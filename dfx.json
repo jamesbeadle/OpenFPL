@@ -1,0 +1,29 @@
+{
+  "canisters": {
+    "OpenFPL_backend": {
+      "main": "src/OpenFPL_backend/main.mo",
+      "type": "motoko"
+    },
+    "OpenFPL_frontend": {
+      "dependencies": [
+        "OpenFPL_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/OpenFPL_frontend/src/index.html"
+      },
+      "source": [
+        "src/OpenFPL_frontend/assets",
+        "dist/OpenFPL_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
