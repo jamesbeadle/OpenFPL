@@ -4,6 +4,12 @@
       "main": "src/OpenFPL_backend/main.mo",
       "type": "motoko"
     },
+    "Token_canister": {
+      "type": "custom",
+      "wasm": "src/token-canister/icrc1-ledger.wasm",
+      "candid": "src/token-canister/icrc1-ledger.did",
+      "build": ""
+    },
     "OpenFPL_frontend": {
       "dependencies": [
         "OpenFPL_backend"
@@ -21,7 +27,10 @@
   "defaults": {
     "build": {
       "args": "",
-      "packtool": ""
+      "packtool": "mops sources"
+    },
+    "replica": {
+      "subnet_type": "system"
     }
   },
   "output_env_file": ".env",
