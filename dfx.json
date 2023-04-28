@@ -1,6 +1,9 @@
 {
   "canisters": {
     "OpenFPL_backend": {
+      "dependencies": [
+        "ledger"
+      ],
       "main": "src/OpenFPL_backend/main.mo",
       "type": "motoko"
     },
@@ -22,6 +25,28 @@
         "dist/OpenFPL_frontend/"
       ],
       "type": "assets"
+    },
+    "internet_identity": {
+      "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+      "remote": {
+        "id": {
+          "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai",
+          "local": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+        }
+      },
+      "type": "custom",
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm"
+    },
+    "ledger": {
+      "candid": "candid/nns-ledger.did",
+      "remote": {
+        "id": {
+          "ic": "ryjl3-tyaaa-aaaaa-aaaba-cai",
+          "local": "ryjl3-tyaaa-aaaaa-aaaba-cai"
+        }
+      },
+      "type": "custom",
+      "wasm": ""
     }
   },
   "defaults": {

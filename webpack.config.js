@@ -4,6 +4,10 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
+const network =
+process.env.DFX_NETWORK ||
+(process.env.NODE_ENV === "production" ? "ic" : "local");
+
 function initCanisterEnv() {
   let localCanisters, prodCanisters;
   try {
@@ -21,10 +25,6 @@ function initCanisterEnv() {
     console.log("No production canister_ids.json found. Continuing with local");
   }
 
-  const network =
-    process.env.DFX_NETWORK ||
-    (process.env.NODE_ENV === "production" ? "ic" : "local");
-
   const canisterConfig = network === "local" ? localCanisters : prodCanisters;
 
   return Object.entries(canisterConfig).reduce((prev, current) => {
@@ -35,6 +35,8 @@ function initCanisterEnv() {
   }, {});
 }
 const canisterEnvVariables = initCanisterEnv();
+
+const internetIdentityUrl = network === "local" ? `http://localhost:8080/?canisterId=${canisterEnvVariables["INTERNET_IDENTITY_CANISTER_ID"]}` : `https://identity.ic0.app`
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -48,7 +50,7 @@ module.exports = {
   entry: {
     // The frontend.entrypoint points to the HTML file for this build, so we need
     // to replace the extension to `.js`.
-    index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".js"),
+    index: path.join(__dirname, frontend_entry).replace(/\.html$/, ".jsx"),
   },
   devtool: isDevelopment ? "source-map" : false,
   optimization: {
@@ -81,6 +83,23 @@ module.exports = {
   //    { test: /\.css$/, use: ['style-loader','css-loader'] }
   //  ]
   // },
+  module: {
+    rules: [
+      { test: /\.(js|ts)x?$/, loader: "ts-loader" },
+      { test: /\.css$/, use: ['style-loader','css-loader'] },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              publicPath: '/',
+            },
+          },
+        ],
+      }
+    ]
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, frontend_entry),
@@ -88,6 +107,7 @@ module.exports = {
     }),
     new webpack.EnvironmentPlugin({
       NODE_ENV: "development",
+      II_URL: internetIdentityUrl,
       ...canisterEnvVariables,
     }),
     new webpack.ProvidePlugin({
@@ -107,6 +127,7 @@ module.exports = {
   // proxy /api to port 4943 during development.
   // if you edit dfx.json to define a project-specific local network, change the port to match.
   devServer: {
+    historyApiFallback: true,
     proxy: {
       "/api": {
         target: "http://127.0.0.1:8080",
