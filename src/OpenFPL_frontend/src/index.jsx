@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import '../assets/custom.scss';
 import { AuthProvider } from "./contexts/AuthContext";
 
 import MyNavbar from './components/shared/navbar';
@@ -11,6 +11,7 @@ import Admin from "./components/admin/admin";
 import Profile from "./components/profile/profile";
 
 import Logo from '../assets/logo.png';
+import Whitepaper from "./components/whitepaper";
 
 const PrivateWindowFallback = () => {
   return (
@@ -65,6 +66,7 @@ const App = () => {
           <MyNavbar />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/whitepaper" element={<Whitepaper   />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/profile" element={<Profile />} />
             </Routes>

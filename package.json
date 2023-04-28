@@ -2,7 +2,12 @@
   "name": "open_fpl_frontend",
   "version": "0.1.0",
   "description": "Open FPL Game",
-  "keywords": ["Open FPL", "FPL", "IC", "ICP"],
+  "keywords": [
+    "Open FPL",
+    "FPL",
+    "IC",
+    "ICP"
+  ],
   "scripts": {
     "build": "webpack",
     "prebuild": "npm run generate",
@@ -23,7 +28,9 @@
     "events": "3.3.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "5.5.0",
+    "node-sass": "^8.0.0",
     "process": "0.11.10",
+    "sass-loader": "^13.2.2",
     "stream-browserify": "3.0.0",
     "style-loader": "^3.3.2",
     "terser-webpack-plugin": "^5.3.3",

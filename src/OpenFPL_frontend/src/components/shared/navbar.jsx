@@ -38,7 +38,10 @@ const MyNavbar = () => {
               </Nav.Link>    
             </>
           ) : (
-            <Button className="custom-button" onClick={() => { login(); setExpanded(false); }}>Connect</Button>
+            <Nav.Link as={Link} to="/whitepaper" onClick={() => setExpanded(false)} className="nav-link">
+              Whitepaper
+            </Nav.Link>
+            /*<Button className="custom-button" onClick={() => { login(); setExpanded(false); }}>Connect</Button>*/
           )}
         </Nav>
       </Navbar.Collapse>
