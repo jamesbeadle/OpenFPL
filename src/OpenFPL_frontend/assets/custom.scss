@@ -1,6 +1,35 @@
 // Custom.scss
 
-$primary: red; // Your custom primary color
-$secondary: #ee6f57; // Your custom secondary color
+//$primary: red; // Your custom primary color
+//$secondary: #ee6f57; // Your custom secondary color
 
+.navbar-brand, .nav-link{
+    color: whitesmoke !important;
+}
+
+.card{
+    background-color: #1E024D !important;
+}
+
+.accordion-button{
+    background: linear-gradient(to right, #3B2266, #583299) !important;
+    color: whitesmoke !important;
+}
+
+.accordion-item{
+    background: linear-gradient(to right, #625080, #8970B3) !important;
+    color: whitesmoke !important;
+}
+ 
 @import '~bootstrap/scss/bootstrap';
+
+.accordion {
+    --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(43, 46, 115, 0.5);
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill='%23f5f5f5'%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e");
+
+}
+
+  
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f5f5f5'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}

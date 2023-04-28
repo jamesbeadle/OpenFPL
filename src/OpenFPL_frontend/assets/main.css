@@ -8,13 +8,8 @@
   
   body {
     font-family: 'Comfortaa', sans-serif !important;
-  }
-  
-  .custom-nav{
-    background-color: #310480;
-  }
-  
-  .custom-footer{
-    background-color: #2C1D45;
+    background: linear-gradient(to bottom, #000000, #310480);
+    transition: background ease-in-out 300ms, color ease-in-out 150ms, padding ease-in-out 150ms;
+    color: whitesmoke !important;
   }
   

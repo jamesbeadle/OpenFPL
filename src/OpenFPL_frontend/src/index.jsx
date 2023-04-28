@@ -65,7 +65,7 @@ const App = () => {
         <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
           <MyNavbar />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Whitepaper />} />
             <Route path="/whitepaper" element={<Whitepaper   />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/profile" element={<Profile />} />
