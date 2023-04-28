@@ -14,4 +14,8 @@ actor {
     let name = await tokenCanister.icrc1_name();
     return "Token Name:, " # name # "!";
   };
+
+  public func mintTokens() : async (){
+    
+  };  
 };
