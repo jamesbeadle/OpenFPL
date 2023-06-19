@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Spinner, Row, Col, Card, Accordion, Image, Table } from 'react-bootstrap';
+import { Container, Spinner, Row, Col, Card, Accordion, Image, Table, Button } from 'react-bootstrap';
 import { Alert } from '../../../../node_modules/react-bootstrap/esm/index';
 import TokenImage from "../../assets/tokens.png";
+import { ExitIcon } from './icons';
+import { useNavigate } from 'react-router-dom';
 
 const Whitepaper = () => {
   
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +35,7 @@ const Whitepaper = () => {
             <Card className="mb-4">
               <Card.Header><h2 className="mt-4 mb-4">OpenFPL Whitepaper</h2></Card.Header>
               <Card.Body>
-                <Card.Text>Please see below details of the proposed OpenFPL DAO.</Card.Text>
+                <Card.Text>Please see below details of the OpenFPL DAO.</Card.Text>
                 <Alert key='warning' variant='warning'>Draft Version: For community feedback only.</Alert>
                 <Accordion>
                 <Accordion.Item eventKey="0">
@@ -65,7 +68,7 @@ const Whitepaper = () => {
                           <th>Description</th>
                         </tr>
                       </thead>
-                      <tbody style={{color: "whitesmoke"}}>
+                      <tbody>
                         <tr>
                           <td>Advertising</td>
                           <td>Integrated advertising spaces within the OpenFPL gameplay user interface. These spaces are artfully incorporated to resemble organic sporting venue advertising locations. 
@@ -702,15 +705,41 @@ const Whitepaper = () => {
                     </Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="8">
-                    <Accordion.Header>Further Documentation</Accordion.Header>
+                    <Accordion.Header>Other Links</Accordion.Header>
                     <Accordion.Body>
-                      <h4>Further Docs (Coming Soon)</h4>
-                      <p>- Github.</p>
-                      <p>- Open FPL Gameplay Rules.</p>
-                      <p>- Automatic Canister Architecture.</p>
-                      <p>- Player Pricing Formula.</p>
-                      <p>- Game Event Data Formula.</p>
-                      <p>- Terms and Conditions.</p>
+                      <Row className="mt-4">
+                        <p> <a href="https://github.com/jamesbeadle/OpenFPL" target='_blank'>Github</a>. <ExitIcon /></p>
+                      </Row>
+                      <Container fluid>
+                        <Row className="mt-4">
+                          <Col>
+                            <Button className='btn' onClick={() => navigate('/gameplay')}>
+                              Open FPL Gameplay Rules
+                            </Button>
+                          </Col>
+                        </Row>
+                        <Row className="mt-4">
+                          <Col>
+                            <Button onClick={() => navigate('/architecture')}>
+                              OpenFPL Architecture.
+                            </Button>
+                          </Col>
+                        </Row>
+                        <Row className="mt-4">
+                          <Col>
+                            <Button onClick={() => navigate('/definitions')}>
+                              Further Definitions.
+                            </Button>
+                          </Col>
+                        </Row>
+                        <Row className="mt-4">
+                          <Col>
+                            <Button onClick={() => navigate('/terms')}>
+                              Terms and Conditions.
+                            </Button>
+                          </Col>  
+                        </Row>
+                      </Container>
                     </Accordion.Body>
                   </Accordion.Item>
                 </Accordion>

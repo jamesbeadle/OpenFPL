@@ -122,7 +122,7 @@ const WithdrawICPModal = ({ show, onHide, balance, wallet }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={hideModal}>Cancel</Button>
-        <Button className="custom-button" onClick={handleSubmit}>Withdraw</Button>
+        <Button onClick={handleSubmit}>Withdraw</Button>
       </Modal.Footer>
     </Modal>
     

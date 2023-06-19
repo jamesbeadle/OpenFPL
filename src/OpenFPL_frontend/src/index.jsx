@@ -7,11 +7,14 @@ import { AuthProvider } from "./contexts/AuthContext";
 import MyNavbar from './components/shared/navbar';
 import MyFooter from './components/shared/footer';
 import Home from "./components/home";
-import Admin from "./components/admin/admin";
 import Profile from "./components/profile/profile";
 
 import Logo from '../assets/logo.png';
 import Whitepaper from "./components/whitepaper";
+import Gameplay from "./components/gameplay";
+import Terms from "./components/terms";
+import Definitions from "./components/definitions";
+import Architecture from "./components/architecture";
 
 const PrivateWindowFallback = () => {
   return (
@@ -64,11 +67,13 @@ const App = () => {
       <Router>
         <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
           <MyNavbar />
-          <Routes>
-            <Route path="/" element={<Whitepaper />} />
-            <Route path="/whitepaper" element={<Whitepaper   />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/profile" element={<Profile />} />
+            <Routes>
+              <Route path="/" element={<Whitepaper />} />
+              <Route path="/whitepaper" element={<Whitepaper   />} />
+              <Route path="/gameplay" element={<Gameplay   />} />
+              <Route path="/definitions" element={<Definitions   />} />
+              <Route path="/terms" element={<Terms   />} />
+              <Route path="/architecture" element={<Architecture   />} />
             </Routes>
           <MyFooter />
         </div>

@@ -41,4 +41,10 @@
     table-layout: fixed;
   }
   
-  
+  a{
+    color: whitesmoke !important;
+  }
+
+  td{
+    color: whitesmoke !important;
+  }
