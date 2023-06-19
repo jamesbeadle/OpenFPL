@@ -13,3 +13,7 @@
     color: whitesmoke !important;
   }
   
+  .table-fixed {
+    table-layout: fixed;
+  }
+  
