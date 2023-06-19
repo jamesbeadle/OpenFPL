@@ -388,7 +388,11 @@ const Whitepaper = () => {
                   <Accordion.Item eventKey="6">
                     <Accordion.Header>Roadmap</Accordion.Header>
                     <Accordion.Body>
-                      Test.
+                      <h4>OpenFPL RoadMap</h4>
+                      <p>- Q4 2023: OpenFPL fantasy football beta launch.</p>
+                      <p>- Q1 2024: OpenFPL DAO Player Evaluation Launch.</p>
+                      <p>- Q2 2024: OpenFPL SNS Decentralisation Sale.</p>
+                      <p>- Q3 2024: OpenFPL public launch.</p>
                     </Accordion.Body>
                   </Accordion.Item>
                 </Accordion>
