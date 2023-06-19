@@ -61,7 +61,7 @@ const Whitepaper = () => {
                         <br />
                         <br /> - Users will be able to create private leagues for small fee (the fee is controlled by the DAO). 
                         <br />
-                        <br /> - A small fee is charged in FPL for a user entering into a bet with other users.                        
+                        <br /> - A small fee is charged in FPL for a user entering into a bet with other users (within private leagues only).                        
                       </p>
                       <p>All revenue will be deposited into the DAOs treasury.</p>
                       
