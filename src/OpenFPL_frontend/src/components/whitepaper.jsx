@@ -146,6 +146,14 @@ const Whitepaper = () => {
                           <td>A DAO proposal can be added to modify a players rating.</td>
                         </tr>
                         <tr>
+                          <td>Player Transfers</td>
+                          <td>A DAO proposal can be added to transfer players in and out of teams.</td>
+                        </tr>
+                        <tr>
+                          <td>Amend Fixtures</td>
+                          <td>A DAO proposal can be added to move fixtures between gameweeks.</td>
+                        </tr>
+                        <tr>
                           <td>Game Data Point</td>
                           <td>Any data point can be amended by DAO proposal.</td>
                         </tr>
@@ -437,8 +445,8 @@ const Whitepaper = () => {
                         <Row className="mb-3">
                           <Col>
                             <h3>Treasury (51%)</h3>
-                            <p>After the decentraliation sale the SNS will be left with a treasury of the remaining 51% of FPL tokens. 
-                              The bulk is likely to be used over time to automatically reward users who positively contribute and help OpenFPL grow by playing OpenFPL. 
+                            <p>After the decentraliation sale the SNS will be left with a treasury of the remaining 51% of FPL tokens. 80% of the FPL & ICP tokens in the treasury will be staked for the maximum amount of time in their respective SNS.
+                              The remainder is likely to be used over time to automatically reward users who positively contribute and help OpenFPL grow by playing OpenFPL. 
                               <br />
                               <br />
                               It will also be available to pay community bounties, by SNS proposal, to compensate people who contribute to OpenFPL more generally. 
