@@ -4,7 +4,7 @@ import Blob "mo:base/Blob";
 import DTOs "DTOs";
 import Profiles "profiles";
 import Account "Account";
-import Book "book";
+//import Book "book";
 import Nat64 "mo:base/Nat64";
 
 actor Self {
@@ -14,7 +14,7 @@ actor Self {
   ];
 
   let profilesInstance = Profiles.Profiles();
-  let bookInstance = Book.Book();
+  //let bookInstance = Book.Book();
 
   //admin functions
   private func isAdminForCaller(caller: Principal): Bool {
@@ -67,7 +67,7 @@ actor Self {
     let principalName = Principal.toText(caller);
     var accountBalance = Nat64.fromNat(0);
 
-    accountBalance := await bookInstance.getUserAccountBalance(Principal.fromActor(Self), caller);
+    //accountBalance := await bookInstance.getUserAccountBalance(Principal.fromActor(Self), caller);
     
     let accountBalanceDTO: DTOs.AccountBalanceDTO = {
       accountBalance = accountBalance;

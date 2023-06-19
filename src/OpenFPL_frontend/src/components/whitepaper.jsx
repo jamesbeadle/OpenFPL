@@ -35,7 +35,7 @@ const Whitepaper = () => {
                 <Card.Text>
                   Please see below details of the proposed OpenFPL DAO.
                 </Card.Text>
-                <Alert>VERSION: DRAFT</Alert>
+                <Alert>Draft Version: For community feedback only</Alert>
                 <Accordion>
                   <Accordion.Item eventKey="0">
                     <Accordion.Header as="h1">Product Details</Accordion.Header>
@@ -55,15 +55,19 @@ const Whitepaper = () => {
                       </p>
                       <p>The DAO will have 2 primary sources of revenue:
                         <br />
-                        <br /> - Discrete advertising space exists within the OpenFPL gameplay UI. The website incorporates these spaces to ensure they look like natural sporting venue advertising locations.
-                        Revenue from filling these potentially high value spaces for a season is also deposited into the DAO's treasury. The more popular the OpenFPL becomes the more valuable
-                        these spaces will be, advertisers will benefit from users who play the game but also from social media image sharing of the game containing their brand. 
+                        <br /> - Discrete advertising space exists within the OpenFPL gameplay UI. The website incorporates these spaces to ensure they look like 
+                        natural sporting venue advertising locations. Any neuron holders will be able to submit proposals to rent discrete advertising on behalh of a brand in key app area display sections. 
+                        Proposals for advertising contracts are for an entire season and are payable to the OpenFPL treasury in ICP or FPL. 
+                        As the number of users increase the cost of this space increases. Advertisers will be attracted by the secondary exposure of players posting screenshots on social media.
                         <br />
-                        <br /> - Users will be able to create private leagues for small fee (the fee is controlled by the DAO). 
+                        <br /> - Users will be able to obtain Diamond Membership. This give them the ability to create private leagues for small fee (the fee is controlled by the DAO). 
                         <br />
                         <br /> - A small fee is charged in FPL for a user entering into a bet with other users (within private leagues only).                        
                       </p>
                       <p>All revenue will be deposited into the DAOs treasury.</p>
+
+                      <p>The OpenFPL DAO earns ICP as revenue when users purchase FPL tokens from the DAO with ICP tokens. 
+                        The OpenFPL DAO also earns ICP if the DAO stakes its ICP into a neuron on the NNS and earns voting rewards.</p>
                       
                    </Accordion.Body>
                   </Accordion.Item>
@@ -81,9 +85,180 @@ const Whitepaper = () => {
                       <p>The DAO can make a proposal to update the price of creating private leagues.</p>
                       <p>The DAO can make a proposal to accept a new advertising contract for the season.</p>
                       <p>ICP tokens in the DAO’s treasury can be used to fund expenses provided this is voted on by the DAO.</p>
+                      <h4>DAO Rewards</h4>
+                      <p>Rewards are paid to users with staked neurons for providing accurate information to the system. 
+                        This mechanism is used to ensure the system has no reliance on any 3rd party systems.</p>
+                        <p>The following table shows % of minted rewards payable for each scenario. 
+                          These values can be adjusted by the DAO.</p>
+                        
+                        <p>Neuron Maturity</p>
+                        <p>5% of the minted FPL will be used to pay Neuron maturity</p>
+
+                        <p>Player valuations</p>
+
+                        <Table striped bordered hover className="table-fixed">
+                          <colgroup>
+                            <col style={{width: '70%'}} />
+                            <col style={{width: '30%'}} />
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th>Reward</th>
+                              <th>Minted Share</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Neuron Maturity</td>
+                              <td>5%</td>
+                            </tr>
+                            <tr>
+                              <td>Evaluating Players</td>
+                              <td>10%</td>
+                            </tr>
+                            <tr>
+                              <td>Validating Game Event Data</td>
+                              <td>10%</td>
+                            </tr>
+                            <tr>
+                              <td>OpenFPL Gameplay Awards</td>
+                              <td>75%</td>
+                            </tr>
+                          </tbody>
+                        </Table>
+
+
+
                     </Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="2">
+                    <Accordion.Header>DAO Rewards</Accordion.Header>
+                    <Accordion.Body>
+                      <h3>DAO Voting Rewards</h3>
+                      <p>Rewards are paid to users with staked neurons for providing accurate information to the system. 
+                        This mechanism is used to ensure the system has no reliance on any 3rd party systems.</p>
+                      <p>DAO rewards are issued from the total minted supply each year for the following actions:</p>
+
+                      <h4>Neuron Maturity</h4>
+                      <p>5% of the minted FPL is used for staked neuron maturity.</p>
+
+                      <h4>Evaluating Players</h4>
+                      <p>Eligble neuron holders are able to evaluate a players value, proportional to their staked neurons voting power.</p>
+                      <p>The front end is designed to provide an easy interface to quickly input information into the system. 
+                        Users will be able to bulk compare players with the ability to filter by position & team to make the comparsion.
+                         A player will appear in the list and the user can select to increase or decrease their price 0.1, 0.2 or 0.3. 
+                         This information is entered into the player pricing formula which sets a players current price. 
+                         Neurons can only vote on a players value once per season. The players ratings will be set from genesis. A DAO proposal can be added to modify a players rating.</p>
+
+                         <Table striped bordered hover className="table-fixed">
+                          <colgroup>
+                            <col style={{width: '70%'}} />
+                            <col style={{width: '30%'}} />
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th>Reward</th>
+                              <th>Share of Minted Validation Rewards</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Valuing a player.</td>
+                              <td>100% / total players for season.</td>
+                            </tr>
+                          </tbody>
+                        </Table>
+
+
+                      <h4>Validating Game Data</h4>
+                      <p>The DAO wants to remain free of 3rd party libraries. To do this it will use it's community to gather the information it needs, 
+                        in return the DAO will pay rewards to users for this information.</p>
+                      <p>The information is fed into the game event data formula which rewards users for being the earliest to provide the required correct information to score the gameplay.</p>
+                      <p>After each game users can enter the following information withing 12 hours, provided the game data requirement remains open. 
+                        After the required validation point is reached (initially set to 1,000,000 FPL votes) confirming the data. Any data point can be amended by DAO proposal.</p>
+                      <p>The current data points a user can enter to earn FPL tokens are:</p>
+                    
+                      <Table striped bordered hover className="table-fixed">
+                        <colgroup>
+                          <col style={{width: '70%'}} />
+                          <col style={{width: '30%'}} />
+                        </colgroup>
+                        <thead>
+                          <tr>
+                            <th>Reward</th>
+                            <th>Share of Minted Validation Rewards</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Recording correct goal scorer & assist player for a goal, including whether the goal was an own goal.</td>
+                            <td>15%</td>
+                          </tr>
+                          <tr>
+                            <td>Recording a correct penalty being awarded, with the minute of the penality and result of the penalty.</td>
+                            <td>15%</td>
+                          </tr>
+                          <tr>
+                            <td>Recording the correct minutes played for a player.</td>
+                            <td>20%</td>
+                          </tr>
+                          <tr>
+                            <td>Recording the correct number of saves for a goal keeper in each match.</td>
+                            <td>20%</td>
+                          </tr>
+                          <tr>
+                            <td>Recording the correct time in which all players in a game received yellow or red cards along with the minute the card was given.</td>
+                            <td>20%</td>
+                          </tr>
+                          <tr>
+                            <td>The number of bonus points a player receives based on 0-3, paid out in your number is in the majority.</td>
+                            <td>10%</td>
+                          </tr>
+                        </tbody>
+                      </Table>
+
+                      <p>Incorrect data does not get paid a reward.</p>
+
+
+                      
+                      <h4>OpenFPL Gameplay Rewards</h4>
+                      <p>Below is the share of minted FPL gameplay rewards that are shared between the neurons at their respective voting power:</p>
+                      <Table striped bordered hover className="table-fixed">
+                        <colgroup>
+                          <col style={{width: '70%'}} />
+                          <col style={{width: '30%'}} />
+                        </colgroup>
+                        <thead>
+                          <tr>
+                            <th>Reward</th>
+                            <th>Share of Minted Validation Rewards</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Highest weekly points.</td>
+                            <td>50% / 38 gameweeks = ~0.26%</td>
+                          </tr>
+                          <tr>
+                            <td>Highest season score.</td>
+                            <td>25%</td>
+                          </tr>
+                          <tr>
+                            <td>Highest weekly preferred club score.</td>
+                            <td>12.5% / 20 teams = ~0.25%</td>
+                          </tr>
+                          <tr>
+                            <td>Highest gameweek player score in your team.</td>
+                            <td>12.5% / 38 gameweeks = ~0.026%</td>
+                          </tr>
+                        </tbody>
+                      </Table>
+
+                      <p>All rewards and reward percentages can be adjusted by DAO proposal.</p>
+
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="3">
                     <Accordion.Header>FPL Utility Token</Accordion.Header>
                     <Accordion.Body>
                       <p>OpenFPL uses its own utility token called FPL. The tokens primary purpose is for rewarding users who play OpenFPL. </p>
@@ -94,7 +269,7 @@ const Whitepaper = () => {
                       <p>- Any future products and services voted on by the DAO.</p>
                     </Accordion.Body>
                   </Accordion.Item>
-                  <Accordion.Item eventKey="3">
+                  <Accordion.Item eventKey="4">
                     <Accordion.Header>Genesis Token Allocation</Accordion.Header>
                     <Accordion.Body>
                       <Container fluid>
@@ -281,7 +456,7 @@ const Whitepaper = () => {
                       </Container>
                     </Accordion.Body>
                   </Accordion.Item>
-                  <Accordion.Item eventKey="4">
+                  <Accordion.Item eventKey="5">
                     <Accordion.Header>OpenFPL Treasury</Accordion.Header>
                     <Accordion.Body>
                       <p>The SNS will hold a treasury of ICP tokens and FPL tokens. Immediately after the decentralisation sale the SNS will have an ICP ledger account with the 
@@ -326,7 +501,7 @@ const Whitepaper = () => {
                       </p>
                     </Accordion.Body>
                   </Accordion.Item>
-                  <Accordion.Item eventKey="5">
+                  <Accordion.Item eventKey="6">
                     <Accordion.Header>Tokenomics</Accordion.Header>
                     <Accordion.Body>
                       <h4>Total supply levers</h4>
@@ -335,7 +510,7 @@ const Whitepaper = () => {
                         The supply will increase if more tokens are minted and decrease if tokens are burned.
                       </p>
                       <p>
-                        The SNS is configured to generate 2.5% of the total supply annually to pay voting rewards to participating neurons. 
+                        The SNS is configured to generate 2.5% of the total supply annually to pay equally to the 4 reward categories specified in the "DAO Rewards" section.
                         Voting rewards accumulate in participating neurons as maturity . 
                         At the point a neuron’s maturity is disbursed it is burned and the corresponding value of FPL tokens will be minted by the SNS ledger to an account. 
                         It is also possible for the SNS to mint tokens by proposal although it is unlikely the OpenFPL DAO will elect to do this.
@@ -385,7 +560,7 @@ const Whitepaper = () => {
 
                     </Accordion.Body>
                   </Accordion.Item>
-                  <Accordion.Item eventKey="6">
+                  <Accordion.Item eventKey="7">
                     <Accordion.Header>Roadmap</Accordion.Header>
                     <Accordion.Body>
                       <h4>OpenFPL RoadMap</h4>
@@ -393,6 +568,17 @@ const Whitepaper = () => {
                       <p>- Q1 2024: OpenFPL DAO Player Evaluation Launch.</p>
                       <p>- Q2 2024: OpenFPL SNS Decentralisation Sale.</p>
                       <p>- Q3 2024: OpenFPL public launch.</p>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="8">
+                    <Accordion.Header>Further Documentation</Accordion.Header>
+                    <Accordion.Body>
+                      <h4>Further Docs</h4>
+                      <p>- Github.</p>
+                      <p>- Open FPL Gameplay Rules.</p>
+                      <p>- Automatic Canister Architecture.</p>
+                      <p>- Player Pricing Formular</p>
+                      <p>- Game Event Data Formula.</p>
                     </Accordion.Body>
                   </Accordion.Item>
                 </Accordion>
