@@ -1,5 +1,25 @@
 // Custom.scss
+/*
+.UEFA-EURO-2024-1-hex { color: #0424D9; } Blue
+.UEFA-EURO-2024-2-hex { color: #2552D9; } Light Blue
+.UEFA-EURO-2024-3-hex { color: #05A64B; } Green
+.UEFA-EURO-2024-4-hex { color: #F2C53D; } Yellow
+.UEFA-EURO-2024-5-hex { color: #F23827; } Red
 
+.UEFA-EURO-2024-1-rgba { color: rgba(4, 36, 216, 1); }
+.UEFA-EURO-2024-2-rgba { color: rgba(36, 81, 216, 1); }
+.UEFA-EURO-2024-3-rgba { color: rgba(4, 165, 74, 1); }
+.UEFA-EURO-2024-4-rgba { color: rgba(242, 196, 60, 1); }
+.UEFA-EURO-2024-5-rgba { color: rgba(242, 55, 38, 1); }
+
+.UEFA-EURO-2024-1-hsla { color: hsla(230, 96, 43, 1); }
+.UEFA-EURO-2024-2-hsla { color: hsla(225, 70, 49, 1); }
+.UEFA-EURO-2024-3-hsla { color: hsla(146, 94, 33, 1); }
+.UEFA-EURO-2024-4-hsla { color: hsla(45, 87, 59, 1); }
+.UEFA-EURO-2024-5-hsla { color: hsla(5, 88, 55, 1); }
+
+
+*/
 //$primary: red; // Your custom primary color
 //$secondary: #ee6f57; // Your custom secondary color
 
@@ -8,28 +28,27 @@
 }
 
 .card{
-    background-color: #1E024D !important;
+    background-color: #2552D9 !important;
 }
 
 .accordion-button{
-    background: linear-gradient(to right, #3B2266, #583299) !important;
+    background: linear-gradient(to right, #0424D9, #2552D9) !important;
     color: whitesmoke !important;
 }
 
 .accordion-item{
-    background: linear-gradient(to right, #625080, #8970B3) !important;
+    background: linear-gradient(to right, #2552D9, #2552D9) !important;
     color: whitesmoke !important;
 }
  
 @import '~bootstrap/scss/bootstrap';
 
 .accordion {
-    --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(43, 46, 115, 0.5);
+    --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(4, 165, 74, 1);
     --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill='%23f5f5f5'%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e");
 
 }
 
-  
 .accordion-button::after {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f5f5f5'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
 }
