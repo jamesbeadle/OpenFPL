@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Spinner, Row, Col, Card} from 'react-bootstrap';
+import { Container, Spinner, Row, Col, Card, Image} from 'react-bootstrap';
 import { Alert } from '../../../../node_modules/react-bootstrap/esm/index';
+import EventCalcImage from "../../assets/event_calc.png";
+import CouncilCalcImage from "../../assets/council_calc.png";
 
 const Definitions = () => {
   
@@ -33,7 +35,41 @@ const Definitions = () => {
               <Card.Body>
                 <Card.Text>Please see below further definitions of formula mentioned in the OpenFPL DAO.</Card.Text>
                 <Alert key='warning' variant='warning'>Draft Version: For community feedback only.</Alert>
-                <p>Coming Soon</p>
+                <h4 className='mt-4'>Game event data formula</h4>
+                <p>After a game has finished its state moves to awaiting consensus. When in this state it appears in the OpenFPL DAO for neuron holders to
+                  fill in statistical information for the game. 
+                </p>
+                <p>
+                  A neuron holder receives rewards, proportional to their voting power for each correcly completed game.  
+                </p>
+                <p>
+                  These rewards are subject to a time multiplier, with earlier submissions receiving a higher time multiplier than lower submissions.
+                </p>
+                <p>Please see below sample calcuation on how rewards would be calculated using the intial DAO setup values:</p>
+                <p>A user doesn't know how early they are in adding the data until after consensus has been reached.</p>
+                
+                <Image src={EventCalcImage} alt="openfpl" rounded fluid className="ml-4 mr-4 mt-4 mb-4 w-100" />
+                <h4 className='mt-4'>Data Validation Council Rewards Formula</h4>
+                <p>If a game reaches consensus and the result is different from the secondary third party check, they game appears as unresolved until any members of the 
+                  data validation council have confirmed the result with a voting power of 1,000,000 split with a maximum voting power of 100,000 per neuron. 
+                </p>
+                <p>
+                  A council member neuron receives rewards vor confirming results, proportional to their voting power on the votes cast.  
+                </p>
+                <p>
+                  These rewards are subject to a time multiplier, with earlier submissions receiving a higher time multiplier than lower submissions.
+                </p>
+                <p>Please see below sample calcuation on how rewards would be calculated using the intial DAO setup values:</p>
+                <p>A council member doesn't know how early they are in confirm the correct data until after consensus has been reached.</p>
+                
+                <Image src={CouncilCalcImage} alt="openfpl" rounded fluid className="ml-4 mr-4 mt-4 mb-4 w-100" />
+
+                <h4 className='mt-4'>Player Pricing Formula and Reward Calculation</h4>
+                <p>A players value will go up and down </p>
+                
+                <Image src={CouncilCalcImage} alt="openfpl" rounded fluid className="ml-4 mr-4 mt-4 mb-4 w-100" />
+
+
               </Card.Body>
             </Card>
           </Col>
