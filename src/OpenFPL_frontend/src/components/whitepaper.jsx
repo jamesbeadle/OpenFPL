@@ -107,7 +107,7 @@ const Whitepaper = () => {
                         Neuron holders can also receive FPL rewards by valuing players. A neuron can value a player once during the season to receive FPL tokens rewards. 
                         After each valuation a players value changes.
                       </p>
-                      <h4>DAO Proposals</h4>
+                      <h4 className='mt-4'>DAO Proposals</h4>
                       <Table striped bordered hover className="table-fixed">
                         <colgroup>
                           <col style={{width: '30%'}} />
@@ -163,7 +163,7 @@ const Whitepaper = () => {
                         </tbody>
                       </Table>
                       
-                      <h4>DAO Rewards</h4>
+                      <h4 className='mt-4'>DAO Rewards</h4>
                       <p>
                         Rewards are paid to users with staked neurons for providing accurate information to the system. 
                         This mechanism is used to ensure the system has no reliance on any 3rd party systems.
@@ -193,11 +193,15 @@ const Whitepaper = () => {
                           </tr>
                           <tr>
                             <td>Evaluating Players</td>
-                            <td>10%</td>
+                            <td>5%</td>
                           </tr>
                           <tr>
                             <td>Validating Game Event Data</td>
                             <td>10%</td>
+                          </tr>
+                          <tr>
+                            <td>Data Verification Council Member Participation</td>
+                            <td>5%</td>
                           </tr>
                           <tr>
                             <td>OpenFPL Gameplay Awards</td>
@@ -216,12 +220,12 @@ const Whitepaper = () => {
                         This mechanism is used to ensure the system has no reliance on any 3rd party systems.</p>
                       <p>The DAO rewards in the following circumstances:</p>
 
-                      <h4>Neuron Maturity</h4>
+                      <h4 className='mt-4'>Neuron Maturity</h4>
                       <p>5% of the minted FPL is used for staked neuron maturity.</p>
 
                       
 
-                      <h4>Evaluating Players</h4>
+                      <h4 className='mt-4'>Evaluating Players</h4>
                       <p>Eligble neuron holders are able to evaluate a players value, proportional to their staked neurons voting power.</p>
                       <p>The front end is designed to provide an easy interface to quickly input information into the system. 
                         Users will be able to bulk compare players with the ability to filter by position & team to make the comparsion.
@@ -249,13 +253,14 @@ const Whitepaper = () => {
                         </Table>
 
 
-                      <h4>Validating Game Data</h4>
+                      <h4 className='mt-4'>Validating Game Data</h4>
                       <p>The DAO wants to remain free of 3rd party libraries. To do this it will use it's community to gather the information it needs, 
                         in return the DAO will pay rewards to users for this information.</p>
                       <p>The information is fed into the game event data formula which rewards users for being the earliest to provide the required correct information to score the gameplay.</p>
                       <p>After each game users can enter the following information withing 12 hours, provided the game data requirement remains open. 
                         After the required validation point is reached (initially set to 1,000,000 FPL votes) confirming the data. Any data point can be amended by DAO proposal.</p>
                       <p>The current data points a user can enter to earn FPL tokens are:</p>
+                      <p>Ideally a sports oracle is created in which the DAO could remove this requirement and subsequent reward via a DAO proposal.</p>
                     
                       <Table striped bordered hover className="table-fixed">
                         <colgroup>
@@ -300,7 +305,7 @@ const Whitepaper = () => {
 
 
                       
-                      <h4>OpenFPL Gameplay Rewards</h4>
+                      <h4 className='mt-4'>OpenFPL Gameplay Rewards</h4>
                       <p>Below is the share of minted FPL gameplay rewards that are shared between the neurons at their respective voting power:</p>
                       <Table striped bordered hover className="table-fixed">
                         <colgroup>
@@ -332,7 +337,10 @@ const Whitepaper = () => {
                           </tr>
                         </tbody>
                       </Table>
-
+                      
+                      <h4 className='mt-4'>Data Verification Council Membership Rewards</h4>
+                      <p>All data verfication council members will be rewarded proportional to their participation.</p>
+                      
                       <p>All rewards and reward percentages can be adjusted by DAO proposal.</p>
 
                     </Accordion.Body>
@@ -604,26 +612,26 @@ const Whitepaper = () => {
                         Any liquid ICP in the reserve could be used directly, or the DAO could swap FPL from the FPL reserve for ICP at a DEX, 
                         and use it to fund expenses such as cycles for hosting, 3rd party services, and later for paying the development team.</p>
                       
-                      <h4>ICP for cycles to fund hosting</h4>
+                      <h4 className='mt-4'>ICP for cycles to fund hosting</h4>
 
                       <p>OpenFPL has a "cycles dispenser" canister which keeps all the other OpenFPL canisters topped up with cycles. 
                         It has a treasury of cycles and ICP. 
                         When it is runnning low on cycles it will automatically burn some ICP for more cycles using the NNS cycles minting canister. 
                         There will be infrequent proposals to transfer a portion of ICP from the SNS treasury to the "cycles dispenser".
                       </p>
-                      <h4>3rd party services</h4>
+                      <h4 className='mt-4'>3rd party services</h4>
                       <p>
                         The intention is for OpenFPL to have no off-chain dependencies so that it is not necessary to trust any human agent, 
                         for example to transact in FIAT currencies. There are no plans to add any off-chain dependencies.
                       </p>
-                      <h4>Pay the development team</h4>
+                      <h4 className='mt-4'>Pay the development team</h4>
                       <p>
                         For some period the founding developer will continue to develop on the OpenFPL platform and thus remain a core contributor to the OpenFPL open source project. 
                         Eventually the OpenFPL DAO will need to fund its own development. In this case development team(s) can make proposals to the SNS to receive ICP for development. 
                         For example the team could make a proposal each quarter with a development plan and a request for funds.
                       </p>
 
-                      <h4>Mitigation against a 51% Attack</h4>
+                      <h4 className='mt-4'>Mitigation against a 51% Attack</h4>
 
                       <p>
                         There is a danger that the OpenFPL SNS treasury could be the target of an attack. One possible scenario is for an attacker to buy a large proportion 
@@ -637,7 +645,7 @@ const Whitepaper = () => {
                   <Accordion.Item eventKey="6">
                     <Accordion.Header>Tokenomics</Accordion.Header>
                     <Accordion.Body>
-                      <h4>Total supply levers</h4>
+                      <h4 className='mt-4'>Total supply levers</h4>
                       <p>
                         At genesis the total supply of FPL tokens will be 100M. 
                         The supply will increase if more tokens are minted and decrease if tokens are burned.
@@ -651,7 +659,7 @@ const Whitepaper = () => {
 
                       <p>The only way the SNS can burn tokens is by proposal.</p>
 
-                      <h4>Income and outgoings</h4>
+                      <h4 className='mt-4'>Income and outgoings</h4>
 
                       <p>At genesis the SNS will have a treasury of ICP from the decentralisation sale and 51M FPL tokens.</p>
                       <p>The SNS will receive an income in FPL tokens from premium features, transaction fees and advertising revenue. 
@@ -667,7 +675,7 @@ const Whitepaper = () => {
                         the minting rate from voting rewards and the total supply starts decreasing.
                       </p>
 
-                      <h4>Token price</h4>
+                      <h4 className='mt-4'>Token price</h4>
                       <p>There are various factors that will influence the price of FPL tokens such as:</p>
                       <p>- Total supply</p>
                       <p>- Market sentiment</p>
@@ -694,16 +702,35 @@ const Whitepaper = () => {
                     </Accordion.Body>
                   </Accordion.Item>
                   <Accordion.Item eventKey="7">
+                    <Accordion.Header>Data Verification Council</Accordion.Header>
+                    <Accordion.Body>
+                      <h4 className='mt-4'>OpenFPL Data Verification Council</h4>
+                      <p>
+                        One of the challenges faced by the DAO will be to ensure the accuracy of its data. 
+                        The DAO does not wish to rely on third parties but it will use third party data feeds as a secondary check on data.
+                      </p>
+                      <p>The DAO will vote in members of a Data Verification Council that will be responsible for checking that data is valid.
+                      Council members can be removed by DAO proposal at any time. 
+                      </p>
+
+                      <p>
+                        Council members will access the data verification dashboard showing instances in which variations in data occur. The variations 
+                        are identified from publicly available API datafeeds which can be added and removed by DAO vote.</p>
+                      <p>DAO users who verify data will receive a reputation score, this will enable the DAO to select the most accurate people to participate with the council. </p>
+                      <p>Council members are awarded $FPL tokens for their participation from the DAO rewards.</p>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="8">
                     <Accordion.Header>Roadmap</Accordion.Header>
                     <Accordion.Body>
-                      <h4>OpenFPL RoadMap</h4>
+                      <h4 className='mt-4'>OpenFPL RoadMap</h4>
                       <p>- Q4 2023: OpenFPL fantasy football beta launch.</p>
                       <p>- Q1 2024: OpenFPL DAO Player Evaluation Launch.</p>
                       <p>- Q2 2024: OpenFPL SNS Decentralisation Sale.</p>
                       <p>- Q3 2024: OpenFPL public launch.</p>
                     </Accordion.Body>
                   </Accordion.Item>
-                  <Accordion.Item eventKey="8">
+                  <Accordion.Item eventKey="9">
                     <Accordion.Header>Other Links</Accordion.Header>
                     <Accordion.Body>
                       <Row className="mt-4">
