@@ -65,10 +65,9 @@ const Definitions = () => {
                 <Image src={CouncilCalcImage} alt="openfpl" rounded fluid className="ml-4 mr-4 mt-4 mb-4 w-100" />
 
                 <h4 className='mt-4'>Player Pricing Formula and Reward Calculation</h4>
-                <p>A players value will go up and down </p>
+                <p>A players value will go up when a user adjusts their rating within the DAO. Users can select a positive or negative rating for any player, 3 times a season. 
+                  The ratings for that player are averaged for each week, weighted by voting power and a players price adjusts.</p>
                 
-                <Image src={CouncilCalcImage} alt="openfpl" rounded fluid className="ml-4 mr-4 mt-4 mb-4 w-100" />
-
 
               </Card.Body>
             </Card>
