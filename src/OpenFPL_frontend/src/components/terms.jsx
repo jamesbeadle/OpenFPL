@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card} from 'react-bootstrap';
-import { Alert } from '../../../../node_modules/react-bootstrap/esm/index';
 
 const Terms = () => {
   
@@ -31,7 +30,6 @@ const Terms = () => {
             <Card className="mb-4">
               <Card.Header><h2 className="mt-4 mb-4">OpenFPL DAO Terms and Conditions</h2></Card.Header>
               <Card.Body>
-                <Alert key='warning' variant='warning'>Draft Version: For community feedback only.</Alert>
                 <Card.Text>
                   <p>Welcome to OpenFPL DAO. Please read these Terms and Conditions carefully before using this platform. By accessing or using the OpenFPL DAO, you agree to be bound by these Terms and Conditions. If you disagree with any part of the terms, you may not access the platform.</p>
 

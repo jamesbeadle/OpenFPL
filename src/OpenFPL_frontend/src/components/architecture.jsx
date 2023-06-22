@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card, Image} from 'react-bootstrap';
-import { Alert } from '../../../../node_modules/react-bootstrap/esm/index';
 import ArchitectureImage from "../../assets/architecture.jpg";
 
 const Architecture = () => {
@@ -33,7 +32,6 @@ const Architecture = () => {
               <Card.Header><h2 className="mt-4 mb-4">OpenFPL Architecture</h2></Card.Header>
               <Card.Body>
                 <h4>Canister Architecture</h4>
-                <Alert key='warning' variant='warning'>Draft Version: For community feedback only.</Alert>
                 <p>A canister is created for each prediction gameweek and stores around 60 bytes of data for each users prediction. 
                   This enables the gameweek canister to hold roughly 70 million predictions per week, about 7 times the capacity required for every player 
                   using the market leading fantasy football app to make submit their team.

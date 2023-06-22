@@ -17,35 +17,14 @@
     font-style: normal;
   }
 
-  @font-face {
-      font-family: 'Comfortaa';
-      src: url('Comfortaa.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-  
-  
   body {
-    font-family: 'Comfortaa', sans-serif !important;
+    font-family: 'Chakra Petch', sans-serif !important;
     background: linear-gradient(to bottom, #67F5C9, #895BF5);
     transition: background ease-in-out 300ms, color ease-in-out 150ms, padding ease-in-out 150ms;
-    color: whitesmoke !important;
   }
   
   .table-fixed {
     table-layout: fixed;
-  }
-  
-  a{
-    color: whitesmoke !important;
-  }
-
-  th{
-    color: whitesmoke !important;
-  }
-
-  td{
-    color: whitesmoke !important;
   }
 
 
@@ -57,7 +36,7 @@
   }
 
   .nav-link-brand {
-    font-family: 'Chakra Petch', sans-serif !important;
+    color: whitesmoke !important;
   }
 
 
@@ -71,7 +50,15 @@
     padding: 0;
     font-size: 0.8rem;
   }
+
+  footer{
+    color: whitesmoke !important;
+  }
   
   .footer-links li {
     line-height: 1.6;
+  }
+
+  a{
+    color:whitesmoke !important;
   }

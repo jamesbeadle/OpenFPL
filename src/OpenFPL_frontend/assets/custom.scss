@@ -15,18 +15,14 @@ $secondary: #67F5C9; // Your custom secondary color
 
 .card{
     background-color: whitesmoke !important;
-    color: black;
+    color: #0A0111;
 }
 
 .accordion-button{
-    background: linear-gradient(to right, #895BF5, #9A73F6) !important;
-    color: whitesmoke !important;
+    background: linear-gradient(to right, #F5A28C, #9A73F6) !important;
+    color: #0A0111 !important;
 }
 
-.accordion-item{
-    background: linear-gradient(to right, #9A73F6, #9A73F6) !important;
-    color: whitesmoke !important;
-}
  
 @import '~bootstrap/scss/bootstrap';
 

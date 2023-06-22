@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card, Accordion, Image, Table, Button } from 'react-bootstrap';
-import { Alert } from '../../../../node_modules/react-bootstrap/esm/index';
 import TokenImage from "../../assets/tokens.png";
 import { ExitIcon } from './icons';
 import { useNavigate } from 'react-router-dom';
@@ -36,7 +35,6 @@ const Whitepaper = () => {
               <Card.Header><h2 className="mt-4 mb-4">OpenFPL Whitepaper</h2></Card.Header>
               <Card.Body>
                 <Card.Text>Please see below details of the OpenFPL DAO.</Card.Text>
-                <Alert key='warning' variant='warning'>Draft Version: For community feedback only.</Alert>
                 <Accordion>
                   <Accordion.Item eventKey="0">
                     <Accordion.Header as="h1">Product Details</Accordion.Header>
@@ -57,7 +55,7 @@ const Whitepaper = () => {
                         The DAO primarily generates revenue from the following sources:
                       </p>
                       
-                      <Table striped bordered hover className="table-fixed">
+                      <Table bordered className="table-fixed">
                         <colgroup>
                           <col style={{width: '30%'}} />
                           <col style={{width: '70%'}} />
@@ -108,7 +106,7 @@ const Whitepaper = () => {
                         After each valuation a players value changes.
                       </p>
                       <h4 className='mt-4'>DAO Proposals</h4>
-                      <Table striped bordered hover className="table-fixed">
+                      <Table bordered className="table-fixed">
                         <colgroup>
                           <col style={{width: '30%'}} />
                           <col style={{width: '70%'}} />
@@ -119,7 +117,7 @@ const Whitepaper = () => {
                             <th>Description</th>
                           </tr>
                         </thead>
-                        <tbody style={{color: "whitesmoke"}}>
+                        <tbody>
                           <tr>
                             <td>FPL Tokens</td>
                             <td>The DAO can make a proposal to burn or otherwise utilise FPL tokens within the DAO's treasury FPL ledger account.</td>
@@ -175,7 +173,7 @@ const Whitepaper = () => {
                       <p>Neuron Maturity</p>
                       <p>5% of the rewards pool will be used to pay Neuron maturity</p>
                       <p>Player valuations</p>
-                      <Table striped bordered hover className="table-fixed">
+                      <Table bordered className="table-fixed">
                         <colgroup>
                           <col style={{width: '70%'}} />
                           <col style={{width: '30%'}} />
@@ -186,7 +184,7 @@ const Whitepaper = () => {
                             <th>Minted Share</th>
                           </tr>
                         </thead>
-                        <tbody style={{color: "whitesmoke"}}>
+                        <tbody>
                           <tr>
                             <td>Neuron Maturity</td>
                             <td>5%</td>
@@ -233,7 +231,7 @@ const Whitepaper = () => {
                           This information is entered into the player pricing formula which sets a players current price. 
                           Neurons can only vote on a players value once per season. The players ratings will be set from genesis. A DAO proposal can be added to modify a players rating.</p>
 
-                          <Table striped bordered hover className="table-fixed">
+                          <Table bordered className="table-fixed">
                           <colgroup>
                             <col style={{width: '70%'}} />
                             <col style={{width: '30%'}} />
@@ -262,7 +260,7 @@ const Whitepaper = () => {
                       <p>The current data points a user can enter to earn FPL tokens are:</p>
                       <p>Ideally a sports oracle is created in which the DAO could remove this requirement and subsequent reward via a DAO proposal.</p>
                     
-                      <Table striped bordered hover className="table-fixed">
+                      <Table bordered className="table-fixed">
                         <colgroup>
                           <col style={{width: '70%'}} />
                           <col style={{width: '30%'}} />
@@ -307,7 +305,7 @@ const Whitepaper = () => {
                       
                       <h4 className='mt-4'>OpenFPL Gameplay Rewards</h4>
                       <p>Below is the share of minted FPL gameplay rewards that are shared between the neurons at their respective voting power:</p>
-                      <Table striped bordered hover className="table-fixed">
+                      <Table bordered className="table-fixed">
                         <colgroup>
                           <col style={{width: '70%'}} />
                           <col style={{width: '30%'}} />
@@ -349,7 +347,7 @@ const Whitepaper = () => {
                     <Accordion.Header>FPL Utility Token</Accordion.Header>
                     <Accordion.Body>
                       <p>OpenFPL uses its own utility token called FPL. The tokens primary purpose is for rewarding users who play OpenFPL. The FPL utility token can be used to pay for OpenFPL products and services:</p>
-                      <Table striped bordered hover className="table-fixed">
+                      <Table bordered className="table-fixed">
                         <colgroup>
                           <col style={{width: '100%'}} />
                         </colgroup>
@@ -393,7 +391,7 @@ const Whitepaper = () => {
                             Participants in the decentralisation sale will deposit ICP into the SNS and once the sale has completed they will receive the same proportion of 
                             FPL tokens as their share of the ICP deposited. Each participant will receive their FPL as a basket of 3 equal value neurons:
                             </p>
-                            <Table striped bordered hover className="table-fixed">
+                            <Table bordered className="table-fixed">
                                 <colgroup>
                                   <col style={{width: '100%'}} />
                                 </colgroup>
@@ -427,7 +425,7 @@ const Whitepaper = () => {
                               Each funded.app NFT purchaser will receive their FPL as a basket of 3 equal value neurons:
                             </p>
                             
-                            <Table striped bordered hover className="table-fixed">
+                            <Table bordered className="table-fixed">
                                 <colgroup>
                                   <col style={{width: '100%'}} />
                                 </colgroup>
@@ -475,7 +473,7 @@ const Whitepaper = () => {
                         <Row className="mb-3">
                           <Col>
                             <h3>Initial SNS Configuration</h3>
-                            <Table striped bordered hover className="table-fixed">
+                            <Table bordered className="table-fixed">
                               <colgroup>
                                 <col style={{width: '70%'}} />
                                 <col style={{width: '30%'}} />
@@ -539,7 +537,7 @@ const Whitepaper = () => {
                         <Row className="mb-3">
                           <Col>
                             <h3>SNS Decentralisation Sale Configuration</h3>
-                            <Table striped bordered hover className="table-fixed">
+                            <Table bordered className="table-fixed">
                               <colgroup>
                                 <col style={{width: '70%'}} />
                                 <col style={{width: '30%'}} />
@@ -739,28 +737,28 @@ const Whitepaper = () => {
                       <Container fluid>
                         <Row className="mt-4">
                           <Col>
-                            <Button className='btn' onClick={() => navigate('/gameplay')}>
+                            <Button className='btn nav-link-brand' onClick={() => navigate('/gameplay')}>
                               Open FPL Gameplay Rules
                             </Button>
                           </Col>
                         </Row>
                         <Row className="mt-4">
                           <Col>
-                            <Button onClick={() => navigate('/architecture')}>
+                            <Button className='btn nav-link-brand' onClick={() => navigate('/architecture')}>
                               OpenFPL Architecture.
                             </Button>
                           </Col>
                         </Row>
                         <Row className="mt-4">
                           <Col>
-                            <Button onClick={() => navigate('/definitions')}>
+                            <Button className='btn nav-link-brand' onClick={() => navigate('/definitions')}>
                               Further Definitions.
                             </Button>
                           </Col>
                         </Row>
                         <Row className="mt-4">
                           <Col>
-                            <Button onClick={() => navigate('/terms')}>
+                            <Button className='btn nav-link-brand' onClick={() => navigate('/terms')}>
                               Terms and Conditions.
                             </Button>
                           </Col>  

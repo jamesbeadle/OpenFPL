@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card, Image} from 'react-bootstrap';
-import { Alert } from '../../../../node_modules/react-bootstrap/esm/index';
 import EventCalcImage from "../../assets/event_calc.png";
 import CouncilCalcImage from "../../assets/council_calc.png";
 
@@ -34,7 +33,6 @@ const Definitions = () => {
               <Card.Header><h2 className="mt-4 mb-4">OpenFPL DAO Forumla Definitions</h2></Card.Header>
               <Card.Body>
                 <Card.Text>Please see below further definitions of formula mentioned in the OpenFPL DAO.</Card.Text>
-                <Alert key='warning' variant='warning'>Draft Version: For community feedback only.</Alert>
                 <h4 className='mt-4'>Game event data formula</h4>
                 <p>After a game has finished its state moves to awaiting consensus. When in this state it appears in the OpenFPL DAO for neuron holders to
                   fill in statistical information for the game. 
