@@ -74,6 +74,7 @@ const App = () => {
               <Route path="/definitions" element={<Definitions   />} />
               <Route path="/terms" element={<Terms   />} />
               <Route path="/architecture" element={<Architecture   />} />
+              <Route path="/profile" element={<Profile   />} />
             </Routes>
           <MyFooter />
         </div>

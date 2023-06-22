@@ -47,7 +47,6 @@ actor Self {
       case (?p){
         depositAddress := p.depositAddress;
         displayName := p.displayName;
-        walletAddress := p.wallet;
       };
     };
 

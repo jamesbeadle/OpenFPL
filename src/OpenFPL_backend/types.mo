@@ -11,7 +11,6 @@ module Types{
     public type Profile = {
         principalName: Text;
         displayName: Text;
-        wallet: Text;
         depositAddress: Blob;
         balance: Nat64;
     };

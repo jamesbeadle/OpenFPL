@@ -40,7 +40,13 @@
   }
 
 
-  .custom-nav-link .custom-icon {
+  .custom-nav-link {
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+
+  .custom-icon {
     margin-left: 8px;
     vertical-align: middle;
   }
