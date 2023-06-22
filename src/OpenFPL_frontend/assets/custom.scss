@@ -1,43 +1,30 @@
 // Custom.scss
-/*
-.UEFA-EURO-2024-1-hex { color: #0424D9; } Blue
-.UEFA-EURO-2024-2-hex { color: #2552D9; } Light Blue
-.UEFA-EURO-2024-3-hex { color: #05A64B; } Green
-.UEFA-EURO-2024-4-hex { color: #F2C53D; } Yellow
-.UEFA-EURO-2024-5-hex { color: #F23827; } Red
 
-.UEFA-EURO-2024-1-rgba { color: rgba(4, 36, 216, 1); }
-.UEFA-EURO-2024-2-rgba { color: rgba(36, 81, 216, 1); }
-.UEFA-EURO-2024-3-rgba { color: rgba(4, 165, 74, 1); }
-.UEFA-EURO-2024-4-rgba { color: rgba(242, 196, 60, 1); }
-.UEFA-EURO-2024-5-rgba { color: rgba(242, 55, 38, 1); }
+//purple #895BF5 (137,91,245,96)
+//peach #F5A28C (245,162,140,96)
+//light purple #9A73F6 (154,115,246,96)
+//brown #F5EA5B (245,234,91,96)
+//seafoam #67F5C9 (103,246,201,96) 
 
-.UEFA-EURO-2024-1-hsla { color: hsla(230, 96, 43, 1); }
-.UEFA-EURO-2024-2-hsla { color: hsla(225, 70, 49, 1); }
-.UEFA-EURO-2024-3-hsla { color: hsla(146, 94, 33, 1); }
-.UEFA-EURO-2024-4-hsla { color: hsla(45, 87, 59, 1); }
-.UEFA-EURO-2024-5-hsla { color: hsla(5, 88, 55, 1); }
-
-
-*/
-//$primary: red; // Your custom primary color
-//$secondary: #ee6f57; // Your custom secondary color
+$primary: #895BF5; // Your custom primary color
+$secondary: #67F5C9; // Your custom secondary color
 
 .navbar-brand, .nav-link{
-    color: whitesmoke !important;
+    color: #895BF5 !important;
 }
 
 .card{
-    background-color: #2552D9 !important;
+    background-color: whitesmoke !important;
+    color: black;
 }
 
 .accordion-button{
-    background: linear-gradient(to right, #0424D9, #2552D9) !important;
+    background: linear-gradient(to right, #895BF5, #9A73F6) !important;
     color: whitesmoke !important;
 }
 
 .accordion-item{
-    background: linear-gradient(to right, #2552D9, #2552D9) !important;
+    background: linear-gradient(to right, #9A73F6, #9A73F6) !important;
     color: whitesmoke !important;
 }
  

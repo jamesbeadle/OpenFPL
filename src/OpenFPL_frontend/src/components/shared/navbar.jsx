@@ -3,11 +3,13 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
+import { LogoutIcon } from '../icons';
 
 const MyNavbar = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
 
@@ -26,12 +28,16 @@ const MyNavbar = () => {
     
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse  id="responsive-navbar-nav" className="justify-content-end">
-          <Nav.Link as={Link} to="/whitepaper" onClick={() => setExpanded(false)} className="nav-link mx-3">
-            Whitepaper
-          </Nav.Link>
-          <Nav.Link as={Link} to="/gameplay" onClick={() => setExpanded(false)} className="nav-link mx-3">
-            Gameplay
-          </Nav.Link>
+          {isAuthenticated && 
+          <Nav.Link onClick={() => {logout(); setExpanded(false);}} className="custom-nav-link">
+            <button className="btn btn-primary">Disconnect
+            <LogoutIcon className="custom-icon" ></LogoutIcon></button>
+          </Nav.Link> 
+          }
+          {!isAuthenticated && 
+            <Button className="nav-link-brand" onClick={() => { login(); setExpanded(false); }}>CONNECT</Button>
+          }
+          
         </Navbar.Collapse>
       </Container>
     </Navbar>

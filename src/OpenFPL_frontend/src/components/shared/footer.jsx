@@ -25,6 +25,18 @@ const MyFooter = () => {
         </Row>
         <Row className="mt-4">
           <Col className="text-center">
+            <ul className="footer-links">
+              <li><LinkContainer to="/whitepaper"><a>Open FPL Whitepaper</a></LinkContainer></li>
+              <li><LinkContainer to="/gameplay"><a>Open FPL Gameplay Rules</a></LinkContainer></li>
+              <li><LinkContainer to="/architecture"><a>OpenFPL Architecture</a></LinkContainer></li>
+              <li><LinkContainer to="/definitions"><a>Further Definitions</a></LinkContainer></li>
+              <li><LinkContainer to="/terms"><a>Terms and Conditions</a></LinkContainer></li>
+              <li><a href="https://github.com/jamesbeadle/OpenFPL" target='_blank'>Github</a></li>
+            </ul>
+          </Col>
+        </Row>
+        <Row className="mt-4">
+          <Col className="text-center">
             OpenFPL
           </Col>
         </Row>
