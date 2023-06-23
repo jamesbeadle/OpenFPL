@@ -4,8 +4,10 @@ import Blob "mo:base/Blob";
 import DTOs "DTOs";
 import Profiles "profiles";
 import Account "Account";
-//import Book "book";
+import Book "book";
 import Nat64 "mo:base/Nat64";
+import Result "mo:base/Result";
+import T "types";
 
 actor Self {
 
@@ -14,7 +16,7 @@ actor Self {
   ];
 
   let profilesInstance = Profiles.Profiles();
-  //let bookInstance = Book.Book();
+  let bookInstance = Book.Book();
 
   //admin functions
   private func isAdminForCaller(caller: Principal): Bool {
@@ -33,12 +35,11 @@ actor Self {
     let principalName = Principal.toText(caller);
     var depositAddress = Blob.fromArray([]);
     var displayName = "";
-    var walletAddress = "";
 
     var profile = profilesInstance.getProfile(Principal.toText(caller));
     
     if(profile == null){
-      profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), "", getUserDepositAccount(caller));
+      profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getUserDepositAccount(caller));
       profile := profilesInstance.getProfile(Principal.toText(caller));
     };
     
@@ -54,7 +55,6 @@ actor Self {
       principalName = principalName;
       depositAddress = depositAddress;
       displayName = displayName;
-      walletAddress = walletAddress;
     };
     
   };
@@ -78,6 +78,30 @@ actor Self {
 
   private func getUserDepositAccount(caller: Principal) : Account.AccountIdentifier {
     Account.accountIdentifier(Principal.fromActor(Self), Account.principalToSubaccount(caller))
+  };
+
+  public shared query ({caller}) func isDisplayNameValid(displayName: Text) : async Bool {
+    assert not Principal.isAnonymous(caller);
+    return profilesInstance.isDisplayNameValid(displayName);
+  };
+
+  
+  public shared ({caller}) func withdrawICP(amount: Float, withdrawalAddress: Text) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    
+    let userProfile = profilesInstance.getProfile(Principal.toText(caller));
+    
+    switch userProfile {
+      case (null) {
+        return #err(#NotFound);
+      };
+      case (?profile) {
+        if(not profilesInstance.isWalletValid(withdrawalAddress)){
+          return #err(#NotAllowed);
+        };
+        return await bookInstance.withdrawICP(Principal.fromActor(Self), caller, amount, withdrawalAddress);
+      };
+    };
   };
 
 

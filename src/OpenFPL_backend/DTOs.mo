@@ -4,7 +4,6 @@ module DTOs {
         principalName: Text;
         depositAddress: Blob;
         displayName: Text;
-        walletAddress: Text;
     };
 
     public type AccountBalanceDTO = {

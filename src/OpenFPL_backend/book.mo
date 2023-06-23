@@ -1,5 +1,5 @@
 import Account "Account";
-import Ledger "canister:ledger";
+import ICPLedger "canister:ledger";
 import Float "mo:base/Float";
 import Int "mo:base/Int";
 import Int64 "mo:base/Int64";
@@ -22,7 +22,7 @@ module {
    
     public func getUserAccountBalance(defaultAccount: Principal, user: Principal) : async Nat64 {
         let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(user));
-        let balance = await Ledger.account_balance({ account = source_account });
+        let balance = await ICPLedger.account_balance({ account = source_account });
         return balance.e8s;
     };
 
@@ -34,7 +34,7 @@ module {
 
         let e8Amount = Int64.toNat64(Float.toInt64(amount * 1e8));
         let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(user));
-        let balance = await Ledger.account_balance({ account = source_account });
+        let balance = await ICPLedger.account_balance({ account = source_account });
         
         if(balance.e8s < icp_fee){
             return #err(#NotAllowed);
@@ -54,7 +54,7 @@ module {
                     return #err(#NotAllowed);
                 };
 
-                let result = await Ledger.transfer({
+                let result = await ICPLedger.transfer({
                     memo: Nat64    = 0;
                     from_subaccount = ?Account.principalToSubaccount(user);
                     to = Blob.fromArray(array);

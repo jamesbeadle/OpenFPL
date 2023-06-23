@@ -4,7 +4,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../contexts/AuthContext";
 
-const WithdrawICPModal = ({ show, onHide, balance }) => {
+const WithdrawFPLModal = ({ show, onHide, balance }) => {
   
   const { authClient } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -138,4 +138,4 @@ const WithdrawICPModal = ({ show, onHide, balance }) => {
   );
 };
 
-export default WithdrawICPModal;
+export default WithdrawFPLModal;
