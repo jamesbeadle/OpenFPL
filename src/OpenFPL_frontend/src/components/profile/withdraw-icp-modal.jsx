@@ -125,7 +125,7 @@ const WithdrawICPModal = ({ show, onHide, balance }) => {
               />
               {withdrawError && <Form.Text className="text-danger">{withdrawError}</Form.Text>}
             </Form.Group>
-            <p>We will take the withdrawal fee of {withdrawalFee} ICP off your withdrawal amount.</p>
+            <p className='mt-4'>We will take the withdrawal fee of {withdrawalFee} ICP off your withdrawal amount.</p>
         </Form>
       </div>
       </Modal.Body>

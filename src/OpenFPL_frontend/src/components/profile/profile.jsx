@@ -21,8 +21,8 @@ const Profile = () => {
   const [showUpdateProfilePictureModal, setShowUpdateProfilePictureModal] = useState(false);
   const [showWithdrawICPModal, setShowWithdrawICPModal] = useState(false);
   const [showWithdrawFPLModal, setShowWithdrawFPLModal] = useState(false);
+  const [favouriteTeam, setFavouriteTeam] = useState(null);
   const [loadingAccountBalance, setLoadingAccountBalance] = useState(true);
-  const [favoriteTeam, setFavoriteTeam] = useState('');
   const [balanceData, setBalanceData] = useState(null);
 
   const [showUpgradeAccountModal, setShowUpgradeAccountModal] = useState(false);
@@ -30,16 +30,26 @@ const Profile = () => {
 
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
 
+  const [teams, setTeamsData] = useState([]);
   const [viewData, setViewData] = useState(null);
-  const [copied, setCopied] = useState(false);
-
+  const [icpAddressCopied, setICPAddressCopied] = useState(false);
+  const [fplAddressCopied, setFPLAddressCopied] = useState(false);
+  
   useEffect(() => {
     const fetchData = async () => {
+      await fetchTeams();
       await fetchViewData();
       setIsLoading(false);
     };
     fetchData();
   }, []);
+
+  
+  
+  const fetchTeams = async () => {
+    const teamsData = await open_fpl_backend.getTeams();
+    setTeamsData(teamsData);
+  };
 
   useEffect(() => {
     if(!viewData){
@@ -57,6 +67,18 @@ const Profile = () => {
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     const data = await open_fpl_backend.getProfileDTO();
     setViewData(data);
+
+    if (data.profilePicture && data.profilePicture.length > 0) {
+     
+      const blob = new Blob([data.profilePicture]);
+      const blobUrl = URL.createObjectURL(blob);
+      setProfilePicSrc(blobUrl);
+
+    } else {
+      setProfilePicSrc(ProfileImage);
+    }
+    console.log(data)
+    setFavouriteTeam(data.favouriteTeamId);
   };
 
   const fetchAccountBalance = async () => {
@@ -88,9 +110,46 @@ const Profile = () => {
     setIsLoading(false);
   };
 
+  const hideWithdrawFPLModal = async (changed) => {
+    if(!changed){
+      setShowWithdrawFPLModal(false); 
+      return;
+    }
+    setIsLoading(true);
+    setShowWithdrawFPLModal(false); 
+    await fetchViewData();
+    setIsLoading(false);
+  };
+
+  const hideProfilePictureModal = async (changed) => {
+    if(!changed){
+      setShowUpdateProfilePictureModal(false); 
+      return;
+    }
+    setIsLoading(true);
+    setShowUpdateProfilePictureModal(false); 
+    await fetchViewData();
+    setIsLoading(false);
+  };
+
+  const hideUpgradeAccountModal = async (changed) => {
+    if(!changed){
+      setShowUpgradeAccountModal(false); 
+      return;
+    }
+    setIsLoading(true);
+    setShowUpgradeAccountModal(false); 
+    await fetchViewData();
+    setIsLoading(false);
+  };
   
-  const handleFavoriteTeamChange = (event) => {
-    setFavoriteTeam(event.target.value);
+  const handleFavoriteTeamChange = async (event) => {
+    setIsLoading(true);
+    setFavouriteTeam(Number(event.target.value));
+    const identity = authClient.getIdentity();
+    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    await open_fpl_backend.updateFavouriteTeam(Number(event.target.value));
+    setIsLoading(false);
   };
 
   return (
@@ -137,29 +196,17 @@ const Profile = () => {
                               </p>
                             </ListGroup.Item>
                             <ListGroup.Item className="mt-1 mb-1">
-                              <h6>Favorite Team:</h6>
-                              <Form.Select value={favoriteTeam} onChange={handleFavoriteTeamChange}>
-                                <option value="">Choose a team</option>
-                                <option value="team1">Arsenal</option>
-                                <option value="team1">Aston Villa</option>
-                                <option value="team2">Bournemouth</option>
-                                <option value="team1">Brentford</option>
-                                <option value="team1">Brighton</option>
-                                <option value="team1">Burnley</option>
-                                <option value="team1">Chelsea</option>
-                                <option value="team1">Crystal Palce</option>
-                                <option value="team1">Everton</option>
-                                <option value="team1">Fulham</option>
-                                <option value="team1">Liverpool</option>
-                                <option value="team1">Luton</option>
-                                <option value="team1">Man City</option>
-                                <option value="team1">Man United</option>
-                                <option value="team1">Newcastle</option>
-                                <option value="team1">Nottingham Forest</option>
-                                <option value="team1">Tottenham</option>
-                                <option value="team1">West Ham</option>
-                                <option value="team1">Wolves</option>
-                              </Form.Select>
+                              <Form.Group controlId="favouriteTeam">
+                                <Form.Label>Favorite Team</Form.Label>
+                                <Form.Control as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange}>
+                                    <option value="">Select Favourite Team</option>
+                                      {teams.map((team) => (
+                                      <option key={team.id} value={team.id}>
+                                          {team.name}
+                                      </option>
+                                      ))}
+                                </Form.Control>
+                              </Form.Group>
                             </ListGroup.Item>
                           </Col>
                         </Row>
@@ -170,8 +217,8 @@ const Profile = () => {
                         <ListGroup.Item className="mt-1 mb-1">
                           <h6>Membership Type:</h6>
                           <p>
-                            <small>{viewData.membershipType}</small>&nbsp;&nbsp;
-                            {viewData.membershipType === 'free' && <Button className="btn btn-sm ml-3" onClick={() => setShowUpgradeAccountModal(true)}>Upgrade</Button>}
+                            <small>{viewData.membershipType === 0 ? 'Free' : 'Diamond'}</small>&nbsp;&nbsp;
+                            {viewData.membershipType === 0 && <Button className="btn btn-sm ml-3" onClick={() => setShowUpgradeAccountModal(true)}>Upgrade</Button>}
                           </p>
                         </ListGroup.Item>
                         {viewData.membershipType === 'diamond' && (
@@ -188,28 +235,28 @@ const Profile = () => {
                         {loadingAccountBalance ? (
                           <div className="d-flex flex-column align-items-center justify-content-center mt-3">
                             <Spinner animation="border" />
-                            <p className='text-center mt-1'><small>Loading Account Balance</small></p>
+                            <p className='text-center mt-1'><small>Loading ICP Balance</small></p>
                           </div>
                         ) :  (
                           <div>
                             <p>
-                              <small>{(Number(balanceData.accountBalance) / 1e8).toFixed(4)} ICP</small>&nbsp;&nbsp;
+                              <small>{(Number(balanceData.icpBalance) / 1e8).toFixed(4)} ICP</small>&nbsp;&nbsp;
                               <Button className="btn btn-sm ml-3" onClick={() => setShowWithdrawICPModal(true)}>Withdraw</Button>
                             </p>
                           </div>
                           )}
-                        {copied && <p className="text-primary"><small>Copied to clipboard.</small></p>}
-                        <p>Deposit Address: <small>{toHexString(viewData.depositAddress)}{' '}
+                        <p><small>ICP Deposit Address: <br />{toHexString(viewData.icpDepositAddress)}{' '}
                         <CopyIcon onClick={async () => {
                           try {
-                            await navigator.clipboard.writeText(toHexString(viewData.depositAddress));
-                            setCopied(true);
+                            await navigator.clipboard.writeText(toHexString(viewData.icpDepositAddress));
+                            setICPAddressCopied(true);
                           } catch (error) {
                             console.error('Clipboard API error:', error);
-                            setCopied(false);
+                            setICPAddressCopied(false);
                           }
                         }} />
                         </small></p>
+                        {icpAddressCopied && <p className="text-primary"><small>Copied to clipboard.</small></p>}
                       </ListGroup.Item>
 
                       <ListGroup.Item className="mt-1 mb-1">
@@ -217,28 +264,28 @@ const Profile = () => {
                         {loadingAccountBalance ? (
                           <div className="d-flex flex-column align-items-center justify-content-center mt-3">
                             <Spinner animation="border" />
-                            <p className='text-center mt-1'><small>Loading Account Balance</small></p>
+                            <p className='text-center mt-1'><small>Loading FPL Balance</small></p>
                           </div>
                         ) :  (
                           <div>
                             <p>
-                              <small>{(Number(balanceData.accountBalance) / 1e8).toFixed(4)} FPL</small>&nbsp;&nbsp;
-                              <Button className="btn btn-sm ml-3" onClick={() => setShowWithdrawICPModal(true)}>Withdraw</Button>
+                              <small>{(Number(balanceData.fplBalance) / 1e8).toFixed(4)} FPL</small>&nbsp;&nbsp;
+                              <Button className="btn btn-sm ml-3" onClick={() => setShowWithdrawFPLModal(true)}>Withdraw</Button>
                             </p>
                           </div>
                           )}
-                        {copied && <p className="text-primary"><small>Copied to clipboard.</small></p>}
-                        <p>Deposit Address: <small>{toHexString(viewData.depositAddress)}{' '}
+                        <p><small>FPL Deposit Address:<br /> {toHexString(viewData.fplDepositAddress)}{' '}
                         <CopyIcon onClick={async () => {
                           try {
-                            await navigator.clipboard.writeText(toHexString(viewData.depositAddress));
-                            setCopied(true);
+                            await navigator.clipboard.writeText(toHexString(viewData.fplDepositAddress));
+                            setFPLAddressCopied(true);
                           } catch (error) {
                             console.error('Clipboard API error:', error);
-                            setCopied(false);
+                            setFPLAddressCopied(false);
                           }
                         }} />
                         </small></p>
+                        {fplAddressCopied && <p className="text-primary"><small>Copied to clipboard.</small></p>}
                       </ListGroup.Item>
                       </ListGroup>
                     </Card.Body>
@@ -251,24 +298,24 @@ const Profile = () => {
               />
               <UpdateProfilePictureModal
                 show={showUpdateProfilePictureModal}
-                onHide={() => setShowUpdateProfilePictureModal(false)}
+                onHide={hideProfilePictureModal}
               />
               <UpgradeMembershipModal
                 show={showUpgradeAccountModal}
-                onHide={() => setShowUpgradeAccountModal(false)}
+                onHide={hideUpgradeAccountModal}
               />
               {!loadingAccountBalance && (
                   <WithdrawICPModal
                     show={showWithdrawICPModal}
                     onHide={hideWithdrawICPModal}
-                    balance={balanceData.accountBalance}
+                    balance={balanceData.icpBalance}
                   />
               )}
               {!loadingAccountBalance && (
                 <WithdrawFPLModal
                   show={showWithdrawFPLModal}
-                  onHide={() => setShowWithdrawFPLModal(false)}
-                  balance={balanceData.accountBalance}
+                  onHide={hideWithdrawFPLModal}
+                  balance={balanceData.fplBalance}
                 />
               )}
             </Tab>

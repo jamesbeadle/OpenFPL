@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { Actor } from "@dfinity/agent";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const UpdateProfilePictureModal = ({ show, onHide }) => {
 
     const [isLoading, setIsLoading] = useState(false);
-    //const [backend] = useCanister("backend");
+    const { authClient } = useContext(AuthContext);
     const [picture, setPicture] = useState(null);
     const [pictureError, setPictureError] = useState(null);
 
@@ -30,7 +33,9 @@ const UpdateProfilePictureModal = ({ show, onHide }) => {
             const uint8Array = new Uint8Array(arrayBuffer);
             
             // send the Uint8Array to the backend
-            //await backend.updateProfilePicture(uint8Array);
+            const identity = authClient.getIdentity();
+            Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+            await open_fpl_backend.updateProfilePicture(uint8Array);
 
             setPicture(null);
             setPictureError(null);

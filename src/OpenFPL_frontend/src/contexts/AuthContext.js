@@ -7,7 +7,6 @@ export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
   const [authClient, setAuthClient] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -40,16 +39,7 @@ export const AuthProvider = ({ children }) => {
             idleTimeout: 1000 * 60 * 60
           }
         });
-        const isLoggedIn = await checkLoginStatus(authClient);
-        
-        if (isLoggedIn) {
-          const identity = authClient.getIdentity();
-          Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-          const userIsAdmin = await open_fpl_backend.isAdmin();
-          setIsAdmin(userIsAdmin);
-        } else {
-          setIsAdmin(false);
-        }
+        await checkLoginStatus(authClient);
         setAuthClient(authClient);
       }
       catch (error){
@@ -81,10 +71,6 @@ export const AuthProvider = ({ children }) => {
       maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
       onSuccess: async () => {
         setIsAuthenticated(true);
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-        const userIsAdmin = await open_fpl_backend.isAdmin();
-        setIsAdmin(userIsAdmin);
       }
     });
   };
@@ -92,7 +78,6 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     await authClient.logout();
     setIsAuthenticated(false);
-    setIsAdmin(false);
   };
 
   const checkLoginStatus = async (client) => {
@@ -127,7 +112,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={ { authClient, isAdmin, isAuthenticated, setIsAdmin, setIsAuthenticated, login, logout }}>
+    <AuthContext.Provider value={ { authClient, isAuthenticated, setIsAuthenticated, login, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );

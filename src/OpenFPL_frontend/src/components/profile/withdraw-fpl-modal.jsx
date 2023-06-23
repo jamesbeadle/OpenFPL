@@ -34,7 +34,7 @@ const WithdrawFPLModal = ({ show, onHide, balance }) => {
 
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    await open_fpl_backend.withdrawICP(withdrawAmount - withdrawalFee, withdrawalAddress);
+    await open_fpl_backend.withdrawFPL(withdrawAmount - withdrawalFee, withdrawalAddress);
 
     setWithdrawAmount(0);
     setWithdrawError(null);
@@ -91,17 +91,17 @@ const WithdrawFPLModal = ({ show, onHide, balance }) => {
       {isLoading && (
         <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
           <Spinner animation="border" />
-          <p className='text-center mt-1'>Withdrawing ICP</p>
+          <p className='text-center mt-1'>Withdrawing FPL</p>
         </div>
       )}
       <Modal.Header closeButton>
-        <Modal.Title>Withdraw ICP</Modal.Title>
+        <Modal.Title>Withdraw FPL</Modal.Title>
       </Modal.Header>
       <Modal.Body>
       <div className="table-responsive">
         <Form onSubmit={handleSubmit}>
           
-          <p><strong>Account Balance:</strong> {(Number(balance) / 1e8).toFixed(4)} ICP</p>
+          <p><strong>Account Balance:</strong> {(Number(balance) / 1e8).toFixed(4)} FPL</p>
             
           <Form.Group className="mb-3">
             <Form.Label>Withdrawal Address</Form.Label>
@@ -125,7 +125,7 @@ const WithdrawFPLModal = ({ show, onHide, balance }) => {
               />
               {withdrawError && <Form.Text className="text-danger">{withdrawError}</Form.Text>}
             </Form.Group>
-            <p>We will take the withdrawal fee of {withdrawalFee} ICP off your withdrawal amount.</p>
+            <p className='mt-4'>We will take the withdrawal fee of {withdrawalFee} FPL off your withdrawal amount.</p>
         </Form>
       </div>
       </Modal.Body>

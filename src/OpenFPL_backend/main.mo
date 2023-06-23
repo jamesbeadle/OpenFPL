@@ -5,79 +5,81 @@ import DTOs "DTOs";
 import Profiles "profiles";
 import Account "Account";
 import Book "book";
+import Teams "teams";
+import Nat "mo:base/Nat";
+import Nat8 "mo:base/Nat8";
+import Nat16 "mo:base/Nat16";
 import Nat64 "mo:base/Nat64";
 import Result "mo:base/Result";
 import T "types";
+import Debug "mo:base/Debug";
 
 actor Self {
 
-  let admins : [Principal] = [
-    Principal.fromText("ld6pc-7sgvt-fs7gg-fvsih-gspgy-34ikk-wrwl6-ixrkc-k54er-7ivom-wae")
-  ];
-
   let profilesInstance = Profiles.Profiles();
   let bookInstance = Book.Book();
+  let teamsInstance = Teams.Teams();
 
-  //admin functions
-  private func isAdminForCaller(caller: Principal): Bool {
-    switch (Array.find<Principal>(admins, func (admin) { admin == caller })) {
-      case null { false };
-      case _ { true };
-    };
+  let CANISTER_IDS = {
+    //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
+    token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   };
   
-  public shared query ({caller}) func isAdmin(): async Bool {
-    return isAdminForCaller(caller);
+  let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
+  { 
+    icrc1_name: () -> async Text;
+    icrc1_total_supply: () -> async Nat;
+    icrc1_balance_of: (T.Account) -> async Nat;
   };
 
-  public shared query ({caller}) func getProfileDTO() : async DTOs.ProfileDTO {
+  private stable var stable_profiles: [T.Profile] = [];
+
+  //Profile Functions
+  public shared ({caller}) func getProfileDTO() : async DTOs.ProfileDTO {
     assert not Principal.isAnonymous(caller);
     let principalName = Principal.toText(caller);
-    var depositAddress = Blob.fromArray([]);
+    var icpDepositAddress = Blob.fromArray([]);
+    var fplDepositAddress = Blob.fromArray([]);
     var displayName = "";
+    var membershipType = Nat8.fromNat(0);
+    var profilePicture = Blob.fromArray([]);
+    var favouriteTeamId = Nat16.fromNat(0);
+    var createDate: Int = 0;
 
     var profile = profilesInstance.getProfile(Principal.toText(caller));
     
     if(profile == null){
-      profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getUserDepositAccount(caller));
+      profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
       profile := profilesInstance.getProfile(Principal.toText(caller));
     };
     
     switch(profile){
       case (null){};
       case (?p){
-        depositAddress := p.depositAddress;
+        Debug.print(debug_show p);
+        icpDepositAddress := p.icpDepositAddress;
+        fplDepositAddress := p.fplDepositAddress;
         displayName := p.displayName;
+        membershipType := p.membershipType;
+        profilePicture := p.profilePicture;
+        favouriteTeamId := p.favouriteTeamId;
+        createDate := p.createDate;
       };
     };
 
     let profileDTO: DTOs.ProfileDTO = {
       principalName = principalName;
-      depositAddress = depositAddress;
+      icpDepositAddress = icpDepositAddress;
+      fplDepositAddress = fplDepositAddress;
       displayName = displayName;
-    };
-    
-  };
-
-  
-  public shared ({caller}) func getAccountBalanceDTO() : async DTOs.AccountBalanceDTO {
-    
-    assert not Principal.isAnonymous(caller);
-    let principalName = Principal.toText(caller);
-    var accountBalance = Nat64.fromNat(0);
-
-    //accountBalance := await bookInstance.getUserAccountBalance(Principal.fromActor(Self), caller);
-    
-    let accountBalanceDTO: DTOs.AccountBalanceDTO = {
-      accountBalance = accountBalance;
+      membershipType = membershipType;
+      profilePicture = profilePicture;
+      favouriteTeamId = favouriteTeamId;
+      createDate = createDate;
     };
 
-    return accountBalanceDTO;
-  };
-
-
-  private func getUserDepositAccount(caller: Principal) : Account.AccountIdentifier {
-    Account.accountIdentifier(Principal.fromActor(Self), Account.principalToSubaccount(caller))
+    return profileDTO;
+    
   };
 
   public shared query ({caller}) func isDisplayNameValid(displayName: Text) : async Bool {
@@ -85,7 +87,68 @@ actor Self {
     return profilesInstance.isDisplayNameValid(displayName);
   };
 
+  public shared ({caller}) func updateDisplayName(displayName :Text) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    return profilesInstance.updateDisplayName(Principal.toText(caller), displayName);
+  };
+
+  public shared ({caller}) func updateFavouriteTeam(favouriteTeamId :Nat16) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    return profilesInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
+  };
+
+  public shared ({caller}) func updateProfilePicture(profilePicture :Blob) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+
+    let sizeInKB = Array.size(Blob.toArray(profilePicture)) / 1024;
+    if (sizeInKB > 4000) {
+      return #err(#NotAllowed);
+    };
+
+    return profilesInstance.updateProfilePicture(Principal.toText(caller), profilePicture);
+  };
   
+  public query func getTeams() : async [T.Team] {
+    return teamsInstance.getTeams();
+  };
+  
+  public query func getProfiles() : async [T.Profile] {
+    return profilesInstance.getProfiles();
+  };
+
+  
+  public shared ({caller}) func getAccountBalanceDTO() : async DTOs.AccountBalanceDTO {
+    
+    assert not Principal.isAnonymous(caller);
+    let principalName = Principal.toText(caller);
+    var icpBalance = Nat64.fromNat(0);
+    var fplBalance = Nat64.fromNat(0);
+
+    icpBalance := await bookInstance.getUserAccountBalance(Principal.fromActor(Self), caller);
+
+    let tokenCanisterUser: T.Account = {
+      owner = Principal.fromActor(tokenCanister);
+      subaccount = Account.principalToSubaccount(caller);
+    };
+
+    fplBalance := Nat64.fromNat(await tokenCanister.icrc1_balance_of(tokenCanisterUser));
+    
+    let accountBalanceDTO: DTOs.AccountBalanceDTO = {
+      icpBalance = icpBalance;
+      fplBalance = fplBalance;
+    };
+
+    return accountBalanceDTO;
+  };
+
+  private func getICPDepositAccount(caller: Principal) : Account.AccountIdentifier {
+    Account.accountIdentifier(Principal.fromActor(Self), Account.principalToSubaccount(caller))
+  };
+  
+  private func getFPLDepositAccount(caller: Principal) : Account.AccountIdentifier {
+    Account.accountIdentifier(Principal.fromActor(tokenCanister), Account.principalToSubaccount(caller))
+  };
+
   public shared ({caller}) func withdrawICP(amount: Float, withdrawalAddress: Text) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     
@@ -104,23 +167,14 @@ actor Self {
     };
   };
 
-
-  let CANISTER_IDS = {
-    token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
-  };
   
-  let tokenCanister = actor (CANISTER_IDS.token_canister): actor { icrc1_name: () -> async Text };
 
-  public query func greet(name : Text) : async Text {
-    return "Hello, " # name # "!";
+  system func preupgrade() {
+    stable_profiles := profilesInstance.getProfiles();
   };
 
-  public func getTokenName() : async Text {
-    let name = await tokenCanister.icrc1_name();
-    return "Token Name:, " # name # "!";
+  system func postupgrade() {
+    profilesInstance.setData(stable_profiles);
   };
 
-  public func mintTokens() : async (){
-    
-  };  
 };

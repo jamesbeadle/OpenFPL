@@ -1,3 +1,4 @@
+import Principal "mo:base/Principal";
 module Types{
     
     public type Error = {
@@ -11,8 +12,15 @@ module Types{
     public type Profile = {
         principalName: Text;
         displayName: Text;
-        depositAddress: Blob;
-        balance: Nat64;
+        icpDepositAddress: Blob;
+        fplDepositAddress: Blob;
+        termsAccepted: Bool;
+        profilePicture: Blob;
+        favouriteTeamId: Nat16;
+        membershipType: Nat8;
+        createDate: Int;
+        subscriptionDate: Int;
+        reputation: Nat32;
     };
 
     public type Season = {
@@ -45,6 +53,11 @@ module Types{
         id: Nat16;
         firstName: Text;
         lastName: Text;
+    };
+
+    public type Account = {
+        owner: Principal;
+        subaccount: Blob;
     };
 
 

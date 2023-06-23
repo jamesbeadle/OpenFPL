@@ -23,19 +23,19 @@ const MyNavbar = () => {
     <Navbar expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)}>
-          <img src={LogoImage} alt="footballgod" style={{ maxWidth: '200px', maxHeight: '100%' }} />
+          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '200px', maxHeight: '100%' }} />
         </Navbar.Brand>
     
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse  id="responsive-navbar-nav" className="justify-content-end">
           {isAuthenticated && 
-            <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link">
+            <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link mt-sm-4">
               <button className="btn btn-primary">Profile
               <ProfileIcon className="custom-icon" ></ProfileIcon></button>
             </Nav.Link> 
           }
           {isAuthenticated && 
-            <Nav.Link onClick={() => {logout(); setExpanded(false);}} className="custom-nav-link">
+            <Nav.Link onClick={() => {logout(); setExpanded(false);}} className="custom-nav-link mt-sm-4">
               <button className="btn btn-primary">Disconnect
               <LogoutIcon className="custom-icon" ></LogoutIcon></button>
             </Nav.Link> 

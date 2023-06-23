@@ -5,7 +5,7 @@
   "OpenFPL_frontend": {
     "ic": "bgpwv-eqaaa-aaaal-qb6eq-cai"
   },
-  "Token_canister": {
-    "ic": "bpm5j-syaaa-aaaal-qb6fa-cai"
+  "token_canister": {
+    "ic": "hwd4h-eyaaa-aaaal-qb6ra-cai"
   }
 }

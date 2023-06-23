@@ -2,12 +2,18 @@ module DTOs {
     
     public type ProfileDTO = {
         principalName: Text;
-        depositAddress: Blob;
+        icpDepositAddress: Blob;
+        fplDepositAddress: Blob;
         displayName: Text;
+        membershipType: Nat8;
+        profilePicture: Blob;
+        favouriteTeamId: Nat16;
+        createDate: Int;
     };
 
     public type AccountBalanceDTO = {
-        accountBalance: Nat64;
+        icpBalance: Nat64;
+        fplBalance: Nat64;
     };
     
 }
