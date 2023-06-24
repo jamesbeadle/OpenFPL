@@ -9,9 +9,8 @@ import WithdrawICPModal from './withdraw-icp-modal';
 import WithdrawFPLModal from './withdraw-fpl-modal';
 import UpdateProfilePictureModal from './update-profile-picture-modal';
 import UpgradeMembershipModal from './upgrade-membership-modal';
-import { CopyIcon } from '../icons';
+import { EditIcon, CopyIcon, StarIcon } from '../icons';
 import ProfileImage from '../../../assets/profile_placeholder.png';
-import { EditIcon } from '../icons';
 
 const Profile = () => {
 
@@ -29,6 +28,7 @@ const Profile = () => {
   const [showGetMoreLeaguesModal, setShowGetMoreLeaguesModal] = useState(false);
 
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
+  const [joinedDate, setJoinedDate] = useState('');
 
   const [teams, setTeamsData] = useState([]);
   const [viewData, setViewData] = useState(null);
@@ -67,6 +67,12 @@ const Profile = () => {
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     const data = await open_fpl_backend.getProfileDTO();
     setViewData(data);
+
+    const dateInMilliseconds = Number(data.createDate / 1000000n);
+    const date = new Date(dateInMilliseconds);
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const joinDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+    setJoinedDate(joinDate);
 
     if (data.profilePicture && data.profilePicture.length > 0) {
      
@@ -182,8 +188,17 @@ const Profile = () => {
                               </div>
                             </ListGroup.Item>
                             <ListGroup.Item className="mt-1 mb-1">
-                              <h6>Reputation:</h6>
-                              <p>{viewData.reputation}</p>
+                              <h6>Joined: {joinedDate}</h6>
+                              <h6>Reputation: {viewData.reputation}</h6>
+                              <div>
+                                {viewData.reputation === 0 && (
+                                  <>
+                                    <StarIcon color="#807A00" margin="0 10px 0 0" />
+                                    <StarIcon color="#807A00" margin="0 10px 0 0" />
+                                    <StarIcon color="#807A00" margin="0 10px 0 0" />
+                                  </>
+                                )}
+                              </div>
                             </ListGroup.Item>
                           </Col>
                           <Col md={8}>
@@ -328,6 +343,9 @@ const Profile = () => {
             </Tab>
             <Tab eventKey="betting" title="Betting">
               <h3 className='mt-4'>Betting History Coming Soon</h3>
+            </Tab>
+            <Tab eventKey="governance" title="Governance">
+              <h3 className='mt-4'>Governance History Coming Soon</h3>
             </Tab>
           </Tabs>
         </Container>

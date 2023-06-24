@@ -9,6 +9,7 @@ module DTOs {
         profilePicture: Blob;
         favouriteTeamId: Nat16;
         createDate: Int;
+        reputation: Nat32;
     };
 
     public type AccountBalanceDTO = {

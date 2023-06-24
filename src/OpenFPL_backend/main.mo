@@ -9,6 +9,7 @@ import Teams "teams";
 import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
+import Nat32 "mo:base/Nat32";
 import Nat64 "mo:base/Nat64";
 import Result "mo:base/Result";
 import T "types";
@@ -45,6 +46,7 @@ actor Self {
     var profilePicture = Blob.fromArray([]);
     var favouriteTeamId = Nat16.fromNat(0);
     var createDate: Int = 0;
+    var reputation = Nat32.fromNat(0);
 
     var profile = profilesInstance.getProfile(Principal.toText(caller));
     
@@ -56,7 +58,6 @@ actor Self {
     switch(profile){
       case (null){};
       case (?p){
-        Debug.print(debug_show p);
         icpDepositAddress := p.icpDepositAddress;
         fplDepositAddress := p.fplDepositAddress;
         displayName := p.displayName;
@@ -64,6 +65,7 @@ actor Self {
         profilePicture := p.profilePicture;
         favouriteTeamId := p.favouriteTeamId;
         createDate := p.createDate;
+        reputation := p.reputation;
       };
     };
 
@@ -76,6 +78,7 @@ actor Self {
       profilePicture = profilePicture;
       favouriteTeamId = favouriteTeamId;
       createDate = createDate;
+      reputation = reputation;
     };
 
     return profileDTO;
