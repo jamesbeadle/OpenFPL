@@ -27,6 +27,7 @@ const MyFooter = () => {
           <Col className="text-center">
             <ul className="footer-links">
               <li><LinkContainer to="/whitepaper"><a>Open FPL Whitepaper</a></LinkContainer></li>
+              <li><LinkContainer to="/dao"><a>Open FPL DAO Actions</a></LinkContainer></li>
               <li><LinkContainer to="/gameplay"><a>Open FPL Gameplay Rules</a></LinkContainer></li>
               <li><LinkContainer to="/architecture"><a>OpenFPL Architecture</a></LinkContainer></li>
               <li><LinkContainer to="/definitions"><a>Further Definitions</a></LinkContainer></li>

@@ -15,6 +15,7 @@ import Gameplay from "./components/gameplay";
 import Terms from "./components/terms";
 import Definitions from "./components/definitions";
 import Architecture from "./components/architecture";
+import DAO from "./components/dao";
 
 const PrivateWindowFallback = () => {
   return (
@@ -75,6 +76,7 @@ const App = () => {
               <Route path="/terms" element={<Terms   />} />
               <Route path="/architecture" element={<Architecture   />} />
               <Route path="/profile" element={<Profile   />} />
+              <Route path="/dao" element={<DAO   />} />
             </Routes>
           <MyFooter />
         </div>
