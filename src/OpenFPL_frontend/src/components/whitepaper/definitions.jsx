@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card, Image} from 'react-bootstrap';
-import EventCalcImage from "../../assets/event_calc.png";
-import CouncilCalcImage from "../../assets/council_calc.png";
+import EventCalcImage from "../../../assets/event_calc.png";
+import CouncilCalcImage from "../../../assets/council_calc.png";
 
 const Definitions = () => {
   

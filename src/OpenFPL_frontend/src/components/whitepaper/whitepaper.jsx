@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card, Accordion, Image, Table, Button } from 'react-bootstrap';
-import TokenImage from "../../assets/tokens.png";
-import { ExitIcon } from './icons';
+import TokenImage from "../../../assets/tokens.png";
+import { ExitIcon } from '../icons';
 import { useNavigate } from 'react-router-dom';
 
 const Whitepaper = () => {

@@ -29,16 +29,20 @@ const MyNavbar = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse  id="responsive-navbar-nav" className="justify-content-end">
           {isAuthenticated && 
-            <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link mt-sm-4">
-              <button className="btn btn-primary">Profile
-              <ProfileIcon className="custom-icon" ></ProfileIcon></button>
-            </Nav.Link> 
-          }
-          {isAuthenticated && 
-            <Nav.Link onClick={() => {logout(); setExpanded(false);}} className="custom-nav-link mt-sm-4">
-              <button className="btn btn-primary">Disconnect
-              <LogoutIcon className="custom-icon" ></LogoutIcon></button>
-            </Nav.Link> 
+            <>
+              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">
+                Governance
+                <ProfileIcon className="custom-icon" ></ProfileIcon>
+              </Nav.Link> 
+              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link">
+                Profile
+                <ProfileIcon className="custom-icon" ></ProfileIcon>
+              </Nav.Link> 
+              <Nav.Link onClick={() => {logout(); setExpanded(false);}} className="custom-nav-link mt-2 mt-md-0">
+                <button className="btn btn-primary">Disconnect
+                <LogoutIcon className="custom-icon" ></LogoutIcon></button>
+              </Nav.Link> 
+            </>
           }
           {!isAuthenticated && 
             <Button className="nav-link-brand" onClick={() => { login(); setExpanded(false); }}>CONNECT</Button>

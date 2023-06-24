@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card, Image} from 'react-bootstrap';
-import ArchitectureImage from "../../assets/architecture.jpg";
+import ArchitectureImage from "../../../assets/architecture.jpg";
 
 const Architecture = () => {
   

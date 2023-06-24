@@ -6,16 +6,15 @@ import { AuthProvider } from "./contexts/AuthContext";
 
 import MyNavbar from './components/shared/navbar';
 import MyFooter from './components/shared/footer';
-import Home from "./components/home";
 import Profile from "./components/profile/profile";
 
 import Logo from '../assets/logo.png';
-import Whitepaper from "./components/whitepaper";
-import Gameplay from "./components/gameplay";
+import Whitepaper from "./components/whitepaper/whitepaper";
+import Gameplay from "./components/whitepaper/gameplay";
 import Terms from "./components/terms";
-import Definitions from "./components/definitions";
-import Architecture from "./components/architecture";
-import DAO from "./components/dao";
+import Definitions from "./components/whitepaper/definitions";
+import Architecture from "./components/whitepaper/architecture";
+import DAO from "./components/whitepaper/dao";
 
 const PrivateWindowFallback = () => {
   return (
