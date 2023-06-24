@@ -165,7 +165,7 @@ const Profile = () => {
           <p className='text-center mt-1'>Loading Profile</p>
         </div>
       ) : (
-        <Container>
+        <Container className="flex-grow-1 my-5">
             <br />
             <Tabs defaultActiveKey="details" id="profile-tabs" className="mt- 4">
             <Tab eventKey="details" title="Details">

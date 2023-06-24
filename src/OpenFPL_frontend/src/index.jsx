@@ -15,6 +15,7 @@ import Terms from "./components/terms";
 import Definitions from "./components/whitepaper/definitions";
 import Architecture from "./components/whitepaper/architecture";
 import DAO from "./components/whitepaper/dao";
+import Governance from "./components/governanace/governance";
 
 const PrivateWindowFallback = () => {
   return (
@@ -76,6 +77,7 @@ const App = () => {
               <Route path="/architecture" element={<Architecture   />} />
               <Route path="/profile" element={<Profile   />} />
               <Route path="/dao" element={<DAO   />} />
+              <Route path="/governance" element={<Governance   />} />
             </Routes>
           <MyFooter />
         </div>
