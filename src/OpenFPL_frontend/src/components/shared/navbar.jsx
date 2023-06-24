@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
-import { LogoutIcon, ProfileIcon } from '../icons';
+import { LogoutIcon, ProfileIcon, GovernanceIcon } from '../icons';
 
 const MyNavbar = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
@@ -32,7 +32,7 @@ const MyNavbar = () => {
             <>
               <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">
                 Governance
-                <ProfileIcon className="custom-icon" ></ProfileIcon>
+                <GovernanceIcon className="custom-icon" ></GovernanceIcon>
               </Nav.Link> 
               <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link">
                 Profile
