@@ -181,6 +181,10 @@ const Profile = () => {
                                 </div>
                               </div>
                             </ListGroup.Item>
+                            <ListGroup.Item className="mt-1 mb-1">
+                              <h6>Reputation:</h6>
+                              <p>{viewData.reputation}</p>
+                            </ListGroup.Item>
                           </Col>
                           <Col md={8}>
                             <ListGroup.Item className="mt-1 mb-1">
