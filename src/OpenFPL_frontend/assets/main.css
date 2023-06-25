@@ -81,3 +81,14 @@
     align-items: center;
     z-index: 9999;
   }
+
+  .table-col-id,
+  .table-col-yes,
+  .table-col-no,
+  .table-col-status {
+    width: 10%;
+  }
+
+  .table-col-detail {
+    width: 60%;
+  }

@@ -1,4 +1,6 @@
 import Principal "mo:base/Principal";
+import List "mo:base/List";
+
 module Types{
     
     public type Error = {
@@ -59,6 +61,40 @@ module Types{
         owner: Principal;
         subaccount: Blob;
     };
+
+     public type Proposal = {
+        id : Nat;
+        votes_no : Tokens;
+        voters : List.List<Principal>;
+        state : ProposalState;
+        timestamp : Int;
+        proposer : Principal;
+        votes_yes : Tokens;
+        payload : ProposalPayload;
+    };
+
+    public type ProposalPayload = {
+        method : Text;
+        canister_id : Principal;
+        message : Blob;
+    };
+
+    public type ProposalState = {
+        // A failure occurred while executing the proposal
+        #failed : Text;
+        // The proposal is open for voting
+        #open;
+        // The proposal is currently being executed
+        #executing;
+        // Enough "no" votes have been cast to reject the proposal, and it will not be executed
+        #rejected;
+        // The proposal has been successfully executed
+        #succeeded;
+        // Enough "yes" votes have been cast to accept the proposal, and it will soon be executed
+        #accepted;
+    };
+
+    public type Tokens = { amount_e8s : Nat };
 
 
 }

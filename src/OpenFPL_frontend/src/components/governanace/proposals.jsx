@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Spinner } from 'react-bootstrap';
+import { Card, Spinner, Button, Modal, Dropdown, Table, ButtonGroup } from 'react-bootstrap';
+import AddProposalModal from './add-proposal-modal';
 
 const Proposals = ({ isActive }) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showAddProposalModal, setShowAddProposalModal] = useState(false);
+  const proposalStates = ['All', 'Failed', 'Open', 'Executing', 'Rejected', 'Succeeded', 'Accepted'];
+  const [page, setPage] = useState(0);
+  const count = 25;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -11,13 +16,25 @@ const Proposals = ({ isActive }) => {
       // Replace with your actual data fetching logic
       await new Promise(resolve => setTimeout(resolve, 2000)); // For example purposes only
       setIsLoading(false);
-      setData('Your data');
     };
 
     if (isActive) {
       fetchData();
     }
   }, [isActive]);
+
+  
+
+  const hideAddProposalModal = async (changed) => {
+    if(!changed){
+      setShowAddProposalModal(false); 
+      return;
+    }
+    setIsLoading(true);
+    setShowAddProposalModal(false); 
+    await fetchViewData();
+    setIsLoading(false);
+  };
 
   if (isLoading) {
     return (
@@ -32,8 +49,69 @@ const Proposals = ({ isActive }) => {
   return (
     <Card className="custom-card mt-1">
       <Card.Body>
-        <h2>DAO Proposals</h2>
-        <p>Coming soon: See all active & inactive DAO proposals.</p>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h2>DAO Proposals</h2>
+          <Button variant="primary" onClick={() => setShowAddProposalModal(true)}>New Proposal</Button>
+        </div>
+
+        <Dropdown className="mb-3">
+          <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+            Filter by Proposal State
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            {proposalStates.map((state, index) => (
+              <Dropdown.Item key={index} href="#/action-1">{state}</Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+
+        <Table bordered responsive className="mt-1 custom-table">
+        <thead>
+          <tr>
+            <th className="table-col-id"><small>Id</small></th>
+            <th className="table-col-detail"><small>Detail</small></th>
+            <th className="table-col-yes"><small>Yes</small></th>
+            <th className="table-col-no"><small>No</small></th>
+            <th className="table-col-status"><small>Status</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          {data != null && data.map((entry) => (
+            <tr key={entry.id}>
+              <td>{entry.id}</td>
+              <td>{entry.proposalDetail}</td>
+              <td>{entry.yesVotes}</td>
+              <td>{entry.noVotes}</td>
+              <td>{entry.status}</td>
+              <td>
+                <Button className="custom-button" onClick={() => handleViewPrediction(entry.principalName)}>
+                  View
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+        </Table>
+        {data != null && (<div className="d-flex justify-content-center mt-3 mb-3">
+          <ButtonGroup>
+            <Button className="custom-button" onClick={() => handlePageChange(-1)} disabled={page === 0}>
+              Prior
+            </Button>
+            <div className="d-flex align-items-center mr-3 ml-3">
+              <p className="mb-0">Page {page + 1}</p>
+            </div>
+            <Button className="custom-button" onClick={() => handlePageChange(1)} disabled={(page + 1) * count >= data.totalEntries}>
+              Next
+            </Button>
+          </ButtonGroup>
+        </div>)}
+      
+
+        <AddProposalModal
+                show={showAddProposalModal}
+                onHide={hideAddProposalModal}
+              />
       </Card.Body>
     </Card>
   );

@@ -34,12 +34,21 @@ const DAO = () => {
                 <Card.Text>Please see below built in functions a neuron holder can raise a DAO proposal for by category:</Card.Text>
                 <ListGroup>
                     <ListGroup.Item className="mt-1 mb-1">
+                        <h6>Season:</h6>
+                        <ul>
+                            <li>Add a new season.</li>
+                            <li>Update a season.</li>
+                            <li>Remove a season.</li>
+                        </ul>
+                    </ListGroup.Item>
+                </ListGroup>
+                <ListGroup>
+                    <ListGroup.Item className="mt-1 mb-1">
                         <h6>Team:</h6>
                         <ul>
-                            <li>Add a new team.</li>
+                            <li>Promote a team.</li>
                             <li>Update a team.</li>
                             <li>Relegate a team.</li>
-                            <li>Reinstate a promoted team.</li>
                         </ul>
                     </ListGroup.Item>
                 </ListGroup>
@@ -49,8 +58,7 @@ const DAO = () => {
                         <ul>
                             <li>Add a new player to a team.</li>
                             <li>Update an existing players details.</li>
-                            <li>Transfer a player to another team.</li>
-                            <li>Transfer a player to team outside of the Premier League.</li>
+                            <li>Transfer a player to another team either inside or outside of the Premier League.</li>
                             <li>Retire a player.</li>
                             <li>Bring a player out of retirement to a specific team.</li>
                             <li>Set a player as injured with the expected injury duration.</li>
@@ -62,21 +70,9 @@ const DAO = () => {
                     <ListGroup.Item className="mt-1 mb-1">
                         <h6>Fixtures:</h6>
                         <ul>
-                            <li>Create fixtures.</li>
+                            <li>Create fixtures, including setting their gameweek.</li>
                             <li>Remove fixtures.</li>
-                            <li>Update fixture date or time.</li>
-                        </ul>
-                    </ListGroup.Item>
-                </ListGroup>
-                <ListGroup>
-                    <ListGroup.Item className="mt-1 mb-1">
-                        <h6>Gameweek:</h6>
-                        <ul>
-                            <li>Add fixtures to a gameweek.</li>
-                            <li>Remove fixtures from a gameweek.</li>
-                            <li>Transfer fixtures between current and future gameweeks.</li>
-                            <li>Postpone fixtures within a gameweek.</li>
-                            <li>Add postponed fixtures to a gameweek.</li>
+                            <li>Updating a fixtures date or time, postposing ir or moving it to another gameweek.</li>
                         </ul>
                     </ListGroup.Item>
                 </ListGroup>

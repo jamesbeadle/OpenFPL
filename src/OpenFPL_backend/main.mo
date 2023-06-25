@@ -14,12 +14,14 @@ import Nat64 "mo:base/Nat64";
 import Result "mo:base/Result";
 import T "types";
 import Debug "mo:base/Debug";
+import Proposals "proposals";
 
 actor Self {
 
   let profilesInstance = Profiles.Profiles();
   let bookInstance = Book.Book();
   let teamsInstance = Teams.Teams();
+  let proposalsInstance = Proposals.Proposals();
 
   let CANISTER_IDS = {
     //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
@@ -34,6 +36,8 @@ actor Self {
   };
 
   private stable var stable_profiles: [T.Profile] = [];
+  private stable var stable_proposals: [T.Proposal] = [];
+  private stable var stable_next_proposal_id : Nat = 0;
 
   //Profile Functions
   public shared ({caller}) func getProfileDTO() : async DTOs.ProfileDTO {
@@ -170,14 +174,21 @@ actor Self {
     };
   };
 
+    
+  system func heartbeat() : async () {
+      await proposalsInstance.execute_accepted_proposals();
+  };
   
 
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
+    stable_proposals := proposalsInstance.getData();
+    stable_next_proposal_id := proposalsInstance.nextProposalId;
   };
 
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
+    proposalsInstance.setData(stable_proposals, stable_next_proposal_id);
   };
 
 };
