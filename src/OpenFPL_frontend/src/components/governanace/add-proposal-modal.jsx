@@ -4,6 +4,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../contexts/AuthContext";
 import AddPlayerProposal from './proposals/player/add-player-proposal';
+import PlayerInjuryProposal from './proposals/player/player-injury-proposal';
 
 const proposalCategories = [
     { label: 'Player', value: 'player' },
@@ -13,8 +14,8 @@ const proposalCategories = [
 ];
 
 const proposalTypes = [
-    { label: 'Add Player Proposal', value: 'add-player', category: 'player', component: AddPlayerProposal }
-    // ... add more proposal types as needed
+    { label: 'Add Player Proposal', value: 'add-player', category: 'player', component: AddPlayerProposal },
+    { label: 'Player Injury Proposal', value: 'player-injury', category: 'player', component: PlayerInjuryProposal }
 ];
 
 const AddProposalModal = ({ show, onHide }) => {
