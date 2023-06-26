@@ -40,6 +40,9 @@ module Types{
     public type Team = {
         id: Nat16;
         name: Text;
+        properName: Text;
+        homeColourHex: Text;
+        awayColourHex: Text;
         players: [Player]
     };
 

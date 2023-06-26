@@ -17,10 +17,7 @@ const AddPlayerProposal = () => {
     const fetchTeamsFromBackend = async () => {
         // Replace with your actual data fetching logic
         // This is just a placeholder
-        //const response = await fetch('http://your-backend-url/api/teams');
-        //const data = await response.json();
         const data = [{id: 1, name: "Arsenal"}];
-
         return data;
     }
 
@@ -29,6 +26,11 @@ const AddPlayerProposal = () => {
             <Form.Group className="mb-3">
                 <Form.Label>Player Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter player name" />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Date of Birth</Form.Label>
+                <Form.Control type="date" />
             </Form.Group>
 
             <Form.Group className="mb-3">
