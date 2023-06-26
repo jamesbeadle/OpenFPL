@@ -14,7 +14,7 @@ const MyFooter = () => {
           <Col md={4} className="text-start">
             {/* Place additional content if needed */}
           </Col>
-          <Col md={4} className="text-center">
+          <Col md={4} xs={12} className="text-center">
             <div className="social-icons">
                 <a href="https://twitter.com/ofpl_dao" target="_blank" rel="noopener noreferrer">
                   <img src={TwitterIcon} alt="Twitter" className="social-icon" />
@@ -28,20 +28,20 @@ const MyFooter = () => {
             </div>
             <img src={LogoImage} alt="openFPL" style={{ maxWidth: '100px', maxHeight: '100%', marginTop: '10px' }} />
           </Col>
-          <Col md={4} className="text-end">
-            <Row>
-              <Col>
-                <ul className="footer-links">
-                    <li><LinkContainer to="/architecture"><a>OpenFPL Architecture</a></LinkContainer></li>
-                    <li><LinkContainer to="/definitions"><a>Further Definitions</a></LinkContainer></li>
-                    <li><LinkContainer to="/terms"><a>Terms and Conditions</a></LinkContainer></li>
-                </ul>
-              </Col>
-              <Col>
+          <Col md={4} xs={12} className="text-md-end text-center">
+            <Row className="mt-4">
+              <Col md={6} xs={12}>
                 <ul className="footer-links">
                   <li><LinkContainer to="/whitepaper"><a>Open FPL Whitepaper</a></LinkContainer></li>
                   <li><LinkContainer to="/dao"><a>Open FPL DAO Actions</a></LinkContainer></li>
                   <li><LinkContainer to="/gameplay"><a>Open FPL Gameplay Rules</a></LinkContainer></li>
+                </ul>
+              </Col>
+              <Col md={6} xs={12}>
+                <ul className="footer-links">
+                    <li><LinkContainer to="/architecture"><a>OpenFPL Architecture</a></LinkContainer></li>
+                    <li><LinkContainer to="/definitions"><a>Further Definitions</a></LinkContainer></li>
+                    <li><LinkContainer to="/terms"><a>Terms and Conditions</a></LinkContainer></li>
                 </ul>
               </Col>
             </Row>
