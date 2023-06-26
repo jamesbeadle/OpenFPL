@@ -3,6 +3,7 @@ import { Container, Spinner, Row, Col, Card, Tabs, Tab } from 'react-bootstrap';
 import PlayerValuations from './player-valuations';
 import Proposals from './proposals';
 import ValidateGameData from './validate-game-data';
+import AdvertisingProposals from './advertising-proposals';
 
 const Governance = () => {
   
@@ -40,6 +41,9 @@ const Governance = () => {
           </Tab>
           <Tab eventKey="games" title="Validating Game Data">
             <ValidateGameData isActive={key === 'games'} />
+          </Tab>
+          <Tab eventKey="advertising" title="Advertising Proposals">
+            <AdvertisingProposals isActive={key === 'advertising'} />
           </Tab>
         </Tabs>
       </Container>
