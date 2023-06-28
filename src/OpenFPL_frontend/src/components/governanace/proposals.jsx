@@ -61,7 +61,7 @@ const Proposals = ({ isActive }) => {
 
           <Dropdown.Menu>
             {proposalStates.map((state, index) => (
-              <Dropdown.Item key={index} href="#/action-1">{state}</Dropdown.Item>
+              <Dropdown.Item key={index}>{state}</Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>

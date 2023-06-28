@@ -419,10 +419,10 @@ const Whitepaper = () => {
                         <Row className="mb-3">
                           <Col>
                             <h3>Founders and funders (24%)</h3>
-                            <p>OpenFPL is being built by a single developer, it's founder, who will receive 14% of the tokens. 
-                              He will receive a single neuron with a 4 year disolve delay that cannot be touched until that period is over (vesting period). 
-                              This ensures he cannot rug-pull investors and provides an ongoing incentive to make OpenFPL successful. 
-                              Each funded.app NFT purchaser will receive their FPL as a basket of 3 equal value neurons:
+                            <p>OpenFPL's foudning development team will receive 14% of the intial token allocation. This will be split between the founding developer (10% out of the 14%) and
+                              other team members (4% out of 14%). The founding developer will receive a single neuron with a 4 year disolve delay that cannot be touched until that period is 
+                              over (vesting period). This ensures he cannot rug-pull investors and provides an ongoing incentive to make OpenFPL successful. The remaining team members and each 
+                              Funded.app NFT purchaser will receive their FPL as a basket of 3 equal value neurons:
                             </p>
                             
                             <Table bordered className="table-fixed">
@@ -447,6 +447,15 @@ const Whitepaper = () => {
                                   </tr>
                                 </tbody>
                               </Table>
+
+                              <p>Confirmed team members are:</p>
+                              <ul>
+                                <li>James Beadle: Lead Developer (10m $FPL)</li>
+                                <li>@ICP_Insider: Community Support (1m $FPL)</li>
+                                <li>@daydrinkr: Community Manager (500K $FPL)</li>
+                                <li>TBC: 2.5m $FPL</li>
+                              </ul>
+
                           </Col>
                         </Row>
 
