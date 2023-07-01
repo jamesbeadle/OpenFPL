@@ -3,14 +3,22 @@
     "OpenFPL_backend": {
       "dependencies": [
         "ledger",
-        "token_canister"
+        "token_canister",
+        "player_canister"
       ],
       "main": "src/OpenFPL_backend/main.mo",
       "type": "motoko"
     },
+    "player_canister": {
+      "dependencies": [
+      ],
+      "main": "src/player-canister/main.mo",
+      "type": "motoko"
+    },
     "OpenFPL_frontend": {
       "dependencies": [
-        "OpenFPL_backend"
+        "OpenFPL_backend",
+        "player_canister"
       ],
       "frontend": {
         "entrypoint": "src/OpenFPL_frontend/src/index.html"

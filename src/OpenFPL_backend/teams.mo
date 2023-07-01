@@ -10,26 +10,26 @@ module {
   public class Teams(){
 
     private var genesis_teams: [Types.Team] = [
-        { id = 1; properName = "Arsenal"; homeColourHex = ""; awayColourHex = ""; name = "Arsenal"; players = [] },
-        { id = 2; properName = "Aston Villa"; homeColourHex = ""; awayColourHex = ""; name = "Aston Villa"; players = [] },
-        { id = 3; properName = "AFC Bournemouth"; homeColourHex = ""; awayColourHex = ""; name = "Bournemouth"; players = [] },
-        { id = 4; properName = "Brentford"; homeColourHex = ""; awayColourHex = ""; name = "Brentford"; players = [] },
-        { id = 5; properName = "Brighton & Hove Albion"; homeColourHex = ""; awayColourHex = ""; name = "Brighton"; players = [] },
-        { id = 6; properName = "Burnley"; homeColourHex = ""; awayColourHex = ""; name = "Burnley"; players = [] },
-        { id = 7; properName = "Chelsea"; homeColourHex = ""; awayColourHex = ""; name = "Chelsea"; players = [] },
-        { id = 8; properName = "Crystal Palace"; homeColourHex = ""; awayColourHex = ""; name = "Crystal Palace"; players = [] },
-        { id = 9; properName = "Everton"; homeColourHex = ""; awayColourHex = ""; name = "Everton"; players = [] },
-        { id = 10; properName = "Fulham"; homeColourHex = ""; awayColourHex = ""; name = "Fulham"; players = [] },
-        { id = 11; properName = "Liverpool"; homeColourHex = ""; awayColourHex = ""; name = "Liverpool"; players = [] },
-        { id = 12; properName = "Luton Town"; homeColourHex = ""; awayColourHex = ""; name = "Luton"; players = [] },
-        { id = 13; properName = "Manchester City"; homeColourHex = ""; awayColourHex = ""; name = "Man City"; players = [] },
-        { id = 14; properName = "Manchester United"; homeColourHex = ""; awayColourHex = ""; name = "Man United"; players = [] },
-        { id = 15; properName = "Newcastle United"; homeColourHex = ""; awayColourHex = ""; name = "Newcastle"; players = [] },
-        { id = 16; properName = "Nottingham Forest"; homeColourHex = ""; awayColourHex = ""; name = "Nottingham Forest"; players = [] },
-        { id = 17; properName = "Sheffield United"; homeColourHex = ""; awayColourHex = ""; name = "Sheffield United"; players = [] },
-        { id = 18; properName = "Tottenham Hotspur"; homeColourHex = ""; awayColourHex = ""; name = "Tottenham"; players = [] },
-        { id = 19; properName = "West Ham United"; homeColourHex = ""; awayColourHex = ""; name = "West Ham"; players = [] },
-        { id = 20; properName = "Wolverhampton Wanderers"; homeColourHex = ""; awayColourHex = ""; name = "Wolves"; players = [] }
+        { id = 1; name = "Arsenal"; primaryColourHex = "#f00000"; secondaryColourHex = "#ffffff"; friendlyName = "Arsenal"; },
+        { id = 2; name = "Aston Villa"; primaryColourHex = "#7d1142"; secondaryColourHex = "#ffffff"; friendlyName = "Aston Villa"; },
+        { id = 3; name = "AFC Bournemouth"; primaryColourHex = "#d71921"; secondaryColourHex = "#ffffff"; friendlyName = "Bournemouth"; },
+        { id = 4; name = "Brentford"; primaryColourHex = "#c10000"; secondaryColourHex = "#ffffff"; friendlyName = "Brentford"; },
+        { id = 5; name = "Brighton & Hove Albion"; primaryColourHex = "#004b95"; secondaryColourHex = "#ffffff"; friendlyName = "Brighton"; },
+        { id = 6; name = "Burnley"; primaryColourHex = "#5e1444"; secondaryColourHex = "#f2f2f2"; friendlyName = "Burnley"; },
+        { id = 7; name = "Chelsea"; primaryColourHex = "#001b71"; secondaryColourHex = "#ffffff"; friendlyName = "Chelsea"; },
+        { id = 8; name = "Crystal Palace"; primaryColourHex = "#e91d12"; secondaryColourHex = "#0055a5"; friendlyName = "Crystal Palace"; },
+        { id = 9; name = "Everton"; primaryColourHex = "#0a0ba1"; secondaryColourHex = "#ffffff"; friendlyName = "Everton"; },
+        { id = 10; name = "Fulham"; primaryColourHex = "#000000"; secondaryColourHex = "#e5231b"; friendlyName = "Fulham"; },
+        { id = 11; name = "Liverpool"; primaryColourHex = "#dc0714"; secondaryColourHex = "#ffffff"; friendlyName = "Liverpool"; },
+        { id = 12; name = "Luton Town"; primaryColourHex = "#f36f24"; secondaryColourHex = "#fefefe"; friendlyName = "Luton"; },
+        { id = 13; name = "Manchester City"; primaryColourHex = "#98c5e9"; secondaryColourHex = "#ffffff"; friendlyName = "Man City"; },
+        { id = 14; name = "Manchester United"; primaryColourHex = "#c70101"; secondaryColourHex = "#ffffff"; friendlyName = "Man United"; },
+        { id = 15; name = "Newcastle United"; primaryColourHex = "#000000"; secondaryColourHex = "#ffffff"; friendlyName = "Newcastle"; },
+        { id = 16; name = "Nottingham Forest"; primaryColourHex = "#c8102e"; secondaryColourHex = "#efefef"; friendlyName = "Nottingham Forest"; },
+        { id = 17; name = "Sheffield United"; primaryColourHex = "#e20c17"; secondaryColourHex = "#1d1d1b"; friendlyName = "Sheffield United"; },
+        { id = 18; name = "Tottenham Hotspur"; primaryColourHex = "#ffffff"; secondaryColourHex = "#0b0e1e"; friendlyName = "Tottenham"; },
+        { id = 19; name = "West Ham United"; primaryColourHex = "#7c2c3b"; secondaryColourHex = "#2dafe5"; friendlyName = "West Ham"; },
+        { id = 20; name = "Wolverhampton Wanderers"; primaryColourHex = "#fdb913"; secondaryColourHex = "#231f20"; friendlyName = "Wolves"; }
     ];
     private var teams = List.fromArray(genesis_teams);
     private var nextTeamId : Nat16 = 1;
@@ -67,15 +67,14 @@ module {
         return nextTeamId;
     };
 
-    public func createTeam(name : Text, properName: Text, homeColourHex: Text, awayColourHex: Text) : Result.Result<(), Types.Error> {
+    public func createTeam(name : Text, friendlyName: Text, primaryColourHex: Text, secondaryColourHex: Text) : Result.Result<(), Types.Error> {
         let id = nextTeamId;
         let newTeam : Types.Team = {
             id = id;
             name = name;
-            properName = properName;
-            homeColourHex = homeColourHex;
-            awayColourHex = awayColourHex;
-            players = [];
+            friendlyName = friendlyName;
+            primaryColourHex = primaryColourHex;
+            secondaryColourHex = secondaryColourHex;
         };
         
         var newTeamList = List.nil<Types.Team>();
@@ -91,7 +90,7 @@ module {
         teams := List.map<Types.Team, Types.Team>(teams,
         func (team: Types.Team): Types.Team {
             if (team.id == id) {
-            { id = team.id; name = name; players = team.players; properName = team.properName; homeColourHex = team.homeColourHex; awayColourHex = team.awayColourHex; }
+            { id = team.id; name = name; friendlyName = team.friendlyName; primaryColourHex = team.primaryColourHex; secondaryColourHex = team.secondaryColourHex; }
             } 
             else { team }
         });

@@ -40,10 +40,9 @@ module Types{
     public type Team = {
         id: Nat16;
         name: Text;
-        properName: Text;
-        homeColourHex: Text;
-        awayColourHex: Text;
-        players: [Player]
+        friendlyName: Text;
+        primaryColourHex: Text;
+        secondaryColourHex: Text;
     };
 
     public type Fixture = {
@@ -56,8 +55,14 @@ module Types{
 
     public type Player = {
         id: Nat16;
+        teamId: Nat16;
+        position: Nat8; //0 = Goalkeeper //1 = Defender //2 = Midfielder //3 = Forward
         firstName: Text;
         lastName: Text;
+        shirtNumber: Nat8;
+        value: Float;
+        dateOfBirth: Int;
+        nationality: Text;
     };
 
     public type Account = {
