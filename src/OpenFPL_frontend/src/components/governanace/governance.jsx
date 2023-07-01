@@ -8,7 +8,7 @@ import AdvertisingProposals from './advertising-proposals';
 const Governance = () => {
   
   const [isLoading, setIsLoading] = useState(true);
-  const [key, setKey] = useState('proposals');
+  const [key, setKey] = useState('valuations');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,12 +33,12 @@ const Governance = () => {
         <h1>OpenFPL DAO Governance</h1>
         <br />
         <Tabs defaultActiveKey="proposals" id="profile-tabs" className="mt-4" activeKey={key} onSelect={(k) => setKey(k)}>
-          <Tab eventKey="proposals" title="Proposals">
-              <Proposals isActive={key === 'proposals'} />
-          </Tab>  
           <Tab eventKey="valuations" title="Player Valuations">
             <PlayerValuations isActive={key === 'valuations'} />
           </Tab>
+          <Tab eventKey="proposals" title="Proposals">
+              <Proposals isActive={key === 'proposals'} />
+          </Tab>  
           <Tab eventKey="games" title="Validating Game Data">
             <ValidateGameData isActive={key === 'games'} />
           </Tab>
