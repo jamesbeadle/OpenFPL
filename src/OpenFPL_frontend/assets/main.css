@@ -92,3 +92,13 @@
   .table-col-detail {
     width: 60%;
   }
+
+  .pitch-bg {
+    background: url('pitch.png') no-repeat center center;
+    background-size: cover;
+  }
+
+  .player-container {
+    display: flex;
+    align-items: stretch;
+  }

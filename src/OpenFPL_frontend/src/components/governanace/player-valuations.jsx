@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { Actor } from "@dfinity/agent";
 import { hasFlag } from 'country-flag-icons'
 import getFlag from '../country-flag';
+import { getAgeFromDOB } from '../helpers';
 
 import { AuthContext } from "../../contexts/AuthContext";
 
@@ -96,13 +97,6 @@ const PlayerValuations = ({ isActive }) => {
       </div>
     );
   }
-
-  const getAgeFromDOB = dob => {
-    const birthDate = new Date(dob / 1000000);
-    const ageDifMs = Date.now() - birthDate.getTime();
-    const ageDate = new Date(ageDifMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
-  };
   
   const handleVote = (voteType, player) => {
     setSelectedVote(voteType);

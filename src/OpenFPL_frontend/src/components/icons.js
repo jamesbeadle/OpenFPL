@@ -116,4 +116,32 @@ const StarIcon = ({ onClick, color = 'currentColor', margin = '0' }) => (
     </svg>
   );
 
-export { CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, TeamIcon };
+  const PlayerIcon = ({ primaryColour, secondaryColour }) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 1.5 16 16"
+      width="40"
+      height="40"
+      >
+          <path fill={primaryColour} fillRule="evenodd" d="M1.093 3.093c-.465 4.275.885 7.46 2.513 9.589a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.159 7.159 0 0 0 1.048-.625 11.32 11.32 0 0 0 1.733-1.525L1.093 3.093zm12.215 8.215L3.128 1.128A61.369 61.369 0 0 1 5.073.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.483 3.626-.332 6.491-1.551 8.616zm.338 3.046-13-13 .708-.708 13 13-.707.707z"/>
+
+     <path fill={secondaryColour} d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+  
+    </svg>
+  );
+
+  const TransferIcon = ({className }) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+      viewBox="0 1.5 16 16"
+      width="16"
+      height="20"
+      className={className}
+      >
+    <path d="M4 8.585h1.969c.115.465.186.939.186 1.43 0 1.385-.736 2.496-2.075 2.771V14H12v-1.24H6.492v-.129c.825-.525 1.135-1.446 1.135-2.694 0-.465-.07-.913-.168-1.352h3.29v-.972H7.22c-.186-.723-.372-1.455-.372-2.247 0-1.274 1.047-2.066 2.58-2.066a5.32 5.32 0 0 1 2.103.465V2.456A5.629 5.629 0 0 0 9.348 2C6.865 2 5.322 3.291 5.322 5.366c0 .775.195 1.515.399 2.247H4v.972z"/>
+
+    </svg>
+  );
+
+export { CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, TeamIcon, PlayerIcon, TransferIcon };
