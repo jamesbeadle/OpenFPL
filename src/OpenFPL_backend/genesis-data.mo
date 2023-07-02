@@ -137,7 +137,7 @@ module GenesisData {
         {id = 131; teamId = 5; firstName = "João"; lastName = "Pedro"; shirtNumber = 0; value = 14; dateOfBirth = 1001462400000000000; nationality = "Brazil"; position = 3;},
         {id = 132; teamId = 7; firstName = "Kepa"; lastName = "Arrizabalaga"; shirtNumber = 1; value = 10.5; dateOfBirth = 781142400000000000; nationality = "Spain"; position = 0;},
         {id = 133; teamId = 7; firstName = "Edouard"; lastName = "Mendy"; shirtNumber = 16; value = 14; dateOfBirth = 699408000000000000; nationality = "Senegal"; position = 0;},
-        {id = 134; teamId = 7; firstName = "Gabriel"; lastName = "Slonina"; shirtNumber = 36; value = 22; dateOfBirth = 1084579200000000000; nationality = "United States"; position = 0;},
+        {id = 134; teamId = 7; firstName = "Gabriel"; lastName = "Slonina"; shirtNumber = 36; value = 5.5; dateOfBirth = 1084579200000000000; nationality = "United States"; position = 0;},
         {id = 135; teamId = 7; firstName = "Marcus"; lastName = "Bettinelli"; shirtNumber = 13; value = 5.5; dateOfBirth = 706665600000000000; nationality = "England"; position = 0;},
         {id = 136; teamId = 7; firstName = "Wesley"; lastName = "Fofana"; shirtNumber = 33; value = 8.5; dateOfBirth = 977011200000000000; nationality = "France"; position = 1;},
         {id = 137; teamId = 7; firstName = "Benoît"; lastName = "Badiashile"; shirtNumber = 4; value = 16; dateOfBirth = 985564800000000000; nationality = "France"; position = 1;},

@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
-import { LogoutIcon, ProfileIcon, GovernanceIcon } from '../icons';
+import { LogoutIcon, ProfileIcon, GovernanceIcon, TeamIcon } from '../icons';
 
 const MyNavbar = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
@@ -30,6 +30,10 @@ const MyNavbar = () => {
         <Navbar.Collapse  id="responsive-navbar-nav" className="justify-content-end">
           {isAuthenticated && 
             <>
+              <Nav.Link as={Link} to="/pick-team" onClick={() => setExpanded(false)}  className="custom-nav-link">
+                Play
+                <TeamIcon className="custom-icon" ></TeamIcon>
+              </Nav.Link> 
               <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">
                 Governance
                 <GovernanceIcon className="custom-icon" ></GovernanceIcon>

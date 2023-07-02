@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Card, Spinner, Dropdown, Table, Button, Form, Modal, DropdownButton, Col, Row } from 'react-bootstrap';
+import { Card, Spinner, Dropdown, Table, Button, Form, Modal, ButtonGroup, Col, Row } from 'react-bootstrap';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { format } from 'date-fns';
@@ -14,7 +14,7 @@ const POSITION_LABELS = ["GK", "DEF", "MID", "FWD"];
 const PlayerValuations = ({ isActive }) => {
   const { authClient } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
-  const [players, setPlayersData] = useState([]);
+  const [viewData, setViewData] = useState([]);
   const [teams, setTeamsData] = useState([]);
   const [filterTeam, setFilterTeam] = useState(0);
   const [filterPosition, setFilterPosition] = useState(-1);
@@ -23,6 +23,8 @@ const PlayerValuations = ({ isActive }) => {
   const [selectedVote, setSelectedVote] = useState(null);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [teamColours, setTeamColours] = useState({});
+  const [page, setPage] = useState(0);
+  const count = 25;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +47,7 @@ const PlayerValuations = ({ isActive }) => {
     if (isActive) {
       fetchData();
     }
-  }, [isActive, filterTeam]);
+  }, [isActive]);
 
   useEffect(() => {
     if(!teams){
@@ -54,40 +56,35 @@ const PlayerValuations = ({ isActive }) => {
     
     const fetchData = async () => {
       setIsLoading(true);
-      const identity = authClient.getIdentity();
-      Actor.agentOf(player_canister).replaceIdentity(identity);
-      const playersData = await player_canister.getPlayers(Number(filterTeam), Number(filterPosition));
-      setPlayersData(playersData);
+      await fetchViewData(filterTeam, filterPosition, page);
       setIsLoading(false);
     };
 
     if (isActive) {
       fetchData();
     }
-  }, [isActive, teams]);
+  }, [isActive, teams, page, filterTeam, filterPosition]);
   
   const handleFilterTeamChange = async (event) => {
     setIsLoading(true);
     setFilterTeam(Number(event.target.value));
-    
-    const identity = authClient.getIdentity();
-    Actor.agentOf(player_canister).replaceIdentity(identity);
-    const playersData = await player_canister.getPlayers(Number(event.target.value), Number(filterPosition));
-    setPlayersData(playersData);
-    console.log(playersData)
-    
+    setPage(0);
+    await fetchViewData(event.target.value, filterPosition, 0);
     setIsLoading(false);
   };
   
   const handleFilterPositionChange = async (event) => {
-   setIsLoading(true);
+    setIsLoading(true);
     setFilterPosition(Number(event.target.value));
-    
+    setPage(0);
+    await fetchViewData(filterTeam, event.target.value, 0);
+  };
+
+  const fetchViewData = async (teamId, positionId, pageNumber) => {
     const identity = authClient.getIdentity();
     Actor.agentOf(player_canister).replaceIdentity(identity);
-    const playersData = await player_canister.getPlayers(Number(filterTeam), Number(event.target.value));
-    setPlayersData(playersData);
-
+    const playersData = await player_canister.getPlayers(Number(teamId), Number(positionId), Number(pageNumber) * Number(count), Number(count));
+    setViewData(playersData);
     setIsLoading(false);
   };
 
@@ -122,6 +119,10 @@ const PlayerValuations = ({ isActive }) => {
   
     // Close modal
     setShowConfirmModal(false);
+  };
+
+  const handlePageChange = (change) => {
+    setPage((prevPage) => prevPage + change);
   };
 
   // Modal for vote confirmation
@@ -190,7 +191,7 @@ const PlayerValuations = ({ isActive }) => {
             </tr>
           </thead>
           <tbody>
-            {players && players.map(player => (
+            {viewData && viewData.players && viewData.players.map(player => (
               <tr key={player.id}>
                 <td className='align-middle'>
                   <div className='d-flex flex-column justify-content-center'>
@@ -214,19 +215,19 @@ const PlayerValuations = ({ isActive }) => {
                         <small className='text-muted'>{player.firstName}</small>
                       </span>
                       <div style={{
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingBottom: '2px'
-}}>
-  <div style={{
-    borderBottom: `3px solid ${(teamColours[player.teamId] || {}).secondary || 'defaultColor'}`,
-    width: '60%',
-  }}></div>
-  <span style={{ width: '40%', textAlign: 'right' }}>
-    {teams.find(team => team.id === player.teamId)?.friendlyName}
-  </span>
-</div>
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingBottom: '2px'
+                      }}>
+                        <div style={{
+                          borderBottom: `3px solid ${(teamColours[player.teamId] || {}).secondary || 'defaultColor'}`,
+                          width: '50%',
+                        }}></div>
+                        <span style={{ width: '50%', textAlign: 'right' }}>
+                          <small>{teams.find(team => team.id === player.teamId)?.friendlyName}</small>
+                        </span>
+                      </div>
                       <div style={{
                         borderBottom: `3px solid ${(teamColours[player.teamId] || {}).primary || 'defaultColor'}`,
                         width: '100%',
@@ -236,17 +237,17 @@ const PlayerValuations = ({ isActive }) => {
                     </div>
                   </div>
                 </td>
-                <td className='align-middle'>
+                <td className='align-middle text-center'>
                   <h5 className='ml-4'>£{parseFloat(player.value).toFixed(2)}m</h5>
                 </td>
                 <td>
                   <Row className="no-gutters">
                     <Col>
-                      <Button variant="danger" style={{width: '100%'}} onClick={() => handleVote("negative", player)}>Decrease 0.25m</Button>
+                      <Button variant="danger" style={{width: '100%'}} onClick={() => handleVote("negative", player)}>Update -£0.25m</Button>
                       <p className="text-center mt-1">50%</p>
                     </Col>
                     <Col>
-                      <Button variant="success" style={{width: '100%'}} onClick={() => handleVote("positive", player)}>Increase 0.25m</Button>
+                      <Button variant="success" style={{width: '100%'}} onClick={() => handleVote("positive", player)}>Update +£0.25m</Button>
                       <p className="text-center mt-1">50%</p>
                     </Col>
                   </Row>
@@ -260,6 +261,20 @@ const PlayerValuations = ({ isActive }) => {
             ))}
           </tbody>
         </Table>
+        <div className="d-flex justify-content-center mt-3 mb-3">
+          <ButtonGroup>
+            <Button className="primary" onClick={() => handlePageChange(-1)} disabled={page === 0}>
+              Prior
+            </Button>
+            <div className="d-flex align-items-center">
+              <p className="mb-0 mx-4">Page {page + 1} / {Math.ceil(viewData.totalEntries / count)}</p>
+            </div>
+
+            <Button className="primary" onClick={() => handlePageChange(1)} disabled={(page + 1) >= Math.ceil(viewData.totalEntries / count)}>
+              Next
+            </Button>
+          </ButtonGroup>
+        </div>
       </Card.Body>
     </Card>
   );

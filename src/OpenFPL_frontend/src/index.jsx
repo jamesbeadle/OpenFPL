@@ -16,6 +16,7 @@ import Definitions from "./components/whitepaper/definitions";
 import Architecture from "./components/whitepaper/architecture";
 import DAO from "./components/whitepaper/dao";
 import Governance from "./components/governanace/governance";
+import PickTeam from "./components/gameplay/pick-team";
 
 const PrivateWindowFallback = () => {
   return (
@@ -78,6 +79,7 @@ const App = () => {
               <Route path="/profile" element={<Profile   />} />
               <Route path="/dao" element={<DAO   />} />
               <Route path="/governance" element={<Governance   />} />
+              <Route path="/pick-team" element={<PickTeam   />} />
             </Routes>
           <MyFooter />
         </div>

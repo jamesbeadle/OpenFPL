@@ -1,3 +1,4 @@
+import T "./types";
 module DTOs {
     
     public type ProfileDTO = {
@@ -15,6 +16,11 @@ module DTOs {
     public type AccountBalanceDTO = {
         icpBalance: Nat64;
         fplBalance: Nat64;
+    };
+
+    public type PlayerRatingsDTO = {
+        players: [T.Player];
+        totalEntries: Nat16;
     };
     
 }
