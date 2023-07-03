@@ -97,8 +97,22 @@
     background: url('pitch.png') no-repeat center center;
     background-size: cover;
   }
-
+  
   .player-container {
     display: flex;
     align-items: stretch;
   }
+  
+  .small-text {
+    font-size: 0.75rem;
+  }
+  
+/*
+  .card-header{
+    background: linear-gradient(to bottom, #ffffff, #67F5C9);
+  }
+
+  .card-body{
+    background: linear-gradient(to bottom, #ffffff, #F5A28C);
+  }
+*/

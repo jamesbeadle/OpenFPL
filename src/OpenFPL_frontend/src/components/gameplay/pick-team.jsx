@@ -60,7 +60,7 @@ const PlayerDetails = ({ player }) => {
         </Col>
         <Col xs={12} md={4}>
             <h6 className='text-center mt-2'>{`£${player.value}m`}</h6>
-            <Button className="w-100 mb-2 mt-2"><TransferIcon />Sell</Button>
+            <Button className="w-100 mb-2 mt-2"><TransferIcon /><small>Sell</small></Button>
         </Col>
       </Row>
     </Card>
@@ -99,6 +99,36 @@ const BonusPanel = ({bonuses, handleBonusClick, show, handleClose}) => (
     </Modal>
   </Card>
 );
+
+const FixtureRow = ({ homeTeam, awayTeam }) => (
+  <Row className='align-items-center small-text'>
+    <Col xs={1} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
+      <div style={{padding: '0 5px'}}>
+        <div style={{backgroundColor: homeTeam.primaryColourHex, width: '20px', height: '20px'}}></div>
+        <div style={{borderBottom: `3px solid ${homeTeam.secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
+      </div>
+    </Col>
+    <Col xs={4} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
+      <p style={{margin: 0}}><small>{homeTeam.name}</small></p>
+    </Col>
+    <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
+      <small style={{margin: 0}}>vs</small>
+    </Col>
+    <Col xs={4} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
+      <p style={{margin: 0}}>{awayTeam.name}</p>
+    </Col>
+    <Col xs={1} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
+      <div style={{padding: '0 5px'}}>
+        <div style={{backgroundColor: awayTeam.primaryColourHex, width: '20px', height: '20px'}}></div>
+        <div style={{borderBottom: `3px solid ${awayTeam.secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
+      </div>
+    </Col>
+  </Row>
+);
+
+
+
+
 
 const PickTeam = () => {
   
@@ -164,15 +194,15 @@ const PickTeam = () => {
 
   const fetchViewData = async () => {
     setPlayers([
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'MF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'DF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'GK', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 1, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'GK', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 2, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'DF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 3, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'DF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 4, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'DF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 5, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'MF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 6, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'MF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 7, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'MF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 8, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'MF', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
+      {shirtNumber: 9, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
       {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#2dafe5'},
       null
     ]);
@@ -181,17 +211,33 @@ const PickTeam = () => {
       // ... add more bonuses as required
     ]);
     setFixtures([
-      'Man United v Chelsea',
-      'Arsenal v Liverpool',
-      'Arsenal v Liverpool',
-      'Arsenal v Liverpool',
-      'Arsenal v Liverpool',
-      'Arsenal v Liverpool',
-      'Arsenal v Liverpool',
-      'Arsenal v Liverpool',
-      'Arsenal v Liverpool',
-      'Arsenal v Liverpool'
+      {
+        homeTeam: {
+          name: 'Burnley',
+          primaryColourHex: '#6C1D45',
+          secondaryColourHex: '#FFFFFF',
+        },
+        awayTeam: {
+          name: 'Man City',
+          primaryColourHex: '#6CABDD',
+          secondaryColourHex: '#FFFFFF',
+        },
+      },
+      {
+        homeTeam: {
+          name: 'Arsenal',
+          primaryColourHex: '#EF0107',
+          secondaryColourHex: '#ffffff',
+        },
+        awayTeam: {
+          name: 'Nottingham Forest',
+          primaryColourHex: '#EB1739',
+          secondaryColourHex: '#000000',
+        },
+      },
+      // ... add more fixtures as required
     ]);
+    
   };
 
   const handleGameweekChange = (change) => {
@@ -207,10 +253,28 @@ const PickTeam = () => {
       </div>) 
       :
       <Container className="flex-grow-1 my-5 pitch-bg mt-0">
-        <Row className="mt-4">
-          <Col md={10}>
+        <Row className="mt-4 mb-4">
+          <Col md={9}>
             <Card className="mt-4">
-              <Card.Header>Team Selection</Card.Header>
+            <Card.Header>
+              <Row className="justify-content-between align-items-center">
+                <Col xs={12} md={6}>
+                  Team Selection
+                </Col>
+                <Col xs={12} md={6}>
+                  <Card className="p-2">
+                    <Row className='align-items-center text-center'>
+                      <Col xs={12} md={6}>
+                          <small>Team Value: £187.5m</small>
+                      </Col>
+                      <Col xs={12} md={6}>
+                        <small>Bank: £3.5m</small>
+                      </Col>
+                    </Row>
+                  </Card>
+                </Col>
+              </Row>
+            </Card.Header>
               <Card.Body>
                 <Row>
                   {renderPlayerSlots(players)}
@@ -218,17 +282,30 @@ const PickTeam = () => {
               </Card.Body>
             </Card>
           </Col>
-          <Col md={2}>
+          <Col md={3}>
             <Card className="mt-4 mb-4">
               <Card.Header>
-                Fixtures<br />
-                <Button variant="link" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>{"<"}</Button>
-                Gameweek {currentGameweek}
-                <Button variant="link" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>{">"}</Button>
+                Fixtures
               </Card.Header>
               <Card.Body>
+              <Row className="d-flex align-items-center">
+                <div style={{flex: 1, padding: '0 5px'}}>
+                  <Button className="w-100 justify-content-center" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>{"<"}</Button>
+                </div>
+                <div style={{flex: 3, textAlign: 'center', padding: '0 5px'}}>
+                  <small>Gameweek {currentGameweek}</small>
+                </div>
+                <div style={{flex: 1, padding: '0 5px'}}>
+                  <Button className="w-100 justify-content-center" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>{">"}</Button>
+                </div>
+              </Row>
+
+
+
+
+                <br />
                 {fixtures.map((fixture, i) => (
-                  <p className='text-center' key={i}>{fixture}</p>
+                  <FixtureRow key={i} homeTeam={fixture.homeTeam} awayTeam={fixture.awayTeam} />
                 ))}
               </Card.Body>
             </Card>
