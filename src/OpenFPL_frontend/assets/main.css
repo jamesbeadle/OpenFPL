@@ -102,17 +102,28 @@
     display: flex;
     align-items: stretch;
   }
-  
+
   .small-text {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .card{
+    border: none !important;
   }
   
-/*
   .card-header{
-    background: linear-gradient(to bottom, #ffffff, #67F5C9);
+    background: linear-gradient(to bottom, #251942, #251942) !important;
+    color: whitesmoke !important;
   }
 
   .card-body{
-    background: linear-gradient(to bottom, #ffffff, #F5A28C);
+    background: linear-gradient(to bottom, #1E1436, #1E1436) !important;
+    color: whitesmoke !important;
   }
+
+  .table-fixed{
+    color: whitesmoke !important;
+  }
+/*1E1436
+  
 */

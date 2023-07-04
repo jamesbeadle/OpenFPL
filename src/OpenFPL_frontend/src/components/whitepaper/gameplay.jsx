@@ -30,34 +30,25 @@ const Gameplay = () => {
             <Card className="mb-4">
               <Card.Header><h2 className="mt-4 mb-4">OpenFPL Gameplay Rules</h2></Card.Header>
               <Card.Body>
-                <Card.Text>Please see below detailed rules of the OpenFPL fantasy football game.</Card.Text>
-                <p>Users will setup their team before the gameweek deadline each week. When playing OpenFPL, users have the chance to win FPL tokens depending on how well the players in their team perform.</p>
+                <Card.Text>Please see the below OpenFPL fantasy football gameplay rules.</Card.Text>
+                
+                <p>Each user begins with £300m to purchase players for their team. The value of a player can go up or down depending on how the player is rated in the DAO. 
+                  Provided a certain voting threshold is reached for either a £0.25m increase or decrease, the player's value will change in that gameweek.</p>
+                
+                <p>Each team has 11 players, with no more than 3 selected from any single team. 
+                  The team must be in a valid formation, with 1 goalkeeper, 3-5 defenders, 3-5 midfielders and 1-3 strikers. </p>
 
-                <p>The users select 15 players, 11 playing and 4 substitutes from any Premier League team. Users have a budget of 120m to pick a team at the start of the season. 
-                  No more than 3 players from a single Premier League club can be in a fantasy football team.</p>
+                <p>Users will setup their team before the gameweek deadline each week. When playing OpenFPL, users have the chance to win FPL tokens depending on how well 
+                  the players in their team perform.</p>
 
                 <p>In January, a user can change their entire team once. </p>
 
-                <p>A players value may go up or down based on a player pricing algorithm.</p>
+                <p>A user is allowed to make 2 transfers per week which are never carried over.</p>
 
-                <p>Player ratings are set either at the start of the DAO or by DAO proposal. These ratings are then adjusted each week by the average ratings for that player by DAO neuron holders.</p>
-
-                <p>During a gameweek substitutes are not included in a users score. A user is allowed to make 2 transfers per week which are never carried over.</p>
-
-                <p>A user can make a player their captain each gameweek and that player will receive double points. </p>
-
-                <p>The following bonuses can be played once a season by a user:</p>
-                <p>- 'Dynamic Duo' bonus: A bonus for effective team partnerships. If any two players from the same club within your fantasy team combine to score a goal (one assisting and the other scoring), 
-                  you'll earn bonus points. </p>
-                <p>- 'Double Club' bonus: All players from a chosen team in their fantasy squad will have their points doubled for that gameweek. 
-                  This power play must be declared before the gameweek deadline.</p>
-                <p>-'Hat-trick Bonus': When a user correctly predicts and owns the player who scores a hat-trick they will receive a bonus.</p>
-                <p>-'Penalty Save Bonus': When a user correctly predicts and owns the goalkeeper who saves a penalty they will receive a bonus.</p>
-                <p>-'Red Card Bonus': When a user correctly predicts and owns the player who receives a red card they will receive a bonus.</p>
-                <p>- 'Prodigy Bonus': A user can choose one player under the age of 21 from their squad at the start of the season. 
-                  If this chosen player scores or assists any goal, the user receives bonus points.</p>
-               
-
+                <p>Each week a user can select a star player. This player will receive double points for the gameweek. If one is not set by the start of the gameweek it will automatically be set to the
+                  most valuable player in your team.
+                </p>
+                <h4 className='mt-4'>Points</h4>
                 <p>The user can get the following points during a gameweek for their team:</p>
 
                 <Table bordered className="table-fixed mt-4">
@@ -73,91 +64,108 @@ const Gameplay = () => {
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Playing up to 60 minutes.</td>
-                      <td>1</td>
-                    </tr>
-                    <tr>
-                      <td>Playing 60 minutes or more (excluding stoppage time).</td>
-                      <td>2</td>
-                    </tr>
-                    <tr>
-                      <td>Goal scored by a goalkeeper or defender.</td>
-                      <td>6</td>
-                    </tr>
-                    <tr>
-                      <td>Goal scored by a midfielder.</td>
+                      <td>Appearing in the game.</td>
                       <td>5</td>
                     </tr>
                     <tr>
-                      <td>Goal scored by a forward.</td>
-                      <td>4</td>
-                    </tr>
-                    <tr>
-                      <td>Assisting a goal.</td>
-                      <td>3</td>
-                    </tr>
-                    <tr>
-                      <td>Defender and goalkeeper clean sheets.</td>
-                      <td>4</td>
-                    </tr>
-                    <tr>
-                      <td>Midfielder clean sheet bonus.</td>
-                      <td>1</td>
-                    </tr>
-                    <tr>
-                      <td>3 keeper saves.</td>
-                      <td>1</td>
-                    </tr>
-                    <tr>
-                      <td>Penalty save.</td>
+                      <td>Every 3 saves a goalkeeper makes.</td>
                       <td>5</td>
                     </tr>
                     <tr>
-                      <td>Penalty miss.</td>
-                      <td>-2</td>
+                      <td>Goalkeeper or defender cleansheet.</td>
+                      <td>10</td>
                     </tr>
                     <tr>
-                      <td>Bonus points.</td>
-                      <td>1-3</td>
+                      <td>Forward scores a goal.</td>
+                      <td>10</td>
                     </tr>
                     <tr>
-                      <td>Goalkeeper or defender concedes 2 goals.</td>
-                      <td>-1</td>
+                      <td>Midfielder or Forward assists a goal.</td>
+                      <td>10</td>
                     </tr>
                     <tr>
-                      <td>Yellow card received.</td>
-                      <td>-1</td>
+                      <td>Midfielder scores a goal.</td>
+                      <td>15</td>
                     </tr>
                     <tr>
-                      <td>Red card received.</td>
-                      <td>-3</td>
+                      <td>Goalkeeper or defender assists a goal.</td>
+                      <td>15</td>
                     </tr>
                     <tr>
-                      <td>Own goal scored.</td>
-                      <td>-2</td>
+                      <td>Goalkeeper or defender scores a goal.</td>
+                      <td>20</td>
                     </tr>
                     <tr>
-                      <td>Dynamic Duo Bonus (each time one player assists another for a goal and both players are from the same club  and in your team.)</td>
-                      <td>4</td>
+                      <td>Goalkeeper saves a penalty.</td>
+                      <td>20</td>
                     </tr>
                     <tr>
-                      <td>Double Club Bonus (all points from a chosen club's players are doubled for a gameweek)</td>
-                      <td>2x</td>
-                    </tr>
-                    <tr>
-                      <td>Hat-trick Bonus (a player scores three goals in a match)</td>
+                      <td>Player is highest scoring player in match.</td>
                       <td>25</td>
                     </tr>
                     <tr>
-                      <td>Penalty Save Bonus (a player saves a penalty)</td>
-                      <td>50</td>
+                      <td>Player receives a red card.</td>
+                      <td>-20</td>
                     </tr>
                     <tr>
-                      <td>Prodigy Bonus (a player under the age of 21 scores or assists a goal)</td>
-                      <td>4</td>
+                      <td>Player misses a penalty.</td>
+                      <td>-15</td>
+                    </tr>
+                    <tr>
+                      <td>Each time a goalkeeper or defender concedes 2 goals.</td>
+                      <td>-15</td>
+                    </tr>
+                    <tr>
+                      <td>A player scores an own goal.</td>
+                      <td>-10</td>
+                    </tr>
+                    <tr>
+                      <td>A player receives a yellow card.</td>
+                      <td>-5</td>
                     </tr>
                   </tbody>
                 </Table>
+
+                <h4 className='mt-4'>Bonuses</h4>
+                <p>A user can play 1 bonus per gameweek. Each season a user starts with the following 8 bonuses:</p>
+
+                <Table bordered className="table-fixed mt-4">
+                  <colgroup>
+                    <col style={{width: '100%'}} />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>Bonus</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><b>Team Boost</b>: Receive a X2 multiplier from all players from a single club that are in your team.</td>
+                    </tr>
+                    <tr>
+                      <td><b>Goal Getter</b>: Select a player you think will score in a game to receive a X3 mulitplier for each goal scored.</td>
+                    </tr>
+                    <tr>
+                      <td><b>Pass Master</b>: Select a player you think will assist in a game to receive a X3 mulitplier for each assist.</td>
+                    </tr>
+                    <tr>
+                      <td><b>No Entry</b>: Select a goalkeeper or defender you think will keep a clean sheet to receive a X3 multipler on their total score.</td>
+                    </tr>
+                    <tr>
+                      <td><b>Safe Hands</b>: Receive a X3 multiplier on your goalkeeper if they make 5 saves in a match.</td>
+                    </tr>
+                    <tr>
+                      <td><b>Star Scorer</b>: Receive a X2 multiplier on your star player's score if they score a goal in a match.</td>
+                    </tr>
+                    <tr>
+                      <td><b>Brace Bonus</b>: Receive a X2 multiplier on a player's score if they score 2 or more goals in a game.</td>
+                    </tr>
+                    <tr>
+                      <td><b>Hat Trick Hero</b>: Receive a X3 multiplier on a player's score if they score 3 or more goals in a game.</td>
+                    </tr>
+                  </tbody>
+                </Table>
+
               </Card.Body>
             </Card>
           </Col>
