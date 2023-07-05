@@ -51,7 +51,7 @@ const Gameplay = () => {
                 <h4 className='mt-4'>Points</h4>
                 <p>The user can get the following points during a gameweek for their team:</p>
 
-                <Table bordered className="table-fixed mt-4">
+                <Table bordered className="table-fixed mt-4 white-text">
                   <colgroup>
                     <col style={{width: '70%'}} />
                     <col style={{width: '30%'}} />
@@ -129,7 +129,7 @@ const Gameplay = () => {
                 <h4 className='mt-4'>Bonuses</h4>
                 <p>A user can play 1 bonus per gameweek. Each season a user starts with the following 8 bonuses:</p>
 
-                <Table bordered className="table-fixed mt-4">
+                <Table bordered className="table-fixed mt-4 white-text">
                   <colgroup>
                     <col style={{width: '100%'}} />
                   </colgroup>
