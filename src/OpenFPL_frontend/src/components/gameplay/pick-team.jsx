@@ -1,110 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Dropdown, Spinner, Modal } from 'react-bootstrap';
 import { StarIcon, StarOutlineIcon,  PlayerIcon, TransferIcon } from '../icons';
 import getFlag from '../country-flag';
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { Actor } from "@dfinity/agent";
+import PlayerSlot from './player-slot';
 
-const PlayerSlot = ({ player, slotNumber, handlePlayerSelection }) => (
-  <Col md={4} className='d-flex'>
-    <div className='player-slot w-100'>
-      {player 
-        ? <PlayerDetails player={player} /> 
-        : <Card className='mb-1 h-100 d-flex flex-column justify-content-center'>
-            <Card.Body className='d-flex align-items-center justify-content-center'>
-              <Button onClick={() => handlePlayerSelection(slotNumber)} className="w-100">Add Player</Button>
-            </Card.Body>
-          </Card>}
-    </div>
-  </Col>
-);
-
-const PlayerDetails = ({ player }) => {
-  
-  return (
-    
-    <Card className='mb-1 position-relative'>
-     <Row className='mx-1 mt-2'>
-        <Col xs={4} md={3}>
-          <Row>
-            <p className='text-center'>{player.position}</p>
-            <PlayerIcon primaryColour={player.primaryColourHex} secondaryColour={player.secondaryColourHex} />
-          </Row>
-          <Row>
-            <div style={{
-              borderBottom: `3px solid ${player.primaryColourHex}`,
-              width: '100%',
-              paddingBottom: '2px'
-            }}></div>
-              <div style={{
-                marginTop: '5px',
-                marginBottom: '5px',
-                borderBottom: `3px solid ${player.secondaryColourHex}`,
-                width: '100%',
-              }}></div>
-          </Row>
-        </Col>
-        <Col xs={8} md={5}>
-          <Row>
-            <Col>
-            <span style={{fontSize: '0.94rem'}} className='mb-0'>
-              {getFlag(player.nationality)} {`${player.shirtNumber}`} {player.lastName}<br />
-              <small className='text-muted'>{player.firstName}</small>
-              <p className='w-100'>
-                <small>{player.team}</small>
-              </p>
-            </span>
-            </Col>
-          </Row>
-        </Col>
-        <Col xs={12} md={4} className='text-center'>
-              <StarOutlineIcon 
-                color="#807A00" 
-                width="15" 
-                height="15" 
-              />
-            <h6 className='text-center mt-2'>{`£${player.value}m`}</h6>
-            <Button className="w-100 mb-2"><TransferIcon /><small>Sell</small></Button>
-        </Col>
-      </Row>
-    </Card>
-  )
-}
-
-const BonusPanel = ({bonuses, handleBonusClick, show, handleClose}) => (
-  <Row>
-  
-    {
-    bonuses.map((bonus, index) =>
-    <Col xs={12} md={3}>
-      <Card className='mb-2'>
-      <div className='bonus-card-item' key={index}>
-      <div className='text-center mb-2'>
-        <StarIcon color="#807A00" />
-      </div>
-      <div className='text-center mb-2'>{bonus.name}</div>
-      <Button variant="primary w-100" onClick={() => handleBonusClick(bonus)} block>
-        Use
-      </Button>
-    </div>
-      </Card>
-    
-    </Col> 
-    )}
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Confirmation</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>You can only use 1 bonus per gameweek. Are you sure you want to proceed?</Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Confirm
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  </Row>
-);
+import { AuthContext } from "../../contexts/AuthContext";
+import BonusPanel from './bonus-panel';
 
 const FixtureRow = ({ homeTeam, awayTeam }) => (
   <Row className='align-items-center small-text mt-2'>
@@ -133,23 +36,11 @@ const FixtureRow = ({ homeTeam, awayTeam }) => (
 );
 
 const PickTeam = () => {
-  
+  const { authClient } = useContext(AuthContext);  
   const [isLoading, setIsLoading] = useState(true);
-  const [players, setPlayers] = useState([]);
-  const [bonuses, setBonuses] = useState([]);
-  const [show, setShow] = useState(false);
-  const [fixtures, setFixtures] = useState([]);
-  const [currentGameweek, setCurrentGameweek] = useState(1);
 
+  const [fantasyTeam, setFantasyTeam] = useState(null);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const handleBonusClick = (bonus) => {
-    // Handle the logic when a bonus is clicked
-    console.log(`Bonus ${bonus.name} was clicked`);
-    handleShow();
-  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -159,42 +50,15 @@ const PickTeam = () => {
     fetchData();
   }, []);
 
-  const handlePlayerSelection = (slotNumber) => {
-    // Handle player selection logic here
-    console.log(`Player slot ${slotNumber} was clicked`);
-  }
-  
-  const renderPlayerSlots = (playerArray) => {
-    let rows = [];
-    let cols = [];
-  
-    for (let i = 0; i < playerArray.length; i++) {
-      cols.push(
-        <PlayerSlot 
-          key={i} 
-          player={playerArray[i]} 
-          slotNumber={i} 
-          handlePlayerSelection={handlePlayerSelection} 
-        />
-      );
-  
-      // Create a new row every 3 players
-      if (cols.length === 3) {
-        rows.push(<Row className='player-container' key={i}>{cols}</Row>);
-        cols = [];
-      }
-    }
-  
-    // If there's an odd number of players, make sure to render the last player
-    if (cols.length > 0) {
-      rows.push(<Row className='player-container' key={playerArray.length - 1}>{cols}</Row>);
-    }
-  
-    return rows;
-  }
-
-
+  //CHANGE TO FETCH FROM DB
   const fetchViewData = async () => {
+    const identity = authClient.getIdentity();
+    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    //const fantasyTeamData = await open_fpl_backend.getFantasyTeam();
+    //setFantasyTeam(fantasyTeamData);
+    
+
+    //REMOVE ALL TEST DATA
     setPlayers([
       {shirtNumber: 1, nationality: 'Spain', firstName: 'David', lastName: 'Raya', position: 'GK', team: 'Brentford', value: 14, dateOfBirth: '1985-01-01', primaryColourHex: '#c10000', secondaryColourHex: '#ffffff'},
       {shirtNumber: 2, nationality: 'Brazil', firstName: 'Thiago', lastName: 'Silver', position: 'DF', team: 'Chelsea', value: 20, dateOfBirth: '1985-01-01', primaryColourHex: '#001b71', secondaryColourHex: '#ffffff  '},
@@ -214,7 +78,7 @@ const PickTeam = () => {
       {name: 'No Entry'},
       {name: 'Team Boost'},
       {name: 'Safe Hands'},
-      {name: 'Star Scorer'},
+      {name: 'Captain Fantastic'},
       {name: 'Brace Bonus'},
       {name: 'Hat Trick Hero'}
     ]);
@@ -385,6 +249,66 @@ const PickTeam = () => {
     
   };
 
+
+  //REMOVE: WILL COME FROM FANTASY TEAM
+  const [players, setPlayers] = useState([]);
+  const [bonuses, setBonuses] = useState([]);
+  
+  //UPDATE AS FOR BONUSES MODAL 
+  const [show, setShow] = useState(false);
+
+  //MOVE TO OWN FILE
+  const [fixtures, setFixtures] = useState([]);
+  const [currentGameweek, setCurrentGameweek] = useState(1);
+
+  //RENAME AND SETUP MODAL PROPERLY POSSIBLY PUTTING BONUSES IN SEPERATE FILE
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleBonusClick = (bonus) => {
+    // Handle the logic when a bonus is clicked
+    console.log(`Bonus ${bonus.name} was clicked`);
+    handleShow();
+  }
+
+  const handlePlayerSelection = (slotNumber) => {
+    // Handle player selection logic here
+    console.log(`Player slot ${slotNumber} was clicked`);
+  }
+  
+  
+  //THIS MIGHT BE OVER WORKED SINCE THE PLAYER POSITIONS WILL COME FROM THE DATABASE FIXED AND ORDERED
+  const renderPlayerSlots = (playerArray) => {
+    let rows = [];
+    let cols = [];
+  
+    for (let i = 0; i < playerArray.length; i++) {
+      cols.push(
+        <PlayerSlot 
+          key={i} 
+          player={playerArray[i]} 
+          slotNumber={i} 
+          handlePlayerSelection={handlePlayerSelection} 
+        />
+      );
+  
+      // Create a new row every 3 players
+      if (cols.length === 3) {
+        rows.push(<Row className='player-container' key={i}>{cols}</Row>);
+        cols = [];
+      }
+    }
+  
+    // If there's an odd number of players, make sure to render the last player
+    if (cols.length > 0) {
+      rows.push(<Row className='player-container' key={playerArray.length - 1}>{cols}</Row>);
+    }
+  
+    return rows;
+  }
+
+
+  //MOVE INTO STAND ALONE FIXTURES COMPONENT
   const handleGameweekChange = (change) => {
     // Ensures the current gameweek is always within the range 1 - 38
     setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
@@ -430,7 +354,7 @@ const PickTeam = () => {
         width="15" 
         height="15" 
       />
-      <p style={{marginLeft: '1rem'}} className='mb-0'>Select a player's star icon to receive double points for that player in the next gameweek.</p>
+      <p style={{marginLeft: '1rem'}} className='mb-0'>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</p>
     </div>
                 <Row>
                   {renderPlayerSlots(players)}

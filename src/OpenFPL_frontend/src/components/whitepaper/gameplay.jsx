@@ -155,13 +155,13 @@ const Gameplay = () => {
                       <td><b>Safe Hands</b>: Receive a X3 multiplier on your goalkeeper if they make 5 saves in a match.</td>
                     </tr>
                     <tr>
-                      <td><b>Star Scorer</b>: Receive a X2 multiplier on your star player's score if they score a goal in a match.</td>
+                      <td><b>Captain Fantastic</b>: Receive a X2 multiplier on your team captain's score if they score a goal in a match.</td>
                     </tr>
                     <tr>
-                      <td><b>Brace Bonus</b>: Receive a X2 multiplier on a player's score if they score 2 or more goals in a game.</td>
+                      <td><b>Brace Bonus</b>: Receive a X2 multiplier on a player's score if they score 2 or more goals in a game. Applies to every player who scores a brace.</td>
                     </tr>
                     <tr>
-                      <td><b>Hat Trick Hero</b>: Receive a X3 multiplier on a player's score if they score 3 or more goals in a game.</td>
+                      <td><b>Hat Trick Hero</b>: Receive a X3 multiplier on a player's score if they score 3 or more goals in a game. Applies to every player who scores a hat-trick.</td>
                     </tr>
                   </tbody>
                 </Table>

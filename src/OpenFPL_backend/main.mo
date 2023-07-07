@@ -15,6 +15,7 @@ import Result "mo:base/Result";
 import T "types";
 import Debug "mo:base/Debug";
 import Proposals "proposals";
+import FantasyTeams "fantasy-teams";
 
 actor Self {
 
@@ -22,6 +23,7 @@ actor Self {
   let bookInstance = Book.Book();
   let teamsInstance = Teams.Teams();
   let proposalsInstance = Proposals.Proposals();
+  let fantasyTeamsInstance = FantasyTeams.FantasyTeams();
 
   let CANISTER_IDS = {
     //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
@@ -174,6 +176,14 @@ actor Self {
     };
   };
 
+  public shared ({caller}) func getFantasyTeam() : async ?T.FantasyTeam {
+
+    if(Principal.isAnonymous(caller)){
+      return null;
+    };
+
+    return fantasyTeamsInstance.getFantasyTeam(Principal.toText(caller));
+  };
     
   system func heartbeat() : async () {
       await proposalsInstance.execute_accepted_proposals();

@@ -1,5 +1,6 @@
 import Principal "mo:base/Principal";
 import List "mo:base/List";
+import Bool "mo:base/Bool";
 
 module Types{
     
@@ -9,6 +10,7 @@ module Types{
         #NotAuthorized;
         #NotAllowed;
         #DecodeError;
+        #InvalidTeamError;
     };
     
     public type Profile = {
@@ -26,7 +28,7 @@ module Types{
     };
 
     public type Season = {
-        id: Nat8;
+        id: Nat16;
         name: Text;
         gameweeks: [Gameweek]
     };
@@ -69,6 +71,52 @@ module Types{
         owner: Principal;
         subaccount: Blob;
     };
+
+    public type FantasyTeam = {
+        principalId: Text;
+        transfersAvailable: Nat8;
+        bankBalance: Nat32;
+        playerIds: [Nat16];
+        captainId: Nat16;
+        goalGetterGameweek: Nat8;
+        goalGetterPlayerId: Nat16;
+        passMasterGameweek: Nat8;
+        passMasterPlayerId: Nat16;
+        noEntryGameweek: Nat8;
+        noEntryPlayerId: Nat16;
+        teamBoostGameweek: Nat8;
+        teamBoostTeamId: Nat16;
+        safeHandsGameweek: Nat8;
+        safeHandsPlayerId: Nat16;
+        captainFantasticGameweek: Nat8;
+        captainFantasticPlayerId: Nat16;
+        braceBonusGameweek: Nat8;
+        hatTrickHeroGameweek: Nat8;
+    };
+
+    public type FantasySelection = {
+        principalId: Text;
+        seasonId: Nat16;
+        gameweekId: Nat16;
+        bonusId: Nat8;
+        playerIds: [Nat16];
+        captainId: Nat16;
+        score: Nat16;
+        teamValue: Nat32;
+        bankBalance: Nat32;
+    };
+
+
+
+
+
+
+
+
+
+
+
+
 
      public type Proposal = {
         id : Nat;
