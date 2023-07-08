@@ -75,7 +75,7 @@ module Types{
     public type FantasyTeam = {
         principalId: Text;
         transfersAvailable: Nat8;
-        bankBalance: Nat32;
+        bankBalance: Float;
         playerIds: [Nat16];
         captainId: Nat16;
         goalGetterGameweek: Nat8;

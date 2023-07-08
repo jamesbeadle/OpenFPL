@@ -10,6 +10,7 @@ import Order "mo:base/Order";
 import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
+import Option "mo:base/Option";
 
 module {
     public class FantasyTeams(){
@@ -55,7 +56,7 @@ module {
                         return #err(#InvalidTeamError);
                     };
 
-                    var bankBalance = Nat32.fromNat(0);
+                    var bankBalance = Float.fromInt(0);
                     var goalGetterGameweek = Nat8.fromNat(0);
                     var goalGetterPlayerId = Nat16.fromNat(0);
                     var passMasterGameweek = Nat8.fromNat(0);
@@ -90,28 +91,28 @@ module {
                         goalGetterPlayerId := bonusPlayerId;
                     };
 
-                    if(bonusId == 2){
+                    if(bonusId == 2 and bonusPlayerId > 0){
                         passMasterGameweek := gameweek;
                         passMasterPlayerId := bonusPlayerId;
                     };
 
-                    if(bonusId == 3){
+                    if(bonusId == 3 and bonusPlayerId > 0){
                         noEntryGameweek := gameweek;
                         noEntryPlayerId := bonusPlayerId;
                     };
 
-                    if(bonusId == 4){
+                    if(bonusId == 4 and bonusTeamId > 0){
                         teamBoostGameweek := gameweek;
                         teamBoostTeamId := bonusTeamId;
                     };
 
-                    if(bonusId == 5){
+                    if(bonusId == 5 and bonusPlayerId > 0){
                         safeHandsGameweek := gameweek;
                         safeHandsPlayerId := bonusPlayerId;
                     };
 
 
-                    if(bonusId == 6){
+                    if(bonusId == 6 and bonusPlayerId > 0){
                         captainFantasticGameweek := gameweek;
                         captainFantasticPlayerId := bonusPlayerId;
                     };
@@ -157,7 +158,7 @@ module {
             };
         };
 
-        public func updateFantasyTeam(principalId: Text, players: [T.Player], bankBalance: Nat32, bonusId: Nat8, gameweek: Nat8) : Result.Result<(), T.Error> {
+        public func updateFantasyTeam(principalId: Text, players: [T.Player], captainId: Nat16, bankBalance: Nat32, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16, gameweek: Nat8, allPlayers: [T.Player]) : Result.Result<(), T.Error> {
             
              let existingTeam = List.find<T.FantasyTeam>(fantasyTeams, func (team: T.FantasyTeam): Bool {
                 return team.principalId == principalId;
@@ -173,87 +174,186 @@ module {
                         return #err(#InvalidTeamError);
                     };
 
-                    //if valid team need to work out which players are in and which are out to calculate the number of transfers and whether it is over budget or not
+                    let playersAdded = Array.filter<T.Player>(players, func (player: T.Player): Bool {
+                        let playerId = player.id;
+                        let isPlayerIdInExistingTeam = Array.find(existingTeam.playerIds, func (id: Nat16): Bool {
+                            return id == playerId;
+                        });
+                        return Option.isNull(isPlayerIdInExistingTeam);
+                    });
 
-
-
-                    let totalTeamValue = Array.foldLeft<Float, Float>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
-                    if(totalTeamValue > Float.fromInt(300_000_000)){
+                    if(Nat8.fromNat(Array.size(playersAdded)) > existingTeam.transfersAvailable){
                         return #err(#InvalidTeamError);
                     };
+
+                    let playersRemoved = Array.filter<Nat16>(existingTeam.playerIds, func (playerId: Nat16): Bool {
+                        let isPlayerIdInPlayers = Array.find(players, func (player: T.Player): Bool {
+                            return player.id == playerId;
+                        });
+                        return Option.isNull(isPlayerIdInPlayers);
+                    });
+
+                    let spent = Array.foldLeft<T.Player, Float>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.value);
+                    var sold = 0.0;
+                    for (i in Iter.range(0, Array.size(playersRemoved)-1)) {
+                        let player = Array.find(allPlayers, func (player: T.Player): Bool {
+                            return player.id == playersRemoved[i];
+                        });
+                        switch(player){
+                            case (null) {};
+                            case (?p) {
+                                sold := sold + p.value;
+                            };
+                        };
+                    };
+
+                    if(spent - sold > existingTeam.bankBalance){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId == 1 and existingTeam.goalGetterGameweek != 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId == 2 and existingTeam.passMasterGameweek != 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId == 3 and existingTeam.noEntryGameweek != 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId == 4 and existingTeam.teamBoostGameweek != 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId == 5 and existingTeam.safeHandsGameweek != 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId == 6 and existingTeam.captainFantasticGameweek != 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId == 7 and existingTeam.braceBonusGameweek != 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId == 8 and existingTeam.hatTrickHeroGameweek != 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    if(bonusId > 0 and (
+                        existingTeam.goalGetterGameweek == gameweek 
+                        or existingTeam.passMasterGameweek == gameweek
+                        or existingTeam.noEntryGameweek == gameweek
+                        or existingTeam.teamBoostGameweek == gameweek
+                        or existingTeam.safeHandsGameweek == gameweek
+                        or existingTeam.captainFantasticGameweek == gameweek
+                        or existingTeam.braceBonusGameweek == gameweek
+                        or existingTeam.hatTrickHeroGameweek == gameweek)){
+                            return #err(#InvalidTeamError);
+                    };
+
+
+                    var goalGetterGameweek = existingTeam.goalGetterGameweek;
+                    var goalGetterPlayerId = existingTeam.goalGetterPlayerId;
+                    var passMasterGameweek = existingTeam.passMasterGameweek;
+                    var passMasterPlayerId = existingTeam.passMasterPlayerId;
+                    var noEntryGameweek = existingTeam.noEntryGameweek;
+                    var noEntryPlayerId = existingTeam.noEntryPlayerId;
+                    var teamBoostGameweek = existingTeam.teamBoostGameweek;
+                    var teamBoostTeamId = existingTeam.teamBoostTeamId;
+                    var safeHandsGameweek = existingTeam.safeHandsGameweek;
+                    var safeHandsPlayerId = existingTeam.safeHandsPlayerId;
+                    var captainFantasticGameweek = existingTeam.captainFantasticGameweek;
+                    var captainFantasticPlayerId = existingTeam.captainFantasticPlayerId;
+                    var braceBonusGameweek = existingTeam.braceBonusGameweek;
+                    var hatTrickHeroGameweek = existingTeam.hatTrickHeroGameweek;
+                    var newCaptainId = captainId;
+                    
+                    if(newCaptainId == 0){
+                        var highestValue = Float.fromInt(0);
+                        for (i in Iter.range(0, Array.size(players)-1)) {
+                            if(players[i].value > highestValue){
+                                highestValue := players[i].value; 
+                                newCaptainId := players[i].id;
+                            };
+                        };
+                    };
+                    
+                    if(bonusId == 1 and bonusPlayerId > 0){
+                        goalGetterGameweek := gameweek;
+                        goalGetterPlayerId := bonusPlayerId;
+                    };
+
+                    if(bonusId == 2 and bonusPlayerId > 0){
+                        passMasterGameweek := gameweek;
+                        passMasterPlayerId := bonusPlayerId;
+                    };
+
+                    if(bonusId == 3 and bonusPlayerId > 0){
+                        noEntryGameweek := gameweek;
+                        noEntryPlayerId := bonusPlayerId;
+                    };
+
+                    if(bonusId == 4 and bonusTeamId > 0){
+                        teamBoostGameweek := gameweek;
+                        teamBoostTeamId := bonusTeamId;
+                    };
+
+                    if(bonusId == 5 and bonusPlayerId > 0){
+                        safeHandsGameweek := gameweek;
+                        safeHandsPlayerId := bonusPlayerId;
+                    };
+
+
+                    if(bonusId == 6 and bonusPlayerId > 0){
+                        captainFantasticGameweek := gameweek;
+                        captainFantasticPlayerId := bonusPlayerId;
+                    };
+
+
+                    if(bonusId == 7){
+                        braceBonusGameweek := gameweek;
+                    };
+
+
+                    if(bonusId == 8){
+                        hatTrickHeroGameweek := gameweek;
+                    };
+
+
+                    let allPlayerIds = Array.map<T.Player, Nat16>(players, func (player: T.Player) : Nat16 { return player.id; });
+                   
+                    let updatedTeam: T.FantasyTeam = {
+                        principalId = principalId;
+                        bankBalance = existingTeam.bankBalance - spent + sold;
+                        playerIds = allPlayerIds;
+                        transfersAvailable = existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
+                        captainId = newCaptainId;
+                        goalGetterGameweek = goalGetterGameweek;
+                        goalGetterPlayerId = goalGetterPlayerId;
+                        passMasterGameweek = passMasterGameweek;
+                        passMasterPlayerId = passMasterPlayerId;
+                        noEntryGameweek = noEntryGameweek;
+                        noEntryPlayerId = noEntryPlayerId;
+                        teamBoostGameweek = teamBoostGameweek;
+                        teamBoostTeamId = teamBoostTeamId;
+                        safeHandsGameweek = safeHandsGameweek;
+                        safeHandsPlayerId = safeHandsPlayerId;
+                        captainFantasticGameweek = captainFantasticGameweek;
+                        captainFantasticPlayerId = captainFantasticPlayerId;
+                        braceBonusGameweek = braceBonusGameweek;
+                        hatTrickHeroGameweek = hatTrickHeroGameweek;
+                    };
+
+                    fantasyTeams := List.map<T.FantasyTeam, T.FantasyTeam>(fantasyTeams, func (fantasyTeam: T.FantasyTeam): T.FantasyTeam {
+                        if (fantasyTeam.principalId == principalId) { updatedTeam } else { fantasyTeam }
+                    });
                    
                     return #ok(()); 
                 };
-            };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            let allPlayerIds = Array.map<T.Player, Nat16>(players, func (player: T.Player) : Nat16 { return player.id; });
-            let allPlayerPositions = Array.map<T.Player, Nat8>(players, func (player: T.Player) : Nat8 { return player.position; });
-
-            let validTeam = isTeamValid(allPlayerPositions);
-            if(not validTeam){
-                //SHOW INVALID FORMATION ERROR
-            };
-
-            //CHECK THE BONUS HASN'T ALREADY BEEN PLAYED
-            //Check they are allowed to make the transfers they have requested
-            //2 per gameweek unless pre season
-            //check players against original fanatasy team to check number of transfers and then check that against transfers available
-            //reduce the number of transfers if all valid
-
-            let newTeam: T.FantasyTeam = {
-                principalId = principalId;
-                bankBalance = bankBalance;
-                playerIds = allPlayerIds;
-                transfersAvailable = 0;
-                captainId = 0;
-                goalGetterGameweek = 0;
-                goalGetterPlayerId = 0;
-                passMasterGameweek = 0;
-                passMasterPlayerId = 0;
-                noEntryGameweek = 0;
-                noEntryPlayerId = 0;
-                teamBoostGameweek = 0;
-                teamBoostTeamId = 0;
-                safeHandsGameweek = 0;
-                safeHandsPlayerId = 0;
-                captainFantasticGameweek = 0;
-                captainFantasticPlayerId = 0;
-                braceBonusGameweek = 0;
-                hatTrickHeroGameweek = 0;
-            };
-
-            let existingTeam = List.find<T.FantasyTeam>(fantasyTeams, func (team: T.FantasyTeam): Bool {
-                return team.principalId == principalId;
-            });
-            
-            switch (existingTeam) {
-                case (null) { 
-                    var newTeamsList = List.nil<T.FantasyTeam>();
-                    newTeamsList := List.push(newTeam, newTeamsList);
-                    fantasyTeams := List.append(fantasyTeams, newTeamsList);
-                    };
-                case (?existingTeam) { };
             };
         };
 
