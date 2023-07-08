@@ -355,6 +355,7 @@ module {
                     return #ok(()); 
                 };
             };
+            
         };
 
         private func sortPlayers(players: [T.Player]) : [T.Player] {
