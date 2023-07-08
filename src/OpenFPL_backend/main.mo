@@ -16,6 +16,7 @@ import T "types";
 import Debug "mo:base/Debug";
 import Proposals "proposals";
 import FantasyTeams "fantasy-teams";
+import Option "mo:base/Option";
 
 actor Self {
 
@@ -25,9 +26,12 @@ actor Self {
   let proposalsInstance = Proposals.Proposals();
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams();
 
+  var activeGameweek: Nat8 = 1;
+
   let CANISTER_IDS = {
     //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
+    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -35,6 +39,11 @@ actor Self {
     icrc1_name: () -> async Text;
     icrc1_total_supply: () -> async Nat;
     icrc1_balance_of: (T.Account) -> async Nat;
+  };
+  
+  let playerCanister = actor (CANISTER_IDS.player_canister): actor 
+  { 
+    getPlayers: () -> async [T.Player];
   };
 
   private stable var stable_profiles: [T.Profile] = [];
@@ -176,13 +185,46 @@ actor Self {
     };
   };
 
-  public shared ({caller}) func getFantasyTeam() : async ?T.FantasyTeam {
+  public shared query ({caller}) func getFantasyTeam() : async ?T.FantasyTeam {
 
     if(Principal.isAnonymous(caller)){
       return null;
     };
 
     return fantasyTeamsInstance.getFantasyTeam(Principal.toText(caller));
+  };
+
+  public shared ({caller}) func saveFantasyTeam(newPlayerIds: [Nat16], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(principalId);
+
+    let allPlayers = await playerCanister.getPlayers();
+
+    let newPlayers = Array.filter<T.Player>(allPlayers, func (player: T.Player): Bool {
+        let playerId = player.id;
+        let isPlayerIdInNewTeam = Array.find(newPlayerIds, func (id: Nat16): Bool {
+            return id == playerId;
+        });
+        return Option.isSome(isPlayerIdInNewTeam);
+    });
+
+    switch (fantasyTeam) {
+        case (null) { return fantasyTeamsInstance.createFantasyTeam(principalId, activeGameweek, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId); };
+        case (?team) 
+        { 
+
+          let existingPlayers = Array.filter<T.Player>(allPlayers, func (player: T.Player): Bool {
+              let playerId = player.id;
+              let isPlayerIdInExistingTeam = Array.find(team.playerIds, func (id: Nat16): Bool {
+                  return id == playerId;
+              });
+              return Option.isSome(isPlayerIdInExistingTeam);
+          });
+          
+          return fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, activeGameweek, existingPlayers); 
+        };
+    };
   };
     
   system func heartbeat() : async () {

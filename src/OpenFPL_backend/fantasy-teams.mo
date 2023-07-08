@@ -36,7 +36,7 @@ module {
             };
         };
 
-        public func createFantasyTeam(principalId: Text, gameweek: Nat8, players: [T.Player], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : Result.Result<(), T.Error> {
+        public func createFantasyTeam(principalId: Text, gameweek: Nat8, newPlayers: [T.Player], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : Result.Result<(), T.Error> {
 
             let existingTeam = List.find<T.FantasyTeam>(fantasyTeams, func (team: T.FantasyTeam): Bool {
                 return team.principalId == principalId;
@@ -45,9 +45,9 @@ module {
             switch (existingTeam) {
                 case (null) { 
 
-                    let allPlayerValues = Array.map<T.Player, Float>(players, func (player: T.Player) : Float { return player.value; });
+                    let allPlayerValues = Array.map<T.Player, Float>(newPlayers, func (player: T.Player) : Float { return player.value; });
 
-                    if(not isTeamValid(players)){
+                    if(not isTeamValid(newPlayers)){
                         return #err(#InvalidTeamError);
                     };
 
@@ -73,15 +73,15 @@ module {
                     var hatTrickHeroGameweek = Nat8.fromNat(0);
                     var newCaptainId = captainId;
 
-                    let sortedPlayers = sortPlayers(players);       
+                    let sortedPlayers = sortPlayers(newPlayers);       
                     let allPlayerIds = Array.map<T.Player, Nat16>(sortedPlayers, func (player: T.Player) : Nat16 { return player.id; });
                     
                     if(newCaptainId == 0){
                         var highestValue = Float.fromInt(0);
-                        for (i in Iter.range(0, Array.size(players)-1)) {
-                            if(players[i].value > highestValue){
-                                highestValue := players[i].value; 
-                                newCaptainId := players[i].id;
+                        for (i in Iter.range(0, Array.size(newPlayers)-1)) {
+                            if(newPlayers[i].value > highestValue){
+                                highestValue := newPlayers[i].value; 
+                                newCaptainId := newPlayers[i].id;
                             };
                         };
                     };
@@ -158,7 +158,7 @@ module {
             };
         };
 
-        public func updateFantasyTeam(principalId: Text, players: [T.Player], captainId: Nat16, bankBalance: Nat32, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16, gameweek: Nat8, allPlayers: [T.Player]) : Result.Result<(), T.Error> {
+        public func updateFantasyTeam(principalId: Text, newPlayers: [T.Player], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16, gameweek: Nat8, existingPlayers: [T.Player]) : Result.Result<(), T.Error> {
             
              let existingTeam = List.find<T.FantasyTeam>(fantasyTeams, func (team: T.FantasyTeam): Bool {
                 return team.principalId == principalId;
@@ -168,13 +168,13 @@ module {
                 case (null) { return #ok(()); };
                 case (?existingTeam) { 
                     
-                    let allPlayerValues = Array.map<T.Player, Float>(players, func (player: T.Player) : Float { return player.value; });
+                    let allPlayerValues = Array.map<T.Player, Float>(newPlayers, func (player: T.Player) : Float { return player.value; });
                     
-                    if(not isTeamValid(players)){
+                    if(not isTeamValid(newPlayers)){
                         return #err(#InvalidTeamError);
                     };
 
-                    let playersAdded = Array.filter<T.Player>(players, func (player: T.Player): Bool {
+                    let playersAdded = Array.filter<T.Player>(newPlayers, func (player: T.Player): Bool {
                         let playerId = player.id;
                         let isPlayerIdInExistingTeam = Array.find(existingTeam.playerIds, func (id: Nat16): Bool {
                             return id == playerId;
@@ -187,7 +187,7 @@ module {
                     };
 
                     let playersRemoved = Array.filter<Nat16>(existingTeam.playerIds, func (playerId: Nat16): Bool {
-                        let isPlayerIdInPlayers = Array.find(players, func (player: T.Player): Bool {
+                        let isPlayerIdInPlayers = Array.find(newPlayers, func (player: T.Player): Bool {
                             return player.id == playerId;
                         });
                         return Option.isNull(isPlayerIdInPlayers);
@@ -196,7 +196,7 @@ module {
                     let spent = Array.foldLeft<T.Player, Float>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.value);
                     var sold = 0.0;
                     for (i in Iter.range(0, Array.size(playersRemoved)-1)) {
-                        let player = Array.find(allPlayers, func (player: T.Player): Bool {
+                        let player = Array.find(newPlayers, func (player: T.Player): Bool {
                             return player.id == playersRemoved[i];
                         });
                         switch(player){
@@ -274,10 +274,10 @@ module {
                     
                     if(newCaptainId == 0){
                         var highestValue = Float.fromInt(0);
-                        for (i in Iter.range(0, Array.size(players)-1)) {
-                            if(players[i].value > highestValue){
-                                highestValue := players[i].value; 
-                                newCaptainId := players[i].id;
+                        for (i in Iter.range(0, Array.size(newPlayers)-1)) {
+                            if(newPlayers[i].value > highestValue){
+                                highestValue := newPlayers[i].value; 
+                                newCaptainId := newPlayers[i].id;
                             };
                         };
                     };
@@ -324,7 +324,7 @@ module {
                     };
 
 
-                    let allPlayerIds = Array.map<T.Player, Nat16>(players, func (player: T.Player) : Nat16 { return player.id; });
+                    let allPlayerIds = Array.map<T.Player, Nat16>(newPlayers, func (player: T.Player) : Nat16 { return player.id; });
                    
                     let updatedTeam: T.FantasyTeam = {
                         principalId = principalId;
