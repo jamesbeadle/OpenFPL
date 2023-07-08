@@ -355,7 +355,6 @@ module {
                     return #ok(()); 
                 };
             };
-            
         };
 
         private func sortPlayers(players: [T.Player]) : [T.Player] {
@@ -370,94 +369,14 @@ module {
             return sortedPlayers;
         };
 
-        //sell player 
-
-        /*
-        public func isDisplayNameValid(displayName: Text) : Bool {
-            
-            if (Text.size(displayName) < 3 or Text.size(displayName) > 20) {
-                return false;
-            };
-
-            let isAlphanumeric = func (s: Text): Bool {
-                let chars = Text.toIter(s);
-                for (c in chars) {
-                    if (not((c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9'))) {
-                        return false;
-                    };
-                };
-                return true;
-            };
-
-            if (not isAlphanumeric(displayName)) {
-                return false;
-            };
-
-            let foundProfile = List.find<Types.Profile>(userProfiles, func (profile: Types.Profile): Bool {
-                return profile.displayName == displayName;
-            });
-
-            if(foundProfile != null){
-                return false;
-            };
-
-            return true;
-        };
-
-        public func updateDisplayName(principalName: Text, displayName: Text) : Result.Result<(), Types.Error> {
-            
-             let existingProfile = List.find<Types.Profile>(userProfiles, func (profile: Types.Profile): Bool {
-                return profile.principalName == principalName;
-            });
-            switch (existingProfile) {
-                case (null) { 
-                    return #err(#NotFound);
-                };
-                case (?existingProfile) {
-
-                    if(existingProfile.displayName == displayName){
-                        return #ok(());
-                    };
-            
-                    let updatedProfile: Types.Profile = {
-                        principalName = existingProfile.principalName;
-                        displayName = displayName;
-                        icpDepositAddress = existingProfile.icpDepositAddress;
-                        fplDepositAddress = existingProfile.fplDepositAddress;
-                        profilePicture = existingProfile.profilePicture;
-                        termsAccepted = existingProfile.termsAccepted;
-                        favouriteTeamId = existingProfile.favouriteTeamId;
-                        membershipType = existingProfile.membershipType;
-                        subscriptionDate = existingProfile.subscriptionDate;
-                        createDate = existingProfile.createDate;
-                        reputation = existingProfile.reputation;
-                    };
-
-                    let nameValid = isDisplayNameValid(updatedProfile.displayName);
-                    if(not nameValid){
-                        return #err(#NotAllowed);
-                    };
-
-                    userProfiles := List.map<Types.Profile, Types.Profile>(userProfiles, func (profile: Types.Profile): Types.Profile {
-                        if (profile.principalName == principalName) { updatedProfile } else { profile }
-                    });
-
-                    return #ok(());
-                };
-            };
-        };
-*/
-
         public func isTeamValid(players: [T.Player]) : Bool {
             let playerPositions = Array.map<T.Player, Nat8>(players, func (player: T.Player) : Nat8 { return player.position; });
                     
-            // Check the number of players
             let playerCount = playerPositions.size();
             if(playerCount != 11 ){
                 return false;
             };
             
-            // Count the number of players in each position
             var teamPlayerCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
             var goalkeeperCount = 0;
             var defenderCount = 0;
@@ -501,12 +420,7 @@ module {
                 midfielderCount < 3 or midfielderCount > 5 or forwardCount < 1 or forwardCount > 3 ){
                 return false;
             };
-
-
-            
             return true;
         };
-
-
     }
 }
