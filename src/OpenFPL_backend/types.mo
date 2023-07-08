@@ -30,7 +30,6 @@ module Types{
     public type Season = {
         id: Nat16;
         name: Text;
-        gameweeks: [Gameweek]
     };
 
     public type Gameweek = {
@@ -49,10 +48,13 @@ module Types{
 
     public type Fixture = {
         id: Nat32;
+        seasonId: Nat16;
+        gameweek: Nat8;
+        kickOff: Int;
         homeTeamId: Nat16;
         awayTeamId: Nat16;
         homeGoals: Nat8;
-        awayGoal: Nat8;
+        awayGoals: Nat8;
     };
 
     public type Player = {

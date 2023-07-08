@@ -1,19 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Card, Spinner, Dropdown, Table, Button, Form, Modal, ButtonGroup, Col, Row } from 'react-bootstrap';
-import { player_canister as player_canister } from '../../../../declarations/player_canister';
+import { Card, Spinner, Table, Button, Form, Modal, ButtonGroup, Col, Row } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
-import { format } from 'date-fns';
-import { Actor } from "@dfinity/agent";
-import { hasFlag } from 'country-flag-icons'
 import getFlag from '../country-flag';
 import { getAgeFromDOB } from '../helpers';
 
-import { AuthContext } from "../../contexts/AuthContext";
+import { PlayerContext } from "./contexts/PlayerContext";
+
 
 const POSITION_LABELS = ["GK", "DEF", "MID", "FWD"];
 
 const PlayerValuations = ({ isActive }) => {
-  const { authClient } = useContext(AuthContext);
+  const { players, setPlayers } = useContext(PlayerContext);
+
   const [isLoading, setIsLoading] = useState(false);
   const [viewData, setViewData] = useState([]);
   const [teams, setTeamsData] = useState([]);
@@ -81,13 +79,18 @@ const PlayerValuations = ({ isActive }) => {
     await fetchViewData(filterTeam, event.target.value, 0);
   };
 
-  const fetchViewData = async (teamId, positionId, pageNumber) => {
-    const identity = authClient.getIdentity();
-    Actor.agentOf(player_canister).replaceIdentity(identity);
-    const playersData = await player_canister.getPlayers(Number(teamId), Number(positionId), Number(pageNumber) * Number(count), Number(count));
-    setViewData(playersData);
+  const fetchViewData = (teamId, positionId, pageNumber) => {
+    setIsLoading(true);
+  
+    const filteredPlayers = players
+      .filter(player => (teamId === 0 || player.teamId === teamId) && (positionId === -1 || player.positionId === positionId))
+      .slice(pageNumber * count, (pageNumber + 1) * count);
+  
+    setViewData({ players: filteredPlayers, totalEntries: filteredPlayers.length });
+  
     setIsLoading(false);
   };
+  
 
   if (isLoading) {
     return (

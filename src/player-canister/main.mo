@@ -11,7 +11,7 @@ import Nat16 "mo:base/Nat16";
 actor Self {
 
   private var players = List.fromArray<T.Player>(GenesisData.genesis_players);
-  private var nextPlayerId : Nat = 1;
+  private var nextPlayerId : Nat = 560;
 
   private stable var stable_players: [T.Player] = [];
   private stable var stable_next_player_id : Nat = 0;

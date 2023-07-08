@@ -6,17 +6,18 @@ import Profiles "profiles";
 import Account "Account";
 import Book "book";
 import Teams "teams";
+import Proposals "proposals";
+import FantasyTeams "fantasy-teams";
+import Fixtures "fixtures";
 import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
 import Nat32 "mo:base/Nat32";
 import Nat64 "mo:base/Nat64";
 import Result "mo:base/Result";
-import T "types";
 import Debug "mo:base/Debug";
-import Proposals "proposals";
-import FantasyTeams "fantasy-teams";
 import Option "mo:base/Option";
+import T "types";
 
 actor Self {
 
@@ -25,7 +26,9 @@ actor Self {
   let teamsInstance = Teams.Teams();
   let proposalsInstance = Proposals.Proposals();
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams();
+  let fixturesInstance = Fixtures.Fixtures();
 
+  var activeSeasonId: Nat16 = 1;
   var activeGameweek: Nat8 = 1;
 
   let CANISTER_IDS = {
@@ -46,9 +49,9 @@ actor Self {
     getPlayers: () -> async [T.Player];
   };
 
-  private stable var stable_profiles: [T.Profile] = [];
-  private stable var stable_proposals: [T.Proposal] = [];
-  private stable var stable_next_proposal_id : Nat = 0;
+  public shared ({caller}) func getCurrentGameweek() : async Nat8 {
+    return activeGameweek;
+  };
 
   //Profile Functions
   public shared ({caller}) func getProfileDTO() : async DTOs.ProfileDTO {
@@ -97,7 +100,10 @@ actor Self {
     };
 
     return profileDTO;
-    
+  };
+
+  public shared query ({caller}) func getFixturesForGameweek(gameweek: Nat8) : async [T.Fixture]{
+    return fixturesInstance.getFixtures(activeSeasonId);
   };
 
   public shared query ({caller}) func isDisplayNameValid(displayName: Text) : async Bool {
@@ -232,10 +238,19 @@ actor Self {
   };
   
 
+
+  private stable var stable_profiles: [T.Profile] = [];
+  private stable var stable_proposals: [T.Proposal] = [];
+  private stable var stable_next_proposal_id : Nat = 0;
+  private stable var stable_active_season_id : Nat16 = 0;
+  private stable var stable_active_gameweek : Nat8 = 0;
+
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
     stable_proposals := proposalsInstance.getData();
     stable_next_proposal_id := proposalsInstance.nextProposalId;
+    stable_active_season_id := activeSeasonId;
+    stable_active_gameweek := activeGameweek;
   };
 
   system func postupgrade() {

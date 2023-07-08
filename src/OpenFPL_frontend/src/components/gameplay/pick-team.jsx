@@ -1,45 +1,32 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Row, Col, Card, Button, Dropdown, Spinner, Modal } from 'react-bootstrap';
-import { StarIcon, StarOutlineIcon,  PlayerIcon, TransferIcon } from '../icons';
-import getFlag from '../country-flag';
+import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
+import { StarOutlineIcon } from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import PlayerSlot from './player-slot';
+import Fixtures from './fixtures';
+import SelectPlayerModal from './select-player-modal';
 
-import { AuthContext } from "../../contexts/AuthContext";
-import BonusPanel from './bonus-panel';
-
-const FixtureRow = ({ homeTeam, awayTeam }) => (
-  <Row className='align-items-center small-text mt-2'>
-    <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
-      <div style={{padding: '0 5px'}}>
-        <div style={{backgroundColor: homeTeam.primaryColourHex, width: '20px', height: '20px'}}></div>
-        <div style={{borderBottom: `3px solid ${homeTeam.secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
-      </div>
-    </Col>
-    <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-      <p style={{margin: 0}}><small>{homeTeam.friendlyName}</small></p>
-    </Col>
-    <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-      <small style={{margin: 0}}>vs</small>
-    </Col>
-    <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-      <p style={{margin: 0}}><small>{awayTeam.friendlyName}</small></p>
-    </Col>
-    <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
-      <div style={{padding: '0 5px'}}>
-        <div style={{backgroundColor: awayTeam.primaryColourHex, width: '20px', height: '20px'}}></div>
-        <div style={{borderBottom: `3px solid ${awayTeam.secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
-      </div>
-    </Col>
-  </Row>
-);
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);  
   const [isLoading, setIsLoading] = useState(true);
 
   const [fantasyTeam, setFantasyTeam] = useState(null);
+  const [teams, setTeams] = useState([]);
+  const [bonuses, setBonuses] = useState([
+    {id: 1, name: 'Goal Getter'},
+    {id: 2, name: 'Pass Master'},
+    {id: 3, name: 'No Entry'},
+    {id: 4, name: 'Team Boost'},
+    {id: 5, name: 'Safe Hands'},
+    {id: 6, name: 'Captain Fantastic'},
+    {id: 7, name: 'Brace Bonus'},
+    {id: 8, name: 'Hat Trick Hero'}
+  ]); 
+  const [showSelectPlayerModal, setShowSelectPlayerModal] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
 
 
   useEffect(() => {
@@ -50,234 +37,36 @@ const PickTeam = () => {
     fetchData();
   }, []);
 
-  //CHANGE TO FETCH FROM DB
   const fetchViewData = async () => {
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    //const fantasyTeamData = await open_fpl_backend.getFantasyTeam();
-    //setFantasyTeam(fantasyTeamData);
-    
 
-    //REMOVE ALL TEST DATA
-    setPlayers([
-      {shirtNumber: 1, nationality: 'Spain', firstName: 'David', lastName: 'Raya', position: 'GK', team: 'Brentford', value: 14, dateOfBirth: '1985-01-01', primaryColourHex: '#c10000', secondaryColourHex: '#ffffff'},
-      {shirtNumber: 2, nationality: 'Brazil', firstName: 'Thiago', lastName: 'Silver', position: 'DF', team: 'Chelsea', value: 20, dateOfBirth: '1985-01-01', primaryColourHex: '#001b71', secondaryColourHex: '#ffffff  '},
-      {shirtNumber: 3, nationality: 'Netherlands', firstName: 'Virgil', lastName: 'Van Dijk', position: 'DF', team: 'Liverpool', value: 32.5, dateOfBirth: '1985-01-01', primaryColourHex: '#dc0714', secondaryColourHex: '#ffffff'},
-      {shirtNumber: 4, nationality: 'England', firstName: 'John', lastName: 'Stones', position: 'DF', team: 'Man City', value: 22, dateOfBirth: '1985-01-01', primaryColourHex: '#98c5e9', secondaryColourHex: '#ffffff'},
-      {shirtNumber: 5, nationality: 'Sweden', firstName: 'Victor', lastName: 'Lindelöf', position: 'DF', team: 'Man United', value: 12.5, dateOfBirth: '1985-01-01', primaryColourHex: '#c70101', secondaryColourHex: '#ffffff'},
-      {shirtNumber: 6, nationality: 'Portugal', firstName: 'Matheus', lastName: 'Nunes', position: 'MF', team: 'Wolves', value: 14, dateOfBirth: '1985-01-01', primaryColourHex: '#fdb913', secondaryColourHex: '#231f20'},
-      {shirtNumber: 7, nationality: 'England', firstName: 'Mason', lastName: 'Mount', position: 'MF', team: 'Chelsea', value: 39, dateOfBirth: '1985-01-01', primaryColourHex: '#001b71', secondaryColourHex: '#ffffff'},
-      {shirtNumber: 8, nationality: 'England', firstName: 'Manuel', lastName: 'Lanzini', position: 'MF', team: 'West Ham', value: 16, dateOfBirth: '1985-01-01', primaryColourHex: '#7c2c3b', secondaryColourHex: '#ffffff'},
-      {shirtNumber: 9, nationality: 'England', firstName: 'Emmanuel', lastName: 'Dennis', position: 'FW', team: 'Nottingham Forest', value: 22, dateOfBirth: '1985-01-01', primaryColourHex: '#c8102e', secondaryColourHex: '#efefef'},
-      {shirtNumber: 10, nationality: 'England', firstName: 'Harry', lastName: 'Kane', position: 'FW', team: 'Tottenham', value: 84, dateOfBirth: '1985-01-01', primaryColourHex: '#ffffff', secondaryColourHex: '#0b0e1e'},
-      null
-    ]);
-    setBonuses([
-      {name: 'Goal Getter'},
-      {name: 'Pass Master'},
-      {name: 'No Entry'},
-      {name: 'Team Boost'},
-      {name: 'Safe Hands'},
-      {name: 'Captain Fantastic'},
-      {name: 'Brace Bonus'},
-      {name: 'Hat Trick Hero'}
-    ]);
-    setFixtures([
-      {
-        awayTeam: {
-          id: 1,
-          name: 'Arsenal',
-          primaryColourHex: '#f00000',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Arsenal'
-        },
-        homeTeam: {
-          id: 16,
-          name: 'Nottingham Forest',
-          primaryColourHex: '#c8102e',
-          secondaryColourHex: '#efefef',
-          friendlyName: 'Nottingham Forest'
-        },
-      },
-      {
-        homeTeam: {
-          id: 6,
-          name: 'Burnley',
-          primaryColourHex: '#5e1444',
-          secondaryColourHex: '#f2f2f2',
-          friendlyName: 'Burnley'
-        },
-        awayTeam: {
-          id: 13,
-          name: 'Manchester City',
-          primaryColourHex: '#98c5e9',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Man City'
-        },
-      },
-      {
-        awayTeam: {
-          id: 3,
-          name: 'AFC Bournemouth',
-          primaryColourHex: '#d71921',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Bournemouth'
-        },
-        homeTeam: {
-          id: 19,
-          name: 'West Ham United',
-          primaryColourHex: '#7c2c3b',
-          secondaryColourHex: '#2dafe5',
-          friendlyName: 'West Ham'
-        },
-      },
-      {
-        homeTeam: {
-          id: 5,
-          name: 'Brighton & Hove Albion',
-          primaryColourHex: '#004b95',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Brighton'
-        },
-        awayTeam: {
-          id: 12,
-          name: 'Luton Town',
-          primaryColourHex: '#f36f24',
-          secondaryColourHex: '#fefefe',
-          friendlyName: 'Luton'
-        },
-      },
-      {
-        awayTeam: {
-          id: 9,
-          name: 'Everton',
-          primaryColourHex: '#0a0ba1',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Everton'
-        },
-        homeTeam: {
-          id: 10,
-          name: 'Fulham',
-          primaryColourHex: '#000000',
-          secondaryColourHex: '#e5231b',
-          friendlyName: 'Fulham'
-        },
-      },
-      {
-        awayTeam: {
-          id: 17,
-          name: 'Sheffield United',
-          primaryColourHex: '#e20c17',
-          secondaryColourHex: '#1d1d1b',
-          friendlyName: 'Sheffield United'
-        },
-        homeTeam: {
-          id: 8,
-          name: 'Crystal Palace',
-          primaryColourHex: '#e91d12',
-          secondaryColourHex: '#0055a5',
-          friendlyName: 'Crystal Palace'
-        },
-      },
-      {
-        homeTeam: {
-          id: 15,
-          name: 'Newcastle United',
-          primaryColourHex: '#000000',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Newcastle'
-        },
-        awayTeam: {
-          id: 2,
-          name: 'Aston Villa',
-          primaryColourHex: '#7d1142',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Aston Villa'
-        },
-      },
-      {
-        awayTeam: {
-          id: 4,
-          name: 'Brentford',
-          primaryColourHex: '#c10000',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Brentford'
-        },
-        homeTeam: {
-          id: 18,
-          name: 'Tottenham Hotspur',
-          primaryColourHex: '#ffffff',
-          secondaryColourHex: '#0b0e1e',
-          friendlyName: 'Tottenham'
-        },
-      },
-      {
-        homeTeam: {
-          id: 7,
-          name: 'Chelsea',
-          primaryColourHex: '#001b71',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Chelsea'
-        },
-        awayTeam: {
-          id: 11,
-          name: 'Liverpool',
-          primaryColourHex: '#dc0714',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Liverpool'
-        },
-      },
-      {
-        awayTeam: {
-          id: 14,
-          name: 'Manchester United',
-          primaryColourHex: '#c70101',
-          secondaryColourHex: '#ffffff',
-          friendlyName: 'Man United'
-        },
-        homeTeam: {
-          id: 20,
-          name: 'Wolverhampton Wanderers',
-          primaryColourHex: '#fdb913',
-          secondaryColourHex: '#231f20',
-          friendlyName: 'Wolves'
-        },
-      }
-    ]);
-    
-    
-    
+    const teamsData = await open_fpl_backend.getTeams();
+    setTeams(teamsData);
+
+    const fantasyTeamData = await open_fpl_backend.getFantasyTeam();
+    setFantasyTeam(fantasyTeamData);
+  };
+  
+  const handlePlayerSelection = (slotNumber) => {
+    setSelectedSlot(slotNumber);
+    setShowSelectPlayerModal(true);
   };
 
-
-  //REMOVE: WILL COME FROM FANTASY TEAM
-  const [players, setPlayers] = useState([]);
-  const [bonuses, setBonuses] = useState([]);
+  const handlePlayerConfirm = (player) => {
+    setFantasyTeam(prevFantasyTeam => {
+      const updatedFantasyTeam = {...prevFantasyTeam};
+      updatedFantasyTeam.players[selectedSlot] = player;
+      return updatedFantasyTeam;
+    });
+    setShowSelectPlayerModal(false);
+  };
   
-  //UPDATE AS FOR BONUSES MODAL 
-  const [show, setShow] = useState(false);
-
-  //MOVE TO OWN FILE
-  const [fixtures, setFixtures] = useState([]);
-  const [currentGameweek, setCurrentGameweek] = useState(1);
-
-  //RENAME AND SETUP MODAL PROPERLY POSSIBLY PUTTING BONUSES IN SEPERATE FILE
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const handleBonusClick = (bonus) => {
-    // Handle the logic when a bonus is clicked
-    console.log(`Bonus ${bonus.name} was clicked`);
-    handleShow();
-  }
-
-  const handlePlayerSelection = (slotNumber) => {
-    // Handle player selection logic here
-    console.log(`Player slot ${slotNumber} was clicked`);
+  
+  const handleBonusClick = (bonusId) => {
+    console.log(`Bonus ${bonusId} was clicked`);
   }
   
-  
-  //THIS MIGHT BE OVER WORKED SINCE THE PLAYER POSITIONS WILL COME FROM THE DATABASE FIXED AND ORDERED
   const renderPlayerSlots = (playerArray) => {
     let rows = [];
     let cols = [];
@@ -292,35 +81,56 @@ const PickTeam = () => {
         />
       );
   
-      // Create a new row every 3 players
-      if (cols.length === 3) {
+      if (cols.length === 3 || i === playerArray.length - 1) {
         rows.push(<Row className='player-container' key={i}>{cols}</Row>);
         cols = [];
       }
     }
-  
-    // If there's an odd number of players, make sure to render the last player
-    if (cols.length > 0) {
-      rows.push(<Row className='player-container' key={playerArray.length - 1}>{cols}</Row>);
-    }
+    
+    // Add Save button as 12th tile
+    cols.push(
+      <Col className="d-flex justify-content-center align-items-center">
+        <Button variant="primary" onClick={handleSaveTeam}>Save</Button>
+      </Col>
+    );
+    
+    rows.push(<Row className='player-container' key={playerArray.length}>{cols}</Row>);
   
     return rows;
   }
 
-
-  //MOVE INTO STAND ALONE FIXTURES COMPONENT
-  const handleGameweekChange = (change) => {
-    // Ensures the current gameweek is always within the range 1 - 38
-    setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
+  const calculateTeamValue = () => {
+    if(fantasyTeam && fantasyTeam.players) {
+      const totalValue = fantasyTeam.players.reduce((acc, player) => acc + player.value, 0);
+      return (totalValue / 10).toFixed(1);
+    }
+    return null;
   }
+
+  const handleSaveTeam = async () => {
+    setIsLoading(true);
+    try {
+      const playerIds = fantasyTeam.players.map(player => player.id);
+
+      const identity = authClient.getIdentity();
+      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      await open_fpl_backend.saveFantasyTeam(playerIds);
+      
+      setIsLoading(false);
   
+    } catch(error) {
+      console.error("Failed to save team", error);
+      setIsLoading(false);
+    }
+  };
+  
+
   return (
     isLoading ? (
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
         <Spinner animation="border" />
         <p className='text-center mt-1'>Loading Team</p>
-      </div>) 
-      :
+      </div>) :
       <Container className="flex-grow-1 my-5 pitch-bg mt-0">
         <Row className="mb-4">
           <Col md={9}>
@@ -334,13 +144,13 @@ const PickTeam = () => {
                     <Card className="p-2">
                       <Row className='align-items-center text-center small-text'>
                         <Col xs={12} md={4}>
-                            <small>Team Value: £276.0m</small>
+                            <small>Team Value: £{calculateTeamValue()}m</small>
                         </Col>
                         <Col xs={12} md={4}>
-                          <small>Bank: £24.0m</small>
+                          <small>Bank: £{(fantasyTeam ? fantasyTeam.bank / 10 : 0).toFixed(1)}m</small>
                         </Col>
                         <Col xs={12} md={4}>
-                          <small>Transfers Available: 2</small>
+                          <small>Transfers Available: {fantasyTeam ? fantasyTeam.transfersAvailable : 0}</small>
                         </Col>
                       </Row>
                     </Card>
@@ -348,60 +158,48 @@ const PickTeam = () => {
                 </Row>
               </Card.Header>
               <Card.Body>
-              <div className='d-flex align-items-center mb-3'>
-      <StarOutlineIcon 
-        color="#807A00" 
-        width="15" 
-        height="15" 
-      />
-      <p style={{marginLeft: '1rem'}} className='mb-0'>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</p>
-    </div>
+                <div className='d-flex align-items-center mb-3'>
+                  <StarOutlineIcon color="#807A00" width="15" height="15" />
+                  <p style={{marginLeft: '1rem'}} className='mb-0'>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</p>
+                </div>
                 <Row>
-                  {renderPlayerSlots(players)}
+                  {renderPlayerSlots(fantasyTeam.players)}
                 </Row>
               </Card.Body>
             </Card>
             <Card className="mt-4">
               <Card.Header>Bonuses</Card.Header>
               <Card.Body>
-              <BonusPanel 
-              bonuses={bonuses} 
-              handleBonusClick={handleBonusClick} 
-              show={show} 
-              handleClose={handleClose} 
-            />
+                <Row>
+                  {bonuses.map((bonus, index) =>
+                    <Col xs={12} md={3} key={index}>
+                      <Card className='mb-2'>
+                        <div className='bonus-card-item'>
+                          <div className='text-center mb-2'>
+                            <StarIcon color="#807A00" />
+                          </div>
+                          <div className='text-center mb-2'>{bonus.name}</div>
+                          <Button variant="primary w-100" onClick={() => handleBonusClick(bonus.id)} style={{ display: 'block' }}>
+                            Use
+                          </Button>
+                        </div>
+                      </Card>
+                    </Col>)}
+                  </Row>
               </Card.Body>
             </Card>
           </Col>
           <Col md={3}>
-            <Card className="mt-4 mb-4">
-              <Card.Header>
-                Fixtures
-              </Card.Header>
-              <Card.Body>
-              <Row className="d-flex align-items-center">
-                <div style={{flex: 1, padding: '0 5px'}}>
-                  <Button className="w-100 justify-content-center" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>{"<"}</Button>
-                </div>
-                <div style={{flex: 3, textAlign: 'center', padding: '0 5px'}}>
-                  <small>Gameweek {currentGameweek}</small>
-                </div>
-                <div style={{flex: 1, padding: '0 5px'}}>
-                  <Button className="w-100 justify-content-center" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>{">"}</Button>
-                </div>
-              </Row>
-
-
-
-
-                <br />
-                {fixtures.map((fixture, i) => (
-                  <FixtureRow key={i} homeTeam={fixture.homeTeam} awayTeam={fixture.awayTeam} />
-                ))}
-              </Card.Body>
-            </Card>
+            <Fixtures />
           </Col>
         </Row>
+
+        <SelectPlayerModal 
+          show={showSelectPlayerModal} 
+          handleClose={() => setShowSelectPlayerModal(false)} 
+          handleConfirm={handlePlayerConfirm}
+          teams={teams}
+        />
         
       </Container>
   );

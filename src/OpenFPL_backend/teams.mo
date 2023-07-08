@@ -32,7 +32,7 @@ module {
         { id = 20; name = "Wolverhampton Wanderers"; primaryColourHex = "#fdb913"; secondaryColourHex = "#231f20"; friendlyName = "Wolves"; }
     ];
     private var teams = List.fromArray(genesis_teams);
-    private var nextTeamId : Nat16 = 1;
+    private var nextTeamId : Nat16 = 21;
 
     public func setData(stable_teams: [Types.Team], stable_teamId : Nat16){
         teams := List.fromArray(stable_teams);
