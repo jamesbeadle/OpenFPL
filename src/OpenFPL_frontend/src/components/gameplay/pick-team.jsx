@@ -7,26 +7,29 @@ import { Actor } from "@dfinity/agent";
 import PlayerSlot from './player-slot';
 import Fixtures from './fixtures';
 import SelectPlayerModal from './select-player-modal';
+import { PlayerContext } from "../../contexts/PlayerContext";
 
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);  
   const [isLoading, setIsLoading] = useState(true);
-
+  const { players } = useContext(PlayerContext);
   const [fantasyTeam, setFantasyTeam] = useState(null);
   const [teams, setTeams] = useState([]);
   const [bonuses, setBonuses] = useState([
-    {id: 1, name: 'Goal Getter'},
-    {id: 2, name: 'Pass Master'},
-    {id: 3, name: 'No Entry'},
-    {id: 4, name: 'Team Boost'},
-    {id: 5, name: 'Safe Hands'},
-    {id: 6, name: 'Captain Fantastic'},
-    {id: 7, name: 'Brace Bonus'},
-    {id: 8, name: 'Hat Trick Hero'}
+    {id: 1, name: 'Goal Getter', propertyName: 'goalGetterGameweek'},
+    {id: 2, name: 'Pass Master', propertyName: 'passMasterGameweek'},
+    {id: 3, name: 'No Entry', propertyName: 'noEntryGameweek'},
+    {id: 4, name: 'Team Boost', propertyName: 'teamBoostGameweek'},
+    {id: 5, name: 'Safe Hands', propertyName: 'safaHandsGameweek'},
+    {id: 6, name: 'Captain Fantastic', propertyName: 'captainFantasticGameweek'},
+    {id: 7, name: 'Brace Bonus', propertyName: 'braceBonusGameweek'},
+    {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHeroGameweek'}
   ]); 
   const [showSelectPlayerModal, setShowSelectPlayerModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [captainId, setCaptainId] = useState(0);
+  const [currentGameweek, setCurrentGameweek] = useState(null);
 
 
   useEffect(() => {
@@ -46,6 +49,9 @@ const PickTeam = () => {
 
     const fantasyTeamData = await open_fpl_backend.getFantasyTeam();
     setFantasyTeam(fantasyTeamData);
+
+    const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
+    setCurrentGameweek(currentGameweekData);
   };
   
   const handlePlayerSelection = (slotNumber) => {
@@ -67,17 +73,23 @@ const PickTeam = () => {
     console.log(`Bonus ${bonusId} was clicked`);
   }
   
-  const renderPlayerSlots = (playerArray) => {
+  const renderPlayerSlots = (playerArray, captainId, handleCaptainSelection) => {
     let rows = [];
     let cols = [];
-  
+
+    const disableSellButton = currentGameweek === 1 || !fantasyTeam || (fantasyTeam && fantasyTeam.transfersAvailable === 0);
+
     for (let i = 0; i < playerArray.length; i++) {
       cols.push(
         <PlayerSlot 
           key={i} 
           player={playerArray[i]} 
           slotNumber={i} 
-          handlePlayerSelection={handlePlayerSelection} 
+          handlePlayerSelection={handlePlayerSelection}
+          captainId={captainId} 
+          handleCaptainSelection={handleCaptainSelection} 
+          disableSellButton={disableSellButton}
+          handleSellPlayer={handleSellPlayer}
         />
       );
   
@@ -99,6 +111,17 @@ const PickTeam = () => {
     return rows;
   }
 
+  const handleSellPlayer = (playerId) => {
+    setFantasyTeam(prevFantasyTeam => {
+      const updatedFantasyTeam = {...prevFantasyTeam};
+      // filter out the sold player
+      updatedFantasyTeam.players = updatedFantasyTeam.players.filter(player => player.id !== playerId);
+      // add player's value back to bank
+      updatedFantasyTeam.bank += players.find(player => player.id === playerId).value;
+      return updatedFantasyTeam;
+    });
+  };
+  
   const calculateTeamValue = () => {
     if(fantasyTeam && fantasyTeam.players) {
       const totalValue = fantasyTeam.players.reduce((acc, player) => acc + player.value, 0);
@@ -123,8 +146,74 @@ const PickTeam = () => {
       setIsLoading(false);
     }
   };
-  
 
+  const handleCaptainSelection = (playerId) => {
+    setCaptainId(prevCaptainId => (prevCaptainId === playerId ? 0 : playerId));
+  };
+
+  const handleAutoFill = () => {
+    // Make sure we have all the players data
+    if (players.length === 0) {
+      console.error("No player data available for autofill.");
+      return;
+    }
+  
+    // Generate list of available positions for auto-fill (remaining positions to be filled in team)
+    const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
+    const currentTeamPositions = fantasyTeam.players.map(player => player.position);
+    const positionsToFill = teamPositions.map(position => {
+      let minPlayers, maxPlayers;
+      switch(position) {
+        case 'Goalkeeper':
+          minPlayers = 1;
+          maxPlayers = 1;
+          break;
+        case 'Defender':
+          minPlayers = 3;
+          maxPlayers = 5;
+          break;
+        case 'Midfielder':
+          minPlayers = 3;
+          maxPlayers = 5;
+          break;
+        case 'Forward':
+          minPlayers = 1;
+          maxPlayers = 3;
+          break;
+        default:
+          minPlayers = 0;
+          maxPlayers = 0;
+      }
+      const currentCount = currentTeamPositions.filter(pos => pos === position).length;
+      const positionsToAdd = Math.max(minPlayers - currentCount, 0);
+      const positionsToReplace = Math.min(maxPlayers - currentCount, positionsToAdd);
+      return Array(positionsToAdd + positionsToReplace).fill(position);
+    }).flat();
+  
+    // Sort players by value (price)
+    const sortedPlayers = [...players].sort((a, b) => a.value - b.value);
+  
+    // Create a new team based on the sorted players and the positions to fill
+    let newTeam = [...fantasyTeam.players];
+    let remainingBudget = fantasyTeam.bankBalance;
+    for (let position of positionsToFill) {
+      for (let i = 0; i < sortedPlayers.length; i++) {
+        if (sortedPlayers[i].position === position && sortedPlayers[i].value <= remainingBudget) {
+          newTeam.push(sortedPlayers[i]);
+          remainingBudget -= sortedPlayers[i].value;
+          sortedPlayers.splice(i, 1);
+          break;
+        }
+      }
+    }
+  
+    if (newTeam.length > 11) {
+      newTeam = newTeam.slice(0, 11);
+    }
+  
+    setFantasyTeam(newTeam);
+  };
+  
   return (
     isLoading ? (
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
@@ -150,7 +239,20 @@ const PickTeam = () => {
                           <small>Bank: £{(fantasyTeam ? fantasyTeam.bank / 10 : 0).toFixed(1)}m</small>
                         </Col>
                         <Col xs={12} md={4}>
-                          <small>Transfers Available: {fantasyTeam ? fantasyTeam.transfersAvailable : 0}</small>
+                          <small>Transfers Available: 
+                            {
+                              (fantasyTeam === null || currentGameweek === 1) ? 
+                                'unlimited' 
+                                : 
+                                (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
+                            }
+                          </small>
+                        </Col>
+
+                      </Row>
+                      <Row className='align-items-center text-center small-text'>
+                        <Col>
+                            <small>System Status: Preseason</small>
                         </Col>
                       </Row>
                     </Card>
@@ -162,8 +264,11 @@ const PickTeam = () => {
                   <StarOutlineIcon color="#807A00" width="15" height="15" />
                   <p style={{marginLeft: '1rem'}} className='mb-0'>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</p>
                 </div>
+                <Button variant="primary" onClick={handleAutoFill}>
+                  AutoFill
+                </Button>
                 <Row>
-                  {renderPlayerSlots(fantasyTeam.players)}
+                  {renderPlayerSlots(fantasyTeam.players, captainId, handleCaptainSelection)}
                 </Row>
               </Card.Body>
             </Card>
@@ -171,21 +276,35 @@ const PickTeam = () => {
               <Card.Header>Bonuses</Card.Header>
               <Card.Body>
                 <Row>
-                  {bonuses.map((bonus, index) =>
-                    <Col xs={12} md={3} key={index}>
-                      <Card className='mb-2'>
-                        <div className='bonus-card-item'>
-                          <div className='text-center mb-2'>
-                            <StarIcon color="#807A00" />
+                  {bonuses.map((bonus, index) => {
+                    const bonusPlayedGameweek = fantasyTeam[`${bonus.propertyName}`];
+                    const isBonusUsed = bonusPlayedGameweek !== 0;
+                    const isSameGameweek = bonusPlayedGameweek === currentGameweek;
+                    return (
+                      <Col xs={12} md={3} key={index}>
+                        <Card className='mb-2'>
+                          <div className='bonus-card-item'>
+                            <div className='text-center mb-2'>
+                              <StarIcon color="#807A00" />
+                            </div>
+                            <div className='text-center mb-2'>{bonus.name}</div>
+                            {isBonusUsed ? (
+                              <div className='text-center mb-2'>Played Gameweek {bonusPlayedGameweek}</div>
+                            ) : (
+                              isSameGameweek ? (
+                                <div>You can only use 1 bonus per gameweek</div>
+                              ) : (
+                                <Button variant="primary w-100" onClick={() => handleBonusClick(bonus.id)}>
+                                  Use
+                                </Button>
+                              )
+                            )}
                           </div>
-                          <div className='text-center mb-2'>{bonus.name}</div>
-                          <Button variant="primary w-100" onClick={() => handleBonusClick(bonus.id)} style={{ display: 'block' }}>
-                            Use
-                          </Button>
-                        </div>
-                      </Card>
-                    </Col>)}
-                  </Row>
+                        </Card>
+                      </Col>
+                    );
+                  })}
+                </Row>
               </Card.Body>
             </Card>
           </Col>

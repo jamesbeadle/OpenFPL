@@ -182,7 +182,7 @@ module {
                         return Option.isNull(isPlayerIdInExistingTeam);
                     });
 
-                    if(Nat8.fromNat(Array.size(playersAdded)) > existingTeam.transfersAvailable){
+                    if(Nat8.fromNat(Array.size(playersAdded)) > existingTeam.transfersAvailable and gameweek != 1){
                         return #err(#InvalidTeamError);
                     };
 
@@ -271,6 +271,9 @@ module {
                     var braceBonusGameweek = existingTeam.braceBonusGameweek;
                     var hatTrickHeroGameweek = existingTeam.hatTrickHeroGameweek;
                     var newCaptainId = captainId;
+
+                    let sortedPlayers = sortPlayers(newPlayers);       
+                    let allPlayerIds = Array.map<T.Player, Nat16>(sortedPlayers, func (player: T.Player) : Nat16 { return player.id; });    
                     
                     if(newCaptainId == 0){
                         var highestValue = Float.fromInt(0);
@@ -322,9 +325,6 @@ module {
                     if(bonusId == 8){
                         hatTrickHeroGameweek := gameweek;
                     };
-
-
-                    let allPlayerIds = Array.map<T.Player, Nat16>(newPlayers, func (player: T.Player) : Nat16 { return player.id; });
                    
                     let updatedTeam: T.FantasyTeam = {
                         principalId = principalId;
