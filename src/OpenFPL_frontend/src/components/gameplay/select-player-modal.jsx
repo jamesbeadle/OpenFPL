@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Button, Table, Form, Pagination, Row, Col } from 'react-bootstrap';
 import { PlayerContext } from '../../contexts/PlayerContext';
+import { TeamContext } from "../../contexts/TeamContext";
 
-const SelectPlayerModal = ({ show, handleClose, handleConfirm, teams }) => {
+const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
   
   const { players } = useContext(PlayerContext);
+  const { teams } = useContext(TeamContext);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [filterTeam, setFilterTeam] = useState("");
   const [filterPosition, setFilterPosition] = useState("");
@@ -20,7 +22,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, teams }) => {
   ];
   
   useEffect(() => {
-    if(!players){
+    if(!Array.isArray(players)){
       return;
     }
     
@@ -32,6 +34,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, teams }) => {
     setViewData({ players: filteredPlayers, totalEntries: filteredPlayers.length });
   
   }, [players, filterTeam, filterPosition, page]);
+
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
@@ -76,7 +79,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, teams }) => {
                 <Form.Label>Filter Team:</Form.Label>
                 <Form.Control as="select" value={filterTeam || ''} onChange={handleChangeFilterTeam}>
                   <option value="">All</option>
-                  {teamOptions.map((team, index) => (
+                  {teams.map((team, index) => (
                     <option key={index} value={team}>
                       {team}
                     </option>

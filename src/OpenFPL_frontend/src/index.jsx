@@ -19,6 +19,7 @@ import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
 
 import { PlayerProvider  } from "./contexts/PlayerContext";
+import { TeamProvider } from "./contexts/TeamContext";
 
 
 const PrivateWindowFallback = () => {
@@ -70,24 +71,26 @@ const App = () => {
   return (
     <AuthProvider>
       <PlayerProvider>
-        <Router>
-          <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-            <MyNavbar />
-              <Routes>
-                <Route path="/" element={<Whitepaper />} />
-                <Route path="/whitepaper" element={<Whitepaper   />} />
-                <Route path="/gameplay" element={<Gameplay   />} />
-                <Route path="/definitions" element={<Definitions   />} />
-                <Route path="/terms" element={<Terms   />} />
-                <Route path="/architecture" element={<Architecture   />} />
-                <Route path="/profile" element={<Profile   />} />
-                <Route path="/dao" element={<DAO   />} />
-                <Route path="/governance" element={<Governance   />} />
-                <Route path="/pick-team" element={<PickTeam   />} />
-              </Routes>
-            <MyFooter />
-          </div>
-        </Router>   
+        <TeamProvider>
+          <Router>
+            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+              <MyNavbar />
+                <Routes>
+                  <Route path="/" element={<Whitepaper />} />
+                  <Route path="/whitepaper" element={<Whitepaper   />} />
+                  <Route path="/gameplay" element={<Gameplay   />} />
+                  <Route path="/definitions" element={<Definitions   />} />
+                  <Route path="/terms" element={<Terms   />} />
+                  <Route path="/architecture" element={<Architecture   />} />
+                  <Route path="/profile" element={<Profile   />} />
+                  <Route path="/dao" element={<DAO   />} />
+                  <Route path="/governance" element={<Governance   />} />
+                  <Route path="/pick-team" element={<PickTeam   />} />
+                </Routes>
+              <MyFooter />
+            </div>
+          </Router>   
+        </TeamProvider>
       </PlayerProvider>
   </AuthProvider>
   );

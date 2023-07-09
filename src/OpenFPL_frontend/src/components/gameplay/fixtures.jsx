@@ -2,11 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
+import { TeamContext } from "../../contexts/TeamContext";
 import { Actor } from "@dfinity/agent";
 
 const Fixtures = () => {
   const { authClient } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
+  const { teams } = useContext(TeamContext);
 
   const [allFixtures, setAllFixtures] = useState([]);
   const [fixtures, setFixtures] = useState([]);
@@ -36,6 +38,11 @@ const Fixtures = () => {
   const handleGameweekChange = (change) => {
     setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
   }
+
+  const getTeamById = (teamId) => {
+    return teams.find(team => team.id === teamId);
+  }
+  
   
   return (
     isLoading ? (
@@ -62,26 +69,26 @@ const Fixtures = () => {
         </Row>
         <br />
         {fixtures.map((fixture, i) => (
-            <Row className='align-items-center small-text mt-2'>
+            <Row className='align-items-center small-text mt-2' key={fixture.id}>
                 <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                   <div style={{padding: '0 5px'}}>
-                      <div style={{backgroundColor: fixture.homeTeam.primaryColourHex, width: '20px', height: '20px'}}></div>
-                      <div style={{borderBottom: `3px solid ${fixture.homeTeam.secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
+                      <div style={{backgroundColor: getTeamById(fixture.homeTeamId).primaryColourHex, width: '20px', height: '20px'}}></div>
+                      <div style={{borderBottom: `3px solid ${getTeamById(fixture.homeTeamId).secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
                   </div>
                 </Col>
                 <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                  <p style={{margin: 0}}><small>{fixture.homeTeam.friendlyName}</small></p>
+                  <p style={{margin: 0}}><small>{getTeamById(fixture.homeTeamId).friendlyName}</small></p>
                 </Col>
                 <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
                   <small style={{margin: 0}}>vs</small>
                 </Col>
                 <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                  <p style={{margin: 0}}><small>{fixture.awayTeam.friendlyName}</small></p>
+                  <p style={{margin: 0}}><small>{getTeamById(fixture.awayTeamId).friendlyName}</small></p>
                 </Col>
                 <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                   <div style={{padding: '0 5px'}}>
-                      <div style={{backgroundColor: fixture.awayTeam.primaryColourHex, width: '20px', height: '20px'}}></div>
-                      <div style={{borderBottom: `3px solid ${fixture.awayTeam.secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
+                      <div style={{backgroundColor: getTeamById(fixture.awayTeamId).primaryColourHex, width: '20px', height: '20px'}}></div>
+                      <div style={{borderBottom: `3px solid ${getTeamById(fixture.awayTeamId).secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
                   </div>
                 </Col>
             </Row>

@@ -102,7 +102,7 @@ actor Self {
     return profileDTO;
   };
 
-  public shared query ({caller}) func getFixturesForGameweek(gameweek: Nat8) : async [T.Fixture]{
+  public shared query ({caller}) func getFixtures() : async [T.Fixture]{
     return fixturesInstance.getFixtures(activeSeasonId);
   };
 

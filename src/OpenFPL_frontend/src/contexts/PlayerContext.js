@@ -12,7 +12,8 @@ export const PlayerProvider = (props) => {
   const fetchAllPlayers = async () => {
     const identity = authClient.getIdentity();
     Actor.agentOf(player_canister).replaceIdentity(identity);
-    const allPlayersData = await player_canister.getAllPlayers();
+    const allPlayersData = await player_canister.getPlayers(0,-1,0,25);
+    console.log(allPlayersData);
     setPlayers(allPlayersData);
   };
 

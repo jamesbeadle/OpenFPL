@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
-import { StarOutlineIcon } from '../icons';
+import { StarIcon, StarOutlineIcon } from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
@@ -8,14 +8,15 @@ import PlayerSlot from './player-slot';
 import Fixtures from './fixtures';
 import SelectPlayerModal from './select-player-modal';
 import { PlayerContext } from "../../contexts/PlayerContext";
+import { TeamContext } from "../../contexts/TeamContext";
 
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);  
   const [isLoading, setIsLoading] = useState(true);
   const { players } = useContext(PlayerContext);
+  const { teams } = useContext(TeamContext);
   const [fantasyTeam, setFantasyTeam] = useState(null);
-  const [teams, setTeams] = useState([]);
   const [bonuses, setBonuses] = useState([
     {id: 1, name: 'Goal Getter', propertyName: 'goalGetterGameweek'},
     {id: 2, name: 'Pass Master', propertyName: 'passMasterGameweek'},
@@ -43,9 +44,6 @@ const PickTeam = () => {
   const fetchViewData = async () => {
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-
-    const teamsData = await open_fpl_backend.getTeams();
-    setTeams(teamsData);
 
     const fantasyTeamData = await open_fpl_backend.getFantasyTeam();
     setFantasyTeam(fantasyTeamData);
@@ -268,7 +266,7 @@ const PickTeam = () => {
                   AutoFill
                 </Button>
                 <Row>
-                  {renderPlayerSlots(fantasyTeam.players, captainId, handleCaptainSelection)}
+                  {fantasyTeam && fantasyTeam.players && renderPlayerSlots(fantasyTeam.players, captainId, handleCaptainSelection)}
                 </Row>
               </Card.Body>
             </Card>
@@ -309,7 +307,7 @@ const PickTeam = () => {
             </Card>
           </Col>
           <Col md={3}>
-            <Fixtures />
+            <Fixtures teams={teams} />
           </Col>
         </Row>
 
@@ -317,7 +315,6 @@ const PickTeam = () => {
           show={showSelectPlayerModal} 
           handleClose={() => setShowSelectPlayerModal(false)} 
           handleConfirm={handlePlayerConfirm}
-          teams={teams}
         />
         
       </Container>
