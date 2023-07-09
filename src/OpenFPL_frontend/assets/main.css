@@ -129,6 +129,23 @@
     border: 3px solid gold;
   }
 
+  .summary-panel{
+    background: linear-gradient(to bottom, #586AA8, #586AA8) !important;
+    color: whitesmoke !important;
+    border-color: whitesmoke !important;
+    border-width: 0.1rem !important;
+    border-style: solid !important;
+  }
+
+  .bonus-card-item{
+    background: linear-gradient(to bottom, #67F5C9, #1E1436) !important;
+    border-radius: 0.1rem !important;
+    color: whitesmoke !important;
+  }
+
+  .save-panel{
+    color: #A84025 !important;
+  }
   
 /*1E1436
   

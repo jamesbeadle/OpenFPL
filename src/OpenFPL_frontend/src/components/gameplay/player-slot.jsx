@@ -77,7 +77,9 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
           handleSellPlayer={() => handleSellPlayer(slotNumber)}  /> 
           : <Card className='mb-1 h-100 d-flex flex-column justify-content-center'>
               <Card.Body className='d-flex align-items-center justify-content-center'>
-                <Button onClick={() => handlePlayerSelection(slotNumber)} className="w-100">Add Player</Button>
+                <Button className="d-flex align-items-center justify-content-center p-3" onClick={() => handlePlayerSelection(i)}>
+                  Add player
+                </Button>
               </Card.Body>
             </Card>}
       </div>

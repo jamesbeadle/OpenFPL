@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
-import { StarIcon, StarOutlineIcon } from '../icons';
+import { StarIcon, RecordIcon, StarOutlineIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon } from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
@@ -16,7 +16,12 @@ const PickTeam = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { players } = useContext(PlayerContext);
   const { teams } = useContext(TeamContext);
-  const [fantasyTeam, setFantasyTeam] = useState(null);
+  const [fantasyTeam, setFantasyTeam] = useState({
+    players: [],
+    bank: 3000,
+    transfersAvailable: 0
+  });
+  
   const [bonuses, setBonuses] = useState([
     {id: 1, name: 'Goal Getter', propertyName: 'goalGetterGameweek'},
     {id: 2, name: 'Pass Master', propertyName: 'passMasterGameweek'},
@@ -31,6 +36,9 @@ const PickTeam = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [captainId, setCaptainId] = useState(0);
   const [currentGameweek, setCurrentGameweek] = useState(null);
+  const [isTeamValid, setIsTeamValid] = useState(false);
+  const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
+  
 
 
   useEffect(() => {
@@ -40,12 +48,22 @@ const PickTeam = () => {
     };
     fetchData();
   }, []);
+  
+  useEffect(() => {
+    setIsTeamValid(checkTeamValidation());
+    setInvalidTeamMessage(getInvalidTeamMessage());
+  }, [fantasyTeam.players]);
 
   const fetchViewData = async () => {
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-
-    const fantasyTeamData = await open_fpl_backend.getFantasyTeam();
+    
+    let fantasyTeamData = await open_fpl_backend.getFantasyTeam();
+    fantasyTeamData = {
+      ...fantasyTeamData,
+      players: fantasyTeamData.players || [],
+      bank: fantasyTeamData.bank || 3000
+    };
     setFantasyTeam(fantasyTeamData);
 
     const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
@@ -70,45 +88,108 @@ const PickTeam = () => {
   const handleBonusClick = (bonusId) => {
     console.log(`Bonus ${bonusId} was clicked`);
   }
+
+    
+  const checkTeamValidation = () => {
+    if (fantasyTeam.players.length !== 11) {
+      return false;
+    }
+    
+    const positions = fantasyTeam.players.map(player => player.position);
+    const goalkeeperCount = positions.filter(position => position === 'Goalkeeper').length;
+    const defenderCount = positions.filter(position => position === 'Defender').length;
+    const midfielderCount = positions.filter(position => position === 'Midfielder').length;
+    const forwardCount = positions.filter(position => position === 'Forward').length;
+    
+    if (goalkeeperCount !== 1 || defenderCount < 1 || defenderCount > 3 || midfielderCount < 3 || midfielderCount > 5 || forwardCount < 1 || forwardCount > 3) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const getInvalidTeamMessage = () => {
+    if (fantasyTeam.players.length !== 11) {
+      return "You must select 11 players";
+    }
+    
+    const positions = fantasyTeam.players.map(player => player.position);
+    const goalkeeperCount = positions.filter(position => position === 'Goalkeeper').length;
+    const defenderCount = positions.filter(position => position === 'Defender').length;
+    const midfielderCount = positions.filter(position => position === 'Midfielder').length;
+    const forwardCount = positions.filter(position => position === 'Forward').length;
+    
+    if (goalkeeperCount !== 1) {
+      return "You must have 1 goalkeeper";
+    }
+    if (defenderCount < 1 || defenderCount > 3) {
+      return "You must have between 1 and 3 defenders";
+    }
+    if (midfielderCount < 3 || midfielderCount > 5) {
+      return "You must have between 3 and 5 midfielders";
+    }
+    if (forwardCount < 1 || forwardCount > 3) {
+      return "You must have between 1 and 3 forwards";
+    }
+
+    return "Invalid team";
+  };
+
   
-  const renderPlayerSlots = (playerArray, captainId, handleCaptainSelection) => {
+ 
+  const renderPlayerSlots = () => {
     let rows = [];
     let cols = [];
-
-    const disableSellButton = currentGameweek === 1 || !fantasyTeam || (fantasyTeam && fantasyTeam.transfersAvailable === 0);
-
-    for (let i = 0; i < playerArray.length; i++) {
-      cols.push(
-        <PlayerSlot 
-          key={i} 
-          player={playerArray[i]} 
-          slotNumber={i} 
-          handlePlayerSelection={handlePlayerSelection}
-          captainId={captainId} 
-          handleCaptainSelection={handleCaptainSelection} 
-          disableSellButton={disableSellButton}
-          handleSellPlayer={handleSellPlayer}
-        />
-      );
   
-      if (cols.length === 3 || i === playerArray.length - 1) {
-        rows.push(<Row className='player-container' key={i}>{cols}</Row>);
-        cols = [];
+    for (let i = 0; i < 12; i++) {
+      const player = fantasyTeam.players[i] || null;
+    
+      if(i === 11) {
+        cols.push(
+          <Col md={3} key={'save'} className="d-flex justify-content-center align-items-center flex-column">
+            <Card className="w-100 save-panel">
+              <Row>
+                <Col>
+                  <Button className='w-100' variant="success" onClick={handleSaveTeam} disabled={!isTeamValid}>Save Team</Button>
+                </Col>
+              </Row>
+              {!isTeamValid && <p className='m-0 text-center'><small>{invalidTeamMessage}</small></p>}
+            </Card>
+          </Col>
+        );
+      } else {
+        cols.push(
+          <Col md={3} key={i} className="d-flex justify-content-center align-items-center flex-column">
+            {player ? (
+              <PlayerSlot 
+                player={player}
+                slotNumber={i}
+                handlePlayerSelection={handlePlayerSelection}
+                captainId={captainId} 
+                handleCaptainSelection={handleCaptainSelection} 
+                handleSellPlayer={handleSellPlayer}
+              />
+            ) : (
+              <Button className="m-3 w-100" onClick={() => handlePlayerSelection(i)}>
+                Add player
+              </Button>
+            )}
+          </Col>
+        );
       }
     }
     
-    // Add Save button as 12th tile
-    cols.push(
-      <Col className="d-flex justify-content-center align-items-center">
-        <Button variant="primary" onClick={handleSaveTeam}>Save</Button>
-      </Col>
-    );
-    
-    rows.push(<Row className='player-container' key={playerArray.length}>{cols}</Row>);
+  
+    if (cols.length > 0) {
+      rows.push(<Row className='player-container' key={'row-' + (rows.length + 1)}>{cols}</Row>);
+    }
   
     return rows;
   }
-
+  
+  
+  
+  
   const handleSellPlayer = (playerId) => {
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
@@ -224,51 +305,69 @@ const PickTeam = () => {
             <Card className="mt-4">
               <Card.Header>
                 <Row className="justify-content-between align-items-center">
-                  <Col xs={12} md={6}>
+                  <Col xs={12} md={3}>
                     Team Selection
                   </Col>
-                  <Col xs={12} md={6}>
-                    <Card className="p-2">
+                  <Col xs={12} md={9}>
+                    <Card className="p-2 summary-panel">
                       <Row className='align-items-center text-center small-text'>
-                        <Col xs={12} md={4}>
-                            <small>Team Value: £{calculateTeamValue()}m</small>
+                        <Col xs={4} md={4}>
+                          <p style={{marginBottom: 0}}>
+                            £{calculateTeamValue()}m
+                            <br />
+                            <small>Team Value</small>
+                          </p>
                         </Col>
-                        <Col xs={12} md={4}>
-                          <small>Bank: £{(fantasyTeam ? fantasyTeam.bank / 10 : 0).toFixed(1)}m</small>
+                        <Col xs={4} md={4}>
+                          <p style={{marginBottom: 0}}>
+                            £{(fantasyTeam.bank / 10).toFixed(1)}m
+                            <br />
+                            <small>Bank Balance</small>
+                          </p>
                         </Col>
-                        <Col xs={12} md={4}>
-                          <small>Transfers Available: 
+                        <Col xs={4} md={4}>
+                          <p style={{marginBottom: 0}}>
                             {
                               (fantasyTeam === null || currentGameweek === 1) ? 
-                                'unlimited' 
+                                'Unlimited' 
                                 : 
+                                
                                 (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
                             }
-                          </small>
+                            <br />
+                            <small>Transfers Available</small>
+                          </p>
                         </Col>
 
-                      </Row>
-                      <Row className='align-items-center text-center small-text'>
-                        <Col>
-                            <small>System Status: Preseason</small>
-                        </Col>
                       </Row>
                     </Card>
                   </Col>
                 </Row>
+                <Row className='small-text'>
+                  <Col>
+                      <small>Status: 2023/24 Pre-season</small>
+                  </Col>
+                </Row>
               </Card.Header>
               <Card.Body>
-                <div className='d-flex align-items-center mb-3'>
-                  <StarOutlineIcon color="#807A00" width="15" height="15" />
-                  <p style={{marginLeft: '1rem'}} className='mb-0'>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</p>
-                </div>
-                <Button variant="primary" onClick={handleAutoFill}>
-                  AutoFill
-                </Button>
+                <Row>
+                  <Col md={10}>
+                    <div className='d-flex align-items-center mb-3 mt-3'>
+                      <StarIcon color="#807A00" width="15" height="15" />
+                      <p style={{marginLeft: '1rem'}} className='mb-0'><small>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</small></p>
+                    </div>
+                  </Col>
+                  <Col md={2} className='d-flex align-items-center'>
+                    <div className='w-100'>
+                      <Button variant="secondary white-text w-100" onClick={handleAutoFill}>AutoFill</Button>
+                    </div>
+                  </Col>
+                </Row>
                 <Row>
                   {fantasyTeam && fantasyTeam.players && renderPlayerSlots(fantasyTeam.players, captainId, handleCaptainSelection)}
                 </Row>
               </Card.Body>
+
             </Card>
             <Card className="mt-4">
               <Card.Header>Bonuses</Card.Header>
@@ -276,14 +375,34 @@ const PickTeam = () => {
                 <Row>
                   {bonuses.map((bonus, index) => {
                     const bonusPlayedGameweek = fantasyTeam[`${bonus.propertyName}`];
-                    const isBonusUsed = bonusPlayedGameweek !== 0;
+                    const isBonusUsed = bonusPlayedGameweek != undefined && bonusPlayedGameweek !== 0;
                     const isSameGameweek = bonusPlayedGameweek === currentGameweek;
                     return (
                       <Col xs={12} md={3} key={index}>
                         <Card className='mb-2'>
                           <div className='bonus-card-item'>
-                            <div className='text-center mb-2'>
-                              <StarIcon color="#807A00" />
+                            <div className='text-center mb-2 mt-2'>
+                            {(() => {
+                              switch (bonus.id) {
+                                case 1:
+                                  return <RecordIcon />;
+                                case 2:
+                                  return <PersonBoxIcon />;
+                                case 3:
+                                  return <StopIcon />;
+                                case 4:
+                                  return <PersonUpIcon />;
+                                case 5:
+                                  return <PersonIcon />;
+                                case 6:
+                                  return <CaptainIcon />;
+                                case 7:
+                                  return <TwoIcon />;
+                                case 8:
+                                  return <ThreeIcon />;
+                                default:
+                                  return <StarOutlineIcon />;
+                              }})()}
                             </div>
                             <div className='text-center mb-2'>{bonus.name}</div>
                             {isBonusUsed ? (
@@ -292,9 +411,11 @@ const PickTeam = () => {
                               isSameGameweek ? (
                                 <div>You can only use 1 bonus per gameweek</div>
                               ) : (
-                                <Button variant="primary w-100" onClick={() => handleBonusClick(bonus.id)}>
-                                  Use
-                                </Button>
+                                <div style={{marginLeft: '1rem', marginRight: '1rem'}}>
+                                  <Button variant="info" className="w-100 mb-4" onClick={() => handleBonusClick(bonus.id)}>
+                                    Use
+                                  </Button>
+                                </div>
                               )
                             )}
                           </div>

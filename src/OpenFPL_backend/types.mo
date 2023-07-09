@@ -44,6 +44,7 @@ module Types{
         friendlyName: Text;
         primaryColourHex: Text;
         secondaryColourHex: Text;
+        abbreviatedName: Text;
     };
 
     public type Fixture = {

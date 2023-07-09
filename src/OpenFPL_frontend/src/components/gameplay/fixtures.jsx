@@ -4,6 +4,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import { AuthContext } from "../../contexts/AuthContext";
 import { TeamContext } from "../../contexts/TeamContext";
 import { Actor } from "@dfinity/agent";
+import { FixtureIcon } from '../icons';
 
 const Fixtures = () => {
   const { authClient } = useContext(AuthContext);
@@ -72,23 +73,21 @@ const Fixtures = () => {
             <Row className='align-items-center small-text mt-2' key={fixture.id}>
                 <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                   <div style={{padding: '0 5px'}}>
-                      <div style={{backgroundColor: getTeamById(fixture.homeTeamId).primaryColourHex, width: '20px', height: '20px'}}></div>
-                      <div style={{borderBottom: `3px solid ${getTeamById(fixture.homeTeamId).secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
+                      <FixtureIcon primaryColour={getTeamById(fixture.homeTeamId).primaryColourHex} secondaryColour={getTeamById(fixture.homeTeamId).secondaryColourHex} />
                   </div>
                 </Col>
                 <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                  <p style={{margin: 0}}><small>{getTeamById(fixture.homeTeamId).friendlyName}</small></p>
+                  <p style={{margin: 0}}><small>{getTeamById(fixture.homeTeamId).abbreviatedName}</small></p>
                 </Col>
                 <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
                   <small style={{margin: 0}}>vs</small>
                 </Col>
                 <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                  <p style={{margin: 0}}><small>{getTeamById(fixture.awayTeamId).friendlyName}</small></p>
+                  <p style={{margin: 0}}><small>{getTeamById(fixture.awayTeamId).abbreviatedName}</small></p>
                 </Col>
                 <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                   <div style={{padding: '0 5px'}}>
-                      <div style={{backgroundColor: getTeamById(fixture.awayTeamId).primaryColourHex, width: '20px', height: '20px'}}></div>
-                      <div style={{borderBottom: `3px solid ${getTeamById(fixture.awayTeamId).secondaryColourHex}`, width: '20px', marginTop: '2px'}}></div>
+                      <FixtureIcon primaryColour={getTeamById(fixture.awayTeamId).primaryColourHex} secondaryColour={getTeamById(fixture.awayTeamId).secondaryColourHex} />
                   </div>
                 </Col>
             </Row>

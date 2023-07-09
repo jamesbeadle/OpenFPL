@@ -453,7 +453,8 @@ const Whitepaper = () => {
                                 <li>James Beadle: Lead Developer (10m $FPL)</li>
                                 <li>@ICP_Insider: Community Support (1m $FPL)</li>
                                 <li>@daydrinkr: Community Manager (500K $FPL)</li>
-                                <li>TBC: 2.5m $FPL</li>
+                                <li>@madmaxic: FPL Expert (500K $FPL)</li>
+                                <li>TBC: 2m $FPL</li>
                               </ul>
 
                           </Col>
