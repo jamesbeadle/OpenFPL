@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { Actor } from '@dfinity/agent';
 import { AuthContext } from "./AuthContext";
 import { player_canister as player_canister } from '../../../declarations/player_canister';

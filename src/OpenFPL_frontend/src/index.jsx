@@ -18,7 +18,7 @@ import DAO from "./components/whitepaper/dao";
 import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
 
-import { PlayerContextProvider } from "./contexts/PlayerContext";
+import { PlayerProvider  } from "./contexts/PlayerContext";
 
 
 const PrivateWindowFallback = () => {
@@ -69,7 +69,7 @@ const App = () => {
  
   return (
     <AuthProvider>
-      <PlayerContextProvider>
+      <PlayerProvider>
         <Router>
           <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
             <MyNavbar />
@@ -88,7 +88,7 @@ const App = () => {
             <MyFooter />
           </div>
         </Router>   
-      </PlayerContextProvider>
+      </PlayerProvider>
   </AuthProvider>
   );
 };

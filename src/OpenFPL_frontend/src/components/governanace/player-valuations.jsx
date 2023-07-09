@@ -4,7 +4,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import getFlag from '../country-flag';
 import { getAgeFromDOB } from '../helpers';
 
-import { PlayerContext } from "./contexts/PlayerContext";
+import { PlayerContext } from "../../contexts/PlayerContext";
 
 
 const POSITION_LABELS = ["GK", "DEF", "MID", "FWD"];
