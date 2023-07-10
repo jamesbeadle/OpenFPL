@@ -13,7 +13,6 @@ export const TeamProvider = (props) => {
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     const teamsData = await open_fpl_backend.getTeams();
-    console.log(teamsData);
     setTeams(teamsData);
   };
 

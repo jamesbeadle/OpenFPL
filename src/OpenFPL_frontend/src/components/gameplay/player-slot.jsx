@@ -6,6 +6,7 @@ import getFlag from '../country-flag';
 const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellButton, handleSellPlayer }) => {
   
   const isCaptain = player.id === captainId;
+  const positionCodes = ['GK', 'DF', 'MF', 'FW'];
 
   const handleStarClick = (event) => {
     event.stopPropagation();
@@ -13,11 +14,11 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
   };
 
   return (      
-    <Card className='mb-1 position-relative'>
+    <Card className='mb-1 h-100 d-flex flex-column justify-content-center'>
       <Row className='mx-1 mt-2'>
         <Col xs={4} md={3}>
           <Row>
-            <p className='text-center'>{player.position}</p>
+            <p className='text-center'>{positionCodes[player.position]}</p>
             <PlayerIcon primaryColour={player.primaryColourHex} secondaryColour={player.secondaryColourHex} />
           </Row>
           <Row>
@@ -70,7 +71,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
   };
 
   const PlayerSlot = ({ player, slotNumber, handlePlayerSelection, captainId, handleCaptainSelection, handleSellPlayer }) => (
-    <Col md={4} className='d-flex'>
+    <Col className='d-flex mb-2'>
       <div className='player-slot w-100'>
         {player 
           ? <PlayerDetails player={player} captainId={captainId} handleCaptainSelection={handleCaptainSelection} 

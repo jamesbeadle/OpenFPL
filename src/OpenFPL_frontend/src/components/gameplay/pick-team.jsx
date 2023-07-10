@@ -91,6 +91,9 @@ const PickTeam = () => {
 
     
   const checkTeamValidation = () => {
+    if(fantasyTeam.players == undefined){
+      return false;
+    }
     if (fantasyTeam.players.length !== 11) {
       return false;
     }
@@ -109,6 +112,9 @@ const PickTeam = () => {
   };
 
   const getInvalidTeamMessage = () => {
+    if(fantasyTeam.players == undefined){
+      return "You must select 11 players";
+    }
     if (fantasyTeam.players.length !== 11) {
       return "You must select 11 players";
     }
@@ -146,7 +152,7 @@ const PickTeam = () => {
     
       if(i === 11) {
         cols.push(
-          <Col md={3} key={'save'} className="d-flex justify-content-center align-items-center flex-column">
+          <Col md={3} key={'save'} className="d-flex align-items-center">
             <Card className="w-100 save-panel">
               <Row>
                 <Col>
@@ -159,7 +165,7 @@ const PickTeam = () => {
         );
       } else {
         cols.push(
-          <Col md={3} key={i} className="d-flex justify-content-center align-items-center flex-column">
+          <Col md={3} key={i} className="d-flex align-items-center">
             {player ? (
               <PlayerSlot 
                 player={player}
@@ -181,7 +187,7 @@ const PickTeam = () => {
     
   
     if (cols.length > 0) {
-      rows.push(<Row className='player-container' key={'row-' + (rows.length + 1)}>{cols}</Row>);
+      rows.push(<Row className='player-container m-0' key={'row-' + (rows.length + 1)}>{cols}</Row>);
     }
   
     return rows;
@@ -237,9 +243,12 @@ const PickTeam = () => {
       return;
     }
   
+    // Define position names
+    const positionNames = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
+  
     // Generate list of available positions for auto-fill (remaining positions to be filled in team)
     const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
-    const currentTeamPositions = fantasyTeam.players.map(player => player.position);
+    const currentTeamPositions = fantasyTeam.players.map(player => positionNames[player.position]);
     const positionsToFill = teamPositions.map(position => {
       let minPlayers, maxPlayers;
       switch(position) {
@@ -274,10 +283,10 @@ const PickTeam = () => {
   
     // Create a new team based on the sorted players and the positions to fill
     let newTeam = [...fantasyTeam.players];
-    let remainingBudget = fantasyTeam.bankBalance;
+    let remainingBudget = fantasyTeam.bank;
     for (let position of positionsToFill) {
       for (let i = 0; i < sortedPlayers.length; i++) {
-        if (sortedPlayers[i].position === position && sortedPlayers[i].value <= remainingBudget) {
+        if (positionNames[sortedPlayers[i].position] === position && sortedPlayers[i].value <= remainingBudget) {
           newTeam.push(sortedPlayers[i]);
           remainingBudget -= sortedPlayers[i].value;
           sortedPlayers.splice(i, 1);
@@ -290,8 +299,14 @@ const PickTeam = () => {
       newTeam = newTeam.slice(0, 11);
     }
   
-    setFantasyTeam(newTeam);
+    // Correctly update the state to keep existing properties
+    setFantasyTeam(prevState => ({
+      ...prevState,
+      players: newTeam,
+      bank: remainingBudget,
+    }));
   };
+  
   
   return (
     isLoading ? (

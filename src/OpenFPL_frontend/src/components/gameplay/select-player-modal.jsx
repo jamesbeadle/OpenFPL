@@ -8,7 +8,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
   const { players } = useContext(PlayerContext);
   const { teams } = useContext(TeamContext);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [filterTeam, setFilterTeam] = useState("");
+  const [filterTeamId, setFilterTeamId] = useState("");
   const [filterPosition, setFilterPosition] = useState("");
   const [page, setPage] = useState(0);
   const count = 25;
@@ -25,23 +25,22 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
     if(!Array.isArray(players)){
       return;
     }
-    
+
     const filteredPlayers = players
-      .filter(player => player.team.toLowerCase().includes(filterTeam.toLowerCase()))
-      .filter(player => player.position.toLowerCase().includes(filterPosition.toLowerCase()))
+      .filter(player => filterTeamId === "" || player.teamId === filterTeamId)
+      .filter(player => filterPosition === "" || player.position === filterPosition)
       .slice(page * count, (page + 1) * count);
   
     setViewData({ players: filteredPlayers, totalEntries: filteredPlayers.length });
   
-  }, [players, filterTeam, filterPosition, page]);
-
+  }, [players, filterTeamId, filterPosition, page]);
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
   };
 
   const handleChangeFilterTeam = (event) => {
-    setFilterTeam(event.target.value);
+    setFilterTeamId(event.target.value);
     setPage(0); 
   };
 
@@ -77,11 +76,11 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
             <Col>
               <Form.Group controlId="teamFilter">
                 <Form.Label>Filter Team:</Form.Label>
-                <Form.Control as="select" value={filterTeam || ''} onChange={handleChangeFilterTeam}>
+                <Form.Control as="select" value={filterTeamId || ''} onChange={handleChangeFilterTeam}>
                   <option value="">All</option>
                   {teams.map((team, index) => (
-                    <option key={index} value={team}>
-                      {team}
+                    <option key={index} value={team.id}>
+                      {team.name}
                     </option>
                   ))}
                 </Form.Control>
@@ -92,9 +91,9 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
                 <Form.Label>Filter Position:</Form.Label>
                 <Form.Control as="select" value={filterPosition || ''} onChange={handleChangeFilterPosition}>
                   <option value="">All</option>
-                  {positionOptions.map((position, index) => (
-                    <option key={index} value={position}>
-                      {position}
+                  {positionOptions.map((position) => (
+                    <option key={position.id} value={position.id}>
+                      {position.name}
                     </option>
                   ))}
                 </Form.Control>
@@ -119,8 +118,8 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
                 {viewData.players.map((player) => (
                   <tr key={player.id}>
                     <td>{player.name}</td>
-                    <td>{player.team}</td>
-                    <td>{player.position}</td>
+                    <td>{teams.find(team => team.id === player.teamId).name}</td>
+                    <td>{positionOptions.find(position => position.id === player.position).name}</td>
                     <td>
                       <Button variant="primary" onClick={() => setSelectedPlayer(player)}>
                         Select

@@ -65,6 +65,28 @@ actor Self {
 
   };
 
+  public shared query ({caller}) func getAllPlayers() : async [T.Player] {
+    assert not Principal.isAnonymous(caller);
+
+    func compare(player1: T.Player, player2: T.Player) : Bool {
+        return player1.value >= player2.value;
+    };
+
+    func mergeSort(entries: List.List<T.Player>) : List.List<T.Player> {
+        let len = List.size(entries);
+        
+        if (len <= 1) {
+            return entries;
+        } else {
+            let (firstHalf, secondHalf) = List.split(len / 2, entries);
+            return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
+        };
+    };
+
+    let sortedPlayers = mergeSort(players);
+    return List.toArray(sortedPlayers);
+  };
+
   system func heartbeat() : async () {
       
   };
