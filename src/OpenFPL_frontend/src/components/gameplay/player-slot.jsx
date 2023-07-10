@@ -37,7 +37,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
               <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 <span style={{fontSize: '0.8rem'}} className='mb-0'>
                     {getFlag(player.nationality)} {player.lastName}<br />
-                    <small className='text-muted'>{player.firstName}</small>
+                    <small className='text-muted'>{player.firstName == "" ? player.lastName : player.firstName}</small>
                 </span>
               </div>
             </Col>
@@ -78,7 +78,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
           style={{width: 'calc(100% - 1rem)', margin: '0px 0.5rem'}} 
           className="mb-2" 
           disabled={disableSellButton} 
-          onClick={handleSellPlayer} 
+          onClick={() => handleSellPlayer(player.id)}
         >
           <TransferIcon /><small>Sell</small>
         </Button>
@@ -95,7 +95,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
       <div className='player-slot w-100'>
         {player 
           ? <PlayerDetails player={player} captainId={captainId} handleCaptainSelection={handleCaptainSelection} 
-          handleSellPlayer={() => handleSellPlayer(slotNumber)}  /> 
+          handleSellPlayer={() => handleSellPlayer(player.id)}  /> 
           : <Card className='mb-1 h-100 d-flex flex-column justify-content-center'>
               <Card.Body className='d-flex align-items-center justify-content-center'>
                 <Button className="d-flex align-items-center justify-content-center p-3" onClick={() => handlePlayerSelection(i)}>

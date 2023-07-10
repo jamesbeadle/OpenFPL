@@ -193,16 +193,32 @@ const PickTeam = () => {
     return rows;
   }
   
-  
-  
-  
   const handleSellPlayer = (playerId) => {
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
-      // filter out the sold player
+      const soldPlayer = players.find(player => player.id === playerId);
+  
       updatedFantasyTeam.players = updatedFantasyTeam.players.filter(player => player.id !== playerId);
-      // add player's value back to bank
-      updatedFantasyTeam.bank += players.find(player => player.id === playerId).value;
+      updatedFantasyTeam.bank += soldPlayer.value;
+      if(updatedFantasyTeam.positionsToFill == undefined){
+        updatedFantasyTeam.positionsToFill = [];
+      }
+      
+      switch(soldPlayer.position) {
+        case 0:
+          updatedFantasyTeam.positionsToFill.push('Goalkeeper');
+          break;
+        case 1:
+          updatedFantasyTeam.positionsToFill.push('Defender');
+          break;
+        case 2:
+          updatedFantasyTeam.positionsToFill.push('Midfielder');
+          break;
+        case 3:
+          updatedFantasyTeam.positionsToFill.push('Forward');
+          break;
+        default:
+      }
       return updatedFantasyTeam;
     });
   };
@@ -251,10 +267,11 @@ const PickTeam = () => {
     };
   
     const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
-    const currentTeamPositions = fantasyTeam.players.map(player => teamPositions[player.position]);
-  
-    const positionsToFill = [];
-  
+    const currentTeamPositions = fantasyTeam.players.map(player => player.position);
+
+    console.log(fantasyTeam.positionsToFill)
+    let positionsToFill = fantasyTeam.positionsToFill ? [...fantasyTeam.positionsToFill] : [];
+    
     teamPositions.forEach(position => {
       let minPlayers;
       switch(position) {
@@ -278,16 +295,32 @@ const PickTeam = () => {
         positionsToFill.push(...Array(minPlayers - currentCount).fill(position));
       }
     });
-  
+
+
     while (positionsToFill.length < 11 - fantasyTeam.players.length) {
-      // Pick a random position from teamPositions, with the constraint that there's at least one slot open for this position.
-      let randomPosition;
-      do {
-        randomPosition = teamPositions[Math.floor(Math.random() * teamPositions.length)];
-      } while (positionsToFill.filter(pos => pos === randomPosition).length >= maxPlayersPerPosition[randomPosition]);
+      // Get positions that haven't reached their maximum limit yet
+      let openPositions = teamPositions.filter(position => 
+        (positionsToFill.filter(pos => pos === position).length + currentTeamPositions.filter(pos => pos === position).length)
+        < maxPlayersPerPosition[position]
+      );
+    
+      if (openPositions.length === 0) {
+        break; // No more positions are open, so we break the loop
+      }
+    
+      // Pick a random position from openPositions
+      let randomPosition = openPositions[Math.floor(Math.random() * openPositions.length)];
+    
       positionsToFill.push(randomPosition);
+
+      if (fantasyTeam.positionToFill === randomPosition) {
+        setFantasyTeam(prevState => ({
+          ...prevState,
+          positionToFill: null,
+        }));
+      }
     }
-  
+    
     // Sort players by value (price)
     let sortedPlayers = [...players].sort((a, b) => a.value - b.value);
     sortedPlayers = shuffle(sortedPlayers);
@@ -295,19 +328,26 @@ const PickTeam = () => {
     // Create a new team based on the sorted players and the positions to fill
     let newTeam = [...fantasyTeam.players];
     let remainingBudget = fantasyTeam.bank;
-    for (let position of positionsToFill) {
+    for (let i = 0; i < positionsToFill.length; i++) {
       if (newTeam.length >= 11) {
         break;
       }
-      for (let i = 0; i < sortedPlayers.length; i++) {
-        if (teamPositions[sortedPlayers[i].position] === position && sortedPlayers[i].value <= remainingBudget) {
-          newTeam.push(sortedPlayers[i]);
-          remainingBudget -= sortedPlayers[i].value;
-          sortedPlayers.splice(i, 1);
+      let position = positionsToFill[i];
+      const positionMapping = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
+
+
+      for (let j = 0; j < sortedPlayers.length; j++) {
+        if (positionMapping[sortedPlayers[j].position] === position && sortedPlayers[j].value <= remainingBudget) {
+          newTeam.push(sortedPlayers[j]);
+          remainingBudget -= sortedPlayers[j].value;
+          sortedPlayers.splice(j, 1);
+          positionsToFill.splice(i, 1); // remove the filled position from positionsToFill
+          i--; // decrement i to offset the index after splicing
           break;
         }
       }
     }
+
 
     newTeam.sort((a, b) => {
       if (a.position < b.position) {
@@ -324,7 +364,7 @@ const PickTeam = () => {
     });
     
     
-  
+    fantasyTeam.positionsToFill = [];
     // Correctly update the state to keep existing properties
     setFantasyTeam(prevState => ({
       ...prevState,
