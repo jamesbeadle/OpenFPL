@@ -99,10 +99,10 @@ const PickTeam = () => {
     }
     
     const positions = fantasyTeam.players.map(player => player.position);
-    const goalkeeperCount = positions.filter(position => position === 'Goalkeeper').length;
-    const defenderCount = positions.filter(position => position === 'Defender').length;
-    const midfielderCount = positions.filter(position => position === 'Midfielder').length;
-    const forwardCount = positions.filter(position => position === 'Forward').length;
+    const goalkeeperCount = positions.filter(position => position === 0).length;
+    const defenderCount = positions.filter(position => position === 1).length;
+    const midfielderCount = positions.filter(position => position === 2).length;
+    const forwardCount = positions.filter(position => position === 3).length;
     
     if (goalkeeperCount !== 1 || defenderCount < 1 || defenderCount > 3 || midfielderCount < 3 || midfielderCount > 5 || forwardCount < 1 || forwardCount > 3) {
       return false;
@@ -120,15 +120,15 @@ const PickTeam = () => {
     }
     
     const positions = fantasyTeam.players.map(player => player.position);
-    const goalkeeperCount = positions.filter(position => position === 'Goalkeeper').length;
-    const defenderCount = positions.filter(position => position === 'Defender').length;
-    const midfielderCount = positions.filter(position => position === 'Midfielder').length;
-    const forwardCount = positions.filter(position => position === 'Forward').length;
+    const goalkeeperCount = positions.filter(position => position === 0).length;
+    const defenderCount = positions.filter(position => position === 1).length;
+    const midfielderCount = positions.filter(position => position === 2).length;
+    const forwardCount = positions.filter(position => position === 3).length;
     
     if (goalkeeperCount !== 1) {
       return "You must have 1 goalkeeper";
     }
-    if (defenderCount < 1 || defenderCount > 3) {
+    if (defenderCount < 3 || defenderCount > 5) {
       return "You must have between 1 and 3 defenders";
     }
     if (midfielderCount < 3 || midfielderCount > 5) {
@@ -138,7 +138,7 @@ const PickTeam = () => {
       return "You must have between 1 and 3 forwards";
     }
 
-    return "Invalid team";
+    return null;
   };
 
   
@@ -308,6 +308,22 @@ const PickTeam = () => {
         }
       }
     }
+
+    newTeam.sort((a, b) => {
+      if (a.position < b.position) {
+        return -1;
+      } else if (a.position > b.position) {
+        return 1;
+      }
+      
+      if (a.position === b.position) {
+        return b.value - a.value;
+      }
+    
+      return 0;
+    });
+    
+    
   
     // Correctly update the state to keep existing properties
     setFantasyTeam(prevState => ({
@@ -450,7 +466,7 @@ const PickTeam = () => {
                                   return <StarOutlineIcon />;
                               }})()}
                             </div>
-                            <div className='text-center mb-2'>{bonus.name}</div>
+                            <div className='text-center mb-2 mx-1'>{bonus.name}</div>
                             {isBonusUsed ? (
                               <div className='text-center mb-2'>Played Gameweek {bonusPlayedGameweek}</div>
                             ) : (
