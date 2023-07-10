@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Card, Button, Col, Row } from 'react-bootstrap';
 import { StarIcon, StarOutlineIcon,  PlayerIcon, TransferIcon } from '../icons';
 import getFlag from '../country-flag';
+import { TeamContext } from "../../contexts/TeamContext";
 
 const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellButton, handleSellPlayer }) => {
   
+  const { teams } = useContext(TeamContext);
   const isCaptain = player.id === captainId;
   const positionCodes = ['GK', 'DF', 'MF', 'FW'];
 
@@ -13,13 +15,18 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
     handleCaptainSelection(player.id);
   };
 
+  const getTeamById = (teamId) => {
+    return teams.find(team => team.id === teamId);
+  }
+
   return (      
-    <Card className='mb-1 h-100 d-flex flex-column justify-content-center'>
+    <Card className='h-100 d-flex flex-column justify-content-center'>
       <Row className='mx-1 mt-2'>
-        <Col xs={4} md={3}>
+        <Col xs={3}>
           <Row>
-            <p className='text-center'>{positionCodes[player.position]}</p>
-            <PlayerIcon primaryColour={player.primaryColourHex} secondaryColour={player.secondaryColourHex} />
+            <p className='text-center mb-0'>{player.shirtNumber}</p>
+            <p className='text-center mb-1'>{positionCodes[player.position]}</p>
+            <PlayerIcon primaryColour={getTeamById(player.teamId).primaryColourHex} secondaryColour={getTeamById(player.teamId).secondaryColourHex} />
           </Row>
           <Row>
             <div style={{
@@ -35,21 +42,16 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
               }}></div>
           </Row>
         </Col>
-        <Col xs={8} md={5}>
+        <Col xs={9}>
           <Row>
-            <Col>
-            <span style={{fontSize: '0.94rem'}} className='mb-0'>
-              {getFlag(player.nationality)} {`${player.shirtNumber}`} {player.lastName}<br />
-              <small className='text-muted'>{player.firstName}</small>
-              <p className='w-100'>
-                <small>{player.team}</small>
-              </p>
-            </span>
+            <Col xs={9}>
+              <span style={{fontSize: '0.9rem'}} className='mb-0'>
+                {getFlag(player.nationality)} {player.lastName}<br />
+                <small className='text-muted'>{player.firstName}</small>
+              </span>
             </Col>
-          </Row>
-        </Col>
-        <Col xs={12} md={4} className='text-center'>
-          {isCaptain
+            <Col xs={3}>
+            {isCaptain
             ? <StarIcon 
                 onClick={handleStarClick} 
                 color="#807A00" 
@@ -62,8 +64,33 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
                 width="15" 
                 height="15" 
               />}
-            <h6 className='text-center mt-2'>{`£${player.value}m`}</h6>
-            <Button className="w-100 mb-2" disabled={disableSellButton} onClick={handleSellPlayer} ><TransferIcon /><small>Sell</small></Button>
+            </Col>
+          </Row>
+          <Row>
+          <span style={{fontSize: '0.94rem'}} className='mb-0'>
+              <p className='w-100 mb-0'>
+                <small>{getTeamById(player.teamId).friendlyName}</small>
+              </p>
+              <p className='w-100'>
+                <small>{`£${player.value}m`}</small>
+              </p>
+            </span>
+          </Row>
+          
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+        <Button 
+          style={{width: 'calc(100% - 16px)', margin: '0px 8px'}} 
+          className="mb-2" 
+          disabled={disableSellButton} 
+          onClick={handleSellPlayer} 
+        >
+          <TransferIcon /><small>Sell</small>
+        </Button>
+
+
         </Col>
       </Row>
     </Card>
@@ -71,7 +98,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
   };
 
   const PlayerSlot = ({ player, slotNumber, handlePlayerSelection, captainId, handleCaptainSelection, handleSellPlayer }) => (
-    <Col className='d-flex mb-2'>
+    <Col className='d-flex mb-4'>
       <div className='player-slot w-100'>
         {player 
           ? <PlayerDetails player={player} captainId={captainId} handleCaptainSelection={handleCaptainSelection} 

@@ -156,10 +156,10 @@ const PickTeam = () => {
             <Card className="w-100 save-panel">
               <Row>
                 <Col>
-                  <Button className='w-100' variant="success" onClick={handleSaveTeam} disabled={!isTeamValid}>Save Team</Button>
+                  <Button className="mt-2" style={{width: 'calc(100% - 16px)', margin: '0px 8px'}} variant="success" onClick={handleSaveTeam} disabled={!isTeamValid}>Save Team</Button>
                 </Col>
               </Row>
-              {!isTeamValid && <p className='m-0 text-center'><small>{invalidTeamMessage}</small></p>}
+              {!isTeamValid && <p className='m-0 mb-1 text-center'><small>{invalidTeamMessage}</small></p>}
             </Card>
           </Col>
         );
@@ -365,7 +365,7 @@ const PickTeam = () => {
                 </Row>
               </Card.Header>
               <Card.Body>
-                <Row>
+                <Row className='mb-2'>
                   <Col md={10}>
                     <div className='d-flex align-items-center mb-3 mt-3'>
                       <StarIcon color="#807A00" width="15" height="15" />
