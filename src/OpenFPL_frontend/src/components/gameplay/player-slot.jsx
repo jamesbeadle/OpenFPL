@@ -25,7 +25,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
         <Col xs={3}>
           <Row>
             <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              <p style={{fontSize: '0.8rem'}} className='text-center mb-0'>{player.shirtNumber}</p>
+              <p style={{fontSize: '0.8rem'}} className='text-center mb-0'>{player.shirtNumber == 0 ? '-' : player.shirtNumber}</p>
               <p style={{fontSize: '0.8rem'}} className='text-center mb-1'>{positionCodes[player.position]}</p>  
             </div>
             <PlayerIcon primaryColour={getTeamById(player.teamId).primaryColourHex} secondaryColour={getTeamById(player.teamId).secondaryColourHex} />

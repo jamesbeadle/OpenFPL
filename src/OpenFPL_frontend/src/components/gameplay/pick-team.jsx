@@ -153,7 +153,7 @@ const PickTeam = () => {
       if(i === 11) {
         cols.push(
           <Col md={3} key={'save'} className="d-flex align-items-center">
-            <Card className="w-100 save-panel">
+            <Card className="w-100 save-panel mt-4">
               <Row>
                 <Col>
                   <Button className="mt-2" style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} variant="success" onClick={handleSaveTeam} disabled={!isTeamValid}>Save Team</Button>
@@ -176,7 +176,7 @@ const PickTeam = () => {
                 handleSellPlayer={handleSellPlayer}
               />
             ) : (
-              <Button className="m-3 w-100" onClick={() => handlePlayerSelection(i)}>
+              <Button className="mt-4 w-100" onClick={() => handlePlayerSelection(i)}>
                 Add player
               </Button>
             )}
