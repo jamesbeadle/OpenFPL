@@ -18,7 +18,7 @@ const PickTeam = () => {
   const { teams } = useContext(TeamContext);
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
-    bank: 3000,
+    bank: 300,
     transfersAvailable: 0
   });
   
@@ -62,7 +62,7 @@ const PickTeam = () => {
     fantasyTeamData = {
       ...fantasyTeamData,
       players: fantasyTeamData.players || [],
-      bank: fantasyTeamData.bank || 3000
+      bank: fantasyTeamData.bank || 300
     };
     setFantasyTeam(fantasyTeamData);
 
@@ -156,16 +156,16 @@ const PickTeam = () => {
             <Card className="w-100 save-panel">
               <Row>
                 <Col>
-                  <Button className="mt-2" style={{width: 'calc(100% - 16px)', margin: '0px 8px'}} variant="success" onClick={handleSaveTeam} disabled={!isTeamValid}>Save Team</Button>
+                  <Button className="mt-2" style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} variant="success" onClick={handleSaveTeam} disabled={!isTeamValid}>Save Team</Button>
                 </Col>
               </Row>
-              {!isTeamValid && <p className='m-0 mb-1 text-center'><small>{invalidTeamMessage}</small></p>}
+              {!isTeamValid && <p className='m-0 mb-1 p-1 text-center small-text'><small>{invalidTeamMessage}</small></p>}
             </Card>
           </Col>
         );
       } else {
         cols.push(
-          <Col md={3} key={i} className="d-flex align-items-center">
+          <Col md={3} key={i} className="align-items-center">
             {player ? (
               <PlayerSlot 
                 player={player}
@@ -210,7 +210,7 @@ const PickTeam = () => {
   const calculateTeamValue = () => {
     if(fantasyTeam && fantasyTeam.players) {
       const totalValue = fantasyTeam.players.reduce((acc, player) => acc + player.value, 0);
-      return (totalValue / 10).toFixed(1);
+      return (totalValue).toFixed(1);
     }
     return null;
   }
@@ -237,66 +237,76 @@ const PickTeam = () => {
   };
 
   const handleAutoFill = () => {
-    // Make sure we have all the players data
+    
     if (players.length === 0) {
       console.error("No player data available for autofill.");
       return;
     }
   
-    // Define position names
-    const positionNames = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
+    const maxPlayersPerPosition = {
+      'Goalkeeper': 1,
+      'Defender': 5,
+      'Midfielder': 5,
+      'Forward': 3
+    };
   
-    // Generate list of available positions for auto-fill (remaining positions to be filled in team)
     const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
-    const currentTeamPositions = fantasyTeam.players.map(player => positionNames[player.position]);
-    const positionsToFill = teamPositions.map(position => {
-      let minPlayers, maxPlayers;
+    const currentTeamPositions = fantasyTeam.players.map(player => teamPositions[player.position]);
+  
+    const positionsToFill = [];
+  
+    teamPositions.forEach(position => {
+      let minPlayers;
       switch(position) {
         case 'Goalkeeper':
           minPlayers = 1;
-          maxPlayers = 1;
           break;
         case 'Defender':
           minPlayers = 3;
-          maxPlayers = 5;
           break;
         case 'Midfielder':
           minPlayers = 3;
-          maxPlayers = 5;
           break;
         case 'Forward':
           minPlayers = 1;
-          maxPlayers = 3;
           break;
         default:
           minPlayers = 0;
-          maxPlayers = 0;
       }
       const currentCount = currentTeamPositions.filter(pos => pos === position).length;
-      const positionsToAdd = Math.max(minPlayers - currentCount, 0);
-      const positionsToReplace = Math.min(maxPlayers - currentCount, positionsToAdd);
-      return Array(positionsToAdd + positionsToReplace).fill(position);
-    }).flat();
+      if (currentCount < minPlayers) {
+        positionsToFill.push(...Array(minPlayers - currentCount).fill(position));
+      }
+    });
+  
+    while (positionsToFill.length < 11 - fantasyTeam.players.length) {
+      // Pick a random position from teamPositions, with the constraint that there's at least one slot open for this position.
+      let randomPosition;
+      do {
+        randomPosition = teamPositions[Math.floor(Math.random() * teamPositions.length)];
+      } while (positionsToFill.filter(pos => pos === randomPosition).length >= maxPlayersPerPosition[randomPosition]);
+      positionsToFill.push(randomPosition);
+    }
   
     // Sort players by value (price)
-    const sortedPlayers = [...players].sort((a, b) => a.value - b.value);
+    let sortedPlayers = [...players].sort((a, b) => a.value - b.value);
+    sortedPlayers = shuffle(sortedPlayers);
   
     // Create a new team based on the sorted players and the positions to fill
     let newTeam = [...fantasyTeam.players];
     let remainingBudget = fantasyTeam.bank;
     for (let position of positionsToFill) {
+      if (newTeam.length >= 11) {
+        break;
+      }
       for (let i = 0; i < sortedPlayers.length; i++) {
-        if (positionNames[sortedPlayers[i].position] === position && sortedPlayers[i].value <= remainingBudget) {
+        if (teamPositions[sortedPlayers[i].position] === position && sortedPlayers[i].value <= remainingBudget) {
           newTeam.push(sortedPlayers[i]);
           remainingBudget -= sortedPlayers[i].value;
           sortedPlayers.splice(i, 1);
           break;
         }
       }
-    }
-  
-    if (newTeam.length > 11) {
-      newTeam = newTeam.slice(0, 11);
     }
   
     // Correctly update the state to keep existing properties
@@ -306,6 +316,27 @@ const PickTeam = () => {
       bank: remainingBudget,
     }));
   };
+  
+  function shuffle(array) {
+    let currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+  }
+  
+  
   
   
   return (
@@ -335,7 +366,7 @@ const PickTeam = () => {
                         </Col>
                         <Col xs={4} md={4}>
                           <p style={{marginBottom: 0}}>
-                            £{(fantasyTeam.bank / 10).toFixed(1)}m
+                            £{(fantasyTeam.bank).toFixed(1)}m
                             <br />
                             <small>Bank Balance</small>
                           </p>

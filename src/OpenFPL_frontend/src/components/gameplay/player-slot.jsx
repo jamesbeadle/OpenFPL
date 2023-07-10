@@ -20,35 +20,26 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
   }
 
   return (      
-    <Card className='h-100 d-flex flex-column justify-content-center'>
+    <Card className='justify-content-center'>
       <Row className='mx-1 mt-2'>
         <Col xs={3}>
           <Row>
-            <p className='text-center mb-0'>{player.shirtNumber}</p>
-            <p className='text-center mb-1'>{positionCodes[player.position]}</p>
+            <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <p style={{fontSize: '0.8rem'}} className='text-center mb-0'>{player.shirtNumber}</p>
+              <p style={{fontSize: '0.8rem'}} className='text-center mb-1'>{positionCodes[player.position]}</p>  
+            </div>
             <PlayerIcon primaryColour={getTeamById(player.teamId).primaryColourHex} secondaryColour={getTeamById(player.teamId).secondaryColourHex} />
-          </Row>
-          <Row>
-            <div style={{
-              borderBottom: `3px solid ${player.primaryColourHex}`,
-              width: '100%',
-              paddingBottom: '2px'
-            }}></div>
-              <div style={{
-                marginTop: '5px',
-                marginBottom: '5px',
-                borderBottom: `3px solid ${player.secondaryColourHex}`,
-                width: '100%',
-              }}></div>
           </Row>
         </Col>
         <Col xs={9}>
           <Row>
             <Col xs={9}>
-              <span style={{fontSize: '0.9rem'}} className='mb-0'>
-                {getFlag(player.nationality)} {player.lastName}<br />
-                <small className='text-muted'>{player.firstName}</small>
-              </span>
+              <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span style={{fontSize: '0.8rem'}} className='mb-0'>
+                    {getFlag(player.nationality)} {player.lastName}<br />
+                    <small className='text-muted'>{player.firstName}</small>
+                </span>
+              </div>
             </Col>
             <Col xs={3}>
             {isCaptain
@@ -67,14 +58,16 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
             </Col>
           </Row>
           <Row>
-          <span style={{fontSize: '0.94rem'}} className='mb-0'>
-              <p className='w-100 mb-0'>
-                <small>{getTeamById(player.teamId).friendlyName}</small>
-              </p>
-              <p className='w-100'>
-                <small>{`£${player.value}m`}</small>
-              </p>
-            </span>
+            <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <span style={{fontSize: '0.94rem'}} className='mb-0'>
+                <p className='w-100 mb-0'>
+                  <small>{getTeamById(player.teamId).friendlyName}</small>
+                </p>
+                <p className='w-100'>
+                  <small>{`£${player.value}m`}</small>
+                </p>
+              </span>
+              </div>
           </Row>
           
         </Col>
@@ -82,7 +75,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
       <Row>
         <Col>
         <Button 
-          style={{width: 'calc(100% - 16px)', margin: '0px 8px'}} 
+          style={{width: 'calc(100% - 1rem)', margin: '0px 0.5rem'}} 
           className="mb-2" 
           disabled={disableSellButton} 
           onClick={handleSellPlayer} 
