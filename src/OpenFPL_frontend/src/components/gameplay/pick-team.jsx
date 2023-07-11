@@ -79,11 +79,26 @@ const PickTeam = () => {
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       updatedFantasyTeam.players[selectedSlot] = player;
+      updatedFantasyTeam.bank -= player.value; // decrease the bank value
+
+      updatedFantasyTeam.players.sort((a, b) => {
+        if (a.position < b.position) {
+          return -1;
+        } else if (a.position > b.position) {
+          return 1;
+        }
+        
+        if (a.position === b.position) {
+          return b.value - a.value;
+        }
+      
+        return 0;
+      });
+  
       return updatedFantasyTeam;
     });
     setShowSelectPlayerModal(false);
   };
-  
   
   const handleBonusClick = (bonusId) => {
     console.log(`Bonus ${bonusId} was clicked`);
@@ -336,16 +351,19 @@ const PickTeam = () => {
       const positionMapping = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
 
 
-      for (let j = 0; j < sortedPlayers.length; j++) {
-        if (positionMapping[sortedPlayers[j].position] === position && sortedPlayers[j].value <= remainingBudget) {
+     for (let j = 0; j < sortedPlayers.length; j++) {
+        if (positionMapping[sortedPlayers[j].position] === position && 
+            sortedPlayers[j].value <= remainingBudget &&
+            !newTeam.some((teamPlayer) => teamPlayer.id === sortedPlayers[j].id)
+        ) {
           newTeam.push(sortedPlayers[j]);
           remainingBudget -= sortedPlayers[j].value;
           sortedPlayers.splice(j, 1);
-          positionsToFill.splice(i, 1); // remove the filled position from positionsToFill
-          i--; // decrement i to offset the index after splicing
+          positionsToFill.splice(i, 1);
+          i--;
           break;
-        }
-      }
+    }
+  }
     }
 
 
@@ -391,9 +409,6 @@ const PickTeam = () => {
   
     return array;
   }
-  
-  
-  
   
   return (
     isLoading ? (

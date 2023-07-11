@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, Button, Table, Form, Pagination, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
 import { PlayerContext } from '../../contexts/PlayerContext';
 import { TeamContext } from "../../contexts/TeamContext";
 
@@ -7,33 +7,42 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
   
   const { players } = useContext(PlayerContext);
   const { teams } = useContext(TeamContext);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [filterTeamId, setFilterTeamId] = useState("");
   const [filterPosition, setFilterPosition] = useState("");
   const [page, setPage] = useState(0);
-  const count = 25;
+  const count = 10;
   const [viewData, setViewData] = useState({ players: [], totalEntries: 0 }); 
 
   const positionOptions = [
-    { id: 0, name: "Goalkeepers" },
-    { id: 1, name: "Defenders" },
-    { id: 2, name: "Midfielders" },
-    { id: 3, name: "Forwards" },
+    { id: 0, name: "Goalkeeper" },
+    { id: 1, name: "Defender" },
+    { id: 2, name: "Midfielder" },
+    { id: 3, name: "Forward" },
   ];
+
+  useEffect(() => {
+    if (!show) {
+      setFilterTeamId("");
+      setFilterPosition("");
+      setPage(0);
+    }
+  }, [show]);
   
   useEffect(() => {
     if(!Array.isArray(players)){
       return;
     }
-
     const filteredPlayers = players
-      .filter(player => filterTeamId === "" || player.teamId === filterTeamId)
-      .filter(player => filterPosition === "" || player.position === filterPosition)
-      .slice(page * count, (page + 1) * count);
+    .filter(player => filterTeamId === "" || player.teamId === Number(filterTeamId))
+    .filter(player => filterPosition === "" || player.position === Number(filterPosition))
+
+    const totalEntries = filteredPlayers.length; 
+    const paginatedPlayers = filteredPlayers.slice(page * count, (page + 1) * count);
   
-    setViewData({ players: filteredPlayers, totalEntries: filteredPlayers.length });
+    setViewData({ players: paginatedPlayers, totalEntries: totalEntries });
   
   }, [players, filterTeamId, filterPosition, page]);
+  
 
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
@@ -49,8 +58,8 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
     setPage(0);
   };
 
-  const handleSubmit = () => {
-    handleConfirm(selectedPlayer);
+  const handleSubmit = (player) => {
+    handleConfirm(player);
   };
 
   const renderPagination = () => {
@@ -71,7 +80,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
         <Modal.Title>Select Player</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form>
+        <Form className='mb-4'>
           <Row>
             <Col>
               <Form.Group controlId="teamFilter">
@@ -104,43 +113,46 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
         {players?.isLoading ? (
           <p>Loading...</p>
         ) : (
-          <>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Team</th>
-                  <th>Position</th>
-                  <th>Select</th>
-                </tr>
-              </thead>
-              <tbody>
-                {viewData.players.map((player) => (
-                  <tr key={player.id}>
-                    <td>{player.name}</td>
-                    <td>{teams.find(team => team.id === player.teamId).name}</td>
-                    <td>{positionOptions.find(position => position.id === player.position).name}</td>
-                    <td>
-                      <Button variant="primary" onClick={() => setSelectedPlayer(player)}>
-                        Select
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+          <Container className="mt-4">
+          {viewData.players.map((player) => (
+            <Row key={player.id} className='mb-2'>
+              <Col xs={1} className='d-flex align-self-center'>
+                <p className='small-text m-0'>
+                  {(() => {
+                    switch (player.position) {
+                      case 0:
+                        return "GK";
+                      case 1:
+                        return "DF";
+                      case 2:
+                        return "MF";
+                      case 3:
+                        return "FW";
+                    }})()}
+                </p>
+              </Col>
+              <Col xs={4} className='d-flex align-self-center'>
+                <p className='small-text m-0'>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</p>
+              </Col>
+              <Col xs={2} className='d-flex align-self-center'>
+                <p className='small-text m-0'>{teams.find(team => team.id === player.teamId).abbreviatedName}</p>
+              </Col>
+              <Col xs={2} className='d-flex align-self-center'>
+                <p className='small-text m-0'>{`£${player.value}m`}</p>
+              </Col>
+              <Col xs={3} className='d-flex align-self-center'>
+                <Button className="w-100" variant="primary" onClick={() => {handleSubmit(player);}}>
+                  <small>Select</small>
+                </Button>
+              </Col>
+            </Row>
+          ))}
+          <div style={{ overflowX: 'auto' }}>
             {renderPagination()}
-          </>
+          </div>
+        </Container>
         )}
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={handleSubmit} disabled={!selectedPlayer}>
-          Confirm
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 };
