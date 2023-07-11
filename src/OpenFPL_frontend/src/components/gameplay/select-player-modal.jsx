@@ -3,7 +3,7 @@ import { Modal, Button, Container, Form, Pagination, Row, Col } from 'react-boot
 import { PlayerContext } from '../../contexts/PlayerContext';
 import { TeamContext } from "../../contexts/TeamContext";
 
-const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
+const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) => {
   
   const { players } = useContext(PlayerContext);
   const { teams } = useContext(TeamContext);
@@ -141,10 +141,14 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm }) => {
                 <p className='small-text m-0'>{`£${player.value}m`}</p>
               </Col>
               <Col xs={3} className='d-flex align-self-center'>
-                <Button className="w-100" variant="primary" onClick={() => {handleSubmit(player);}}>
-                  <small>Select</small>
-                </Button>
+                {fantasyTeam.players.some(teamPlayer => teamPlayer.id === player.id) 
+                  ? <p className='small-text m-0 text-center w-100'>Added</p> 
+                  : <Button className="w-100" variant="primary" onClick={() => {handleSubmit(player);}}>
+                      <small>Select</small>
+                    </Button>
+                }
               </Col>
+
             </Row>
           ))}
           <div style={{ overflowX: 'auto' }}>

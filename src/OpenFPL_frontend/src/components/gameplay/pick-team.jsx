@@ -282,9 +282,9 @@ const PickTeam = () => {
     };
   
     const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
-    const currentTeamPositions = fantasyTeam.players.map(player => player.position);
+    const currentTeamPositions = fantasyTeam.players.map(player => teamPositions[player.position]);
 
-    console.log(fantasyTeam.positionsToFill)
+
     let positionsToFill = fantasyTeam.positionsToFill ? [...fantasyTeam.positionsToFill] : [];
     
     teamPositions.forEach(position => {
@@ -310,7 +310,6 @@ const PickTeam = () => {
         positionsToFill.push(...Array(minPlayers - currentCount).fill(position));
       }
     });
-
 
     while (positionsToFill.length < 11 - fantasyTeam.players.length) {
       // Get positions that haven't reached their maximum limit yet
@@ -553,6 +552,7 @@ const PickTeam = () => {
           show={showSelectPlayerModal} 
           handleClose={() => setShowSelectPlayerModal(false)} 
           handleConfirm={handlePlayerConfirm}
+          fantasyTeam={fantasyTeam}
         />
         
       </Container>
