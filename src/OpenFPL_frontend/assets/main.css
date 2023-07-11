@@ -150,6 +150,11 @@
   .small-text-container {
       height: 100%;
   }
+
+  .card.captain {
+    background-color: #400042 !important;  /* Change this to the color you want */
+    color: whitesmoke !important;
+  }
   
 /*1E1436
   

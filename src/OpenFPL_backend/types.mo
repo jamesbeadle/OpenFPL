@@ -110,17 +110,6 @@ module Types{
     };
 
 
-
-
-
-
-
-
-
-
-
-
-
      public type Proposal = {
         id : Nat;
         votes_no : Tokens;

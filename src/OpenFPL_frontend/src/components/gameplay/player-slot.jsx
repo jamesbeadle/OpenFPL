@@ -20,7 +20,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
   }
 
   return (      
-    <Card className='justify-content-center'>
+    <Card className={`justify-content-center ${isCaptain ? 'captain' : ''}`}>
       <Row className='mx-1 mt-2'>
         <Col xs={3}>
           <Row>

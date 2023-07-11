@@ -9,6 +9,9 @@ import Fixtures from './fixtures';
 import SelectPlayerModal from './select-player-modal';
 import { PlayerContext } from "../../contexts/PlayerContext";
 import { TeamContext } from "../../contexts/TeamContext";
+import SelectFantasyPlayerModal from './select-fantasy-player-modal';
+import SelectBonusTeamModal from './select-bonus-team-modal';
+import ConfirmBonusModal from './confirm-bonus-modal';
 
 
 const PickTeam = () => {
@@ -33,12 +36,20 @@ const PickTeam = () => {
     {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHeroGameweek'}
   ]); 
   const [showSelectPlayerModal, setShowSelectPlayerModal] = useState(false);
+  const [showSelectFantasyPlayerModal, setShowSelectFantasyPlayerModal] = useState(false);
+  const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
+  const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [captainId, setCaptainId] = useState(0);
   const [currentGameweek, setCurrentGameweek] = useState(null);
   const [isTeamValid, setIsTeamValid] = useState(false);
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
-  
+  const [selectedBonusId, setSelectedBonusId] = useState(null);
+  const positionsForBonus = {
+    1: null,  // Goal Getter - all positions
+    2: null,  // Pass Master - all positions
+    3: [1]    // No Entry - only defenders
+  };
 
 
   useEffect(() => {
@@ -101,10 +112,51 @@ const PickTeam = () => {
   };
   
   const handleBonusClick = (bonusId) => {
-    console.log(`Bonus ${bonusId} was clicked`);
-  }
+    const bonusProperty = bonuses.find(bonus => bonus.id === bonusId).propertyName;
+    if (bonuses.some(bonus => fantasyTeam[bonus.propertyName] === currentGameweek)) {
+      return;
+    }
 
-    
+    setFantasyTeam(prevTeam => ({
+      ...prevTeam,
+      [bonusProperty]: currentGameweek
+    }));
+
+    setSelectedBonusId(bonusId);
+    if ([1, 2, 3].includes(bonusId)) {
+      setShowSelectFantasyPlayerModal(true);
+    } else if (bonusId === 4) {
+      setShowSelectBonusTeamModal(true);
+    } else {
+      setShowConfirmBonusModal(true);
+    }
+  };
+
+  const handleConfirmBonusClick = (data) => {
+    const { bonusType, player } = data;
+  
+    const bonusObject = bonuses.find((bonus) => bonus.id === bonusType);
+  
+    if (!bonusObject) {
+      console.error("No bonus found for type:", bonusType);
+      return;
+    }
+  
+    const bonusGameweekProperty = bonusObject.propertyName;
+    const bonusPlayerProperty = bonusObject.propertyName.replace('Gameweek', 'PlayerId');
+  
+    setFantasyTeam((prevFantasyTeam) => {
+      return {
+        ...prevFantasyTeam,
+        [bonusGameweekProperty]: currentGameweek,
+        [bonusPlayerProperty]: player ? player.id : null
+      }
+    });
+  
+    setShowConfirmBonusModal(false);
+    setSelectedBonusId(null);
+  };
+
   const checkTeamValidation = () => {
     if(fantasyTeam.players == undefined){
       return false;
@@ -490,12 +542,15 @@ const PickTeam = () => {
               <Card.Body>
                 <Row>
                   {bonuses.map((bonus, index) => {
-                    const bonusPlayedGameweek = fantasyTeam[`${bonus.propertyName}`];
+                    const bonusPlayedGameweek = fantasyTeam[bonus.propertyName];
                     const isBonusUsed = bonusPlayedGameweek != undefined && bonusPlayedGameweek !== 0;
-                    const isSameGameweek = bonusPlayedGameweek === currentGameweek;
+                    const isSameGameweek = bonuses.some(bonus => fantasyTeam[bonus.propertyName] === currentGameweek);
+                    const bonusPlayedInCurrentWeek = fantasyTeam[bonus.propertyName] === currentGameweek;
+ 
                     return (
                       <Col xs={12} md={3} key={index}>
-                        <Card className='mb-2'>
+                             <Card className='mb-2' style={{ opacity: isSameGameweek && !bonusPlayedInCurrentWeek ? 0.5 : 1 }}>
+      
                           <div className='bonus-card-item'>
                             <div className='text-center mb-2 mt-2'>
                             {(() => {
@@ -525,7 +580,9 @@ const PickTeam = () => {
                               <div className='text-center mb-2'>Played Gameweek {bonusPlayedGameweek}</div>
                             ) : (
                               isSameGameweek ? (
-                                <div>You can only use 1 bonus per gameweek</div>
+                                <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} className='text-center small-text mb-2'>
+                                  You can only use 1 bonus each week.
+                                </p>
                               ) : (
                                 <div style={{marginLeft: '1rem', marginRight: '1rem'}}>
                                   <Button variant="info" className="w-100 mb-4" onClick={() => handleBonusClick(bonus.id)}>
@@ -553,6 +610,29 @@ const PickTeam = () => {
           handleClose={() => setShowSelectPlayerModal(false)} 
           handleConfirm={handlePlayerConfirm}
           fantasyTeam={fantasyTeam}
+        />
+        
+        <SelectFantasyPlayerModal 
+          show={showSelectFantasyPlayerModal}
+          handleClose={() => setShowSelectFantasyPlayerModal(false)}
+          handleConfirm={handleConfirmBonusClick}
+          fantasyTeam={fantasyTeam}
+          positions={positionsForBonus[selectedBonusId]}
+          bonusType={bonuses.find(bonus => bonus.id === selectedBonusId)?.propertyName}
+        />
+
+        <SelectBonusTeamModal
+          show={showSelectBonusTeamModal}
+          handleClose={() => setShowSelectBonusTeamModal(false)}
+          handleConfirm={handleConfirmBonusClick}
+          bonusType={bonuses.find(bonus => bonus.id === selectedBonusId)?.propertyName}
+        />
+
+        <ConfirmBonusModal
+          show={showConfirmBonusModal}
+          handleClose={() => setShowConfirmBonusModal(false)}
+          handleConfirm={handleConfirmBonusClick}
+          bonusType={bonuses.find(bonus => bonus.id === selectedBonusId)?.propertyName}
         />
         
       </Container>
