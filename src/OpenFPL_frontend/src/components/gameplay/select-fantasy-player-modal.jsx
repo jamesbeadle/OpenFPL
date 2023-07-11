@@ -7,7 +7,12 @@ const SelectFantasyPlayerModal = ({ show, handleClose, handleConfirm, fantasyTea
   
   const { players } = useContext(PlayerContext);
   const { teams } = useContext(TeamContext);
-  const filteredPlayers = positions ? players.filter(player => positions.includes(player.position)) : players;
+  console.log(fantasyTeam)
+  const filteredPlayers = positions 
+  ? players.filter(player => positions.includes(player.position) && fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id))
+  : players.filter(player => fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id));
+
+
 
   const handleSubmit = (data) => {
     handleConfirm(data);

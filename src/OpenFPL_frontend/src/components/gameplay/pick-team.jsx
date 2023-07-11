@@ -46,9 +46,9 @@ const PickTeam = () => {
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
   const [selectedBonusId, setSelectedBonusId] = useState(null);
   const positionsForBonus = {
-    1: null,  // Goal Getter - all positions
-    2: null,  // Pass Master - all positions
-    3: [1]    // No Entry - only defenders
+    1: null,  
+    2: null,
+    3: [1]
   };
 
 
@@ -116,11 +116,6 @@ const PickTeam = () => {
     if (bonuses.some(bonus => fantasyTeam[bonus.propertyName] === currentGameweek)) {
       return;
     }
-
-    setFantasyTeam(prevTeam => ({
-      ...prevTeam,
-      [bonusProperty]: currentGameweek
-    }));
 
     setSelectedBonusId(bonusId);
     if ([1, 2, 3].includes(bonusId)) {
@@ -612,14 +607,14 @@ const PickTeam = () => {
           fantasyTeam={fantasyTeam}
         />
         
-        <SelectFantasyPlayerModal 
+        {showSelectFantasyPlayerModal && <SelectFantasyPlayerModal 
           show={showSelectFantasyPlayerModal}
           handleClose={() => setShowSelectFantasyPlayerModal(false)}
           handleConfirm={handleConfirmBonusClick}
           fantasyTeam={fantasyTeam}
           positions={positionsForBonus[selectedBonusId]}
           bonusType={bonuses.find(bonus => bonus.id === selectedBonusId)?.propertyName}
-        />
+        />}
 
         <SelectBonusTeamModal
           show={showSelectBonusTeamModal}
