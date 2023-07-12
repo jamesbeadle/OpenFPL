@@ -5,8 +5,9 @@ import { TeamContext } from "../../contexts/TeamContext";
 const SelectBonusTeamModal = ({ show, handleClose, handleConfirm, bonusType  }) => {
   
   const { teams } = useContext(TeamContext);
-  const handleSubmit = (team) => {
-    handleConfirm({ team, bonusType });
+ 
+  const handleSubmit = (data) => {
+    handleConfirm(data);
   };
 
   return (
@@ -24,7 +25,7 @@ const SelectBonusTeamModal = ({ show, handleClose, handleConfirm, bonusType  }) 
             <Row>
             {teams.sort((a, b) => a.id - b.id).map((team, index) => (
               <Col xs={4} className='mb-2' key={index}>
-                <Button className="w-100 text-truncate" variant="primary" onClick={() => { handleSubmit(team); }} style={{overflow: 'hidden'}}>
+                <Button className="w-100 text-truncate" variant="primary" onClick={() => { handleSubmit({ teamId: team.id, bonusType }); }} style={{overflow: 'hidden'}}>
                     <small>{team.friendlyName}</small>
                 </Button>
                 {/* To create new row after every 3 columns */}
