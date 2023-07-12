@@ -11,7 +11,14 @@ const SelectFantasyPlayerModal = ({ show, handleClose, handleConfirm, fantasyTea
   const filteredPlayers = positions 
   ? players.filter(player => positions.includes(player.position) && fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id))
   : players.filter(player => fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id));
+  
+  const bonusTitle = (bonusType == 1) ? "Bonus: Goal Getter" :
+                      (bonusType == 2) ? "Bonus: Pass Master" :
+                      (bonusType == 3) ? "Bonus: No Entry" : "";
 
+const description = (bonusType == 1) ? "Play your Goal Getter bonus to receive triple points for each goal scored for any selected player." :
+  (bonusType == 2) ? "Play your Pass Master bonus to receive triple points for each assist for any selected player." :
+  (bonusType == 3) ? "Play your No Entry bonus to receieve triple points on any defenders score if they keep a clean sheet." : "";
 
 
   const handleSubmit = (data) => {
@@ -21,9 +28,12 @@ const SelectFantasyPlayerModal = ({ show, handleClose, handleConfirm, fantasyTea
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Select Player</Modal.Title>
+        <Modal.Title>{bonusTitle}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body>    
+        <p>{description}</p>
+        <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0rem'}} className='small-text warning-text'><small>A bonus can only be used once per season and only one bonus can be used per gameweek.</small></p>
+    
         {filteredPlayers?.isLoading ? (
           <p>Loading...</p>
         ) : (

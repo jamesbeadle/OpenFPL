@@ -65,7 +65,7 @@
     line-height: 1.6;
   }
 
-  a{
+  .footer a{
     color:whitesmoke !important;
   }
     
@@ -159,6 +159,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .warning-text {
+    color:#A84025;
   }
   
 /*1E1436

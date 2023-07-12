@@ -7,13 +7,24 @@ const ConfirmBonusModal = ({ show, handleClose, handleConfirm, bonusType }) => {
     handleConfirm(bonusType);
   };
 
+  const bonusTitle = (bonusType == 5) ? "Bonus: Safe Hands" :
+                      (bonusType == 6) ? "Bonus: Captain Fantastic" :
+                      (bonusType == 7) ? "Bonus: Brace Bonus" :
+                      (bonusType == 8) ? "Bonus: Hat Trick Hero" : "";
+
+  const description = (bonusType == 5) ? "Play your Safe Hands bonus to triple your goalkeeper's points for this gameweek." :
+                      (bonusType == 6) ? "Play your Captain Fantastic bonus to triple your captain's points for this gameweek if they score a goal." :
+                      (bonusType == 7) ? "Play Brace Bonus to double the points for any player in your team that scores 2 or more goals in a match." :
+                      (bonusType == 8) ? "Play your Hat Trick Hero bonus to triple the points for any player in your team that scores 3 or more goals in a match." : "";
+
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Confirm Bonus</Modal.Title>
+        <Modal.Title>{bonusTitle}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Are you sure you want to apply the {bonusType} bonus?</p>
+        <p>{description}</p>
+        <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0rem'}} className='small-text warning-text'><small>A bonus can only be used once per season and only one bonus can be used per gameweek.</small></p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>

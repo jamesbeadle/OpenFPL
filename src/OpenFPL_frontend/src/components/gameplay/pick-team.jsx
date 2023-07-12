@@ -127,9 +127,7 @@ const PickTeam = () => {
     }
   };
 
-  const handleConfirmBonusClick = (data) => {
-    const { bonusType, player } = data;
-  
+  const handleConfirmBonusClick = (bonusType) => {
     const bonusObject = bonuses.find((bonus) => bonus.id === bonusType);
   
     if (!bonusObject) {
@@ -138,13 +136,11 @@ const PickTeam = () => {
     }
   
     const bonusGameweekProperty = bonusObject.propertyName;
-    const bonusPlayerProperty = bonusObject.propertyName.replace('Gameweek', 'PlayerId');
   
     setFantasyTeam((prevFantasyTeam) => {
       return {
         ...prevFantasyTeam,
-        [bonusGameweekProperty]: currentGameweek,
-        [bonusPlayerProperty]: player ? player.id : null
+        [bonusGameweekProperty]: currentGameweek
       }
     });
   
@@ -613,22 +609,22 @@ const PickTeam = () => {
           handleConfirm={handleConfirmBonusClick}
           fantasyTeam={fantasyTeam}
           positions={positionsForBonus[selectedBonusId]}
-          bonusType={bonuses.find(bonus => bonus.id === selectedBonusId)?.propertyName}
+          bonusType={selectedBonusId}
         />}
 
-        <SelectBonusTeamModal
+        {showSelectBonusTeamModal && <SelectBonusTeamModal
           show={showSelectBonusTeamModal}
           handleClose={() => setShowSelectBonusTeamModal(false)}
           handleConfirm={handleConfirmBonusClick}
           bonusType={bonuses.find(bonus => bonus.id === selectedBonusId)?.propertyName}
-        />
+        />}
 
-        <ConfirmBonusModal
+        {showConfirmBonusModal && <ConfirmBonusModal
           show={showConfirmBonusModal}
           handleClose={() => setShowConfirmBonusModal(false)}
           handleConfirm={handleConfirmBonusClick}
-          bonusType={bonuses.find(bonus => bonus.id === selectedBonusId)?.propertyName}
-        />
+          bonusType={selectedBonusId}
+        />}
         
       </Container>
   );
