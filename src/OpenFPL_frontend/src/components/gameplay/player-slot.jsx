@@ -1,15 +1,25 @@
 import React, { useContext } from 'react';
 import { Card, Button, Col, Row } from 'react-bootstrap';
-import { StarIcon, StarOutlineIcon,  PlayerIcon, TransferIcon } from '../icons';
+import { StarIcon, StarOutlineIcon,  PlayerIcon, TransferIcon, RecordIcon, PersonBoxIcon, StopIcon, PersonUpIcon, PersonIcon, CaptainIcon, TwoIcon, ThreeIcon } from '../icons';
 import getFlag from '../country-flag';
 import { TeamContext } from "../../contexts/TeamContext";
 
-const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellButton, handleSellPlayer }) => {
+const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellButton, handleSellPlayer, bonusId }) => {
   
   const { teams } = useContext(TeamContext);
   const isCaptain = player.id === captainId;
   const positionCodes = ['GK', 'DF', 'MF', 'FW'];
-
+  const bonusIcons = {
+    1: <RecordIcon style={{marginLeft: '1rem'}} />,
+    2: <PersonBoxIcon style={{marginLeft: '1rem'}} />,
+    3: <StopIcon style={{marginLeft: '1rem'}} />,
+    4: <PersonUpIcon style={{marginLeft: '1rem'}} />,
+    5: <PersonIcon style={{marginLeft: '1rem'}} />,
+    6: <CaptainIcon style={{marginLeft: '1rem'}} />,
+    7: <TwoIcon style={{marginLeft: '1rem'}} />,
+    8: <ThreeIcon style={{marginLeft: '1rem'}} />
+  };
+  
   const handleStarClick = (event) => {
     event.stopPropagation();
     handleCaptainSelection(player.id);
@@ -65,6 +75,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
                 </p>
                 <p className='w-100'>
                   <small>{`£${player.value}m`}</small>
+                  {bonusIcons[bonusId]}
                 </p>
               </span>
               </div>
@@ -90,12 +101,12 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
     )
   };
 
-  const PlayerSlot = ({ player, slotNumber, handlePlayerSelection, captainId, handleCaptainSelection, handleSellPlayer }) => (
+  const PlayerSlot = ({ player, slotNumber, handlePlayerSelection, captainId, handleCaptainSelection, handleSellPlayer, bonusId }) => (
     <Col className='d-flex mb-4'>
       <div className='player-slot w-100'>
         {player 
           ? <PlayerDetails player={player} captainId={captainId} handleCaptainSelection={handleCaptainSelection} 
-          handleSellPlayer={() => handleSellPlayer(player.id)}  /> 
+          handleSellPlayer={() => handleSellPlayer(player.id)} bonusId={bonusId}  /> 
           : <Card className='mb-1 h-100 d-flex flex-column justify-content-center'>
               <Card.Body className='d-flex align-items-center justify-content-center'>
                 <Button className="d-flex align-items-center justify-content-center p-3" onClick={() => handlePlayerSelection(i)}>

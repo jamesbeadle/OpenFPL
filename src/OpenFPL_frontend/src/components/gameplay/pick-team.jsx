@@ -26,15 +26,15 @@ const PickTeam = () => {
   });
   
   const [bonuses, setBonuses] = useState([
-    {id: 1, name: 'Goal Getter', propertyName: 'goalGetterGameweek'},
-    {id: 2, name: 'Pass Master', propertyName: 'passMasterGameweek'},
-    {id: 3, name: 'No Entry', propertyName: 'noEntryGameweek'},
-    {id: 4, name: 'Team Boost', propertyName: 'teamBoostGameweek'},
-    {id: 5, name: 'Safe Hands', propertyName: 'safaHandsGameweek'},
-    {id: 6, name: 'Captain Fantastic', propertyName: 'captainFantasticGameweek'},
-    {id: 7, name: 'Brace Bonus', propertyName: 'braceBonusGameweek'},
-    {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHeroGameweek'}
-  ]); 
+    {id: 1, name: 'Goal Getter', propertyName: 'goalGetter', icon: <RecordIcon />},
+    {id: 2, name: 'Pass Master', propertyName: 'passMaster', icon: <PersonBoxIcon />},
+    {id: 3, name: 'No Entry', propertyName: 'noEntry', icon: <StopIcon />},
+    {id: 4, name: 'Team Boost', propertyName: 'teamBoost', icon: <PersonUpIcon />},
+    {id: 5, name: 'Safe Hands', propertyName: 'safaHands', icon: <PersonIcon />},
+    {id: 6, name: 'Captain Fantastic', propertyName: 'captainFantastic', icon: <CaptainIcon />},
+    {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus', icon: <TwoIcon />},
+    {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero', icon: <ThreeIcon />}
+  ]);
   const [showSelectPlayerModal, setShowSelectPlayerModal] = useState(false);
   const [showSelectFantasyPlayerModal, setShowSelectFantasyPlayerModal] = useState(false);
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
@@ -112,7 +112,7 @@ const PickTeam = () => {
   };
   
   const handleBonusClick = (bonusId) => {
-    const bonusProperty = bonuses.find(bonus => bonus.id === bonusId).propertyName;
+
     if (bonuses.some(bonus => fantasyTeam[bonus.propertyName] === currentGameweek)) {
       return;
     }
@@ -127,7 +127,31 @@ const PickTeam = () => {
     }
   };
 
+  const handleConfirmPlayerBonusClick = (data) => {
+    const bonusObject = bonuses.find((bonus) => bonus.id === data.bonusType);
+  
+    if (!bonusObject) {
+      console.error("No bonus found for type:", data.bonusType);
+      return;
+    }
+    
+    const bonusGameweekProperty = bonusObject.propertyName;
+    const bonusPlayerProperty = `${bonusObject.propertyName}PlayerId`;
+  
+    setFantasyTeam((prevFantasyTeam) => {
+      return {
+        ...prevFantasyTeam,
+        [bonusGameweekProperty]: currentGameweek,
+        [bonusPlayerProperty]: data.playerId
+      }
+    });
+  
+    setShowSelectFantasyPlayerModal(false);
+    setSelectedBonusId(null);
+  };
+
   const handleConfirmBonusClick = (bonusType) => {
+    console.log(bonusType)
     const bonusObject = bonuses.find((bonus) => bonus.id === bonusType);
   
     if (!bonusObject) {
@@ -224,15 +248,31 @@ const PickTeam = () => {
       } else {
         cols.push(
           <Col md={3} key={i} className="align-items-center">
-            {player ? (
-              <PlayerSlot 
-                player={player}
-                slotNumber={i}
-                handlePlayerSelection={handlePlayerSelection}
-                captainId={captainId} 
-                handleCaptainSelection={handleCaptainSelection} 
-                handleSellPlayer={handleSellPlayer}
-              />
+            {player && fantasyTeam ? ((() => {
+              let bonusId;
+              if (fantasyTeam.goalGetterPlayerId === player.id && fantasyTeam.goalGetter === currentGameweek) {
+                console.log(`Player ${player.id} is a goal getter`);
+                bonusId = 1;
+              } else if (fantasyTeam.passMasterPlayerId === player.id && fantasyTeam.passMaster === currentGameweek) {
+                console.log(`Player ${player.id} is a pass master`);
+                bonusId = 2;
+              } else if (fantasyTeam.noEntryPlayerId === player.id && fantasyTeam.noEntry === currentGameweek) {
+                console.log(`Player ${player.id} is a no entry`);
+                bonusId = 3;
+              }
+      
+              return (
+                <PlayerSlot 
+                  player={player}
+                  slotNumber={i}
+                  handlePlayerSelection={handlePlayerSelection}
+                  captainId={captainId} 
+                  handleCaptainSelection={handleCaptainSelection} 
+                  handleSellPlayer={handleSellPlayer}
+                  bonusId={bonusId}
+                />
+              );
+            })()
             ) : (
               <Button className="mt-4 w-100" onClick={() => handlePlayerSelection(i)}>
                 Add player
@@ -258,6 +298,7 @@ const PickTeam = () => {
   
       updatedFantasyTeam.players = updatedFantasyTeam.players.filter(player => player.id !== playerId);
       updatedFantasyTeam.bank += soldPlayer.value;
+
       if(updatedFantasyTeam.positionsToFill == undefined){
         updatedFantasyTeam.positionsToFill = [];
       }
@@ -277,6 +318,16 @@ const PickTeam = () => {
           break;
         default:
       }
+
+      bonuses.forEach(bonus => {
+        const bonusGameweek = updatedFantasyTeam[`${bonus.propertyName}Gameweek`];
+        const bonusPlayerId = updatedFantasyTeam[`${bonus.propertyName}PlayerId`];
+        if (bonusGameweek === currentGameweek && bonusPlayerId === playerId) {
+          updatedFantasyTeam[`${bonus.propertyName}Gameweek`] = null;
+          updatedFantasyTeam[`${bonus.propertyName}PlayerId`] = null;
+        }
+      });
+
       return updatedFantasyTeam;
     });
   };
@@ -540,36 +591,16 @@ const PickTeam = () => {
  
                     return (
                       <Col xs={12} md={3} key={index}>
-                             <Card className='mb-2' style={{ opacity: isSameGameweek && !bonusPlayedInCurrentWeek ? 0.5 : 1 }}>
+                        <Card className='mb-2' style={{ opacity: isSameGameweek && !bonusPlayedInCurrentWeek ? 0.5 : 1 }}>
       
                           <div className='bonus-card-item'>
                             <div className='text-center mb-2 mt-2'>
-                            {(() => {
-                              switch (bonus.id) {
-                                case 1:
-                                  return <RecordIcon />;
-                                case 2:
-                                  return <PersonBoxIcon />;
-                                case 3:
-                                  return <StopIcon />;
-                                case 4:
-                                  return <PersonUpIcon />;
-                                case 5:
-                                  return <PersonIcon />;
-                                case 6:
-                                  return <CaptainIcon />;
-                                case 7:
-                                  return <TwoIcon />;
-                                case 8:
-                                  return <ThreeIcon />;
-                                default:
-                                  return <StarOutlineIcon />;
-                              }})()}
+                              {bonus.icon}
                             </div>
                             <div className='text-center mb-2 mx-1'>{bonus.name}</div>
                             {isBonusUsed ? (
                               <div className='text-center mb-2'>Played Gameweek {bonusPlayedGameweek}</div>
-                            ) : (
+                              ) : (
                               isSameGameweek ? (
                                 <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} className='text-center small-text mb-2'>
                                   You can only use 1 bonus each week.
@@ -606,7 +637,7 @@ const PickTeam = () => {
         {showSelectFantasyPlayerModal && <SelectFantasyPlayerModal 
           show={showSelectFantasyPlayerModal}
           handleClose={() => setShowSelectFantasyPlayerModal(false)}
-          handleConfirm={handleConfirmBonusClick}
+          handleConfirm={handleConfirmPlayerBonusClick}
           fantasyTeam={fantasyTeam}
           positions={positionsForBonus[selectedBonusId]}
           bonusType={selectedBonusId}

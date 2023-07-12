@@ -7,7 +7,7 @@ const SelectFantasyPlayerModal = ({ show, handleClose, handleConfirm, fantasyTea
   
   const { players } = useContext(PlayerContext);
   const { teams } = useContext(TeamContext);
-  console.log(fantasyTeam)
+  
   const filteredPlayers = positions 
   ? players.filter(player => positions.includes(player.position) && fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id))
   : players.filter(player => fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id));
@@ -67,14 +67,10 @@ const description = (bonusType == 1) ? "Play your Goal Getter bonus to receive t
                 <p className='small-text m-0'>{`£${player.value}m`}</p>
               </Col>
               <Col xs={3} className='d-flex align-self-center'>
-                {fantasyTeam.players.some(teamPlayer => teamPlayer.id === player.id) 
-                  ? <p className='small-text m-0 text-center w-100'>Added</p> 
-                  : <Button className="w-100" variant="primary" onClick={() => { handleSubmit({ player, bonusType }); }}>
-                      <small>Select</small>
-                    </Button>
-                }
+                <Button className="w-100" variant="primary" onClick={() => { handleSubmit({ playerId: player.id, bonusType }); }}>
+                  <small>Select</small>
+                </Button>
               </Col>
-
             </Row>
           ))}
         </Container>
