@@ -657,63 +657,63 @@ const PickTeam = () => {
                   const bonusPlayerId = fantasyTeam?.[`${bonus.propertyName}PlayerId`];
                   const bonusTeamId = fantasyTeam?.[`${bonus.propertyName}TeamId`];
                   const bonusGameweek = fantasyTeam?.[`${bonus.propertyName}Gameweek`];
-                 const bonusUsed = bonusGameweek !== null && bonusGameweek !== 0 && bonusGameweek !== undefined;
-                 const bonusUsedInCurrentWeek = fantasyTeam && fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek;
+                  const bonusUsed = bonusGameweek !== null && bonusGameweek !== 0 && bonusGameweek !== undefined;
+                  const bonusUsedInCurrentWeek = fantasyTeam && fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek;
                   const otherBonusUsedInCurrentWeek = bonuses.some((otherBonus) => {
                   if (otherBonus.propertyName === bonus.propertyName) return false; // Ignore the current bonus
-                  const otherBonusGameweek = fantasyTeam?.[`${otherBonus.propertyName}Gameweek`];
-                  return otherBonusGameweek === currentGameweek;
-                });
+                    const otherBonusGameweek = fantasyTeam?.[`${otherBonus.propertyName}Gameweek`];
+                    return otherBonusGameweek === currentGameweek;
+                  });
                 
-  let bonusTarget = "";
-  if (bonusPlayerId) {
-    bonusTarget = getPlayerNameFromId(bonusPlayerId);
-  } else if (bonusTeamId) {
-    bonusTarget = getTeamNameFromId(bonusTeamId);
-  } else if(bonusUsed) {
-    bonusTarget = `Played Gameweek ${bonusGameweek}`;
-  }
+                  let bonusTarget = "";
+                  if (bonusPlayerId) {
+                    bonusTarget = getPlayerNameFromId(bonusPlayerId);
+                  } else if (bonusTeamId) {
+                    bonusTarget = getTeamNameFromId(bonusTeamId);
+                  } else if(bonusUsed) {
+                    bonusTarget = `Played Gameweek ${bonusGameweek}`;
+                  }
 
-  let isBonusActive = !bonusUsed;
-  let useButton = (
-    <div style={{marginLeft: '1rem', marginRight: '1rem'}}>
-      <Button variant="info" className="w-100 mb-4" onClick={() => handleBonusClick(bonus.id)}>
-        Use
-      </Button>
-    </div>
-  );
+                  let isBonusActive = !bonusUsed;
+                  let useButton = (
+                    <div style={{marginLeft: '1rem', marginRight: '1rem'}}>
+                      <Button variant="info" className="w-100 mb-4" onClick={() => handleBonusClick(bonus.id)}>
+                        Use
+                      </Button>
+                    </div>
+                  );
 
-  if (bonusUsed && !bonusUsedInCurrentWeek) {
-    isBonusActive = false;
-    useButton = <div className='text-center mb-4'><small>{`Used in Gameweek ${bonusGameweek}`}</small></div>;
-  }
+                  if (bonusUsed && !bonusUsedInCurrentWeek) {
+                    isBonusActive = false;
+                    useButton = <div className='text-center mb-4'><small>{`Used in Gameweek ${bonusGameweek}`}</small></div>;
+                  }
 
-  if (bonusUsedInCurrentWeek) {
-    isBonusActive = true;
-    useButton = <div className='text-center mb-1'><small>{bonusTarget}</small></div>;
-  }
+                  if (bonusUsedInCurrentWeek) {
+                    isBonusActive = true;
+                    useButton = <div className='text-center mb-1'><small>{bonusTarget}</small></div>;
+                  }
 
-  if (otherBonusUsedInCurrentWeek) {
-    isBonusActive = false;
-    useButton = <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} className='text-center small-text mb-2'>You can only use 1 bonus each week.</p>;
-  }
+                  if (otherBonusUsedInCurrentWeek) {
+                    isBonusActive = false;
+                    useButton = <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} className='text-center small-text mb-2'>You can only use 1 bonus each week.</p>;
+                  }
 
-  return (
-    <Col xs={12} md={3} key={index}>
-      <Card className='mb-3' style={{ opacity: isBonusActive ? 1 : 0.5 }}>
-        <div className='bonus-card-item'>
-          <div className='text-center mb-2 mt-2'>
-            {bonus.icon}
-          </div>
-          <div className='text-center mx-1'>{bonus.name}</div>
-          {useButton}
+                  return (
+                    <Col xs={12} md={3} key={index}>
+                      <Card className='mb-3' style={{ opacity: isBonusActive ? 1 : 0.5 }}>
+                        <div className='bonus-card-item'>
+                          <div className='text-center mb-2 mt-2'>
+                            {bonus.icon}
+                          </div>
+                          <div className='text-center mx-1'>{bonus.name}</div>
+                          {useButton}
 
-          {bonusUsed && <div className='text-center mb-2'><CancelBonusIcon onClick={() => handleCancelBonus(bonus.id)} /></div>}
-        </div>
-      </Card>
-    </Col>
-  );
-})}
+                          {bonusUsed && <div className='text-center mb-2'><CancelBonusIcon onClick={() => handleCancelBonus(bonus.id)} /></div>}
+                        </div>
+                      </Card>
+                    </Col>
+                  );
+                })}
 
                 </Row>
               </Card.Body>
