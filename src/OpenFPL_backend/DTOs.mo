@@ -22,5 +22,18 @@ module DTOs {
         players: [T.Player];
         totalEntries: Nat16;
     };
+
+    public type PlayerDTO = {
+        id: Nat16;
+        teamId: Nat16;
+        position: Nat8; //0 = Goalkeeper //1 = Defender //2 = Midfielder //3 = Forward
+        firstName: Text;
+        lastName: Text;
+        shirtNumber: Nat8;
+        value: Float;
+        dateOfBirth: Int;
+        nationality: Text;
+        totalPoints: Nat16;
+    };
     
 }

@@ -7,6 +7,7 @@ import Nat8 "mo:base/Nat8";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
 import Nat16 "mo:base/Nat16";
+import Array "mo:base/Array";
 
 actor Self {
 
@@ -65,7 +66,7 @@ actor Self {
 
   };
 
-  public shared query ({caller}) func getAllPlayers() : async [T.Player] {
+  public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
     assert not Principal.isAnonymous(caller);
 
     func compare(player1: T.Player, player2: T.Player) : Bool {
@@ -84,7 +85,19 @@ actor Self {
     };
 
     let sortedPlayers = mergeSort(players);
-    return List.toArray(sortedPlayers);
+    return Array.map<T.Player, DTOs.PlayerDTO>(List.toArray(sortedPlayers), func (player: T.Player) : DTOs.PlayerDTO { 
+      return {
+        id = player.id;
+        firstName = player.firstName;
+        lastName = player.lastName;
+        teamId = player.teamId;
+        position = player.position;
+        shirtNumber = player.shirtNumber;
+        value = player.value;
+        dateOfBirth = player.dateOfBirth;
+        nationality = player.nationality;
+        totalPoints = 0;
+      }});
   };
 
   system func heartbeat() : async () {

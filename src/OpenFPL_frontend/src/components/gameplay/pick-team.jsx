@@ -61,9 +61,10 @@ const PickTeam = () => {
   }, []);
   
   useEffect(() => {
+    console.log("Team changed")
     setIsTeamValid(checkTeamValidation());
     setInvalidTeamMessage(getInvalidTeamMessage());
-  }, [fantasyTeam.players]);
+  }, [fantasyTeam]);
 
   const fetchViewData = async () => {
     const identity = authClient.getIdentity();
@@ -216,7 +217,6 @@ const PickTeam = () => {
       }
     });
   }
-  
 
   const checkTeamValidation = () => {
     if(fantasyTeam.players == undefined){
@@ -232,13 +232,23 @@ const PickTeam = () => {
     const midfielderCount = positions.filter(position => position === 2).length;
     const forwardCount = positions.filter(position => position === 3).length;
     
-    if (goalkeeperCount !== 1 || defenderCount < 1 || defenderCount > 3 || midfielderCount < 3 || midfielderCount > 5 || forwardCount < 1 || forwardCount > 3) {
+    if (goalkeeperCount !== 1 || defenderCount < 3 || defenderCount > 5 || midfielderCount < 3 || midfielderCount > 5 || forwardCount < 1 || forwardCount > 3) {
       return false;
     }
-
+  
+    const teams = fantasyTeam.players.map(player => player.team);
+    const teamsCount = teams.reduce((acc, team) => {
+      acc[team] = (acc[team] || 0) + 1;
+      return acc;
+    }, {});
+    
+    if (Object.values(teamsCount).some(count => count > 3)) {
+      return false;
+    }
+  
     return true;
   };
-
+  
   const getInvalidTeamMessage = () => {
     if(fantasyTeam.players == undefined){
       return "You must select 11 players";
@@ -257,7 +267,7 @@ const PickTeam = () => {
       return "You must have 1 goalkeeper";
     }
     if (defenderCount < 3 || defenderCount > 5) {
-      return "You must have between 1 and 3 defenders";
+      return "You must have between 3 and 5 defenders";
     }
     if (midfielderCount < 3 || midfielderCount > 5) {
       return "You must have between 3 and 5 midfielders";
@@ -265,9 +275,20 @@ const PickTeam = () => {
     if (forwardCount < 1 || forwardCount > 3) {
       return "You must have between 1 and 3 forwards";
     }
-
+  
+    const teams = fantasyTeam.players.map(player => player.teamId);
+    const teamsCount = teams.reduce((acc, team) => {
+      acc[team] = (acc[team] || 0) + 1;
+      return acc;
+    }, {});
+    console.log(teamsCount)
+    if (Object.values(teamsCount).some(count => count > 3)) {
+      return "Max 3 players from any single club";
+    }
+  
     return null;
   };
+  
 
   
  

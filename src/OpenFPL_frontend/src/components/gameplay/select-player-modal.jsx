@@ -119,6 +119,26 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
           <p>Loading...</p>
         ) : (
           <Container className="mt-4">
+            <Row className='mb-2'>
+              <Col xs={1} className='d-flex align-self-center'>
+                <p className='small-text m-0'>Pos</p>
+              </Col>
+              <Col xs={3} className='d-flex align-self-center'>
+                <p className='small-text m-0'>Player</p>
+              </Col>
+              <Col xs={1} className='d-flex align-self-center'>
+                <p className='small-text m-0'>Team</p>
+              </Col>
+              <Col xs={2} className='d-flex align-self-center'>
+                <p className='small-text m-0'>Value</p>
+              </Col>
+              <Col xs={1} className='d-flex align-self-center'>
+                <p className='small-text m-0'>Pts</p>
+              </Col>
+              <Col xs={4} className='d-flex align-self-center'>
+              </Col>
+
+            </Row>
           {viewData.players.map((player) => (
             <Row key={player.id} className='mb-2'>
               <Col xs={1} className='d-flex align-self-center'>
@@ -136,19 +156,22 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
                     }})()}
                 </p>
               </Col>
-              <Col xs={4} className='d-flex align-self-center'>
+              <Col xs={3} className='d-flex align-self-center'>
                 <p className='small-text m-0'>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</p>
               </Col>
-              <Col xs={2} className='d-flex align-self-center'>
+              <Col xs={1} className='d-flex align-self-center'>
                 <p className='small-text m-0'>{teams.find(team => team.id === player.teamId).abbreviatedName}</p>
               </Col>
               <Col xs={2} className='d-flex align-self-center'>
                 <p className='small-text m-0'>{`£${player.value}m`}</p>
               </Col>
-              <Col xs={3} className='d-flex align-self-center'>
+              <Col xs={1} className='d-flex align-self-center'>
+                <p className='small-text m-0'>{player.totalPoints}</p>
+              </Col>
+              <Col xs={4} className='d-flex align-self-center'>
                 {fantasyTeam.players.some(teamPlayer => teamPlayer.id === player.id) 
                   ? <p className='small-text m-0 text-center w-100'>Added</p> 
-                  : <Button className="w-100" variant="primary" onClick={() => {handleSubmit(player);}} disabled={player.value > fantasyTeam.bank}>
+                  : <Button className="w-100 small-text" variant="primary" onClick={() => {handleSubmit(player);}} disabled={player.value > fantasyTeam.bank}>
                       <small>Select</small>
                     </Button>
                 }
