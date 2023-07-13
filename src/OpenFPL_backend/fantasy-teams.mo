@@ -27,7 +27,6 @@ module {
         };
 
         public func getFantasyTeam(principalId: Text) : ?T.FantasyTeam {
-            Debug.print(debug_show principalId);
             let foundTeam = List.find<T.FantasyTeam>(fantasyTeams, func (team: T.FantasyTeam): Bool {
                 return team.principalId == principalId;
             });

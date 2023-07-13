@@ -83,7 +83,6 @@ const Profile = () => {
     } else {
       setProfilePicSrc(ProfileImage);
     }
-    console.log(data)
     setFavouriteTeam(data.favouriteTeamId);
   };
 

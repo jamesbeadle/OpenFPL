@@ -54,7 +54,6 @@ const PickTeam = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetchViewData();
-      setIsLoading(false);
     };
     fetchData();
   }, [players]);
@@ -75,8 +74,6 @@ const PickTeam = () => {
       return;
     }
 
-    console.log(fantasyTeamData)
-
     const playerIds = fantasyTeamData[0].playerIds.length > 0 ? Object.values(fantasyTeamData[0].playerIds) : [];
       
     const teamPlayers = playerIds.map(id => {
@@ -90,9 +87,11 @@ const PickTeam = () => {
     };
     setFantasyTeam(fantasyTeamData[0]);
     setCaptainId(fantasyTeamData[0].captainId);
-
+    
     const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
     setCurrentGameweek(currentGameweekData);
+
+    setIsLoading(false);
   };
   
   const handlePlayerSelection = (slotNumber) => {
@@ -591,7 +590,7 @@ const PickTeam = () => {
                   <Col xs={12} md={3}>
                     Team Selection<br />
                     <small className='small-text'>Status: 2023/24 Pre-season</small><br />
-                    <small className='small-text'>Gameweek: 1</small>
+                    <small className='small-text'>Gameweek: {currentGameweek}</small>
                   </Col>
                   <Col xs={12} md={9}>
                     <Card className="p-2 summary-panel">
