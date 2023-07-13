@@ -9,6 +9,8 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
   const { teams } = useContext(TeamContext);
   const [filterTeamId, setFilterTeamId] = useState("");
   const [filterPosition, setFilterPosition] = useState("");
+  const [minValue, setMinValue] = useState("");
+  const [maxValue, setMaxValue] = useState("");
   const [page, setPage] = useState(0);
   const count = 10;
   const [viewData, setViewData] = useState({ players: [], totalEntries: 0 }); 
@@ -35,13 +37,15 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
     const filteredPlayers = players
     .filter(player => filterTeamId === "" || player.teamId === Number(filterTeamId))
     .filter(player => filterPosition === "" || player.position === Number(filterPosition))
+    .filter(player => minValue === "" || player.value >= Number(minValue))
+    .filter(player => maxValue === "" || player.value <= Number(maxValue))
 
     const totalEntries = filteredPlayers.length; 
     const paginatedPlayers = filteredPlayers.slice(page * count, (page + 1) * count);
   
     setViewData({ players: paginatedPlayers, totalEntries: totalEntries });
   
-  }, [players, filterTeamId, filterPosition, page]);
+  }, [players, filterTeamId, filterPosition, page, minValue, maxValue]);
   
 
   const handlePageChange = (pageNumber) => {
@@ -51,6 +55,16 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
   const handleChangeFilterTeam = (event) => {
     setFilterTeamId(event.target.value);
     setPage(0); 
+  };
+
+  const handleChangeMinValue = (event) => {
+    setMinValue(event.target.value);
+    setPage(0);
+  };
+
+  const handleChangeMaxValue = (event) => {
+    setMaxValue(event.target.value);
+    setPage(0);
   };
 
   const handleChangeFilterPosition = (event) => {
@@ -82,7 +96,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
       <Modal.Body>
         <Form className='mb-4'>
           <Row>
-            <Col>
+            <Col xs={6}>
               <Form.Group controlId="teamFilter">
                 <Form.Label>Filter Team:</Form.Label>
                 <Form.Control as="select" value={filterTeamId || ''} onChange={handleChangeFilterTeam}>
@@ -95,7 +109,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
                 </Form.Control>
               </Form.Group>
             </Col>
-            <Col>
+            <Col xs={6}>
               <Form.Group controlId="positionFilter">
                 <Form.Label>Filter Position:</Form.Label>
                 <Form.Control as="select" value={filterPosition || ''} onChange={handleChangeFilterPosition}>
@@ -106,6 +120,20 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
                     </option>
                   ))}
                 </Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="mt-2">
+            <Col xs={6}>
+              <Form.Group controlId="minValueFilter">
+                <Form.Label>Min Value (£m):</Form.Label>
+                <Form.Control type="number" step="0.1" value={minValue || ''} onChange={handleChangeMinValue} />
+              </Form.Group>
+            </Col>
+            <Col xs={6}>
+              <Form.Group controlId="maxValueFilter">
+                <Form.Label>Max Value (£m):</Form.Label>
+                <Form.Control type="number" step="0.1" value={maxValue || ''} onChange={handleChangeMaxValue} />
               </Form.Group>
             </Col>
           </Row>
