@@ -89,6 +89,7 @@ const PickTeam = () => {
       bankBalance: (fantasyTeamData[0].bankBalance / 1_000_000) || 300
     };
     setFantasyTeam(fantasyTeamData[0]);
+    setCaptainId(fantasyTeamData[0].captainId);
 
     const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
     setCurrentGameweek(currentGameweekData);
@@ -280,13 +281,18 @@ const PickTeam = () => {
       if(i === 11) {
         cols.push(
           <Col md={3} key={'save'} className="d-flex align-items-center">
-            <Card className="w-100 save-panel mt-4">
-              <Row>
+            <Card className="w-100 save-panel">
+              <Row className="mt-4">
                 <Col>
-                  <Button className="mt-2" style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} variant="success" onClick={handleSaveTeam} disabled={!isTeamValid}>Save Team</Button>
+                  {!isTeamValid && <p className='text-center small-text'><small>{invalidTeamMessage}</small></p>}
+                  {isTeamValid && <p style={{color: "#16362C"}} className='text-center small-text'><small>Team Valid!</small></p>}
                 </Col>
               </Row>
-              {!isTeamValid && <p className='m-0 mb-1 p-1 text-center small-text'><small>{invalidTeamMessage}</small></p>}
+              <Row className="mb-2">
+                <Col>
+                  <Button style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} variant="success" onClick={handleSaveTeam} disabled={!isTeamValid}>Save Team</Button>
+                </Col>
+              </Row>
             </Card>
           </Col>
         );

@@ -49,7 +49,7 @@ module {
 
                     let allPlayerValues = Array.map<T.Player, Float>(newPlayers, func (player: T.Player) : Float { return player.value; });
 
-                    if(not isTeamValid(newPlayers)){
+                    if(not isTeamValid(newPlayers, bonusId, bonusPlayerId)){
                         return #err(#InvalidTeamError);
                     };
 
@@ -172,7 +172,7 @@ module {
                     
                     let allPlayerValues = Array.map<T.Player, Float>(newPlayers, func (player: T.Player) : Float { return player.value; });
                     
-                    if(not isTeamValid(newPlayers)){
+                    if(not isTeamValid(newPlayers, bonusId, bonusPlayerId)){
                         return #err(#InvalidTeamError);
                     };
 
@@ -371,7 +371,7 @@ module {
             return sortedPlayers;
         };
 
-        public func isTeamValid(players: [T.Player]) : Bool {
+        public func isTeamValid(players: [T.Player], bonusId: Nat8, bonusPlayerId: Nat16) : Bool {
             let playerPositions = Array.map<T.Player, Nat8>(players, func (player: T.Player) : Nat8 { return player.position; });
                     
             let playerCount = playerPositions.size();
@@ -380,6 +380,7 @@ module {
             };
             
             var teamPlayerCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
+            var playerIdCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);  // HashMap to store player ids as Text
             var goalkeeperCount = 0;
             var defenderCount = 0;
             var midfielderCount = 0;
@@ -393,7 +394,15 @@ module {
                         teamPlayerCounts.put(Nat16.toText(players[i].teamId), count + 1);
                     };
                 };
-                
+        
+                let playerIdCount = playerIdCounts.get(Nat16.toText(players[i].id));
+                switch(playerIdCount){
+                    case (null) { playerIdCounts.put(Nat16.toText(players[i].id), 1); };
+                    case (?count){
+                        return false;
+                    };
+                };
+
                 if(players[i].position == 0){
                     goalkeeperCount := goalkeeperCount + 1;
                 };
@@ -422,6 +431,32 @@ module {
                 midfielderCount < 3 or midfielderCount > 5 or forwardCount < 1 or forwardCount > 3 ){
                 return false;
             };
+
+            // Checking bonus conditions
+            if (bonusId == 3) {
+                let bonusPlayer = List.find<T.Player>(List.fromArray(players), func (player: T.Player): Bool {
+                    return player.id == bonusPlayerId;
+                });
+                switch(bonusPlayer){
+                    case(null) { return false; };
+                    case(?player) {
+                        if (player.position != 1) { return false; };
+                    };
+                };
+            };
+
+            if (bonusId == 5) {
+                let bonusPlayer = List.find<T.Player>(List.fromArray(players), func (player: T.Player): Bool {
+                    return player.id == bonusPlayerId;
+                });
+                switch(bonusPlayer){
+                    case(null) { return false; };
+                    case(?player) {
+                        if (player.position != 0) { return false; };
+                    };
+                };
+            };
+
             return true;
         };
     }
