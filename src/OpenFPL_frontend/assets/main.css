@@ -164,6 +164,10 @@
   .warning-text {
     color:#A84025;
   }
+
+  .list-group-item {
+    color: whitesmoke !important;
+  }
   
 /*1E1436
   

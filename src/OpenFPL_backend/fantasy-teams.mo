@@ -58,7 +58,7 @@ module {
                         return #err(#InvalidTeamError);
                     };
 
-                    var bankBalance = 300_000_000 - totalTeamValue;
+                    var bankBalance = 300_000_000 - (totalTeamValue * 1_000_000);
                     var goalGetterGameweek = Nat8.fromNat(0);
                     var goalGetterPlayerId = Nat16.fromNat(0);
                     var passMasterGameweek = Nat8.fromNat(0);

@@ -75,19 +75,20 @@ const PickTeam = () => {
       return;
     }
 
+    console.log(fantasyTeamData)
+
     const playerIds = fantasyTeamData[0].playerIds.length > 0 ? Object.values(fantasyTeamData[0].playerIds) : [];
       
     const teamPlayers = playerIds.map(id => {
       return players.find(player => player.id == id);
     });
 
-
-    fantasyTeamData = {
-      ...fantasyTeamData,
+    fantasyTeamData[0] = {
+      ...fantasyTeamData[0],
       players: teamPlayers || [],
-      bankBalance: fantasyTeamData.bankBalance || 300
+      bankBalance: (fantasyTeamData[0].bankBalance / 1_000_000) || 300
     };
-    setFantasyTeam(fantasyTeamData);
+    setFantasyTeam(fantasyTeamData[0]);
 
     const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
     setCurrentGameweek(currentGameweekData);
@@ -261,7 +262,7 @@ const PickTeam = () => {
       acc[team] = (acc[team] || 0) + 1;
       return acc;
     }, {});
-    console.log(teamsCount)
+    
     if (Object.values(teamsCount).some(count => count > 3)) {
       return "Max 3 players from any single club";
     }
@@ -395,7 +396,7 @@ const PickTeam = () => {
       
       const newPlayerIds = fantasyTeam.players.map(player => Number(player.id));
       const { captainId, bonusId, bonusPlayerId, bonusTeamId } = fantasyTeam;
-      console.log(bonusId)
+      
       const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
       await open_fpl_backend.saveFantasyTeam(newPlayerIds, captainId ? Number(captainId) : 0, bonusId ? Number(bonusId) : 0, bonusPlayerId ? Number(bonusPlayerId) : 0, bonusTeamId ? Number(bonusTeamId) : 0);
