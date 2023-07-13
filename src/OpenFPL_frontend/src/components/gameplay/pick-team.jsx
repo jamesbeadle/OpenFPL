@@ -42,7 +42,6 @@ const PickTeam = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [captainId, setCaptainId] = useState(0);
   const [currentGameweek, setCurrentGameweek] = useState(null);
-  const [isTeamValid, setIsTeamValid] = useState(false);
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
   const [selectedBonusId, setSelectedBonusId] = useState(null);
   const positionsForBonus = {
@@ -50,7 +49,7 @@ const PickTeam = () => {
     2: null,
     3: [1]
   };
-
+  const isTeamValid = invalidTeamMessage === null;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,22 +57,31 @@ const PickTeam = () => {
       setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [players]);
   
   useEffect(() => {
-    console.log("Team changed")
-    setIsTeamValid(checkTeamValidation());
     setInvalidTeamMessage(getInvalidTeamMessage());
   }, [fantasyTeam]);
 
   const fetchViewData = async () => {
+    if(players.length == 0){
+      return;
+    }
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
     let fantasyTeamData = await open_fpl_backend.getFantasyTeam();
+    
+  const playerIds = Object.values(fantasyTeamData[0].playerIds);
+    
+    
+  const teamPlayers = playerIds.map(id => {
+    return players.find(player => player.id == id);
+  });
+
     fantasyTeamData = {
       ...fantasyTeamData,
-      players: fantasyTeamData.players || [],
+      players: teamPlayers || [],
       bank: fantasyTeamData.bank || 300
     };
     setFantasyTeam(fantasyTeamData);
@@ -217,37 +225,6 @@ const PickTeam = () => {
       }
     });
   }
-
-  const checkTeamValidation = () => {
-    if(fantasyTeam.players == undefined){
-      return false;
-    }
-    if (fantasyTeam.players.length !== 11) {
-      return false;
-    }
-    
-    const positions = fantasyTeam.players.map(player => player.position);
-    const goalkeeperCount = positions.filter(position => position === 0).length;
-    const defenderCount = positions.filter(position => position === 1).length;
-    const midfielderCount = positions.filter(position => position === 2).length;
-    const forwardCount = positions.filter(position => position === 3).length;
-    
-    if (goalkeeperCount !== 1 || defenderCount < 3 || defenderCount > 5 || midfielderCount < 3 || midfielderCount > 5 || forwardCount < 1 || forwardCount > 3) {
-      return false;
-    }
-  
-    const teams = fantasyTeam.players.map(player => player.team);
-    const teamsCount = teams.reduce((acc, team) => {
-      acc[team] = (acc[team] || 0) + 1;
-      return acc;
-    }, {});
-    
-    if (Object.values(teamsCount).some(count => count > 3)) {
-      return false;
-    }
-  
-    return true;
-  };
   
   const getInvalidTeamMessage = () => {
     if(fantasyTeam.players == undefined){
@@ -289,9 +266,6 @@ const PickTeam = () => {
     return null;
   };
   
-
-  
- 
   const renderPlayerSlots = () => {
     let rows = [];
     let cols = [];
@@ -411,15 +385,17 @@ const PickTeam = () => {
     }
     return null;
   }
-
+  
   const handleSaveTeam = async () => {
     setIsLoading(true);
     try {
-      const playerIds = fantasyTeam.players.map(player => player.id);
-
+      
+      const newPlayerIds = fantasyTeam.players.map(player => Number(player.id));
+      const { captainId, bonusId, bonusPlayerId, bonusTeamId } = fantasyTeam;
+      console.log(bonusId)
       const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-      await open_fpl_backend.saveFantasyTeam(playerIds);
+      await open_fpl_backend.saveFantasyTeam(newPlayerIds, captainId ? Number(captainId) : 0, bonusId ? Number(bonusId) : 0, bonusPlayerId ? Number(bonusPlayerId) : 0, bonusTeamId ? Number(bonusTeamId) : 0);
       
       setIsLoading(false);
   

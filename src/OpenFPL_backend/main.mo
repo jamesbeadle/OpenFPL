@@ -17,6 +17,7 @@ import Nat64 "mo:base/Nat64";
 import Result "mo:base/Result";
 import Debug "mo:base/Debug";
 import Option "mo:base/Option";
+import PlayerCanister "canister:player_canister";
 import T "types";
 
 actor Self {
@@ -34,7 +35,8 @@ actor Self {
   let CANISTER_IDS = {
     //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    //player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -46,7 +48,8 @@ actor Self {
   
   let playerCanister = actor (CANISTER_IDS.player_canister): actor 
   { 
-    getPlayers: () -> async [T.Player];
+    //getPlayers: () -> async [T.Player];
+    getAllPlayers: () -> async [DTOs.PlayerDTO];
   };
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
@@ -205,9 +208,9 @@ actor Self {
     let principalId = Principal.toText(caller);
     let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(principalId);
 
-    let allPlayers = await playerCanister.getPlayers();
+    let allPlayers = await playerCanister.getAllPlayers();
 
-    let newPlayers = Array.filter<T.Player>(allPlayers, func (player: T.Player): Bool {
+    let newPlayers = Array.filter<DTOs.PlayerDTO>(allPlayers, func (player: DTOs.PlayerDTO): Bool {
         let playerId = player.id;
         let isPlayerIdInNewTeam = Array.find(newPlayerIds, func (id: Nat16): Bool {
             return id == playerId;
