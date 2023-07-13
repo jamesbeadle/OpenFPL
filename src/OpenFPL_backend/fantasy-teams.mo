@@ -11,6 +11,7 @@ import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Option "mo:base/Option";
+import Debug "mo:base/Debug";
 
 module {
     public class FantasyTeams(){
@@ -26,6 +27,7 @@ module {
         };
 
         public func getFantasyTeam(principalId: Text) : ?T.FantasyTeam {
+            Debug.print(debug_show principalId);
             let foundTeam = List.find<T.FantasyTeam>(fantasyTeams, func (team: T.FantasyTeam): Bool {
                 return team.principalId == principalId;
             });
@@ -56,7 +58,7 @@ module {
                         return #err(#InvalidTeamError);
                     };
 
-                    var bankBalance = Float.fromInt(0);
+                    var bankBalance = 300_000_000 - totalTeamValue;
                     var goalGetterGameweek = Nat8.fromNat(0);
                     var goalGetterPlayerId = Nat16.fromNat(0);
                     var passMasterGameweek = Nat8.fromNat(0);

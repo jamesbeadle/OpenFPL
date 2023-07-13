@@ -112,7 +112,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
         </Form>
         <Row>
           <Col>
-            <p>Available Balance: £{(fantasyTeam.bank).toFixed(1)}m</p>
+            <p>Available Balance: £{(fantasyTeam.bankBalance).toFixed(1)}m</p>
           </Col>
         </Row>
         {players?.isLoading ? (

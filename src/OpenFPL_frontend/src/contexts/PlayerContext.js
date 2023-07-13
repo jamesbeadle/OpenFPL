@@ -17,8 +17,10 @@ export const PlayerProvider = (props) => {
   };
 
   useEffect(() => {
-    fetchAllPlayers();
-  }, []);
+    if (authClient.isAuthenticated()) {
+      fetchAllPlayers();
+    }
+  }, [authClient]);
 
   return (
     <PlayerContext.Provider value={{ players, setPlayers }}>

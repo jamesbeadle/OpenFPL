@@ -21,7 +21,7 @@ const PickTeam = () => {
   const { teams } = useContext(TeamContext);
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
-    bank: 300,
+    bankBalance: 300,
     transfersAvailable: 0
   });
   
@@ -71,18 +71,21 @@ const PickTeam = () => {
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
     let fantasyTeamData = await open_fpl_backend.getFantasyTeam();
-    
-  const playerIds = Object.values(fantasyTeamData[0].playerIds);
-    
-    
-  const teamPlayers = playerIds.map(id => {
-    return players.find(player => player.id == id);
-  });
+    if(!fantasyTeamData[0]){
+      return;
+    }
+
+    const playerIds = fantasyTeamData[0].playerIds.length > 0 ? Object.values(fantasyTeamData[0].playerIds) : [];
+      
+    const teamPlayers = playerIds.map(id => {
+      return players.find(player => player.id == id);
+    });
+
 
     fantasyTeamData = {
       ...fantasyTeamData,
       players: teamPlayers || [],
-      bank: fantasyTeamData.bank || 300
+      bankBalance: fantasyTeamData.bankBalance || 300
     };
     setFantasyTeam(fantasyTeamData);
 
@@ -99,7 +102,7 @@ const PickTeam = () => {
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       updatedFantasyTeam.players[selectedSlot] = player;
-      updatedFantasyTeam.bank -= player.value; // decrease the bank value
+      updatedFantasyTeam.bankBalance -= player.value; // decrease the bank value
 
       updatedFantasyTeam.players.sort((a, b) => {
         if (a.position < b.position) {
@@ -338,7 +341,7 @@ const PickTeam = () => {
       const soldPlayer = players.find(player => player.id === playerId);
   
       updatedFantasyTeam.players = updatedFantasyTeam.players.filter(player => player.id !== playerId);
-      updatedFantasyTeam.bank += soldPlayer.value;
+      updatedFantasyTeam.bankBalance += soldPlayer.value;
 
       if(updatedFantasyTeam.positionsToFill == undefined){
         updatedFantasyTeam.positionsToFill = [];
@@ -477,13 +480,11 @@ const PickTeam = () => {
       }
     }
     
-    // Sort players by value (price)
     let sortedPlayers = [...players].sort((a, b) => a.value - b.value);
     sortedPlayers = shuffle(sortedPlayers);
   
-    // Create a new team based on the sorted players and the positions to fill
     let newTeam = [...fantasyTeam.players];
-    let remainingBudget = fantasyTeam.bank;
+    let remainingBudget = fantasyTeam.bankBalance;
     for (let i = 0; i < positionsToFill.length; i++) {
       if (newTeam.length >= 11) {
         break;
@@ -524,11 +525,11 @@ const PickTeam = () => {
     
     
     fantasyTeam.positionsToFill = [];
-    // Correctly update the state to keep existing properties
+    
     setFantasyTeam(prevState => ({
       ...prevState,
       players: newTeam,
-      bank: remainingBudget,
+      bankBalance: remainingBudget,
     }));
   };
   
@@ -597,7 +598,7 @@ const PickTeam = () => {
                         </Col>
                         <Col xs={4} md={4}>
                           <p style={{marginBottom: 0}}>
-                            £{(fantasyTeam.bank).toFixed(1)}m
+                            £{(fantasyTeam.bankBalance).toFixed(1)}m
                             <br />
                             <small>Bank Balance</small>
                           </p>
