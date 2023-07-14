@@ -4,7 +4,8 @@ import { LinkContainer } from 'react-router-bootstrap';
 import TwitterIcon from '../../../assets/twitter.png';
 import DiscordIcon from '../../../assets/discord.png';
 import OpenChatIcon from '../../../assets/openchat.png';
-import LogoImage from '../../../assets/logo.png'; // Your Logo Image
+import TelegramLogo from '../../../assets/telegram.png';
+import LogoImage from '../../../assets/logo.png';
 
 const MyFooter = () => {
   return (
@@ -16,14 +17,17 @@ const MyFooter = () => {
           </Col>
           <Col md={4} xs={12} className="text-center">
             <div className="social-icons">
-                <a href="https://twitter.com/ofpl_dao" target="_blank" rel="noopener noreferrer">
+                <a href="https://twitter.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer">
                   <img src={TwitterIcon} alt="Twitter" className="social-icon" />
                 </a>
-                <a href="https://discord.gg/EzqH6qYa" target="_blank" rel="noopener noreferrer">
+                <a href="https://t.co/WmOhFA8JUR" target="_blank" rel="noopener noreferrer">
                   <img src={DiscordIcon} alt="Discord" className="social-icon" />
                 </a>
                 <a href="https://oc.app/mww5i-uqaaa-aaaar-aqi2a-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer">
                   <img src={OpenChatIcon} alt="OpenChat" className="social-icon" />
+                </a>
+                <a href="https://t.co/vVkquMrdOu" target="_blank" rel="noopener noreferrer">
+                  <img src={TelegramLogo} alt="OpenChat" className="social-icon" />
                 </a>
             </div>
             <img src={LogoImage} alt="openFPL" style={{ maxWidth: '100px', maxHeight: '100%', marginTop: '10px' }} />
