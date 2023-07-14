@@ -35,8 +35,8 @@ actor Self {
   let CANISTER_IDS = {
     //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-    //player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
-    player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
+    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    //player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 

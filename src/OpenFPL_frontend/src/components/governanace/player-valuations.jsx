@@ -3,14 +3,13 @@ import { Card, Spinner, Table, Button, Form, Modal, ButtonGroup, Col, Row } from
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import getFlag from '../country-flag';
 import { getAgeFromDOB } from '../helpers';
-
-import { PlayerContext } from "../../contexts/PlayerContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 
 const POSITION_LABELS = ["GK", "DEF", "MID", "FWD"];
 
 const PlayerValuations = ({ isActive }) => {
-  const { players, setPlayers } = useContext(PlayerContext);
+  const { players } = useContext(AuthContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [viewData, setViewData] = useState([]);
@@ -83,7 +82,7 @@ const PlayerValuations = ({ isActive }) => {
     setIsLoading(true);
   
     const filteredPlayers = players
-      .filter(player => (teamId === 0 || player.teamId === teamId) && (positionId === -1 || player.positionId === positionId))
+      .filter(player => (teamId === 0 || player.teamId === teamId) && (positionId === -1 || player.position === positionId))
       .slice(pageNumber * count, (pageNumber + 1) * count);
   
     setViewData({ players: filteredPlayers, totalEntries: filteredPlayers.length });

@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
 import { Modal, Button, Container, Row, Col } from 'react-bootstrap';
-import { PlayerContext } from '../../contexts/PlayerContext';
-import { TeamContext } from "../../contexts/TeamContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const SelectFantasyPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, positions, bonusType }) => {
   
-  const { players } = useContext(PlayerContext);
-  const { teams } = useContext(TeamContext);
+  const { players } = useContext(AuthContext);
+  const { teams } = useContext(AuthContext);
   
   const filteredPlayers = positions 
   ? players.filter(player => positions.includes(player.position) && fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id))

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor } from "@dfinity/agent";
+import { player_canister as player_canister } from '../../../declarations/player_canister';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 
 export const AuthContext = React.createContext();
@@ -8,6 +9,8 @@ export const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
   const [authClient, setAuthClient] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [players, setPlayers] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const deleteIndexedDB = (dbName) => {
@@ -110,9 +113,36 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const fetchAllPlayers = async () => {
+    if (!isAuthenticated) {
+      return;
+    }
+    
+    const identity = authClient.getIdentity();
+    Actor.agentOf(player_canister).replaceIdentity(identity);
+    const allPlayersData = await player_canister.getAllPlayers();
+    setPlayers(allPlayersData);
+  };
+
+  
+  const fetchAllTeams = async () => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    const identity = authClient.getIdentity();
+    Actor.agentOf(player_canister).replaceIdentity(identity);
+    const teamsData = await open_fpl_backend.getTeams();
+    setTeams(teamsData);
+  };
+
+  useEffect(() => {
+    fetchAllTeams();
+    fetchAllPlayers();
+  }, [isAuthenticated]);
 
   return (
-    <AuthContext.Provider value={ { authClient, isAuthenticated, setIsAuthenticated, login, logout }}>
+    <AuthContext.Provider value={ { authClient, isAuthenticated, setIsAuthenticated, login, logout, players, teams  }}>
       {!loading && children}
     </AuthContext.Provider>
   );

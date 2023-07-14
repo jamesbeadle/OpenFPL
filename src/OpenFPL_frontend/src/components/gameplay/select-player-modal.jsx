@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Button, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
-import { PlayerContext } from '../../contexts/PlayerContext';
-import { TeamContext } from "../../contexts/TeamContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
 const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) => {
   
-  const { players } = useContext(PlayerContext);
-  const { teams } = useContext(TeamContext);
+  const { players, teams } = useContext(AuthContext);
   const [filterTeamId, setFilterTeamId] = useState("");
   const [filterPosition, setFilterPosition] = useState("");
   const [minValue, setMinValue] = useState("");
@@ -44,7 +42,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
     const paginatedPlayers = filteredPlayers.slice(page * count, (page + 1) * count);
   
     setViewData({ players: paginatedPlayers, totalEntries: totalEntries });
-  
+    console.log(fantasyTeam)
   }, [players, filterTeamId, filterPosition, page, minValue, maxValue]);
   
 
@@ -199,7 +197,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
               <Col xs={4} className='d-flex align-self-center'>
                 {fantasyTeam.players.some(teamPlayer => teamPlayer.id === player.id) 
                   ? <p className='small-text m-0 text-center w-100'>Added</p> 
-                  : <Button className="w-100 small-text" variant="primary" onClick={() => {handleSubmit(player);}} disabled={player.value > fantasyTeam.bank}>
+                  : <Button className="w-100 small-text" variant="primary" onClick={() => {handleSubmit(player);}} disabled={player.value > fantasyTeam.bankBalance}>
                       <small>Select</small>
                     </Button>
                 }
