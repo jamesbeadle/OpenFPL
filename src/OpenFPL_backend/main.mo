@@ -19,6 +19,7 @@ import Debug "mo:base/Debug";
 import Option "mo:base/Option";
 import PlayerCanister "canister:player_canister";
 import T "types";
+import SeasonManager "season-manager";
 
 actor Self {
 
@@ -33,10 +34,11 @@ actor Self {
   var activeGameweek: Nat8 = 1;
 
   let CANISTER_IDS = {
+    //JB Local Dev
     //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
-    token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     //player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
+    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -54,6 +56,14 @@ actor Self {
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
     return activeGameweek;
+  };
+  
+  public query func getTeams() : async [T.Team] {
+    return teamsInstance.getTeams();
+  };
+
+  public shared query ({caller}) func getFixtures() : async [T.Fixture]{
+    return fixturesInstance.getFixtures(activeSeasonId);
   };
 
   //Profile Functions
@@ -105,10 +115,6 @@ actor Self {
     return profileDTO;
   };
 
-  public shared query ({caller}) func getFixtures() : async [T.Fixture]{
-    return fixturesInstance.getFixtures(activeSeasonId);
-  };
-
   public shared query ({caller}) func isDisplayNameValid(displayName: Text) : async Bool {
     assert not Principal.isAnonymous(caller);
     return profilesInstance.isDisplayNameValid(displayName);
@@ -135,15 +141,10 @@ actor Self {
     return profilesInstance.updateProfilePicture(Principal.toText(caller), profilePicture);
   };
   
-  public query func getTeams() : async [T.Team] {
-    return teamsInstance.getTeams();
-  };
-  
   public query func getProfiles() : async [T.Profile] {
     return profilesInstance.getProfiles();
   };
 
-  
   public shared ({caller}) func getAccountBalanceDTO() : async DTOs.AccountBalanceDTO {
     
     assert not Principal.isAnonymous(caller);
@@ -235,18 +236,17 @@ actor Self {
         };
     };
   };
-    
-  system func heartbeat() : async () {
-      await proposalsInstance.execute_accepted_proposals();
-  };
   
-
-
   private stable var stable_profiles: [T.Profile] = [];
   private stable var stable_proposals: [T.Proposal] = [];
   private stable var stable_next_proposal_id : Nat = 0;
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
+
+  public func resetTransfers(): async () {
+    // implementation of resetTransfers
+  };
+  let seasonManager = SeasonManager.SeasonManager(resetTransfers);
 
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();

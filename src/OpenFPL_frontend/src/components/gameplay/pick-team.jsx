@@ -15,6 +15,7 @@ import ConfirmBonusModal from './confirm-bonus-modal';
 const PickTeam = () => {
   const { authClient, teams, players } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingText, setLoadingText] = useState("Loading Team");
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
     bankBalance: 300,
@@ -36,7 +37,6 @@ const PickTeam = () => {
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [captainId, setCaptainId] = useState(0);
   const [currentGameweek, setCurrentGameweek] = useState(null);
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
   const [selectedBonusId, setSelectedBonusId] = useState(null);
@@ -64,6 +64,7 @@ const PickTeam = () => {
   }, [fantasyTeam]);
 
   const fetchViewData = async () => {
+    setLoadingText("Loading Team");
     try {
         if(players.length == 0){
           return;
@@ -71,7 +72,6 @@ const PickTeam = () => {
 
         
         const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
-        console.log(currentGameweekData)
         setCurrentGameweek(currentGameweekData);
         
         const identity = authClient.getIdentity();
@@ -94,7 +94,6 @@ const PickTeam = () => {
           bankBalance: (fantasyTeamData[0].bankBalance / 1_000_000) || 300
         };
         setFantasyTeam(fantasyTeamData[0]);
-        setCaptainId(fantasyTeamData[0].captainId);
         
     } catch (error) {
         console.error(error);
@@ -290,7 +289,7 @@ const PickTeam = () => {
       if(i === 11) {
         cols.push(
           <Col md={3} key={'save'} className="d-flex align-items-center">
-            <Card className="w-100 save-panel">
+            <Card className="w-100 save-panel mt-4">
               <Row className="mt-4">
                 <Col>
                   {!isTeamValid && <p className='text-center small-text'><small>{invalidTeamMessage}</small></p>}
@@ -326,7 +325,7 @@ const PickTeam = () => {
                   player={player}
                   slotNumber={i}
                   handlePlayerSelection={handlePlayerSelection}
-                  captainId={captainId} 
+                  captainId={fantasyTeam.captainId} 
                   handleCaptainSelection={handleCaptainSelection} 
                   handleSellPlayer={handleSellPlayer}
                   bonusId={bonusId}
@@ -406,6 +405,7 @@ const PickTeam = () => {
   }
   
   const handleSaveTeam = async () => {
+    setLoadingText("Saving Team");
     setIsLoading(true);
     try {
       
@@ -415,18 +415,24 @@ const PickTeam = () => {
       const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
       await open_fpl_backend.saveFantasyTeam(newPlayerIds, captainId ? Number(captainId) : 0, bonusId ? Number(bonusId) : 0, bonusPlayerId ? Number(bonusPlayerId) : 0, bonusTeamId ? Number(bonusTeamId) : 0);
-      setCaptainId(captainId);
+      fetchViewData();
       setIsLoading(false);
-  
     } catch(error) {
+      fetchViewData();
       console.error("Failed to save team", error);
       setIsLoading(false);
     }
   };
 
   const handleCaptainSelection = (playerId) => {
-    setCaptainId(prevCaptainId => (prevCaptainId === playerId ? 0 : playerId));
+    setFantasyTeam(prevFantasyTeam => {
+      const updatedFantasyTeam = {...prevFantasyTeam};
+      updatedFantasyTeam.captainId = playerId;
+  
+      return updatedFantasyTeam;
+    });
   };
+  
 
   const handleAutoFill = () => {
     
@@ -589,7 +595,7 @@ const PickTeam = () => {
     isLoading ? (
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
         <Spinner animation="border" />
-        <p className='text-center mt-1'>Loading Team</p>
+        <p className='text-center mt-1'>{loadingText}</p>
       </div>) :
       <Container className="flex-grow-1 my-5 pitch-bg mt-0">
         <Row className="mb-4">
@@ -597,7 +603,7 @@ const PickTeam = () => {
             <Card className="mt-4">
               <Card.Header>
                 <Row className="justify-content-between align-items-center">
-                  <Col xs={12} md={3}>
+                  <Col xs={12} md={3} className='mb-1'>
                     Team Selection<br />
                     <small className='small-text'>Status: 2023/24 Pre-season</small><br />
                     <small className='small-text'>Gameweek: {currentGameweek}</small>
@@ -637,28 +643,21 @@ const PickTeam = () => {
                     </Card>
                   </Col>
                 </Row>
-                <Row className='small-text'>
-                  <Col>
-                      
-                  </Col>
-                </Row>
               </Card.Header>
               <Card.Body>
                 <Row className='mb-2'>
                   <Col md={10}>
-                    <div className='d-flex align-items-center mb-3 mt-3'>
-                      <StarIcon color="#807A00" width="15" height="15" />
+                    <div className='d-flex align-items-center mb-4 mb-md-0'>
+                      <StarIcon color="#807A00" width="15pt" height="15pt" />
                       <p style={{marginLeft: '1rem'}} className='mb-0'><small>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</small></p>
                     </div>
                   </Col>
                   <Col md={2} className='d-flex align-items-center'>
-                    <div className='w-100'>
-                      <Button variant="secondary white-text w-100" onClick={handleAutoFill}>AutoFill</Button>
-                    </div>
+                    <Button style={{marginLeft: '0.8rem', marginRight: '0.8rem'}}  variant="secondary white-text w-100" onClick={handleAutoFill}>AutoFill</Button>
                   </Col>
                 </Row>
                 <Row>
-                  {fantasyTeam && fantasyTeam.players && renderPlayerSlots(fantasyTeam.players, captainId, handleCaptainSelection)}
+                  {fantasyTeam && fantasyTeam.players && renderPlayerSlots(fantasyTeam.players, fantasyTeam.captainId, handleCaptainSelection)}
                 </Row>
               </Card.Body>
 
@@ -666,7 +665,7 @@ const PickTeam = () => {
             <Card className="mt-4">
               <Card.Header>Bonuses</Card.Header>
               <Card.Body>
-                <Row>
+                <Row >
                 {bonuses.map((bonus, index) => {
                   const bonusPlayerId = fantasyTeam?.[`${bonus.propertyName}PlayerId`];
                   const bonusTeamId = fantasyTeam?.[`${bonus.propertyName}TeamId`];
@@ -713,8 +712,8 @@ const PickTeam = () => {
                   }
 
                   return (
-                    <Col xs={12} md={3} key={index}>
-                      <Card className='mb-3' style={{ opacity: isBonusActive ? 1 : 0.5 }}>
+                    <Col xs={12} md={3} key={index} className='mb-3'>
+                      <Card style={{ opacity: isBonusActive ? 1 : 0.5 }}>
                         <div className='bonus-card-item'>
                           <div className='text-center mb-2 mt-2'>
                             {bonus.icon}

@@ -102,7 +102,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
   };
 
   const PlayerSlot = ({ player, slotNumber, handlePlayerSelection, captainId, handleCaptainSelection, handleSellPlayer, bonusId }) => (
-    <Col className='d-flex mb-4'>
+    <Col className='d-flex mt-2 mb-2'>
       <div className='player-slot w-100'>
         {player 
           ? <PlayerDetails player={player} captainId={captainId} handleCaptainSelection={handleCaptainSelection} 
