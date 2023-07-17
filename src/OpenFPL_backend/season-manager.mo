@@ -5,54 +5,128 @@ import Timer "mo:base/Timer";
 import { now } = "mo:base/Time";
 import Int "mo:base/Int";
 import Time "mo:base/Time";
+import FantasyTeams "fantasy-teams";
+import Iter "mo:base/Iter";
+import Array "mo:base/Array";
+import List "mo:base/List";
+import Fixtures "fixtures";
 
 module {
 
-  public class SeasonManager(resetTransfers: shared () -> async ()) {
+  public class SeasonManager(
+    resetTransfers: shared () -> async ()) {
 
     private var seasons: [T.Season] = [];
+
     private var activeSeasonId: Nat16 = 1;
+    private var activeGameweek: Nat8 = 1;
     private var nextSeasonId: Nat16 = 2;
     private var activeTimers: [Nat] = [];
-    private let oneHour = 1_000_000_000 * 60 * 30;
+    private var transfersAllowed: Bool = true;
+
+    //timers
+    private var gameweekBeginTimerId: Nat = 0;
+    private var kickOffTimerIds: [Nat] = [];
+    private var gameCompletedTimerIds: [Nat] = [];
+    private var votingPeriodTimerIds: [Nat] = [];
+
+    //timer data
+    private var activeFixtures: [T.Fixture] = [];
+    
+    //child modules
+    private let fixturesInstance = Fixtures.Fixtures();
+
+    //definitions
+    private let oneHour = 1_000_000_000 * 60 * 60;
+  
 
     public func init_genesis_season(firstFixture: T.Fixture){
-        //new season created, fixture consensus reched and gameweek and season id set
-
-        //set gameweek 1 timers
+        //new season created, fixture consensus reched and gameweek and season id set to 1
         let now = Time.now();
-        let gameweekBeginTimerId = Timer.setTimer(#nanoseconds (Int.abs(firstFixture.kickOff - now - oneHour)), gameweekBegin);
-
+        gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(firstFixture.kickOff - now - oneHour)), gameweekBegin);
     };
 
     private func gameweekBegin() : async (){
-        //the active gameweek has begun
-        //set system status to gameweek closed
-        //for each fixture of the active gameweek of the active season you need to load the game kickoff timer
+        transfersAllowed := false;
+
+        let now = Time.now();
+        activeFixtures := fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+        var gameKickOffTimers = List.nil<Nat>(); 
+        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
+            let gameBeginTimerId = Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[i].kickOff - now)), gameKickOff);
+            gameKickOffTimers := List.push(gameBeginTimerId, gameKickOffTimers);
+        };
+
+        kickOffTimerIds := List.toArray(gameKickOffTimers);
     };
 
     private func gameKickOff() : async (){
-        //game kicked off
+        await setGameActive();
+        let now = Time.now();
+        let gameCompletedTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), gameCompleted);
+        
+        //add time to gameCompletedTimerIds
 
-        //timer for 2 hours from now to mark game as completed
-        //load the game completed timer in 2 hours
+
     };
 
     private func gameCompleted() : async (){
-        //the active gameweek has begun
-        //set voting period timer
+        await setGameCompleted();
+        let now = Time.now();
+        let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), votingPeriodOver);
     };
 
-    private func allowVotingPeriod() : async (){
-        //at this point consensus will be reached either by timer or voting period
+    private func votingPeriodOver() : async (){
+        await checkGameConsensus();
     };
 
-    private func consensusReached() : async (){
-        //check if reached via voting power
-        //if not trigger third party API check if activated (won't be in first instance)
+    public func setNextGameweek() : async (){
+        //check if current is 38
+        //gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(firstFixture.kickOff - now - oneHour)), gameweekBegin);
     };
 
-    private func gameVerified() : async (){
+    private func createNewSeason() : async (){
+        //create a new season
+    };
+
+    private func intialFixturesConfirmed() : async (){
+        //set gameweek to 1
+        
+        //set current season to new season
+    };
+
+    public func setGameActive(): async (){
+        //for each fixture for this gameweek whose kickoff date is before the time now and whose status is set to unplayed set them as active
+    };
+
+    public func setGameCompleted(): async (){
+        //for each fixture that has been 
+    };
+
+    public func checkGameConsensus(): async (){
+        //check if a game has reached consensus via voting power if not set the final score
+    };
+
+    public func getActiveSeasonId() : Nat16 {
+        return activeSeasonId;
+    };
+
+    public func getActiveGameweek() : Nat8 {
+        return activeGameweek;
+    };
+
+    public func getGameweekFixtures() : [T.Fixture] {
+        return fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+    };
+
+    public func getTransfersAllowed() : Bool {
+        return transfersAllowed;
+    };
+
+
+
+
+        private func gameVerified() : async (){
         //check if all games in the gameweek are verified
     };
 
@@ -62,44 +136,9 @@ module {
         //settle user bets
         //revalue players
         //reset weekly transfers
+        //mint FPL
         await resetTransfers();
     };
-
-    private func setNextGameweek() : async (){
-        //check if current is 38
-    };
-
-    private func createNewSeason() : async (){
-        //create a new season
-    };
-
-    private func intialFixturesConfirmed() : async (){
-        //set gameweek to 1
-        //set current season to new season
-    };
-
-
-
-    //create a timer that kicks off for gameweek 1 of the already added season and things can begin
-
-    //create new season
-    //fixture consensus achieved, set new season to active season
-    //reset season and gameweek
-
-    //create gameweek timers    
-        //gameweek begins: 1 hour before first kickoff
-        //game kickoffs: kickoff time for each game
-        //2 hours after game kickoffs: game set to rquires consensus
-    
-    //events linked to this
-        //game consensus reached for all games
-        //potential comparison with 3rd party APIs
-        //check all games are verified
-
-    //when all games are verified
-        //calculate points, distribute rewards, settle user bets, revalue players and reset weekly transfers
-    
-    //back to create gameweek timers unless gameweek 38 finished then create new season
 
 
   };

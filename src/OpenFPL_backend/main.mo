@@ -28,11 +28,7 @@ actor Self {
   let teamsInstance = Teams.Teams();
   let proposalsInstance = Proposals.Proposals();
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams();
-  let fixturesInstance = Fixtures.Fixtures();
-
-  var activeSeasonId: Nat16 = 1;
-  var activeGameweek: Nat8 = 1;
-
+  
   let CANISTER_IDS = {
     //JB Local Dev
     //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
@@ -55,15 +51,15 @@ actor Self {
   };
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
-    return activeGameweek;
+    return seasonManager.getActiveGameweek();
   };
   
   public query func getTeams() : async [T.Team] {
     return teamsInstance.getTeams();
   };
 
-  public shared query ({caller}) func getFixtures() : async [T.Fixture]{
-    return fixturesInstance.getFixtures(activeSeasonId);
+  public query ({caller}) func getFixtures() : async [T.Fixture]{
+    return seasonManager.getGameweekFixtures();
   };
 
   //Profile Functions
@@ -206,6 +202,11 @@ actor Self {
 
   public shared ({caller}) func saveFantasyTeam(newPlayerIds: [Nat16], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+
+    if(not seasonManager.getTransfersAllowed()){
+      return #err(#NotAllowed);
+    };
+
     let principalId = Principal.toText(caller);
     let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(principalId);
 
@@ -220,7 +221,7 @@ actor Self {
     });
 
     switch (fantasyTeam) {
-        case (null) { return fantasyTeamsInstance.createFantasyTeam(principalId, activeGameweek, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId); };
+        case (null) { return fantasyTeamsInstance.createFantasyTeam(principalId, seasonManager.getActiveGameweek(), newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId); };
         case (?team) 
         { 
 
@@ -232,33 +233,40 @@ actor Self {
               return Option.isSome(isPlayerIdInExistingTeam);
           });
           
-          return fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, activeGameweek, existingPlayers); 
+          return fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, seasonManager.getActiveGameweek(), existingPlayers); 
         };
     };
   };
+
+  public func resetTransfers(): async () {
+      await fantasyTeamsInstance.resetTransfers();
+  };
   
+  //intialise season manager
+  let seasonManager = SeasonManager.SeasonManager(resetTransfers);
+  //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
+  
+  //stable variable backup
   private stable var stable_profiles: [T.Profile] = [];
+  private stable var stable_fantasy_teams: [T.FantasyTeam] = [];
   private stable var stable_proposals: [T.Proposal] = [];
   private stable var stable_next_proposal_id : Nat = 0;
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
-
-  public func resetTransfers(): async () {
-    // implementation of resetTransfers
-  };
-  let seasonManager = SeasonManager.SeasonManager(resetTransfers);
-
+  
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
+    stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
     stable_proposals := proposalsInstance.getData();
     stable_next_proposal_id := proposalsInstance.nextProposalId;
-    stable_active_season_id := activeSeasonId;
-    stable_active_gameweek := activeGameweek;
+    stable_active_season_id := seasonManager.getActiveSeasonId();
+    stable_active_gameweek := seasonManager.getActiveGameweek();
   };
 
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
     proposalsInstance.setData(stable_proposals, stable_next_proposal_id);
+    fantasyTeamsInstance.setData(stable_fantasy_teams);
   };
 
 };

@@ -9,7 +9,7 @@ import GenesisData "genesis-data";
 module {
     
   public class Fixtures(){
-
+    
     private var genesis_seasons: [T.Season] = [
         { id = 1; name = "2023/24"; year = 2023; }
     ];
@@ -36,6 +36,12 @@ module {
         });
         let sortedFixtures = List.fromArray(sortedArray);
         return sortedArray;
+    };
+
+    public func getGameweekFixtures(seasonId: Nat16, gameweek: Nat8) : [T.Fixture] {
+        return List.toArray(List.filter<T.Fixture>(fixtures, func (fixture: T.Fixture) : Bool {
+            return fixture.seasonId == seasonId and fixture.gameweek == gameweek;
+        }));
     };
 
     public func getNextFixtureId() : Nat32{

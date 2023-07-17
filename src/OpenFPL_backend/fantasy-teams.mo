@@ -458,5 +458,9 @@ module {
 
             return true;
         };
+
+        public func resetTransfers(): async () {
+            // implementation of resetTransfers
+        };
     }
 }
