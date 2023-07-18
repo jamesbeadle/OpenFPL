@@ -57,7 +57,7 @@ const PlayerValuations = ({ isActive }) => {
       await fetchViewData(filterTeam, filterPosition, page);
       setIsLoading(false);
     };
-
+      
     if (isActive) {
       fetchData();
     }
@@ -81,10 +81,11 @@ const PlayerValuations = ({ isActive }) => {
   const fetchViewData = (teamId, positionId, pageNumber) => {
     setIsLoading(true);
   
+    console.log(players)
     const filteredPlayers = players
       .filter(player => (teamId === 0 || player.teamId === teamId) && (positionId === -1 || player.position === positionId))
       .slice(pageNumber * count, (pageNumber + 1) * count);
-  
+    
     setViewData({ players: filteredPlayers, totalEntries: filteredPlayers.length });
   
     setIsLoading(false);
@@ -176,7 +177,7 @@ const PlayerValuations = ({ isActive }) => {
           </Col>
         </Row>
 
-        <Table striped bordered hover responsive="md">
+        <Table bordered hover responsive="md">
           <thead>
             <tr>
               <th>#</th>
