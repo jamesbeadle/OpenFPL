@@ -415,10 +415,10 @@ const PickTeam = () => {
       const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
       await open_fpl_backend.saveFantasyTeam(newPlayerIds, captainId ? Number(captainId) : 0, bonusId ? Number(bonusId) : 0, bonusPlayerId ? Number(bonusPlayerId) : 0, bonusTeamId ? Number(bonusTeamId) : 0);
-      fetchViewData();
+      await fetchViewData();
       setIsLoading(false);
     } catch(error) {
-      fetchViewData();
+      await fetchViewData();
       console.error("Failed to save team", error);
       setIsLoading(false);
     }

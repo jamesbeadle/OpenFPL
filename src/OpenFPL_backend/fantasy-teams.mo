@@ -460,7 +460,7 @@ module {
         };
 
         public func resetTransfers(): async () {
-            // implementation of resetTransfers
+            // reset all team available transfers to 2 for the new gameweek
         };
     }
 }

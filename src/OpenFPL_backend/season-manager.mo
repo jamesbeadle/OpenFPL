@@ -47,7 +47,11 @@ module {
     };
 
     private func gameweekBegin() : async (){
+        //clear gameweekBegin timer id
+
         transfersAllowed := false;
+
+        //copy current teams into gameweek predictions
 
         let now = Time.now();
         activeFixtures := fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
@@ -61,16 +65,18 @@ module {
     };
 
     private func gameKickOff() : async (){
+        //clear game kickoff timer ids
         await setGameActive();
         let now = Time.now();
         let gameCompletedTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), gameCompleted);
         
         //add time to gameCompletedTimerIds
-
+        //gameCompletedTimerIds
 
     };
 
     private func gameCompleted() : async (){
+        //clear game completed timer ids
         await setGameCompleted();
         let now = Time.now();
         let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), votingPeriodOver);
@@ -97,6 +103,7 @@ module {
 
     public func setGameActive(): async (){
         //for each fixture for this gameweek whose kickoff date is before the time now and whose status is set to unplayed set them as active
+        //allow draft data to be collected for a game
     };
 
     public func setGameCompleted(): async (){
@@ -123,10 +130,7 @@ module {
         return transfersAllowed;
     };
 
-
-
-
-        private func gameVerified() : async (){
+    private func gameVerified() : async (){
         //check if all games in the gameweek are verified
     };
 
@@ -138,6 +142,7 @@ module {
         //reset weekly transfers
         //mint FPL
         await resetTransfers();
+        transfersAllowed := true;
     };
 
 
