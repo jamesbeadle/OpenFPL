@@ -10,6 +10,8 @@ import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import List "mo:base/List";
 import Fixtures "fixtures";
+import Buffer "mo:base/Buffer";
+import Option "mo:base/Option";
 
 module {
 
@@ -47,11 +49,11 @@ module {
     };
 
     private func gameweekBegin() : async (){
-        //clear gameweekBegin timer id
 
+        gameweekBeginTimerId := 0;
         transfersAllowed := false;
 
-        //copy current teams into gameweek predictions
+        await snapshotGameweek();
 
         let now = Time.now();
         activeFixtures := fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
@@ -64,22 +66,69 @@ module {
         kickOffTimerIds := List.toArray(gameKickOffTimers);
     };
 
+    private func snapshotGameweek(): async (){
+        //copy current teams into gameweek predictions
+    };
+
     private func gameKickOff() : async (){
-        //clear game kickoff timer ids
-        await setGameActive();
-        let now = Time.now();
-        let gameCompletedTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), gameCompleted);
         
-        //add time to gameCompletedTimerIds
-        //gameCompletedTimerIds
+        let now = Time.now();
+            
+        let timerBuffer = Buffer.fromArray<Nat>(gameCompletedTimerIds);
+        let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+        
+        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
+            if(activeFixtures[i].kickOff < now and activeFixtures[i].status == 0){
+                
+                await fixturesInstance.setActive(activeFixtures[i].id);
+                activeFixturesBuffer.add(
+                    {
+                        id = activeFixtures[i].id;
+                        seasonId = activeFixtures[i].seasonId;
+                        gameweek = activeFixtures[i].gameweek;
+                        kickOff = activeFixtures[i].kickOff;
+                        homeTeamId = activeFixtures[i].homeTeamId;
+                        awayTeamId = activeFixtures[i].awayTeamId;
+                        homeGoals = activeFixtures[i].homeGoals;
+                        awayGoals = activeFixtures[i].awayGoals;
+                        status = 1; 
+                    });
+
+                let gameCompletedTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), gameCompleted);
+                timerBuffer.add(gameCompletedTimer);
+                
+            }
+            else{
+                activeFixturesBuffer.add(activeFixtures[i]);
+            };
+        };
+
+        gameCompletedTimerIds := Buffer.toArray<Nat>(timerBuffer);
+        activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
+
+        let remainingFixtures = Array.find(activeFixtures, func (fixture: T.Fixture): Bool {
+            return fixture.status == 0;
+        });
+
+        if(Option.isNull(remainingFixtures)){
+            gameCompletedTimerIds := [];
+        };
 
     };
 
     private func gameCompleted() : async (){
-        //clear game completed timer ids
-        await setGameCompleted();
+        
         let now = Time.now();
-        let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), votingPeriodOver);
+        
+        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
+            if((activeFixtures[i].kickOff + (oneHour * 2))  < now and activeFixtures[i].status == 1){
+                await fixturesInstance.setCompleted(activeFixtures[i].id);
+                let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), votingPeriodOver);
+            };
+        };
+        
+        //if all games completed clear game completed timers array
+        
     };
 
     private func votingPeriodOver() : async (){
@@ -87,6 +136,7 @@ module {
     };
 
     public func setNextGameweek() : async (){
+        //reset all timer arrays in one go
         //check if current is 38
         //gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(firstFixture.kickOff - now - oneHour)), gameweekBegin);
     };
@@ -99,11 +149,6 @@ module {
         //set gameweek to 1
         
         //set current season to new season
-    };
-
-    public func setGameActive(): async (){
-        //for each fixture for this gameweek whose kickoff date is before the time now and whose status is set to unplayed set them as active
-        //allow draft data to be collected for a game
     };
 
     public func setGameCompleted(): async (){
@@ -120,6 +165,10 @@ module {
 
     public func getActiveGameweek() : Nat8 {
         return activeGameweek;
+    };
+
+    public func getFixtures() : [T.Fixture] {
+        return fixturesInstance.getFixtures(activeSeasonId);
     };
 
     public func getGameweekFixtures() : [T.Fixture] {

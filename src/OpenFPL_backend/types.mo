@@ -56,6 +56,7 @@ module Types{
         awayTeamId: Nat16;
         homeGoals: Nat8;
         awayGoals: Nat8;
+        status: Nat8; //0 = Unplayed, 1 = Active, 2 = Completed, 3 = Verified
     };
 
     public type Player = {

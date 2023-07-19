@@ -60,7 +60,7 @@ actor Self {
   };
 
   public query ({caller}) func getFixtures() : async [T.Fixture]{
-    return seasonManager.getGameweekFixtures();
+    return seasonManager.getFixtures();
   };
 
   //Profile Functions

@@ -59,6 +59,7 @@ module {
             kickOff = kickOff;
             homeGoals = 0;
             awayGoals = 0;
+            status = 0;
         };
         
         var newFixtureList = List.nil<T.Fixture>();
@@ -68,6 +69,62 @@ module {
         
         nextFixtureId := nextFixtureId + 1;
         return #ok(());
+    };
+
+    public func setActive(fixtureId: Nat32) : async () {
+        
+        let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
+            return fixture.id == fixtureId;
+        });
+        switch (foundFixture) {
+            case (null) { };
+            case (?foundFixture) {
+
+                let updatedFixture: T.Fixture = {
+                    id = foundFixture.id;
+                    seasonId = foundFixture.seasonId;
+                    gameweek = foundFixture.gameweek;
+                    kickOff = foundFixture.kickOff;
+                    homeTeamId = foundFixture.homeTeamId;
+                    awayTeamId = foundFixture.awayTeamId;
+                    homeGoals = foundFixture.homeGoals;
+                    awayGoals = foundFixture.awayGoals;
+                    status = 1;
+                };
+
+                fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
+                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
+                });
+            };
+        };
+    };
+
+    public func setCompleted(fixtureId: Nat32) : async () {
+        
+        let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
+            return fixture.id == fixtureId;
+        });
+        switch (foundFixture) {
+            case (null) { };
+            case (?foundFixture) {
+
+                let updatedFixture: T.Fixture = {
+                    id = foundFixture.id;
+                    seasonId = foundFixture.seasonId;
+                    gameweek = foundFixture.gameweek;
+                    kickOff = foundFixture.kickOff;
+                    homeTeamId = foundFixture.homeTeamId;
+                    awayTeamId = foundFixture.awayTeamId;
+                    homeGoals = foundFixture.homeGoals;
+                    awayGoals = foundFixture.awayGoals;
+                    status = 2;
+                };
+
+                fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
+                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
+                });
+            };
+        };
     };
 
   }
