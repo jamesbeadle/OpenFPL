@@ -39,9 +39,18 @@ module {
     };
 
     public func getGameweekFixtures(seasonId: Nat16, gameweek: Nat8) : [T.Fixture] {
-        return List.toArray(List.filter<T.Fixture>(fixtures, func (fixture: T.Fixture) : Bool {
+        
+        let fixturesArray = List.toArray(List.filter<T.Fixture>(fixtures, func (fixture: T.Fixture) : Bool {
             return fixture.seasonId == seasonId and fixture.gameweek == gameweek;
         }));
+
+        let sortedArray = Array.sort(fixturesArray, func (a: T.Fixture, b: T.Fixture): Order.Order {
+            if (a.kickOff < b.kickOff) { return #less; };
+            if (a.kickOff == b.kickOff) { return #equal; };
+            return #greater;
+        });
+
+        return sortedArray;
     };
 
     public func getNextFixtureId() : Nat32{
@@ -118,6 +127,34 @@ module {
                     homeGoals = foundFixture.homeGoals;
                     awayGoals = foundFixture.awayGoals;
                     status = 2;
+                };
+
+                fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
+                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
+                });
+            };
+        };
+    };
+
+    public func setFinalised(fixtureId: Nat32) : async () {
+        
+        let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
+            return fixture.id == fixtureId;
+        });
+        switch (foundFixture) {
+            case (null) { };
+            case (?foundFixture) {
+
+                let updatedFixture: T.Fixture = {
+                    id = foundFixture.id;
+                    seasonId = foundFixture.seasonId;
+                    gameweek = foundFixture.gameweek;
+                    kickOff = foundFixture.kickOff;
+                    homeTeamId = foundFixture.homeTeamId;
+                    awayTeamId = foundFixture.awayTeamId;
+                    homeGoals = foundFixture.homeGoals;
+                    awayGoals = foundFixture.awayGoals;
+                    status = 3;
                 };
 
                 fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {

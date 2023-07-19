@@ -40,6 +40,9 @@ module {
 
     //definitions
     private let oneHour = 1_000_000_000 * 60 * 60;
+
+    //System variables - to be moved and controlled by proposal
+    private let gameConsensusDurationHours = 6;
   
 
     public func init_genesis_season(firstFixture: T.Fixture){
@@ -66,14 +69,9 @@ module {
         kickOffTimerIds := List.toArray(gameKickOffTimers);
     };
 
-    private func snapshotGameweek(): async (){
-        //copy current teams into gameweek predictions
-    };
-
     private func gameKickOff() : async (){
         
         let now = Time.now();
-            
         let timerBuffer = Buffer.fromArray<Nat>(gameCompletedTimerIds);
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
         
@@ -96,7 +94,6 @@ module {
 
                 let gameCompletedTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), gameCompleted);
                 timerBuffer.add(gameCompletedTimer);
-                
             }
             else{
                 activeFixturesBuffer.add(activeFixtures[i]);
@@ -105,7 +102,37 @@ module {
 
         gameCompletedTimerIds := Buffer.toArray<Nat>(timerBuffer);
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
+    };
 
+    private func gameCompleted() : async (){
+        
+        let now = Time.now();
+        let timerBuffer = Buffer.fromArray<Nat>(gameCompletedTimerIds);
+        let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+       
+        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
+            if((activeFixtures[i].kickOff + (oneHour * 2))  < now and activeFixtures[i].status == 1){
+                await fixturesInstance.setCompleted(activeFixtures[i].id);
+                activeFixturesBuffer.add(
+                    {
+                        id = activeFixtures[i].id;
+                        seasonId = activeFixtures[i].seasonId;
+                        gameweek = activeFixtures[i].gameweek;
+                        kickOff = activeFixtures[i].kickOff;
+                        homeTeamId = activeFixtures[i].homeTeamId;
+                        awayTeamId = activeFixtures[i].awayTeamId;
+                        homeGoals = activeFixtures[i].homeGoals;
+                        awayGoals = activeFixtures[i].awayGoals;
+                        status = 2; 
+                    });
+                let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * gameConsensusDurationHours)) - now)), votingPeriodOver);
+                timerBuffer.add(votingPeriodOverTimer);
+            };
+        };
+
+        votingPeriodTimerIds := Buffer.toArray<Nat>(timerBuffer);
+        activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
+        
         let remainingFixtures = Array.find(activeFixtures, func (fixture: T.Fixture): Bool {
             return fixture.status == 0;
         });
@@ -113,50 +140,107 @@ module {
         if(Option.isNull(remainingFixtures)){
             gameCompletedTimerIds := [];
         };
-
-    };
-
-    private func gameCompleted() : async (){
-        
-        let now = Time.now();
-        
-        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
-            if((activeFixtures[i].kickOff + (oneHour * 2))  < now and activeFixtures[i].status == 1){
-                await fixturesInstance.setCompleted(activeFixtures[i].id);
-                let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), votingPeriodOver);
-            };
-        };
-        
-        //if all games completed clear game completed timers array
         
     };
 
     private func votingPeriodOver() : async (){
-        await checkGameConsensus();
+
+        let now = Time.now();
+        let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+       
+        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
+            if((activeFixtures[i].kickOff + (oneHour * gameConsensusDurationHours)) < now and activeFixtures[i].status == 2){
+                await fixturesInstance.setFinalised(activeFixtures[i].id);
+                activeFixturesBuffer.add(
+                    {
+                        id = activeFixtures[i].id;
+                        seasonId = activeFixtures[i].seasonId;
+                        gameweek = activeFixtures[i].gameweek;
+                        kickOff = activeFixtures[i].kickOff;
+                        homeTeamId = activeFixtures[i].homeTeamId;
+                        awayTeamId = activeFixtures[i].awayTeamId;
+                        homeGoals = activeFixtures[i].homeGoals;
+                        awayGoals = activeFixtures[i].awayGoals;
+                        status = 3; 
+                    });
+            };
+        };
+
+        await finaliseGameData();
+
+        let remainingFixtures = Array.find(activeFixtures, func (fixture: T.Fixture): Bool {
+            return fixture.status < 3;
+        });
+
+        if(Option.isNull(remainingFixtures)){
+            votingPeriodTimerIds := [];
+            await gameweekVerified();
+            await setNextGameweek();
+        };
+
+    };
+
+    private func gameweekVerified() : async (){
+        //calculate points
+        //distribute rewards
+        //settle user bets
+        //revalue players
+        //reset weekly transfers
+        //mint FPL
+        await resetTransfers();
+        transfersAllowed := true;
     };
 
     public func setNextGameweek() : async (){
-        //reset all timer arrays in one go
-        //check if current is 38
-        //gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(firstFixture.kickOff - now - oneHour)), gameweekBegin);
+        if(activeGameweek == 38){
+            await createNewSeason();
+            return;
+        };
+
+        let now = Time.now();
+        activeGameweek := activeGameweek + 1;
+        activeFixtures := getGameweekFixtures();
+        gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);        
     };
 
     private func createNewSeason() : async (){
         //create a new season
+            //nextSeasonId use this to set new season
+
+        nextSeasonId := nextSeasonId + 1;
+        //increment next season id as it's been added
+
+        //state is awaiting fixtures
     };
 
     private func intialFixturesConfirmed() : async (){
-        //set gameweek to 1
         
-        //set current season to new season
+        activeSeasonId := nextSeasonId;
+        activeGameweek := 1;
+        
+        //set the active fixtures to the current gameweeks fixtures ordered by date ascending
+
+        //get the first and set the timer
+
+        gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(firstFixture.kickOff - now - oneHour)), gameweekBegin);
     };
 
-    public func setGameCompleted(): async (){
-        //for each fixture that has been 
+    private func snapshotGameweek(): async (){
+        //copy current teams into gameweek predictions
     };
 
-    public func checkGameConsensus(): async (){
-        //check if a game has reached consensus via voting power if not set the final score
+    private func finaliseGameData(): async (){
+
+        //check if the game has already reached consensus
+
+        //if not take the consensus values that are set based on voting power
+
+        //what is consensus
+            //enough votes have been received from enough people
+                //but what if they haven't?!
+            //the timer is over so too late go with the majority
+
+
     };
 
     public func getActiveSeasonId() : Nat16 {
@@ -177,21 +261,6 @@ module {
 
     public func getTransfersAllowed() : Bool {
         return transfersAllowed;
-    };
-
-    private func gameVerified() : async (){
-        //check if all games in the gameweek are verified
-    };
-
-    private func gameweekVerified() : async (){
-        //calculate points
-        //distribute rewards
-        //settle user bets
-        //revalue players
-        //reset weekly transfers
-        //mint FPL
-        await resetTransfers();
-        transfersAllowed := true;
     };
 
 
