@@ -213,16 +213,12 @@ module {
         //state is awaiting fixtures
     };
 
-    private func intialFixturesConfirmed() : async (){
-        
+    public func intialFixturesConfirmed() : async (){
+        let now = Time.now();
         activeSeasonId := nextSeasonId;
         activeGameweek := 1;
-        
-        //set the active fixtures to the current gameweeks fixtures ordered by date ascending
-
-        //get the first and set the timer
-
-        gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(firstFixture.kickOff - now - oneHour)), gameweekBegin);
+        activeFixtures := getGameweekFixtures();
+        gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
     };
 
     private func snapshotGameweek(): async (){
@@ -262,7 +258,5 @@ module {
     public func getTransfersAllowed() : Bool {
         return transfersAllowed;
     };
-
-
   };
 }
