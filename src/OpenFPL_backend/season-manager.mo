@@ -12,6 +12,9 @@ import List "mo:base/List";
 import Fixtures "fixtures";
 import Buffer "mo:base/Buffer";
 import Option "mo:base/Option";
+import Nat16 "mo:base/Nat16";
+import Text "mo:base/Text";
+import Char "mo:base/Char";
 
 module {
 
@@ -199,25 +202,40 @@ module {
 
         let now = Time.now();
         activeGameweek := activeGameweek + 1;
-        activeFixtures := getGameweekFixtures();
+        activeFixtures := await getGameweekFixtures();
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);        
     };
 
     private func createNewSeason() : async (){
-        //create a new season
-            //nextSeasonId use this to set new season
+        let currentSeason = List.find<T.Season>(List.fromArray(seasons), func (season: T.Season): Bool {
+            return season.id == activeSeasonId;
+        });
 
-        nextSeasonId := nextSeasonId + 1;
-        //increment next season id as it's been added
+        switch (currentSeason) {
+            case (null) { };
+            case (?season) { 
+                //create a new season
+                let newYear = season.year + 1;
+                let newSeason: T.Season = {
+                    id = nextSeasonId;
+                    name = Nat16.toText(newYear) # subText(Nat16.toText(newYear + 1), 2, 3);
+                    year = newYear;
+                };
 
-        //state is awaiting fixtures
+                let seasonsBuffer = Buffer.fromArray<T.Season>(seasons);
+                seasonsBuffer.add(newSeason);
+                seasons := Buffer.toArray(seasonsBuffer);
+                nextSeasonId := nextSeasonId + 1;
+             };
+        };
     };
+
 
     public func intialFixturesConfirmed() : async (){
         let now = Time.now();
         activeSeasonId := nextSeasonId;
         activeGameweek := 1;
-        activeFixtures := getGameweekFixtures();
+        activeFixtures := await getGameweekFixtures();
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
     };
 
@@ -227,15 +245,15 @@ module {
 
     private func finaliseGameData(): async (){
 
-        //check if the game has already reached consensus
+        //check to see if the game data has already been finalised via voting power
 
-        //if not take the consensus values that are set based on voting power
+        //sort all game validation submissions by users into groups of the most common
 
-        //what is consensus
-            //enough votes have been received from enough people
-                //but what if they haven't?!
-            //the timer is over so too late go with the majority
+        //value the groups based on the users voting power that submitted them
 
+        //for the submission grouping that has the most voting power take that as the correct answer
+
+        //order the voting power by the earliest voters first to reward them with the most FPL
 
     };
 
@@ -251,12 +269,34 @@ module {
         return fixturesInstance.getFixtures(activeSeasonId);
     };
 
-    public func getGameweekFixtures() : [T.Fixture] {
+    public query func getGameweekFixtures() : async [T.Fixture] {
         return fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
     };
 
     public func getTransfersAllowed() : Bool {
         return transfersAllowed;
+    };
+
+    private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {
+        if (indexStart == 0 and indexEnd >= value.size()) {
+            return value;
+        }
+        else if (indexStart >= value.size()) {
+            return "";
+        };
+        
+        var indexEndValid = indexEnd;
+        if (indexEnd > value.size()) {
+            indexEndValid := value.size();
+        };
+
+        var result : Text = "";
+        var iter = Iter.toArray<Char>(Text.toIter(value));
+        for (index in Iter.range(indexStart, indexEndValid - 1)) {
+            result := result # Char.toText(iter[index]);
+        };
+
+        result;
     };
   };
 }

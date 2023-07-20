@@ -30,6 +30,7 @@ module Types{
     public type Season = {
         id: Nat16;
         name: Text;
+        year: Nat16;
     };
 
     public type Gameweek = {
