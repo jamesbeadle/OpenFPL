@@ -111,7 +111,8 @@ module Types{
         bankBalance: Nat32;
     };
 
-    public type GameSubmission = {
+    public type GameEventData = {
+        fixtureId: Nat32;
         appearances: [PlayerAppearance];
         homeGoals: [GoalEvent];
         awayGoals: [GoalEvent];

@@ -20,7 +20,8 @@ module {
 
   public class SeasonManager(
     resetTransfers: shared () -> async (),
-    calculatePoints: shared (gameweekFixtures: [T.Fixture]) -> async ()) {
+    calculatePoints: shared (gameweekFixtures: [T.Fixture]) -> async (),
+    getConsensusData: shared (fixtureId: Nat32) -> async T.GameEventData) {
 
     private var seasons: [T.Season] = [];
 
@@ -154,7 +155,8 @@ module {
        
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             if((activeFixtures[i].kickOff + (oneHour * gameConsensusDurationHours)) < now and activeFixtures[i].status == 2){
-                await fixturesInstance.setFinalised(activeFixtures[i].id);
+                let consensusData = await getConsensusData(activeFixtures[i].id);
+                await fixturesInstance.finaliseGameEventData(consensusData);
                 activeFixturesBuffer.add(
                     {
                         id = activeFixtures[i].id;
@@ -170,7 +172,6 @@ module {
             };
         };
 
-        await finaliseGameData();
 
         let remainingFixtures = Array.find(activeFixtures, func (fixture: T.Fixture): Bool {
             return fixture.status < 3;
@@ -265,19 +266,7 @@ module {
         //copy current teams into gameweek predictions
     };
 
-    private func finaliseGameData(): async (){
-
-        //check to see if the game data has already been finalised via voting power
-
-        //sort all game validation submissions by users into groups of the most common
-
-        //value the groups based on the users voting power that submitted them
-
-        //for the submission grouping that has the most voting power take that as the correct answer
-
-        //order the voting power by the earliest voters first to reward them with the most FPL
-
-    };
+    
 
     public func getActiveSeasonId() : Nat16 {
         return activeSeasonId;

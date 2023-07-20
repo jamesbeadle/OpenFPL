@@ -5,6 +5,7 @@ import Debug "mo:base/Debug";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
 import GenesisData "genesis-data";
+import Buffer "mo:base/Buffer";
 
 module {
     
@@ -19,6 +20,8 @@ module {
 
     private var nextFixtureId : Nat32 = 381;
     private var nextSeasonId : Nat16 = 2;
+
+    private var gameEvents = List.fromArray<T.GameEventData>([]);
 
     public func setData(stable_fixtures: [T.Fixture], stable_fixture_id : Nat32, stable_seasons: [T.Season], stable_season_id: Nat16){
         fixtures := List.fromArray(stable_fixtures);
@@ -136,10 +139,9 @@ module {
         };
     };
 
-    public func setFinalised(fixtureId: Nat32) : async () {
-        
+    public func finaliseGameEventData(gameEventData: T.GameEventData): async () {
         let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
-            return fixture.id == fixtureId;
+            return fixture.id == gameEventData.fixtureId;
         });
         switch (foundFixture) {
             case (null) { };
@@ -158,10 +160,15 @@ module {
                 };
 
                 fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
-                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
+                    if (fixture.id == gameEventData.fixtureId) { updatedFixture } else { fixture }
                 });
             };
         };
+
+        let gameEventsBuffer = Buffer.fromArray<T.GameEventData>(List.toArray(gameEvents));
+        gameEventsBuffer.add(gameEventData);
+        gameEvents := List.fromArray(Buffer.toArray<T.GameEventData>(gameEventsBuffer));
+
     };
 
   }

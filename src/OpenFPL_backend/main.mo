@@ -20,6 +20,7 @@ import Option "mo:base/Option";
 import PlayerCanister "canister:player_canister";
 import T "types";
 import SeasonManager "season-manager";
+import Governance "governance";
 
 actor Self {
 
@@ -28,6 +29,7 @@ actor Self {
   let teamsInstance = Teams.Teams();
   let proposalsInstance = Proposals.Proposals();
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams();
+  let governanceInstance = Governance.Governance();
   
   let CANISTER_IDS = {
     //JB Local Dev
@@ -246,9 +248,13 @@ actor Self {
   public func calculatePoints(gameweekFixtures: [T.Fixture]): async () {
     await fantasyTeamsInstance.calculatePoints(gameweekFixtures);
   };
+
+  public shared func getConsensusData(fixtureId: Nat32): async T.GameEventData {
+    return await governanceInstance.getConsensusData(fixtureId);
+  };
   
   //intialise season manager
-  let seasonManager = SeasonManager.SeasonManager(resetTransfers, calculatePoints);
+  let seasonManager = SeasonManager.SeasonManager(resetTransfers, calculatePoints, getConsensusData);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup
