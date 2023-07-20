@@ -184,13 +184,12 @@ module {
     };
 
     private func gameweekVerified() : async (){
-        //calculate points
-        //distribute rewards
-        //settle user bets
-        //revalue players
-        //reset weekly transfers
-        //mint FPL
+        await calculatePoints();
+        await distributeRewards();
+        await settleUserBets();
+        await revaluePlayers();
         await resetTransfers();
+        await resetWeeklyTransfers();
         transfersAllowed := true;
     };
 
@@ -237,6 +236,28 @@ module {
         activeGameweek := 1;
         activeFixtures := await getGameweekFixtures();
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
+    };
+
+    private func calculatePoints(): async (){
+        //calculate points
+    };
+
+    private func distributeRewards(): async (){
+        //distribute rewards
+        //mint FPL
+    };
+
+    private func settleUserBets(): async (){
+        //settle user bets
+    };
+
+    private func revaluePlayers(): async (){
+        //revalue players
+    };
+
+    private func resetWeeklyTransfers(): async (){
+
+        //reset weekly transfers
     };
 
     private func snapshotGameweek(): async (){
@@ -296,7 +317,7 @@ module {
             result := result # Char.toText(iter[index]);
         };
 
-        result;
+        return result;
     };
   };
 }
