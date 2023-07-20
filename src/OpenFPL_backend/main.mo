@@ -240,11 +240,15 @@ actor Self {
   };
 
   public func resetTransfers(): async () {
-      await fantasyTeamsInstance.resetTransfers();
+    await fantasyTeamsInstance.resetTransfers();
+  };
+
+  public func calculatePoints(gameweekFixtures: [T.Fixture]): async () {
+    await fantasyTeamsInstance.calculatePoints(gameweekFixtures);
   };
   
   //intialise season manager
-  let seasonManager = SeasonManager.SeasonManager(resetTransfers);
+  let seasonManager = SeasonManager.SeasonManager(resetTransfers, calculatePoints);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup

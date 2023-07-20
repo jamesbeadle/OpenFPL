@@ -19,7 +19,8 @@ import Char "mo:base/Char";
 module {
 
   public class SeasonManager(
-    resetTransfers: shared () -> async ()) {
+    resetTransfers: shared () -> async (),
+    calculatePoints: shared (gameweekFixtures: [T.Fixture]) -> async ()) {
 
     private var seasons: [T.Season] = [];
 
@@ -184,12 +185,16 @@ module {
     };
 
     private func gameweekVerified() : async (){
-        await calculatePoints();
+        
+        let gameweekFixtures = await getGameweekFixtures();
+        await calculatePoints(gameweekFixtures);
+        
         await distributeRewards();
         await settleUserBets();
         await revaluePlayers();
         await resetTransfers();
         await resetWeeklyTransfers();
+        
         transfersAllowed := true;
     };
 
@@ -236,10 +241,6 @@ module {
         activeGameweek := 1;
         activeFixtures := await getGameweekFixtures();
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
-    };
-
-    private func calculatePoints(): async (){
-        //calculate points
     };
 
     private func distributeRewards(): async (){

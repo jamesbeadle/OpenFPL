@@ -111,6 +111,33 @@ module Types{
         bankBalance: Nat32;
     };
 
+    public type GameSubmission = {
+        appearances: [PlayerAppearance];
+        homeGoals: [GoalEvent];
+        awayGoals: [GoalEvent];
+        redCards: [CardEvent];
+        yellowCards: [CardEvent];
+        keeperSaves: [Nat16];
+        penaltySaves: [Nat16];
+        penaltyMisses: [Nat16];
+    };
+
+    public type PlayerAppearance = {
+        playerId: Nat16;
+        startMinute: Nat8;
+        endMinute: Nat8;
+    };
+
+    public type GoalEvent = {
+        playerId: Nat16;
+        assistPlayerId: Nat16;
+        minute: Nat8;
+    };
+
+    public type CardEvent = {
+        playerId: Nat16;
+        minute: Nat8;
+    };
 
      public type Proposal = {
         id : Nat;

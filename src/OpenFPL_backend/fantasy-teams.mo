@@ -462,5 +462,9 @@ module {
         public func resetTransfers(): async () {
             // reset all team available transfers to 2 for the new gameweek
         };
+
+        public func calculatePoints(gameweekFixtures: [T.Fixture]): async () {
+            //calculate gameweek points
+        };
     }
 }
