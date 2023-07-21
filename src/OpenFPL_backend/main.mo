@@ -55,6 +55,7 @@ actor Self {
   { 
     //getPlayers: () -> async [T.Player];
     getAllPlayers: () -> async [DTOs.PlayerDTO];
+    revaluePlayers: ([T.Player]) -> async ();
   };
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
@@ -262,17 +263,16 @@ actor Self {
   };
 
   private func revaluePlayers(): async (){
-    //get a list of players whose value has updated from the governance canister
-    //update the players value in the player canister
-    //ensure the prior value is recorded
+    let revaluedPlayers = await governanceInstance.getRevaluedPlayers();
+    await playerCanister.revaluePlayers(revaluedPlayers);
   };
 
   private func resetWeeklyTransfers(): async (){
-      //reset weekly transfers - call this in the fantasy teams canister
+    await fantasyTeamsInstance.resetTransfers();
   };
 
   private func snapshotGameweek(): async (){
-      //copy current teams into gameweek predictions - this is to copy the predictions into the users profile history
+    await fantasyTeamsInstance.snapshotGameweek();
   };
   
   //intialise season manager

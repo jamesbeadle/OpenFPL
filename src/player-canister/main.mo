@@ -100,6 +100,12 @@ actor Self {
       }});
   };
 
+  public func revaluePlayers(revaluedPlayers: [T.Player]){
+
+    //update the players value in the player canister
+    //ensure the prior value is recorded
+  };
+
   system func heartbeat() : async () {
       
   };

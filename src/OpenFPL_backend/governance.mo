@@ -29,5 +29,16 @@ module {
             }
         };
 
+        public shared func getRevaluedPlayers() : async [T.Player] {
+
+            //IMPLEMENT
+
+            //RESET PLAYERS VOTES
+
+            //NOTE THE SUCCESSFUL PLAYER VALUATION VOTES
+
+            return [];
+        };
+
     }
 }

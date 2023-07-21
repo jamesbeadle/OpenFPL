@@ -467,5 +467,12 @@ module {
             //IMPLEMENT
             //calculate gameweek points
         };
+        
+        public shared func snapshotGameweek(): async (){
+
+            //need to copy every current team into gameweek predictions
+
+            //copy current teams into gameweek predictions - this is to copy the predictions into the users profile history
+        };
     }
 }
