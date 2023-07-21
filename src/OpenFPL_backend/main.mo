@@ -22,6 +22,7 @@ import T "types";
 import SeasonManager "season-manager";
 import Governance "governance";
 import Rewards "rewards";
+import PrivateLeagues "private-leagues-manager";
 
 actor Self {
 
@@ -32,6 +33,7 @@ actor Self {
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams();
   let governanceInstance = Governance.Governance();
   let rewardsInstance = Rewards.Rewards();
+  let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
   let CANISTER_IDS = {
     //JB Local Dev
@@ -256,11 +258,13 @@ actor Self {
   };
 
   private func settleUserBets(): async (){
-      //settle user bets - USE PRIVATE LEAGUE CANISTER
+    await privateLeaguesInstance.settleUserBets();
   };
 
   private func revaluePlayers(): async (){
-      //revalue players - USE PLAYER CANISTER AND GOVERNANCE CANISTER DATA
+    //get a list of players whose value has updated from the governance canister
+    //update the players value in the player canister
+    //ensure the prior value is recorded
   };
 
   private func resetWeeklyTransfers(): async (){
