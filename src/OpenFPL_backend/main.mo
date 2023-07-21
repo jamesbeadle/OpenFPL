@@ -6,7 +6,6 @@ import Profiles "profiles";
 import Account "Account";
 import Book "book";
 import Teams "teams";
-import Proposals "proposals";
 import FantasyTeams "fantasy-teams";
 import Fixtures "fixtures";
 import Nat "mo:base/Nat";
@@ -29,7 +28,6 @@ actor Self {
   let profilesInstance = Profiles.Profiles();
   let bookInstance = Book.Book();
   let teamsInstance = Teams.Teams();
-  let proposalsInstance = Proposals.Proposals();
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams();
   let governanceInstance = Governance.Governance();
   let rewardsInstance = Rewards.Rewards();
@@ -291,15 +289,12 @@ actor Self {
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
     stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
-    stable_proposals := proposalsInstance.getData();
-    stable_next_proposal_id := proposalsInstance.nextProposalId;
     stable_active_season_id := seasonManager.getActiveSeasonId();
     stable_active_gameweek := seasonManager.getActiveGameweek();
   };
 
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
-    proposalsInstance.setData(stable_proposals, stable_next_proposal_id);
     fantasyTeamsInstance.setData(stable_fantasy_teams);
   };
 
