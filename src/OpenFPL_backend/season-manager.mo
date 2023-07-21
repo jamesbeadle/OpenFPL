@@ -21,7 +21,12 @@ module {
   public class SeasonManager(
     resetTransfers: shared () -> async (),
     calculatePoints: shared (gameweekFixtures: [T.Fixture]) -> async (),
-    getConsensusData: shared (fixtureId: Nat32) -> async T.GameEventData) {
+    getConsensusData: shared (fixtureId: Nat32) -> async T.GameEventData,
+    distributeRewards: shared () -> async (),
+    settleUserBets: shared () -> async (),
+    revaluePlayers: shared () -> async (),
+    resetWeeklyTransfers: shared () -> async (),
+    snapshotGameweek: shared () -> async ()) {
 
     private var seasons: [T.Season] = [];
 
@@ -235,35 +240,12 @@ module {
         };
     };
 
-
     public func intialFixturesConfirmed() : async (){
         let now = Time.now();
         activeSeasonId := nextSeasonId;
         activeGameweek := 1;
         activeFixtures := await getGameweekFixtures();
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
-    };
-
-    private func distributeRewards(): async (){
-        //distribute rewards
-        //mint FPL
-    };
-
-    private func settleUserBets(): async (){
-        //settle user bets
-    };
-
-    private func revaluePlayers(): async (){
-        //revalue players
-    };
-
-    private func resetWeeklyTransfers(): async (){
-
-        //reset weekly transfers
-    };
-
-    private func snapshotGameweek(): async (){
-        //copy current teams into gameweek predictions
     };
 
     

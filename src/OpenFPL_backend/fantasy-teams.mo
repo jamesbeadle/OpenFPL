@@ -431,7 +431,6 @@ module {
                 return false;
             };
 
-            // Checking bonus conditions
             if (bonusId == 3) {
                 let bonusPlayer = List.find<T.Player>(List.fromArray(players), func (player: T.Player): Bool {
                     return player.id == bonusPlayerId;
@@ -460,10 +459,12 @@ module {
         };
 
         public func resetTransfers(): async () {
+            //IMPLEMENT
             // reset all team available transfers to 2 for the new gameweek
         };
 
         public func calculatePoints(gameweekFixtures: [T.Fixture]): async () {
+            //IMPLEMENT
             //calculate gameweek points
         };
     }

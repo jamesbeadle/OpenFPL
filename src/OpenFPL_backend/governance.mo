@@ -13,6 +13,9 @@ module {
         private var gameEventDataSubmissions: [T.GameEventData] = [];
 
         public shared func getConsensusData(fixtureId: Nat32) : async T.GameEventData {
+
+            //IMPLEMENT
+
             return {
                 fixtureId = 0;
                 appearances = [];
