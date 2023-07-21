@@ -19,14 +19,14 @@ import Char "mo:base/Char";
 module {
 
   public class SeasonManager(
-    resetTransfers: shared () -> async (),
-    calculatePoints: shared (gameweekFixtures: [T.Fixture]) -> async (),
-    getConsensusData: shared (fixtureId: Nat32) -> async T.GameEventData,
-    distributeRewards: shared () -> async (),
-    settleUserBets: shared () -> async (),
-    revaluePlayers: shared () -> async (),
-    resetWeeklyTransfers: shared () -> async (),
-    snapshotGameweek: shared () -> async ()) {
+    resetTransfers: () -> async (),
+    calculatePoints: (gameweekFixtures: [T.Fixture]) -> async (),
+    getConsensusData: (fixtureId: Nat32) -> async T.GameEventData,
+    distributeRewards: () -> async (),
+    settleUserBets: () -> async (),
+    revaluePlayers: () -> async (),
+    resetWeeklyTransfers: () -> async (),
+    snapshotGameweek: () -> async ()) {
 
     private var seasons: [T.Season] = [];
 
@@ -177,7 +177,6 @@ module {
             };
         };
 
-
         let remainingFixtures = Array.find(activeFixtures, func (fixture: T.Fixture): Bool {
             return fixture.status < 3;
         });
@@ -247,8 +246,6 @@ module {
         activeFixtures := await getGameweekFixtures();
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
     };
-
-    
 
     public func getActiveSeasonId() : Nat16 {
         return activeSeasonId;

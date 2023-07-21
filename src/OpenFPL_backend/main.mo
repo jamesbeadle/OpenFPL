@@ -141,10 +141,6 @@ actor Self {
 
     return profilesInstance.updateProfilePicture(Principal.toText(caller), profilePicture);
   };
-  
-  public query func getProfiles() : async [T.Profile] {
-    return profilesInstance.getProfiles();
-  };
 
   public shared ({caller}) func getAccountBalanceDTO() : async DTOs.AccountBalanceDTO {
     
@@ -243,35 +239,35 @@ actor Self {
     };
   };
 
-  public func resetTransfers(): async () {
+  private func resetTransfers(): async () {
     await fantasyTeamsInstance.resetTransfers();
   };
 
-  public func calculatePoints(gameweekFixtures: [T.Fixture]): async () {
+  private func calculatePoints(gameweekFixtures: [T.Fixture]): async () {
     await fantasyTeamsInstance.calculatePoints(gameweekFixtures);
   };
 
-  public shared func getConsensusData(fixtureId: Nat32): async T.GameEventData {
+  private func getConsensusData(fixtureId: Nat32): async T.GameEventData {
     return await governanceInstance.getConsensusData(fixtureId);
   };
 
-  public func distributeRewards(): async () {
+  private func distributeRewards(): async () {
     await rewardsInstance.distributeRewards();
   };
 
-  public func settleUserBets(): async (){
+  private func settleUserBets(): async (){
       //settle user bets - USE PRIVATE LEAGUE CANISTER
   };
 
-  public func revaluePlayers(): async (){
+  private func revaluePlayers(): async (){
       //revalue players - USE PLAYER CANISTER AND GOVERNANCE CANISTER DATA
   };
 
-  public func resetWeeklyTransfers(): async (){
+  private func resetWeeklyTransfers(): async (){
       //reset weekly transfers - call this in the fantasy teams canister
   };
 
-  public func snapshotGameweek(): async (){
+  private func snapshotGameweek(): async (){
       //copy current teams into gameweek predictions - this is to copy the predictions into the users profile history
   };
   
