@@ -459,11 +459,33 @@ module {
         };
 
         public func resetTransfers(): async () {
-            //IMPLEMENT
-            // reset all team available transfers to 2 for the new gameweek
+            let mappedTeams = List.map<T.FantasyTeam, T.FantasyTeam>(fantasyTeams, func (fantasyTeam: T.FantasyTeam) : T.FantasyTeam {
+              return {
+                principalId = fantasyTeam.principalId;
+                transfersAvailable = 2;
+                bankBalance = fantasyTeam.bankBalance;
+                playerIds = fantasyTeam.playerIds;
+                captainId = fantasyTeam.captainId;
+                goalGetterGameweek = fantasyTeam.goalGetterGameweek;
+                goalGetterPlayerId = fantasyTeam.goalGetterPlayerId;
+                passMasterGameweek = fantasyTeam.passMasterGameweek;
+                passMasterPlayerId = fantasyTeam.passMasterPlayerId;
+                noEntryGameweek = fantasyTeam.noEntryGameweek;
+                noEntryPlayerId = fantasyTeam.noEntryPlayerId;
+                teamBoostGameweek = fantasyTeam.teamBoostGameweek;
+                teamBoostTeamId = fantasyTeam.teamBoostTeamId;
+                safeHandsGameweek = fantasyTeam.safeHandsGameweek;
+                safeHandsPlayerId = fantasyTeam.safeHandsPlayerId;
+                captainFantasticGameweek = fantasyTeam.captainFantasticGameweek;
+                captainFantasticPlayerId = fantasyTeam.captainFantasticPlayerId;
+                braceBonusGameweek = fantasyTeam.braceBonusGameweek;
+                hatTrickHeroGameweek = fantasyTeam.hatTrickHeroGameweek;
+              };
+          });
+          fantasyTeams := mappedTeams;
         };
 
-        public func calculatePoints(gameweekFixtures: [T.Fixture]): async () {
+        public func calculatePoints(gameweekFixtures: [T.Fixture], gameEventData: [T.GameEventData]): async () {
             //IMPLEMENT
             //calculate gameweek points
         };

@@ -171,5 +171,16 @@ module {
 
     };
 
+    public func getGameweekEventData(gameweekFixtures: [T.Fixture]) : [T.GameEventData] {
+        
+        let eventDataArray = Array.filter(List.toArray(gameEvents), func (event: T.GameEventData) : Bool {
+            return Array.find(gameweekFixtures, func (fixture: T.Fixture) : Bool { 
+                return fixture.id == event.fixtureId;
+            }) != null;
+        });
+
+        return eventDataArray;
+    };
+
   }
 }

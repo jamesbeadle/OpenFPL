@@ -244,8 +244,8 @@ actor Self {
     await fantasyTeamsInstance.resetTransfers();
   };
 
-  private func calculatePoints(gameweekFixtures: [T.Fixture]): async () {
-    await fantasyTeamsInstance.calculatePoints(gameweekFixtures);
+  private func calculatePoints(gameweekFixtures: [T.Fixture], gameEventData: [T.GameEventData]): async () {
+    await fantasyTeamsInstance.calculatePoints(gameweekFixtures, gameEventData);
   };
 
   private func getConsensusData(fixtureId: Nat32): async T.GameEventData {

@@ -20,7 +20,7 @@ module {
 
   public class SeasonManager(
     resetTransfers: () -> async (),
-    calculatePoints: (gameweekFixtures: [T.Fixture]) -> async (),
+    calculatePoints: (gameweekFixtures: [T.Fixture], gameEventData: [T.GameEventData]) -> async (),
     getConsensusData: (fixtureId: Nat32) -> async T.GameEventData,
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
@@ -192,7 +192,8 @@ module {
     private func gameweekVerified() : async (){
         
         let gameweekFixtures = await getGameweekFixtures();
-        await calculatePoints(gameweekFixtures);
+        let gameweekEventData = fixturesInstance.getGameweekEventData(activeFixtures);
+        await calculatePoints(gameweekFixtures, gameweekEventData);
         
         await distributeRewards();
         await settleUserBets();
