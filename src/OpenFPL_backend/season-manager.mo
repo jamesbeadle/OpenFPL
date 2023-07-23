@@ -1,5 +1,3 @@
-// SeasonManager.mo
-
 import T "types";
 import Timer "mo:base/Timer";
 import { now } = "mo:base/Time";
@@ -20,13 +18,14 @@ module {
 
   public class SeasonManager(
     resetTransfers: () -> async (),
-    calculatePoints: (gameweekFixtures: [T.Fixture], gameEventData: [T.GameEventData]) -> async (),
-    getConsensusData: (fixtureId: Nat32) -> async T.GameEventData,
+    calculatePoints: (activeGameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async (),
+    getFinalisedPlayerData: (fixtureId: Nat32) -> async List.List<T.PlayerEventData>,
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
     revaluePlayers: () -> async (),
     resetWeeklyTransfers: () -> async (),
-    snapshotGameweek: () -> async ()) {
+    snapshotGameweek: () -> async (),
+    getPlayer: (playerId: Nat16) -> async T.Player ) {
 
     private var seasons: [T.Season] = [];
 
@@ -86,21 +85,10 @@ module {
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
         
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
-            if(activeFixtures[i].kickOff < now and activeFixtures[i].status == 0){
+            if(activeFixtures[i].kickOff <= now and activeFixtures[i].status == 0){
                 
-                await fixturesInstance.setActive(activeFixtures[i].id);
-                activeFixturesBuffer.add(
-                    {
-                        id = activeFixtures[i].id;
-                        seasonId = activeFixtures[i].seasonId;
-                        gameweek = activeFixtures[i].gameweek;
-                        kickOff = activeFixtures[i].kickOff;
-                        homeTeamId = activeFixtures[i].homeTeamId;
-                        awayTeamId = activeFixtures[i].awayTeamId;
-                        homeGoals = activeFixtures[i].homeGoals;
-                        awayGoals = activeFixtures[i].awayGoals;
-                        status = 1; 
-                    });
+                let updatedFixture = await fixturesInstance.updateStatus(activeFixtures[i].id, 1);
+                activeFixturesBuffer.add(updatedFixture);
 
                 let gameCompletedTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * 2)) - now)), gameCompleted);
                 timerBuffer.add(gameCompletedTimer);
@@ -121,20 +109,11 @@ module {
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
        
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
-            if((activeFixtures[i].kickOff + (oneHour * 2))  < now and activeFixtures[i].status == 1){
-                await fixturesInstance.setCompleted(activeFixtures[i].id);
-                activeFixturesBuffer.add(
-                    {
-                        id = activeFixtures[i].id;
-                        seasonId = activeFixtures[i].seasonId;
-                        gameweek = activeFixtures[i].gameweek;
-                        kickOff = activeFixtures[i].kickOff;
-                        homeTeamId = activeFixtures[i].homeTeamId;
-                        awayTeamId = activeFixtures[i].awayTeamId;
-                        homeGoals = activeFixtures[i].homeGoals;
-                        awayGoals = activeFixtures[i].awayGoals;
-                        status = 2; 
-                    });
+            if((activeFixtures[i].kickOff + (oneHour * 2))  <= now and activeFixtures[i].status == 1){
+                
+                let updatedFixture = await fixturesInstance.updateStatus(activeFixtures[i].id, 2);
+                activeFixturesBuffer.add(updatedFixture);
+
                 let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now + (oneHour * gameConsensusDurationHours)) - now)), votingPeriodOver);
                 timerBuffer.add(votingPeriodOverTimer);
             };
@@ -159,23 +138,14 @@ module {
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
        
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
-            if((activeFixtures[i].kickOff + (oneHour * gameConsensusDurationHours)) < now and activeFixtures[i].status == 2){
-                let consensusData = await getConsensusData(activeFixtures[i].id);
-                await fixturesInstance.finaliseGameEventData(consensusData);
-                activeFixturesBuffer.add(
-                    {
-                        id = activeFixtures[i].id;
-                        seasonId = activeFixtures[i].seasonId;
-                        gameweek = activeFixtures[i].gameweek;
-                        kickOff = activeFixtures[i].kickOff;
-                        homeTeamId = activeFixtures[i].homeTeamId;
-                        awayTeamId = activeFixtures[i].awayTeamId;
-                        homeGoals = activeFixtures[i].homeGoals;
-                        awayGoals = activeFixtures[i].awayGoals;
-                        status = 3; 
-                    });
+            if((activeFixtures[i].kickOff + (oneHour * gameConsensusDurationHours)) <= now and activeFixtures[i].status == 2){
+                let fixtureId = activeFixtures[i].id;
+                let finalisedPlayerEventData = await getFinalisedPlayerData(fixtureId);
+                let updatedFixture = await fixturesInstance.finalisePlayerEventData(fixtureId, List.toArray(finalisedPlayerEventData));
+                activeFixturesBuffer.add(updatedFixture);
             };
         };
+        activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
 
         let remainingFixtures = Array.find(activeFixtures, func (fixture: T.Fixture): Bool {
             return fixture.status < 3;
@@ -190,11 +160,8 @@ module {
     };
 
     private func gameweekVerified() : async (){
-        
-        let gameweekFixtures = await getGameweekFixtures();
-        let gameweekEventData = fixturesInstance.getGameweekEventData(activeFixtures);
-        await calculatePoints(gameweekFixtures, gameweekEventData);
-        
+
+        await calculatePoints(activeGameweek, activeFixtures);
         await distributeRewards();
         await settleUserBets();
         await revaluePlayers();
@@ -212,7 +179,7 @@ module {
 
         let now = Time.now();
         activeGameweek := activeGameweek + 1;
-        activeFixtures := await getGameweekFixtures();
+        activeFixtures := fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);        
     };
 
@@ -244,7 +211,7 @@ module {
         let now = Time.now();
         activeSeasonId := nextSeasonId;
         activeGameweek := 1;
-        activeFixtures := await getGameweekFixtures();
+        activeFixtures := fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
     };
 

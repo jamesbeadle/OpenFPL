@@ -6,27 +6,25 @@ import Account "Account";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
+import HashMap "mo:base/HashMap";
+import Hash "mo:base/Hash";
+import Nat32 "mo:base/Nat32";
+import Nat16 "mo:base/Nat16";
 
 module {
     public class Governance(){
 
-        private var gameEventDataSubmissions: [T.GameEventData] = [];
+        let eq = func (a: Nat16, b: Nat16) : Bool { a == b };
+        let hashNat16 = func (key: Nat16) : Hash.Hash {
+            Nat32.fromNat(Nat16.toNat(key)%(2 ** 32 -1));
+        };
+        private var fixtureDataSubmissions: HashMap.HashMap<Nat16, List.List<T.PlayerEventData>> = HashMap.HashMap<Nat16, List.List<T.PlayerEventData>>(22, eq, hashNat16);
 
-        public shared func getConsensusData(fixtureId: Nat32) : async T.GameEventData {
+        public shared func getConsensusData(fixtureId: Nat32) : async List.List<T.PlayerEventData> {
 
             //IMPLEMENT
 
-            return {
-                fixtureId = 0;
-                appearances = [];
-                homeGoals = [];
-                awayGoals = [];
-                redCards = [];
-                yellowCards = [];
-                keeperSaves = [];
-                penaltySaves = [];
-                penaltyMisses = [];
-            }
+            return List.nil();
         };
 
         public shared func getRevaluedPlayers() : async [T.Player] {

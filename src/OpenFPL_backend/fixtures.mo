@@ -21,8 +21,6 @@ module {
     private var nextFixtureId : Nat32 = 381;
     private var nextSeasonId : Nat16 = 2;
 
-    private var gameEvents = List.fromArray<T.GameEventData>([]);
-
     public func setData(stable_fixtures: [T.Fixture], stable_fixture_id : Nat32, stable_seasons: [T.Season], stable_season_id: Nat16){
         fixtures := List.fromArray(stable_fixtures);
         nextFixtureId := stable_fixture_id;
@@ -72,6 +70,7 @@ module {
             homeGoals = 0;
             awayGoals = 0;
             status = 0;
+            events = [];
         };
         
         var newFixtureList = List.nil<T.Fixture>();
@@ -83,13 +82,13 @@ module {
         return #ok(());
     };
 
-    public func setActive(fixtureId: Nat32) : async () {
+    public func updateStatus(fixtureId: Nat32, status: Nat8) : async T.Fixture {
         
         let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
             return fixture.id == fixtureId;
         });
         switch (foundFixture) {
-            case (null) { };
+            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = [] }; };
             case (?foundFixture) {
 
                 let updatedFixture: T.Fixture = {
@@ -101,50 +100,25 @@ module {
                     awayTeamId = foundFixture.awayTeamId;
                     homeGoals = foundFixture.homeGoals;
                     awayGoals = foundFixture.awayGoals;
-                    status = 1;
+                    status = status;
+                    events = [];
                 };
 
                 fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
                     if (fixture.id == fixtureId) { updatedFixture } else { fixture }
                 });
+                
+                return updatedFixture;
             };
         };
     };
-
-    public func setCompleted(fixtureId: Nat32) : async () {
-        
+    
+    public func finalisePlayerEventData(fixtureId: Nat32, playerEventData: [T.PlayerEventData]): async T.Fixture {
         let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
             return fixture.id == fixtureId;
         });
         switch (foundFixture) {
-            case (null) { };
-            case (?foundFixture) {
-
-                let updatedFixture: T.Fixture = {
-                    id = foundFixture.id;
-                    seasonId = foundFixture.seasonId;
-                    gameweek = foundFixture.gameweek;
-                    kickOff = foundFixture.kickOff;
-                    homeTeamId = foundFixture.homeTeamId;
-                    awayTeamId = foundFixture.awayTeamId;
-                    homeGoals = foundFixture.homeGoals;
-                    awayGoals = foundFixture.awayGoals;
-                    status = 2;
-                };
-
-                fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
-                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
-                });
-            };
-        };
-    };
-
-    public func finaliseGameEventData(gameEventData: T.GameEventData): async () {
-        let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
-            return fixture.id == gameEventData.fixtureId;
-        });
-        switch (foundFixture) {
-            case (null) { };
+            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = [] }; };
             case (?foundFixture) {
 
                 let updatedFixture: T.Fixture = {
@@ -157,21 +131,20 @@ module {
                     homeGoals = foundFixture.homeGoals;
                     awayGoals = foundFixture.awayGoals;
                     status = 3;
+                    events = playerEventData;
                 };
 
                 fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
-                    if (fixture.id == gameEventData.fixtureId) { updatedFixture } else { fixture }
+                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
                 });
+                
+                return updatedFixture;
             };
         };
-
-        let gameEventsBuffer = Buffer.fromArray<T.GameEventData>(List.toArray(gameEvents));
-        gameEventsBuffer.add(gameEventData);
-        gameEvents := List.fromArray(Buffer.toArray<T.GameEventData>(gameEventsBuffer));
-
     };
 
-    public func getGameweekEventData(gameweekFixtures: [T.Fixture]) : [T.GameEventData] {
+/*
+    public func getGameweekEventData(gameweekFixtures: [T.Fixture]) : [T.PlayerEventData] {
         
         let eventDataArray = Array.filter(List.toArray(gameEvents), func (event: T.GameEventData) : Bool {
             return Array.find(gameweekFixtures, func (fixture: T.Fixture) : Bool { 
@@ -181,6 +154,6 @@ module {
 
         return eventDataArray;
     };
-
+*/
   }
 }

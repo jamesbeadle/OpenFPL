@@ -58,6 +58,7 @@ module Types{
         homeGoals: Nat8;
         awayGoals: Nat8;
         status: Nat8; //0 = Unplayed, 1 = Active, 2 = Completed, 3 = Data Finalised
+        events: [PlayerEventData];
     };
 
     public type Player = {
@@ -111,33 +112,23 @@ module Types{
         bankBalance: Nat32;
     };
 
-    public type GameEventData = {
+    public type PlayerEventData = {
         fixtureId: Nat32;
-        appearances: [PlayerAppearance];
-        homeGoals: [GoalEvent];
-        awayGoals: [GoalEvent];
-        redCards: [CardEvent];
-        yellowCards: [CardEvent];
-        keeperSaves: [Nat16];
-        penaltySaves: [Nat16];
-        penaltyMisses: [Nat16];
-    };
-
-    public type PlayerAppearance = {
         playerId: Nat16;
-        startMinute: Nat8;
-        endMinute: Nat8;
-    };
-
-    public type GoalEvent = {
-        playerId: Nat16;
-        assistPlayerId: Nat16;
-        minute: Nat8;
-    };
-
-    public type CardEvent = {
-        playerId: Nat16;
-        minute: Nat8;
+        //0 = Appearance
+        //1 = Goal Scored
+        //2 = Goal Assisted
+        //3 = Keeper Save
+        //4 = Clean Sheet
+        //5 = Penalty Saved
+        //6 = Penalty Missed
+        //7 = Yellow Card
+        //8 = Red Card
+        //9 = Own Goal
+        //10 = Highest Scoring Player 
+        eventType: Nat8;
+        eventStartMinute: Nat8; //use to record event time of all other events
+        eventEndTime: Nat8; //currently only used for Appearance
     };
 
      public type Proposal = {

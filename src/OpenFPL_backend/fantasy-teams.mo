@@ -1,4 +1,5 @@
 import T "types";
+import DTOs "DTOs";
 import List "mo:base/List";
 import Nat32 "mo:base/Nat32";
 import Array "mo:base/Array";
@@ -12,6 +13,8 @@ import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Option "mo:base/Option";
 import Debug "mo:base/Debug";
+import Buffer "mo:base/Buffer";
+import Hash "mo:base/Hash";
 
 module {
     public class FantasyTeams(){
@@ -485,9 +488,118 @@ module {
           fantasyTeams := mappedTeams;
         };
 
-        public func calculatePoints(gameweekFixtures: [T.Fixture], gameEventData: [T.GameEventData]): async () {
-            //IMPLEMENT
-            //calculate gameweek points
+        public func calculatePoints(gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
+            /*
+            var allPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+            for (i in Iter.range(0, Array.size(gameEventData)-1)) {
+                for (j in Iter.range(0, Array.size(gameEventData[i].appearances)-1)) {
+                    let playerId: Nat16 = gameEventData[i].appearances[j].playerId;
+                    allPlayerIdsBuffer.add(playerId);
+                };
+            };
+
+            let allPlayerIds = Buffer.toArray(allPlayerIdsBuffer);
+            let eq = func (a: Nat16, b: Nat16) : Bool {
+                a == b
+            };
+
+            let hashNat16 = func (key: Nat16) : Hash.Hash {
+                Nat32.fromNat(Nat16.toNat(key)%(2 ** 32 -1));
+            };
+
+            let playerPointsMap: HashMap.HashMap<Nat16, Nat16> = HashMap.HashMap<Nat16, Nat16>(22, eq, hashNat16);
+            
+            for (i in Iter.range(0, Array.size(allPlayerIds)-1)) {
+
+                //HERE I NEED TO BE LOOPING AROUND AN OBJECT OF PLAYER ID AND THEIR RESPECTIVE EVNTS SO I ONLY PASS THOSE TO CALCULATE PLAYER POINTS
+
+                let playerPoints = calculatePlayerPoints(gameEventData);
+                playerPointsMap.put(allPlayerIds[i], playerPoints);
+            };
+            
+            let fantasyTeamsArray = getFantasyTeams();
+
+            for (i in Iter.range(0, Array.size(fantasyTeamsArray)-1)) {
+                let fantasyTeam = fantasyTeamsArray[i];
+                var points: Nat16 = 0;
+                    
+                for (j in Iter.range(0, Array.size(fantasyTeam.playerIds)-1)) {
+                    let playerId = fantasyTeam.playerIds[j];
+                    let playerPoints = playerPointsMap.get(playerId);
+                    switch(playerPoints){
+                        case (null) {};
+                        case (?p){
+                            
+                            //adjust for bonuses
+                            var bonusPlayed: Bool = false;
+                            let player = await getPlayer(fantasyTeam.goalGetterPlayerId);
+                            
+                            //where fixture has player id in goal scored event count them and same for conceded
+                            let goalsScored = 0; //GET FROM GAME EVENT DATA
+                            
+                            let goalsConceded = 0; //GET FROM GAME EVENT DATA
+                               
+                            if(fantasyTeam.goalGetterGameweek == gameweek and fantasyTeam.goalGetterPlayerId == playerId){
+                                //let goalsScored = //get active season active gameweek goal count
+                                
+                                //Goal Getter - triple points for each goal scored for any selected player
+                                points := points + p;
+                                bonusPlayed := true;
+                            };
+
+                            if(fantasyTeam.passMasterGameweek == gameweek and fantasyTeam.passMasterPlayerId == playerId){
+                                //Pass Master - receive triple points for each assist for any selected player.
+                                
+                            };
+
+                            if(fantasyTeam.noEntryGameweek == gameweek and player.position == 1 and goalsConceded == 0){
+                                //No Entry - receieve triple points on any defenders score if they keep a clean sheet.
+                                points := points + (p * 3);
+                            };
+
+                            if(fantasyTeam.teamBoostGameweek == gameweek and player.teamId == fantasyTeam.teamBoostTeamId){
+                                //Team Boost - receive double points for each player of the chosen team.
+                                points := points + (p * 2);
+                            };
+
+                            if(fantasyTeam.safeHandsGameweek == gameweek and player.position == 0 and goalsConceded == 0){
+                                //Safe Hands - bonus to triple your goalkeeper's points for this gameweek.
+                                points := points + (p * 3);
+                            };
+
+                            if(fantasyTeam.captainFantasticGameweek == gameweek and fantasyTeam.captainId == playerId and goalsScored > 0){
+                                //Captain Fantastic - bonus to triple your captain's points for this gameweek if they score a goal.
+                                points := points + (p * 3);
+                            };
+
+                            if(fantasyTeam.braceBonusGameweek == gameweek and goalsScored >= 2){
+                                //Brace Bonus - double the points for any player in your team that scores 2 or more goals in a match.
+                                points := points + (p * 2);
+                            };
+
+                            if(fantasyTeam.hatTrickHeroGameweek == gameweek and goalsScored >= 3){
+                                //Hat Trick Hero - bonus to triple the points for any player in your team that scores 3 or more goals in a match.
+                                points := points + (p * 3);
+                            };
+
+                            if(not bonusPlayed){
+                                points := points + p;
+                            };
+                        }
+                    };
+                };
+
+                //save team score for gameweek
+
+            };
+            */
+        };
+
+        private func calculatePlayerPoints(gameEventData: [T.PlayerEventData]) : Nat16 {
+
+            //save points in player canister
+
+            return 0;
         };
         
         public shared func snapshotGameweek(): async (){

@@ -100,6 +100,40 @@ actor Self {
       }});
   };
 
+  public query ({caller}) func getPlayer() : async [T.Player] {
+    assert not Principal.isAnonymous(caller);
+
+    func compare(player1: T.Player, player2: T.Player) : Bool {
+        return player1.value >= player2.value;
+    };
+
+    func mergeSort(entries: List.List<T.Player>) : List.List<T.Player> {
+        let len = List.size(entries);
+        
+        if (len <= 1) {
+            return entries;
+        } else {
+            let (firstHalf, secondHalf) = List.split(len / 2, entries);
+            return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
+        };
+    };
+
+    let sortedPlayers = mergeSort(players);
+    return Array.map<T.Player, DTOs.PlayerDTO>(List.toArray(sortedPlayers), func (player: T.Player) : DTOs.PlayerDTO { 
+      return {
+        id = player.id;
+        firstName = player.firstName;
+        lastName = player.lastName;
+        teamId = player.teamId;
+        position = player.position;
+        shirtNumber = player.shirtNumber;
+        value = player.value;
+        dateOfBirth = player.dateOfBirth;
+        nationality = player.nationality;
+        totalPoints = 0;
+      }});
+  };
+
   public func revaluePlayers(revaluedPlayers: [T.Player]){
 
     //update the players value in the player canister

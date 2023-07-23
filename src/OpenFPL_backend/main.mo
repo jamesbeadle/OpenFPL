@@ -22,6 +22,7 @@ import SeasonManager "season-manager";
 import Governance "governance";
 import Rewards "rewards";
 import PrivateLeagues "private-leagues-manager";
+import List "mo:base/List";
 
 actor Self {
 
@@ -51,9 +52,9 @@ actor Self {
   
   let playerCanister = actor (CANISTER_IDS.player_canister): actor 
   { 
-    //getPlayers: () -> async [T.Player];
     getAllPlayers: () -> async [DTOs.PlayerDTO];
     revaluePlayers: ([T.Player]) -> async ();
+    getPlayer: (playerId: Nat16) -> async T.Player;
   };
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
@@ -244,11 +245,11 @@ actor Self {
     await fantasyTeamsInstance.resetTransfers();
   };
 
-  private func calculatePoints(gameweekFixtures: [T.Fixture], gameEventData: [T.GameEventData]): async () {
-    await fantasyTeamsInstance.calculatePoints(gameweekFixtures, gameEventData);
-  };
+  private func calculatePoints(activeGameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
+    await fantasyTeamsInstance.calculatePoints(activeGameweek, gameweekFixtures);
+  };  
 
-  private func getConsensusData(fixtureId: Nat32): async T.GameEventData {
+  private func getConsensusData(fixtureId: Nat32): async List.List<T.PlayerEventData> {
     return await governanceInstance.getConsensusData(fixtureId);
   };
 
@@ -272,10 +273,14 @@ actor Self {
   private func snapshotGameweek(): async (){
     await fantasyTeamsInstance.snapshotGameweek();
   };
+
+  private func getPlayer(playerId: Nat16): async T.Player {
+    return await playerCanister.getPlayer(playerId);
+  };
   
   //intialise season manager
   let seasonManager = SeasonManager.SeasonManager(resetTransfers, calculatePoints, getConsensusData, distributeRewards, 
-    settleUserBets, revaluePlayers, resetWeeklyTransfers, snapshotGameweek);
+    settleUserBets, revaluePlayers, resetWeeklyTransfers, snapshotGameweek, getPlayer);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup
