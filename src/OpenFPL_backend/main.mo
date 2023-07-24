@@ -55,7 +55,7 @@ actor Self {
     getAllPlayers: () -> async [DTOs.PlayerDTO];
     revaluePlayers: ([T.Player]) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
-    calculatePlayerScores: (gameweek: Nat8, gameweekFixtures: [T.Fixture], gameweekEventData: List.List<T.PlayerEventData>) -> async ();
+    calculatePlayerPoints: (gameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async [T.Fixture];
   };
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
@@ -246,11 +246,17 @@ actor Self {
     await fantasyTeamsInstance.resetTransfers();
   };
 
-  private func calculatePoints(activeGameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
-    let gameweekPlayerEventData = await governanceInstance.getGameweekPlayerEventData(activeGameweek);
-    await playerCanister.calculatePlayerScores(activeGameweek, gameweekFixtures, gameweekPlayerEventData);
-    await fantasyTeamsInstance.calculateTeamScores(activeGameweek, gameweekFixtures, gameweekPlayerEventData);
+  private func calculatePlayerPoints(activeGameweek: Nat8, gameweekFixtures: [T.Fixture]): async [T.Fixture] {
+    return await playerCanister.calculatePlayerPoints(activeGameweek, gameweekFixtures);
   };  
+
+  private func getConsensusPlayerEventData(gameweekId: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData>{
+    return await governanceInstance.getGameweekPlayerEventData(gameweekId, fixtureId);
+  };
+
+  private func calculateFantasyTeamScores(activeGameweek: Nat8, gameweekFixtures: [T.Fixture]) : async () {
+    
+  };
 
   private func distributeRewards(): async () {
     await rewardsInstance.distributeRewards();
@@ -265,16 +271,16 @@ actor Self {
     await playerCanister.revaluePlayers(revaluedPlayers);
   };
 
-  private func resetWeeklyTransfers(): async (){
-    await fantasyTeamsInstance.resetTransfers();
-  };
-
   private func snapshotGameweek(): async (){
     await fantasyTeamsInstance.snapshotGameweek();
   };
 
   private func getPlayer(playerId: Nat16): async T.Player {
     return await playerCanister.getPlayer(playerId);
+  }; 
+
+  private func calculatePredictionScores(gameweekId: Nat8, fixtures: [T.Fixture]) : async (){
+    return await fantasyTeamsInstance.calculatePredictionScores(gameweekId, fixtures);
   };
 
   private func mintWeeklyRewardsPool(): async () {
@@ -286,8 +292,18 @@ actor Self {
   };
   
   //intialise season manager
-  let seasonManager = SeasonManager.SeasonManager(resetTransfers, calculatePoints, distributeRewards, 
-    settleUserBets, revaluePlayers, resetWeeklyTransfers, snapshotGameweek, getPlayer, mintWeeklyRewardsPool, mintAnnualRewardsPool);
+  let seasonManager = SeasonManager.SeasonManager(
+    resetTransfers, 
+    calculatePlayerPoints, 
+    distributeRewards, 
+    settleUserBets, 
+    revaluePlayers, 
+    snapshotGameweek, 
+    getPlayer, 
+    mintWeeklyRewardsPool, 
+    mintAnnualRewardsPool, 
+    calculateFantasyTeamScores, 
+    getConsensusPlayerEventData);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup

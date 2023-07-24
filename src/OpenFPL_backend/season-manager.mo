@@ -18,15 +18,16 @@ module {
 
   public class SeasonManager(
     resetTransfers: () -> async (),
-    calculatePoints: (activeGameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async (),
+    calculatePlayerPoints: (activeGameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async [T.Fixture],
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
     revaluePlayers: () -> async (),
-    resetWeeklyTransfers: () -> async (),
     snapshotGameweek: () -> async (),
     getPlayer: (playerId: Nat16) -> async T.Player,
     mintWeeklyRewardsPool: () -> async (),
-    mintAnnualRewardsPool: () -> async () ) {
+    mintAnnualRewardsPool: () -> async (),
+    calculateFantasyTeamScores: (Nat8, [T.Fixture]) -> async (),
+    getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>  ) {
 
     private var seasons: [T.Season] = [];
 
@@ -138,8 +139,10 @@ module {
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
        
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
-            if((activeFixtures[i].kickOff + (oneHour * gameConsensusDurationHours)) <= now and activeFixtures[i].status == 2){
-                let updatedFixture = await fixturesInstance.updateStatus(activeFixtures[i].id, 3);
+            let fixture = activeFixtures[i];
+            if((fixture.kickOff + (oneHour * gameConsensusDurationHours)) <= now and fixture.status == 2){
+                let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id);
+                let updatedFixture = await fixturesInstance.savePlayerEventData(activeFixtures[i].id, consensusPlayerEventData);
                 activeFixturesBuffer.add(updatedFixture);
             };
         };
@@ -159,12 +162,13 @@ module {
 
     private func gameweekVerified() : async (){
           
-        await calculatePoints(activeGameweek, activeFixtures);
+        let fixturesWithHighestPlayerId = await calculatePlayerPoints(activeGameweek, activeFixtures);
+        await fixturesInstance.updateHighestPlayerIds(fixturesWithHighestPlayerId);
+        await calculateFantasyTeamScores(activeGameweek, activeFixtures);
         await distributeRewards();
         await settleUserBets();
         await revaluePlayers();
         await resetTransfers();
-        await resetWeeklyTransfers();
         
         transfersAllowed := true;
     };
@@ -213,6 +217,10 @@ module {
         activeGameweek := 1;
         activeFixtures := fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
+    };
+
+    public func setHighestScoringPlayerIds(fixtures: [T.Fixture]) : async (){
+
     };
 
     public func getActiveSeasonId() : Nat16 {

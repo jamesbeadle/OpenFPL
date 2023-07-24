@@ -145,8 +145,9 @@ actor Self {
     //ensure the prior value is recorded
   };
 
-  public func calculatePlayerScores(gameweek: Nat8, gameweekFixtures: [T.Fixture], gameweekEventData: List.List<T.PlayerEventData>) : async (){
+  public func calculatePlayerScores(gameweek: Nat8, gameweekFixtures: [T.Fixture]) : async [T.Fixture] {
     
+    /*
     let eq = func (a: Nat16, b: Nat16) : Bool {
         a == b
     };
@@ -164,11 +165,12 @@ actor Self {
             playerEventsMap.put(playerId, events[j]);
         };
     };
+    */
     
     //save each players event data
     //record a summary of their gameweek
     //in seasons then gameweeks - use lists
-
+    return [];
   };
 
   system func heartbeat() : async () {
