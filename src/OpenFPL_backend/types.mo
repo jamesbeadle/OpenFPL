@@ -58,7 +58,8 @@ module Types{
         homeGoals: Nat8;
         awayGoals: Nat8;
         status: Nat8; //0 = Unplayed, 1 = Active, 2 = Completed, 3 = Data Finalised
-        events: [PlayerEventData];
+        events: List.List<PlayerEventData>;
+        highestScoringPlayerId: Nat16;
     };
 
     public type Player = {
@@ -71,6 +72,17 @@ module Types{
         value: Float;
         dateOfBirth: Int;
         nationality: Text;
+        seasons: List.List<PlayerSeason>;
+    };
+
+    public type PlayerSeason = {
+        year: Nat16;
+        gameweeks: List.List<PlayerGameweek>;
+    };
+
+    public type PlayerGameweek = {
+        number: Nat8;
+        events: List.List<PlayerEventData>;
     };
 
     public type Account = {
@@ -98,18 +110,6 @@ module Types{
         captainFantasticPlayerId: Nat16;
         braceBonusGameweek: Nat8;
         hatTrickHeroGameweek: Nat8;
-    };
-
-    public type FantasySelection = {
-        principalId: Text;
-        seasonId: Nat16;
-        gameweekId: Nat16;
-        bonusId: Nat8;
-        playerIds: [Nat16];
-        captainId: Nat16;
-        score: Nat16;
-        teamValue: Nat32;
-        bankBalance: Nat32;
     };
 
     public type PlayerEventData = {

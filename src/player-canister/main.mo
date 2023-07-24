@@ -11,7 +11,7 @@ import Array "mo:base/Array";
 
 actor Self {
 
-  private var players = List.fromArray<T.Player>(GenesisData.genesis_players);
+  private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
   private var nextPlayerId : Nat = 560;
 
   private stable var stable_players: [T.Player] = [];
@@ -50,6 +50,7 @@ actor Self {
           value = player.value;
           dateOfBirth = player.dateOfBirth;
           nationality = player.nationality;
+          seasons = List.nil<T.PlayerSeason>();
         };
     });
 
@@ -100,7 +101,7 @@ actor Self {
       }});
   };
 
-  public query ({caller}) func getPlayer() : async [T.Player] {
+  public query ({caller}) func getPlayer() : async [DTOs.PlayerDTO] {
     assert not Principal.isAnonymous(caller);
 
     func compare(player1: T.Player, player2: T.Player) : Bool {
@@ -138,6 +139,17 @@ actor Self {
 
     //update the players value in the player canister
     //ensure the prior value is recorded
+  };
+
+  public func saveEventData(fixtures: [T.Fixture]){
+    //save each players event data
+    //track the highest scoring player
+   
+
+
+    //record a summary of their gameweek
+    //in seasons then gameweeks - use lists
+
   };
 
   system func heartbeat() : async () {

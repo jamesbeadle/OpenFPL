@@ -40,7 +40,7 @@ module {
             };
         };
 
-        public func createFantasyTeam(principalId: Text, gameweek: Nat8, newPlayers: [T.Player], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : Result.Result<(), T.Error> {
+        public func createFantasyTeam(principalId: Text, gameweek: Nat8, newPlayers: [DTOs.PlayerDTO], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : Result.Result<(), T.Error> {
 
             let existingTeam = List.find<T.FantasyTeam>(fantasyTeams, func (team: T.FantasyTeam): Bool {
                 return team.principalId == principalId;
@@ -49,7 +49,7 @@ module {
             switch (existingTeam) {
                 case (null) { 
 
-                    let allPlayerValues = Array.map<T.Player, Float>(newPlayers, func (player: T.Player) : Float { return player.value; });
+                    let allPlayerValues = Array.map<DTOs.PlayerDTO, Float>(newPlayers, func (player: DTOs.PlayerDTO) : Float { return player.value; });
 
                     if(not isTeamValid(newPlayers, bonusId, bonusPlayerId)){
                         return #err(#InvalidTeamError);
@@ -78,7 +78,7 @@ module {
                     var newCaptainId = captainId;
 
                     let sortedPlayers = sortPlayers(newPlayers);       
-                    let allPlayerIds = Array.map<T.Player, Nat16>(sortedPlayers, func (player: T.Player) : Nat16 { return player.id; });
+                    let allPlayerIds = Array.map<DTOs.PlayerDTO, Nat16>(sortedPlayers, func (player: DTOs.PlayerDTO) : Nat16 { return player.id; });
                     
                     if(newCaptainId == 0){
                         var highestValue = Float.fromInt(0);
@@ -162,7 +162,7 @@ module {
             };
         };
 
-        public func updateFantasyTeam(principalId: Text, newPlayers: [T.Player], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16, gameweek: Nat8, existingPlayers: [T.Player]) : Result.Result<(), T.Error> {
+        public func updateFantasyTeam(principalId: Text, newPlayers: [DTOs.PlayerDTO], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16, gameweek: Nat8, existingPlayers: [DTOs.PlayerDTO]) : Result.Result<(), T.Error> {
             
              let existingTeam = List.find<T.FantasyTeam>(fantasyTeams, func (team: T.FantasyTeam): Bool {
                 return team.principalId == principalId;
@@ -172,13 +172,13 @@ module {
                 case (null) { return #ok(()); };
                 case (?existingTeam) { 
                     
-                    let allPlayerValues = Array.map<T.Player, Float>(newPlayers, func (player: T.Player) : Float { return player.value; });
+                    let allPlayerValues = Array.map<DTOs.PlayerDTO, Float>(newPlayers, func (player: DTOs.PlayerDTO) : Float { return player.value; });
                     
                     if(not isTeamValid(newPlayers, bonusId, bonusPlayerId)){
                         return #err(#InvalidTeamError);
                     };
 
-                    let playersAdded = Array.filter<T.Player>(newPlayers, func (player: T.Player): Bool {
+                    let playersAdded = Array.filter<DTOs.PlayerDTO>(newPlayers, func (player: DTOs.PlayerDTO): Bool {
                         let playerId = player.id;
                         let isPlayerIdInExistingTeam = Array.find(existingTeam.playerIds, func (id: Nat16): Bool {
                             return id == playerId;
@@ -191,16 +191,16 @@ module {
                     };
 
                     let playersRemoved = Array.filter<Nat16>(existingTeam.playerIds, func (playerId: Nat16): Bool {
-                        let isPlayerIdInPlayers = Array.find(newPlayers, func (player: T.Player): Bool {
+                        let isPlayerIdInPlayers = Array.find(newPlayers, func (player: DTOs.PlayerDTO): Bool {
                             return player.id == playerId;
                         });
                         return Option.isNull(isPlayerIdInPlayers);
                     });
 
-                    let spent = Array.foldLeft<T.Player, Float>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.value);
+                    let spent = Array.foldLeft<DTOs.PlayerDTO, Float>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.value);
                     var sold = 0.0;
                     for (i in Iter.range(0, Array.size(playersRemoved)-1)) {
-                        let player = Array.find(newPlayers, func (player: T.Player): Bool {
+                        let player = Array.find(newPlayers, func (player: DTOs.PlayerDTO): Bool {
                             return player.id == playersRemoved[i];
                         });
                         switch(player){
@@ -277,7 +277,7 @@ module {
                     var newCaptainId = captainId;
 
                     let sortedPlayers = sortPlayers(newPlayers);       
-                    let allPlayerIds = Array.map<T.Player, Nat16>(sortedPlayers, func (player: T.Player) : Nat16 { return player.id; });    
+                    let allPlayerIds = Array.map<DTOs.PlayerDTO, Nat16>(sortedPlayers, func (player: DTOs.PlayerDTO) : Nat16 { return player.id; });    
                     
                     if(newCaptainId == 0){
                         var highestValue = Float.fromInt(0);
@@ -361,9 +361,9 @@ module {
             };
         };
 
-        private func sortPlayers(players: [T.Player]) : [T.Player] {
+        private func sortPlayers(players: [DTOs.PlayerDTO]) : [DTOs.PlayerDTO] {
             
-            let sortedPlayers = Array.sort(players, func(a: T.Player, b: T.Player): Order.Order {
+            let sortedPlayers = Array.sort(players, func(a: DTOs.PlayerDTO, b: DTOs.PlayerDTO): Order.Order {
                 if (a.position < b.position) { return #less; };
                 if (a.position > b.position) { return #greater; };
                 if (a.value > b.value) { return #less; };
@@ -373,8 +373,8 @@ module {
             return sortedPlayers;
         };
 
-        public func isTeamValid(players: [T.Player], bonusId: Nat8, bonusPlayerId: Nat16) : Bool {
-            let playerPositions = Array.map<T.Player, Nat8>(players, func (player: T.Player) : Nat8 { return player.position; });
+        public func isTeamValid(players: [DTOs.PlayerDTO], bonusId: Nat8, bonusPlayerId: Nat16) : Bool {
+            let playerPositions = Array.map<DTOs.PlayerDTO, Nat8>(players, func (player: DTOs.PlayerDTO) : Nat8 { return player.position; });
                     
             let playerCount = playerPositions.size();
             if(playerCount != 11 ){
@@ -435,7 +435,7 @@ module {
             };
 
             if (bonusId == 3) {
-                let bonusPlayer = List.find<T.Player>(List.fromArray(players), func (player: T.Player): Bool {
+                let bonusPlayer = List.find<DTOs.PlayerDTO>(List.fromArray(players), func (player: DTOs.PlayerDTO): Bool {
                     return player.id == bonusPlayerId;
                 });
                 switch(bonusPlayer){
@@ -447,7 +447,7 @@ module {
             };
 
             if (bonusId == 5) {
-                let bonusPlayer = List.find<T.Player>(List.fromArray(players), func (player: T.Player): Bool {
+                let bonusPlayer = List.find<DTOs.PlayerDTO>(List.fromArray(players), func (player: DTOs.PlayerDTO): Bool {
                     return player.id == bonusPlayerId;
                 });
                 switch(bonusPlayer){
@@ -489,6 +489,15 @@ module {
         };
 
         public func calculatePoints(gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
+
+            //loop through each fixture
+                //get a unique list of the player ids in the fixture
+                //if the player has the id in the team lookup the total points for the player
+
+                        
+
+
+
             /*
             var allPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
             for (i in Iter.range(0, Array.size(gameEventData)-1)) {

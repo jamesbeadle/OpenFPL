@@ -55,6 +55,7 @@ actor Self {
     getAllPlayers: () -> async [DTOs.PlayerDTO];
     revaluePlayers: ([T.Player]) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
+    saveEventData: (T.Fixture) -> async ();
   };
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
@@ -228,7 +229,7 @@ actor Self {
         case (?team) 
         { 
 
-          let existingPlayers = Array.filter<T.Player>(allPlayers, func (player: T.Player): Bool {
+          let existingPlayers = Array.filter<DTOs.PlayerDTO>(allPlayers, func (player: DTOs.PlayerDTO): Bool {
               let playerId = player.id;
               let isPlayerIdInExistingTeam = Array.find(team.playerIds, func (id: Nat16): Bool {
                   return id == playerId;
@@ -277,10 +278,22 @@ actor Self {
   private func getPlayer(playerId: Nat16): async T.Player {
     return await playerCanister.getPlayer(playerId);
   };
+
+  private func saveEventData(fixture: T.Fixture): async () {
+    return await playerCanister.saveEventData(fixture);
+  };
+
+  private func mintWeeklyRewardsPool(): async () {
+    //implement last
+  };
+
+  private func mintAnnualRewardsPool(): async () {
+    //implement last
+  };
   
   //intialise season manager
   let seasonManager = SeasonManager.SeasonManager(resetTransfers, calculatePoints, getConsensusData, distributeRewards, 
-    settleUserBets, revaluePlayers, resetWeeklyTransfers, snapshotGameweek, getPlayer);
+    settleUserBets, revaluePlayers, resetWeeklyTransfers, snapshotGameweek, getPlayer, saveEventData, mintWeeklyRewardsPool, mintAnnualRewardsPool);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup

@@ -15,7 +15,7 @@ module {
         { id = 1; name = "2023/24"; year = 2023; }
     ];
 
-    private var fixtures = List.fromArray(GenesisData.genesis_fixtures);
+    private var fixtures = List.fromArray(GenesisData.get_genesis_fixtures());
     private var seasons = List.fromArray(genesis_seasons);
 
     private var nextFixtureId : Nat32 = 381;
@@ -70,7 +70,7 @@ module {
             homeGoals = 0;
             awayGoals = 0;
             status = 0;
-            events = [];
+            events = List.nil<T.PlayerEventData>();
         };
         
         var newFixtureList = List.nil<T.Fixture>();
@@ -88,7 +88,7 @@ module {
             return fixture.id == fixtureId;
         });
         switch (foundFixture) {
-            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = [] }; };
+            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); }; };
             case (?foundFixture) {
 
                 let updatedFixture: T.Fixture = {
@@ -101,7 +101,7 @@ module {
                     homeGoals = foundFixture.homeGoals;
                     awayGoals = foundFixture.awayGoals;
                     status = status;
-                    events = [];
+                    events = List.nil<T.PlayerEventData>();
                 };
 
                 fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
@@ -113,12 +113,12 @@ module {
         };
     };
     
-    public func finalisePlayerEventData(fixtureId: Nat32, playerEventData: [T.PlayerEventData]): async T.Fixture {
+    public func saveEventData(fixtureId: Nat32, playerEventData: [T.PlayerEventData]): async T.Fixture {
         let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
             return fixture.id == fixtureId;
         });
         switch (foundFixture) {
-            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = [] }; };
+            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); }; };
             case (?foundFixture) {
 
                 let updatedFixture: T.Fixture = {
@@ -131,7 +131,7 @@ module {
                     homeGoals = foundFixture.homeGoals;
                     awayGoals = foundFixture.awayGoals;
                     status = 3;
-                    events = playerEventData;
+                    events = List.nil<T.PlayerEventData>();
                 };
 
                 fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
@@ -142,18 +142,5 @@ module {
             };
         };
     };
-
-/*
-    public func getGameweekEventData(gameweekFixtures: [T.Fixture]) : [T.PlayerEventData] {
-        
-        let eventDataArray = Array.filter(List.toArray(gameEvents), func (event: T.GameEventData) : Bool {
-            return Array.find(gameweekFixtures, func (fixture: T.Fixture) : Bool { 
-                return fixture.id == event.fixtureId;
-            }) != null;
-        });
-
-        return eventDataArray;
-    };
-*/
   }
 }

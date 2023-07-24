@@ -25,7 +25,10 @@ module {
     revaluePlayers: () -> async (),
     resetWeeklyTransfers: () -> async (),
     snapshotGameweek: () -> async (),
-    getPlayer: (playerId: Nat16) -> async T.Player ) {
+    getPlayer: (playerId: Nat16) -> async T.Player,
+    saveEventData: (T.Fixture) -> async (),
+    mintWeeklyRewardsPool: () -> async (),
+    mintAnnualRewardsPool: () -> async () ) {
 
     private var seasons: [T.Season] = [];
 
@@ -53,7 +56,6 @@ module {
     //System variables - to be moved and controlled by proposal
     private let gameConsensusDurationHours = 6;
   
-
     public func init_genesis_season(firstFixture: T.Fixture){
         //new season created, fixture consensus reched and gameweek and season id set to 1
         let now = Time.now();
@@ -141,7 +143,8 @@ module {
             if((activeFixtures[i].kickOff + (oneHour * gameConsensusDurationHours)) <= now and activeFixtures[i].status == 2){
                 let fixtureId = activeFixtures[i].id;
                 let finalisedPlayerEventData = await getFinalisedPlayerData(fixtureId);
-                let updatedFixture = await fixturesInstance.finalisePlayerEventData(fixtureId, List.toArray(finalisedPlayerEventData));
+                let updatedFixture = await fixturesInstance.saveEventData(fixtureId, List.toArray(finalisedPlayerEventData));
+                await saveEventData(updatedFixture);
                 activeFixturesBuffer.add(updatedFixture);
             };
         };
@@ -180,6 +183,7 @@ module {
         let now = Time.now();
         activeGameweek := activeGameweek + 1;
         activeFixtures := fixturesInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+        await mintWeeklyRewardsPool();
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);        
     };
 
@@ -203,6 +207,7 @@ module {
                 seasonsBuffer.add(newSeason);
                 seasons := Buffer.toArray(seasonsBuffer);
                 nextSeasonId := nextSeasonId + 1;
+                await mintAnnualRewardsPool();
              };
         };
     };
