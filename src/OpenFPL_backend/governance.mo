@@ -20,7 +20,7 @@ module {
         };
         private var fixtureDataSubmissions: HashMap.HashMap<Nat16, List.List<T.PlayerEventData>> = HashMap.HashMap<Nat16, List.List<T.PlayerEventData>>(22, eq, hashNat16);
 
-        public shared func getConsensusData(fixtureId: Nat32) : async List.List<T.PlayerEventData> {
+        public shared func getGameweekPlayerEventData(gameweek: Nat8) : async List.List<T.PlayerEventData> {
 
             //IMPLEMENT
 

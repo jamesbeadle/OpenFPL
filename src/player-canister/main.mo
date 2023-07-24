@@ -8,6 +8,10 @@ import Int "mo:base/Int";
 import Nat "mo:base/Nat";
 import Nat16 "mo:base/Nat16";
 import Array "mo:base/Array";
+import HashMap "mo:base/HashMap";
+import Hash "mo:base/Hash";
+import Nat32 "mo:base/Nat32";
+import Iter "mo:base/Iter";
 
 actor Self {
 
@@ -141,12 +145,27 @@ actor Self {
     //ensure the prior value is recorded
   };
 
-  public func saveEventData(fixtures: [T.Fixture]){
+  public func calculatePlayerScores(gameweek: Nat8, gameweekFixtures: [T.Fixture], gameweekEventData: List.List<T.PlayerEventData>) : async (){
+    
+    let eq = func (a: Nat16, b: Nat16) : Bool {
+        a == b
+    };
+
+    let hashNat16 = func (key: Nat16) : Hash.Hash {
+        Nat32.fromNat(Nat16.toNat(key)%(2 ** 32 -1));
+    };
+
+    //get map of all player ids and events
+    let playerEventsMap: HashMap.HashMap<Nat16, T.PlayerEventData> = HashMap.HashMap<Nat16, T.PlayerEventData >(22, eq, hashNat16);
+    for (i in Iter.range(0, Array.size(gameweekFixtures)-1)) {
+        let events = List.toArray<T.PlayerEventData>(gameweekFixtures[i].events);
+        for (j in Iter.range(0, Array.size(events)-1)) {
+            let playerId: Nat16 = events[j].playerId;
+            playerEventsMap.put(playerId, events[j]);
+        };
+    };
+    
     //save each players event data
-    //track the highest scoring player
-   
-
-
     //record a summary of their gameweek
     //in seasons then gameweeks - use lists
 

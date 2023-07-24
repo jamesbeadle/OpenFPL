@@ -19,14 +19,12 @@ module {
   public class SeasonManager(
     resetTransfers: () -> async (),
     calculatePoints: (activeGameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async (),
-    getFinalisedPlayerData: (fixtureId: Nat32) -> async List.List<T.PlayerEventData>,
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
     revaluePlayers: () -> async (),
     resetWeeklyTransfers: () -> async (),
     snapshotGameweek: () -> async (),
     getPlayer: (playerId: Nat16) -> async T.Player,
-    saveEventData: (T.Fixture) -> async (),
     mintWeeklyRewardsPool: () -> async (),
     mintAnnualRewardsPool: () -> async () ) {
 
@@ -141,10 +139,7 @@ module {
        
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             if((activeFixtures[i].kickOff + (oneHour * gameConsensusDurationHours)) <= now and activeFixtures[i].status == 2){
-                let fixtureId = activeFixtures[i].id;
-                let finalisedPlayerEventData = await getFinalisedPlayerData(fixtureId);
-                let updatedFixture = await fixturesInstance.saveEventData(fixtureId, List.toArray(finalisedPlayerEventData));
-                await saveEventData(updatedFixture);
+                let updatedFixture = await fixturesInstance.updateStatus(activeFixtures[i].id, 3);
                 activeFixturesBuffer.add(updatedFixture);
             };
         };
@@ -163,7 +158,7 @@ module {
     };
 
     private func gameweekVerified() : async (){
-
+          
         await calculatePoints(activeGameweek, activeFixtures);
         await distributeRewards();
         await settleUserBets();

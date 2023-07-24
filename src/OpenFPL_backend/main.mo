@@ -55,7 +55,7 @@ actor Self {
     getAllPlayers: () -> async [DTOs.PlayerDTO];
     revaluePlayers: ([T.Player]) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
-    saveEventData: (T.Fixture) -> async ();
+    calculatePlayerScores: (gameweek: Nat8, gameweekFixtures: [T.Fixture], gameweekEventData: List.List<T.PlayerEventData>) -> async ();
   };
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
@@ -247,12 +247,10 @@ actor Self {
   };
 
   private func calculatePoints(activeGameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
-    await fantasyTeamsInstance.calculatePoints(activeGameweek, gameweekFixtures);
+    let gameweekPlayerEventData = await governanceInstance.getGameweekPlayerEventData(activeGameweek);
+    await playerCanister.calculatePlayerScores(activeGameweek, gameweekFixtures, gameweekPlayerEventData);
+    await fantasyTeamsInstance.calculateTeamScores(activeGameweek, gameweekFixtures, gameweekPlayerEventData);
   };  
-
-  private func getConsensusData(fixtureId: Nat32): async List.List<T.PlayerEventData> {
-    return await governanceInstance.getConsensusData(fixtureId);
-  };
 
   private func distributeRewards(): async () {
     await rewardsInstance.distributeRewards();
@@ -279,10 +277,6 @@ actor Self {
     return await playerCanister.getPlayer(playerId);
   };
 
-  private func saveEventData(fixture: T.Fixture): async () {
-    return await playerCanister.saveEventData(fixture);
-  };
-
   private func mintWeeklyRewardsPool(): async () {
     //implement last
   };
@@ -292,8 +286,8 @@ actor Self {
   };
   
   //intialise season manager
-  let seasonManager = SeasonManager.SeasonManager(resetTransfers, calculatePoints, getConsensusData, distributeRewards, 
-    settleUserBets, revaluePlayers, resetWeeklyTransfers, snapshotGameweek, getPlayer, saveEventData, mintWeeklyRewardsPool, mintAnnualRewardsPool);
+  let seasonManager = SeasonManager.SeasonManager(resetTransfers, calculatePoints, distributeRewards, 
+    settleUserBets, revaluePlayers, resetWeeklyTransfers, snapshotGameweek, getPlayer, mintWeeklyRewardsPool, mintAnnualRewardsPool);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup

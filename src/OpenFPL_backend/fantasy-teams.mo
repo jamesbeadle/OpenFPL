@@ -488,7 +488,9 @@ module {
           fantasyTeams := mappedTeams;
         };
 
-        public func calculatePoints(gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
+        public func calculateTeamScores(gameweek: Nat8, gameweekFixtures: [T.Fixture], gameweekEventData: List.List<T.PlayerEventData>): async () {
+
+            //keep updating the highest scoring player for a fixture
 
             //loop through each fixture
                 //get a unique list of the player ids in the fixture

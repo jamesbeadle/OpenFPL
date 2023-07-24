@@ -71,6 +71,7 @@ module {
             awayGoals = 0;
             status = 0;
             events = List.nil<T.PlayerEventData>();
+            highestScoringPlayerId = 0;
         };
         
         var newFixtureList = List.nil<T.Fixture>();
@@ -88,7 +89,8 @@ module {
             return fixture.id == fixtureId;
         });
         switch (foundFixture) {
-            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); }; };
+            case (null) { 
+                return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;}; };
             case (?foundFixture) {
 
                 let updatedFixture: T.Fixture = {
@@ -102,36 +104,7 @@ module {
                     awayGoals = foundFixture.awayGoals;
                     status = status;
                     events = List.nil<T.PlayerEventData>();
-                };
-
-                fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
-                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
-                });
-                
-                return updatedFixture;
-            };
-        };
-    };
-    
-    public func saveEventData(fixtureId: Nat32, playerEventData: [T.PlayerEventData]): async T.Fixture {
-        let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
-            return fixture.id == fixtureId;
-        });
-        switch (foundFixture) {
-            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); }; };
-            case (?foundFixture) {
-
-                let updatedFixture: T.Fixture = {
-                    id = foundFixture.id;
-                    seasonId = foundFixture.seasonId;
-                    gameweek = foundFixture.gameweek;
-                    kickOff = foundFixture.kickOff;
-                    homeTeamId = foundFixture.homeTeamId;
-                    awayTeamId = foundFixture.awayTeamId;
-                    homeGoals = foundFixture.homeGoals;
-                    awayGoals = foundFixture.awayGoals;
-                    status = 3;
-                    events = List.nil<T.PlayerEventData>();
+                    highestScoringPlayerId = foundFixture.highestScoringPlayerId;
                 };
 
                 fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
