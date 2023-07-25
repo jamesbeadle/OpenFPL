@@ -605,13 +605,6 @@ module {
             };
             */
         };
-
-        private func calculatePlayerPoints(gameEventData: [T.PlayerEventData]) : Nat16 {
-
-            //save points in player canister
-
-            return 0;
-        };
         
         public shared func snapshotGameweek(): async (){
 

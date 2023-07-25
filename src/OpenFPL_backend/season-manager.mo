@@ -219,10 +219,6 @@ module {
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);     
     };
 
-    public func setHighestScoringPlayerIds(fixtures: [T.Fixture]) : async (){
-
-    };
-
     public func getActiveSeasonId() : Nat16 {
         return activeSeasonId;
     };

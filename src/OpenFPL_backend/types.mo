@@ -83,6 +83,7 @@ module Types{
     public type PlayerGameweek = {
         number: Nat8;
         events: List.List<PlayerEventData>;
+        points: Int16;
     };
 
     public type Account = {
@@ -118,14 +119,15 @@ module Types{
         //0 = Appearance
         //1 = Goal Scored
         //2 = Goal Assisted
-        //3 = Keeper Save
-        //4 = Clean Sheet
-        //5 = Penalty Saved
-        //6 = Penalty Missed
-        //7 = Yellow Card
-        //8 = Red Card
-        //9 = Own Goal
-        //10 = Highest Scoring Player 
+        //3 = Goal Conceded
+        //4 = Keeper Save
+        //5 = Clean Sheet
+        //6 = Penalty Saved
+        //7 = Penalty Missed
+        //8 = Yellow Card
+        //9 = Red Card
+        //10 = Own Goal
+        //11 = Highest Scoring Player 
         eventType: Nat8;
         eventStartMinute: Nat8; //use to record event time of all other events
         eventEndTime: Nat8; //currently only used for Appearance
