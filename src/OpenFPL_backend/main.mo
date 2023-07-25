@@ -7,7 +7,6 @@ import Account "Account";
 import Book "book";
 import Teams "teams";
 import FantasyTeams "fantasy-teams";
-import Fixtures "fixtures";
 import Nat "mo:base/Nat";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";

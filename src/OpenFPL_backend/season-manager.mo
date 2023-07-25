@@ -7,7 +7,7 @@ import FantasyTeams "fantasy-teams";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import List "mo:base/List";
-import Fixtures "fixtures";
+import Seasons "seasons";
 import Buffer "mo:base/Buffer";
 import Option "mo:base/Option";
 import Nat16 "mo:base/Nat16";
@@ -29,8 +29,6 @@ module {
     calculateFantasyTeamScores: (Nat8, [T.Fixture]) -> async (),
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>  ) {
 
-    private var seasons: [T.Season] = [];
-
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
     private var nextSeasonId: Nat16 = 2;
@@ -47,7 +45,7 @@ module {
     private var activeFixtures: [T.Fixture] = [];
     
     //child modules
-    private let fixturesInstance = Fixtures.Fixtures();
+    private let seasonsInstance = Fixtures.Fixtures();
 
     //definitions
     private let oneHour = 1_000_000_000 * 60 * 60;

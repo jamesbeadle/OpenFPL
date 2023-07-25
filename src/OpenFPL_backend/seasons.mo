@@ -9,28 +9,36 @@ import Buffer "mo:base/Buffer";
 
 module {
     
-  public class Fixtures(){
+  public class Seasons(){
     
-    private var genesis_seasons: [T.Season] = [
-        { id = 1; name = "2023/24"; year = 2023; }
-    ];
-
-    private var fixtures = List.fromArray(GenesisData.get_genesis_fixtures());
-    private var seasons = List.fromArray(genesis_seasons);
+    private var seasons = List.fromArray(GenesisData.get_genesis_seasons());
 
     private var nextFixtureId : Nat32 = 381;
     private var nextSeasonId : Nat16 = 2;
 
-    public func setData(stable_fixtures: [T.Fixture], stable_fixture_id : Nat32, stable_seasons: [T.Season], stable_season_id: Nat16){
-        fixtures := List.fromArray(stable_fixtures);
-        nextFixtureId := stable_fixture_id;
+    public func setData(stable_seasons: [T.Season], stable_season_id: Nat16){
         seasons := List.fromArray(stable_seasons);
         nextSeasonId := stable_season_id;
     };
 
-    public func getFixtures(seasonId: Nat16) : [T.Fixture] {
-        let fixturesArray = List.toArray(fixtures);
-        let sortedArray = Array.sort(fixturesArray, func (a: T.Fixture, b: T.Fixture): Order.Order {
+    public func getSeasonFixtures(seasonId: Nat16) : [T.Fixture] {
+
+        var seasonFixtures = List.nil<T.Fixture>();
+
+        let foundSeason = List.find<T.Season>(seasons, func (season: T.Season): Bool {
+            return season.id == seasonId;
+        });
+
+        switch (foundSeason) {
+            case (null) { return []; };
+            case (?season) { 
+                for(gameweek in List.toIter(season.gameweeks)){
+                    seasonFixtures := List.append(seasonFixtures, gameweek.fixtures);
+                };
+            };
+        };
+        
+        let sortedArray = Array.sort(List.toArray(seasonFixtures), func (a: T.Fixture, b: T.Fixture): Order.Order {
             if (a.kickOff < b.kickOff) { return #less; };
             if (a.kickOff == b.kickOff) { return #equal; };
             return #greater;
@@ -150,7 +158,8 @@ module {
     };
 
     public func updateHighestPlayerIds(fixtures: [T.Fixture]) : async () {
-        //implement
+
+        //implement - think i need to change the data structure for more efficicent lookup if data is going to change, i mean it is only once so I dunno and it will happen in order?
     };
   }
 }

@@ -31,12 +31,14 @@ module Types{
         id: Nat16;
         name: Text;
         year: Nat16;
+        gameweeks: List.List<Gameweek>;
     };
 
     public type Gameweek = {
         id: Nat16;
         number: Nat8;
         canisterId: Text;
+        fixtures: List.List<Fixture>;
     };
 
     public type Team = {
@@ -111,6 +113,35 @@ module Types{
         captainFantasticPlayerId: Nat16;
         braceBonusGameweek: Nat8;
         hatTrickHeroGameweek: Nat8;
+    };
+
+    
+    public type UserFantasyTeam = {
+        fantasyTeam: FantasyTeam;
+        history: List.List<FantasyTeamSnapshot>;
+    };
+
+    public type FantasyTeamSnapshot = {
+        principalId: Text;
+        transfersAvailable: Nat8;
+        bankBalance: Float;
+        playerIds: [Nat16];
+        captainId: Nat16;
+        goalGetterGameweek: Nat8;
+        goalGetterPlayerId: Nat16;
+        passMasterGameweek: Nat8;
+        passMasterPlayerId: Nat16;
+        noEntryGameweek: Nat8;
+        noEntryPlayerId: Nat16;
+        teamBoostGameweek: Nat8;
+        teamBoostTeamId: Nat16;
+        safeHandsGameweek: Nat8;
+        safeHandsPlayerId: Nat16;
+        captainFantasticGameweek: Nat8;
+        captainFantasticPlayerId: Nat16;
+        braceBonusGameweek: Nat8;
+        hatTrickHeroGameweek: Nat8;
+        points: Int16;
     };
 
     public type PlayerEventData = {
