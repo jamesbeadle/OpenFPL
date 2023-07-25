@@ -47,119 +47,204 @@ module {
         return sortedArray;
     };
 
-    public func getGameweekFixtures(seasonId: Nat16, gameweek: Nat8) : [T.Fixture] {
+    public func getGameweekFixtures(seasonId: Nat16, gameweekNumber: Nat8) : [T.Fixture] {
         
-        let fixturesArray = List.toArray(List.filter<T.Fixture>(fixtures, func (fixture: T.Fixture) : Bool {
-            return fixture.seasonId == seasonId and fixture.gameweek == gameweek;
-        }));
-
-        let sortedArray = Array.sort(fixturesArray, func (a: T.Fixture, b: T.Fixture): Order.Order {
-            if (a.kickOff < b.kickOff) { return #less; };
-            if (a.kickOff == b.kickOff) { return #equal; };
-            return #greater;
+        let foundSeason = List.find<T.Season>(seasons, func (season: T.Season): Bool {
+            return season.id == seasonId;
         });
 
-        return sortedArray;
+        switch (foundSeason) {
+            case (null) { return []; };
+            case (?season) { 
+                let foundGameweek = List.find<T.Gameweek>(season.gameweeks, func (gameweek: T.Gameweek): Bool {
+                    return gameweek.number == gameweekNumber;
+                });
+                switch(foundGameweek){
+                    case (null) { return []; };
+                    case (?g) {
+                        let sortedArray = Array.sort(List.toArray(g.fixtures), func (a: T.Fixture, b: T.Fixture): Order.Order {
+                            if (a.kickOff < b.kickOff) { return #less; };
+                            if (a.kickOff == b.kickOff) { return #equal; };
+                            return #greater;
+                        });
+                        let sortedFixtures = List.fromArray(sortedArray);
+                        return sortedArray;    
+                    };
+                };
+            };
+        };
     };
 
     public func getNextFixtureId() : Nat32{
         return nextFixtureId;
     };
 
-    public func createFixture(seasonId: Nat16, gameweek: Nat8, homeTeamId: Nat16, awayTeamId: Nat16, kickOff: Int) : Result.Result<(), T.Error> {
-        let id = nextFixtureId;
-        let newFixture : T.Fixture = {
-            id = id;
-            seasonId = seasonId;
-            gameweek = gameweek;
-            homeTeamId = homeTeamId;
-            awayTeamId = awayTeamId;
-            kickOff = kickOff;
-            homeGoals = 0;
-            awayGoals = 0;
-            status = 0;
-            events = List.nil<T.PlayerEventData>();
-            highestScoringPlayerId = 0;
-        };
-        
-        var newFixtureList = List.nil<T.Fixture>();
-        newFixtureList := List.push(newFixture, newFixtureList);
-
-        fixtures := List.append(fixtures, newFixtureList);
-        
-        nextFixtureId := nextFixtureId + 1;
-        return #ok(());
-    };
-
-    public func updateStatus(fixtureId: Nat32, status: Nat8) : async T.Fixture {
-        
-        let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
-            return fixture.id == fixtureId;
-        });
-        switch (foundFixture) {
-            case (null) { 
-                return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;}; };
-            case (?foundFixture) {
-
-                let updatedFixture: T.Fixture = {
-                    id = foundFixture.id;
-                    seasonId = foundFixture.seasonId;
-                    gameweek = foundFixture.gameweek;
-                    kickOff = foundFixture.kickOff;
-                    homeTeamId = foundFixture.homeTeamId;
-                    awayTeamId = foundFixture.awayTeamId;
-                    homeGoals = foundFixture.homeGoals;
-                    awayGoals = foundFixture.awayGoals;
-                    status = status;
-                    events = List.nil<T.PlayerEventData>();
-                    highestScoringPlayerId = foundFixture.highestScoringPlayerId;
-                };
-
-                fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
-                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
+    public func updateStatus(seasonId: Nat16, gameweek: Nat8, fixtureId: Nat32, status: Nat8) : async T.Fixture {
+    
+        seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
+            if (season.id == seasonId) {
+                
+                // When the correct season is found, iterate through its gameweeks.
+                let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
+                    if (gw.number == gameweek) {
+                        
+                        // When the correct gameweek is found, iterate through its fixtures.
+                        let updatedFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
+                            if (fixture.id == fixtureId) {
+                                
+                                // When the correct fixture is found, update its status.
+                                return {
+                                    id = fixture.id;
+                                    seasonId = fixture.seasonId;
+                                    gameweek = fixture.gameweek;
+                                    kickOff = fixture.kickOff;
+                                    homeTeamId = fixture.homeTeamId;
+                                    awayTeamId = fixture.awayTeamId;
+                                    homeGoals = fixture.homeGoals;
+                                    awayGoals = fixture.awayGoals;
+                                    status = status;
+                                    events = fixture.events;
+                                    highestScoringPlayerId = fixture.highestScoringPlayerId;
+                                };
+                            } else {
+                                return fixture;
+                            }
+                        });
+                        return {id = gw.id; number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
+                    } else {
+                        return gw;
+                    }
                 });
                 
-                return updatedFixture;
+                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks};
+            } else {
+                return season;
+            }
+        });
+
+        let modifiedSeason = List.find<T.Season>(seasons, func (s: T.Season): Bool {
+            return s.id == seasonId;
+        });
+
+        switch (modifiedSeason) {
+            case (null) { 
+                return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;}; 
+            };
+            case (?s) { 
+                let modifiedGameweek = List.find<T.Gameweek>(s.gameweeks, func (gw: T.Gameweek): Bool {
+                    return gw.number == gameweek;
+                });
+
+                switch(modifiedGameweek) {
+                    case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;}; };
+                    case (?gw) {
+                        let modifiedFixture = List.find<T.Fixture>(gw.fixtures, func (f: T.Fixture): Bool {
+                            return f.id == fixtureId;
+                        });
+
+                        switch(modifiedFixture) {
+                            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;}; };
+                            case (?f) { return f; };
+                        };
+                    };
+                };
             };
         };
     };
 
-    public func savePlayerEventData(fixtureId: Nat32, playerEventData: List.List<T.PlayerEventData>) : async T.Fixture {
-        
-        let foundFixture = List.find<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
-            return fixture.id == fixtureId;
-        });
-        switch (foundFixture) {
-            case (null) { 
-                return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;}; };
-            case (?foundFixture) {
 
-                let updatedFixture: T.Fixture = {
-                    id = foundFixture.id;
-                    seasonId = foundFixture.seasonId;
-                    gameweek = foundFixture.gameweek;
-                    kickOff = foundFixture.kickOff;
-                    homeTeamId = foundFixture.homeTeamId;
-                    awayTeamId = foundFixture.awayTeamId;
-                    homeGoals = foundFixture.homeGoals;
-                    awayGoals = foundFixture.awayGoals;
-                    status = 3;
-                    events = playerEventData;
-                    highestScoringPlayerId = foundFixture.highestScoringPlayerId;
-                };
-
-                fixtures := List.map<T.Fixture, T.Fixture>(fixtures, func (fixture: T.Fixture): T.Fixture {
-                    if (fixture.id == fixtureId) { updatedFixture } else { fixture }
+    public func savePlayerEventData(seasonId: Nat16, gameweek: Nat8, fixtureId: Nat32, playerEventData: List.List<T.PlayerEventData>) : async T.Fixture {
+    
+        seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
+            if (season.id == seasonId) {
+                let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
+                    if (gw.number == gameweek) {           
+                        let updatedFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
+                            if (fixture.id == fixtureId) {
+                                return {
+                                    id = fixture.id;
+                                    seasonId = fixture.seasonId;
+                                    gameweek = fixture.gameweek;
+                                    kickOff = fixture.kickOff;
+                                    homeTeamId = fixture.homeTeamId;
+                                    awayTeamId = fixture.awayTeamId;
+                                    homeGoals = fixture.homeGoals;
+                                    awayGoals = fixture.awayGoals;
+                                    status = fixture.status; 
+                                    events = playerEventData;
+                                    highestScoringPlayerId = fixture.highestScoringPlayerId;
+                                };
+                            } else {
+                                return fixture;
+                            }
+                        });
+                        return {id = gw.id; number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
+                    } else {
+                        return gw;
+                    }
                 });
-                
-                return updatedFixture;
+                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks};
+            } else {
+                return season;
+            }
+        });
+
+        let modifiedSeason = List.find<T.Season>(seasons, func (s: T.Season): Bool {
+            return s.id == seasonId;
+        });
+
+        switch (modifiedSeason) {
+            case (null) { 
+                return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;};
+            };
+            case (?s) { 
+                let modifiedGameweek = List.find<T.Gameweek>(s.gameweeks, func (gw: T.Gameweek): Bool {
+                    return gw.number == gameweek;
+                });
+
+                switch(modifiedGameweek) {
+                    case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;}; };
+                    case (?gw) {
+                        let modifiedFixture = List.find<T.Fixture>(gw.fixtures, func (f: T.Fixture): Bool {
+                            return f.id == fixtureId;
+                        });
+
+                        switch(modifiedFixture) {
+                            case (null) { return { id = 0; seasonId = 0; gameweek = 0; kickOff = 0; awayTeamId = 0; homeTeamId = 0; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0;}; };
+                            case (?f) { return f; };
+                        };
+                    };
+                };
             };
         };
     };
 
-    public func updateHighestPlayerIds(fixtures: [T.Fixture]) : async () {
+    public func updateHighestPlayerIds(seasonId: Nat16, gameweek: Nat8, updatedFixtures: [T.Fixture]) : async () {
+        seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
+            if (season.id == seasonId) {
+                let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
+                    if (gw.number == gameweek) {
+                        let newFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
+                            for (updatedFixture in List.toIter(List.fromArray(updatedFixtures))) {
+                                if (fixture.id == updatedFixture.id) {
+                                    return updatedFixture;
+                                }
+                            };
+                            return fixture;
+                        });
 
-        //implement - think i need to change the data structure for more efficicent lookup if data is going to change, i mean it is only once so I dunno and it will happen in order?
+                        return {id = gw.id; number = gw.number; canisterId = gw.canisterId; fixtures = newFixtures};
+                    } else {
+                        return gw;
+                    };
+                });
+                
+                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks};
+            } else {
+                return season;
+            }
+        });
     };
+
   }
 }
