@@ -223,12 +223,72 @@ actor Self {
                 players := List.map<T.Player, T.Player>(players, func (player: T.Player): T.Player {
                   if (player.id == updatedPlayer.id) { updatedPlayer } else { player }
                 });
-                
+
             };
         };
     };
+    
 
-    return [];
+    var updatedFixtures: [T.Fixture] = [];
+    let updatedFixturesBuffer = Buffer.fromArray<T.Fixture>(updatedFixtures);
+
+    for (i in Iter.range(0, Array.size(gameweekFixtures)-1)) {  
+      let fixture = gameweekFixtures[i];
+      let fixtureEvents = List.toArray<T.PlayerEventData>(fixture.events);
+      var highestScore: Int16 = 0;
+      var highestScoringPlayerId: Nat16 = 0;
+      var isUniqueHighScore: Bool = true; 
+
+      // Create a buffer to hold unique playerIds
+      let uniquePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+
+      for (event in List.toIter(fixture.events)) {
+        if (not Buffer.contains<Nat16>(uniquePlayerIdsBuffer, event.playerId, func (a: Nat16, b: Nat16): Bool { a == b })) {
+              uniquePlayerIdsBuffer.add(event.playerId);
+          };
+      };
+
+      let uniquePlayerIds = Buffer.toArray<Nat16>(uniquePlayerIdsBuffer);
+
+      for (j in Iter.range(0, Array.size(uniquePlayerIds)-1)) {  
+          let playerId = uniquePlayerIds[j];
+          switch (playerScoresMap.get(playerId)) {
+              case (?playerScore) {
+                  if (playerScore > highestScore) {
+                      highestScore := playerScore;
+                      highestScoringPlayerId := playerId;
+                      isUniqueHighScore := true;
+                  } else if (playerScore == highestScore) {
+                      isUniqueHighScore := false;
+                  };
+              };
+              case null {};
+          };
+      };
+
+      var newHighScoringPlayerId: Nat16 = 0;
+      if(isUniqueHighScore){
+        newHighScoringPlayerId := highestScoringPlayerId;
+      };
+      let updatedFixture = {
+        id = fixture.id;
+        seasonId = fixture.seasonId;
+        gameweek = fixture.gameweek;
+        homeTeamId = fixture.homeTeamId;
+        awayTeamId = fixture.awayTeamId;
+        kickOff = fixture.kickOff;
+        homeGoals = fixture.homeGoals;
+        awayGoals = fixture.awayGoals;
+        status = fixture.status;
+        events = fixture.events;
+        highestScoringPlayerId = newHighScoringPlayerId;
+      };
+
+      updatedFixturesBuffer.add(updatedFixture);
+    };
+
+    updatedFixtures := Buffer.toArray<T.Fixture>(updatedFixturesBuffer);
+    return updatedFixtures;
   };
 
   func calculateAggregatePlayerEvents(events: [T.PlayerEventData], playerPosition: Nat8): Int16 {
