@@ -21,9 +21,6 @@ actor Self {
     private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
     private var nextPlayerId : Nat = 560;
 
-    private stable var stable_players: [T.Player] = [];
-    private stable var stable_next_player_id : Nat = 0;
-
     public shared query ({caller}) func getPlayers(teamId: Nat16, positionId: Int, start: Nat, count: Nat) : async DTOs.PlayerRatingsDTO {
         assert not Principal.isAnonymous(caller);
 
@@ -402,6 +399,9 @@ actor Self {
     system func heartbeat() : async () {
         
     };
+
+    private stable var stable_players: [T.Player] = [];
+    private stable var stable_next_player_id : Nat = 0;
 
     system func preupgrade() {
         stable_players := List.toArray(players);

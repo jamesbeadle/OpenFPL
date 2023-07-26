@@ -344,21 +344,50 @@ actor Self {
   //stable variable backup
   private stable var stable_profiles: [(Text, T.Profile)] = [];
   private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
-  private stable var stable_proposals: [T.Proposal] = [];
-  private stable var stable_next_proposal_id : Nat = 0;
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
+  private stable var stable_fixture_data_submissions: [(Nat16, List.List<T.PlayerEventData>)] = [];
+  private stable var stable_active_timers : [Int] = [];
+  private stable var stable_transfers_allowed : Bool = true;
+  private stable var stable_gameweek_begin_timer_id : Int = 0;
+  private stable var stable_kick_off_timer_ids : [Int] = [];
+  private stable var stable_game_completed_timer_ids : [Int] = [];
+  private stable var stable_voting_period_timer_ids : [Int] = [];
+  private stable var stable_active_fixtures : [T.Fixture] = [];
+  private stable var stable_next_fixture_id : Nat32 = 0;
+  private stable var stable_next_season_id : Nat16 = 0;
+  private stable var stable_teams : [T.Team] = [];
+  private stable var stable_next_team_id : Nat16 = 0;
   
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
     stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
     stable_active_season_id := seasonManager.getActiveSeasonId();
     stable_active_gameweek := seasonManager.getActiveGameweek();
+    stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
+    stable_active_timers := seasonManager.getActiveTimerIds();
+    stable_transfers_allowed := seasonManager.getTransfersAllowed();
+    stable_gameweek_begin_timer_id := seasonManager.getGameweekBeginTimerId();
+    stable_kick_off_timer_ids := seasonManager.getKickOffTimerIds();
+    stable_game_completed_timer_ids := seasonManager.getGameCompletedTimerIds();
+    stable_voting_period_timer_ids := seasonManager.getVotingPeriodTimerIds();
+    stable_active_fixtures := seasonManager.getActiveFixtures();
+    stable_next_fixture_id := seasonManager.getNextFixtureId();
+    stable_next_season_id := seasonManager.getNextSeasonId();
+    stable_teams := teamsInstance.getTeams();
+    stable_next_team_id := teamsInstance.getNextTeamId();
   };
 
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
     fantasyTeamsInstance.setData(stable_fantasy_teams);
+    seasonManager.setData(stable_active_season_id, stable_active_gameweek, stable_active_timers, stable_transfers_allowed, stable_gameweek_begin_timer_id, 
+    stable_kick_off_timer_ids, stable_game_completed_timer_ids, stable_voting_period_timer_ids, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
+
+    
+    stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
+    stable_teams := teamsInstance.getTeams();
+    stable_next_team_id := teamsInstance.getNextTeamId();
   };
 
 };

@@ -77,8 +77,20 @@ module {
         };
     };
 
+    public func getNextSeasonId() : Nat16{
+        return nextSeasonId;
+    };
+
     public func getNextFixtureId() : Nat32{
         return nextFixtureId;
+    };
+
+    public func setNextSeasonId(stable_next_season_id: Nat16) : (){
+        nextSeasonId := stable_next_season_id;
+    };
+
+    public func setNextFixtureId(stable_next_fixture_id: Nat32) : (){
+        nextFixtureId := stable_next_fixture_id;
     };
 
     public func createNewSeason(activeSeasonId: Nat16) : async () {

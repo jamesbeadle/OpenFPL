@@ -29,15 +29,14 @@ module {
 
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
-    private var nextSeasonId: Nat16 = 2;
-    private var activeTimers: [Nat] = [];
+    private var activeTimers: [Int] = [];
     private var transfersAllowed: Bool = true;
 
     //timers
-    private var gameweekBeginTimerId: Nat = 0;
-    private var kickOffTimerIds: [Nat] = [];
-    private var gameCompletedTimerIds: [Nat] = [];
-    private var votingPeriodTimerIds: [Nat] = [];
+    private var gameweekBeginTimerId: Int = 0;
+    private var kickOffTimerIds: [Int] = [];
+    private var gameCompletedTimerIds: [Int] = [];
+    private var votingPeriodTimerIds: [Int] = [];
 
     //timer data
     private var activeFixtures: [T.Fixture] = [];
@@ -54,6 +53,55 @@ module {
     public func init_genesis_season(firstFixture: T.Fixture){
         //new season created, fixture consensus reched and gameweek and season id set to 1
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(firstFixture.kickOff - now() - oneHour)), gameweekBegin);
+    };
+
+    public func setData(stable_active_season_id: Nat16, stable_active_gameweek: Nat8, stable_active_timers: [Int], stable_transfers_allowed: Bool, 
+        stable_gameweek_begin_timer_id: Int, stable_kick_off_timer_ids: [Int], stable_game_completed_timer_ids: [Int], stable_voting_period_timer_ids: [Int],
+        stable_active_fixtures: [T.Fixture], stable_next_fixture_id: Nat32, stable_next_season_id: Nat16){
+            activeSeasonId := stable_active_season_id;
+            activeGameweek :=  stable_active_gameweek; 
+            activeTimers :=  stable_active_timers;
+            transfersAllowed :=  stable_transfers_allowed; 
+            gameweekBeginTimerId := stable_gameweek_begin_timer_id; 
+            kickOffTimerIds := stable_kick_off_timer_ids; 
+            gameCompletedTimerIds := stable_game_completed_timer_ids; 
+            votingPeriodTimerIds := stable_voting_period_timer_ids;
+            activeFixtures := stable_active_fixtures; 
+            seasonsInstance.setNextFixtureId(stable_next_fixture_id);
+            seasonsInstance.setNextSeasonId(stable_next_season_id);
+
+    };
+    
+    public func getActiveTimerIds() : [Int] {
+        return activeTimers;
+    };
+
+    public func getGameweekBeginTimerId() : Int {
+        return gameweekBeginTimerId;
+    };
+
+    public func getKickOffTimerIds() : [Int] {
+        return kickOffTimerIds;
+    };
+
+    public func getGameCompletedTimerIds() : [Int] {
+        return gameCompletedTimerIds;
+    };
+
+    public func getVotingPeriodTimerIds() : [Int] {
+        return votingPeriodTimerIds;
+    };
+
+    public func getActiveFixtures() : [T.Fixture] {
+        return activeFixtures;
+    };
+
+    public func getNextFixtureId() : Nat32 {
+        return seasonsInstance.getNextFixtureId();
+    };
+
+    public func getNextSeasonId() : Nat16 {
+        return seasonsInstance.getNextSeasonId();
     };
 
     private func gameweekBegin() : async (){
@@ -75,7 +123,7 @@ module {
 
     private func gameKickOff() : async (){
         
-        let timerBuffer = Buffer.fromArray<Nat>(gameCompletedTimerIds);
+        let timerBuffer = Buffer.fromArray<Int>(gameCompletedTimerIds);
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
         
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
@@ -92,13 +140,13 @@ module {
             };
         };
 
-        gameCompletedTimerIds := Buffer.toArray<Nat>(timerBuffer);
+        gameCompletedTimerIds := Buffer.toArray<Int>(timerBuffer);
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
     };
 
     private func gameCompleted() : async (){
         
-        let timerBuffer = Buffer.fromArray<Nat>(gameCompletedTimerIds);
+        let timerBuffer = Buffer.fromArray<Int>(gameCompletedTimerIds);
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
        
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
@@ -112,7 +160,7 @@ module {
             };
         };
 
-        votingPeriodTimerIds := Buffer.toArray<Nat>(timerBuffer);
+        votingPeriodTimerIds := Buffer.toArray<Int>(timerBuffer);
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
         
         let remainingFixtures = Array.find(activeFixtures, func (fixture: T.Fixture): Bool {
@@ -179,7 +227,6 @@ module {
     };
 
     public func intialFixturesConfirmed() : async (){
-        activeSeasonId := nextSeasonId;
         activeGameweek := 1;
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now() - oneHour)), gameweekBegin);     
