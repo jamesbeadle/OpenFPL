@@ -6,6 +6,10 @@ import Array "mo:base/Array";
 import Order "mo:base/Order";
 import GenesisData "genesis-data";
 import Buffer "mo:base/Buffer";
+import Nat16 "mo:base/Nat16";
+import Iter "mo:base/Iter";
+import Text "mo:base/Text";
+import Char "mo:base/Char";
 
 module {
     
@@ -77,6 +81,30 @@ module {
 
     public func getNextFixtureId() : Nat32{
         return nextFixtureId;
+    };
+
+    public func createNewSeason(activeSeasonId: Nat16) : async () {
+        let activeSeason = List.find<T.Season>(seasons, func (season: T.Season): Bool {
+            return season.id == activeSeasonId;
+        });
+
+        var newSeasonsList = List.nil<T.Season>();
+        switch (activeSeason) {
+            case (null) { }; 
+            case (?season) { 
+                let newYear = season.year + 1;
+                let newSeason: T.Season = {
+                    id = nextSeasonId;
+                    name = Nat16.toText(newYear) # subText(Nat16.toText(newYear + 1), 2, 3);
+                    year = newYear;
+                    gameweeks = List.nil();
+                };
+
+                newSeasonsList := List.push(newSeason, newSeasonsList);
+                seasons := List.append(seasons, newSeasonsList);
+                nextSeasonId := nextSeasonId + 1;
+            };
+        };
     };
 
     public func updateStatus(seasonId: Nat16, gameweek: Nat8, fixtureId: Nat32, status: Nat8) : async T.Fixture {
@@ -244,6 +272,28 @@ module {
                 return season;
             }
         });
+    };
+
+    private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {
+        if (indexStart == 0 and indexEnd >= value.size()) {
+            return value;
+        }
+        else if (indexStart >= value.size()) {
+            return "";
+        };
+        
+        var indexEndValid = indexEnd;
+        if (indexEnd > value.size()) {
+            indexEndValid := value.size();
+        };
+
+        var result : Text = "";
+        var iter = Iter.toArray<Char>(Text.toIter(value));
+        for (index in Iter.range(indexStart, indexEndValid - 1)) {
+            result := result # Char.toText(iter[index]);
+        };
+
+        return result;
     };
 
   }

@@ -1,4 +1,6 @@
 import T "./types";
+import List "mo:base/List";
+
 module DTOs {
     
     public type ProfileDTO = {
@@ -34,6 +36,13 @@ module DTOs {
         dateOfBirth: Int;
         nationality: Text;
         totalPoints: Nat16;
+    };
+
+    public type PlayerScoreDTO = {
+        id: Nat16;
+        points: Int16;
+        teamId: Nat16;
+        events: List.List<T.PlayerEventData>;
     };
     
 }

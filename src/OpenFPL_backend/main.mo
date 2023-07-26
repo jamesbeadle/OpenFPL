@@ -28,7 +28,6 @@ actor Self {
   let profilesInstance = Profiles.Profiles();
   let bookInstance = Book.Book();
   let teamsInstance = Teams.Teams();
-  let fantasyTeamsInstance = FantasyTeams.FantasyTeams();
   let governanceInstance = Governance.Governance();
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
@@ -52,10 +51,17 @@ actor Self {
   let playerCanister = actor (CANISTER_IDS.player_canister): actor 
   { 
     getAllPlayers: () -> async [DTOs.PlayerDTO];
+    getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)];
     revaluePlayers: ([T.Player]) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
     calculatePlayerPoints: (gameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async [T.Fixture];
   };
+
+  private func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8): async [(Nat16, DTOs.PlayerScoreDTO)] {
+    return await playerCanister.getAllPlayersMap(seasonId, gameweek);
+  }; 
+
+  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap);
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
     return seasonManager.getActiveGameweek();
@@ -194,13 +200,39 @@ actor Self {
     };
   };
 
-  public shared query ({caller}) func getFantasyTeam() : async ?T.FantasyTeam {
+  public shared query ({caller}) func getFantasyTeam() : async T.FantasyTeam {
+    assert not Principal.isAnonymous(caller);
 
-    if(Principal.isAnonymous(caller)){
-      return null;
+    let principalId = Principal.toText(caller);
+    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(principalId);
+
+    switch (fantasyTeam) {
+        case (null) { return {
+          principalId = "";
+          transfersAvailable = 0;
+          bankBalance = 0;
+          playerIds = [];
+          captainId = 0;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          teamBoostGameweek = 0;
+          teamBoostTeamId = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          braceBonusGameweek = 0;
+          hatTrickHeroGameweek = 0;
+        }; };
+        case (?team) 
+        { 
+          return team.fantasyTeam;
+        };
     };
-
-    return fantasyTeamsInstance.getFantasyTeam(Principal.toText(caller));
   };
 
   public shared ({caller}) func saveFantasyTeam(newPlayerIds: [Nat16], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : async Result.Result<(), T.Error> {
@@ -230,7 +262,7 @@ actor Self {
 
           let existingPlayers = Array.filter<DTOs.PlayerDTO>(allPlayers, func (player: DTOs.PlayerDTO): Bool {
               let playerId = player.id;
-              let isPlayerIdInExistingTeam = Array.find(team.playerIds, func (id: Nat16): Bool {
+              let isPlayerIdInExistingTeam = Array.find(team.fantasyTeam.playerIds, func (id: Nat16): Bool {
                   return id == playerId;
               });
               return Option.isSome(isPlayerIdInExistingTeam);
@@ -278,8 +310,8 @@ actor Self {
     return await playerCanister.getPlayer(playerId);
   }; 
 
-  private func calculatePredictionScores(gameweekId: Nat8, fixtures: [T.Fixture]) : async (){
-    return await fantasyTeamsInstance.calculatePredictionScores(gameweekId, fixtures);
+  private func calculatePredictionScores(seasonId: Nat16, gameweek: Nat8, fixtures: [T.Fixture]) : async (){
+    return await fantasyTeamsInstance.calculatePredictionScores(seasonId, gameweek, fixtures);
   };
 
   private func mintWeeklyRewardsPool(): async () {
@@ -298,11 +330,11 @@ actor Self {
     settleUserBets, 
     revaluePlayers, 
     snapshotGameweek, 
-    getPlayer, 
     mintWeeklyRewardsPool, 
     mintAnnualRewardsPool, 
     calculateFantasyTeamScores, 
-    getConsensusPlayerEventData);
+    getConsensusPlayerEventData,
+    getAllPlayersMap);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup

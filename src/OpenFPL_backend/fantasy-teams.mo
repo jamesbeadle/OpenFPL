@@ -17,7 +17,7 @@ import Buffer "mo:base/Buffer";
 import Hash "mo:base/Hash";
 
 module {
-    public class FantasyTeams(){
+    public class FantasyTeams(getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)]){
         
         private var fantasyTeams: HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
 
@@ -490,24 +490,41 @@ module {
                 fantasyTeams.put(key, updatedUserTeam);
             }
         };
-        
 
-        public func calculatePredictionScores(gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
-            let fantasyTeamsArray = getFantasyTeams();
-            for (i in Iter.range(0, Array.size(fantasyTeamsArray)-1)) {
-                let fantasyTeam = fantasyTeamsArray[i];
-                var points: Nat16 = 0;
-                    
-                for (j in Iter.range(0, Array.size(fantasyTeam.playerIds)-1)) {
-                    
-
-                    //GET THE PLAYERS SCORE AND ADD IT TO THE POINTS    
-
-                };
+        public func calculatePredictionScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
+            let eq = func (a: Nat16, b: Nat16) : Bool {
+                a == b
             };
 
-            //use it with a new type to store with the users fantasy team history
+            let hashNat16 = func (key: Nat16) : Hash.Hash {
+                Nat32.fromNat(Nat16.toNat(key)%(2 ** 32 -1));
+            };
+            let allPlayersList = await getAllPlayersMap(seasonId, gameweek);
+            var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, eq, hashNat16);
+            for ((key, value) in Iter.fromArray(allPlayersList)) {
+                allPlayers.put(key, value);
+            };
 
+            for ((key, value) in fantasyTeams.entries()) {
+                let userFantasyTeam = value.fantasyTeam;
+                var totalTeamPoints: Int16 = 0;
+                
+                for (i in Iter.range(0, Array.size(userFantasyTeam.playerIds)-1)) {
+
+                    let playerId = userFantasyTeam.playerIds[i];
+                    let playerData = allPlayers.get(playerId);
+                    switch (playerData) {
+                        case (null) {};
+                        case (?player) {
+                            totalTeamPoints += player.points;
+
+                            if (playerId == userFantasyTeam.captainId) {
+                                totalTeamPoints += player.points;
+                            };
+                        };
+                    }
+                };
+            };
         };
         
         public shared func snapshotGameweek(): async (){
@@ -515,6 +532,28 @@ module {
             //need to copy every current team into gameweek predictions
 
             //copy current teams into gameweek predictions - this is to copy the predictions into the users profile history
+
+            
+
+               /*
+
+                // 3. Create a snapshot with the total points and append it to the team's history
+                let updatedTeamSnapshot: T.FantasyTeamSnapshot = { 
+                    // ... (the rest remains unchanged)
+                    points = totalTeamPoints; // Assign the calculated points
+                };
+
+                var newHistoryList = value.history;
+                newHistoryList := List.push(updatedTeamSnapshot, newHistoryList);
+            
+                let updatedUserTeam: T.UserFantasyTeam = {
+                    fantasyTeam = value.fantasyTeam;
+                    history = List.append(value.history, newHistoryList);
+                };
+
+                fantasyTeams.put(key, updatedUserTeam);
+                */
+                
         };
     }
 }
