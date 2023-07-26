@@ -1,15 +1,6 @@
 import T "types";
 import List "mo:base/List";
-import Text "mo:base/Text";
-import Blob "mo:base/Blob";
-import Account "Account";
-import Result "mo:base/Result";
-import Time "mo:base/Time";
-import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
-import Hash "mo:base/Hash";
-import Nat32 "mo:base/Nat32";
-import Nat16 "mo:base/Nat16";
 import Utilities "utilities";
 
 module {

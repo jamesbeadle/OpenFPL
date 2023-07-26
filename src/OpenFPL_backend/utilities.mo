@@ -1,6 +1,7 @@
 import Hash "mo:base/Hash";
 import Nat32 "mo:base/Nat32";
 import Nat16 "mo:base/Nat16";
+
 module {
     public let eqNat16 = func (a: Nat16, b: Nat16) : Bool {
         a == b

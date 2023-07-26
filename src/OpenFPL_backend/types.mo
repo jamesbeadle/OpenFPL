@@ -1,6 +1,4 @@
-import Principal "mo:base/Principal";
 import List "mo:base/List";
-import Bool "mo:base/Bool";
 
 module Types{
     

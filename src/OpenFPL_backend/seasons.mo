@@ -1,11 +1,9 @@
 import List "mo:base/List";
 import Result "mo:base/Result";
 import T "types";
-import Debug "mo:base/Debug";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
 import GenesisData "genesis-data";
-import Buffer "mo:base/Buffer";
 import Nat16 "mo:base/Nat16";
 import Iter "mo:base/Iter";
 import Text "mo:base/Text";

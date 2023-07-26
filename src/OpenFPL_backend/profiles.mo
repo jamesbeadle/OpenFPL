@@ -4,8 +4,7 @@ import Text "mo:base/Text";
 import Blob "mo:base/Blob";
 import Account "Account";
 import Result "mo:base/Result";
-import Time "mo:base/Time";
-import Debug "mo:base/Debug";
+import { now } "mo:base/Time";
 
 module {
     public class Profiles(){
@@ -74,7 +73,7 @@ module {
                 favouriteTeamId = 0;
                 membershipType = 0;
                 subscriptionDate = 0;
-                createDate = Time.now();
+                createDate = now();
                 reputation = 0;
             };
             

@@ -1,7 +1,6 @@
 import T "types";
 import DTOs "DTOs";
 import List "mo:base/List";
-import Nat32 "mo:base/Nat32";
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
 import Float "mo:base/Float";
@@ -12,9 +11,6 @@ import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Option "mo:base/Option";
-import Debug "mo:base/Debug";
-import Buffer "mo:base/Buffer";
-import Hash "mo:base/Hash";
 import Utilities "utilities";
 
 module {

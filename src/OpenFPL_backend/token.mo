@@ -1,11 +1,9 @@
 import Nat64 "mo:base/Nat64";
-import Principal "mo:base/Principal";
-
 
 module {
 
     public class Token(){
- //icrc1_balance_of : (Account) -> (Tokens) query;
+        
         type Subaccount = Blob;
         type Account = {
             owner : Principal;
