@@ -510,67 +510,106 @@ module {
                 var totalTeamPoints: Int16 = 0;
                 
                 for (i in Iter.range(0, Array.size(userFantasyTeam.playerIds)-1)) {
-
                     let playerId = userFantasyTeam.playerIds[i];
                     let playerData = allPlayers.get(playerId);
                     switch (playerData) {
                         case (null) {};
                         case (?player) {
-                            var bonusPlayed: Bool = false;
-                            
-                            totalTeamPoints += player.points;
-                            
-                            // Handle captain bonus
-                            if (playerId == userFantasyTeam.captainId) {
-                                totalTeamPoints += player.points;
-                            };
+                            var bonusPoints: Int16 = 0;
 
                             // Goal Getter
                             if(userFantasyTeam.goalGetterGameweek == gameweek and userFantasyTeam.goalGetterPlayerId == playerId) {
-                                //Adjust: Bonus should be a times 3 multiplier for each goal scored, and their score already includes the points for each goal so only need to add
-                                //x2 multipler for each goal scored, will need to use the event data for the player
-                                totalTeamPoints += (player.points * 3);
-                                bonusPlayed := true;
+                                bonusPoints += calculateGoalPoints(player.position, player.goalsScored);
                             };
 
                             // Pass Master
                             if(userFantasyTeam.passMasterGameweek == gameweek and userFantasyTeam.passMasterPlayerId == playerId) {
-                                //Adjust: Bonus should be a times 3 multiplier for each assist for a goal, and their score already includes the points for each assist so only need to add
-                                //x2 multipler for each assist, will need to use the event data for the player
-                                totalTeamPoints += (player.points * 3);
+                                bonusPoints += calculateAssistPoints(player.position, player.assists);
                             };
 
                             // No Entry
                             if(userFantasyTeam.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
-                                totalTeamPoints += (player.points * 3);
+                                bonusPoints += (player.points * 2);
                             };
 
                             // Team Boost
                             if(userFantasyTeam.teamBoostGameweek == gameweek and player.teamId == userFantasyTeam.teamBoostTeamId) {
-                                totalTeamPoints += (player.points * 2);
+                                bonusPoints += player.points;
                             };
 
                             // Safe Hands
                             if(userFantasyTeam.safeHandsGameweek == gameweek and player.position == 0 and player.saves > 4) {
-                                totalTeamPoints += (player.points * 3);
+                                bonusPoints += (player.points * 2);
                             };
 
                             // Captain Fantastic
                             if(userFantasyTeam.captainFantasticGameweek == gameweek and userFantasyTeam.captainId == playerId and player.goalsScored > 0) {
-                                totalTeamPoints += (player.points * 4);
+                                bonusPoints += (player.points * 2);
                             };
 
                             // Brace Bonus
                             if(userFantasyTeam.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
-                                totalTeamPoints += (player.points * 2);
+                                bonusPoints += (player.points * 2);
                             };
 
                             // Hat Trick Hero
                             if(userFantasyTeam.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
-                                totalTeamPoints += (player.points * 3);
+                                bonusPoints += (player.points * 3);
+                            };
+
+                            totalTeamPoints += player.points + bonusPoints;
+
+                            // Handle captain bonus: Doubles the total (base + bonus) points of the captain
+                            if (playerId == userFantasyTeam.captainId) {
+                                totalTeamPoints += player.points + bonusPoints;
                             };
                         };
                     }
+                };
+                
+                updateSnapshotPoints(key, gameweek, totalTeamPoints);
+            };
+        };
+
+        private func updateSnapshotPoints(principalId: Text, gameweek: Nat8, teamPoints: Int16): () {
+            let userFantasyTeam = fantasyTeams.get(principalId);
+
+            switch(userFantasyTeam) {
+                case (null) { };
+                case (?ufTeam) {
+                    
+                    let history = ufTeam.history;
+
+                    let updatedHistory = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(history, func(snapshot: T.FantasyTeamSnapshot): T.FantasyTeamSnapshot {
+                        if (snapshot.goalGetterGameweek == gameweek) {
+                            return {
+                                principalId = snapshot.principalId;
+                                transfersAvailable = snapshot.transfersAvailable;
+                                bankBalance = snapshot.bankBalance;
+                                playerIds = snapshot.playerIds;
+                                captainId = snapshot.captainId;
+                                goalGetterGameweek = snapshot.goalGetterGameweek;
+                                goalGetterPlayerId = snapshot.goalGetterPlayerId;
+                                passMasterGameweek = snapshot.passMasterGameweek;
+                                passMasterPlayerId = snapshot.passMasterPlayerId;
+                                noEntryGameweek = snapshot.noEntryGameweek;
+                                noEntryPlayerId = snapshot.noEntryPlayerId;
+                                teamBoostGameweek = snapshot.teamBoostGameweek;
+                                teamBoostTeamId = snapshot.teamBoostTeamId;
+                                safeHandsGameweek = snapshot.safeHandsGameweek;
+                                safeHandsPlayerId = snapshot.safeHandsPlayerId;
+                                captainFantasticGameweek = snapshot.captainFantasticGameweek;
+                                captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
+                                braceBonusGameweek = snapshot.braceBonusGameweek;
+                                hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
+                                points = teamPoints;
+                            };
+                        };
+                        return snapshot;
+                    });
+
+                    let newUserFantasyTeam: T.UserFantasyTeam = { fantasyTeam = ufTeam.fantasyTeam; history = updatedHistory; };
+                    fantasyTeams.put(principalId, newUserFantasyTeam);
                 };
             };
         };
@@ -603,5 +642,26 @@ module {
                 */
                 
         };
+
+        func calculateGoalPoints(position: Nat8, goalsScored: Int16) : Int16 {
+            switch (position) {
+                case 0 { return 20 * goalsScored; };
+                case 1 { return 20 * goalsScored; };
+                case 2 { return 15 * goalsScored; };
+                case 3 { return 10 * goalsScored; };
+                case _ { return 0; };
+            };
+        };
+
+        func calculateAssistPoints(position: Nat8, assists: Int16) : Int16 {
+            switch (position) {
+                case 0 { return 15 * assists; };
+                case 1 { return 15 * assists; };
+                case 2 { return 10 * assists; };
+                case 3 { return 10 * assists; };
+                case _ { return 0; };
+            };
+        };
+
     }
 }

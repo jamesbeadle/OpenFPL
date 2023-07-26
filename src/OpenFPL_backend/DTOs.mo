@@ -42,10 +42,11 @@ module DTOs {
         id: Nat16;
         points: Int16;
         teamId: Nat16;
-        goalsScored: Nat8;
-        goalsConceded: Nat8;
+        goalsScored: Int16;
+        goalsConceded: Int16;
         position: Nat8;
-        saves: Nat8;
+        saves: Int16;
+        assists: Int16;
         events: List.List<T.PlayerEventData>;
     };
     

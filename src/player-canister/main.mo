@@ -122,9 +122,10 @@ actor Self {
 
             var points: Int16 = 0;
             var events: List.List<T.PlayerEventData> = List.nil();
-            var goalsScored: Nat8 = 0;
-            var goalsConceded: Nat8 = 0;
-            var saves: Nat8 = 0;
+            var goalsScored: Int16 = 0;
+            var goalsConceded: Int16 = 0;
+            var saves: Int16 = 0;
+            var assists: Int16 = 0;
 
             for (season in Iter.fromList(player.seasons)) {
                 if (season.year == seasonId) {
@@ -138,6 +139,7 @@ actor Self {
                         for (event in Iter.fromList(gw.events)) {
                             switch (event.eventType) {
                                 case (1) { goalsScored += 1; }; 
+                                case (2) { assists += 1; };
                                 case (3) { goalsConceded += 1; };
                                 case (4) { saves += 1; };
                                 case _ {};
@@ -156,6 +158,7 @@ actor Self {
                 goalsScored = goalsScored;
                 goalsConceded = goalsConceded;
                 saves = saves;
+                assists = assists;
             };
         };
         return Iter.toArray(playersMap.entries());
