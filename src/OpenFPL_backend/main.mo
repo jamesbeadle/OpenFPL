@@ -342,7 +342,7 @@ actor Self {
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup
-  private stable var stable_profiles: [T.Profile] = [];
+  private stable var stable_profiles: [(Text, T.Profile)] = [];
   private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
   private stable var stable_proposals: [T.Proposal] = [];
   private stable var stable_next_proposal_id : Nat = 0;
