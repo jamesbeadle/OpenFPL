@@ -661,5 +661,44 @@ module {
             };
         };
 
+        public func resetFantasyTeams() : async () {
+            for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {
+
+                let clearTeam = clearFantasyTeam(principalId);
+
+                let updatedUserTeam: T.UserFantasyTeam = {
+                    fantasyTeam = clearTeam;
+                    history = userFantasyTeam.history;
+                };
+
+                fantasyTeams.put(principalId, updatedUserTeam);
+            }
+        };
+
+        private func clearFantasyTeam(principalId: Text) : T.FantasyTeam {
+            return {
+                principalId = principalId;
+                transfersAvailable = 2;
+                bankBalance = 300_000_000;
+                playerIds = [];
+                captainId = 0;
+                goalGetterGameweek = 0;
+                goalGetterPlayerId = 0;
+                passMasterGameweek = 0;
+                passMasterPlayerId = 0;
+                noEntryGameweek = 0;
+                noEntryPlayerId = 0;
+                teamBoostGameweek = 0;
+                teamBoostTeamId = 0;
+                safeHandsGameweek = 0;
+                safeHandsPlayerId = 0;
+                captainFantasticGameweek = 0;
+                captainFantasticPlayerId = 0;
+                braceBonusGameweek = 0;
+                hatTrickHeroGameweek = 0;
+            };
+        }
+
+
     }
 }

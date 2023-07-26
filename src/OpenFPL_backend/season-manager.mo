@@ -24,7 +24,8 @@ module {
     mintAnnualRewardsPool: () -> async (),
     calculateFantasyTeamScores: (Nat8, [T.Fixture]) -> async (),
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
-    getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)]) {
+    getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
+    resetFantasyTeams: () -> async ()) {
 
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
@@ -167,6 +168,7 @@ module {
         if(activeGameweek == 38){
             await seasonsInstance.createNewSeason(activeSeasonId);
             await mintAnnualRewardsPool();
+            await resetFantasyTeams();
             return;
         };
 

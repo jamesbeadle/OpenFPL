@@ -313,6 +313,10 @@ actor Self {
     return await fantasyTeamsInstance.calculatePredictionScores(seasonId, gameweek, fixtures);
   };
 
+  private func resetFantasyTeams(): async () {
+    await fantasyTeamsInstance.resetFantasyTeams();
+  };
+
   private func mintWeeklyRewardsPool(): async () {
     //implement last
   };
@@ -333,7 +337,8 @@ actor Self {
     mintAnnualRewardsPool, 
     calculateFantasyTeamScores, 
     getConsensusPlayerEventData,
-    getAllPlayersMap);
+    getAllPlayersMap,
+    resetFantasyTeams);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup
