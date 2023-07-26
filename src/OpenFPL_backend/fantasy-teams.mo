@@ -614,33 +614,40 @@ module {
             };
         };
         
-        public shared func snapshotGameweek(): async (){
-
-            //need to copy every current team into gameweek predictions
-
-            //copy current teams into gameweek predictions - this is to copy the predictions into the users profile history
-
-            
-
-               /*
-
-                // 3. Create a snapshot with the total points and append it to the team's history
-                let updatedTeamSnapshot: T.FantasyTeamSnapshot = { 
-                    // ... (the rest remains unchanged)
-                    points = totalTeamPoints; // Assign the calculated points
+        public shared func snapshotGameweek(): async () {
+            for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {
+                let newSnapshot: T.FantasyTeamSnapshot = {
+                    principalId = userFantasyTeam.fantasyTeam.principalId;
+                    transfersAvailable = userFantasyTeam.fantasyTeam.transfersAvailable;
+                    bankBalance = userFantasyTeam.fantasyTeam.bankBalance;
+                    playerIds = userFantasyTeam.fantasyTeam.playerIds;
+                    captainId = userFantasyTeam.fantasyTeam.captainId;
+                    goalGetterGameweek = userFantasyTeam.fantasyTeam.goalGetterGameweek;
+                    goalGetterPlayerId = userFantasyTeam.fantasyTeam.goalGetterPlayerId;
+                    passMasterGameweek = userFantasyTeam.fantasyTeam.passMasterGameweek;
+                    passMasterPlayerId = userFantasyTeam.fantasyTeam.passMasterPlayerId;
+                    noEntryGameweek = userFantasyTeam.fantasyTeam.noEntryGameweek;
+                    noEntryPlayerId = userFantasyTeam.fantasyTeam.noEntryPlayerId;
+                    teamBoostGameweek = userFantasyTeam.fantasyTeam.teamBoostGameweek;
+                    teamBoostTeamId = userFantasyTeam.fantasyTeam.teamBoostTeamId;
+                    safeHandsGameweek = userFantasyTeam.fantasyTeam.safeHandsGameweek;
+                    safeHandsPlayerId = userFantasyTeam.fantasyTeam.safeHandsPlayerId;
+                    captainFantasticGameweek = userFantasyTeam.fantasyTeam.captainFantasticGameweek;
+                    captainFantasticPlayerId = userFantasyTeam.fantasyTeam.captainFantasticPlayerId;
+                    braceBonusGameweek = userFantasyTeam.fantasyTeam.braceBonusGameweek;
+                    hatTrickHeroGameweek = userFantasyTeam.fantasyTeam.hatTrickHeroGameweek;
+                    points = 0;
                 };
 
-                var newHistoryList = value.history;
-                newHistoryList := List.push(updatedTeamSnapshot, newHistoryList);
-            
+                let updatedHistory = List.push(newSnapshot, userFantasyTeam.history);
+
                 let updatedUserTeam: T.UserFantasyTeam = {
-                    fantasyTeam = value.fantasyTeam;
-                    history = List.append(value.history, newHistoryList);
+                    fantasyTeam = userFantasyTeam.fantasyTeam;
+                    history = updatedHistory;
                 };
 
-                fantasyTeams.put(key, updatedUserTeam);
-                */
-                
+                fantasyTeams.put(principalId, updatedUserTeam);
+            }
         };
 
         func calculateGoalPoints(position: Nat8, goalsScored: Int16) : Int16 {
