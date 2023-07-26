@@ -339,7 +339,7 @@ actor Self {
   
   //stable variable backup
   private stable var stable_profiles: [T.Profile] = [];
-  private stable var stable_fantasy_teams: [T.FantasyTeam] = [];
+  private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
   private stable var stable_proposals: [T.Proposal] = [];
   private stable var stable_next_proposal_id : Nat = 0;
   private stable var stable_active_season_id : Nat16 = 0;

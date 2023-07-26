@@ -516,6 +516,10 @@ module {
                     switch (playerData) {
                         case (null) {};
                         case (?player) {
+
+                            
+
+
                             totalTeamPoints += player.points;
 
                             if (playerId == userFantasyTeam.captainId) {
