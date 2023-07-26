@@ -516,12 +516,53 @@ module {
                     switch (playerData) {
                         case (null) {};
                         case (?player) {
-
+                            var bonusPlayed: Bool = false;
                             
-
-
                             totalTeamPoints += player.points;
 
+                            // Goal Getter
+                            if(userFantasyTeam.goalGetterGameweek == gameweek and userFantasyTeam.goalGetterPlayerId == playerId) {
+                                totalTeamPoints += (player.points * 3);
+                                bonusPlayed := true;
+                            };
+
+                            // Pass Master
+                            if(userFantasyTeam.passMasterGameweek == gameweek and userFantasyTeam.passMasterPlayerId == playerId) {
+                                // Assuming assists are included in the player's points
+                                totalTeamPoints += (player.points * 3);
+                            };
+
+                            // No Entry
+                            if(userFantasyTeam.noEntryGameweek == gameweek and player.position == 1 and player.goalsConceded == 0) {
+                                totalTeamPoints += (player.points * 3);
+                            };
+
+                            // Team Boost
+                            if(userFantasyTeam.teamBoostGameweek == gameweek and player.teamId == userFantasyTeam.teamBoostTeamId) {
+                                totalTeamPoints += (player.points * 2);
+                            };
+
+                            // Safe Hands
+                            if(userFantasyTeam.safeHandsGameweek == gameweek and player.position == 0 and player.goalsConceded == 0) {
+                                totalTeamPoints += (player.points * 3);
+                            };
+
+                            // Captain Fantastic
+                            if(userFantasyTeam.captainFantasticGameweek == gameweek and userFantasyTeam.captainId == playerId and player.goalsScored > 0) {
+                                totalTeamPoints += (player.points * 3);
+                            };
+
+                            // Brace Bonus
+                            if(userFantasyTeam.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
+                                totalTeamPoints += (player.points * 2);
+                            };
+
+                            // Hat Trick Hero
+                            if(userFantasyTeam.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
+                                totalTeamPoints += (player.points * 3);
+                            };
+                            
+                            // Handle captain bonus
                             if (playerId == userFantasyTeam.captainId) {
                                 totalTeamPoints += player.points;
                             };
