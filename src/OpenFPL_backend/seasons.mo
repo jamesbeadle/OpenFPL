@@ -102,7 +102,7 @@ module {
 
                 newSeasonsList := List.push(newSeason, newSeasonsList);
                 seasons := List.append(seasons, newSeasonsList);
-                nextSeasonId := nextSeasonId + 1;
+                nextSeasonId += 1;
             };
         };
     };

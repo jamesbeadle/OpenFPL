@@ -14,6 +14,7 @@ import Nat32 "mo:base/Nat32";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Int16 "mo:base/Int16";
+import Utilities "../OpenFPL_backend/utilities";
 
 actor Self {
 
@@ -110,14 +111,7 @@ actor Self {
     public query ({caller}) func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
         assert not Principal.isAnonymous(caller);
 
-        let eq = func (a: Nat16, b: Nat16) : Bool {
-            a == b
-        };
-
-        let hashNat16 = func (key: Nat16) : Hash.Hash {
-            Nat32.fromNat(Nat16.toNat(key)%(2 ** 32 -1));
-        };
-        var playersMap: HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, eq, hashNat16);
+        var playersMap: HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
         for (player in Iter.fromList(players)) {
 
             var points: Int16 = 0;
@@ -184,15 +178,7 @@ actor Self {
 
     public func calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]) : async [T.Fixture] {
 
-        let eq = func (a: Nat16, b: Nat16) : Bool {
-            a == b
-        };
-
-        let hashNat16 = func (key: Nat16) : Hash.Hash {
-            Nat32.fromNat(Nat16.toNat(key)%(2 ** 32 -1));
-        };
-
-        let playerEventsMap: HashMap.HashMap<Nat16, [T.PlayerEventData]> = HashMap.HashMap<Nat16, [T.PlayerEventData]>(22, eq, hashNat16);
+        let playerEventsMap: HashMap.HashMap<Nat16, [T.PlayerEventData]> = HashMap.HashMap<Nat16, [T.PlayerEventData]>(200, Utilities.eqNat16, Utilities.hashNat16);
         for (i in Iter.range(0, Array.size(gameweekFixtures)-1)) {  
             
             let fixture = gameweekFixtures[i];
@@ -214,7 +200,7 @@ actor Self {
             };
         };
 
-        let playerScoresMap: HashMap.HashMap<Nat16, Int16> = HashMap.HashMap<Nat16, Int16>(22, eq, hashNat16);
+        let playerScoresMap: HashMap.HashMap<Nat16, Int16> = HashMap.HashMap<Nat16, Int16>(200, Utilities.eqNat16, Utilities.hashNat16);
         for ((playerId, events) in playerEventsMap.entries()) {
             var currentPlayer = await getPlayer(playerId);
 
@@ -360,7 +346,7 @@ actor Self {
 
             if (goalsConcededCount >= 2) {
                 
-                totalScore := totalScore + (Int16.fromNat16(Nat16.fromNat(goalsConcededCount)) / 2) * -15;
+                totalScore += (Int16.fromNat16(Nat16.fromNat(goalsConcededCount)) / 2) * -15;
             }
         };
 
@@ -371,7 +357,7 @@ actor Self {
                 func (event: T.PlayerEventData): Bool { event.eventType == 4 }
             ).size();
 
-            totalScore := totalScore + (Int16.fromNat16(Nat16.fromNat(savesCount)) / 3) * 5;
+            totalScore += (Int16.fromNat16(Nat16.fromNat(savesCount)) / 3) * 5;
         };
 
         return totalScore;

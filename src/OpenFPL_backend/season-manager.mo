@@ -180,7 +180,7 @@ module {
         };
 
         let now = Time.now();
-        activeGameweek := activeGameweek + 1;
+        activeGameweek += 1;
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         await mintWeeklyRewardsPool();
         gameweekBeginTimerId := Timer.setTimer(#nanoseconds (Int.abs(activeFixtures[0].kickOff - now - oneHour)), gameweekBegin);        

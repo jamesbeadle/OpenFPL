@@ -15,6 +15,7 @@ import Option "mo:base/Option";
 import Debug "mo:base/Debug";
 import Buffer "mo:base/Buffer";
 import Hash "mo:base/Hash";
+import Utilities "utilities";
 
 module {
     public class FantasyTeams(getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)]){
@@ -401,19 +402,19 @@ module {
                 };
 
                 if(players[i].position == 0){
-                    goalkeeperCount := goalkeeperCount + 1;
+                    goalkeeperCount += 1;
                 };
 
                 if(players[i].position == 1){
-                    defenderCount := defenderCount + 1;
+                    defenderCount += 1;
                 };
                 
                 if(players[i].position == 2){
-                    midfielderCount := midfielderCount + 1;
+                    midfielderCount += 1;
                 };
                 
                 if(players[i].position == 3){
-                    forwardCount := forwardCount + 1;
+                    forwardCount += 1;
                 };
 
             };
@@ -492,15 +493,9 @@ module {
         };
 
         public func calculatePredictionScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
-            let eq = func (a: Nat16, b: Nat16) : Bool {
-                a == b
-            };
-
-            let hashNat16 = func (key: Nat16) : Hash.Hash {
-                Nat32.fromNat(Nat16.toNat(key)%(2 ** 32 -1));
-            };
+            
             let allPlayersList = await getAllPlayersMap(seasonId, gameweek);
-            var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, eq, hashNat16);
+            var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
             for ((key, value) in Iter.fromArray(allPlayersList)) {
                 allPlayers.put(key, value);
             };

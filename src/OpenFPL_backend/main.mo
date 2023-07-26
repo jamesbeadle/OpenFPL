@@ -200,6 +200,7 @@ actor Self {
     };
   };
 
+  //Fantasy team functions
   public shared query ({caller}) func getFantasyTeam() : async T.FantasyTeam {
     assert not Principal.isAnonymous(caller);
 
