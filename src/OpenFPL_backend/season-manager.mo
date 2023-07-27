@@ -19,7 +19,7 @@ module {
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
     revaluePlayers: () -> async (),
-    snapshotGameweek: () -> async (),
+    snapshotGameweek: (seaasonId: Nat16) -> async (),
     mintWeeklyRewardsPool: () -> async (),
     mintAnnualRewardsPool: () -> async (),
     calculateFantasyTeamScores: (Nat8, [T.Fixture]) -> async (),
@@ -109,7 +109,7 @@ module {
         gameweekBeginTimerId := 0;
         transfersAllowed := false;
 
-        await snapshotGameweek();
+        await snapshotGameweek(activeSeasonId);
 
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         var gameKickOffTimers = List.nil<Nat>(); 

@@ -301,8 +301,8 @@ actor Self {
     await playerCanister.revaluePlayers(revaluedPlayers);
   };
 
-  private func snapshotGameweek(): async (){
-    await fantasyTeamsInstance.snapshotGameweek();
+  private func snapshotGameweek(seaasonId: Nat16): async (){
+    await fantasyTeamsInstance.snapshotGameweek(seaasonId);
   };
 
   private func getPlayer(playerId: Nat16): async T.Player {
@@ -383,8 +383,6 @@ actor Self {
     fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_active_season_id, stable_active_gameweek, stable_active_timers, stable_transfers_allowed, stable_gameweek_begin_timer_id, 
     stable_kick_off_timer_ids, stable_game_completed_timer_ids, stable_voting_period_timer_ids, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
-
-    
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
     stable_teams := teamsInstance.getTeams();
     stable_next_team_id := teamsInstance.getNextTeamId();

@@ -144,7 +144,7 @@ module {
 
                     let newUserTeam: T.UserFantasyTeam = {
                         fantasyTeam = newTeam;
-                        history = List.nil<T.FantasyTeamSnapshot>();
+                        history = List.nil<T.FantasyTeamSeason>();
                     };
 
                     fantasyTeams.put(principalId, newUserTeam);
@@ -558,54 +558,64 @@ module {
                     }
                 };
                 
-                updateSnapshotPoints(key, gameweek, totalTeamPoints);
+                updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
             };
         };
 
-        private func updateSnapshotPoints(principalId: Text, gameweek: Nat8, teamPoints: Int16): () {
+        private func updateSnapshotPoints(principalId: Text, seasonId: Nat16, gameweek: Nat8, teamPoints: Int16): () {
             let userFantasyTeam = fantasyTeams.get(principalId);
 
             switch(userFantasyTeam) {
-                case (null) { };
+                case (null) { }; 
                 case (?ufTeam) {
-                    
-                    let history = ufTeam.history;
-
-                    let updatedHistory = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(history, func(snapshot: T.FantasyTeamSnapshot): T.FantasyTeamSnapshot {
-                        if (snapshot.goalGetterGameweek == gameweek) {
+                    let updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(ufTeam.history, func(season: T.FantasyTeamSeason): T.FantasyTeamSeason {
+                        if (season.seasonId == seasonId) {
+                            let updatedGameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(snapshot: T.FantasyTeamSnapshot): T.FantasyTeamSnapshot {
+                                if (snapshot.goalGetterGameweek == gameweek) {
+                                    return {
+                                        principalId = snapshot.principalId;
+                                        transfersAvailable = snapshot.transfersAvailable;
+                                        bankBalance = snapshot.bankBalance;
+                                        playerIds = snapshot.playerIds;
+                                        captainId = snapshot.captainId;
+                                        goalGetterGameweek = snapshot.goalGetterGameweek;
+                                        goalGetterPlayerId = snapshot.goalGetterPlayerId;
+                                        passMasterGameweek = snapshot.passMasterGameweek;
+                                        passMasterPlayerId = snapshot.passMasterPlayerId;
+                                        noEntryGameweek = snapshot.noEntryGameweek;
+                                        noEntryPlayerId = snapshot.noEntryPlayerId;
+                                        teamBoostGameweek = snapshot.teamBoostGameweek;
+                                        teamBoostTeamId = snapshot.teamBoostTeamId;
+                                        safeHandsGameweek = snapshot.safeHandsGameweek;
+                                        safeHandsPlayerId = snapshot.safeHandsPlayerId;
+                                        captainFantasticGameweek = snapshot.captainFantasticGameweek;
+                                        captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
+                                        braceBonusGameweek = snapshot.braceBonusGameweek;
+                                        hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
+                                        points = teamPoints;
+                                    };
+                                };
+                                return snapshot;
+                            });
                             return {
-                                principalId = snapshot.principalId;
-                                transfersAvailable = snapshot.transfersAvailable;
-                                bankBalance = snapshot.bankBalance;
-                                playerIds = snapshot.playerIds;
-                                captainId = snapshot.captainId;
-                                goalGetterGameweek = snapshot.goalGetterGameweek;
-                                goalGetterPlayerId = snapshot.goalGetterPlayerId;
-                                passMasterGameweek = snapshot.passMasterGameweek;
-                                passMasterPlayerId = snapshot.passMasterPlayerId;
-                                noEntryGameweek = snapshot.noEntryGameweek;
-                                noEntryPlayerId = snapshot.noEntryPlayerId;
-                                teamBoostGameweek = snapshot.teamBoostGameweek;
-                                teamBoostTeamId = snapshot.teamBoostTeamId;
-                                safeHandsGameweek = snapshot.safeHandsGameweek;
-                                safeHandsPlayerId = snapshot.safeHandsPlayerId;
-                                captainFantasticGameweek = snapshot.captainFantasticGameweek;
-                                captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
-                                braceBonusGameweek = snapshot.braceBonusGameweek;
-                                hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
-                                points = teamPoints;
+                                seasonId = season.seasonId;
+                                totalPoints = season.totalPoints;
+                                gameweeks = updatedGameweeks;
                             };
                         };
-                        return snapshot;
+                        return season;
                     });
 
-                    let newUserFantasyTeam: T.UserFantasyTeam = { fantasyTeam = ufTeam.fantasyTeam; history = updatedHistory; };
-                    fantasyTeams.put(principalId, newUserFantasyTeam);
+                    let updatedUserFantasyTeam: T.UserFantasyTeam = {
+                        fantasyTeam = ufTeam.fantasyTeam;
+                        history = updatedSeasons;
+                    };
+                    fantasyTeams.put(principalId, updatedUserFantasyTeam);
                 };
             };
         };
-        
-        public shared func snapshotGameweek(): async () {
+
+        public shared func snapshotGameweek(seasonId: Nat16): async () {
             for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {
                 let newSnapshot: T.FantasyTeamSnapshot = {
                     principalId = userFantasyTeam.fantasyTeam.principalId;
@@ -630,16 +640,40 @@ module {
                     points = 0;
                 };
 
-                let updatedHistory = List.push(newSnapshot, userFantasyTeam.history);
+                var seasonFound = false;
+        
+                var updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(userFantasyTeam.history, func(season: T.FantasyTeamSeason): T.FantasyTeamSeason {
+                    if (season.seasonId == seasonId) {
+                        seasonFound := true; 
+                        let updatedGameweeks = List.push(newSnapshot, season.gameweeks);
+                        return {
+                            seasonId = season.seasonId;
+                            totalPoints = season.totalPoints;
+                            gameweeks = updatedGameweeks;
+                        };
+                    };
+                    return season;
+                });
+        
+                if (not seasonFound) {
+                    let newSeason: T.FantasyTeamSeason = {
+                        seasonId = seasonId;
+                        totalPoints = 0; 
+                        gameweeks =  List.push(newSnapshot, List.nil());  
+                    };
+                    
+                    updatedSeasons := List.push(newSeason, updatedSeasons); 
+                };
 
                 let updatedUserTeam: T.UserFantasyTeam = {
                     fantasyTeam = userFantasyTeam.fantasyTeam;
-                    history = updatedHistory;
+                    history = updatedSeasons;
                 };
 
                 fantasyTeams.put(principalId, updatedUserTeam);
             }
         };
+
 
         func calculateGoalPoints(position: Nat8, goalsScored: Int16) : Int16 {
             switch (position) {

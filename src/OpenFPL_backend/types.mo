@@ -116,7 +116,13 @@ module Types{
     
     public type UserFantasyTeam = {
         fantasyTeam: FantasyTeam;
-        history: List.List<FantasyTeamSnapshot>;
+        history: List.List<FantasyTeamSeason>;
+    };
+
+    public type FantasyTeamSeason = {
+        seasonId: Nat16;
+        totalPoints: Nat16;
+        gameweeks: List.List<FantasyTeamSnapshot>;
     };
 
     public type FantasyTeamSnapshot = {
