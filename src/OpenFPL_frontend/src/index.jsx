@@ -17,6 +17,7 @@ import Architecture from "./components/whitepaper/architecture";
 import DAO from "./components/whitepaper/dao";
 import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
+import Homepage from "./components/homepage";
 
 const PrivateWindowFallback = () => {
   return (
@@ -70,7 +71,7 @@ const App = () => {
         <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
           <MyNavbar />
             <Routes>
-              <Route path="/" element={<Whitepaper />} />
+              <Route path="/" element={<Homepage />} />
               <Route path="/whitepaper" element={<Whitepaper   />} />
               <Route path="/gameplay" element={<Gameplay   />} />
               <Route path="/definitions" element={<Definitions   />} />

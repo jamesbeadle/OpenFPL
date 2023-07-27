@@ -18,14 +18,14 @@ module {
             return Iter.toArray(fixtureDataSubmissions.entries());
         };
 
-        public shared func getGameweekPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
+        public func getGameweekPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
 
             //IMPLEMENT
 
             return List.nil();
         };
 
-        public shared func getRevaluedPlayers() : async [T.Player] {
+        public func getRevaluedPlayers() : async [T.Player] {
 
             //IMPLEMENT
 

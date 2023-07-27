@@ -615,7 +615,7 @@ module {
             };
         };
 
-        public shared func snapshotGameweek(seasonId: Nat16): async () {
+        public func snapshotGameweek(seasonId: Nat16): async () {
             for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {
                 let newSnapshot: T.FantasyTeamSnapshot = {
                     principalId = userFantasyTeam.fantasyTeam.principalId;

@@ -244,7 +244,7 @@ module {
         return seasonsInstance.getSeasonFixtures(activeSeasonId);
     };
 
-    public query func getGameweekFixtures() : async [T.Fixture] {
+    public func getGameweekFixtures() : async [T.Fixture] {
         return seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
     };
 

@@ -1,43 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Spinner, Row, Col, Card} from 'react-bootstrap';
+import { Container, Table, Pagination, Form } from 'react-bootstrap';
 
 const WeeklyLeagueStandings = () => {
-  
-  const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [managers, setManagers] = useState([]);
+    const [currentGameweek, setCurrentGameweek] = useState(1);
+    const [selectedGameweek, setSelectedGameweek] = useState(1);
+    const itemsPerPage = 10;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchViewData();
-      setIsLoading(false);
+    useEffect(() => {
+        const fetchData = async () => {
+            const activeGameweek = await fetchActiveGameweek();
+            setSelectedGameweek(activeGameweek);
+            await fetchManagerDataForWeek(activeGameweek);
+            setIsLoading(false);
+        };
+        fetchData();
+    }, []);
+
+    const fetchActiveGameweek = async () => {
+        // Fetch the active gameweek from your backend.
+        const response = await fetch('/api/active-gameweek');
+        const data = await response.json();
+        return data.activeGameweek;
     };
-    fetchData();
-  }, []);
 
-  const fetchViewData = async () => {
-    
-  };
-  
-  return (
-    isLoading ? (
-      <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
-        <Spinner animation="border" />
-        <p className='text-center mt-1'>Loading</p>
-      </div>) 
-      :
-      <Container className="flex-grow-1 my-5">
-        <Row>
-          <Col md={12}>
-            <Card className="mb-4">
-              <Card.Header><h2 className="mt-4 mb-4">OpenFPL Weekly League Standings</h2></Card.Header>
-              <Card.Body>
-                <Card.Text>
-                  <p>Welcome to OpenFPL DAO.</p>
-               </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+    const fetchManagerDataForWeek = async (gameweek) => {
+        // Fetch the data based on the selected gameweek from your backend.
+        // Mocked up for demonstration purposes.
+        const mockData = Array(100).fill(null).map((_, index) => ({
+            position: index + 1,
+            username: `manager${index + 1}`,
+            score: Math.floor(Math.random() * 100) // Random score for the week
+        }));
+        setManagers(mockData);
+    };
+
+    // Placeholder for pagination and rendering logic
+    const renderedData = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(manager => (
+        <tr key={manager.position}>
+            <td>{manager.position}</td>
+            <td>{manager.username}</td>
+            <td>{manager.score}</td>
+        </tr>
+    ));
+
+    return (
+        <Container>
+            <Form.Group controlId="gameweekSelect">
+                <Form.Label>Select Gameweek</Form.Label>
+                <Form.Control as="select" value={selectedGameweek} onChange={e => setSelectedGameweek(Number(e.target.value))}>
+                    {Array.from({ length: 38 }, (_, index) => (
+                        <option key={index + 1} value={index + 1}>Gameweek {index + 1}</option>
+                    ))}
+                </Form.Control>
+            </Form.Group>
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Username</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {renderedData}
+                </tbody>
+            </Table>
+            {/* Placeholder for Pagination Component */}
+            <Pagination>{/* Pagination items go here */}</Pagination>
+        </Container>
     );
 };
 
