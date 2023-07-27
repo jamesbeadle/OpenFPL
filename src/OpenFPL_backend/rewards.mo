@@ -5,7 +5,7 @@ module {
 
     public func distributeRewards(): async () {
         //distribute rewards
-        //implement last
+        //IMPLEMENT
     };
 
   }

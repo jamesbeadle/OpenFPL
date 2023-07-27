@@ -314,11 +314,11 @@ actor Self {
   };
 
   private func mintWeeklyRewardsPool(): async () {
-    //implement last
+    //IMPLEMENT
   };
 
   private func mintAnnualRewardsPool(): async () {
-    //implement last
+    //IMPLEMENT
   };
   
   //intialise season manager
