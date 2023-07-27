@@ -121,7 +121,7 @@ module Types{
 
     public type FantasyTeamSeason = {
         seasonId: Nat16;
-        totalPoints: Nat16;
+        totalPoints: Int16;
         gameweeks: List.List<FantasyTeamSnapshot>;
     };
 

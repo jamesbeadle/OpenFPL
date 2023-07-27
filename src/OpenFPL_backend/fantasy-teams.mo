@@ -488,7 +488,7 @@ module {
             }
         };
 
-        public func calculatePredictionScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
+        public func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
             
             let allPlayersList = await getAllPlayersMap(seasonId, gameweek);
             var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
@@ -599,7 +599,7 @@ module {
                             });
                             return {
                                 seasonId = season.seasonId;
-                                totalPoints = season.totalPoints;
+                                totalPoints = season.totalPoints + teamPoints;
                                 gameweeks = updatedGameweeks;
                             };
                         };

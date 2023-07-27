@@ -22,7 +22,7 @@ module {
     snapshotGameweek: (seaasonId: Nat16) -> async (),
     mintWeeklyRewardsPool: () -> async (),
     mintAnnualRewardsPool: () -> async (),
-    calculateFantasyTeamScores: (Nat8, [T.Fixture]) -> async (),
+    calculateFantasyTeamScores: (Nat16, Nat8, [T.Fixture]) -> async (),
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async ()) {
@@ -203,7 +203,7 @@ module {
           
         let fixturesWithHighestPlayerId = await calculatePlayerPoints(activeGameweek, activeFixtures);
         await seasonsInstance.updateHighestPlayerIds(activeSeasonId, activeGameweek, fixturesWithHighestPlayerId);
-        await calculateFantasyTeamScores(activeGameweek, activeFixtures);
+        await calculateFantasyTeamScores(activeSeasonId, activeGameweek, activeFixtures);
         await distributeRewards();
         await settleUserBets();
         await revaluePlayers();

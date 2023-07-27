@@ -284,10 +284,6 @@ actor Self {
     return await governanceInstance.getGameweekPlayerEventData(gameweekId, fixtureId);
   };
 
-  private func calculateFantasyTeamScores(activeGameweek: Nat8, gameweekFixtures: [T.Fixture]) : async () {
-    
-  };
-
   private func distributeRewards(): async () {
     await rewardsInstance.distributeRewards();
   };
@@ -309,8 +305,8 @@ actor Self {
     return await playerCanister.getPlayer(playerId);
   }; 
 
-  private func calculatePredictionScores(seasonId: Nat16, gameweek: Nat8, fixtures: [T.Fixture]) : async (){
-    return await fantasyTeamsInstance.calculatePredictionScores(seasonId, gameweek, fixtures);
+  private func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8, fixtures: [T.Fixture]) : async (){
+    return await fantasyTeamsInstance.calculateFantasyTeamScores(seasonId, gameweek, fixtures);
   };
 
   private func resetFantasyTeams(): async () {
