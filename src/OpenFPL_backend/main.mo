@@ -73,6 +73,10 @@ actor Self {
     return seasonManager.getFixtures();
   };
 
+  public query ({caller}) func getActiveGameweekFixtures() : async [T.Fixture]{
+    return seasonManager.getActiveGameweekFixtures();
+  };
+
   //Profile Functions
   public shared ({caller}) func getProfileDTO() : async DTOs.ProfileDTO {
     assert not Principal.isAnonymous(caller);
@@ -198,7 +202,22 @@ actor Self {
     };
   };
 
+  //Get homepage DTO
+
+  //League functions
+  public shared query ({caller}) func getSeasonTop10() : async T.Leaderboard {
+      return fantasyTeamsInstance.getSeasonTop10();
+  };
+
+  public shared query ({caller}) func getWeeklyTop10() : async T.Leaderboard {
+      return fantasyTeamsInstance.getWeeklyTop10();
+  };
+
   //Fantasy team functions
+  public shared query ({caller}) func getTotalManagers() : async Nat {
+      return fantasyTeamsInstance.getTotalManagers();
+  };
+
   public shared query ({caller}) func getFantasyTeam() : async T.FantasyTeam {
     assert not Principal.isAnonymous(caller);
 

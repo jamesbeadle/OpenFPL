@@ -31,7 +31,7 @@ const MyNavbar = () => {
           {isAuthenticated && 
             <>
               <Nav.Link as={Link} to="/pick-team" onClick={() => setExpanded(false)}  className="custom-nav-link">
-                Play
+                Pick Team
                 <TeamIcon className="custom-icon" ></TeamIcon>
               </Nav.Link> 
               <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">

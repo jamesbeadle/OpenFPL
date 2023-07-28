@@ -148,6 +148,20 @@ module Types{
         points: Int16;
     };
 
+    public type Leaderboard = {
+        season: Nat16;
+        gameweek: Nat8;
+        entries: List.List<LeaderboardEntry>;
+    };
+
+    public type LeaderboardEntry ={
+        position: Int;
+        positionText: Text;
+        username: Text;
+        principalId: Text;
+        points: Int16;
+    };
+
     public type PlayerEventData = {
         fixtureId: Nat32;
         playerId: Nat16;

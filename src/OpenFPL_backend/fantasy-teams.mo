@@ -674,6 +674,28 @@ module {
             }
         };
 
+        public func getTotalManagers() : Nat{
+            fantasyTeams.size();
+        };
+
+        public func getWeeklyTop10() : T.Leaderboard {
+            let leaderboard: T.Leaderboard = {
+                season = 1;
+                gameweek = 1;
+                entries = List.nil();
+            };
+            return leaderboard;
+        };
+
+        public func getSeasonTop10() : T.Leaderboard {
+            let leaderboard: T.Leaderboard = {
+                season = 1;
+                gameweek = 1;
+                entries = List.nil();
+            };
+            return leaderboard;
+        };
+
 
         func calculateGoalPoints(position: Nat8, goalsScored: Int16) : Int16 {
             switch (position) {

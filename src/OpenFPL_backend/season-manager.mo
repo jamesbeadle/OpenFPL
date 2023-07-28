@@ -10,6 +10,7 @@ import List "mo:base/List";
 import Seasons "seasons";
 import Buffer "mo:base/Buffer";
 import Option "mo:base/Option";
+import Nat8 "mo:base/Nat8";
 
 module {
 
@@ -244,7 +245,7 @@ module {
         return seasonsInstance.getSeasonFixtures(activeSeasonId);
     };
 
-    public func getGameweekFixtures() : async [T.Fixture] {
+    public func getActiveGameweekFixtures() : [T.Fixture] {
         return seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
     };
 

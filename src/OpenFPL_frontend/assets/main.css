@@ -121,6 +121,22 @@
     color: whitesmoke !important;
   }
 
+  .custom-card-title {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+  }
+
+  .custom-display-sm {
+      font-size: 2rem; 
+      font-weight: 300;
+  }
+
+  .custom-card-text {
+      font-size: 0.9rem;
+  }
+
   .white-text{
     color: whitesmoke !important;
   }
@@ -176,3 +192,8 @@
 Table{
   color: whitesmoke !important;
 }
+
+.nav-tabs .nav-link:not(.active) {
+  color: whitesmoke !important;
+}
+
