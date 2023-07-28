@@ -7,55 +7,42 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenF
 
 const Homepage = () => {
   
-  const [isLoading, setIsLoading] = useState(true);
-  const { authClient, teams } = useContext(AuthContext);
-  const [fixtures, setFixtures] = useState([]);
-  
-  const [managerCount, setManagerCount] = useState(0); // Total number of OpenFPL managers
+    const [isLoading, setIsLoading] = useState(true);
+    const { authClient, teams } = useContext(AuthContext);
+    const [fixtures, setFixtures] = useState([]);
+    const [managerCount, setManagerCount] = useState(0);
+    const [seasonTop10, setSeasonTop10] = useState([]);
+    const [weeklyTop10, setWeeklyTop10] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchViewData();
-      setIsLoading(false);
+    useEffect(() => {
+        const fetchData = async () => {
+        await fetchViewData();
+        setIsLoading(false);
+        };
+        fetchData();
+    }, []);
+
+    const fetchViewData = async () => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    
+        const fixturesData = await open_fpl_backend.getGameweekFixtures();
+        setFixtures(fixturesData);
+
+        const managerCountData = await open_fpl_backend.getTotalManagers();
+        setManagerCount(managerCountData);
+
+        const seasonTop10Data = await open_fpl_backend.getSeasonTop10();
+        setSeasonTop10(seasonTop10Data.entries);
+    
+        const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
+        setWeeklyTop10(weeklyTop10Data.entries);
     };
-    fetchData();
-  }, []);
 
-  const fetchViewData = async () => {
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-  
-    const fixturesData = await open_fpl_backend.getGameweekFixtures();
-    setFixtures(fixturesData);
-
-    const managerCountData = await open_fpl_backend.getTotalManagers();
-    setManagerCount(managerCountData);
-  };
-
-  const getTeamById = (teamId) => {
-    return teams.find(team => team.id === teamId);
-  };
-
-    const gameweekLeaders = [
-    { position: 1, username: 'James', points: 151 },
-    { position: 2, username: 'Sarah', points: 137 },
-    { position: 3, username: 'Sam', points: 111 },
-    { position: 4, username: 'Jess', points: 104 },
-    { position: 5, username: 'Oliver', points: 99 },
-    { position: 6, username: 'James', points: 98 },
-    { position: 7, username: 'Mark', points: 91 },
-    { position: 8, username: 'Liz', points: 87 },
-    { position: 9, username: 'Tom', points: 86 },
-    { position: 10, username: 'Sean', points: 85 }
-    ];
-
-    const seasonLeaders = [
-    { position: 1, username: 'EveEvans', points: 1398 },
-    { position: 2, username: 'CharlieClark', points: 1375 },
-    { position: 3, username: 'JohnDoe', points: 1360 },
-    { position: 4, username: 'BobBrown', points: 1325 },
-    { position: 5, username: 'AliceSmith', points: 1309 }
-    ];
+    const getTeamById = (teamId) => {
+        return teams.find(team => team.id === teamId);
+    };
+    
     const totalPrizePool = 0;
 
     return (
@@ -162,7 +149,7 @@ const Homepage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {gameweekLeaders.map((leader) => (
+                                            {weeklyTop10.map((leader) => (
                                             <tr key={leader.position}>
                                                 <td>{leader.position}</td>
                                                 <td>{leader.username}</td>
@@ -186,7 +173,7 @@ const Homepage = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {seasonLeaders.map((leader) => (
+                                            {seasonTop10.map((leader) => (
                                             <tr key={leader.position}>
                                                 <td>{leader.position}</td>
                                                 <td>{leader.username}</td>

@@ -376,7 +376,7 @@ module {
             };
             
             var teamPlayerCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
-            var playerIdCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);  // HashMap to store player ids as Text
+            var playerIdCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
             var goalkeeperCount = 0;
             var defenderCount = 0;
             var midfielderCount = 0;
@@ -649,7 +649,7 @@ module {
                     case (null) { return 0; };
                     case (?currentSeason) {
                         let filteredWeeks = List.filter(currentSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot): Bool {
-                            return snapshot.goalGetterGameweek <= gameweek;  // Adjust this condition to sum all gameweeks up to the current one
+                            return snapshot.goalGetterGameweek <= gameweek;  
                         });
 
                         return List.foldLeft(filteredWeeks, 0 : Int16, func(accum: Int16, snapshot: T.FantasyTeamSnapshot): Int16 {
