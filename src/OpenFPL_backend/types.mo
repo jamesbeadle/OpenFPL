@@ -148,8 +148,13 @@ module Types{
         points: Int16;
     };
 
+    public type SeasonLeaderboards = {
+        seasonLeaderboard: Leaderboard;
+        gameweekLeaderboards: List.List<Leaderboard>;
+    };
+
     public type Leaderboard = {
-        season: Nat16;
+        seasonId: Nat16;
         gameweek: Nat8;
         entries: List.List<LeaderboardEntry>;
     };

@@ -206,11 +206,11 @@ actor Self {
 
   //League functions
   public shared query ({caller}) func getSeasonTop10() : async T.Leaderboard {
-      return fantasyTeamsInstance.getSeasonTop10();
+      return fantasyTeamsInstance.getSeasonTop10(seasonManager.getActiveSeasonId());
   };
 
   public shared query ({caller}) func getWeeklyTop10() : async T.Leaderboard {
-      return fantasyTeamsInstance.getWeeklyTop10();
+      return fantasyTeamsInstance.getWeeklyTop10(seasonManager.getActiveSeasonId(), seasonManager.getActiveGameweek());
   };
 
   //Fantasy team functions
