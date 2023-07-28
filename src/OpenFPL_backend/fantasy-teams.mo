@@ -640,7 +640,7 @@ module {
                 };
             };
 
-            func totalPointsForSeasonUpToCurrentGameweek(team: T.UserFantasyTeam): Int16 {
+            func totalPointsForSeason(team: T.UserFantasyTeam): Int16 {
                 let filteredSeason = List.filter(team.history, func(season: T.FantasyTeamSeason): Bool {
                     return season.seasonId == seasonId;
                 });
@@ -669,47 +669,78 @@ module {
                 };
             };
 
+            func assignPositionText(sortedEntries: List.List<T.LeaderboardEntry>): List.List<T.LeaderboardEntry> {
+                var rank = 1;
+                var previousPoints: ?Int16 = null;
+                var countWithPreviousPoints = 0;
+                var tiedEntries: List.List<T.LeaderboardEntry> = List.nil();
+
+                let result = List.foldLeft(sortedEntries, List.nil<T.LeaderboardEntry>(), func(acc: List.List<T.LeaderboardEntry>, entry: T.LeaderboardEntry): List.List<T.LeaderboardEntry> {
+                    switch previousPoints {
+                        case (?lastPoints) {
+                            if (entry.points == lastPoints) {
+                                // It's a tie
+                                countWithPreviousPoints += 1;
+                                tiedEntries := List.append(tiedEntries, List.make(entry));
+                                return acc;
+                            } else {
+                                // Not a tie, so process the tied entries first
+                                let processedTiedEntries = List.map(tiedEntries, func(tiedEntry: T.LeaderboardEntry): T.LeaderboardEntry {
+                                    return {
+                                        position = rank;
+                                        positionText = "T" # Int.toText(rank);
+                                        username = tiedEntry.username;
+                                        principalId = tiedEntry.principalId;
+                                        points = tiedEntry.points;
+                                    };
+                                });
+                                rank += countWithPreviousPoints;
+                                countWithPreviousPoints := 1;  // Reset this count
+                                tiedEntries := List.nil();  // Reset tied entries
+                                return List.append(processedTiedEntries, List.append(acc, List.make(entry)));
+                            };
+                        };
+                        case null {
+                            // This is the first player being processed
+                            previousPoints := ?entry.points;
+                            countWithPreviousPoints := 1;
+                            tiedEntries := List.append(tiedEntries, List.make(entry));
+                            return acc;
+                        };
+                    };
+                });
+
+                // Handle any remaining tied entries at the end
+                let processedTiedEntries = List.map(tiedEntries, func(tiedEntry: T.LeaderboardEntry): T.LeaderboardEntry {
+                    return {
+                        position = rank;
+                        positionText = "T" # Int.toText(rank);
+                        username = tiedEntry.username;
+                        principalId = tiedEntry.principalId;
+                        points = tiedEntry.points;
+                    };
+                });
+                return List.append(processedTiedEntries, result);
+            };
+
             let seasonEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
                 Iter.toArray(fantasyTeams.entries()),
-                func (pair) { return createLeaderboardEntry(pair.0, pair.1, totalPointsForSeasonUpToCurrentGameweek); }
+                func (pair) { return createLeaderboardEntry(pair.0, pair.1, totalPointsForSeason); }
             );
 
 
-            // Create leaderboard entries from fantasy teams for season and gameweek
             let gameweekEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
                 Iter.toArray(fantasyTeams.entries()),
                 func (pair) { return createLeaderboardEntry(pair.0, pair.1, totalPointsForGameweek); }
             );
 
-            // Sort and position the entries
             let sortedGameweekEntries = mergeSort(List.fromArray(gameweekEntries));
             let sortedSeasonEntries = mergeSort(List.fromArray(seasonEntries));
 
+            let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
+            let positionedSeasonEntries = assignPositionText(sortedSeasonEntries);
 
-            var position = 1;
-            var previousPoints: ?Int16 = null;
 
-            let positionedGameweekEntries = List.map(sortedGameweekEntries, func(entry: T.LeaderboardEntry): T.LeaderboardEntry {
-                if (previousPoints == null or previousPoints != ?entry.points) {
-                    previousPoints := ?entry.points;
-                    let updatedEntry = { entry with position = position; positionText = Int.toText(position) };
-                    position += 1;
-                    return updatedEntry;
-                } else {
-                    return { entry with positionText = "-" };
-                }
-            });
-
-            let positionedSeasonEntries = List.map(sortedSeasonEntries, func(entry: T.LeaderboardEntry): T.LeaderboardEntry {
-                if (previousPoints == null or previousPoints != ?entry.points) {
-                    previousPoints := ?entry.points;
-                    let updatedEntry = { entry with position = position; positionText = Int.toText(position) };
-                    position += 1;
-                    return updatedEntry;
-                } else {
-                    return { entry with positionText = "-" };
-                }
-            });
 
             let existingGameweekLeaderboards : List.List<T.Leaderboard> = 
                 switch (seasonLeaderboards.get(seasonId)) {
@@ -717,17 +748,14 @@ module {
                     case (?seasonData) { seasonData.gameweekLeaderboards };
                 };
 
-            // Create leaderboard for the current gameweek
             let currentGameweekLeaderboard : T.Leaderboard = {
                 seasonId = seasonId;
                 gameweek = gameweek;
                 entries = positionedSeasonEntries;
             };
 
-            // Append the current leaderboard to the existing list
             let updatedGameweekLeaderboards = List.append(existingGameweekLeaderboards, List.make(currentGameweekLeaderboard));
 
-            // Store the updated list back in the seasonLeaderboards hashmap
             seasonLeaderboards.put(seasonId, {
                 seasonLeaderboard = currentGameweekLeaderboard;
                 gameweekLeaderboards = updatedGameweekLeaderboards;
@@ -799,24 +827,62 @@ module {
         };
 
         public func getWeeklyTop10(activeSeasonId: Nat16, activeGameweek: Nat8) : T.Leaderboard {
-            //should get from somewhere they are saved as they don't change so don't need to keep calculating them
-            let leaderboard: T.Leaderboard = {
-                seasonId = 1;
-                gameweek = 1;
-                entries = List.nil();
+            switch (seasonLeaderboards.get(activeSeasonId)) {
+                case (null) {
+                    return {
+                        seasonId = activeSeasonId;
+                        gameweek = activeGameweek;
+                        entries = List.nil();
+                    };
+                };
+                
+                case (?seasonData) {
+                    let allGameweekLeaderboards = seasonData.gameweekLeaderboards;
+                    let matchingGameweekLeaderboard = List.find(allGameweekLeaderboards, func(leaderboard: T.Leaderboard): Bool {
+                        return leaderboard.gameweek == activeGameweek;
+                    });
+
+                    switch (matchingGameweekLeaderboard) {
+                        case (null) {
+                            return {
+                                seasonId = activeSeasonId;
+                                gameweek = activeGameweek;
+                                entries = List.nil();
+                            };
+                        };
+                        case (?foundLeaderboard) {
+                            let top10Entries = List.take(foundLeaderboard.entries, 10);
+                            return {
+                                seasonId = activeSeasonId;
+                                gameweek = activeGameweek;
+                                entries = top10Entries;
+                            };
+                        };
+                    };
+                };
             };
-            return leaderboard;
         };
 
         public func getSeasonTop10(activeSeasonId: Nat16) : T.Leaderboard {
-            let leaderboard: T.Leaderboard = {
-                seasonId = 1;
-                gameweek = 1;
-                entries = List.nil();
+            switch (seasonLeaderboards.get(activeSeasonId)) {
+                case (null) {
+                    return {
+                        seasonId = activeSeasonId;
+                        gameweek = 0; 
+                        entries = List.nil();
+                    };
+                };
+              
+                case (?seasonData) {
+                    let top10Entries = List.take(seasonData.seasonLeaderboard.entries, 10);
+                    return {
+                        seasonId = activeSeasonId;
+                        gameweek = 0; 
+                        entries = top10Entries;
+                    };
+                };
             };
-            return leaderboard;
         };
-
 
         func calculateGoalPoints(position: Nat8, goalsScored: Int16) : Int16 {
             switch (position) {
@@ -876,12 +942,10 @@ module {
             };
         };
         
-        // Comparison function for sorting
         private func compare(entry1: T.LeaderboardEntry, entry2: T.LeaderboardEntry): Bool {
             return entry1.points >= entry2.points;
         };
     
-        // Sorting function (descending)
         func mergeSort(entries: List.List<T.LeaderboardEntry>): List.List<T.LeaderboardEntry> {
             let len = List.size(entries);
             if (len <= 1) {
@@ -891,8 +955,6 @@ module {
                 return List.merge(firstHalf, secondHalf, compare);
             };
         };
-
-
     }
     
 }
