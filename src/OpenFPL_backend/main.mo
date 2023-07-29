@@ -372,11 +372,10 @@ actor Self {
   private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
-  private stable var stable_draft_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)] = [];
   private stable var stable_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)] = [];
-  
-
-
+  private stable var stable_draft_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)] = [];
+  private stable var stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
+  private stable var stable_proposals: [T.Proposal] = [];
   private stable var stable_active_timers : [Int] = [];
   private stable var stable_transfers_allowed : Bool = true;
   private stable var stable_gameweek_begin_timer_id : Int = 0;
@@ -396,6 +395,8 @@ actor Self {
     stable_active_gameweek := seasonManager.getActiveGameweek();
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
     stable_draft_fixture_data_submissions := governanceInstance.getDraftFixtureDataSubmissions();
+    stable_player_revaluation_submissions := governanceInstance.getPlayerRevaluationSubmissions();
+    stable_proposals := governanceInstance.getProposals();
     stable_active_timers := seasonManager.getActiveTimerIds();
     stable_transfers_allowed := seasonManager.getTransfersAllowed();
     stable_gameweek_begin_timer_id := seasonManager.getGameweekBeginTimerId();
@@ -418,6 +419,8 @@ actor Self {
     stable_draft_fixture_data_submissions := governanceInstance.getDraftFixtureDataSubmissions();
     stable_teams := teamsInstance.getTeams();
     stable_next_team_id := teamsInstance.getNextTeamId();
+    governanceInstance.setData(stable_fixture_data_submissions, stable_draft_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals);
+    
   };
 
 };

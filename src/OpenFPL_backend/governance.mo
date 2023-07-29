@@ -5,6 +5,7 @@ import Utilities "utilities";
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Array "mo:base/Array";
+import Buffer "mo:base/Buffer";
 
 module {
     public class Governance(){
@@ -56,18 +57,17 @@ module {
             );
             
             var outerMap: OuterMapType = HashMap.HashMap<T.SeasonId, MidMapType>(Iter.size(Iter.fromArray(stable_player_revaluation_submissions)), Utilities.eqNat16, Utilities.hashNat16);
-        for ((seasonId, (gameweek, data)) in Iter.fromArray(stable_player_revaluation_submissions)) {
-            let (playerId, submissions) = data;
+            for ((seasonId, (gameweek, data)) in Iter.fromArray(stable_player_revaluation_submissions)) {
+                let (playerId, submissions) = data;
 
-            let innerMap: InnerMapType = HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>(1, Utilities.eqNat16, Utilities.hashNat16);
-            innerMap.put(playerId, submissions);
-            
-            let midMap: MidMapType = HashMap.HashMap<T.GameweekNumber, InnerMapType>(1, Utilities.eqNat8, Utilities.hashNat8);
-            midMap.put(gameweek, innerMap);
-            
-            outerMap.put(seasonId, midMap);
-        };
-
+                let innerMap: InnerMapType = HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>(1, Utilities.eqNat16, Utilities.hashNat16);
+                innerMap.put(playerId, submissions);
+                
+                let midMap: MidMapType = HashMap.HashMap<T.GameweekNumber, InnerMapType>(1, Utilities.eqNat8, Utilities.hashNat8);
+                midMap.put(gameweek, innerMap);
+                
+                outerMap.put(seasonId, midMap);
+            };
 
             playerRevaluationSubmissions := outerMap;
 
@@ -82,12 +82,32 @@ module {
             return Iter.toArray(draftFixtureDataSubmissions.entries());
         };
 
-        public func getPlayerRevaluationSubmissions() : (){
-            //IMPLEMENT
+
+        public func getPlayerRevaluationSubmissions() : [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] {
+            var results: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
+            var resultsBuffer = Buffer.fromArray<(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))>(results);
+
+            // Iterate over the outer map (seasons)
+            for ((seasonId, midMap) in playerRevaluationSubmissions.entries()) {
+                
+                // Iterate over the mid map (gameweeks)
+                for ((gameweek, innerMap) in midMap.entries()) {
+                    
+                    // Iterate over the inner map (player submissions)
+                    for ((playerId, submissions) in innerMap.entries()) {
+                        
+                        let entry: (T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>))) = (seasonId, (gameweek, (playerId, submissions)));
+                        resultsBuffer.add(entry);
+                    }
+                }
+            };
+
+            results := Buffer.toArray(resultsBuffer);
+            return results;
         };
 
-        public func getProposals() : (){
-            //IMPLEMENT
+        public func getProposals() : [T.Proposal]{
+            return proposals;
         };
 
 
