@@ -2,6 +2,12 @@ import List "mo:base/List";
 
 module Types{
     
+    public type FixtureId = Nat32;
+    public type SeasonId = Nat16;
+    public type GameweekNumber = Nat8;
+    public type PlayerId = Nat16;
+    public type TeamId = Nat16;
+    
     public type Error = {
         #NotFound;
         #AlreadyExists;
@@ -18,7 +24,7 @@ module Types{
         fplDepositAddress: Blob;
         termsAccepted: Bool;
         profilePicture: Blob;
-        favouriteTeamId: Nat16;
+        favouriteTeamId: TeamId;
         membershipType: Nat8;
         createDate: Int;
         subscriptionDate: Int;
@@ -34,7 +40,7 @@ module Types{
 
     public type Gameweek = {
         id: Nat16;
-        number: Nat8;
+        number: GameweekNumber;
         canisterId: Text;
         fixtures: List.List<Fixture>;
     };
@@ -50,11 +56,11 @@ module Types{
 
     public type Fixture = {
         id: Nat32;
-        seasonId: Nat16;
-        gameweek: Nat8;
+        seasonId: SeasonId;
+        gameweek: GameweekNumber;
         kickOff: Int;
-        homeTeamId: Nat16;
-        awayTeamId: Nat16;
+        homeTeamId: TeamId;
+        awayTeamId: TeamId;
         homeGoals: Nat8;
         awayGoals: Nat8;
         status: Nat8; //0 = Unplayed, 1 = Active, 2 = Completed, 3 = Data Finalised
@@ -63,8 +69,8 @@ module Types{
     };
 
     public type Player = {
-        id: Nat16;
-        teamId: Nat16;
+        id: PlayerId;
+        teamId: TeamId;
         position: Nat8; //0 = Goalkeeper //1 = Defender //2 = Midfielder //3 = Forward
         firstName: Text;
         lastName: Text;
@@ -95,22 +101,22 @@ module Types{
         principalId: Text;
         transfersAvailable: Nat8;
         bankBalance: Float;
-        playerIds: [Nat16];
-        captainId: Nat16;
-        goalGetterGameweek: Nat8;
-        goalGetterPlayerId: Nat16;
-        passMasterGameweek: Nat8;
-        passMasterPlayerId: Nat16;
-        noEntryGameweek: Nat8;
-        noEntryPlayerId: Nat16;
-        teamBoostGameweek: Nat8;
-        teamBoostTeamId: Nat16;
-        safeHandsGameweek: Nat8;
-        safeHandsPlayerId: Nat16;
-        captainFantasticGameweek: Nat8;
-        captainFantasticPlayerId: Nat16;
-        braceBonusGameweek: Nat8;
-        hatTrickHeroGameweek: Nat8;
+        playerIds: [PlayerId];
+        captainId: PlayerId;
+        goalGetterGameweek: GameweekNumber;
+        goalGetterPlayerId: PlayerId;
+        passMasterGameweek: GameweekNumber;
+        passMasterPlayerId: PlayerId;
+        noEntryGameweek: GameweekNumber;
+        noEntryPlayerId: PlayerId;
+        teamBoostGameweek: GameweekNumber;
+        teamBoostTeamId: TeamId;
+        safeHandsGameweek: GameweekNumber;
+        safeHandsPlayerId: PlayerId;
+        captainFantasticGameweek: GameweekNumber;
+        captainFantasticPlayerId: PlayerId;
+        braceBonusGameweek: GameweekNumber;
+        hatTrickHeroGameweek: GameweekNumber;
     };
 
     
@@ -120,7 +126,7 @@ module Types{
     };
 
     public type FantasyTeamSeason = {
-        seasonId: Nat16;
+        seasonId: SeasonId;
         totalPoints: Int16;
         gameweeks: List.List<FantasyTeamSnapshot>;
     };
@@ -129,22 +135,22 @@ module Types{
         principalId: Text;
         transfersAvailable: Nat8;
         bankBalance: Float;
-        playerIds: [Nat16];
+        playerIds: [PlayerId];
         captainId: Nat16;
-        goalGetterGameweek: Nat8;
-        goalGetterPlayerId: Nat16;
-        passMasterGameweek: Nat8;
-        passMasterPlayerId: Nat16;
-        noEntryGameweek: Nat8;
-        noEntryPlayerId: Nat16;
-        teamBoostGameweek: Nat8;
-        teamBoostTeamId: Nat16;
-        safeHandsGameweek: Nat8;
-        safeHandsPlayerId: Nat16;
-        captainFantasticGameweek: Nat8;
-        captainFantasticPlayerId: Nat16;
-        braceBonusGameweek: Nat8;
-        hatTrickHeroGameweek: Nat8;
+        goalGetterGameweek: GameweekNumber;
+        goalGetterPlayerId: PlayerId;
+        passMasterGameweek: GameweekNumber;
+        passMasterPlayerId: PlayerId;
+        noEntryGameweek: GameweekNumber;
+        noEntryPlayerId: PlayerId;
+        teamBoostGameweek: GameweekNumber;
+        teamBoostTeamId: TeamId;
+        safeHandsGameweek: GameweekNumber;
+        safeHandsPlayerId: PlayerId;
+        captainFantasticGameweek: GameweekNumber;
+        captainFantasticPlayerId: PlayerId;
+        braceBonusGameweek: GameweekNumber;
+        hatTrickHeroGameweek: GameweekNumber;
         points: Int16;
     };
 
@@ -154,15 +160,15 @@ module Types{
     };
 
     public type PaginatedLeaderboard = {
-        seasonId: Nat16;
-        gameweek: Nat8;
+        seasonId: SeasonId;
+        gameweek: GameweekNumber;
         entries: List.List<LeaderboardEntry>;
         totalEntries: Nat;
     };
 
     public type Leaderboard = {
-        seasonId: Nat16;
-        gameweek: Nat8;
+        seasonId: SeasonId;
+        gameweek: GameweekNumber;
         entries: List.List<LeaderboardEntry>;
     };
 
@@ -175,7 +181,7 @@ module Types{
     };
 
     public type PlayerEventData = {
-        fixtureId: Nat32;
+        fixtureId: FixtureId;
         playerId: Nat16;
         //0 = Appearance
         //1 = Goal Scored
@@ -195,10 +201,58 @@ module Types{
     };
 
     public type DataSubmission = {
-        fixtureId: Nat16;
-        submittedBy: Text;
+        fixtureId: FixtureId;
+        proposer: Text;
+        timestamp: Int;
         events: List.List<PlayerEventData>;
-        //This is where I need the basic DAO example
-    }
+        votes_yes: List.List<PlayerValuationVote>;
+        votes_no: List.List<PlayerValuationVote>;
+    };
+
+    public type PlayerValuationSubmission = {
+        playerId: Nat16;
+        gameweek: GameweekNumber;
+        timestamp: Int;
+        votes_up: List.List<PlayerValuationVote>;
+        votes_down: List.List<PlayerValuationVote>;
+    };
+
+    public type PlayerValuationVote = {
+        principalId: Text;
+        votes: Tokens;
+    };
+
+    public type Tokens = { amount_e8s : Nat };
+    public type Proposal = {
+        id : Nat;
+        votes_no : Tokens;
+        voters : List.List<Principal>;
+        state : ProposalState;
+        timestamp : Int;
+        proposer : Principal;
+        votes_yes : Tokens;
+        payload : ProposalPayload;
+    };
+
+    public type ProposalState = {
+        #failed : Text;
+        #open;
+        #executing;
+        #rejected;
+        #succeeded;
+        #accepted;
+    };
+
+    public type ProposalPayload = {
+        method : Text;
+        canister_id : Principal;
+        message : Blob;
+    };
+
+    public type SystemParams = {
+        transfer_fee: Tokens;
+        proposal_vote_threshold: Tokens;
+        proposal_submission_deposit: Tokens;
+    };
 
 }

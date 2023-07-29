@@ -372,8 +372,11 @@ actor Self {
   private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
-  private stable var stable_draft_fixture_data_submissions: [(Nat16, List.List<T.PlayerEventData>)] = [];
-  private stable var stable_fixture_data_submissions: [(Nat16, List.List<T.PlayerEventData>)] = [];
+  private stable var stable_draft_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)] = [];
+  private stable var stable_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)] = [];
+  
+
+
   private stable var stable_active_timers : [Int] = [];
   private stable var stable_transfers_allowed : Bool = true;
   private stable var stable_gameweek_begin_timer_id : Int = 0;
