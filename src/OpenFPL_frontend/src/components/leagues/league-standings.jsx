@@ -1,59 +1,104 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Table, Pagination, Form } from 'react-bootstrap';
+import React, { useState, useEffect, useContext } from 'react';
+import { Container, Spinner, Table, Pagination, Form } from 'react-bootstrap';
+
+import { AuthContext } from "../../contexts/AuthContext";
+import { Actor } from "@dfinity/agent";
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 
 const LeagueStandings = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [managers, setManagers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedSeason, setSelectedSeason] = useState(''); // Start with empty state
-  const itemsPerPage = 10;
-  const seasons = ['2022-2023', '2023-2024', '2024-2025']; // Mockup for dropdown, you can fetch this dynamically
+    const [isLoading, setIsLoading] = useState(true);
+    const { authClient } = useContext(AuthContext);
+    const [managers, setManagers] = useState([]);
+    const [seasons, setSeasons] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedSeason, setSelectedSeason] = useState(1);
+    const itemsPerPage = 10;
+    
+    const totalPages = Math.ceil(managers.length / itemsPerPage);
 
-  useEffect(() => {
-      const fetchData = async () => {
-          const currentSeason = await fetchCurrentSeason();
-          setSelectedSeason(currentSeason);
-          await fetchManagerData(currentSeason);
-          setIsLoading(false);
-      };
-      fetchData();
-  }, []);
+    const renderedPaginationItems = Array.from({ length: totalPages }, (_, index) => (
+        <Pagination.Item 
+            key={index + 1} 
+            active={index + 1 === currentPage} 
+            onClick={() => setCurrentPage(index + 1)}
+        >
+            {index + 1}
+        </Pagination.Item>
+    ));
 
-  const fetchCurrentSeason = async () => {
-      // Fetch the current season from your backend.
-      const response = await fetch('/api/current-season');
-      const data = await response.json();
-      return data.currentSeason;
-  };
+    useEffect(() => {
+        const fetchIntialData = async () => {
+            await fetchSeasons();
+            const activeSeason = await fetchActiveSeasonId();
+            await fetchViewData(activeSeason);
+            setIsLoading(false);
+        };
+        fetchIntialData();
+    }, []);
 
-  const fetchManagerData = async (season) => {
-      // Fetch the data based on the selected season from your backend.
-      // Mocked up for demonstration purposes.
-      const mockData = Array(100).fill(null).map((_, index) => ({
-          position: index + 1,
-          username: `manager${index + 1}`,
-          score: Math.floor(Math.random() * 500) // Random score
-      }));
-      setManagers(mockData);
-  };
+    useEffect(() => {
+        setCurrentPage(1);
+        fetchData();
+    }, [selectedSeason]);
+    
+    useEffect(() => {
+        fetchData();
+    }, [currentPage]);
 
-    const displayedManagers = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const fetchData = async () => {
+        await fetchViewData(selectedSeason);
+        setIsLoading(false);
+    };
+    
+    const fetchActiveSeasonId = async () => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    
+        const activeSeasonIdData = await open_fpl_backend.getActiveSeasonId();
+        setSelectedSeason(activeSeasonIdData);
+    };
+
+    const fetchViewData = async (season) => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    
+        const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage); // Update the backend call if needed
+        setManagers(leaderboardData.entries);
+    };
+
+    const fetchSeasons = async () => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    
+        const seasonList = await open_fpl_backend.getSeasons();
+        setSeasons(seasonList); 
+    };
+
+    const renderedData = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(manager => (
+        <tr key={manager.position}>
+            <td>{manager.position}</td>
+            <td>{manager.username}</td>
+            <td>{manager.score}</td>
+        </tr>
+    ));
 
     return (
         isLoading ? (
-            <Container className="d-flex flex-column align-items-center justify-content-center" style={{ minHeight: "80vh" }}>
-                <p>Loading...</p>
-            </Container>
-        )
+        <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
+            <Spinner animation="border" />
+            <p className='text-center mt-1'>Loading</p>
+        </div>
+        ) 
         :
-        <Container className="my-5">
-            <Form.Group controlId="seasonSelect">
+        <Container>
+             <Form.Group controlId="seasonSelect">
                 <Form.Label>Select Season</Form.Label>
-                <Form.Control as="select" value={selectedSeason} onChange={e => setSelectedSeason(e.target.value)}>
-                    {seasons.map(season => <option key={season} value={season}>{season}</option>)}
+                <Form.Control as="select" value={selectedSeason} onChange={e => {
+                    setSelectedSeason(Number(e.target.value));
+                }}>
+                    {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name} ${season.year}`}</option>)}
                 </Form.Control>
             </Form.Group>
-
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -63,22 +108,10 @@ const LeagueStandings = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {displayedManagers.map(manager => (
-                        <tr key={manager.position}>
-                            <td>{manager.position}</td>
-                            <td>{manager.username}</td>
-                            <td>{manager.score}</td>
-                        </tr>
-                    ))}
+                    {renderedData}
                 </tbody>
             </Table>
-            <Pagination>
-                {Array(Math.ceil(managers.length / itemsPerPage)).fill(null).map((_, index) => (
-                    <Pagination.Item key={index} active={index + 1 === currentPage} onClick={() => setCurrentPage(index + 1)}>
-                        {index + 1}
-                    </Pagination.Item>
-                ))}
-            </Pagination>
+            <Pagination>{renderedPaginationItems}</Pagination>
         </Container>
     );
 };

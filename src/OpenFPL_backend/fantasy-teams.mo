@@ -906,6 +906,33 @@ module {
             };
         };
 
+        public func getSeasonLeaderboard(activeSeasonId: Nat16, limit: Nat, offset: Nat) : T.PaginatedLeaderboard {
+            switch (seasonLeaderboards.get(activeSeasonId)) {
+                case (null) {
+                    return {
+                        seasonId = activeSeasonId;
+                        gameweek = 0;
+                        entries = List.nil();
+                        totalEntries = 0;
+                    };
+                };
+
+                case (?seasonData) {
+                    let allSeasonLeaderboardEntries = seasonData.seasonLeaderboard.entries;
+
+                    let droppedEntries = List.drop<T.LeaderboardEntry>(allSeasonLeaderboardEntries, offset);
+                    let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+
+                    return {
+                        seasonId = activeSeasonId;
+                        gameweek = 0; 
+                        entries = paginatedEntries;
+                        totalEntries = List.size<T.LeaderboardEntry>(allSeasonLeaderboardEntries);
+                    };
+                };
+            };
+        };
+
         public func getSeasonTop10(activeSeasonId: Nat16) : T.Leaderboard {
             switch (seasonLeaderboards.get(activeSeasonId)) {
                 case (null) {

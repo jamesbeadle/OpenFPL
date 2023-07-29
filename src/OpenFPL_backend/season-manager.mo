@@ -252,5 +252,9 @@ module {
     public func getTransfersAllowed() : Bool {
         return transfersAllowed;
     };
+    
+    public func getSeasons() : [T.Season] {
+        return seasonsInstance.getSeasons();
+    };
   };
 }

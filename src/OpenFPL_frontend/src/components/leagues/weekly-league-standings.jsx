@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Table, Pagination, Form } from 'react-bootstrap';
+import React, { useState, useEffect, useContext } from 'react';
+import { Container, Spinner, Table, Pagination, Form } from 'react-bootstrap';
+
+import { AuthContext } from "../../contexts/AuthContext";
+import { Actor } from "@dfinity/agent";
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 
 const WeeklyLeagueStandings = () => {
     const [isLoading, setIsLoading] = useState(true);
+    const { authClient } = useContext(AuthContext);
     const [managers, setManagers] = useState([]);
+    const [seasons, setSeasons] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedSeason, setSelectedSeason] = useState(1);
     const [selectedGameweek, setSelectedGameweek] = useState(1);
@@ -23,6 +29,7 @@ const WeeklyLeagueStandings = () => {
 
     useEffect(() => {
         const fetchIntialData = async () => {
+            await fetchSeasons();
             const activeSeason = await fetchActiveSeasonId();
             const activeGameweek = await fetchActiveGameweek();
             await fetchViewData(activeSeason, activeGameweek);
@@ -34,7 +41,7 @@ const WeeklyLeagueStandings = () => {
     useEffect(() => {
         setCurrentPage(1);
         fetchData();
-    }, [selectedGameweek]);
+    }, [selectedGameweek, selectedSeason]);
     
     useEffect(() => {
         fetchData();
@@ -69,6 +76,14 @@ const WeeklyLeagueStandings = () => {
         setManagers(leaderboardData.entries);
     };
 
+    const fetchSeasons = async () => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    
+        const seasonList = await open_fpl_backend.getSeasons();
+        setSeasons(seasonList); 
+    };
+
     const renderedData = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(manager => (
         <tr key={manager.position}>
             <td>{manager.position}</td>
@@ -86,13 +101,13 @@ const WeeklyLeagueStandings = () => {
         ) 
         :
         <Container>
-            <Form.Group controlId="seasonSelect">
+             <Form.Group controlId="seasonSelect">
                 <Form.Label>Select Season</Form.Label>
-                <Form.Control as="select" value={selectedSeason} onChange={e => setSelectedSeason(Number(e.target.value))}>
-                    {/* You might need to update this if there's a predefined list of seasons */}
-                    {Array.from({ length: 5 }, (_, index) => (
-                        <option key={index + 1} value={index + 1}>Season {index + 1}</option>
-                    ))}
+                <Form.Control as="select" value={selectedSeason} onChange={e => {
+                    setSelectedSeason(Number(e.target.value));
+                    setSelectedGameweek(1);
+                }}>
+                    {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name} ${season.year}`}</option>)}
                 </Form.Control>
             </Form.Group>
 

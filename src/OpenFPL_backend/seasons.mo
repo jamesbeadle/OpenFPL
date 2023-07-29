@@ -23,6 +23,10 @@ module {
         nextSeasonId := stable_season_id;
     };
 
+    public func getSeasons() : [T.Season] {
+        List.toArray(seasons);
+    };
+
     public func getSeasonFixtures(seasonId: Nat16) : [T.Fixture] {
 
         var seasonFixtures = List.nil<T.Fixture>();

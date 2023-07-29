@@ -202,7 +202,10 @@ actor Self {
     };
   };
 
-  //Get homepage DTO
+  //Season Functions
+  public shared query ({caller}) func getSeasons() : async [T.Season] {
+      return seasonManager.getSeasons();
+  };
 
   //League functions
   public shared query ({caller}) func getSeasonTop10() : async T.Leaderboard {
@@ -215,6 +218,10 @@ actor Self {
 
   public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
       return fantasyTeamsInstance.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
+  };
+
+  public shared query ({caller}) func getSeasonLeaderboard(seasonId: Nat16, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
+      return fantasyTeamsInstance.getSeasonLeaderboard(seasonId, limit, offset);
   };
 
   //Fantasy team functions
