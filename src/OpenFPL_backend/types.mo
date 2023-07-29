@@ -153,6 +153,13 @@ module Types{
         gameweekLeaderboards: List.List<Leaderboard>;
     };
 
+    public type PaginatedLeaderboard = {
+        seasonId: Nat16;
+        gameweek: Nat8;
+        entries: List.List<LeaderboardEntry>;
+        totalEntries: Nat;
+    };
+
     public type Leaderboard = {
         seasonId: Nat16;
         gameweek: Nat8;

@@ -4,39 +4,71 @@ import { Container, Table, Pagination, Form } from 'react-bootstrap';
 const WeeklyLeagueStandings = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [managers, setManagers] = useState([]);
-    const [currentGameweek, setCurrentGameweek] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedSeason, setSelectedSeason] = useState(1);
     const [selectedGameweek, setSelectedGameweek] = useState(1);
     const itemsPerPage = 10;
+    
+    const totalPages = Math.ceil(managers.length / itemsPerPage);
+
+    const renderedPaginationItems = Array.from({ length: totalPages }, (_, index) => (
+        <Pagination.Item 
+            key={index + 1} 
+            active={index + 1 === currentPage} 
+            onClick={() => setCurrentPage(index + 1)}
+        >
+            {index + 1}
+        </Pagination.Item>
+    ));
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchIntialData = async () => {
+            const activeSeason = await fetchActiveSeasonId();
             const activeGameweek = await fetchActiveGameweek();
-            setSelectedGameweek(activeGameweek);
-            await fetchManagerDataForWeek(activeGameweek);
+            await fetchViewData(activeSeason, activeGameweek);
             setIsLoading(false);
         };
-        fetchData();
+        fetchIntialData();
     }, []);
 
+    useEffect(() => {
+        setCurrentPage(1);
+        fetchData();
+    }, [selectedGameweek]);
+    
+    useEffect(() => {
+        fetchData();
+    }, [currentPage]);
+
+    const fetchData = async () => {
+        await fetchViewData(selectedSeason, selectedGameweek);
+        setIsLoading(false);
+    };
+
     const fetchActiveGameweek = async () => {
-        // Fetch the active gameweek from your backend.
-        const response = await fetch('/api/active-gameweek');
-        const data = await response.json();
-        return data.activeGameweek;
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    
+        const activeGameweekData = await open_fpl_backend.getActiveGameweek();
+        setSelectedGameweek(activeGameweekData);
+    };
+    
+    const fetchActiveSeasonId = async () => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    
+        const activeSeasonIdData = await open_fpl_backend.getActiveSeasonId();
+        setSelectedSeason(activeSeasonIdData);
     };
 
-    const fetchManagerDataForWeek = async (gameweek) => {
-        // Fetch the data based on the selected gameweek from your backend.
-        // Mocked up for demonstration purposes.
-        const mockData = Array(100).fill(null).map((_, index) => ({
-            position: index + 1,
-            username: `manager${index + 1}`,
-            score: Math.floor(Math.random() * 100) // Random score for the week
-        }));
-        setManagers(mockData);
+    const fetchViewData = async (season, gameweek) => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+    
+        const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage); // Update the backend call if needed
+        setManagers(leaderboardData.entries);
     };
 
-    // Placeholder for pagination and rendering logic
     const renderedData = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(manager => (
         <tr key={manager.position}>
             <td>{manager.position}</td>
@@ -46,7 +78,24 @@ const WeeklyLeagueStandings = () => {
     ));
 
     return (
+        isLoading ? (
+        <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
+            <Spinner animation="border" />
+            <p className='text-center mt-1'>Loading</p>
+        </div>
+        ) 
+        :
         <Container>
+            <Form.Group controlId="seasonSelect">
+                <Form.Label>Select Season</Form.Label>
+                <Form.Control as="select" value={selectedSeason} onChange={e => setSelectedSeason(Number(e.target.value))}>
+                    {/* You might need to update this if there's a predefined list of seasons */}
+                    {Array.from({ length: 5 }, (_, index) => (
+                        <option key={index + 1} value={index + 1}>Season {index + 1}</option>
+                    ))}
+                </Form.Control>
+            </Form.Group>
+
             <Form.Group controlId="gameweekSelect">
                 <Form.Label>Select Gameweek</Form.Label>
                 <Form.Control as="select" value={selectedGameweek} onChange={e => setSelectedGameweek(Number(e.target.value))}>
@@ -67,8 +116,7 @@ const WeeklyLeagueStandings = () => {
                     {renderedData}
                 </tbody>
             </Table>
-            {/* Placeholder for Pagination Component */}
-            <Pagination>{/* Pagination items go here */}</Pagination>
+            <Pagination>{renderedPaginationItems}</Pagination>
         </Container>
     );
 };

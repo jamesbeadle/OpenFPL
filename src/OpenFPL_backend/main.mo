@@ -213,6 +213,10 @@ actor Self {
       return fantasyTeamsInstance.getWeeklyTop10(seasonManager.getActiveSeasonId(), seasonManager.getActiveGameweek());
   };
 
+  public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
+      return fantasyTeamsInstance.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
+  };
+
   //Fantasy team functions
   public shared query ({caller}) func getTotalManagers() : async Nat {
       return fantasyTeamsInstance.getTotalManagers();

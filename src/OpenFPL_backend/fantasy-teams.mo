@@ -863,6 +863,49 @@ module {
             };
         };
 
+        public func getWeeklyLeaderboard(activeSeasonId: Nat16, activeGameweek: Nat8, limit: Nat, offset: Nat) : T.PaginatedLeaderboard {
+            switch (seasonLeaderboards.get(activeSeasonId)) {
+                case (null) {
+                    return {
+                        seasonId = activeSeasonId;
+                        gameweek = activeGameweek;
+                        entries = List.nil();
+                        totalEntries = 0;
+                    };
+                };
+                
+                case (?seasonData) {
+                    let allGameweekLeaderboards = seasonData.gameweekLeaderboards;
+                    let matchingGameweekLeaderboard = List.find(allGameweekLeaderboards, func(leaderboard: T.Leaderboard): Bool {
+                        return leaderboard.gameweek == activeGameweek;
+                    });
+
+                    switch (matchingGameweekLeaderboard) {
+                        case (null) {
+                            return {
+                                seasonId = activeSeasonId;
+                                gameweek = activeGameweek;
+                                entries = List.nil();
+                                totalEntries = 0;
+                            };
+                        };
+                        case (?foundLeaderboard) {
+                            let droppedEntries = List.drop<T.LeaderboardEntry>(foundLeaderboard.entries, offset);
+                            let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+ 
+
+                            return {
+                                seasonId = activeSeasonId;
+                                gameweek = activeGameweek;
+                                entries = paginatedEntries;
+                                totalEntries = List.size<T.LeaderboardEntry>(foundLeaderboard.entries);
+                            };
+                        };
+                    };
+                };
+            };
+        };
+
         public func getSeasonTop10(activeSeasonId: Nat16) : T.Leaderboard {
             switch (seasonLeaderboards.get(activeSeasonId)) {
                 case (null) {
