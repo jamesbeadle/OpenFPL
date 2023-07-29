@@ -194,39 +194,11 @@ module Types{
         eventEndTime: Nat8; //currently only used for Appearance
     };
 
-     public type Proposal = {
-        id : Nat;
-        votes_no : Tokens;
-        voters : List.List<Principal>;
-        state : ProposalState;
-        timestamp : Int;
-        proposer : Principal;
-        votes_yes : Tokens;
-        payload : ProposalPayload;
-    };
-
-    public type ProposalPayload = {
-        method : Text;
-        canister_id : Principal;
-        message : Blob;
-    };
-
-    public type ProposalState = {
-        // A failure occurred while executing the proposal
-        #failed : Text;
-        // The proposal is open for voting
-        #open;
-        // The proposal is currently being executed
-        #executing;
-        // Enough "no" votes have been cast to reject the proposal, and it will not be executed
-        #rejected;
-        // The proposal has been successfully executed
-        #succeeded;
-        // Enough "yes" votes have been cast to accept the proposal, and it will soon be executed
-        #accepted;
-    };
-
-    public type Tokens = { amount_e8s : Nat };
-
+    public type DataSubmission = {
+        fixtureId: Nat16;
+        submittedBy: Text;
+        events: List.List<PlayerEventData>;
+        //This is where I need the basic DAO example
+    }
 
 }
