@@ -7,6 +7,7 @@ module Types{
     public type GameweekNumber = Nat8;
     public type PlayerId = Nat16;
     public type TeamId = Nat16;
+    public type ProposalId = Nat;
     
     public type Error = {
         #NotFound;
@@ -218,20 +219,73 @@ module Types{
     };
 
     public type PlayerValuationVote = {
-        principalId: Text;
+        principalId: Principal;
         votes: Tokens;
     };
 
     public type Tokens = { amount_e8s : Nat64 };
     public type Proposal = {
         id : Nat;
-        votes_no : Tokens;
+        votes_no : List.List<PlayerValuationVote>;
         voters : List.List<Principal>;
         state : ProposalState;
         timestamp : Int;
         proposer : Principal;
-        votes_yes : Tokens;
+        votes_yes : List.List<PlayerValuationVote>;
         payload : ProposalPayload;
+        proposalType: ProposalType;
+        data: PayloadData;
+    };
+
+    public type PayloadData = {
+        #AddInitialFixtures : AddInitialFixturesPayload;
+        #RescheduleFixture : RescheduleFixturePayload;
+        #TransferPlayer : TransferPlayerPayload;
+        #CreatePlayer : CreatePlayerPayload;
+        #UpdatePlayer : UpdatePlayerPayload;
+        #SetPlayerInjury : SetPlayerInjuryPayload;
+        #RetirePlayer : RetirePlayerPayload;
+        #UnretirePlayer : UnretirePlayerPayload;
+        #PromoteTeam : PromoteTeamPayload;
+        #RelegateTeam : RelegateTeamPayload;
+        #UpdateTeam : UpdateTeamPayload;
+        #UpdateSystemParameters : UpdateSystemParametersPayload;
+    };
+
+    public type AddInitialFixturesPayload = {
+    };
+
+    public type RescheduleFixturePayload = {
+    };
+
+    public type TransferPlayerPayload = {
+    };
+
+    public type CreatePlayerPayload = {
+    };
+
+    public type UpdatePlayerPayload = {
+    };
+
+    public type SetPlayerInjuryPayload = {
+    };
+
+    public type RetirePlayerPayload = {
+    };
+
+    public type UnretirePlayerPayload = {
+    };
+
+    public type PromoteTeamPayload = {
+    };
+
+    public type RelegateTeamPayload = {
+    };
+
+    public type UpdateTeamPayload = {
+    };
+
+    public type UpdateSystemParametersPayload = {
     };
 
     public type ProposalState = {
@@ -260,5 +314,27 @@ module Types{
         events: List.List<PlayerEventData>;
         totalVotes: Tokens;
     };
+
+    public type VoteChoice = {
+        #Yes;
+        #No;
+    };
+
+
+    public type ProposalType = {
+        #AddInitialFixtures;
+        #RescheduleFixture;
+        #TransferPlayer;
+        #CreatePlayer;
+        #UpdatePlayer;
+        #SetPlayerInjury;
+        #RetirePlayer;
+        #UnretirePlayer;
+        #PromoteTeam;
+        #RelegateTeam;
+        #UpdateTeam;
+        #UpdateSystemParameters;
+    };
+
 
 }

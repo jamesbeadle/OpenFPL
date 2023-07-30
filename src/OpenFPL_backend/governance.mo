@@ -27,7 +27,7 @@ module {
             HashMap.HashMap<T.FixtureId, T.DataSubmission>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var playerRevaluationSubmissions: HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> = 
             HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> (20, Utilities.eqNat16, Utilities.hashNat16);
-        private var proposals: [T.Proposal] = [];
+        private var proposals: List.List<T.Proposal> = List.nil<T.Proposal>();
         private var consensusDraftFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var consensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
 
@@ -76,7 +76,14 @@ module {
 
             playerRevaluationSubmissions := outerMap;
 
-            proposals := stable_proposals;
+            proposals := List.fromArray(stable_proposals);
+        };
+
+        public func getVotingPower(principalId: Text) : Nat64 {
+            switch (Array.find<Text>(admins, func (admin) { admin == principalId })) {
+            case null { return 0; };
+            case _ { return 1_000_000; };
+            };
         };
         
         public func getFixtureDataSubmissions() : [(T.FixtureId, T.DataSubmission)] {
@@ -87,20 +94,13 @@ module {
             return Iter.toArray(draftFixtureDataSubmissions.entries());
         };
 
-
         public func getPlayerRevaluationSubmissions() : [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] {
             var results: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
             var resultsBuffer = Buffer.fromArray<(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))>(results);
 
-            // Iterate over the outer map (seasons)
-            for ((seasonId, midMap) in playerRevaluationSubmissions.entries()) {
-                
-                // Iterate over the mid map (gameweeks)
+            for ((seasonId, midMap) in playerRevaluationSubmissions.entries()) {        
                 for ((gameweek, innerMap) in midMap.entries()) {
-                    
-                    // Iterate over the inner map (player submissions)
                     for ((playerId, submissions) in innerMap.entries()) {
-                        
                         let entry: (T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>))) = (seasonId, (gameweek, (playerId, submissions)));
                         resultsBuffer.add(entry);
                     }
@@ -112,7 +112,7 @@ module {
         };
 
         public func getProposals() : [T.Proposal]{
-            return proposals;
+            return List.toArray(proposals);
         };
 
         public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData], isDraft: Bool) : () {
@@ -141,7 +141,7 @@ module {
                 case (?currentSubmissions) {
                     if (Utilities.eqPlayerEventDataArray(List.toArray(currentSubmissions.events), List.toArray(newSubmission.events))) {
                         let newVote: T.PlayerValuationVote = {
-                            principalId = principalId;
+                            principalId = Principal.fromText(principalId);
                             votes = { amount_e8s = userVotingPower };
                         };
                         let updatedVotesYes = List.push(newVote, currentSubmissions.votes_yes);
@@ -234,7 +234,6 @@ module {
             };
         };
 
-
         public func submitPlayerRevaluations(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber, revaluations: [T.PlayerValuationSubmission]) : () {
             let userVotingPower: Nat64 = getVotingPower(principalId);
 
@@ -277,28 +276,98 @@ module {
             }
         };
 
-
         public func voteOnProposal(principalId: Text, proposalId: T.ProposalId, voteChoice: T.VoteChoice) : () {
-            // Get user's voting power
             let userVotingPower: Nat64 = getVotingPower(principalId);
             
-            // Fetch the proposal based on proposalId
-            switch (proposalsMap.get(proposalId)) {
-                case (null) {
-                    // Proposal not found. Handle error, maybe return an error message.
-                };
+            let proposalOpt: ?T.Proposal = findProposalById(proposalId);
+
+            switch (proposalOpt) {
+                case (null) { };
                 case (?proposal) {
-                    // Check if user has already voted (assuming a method `hasUserVoted` exists)
-                    if (hasUserVoted(principalId, proposalId)) {
-                        // Handle double voting. Return error or ignore.
-                    } else {
-                        // Cast the vote.
-                        // Assuming `castVote` is a method that handles the voting logic, updates counts, etc.
-                        castVote(principalId, proposalId, voteChoice, userVotingPower);
+                    if (not hasUserVoted(Principal.fromText(principalId), proposal)) {
+                        castVote(Principal.fromText(principalId), proposal, voteChoice, userVotingPower);
                     };
                 };
             }
         };
+
+        private func findProposalById(proposalId: T.ProposalId) : ?T.Proposal {
+            var current: List.List<T.Proposal> = proposals;
+            while (switch current {
+                case null { false };
+                case (?((head, tail))) {
+                    if (head.id == proposalId) { true } else {
+                        current := tail;
+                        false
+                    }
+                }
+            }) {};
+            switch current {
+                case null { return null; };
+                case (?((head, _))) { return ?head; };
+            }
+        };
+
+        private func hasUserVoted(principal: Principal, proposal: T.Proposal) : Bool {
+            let hasVotedYes = Array.find<T.PlayerValuationVote>(List.toArray(proposal.votes_yes), func (vote: T.PlayerValuationVote) : Bool {
+                return vote.principalId == principal;
+            }) != null;
+
+            let hasVotedNo = Array.find<T.PlayerValuationVote>(List.toArray(proposal.votes_no), func (vote: T.PlayerValuationVote) : Bool {
+                return vote.principalId == principal;
+            }) != null;
+
+            return hasVotedYes or hasVotedNo;
+        };
+
+        private func castVote(principal: Principal, proposal: T.Proposal, voteChoice: T.VoteChoice, votingPower: Nat64) : () {
+            let userVote: T.PlayerValuationVote = {
+                principalId = principal;
+                votes = { amount_e8s = votingPower };
+            };
+
+            let updatedProposal: T.Proposal = {
+                id = proposal.id;
+                votes_no = switch (voteChoice) {
+                    case (#Yes) { proposal.votes_no };
+                    case (#No) { List.append(?(userVote, null), proposal.votes_no) };
+                };
+                votes_yes = switch (voteChoice) {
+                    case (#Yes) { List.append(?(userVote, null), proposal.votes_yes) };
+                    case (#No) { proposal.votes_yes };
+                };
+                voters = List.append(?(principal, null), proposal.voters);
+                state = proposal.state;
+                timestamp = proposal.timestamp;
+                proposer = proposal.proposer;
+                payload = proposal.payload;
+                proposalType = proposal.proposalType;
+                data = proposal.data;
+            };
+
+            func replaceInList(current: List.List<T.Proposal>, found: Bool) : (List.List<T.Proposal>, Bool) {
+                switch current {
+                    case null {
+                        return (null, found);
+                    };
+                    case (?((head, tail))) {
+                        if (head.id == proposal.id and not found) {
+                            let (newTail, _) = replaceInList(tail, true);
+                            return (?(updatedProposal, newTail), true);
+                        } else {
+                            let (newTail, wasReplaced) = replaceInList(tail, found);
+                            return (?(head, newTail), wasReplaced);
+                        };
+                    };
+                };
+            };
+
+            let (newProposals, _) = replaceInList(proposals, false);
+            proposals := newProposals;
+        };
+
+
+
 
 
         public func getGameweekPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
@@ -322,13 +391,6 @@ module {
             //NOTE THE SUCCESSFUL PLAYER VALUATION VOTES
 
             return [];
-        };
-
-        public func getVotingPower(principalId: Text) : Nat64 {
-            switch (Array.find<Text>(admins, func (admin) { admin == principalId })) {
-            case null { return 0; };
-            case _ { return 1_000_000; };
-            };
         };
 
     }
