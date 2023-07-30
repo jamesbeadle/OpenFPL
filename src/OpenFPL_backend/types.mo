@@ -344,5 +344,9 @@ module Types{
         #UpdateTeam;
         #UpdateSystemParameters;
     };
-    
+
+    public type ProposalTimer = {
+        timerId: Int;
+    };
+
 }

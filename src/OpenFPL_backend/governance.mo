@@ -9,10 +9,16 @@ import Buffer "mo:base/Buffer";
 import Time "mo:base/Time";
 import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
+import TrieMap "mo:base/TrieMap";
+import Nat "mo:base/Nat";
+import Hash "mo:base/Hash";
+import Int "mo:base/Int";
+import Timer "mo:base/Timer";
 
 module {
     public class Governance(){
 
+        private let oneHour = 1_000_000_000 * 60 * 60;
 
         let admins : [Text] = [
             //JB Local
@@ -30,7 +36,7 @@ module {
         private var proposals: List.List<T.Proposal> = List.nil<T.Proposal>();
         private var consensusDraftFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var consensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
-
+        private var proposalTimers: TrieMap.TrieMap<Nat, T.ProposalTimer> = TrieMap.TrieMap<Nat, T.ProposalTimer>(Nat.equal, Utilities.hashNat);
 
         public func setData(
             stable_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)], 
@@ -388,9 +394,122 @@ module {
             };
 
             proposals := List.append(?(newProposal, null), proposals);
+
+            let proposalTimerDuration = #nanoseconds (Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
+            let proposalTimerId = Timer.setTimer(proposalTimerDuration, proposalExpired);
+      
+            let newTimer: T.ProposalTimer = { timerId = proposalTimerId };
+            proposalTimers.put(newId, newTimer);
+
             return newId;
         };
 
+        public func proposalExpired() : async () {
+            // Temporary list to hold updated proposals
+            var updatedProposals = List.nil<T.Proposal>();
+            
+            // Iterate through all proposals
+            for (proposal in Iter.fromList<T.Proposal>(proposals)) {
+                // Check if proposal has expired
+                if (Time.now() - proposal.timestamp > (oneHour * 2)) {
+                    // Check if the proposal was accepted or not
+                    let yesVotes = List.size<T.PlayerValuationVote>(proposal.votes_yes);
+                    let noVotes = List.size<T.PlayerValuationVote>(proposal.votes_no);
+                    
+                    if (yesVotes > noVotes) {
+                        // Execute the proposal
+                        await executeProposal(proposal);
+                        // Append the proposal without modification to the updated list
+                        updatedProposals := List.append(?(proposal, null), updatedProposals);
+                    } else {
+                        // Create an updated proposal object with the state set to expired
+                        let updatedProposal: T.Proposal = {
+                            id = proposal.id;
+                            votes_no = proposal.votes_no;
+                            voters = proposal.voters;
+                            state = #rejected;
+                            timestamp = proposal.timestamp;
+                            proposer = proposal.proposer;
+                            votes_yes = proposal.votes_yes;
+                            payload = proposal.payload;
+                            proposalType = proposal.proposalType;
+                            data = proposal.data;
+                        };
+                        // Append the updated proposal to the updated list
+                        updatedProposals := List.append(?(updatedProposal, null), updatedProposals);
+                    }
+                } else {
+                    // If the proposal has not expired, append it without modification to the updated list
+                    updatedProposals := List.append(?(proposal, null), updatedProposals);
+                }
+            };
+            // Re-assign the updated proposals list to the proposals variable
+            proposals := updatedProposals;
+        };
+
+
+        private func executeProposal(proposal: T.Proposal) : async () {
+            // Execute the proposal based on its type and payload
+            // This is a placeholder; the actual execution logic will depend on the type of the proposal and its payload
+            switch (proposal.proposalType) {
+                case (#AddInitialFixtures) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#RescheduleFixture) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#TransferPlayer) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#LoanPlayer) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#RecallPlayer) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#CreatePlayer) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#UpdatePlayer) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#SetPlayerInjury) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#RetirePlayer) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#UnretirePlayer) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#PromoteTeam) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#RelegateTeam) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#UpdateTeam) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+                case (#UpdateSystemParameters) {
+                    // Handle AddInitialFixtures type
+                    // Use proposal.data and proposal.payload to execute the proposal
+                };
+            }
+        };
 
         public func getGameweekPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
 
