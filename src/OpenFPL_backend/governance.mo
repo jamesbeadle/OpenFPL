@@ -16,7 +16,21 @@ import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 
 module {
-    public class Governance(){
+    public class Governance(
+        addInitialFixtures: (proposalPayload: T.AddInitialFixturesPayload) -> async (),
+        rescheduleFixture: (proposalPayload: T.RescheduleFixturePayload) -> async (),
+        transferPlayer: (proposalPayload: T.TransferPlayerPayload) -> async (),
+        loanPlayer: (proposalPayload: T.LoanPlayerPayload) -> async (),
+        recallPlayer: (proposalPayload: T.RecallPlayerPayload) -> async (),
+        createPlayer: (proposalPayload: T.CreatePlayerPayload) -> async (),
+        updatePlayer: (proposalPayload: T.UpdatePlayerPayload) -> async (),
+        setPlayerInjury: (proposalPayload: T.SetPlayerInjuryPayload) -> async (),
+        retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async (),
+        unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async (),
+        promoteTeam: (proposalPayload: T.PromoteTeamPayload) -> async (),
+        relegateTeam: (proposalPayload: T.RelegateTeamPayload) -> async (),
+        updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async (),
+        updateSystemParameters: (proposalPayload: T.UpdateSystemParametersPayload) -> async ()){
 
         private let oneHour = 1_000_000_000 * 60 * 60;
 
@@ -440,34 +454,46 @@ module {
         private func executeProposal(proposal: T.Proposal) : async () {
             switch (proposal.data) {
                 case (#AddInitialFixtures(payload)) {
-                    let v = payload.name;
+                    await addInitialFixtures(payload);
                 };
                 case (#RescheduleFixture(payload)) {
-                    let v = payload.egg;
+                    await rescheduleFixture(payload);
                 };
                 case (#TransferPlayer(payload)) {
+                    await transferPlayer(payload);
                 };
                 case (#LoanPlayer(payload)) {
+                    await loanPlayer(payload);
                 };
                 case (#RecallPlayer(payload)) {
+                    await recallPlayer(payload);
                 };
                 case (#CreatePlayer(payload)) {
+                    await createPlayer(payload);
                 };
                 case (#UpdatePlayer(payload)) {
+                    await updatePlayer(payload);
                 };
                 case (#SetPlayerInjury(payload)) {
+                    await setPlayerInjury(payload);
                 };
                 case (#RetirePlayer(payload)) {
+                    await retirePlayer(payload);
                 };
                 case (#UnretirePlayer(payload)) {
+                    await unretirePlayer(payload);
                 };
                 case (#PromoteTeam(payload)) {
+                    await promoteTeam(payload);
                 };
                 case (#RelegateTeam(payload)) {
+                    await relegateTeam(payload);
                 };
                 case (#UpdateTeam(payload)) {
+                    await updateTeam(payload);
                 };
                 case (#UpdateSystemParameters(payload)) {
+                    await updateSystemParameters(payload);
                 };
             };
         };

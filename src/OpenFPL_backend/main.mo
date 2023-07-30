@@ -26,7 +26,6 @@ actor Self {
   let profilesInstance = Profiles.Profiles();
   let bookInstance = Book.Book();
   let teamsInstance = Teams.Teams();
-  let governanceInstance = Governance.Governance();
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
@@ -223,6 +222,23 @@ actor Self {
   public shared query ({caller}) func getSeasonLeaderboard(seasonId: Nat16, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
       return fantasyTeamsInstance.getSeasonLeaderboard(seasonId, limit, offset);
   };
+  
+  private func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {};
+  private func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {};
+  private func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {};
+  private func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {};
+  private func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {};
+  private func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {};
+  private func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {};
+  private func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {};
+  private func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {};
+  private func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {};
+  private func promoteTeam(proposalPayload: T.PromoteTeamPayload) : async () {};
+  private func relegateTeam(proposalPayload: T.RelegateTeamPayload) : async () {};
+  private func updateTeam(proposalPayload: T.UpdateTeamPayload) : async () {};
+  private func updateSystemParameters(proposalPayload: T.UpdateSystemParametersPayload) : async () {};
+  let governanceInstance = Governance.Governance(addInitialFixtures, rescheduleFixture, transferPlayer, loanPlayer, recallPlayer, createPlayer,
+      updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam, updateSystemParameters);
 
   //Fantasy team functions
   public shared query ({caller}) func getTotalManagers() : async Nat {
