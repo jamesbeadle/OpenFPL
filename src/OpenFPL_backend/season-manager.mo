@@ -19,7 +19,7 @@ module {
     calculatePlayerPoints: (activeGameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async [T.Fixture],
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
-    revaluePlayers: () -> async (),
+    revaluePlayers: (Nat16, Nat8) -> async (),
     snapshotGameweek: (seaasonId: Nat16) -> async (),
     mintWeeklyRewardsPool: () -> async (),
     mintAnnualRewardsPool: () -> async (),
@@ -207,7 +207,7 @@ module {
         await calculateFantasyTeamScores(activeSeasonId, activeGameweek, activeFixtures);
         await distributeRewards();
         await settleUserBets();
-        await revaluePlayers();
+        await revaluePlayers(activeSeasonId, activeGameweek);
         await resetTransfers();
         
         transfersAllowed := true;

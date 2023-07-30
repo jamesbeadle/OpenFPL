@@ -20,6 +20,8 @@ module {
 
         private let oneHour = 1_000_000_000 * 60 * 60;
 
+        private var Revalution_Threshold: Nat64 = 0;
+
         let admins : [Text] = [
             //JB Local
             "eqlhf-ppkq7-roa5i-4wu6r-jumy3-g2xrc-vfdd5-wtoeu-n7xre-vsktn-lqe"
@@ -282,10 +284,6 @@ module {
             }
         };
 
-        //create propsal with timer to execute
-
-
-
         public func voteOnProposal(principalId: Text, proposalId: T.ProposalId, voteChoice: T.VoteChoice) : () {
             let userVotingPower: Nat64 = getVotingPower(principalId);
             
@@ -405,24 +403,18 @@ module {
         };
 
         public func proposalExpired() : async () {
-            // Temporary list to hold updated proposals
+            
             var updatedProposals = List.nil<T.Proposal>();
             
-            // Iterate through all proposals
             for (proposal in Iter.fromList<T.Proposal>(proposals)) {
-                // Check if proposal has expired
                 if (Time.now() - proposal.timestamp > (oneHour * 2)) {
-                    // Check if the proposal was accepted or not
                     let yesVotes = List.size<T.PlayerValuationVote>(proposal.votes_yes);
                     let noVotes = List.size<T.PlayerValuationVote>(proposal.votes_no);
                     
                     if (yesVotes > noVotes) {
-                        // Execute the proposal
                         await executeProposal(proposal);
-                        // Append the proposal without modification to the updated list
                         updatedProposals := List.append(?(proposal, null), updatedProposals);
                     } else {
-                        // Create an updated proposal object with the state set to expired
                         let updatedProposal: T.Proposal = {
                             id = proposal.id;
                             votes_no = proposal.votes_no;
@@ -435,80 +427,49 @@ module {
                             proposalType = proposal.proposalType;
                             data = proposal.data;
                         };
-                        // Append the updated proposal to the updated list
                         updatedProposals := List.append(?(updatedProposal, null), updatedProposals);
                     }
                 } else {
-                    // If the proposal has not expired, append it without modification to the updated list
                     updatedProposals := List.append(?(proposal, null), updatedProposals);
                 }
             };
-            // Re-assign the updated proposals list to the proposals variable
             proposals := updatedProposals;
         };
 
 
         private func executeProposal(proposal: T.Proposal) : async () {
-            // Execute the proposal based on its type and payload
-            // This is a placeholder; the actual execution logic will depend on the type of the proposal and its payload
-            switch (proposal.proposalType) {
-                case (#AddInitialFixtures) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+            switch (proposal.data) {
+                case (#AddInitialFixtures(payload)) {
+                    let v = payload.name;
                 };
-                case (#RescheduleFixture) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#RescheduleFixture(payload)) {
+                    let v = payload.egg;
                 };
-                case (#TransferPlayer) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#TransferPlayer(payload)) {
                 };
-                case (#LoanPlayer) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#LoanPlayer(payload)) {
                 };
-                case (#RecallPlayer) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#RecallPlayer(payload)) {
                 };
-                case (#CreatePlayer) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#CreatePlayer(payload)) {
                 };
-                case (#UpdatePlayer) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#UpdatePlayer(payload)) {
                 };
-                case (#SetPlayerInjury) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#SetPlayerInjury(payload)) {
                 };
-                case (#RetirePlayer) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#RetirePlayer(payload)) {
                 };
-                case (#UnretirePlayer) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#UnretirePlayer(payload)) {
                 };
-                case (#PromoteTeam) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#PromoteTeam(payload)) {
                 };
-                case (#RelegateTeam) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#RelegateTeam(payload)) {
                 };
-                case (#UpdateTeam) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#UpdateTeam(payload)) {
                 };
-                case (#UpdateSystemParameters) {
-                    // Handle AddInitialFixtures type
-                    // Use proposal.data and proposal.payload to execute the proposal
+                case (#UpdateSystemParameters(payload)) {
                 };
-            }
+            };
         };
 
         public func getGameweekPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
@@ -523,16 +484,58 @@ module {
             return List.nil();
         };
 
-        public func getRevaluedPlayers() : async [T.Player] {
+        public func getRevaluedPlayers(seasonId: Nat16, gameweek: Nat8) : async List.List<T.RevaluedPlayer> {
+            var revaluedPlayers: List.List<T.RevaluedPlayer> = List.nil<T.RevaluedPlayer>();
 
-            //IMPLEMENT
+            let seasonData = playerRevaluationSubmissions.get(seasonId);
+            switch (seasonData) {
+                case (null) { return List.nil<T.RevaluedPlayer>(); };
+                case (?seasonData) {
+                    let gameweekData = seasonData.get(gameweek);
+                    switch (gameweekData) {
+                        case (null) { return List.nil<T.RevaluedPlayer>(); };
+                        case (?gameweekData) {
+                            
+                            for ((_, submissions) in gameweekData.entries()) {
+                                
+                                let totalVotesUp = List.foldLeft<T.PlayerValuationSubmission, Nat64>(submissions, 0, func(acc: Nat64, x: T.PlayerValuationSubmission): Nat64 {
+                                    return acc + List.foldLeft<T.PlayerValuationVote, Nat64>(x.votes_up, 0, func(innerAcc: Nat64, vote: T.PlayerValuationVote): Nat64 {
+                                        return innerAcc + vote.votes.amount_e8s;
+                                    });
+                                });
 
-            //RESET PLAYERS VOTES
+                                let totalVotesDown = List.foldLeft<T.PlayerValuationSubmission, Nat64>(submissions, 0, func(acc: Nat64, x: T.PlayerValuationSubmission): Nat64 {
+                                    return acc + List.foldLeft<T.PlayerValuationVote, Nat64>(x.votes_down, 0, func(innerAcc: Nat64, vote: T.PlayerValuationVote): Nat64 {
+                                        return innerAcc + vote.votes.amount_e8s;
+                                    });
+                                });
 
-            //NOTE THE SUCCESSFUL PLAYER VALUATION VOTES
 
-            return [];
+                                switch (submissions) {
+                                    case (null) {  };
+                                    case (?(firstSubmission, _)) {
+                                        if (totalVotesUp > Revalution_Threshold) {
+                                            revaluedPlayers := List.append<T.RevaluedPlayer>(revaluedPlayers, List.make<T.RevaluedPlayer>({
+                                                playerId = firstSubmission.playerId;
+                                                direction = #Increase;
+                                            }));
+                                        } else if (totalVotesDown > Revalution_Threshold) {
+                                            revaluedPlayers := List.append<T.RevaluedPlayer>(revaluedPlayers, List.make<T.RevaluedPlayer>({
+                                                playerId = firstSubmission.playerId;
+                                                direction = #Decrease;
+                                            }));
+                                        }
+                                    };
+                                };
+                            }
+                        };
+                    };
+                };
+            };
+            return revaluedPlayers;
         };
+
+
 
     }
 }

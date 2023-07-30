@@ -80,6 +80,14 @@ module Types{
         dateOfBirth: Int;
         nationality: Text;
         seasons: List.List<PlayerSeason>;
+        valueHistory: List.List<ValueHistory>;
+    };
+
+    public type ValueHistory = {
+        seasonId: Nat16;
+        gameweek: Nat8;
+        oldValue: Float;
+        newValue: Float;
     };
 
     public type PlayerSeason = {
@@ -255,9 +263,11 @@ module Types{
     };
 
     public type AddInitialFixturesPayload = {
+        name: Text;
     };
 
     public type RescheduleFixturePayload = {
+        egg: Text;
     };
 
     public type TransferPlayerPayload = {
@@ -348,5 +358,16 @@ module Types{
     public type ProposalTimer = {
         timerId: Int;
     };
+
+    public type RevaluedPlayer = {
+        playerId: PlayerId; 
+        direction: RevaluationDirection;
+    };
+
+    public type RevaluationDirection = {
+        #Increase;
+        #Decrease;
+    };
+
 
 }

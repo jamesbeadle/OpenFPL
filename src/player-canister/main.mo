@@ -55,6 +55,7 @@ actor Self {
                 dateOfBirth = player.dateOfBirth;
                 nationality = player.nationality;
                 seasons = List.nil<T.PlayerSeason>();
+                valueHistory = List.nil<T.ValueHistory>();
             };
         });
 
@@ -162,15 +163,58 @@ actor Self {
         });
 
         switch (foundPlayer) {
-            case (null) { return { id = 0; teamId = 0; position = 0; firstName = ""; lastName = ""; shirtNumber = 0; value = 0; dateOfBirth = 0; nationality = ""; seasons = List.nil<T.PlayerSeason>(); } };
+            case (null) { return { id = 0; teamId = 0; position = 0; firstName = ""; lastName = ""; shirtNumber = 0; value = 0; dateOfBirth = 0; nationality = ""; seasons = List.nil<T.PlayerSeason>(); valueHistory = List.nil<T.ValueHistory>(); } };
             case (?player) { return player; };
         };
     };
 
-    public func revaluePlayers(revaluedPlayers: [T.Player]) : async (){
+    public func revaluePlayers(seasonId: Nat16, gameweek: Nat8, revaluedPlayers: List.List<T.RevaluedPlayer>) : async () {
+        let changeAmount: Float = 250000000;
 
-        //update the players value in the player canister
-        //ensure the prior value is recorded
+        for (revaluedPlayer in Iter.fromList(revaluedPlayers)) {
+            var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
+                if (p.id == revaluedPlayer.playerId) {
+                    var newValue = p.value;
+
+                    switch (revaluedPlayer.direction) {
+                        case (#Increase) {
+                            newValue += changeAmount;
+                        };
+                        case (#Decrease) {
+                            if (p.value > changeAmount) {
+                                newValue -= changeAmount;
+                            }
+                        };
+                    };
+        
+                    let historyEntry: T.ValueHistory = {
+                        seasonId = seasonId;
+                        gameweek = gameweek;
+                        oldValue = p.value;
+                        newValue = newValue;
+                    };
+
+                    let updatedPlayer: T.Player = {
+                            id = p.id;
+                            teamId = p.teamId;
+                            position = p.position;
+                            firstName = p.firstName;
+                            lastName = p.lastName;
+                            shirtNumber = p.shirtNumber;
+                            value = newValue;
+                            dateOfBirth = p.dateOfBirth;
+                            nationality = p.nationality;
+                            seasons = p.seasons;
+                            valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
+                    };
+
+                    return updatedPlayer;
+                };
+                return p;
+            });
+
+            players := updatedPlayers;
+        }
     };
 
     public func calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]) : async [T.Fixture] {
@@ -259,6 +303,7 @@ actor Self {
                         dateOfBirth = p.dateOfBirth;
                         nationality = p.nationality;
                         seasons = updatedSeasons;
+                        valueHistory = p.valueHistory;
                     };
 
                     players := List.map<T.Player, T.Player>(players, func (player: T.Player): T.Player {
@@ -393,11 +438,6 @@ actor Self {
             case 10 { return 0; };  // Handled after all players calculated
             case _ { return 0; };
         };
-    };
-
-
-    system func heartbeat() : async () {
-        
     };
 
     private stable var stable_players: [T.Player] = [];

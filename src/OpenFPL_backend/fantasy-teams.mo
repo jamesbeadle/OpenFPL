@@ -679,12 +679,10 @@ module {
                     switch previousPoints {
                         case (?lastPoints) {
                             if (entry.points == lastPoints) {
-                                // It's a tie
                                 countWithPreviousPoints += 1;
                                 tiedEntries := List.append(tiedEntries, List.make(entry));
                                 return acc;
                             } else {
-                                // Not a tie, so process the tied entries first
                                 let processedTiedEntries = List.map(tiedEntries, func(tiedEntry: T.LeaderboardEntry): T.LeaderboardEntry {
                                     return {
                                         position = rank;
@@ -695,13 +693,12 @@ module {
                                     };
                                 });
                                 rank += countWithPreviousPoints;
-                                countWithPreviousPoints := 1;  // Reset this count
-                                tiedEntries := List.nil();  // Reset tied entries
+                                countWithPreviousPoints := 1;
+                                tiedEntries := List.nil(); 
                                 return List.append(processedTiedEntries, List.append(acc, List.make(entry)));
                             };
                         };
                         case null {
-                            // This is the first player being processed
                             previousPoints := ?entry.points;
                             countWithPreviousPoints := 1;
                             tiedEntries := List.append(tiedEntries, List.make(entry));
@@ -710,7 +707,6 @@ module {
                     };
                 });
 
-                // Handle any remaining tied entries at the end
                 let processedTiedEntries = List.map(tiedEntries, func(tiedEntry: T.LeaderboardEntry): T.LeaderboardEntry {
                     return {
                         position = rank;

@@ -50,7 +50,7 @@ actor Self {
   { 
     getAllPlayers: () -> async [DTOs.PlayerDTO];
     getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)];
-    revaluePlayers: ([T.Player]) -> async ();
+    revaluePlayers: (List.List<T.RevaluedPlayer>) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
     calculatePlayerPoints: (gameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async [T.Fixture];
   };
@@ -322,8 +322,8 @@ actor Self {
     await privateLeaguesInstance.settleUserBets();
   };
 
-  private func revaluePlayers(): async (){
-    let revaluedPlayers = await governanceInstance.getRevaluedPlayers();
+  private func revaluePlayers(activeSeasonId: Nat16, activeGameweek: Nat8): async (){
+    let revaluedPlayers = await governanceInstance.getRevaluedPlayers(activeSeasonId, activeGameweek);
     await playerCanister.revaluePlayers(revaluedPlayers);
   };
 
