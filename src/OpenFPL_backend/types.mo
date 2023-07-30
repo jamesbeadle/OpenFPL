@@ -222,7 +222,7 @@ module Types{
         votes: Tokens;
     };
 
-    public type Tokens = { amount_e8s : Nat };
+    public type Tokens = { amount_e8s : Nat64 };
     public type Proposal = {
         id : Nat;
         votes_no : Tokens;
@@ -253,6 +253,12 @@ module Types{
         transfer_fee: Tokens;
         proposal_vote_threshold: Tokens;
         proposal_submission_deposit: Tokens;
+    };
+
+    public type ConsensusData = {
+        fixtureId: FixtureId;
+        events: List.List<PlayerEventData>;
+        totalVotes: Tokens;
     };
 
 }

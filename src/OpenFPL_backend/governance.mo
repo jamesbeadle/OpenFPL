@@ -6,6 +6,9 @@ import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
+import Time "mo:base/Time";
+import Int64 "mo:base/Int64";
+import Nat64 "mo:base/Nat64";
 
 module {
     public class Governance(){
@@ -25,6 +28,8 @@ module {
         private var playerRevaluationSubmissions: HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> = 
             HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> (20, Utilities.eqNat16, Utilities.hashNat16);
         private var proposals: [T.Proposal] = [];
+        private var consensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
+
 
 
         public func setData(
@@ -110,31 +115,116 @@ module {
             return proposals;
         };
 
+        public func submitDraftPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : () {
+            let userVotingPower: Nat64 = getVotingPower(principalId);
 
+            let currentTime = Time.now();
+            let newSubmission: T.DataSubmission = {
+                fixtureId = fixtureId;
+                proposer = principalId;
+                timestamp = currentTime;
+                events = List.fromArray(playerEventData);
+                votes_yes = List.nil<T.PlayerValuationVote>();
+                votes_no = List.nil<T.PlayerValuationVote>();
+            };
 
+            let existingSubmissions = draftFixtureDataSubmissions.get(fixtureId);
 
-        public func submitDraftPlayerEventData(principalId: Text, fixtureId: Nat16, playerEventData: [T.PlayerEventData]) : (){
-            let userVotingPower = getVotingPower(principalId);
+            switch (existingSubmissions) {
+                case (null) {
+                    draftFixtureDataSubmissions.put(fixtureId, newSubmission);
+                };
+                case (?currentSubmissions) {
+                if (Utilities.eqPlayerEventDataArray(List.toArray(currentSubmissions.events), List.toArray(newSubmission.events))) {
+                    
+                    let newVote: T.PlayerValuationVote = {
+                        principalId = principalId;
+                        votes = { amount_e8s = userVotingPower };
+                    };
+                    var newVoteList = List.nil<T.PlayerValuationVote>();
+                    newVoteList := List.push(newVote, newVoteList);
+                    
+                    let updatedSubmissions: T.DataSubmission = {
+                        fixtureId = currentSubmissions.fixtureId;
+                        proposer = currentSubmissions.proposer;
+                        timestamp = currentSubmissions.timestamp;
+                        events = currentSubmissions.events;
+                        votes_yes = List.append<T.PlayerValuationVote>(currentSubmissions.votes_yes, newVoteList);
+                        votes_no = currentSubmissions.votes_no;
+                    };
 
-            //this will submit the draft data and then add it to the list with their voting power
+                    draftFixtureDataSubmissions.put(fixtureId, updatedSubmissions);
+                } else {
+                    draftFixtureDataSubmissions.put(fixtureId, newSubmission);
+                }
+            };
 
+            };
 
-            //on submission recalculate the current accepted draft data to be shown to the site
-
-            //have an array of consensus draft data
-
+            let newConsensus = recalculateDraftPlayerConsensus(fixtureId);
+            consensusFixtureData.put(fixtureId, newConsensus);
         };
 
-        public func submitPlayerEventData(principalId: Text, fixtureId: Nat16, playerEventData: [T.PlayerEventData]) : (){
-            let userVotingPower = getVotingPower(principalId);
-
-            //this will submit the data and then add it to the list with their voting power
 
 
-            //on submission recalculate the current accepted data to be shown to the site
 
-            //have an array of consensus data
+        private func recalculateDraftPlayerConsensus(fixtureId: T.FixtureId) : T.ConsensusData {
+            let submissions = switch (draftFixtureDataSubmissions.get(fixtureId)) {
+                case (null) { 
+                    List.nil<T.DataSubmission>() 
+                };
+                case (?actualSubmissions) { 
+                    List.push(actualSubmissions, List.nil<T.DataSubmission>()) 
+                };
+            };
 
+            var maxVotesSubmission: ?T.DataSubmission = null;
+            var maxVotes: Int = 0;
+
+            List.iterate(submissions, func (submission: T.DataSubmission) {
+                let totalVotesYes = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_yes, (0 : Int), func (acc: Int, vote: T.PlayerValuationVote) {
+                    acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                });
+
+                let totalVotesNo = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_no, (0 : Int), func (acc: Int, vote: T.PlayerValuationVote) {
+                    acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                });
+
+                let currentTotalVotes = totalVotesYes - totalVotesNo;
+
+                if (currentTotalVotes > maxVotes) {
+                    maxVotes := currentTotalVotes;
+                    maxVotesSubmission := ?submission;
+                }
+            });
+
+            let (weightedEvents, totalVotesYes, totalVotesNo) = switch (maxVotesSubmission) {
+                case (null) {
+                    ([], { amount_e8s = 0 }, { amount_e8s = 0 })
+                };
+                case (?submissionWithMaxVotes) {
+                    let events = List.toArray(submissionWithMaxVotes.events);
+
+                    let votesYes = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_yes, (0 : Int), func (acc: Int, vote: T.PlayerValuationVote) {
+                        acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                    });
+
+                    let votesNo = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_no, (0 : Int), func (acc: Int, vote: T.PlayerValuationVote) {
+                        acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                    });
+
+                    (events, { amount_e8s = votesYes }, { amount_e8s = votesNo })
+                };
+            };
+            
+            let totalVotesDifference = totalVotesYes.amount_e8s - totalVotesNo.amount_e8s;
+            let totalVotes: T.Tokens = { amount_e8s = Int64.toNat64(Int64.fromInt(totalVotesDifference)) };
+
+            return {
+                fixtureId = fixtureId;
+                events = List.fromArray(weightedEvents);
+                totalVotes = totalVotes;
+            };
         };
 
         public func submitPlayerRevaluation() : (){
