@@ -256,5 +256,13 @@ module {
     public func getSeasons() : [T.Season] {
         return seasonsInstance.getSeasons();
     };
+
+    public func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
+        
+    };
+
+    public func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
+        
+    };
   };
 }

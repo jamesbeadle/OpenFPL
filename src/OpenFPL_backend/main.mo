@@ -52,6 +52,14 @@ actor Self {
     revaluePlayers: (List.List<T.RevaluedPlayer>) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
     calculatePlayerPoints: (gameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async [T.Fixture];
+    transferPlayer: (proposalPayload: T.TransferPlayerPayload) -> async ();
+    loanPlayer: (proposalPayload: T.LoanPlayerPayload) -> async ();
+    recallPlayer: (proposalPayload: T.RecallPlayerPayload) -> async ();
+    createPlayer: (proposalPayload: T.CreatePlayerPayload) -> async ();
+    updatePlayer: (proposalPayload: T.UpdatePlayerPayload) -> async ();
+    setPlayerInjury: (proposalPayload: T.SetPlayerInjuryPayload) -> async ();
+    retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async ();
+    unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async ();
   };
 
   private func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8): async [(Nat16, DTOs.PlayerScoreDTO)] {
@@ -223,22 +231,60 @@ actor Self {
       return fantasyTeamsInstance.getSeasonLeaderboard(seasonId, limit, offset);
   };
   
-  private func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {};
-  private func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {};
-  private func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {};
-  private func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {};
-  private func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {};
-  private func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {};
-  private func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {};
-  private func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {};
-  private func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {};
-  private func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {};
-  private func promoteTeam(proposalPayload: T.PromoteTeamPayload) : async () {};
-  private func relegateTeam(proposalPayload: T.RelegateTeamPayload) : async () {};
-  private func updateTeam(proposalPayload: T.UpdateTeamPayload) : async () {};
-  private func updateSystemParameters(proposalPayload: T.UpdateSystemParametersPayload) : async () {};
-  let governanceInstance = Governance.Governance(addInitialFixtures, rescheduleFixture, transferPlayer, loanPlayer, recallPlayer, createPlayer,
-      updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam, updateSystemParameters);
+  private func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
+    await seasonManager.addInitialFixtures(proposalPayload);
+  };
+
+  private func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
+    await seasonManager.rescheduleFixture(proposalPayload);
+  };
+
+  private func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {
+    await playerCanister.transferPlayer(proposalPayload);
+  };
+
+  private func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {
+    await playerCanister.loanPlayer(proposalPayload);
+  };
+
+  private func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
+    await playerCanister.recallPlayer(proposalPayload);
+  };
+
+  private func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
+    await playerCanister.createPlayer(proposalPayload);
+  };
+
+  private func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {
+    await playerCanister.updatePlayer(proposalPayload);
+  };
+
+  private func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {
+    await playerCanister.setPlayerInjury(proposalPayload);
+  };
+
+  private func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
+    await playerCanister.retirePlayer(proposalPayload);
+  };
+
+  private func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {
+    await playerCanister.unretirePlayer(proposalPayload);
+  };
+
+  private func promoteTeam(proposalPayload: T.PromoteTeamPayload) : async () {
+    await teamsInstance.promoteTeam(proposalPayload);
+  };
+
+  private func relegateTeam(proposalPayload: T.RelegateTeamPayload) : async () {
+    await teamsInstance.relegateTeam(proposalPayload);
+  };
+
+  private func updateTeam(proposalPayload: T.UpdateTeamPayload) : async () {
+    await teamsInstance.updateTeam(proposalPayload);
+  };
+
+  let governanceInstance = Governance.Governance(transferPlayer, loanPlayer, recallPlayer, createPlayer,
+      updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam);
 
   //Fantasy team functions
   public shared query ({caller}) func getTotalManagers() : async Nat {
@@ -381,6 +427,7 @@ actor Self {
     getConsensusPlayerEventData,
     getAllPlayersMap,
     resetFantasyTeams);
+    seasonManager.setGovernanceFunctions(addInitialFixtures, rescheduleFixture);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup

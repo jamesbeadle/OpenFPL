@@ -17,8 +17,6 @@ import Timer "mo:base/Timer";
 
 module {
     public class Governance(
-        addInitialFixtures: (proposalPayload: T.AddInitialFixturesPayload) -> async (),
-        rescheduleFixture: (proposalPayload: T.RescheduleFixturePayload) -> async (),
         transferPlayer: (proposalPayload: T.TransferPlayerPayload) -> async (),
         loanPlayer: (proposalPayload: T.LoanPlayerPayload) -> async (),
         recallPlayer: (proposalPayload: T.RecallPlayerPayload) -> async (),
@@ -29,8 +27,7 @@ module {
         unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async (),
         promoteTeam: (proposalPayload: T.PromoteTeamPayload) -> async (),
         relegateTeam: (proposalPayload: T.RelegateTeamPayload) -> async (),
-        updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async (),
-        updateSystemParameters: (proposalPayload: T.UpdateSystemParametersPayload) -> async ()){
+        updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async ()){
 
         private let oneHour = 1_000_000_000 * 60 * 60;
 
@@ -53,6 +50,15 @@ module {
         private var consensusDraftFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var consensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var proposalTimers: TrieMap.TrieMap<Nat, T.ProposalTimer> = TrieMap.TrieMap<Nat, T.ProposalTimer>(Nat.equal, Utilities.hashNat);
+        
+        private var addInitialFixtures : ?((T.AddInitialFixturesPayload) -> async ()) = null;
+        private var rescheduleFixture : ?((T.RescheduleFixturePayload) -> async ()) = null;
+
+        public func setGovernanceFunctions(_addInitialFixtures: (proposalPayload: T.AddInitialFixturesPayload) -> async (), _rescheduleFixture: (proposalPayload: T.RescheduleFixturePayload) -> async ()) {
+            addInitialFixtures := ?_addInitialFixtures;
+            rescheduleFixture := ?_rescheduleFixture;
+        };
+
 
         public func setData(
             stable_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)], 
@@ -450,14 +456,19 @@ module {
             proposals := updatedProposals;
         };
 
-
         private func executeProposal(proposal: T.Proposal) : async () {
             switch (proposal.data) {
-                case (#AddInitialFixtures(payload)) {
-                    await addInitialFixtures(payload);
+                 case (#AddInitialFixtures(payload)) {
+                    switch (addInitialFixtures) {
+                        case (null) { };
+                        case (?f) { await f(payload); };
+                    };
                 };
                 case (#RescheduleFixture(payload)) {
-                    await rescheduleFixture(payload);
+                    switch (rescheduleFixture) {
+                        case (null) {  };
+                        case (?f) { await f(payload); };
+                    };
                 };
                 case (#TransferPlayer(payload)) {
                     await transferPlayer(payload);
@@ -511,7 +522,6 @@ module {
             };
         };
 
-
         public func getRevaluedPlayers(seasonId: Nat16, gameweek: Nat8) : async List.List<T.RevaluedPlayer> {
             var revaluedPlayers: List.List<T.RevaluedPlayer> = List.nil<T.RevaluedPlayer>();
 
@@ -561,6 +571,10 @@ module {
                 };
             };
             return revaluedPlayers;
+        };
+
+        private func updateSystemParameters(proposalPayload: T.UpdateSystemParametersPayload) : async (){
+
         };
 
     }

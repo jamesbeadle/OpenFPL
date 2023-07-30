@@ -439,6 +439,31 @@ actor Self {
         };
     };
 
+    
+    public func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {
+    };
+
+    public func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {
+    };
+
+    public func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
+    };
+
+    public func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
+    };
+
+    public func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {
+    };
+
+    public func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {
+    };
+
+    public func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
+    };
+
+    public func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {
+    };
+
     private stable var stable_players: [T.Player] = [];
     private stable var stable_next_player_id : Nat = 0;
 
