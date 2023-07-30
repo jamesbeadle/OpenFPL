@@ -263,14 +263,16 @@ module Types{
     };
 
     public type AddInitialFixturesPayload = {
-        name: Text;
+        //IMPLEMENT
     };
 
     public type RescheduleFixturePayload = {
-        egg: Text;
+        //IMPLEMENT
     };
 
     public type TransferPlayerPayload = {
+        playerId: Nat16;
+        newTeamId: Nat16;
     };
 
     public type LoanPlayerPayload = {

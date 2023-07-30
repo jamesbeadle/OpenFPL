@@ -438,31 +438,95 @@ actor Self {
             case _ { return 0; };
         };
     };
-
     
     public func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {
+        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        switch(player){
+            case (null) { };
+            case (?p) {
+                let updatedPlayer: T.Player = {
+                    id = p.id;
+                    teamId = proposalPayload.newTeamId;
+                    position = p.position;
+                    firstName = p.firstName;
+                    lastName = p.lastName;
+                    shirtNumber = p.shirtNumber;
+                    value = p.value;
+                    dateOfBirth = p.dateOfBirth;
+                    nationality = p.nationality;
+                    seasons = p.seasons;
+                    valueHistory = p.valueHistory;
+                };
+                players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
+                    if (currentPlayer.id == updatedPlayer.id) {
+                        return updatedPlayer;
+                    } else {
+                        return currentPlayer;
+                    }
+                });
+            };
+        };
     };
+
 
     public func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {
+        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        if (player != null) {
+            player.teamId := proposalPayload.loanTeamId;
+            // Assuming you add a loan attribute to the player
+            player.onLoan := true; 
+        }
     };
+
 
     public func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
+        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        if (player != null and player.onLoan) {
+            player.onLoan := false;
+        }
     };
+
 
     public func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
+        let newPlayer: T.Player = {
+            id: proposalPayload.id;
+            // ... and so on for other attributes
+        };
+        players := List.append(players, newPlayer);
     };
+
 
     public func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {
+        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        if (player != null) {
+            player.firstName := proposalPayload.newFirstName;
+            player.lastName := proposalPayload.newLastName;
+            // ... and so on for other attributes to be updated
+        }
     };
 
+
     public func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {
+        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        if (player != null) {
+            player.injuryStatus := proposalPayload.newInjuryStatus;
+        }
     };
 
     public func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
+        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        if (player != null) {
+            player.retired := true;
+        }
     };
 
     public func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {
+        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        if (player != null) {
+            player.retired := false;
+        }
     };
+
 
     private stable var stable_players: [T.Player] = [];
     private stable var stable_next_player_id : Nat = 0;

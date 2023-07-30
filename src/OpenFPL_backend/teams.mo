@@ -85,12 +85,15 @@ module {
     };
 
     public func promoteTeam(proposalPayload: T.PromoteTeamPayload) : async () {
+        //IMPLEMENT
     };
 
     public func relegateTeam(proposalPayload: T.RelegateTeamPayload) : async () {
+        //IMPLEMENT
     };
 
     public func updateTeam(proposalPayload: T.UpdateTeamPayload) : async () {
+        //IMPLEMENT
     };
 
   }
