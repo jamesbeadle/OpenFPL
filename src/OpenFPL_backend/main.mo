@@ -427,7 +427,7 @@ actor Self {
     getConsensusPlayerEventData,
     getAllPlayersMap,
     resetFantasyTeams);
-    seasonManager.setGovernanceFunctions(addInitialFixtures, rescheduleFixture);
+    governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
   
   //stable variable backup

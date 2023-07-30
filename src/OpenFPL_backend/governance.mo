@@ -54,7 +54,7 @@ module {
         private var addInitialFixtures : ?((T.AddInitialFixturesPayload) -> async ()) = null;
         private var rescheduleFixture : ?((T.RescheduleFixturePayload) -> async ()) = null;
 
-        public func setGovernanceFunctions(_addInitialFixtures: (proposalPayload: T.AddInitialFixturesPayload) -> async (), _rescheduleFixture: (proposalPayload: T.RescheduleFixturePayload) -> async ()) {
+        public func setFixtureFunctions(_addInitialFixtures: (proposalPayload: T.AddInitialFixturesPayload) -> async (), _rescheduleFixture: (proposalPayload: T.RescheduleFixturePayload) -> async ()) {
             addInitialFixtures := ?_addInitialFixtures;
             rescheduleFixture := ?_rescheduleFixture;
         };
