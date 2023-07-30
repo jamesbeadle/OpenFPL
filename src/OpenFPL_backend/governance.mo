@@ -276,6 +276,10 @@ module {
             }
         };
 
+        //create propsal with timer to execute
+
+
+
         public func voteOnProposal(principalId: Text, proposalId: T.ProposalId, voteChoice: T.VoteChoice) : () {
             let userVotingPower: Nat64 = getVotingPower(principalId);
             
@@ -366,8 +370,26 @@ module {
             proposals := newProposals;
         };
 
+        public func submitProposal(proposer: Principal, payload: T.ProposalPayload, proposalType: T.ProposalType, data: T.PayloadData) : Nat {
+            
+            let newId = List.size<T.Proposal>(proposals) + 1;
 
+            let newProposal: T.Proposal = {
+                id = newId;
+                votes_no = List.nil<T.PlayerValuationVote>();
+                voters = List.nil<Principal>();
+                state = #open;
+                timestamp = Time.now();
+                proposer = proposer;
+                votes_yes = List.nil<T.PlayerValuationVote>();
+                payload = payload;
+                proposalType = proposalType;
+                data = data;
+            };
 
+            proposals := List.append(?(newProposal, null), proposals);
+            return newId;
+        };
 
 
         public func getGameweekPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {

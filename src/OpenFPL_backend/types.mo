@@ -241,6 +241,8 @@ module Types{
         #AddInitialFixtures : AddInitialFixturesPayload;
         #RescheduleFixture : RescheduleFixturePayload;
         #TransferPlayer : TransferPlayerPayload;
+        #LoanPlayer : LoanPlayerPayload;
+        #RecallPlayer : RecallPlayerPayload;
         #CreatePlayer : CreatePlayerPayload;
         #UpdatePlayer : UpdatePlayerPayload;
         #SetPlayerInjury : SetPlayerInjuryPayload;
@@ -259,6 +261,12 @@ module Types{
     };
 
     public type TransferPlayerPayload = {
+    };
+
+    public type LoanPlayerPayload = {
+    };
+
+    public type RecallPlayerPayload = {
     };
 
     public type CreatePlayerPayload = {
@@ -320,11 +328,12 @@ module Types{
         #No;
     };
 
-
     public type ProposalType = {
         #AddInitialFixtures;
         #RescheduleFixture;
         #TransferPlayer;
+        #LoanPlayer;
+        #RecallPlayer;
         #CreatePlayer;
         #UpdatePlayer;
         #SetPlayerInjury;
@@ -335,6 +344,5 @@ module Types{
         #UpdateTeam;
         #UpdateSystemParameters;
     };
-
-
+    
 }
