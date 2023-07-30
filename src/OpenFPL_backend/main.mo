@@ -311,7 +311,7 @@ actor Self {
   };  
 
   private func getConsensusPlayerEventData(gameweekId: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData>{
-    return await governanceInstance.getGameweekPlayerEventData(gameweekId, fixtureId);
+    return await governanceInstance.getConsensusPlayerEventData(gameweekId, fixtureId);
   };
 
   private func distributeRewards(): async () {

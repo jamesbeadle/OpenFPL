@@ -156,7 +156,6 @@ actor Self {
         return Iter.toArray(playersMap.entries());
     };
 
-
     public query ({caller}) func getPlayer(playerId: Nat16) : async T.Player {
         let foundPlayer = List.find<T.Player>(players, func (player: T.Player): Bool {
             return player.id == playerId;

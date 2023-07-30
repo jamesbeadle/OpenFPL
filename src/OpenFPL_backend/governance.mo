@@ -472,17 +472,19 @@ module {
             };
         };
 
-        public func getGameweekPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
-
-            //so you could have lots of variations of consensus data
-                //need a way to use the most weighted to be in the final array
-
-            //Based on the data that has been added and the voting power of the user the 
-
-            //IMPLEMENT
-
-            return List.nil();
+        public func getConsensusPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
+            let consensusDataOption = consensusFixtureData.get(fixtureId);
+            
+            switch (consensusDataOption) {
+                case (null) { 
+                    return List.nil();
+                };
+                case (?consensusData) {
+                    return consensusData.events ; 
+                };
+            };
         };
+
 
         public func getRevaluedPlayers(seasonId: Nat16, gameweek: Nat8) : async List.List<T.RevaluedPlayer> {
             var revaluedPlayers: List.List<T.RevaluedPlayer> = List.nil<T.RevaluedPlayer>();
@@ -534,8 +536,6 @@ module {
             };
             return revaluedPlayers;
         };
-
-
 
     }
 }
