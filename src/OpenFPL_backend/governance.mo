@@ -28,8 +28,8 @@ module {
         private var playerRevaluationSubmissions: HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> = 
             HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> (20, Utilities.eqNat16, Utilities.hashNat16);
         private var proposals: [T.Proposal] = [];
+        private var consensusDraftFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var consensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
-
 
 
         public func setData(
@@ -115,10 +115,10 @@ module {
             return proposals;
         };
 
-        public func submitDraftPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : () {
+        public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData], isDraft: Bool) : () {
             let userVotingPower: Nat64 = getVotingPower(principalId);
-
             let currentTime = Time.now();
+
             let newSubmission: T.DataSubmission = {
                 fixtureId = fixtureId;
                 proposer = principalId;
@@ -128,48 +128,54 @@ module {
                 votes_no = List.nil<T.PlayerValuationVote>();
             };
 
-            let existingSubmissions = draftFixtureDataSubmissions.get(fixtureId);
+            let existingSubmissions = if (isDraft) {
+                draftFixtureDataSubmissions.get(fixtureId)
+            } else {
+                fixtureDataSubmissions.get(fixtureId)
+            };
 
-            switch (existingSubmissions) {
+            let updatedSubmission = switch (existingSubmissions) {
                 case (null) {
-                    draftFixtureDataSubmissions.put(fixtureId, newSubmission);
+                    newSubmission
                 };
                 case (?currentSubmissions) {
-                if (Utilities.eqPlayerEventDataArray(List.toArray(currentSubmissions.events), List.toArray(newSubmission.events))) {
-                    
-                    let newVote: T.PlayerValuationVote = {
-                        principalId = principalId;
-                        votes = { amount_e8s = userVotingPower };
-                    };
-                    var newVoteList = List.nil<T.PlayerValuationVote>();
-                    newVoteList := List.push(newVote, newVoteList);
-                    
-                    let updatedSubmissions: T.DataSubmission = {
-                        fixtureId = currentSubmissions.fixtureId;
-                        proposer = currentSubmissions.proposer;
-                        timestamp = currentSubmissions.timestamp;
-                        events = currentSubmissions.events;
-                        votes_yes = List.append<T.PlayerValuationVote>(currentSubmissions.votes_yes, newVoteList);
-                        votes_no = currentSubmissions.votes_no;
-                    };
-
-                    draftFixtureDataSubmissions.put(fixtureId, updatedSubmissions);
-                } else {
-                    draftFixtureDataSubmissions.put(fixtureId, newSubmission);
+                    if (Utilities.eqPlayerEventDataArray(List.toArray(currentSubmissions.events), List.toArray(newSubmission.events))) {
+                        let newVote: T.PlayerValuationVote = {
+                            principalId = principalId;
+                            votes = { amount_e8s = userVotingPower };
+                        };
+                        let updatedVotesYes = List.push(newVote, currentSubmissions.votes_yes);
+                        { currentSubmissions with votes_yes = updatedVotesYes }
+                    } else {
+                        newSubmission
+                    }
                 }
             };
 
+            if (isDraft) {
+                draftFixtureDataSubmissions.put(fixtureId, updatedSubmission);
+            } else {
+                fixtureDataSubmissions.put(fixtureId, updatedSubmission);
             };
 
-            let newConsensus = recalculateDraftPlayerConsensus(fixtureId);
-            consensusFixtureData.put(fixtureId, newConsensus);
+            let newConsensus = recalculateConsensus(fixtureId, isDraft);
+            if (isDraft) {
+                consensusDraftFixtureData.put(fixtureId, newConsensus);
+            } else {
+                consensusFixtureData.put(fixtureId, newConsensus);
+            };
         };
 
+        private func recalculateConsensus(fixtureId: T.FixtureId, isDraft: Bool) : T.ConsensusData {
+            var dataSubmission: ?T.DataSubmission = null;
 
+            if (isDraft) {
+                dataSubmission := draftFixtureDataSubmissions.get(fixtureId);
+            } else {
+                dataSubmission := fixtureDataSubmissions.get(fixtureId);
+            };
 
-
-        private func recalculateDraftPlayerConsensus(fixtureId: T.FixtureId) : T.ConsensusData {
-            let submissions = switch (draftFixtureDataSubmissions.get(fixtureId)) {
+            let submissions = switch (dataSubmission) {
                 case (null) { 
                     List.nil<T.DataSubmission>() 
                 };
@@ -178,15 +184,16 @@ module {
                 };
             };
 
+
             var maxVotesSubmission: ?T.DataSubmission = null;
             var maxVotes: Int = 0;
 
             List.iterate(submissions, func (submission: T.DataSubmission) {
-                let totalVotesYes = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_yes, (0 : Int), func (acc: Int, vote: T.PlayerValuationVote) {
+                let totalVotesYes = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_yes, 0, func (acc: Int, vote: T.PlayerValuationVote) {
                     acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
                 });
 
-                let totalVotesNo = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_no, (0 : Int), func (acc: Int, vote: T.PlayerValuationVote) {
+                let totalVotesNo = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_no, 0, func (acc: Int, vote: T.PlayerValuationVote) {
                     acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
                 });
 
@@ -205,18 +212,18 @@ module {
                 case (?submissionWithMaxVotes) {
                     let events = List.toArray(submissionWithMaxVotes.events);
 
-                    let votesYes = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_yes, (0 : Int), func (acc: Int, vote: T.PlayerValuationVote) {
+                    let votesYes = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_yes, 0, func (acc: Int, vote: T.PlayerValuationVote) {
                         acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
                     });
 
-                    let votesNo = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_no, (0 : Int), func (acc: Int, vote: T.PlayerValuationVote) {
+                    let votesNo = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_no, 0, func (acc: Int, vote: T.PlayerValuationVote) {
                         acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
                     });
 
                     (events, { amount_e8s = votesYes }, { amount_e8s = votesNo })
                 };
             };
-            
+
             let totalVotesDifference = totalVotesYes.amount_e8s - totalVotesNo.amount_e8s;
             let totalVotes: T.Tokens = { amount_e8s = Int64.toNat64(Int64.fromInt(totalVotesDifference)) };
 
@@ -227,13 +234,72 @@ module {
             };
         };
 
-        public func submitPlayerRevaluation() : (){
-            //IMPLEMENT
+
+        public func submitPlayerRevaluations(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber, revaluations: [T.PlayerValuationSubmission]) : () {
+            let userVotingPower: Nat64 = getVotingPower(principalId);
+
+            switch (playerRevaluationSubmissions.get(seasonId)) {
+                case (null) {
+                    let innerMap = HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>(10, Utilities.eqNat16, Utilities.hashNat16);
+                    for (revaluation in Iter.fromArray(revaluations)) {
+                        innerMap.put(revaluation.playerId, List.push(revaluation, List.nil<T.PlayerValuationSubmission>()));
+                    };
+
+                    let midMap = HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>(10, Utilities.eqNat8, Utilities.hashNat8);
+                    midMap.put(gameweek, innerMap);
+
+                    playerRevaluationSubmissions.put(seasonId, midMap);
+                };
+                case (?midMap) {
+                    switch (midMap.get(gameweek)) {
+                        case (null) {
+                            let innerMap = HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>(10, Utilities.eqNat16, Utilities.hashNat16);
+                            for (revaluation in Iter.fromArray(revaluations)) {
+                                innerMap.put(revaluation.playerId, List.push(revaluation, List.nil<T.PlayerValuationSubmission>()));
+                            };
+
+                            midMap.put(gameweek, innerMap);
+                        };
+                        case (?innerMap) {
+                            for (revaluation in Iter.fromArray(revaluations)) {
+                                switch (innerMap.get(revaluation.playerId)) {
+                                    case (null) {
+                                        innerMap.put(revaluation.playerId, List.push(revaluation, List.nil<T.PlayerValuationSubmission>()));
+                                    };
+                                    case (?existingRevaluations) {
+                                        innerMap.put(revaluation.playerId, List.push(revaluation, existingRevaluations));
+                                    };
+                                }
+                            }
+                        };
+                    }
+                };
+            }
         };
 
-        public func voteOnProposal() : (){
-            //IMPLEMENT
+
+        public func voteOnProposal(principalId: Text, proposalId: T.ProposalId, voteChoice: T.VoteChoice) : () {
+            // Get user's voting power
+            let userVotingPower: Nat64 = getVotingPower(principalId);
+            
+            // Fetch the proposal based on proposalId
+            switch (proposalsMap.get(proposalId)) {
+                case (null) {
+                    // Proposal not found. Handle error, maybe return an error message.
+                };
+                case (?proposal) {
+                    // Check if user has already voted (assuming a method `hasUserVoted` exists)
+                    if (hasUserVoted(principalId, proposalId)) {
+                        // Handle double voting. Return error or ignore.
+                    } else {
+                        // Cast the vote.
+                        // Assuming `castVote` is a method that handles the voting logic, updates counts, etc.
+                        castVote(principalId, proposalId, voteChoice, userVotingPower);
+                    };
+                };
+            }
         };
+
 
         public func getGameweekPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
 
