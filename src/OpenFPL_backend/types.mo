@@ -81,6 +81,8 @@ module Types{
         nationality: Text;
         seasons: List.List<PlayerSeason>;
         valueHistory: List.List<ValueHistory>;
+        onLoan: Bool;
+        parentTeamId: Nat16;
     };
 
     public type ValueHistory = {
@@ -276,6 +278,9 @@ module Types{
     };
 
     public type LoanPlayerPayload = {
+        playerId: Nat16;
+        loanTeamId: Nat16;
+        loanEndDate: Int;
     };
 
     public type RecallPlayerPayload = {
@@ -359,6 +364,12 @@ module Types{
 
     public type ProposalTimer = {
         timerId: Int;
+    };
+
+    public type LoanTimer = {
+        timerId: Int;
+        playerId: Nat16;
+        expires: Int;
     };
 
     public type RevaluedPlayer = {

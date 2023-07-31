@@ -15,11 +15,14 @@ import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Int16 "mo:base/Int16";
 import Utilities "../OpenFPL_backend/utilities";
+import Timer "mo:base/Timer";
+import Time "mo:base/Time";
 
 actor Self {
 
     private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
     private var nextPlayerId : Nat = 560;
+    private var loanTimers = List.nil<T.LoanTimer>();
 
     public shared query ({caller}) func getPlayers(teamId: Nat16, positionId: Int, start: Nat, count: Nat) : async DTOs.PlayerRatingsDTO {
         assert not Principal.isAnonymous(caller);
@@ -93,17 +96,17 @@ actor Self {
         let sortedPlayers = mergeSort(players);
         return Array.map<T.Player, DTOs.PlayerDTO>(List.toArray(sortedPlayers), func (player: T.Player) : DTOs.PlayerDTO { 
             return {
-            id = player.id;
-            firstName = player.firstName;
-            lastName = player.lastName;
-            teamId = player.teamId;
-            position = player.position;
-            shirtNumber = player.shirtNumber;
-            value = player.value;
-            dateOfBirth = player.dateOfBirth;
-            nationality = player.nationality;
-            totalPoints = 0;
-        }});
+                id = player.id;
+                firstName = player.firstName;
+                lastName = player.lastName;
+                teamId = player.teamId;
+                position = player.position;
+                shirtNumber = player.shirtNumber;
+                value = player.value;
+                dateOfBirth = player.dateOfBirth;
+                nationality = player.nationality;
+                totalPoints = 0;
+            }});
     };
 
     public query ({caller}) func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
@@ -456,6 +459,8 @@ actor Self {
                     nationality = p.nationality;
                     seasons = p.seasons;
                     valueHistory = p.valueHistory;
+                    onLoan = p.onLoan;
+                    parentTeamId = p.parentTeamId;
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == updatedPlayer.id) {
@@ -468,23 +473,127 @@ actor Self {
         };
     };
 
-
     public func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {
-        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
-        if (player != null) {
-            player.teamId := proposalPayload.loanTeamId;
-            // Assuming you add a loan attribute to the player
-            player.onLoan := true; 
-        }
+        let playerToLoan = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        switch(playerToLoan) {
+            case (null) { };
+            case (?p) {
+                let loanedPlayer: T.Player = {
+                    id = p.id;
+                    teamId = proposalPayload.loanTeamId;
+                    position = p.position;
+                    firstName = p.firstName;
+                    lastName = p.lastName;
+                    shirtNumber = p.shirtNumber;
+                    value = p.value;
+                    dateOfBirth = p.dateOfBirth;
+                    nationality = p.nationality;
+                    seasons = p.seasons;
+                    valueHistory = p.valueHistory;
+                    onLoan = true;
+                    parentTeamId = p.teamId;
+                };
+                players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
+                    if (currentPlayer.id == loanedPlayer.id) {
+                        return loanedPlayer;
+                    } else {
+                        return currentPlayer;
+                    }
+                });
+                
+                let loanTimerDuration = #nanoseconds (Int.abs((proposalPayload.loanEndDate - Time.now())));
+                let loanTimerId = Timer.setTimer(loanTimerDuration, loanComplete);
+                let newLoanTimer: T.LoanTimer = {
+                    timerId = loanTimerId;
+                    playerId = proposalPayload.playerId;
+                    expires = Time.now() + Int.abs(proposalPayload.loanEndDate - Time.now());
+                };
+                loanTimers := List.push(newLoanTimer, loanTimers);
+            };
+        };
     };
 
+    private func loanComplete() : async (){
+         let currentTime = Time.now();
+        loanTimers := List.mapFilter<T.LoanTimer, T.LoanTimer>(loanTimers, func(loanTimer: T.LoanTimer) : ?T.LoanTimer {
+            if (loanTimer.expires <= currentTime) {
+                // The loan timer has expired
+                let playerToReturn = List.find<T.Player>(players, func(p: T.Player) { p.id == loanTimer.playerId });
+                switch(playerToReturn) {
+                    case (null) { return null; }; // Player not found; Remove this loan timer
+                    case (?p) {
+                        let returnedPlayer: T.Player = {
+                            id = p.id;
+                            teamId = p.parentTeamId;
+                            position = p.position;
+                            firstName = p.firstName;
+                            lastName = p.lastName;
+                            shirtNumber = p.shirtNumber;
+                            value = p.value;
+                            dateOfBirth = p.dateOfBirth;
+                            nationality = p.nationality;
+                            seasons = p.seasons;
+                            valueHistory = p.valueHistory;
+                            onLoan = false;
+                            parentTeamId = 0;
+                        };
+
+                        players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
+                            if (currentPlayer.id == returnedPlayer.id) {
+                                return returnedPlayer;
+                            } else {
+                                return currentPlayer;
+                            }
+                        });
+
+                        return null;
+                    };
+                };
+            } else {
+                return ?loanTimer;
+            }
+        });
+    };
 
     public func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
-        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
-        if (player != null and player.onLoan) {
-            player.onLoan := false;
-        }
+        let playerToRecall = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        switch(playerToRecall) {
+            case (null) { };
+            case (?p) {
+                if (p.onLoan) {
+                    // Update the player's status and team ID
+                    let returnedPlayer: T.Player = {
+                        id = p.id;
+                        teamId = p.parentTeamId;
+                        position = p.position;
+                        firstName = p.firstName;
+                        lastName = p.lastName;
+                        shirtNumber = p.shirtNumber;
+                        value = p.value;
+                        dateOfBirth = p.dateOfBirth;
+                        nationality = p.nationality;
+                        seasons = p.seasons;
+                        valueHistory = p.valueHistory;
+                        onLoan = false;
+                        parentTeamId = 0;
+                    };
+
+                    players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
+                        if (currentPlayer.id == returnedPlayer.id) {
+                            return returnedPlayer;
+                        } else {
+                            return currentPlayer;
+                        }
+                    });
+
+                    loanTimers := List.filter<T.LoanTimer>(loanTimers, func(loanTimer: T.LoanTimer) : Bool {
+                        return loanTimer.playerId != returnedPlayer.id;
+                    });
+                }
+            };
+        };
     };
+
 
 
     public func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
