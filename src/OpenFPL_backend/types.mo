@@ -83,6 +83,8 @@ module Types{
         valueHistory: List.List<ValueHistory>;
         onLoan: Bool;
         parentTeamId: Nat16;
+        isInjured: Bool;
+        injuryHistory: List.List<InjuryHistory>;
     };
 
     public type ValueHistory = {
@@ -90,6 +92,11 @@ module Types{
         gameweek: Nat8;
         oldValue: Float;
         newValue: Float;
+    };
+
+    public type InjuryHistory = {
+        description: Text;
+        expectedEndDate: Int;
     };
 
     public type PlayerSeason = {
@@ -273,26 +280,47 @@ module Types{
     };
 
     public type TransferPlayerPayload = {
-        playerId: Nat16;
-        newTeamId: Nat16;
+        playerId: PlayerId;
+        newTeamId: TeamId;
     };
 
     public type LoanPlayerPayload = {
-        playerId: Nat16;
-        loanTeamId: Nat16;
+        playerId: PlayerId;
+        loanTeamId: TeamId;
         loanEndDate: Int;
     };
 
     public type RecallPlayerPayload = {
+        playerId: PlayerId;
     };
 
     public type CreatePlayerPayload = {
+        teamId: TeamId;
+        position: Nat8;
+        firstName: Text;
+        lastName: Text;
+        shirtNumber: Nat8;
+        value: Float;
+        dateOfBirth: Int;
+        nationality: Text;
     };
 
     public type UpdatePlayerPayload = {
+        playerId: PlayerId;
+        teamId: TeamId;
+        position: Nat8;
+        firstName: Text;
+        lastName: Text;
+        shirtNumber: Nat8;
+        dateOfBirth: Int;
+        nationality: Text;
     };
 
     public type SetPlayerInjuryPayload = {
+        playerId: PlayerId;
+        injuryDescription: Text;
+        expectedEndDate: Int;
+        recovered: Bool;
     };
 
     public type RetirePlayerPayload = {

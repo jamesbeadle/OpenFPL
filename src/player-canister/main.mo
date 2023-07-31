@@ -461,6 +461,8 @@ actor Self {
                     valueHistory = p.valueHistory;
                     onLoan = p.onLoan;
                     parentTeamId = p.parentTeamId;
+                    isInjured = p.isInjured;
+                    injuryHistory = p.injuryHistory;
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == updatedPlayer.id) {
@@ -492,6 +494,8 @@ actor Self {
                     valueHistory = p.valueHistory;
                     onLoan = true;
                     parentTeamId = p.teamId;
+                    isInjured = p.isInjured;
+                    injuryHistory = p.injuryHistory;
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == loanedPlayer.id) {
@@ -536,6 +540,8 @@ actor Self {
                             valueHistory = p.valueHistory;
                             onLoan = false;
                             parentTeamId = 0;
+                            isInjured = p.isInjured;
+                            injuryHistory = p.injuryHistory;
                         };
 
                         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -576,6 +582,8 @@ actor Self {
                         valueHistory = p.valueHistory;
                         onLoan = false;
                         parentTeamId = 0;
+                        isInjured = p.isInjured;
+                        injuryHistory = p.injuryHistory;
                     };
 
                     players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -594,32 +602,114 @@ actor Self {
         };
     };
 
-
-
     public func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
         let newPlayer: T.Player = {
-            id: proposalPayload.id;
-            // ... and so on for other attributes
+            id = Nat16.fromNat(nextPlayerId + 1);
+            teamId = proposalPayload.teamId;
+            position = proposalPayload.position;
+            firstName = proposalPayload.firstName;
+            lastName = proposalPayload.lastName;
+            shirtNumber = proposalPayload.shirtNumber;
+            value = proposalPayload.value;
+            dateOfBirth = proposalPayload.dateOfBirth;
+            nationality = proposalPayload.nationality;
+            seasons = List.nil<T.PlayerSeason>();
+            valueHistory = List.nil<T.ValueHistory>();
+            onLoan = false;
+            parentTeamId = 0;
+            isInjured = false;
+            injuryHistory = List.nil<T.InjuryHistory>();
         };
-        players := List.append(players, newPlayer);
+        players := List.push(newPlayer, players);
+        nextPlayerId += 1;
     };
-
 
     public func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {
-        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
-        if (player != null) {
-            player.firstName := proposalPayload.newFirstName;
-            player.lastName := proposalPayload.newLastName;
-            // ... and so on for other attributes to be updated
-        }
+        players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
+            if (currentPlayer.id == proposalPayload.playerId) {
+                return {
+                    id = currentPlayer.id;
+                    teamId = proposalPayload.teamId;
+                    position = proposalPayload.position;
+                    firstName = proposalPayload.firstName;
+                    lastName = proposalPayload.lastName;
+                    shirtNumber = proposalPayload.shirtNumber;
+                    value = currentPlayer.value;
+                    dateOfBirth = proposalPayload.dateOfBirth;
+                    nationality = proposalPayload.nationality;
+                    seasons = currentPlayer.seasons;
+                    valueHistory = currentPlayer.valueHistory;
+                    onLoan = currentPlayer.onLoan;
+                    parentTeamId = currentPlayer.parentTeamId;
+                    isInjured = currentPlayer.isInjured;
+                    injuryHistory = currentPlayer.injuryHistory;
+                };
+            } else {
+                return currentPlayer;
+            }
+        });
     };
-
-
+    
     public func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {
-        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
-        if (player != null) {
-            player.injuryStatus := proposalPayload.newInjuryStatus;
-        }
+        players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
+            if (currentPlayer.id == proposalPayload.playerId) {
+                if (proposalPayload.recovered) {
+                    let updatedInjuryHistory = List.map<T.InjuryHistory, T.InjuryHistory>(currentPlayer.injuryHistory, func(injury: T.InjuryHistory) : T.InjuryHistory {
+                        if (injury.expectedEndDate > Time.now()) {
+                            return {
+                                description = injury.description;
+                                expectedEndDate = Time.now();
+                            };
+                        } else {
+                            return injury;
+                        }
+                    });
+
+                    return {
+                        id = currentPlayer.id;
+                        teamId = currentPlayer.teamId;
+                        position = currentPlayer.position;
+                        firstName = currentPlayer.firstName;
+                        lastName = currentPlayer.lastName;
+                        shirtNumber = currentPlayer.shirtNumber;
+                        value = currentPlayer.value;
+                        dateOfBirth = currentPlayer.dateOfBirth;
+                        nationality = currentPlayer.nationality;
+                        seasons = currentPlayer.seasons;
+                        valueHistory = currentPlayer.valueHistory;
+                        onLoan = currentPlayer.onLoan;
+                        parentTeamId = currentPlayer.parentTeamId;
+                        isInjured = false;
+                        injuryHistory = updatedInjuryHistory;
+                    };
+                } else {
+                    let newInjury: T.InjuryHistory = {
+                        description = proposalPayload.injuryDescription;
+                        expectedEndDate = proposalPayload.expectedEndDate;
+                    };
+
+                    return {
+                        id = currentPlayer.id;
+                        teamId = currentPlayer.teamId;
+                        position = currentPlayer.position;
+                        firstName = currentPlayer.firstName;
+                        lastName = currentPlayer.lastName;
+                        shirtNumber = currentPlayer.shirtNumber;
+                        value = currentPlayer.value;
+                        dateOfBirth = currentPlayer.dateOfBirth;
+                        nationality = currentPlayer.nationality;
+                        seasons = currentPlayer.seasons;
+                        valueHistory = currentPlayer.valueHistory;
+                        onLoan = currentPlayer.onLoan;
+                        parentTeamId = currentPlayer.parentTeamId;
+                        isInjured = true;
+                        injuryHistory = List.push(newInjury, currentPlayer.injuryHistory);
+                    };
+                }
+            } else {
+                return currentPlayer;
+            }
+        });
     };
 
     public func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
