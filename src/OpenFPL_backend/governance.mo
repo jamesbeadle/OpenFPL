@@ -30,17 +30,6 @@ module {
         updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async ()){
 
         private let oneHour = 1_000_000_000 * 60 * 60;
-
-        //system parameters
-        private var EventData_VotePeriod: Int = oneHour * 12;
-        private var DraftEventData_VoteThreshold: Nat64 = 500_000;
-        private var EventData_VoteThreshold: Nat64 = 1_000_000;
-        private var Revaluation_VoteThreshold: Nat64 = 1_000_000;
-        private var Proposal_VoteThreshold: Nat64 = 1_000_000;
-        private var Max_Votes_Per_User: Nat64 = 100_000;
-        private var Proposal_Submission_e8_Fee: Nat64 = 10_000;
-
-        
         
         let admins : [Text] = [
             //JB Local
@@ -62,6 +51,72 @@ module {
         
         private var addInitialFixtures : ?((T.AddInitialFixturesPayload) -> async ()) = null;
         private var rescheduleFixture : ?((T.RescheduleFixturePayload) -> async ()) = null;
+
+        //system parameters
+        private var EventData_VotePeriod: Int = oneHour * 12;
+        private var DraftEventData_VoteThreshold: Nat64 = 500_000;
+        private var EventData_VoteThreshold: Nat64 = 1_000_000;
+        private var Revaluation_VoteThreshold: Nat64 = 1_000_000;
+        private var Proposal_VoteThreshold: Nat64 = 1_000_000;
+        private var Max_Votes_Per_User: Nat64 = 100_000;
+        private var Proposal_Submission_e8_Fee: Nat64 = 10_000;
+
+        //system parameter function setters
+        public func getEventDataVotePeriod() : Int{
+            return EventData_VotePeriod;
+        };
+
+        public func setEventDataVotePeriod(newValue: Int){
+            EventData_VotePeriod := newValue;
+        };
+        
+        public func getDraftEventDataVoteThreshold() : Nat64{
+            return DraftEventData_VoteThreshold;
+        };
+
+        public func setDraftEventDataVoteThreshold(newValue: Nat64){
+            DraftEventData_VoteThreshold := newValue;
+        };
+        
+        public func getEventDataVoteThreshold() : Nat64{
+            return EventData_VoteThreshold;
+        };
+
+        public func setEventDataVoteThreshold(newValue: Nat64){
+            EventData_VoteThreshold := newValue;
+        };
+        
+        public func getRevaluationVoteThreshold() : Nat64{
+            return Revaluation_VoteThreshold;
+        };
+
+        public func setRevaluationVoteThreshold(newValue: Nat64){
+            Revaluation_VoteThreshold := newValue;
+        };
+        
+        public func getProposalVoteThreshold() : Nat64{
+            return Proposal_VoteThreshold;
+        };
+
+        public func setProposalVoteThreshold(newValue: Nat64){
+            Proposal_VoteThreshold := newValue;
+        };
+        
+        public func getMaxVotesPerUser() : Nat64{
+            return Max_Votes_Per_User;
+        };
+
+        public func setMaxVotesPerUser(newValue: Nat64){
+            Max_Votes_Per_User := newValue;
+        };
+        
+        public func getProposalSubmissione8Fee() : Nat64{
+            return Proposal_Submission_e8_Fee;
+        };
+
+        public func setProposalSubmissione8Fee(newValue: Nat64){
+            Proposal_Submission_e8_Fee := newValue;
+        };
 
         public func setFixtureFunctions(_addInitialFixtures: (proposalPayload: T.AddInitialFixturesPayload) -> async (), _rescheduleFixture: (proposalPayload: T.RescheduleFixturePayload) -> async ()) {
             addInitialFixtures := ?_addInitialFixtures;
@@ -647,10 +702,6 @@ module {
                     };
                 };
             };
-        };
-
-        public func getEventDataVotingPeriod() : Int {
-            return EventData_VotePeriod;
         };
 
     }

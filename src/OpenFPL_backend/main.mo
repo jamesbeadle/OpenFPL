@@ -427,7 +427,7 @@ actor Self {
     getConsensusPlayerEventData,
     getAllPlayersMap,
     resetFantasyTeams,
-    governanceInstance.getEventDataVotingPeriod());
+    governanceInstance.getEventDataVotePeriod());
     governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
 
@@ -453,6 +453,13 @@ actor Self {
   private stable var stable_next_season_id : Nat16 = 0;
   private stable var stable_teams : [T.Team] = [];
   private stable var stable_next_team_id : Nat16 = 0;
+  private stable var stable_event_data_vote_period : Int = 0;
+  private stable var stable_draft_event_data_VoteThreshold : Nat64 = 0;
+  private stable var stable_event_data_vote_threshold : Nat64 = 0;
+  private stable var stable_revaluation_vote_threshold : Nat64 = 0;
+  private stable var stable_proposal_vote_threshold : Nat64 = 0;
+  private stable var stable_max_votes_per_user : Nat64 = 0;
+  private stable var stable_proposal_submission_e8_fee : Nat64 = 0;
   
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
@@ -474,6 +481,13 @@ actor Self {
     stable_next_season_id := seasonManager.getNextSeasonId();
     stable_teams := teamsInstance.getTeams();
     stable_next_team_id := teamsInstance.getNextTeamId();
+    stable_event_data_vote_period := governanceInstance.getEventDataVotePeriod();
+    stable_draft_event_data_VoteThreshold := governanceInstance.getDraftEventDataVoteThreshold();
+    stable_event_data_vote_threshold := governanceInstance.getEventDataVoteThreshold();
+    stable_revaluation_vote_threshold := governanceInstance.getRevaluationVoteThreshold();
+    stable_proposal_vote_threshold := governanceInstance.getProposalVoteThreshold();
+    stable_max_votes_per_user := governanceInstance.getMaxVotesPerUser();
+    stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
   };
 
   system func postupgrade() {
@@ -486,6 +500,13 @@ actor Self {
     stable_teams := teamsInstance.getTeams();
     stable_next_team_id := teamsInstance.getNextTeamId();
     governanceInstance.setData(stable_fixture_data_submissions, stable_draft_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals);
+    governanceInstance.setEventDataVotePeriod(stable_event_data_vote_period);
+    governanceInstance.setDraftEventDataVoteThreshold(stable_draft_event_data_VoteThreshold);
+    governanceInstance.setEventDataVoteThreshold(stable_event_data_vote_threshold);
+    governanceInstance.setRevaluationVoteThreshold(stable_revaluation_vote_threshold);
+    governanceInstance.setProposalVoteThreshold(stable_proposal_vote_threshold);
+    governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
+    governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
     
   };
 
