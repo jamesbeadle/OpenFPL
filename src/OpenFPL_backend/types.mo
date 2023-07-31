@@ -359,9 +359,6 @@ module Types{
         abbreviatedName: Text;
     };
 
-    public type UpdateSystemParametersPayload = {
-    };
-
     public type ProposalState = {
         #failed : Text;
         #open;
@@ -376,11 +373,26 @@ module Types{
         canister_id : Principal;
         message : Blob;
     };
+    
+    public type UpdateFlag = {
+        #EventData_VotePeriod;
+        #DraftEventData_VoteThreshold;
+        #EventData_VoteThreshold;
+        #Revalution_VoteThreshold;
+        #Proposal_VoteThreshold;
+        #Max_Votes_Per_User;
+        #Proposal_Submission_e8_Fee;
+    };
 
-    public type SystemParams = {
-        transfer_fee: Tokens;
-        proposal_vote_threshold: Tokens;
-        proposal_submission_deposit: Tokens;
+    public type UpdateSystemParametersPayload = {
+        flag: UpdateFlag;
+        event_data_voting_period: ?Int;
+        draft_event_data_vote_threshold: ?Nat64;
+        event_data_vote_threshold: ?Nat64;
+        revalution_vote_threshold: ?Nat64;
+        proposal_vote_threshold: ?Nat64;
+        max_votes_per_user: ?Nat64;
+        proposal_submission_e8_fee: ?Nat64;
     };
 
     public type ConsensusData = {

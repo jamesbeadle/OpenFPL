@@ -31,8 +31,17 @@ module {
 
         private let oneHour = 1_000_000_000 * 60 * 60;
 
-        private var Revalution_Threshold: Nat64 = 0;
+        //system parameters
+        private var EventData_VotePeriod: Int = oneHour * 12;
+        private var DraftEventData_VoteThreshold: Nat64 = 500_000;
+        private var EventData_VoteThreshold: Nat64 = 1_000_000;
+        private var Revalution_VoteThreshold: Nat64 = 1_000_000;
+        private var Proposal_VoteThreshold: Nat64 = 1_000_000;
+        private var Max_Votes_Per_User: Nat64 = 100_000;
+        private var Proposal_Submission_e8_Fee: Nat64 = 10_000;
 
+        
+        
         let admins : [Text] = [
             //JB Local
             "eqlhf-ppkq7-roa5i-4wu6r-jumy3-g2xrc-vfdd5-wtoeu-n7xre-vsktn-lqe"
@@ -552,12 +561,12 @@ module {
                                 switch (submissions) {
                                     case (null) {  };
                                     case (?(firstSubmission, _)) {
-                                        if (totalVotesUp > Revalution_Threshold) {
+                                        if (totalVotesUp > Revalution_VoteThreshold) {
                                             revaluedPlayers := List.append<T.RevaluedPlayer>(revaluedPlayers, List.make<T.RevaluedPlayer>({
                                                 playerId = firstSubmission.playerId;
                                                 direction = #Increase;
                                             }));
-                                        } else if (totalVotesDown > Revalution_Threshold) {
+                                        } else if (totalVotesDown > Revalution_VoteThreshold) {
                                             revaluedPlayers := List.append<T.RevaluedPlayer>(revaluedPlayers, List.make<T.RevaluedPlayer>({
                                                 playerId = firstSubmission.playerId;
                                                 direction = #Decrease;
@@ -573,8 +582,66 @@ module {
             return revaluedPlayers;
         };
 
-        private func updateSystemParameters(proposalPayload: T.UpdateSystemParametersPayload) : async (){
-            //IMPLEMENT
+        
+        private func updateSystemParameters(proposalPayload: T.UpdateSystemParametersPayload) : async () {
+            switch (proposalPayload.flag) {
+                case (#EventData_VotePeriod) {
+                    switch (proposalPayload.event_data_voting_period) {
+                        case (null) {  };
+                        case (?value) {
+                            EventData_VotePeriod := value;
+                        };
+                    };
+                };
+                case (#DraftEventData_VoteThreshold) {
+                    switch (proposalPayload.draft_event_data_vote_threshold) {
+                        case (null) {  };
+                        case (?value) {
+                            DraftEventData_VoteThreshold := value;
+                        };
+                    };
+                };
+                case (#EventData_VoteThreshold) {
+                    switch (proposalPayload.event_data_vote_threshold) {
+                        case (null) {  };
+                        case (?value) {
+                            EventData_VoteThreshold := value;
+                        };
+                    };
+                };
+                case (#Revalution_VoteThreshold) {
+                    switch (proposalPayload.revalution_vote_threshold) {
+                        case (null) {  };
+                        case (?value) {
+                            Revalution_VoteThreshold := value;
+                        };
+                    };
+                };
+                case (#Proposal_VoteThreshold) {
+                    switch (proposalPayload.proposal_vote_threshold) {
+                        case (null) {  };
+                        case (?value) {
+                            Proposal_VoteThreshold := value;
+                        };
+                    };
+                };
+                case (#Max_Votes_Per_User) {
+                    switch (proposalPayload.max_votes_per_user) {
+                        case (null) {  };
+                        case (?value) {
+                            Max_Votes_Per_User := value;
+                        };
+                    };
+                };
+                case (#Proposal_Submission_e8_Fee) {
+                    switch (proposalPayload.proposal_submission_e8_fee) {
+                        case (null) {  };
+                        case (?value) {
+                            Proposal_Submission_e8_Fee := value;
+                        };
+                    };
+                };
+            };
         };
 
     }
