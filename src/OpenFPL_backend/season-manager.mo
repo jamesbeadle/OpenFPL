@@ -26,7 +26,8 @@ module {
     calculateFantasyTeamScores: (Nat16, Nat8, [T.Fixture]) -> async (),
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
-    resetFantasyTeams: () -> async ()) {
+    resetFantasyTeams: () -> async (),
+    EventData_VotingPeriod: Int) {
 
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
@@ -47,9 +48,6 @@ module {
 
     //definitions
     private let oneHour = 1_000_000_000 * 60 * 60;
-
-    //System variables - to be moved and controlled by proposal
-    private let gameConsensusDurationHours = 6;
   
     public func init_genesis_season(firstFixture: T.Fixture){
         //new season created, fixture consensus reched and gameweek and season id set to 1
@@ -156,7 +154,7 @@ module {
                 let updatedFixture = await seasonsInstance.updateStatus(activeSeasonId, activeGameweek, activeFixtures[i].id, 2);
                 activeFixturesBuffer.add(updatedFixture);
 
-                let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now() + (oneHour * gameConsensusDurationHours)) - now())), votingPeriodOver);
+                let votingPeriodOverTimer = Timer.setTimer(#nanoseconds (Int.abs((now() + EventData_VotingPeriod) - now())), votingPeriodOver);
                 timerBuffer.add(votingPeriodOverTimer);
             };
         };
@@ -180,7 +178,7 @@ module {
        
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             let fixture = activeFixtures[i];
-            if((fixture.kickOff + (oneHour * gameConsensusDurationHours)) <= now() and fixture.status == 2){
+            if((fixture.kickOff + EventData_VotingPeriod) <= now() and fixture.status == 2){
                 let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id);
                 let updatedFixture = await seasonsInstance.savePlayerEventData(activeSeasonId, activeGameweek, activeFixtures[i].id, consensusPlayerEventData);
                 activeFixturesBuffer.add(updatedFixture);
@@ -261,9 +259,15 @@ module {
         seasonsInstance.addInitialFixtures(proposalPayload);
     };
 
-
     public func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
         seasonsInstance.rescheduleFixture(proposalPayload);
     };
+
+    //Only return draft data if over threshold for DraftEventData_VoteThreshold
+
+    //Only return event data if over vote threshold
+
+    
+
   };
 }

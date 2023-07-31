@@ -378,7 +378,7 @@ module Types{
         #EventData_VotePeriod;
         #DraftEventData_VoteThreshold;
         #EventData_VoteThreshold;
-        #Revalution_VoteThreshold;
+        #Revaluation_VoteThreshold;
         #Proposal_VoteThreshold;
         #Max_Votes_Per_User;
         #Proposal_Submission_e8_Fee;

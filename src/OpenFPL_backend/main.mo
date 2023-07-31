@@ -426,9 +426,12 @@ actor Self {
     calculateFantasyTeamScores, 
     getConsensusPlayerEventData,
     getAllPlayersMap,
-    resetFantasyTeams);
+    resetFantasyTeams,
+    governanceInstance.getEventDataVotingPeriod());
     governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
+
+  //IMPLEMENT: SUBMIT PROPOSAL SUBMISSION FEE ON SUBMISSION OF PROPOSAL ON FRONT END
   
   //stable variable backup
   private stable var stable_profiles: [(Text, T.Profile)] = [];

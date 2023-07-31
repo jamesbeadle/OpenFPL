@@ -35,7 +35,7 @@ module {
         private var EventData_VotePeriod: Int = oneHour * 12;
         private var DraftEventData_VoteThreshold: Nat64 = 500_000;
         private var EventData_VoteThreshold: Nat64 = 1_000_000;
-        private var Revalution_VoteThreshold: Nat64 = 1_000_000;
+        private var Revaluation_VoteThreshold: Nat64 = 1_000_000;
         private var Proposal_VoteThreshold: Nat64 = 1_000_000;
         private var Max_Votes_Per_User: Nat64 = 100_000;
         private var Proposal_Submission_e8_Fee: Nat64 = 10_000;
@@ -67,7 +67,6 @@ module {
             addInitialFixtures := ?_addInitialFixtures;
             rescheduleFixture := ?_rescheduleFixture;
         };
-
 
         public func setData(
             stable_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)], 
@@ -118,8 +117,14 @@ module {
 
         public func getVotingPower(principalId: Text) : Nat64 {
             switch (Array.find<Text>(admins, func (admin) { admin == principalId })) {
-            case null { return 0; };
-            case _ { return 1_000_000; };
+                case null { return 0; };
+                case _ { 
+                    var dummyVP = Nat64.fromNat(1_000_000);
+                    if(dummyVP > Max_Votes_Per_User){
+                        dummyVP := Max_Votes_Per_User;
+                    };
+                    return dummyVP; 
+                };
             };
         };
         
@@ -437,10 +442,10 @@ module {
             
             for (proposal in Iter.fromList<T.Proposal>(proposals)) {
                 if (Time.now() - proposal.timestamp > (oneHour * 2)) {
-                    let yesVotes = List.size<T.PlayerValuationVote>(proposal.votes_yes);
-                    let noVotes = List.size<T.PlayerValuationVote>(proposal.votes_no);
+                    let yesVotes = Nat64.fromNat(List.size<T.PlayerValuationVote>(proposal.votes_yes));
+                    let noVotes = Nat64.fromNat(List.size<T.PlayerValuationVote>(proposal.votes_no));
                     
-                    if (yesVotes > noVotes) {
+                    if (yesVotes > noVotes and yesVotes > Proposal_VoteThreshold) {
                         await executeProposal(proposal);
                         updatedProposals := List.append(?(proposal, null), updatedProposals);
                     } else {
@@ -561,12 +566,12 @@ module {
                                 switch (submissions) {
                                     case (null) {  };
                                     case (?(firstSubmission, _)) {
-                                        if (totalVotesUp > Revalution_VoteThreshold) {
+                                        if (totalVotesUp > Revaluation_VoteThreshold) {
                                             revaluedPlayers := List.append<T.RevaluedPlayer>(revaluedPlayers, List.make<T.RevaluedPlayer>({
                                                 playerId = firstSubmission.playerId;
                                                 direction = #Increase;
                                             }));
-                                        } else if (totalVotesDown > Revalution_VoteThreshold) {
+                                        } else if (totalVotesDown > Revaluation_VoteThreshold) {
                                             revaluedPlayers := List.append<T.RevaluedPlayer>(revaluedPlayers, List.make<T.RevaluedPlayer>({
                                                 playerId = firstSubmission.playerId;
                                                 direction = #Decrease;
@@ -609,11 +614,11 @@ module {
                         };
                     };
                 };
-                case (#Revalution_VoteThreshold) {
+                case (#Revaluation_VoteThreshold) {
                     switch (proposalPayload.revalution_vote_threshold) {
                         case (null) {  };
                         case (?value) {
-                            Revalution_VoteThreshold := value;
+                            Revaluation_VoteThreshold := value;
                         };
                     };
                 };
@@ -642,6 +647,10 @@ module {
                     };
                 };
             };
+        };
+
+        public func getEventDataVotingPeriod() : Int {
+            return EventData_VotePeriod;
         };
 
     }
