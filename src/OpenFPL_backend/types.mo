@@ -85,6 +85,7 @@ module Types{
         parentTeamId: Nat16;
         isInjured: Bool;
         injuryHistory: List.List<InjuryHistory>;
+        retirementDate: Int;
     };
 
     public type ValueHistory = {
@@ -324,9 +325,12 @@ module Types{
     };
 
     public type RetirePlayerPayload = {
+        playerId: PlayerId;
+        retirementDate: Int;
     };
 
     public type UnretirePlayerPayload = {
+        playerId: PlayerId;
     };
 
     public type PromoteTeamPayload = {

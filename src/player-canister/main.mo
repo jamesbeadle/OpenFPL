@@ -23,6 +23,7 @@ actor Self {
     private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
     private var nextPlayerId : Nat = 560;
     private var loanTimers = List.nil<T.LoanTimer>();
+    private var retiredPlayers = List.fromArray<T.Player>([]);
 
     public shared query ({caller}) func getPlayers(teamId: Nat16, positionId: Int, start: Nat, count: Nat) : async DTOs.PlayerRatingsDTO {
         assert not Principal.isAnonymous(caller);
@@ -59,6 +60,11 @@ actor Self {
                 nationality = player.nationality;
                 seasons = List.nil<T.PlayerSeason>();
                 valueHistory = List.nil<T.ValueHistory>();
+                onLoan = false;
+                parentTeamId = 0;
+                isInjured = false;
+                injuryHistory = List.nil<T.InjuryHistory>();
+                retirementDate = 0;
             };
         });
 
@@ -165,7 +171,16 @@ actor Self {
         });
 
         switch (foundPlayer) {
-            case (null) { return { id = 0; teamId = 0; position = 0; firstName = ""; lastName = ""; shirtNumber = 0; value = 0; dateOfBirth = 0; nationality = ""; seasons = List.nil<T.PlayerSeason>(); valueHistory = List.nil<T.ValueHistory>(); } };
+            case (null) { return { 
+                id = 0; teamId = 0; position = 0; 
+                firstName = ""; lastName = ""; 
+                shirtNumber = 0; value = 0; 
+                dateOfBirth = 0; nationality = ""; 
+                seasons = List.nil<T.PlayerSeason>(); 
+                valueHistory = List.nil<T.ValueHistory>();
+                onLoan = false; parentTeamId = 0;
+                isInjured = false; injuryHistory = List.nil<T.InjuryHistory>();
+                retirementDate = 0; } };
             case (?player) { return player; };
         };
     };
@@ -208,6 +223,11 @@ actor Self {
                             nationality = p.nationality;
                             seasons = p.seasons;
                             valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
+                            onLoan = p.onLoan;
+                            parentTeamId = p.parentTeamId;
+                            isInjured = p.isInjured;
+                            injuryHistory = p.injuryHistory;
+                            retirementDate = p.retirementDate;
                     };
 
                     return updatedPlayer;
@@ -306,6 +326,11 @@ actor Self {
                         nationality = p.nationality;
                         seasons = updatedSeasons;
                         valueHistory = p.valueHistory;
+                        onLoan = p.onLoan;
+                        parentTeamId = p.parentTeamId;
+                        isInjured = p.isInjured;
+                        injuryHistory = p.injuryHistory;
+                        retirementDate = p.retirementDate;
                     };
 
                     players := List.map<T.Player, T.Player>(players, func (player: T.Player): T.Player {
@@ -463,6 +488,7 @@ actor Self {
                     parentTeamId = p.parentTeamId;
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
+                    retirementDate = p.retirementDate;
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == updatedPlayer.id) {
@@ -496,6 +522,7 @@ actor Self {
                     parentTeamId = p.teamId;
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
+                    retirementDate = p.retirementDate;
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == loanedPlayer.id) {
@@ -542,6 +569,7 @@ actor Self {
                             parentTeamId = 0;
                             isInjured = p.isInjured;
                             injuryHistory = p.injuryHistory;
+                            retirementDate = p.retirementDate;
                         };
 
                         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -567,7 +595,6 @@ actor Self {
             case (null) { };
             case (?p) {
                 if (p.onLoan) {
-                    // Update the player's status and team ID
                     let returnedPlayer: T.Player = {
                         id = p.id;
                         teamId = p.parentTeamId;
@@ -584,6 +611,7 @@ actor Self {
                         parentTeamId = 0;
                         isInjured = p.isInjured;
                         injuryHistory = p.injuryHistory;
+                        retirementDate = p.retirementDate;
                     };
 
                     players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -619,6 +647,7 @@ actor Self {
             parentTeamId = 0;
             isInjured = false;
             injuryHistory = List.nil<T.InjuryHistory>();
+            retirementDate = 0;
         };
         players := List.push(newPlayer, players);
         nextPlayerId += 1;
@@ -643,6 +672,7 @@ actor Self {
                     parentTeamId = currentPlayer.parentTeamId;
                     isInjured = currentPlayer.isInjured;
                     injuryHistory = currentPlayer.injuryHistory;
+                    retirementDate = currentPlayer.retirementDate;
                 };
             } else {
                 return currentPlayer;
@@ -681,6 +711,7 @@ actor Self {
                         parentTeamId = currentPlayer.parentTeamId;
                         isInjured = false;
                         injuryHistory = updatedInjuryHistory;
+                        retirementDate = currentPlayer.retirementDate;
                     };
                 } else {
                     let newInjury: T.InjuryHistory = {
@@ -704,6 +735,7 @@ actor Self {
                         parentTeamId = currentPlayer.parentTeamId;
                         isInjured = true;
                         injuryHistory = List.push(newInjury, currentPlayer.injuryHistory);
+                        retirementDate = currentPlayer.retirementDate;
                     };
                 }
             } else {
@@ -712,20 +744,70 @@ actor Self {
         });
     };
 
+    
     public func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
-        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
-        if (player != null) {
-            player.retired := true;
-        }
+        let playerToRetire = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+        switch(playerToRetire) {
+            case (null) { };
+            case (?p) {
+                let retiredPlayer: T.Player = {
+                    id = p.id;
+                    teamId = p.teamId;
+                    position = p.position;
+                    firstName = p.firstName;
+                    lastName = p.lastName;
+                    shirtNumber = p.shirtNumber;
+                    value = p.value;
+                    dateOfBirth = p.dateOfBirth;
+                    nationality = p.nationality;
+                    seasons = p.seasons;
+                    valueHistory = p.valueHistory;
+                    onLoan = p.onLoan;
+                    parentTeamId = p.parentTeamId;
+                    isInjured = p.isInjured;
+                    injuryHistory = p.injuryHistory;
+                    retirementDate = proposalPayload.retirementDate;
+                };
+                
+                retiredPlayers := List.push(retiredPlayer, retiredPlayers);
+                players := List.filter<T.Player>(players, func(currentPlayer: T.Player) : Bool {
+                    return currentPlayer.id != proposalPayload.playerId;
+                });
+            };
+        };
     };
 
     public func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {
-        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
-        if (player != null) {
-            player.retired := false;
-        }
+        let playerToUnretire = List.find<T.Player>(retiredPlayers, func(p: T.Player) { p.id == proposalPayload.playerId });
+        switch(playerToUnretire) {
+            case (null) { };
+            case (?p) {
+                let activePlayer: T.Player = {
+                    id = p.id;
+                    teamId = p.teamId;
+                    position = p.position;
+                    firstName = p.firstName;
+                    lastName = p.lastName;
+                    shirtNumber = p.shirtNumber;
+                    value = p.value;
+                    dateOfBirth = p.dateOfBirth;
+                    nationality = p.nationality;
+                    seasons = p.seasons;
+                    valueHistory = p.valueHistory;
+                    onLoan = p.onLoan;
+                    parentTeamId = p.parentTeamId;
+                    isInjured = p.isInjured;
+                    injuryHistory = p.injuryHistory;
+                    retirementDate = 0;
+                };
+                
+                players := List.push(activePlayer, players);
+                retiredPlayers := List.filter<T.Player>(retiredPlayers, func(currentPlayer: T.Player) : Bool {
+                    return currentPlayer.id != proposalPayload.playerId;
+                });
+            };
+        };
     };
-
 
     private stable var stable_players: [T.Player] = [];
     private stable var stable_next_player_id : Nat = 0;
