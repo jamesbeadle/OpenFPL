@@ -6,7 +6,7 @@ module GenesisData {
 
     public func get_genesis_seasons(): [T.Season] {
         return [
-            { id = 1; name = "2023/24"; year = 2023; gameweeks = List.fromArray<T.Gameweek>([
+            { id = 1; name = "2023/24"; year = 2023; postponedFixtures = List.fromArray<T.Fixture>([]); gameweeks = List.fromArray<T.Gameweek>([
                 { id = 1; number = 1; canisterId = ""; fixtures = List.fromArray<T.Fixture>([
                     { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691784000000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
                     { id = 2; seasonId = 1; gameweek = 1; kickOff = 1691843400000000000; homeTeamId = 1; awayTeamId = 16; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },

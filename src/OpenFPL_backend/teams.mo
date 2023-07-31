@@ -11,6 +11,7 @@ module {
 
     private var teams = List.fromArray(GenesisData.get_genesis_teams());
     private var nextTeamId : Nat16 = 21;
+    private var relegatedTeams = List.fromArray<T.Team>([]);
 
     public func setData(stable_teams: [T.Team], stable_teamId : Nat16){
         teams := List.fromArray(stable_teams);
@@ -45,56 +46,59 @@ module {
         return nextTeamId;
     };
 
-    public func createTeam(name : Text, friendlyName: Text, primaryColourHex: Text, secondaryColourHex: Text, abbreviatedName: Text) : Result.Result<(), T.Error> {
-        let id = nextTeamId;
-        let newTeam : T.Team = {
-            id = id;
-            name = name;
-            friendlyName = friendlyName;
-            primaryColourHex = primaryColourHex;
-            secondaryColourHex = secondaryColourHex;
-            abbreviatedName = abbreviatedName;
-        };
-        
-        var newTeamList = List.nil<T.Team>();
-        newTeamList := List.push(newTeam, newTeamList);
-
-        teams := List.append(teams, newTeamList);
-        
-        nextTeamId += 1;
-        return #ok(());
-    };
-
-/*
-    public func updateTeam(id : Nat16, name : Text, properName: Text, homeColourHex: Text, awayColourHex: Text, abbreviatedName: Text) : Result.Result<(), Types.Error> {
-        teams := List.map<Types.Team, Types.Team>(teams,
-        func (team: Types.Team): Types.Team {
-            if (team.id == id) {
-            { id = team.id; name = name; friendlyName = team.friendlyName; primaryColourHex = team.primaryColourHex; secondaryColourHex = team.secondaryColourHex; abbreviatedName = abbreviatedName; }
-            } 
-            else { team }
-        });
-
-        return #ok(());
-    };
-    */
-
-    public func deleteTeam(id : Nat16) : Result.Result<(), T.Error> {
-        teams := List.filter(teams, func(team: T.Team): Bool { team.id != id });
-        return #ok(());
-    };
-
     public func promoteTeam(proposalPayload: T.PromoteTeamPayload) : async () {
-        //IMPLEMENT
+        let teamToPromote = List.find<T.Team>(relegatedTeams, func(t: T.Team) { t.id == proposalPayload.teamId });
+        switch(teamToPromote) {
+            case (null) {
+                let newTeam : T.Team = {
+                    id = proposalPayload.teamId;
+                    name = proposalPayload.name;
+                    friendlyName = proposalPayload.friendlyName;
+                    primaryColourHex = proposalPayload.primaryColourHex;
+                    secondaryColourHex = proposalPayload.secondaryColourHex;
+                    abbreviatedName = proposalPayload.abbreviatedName;
+                };
+                teams := List.push(newTeam, teams);
+            };
+            case (?team) {
+                teams := List.push(team, teams);
+                relegatedTeams := List.filter<T.Team>(relegatedTeams, func(currentTeam: T.Team) : Bool {
+                    return currentTeam.id != proposalPayload.teamId;
+                });
+            };
+        };
     };
 
     public func relegateTeam(proposalPayload: T.RelegateTeamPayload) : async () {
-        //IMPLEMENT
+        let teamToRelegate = List.find<T.Team>(teams, func(t: T.Team) { t.id == proposalPayload.teamId });
+        switch(teamToRelegate) {
+            case (null) { };
+            case (?team) {
+                relegatedTeams := List.push(team, relegatedTeams);
+                teams := List.filter<T.Team>(teams, func(currentTeam: T.Team) : Bool {
+                    return currentTeam.id != proposalPayload.teamId;
+                });
+            };
+        };
     };
 
     public func updateTeam(proposalPayload: T.UpdateTeamPayload) : async () {
-        //IMPLEMENT
+        teams := List.map<T.Team, T.Team>(teams, func(currentTeam: T.Team) : T.Team {
+            if (currentTeam.id == proposalPayload.teamId) {
+                return {
+                    id = currentTeam.id;
+                    name = proposalPayload.name;
+                    friendlyName = proposalPayload.friendlyName;
+                    primaryColourHex = proposalPayload.primaryColourHex;
+                    secondaryColourHex = proposalPayload.secondaryColourHex;
+                    abbreviatedName = proposalPayload.abbreviatedName;
+                };
+            } else {
+                return currentTeam;
+            }
+        });
     };
+
 
   }
 }

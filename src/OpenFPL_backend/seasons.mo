@@ -8,6 +8,7 @@ import Nat16 "mo:base/Nat16";
 import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Char "mo:base/Char";
+import Nat8 "mo:base/Nat8";
 
 module {
     
@@ -107,11 +108,20 @@ module {
             case (null) { }; 
             case (?season) { 
                 let newYear = season.year + 1;
+                let gameweeks: [T.Gameweek] = Array.tabulate<T.Gameweek>(38, func (index: Nat) : T.Gameweek{
+                    return {
+                        number = Nat8.fromNat(index + 1);
+                        canisterId = "";
+                        fixtures = List.nil<T.Fixture>();
+                    };
+                });
+
                 let newSeason: T.Season = {
                     id = nextSeasonId;
                     name = Nat16.toText(newYear) # subText(Nat16.toText(newYear + 1), 2, 3);
                     year = newYear;
                     gameweeks = List.nil();
+                    postponedFixtures = List.nil();
                 };
 
                 newSeasonsList := List.push(newSeason, newSeasonsList);
@@ -126,15 +136,10 @@ module {
         seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
             if (season.id == seasonId) {
                 
-                // When the correct season is found, iterate through its gameweeks.
                 let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
                     if (gw.number == gameweek) {
-                        
-                        // When the correct gameweek is found, iterate through its fixtures.
                         let updatedFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
                             if (fixture.id == fixtureId) {
-                                
-                                // When the correct fixture is found, update its status.
                                 return {
                                     id = fixture.id;
                                     seasonId = fixture.seasonId;
@@ -152,13 +157,13 @@ module {
                                 return fixture;
                             }
                         });
-                        return {id = gw.id; number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
+                        return {number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
                     } else {
                         return gw;
                     }
                 });
                 
-                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks};
+                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks; postponedFixtures = season.postponedFixtures;};
             } else {
                 return season;
             }
@@ -220,12 +225,12 @@ module {
                                 return fixture;
                             }
                         });
-                        return {id = gw.id; number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
+                        return {number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
                     } else {
                         return gw;
                     }
                 });
-                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks};
+                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks; postponedFixtures = season.postponedFixtures;};
             } else {
                 return season;
             }
@@ -275,13 +280,13 @@ module {
                             return fixture;
                         });
 
-                        return {id = gw.id; number = gw.number; canisterId = gw.canisterId; fixtures = newFixtures};
+                        return {number = gw.number; canisterId = gw.canisterId; fixtures = newFixtures};
                     } else {
                         return gw;
                     };
                 });
                 
-                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks};
+                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks; postponedFixtures = season.postponedFixtures;};
             } else {
                 return season;
             }
@@ -309,6 +314,95 @@ module {
 
         return result;
     };
+
+    
+    public func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : () {
+        seasons := List.map<T.Season, T.Season>(seasons, func(currentSeason: T.Season) : T.Season {
+            if (currentSeason.id == proposalPayload.seasonId) {
+
+                var seasonGameweeks = List.nil<T.Gameweek>();
+
+                for (i in Iter.range(1, 38)) {
+                    let fixturesForCurrentGameweek = Array.filter<T.Fixture>(proposalPayload.fixtures, func (fixture: T.Fixture): Bool {
+                        return Nat8.fromNat(i) == fixture.gameweek;
+                    });
+
+                    let newGameweek: T.Gameweek = {
+                        id = i;
+                        number = Nat8.fromNat(i);
+                        canisterId = "";
+                        fixtures = List.fromArray(fixturesForCurrentGameweek);
+                    };
+
+                    seasonGameweeks := List.push(newGameweek, seasonGameweeks);
+                };
+
+                return {
+                    id = currentSeason.id;
+                    name = currentSeason.name;
+                    year = currentSeason.year;
+                    gameweeks = seasonGameweeks;
+                    postponedFixtures = currentSeason.postponedFixtures;
+                };
+            } else { return currentSeason; } });
+    };
+    
+    public func rescheduleFixture(rescheduleFixture: T.RescheduleFixturePayload) : () {
+        seasons := List.map<T.Season, T.Season>(seasons, func(currentSeason: T.Season) : T.Season {
+            if (currentSeason.id == rescheduleFixture.seasonId) {
+                var updatedGameweeks: List.List<T.Gameweek> = List.nil();
+                var postponedFixtures: List.List<T.Fixture> = List.nil();
+                
+                updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(currentSeason.gameweeks, func(currentGameweek: T.Gameweek) : T.Gameweek {
+                    let updatedFixtures = List.mapFilter<T.Fixture, T.Fixture>(currentGameweek.fixtures, func(currentFixture: T.Fixture) : ?T.Fixture {
+                        if(currentGameweek.number == rescheduleFixture.oldGameweek or currentGameweek.number == rescheduleFixture.newGameweek) {
+                            if(currentFixture.id == rescheduleFixture.fixtureId){
+                                let updatedFixture: T.Fixture = {
+                                    id = currentFixture.id;
+                                    seasonId = currentFixture.seasonId;
+                                    gameweek = rescheduleFixture.newGameweek;
+                                    kickOff = currentFixture.kickOff;
+                                    homeTeamId = currentFixture.homeTeamId;
+                                    awayTeamId = currentFixture.awayTeamId;
+                                    homeGoals = currentFixture.homeGoals;
+                                    awayGoals = currentFixture.awayGoals;
+                                    status = currentFixture.status;
+                                    events = currentFixture.events;
+                                    highestScoringPlayerId = currentFixture.highestScoringPlayerId;
+                                };
+                                if (rescheduleFixture.newGameweek == 0) {
+                                    postponedFixtures := List.push(updatedFixture, currentSeason.postponedFixtures);
+                                    return null;
+                                } else {
+                                    return ?updatedFixture;
+                                }
+                            }
+                        };
+                        return ?currentFixture;
+                    });
+                    
+                    return {
+                        number = currentGameweek.number;
+                        canisterId = currentGameweek.canisterId;
+                        fixtures = updatedFixtures; 
+                    };
+                });
+                
+                let updatedSeason: T.Season = {
+                    id = currentSeason.id;
+                    name = currentSeason.name;
+                    year = currentSeason.year;
+                    gameweeks = updatedGameweeks;
+                    postponedFixtures = postponedFixtures;
+                };
+
+                return updatedSeason;
+            } else {
+                return currentSeason;
+            }
+        });
+    };
+
 
   }
 }

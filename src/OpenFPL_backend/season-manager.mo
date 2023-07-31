@@ -258,11 +258,12 @@ module {
     };
 
     public func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
-        //IMPLEMENT
+        seasonsInstance.addInitialFixtures(proposalPayload);
     };
 
+
     public func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
-        //IMPLEMENT
+        seasonsInstance.rescheduleFixture(proposalPayload);
     };
   };
 }

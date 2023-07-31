@@ -37,10 +37,10 @@ module Types{
         name: Text;
         year: Nat16;
         gameweeks: List.List<Gameweek>;
+        postponedFixtures: List.List<Fixture>;
     };
 
     public type Gameweek = {
-        id: Nat16;
         number: GameweekNumber;
         canisterId: Text;
         fixtures: List.List<Fixture>;
@@ -273,11 +273,15 @@ module Types{
     };
 
     public type AddInitialFixturesPayload = {
-        //IMPLEMENT
+        seasonId: SeasonId;
+        fixtures: [Fixture];
     };
 
     public type RescheduleFixturePayload = {
-        //IMPLEMENT
+        seasonId: SeasonId;
+        fixtureId: FixtureId;
+        oldGameweek: GameweekNumber;
+        newGameweek: GameweekNumber;
     };
 
     public type TransferPlayerPayload = {
@@ -334,12 +338,25 @@ module Types{
     };
 
     public type PromoteTeamPayload = {
+        teamId: TeamId;
+        name: Text;
+        friendlyName: Text;
+        primaryColourHex: Text;
+        secondaryColourHex: Text;
+        abbreviatedName: Text;
     };
 
     public type RelegateTeamPayload = {
+        teamId: TeamId;
     };
 
     public type UpdateTeamPayload = {
+        teamId: TeamId;
+        name: Text;
+        friendlyName: Text;
+        primaryColourHex: Text;
+        secondaryColourHex: Text;
+        abbreviatedName: Text;
     };
 
     public type UpdateSystemParametersPayload = {
