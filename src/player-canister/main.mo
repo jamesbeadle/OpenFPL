@@ -25,62 +25,6 @@ actor Self {
     private var loanTimers = List.nil<T.LoanTimer>();
     private var retiredPlayers = List.fromArray<T.Player>([]);
 
-    public shared query ({caller}) func getPlayers(teamId: Nat16, positionId: Int, start: Nat, count: Nat) : async DTOs.PlayerRatingsDTO {
-        assert not Principal.isAnonymous(caller);
-
-        func compare(player1: T.Player, player2: T.Player) : Bool {
-            return player1.value >= player2.value;
-        };
-
-        func mergeSort(entries: List.List<T.Player>) : List.List<T.Player> {
-            let len = List.size(entries);
-            
-            if (len <= 1) {
-                return entries;
-            } else {
-                let (firstHalf, secondHalf) = List.split(len / 2, entries);
-                return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
-            };
-        };
-
-        let returnPlayers = List.map<T.Player, T.Player>(
-            List.filter<T.Player>(players, func (player: T.Player) : Bool {
-            return (teamId == 0 or player.teamId == teamId) and (positionId == -1 or Nat8.toNat(player.position) == positionId);
-            }), 
-            func (player: T.Player) : T.Player {
-            return {
-                id = player.id;
-                teamId = player.teamId;
-                position = player.position; //0 = Goalkeeper //1 = Defender //2 = Midfielder //3 = Forward
-                firstName = player.firstName;
-                lastName = player.lastName;
-                shirtNumber = player.shirtNumber;
-                value = player.value;
-                dateOfBirth = player.dateOfBirth;
-                nationality = player.nationality;
-                seasons = List.nil<T.PlayerSeason>();
-                valueHistory = List.nil<T.ValueHistory>();
-                onLoan = false;
-                parentTeamId = 0;
-                isInjured = false;
-                injuryHistory = List.nil<T.InjuryHistory>();
-                retirementDate = 0;
-            };
-        });
-
-        let sortedPlayers = mergeSort(returnPlayers);
-
-        let paginatedPlayers = List.take(List.drop(sortedPlayers, start), count);
-
-        let dto: DTOs.PlayerRatingsDTO = {
-            players = List.toArray(paginatedPlayers);
-            totalEntries = Nat16.fromNat(List.size<T.Player>(returnPlayers));
-        };
-
-        return dto;
-
-    };
-
     public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
         assert not Principal.isAnonymous(caller);
 
@@ -99,7 +43,11 @@ actor Self {
             };
         };
 
-        let sortedPlayers = mergeSort(players);
+        let nonLoanPlayers = List.filter<T.Player>(players, func (player: T.Player) : Bool {
+            return player.onLoan == false;
+        });
+
+        let sortedPlayers = mergeSort(nonLoanPlayers);
         return Array.map<T.Player, DTOs.PlayerDTO>(List.toArray(sortedPlayers), func (player: T.Player) : DTOs.PlayerDTO { 
             return {
                 id = player.id;
@@ -119,7 +67,10 @@ actor Self {
         assert not Principal.isAnonymous(caller);
 
         var playersMap: HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
-        for (player in Iter.fromList(players)) {
+        label playerMapLoop for (player in Iter.fromList(players)) { 
+            if (player.onLoan) {
+                continue playerMapLoop; 
+            };
 
             var points: Int16 = 0;
             var events: List.List<T.PlayerEventData> = List.nil();
@@ -167,7 +118,7 @@ actor Self {
 
     public query ({caller}) func getPlayer(playerId: Nat16) : async T.Player {
         let foundPlayer = List.find<T.Player>(players, func (player: T.Player): Bool {
-            return player.id == playerId;
+            return player.id == playerId and not player.onLoan;
         });
 
         switch (foundPlayer) {
@@ -743,7 +694,6 @@ actor Self {
             }
         });
     };
-
     
     public func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
         let playerToRetire = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
