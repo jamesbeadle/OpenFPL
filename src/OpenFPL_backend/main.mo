@@ -290,22 +290,34 @@ actor Self {
 
   private func proposalExpiredCallback() : async () {
     await governanceInstance.proposalExpired();
+    removeExpiredTimers();
   };
 
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBegin();
+    removeExpiredTimers();
   };
 
   private func gameKickOffExpiredCallback() : async () {
     await seasonManager.gameKickOff();
+    removeExpiredTimers();
   };
 
   private func gameCompletedExpiredCallback() : async () {
-      await seasonManager.gameCompleted();
+    await seasonManager.gameCompleted();
+    removeExpiredTimers();
   };
 
   private func votingPeriodOverExpiredCallback() : async () {
-      await seasonManager.votingPeriodOver();
+    await seasonManager.votingPeriodOver();
+    removeExpiredTimers();
+  };
+  
+  private func removeExpiredTimers() : () {
+      let currentTime = Time.now();
+      stable_timers := Array.filter<T.TimerInfo>(stable_timers, func(timer: T.TimerInfo) : Bool {
+          return timer.triggerTime > currentTime;
+      });
   };
 
   private func defaultCallback() : async () { };

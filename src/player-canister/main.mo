@@ -565,11 +565,52 @@ actor Self {
         });
     };
 
-
-
     private func loanExpiredCallback() : async () {
-        // Handle logic for some other event
+        let currentTime = Time.now();
+        
+        for (timer in Iter.fromArray(stable_timers)) {
+            if (timer.callbackName == "loanExpired") {
+                let playerToReturn = List.find<T.Player>(players, func(p: T.Player) { p.id == timer.playerId });
+                
+                switch(playerToReturn) {
+                    case (null) { }; 
+                    case (?p) {
+                        let returnedPlayer: T.Player = {
+                          id = p.id;
+                            teamId = p.parentTeamId;
+                            position = p.position;
+                            firstName = p.firstName;
+                            lastName = p.lastName;
+                            shirtNumber = p.shirtNumber;
+                            value = p.value;
+                            dateOfBirth = p.dateOfBirth;
+                            nationality = p.nationality;
+                            seasons = p.seasons;
+                            valueHistory = p.valueHistory;
+                            onLoan = false;
+                            parentTeamId = 0;
+                            isInjured = p.isInjured;
+                            injuryHistory = p.injuryHistory;
+                            retirementDate = p.retirementDate;
+                        };
+
+                        players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
+                            if (currentPlayer.id == returnedPlayer.id) {
+                                return returnedPlayer;
+                            } else {
+                                return currentPlayer;
+                            }
+                        });
+                        
+                        stable_timers := Array.filter<T.TimerInfo>(stable_timers, func(timer: T.TimerInfo) : Bool {
+                            return timer.playerId != returnedPlayer.id;
+                        });
+                    };
+                };
+            }
+        }
     };
+
 
     private func defaultCallback() : async () { };
 
