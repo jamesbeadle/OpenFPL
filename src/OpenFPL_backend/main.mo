@@ -20,6 +20,9 @@ import Governance "governance";
 import Rewards "rewards";
 import PrivateLeagues "private-leagues-manager";
 import List "mo:base/List";
+import Timer "mo:base/Timer";
+import Time "mo:base/Time";
+import Buffer "mo:base/Buffer";
 
 actor Self {
 
@@ -283,8 +286,75 @@ actor Self {
     await teamsInstance.updateTeam(proposalPayload);
   };
 
+  private func proposalExpiredCallback() : async () {
+      // Handle proposal expiration logic
+  };
+
+  private func gameweekBeginExpiredCallback() : async () {
+      // Handle logic for some other event
+  };
+
+  private func gameKickOffExpiredCallback() : async () {
+      // Handle logic for some other event
+  };
+
+  private func gameCompletedExpiredCallback() : async () {
+      // Handle logic for some other event
+  };
+
+  private func votingPeriodOverExpiredCallback() : async () {
+      // Handle logic for some other event
+  };
+
+  private func defaultCallback() : async () { };
+  
+  private func setAndBackupTimer(duration: Timer.Duration, callbackName: Text) : async () {
+    let jobId: Timer.TimerId = switch(callbackName) {
+        case "proposalExpired" {
+            Timer.setTimer(duration, proposalExpiredCallback);
+        };
+        case "gameweekBeginExpired" {
+            Timer.setTimer(duration, gameweekBeginExpiredCallback);
+        };
+        case "gameKickOffExpired" {
+            Timer.setTimer(duration, gameKickOffExpiredCallback);
+        };
+        case "gameCompletedExpired" {
+            Timer.setTimer(duration, gameCompletedExpiredCallback);
+        };
+        case "votingPeriodOverExpired" {
+            Timer.setTimer(duration, votingPeriodOverExpiredCallback);
+        };
+        case _ {
+            Timer.setTimer(duration, defaultCallback);
+        }
+    };
+
+    let triggerTime = switch (duration) {
+        case (#seconds s) {
+            Time.now() + s * 1_000_000_000;
+        };
+        case (#nanoseconds ns) {
+            Time.now() + ns;
+        };
+    };
+
+    let timerInfo: T.TimerInfo = {
+      id = jobId;
+      triggerTime = triggerTime;
+      callbackName = callbackName;
+      playerId = 0;
+    };
+
+    var timerBuffer = Buffer.fromArray<T.TimerInfo>(stable_timers);
+    timerBuffer.add(timerInfo);
+    stable_timers := Buffer.toArray(timerBuffer);
+  };
+
+  private stable var stable_timers: [T.TimerInfo] = [];
+
   let governanceInstance = Governance.Governance(transferPlayer, loanPlayer, recallPlayer, createPlayer,
-      updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam);
+      updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam, setAndBackupTimer);
 
   //Fantasy team functions
   public shared query ({caller}) func getTotalManagers() : async Nat {
@@ -427,7 +497,8 @@ actor Self {
     getConsensusPlayerEventData,
     getAllPlayersMap,
     resetFantasyTeams,
-    governanceInstance.getEventDataVotePeriod());
+    governanceInstance.getEventDataVotePeriod(),
+    setAndBackupTimer);
     governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
 
@@ -442,16 +513,13 @@ actor Self {
   private stable var stable_draft_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)] = [];
   private stable var stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
   private stable var stable_proposals: [T.Proposal] = [];
-  private stable var stable_active_timers : [Int] = [];
   private stable var stable_transfers_allowed : Bool = true;
-  private stable var stable_gameweek_begin_timer_id : Int = 0;
-  private stable var stable_kick_off_timer_ids : [Int] = [];
-  private stable var stable_game_completed_timer_ids : [Int] = [];
-  private stable var stable_voting_period_timer_ids : [Int] = [];
   private stable var stable_active_fixtures : [T.Fixture] = [];
   private stable var stable_next_fixture_id : Nat32 = 0;
   private stable var stable_next_season_id : Nat16 = 0;
+  private stable var stable_seasons : [T.Season] = [];
   private stable var stable_teams : [T.Team] = [];
+  private stable var stable_relegated_teams : [T.Team] = [];
   private stable var stable_next_team_id : Nat16 = 0;
   private stable var stable_event_data_vote_period : Int = 0;
   private stable var stable_draft_event_data_VoteThreshold : Nat64 = 0;
@@ -460,6 +528,9 @@ actor Self {
   private stable var stable_proposal_vote_threshold : Nat64 = 0;
   private stable var stable_max_votes_per_user : Nat64 = 0;
   private stable var stable_proposal_submission_e8_fee : Nat64 = 0;
+  private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
+  private stable var stable_consensus_draft_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
+  private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
   
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
@@ -470,16 +541,13 @@ actor Self {
     stable_draft_fixture_data_submissions := governanceInstance.getDraftFixtureDataSubmissions();
     stable_player_revaluation_submissions := governanceInstance.getPlayerRevaluationSubmissions();
     stable_proposals := governanceInstance.getProposals();
-    stable_active_timers := seasonManager.getActiveTimerIds();
     stable_transfers_allowed := seasonManager.getTransfersAllowed();
-    stable_gameweek_begin_timer_id := seasonManager.getGameweekBeginTimerId();
-    stable_kick_off_timer_ids := seasonManager.getKickOffTimerIds();
-    stable_game_completed_timer_ids := seasonManager.getGameCompletedTimerIds();
-    stable_voting_period_timer_ids := seasonManager.getVotingPeriodTimerIds();
     stable_active_fixtures := seasonManager.getActiveFixtures();
     stable_next_fixture_id := seasonManager.getNextFixtureId();
     stable_next_season_id := seasonManager.getNextSeasonId();
+    stable_seasons := seasonManager.getSeasons();
     stable_teams := teamsInstance.getTeams();
+    stable_relegated_teams := teamsInstance.getRelegatedTeams();
     stable_next_team_id := teamsInstance.getNextTeamId();
     stable_event_data_vote_period := governanceInstance.getEventDataVotePeriod();
     stable_draft_event_data_VoteThreshold := governanceInstance.getDraftEventDataVoteThreshold();
@@ -488,18 +556,19 @@ actor Self {
     stable_proposal_vote_threshold := governanceInstance.getProposalVoteThreshold();
     stable_max_votes_per_user := governanceInstance.getMaxVotesPerUser();
     stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
+    stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
+    stable_consensus_draft_fixture_data := governanceInstance.getConsensusDraftFixtureData();
+    stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
   };
 
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
     fantasyTeamsInstance.setData(stable_fantasy_teams);
-    seasonManager.setData(stable_active_season_id, stable_active_gameweek, stable_active_timers, stable_transfers_allowed, stable_gameweek_begin_timer_id, 
-    stable_kick_off_timer_ids, stable_game_completed_timer_ids, stable_voting_period_timer_ids, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
+    seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_transfers_allowed, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
     stable_draft_fixture_data_submissions := governanceInstance.getDraftFixtureDataSubmissions();
-    stable_teams := teamsInstance.getTeams();
-    stable_next_team_id := teamsInstance.getNextTeamId();
-    governanceInstance.setData(stable_fixture_data_submissions, stable_draft_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals);
+    teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
+    governanceInstance.setData(stable_fixture_data_submissions, stable_draft_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals, stable_consensus_draft_fixture_data, stable_consensus_fixture_data);
     governanceInstance.setEventDataVotePeriod(stable_event_data_vote_period);
     governanceInstance.setDraftEventDataVoteThreshold(stable_draft_event_data_VoteThreshold);
     governanceInstance.setEventDataVoteThreshold(stable_event_data_vote_threshold);
@@ -507,7 +576,7 @@ actor Self {
     governanceInstance.setProposalVoteThreshold(stable_proposal_vote_threshold);
     governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
     governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
-    
+    fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
   };
 
 };

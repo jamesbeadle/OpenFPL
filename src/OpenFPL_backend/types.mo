@@ -423,16 +423,6 @@ module Types{
         #UpdateSystemParameters;
     };
 
-    public type ProposalTimer = {
-        timerId: Int;
-    };
-
-    public type LoanTimer = {
-        timerId: Int;
-        playerId: Nat16;
-        expires: Int;
-    };
-
     public type RevaluedPlayer = {
         playerId: PlayerId; 
         direction: RevaluationDirection;
@@ -442,6 +432,24 @@ module Types{
         #Increase;
         #Decrease;
     };
+
+    public type TimerInfo = {
+        id: Int;
+        triggerTime: Int;
+        callbackName: Text;
+        playerId: PlayerId;
+    };
+
+    public type ProposalTimer = {
+        timerInfo: TimerInfo;
+    };
+
+    public type LoanTimer = {
+        timerInfo: TimerInfo;
+        playerId: Nat16;
+        expires: Int;
+    };
+
 
 
 }

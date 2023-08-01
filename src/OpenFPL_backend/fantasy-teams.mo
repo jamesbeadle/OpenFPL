@@ -29,6 +29,17 @@ module {
             return Iter.toArray(fantasyTeams.entries());
         };
 
+        public func getSeasonLeaderboards() : [(Nat16, T.SeasonLeaderboards)] {
+            return Iter.toArray(seasonLeaderboards.entries());
+        };
+
+        
+        public func setDataForSeasonLeaderboards(data: [(Nat16, T.SeasonLeaderboards)]) {
+            seasonLeaderboards := HashMap.fromIter<Nat16, T.SeasonLeaderboards>(
+                data.vals(), data.size(), Utilities.eqNat16, Utilities.hashNat16
+            );
+        };
+
         public func getFantasyTeam(principalId: Text) : ?T.UserFantasyTeam {
             return fantasyTeams.get(principalId);
         };

@@ -22,8 +22,9 @@ actor Self {
 
     private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
     private var nextPlayerId : Nat = 560;
-    private var loanTimers = List.nil<T.LoanTimer>();
     private var retiredPlayers = List.fromArray<T.Player>([]);
+
+    private stable var stable_timers: [T.TimerInfo] = [];
 
     public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
         assert not Principal.isAnonymous(caller);
@@ -484,25 +485,51 @@ actor Self {
                 });
                 
                 let loanTimerDuration = #nanoseconds (Int.abs((proposalPayload.loanEndDate - Time.now())));
-                let loanTimerId = Timer.setTimer(loanTimerDuration, loanComplete);
-                let newLoanTimer: T.LoanTimer = {
-                    timerId = loanTimerId;
-                    playerId = proposalPayload.playerId;
-                    expires = Time.now() + Int.abs(proposalPayload.loanEndDate - Time.now());
-                };
-                loanTimers := List.push(newLoanTimer, loanTimers);
+                await setAndBackupTimer(loanTimerDuration, "loanExpired", proposalPayload.playerId);
             };
         };
     };
+  
+    private func setAndBackupTimer(duration: Timer.Duration, callbackName: Text, playerId: T.PlayerId) : async () {
+        let jobId: Timer.TimerId = switch(callbackName) {
+            case "loanExpired" {
+                Timer.setTimer(duration, loanExpiredCallback);
+            };
+            case _ {
+                Timer.setTimer(duration, defaultCallback);
+            }
+        };
+
+        let triggerTime = switch (duration) {
+            case (#seconds s) {
+                Time.now() + s * 1_000_000_000;
+            };
+            case (#nanoseconds ns) {
+                Time.now() + ns;
+            };
+        };
+
+        let timerInfo: T.TimerInfo = {
+            id = jobId;
+            triggerTime = triggerTime;
+            callbackName = callbackName;
+            playerId = playerId;
+        };
+
+        var timerBuffer = Buffer.fromArray<T.TimerInfo>(stable_timers);
+        timerBuffer.add(timerInfo);
+        stable_timers := Buffer.toArray(timerBuffer);
+    };
 
     private func loanComplete() : async (){
-         let currentTime = Time.now();
-        loanTimers := List.mapFilter<T.LoanTimer, T.LoanTimer>(loanTimers, func(loanTimer: T.LoanTimer) : ?T.LoanTimer {
-            if (loanTimer.expires <= currentTime) {
-                // The loan timer has expired
-                let playerToReturn = List.find<T.Player>(players, func(p: T.Player) { p.id == loanTimer.playerId });
+        let currentTime = Time.now();
+
+        for (timer in Iter.fromArray(stable_timers)) {
+            if (timer.triggerTime <= currentTime and timer.callbackName == "loanExpired") {
+                let playerToReturn = List.find<T.Player>(players, func(p: T.Player) { p.id == timer.playerId });
+                
                 switch(playerToReturn) {
-                    case (null) { return null; }; // Player not found; Remove this loan timer
+                    case (null) { }; 
                     case (?p) {
                         let returnedPlayer: T.Player = {
                             id = p.id;
@@ -530,15 +557,23 @@ actor Self {
                                 return currentPlayer;
                             }
                         });
-
-                        return null;
                     };
                 };
-            } else {
-                return ?loanTimer;
             }
+        };
+
+        stable_timers := Array.filter<T.TimerInfo>(stable_timers, func(timer: T.TimerInfo) : Bool {
+            return timer.triggerTime > currentTime;
         });
     };
+
+
+
+    private func loanExpiredCallback() : async () {
+        // Handle logic for some other event
+    };
+
+    private func defaultCallback() : async () { };
 
     public func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
         let playerToRecall = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
@@ -573,13 +608,14 @@ actor Self {
                         }
                     });
 
-                    loanTimers := List.filter<T.LoanTimer>(loanTimers, func(loanTimer: T.LoanTimer) : Bool {
-                        return loanTimer.playerId != returnedPlayer.id;
+                    stable_timers := Array.filter<T.TimerInfo>(stable_timers, func(timer: T.TimerInfo) : Bool {
+                        return timer.playerId != returnedPlayer.id;
                     });
                 }
             };
         };
     };
+
 
     public func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
         let newPlayer: T.Player = {

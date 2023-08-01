@@ -13,9 +13,10 @@ module {
     private var nextTeamId : Nat16 = 21;
     private var relegatedTeams = List.fromArray<T.Team>([]);
 
-    public func setData(stable_teams: [T.Team], stable_teamId : Nat16){
+    public func setData(stable_teams: [T.Team], stable_teamId : Nat16, stable_relegated_teams: [T.Team]){
         teams := List.fromArray(stable_teams);
         nextTeamId := stable_teamId;
+        relegatedTeams := List.fromArray(stable_relegated_teams);
     };
 
     public func getTeams() : [T.Team] {
@@ -27,6 +28,10 @@ module {
         });
         let sortedTeams = List.fromArray(sortedArray);
         return sortedArray;
+    };
+
+    public func getRelegatedTeams() : [T.Team] {
+        return List.toArray(relegatedTeams);
     };
 
     public func getTeamName(teamId: Nat16) : Text {

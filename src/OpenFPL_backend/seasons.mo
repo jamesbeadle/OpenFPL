@@ -19,9 +19,8 @@ module {
     private var nextFixtureId : Nat32 = 381;
     private var nextSeasonId : Nat16 = 2;
 
-    public func setData(stable_seasons: [T.Season], stable_season_id: Nat16){
+    public func setSeasons(stable_seasons: [T.Season]){
         seasons := List.fromArray(stable_seasons);
-        nextSeasonId := stable_season_id;
     };
 
     public func getSeasons() : [T.Season] {

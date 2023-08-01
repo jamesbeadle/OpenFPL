@@ -27,7 +27,8 @@ module {
         unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async (),
         promoteTeam: (proposalPayload: T.PromoteTeamPayload) -> async (),
         relegateTeam: (proposalPayload: T.RelegateTeamPayload) -> async (),
-        updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async ()){
+        updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async (),
+        setAndBackupTimer: (duration: Timer.Duration, callbackName: Text) -> async ()){
 
         private let oneHour = 1_000_000_000 * 60 * 60;
         
@@ -47,7 +48,6 @@ module {
         private var proposals: List.List<T.Proposal> = List.nil<T.Proposal>();
         private var consensusDraftFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var consensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
-        private var proposalTimers: TrieMap.TrieMap<Nat, T.ProposalTimer> = TrieMap.TrieMap<Nat, T.ProposalTimer>(Nat.equal, Utilities.hashNat);
         
         private var addInitialFixtures : ?((T.AddInitialFixturesPayload) -> async ()) = null;
         private var rescheduleFixture : ?((T.RescheduleFixturePayload) -> async ()) = null;
@@ -127,7 +127,9 @@ module {
             stable_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)], 
             stable__draft_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)],
             stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))],
-            stable_proposals: [T.Proposal]) {
+            stable_proposals: [T.Proposal],
+            stable_consensus_draft_fixture_data: [(T.FixtureId, T.ConsensusData)],
+            stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)]) {
 
             // Type definitions
             type InnerMapType = HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>;
@@ -168,6 +170,22 @@ module {
             playerRevaluationSubmissions := outerMap;
 
             proposals := List.fromArray(stable_proposals);
+
+            let consensusDraftIterator = Iter.fromArray(stable_consensus_draft_fixture_data);
+            consensusDraftFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
+                consensusDraftIterator,
+                Iter.size(consensusDraftIterator),
+                Utilities.eqNat32, 
+                Utilities.hashNat32
+            );
+
+            let consensusIterator = Iter.fromArray(stable_consensus_fixture_data);
+            consensusFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
+                consensusIterator,
+                Iter.size(consensusIterator),
+                Utilities.eqNat32, 
+                Utilities.hashNat32
+            );
         };
 
         public func getVotingPower(principalId: Text) : Nat64 {
@@ -189,6 +207,14 @@ module {
         
         public func getDraftFixtureDataSubmissions() : [(T.FixtureId, T.DataSubmission)] {
             return Iter.toArray(draftFixtureDataSubmissions.entries());
+        };
+
+        public func getConsensusDraftFixtureData() : [(T.FixtureId, T.ConsensusData)] {
+            return Iter.toArray(consensusDraftFixtureData.entries());
+        };
+
+        public func getConsensusFixtureData() : [(T.FixtureId, T.ConsensusData)] {
+            return Iter.toArray(consensusFixtureData.entries());
         };
 
         public func getPlayerRevaluationSubmissions() : [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] {
@@ -463,8 +489,7 @@ module {
             proposals := newProposals;
         };
 
-        public func submitProposal(proposer: Principal, payload: T.ProposalPayload, proposalType: T.ProposalType, data: T.PayloadData) : Nat {
-            
+        public func submitProposal(proposer: Principal, payload: T.ProposalPayload, proposalType: T.ProposalType, data: T.PayloadData) : async Nat {
             let newId = List.size<T.Proposal>(proposals) + 1;
 
             let newProposal: T.Proposal = {
@@ -482,14 +507,12 @@ module {
 
             proposals := List.append(?(newProposal, null), proposals);
 
-            let proposalTimerDuration = #nanoseconds (Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
-            let proposalTimerId = Timer.setTimer(proposalTimerDuration, proposalExpired);
-      
-            let newTimer: T.ProposalTimer = { timerId = proposalTimerId };
-            proposalTimers.put(newId, newTimer);
-
+            let proposalTimerDuration : Timer.Duration = #nanoseconds (Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
+            let newTimerInfo = await setAndBackupTimer(proposalTimerDuration, "proposalExpired");
+            
             return newId;
         };
+
 
         public func proposalExpired() : async () {
             
