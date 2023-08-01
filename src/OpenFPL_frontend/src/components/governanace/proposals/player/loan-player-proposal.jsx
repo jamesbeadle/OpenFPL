@@ -4,15 +4,15 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../contexts/AuthContext";
 
-const PlayerInjuryProposal = () => {
+const LoanPlayerProposal = () => {
     const { authClient } = useContext(AuthContext);
 
     const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState("");
     const [players, setPlayers] = useState([]);
     const [selectedPlayer, setSelectedPlayer] = useState("");
-    const [injuryDescription, setInjuryDescription] = useState("");
-    const [expectedEndDate, setExpectedEndDate] = useState("");
+    const [loanToTeam, setLoanToTeam] = useState("");
+    const [outsideLeague, setOutsideLeague] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(null);
 
     useEffect(() => {
@@ -37,31 +37,28 @@ const PlayerInjuryProposal = () => {
         // Fetch players for the given teamId logic
     }
 
-    const handleSetInjury = async (e) => {
+    const handleLoanPlayer = async (e) => {
         e.preventDefault();
 
-        if (!selectedPlayer || !injuryDescription || !expectedEndDate) {
+        if (!selectedPlayer || (outsideLeague === false && !loanToTeam)) {
             setSubmitStatus("Please provide all the required fields.");
             return;
         }
 
         try {
-            const injuryData = {
-                description: injuryDescription,
-                expectedEndDate: parseInt(expectedEndDate)
-            };
+            const loanData = outsideLeague ? { outsideLeague: true } : { teamId: loanToTeam };
 
-            await open_fpl_backend.setPlayerInjury(selectedPlayer, injuryData);
-            setSubmitStatus("Player injury successfully set!");
+            await open_fpl_backend.loanPlayer(selectedPlayer, loanData);
+            setSubmitStatus("Player loaned successfully!");
         } catch (error) {
-            console.error("Error while setting player injury: ", error);
-            setSubmitStatus("Failed to set player injury. Please try again.");
+            console.error("Error while loaning player: ", error);
+            setSubmitStatus("Failed to loan player. Please try again.");
         }
     }
 
     return (
         <div>
-            <Form onSubmit={handleSetInjury}>
+            <Form onSubmit={handleLoanPlayer}>
                 <Form.Group className="mb-3">
                     <Form.Label>Teams</Form.Label>
                     <Form.Control as="select" value={selectedTeam} onChange={(e) => setSelectedTeam(e.target.value)}>
@@ -82,24 +79,33 @@ const PlayerInjuryProposal = () => {
                     </Form.Control>
                 </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Injury Description</Form.Label>
-                    <Form.Control type="text" value={injuryDescription} onChange={(e) => setInjuryDescription(e.target.value)} />
-                </Form.Group>
+                <Form.Check 
+                    type="checkbox" 
+                    label="Transferring Outside of League"
+                    onChange={(e) => setOutsideLeague(e.target.checked)}
+                    className="mb-3"
+                />
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Expected End Date</Form.Label>
-                    <Form.Control type="date" value={expectedEndDate} onChange={(e) => setExpectedEndDate(e.target.value)} />
-                </Form.Group>
+                {!outsideLeague && (
+                    <Form.Group className="mb-3">
+                        <Form.Label>Loan to Team</Form.Label>
+                        <Form.Control as="select" value={loanToTeam} onChange={(e) => setLoanToTeam(e.target.value)}>
+                            <option disabled value="">Select a team</option>
+                            {teams.filter(team => team.id !== selectedTeam).map((team) => (
+                                <option key={team.id} value={team.id}>{team.name}</option>
+                            ))}
+                        </Form.Control>
+                    </Form.Group>
+                )}
 
                 {submitStatus && <Alert variant={submitStatus.includes("successfully") ? "success" : "danger"}>{submitStatus}</Alert>}
 
                 <Button variant="primary" type="submit">
-                    Set Player Injury
+                    Loan Player
                 </Button>
             </Form>
         </div>
     );
 };
 
-export default PlayerInjuryProposal;
+export default LoanPlayerProposal;

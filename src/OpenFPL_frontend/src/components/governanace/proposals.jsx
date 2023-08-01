@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Spinner, Button, Modal, Dropdown, Table, ButtonGroup } from 'react-bootstrap';
+import React, { useState, useEffect, useContext } from 'react';
+import { Card, Spinner, Button, Dropdown, Table, ButtonGroup } from 'react-bootstrap';
+import { AuthContext } from "../../contexts/AuthContext";
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { Actor } from "@dfinity/agent";
 import AddProposalModal from './add-proposal-modal';
 
 const Proposals = ({ isActive }) => {
+  const { authClient } = useContext(AuthContext);
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showAddProposalModal, setShowAddProposalModal] = useState(false);
@@ -11,29 +15,30 @@ const Proposals = ({ isActive }) => {
   const count = 25;
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      // Replace with your actual data fetching logic
-      await new Promise(resolve => setTimeout(resolve, 2000)); // For example purposes only
-      setIsLoading(false);
-    };
-
     if (isActive) {
-      fetchData();
+      fetchProposals();
     }
   }, [isActive]);
 
-  
-
-  const hideAddProposalModal = async (changed) => {
-    if(!changed){
-      setShowAddProposalModal(false); 
-      return;
-    }
+  const fetchProposals = async () => {
     setIsLoading(true);
-    setShowAddProposalModal(false); 
-    await fetchViewData();
-    setIsLoading(false);
+    try {
+      const identity = authClient.getIdentity();
+      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      const activeProposals = await open_fpl_backend.getActiveProposals();
+      setData(activeProposals);
+    } catch (error) {
+      console.error("Failed to fetch active proposals", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddProposalModalClose = (changed) => {
+    setShowAddProposalModal(false);
+    if (changed) {
+      fetchProposals();
+    }
   };
 
   if (isLoading) {
@@ -106,12 +111,11 @@ const Proposals = ({ isActive }) => {
             </Button>
           </ButtonGroup>
         </div>)}
-      
 
         <AddProposalModal
-                show={showAddProposalModal}
-                onHide={hideAddProposalModal}
-              />
+            show={showAddProposalModal}
+            onHide={handleAddProposalModalClose}
+          />
       </Card.Body>
     </Card>
   );
