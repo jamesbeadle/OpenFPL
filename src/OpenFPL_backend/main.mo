@@ -241,7 +241,7 @@ actor Self {
   };
 
   private func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
-    await seasonManager.rescheduleFixture(proposalPayload);
+    stable_timers := await seasonManager.rescheduleFixture(proposalPayload);
   };
 
   private func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {
@@ -322,7 +322,7 @@ actor Self {
 
   private func defaultCallback() : async () { };
   
-  private func setAndBackupTimer(duration: Timer.Duration, callbackName: Text) : async () {
+  private func setAndBackupTimer(duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) : async () {
     let jobId: Timer.TimerId = switch(callbackName) {
         case "proposalExpired" {
             Timer.setTimer(duration, proposalExpiredCallback);
@@ -358,6 +358,7 @@ actor Self {
       triggerTime = triggerTime;
       callbackName = callbackName;
       playerId = 0;
+      fixtureId = 0;
     };
 
     var timerBuffer = Buffer.fromArray<T.TimerInfo>(stable_timers);
@@ -511,7 +512,8 @@ actor Self {
     getConsensusPlayerEventData,
     getAllPlayersMap,
     resetFantasyTeams,
-    governanceInstance.getEventDataVotePeriod());
+    governanceInstance.getEventDataVotePeriod(),
+    stable_timers);
     
     governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
     governanceInstance.setTimerBackupFunction(setAndBackupTimer);

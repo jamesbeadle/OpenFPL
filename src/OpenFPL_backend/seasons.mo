@@ -9,6 +9,8 @@ import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Char "mo:base/Char";
 import Nat8 "mo:base/Nat8";
+import Timer "mo:base/Timer";
+import Int "mo:base/Int";
 
 module {
     
@@ -346,61 +348,6 @@ module {
             } else { return currentSeason; } });
     };
     
-    public func rescheduleFixture(rescheduleFixture: T.RescheduleFixturePayload) : () {
-        seasons := List.map<T.Season, T.Season>(seasons, func(currentSeason: T.Season) : T.Season {
-            if (currentSeason.id == rescheduleFixture.seasonId) {
-                var updatedGameweeks: List.List<T.Gameweek> = List.nil();
-                var postponedFixtures: List.List<T.Fixture> = List.nil();
-                
-                updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(currentSeason.gameweeks, func(currentGameweek: T.Gameweek) : T.Gameweek {
-                    let updatedFixtures = List.mapFilter<T.Fixture, T.Fixture>(currentGameweek.fixtures, func(currentFixture: T.Fixture) : ?T.Fixture {
-                        if(currentGameweek.number == rescheduleFixture.oldGameweek or currentGameweek.number == rescheduleFixture.newGameweek) {
-                            if(currentFixture.id == rescheduleFixture.fixtureId){
-                                let updatedFixture: T.Fixture = {
-                                    id = currentFixture.id;
-                                    seasonId = currentFixture.seasonId;
-                                    gameweek = rescheduleFixture.newGameweek;
-                                    kickOff = currentFixture.kickOff;
-                                    homeTeamId = currentFixture.homeTeamId;
-                                    awayTeamId = currentFixture.awayTeamId;
-                                    homeGoals = currentFixture.homeGoals;
-                                    awayGoals = currentFixture.awayGoals;
-                                    status = currentFixture.status;
-                                    events = currentFixture.events;
-                                    highestScoringPlayerId = currentFixture.highestScoringPlayerId;
-                                };
-                                if (rescheduleFixture.newGameweek == 0) {
-                                    postponedFixtures := List.push(updatedFixture, currentSeason.postponedFixtures);
-                                    return null;
-                                } else {
-                                    return ?updatedFixture;
-                                }
-                            }
-                        };
-                        return ?currentFixture;
-                    });
-                    
-                    return {
-                        number = currentGameweek.number;
-                        canisterId = currentGameweek.canisterId;
-                        fixtures = updatedFixtures; 
-                    };
-                });
-                
-                let updatedSeason: T.Season = {
-                    id = currentSeason.id;
-                    name = currentSeason.name;
-                    year = currentSeason.year;
-                    gameweeks = updatedGameweeks;
-                    postponedFixtures = postponedFixtures;
-                };
-
-                return updatedSeason;
-            } else {
-                return currentSeason;
-            }
-        });
-    };
 
 
   }

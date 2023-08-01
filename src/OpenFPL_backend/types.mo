@@ -282,6 +282,7 @@ module Types{
         fixtureId: FixtureId;
         oldGameweek: GameweekNumber;
         newGameweek: GameweekNumber;
+        newKickOffTime: Int;
     };
 
     public type TransferPlayerPayload = {
@@ -438,6 +439,7 @@ module Types{
         triggerTime: Int;
         callbackName: Text;
         playerId: PlayerId;
+        fixtureId: FixtureId;
     };
 
     public type ProposalTimer = {

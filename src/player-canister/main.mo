@@ -512,6 +512,7 @@ actor Self {
             triggerTime = triggerTime;
             callbackName = callbackName;
             playerId = playerId;
+            fixtureId = 0;
         };
 
         var timerBuffer = Buffer.fromArray<T.TimerInfo>(stable_timers);

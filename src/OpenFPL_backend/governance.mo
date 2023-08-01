@@ -61,7 +61,7 @@ module {
         private var Max_Votes_Per_User: Nat64 = 100_000;
         private var Proposal_Submission_e8_Fee: Nat64 = 10_000;
 
-        private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text) -> async ()) = null;
+        private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
     
         //system parameter function setters
         public func getEventDataVotePeriod() : Int{
@@ -513,7 +513,7 @@ module {
             switch(setAndBackupTimer) {
                 case (null) { };
                 case (?actualFunction) {
-                    await actualFunction(proposalTimerDuration, "proposalExpired");
+                    await actualFunction(proposalTimerDuration, "proposalExpired", 0);
                 };
             };
             
@@ -733,7 +733,7 @@ module {
             };
         };
     
-        public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text) -> async ()) {
+        public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {
             setAndBackupTimer := ?_setAndBackupTimer;
         };
 

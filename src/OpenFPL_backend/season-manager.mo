@@ -28,7 +28,8 @@ module {
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async (),
-    EventData_VotingPeriod: Int) {
+    EventData_VotingPeriod: Int,
+    stable_timers: [T.TimerInfo]) {
 
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
@@ -43,14 +44,14 @@ module {
     //definitions
     private let oneHour = 1_000_000_000 * 60 * 60;
     
-    private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text) -> async ()) = null;
+    private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
     public func init_genesis_season(firstFixture: T.Fixture) : async () {
         let genesisSeasonDuration: Timer.Duration = #nanoseconds (Int.abs(firstFixture.kickOff - Time.now() - oneHour));
         switch(setAndBackupTimer) {
             case (null) { };
             case (?actualFunction) {
-                await actualFunction(genesisSeasonDuration, "gameweekBeginExpired");
+                await actualFunction(genesisSeasonDuration, "gameweekBeginExpired", 0);
             };
         };
     };
@@ -91,7 +92,7 @@ module {
             switch(setAndBackupTimer) {
                 case (null) { };
                 case (?actualFunction) {
-                    await actualFunction(gameKickOffDuration, "gameKickOffExpired");
+                    await actualFunction(gameKickOffDuration, "gameKickOffExpired", activeFixtures[i].id);
                 };
             };
         };
@@ -111,7 +112,7 @@ module {
                 switch(setAndBackupTimer) {
                     case (null) { };
                     case (?actualFunction) {
-                        await actualFunction(gameCompletedDuration, "gameCompletedExpired");
+                        await actualFunction(gameCompletedDuration, "gameCompletedExpired", activeFixtures[i].id);
                     };
                 };
             }
@@ -136,7 +137,7 @@ module {
                 switch(setAndBackupTimer) {
                     case (null) { };
                     case (?actualFunction) {
-                        await actualFunction(votingPeriodOverDuration, "votingPeriodOverExpired");
+                        await actualFunction(votingPeriodOverDuration, "votingPeriodOverExpired", activeFixtures[i].id);
                     };
                 };
             } else {
@@ -202,7 +203,7 @@ module {
         switch(setAndBackupTimer) {
             case (null) { };
             case (?actualFunction) {
-                await actualFunction(gameweekBeginDuration, "gameweekBeginExpired");
+                await actualFunction(gameweekBeginDuration, "gameweekBeginExpired", 0);
             };
         };
     };
@@ -215,7 +216,7 @@ module {
         switch(setAndBackupTimer) {
             case (null) { };
             case (?actualFunction) {
-                await actualFunction(initialGameweekBeginDuration, "gameweekBeginExpired");
+                await actualFunction(initialGameweekBeginDuration, "gameweekBeginExpired", 0);
             };
         };
     };
@@ -247,15 +248,83 @@ module {
     public func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
         seasonsInstance.addInitialFixtures(proposalPayload);
     };
+    
+    public func rescheduleFixture(rescheduleFixture: T.RescheduleFixturePayload) : async [T.TimerInfo] {
+        var allSeasons = List.fromArray(seasonsInstance.getSeasons());
+        allSeasons := List.map<T.Season, T.Season>(allSeasons, func(currentSeason: T.Season) : T.Season {
+            if (currentSeason.id == rescheduleFixture.seasonId) {
+                var updatedGameweeks: List.List<T.Gameweek> = List.nil();
+                var postponedFixtures: List.List<T.Fixture> = List.nil();
+                
+                updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(currentSeason.gameweeks, func(currentGameweek: T.Gameweek) : T.Gameweek {
+                    let updatedFixtures = List.mapFilter<T.Fixture, T.Fixture>(currentGameweek.fixtures, func(currentFixture: T.Fixture) : ?T.Fixture {
+                        if(currentGameweek.number == rescheduleFixture.oldGameweek or currentGameweek.number == rescheduleFixture.newGameweek) {
+                            if(currentFixture.id == rescheduleFixture.fixtureId){
+                                let updatedFixture: T.Fixture = {
+                                    id = currentFixture.id;
+                                    seasonId = currentFixture.seasonId;
+                                    gameweek = rescheduleFixture.newGameweek;
+                                    kickOff = currentFixture.kickOff;
+                                    homeTeamId = currentFixture.homeTeamId;
+                                    awayTeamId = currentFixture.awayTeamId;
+                                    homeGoals = currentFixture.homeGoals;
+                                    awayGoals = currentFixture.awayGoals;
+                                    status = currentFixture.status;
+                                    events = currentFixture.events;
+                                    highestScoringPlayerId = currentFixture.highestScoringPlayerId;
+                                };
+                                if (rescheduleFixture.newGameweek == 0) {
+                                    postponedFixtures := List.push(updatedFixture, currentSeason.postponedFixtures);
+                                    return null;
+                                } else {
+                                    return ?updatedFixture;
+                                }
+                            }
+                        };
+                        return ?currentFixture;
+                    });
+                    
+                    return {
+                        number = currentGameweek.number;
+                        canisterId = currentGameweek.canisterId;
+                        fixtures = updatedFixtures; 
+                    };
+                });
+                
+                let updatedSeason: T.Season = {
+                    id = currentSeason.id;
+                    name = currentSeason.name;
+                    year = currentSeason.year;
+                    gameweeks = updatedGameweeks;
+                    postponedFixtures = postponedFixtures;
+                };
 
-    public func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
-        seasonsInstance.rescheduleFixture(proposalPayload);
+                return updatedSeason;
+            } else {
+                return currentSeason;
+            }
+        });
+
+        // Set new timer for the rescheduled fixture
+        let newKickOffDuration: Timer.Duration = #nanoseconds (Int.abs(rescheduleFixture.newKickOffTime - Time.now()));
+        switch(setAndBackupTimer) {
+            case (null) { };
+            case (?actualFunction) {
+                await actualFunction(newKickOffDuration, "gameKickOffExpired", rescheduleFixture.fixtureId);
+            };
+        };
+
+        // Filter out the timer related to the rescheduled fixture and cancel it
+        let remainingTimers = Array.filter<T.TimerInfo>(stable_timers, func(timer: T.TimerInfo) : Bool {
+            return timer.fixtureId != rescheduleFixture.fixtureId;
+        });
+
+        return remainingTimers;
     };
     
-    public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text) -> async ()) {
+    public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {
         setAndBackupTimer := ?_setAndBackupTimer;
     };
-
     
 
     //Only return draft data if over threshold for DraftEventData_VoteThreshold
