@@ -241,7 +241,7 @@ actor Self {
   };
 
   private func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
-    stable_timers := await seasonManager.rescheduleFixture(proposalPayload);
+    await seasonManager.rescheduleFixture(proposalPayload);
   };
 
   private func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {

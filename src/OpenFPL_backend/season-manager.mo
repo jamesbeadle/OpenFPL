@@ -249,7 +249,7 @@ module {
         seasonsInstance.addInitialFixtures(proposalPayload);
     };
     
-    public func rescheduleFixture(rescheduleFixture: T.RescheduleFixturePayload) : async [T.TimerInfo] {
+    public func rescheduleFixture(rescheduleFixture: T.RescheduleFixturePayload) : async () {
         var allSeasons = List.fromArray(seasonsInstance.getSeasons());
         allSeasons := List.map<T.Season, T.Season>(allSeasons, func(currentSeason: T.Season) : T.Season {
             if (currentSeason.id == rescheduleFixture.seasonId) {
@@ -304,22 +304,6 @@ module {
                 return currentSeason;
             }
         });
-
-        // Set new timer for the rescheduled fixture
-        let newKickOffDuration: Timer.Duration = #nanoseconds (Int.abs(rescheduleFixture.newKickOffTime - Time.now()));
-        switch(setAndBackupTimer) {
-            case (null) { };
-            case (?actualFunction) {
-                await actualFunction(newKickOffDuration, "gameKickOffExpired", rescheduleFixture.fixtureId);
-            };
-        };
-
-        // Filter out the timer related to the rescheduled fixture and cancel it
-        let remainingTimers = Array.filter<T.TimerInfo>(stable_timers, func(timer: T.TimerInfo) : Bool {
-            return timer.fixtureId != rescheduleFixture.fixtureId;
-        });
-
-        return remainingTimers;
     };
     
     public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {
