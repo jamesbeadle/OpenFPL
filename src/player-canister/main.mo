@@ -24,8 +24,6 @@ actor Self {
     private var nextPlayerId : Nat = 560;
     private var retiredPlayers = List.fromArray<T.Player>([]);
 
-    private stable var stable_timers: [T.TimerInfo] = [];
-
     public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
         assert not Principal.isAnonymous(caller);
 
@@ -797,6 +795,7 @@ actor Self {
 
     private stable var stable_players: [T.Player] = [];
     private stable var stable_next_player_id : Nat = 0;
+    private stable var stable_timers: [T.TimerInfo] = [];
 
     system func preupgrade() {
         stable_players := List.toArray(players);
@@ -806,6 +805,28 @@ actor Self {
     system func postupgrade() {
         players := List.fromArray(stable_players);
         nextPlayerId := stable_next_player_id;
+        recreateTimers();
     };
+
+    private func recreateTimers(){
+        let currentTime = Time.now();
+        for (timerInfo in Iter.fromArray(stable_timers)) {
+            let remainingDuration = timerInfo.triggerTime - currentTime;
+
+            if (remainingDuration > 0) { 
+                let duration: Timer.Duration =  #nanoseconds(Int.abs(remainingDuration));
+
+                switch(timerInfo.callbackName) {
+                    case "loanExpired" {
+                        ignore Timer.setTimer(duration, loanExpiredCallback);
+                    };
+                    case _ {
+                        ignore Timer.setTimer(duration, defaultCallback);
+                    };
+                };
+            }
+        }
+    };
+
 
 };

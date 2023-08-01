@@ -28,8 +28,7 @@ module {
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async (),
-    EventData_VotingPeriod: Int,
-    setAndBackupTimer: (duration: Timer.Duration, callbackName: Text) -> async ()) {
+    EventData_VotingPeriod: Int) {
 
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
@@ -43,10 +42,17 @@ module {
 
     //definitions
     private let oneHour = 1_000_000_000 * 60 * 60;
+    
+    private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text) -> async ()) = null;
         
     public func init_genesis_season(firstFixture: T.Fixture) : async () {
         let genesisSeasonDuration: Timer.Duration = #nanoseconds (Int.abs(firstFixture.kickOff - Time.now() - oneHour));
-        await setAndBackupTimer(genesisSeasonDuration, "gameweekBeginExpired");
+        switch(setAndBackupTimer) {
+            case (null) { };
+            case (?actualFunction) {
+                await actualFunction(genesisSeasonDuration, "gameweekBeginExpired");
+            };
+        };
     };
 
 
@@ -73,7 +79,7 @@ module {
         return seasonsInstance.getNextSeasonId();
     };
 
-    private func gameweekBegin() : async (){
+    public func gameweekBegin() : async (){
         transfersAllowed := false;
 
         await snapshotGameweek(activeSeasonId);
@@ -82,11 +88,16 @@ module {
         var gameKickOffTimers = List.nil<T.TimerInfo>(); 
         for (i in Iter.range(0, Array.size(activeFixtures) - 1)) {
             let gameKickOffDuration: Timer.Duration = #nanoseconds (Int.abs(activeFixtures[i].kickOff - Time.now()));
-            await setAndBackupTimer(gameKickOffDuration, "gameKickOffExpired");
+            switch(setAndBackupTimer) {
+                case (null) { };
+                case (?actualFunction) {
+                    await actualFunction(gameKickOffDuration, "gameKickOffExpired");
+                };
+            };
         };
     };
 
-    private func gameKickOff() : async (){
+    public func gameKickOff() : async (){
 
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
         
@@ -97,7 +108,12 @@ module {
                 activeFixturesBuffer.add(updatedFixture);
 
                 let gameCompletedDuration: Timer.Duration = #nanoseconds (Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
-                await setAndBackupTimer(gameCompletedDuration, "gameCompletedExpired");
+                switch(setAndBackupTimer) {
+                    case (null) { };
+                    case (?actualFunction) {
+                        await actualFunction(gameCompletedDuration, "gameCompletedExpired");
+                    };
+                };
             }
             else{
                 activeFixturesBuffer.add(activeFixtures[i]);
@@ -106,8 +122,7 @@ module {
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
     };
 
-
-    private func gameCompleted() : async () {
+    public func gameCompleted() : async () {
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
@@ -117,7 +132,13 @@ module {
                 activeFixturesBuffer.add(updatedFixture);
 
                 let votingPeriodOverDuration: Timer.Duration = #nanoseconds (Int.abs((Time.now() + EventData_VotingPeriod) - Time.now()));
-                await setAndBackupTimer(votingPeriodOverDuration, "votingPeriodOverExpired");
+                
+                switch(setAndBackupTimer) {
+                    case (null) { };
+                    case (?actualFunction) {
+                        await actualFunction(votingPeriodOverDuration, "votingPeriodOverExpired");
+                    };
+                };
             } else {
                 activeFixturesBuffer.add(activeFixtures[i]);
             };
@@ -126,8 +147,7 @@ module {
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
     };
 
-
-    private func votingPeriodOver() : async (){
+    public func votingPeriodOver() : async (){
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
@@ -152,7 +172,6 @@ module {
             await setNextGameweek();
         };
     };
-
 
     private func gameweekVerified() : async (){
           
@@ -180,7 +199,12 @@ module {
         await mintWeeklyRewardsPool();
 
         let gameweekBeginDuration: Timer.Duration = #nanoseconds (Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
-        await setAndBackupTimer(gameweekBeginDuration, "gameweekBeginExpired");
+        switch(setAndBackupTimer) {
+            case (null) { };
+            case (?actualFunction) {
+                await actualFunction(gameweekBeginDuration, "gameweekBeginExpired");
+            };
+        };
     };
 
     public func intialFixturesConfirmed() : async (){
@@ -188,7 +212,12 @@ module {
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
 
         let initialGameweekBeginDuration: Timer.Duration = #nanoseconds (Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
-        await setAndBackupTimer(initialGameweekBeginDuration, "gameweekBeginExpired");
+        switch(setAndBackupTimer) {
+            case (null) { };
+            case (?actualFunction) {
+                await actualFunction(initialGameweekBeginDuration, "gameweekBeginExpired");
+            };
+        };
     };
 
     public func getActiveSeasonId() : Nat16 {
@@ -222,6 +251,12 @@ module {
     public func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
         seasonsInstance.rescheduleFixture(proposalPayload);
     };
+    
+    public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text) -> async ()) {
+        setAndBackupTimer := ?_setAndBackupTimer;
+    };
+
+    
 
     //Only return draft data if over threshold for DraftEventData_VoteThreshold
 

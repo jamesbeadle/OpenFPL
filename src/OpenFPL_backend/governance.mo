@@ -27,8 +27,7 @@ module {
         unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async (),
         promoteTeam: (proposalPayload: T.PromoteTeamPayload) -> async (),
         relegateTeam: (proposalPayload: T.RelegateTeamPayload) -> async (),
-        updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async (),
-        setAndBackupTimer: (duration: Timer.Duration, callbackName: Text) -> async ()){
+        updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async ()){
 
         private let oneHour = 1_000_000_000 * 60 * 60;
         
@@ -54,6 +53,7 @@ module {
 
         //system parameters
         private var EventData_VotePeriod: Int = oneHour * 12;
+        private var Proposal_VotePeriod: Int = oneHour * 12;
         private var DraftEventData_VoteThreshold: Nat64 = 500_000;
         private var EventData_VoteThreshold: Nat64 = 1_000_000;
         private var Revaluation_VoteThreshold: Nat64 = 1_000_000;
@@ -61,6 +61,8 @@ module {
         private var Max_Votes_Per_User: Nat64 = 100_000;
         private var Proposal_Submission_e8_Fee: Nat64 = 10_000;
 
+        private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text) -> async ()) = null;
+    
         //system parameter function setters
         public func getEventDataVotePeriod() : Int{
             return EventData_VotePeriod;
@@ -507,8 +509,13 @@ module {
 
             proposals := List.append(?(newProposal, null), proposals);
 
-            let proposalTimerDuration : Timer.Duration = #nanoseconds (Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
-            let newTimerInfo = await setAndBackupTimer(proposalTimerDuration, "proposalExpired");
+            let proposalTimerDuration : Timer.Duration = #nanoseconds (Int.abs((Time.now() + Proposal_VotePeriod) - Time.now()));
+            switch(setAndBackupTimer) {
+                case (null) { };
+                case (?actualFunction) {
+                    await actualFunction(proposalTimerDuration, "proposalExpired");
+                };
+            };
             
             return newId;
         };
@@ -519,7 +526,7 @@ module {
             var updatedProposals = List.nil<T.Proposal>();
             
             for (proposal in Iter.fromList<T.Proposal>(proposals)) {
-                if (Time.now() - proposal.timestamp > (oneHour * 2)) {
+                if (Time.now() - proposal.timestamp > Proposal_VotePeriod) {
                     let yesVotes = Nat64.fromNat(List.size<T.PlayerValuationVote>(proposal.votes_yes));
                     let noVotes = Nat64.fromNat(List.size<T.PlayerValuationVote>(proposal.votes_no));
                     
@@ -664,7 +671,6 @@ module {
             };
             return revaluedPlayers;
         };
-
         
         private func updateSystemParameters(proposalPayload: T.UpdateSystemParametersPayload) : async () {
             switch (proposalPayload.flag) {
@@ -725,6 +731,10 @@ module {
                     };
                 };
             };
+        };
+    
+        public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text) -> async ()) {
+            setAndBackupTimer := ?_setAndBackupTimer;
         };
 
     }

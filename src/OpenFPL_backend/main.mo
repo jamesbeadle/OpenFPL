@@ -23,6 +23,8 @@ import List "mo:base/List";
 import Timer "mo:base/Timer";
 import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
+import Iter "mo:base/Iter";
+import Int "mo:base/Int";
 
 actor Self {
 
@@ -287,23 +289,23 @@ actor Self {
   };
 
   private func proposalExpiredCallback() : async () {
-      // Handle proposal expiration logic
+    await governanceInstance.proposalExpired();
   };
 
   private func gameweekBeginExpiredCallback() : async () {
-      // Handle logic for some other event
+    await seasonManager.gameweekBegin();
   };
 
   private func gameKickOffExpiredCallback() : async () {
-      // Handle logic for some other event
+    await seasonManager.gameKickOff();
   };
 
   private func gameCompletedExpiredCallback() : async () {
-      // Handle logic for some other event
+      await seasonManager.gameCompleted();
   };
 
   private func votingPeriodOverExpiredCallback() : async () {
-      // Handle logic for some other event
+      await seasonManager.votingPeriodOver();
   };
 
   private func defaultCallback() : async () { };
@@ -354,7 +356,7 @@ actor Self {
   private stable var stable_timers: [T.TimerInfo] = [];
 
   let governanceInstance = Governance.Governance(transferPlayer, loanPlayer, recallPlayer, createPlayer,
-      updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam, setAndBackupTimer);
+      updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam);
 
   //Fantasy team functions
   public shared query ({caller}) func getTotalManagers() : async Nat {
@@ -497,9 +499,11 @@ actor Self {
     getConsensusPlayerEventData,
     getAllPlayersMap,
     resetFantasyTeams,
-    governanceInstance.getEventDataVotePeriod(),
-    setAndBackupTimer);
+    governanceInstance.getEventDataVotePeriod());
+    
     governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
+    governanceInstance.setTimerBackupFunction(setAndBackupTimer);
+    seasonManager.setTimerBackupFunction(setAndBackupTimer);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
 
   //IMPLEMENT: SUBMIT PROPOSAL SUBMISSION FEE ON SUBMISSION OF PROPOSAL ON FRONT END
@@ -577,6 +581,39 @@ actor Self {
     governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
     governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
+    recreateTimers();
   };
+
+    private func recreateTimers(){
+        let currentTime = Time.now();
+        for (timerInfo in Iter.fromArray(stable_timers)) {
+            let remainingDuration = timerInfo.triggerTime - currentTime;
+
+            if (remainingDuration > 0) { 
+                let duration: Timer.Duration =  #nanoseconds(Int.abs(remainingDuration));
+
+                switch(timerInfo.callbackName) {
+                    case "proposalExpired" {
+                        ignore Timer.setTimer(duration, proposalExpiredCallback);
+                    };
+                    case "gameweekBeginExpired" {
+                        ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
+                    };
+                    case "gameKickOffExpired" {
+                        ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
+                    };
+                    case "gameCompletedExpired" {
+                        ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
+                    };
+                    case "votingPeriodOverExpired" {
+                        ignore Timer.setTimer(duration, votingPeriodOverExpiredCallback);
+                    };
+                    case _ {
+                        ignore Timer.setTimer(duration, defaultCallback);
+                    }
+                };
+            }
+        }
+    };
 
 };
