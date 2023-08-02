@@ -51,7 +51,6 @@ const PickTeam = () => {
     if(players.length == 0 || teams.length == 0){
       return;
     }
-    console.log(players)
     const fetchData = async () => {
       await fetchViewData();
     };
@@ -245,7 +244,6 @@ const PickTeam = () => {
     if (fantasyTeam.players.length !== 11) {
       return "You must select 11 players";
     }
-    console.log(fantasyTeam.players)
     const positions = fantasyTeam.players.map(player => player.position);
     const goalkeeperCount = positions.filter(position => position === 0).length;
     const defenderCount = positions.filter(position => position === 1).length;
@@ -309,14 +307,11 @@ const PickTeam = () => {
             {player && fantasyTeam ? ((() => {
               let bonusId;
               if (fantasyTeam.goalGetterPlayerId === player.id && fantasyTeam.goalGetterGameweek === currentGameweek) {
-                console.log(`Player ${player.id} is a goal getter`);
                 bonusId = 1;
               } else if (fantasyTeam.passMasterPlayerId === player.id && fantasyTeam.passMasterGameweek === currentGameweek) {
-                console.log(`Player ${player.id} is a pass master`);
                 bonusId = 2;
               } else if (fantasyTeam.noEntryPlayerId === player.id && fantasyTeam.noEntryGameweek === currentGameweek) {
-                console.log(`Player ${player.id} is a no entry`);
-                bonusId = 3;
+                 bonusId = 3;
               }
       
               return (

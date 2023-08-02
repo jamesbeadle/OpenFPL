@@ -6,8 +6,9 @@
 //brown #F5EA5B (245,234,91,96)
 //seafoam #67F5C9 (103,246,201,96) 
 
-$primary: #895BF5; // Your custom primary color
-$secondary: #F5A28C; // Your custom secondary color
+$primary: #422B75; // Your custom primary color
+$secondary: #75898F; // Your custom secondary color
+$success: #67F5C9; // Your custom secondary color
 $dark: #F5EA5B; // Your custom secondary color
 
 .navbar-brand, .nav-link{
@@ -47,6 +48,7 @@ $dark: #F5EA5B; // Your custom secondary color
 
 .btn-primary{
     color: whitesmoke !important;
+    border: none !important;
 }
 
 .custom-nav-link{

@@ -6,8 +6,6 @@ const UpdateSystemProposal = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Here you should handle the submission of the form, e.g. sending the description to your backend
-        console.log(`Description: ${description}`);
     }
 
     return (

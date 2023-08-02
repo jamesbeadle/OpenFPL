@@ -80,8 +80,6 @@ const PlayerValuations = ({ isActive }) => {
 
   const fetchViewData = (teamId, positionId, pageNumber) => {
     setIsLoading(true);
-  
-    console.log(players)
     const filteredPlayers = players
       .filter(player => (teamId === 0 || player.teamId === teamId) && (positionId === -1 || player.position === positionId))
       .slice(pageNumber * count, (pageNumber + 1) * count);

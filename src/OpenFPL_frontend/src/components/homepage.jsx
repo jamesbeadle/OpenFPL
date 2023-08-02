@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button } from 'react-bootstrap';
+import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button, Pagination } from 'react-bootstrap';
 import { FixtureIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
@@ -13,6 +13,14 @@ const Homepage = () => {
     const [managerCount, setManagerCount] = useState(0);
     const [seasonTop10, setSeasonTop10] = useState([]);
     const [weeklyTop10, setWeeklyTop10] = useState([]);
+    const [currentGameweek, setCurrentGameweek] = useState(1);
+    const [countdown, setCountdown] = useState({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    });
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,11 +34,20 @@ const Homepage = () => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
-        const fixturesData = await open_fpl_backend.getGameweekFixtures();
+        const fixturesData = await open_fpl_backend.getFixtures();
         setFixtures(fixturesData);
 
+        const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
+        const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
+        const nextKickoff = Math.min(...kickOffs);
+        
+        if (!isNaN(nextKickoff)) {
+            const timeLeft = computeTimeLeft(nextKickoff);
+            setCountdown(timeLeft);
+        }
+
         const managerCountData = await open_fpl_backend.getTotalManagers();
-        setManagerCount(managerCountData);
+        setManagerCount(Number(managerCountData));
 
         const seasonTop10Data = await open_fpl_backend.getSeasonTop10();
         setSeasonTop10(seasonTop10Data.entries);
@@ -38,10 +55,55 @@ const Homepage = () => {
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
         setWeeklyTop10(weeklyTop10Data.entries);
     };
-
+    
     const getTeamById = (teamId) => {
-        return teams.find(team => team.id === teamId);
+        const team = teams.find(team => team.id === teamId);
+        return team;
     };
+
+    const getCurrentGameweekFixtures = () => {
+        return fixtures.filter(fixture => fixture.gameweek === currentGameweek);
+    };
+
+    const handlePrevGameweek = () => {
+        if (currentGameweek > 1) {
+            setCurrentGameweek(prevGameweek => prevGameweek - 1);
+        }
+      };
+      
+      const handleNextGameweek = () => {
+        if (currentGameweek < 38) {
+            setCurrentGameweek(nextGameweek => nextGameweek + 1);
+        }
+      };
+    
+
+      const nanoSecondsToMillis = (nanos) => nanos / 1000000; // Convert nanoseconds to milliseconds
+        const computeTimeLeft = (kickoff) => {
+            const now = new Date().getTime();
+            const distance = kickoff - now;
+
+        return {
+            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((distance % (1000 * 60)) / 1000)
+        };
+    };
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
+            const nextKickoff = Math.min(...kickOffs);
+            if (!isNaN(nextKickoff)) {
+                const timeLeft = computeTimeLeft(nextKickoff);
+                setCountdown(timeLeft);
+            }
+        }, 1000);
+        
+        return () => clearInterval(timer);
+    }, [currentGameweek, fixtures]);
+    
     
     const totalPrizePool = 0;
 
@@ -87,84 +149,125 @@ const Homepage = () => {
                     </Row>
                 
                     <Card className="mb-4">
-                        <Card.Header>Fixtures</Card.Header>
+                    <Card.Header>
+    <Row className="align-items-center p-2">
+        <Col xs={6}>
+            Fixtures
+        </Col>
+        <Col xs={6} className="d-flex justify-content-end align-items-center">
+            <Pagination className="my-auto"> {/* Apply my-auto to vertically center this component */}
+                <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={currentGameweek === 1} />
+                <Pagination.Item>Gameweek {currentGameweek}</Pagination.Item>
+                <Pagination.Next onClick={() => handleNextGameweek()} disabled={currentGameweek === 38} />
+            </Pagination>
+        </Col>
+    </Row>
+</Card.Header>
+
+    <Card.Body>
+
+        <Table responsive>
+            <tbody>
+            {getCurrentGameweekFixtures().map((fixture, idx) => {
+                const homeTeam = getTeamById(fixture.homeTeamId);
+                const awayTeam = getTeamById(fixture.awayTeamId);
+                
+                if(!homeTeam || !awayTeam) {
+                    console.error("One of the teams is missing for fixture: ", fixture);
+                    return null;
+                }
+
+                return (
+                    <tr key={idx} className="align-middle">
+                        <td style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>
+
+                        <td className="text-center">
+                            <FixtureIcon 
+                                primaryColour={homeTeam.primaryColourHex}
+                                secondaryColour={homeTeam.secondaryColourHex} 
+                            />
+                        </td>
+                        <td className="text-center align-self-center">v</td>
+                        <td className="text-center">
+                            <FixtureIcon 
+                                primaryColour={awayTeam.primaryColourHex}
+                                secondaryColour={awayTeam.secondaryColourHex} 
+                            />
+                        </td>
+                        <td>{awayTeam.friendlyName}</td>
+                        <td className="text-muted text-center">{fixture.score ? fixture.score : '-'}</td>
+                        <td className='text-center'>
+                            <Badge 
+                                className={
+                                    fixture.status === 1 ? 'bg-primary' : 
+                                    fixture.status === 2 ? 'bg-success' : 'bg-secondary'
+                                } 
+                                style={{ width: '80px', padding: '0.5rem' }}
+                            >
+                                {fixture.status === 1 ? 'Active' : 
+                                    fixture.status === 2 ? 'Completed' : 'Unplayed'}
+                            </Badge>
+                        </td>
+                    </tr>
+                );
+            })}
+            </tbody>
+        </Table>
+        <div className="mb-3" style={{ textAlign: 'right' }}>
+            <Button>View Gameweek Points</Button>
+        </div>
+    </Card.Body>
+</Card>
+
+
+                </Col>
+            
+                <Col md={4} xs={12}>
+                    <Card className='mb-2'>
                         <Card.Body>
-                            <Table responsive>
-                                <tbody>
-                                {fixtures.map((fixture, idx) => (
-                                    <tr key={idx}>
-                                    <td>
-                                        <FixtureIcon 
-                                        primaryColour={getTeamById(fixture.homeTeamId).primaryColourHex}
-                                        secondaryColour={getTeamById(fixture.homeTeamId).secondaryColourHex} 
-                                        />
-                                        {getTeamById(fixture.homeTeamId).name} v {getTeamById(fixture.awayTeamId).name}
-                                        <FixtureIcon 
-                                        primaryColour={getTeamById(fixture.awayTeamId).primaryColourHex}
-                                        secondaryColour={getTeamById(fixture.awayTeamId).secondaryColourHex} 
-                                        />
-                                    </td>
-                                    {fixture.score && <td className="text-muted text-center small">{fixture.score}</td>}
-                                    {!fixture.score && <td className="text-muted text-center small">-</td>}
-                                    <td className='text-center'>
-                                        <Badge 
-                                        className={
-                                            fixture.status === 1 ? 'bg-primary' : 
-                                            fixture.status === 2 ? 'bg-success' : 'bg-secondary'
-                                        } 
-                                        style={{ width: '80px', padding: '0.5rem' }}>
-                                        {fixture.status === 1 ? 'Active' : 
-                                            fixture.status === 2 ? 'Completed' : 'Unplayed'}
-                                        </Badge>
-                                    </td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </Table>
-                            <Row>
-                                <Col>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <Button>View Gameweek Points</Button>
-                                    </div>
-                                </Col>
-                            </Row>
+                            <Card.Title>Gameweek Begins:</Card.Title>
+                            {<h5 className="display-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s</h5>}
                         </Card.Body>
                     </Card>
 
-                </Col>
-
-                <Col md={4} xs={12}>
                     <Card className="mb-4">
                         <Card.Header>Leaderboard</Card.Header>
                         <Card.Body>
                             <Tabs defaultActiveKey="gameweek" id="leaderboard-tabs">
                                 <Tab eventKey="gameweek" title="Gameweek">
                                     <br />
-                                    <Table responsive  className='text-center'>
-                                        <thead>
-                                            <tr>
-                                            <th>#</th>
-                                            <th>Username</th>
-                                            <th>Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {weeklyTop10.map((leader) => (
-                                            <tr key={leader.position}>
-                                                <td>{leader.position}</td>
-                                                <td>{leader.username}</td>
-                                                <td>{leader.points}</td>
-                                            </tr>
-                                            ))}
-                                        </tbody>
-                                    </Table>
-                                    <div style={{ textAlign: 'right' }}>
-                                    <   Button href="/weekly-leaderboard">View All</Button>
-                                    </div>
+                                    {weeklyTop10.length == 0 && (
+                                        <p className='mt-2'>No entries.</p>
+                                    )}
+                                    {weeklyTop10.length > 0 && (
+                                    <>
+                                        <Table responsive className='text-center'>
+                                            <thead>
+                                                <tr>
+                                                <th>#</th>
+                                                <th>Username</th>
+                                                <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {weeklyTop10.map((leader) => (
+                                                <tr key={leader.position}>
+                                                    <td>{leader.position}</td>
+                                                    <td>{leader.username}</td>
+                                                    <td>{leader.points}</td>
+                                                </tr>
+                                                ))}
+                                            </tbody>
+                                        </Table>
+                                        <div style={{ textAlign: 'right' }}>
+                                        <   Button href="/weekly-leaderboard">View All</Button>
+                                        </div>
+                                    </>
+                                    )}
                                 </Tab>
                                 <Tab eventKey="season" title="Season">
                                     <br />
-                                    <Table responsive>
+                                    <Table responsive className='text-center'>
                                         <thead>
                                             <tr>
                                             <th>#</th>

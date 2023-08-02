@@ -42,7 +42,6 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
     const paginatedPlayers = filteredPlayers.slice(page * count, (page + 1) * count);
   
     setViewData({ players: paginatedPlayers, totalEntries: totalEntries });
-    console.log(fantasyTeam)
   }, [players, filterTeamId, filterPosition, page, minValue, maxValue]);
   
 

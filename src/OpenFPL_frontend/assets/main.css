@@ -5,8 +5,11 @@
 //light purple #9A73F6 (154,115,246,96)
 //brown #F5EA5B (245,234,91,96)
 //seafoam #67F5C9 (103,246,201,96)
-
-
+#3EA3C2
+#75898F
+#67F5C9
+#F6AAA5
+#C23E65
 */
 
 
@@ -196,4 +199,3 @@ Table{
 .nav-tabs .nav-link:not(.active) {
   color: whitesmoke !important;
 }
-

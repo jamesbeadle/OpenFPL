@@ -126,12 +126,6 @@ export const AuthProvider = ({ children }) => {
 
   
   const fetchAllTeams = async () => {
-    if (!isAuthenticated) {
-      return;
-    }
-
-    const identity = authClient.getIdentity();
-    Actor.agentOf(player_canister).replaceIdentity(identity);
     const teamsData = await open_fpl_backend.getTeams();
     setTeams(teamsData);
   };
