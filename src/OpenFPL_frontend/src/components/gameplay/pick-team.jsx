@@ -172,7 +172,6 @@ const PickTeam = () => {
     setSelectedBonusId(null);
   };
   
-
   const handleConfirmTeamBonusClick = (data) => {
     const bonusObject = bonuses.find((bonus) => bonus.id === data.bonusType);
   

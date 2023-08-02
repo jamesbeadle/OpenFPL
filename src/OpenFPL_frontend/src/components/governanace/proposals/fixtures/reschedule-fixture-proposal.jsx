@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { OpenFPL_backend as open_fpl_backend } from '../../../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../../../../contexts/AuthContext";
 
 const RescheduleFixtureProposal = () => {
     const { authClient } = useContext(AuthContext);

@@ -1,7 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
-import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../contexts/AuthContext";
 import AddInitialFixturesProposal from './proposals/fixtures/add-initial-fixtures';
 import RescheduleFixtureProposal from './proposals/fixtures/reschedule-fixture-proposal';
@@ -43,7 +41,6 @@ const proposalTypes = [
 
 const AddProposalModal = ({ show, onHide }) => {
   
-  const { authClient } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedType, setSelectedType] = useState(null);

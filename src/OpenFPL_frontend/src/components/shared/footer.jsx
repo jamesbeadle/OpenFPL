@@ -23,7 +23,7 @@ const MyFooter = () => {
                 <a href="https://t.co/WmOhFA8JUR" target="_blank" rel="noopener noreferrer">
                   <img src={DiscordIcon} alt="Discord" className="social-icon" />
                 </a>
-                <a href="https://oc.app/mww5i-uqaaa-aaaar-aqi2a-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer">
+                <a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer">
                   <img src={OpenChatIcon} alt="OpenChat" className="social-icon" />
                 </a>
                 <a href="https://t.co/vVkquMrdOu" target="_blank" rel="noopener noreferrer">

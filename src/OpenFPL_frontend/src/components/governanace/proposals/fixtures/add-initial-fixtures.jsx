@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import Papa from 'papaparse';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { OpenFPL_backend as open_fpl_backend } from '../../../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../../../../contexts/AuthContext";
 
 const AddInitialFixturesProposal = () => {
     const { authClient } = useContext(AuthContext);
