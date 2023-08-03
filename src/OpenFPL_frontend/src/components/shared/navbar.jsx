@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
-import { LogoutIcon, ProfileIcon, GovernanceIcon, TeamIcon } from '../icons';
+import { LogoutIcon, ProfileIcon, GovernanceIcon, TeamIcon, WalletIcon } from '../icons';
 
 const MyNavbar = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
@@ -34,22 +34,19 @@ const MyNavbar = () => {
                 Pick Team
                 <TeamIcon className="custom-icon" ></TeamIcon>
               </Nav.Link> 
-              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">
-                Governance
-                <GovernanceIcon className="custom-icon" ></GovernanceIcon>
-              </Nav.Link> 
+              
               <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link">
                 Profile
                 <ProfileIcon className="custom-icon" ></ProfileIcon>
               </Nav.Link> 
               <Nav.Link onClick={() => {logout(); setExpanded(false);}} className="custom-nav-link mt-2 mt-md-0">
-                <button className="btn btn-primary">Disconnect
-                <LogoutIcon className="custom-icon" ></LogoutIcon></button>
+                <button className="wallet-icon">Disconnect <WalletIcon className="custom-icon" ></WalletIcon></button>
               </Nav.Link> 
             </>
           }
           {!isAuthenticated && 
-            <Button className="nav-link-brand" onClick={() => { login(); setExpanded(false); }}>CONNECT</Button>
+            <button className="wallet-icon" onClick={() => { login(); setExpanded(false); }}>Connect <WalletIcon className="custom-icon" ></WalletIcon></button>
+            
           }
           
         </Navbar.Collapse>
@@ -59,3 +56,15 @@ const MyNavbar = () => {
 };
 
 export default MyNavbar;
+
+
+/*
+
+Links to add in
+
+              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">
+                Governance
+                <GovernanceIcon className="custom-icon" ></GovernanceIcon>
+              </Nav.Link> 
+
+*/

@@ -17,8 +17,6 @@ module {
     
   public class Seasons(){
     private var seasons = List.fromArray(GenesisData.get_genesis_seasons());
-    Debug.print(debug_show "From Class Initialisastion");
-    Debug.print(debug_show seasons);
 
     private var nextFixtureId : Nat32 = 381;
     private var nextSeasonId : Nat16 = 2;
@@ -28,8 +26,6 @@ module {
             return;
         };
         seasons := List.fromArray(stable_seasons);
-        Debug.print(debug_show "From Backup");
-        Debug.print(debug_show seasons);
     };
 
     public func getSeasons() : [T.Season] {

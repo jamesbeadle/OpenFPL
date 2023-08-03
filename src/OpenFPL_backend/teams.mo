@@ -14,6 +14,9 @@ module {
     private var relegatedTeams = List.fromArray<T.Team>([]);
 
     public func setData(stable_teams: [T.Team], stable_teamId : Nat16, stable_relegated_teams: [T.Team]){
+        if(stable_teams == []){
+            return;
+        };
         teams := List.fromArray(stable_teams);
         nextTeamId := stable_teamId;
         relegatedTeams := List.fromArray(stable_relegated_teams);

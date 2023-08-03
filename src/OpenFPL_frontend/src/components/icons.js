@@ -317,4 +317,23 @@ const CancelBonusIcon = ({ onClick, color = 'currentColor', margin = '0', width 
   </svg>
 );
 
-export { CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, FixtureIcon, TeamIcon, PlayerIcon, TransferIcon, StarOutlineIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon };
+const WalletIcon = ({ onClick, color = 'currentColor', margin = '0', width = '20', height = '20', style }) => (
+  <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width}
+      height={height}
+      fill={color}
+      viewBox="0 0 20 20"
+      onClick={onClick}
+      style={{ cursor: 'pointer', margin: margin, ...style }}
+  >  
+    <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
+  <path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"/>
+  <path d="M12,8a.5,.5 0,1,1,.001,0Z"/>
+ </svg>
+);
+
+
+
+export { CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, FixtureIcon, TeamIcon, PlayerIcon, TransferIcon, StarOutlineIcon, 
+  RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon, WalletIcon };

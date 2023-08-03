@@ -115,7 +115,7 @@ const Homepage = () => {
         </div>
         ) 
         :
-        <Container className="flex-grow-1 my-5">
+        <Container className="flex-grow-1 my-1">
             <Row>
                 <Col md={8} xs={12}>
                     <Row className="mb-3">
@@ -178,31 +178,33 @@ const Homepage = () => {
                 }
 
                 return (
+                    
                     <tr key={idx} className="align-middle">
-                        <td style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>
+                        
+                        <td className="home-team-name" style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>
 
-                        <td className="text-center">
+                        <td className="home-team-icon text-center">
                             <FixtureIcon 
                                 primaryColour={homeTeam.primaryColourHex}
                                 secondaryColour={homeTeam.secondaryColourHex} 
                             />
                         </td>
-                        <td className="text-center align-self-center">v</td>
-                        <td className="text-center">
+                        <td className="text-center align-self-center v-symbol">v</td>
+                        <td className="text-center away-team-icon">
                             <FixtureIcon 
                                 primaryColour={awayTeam.primaryColourHex}
                                 secondaryColour={awayTeam.secondaryColourHex} 
                             />
                         </td>
-                        <td>{awayTeam.friendlyName}</td>
-                        <td className="text-muted text-center">{fixture.score ? fixture.score : '-'}</td>
-                        <td className='text-center'>
+                        <td className="away-team-name">{awayTeam.friendlyName}</td>
+                        <td className="text-muted text-center score">{fixture.score ? fixture.score : '-'}</td>
+                        <td className='text-center status'>
                             <Badge 
                                 className={
                                     fixture.status === 1 ? 'bg-primary' : 
                                     fixture.status === 2 ? 'bg-success' : 'bg-secondary'
                                 } 
-                                style={{ width: '80px', padding: '0.5rem' }}
+                                style={{ padding: '0.5rem' }}
                             >
                                 {fixture.status === 1 ? 'Active' : 
                                     fixture.status === 2 ? 'Completed' : 'Unplayed'}
@@ -213,7 +215,7 @@ const Homepage = () => {
             })}
             </tbody>
         </Table>
-        <div className="mb-3" style={{ textAlign: 'right' }}>
+        <div className="mt- 2mb-2" style={{ textAlign: 'right' }}>
             <Button>View Gameweek Points</Button>
         </div>
     </Card.Body>
@@ -267,6 +269,11 @@ const Homepage = () => {
                                 </Tab>
                                 <Tab eventKey="season" title="Season">
                                     <br />
+                                    {seasonTop10.length == 0 && (
+                                        <p className='mt-2'>No entries.</p>
+                                    )}
+                                    {seasonTop10.length > 0 && (
+                                    <>
                                     <Table responsive className='text-center'>
                                         <thead>
                                             <tr>
@@ -288,6 +295,8 @@ const Homepage = () => {
                                     <div style={{ textAlign: 'right' }}>
                                         <Button href="/leaderboard">View All</Button>
                                     </div>
+                                    </>
+                                    )}
                                 </Tab>
                             </Tabs>
                         </Card.Body>

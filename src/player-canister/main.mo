@@ -845,7 +845,9 @@ actor Self {
     };
 
     system func postupgrade() {
-        players := List.fromArray(stable_players);
+        if(stable_players != []){
+            players := List.fromArray(stable_players);
+        };
         nextPlayerId := stable_next_player_id;
         recreateTimers();
     };

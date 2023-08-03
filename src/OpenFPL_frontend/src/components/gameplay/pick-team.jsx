@@ -77,22 +77,22 @@ const PickTeam = () => {
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         
         let fantasyTeamData = await open_fpl_backend.getFantasyTeam();
-        if(!fantasyTeamData[0]){
+        if(!fantasyTeamData){
           return;
         }
-       
-        const playerIds = fantasyTeamData[0].playerIds.length > 0 ? Object.values(fantasyTeamData[0].playerIds) : [];
-          
-        const teamPlayers = playerIds.map(id => {
-          return players.find(player => player.id == id);
-        });
 
-        fantasyTeamData[0] = {
-          ...fantasyTeamData[0],
+        const playerIdArray = Object.values(fantasyTeamData.playerIds);
+
+        const teamPlayers = playerIdArray
+          .map(id => players.find(player => player.id === id))
+          .filter(Boolean); 
+
+        fantasyTeamData = {
+          ...fantasyTeamData,
           players: teamPlayers || [],
-          bankBalance: (fantasyTeamData[0].bankBalance / 1_000_000) || 300
+          bankBalance: (fantasyTeamData.bankBalance / 1_000_000) || 300
         };
-        setFantasyTeam(fantasyTeamData[0]);
+        setFantasyTeam(fantasyTeamData);
         
     } catch (error) {
         console.error(error);
@@ -279,7 +279,6 @@ const PickTeam = () => {
   const renderPlayerSlots = () => {
     let rows = [];
     let cols = [];
-  
     for (let i = 0; i < 12; i++) {
       const player = fantasyTeam.players[i] || null;
     
@@ -731,12 +730,15 @@ const PickTeam = () => {
           </Col>
         </Row>
 
-        <SelectPlayerModal 
-          show={showSelectPlayerModal} 
-          handleClose={() => setShowSelectPlayerModal(false)} 
-          handleConfirm={handlePlayerConfirm}
-          fantasyTeam={fantasyTeam}
-        />
+        {fantasyTeam && fantasyTeam.players && (
+            <SelectPlayerModal 
+            show={showSelectPlayerModal} 
+            handleClose={() => setShowSelectPlayerModal(false)} 
+            handleConfirm={handlePlayerConfirm}
+            fantasyTeam={fantasyTeam}
+          />
+        )}
+        
         
         {showSelectFantasyPlayerModal && <SelectFantasyPlayerModal 
           show={showSelectFantasyPlayerModal}

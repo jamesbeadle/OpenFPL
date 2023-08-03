@@ -188,9 +188,6 @@
     color: whitesmoke !important;
   }
   
-/*1E1436
-  
-*/
 
 Table{
   color: whitesmoke !important;
@@ -198,4 +195,43 @@ Table{
 
 .nav-tabs .nav-link:not(.active) {
   color: whitesmoke !important;
+}
+
+.wallet-icon{
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.home-team-name {
+  width: 25%;
+  text-align: right;
+}
+
+.home-team-icon {
+  width: 5%;
+  text-align: center;
+}
+
+.v-symbol {
+  width: 10%;
+  text-align: center;
+}
+
+.away-team-icon {
+  width: 5%;
+  text-align: center;
+}
+
+.away-team-name {
+  width: 25%;
+}
+
+.score {
+  width: 15%;
+  text-align: center;
+}
+
+.status {
+  width: 15%;
+  text-align: center;
 }
