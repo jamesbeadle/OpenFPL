@@ -25,7 +25,6 @@ import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Int "mo:base/Int";
-import Debug "mo:base/Debug";
 
 actor Self {
 

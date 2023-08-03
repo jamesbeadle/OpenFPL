@@ -40,6 +40,8 @@ const PickTeam = () => {
   const [currentGameweek, setCurrentGameweek] = useState(null);
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
   const [selectedBonusId, setSelectedBonusId] = useState(null);
+  const [selectedBonusPlayerId, setSelectedBonusPlayerId] = useState(null);
+  const [selectedBonusTeamId, setSelectedBonusTeamId] = useState(null);
   const positionsForBonus = {
     1: null,  
     2: null,
@@ -131,111 +133,107 @@ const PickTeam = () => {
     });
     setShowSelectPlayerModal(false);
   };
-  
   const handleBonusClick = (bonusId) => {
-
-    if (bonuses.some(bonus => fantasyTeam[bonus.propertyName] === currentGameweek)) {
-      return;
-    }
-
-    setSelectedBonusId(bonusId);
-    if ([1, 2, 3].includes(bonusId)) {
-      setShowSelectFantasyPlayerModal(true);
-    } else if (bonusId === 4) {
-      setShowSelectBonusTeamModal(true);
-    } else {
-      setShowConfirmBonusModal(true);
-    }
-  };
-  
-  const handleConfirmPlayerBonusClick = (data) => {
-    const bonusObject = bonuses.find((bonus) => bonus.id === data.bonusType);
-  
-    if (!bonusObject) {
-      console.error("No bonus found for type:", data.bonusType);
-      return;
+    // Check if a bonus has already been applied for the current gameweek
+    if (bonuses.some(bonus => fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek)) {
+        return;
     }
     
+    setSelectedBonusId(bonusId);
+    if ([1, 2, 3].includes(bonusId)) {
+        setShowSelectFantasyPlayerModal(true);
+    } else if (bonusId === 4) {
+        setShowSelectBonusTeamModal(true);
+    } else {
+        setShowConfirmBonusModal(true);
+    }
+};
+
+const handleConfirmPlayerBonusClick = (data) => {
+    const bonusObject = bonuses.find((bonus) => bonus.id === data.bonusType);
+
+    if (!bonusObject) {
+        console.error("No bonus found for type:", data.bonusType);
+        return;
+    }
+
     const bonusGameweekProperty = `${bonusObject.propertyName}Gameweek`;
     const bonusPlayerProperty = `${bonusObject.propertyName}PlayerId`;
-  
-    setFantasyTeam((prevFantasyTeam) => {
-      return {
+
+    setFantasyTeam((prevFantasyTeam) => ({
         ...prevFantasyTeam,
         [bonusGameweekProperty]: currentGameweek,
         [bonusPlayerProperty]: data.playerId
-      }
-    });
-  
+    }));
+    setSelectedBonusPlayerId(data.playerId);
+
     setShowSelectFantasyPlayerModal(false);
-    setSelectedBonusId(null);
-  };
-  
-  const handleConfirmTeamBonusClick = (data) => {
-    const bonusObject = bonuses.find((bonus) => bonus.id === data.bonusType);
-  
-    if (!bonusObject) {
-      console.error("No bonus found for type:", data.bonusType);
-      return;
-    }
     
+};
+
+const handleConfirmTeamBonusClick = (data) => {
+    const bonusObject = bonuses.find((bonus) => bonus.id === data.bonusType);
+
+    if (!bonusObject) {
+        console.error("No bonus found for type:", data.bonusType);
+        return;
+    }
+
     const bonusGameweekProperty = `${bonusObject.propertyName}Gameweek`;
     const bonusTeamProperty = `${bonusObject.propertyName}TeamId`;
-  
-    setFantasyTeam((prevFantasyTeam) => {
-      return {
+
+    setFantasyTeam((prevFantasyTeam) => ({
         ...prevFantasyTeam,
         [bonusGameweekProperty]: currentGameweek,
         [bonusTeamProperty]: data.teamId
-      }
-    });
-  
-    setShowSelectBonusTeamModal(false);
-    setSelectedBonusId(null);
-  };
+    }));
+    setSelectedBonusPlayerId(data.teamId);
 
-  const handleConfirmBonusClick = (bonusType) => {
+    setShowSelectBonusTeamModal(false);
+};
+
+const handleConfirmBonusClick = (bonusType) => {
     const bonusObject = bonuses.find((bonus) => bonus.id === bonusType);
-  
+
     if (!bonusObject) {
-      console.error("No bonus found for type:", bonusType);
-      return;
+        console.error("No bonus found for type:", bonusType);
+        return;
     }
-  
+
     const bonusGameweekProperty = `${bonusObject.propertyName}Gameweek`;
-  
-    setFantasyTeam((prevFantasyTeam) => {
-      return {
+
+    setFantasyTeam((prevFantasyTeam) => ({
         ...prevFantasyTeam,
         [bonusGameweekProperty]: currentGameweek
-      }
-    });
-  
+    }));
+
     setShowConfirmBonusModal(false);
     setSelectedBonusId(null);
-  };
+    setSelectedPlayerId(null);
+    setSelectedTeamId(null);
+};
 
-  const handleCancelBonus = (bonusId) => {
+const handleCancelBonus = (bonusId) => {
     const bonusObject = bonuses.find((bonus) => bonus.id === bonusId);
-  
+
     if (!bonusObject) {
-      console.error("No bonus found for id:", bonusId);
-      return;
+        console.error("No bonus found for id:", bonusId);
+        return;
     }
-    
+
     const bonusGameweekProperty = `${bonusObject.propertyName}Gameweek`;
     const bonusPlayerProperty = `${bonusObject.propertyName}PlayerId`;
     const bonusTeamProperty = `${bonusObject.propertyName}TeamId`;
-  
-    setFantasyTeam((prevFantasyTeam) => {
-      return {
+
+    setFantasyTeam((prevFantasyTeam) => ({
         ...prevFantasyTeam,
         [bonusGameweekProperty]: null,
         [bonusPlayerProperty]: null,
         [bonusTeamProperty]: null
-      }
-    });
-  }
+    }));
+};
+
+
   
   const getInvalidTeamMessage = () => {
     if(fantasyTeam.players == undefined){
@@ -403,11 +401,9 @@ const PickTeam = () => {
     try {
       
       const newPlayerIds = fantasyTeam.players.map(player => Number(player.id));
-      const { captainId, bonusId, bonusPlayerId, bonusTeamId } = fantasyTeam;
-      
-      const identity = authClient.getIdentity();
+     const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-      await open_fpl_backend.saveFantasyTeam(newPlayerIds, captainId ? Number(captainId) : 0, bonusId ? Number(bonusId) : 0, bonusPlayerId ? Number(bonusPlayerId) : 0, bonusTeamId ? Number(bonusTeamId) : 0);
+      await open_fpl_backend.saveFantasyTeam(newPlayerIds, fantasyTeam.captainId ? Number(fantasyTeam.captainId) : 0, selectedBonusId ? Number(selectedBonusId) : 0, selectedBonusPlayerId ? Number(selectedBonusPlayerId) : 0, selectedBonusTeamId ? Number(selectedBonusTeamId) : 0);
       await fetchViewData();
       setIsLoading(false);
     } catch(error) {

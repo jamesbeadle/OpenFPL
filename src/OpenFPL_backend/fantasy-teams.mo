@@ -13,6 +13,7 @@ import Text "mo:base/Text";
 import Option "mo:base/Option";
 import Utilities "utilities";
 import Int "mo:base/Int";
+import Debug "mo:base/Debug";
 
 module {
     public class FantasyTeams(getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)]){
@@ -354,6 +355,8 @@ module {
                         braceBonusGameweek = braceBonusGameweek;
                         hatTrickHeroGameweek = hatTrickHeroGameweek;
                     };
+
+                    Debug.print(debug_show updatedTeam);
 
                     let updatedUserTeam: T.UserFantasyTeam = {
                         fantasyTeam = updatedTeam;
