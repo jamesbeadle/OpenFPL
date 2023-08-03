@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button, Pagination } from 'react-bootstrap';
-import { FixtureIcon } from './icons';
+import { SmallFixtureIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
@@ -184,14 +184,14 @@ const Homepage = () => {
                         <td className="home-team-name" style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>
 
                         <td className="home-team-icon text-center">
-                            <FixtureIcon 
+                            <SmallFixtureIcon 
                                 primaryColour={homeTeam.primaryColourHex}
                                 secondaryColour={homeTeam.secondaryColourHex} 
                             />
                         </td>
                         <td className="text-center align-self-center v-symbol">v</td>
                         <td className="text-center away-team-icon">
-                            <FixtureIcon 
+                            <SmallFixtureIcon 
                                 primaryColour={awayTeam.primaryColourHex}
                                 secondaryColour={awayTeam.secondaryColourHex} 
                             />

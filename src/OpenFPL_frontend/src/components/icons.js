@@ -162,6 +162,22 @@ const StarOutlineIcon = ({ onClick, color = 'currentColor', margin = '0', width 
 
   );
 
+  const SmallFixtureIcon = ({ primaryColour, secondaryColour }) => (
+    <svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 1.5 16 16"
+  width="20"
+  height="20"
+>
+<path fill={primaryColour} fillRule="evenodd" d="M1.093 3.093c-.465 4.275.885 7.46 2.513 9.589a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.159 7.159 0 0 0 1.048-.625 11.32 11.32 0 0 0 1.733-1.525L1.093 3.093zm12.215 8.215L3.128 1.128A61.369 61.369 0 0 1 5.073.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.483 3.626-.332 6.491-1.551 8.616zm.338 3.046-13-13 .708-.708 13 13-.707.707z"/>
+ 
+  <g transform="translate(4,4) scale(0.5)">   
+    <path fill={secondaryColour} d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+  </g>
+</svg>
+
+  );
+
   const TransferIcon = ({className }) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -336,4 +352,4 @@ const WalletIcon = ({ onClick, color = 'currentColor', margin = '0', width = '20
 
 
 export { CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, FixtureIcon, TeamIcon, PlayerIcon, TransferIcon, StarOutlineIcon, 
-  RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon, WalletIcon };
+  RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon, WalletIcon, SmallFixtureIcon };
