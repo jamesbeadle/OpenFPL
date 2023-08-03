@@ -18,6 +18,7 @@ import DAO from "./components/whitepaper/dao";
 import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
 import Homepage from "./components/homepage";
+import FundedWhitepaper from "./components/whitepaper/funded_whitepaper";
 
 const PrivateWindowFallback = () => {
   return (
@@ -72,6 +73,7 @@ const App = () => {
           <MyNavbar />
             <Routes>
               <Route path="/" element={<Homepage />} />
+              <Route path="/funded-whitepaper" element={<FundedWhitepaper   />} />
               <Route path="/whitepaper" element={<Whitepaper   />} />
               <Route path="/gameplay" element={<Gameplay   />} />
               <Route path="/definitions" element={<Definitions   />} />

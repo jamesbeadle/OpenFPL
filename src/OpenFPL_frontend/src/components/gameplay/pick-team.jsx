@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
-import { StarIcon, RecordIcon, StarOutlineIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon } from '../icons';
+import { StarIcon, RecordIcon, StarOutlineIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
@@ -32,6 +32,7 @@ const PickTeam = () => {
     {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus', icon: <TwoIcon />},
     {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero', icon: <ThreeIcon />}
   ]);
+
   const [showSelectPlayerModal, setShowSelectPlayerModal] = useState(false);
   const [showSelectFantasyPlayerModal, setShowSelectFantasyPlayerModal] = useState(false);
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
@@ -187,7 +188,7 @@ const handleConfirmTeamBonusClick = (data) => {
         [bonusGameweekProperty]: currentGameweek,
         [bonusTeamProperty]: data.teamId
     }));
-    setSelectedBonusPlayerId(data.teamId);
+    setSelectedBonusTeamId(data.teamId);
 
     setShowSelectBonusTeamModal(false);
 };
@@ -212,28 +213,6 @@ const handleConfirmBonusClick = (bonusType) => {
     setSelectedPlayerId(null);
     setSelectedTeamId(null);
 };
-
-const handleCancelBonus = (bonusId) => {
-    const bonusObject = bonuses.find((bonus) => bonus.id === bonusId);
-
-    if (!bonusObject) {
-        console.error("No bonus found for id:", bonusId);
-        return;
-    }
-
-    const bonusGameweekProperty = `${bonusObject.propertyName}Gameweek`;
-    const bonusPlayerProperty = `${bonusObject.propertyName}PlayerId`;
-    const bonusTeamProperty = `${bonusObject.propertyName}TeamId`;
-
-    setFantasyTeam((prevFantasyTeam) => ({
-        ...prevFantasyTeam,
-        [bonusGameweekProperty]: null,
-        [bonusPlayerProperty]: null,
-        [bonusTeamProperty]: null
-    }));
-};
-
-
   
   const getInvalidTeamMessage = () => {
     if(fantasyTeam.players == undefined){
@@ -662,7 +641,7 @@ const handleCancelBonus = (bonusId) => {
                   const bonusUsed = bonusGameweek !== null && bonusGameweek !== 0 && bonusGameweek !== undefined;
                   const bonusUsedInCurrentWeek = fantasyTeam && fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek;
                   const otherBonusUsedInCurrentWeek = bonuses.some((otherBonus) => {
-                  if (otherBonus.propertyName === bonus.propertyName) return false; // Ignore the current bonus
+                  if (otherBonus.propertyName === bonus.propertyName) return false; 
                     const otherBonusGameweek = fantasyTeam?.[`${otherBonus.propertyName}Gameweek`];
                     return otherBonusGameweek === currentGameweek;
                   });
@@ -685,21 +664,15 @@ const handleCancelBonus = (bonusId) => {
                     </div>
                   );
 
-                  if (bonusUsed && !bonusUsedInCurrentWeek) {
-                    isBonusActive = false;
+                  if (bonusUsed) {
                     useButton = <div className='text-center mb-4'><small>{`Used in Gameweek ${bonusGameweek}`}</small></div>;
-                  }
-
-                  if (bonusUsedInCurrentWeek) {
-                    isBonusActive = true;
-                    useButton = <div className='text-center mb-1'><small>{bonusTarget}</small></div>;
-                  }
-
+                  } 
+                
                   if (otherBonusUsedInCurrentWeek) {
                     isBonusActive = false;
                     useButton = <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} className='text-center small-text mb-2'>You can only use 1 bonus each week.</p>;
                   }
-
+                  
                   return (
                     <Col xs={12} md={3} key={index} className='mb-3'>
                       <Card style={{ opacity: isBonusActive ? 1 : 0.5 }}>
@@ -709,8 +682,6 @@ const handleCancelBonus = (bonusId) => {
                           </div>
                           <div className='text-center mx-1'>{bonus.name}</div>
                           {useButton}
-
-                          {bonusUsed && <div className='text-center mb-2'><CancelBonusIcon onClick={() => handleCancelBonus(bonus.id)} /></div>}
                         </div>
                       </Card>
                     </Col>

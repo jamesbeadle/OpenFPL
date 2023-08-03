@@ -193,6 +193,10 @@ Table{
   color: whitesmoke !important;
 }
 
+.light-table{
+  color: black !important;
+}
+
 .nav-tabs .nav-link:not(.active) {
   color: whitesmoke !important;
 }

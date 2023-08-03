@@ -36,7 +36,7 @@ const MyFooter = () => {
             <Row className="mt-4">
               <Col md={12} xs={12}>
                 <ul className="footer-links">
-                  <li><LinkContainer to="/whitepaper"><a>Whitepaper</a></LinkContainer></li>
+                  <li><LinkContainer to="/funded-whitepaper"><a>Whitepaper</a></LinkContainer></li>
                   <li><LinkContainer to="/gameplay"><a>Gameplay Rules</a></LinkContainer></li>
                     <li><LinkContainer to="/terms"><a>Terms and Conditions</a></LinkContainer></li>
                 </ul>

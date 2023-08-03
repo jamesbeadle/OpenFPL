@@ -55,7 +55,7 @@ const Whitepaper = () => {
                         The DAO primarily generates revenue from the following sources:
                       </p>
                       
-                      <Table bordered className="table-fixed">
+                      <Table bordered className="table-fixed light-table">
                         <colgroup>
                           <col style={{width: '30%'}} />
                           <col style={{width: '70%'}} />
@@ -106,7 +106,7 @@ const Whitepaper = () => {
                         After each valuation a players value changes.
                       </p>
                       <h4 className='mt-4'>DAO Proposals</h4>
-                      <Table bordered className="table-fixed">
+                      <Table bordered className="table-fixed light-table">
                         <colgroup>
                           <col style={{width: '30%'}} />
                           <col style={{width: '70%'}} />
@@ -173,7 +173,7 @@ const Whitepaper = () => {
                       <p>Neuron Maturity</p>
                       <p>5% of the rewards pool will be used to pay Neuron maturity</p>
                       <p>Player valuations</p>
-                      <Table bordered className="table-fixed">
+                      <Table bordered className="table-fixed light-table">
                         <colgroup>
                           <col style={{width: '70%'}} />
                           <col style={{width: '30%'}} />
@@ -231,7 +231,7 @@ const Whitepaper = () => {
                           This information is entered into the player pricing formula which sets a players current price. 
                           Neurons can only vote on a players value once per season. The players ratings will be set from genesis. A DAO proposal can be added to modify a players rating.</p>
 
-                          <Table bordered className="table-fixed">
+                          <Table bordered className="table-fixed light-table">
                           <colgroup>
                             <col style={{width: '70%'}} />
                             <col style={{width: '30%'}} />
@@ -260,7 +260,7 @@ const Whitepaper = () => {
                       <p>The current data points a user can enter to earn FPL tokens are:</p>
                       <p>Ideally a sports oracle is created in which the DAO could remove this requirement and subsequent reward via a DAO proposal.</p>
                     
-                      <Table bordered className="table-fixed">
+                      <Table bordered className="table-fixed light-table">
                         <colgroup>
                           <col style={{width: '70%'}} />
                           <col style={{width: '30%'}} />
@@ -305,7 +305,7 @@ const Whitepaper = () => {
                       
                       <h4 className='mt-4'>OpenFPL Gameplay Rewards</h4>
                       <p>Below is the share of minted FPL gameplay rewards that are shared between the neurons at their respective voting power:</p>
-                      <Table bordered className="table-fixed">
+                      <Table bordered className="table-fixed light-table">
                         <colgroup>
                           <col style={{width: '70%'}} />
                           <col style={{width: '30%'}} />
@@ -347,7 +347,7 @@ const Whitepaper = () => {
                     <Accordion.Header>FPL Utility Token</Accordion.Header>
                     <Accordion.Body>
                       <p>OpenFPL uses its own utility token called FPL. The tokens primary purpose is for rewarding users who play OpenFPL. The FPL utility token can be used to pay for OpenFPL products and services:</p>
-                      <Table bordered className="table-fixed">
+                      <Table bordered className="table-fixed light-table">
                         <colgroup>
                           <col style={{width: '100%'}} />
                         </colgroup>
@@ -391,7 +391,7 @@ const Whitepaper = () => {
                             Participants in the decentralisation sale will deposit ICP into the SNS and once the sale has completed they will receive the same proportion of 
                             FPL tokens as their share of the ICP deposited. Each participant will receive their FPL as a basket of 3 equal value neurons:
                             </p>
-                            <Table bordered className="table-fixed">
+                            <Table bordered className="table-fixed light-table">
                                 <colgroup>
                                   <col style={{width: '100%'}} />
                                 </colgroup>
@@ -425,7 +425,7 @@ const Whitepaper = () => {
                               Funded.app NFT purchaser will receive their FPL as a basket of 3 equal value neurons:
                             </p>
                             
-                            <Table bordered className="table-fixed">
+                            <Table bordered className="table-fixed light-table">
                                 <colgroup>
                                   <col style={{width: '100%'}} />
                                 </colgroup>
@@ -483,7 +483,7 @@ const Whitepaper = () => {
                         <Row className="mb-3">
                           <Col>
                             <h3>Initial SNS Configuration</h3>
-                            <Table bordered className="table-fixed">
+                            <Table bordered className="table-fixed light-table">
                               <colgroup>
                                 <col style={{width: '70%'}} />
                                 <col style={{width: '30%'}} />
@@ -547,7 +547,7 @@ const Whitepaper = () => {
                         <Row className="mb-3">
                           <Col>
                             <h3>SNS Decentralisation Sale Configuration</h3>
-                            <Table bordered className="table-fixed">
+                            <Table bordered className="table-fixed light-table">
                               <colgroup>
                                 <col style={{width: '70%'}} />
                                 <col style={{width: '30%'}} />
