@@ -151,13 +151,13 @@ const Homepage = () => {
                     <Card className="mb-4">
                     <Card.Header>
     <Row className="align-items-center p-2">
-        <Col xs={6}>
+        <Col xs={4}>
             Fixtures
         </Col>
-        <Col xs={6} className="d-flex justify-content-end align-items-center">
+        <Col xs={8} className="d-flex justify-content-end align-items-center">
             <Pagination className="my-auto"> {/* Apply my-auto to vertically center this component */}
                 <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={currentGameweek === 1} />
-                <Pagination.Item>Gameweek {currentGameweek}</Pagination.Item>
+                <Pagination.Item><small className='small-text'>Gameweek {currentGameweek}</small></Pagination.Item>
                 <Pagination.Next onClick={() => handleNextGameweek()} disabled={currentGameweek === 38} />
             </Pagination>
         </Col>

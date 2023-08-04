@@ -236,7 +236,7 @@ const Profile = () => {
                           <h6>Membership Type:</h6>
                           <p>
                             <small>{viewData.membershipType === 0 ? 'Free' : 'Diamond'}</small>&nbsp;&nbsp;
-                            {viewData.membershipType === 0 && <Button className="btn btn-sm ml-3" onClick={() => setShowUpgradeAccountModal(true)}>Upgrade</Button>}
+                            
                           </p>
                         </ListGroup.Item>
                         {viewData.membershipType === 'diamond' && (
@@ -259,7 +259,6 @@ const Profile = () => {
                           <div>
                             <p>
                               <small>{(Number(balanceData.icpBalance) / 1e8).toFixed(4)} ICP</small>&nbsp;&nbsp;
-                              <Button className="btn btn-sm ml-3" onClick={() => setShowWithdrawICPModal(true)}>Withdraw</Button>
                             </p>
                           </div>
                           )}
@@ -288,7 +287,6 @@ const Profile = () => {
                           <div>
                             <p>
                               <small>{(Number(balanceData.fplBalance) / 1e8).toFixed(4)} FPL</small>&nbsp;&nbsp;
-                              <Button className="btn btn-sm ml-3" onClick={() => setShowWithdrawFPLModal(true)}>Withdraw</Button>
                             </p>
                           </div>
                           )}
