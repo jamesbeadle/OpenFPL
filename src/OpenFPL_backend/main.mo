@@ -71,6 +71,10 @@ actor Self {
     return await playerCanister.getAllPlayersMap(seasonId, gameweek);
   }; 
 
+  private func getPlayer(playerId: Nat16): async T.Player {
+    return await playerCanister.getPlayer(playerId);
+  }; 
+
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap);
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
@@ -478,10 +482,6 @@ actor Self {
     await fantasyTeamsInstance.snapshotGameweek(seaasonId);
   };
 
-  private func getPlayer(playerId: Nat16): async T.Player {
-    return await playerCanister.getPlayer(playerId);
-  }; 
-
   private func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8, fixtures: [T.Fixture]) : async (){
     return await fantasyTeamsInstance.calculateFantasyTeamScores(seasonId, gameweek, fixtures);
   };
@@ -598,36 +598,36 @@ actor Self {
     recreateTimers();
   };
 
-    private func recreateTimers(){
-        let currentTime = Time.now();
-        for (timerInfo in Iter.fromArray(stable_timers)) {
-            let remainingDuration = timerInfo.triggerTime - currentTime;
+  private func recreateTimers(){
+      let currentTime = Time.now();
+      for (timerInfo in Iter.fromArray(stable_timers)) {
+          let remainingDuration = timerInfo.triggerTime - currentTime;
 
-            if (remainingDuration > 0) { 
-                let duration: Timer.Duration =  #nanoseconds(Int.abs(remainingDuration));
+          if (remainingDuration > 0) { 
+              let duration: Timer.Duration =  #nanoseconds(Int.abs(remainingDuration));
 
-                switch(timerInfo.callbackName) {
-                    case "proposalExpired" {
-                        ignore Timer.setTimer(duration, proposalExpiredCallback);
-                    };
-                    case "gameweekBeginExpired" {
-                        ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
-                    };
-                    case "gameKickOffExpired" {
-                        ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
-                    };
-                    case "gameCompletedExpired" {
-                        ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
-                    };
-                    case "votingPeriodOverExpired" {
-                        ignore Timer.setTimer(duration, votingPeriodOverExpiredCallback);
-                    };
-                    case _ {
-                        ignore Timer.setTimer(duration, defaultCallback);
-                    }
-                };
-            }
-        }
-    };
+              switch(timerInfo.callbackName) {
+                  case "proposalExpired" {
+                      ignore Timer.setTimer(duration, proposalExpiredCallback);
+                  };
+                  case "gameweekBeginExpired" {
+                      ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
+                  };
+                  case "gameKickOffExpired" {
+                      ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
+                  };
+                  case "gameCompletedExpired" {
+                      ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
+                  };
+                  case "votingPeriodOverExpired" {
+                      ignore Timer.setTimer(duration, votingPeriodOverExpiredCallback);
+                  };
+                  case _ {
+                      ignore Timer.setTimer(duration, defaultCallback);
+                  }
+              };
+          }
+      }
+  };
 
 };

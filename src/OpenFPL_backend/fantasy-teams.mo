@@ -13,7 +13,6 @@ import Text "mo:base/Text";
 import Option "mo:base/Option";
 import Utilities "utilities";
 import Int "mo:base/Int";
-import Debug "mo:base/Debug";
 
 module {
     public class FantasyTeams(getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)]){
@@ -59,7 +58,7 @@ module {
                     };
 
                     let totalTeamValue = Array.foldLeft<Float, Float>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
-                    if(totalTeamValue > Float.fromInt(300_000_000)){
+                    if(totalTeamValue > Float.fromInt(300)){
                         return #err(#InvalidTeamError);
                     };
 
@@ -215,7 +214,7 @@ module {
                         };
                     };
 
-                    if(spent - sold > existingTeam.bankBalance){
+                    if(((spent - sold) * 1_000_000) > existingTeam.bankBalance){
                         return #err(#InvalidTeamError);
                     };
 
@@ -336,7 +335,7 @@ module {
                    
                     let updatedTeam: T.FantasyTeam = {
                         principalId = principalId;
-                        bankBalance = existingTeam.bankBalance - spent + sold;
+                        bankBalance = existingTeam.bankBalance - ((spent + sold) * 1_000_000);
                         playerIds = allPlayerIds;
                         transfersAvailable = existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
                         captainId = newCaptainId;
@@ -355,8 +354,6 @@ module {
                         braceBonusGameweek = braceBonusGameweek;
                         hatTrickHeroGameweek = hatTrickHeroGameweek;
                     };
-
-                    Debug.print(debug_show updatedTeam);
 
                     let updatedUserTeam: T.UserFantasyTeam = {
                         fantasyTeam = updatedTeam;
