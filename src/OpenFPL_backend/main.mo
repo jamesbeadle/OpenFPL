@@ -465,9 +465,17 @@ actor Self {
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, playerEvents: [T.PlayerEventData]) : async (){
     assert not Principal.isAnonymous(caller);
 
-    //check has voting power
+    if(governanceInstance.getVotingPower(Principal.toText(caller)) == 0){
+      return;
+    };
 
-    //check fixture is status 2
+    let activeSeasonId = seasonManager.getActiveSeasonId();
+    let activeGameweek = seasonManager.getActiveGameweek();
+    let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
+
+    if(fixture.status != 2){
+      return;
+    };
 
     governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, playerEvents);
 

@@ -317,5 +317,9 @@ module {
     public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {
         setAndBackupTimer := ?_setAndBackupTimer;
     };
+
+    public func getFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async T.Fixture {
+        return await seasonsInstance.getFixture(seasonId, gameweekNumber, fixtureId);
+    };
   };
 }

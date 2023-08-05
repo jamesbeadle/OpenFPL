@@ -151,6 +151,47 @@ module {
         };
     };
 
+    public func getFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async T.Fixture {
+        let emptyFixture: T.Fixture = { 
+            id = 0;
+            seasonId = 0;
+            gameweek = 0;
+            kickOff = 0;
+            homeTeamId = 0;
+            awayTeamId = 0;
+            homeGoals = 0;
+            awayGoals = 0;
+            status = 0;
+            events = List.nil();
+            highestScoringPlayerId = 0; 
+        };
+
+        let season = List.find<T.Season>(seasons, func (season: T.Season): Bool {
+            return season.id == seasonId;
+        });
+        switch(season){
+            case (null) { return emptyFixture; };
+            case (?foundSeason){
+                let gameweek = List.find<T.Gameweek>(foundSeason.gameweeks, func (gameweek: T.Gameweek): Bool {
+                    return gameweek.number == gameweekNumber;
+                });
+
+                switch(gameweek){
+                    case (null){ return emptyFixture; };
+                    case (?foundGameweek){
+                        let fixture = List.find<T.Fixture>(foundGameweek.fixtures, func (fixture: T.Fixture): Bool {
+                            return fixture.id == fixtureId;
+                        });
+                        switch(fixture){
+                            case (null){ return emptyFixture; };
+                            case (?foundFixture){ return foundFixture; };
+                        };
+                    };
+                };
+            };
+        };
+    };
+
     public func updateStatus(seasonId: Nat16, gameweek: Nat8, fixtureId: Nat32, status: Nat8) : async T.Fixture {
     
         seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
