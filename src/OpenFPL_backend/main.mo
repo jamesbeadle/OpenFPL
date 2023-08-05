@@ -80,6 +80,10 @@ actor Self {
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
     return seasonManager.getActiveGameweek();
   };
+
+  public shared ({caller}) func getCurrentSeason() : async T.Season {
+    return await seasonManager.getActiveSeason();
+  };
   
   public query func getTeams() : async [T.Team] {
     return teamsInstance.getTeams();

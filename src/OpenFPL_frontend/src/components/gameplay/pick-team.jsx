@@ -39,6 +39,7 @@ const PickTeam = () => {
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [currentGameweek, setCurrentGameweek] = useState(null);
+  const [currentSeason, setCurrentSeason] = useState(null);
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
   const [selectedBonusId, setSelectedBonusId] = useState(null);
   const [selectedBonusPlayerId, setSelectedBonusPlayerId] = useState(null);
@@ -75,6 +76,9 @@ const PickTeam = () => {
         
         const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
         setCurrentGameweek(currentGameweekData);
+        
+        const currentSeasonData = await open_fpl_backend.getCurrentSeason();
+        setCurrentSeason(currentSeasonData);
         
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
@@ -573,7 +577,7 @@ const handleConfirmBonusClick = (bonusType) => {
                 <Row className="justify-content-between align-items-center">
                   <Col xs={12} md={3} className='mb-1'>
                     Team Selection<br />
-                    <small className='small-text'>Status: 2023/24 Pre-season</small><br />
+                    <small className='small-text'>Season: {currentSeason.name}</small><br />
                     <small className='small-text'>Gameweek: {currentGameweek}</small>
                   </Col>
                   <Col xs={12} md={9}>

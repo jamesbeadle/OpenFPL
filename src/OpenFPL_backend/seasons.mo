@@ -134,6 +134,23 @@ module {
         };
     };
 
+    public func getSeason(seasonId: Nat16) : async T.Season {
+        let season = List.find<T.Season>(seasons, func (season: T.Season): Bool {
+            return season.id == seasonId;
+        });
+        switch(season){
+            case (null) { return {gameweeks= List.nil<T.Gameweek>(); id = 0; name = ""; postponedFixtures = List.nil<T.Fixture>(); year = 0;  }  };
+            case (?foundSeason){
+                return {
+                    id = foundSeason.id; 
+                    name = foundSeason.name; 
+                    year = foundSeason.year;  
+                    gameweeks= List.nil<T.Gameweek>(); 
+                    postponedFixtures = List.nil<T.Fixture>(); 
+                } };
+        };
+    };
+
     public func updateStatus(seasonId: Nat16, gameweek: Nat8, fixtureId: Nat32, status: Nat8) : async T.Fixture {
     
         seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
@@ -201,7 +218,6 @@ module {
             };
         };
     };
-
 
     public func savePlayerEventData(seasonId: Nat16, gameweek: Nat8, fixtureId: Nat32, playerEventData: List.List<T.PlayerEventData>) : async T.Fixture {
     
@@ -318,7 +334,6 @@ module {
         return result;
     };
 
-    
     public func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : () {
         seasons := List.map<T.Season, T.Season>(seasons, func(currentSeason: T.Season) : T.Season {
             if (currentSeason.id == proposalPayload.seasonId) {
