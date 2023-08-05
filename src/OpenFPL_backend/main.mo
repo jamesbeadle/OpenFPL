@@ -75,7 +75,7 @@ actor Self {
     return await playerCanister.getPlayer(playerId);
   }; 
 
-  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap);
+  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer);
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
     return seasonManager.getActiveGameweek();
@@ -452,7 +452,7 @@ actor Self {
               return Option.isSome(isPlayerIdInExistingTeam);
           });
           
-          return fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, seasonManager.getActiveGameweek(), existingPlayers); 
+          return await fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, seasonManager.getActiveGameweek(), existingPlayers); 
         };
     };
   };

@@ -13,9 +13,12 @@ import Text "mo:base/Text";
 import Option "mo:base/Option";
 import Utilities "utilities";
 import Int "mo:base/Int";
+import Debug "mo:base/Debug";
 
 module {
-    public class FantasyTeams(getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)]){
+    public class FantasyTeams(
+        getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
+        getPlayer: (playerId: Nat16) -> async T.Player){
         
         private var fantasyTeams: HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
         private var seasonLeaderboards: HashMap.HashMap<Nat16, T.SeasonLeaderboards> = HashMap.HashMap<Nat16, T.SeasonLeaderboards>(100, Utilities.eqNat16, Utilities.hashNat16);
@@ -51,18 +54,21 @@ module {
             switch (existingTeam) {
                 case (null) { 
 
-                    let allPlayerValues = Array.map<DTOs.PlayerDTO, Float>(newPlayers, func (player: DTOs.PlayerDTO) : Float { return player.value; });
+                    let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(newPlayers, func (player: DTOs.PlayerDTO) : Nat { return player.value; });
 
                     if(not isTeamValid(newPlayers, bonusId, bonusPlayerId)){
                         return #err(#InvalidTeamError);
                     };
 
-                    let totalTeamValue = Array.foldLeft<Float, Float>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
-                    if(totalTeamValue > Float.fromInt(300)){
+                    let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+                    if(totalTeamValue > 1200){
                         return #err(#InvalidTeamError);
                     };
 
-                    var bankBalance = 300_000_000 - (totalTeamValue * 1_000_000);
+                    let teamValueMillions = totalTeamValue * 4_000_000;
+                    let bank: Nat = 300_000_000 - teamValueMillions;
+
+                    var bankBalance = bank;
                     var goalGetterGameweek = Nat8.fromNat(0);
                     var goalGetterPlayerId = Nat16.fromNat(0);
                     var passMasterGameweek = Nat8.fromNat(0);
@@ -83,7 +89,7 @@ module {
                     let allPlayerIds = Array.map<DTOs.PlayerDTO, Nat16>(sortedPlayers, func (player: DTOs.PlayerDTO) : Nat16 { return player.id; });
                     
                     if(newCaptainId == 0){
-                        var highestValue = Float.fromInt(0);
+                        var highestValue = 0;
                         for (i in Iter.range(0, Array.size(newPlayers)-1)) {
                             if(newPlayers[i].value > highestValue){
                                 highestValue := newPlayers[i].value; 
@@ -135,7 +141,7 @@ module {
 
                     var newTeam: T.FantasyTeam = {
                         principalId = principalId;
-                        bankBalance = bankBalance;
+                        bankBalance = Float.fromInt(bankBalance);
                         playerIds = allPlayerIds;
                         transfersAvailable = 2;
                         captainId = newCaptainId;
@@ -167,20 +173,19 @@ module {
             };
         };
 
-        public func updateFantasyTeam(principalId: Text, newPlayers: [DTOs.PlayerDTO], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16, gameweek: Nat8, existingPlayers: [DTOs.PlayerDTO]) : Result.Result<(), T.Error> {
+        public func updateFantasyTeam(principalId: Text, newPlayers: [DTOs.PlayerDTO], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16, gameweek: Nat8, existingPlayers: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
             
             let existingUserTeam = fantasyTeams.get(principalId);
-   
             switch (existingUserTeam) {
                 case (null) { return #ok(()); };
                 case (?e) { 
                     let existingTeam = e.fantasyTeam;
-                    let allPlayerValues = Array.map<DTOs.PlayerDTO, Float>(newPlayers, func (player: DTOs.PlayerDTO) : Float { return player.value; });
+                    let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(newPlayers, func (player: DTOs.PlayerDTO) : Nat { return player.value; });
                     
                     if(not isTeamValid(newPlayers, bonusId, bonusPlayerId)){
                         return #err(#InvalidTeamError);
                     };
-
+                    
                     let playersAdded = Array.filter<DTOs.PlayerDTO>(newPlayers, func (player: DTOs.PlayerDTO): Bool {
                         let playerId = player.id;
                         let isPlayerIdInExistingTeam = Array.find(existingTeam.playerIds, func (id: Nat16): Bool {
@@ -193,31 +198,30 @@ module {
                         return #err(#InvalidTeamError);
                     };
 
-                    let playersRemoved = Array.filter<Nat16>(existingTeam.playerIds, func (playerId: Nat16): Bool {
+                   let playersRemoved = Array.filter<Nat16>(existingTeam.playerIds, func (playerId: Nat16): Bool {
                         let isPlayerIdInPlayers = Array.find(newPlayers, func (player: DTOs.PlayerDTO): Bool {
                             return player.id == playerId;
                         });
                         return Option.isNull(isPlayerIdInPlayers);
                     });
-
-                    let spent = Array.foldLeft<DTOs.PlayerDTO, Float>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.value);
-                    var sold = 0.0;
+                   
+                    let spent = Array.foldLeft<DTOs.PlayerDTO, Nat>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.value);
+                    var sold: Nat = 0;
                     for (i in Iter.range(0, Array.size(playersRemoved)-1)) {
-                        let player = Array.find(newPlayers, func (player: DTOs.PlayerDTO): Bool {
-                            return player.id == playersRemoved[i];
-                        });
-                        switch(player){
-                            case (null) {};
-                            case (?p) {
-                                sold := sold + p.value;
-                            };
-                        };
+                        //get the new players value
+                        let newPlayer = await getPlayer(playersRemoved[i]);
+                        sold := sold + newPlayer.value;
                     };
 
-                    if(((spent - sold) * 1_000_000) > existingTeam.bankBalance){
+                    let netSpendQMs: Int = spent - sold;
+                    let netSpendM: Float = Float.fromInt(netSpendQMs) / 4.0;
+                    
+                    let netSpend: Float = netSpendM * 1_000_000;
+
+                    if(netSpend > existingTeam.bankBalance){
                         return #err(#InvalidTeamError);
                     };
-
+                
                     if(bonusId == 1 and existingTeam.goalGetterGameweek != 0){
                         return #err(#InvalidTeamError);
                     };
@@ -283,7 +287,7 @@ module {
                     let allPlayerIds = Array.map<DTOs.PlayerDTO, Nat16>(sortedPlayers, func (player: DTOs.PlayerDTO) : Nat16 { return player.id; });    
                     
                     if(newCaptainId == 0){
-                        var highestValue = Float.fromInt(0);
+                        var highestValue = 0;
                         for (i in Iter.range(0, Array.size(newPlayers)-1)) {
                             if(newPlayers[i].value > highestValue){
                                 highestValue := newPlayers[i].value; 
@@ -333,11 +337,20 @@ module {
                         hatTrickHeroGameweek := gameweek;
                     };
                    
+                    let newBankBalance: Float = existingTeam.bankBalance - netSpend;
+
+                    var newTransfersAvailable: Nat8 = 2;
+
+                    if(gameweek != 1){
+                        newTransfersAvailable := existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
+                    };
+
+                    Debug.print(debug_show Array.size(playersAdded));
                     let updatedTeam: T.FantasyTeam = {
                         principalId = principalId;
-                        bankBalance = existingTeam.bankBalance - ((spent + sold) * 1_000_000);
+                        bankBalance = newBankBalance;
                         playerIds = allPlayerIds;
-                        transfersAvailable = existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
+                        transfersAvailable = newTransfersAvailable;
                         captainId = newCaptainId;
                         goalGetterGameweek = goalGetterGameweek;
                         goalGetterPlayerId = goalGetterPlayerId;

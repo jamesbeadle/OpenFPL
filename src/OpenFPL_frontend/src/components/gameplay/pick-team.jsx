@@ -118,7 +118,7 @@ const PickTeam = () => {
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       updatedFantasyTeam.players[selectedSlot] = player;
-      updatedFantasyTeam.bankBalance -= player.value; // decrease the bank value
+      updatedFantasyTeam.bankBalance -= Number(player.value) / 4;
 
       updatedFantasyTeam.players.sort((a, b) => {
         if (a.position < b.position) {
@@ -128,7 +128,7 @@ const PickTeam = () => {
         }
         
         if (a.position === b.position) {
-          return b.value - a.value;
+          return Number(b.value) - Number(a.value);
         }
       
         return 0;
@@ -330,7 +330,7 @@ const handleConfirmBonusClick = (bonusType) => {
       const soldPlayer = players.find(player => player.id === playerId);
   
       updatedFantasyTeam.players = updatedFantasyTeam.players.filter(player => player.id !== playerId);
-      updatedFantasyTeam.bankBalance += soldPlayer.value;
+      updatedFantasyTeam.bankBalance += Number(soldPlayer.value) / 4;
 
       if(updatedFantasyTeam.positionsToFill == undefined){
         updatedFantasyTeam.positionsToFill = [];
@@ -362,7 +362,7 @@ const handleConfirmBonusClick = (bonusType) => {
       });
 
       if (updatedFantasyTeam.captainId === playerId) {
-          const sortedPlayers = [...updatedFantasyTeam.players].sort((a, b) => b.value - a.value);
+          const sortedPlayers = [...updatedFantasyTeam.players].sort((a, b) => Number(b.value) - Number(a.value));
           updatedFantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
       }
 
@@ -372,8 +372,9 @@ const handleConfirmBonusClick = (bonusType) => {
   
   const calculateTeamValue = () => {
     if(fantasyTeam && fantasyTeam.players) {
-      const totalValue = fantasyTeam.players.reduce((acc, player) => acc + player.value, 0);
-      return (totalValue).toFixed(1);
+      console.log(fantasyTeam.players)
+      const totalValue = fantasyTeam.players.reduce((acc, player) => acc + Number(player.value), 0);
+      return (totalValue / 4).toFixed(1);
     }
     return null;
   }
@@ -474,7 +475,7 @@ const handleConfirmBonusClick = (bonusType) => {
       }
     }
     
-    let sortedPlayers = [...players].sort((a, b) => a.value - b.value);
+    let sortedPlayers = [...players].sort((a, b) => Number(b.value) - Number(a.value));
     sortedPlayers = shuffle(sortedPlayers);
   
     let newTeam = [...fantasyTeam.players];
@@ -489,11 +490,11 @@ const handleConfirmBonusClick = (bonusType) => {
 
      for (let j = 0; j < sortedPlayers.length; j++) {
         if (positionMapping[sortedPlayers[j].position] === position && 
-            sortedPlayers[j].value <= remainingBudget &&
+            Number(sortedPlayers[j].value) <= remainingBudget &&
             !newTeam.some((teamPlayer) => teamPlayer.id === sortedPlayers[j].id)
         ) {
           newTeam.push(sortedPlayers[j]);
-          remainingBudget -= sortedPlayers[j].value;
+          remainingBudget -= Number(sortedPlayers[j].value);
           sortedPlayers.splice(j, 1);
           positionsToFill.splice(i, 1);
           i--;
@@ -511,7 +512,7 @@ const handleConfirmBonusClick = (bonusType) => {
       }
       
       if (a.position === b.position) {
-        return b.value - a.value;
+        return Number(b.value) - Number(a.value);
       }
     
       return 0;

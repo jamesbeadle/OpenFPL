@@ -136,6 +136,7 @@ actor Self {
     };
 
     public func revaluePlayers(seasonId: Nat16, gameweek: Nat8, revaluedPlayers: List.List<T.RevaluedPlayer>) : async () {
+        /*
         let changeAmount: Float = 250000000;
 
         for (revaluedPlayer in Iter.fromList(revaluedPlayers)) {
@@ -187,6 +188,7 @@ actor Self {
 
             players := updatedPlayers;
         }
+        */
     };
 
     public func calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]) : async [T.Fixture] {

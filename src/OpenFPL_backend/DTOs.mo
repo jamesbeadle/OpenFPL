@@ -32,7 +32,7 @@ module DTOs {
         firstName: Text;
         lastName: Text;
         shirtNumber: Nat8;
-        value: Float;
+        value: Nat;
         dateOfBirth: Int;
         nationality: Text;
         totalPoints: Nat16;

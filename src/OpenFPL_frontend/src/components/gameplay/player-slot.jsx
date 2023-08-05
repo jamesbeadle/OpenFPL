@@ -74,7 +74,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
                   <small>{getTeamById(player.teamId).friendlyName}</small>
                 </p>
                 <p className='w-100'>
-                  <small>{`£${player.value}m`}</small>
+                  <small>{`£${(Number(player.value) / 4).toFixed(1)}m`}</small>
                   {bonusIcons[bonusId]}
                 </p>
               </span>

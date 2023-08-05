@@ -35,8 +35,8 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
     const filteredPlayers = players
     .filter(player => filterTeamId === "" || player.teamId === Number(filterTeamId))
     .filter(player => filterPosition === "" || player.position === Number(filterPosition))
-    .filter(player => minValue === "" || player.value >= Number(minValue))
-    .filter(player => maxValue === "" || player.value <= Number(maxValue))
+    .filter(player => minValue === "" || player.value >= (Number(minValue) * 4))
+    .filter(player => maxValue === "" || player.value <= (Number(maxValue) * 4))
 
     const totalEntries = filteredPlayers.length; 
     const paginatedPlayers = filteredPlayers.slice(page * count, (page + 1) * count);
@@ -188,7 +188,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
                 <p className='small-text m-0'>{teams.find(team => team.id === player.teamId).abbreviatedName}</p>
               </Col>
               <Col xs={2} className='d-flex align-self-center'>
-                <p className='small-text m-0'>{`£${player.value}m`}</p>
+                <p className='small-text m-0'>{`£${(Number(player.value) / 4).toFixed(1)}m`}</p>
               </Col>
               <Col xs={1} className='d-flex align-self-center'>
                 <p className='small-text m-0'>{player.totalPoints}</p>
@@ -196,7 +196,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
               <Col xs={4} className='d-flex align-self-center'>
                 {fantasyTeam.players.some(teamPlayer => teamPlayer.id === player.id) 
                   ? <p className='small-text m-0 text-center w-100'>Added</p> 
-                  : <Button className="w-100 small-text" variant="primary" onClick={() => {handleSubmit(player);}} disabled={player.value > fantasyTeam.bankBalance}>
+                  : <Button className="w-100 small-text" variant="primary" onClick={() => {handleSubmit(player);}} disabled={(Number(player.value) / 4) > fantasyTeam.bankBalance}>
                       <small>Select</small>
                     </Button>
                 }

@@ -76,7 +76,7 @@ module Types{
         firstName: Text;
         lastName: Text;
         shirtNumber: Nat8;
-        value: Float;
+        value: Nat; //Value in £0.25m units
         dateOfBirth: Int;
         nationality: Text;
         seasons: List.List<PlayerSeason>;
@@ -306,7 +306,7 @@ module Types{
         firstName: Text;
         lastName: Text;
         shirtNumber: Nat8;
-        value: Float;
+        value: Nat;
         dateOfBirth: Int;
         nationality: Text;
     };
