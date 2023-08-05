@@ -205,9 +205,9 @@ module Types{
         //0 = Appearance
         //1 = Goal Scored
         //2 = Goal Assisted
-        //3 = Goal Conceded
+        //3 = Goal Conceded - Inferred
         //4 = Keeper Save
-        //5 = Clean Sheet
+        //5 = Clean Sheet - Inferred
         //6 = Penalty Saved
         //7 = Penalty Missed
         //8 = Yellow Card
@@ -216,7 +216,7 @@ module Types{
         //11 = Highest Scoring Player 
         eventType: Nat8;
         eventStartMinute: Nat8; //use to record event time of all other events
-        eventEndTime: Nat8; //currently only used for Appearance
+        eventEndMinute: Nat8; //currently only used for Appearance
     };
 
     public type DataSubmission = {
@@ -377,7 +377,6 @@ module Types{
     
     public type UpdateFlag = {
         #EventData_VotePeriod;
-        #DraftEventData_VoteThreshold;
         #EventData_VoteThreshold;
         #Revaluation_VoteThreshold;
         #Proposal_VoteThreshold;
@@ -388,7 +387,6 @@ module Types{
     public type UpdateSystemParametersPayload = {
         flag: UpdateFlag;
         event_data_voting_period: ?Int;
-        draft_event_data_vote_threshold: ?Nat64;
         event_data_vote_threshold: ?Nat64;
         revalution_vote_threshold: ?Nat64;
         proposal_vote_threshold: ?Nat64;

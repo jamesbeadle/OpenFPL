@@ -457,9 +457,22 @@ actor Self {
     };
   };
 
-  public shared ({caller}) func getValidatableFixtures() : async [T.Fixture]{
+  public shared query ({caller}) func getValidatableFixtures() : async [T.Fixture]{
     assert not Principal.isAnonymous(caller);
     return seasonManager.getValidatableFixtures();
+  };
+
+  public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, playerEvents: [T.PlayerEventData]) : async (){
+    assert not Principal.isAnonymous(caller);
+
+    //check has voting power
+
+    //check fixture is status 2
+
+    governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, playerEvents);
+
+    
+    
   };
 
   private func resetTransfers(): async () {
@@ -536,8 +549,7 @@ actor Self {
   private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
-  private stable var stable_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)] = [];
-  private stable var stable_draft_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)] = [];
+  private stable var stable_fixture_data_submissions: [(T.FixtureId, List.List<T.DataSubmission>)] = [];
   private stable var stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
   private stable var stable_proposals: [T.Proposal] = [];
   private stable var stable_transfers_allowed : Bool = true;
@@ -549,14 +561,12 @@ actor Self {
   private stable var stable_relegated_teams : [T.Team] = [];
   private stable var stable_next_team_id : Nat16 = 0;
   private stable var stable_event_data_vote_period : Int = 0;
-  private stable var stable_draft_event_data_VoteThreshold : Nat64 = 0;
   private stable var stable_event_data_vote_threshold : Nat64 = 0;
   private stable var stable_revaluation_vote_threshold : Nat64 = 0;
   private stable var stable_proposal_vote_threshold : Nat64 = 0;
   private stable var stable_max_votes_per_user : Nat64 = 0;
   private stable var stable_proposal_submission_e8_fee : Nat64 = 0;
   private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
-  private stable var stable_consensus_draft_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
   private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
   
   system func preupgrade() {
@@ -565,7 +575,6 @@ actor Self {
     stable_active_season_id := seasonManager.getActiveSeasonId();
     stable_active_gameweek := seasonManager.getActiveGameweek();
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
-    stable_draft_fixture_data_submissions := governanceInstance.getDraftFixtureDataSubmissions();
     stable_player_revaluation_submissions := governanceInstance.getPlayerRevaluationSubmissions();
     stable_proposals := governanceInstance.getProposals();
     stable_transfers_allowed := seasonManager.getTransfersAllowed();
@@ -577,14 +586,12 @@ actor Self {
     stable_relegated_teams := teamsInstance.getRelegatedTeams();
     stable_next_team_id := teamsInstance.getNextTeamId();
     stable_event_data_vote_period := governanceInstance.getEventDataVotePeriod();
-    stable_draft_event_data_VoteThreshold := governanceInstance.getDraftEventDataVoteThreshold();
     stable_event_data_vote_threshold := governanceInstance.getEventDataVoteThreshold();
     stable_revaluation_vote_threshold := governanceInstance.getRevaluationVoteThreshold();
     stable_proposal_vote_threshold := governanceInstance.getProposalVoteThreshold();
     stable_max_votes_per_user := governanceInstance.getMaxVotesPerUser();
     stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
     stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
-    stable_consensus_draft_fixture_data := governanceInstance.getConsensusDraftFixtureData();
     stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
   };
 
@@ -593,11 +600,9 @@ actor Self {
     fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_transfers_allowed, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
-    stable_draft_fixture_data_submissions := governanceInstance.getDraftFixtureDataSubmissions();
     teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
-    governanceInstance.setData(stable_fixture_data_submissions, stable_draft_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals, stable_consensus_draft_fixture_data, stable_consensus_fixture_data);
+    governanceInstance.setData(stable_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals, stable_consensus_fixture_data);
     governanceInstance.setEventDataVotePeriod(stable_event_data_vote_period);
-    governanceInstance.setDraftEventDataVoteThreshold(stable_draft_event_data_VoteThreshold);
     governanceInstance.setEventDataVoteThreshold(stable_event_data_vote_threshold);
     governanceInstance.setRevaluationVoteThreshold(stable_revaluation_vote_threshold);
     governanceInstance.setProposalVoteThreshold(stable_proposal_vote_threshold);

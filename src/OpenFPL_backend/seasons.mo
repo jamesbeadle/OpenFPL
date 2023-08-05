@@ -375,7 +375,7 @@ module {
                     case (null) { };
                     case (?gws) {
                         let validatableFixtures = List.filter<T.Fixture>(gws.fixtures, func(fixture: T.Fixture){
-                            fixture.status == 1;
+                            fixture.status == 2;
                         });
                         return List.toArray(validatableFixtures);
                     };

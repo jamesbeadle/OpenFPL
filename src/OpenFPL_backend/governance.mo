@@ -38,14 +38,11 @@ module {
             //"opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"
         ];
 
-        private var draftFixtureDataSubmissions: HashMap.HashMap<T.FixtureId, T.DataSubmission> = 
-            HashMap.HashMap<T.FixtureId, T.DataSubmission>(22, Utilities.eqNat32, Utilities.hashNat32);
-        private var fixtureDataSubmissions: HashMap.HashMap<T.FixtureId, T.DataSubmission> = 
-            HashMap.HashMap<T.FixtureId, T.DataSubmission>(22, Utilities.eqNat32, Utilities.hashNat32);
+        private var fixtureDataSubmissions: HashMap.HashMap<T.FixtureId, List.List<T.DataSubmission>> = 
+            HashMap.HashMap<T.FixtureId, List.List<T.DataSubmission>>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var playerRevaluationSubmissions: HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> = 
             HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> (20, Utilities.eqNat16, Utilities.hashNat16);
         private var proposals: List.List<T.Proposal> = List.nil<T.Proposal>();
-        private var consensusDraftFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var consensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
         
         private var addInitialFixtures : ?((T.AddInitialFixturesPayload) -> async ()) = null;
@@ -54,7 +51,6 @@ module {
         //system parameters
         private var EventData_VotePeriod: Int = oneHour * 12;
         private var Proposal_VotePeriod: Int = oneHour * 12;
-        private var DraftEventData_VoteThreshold: Nat64 = 500_000;
         private var EventData_VoteThreshold: Nat64 = 1_000_000;
         private var Revaluation_VoteThreshold: Nat64 = 1_000_000;
         private var Proposal_VoteThreshold: Nat64 = 1_000_000;
@@ -70,14 +66,6 @@ module {
 
         public func setEventDataVotePeriod(newValue: Int){
             EventData_VotePeriod := newValue;
-        };
-        
-        public func getDraftEventDataVoteThreshold() : Nat64{
-            return DraftEventData_VoteThreshold;
-        };
-
-        public func setDraftEventDataVoteThreshold(newValue: Nat64){
-            DraftEventData_VoteThreshold := newValue;
         };
         
         public func getEventDataVoteThreshold() : Nat64{
@@ -126,11 +114,9 @@ module {
         };
 
         public func setData(
-            stable_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)], 
-            stable__draft_fixture_data_submissions: [(T.FixtureId, T.DataSubmission)],
+            stable_fixture_data_submissions: [(T.FixtureId, List.List<T.DataSubmission>)], 
             stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))],
             stable_proposals: [T.Proposal],
-            stable_consensus_draft_fixture_data: [(T.FixtureId, T.ConsensusData)],
             stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)]) {
 
             // Type definitions
@@ -139,17 +125,9 @@ module {
             type OuterMapType = HashMap.HashMap<T.SeasonId, MidMapType>;
 
             // Iterators
-            let draftFixtureIterator = Iter.fromArray(stable__draft_fixture_data_submissions);
             let fixtureDataIterator = Iter.fromArray(stable_fixture_data_submissions);
 
-            draftFixtureDataSubmissions := HashMap.fromIter<T.FixtureId, T.DataSubmission>(
-                draftFixtureIterator,
-                Iter.size(draftFixtureIterator),
-                Utilities.eqNat32, 
-                Utilities.hashNat32
-            );
-
-            fixtureDataSubmissions := HashMap.fromIter<T.FixtureId, T.DataSubmission>(
+            fixtureDataSubmissions := HashMap.fromIter<T.FixtureId, List.List<T.DataSubmission>>(
                 fixtureDataIterator,
                 Iter.size(fixtureDataIterator),
                 Utilities.eqNat32, 
@@ -173,14 +151,6 @@ module {
 
             proposals := List.fromArray(stable_proposals);
 
-            let consensusDraftIterator = Iter.fromArray(stable_consensus_draft_fixture_data);
-            consensusDraftFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
-                consensusDraftIterator,
-                Iter.size(consensusDraftIterator),
-                Utilities.eqNat32, 
-                Utilities.hashNat32
-            );
-
             let consensusIterator = Iter.fromArray(stable_consensus_fixture_data);
             consensusFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
                 consensusIterator,
@@ -203,18 +173,10 @@ module {
             };
         };
         
-        public func getFixtureDataSubmissions() : [(T.FixtureId, T.DataSubmission)] {
+        public func getFixtureDataSubmissions() : [(T.FixtureId, List.List<T.DataSubmission>)] {
             return Iter.toArray(fixtureDataSubmissions.entries());
         };
         
-        public func getDraftFixtureDataSubmissions() : [(T.FixtureId, T.DataSubmission)] {
-            return Iter.toArray(draftFixtureDataSubmissions.entries());
-        };
-
-        public func getConsensusDraftFixtureData() : [(T.FixtureId, T.ConsensusData)] {
-            return Iter.toArray(consensusDraftFixtureData.entries());
-        };
-
         public func getConsensusFixtureData() : [(T.FixtureId, T.ConsensusData)] {
             return Iter.toArray(consensusFixtureData.entries());
         };
@@ -240,7 +202,20 @@ module {
             return List.toArray(proposals);
         };
 
-        public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData], isDraft: Bool) : () {
+        public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : () {
+            
+            let existingSubmissionsForFixture = fixtureDataSubmissions.get(fixtureId);
+            switch (existingSubmissionsForFixture) {
+                case (?submissions) {
+                    for (submission in Iter.fromList(submissions)) {
+                        if (submission.proposer == principalId) {
+                            return;
+                        };
+                    }
+                };
+                case null {};
+            };
+            
             let userVotingPower: Nat64 = getVotingPower(principalId);
             let currentTime = Time.now();
 
@@ -253,111 +228,86 @@ module {
                 votes_no = List.nil<T.PlayerValuationVote>();
             };
 
-            let existingSubmissions = if (isDraft) {
-                draftFixtureDataSubmissions.get(fixtureId)
-            } else {
-                fixtureDataSubmissions.get(fixtureId)
-            };
-
-            let updatedSubmission = switch (existingSubmissions) {
+            let updatedSubmissions = switch (existingSubmissionsForFixture) {
                 case (null) {
-                    newSubmission
+                    List.fromArray([newSubmission])
                 };
                 case (?currentSubmissions) {
-                    if (Utilities.eqPlayerEventDataArray(List.toArray(currentSubmissions.events), List.toArray(newSubmission.events))) {
-                        let newVote: T.PlayerValuationVote = {
-                            principalId = Principal.fromText(principalId);
-                            votes = { amount_e8s = userVotingPower };
-                        };
-                        let updatedVotesYes = List.push(newVote, currentSubmissions.votes_yes);
-                        { currentSubmissions with votes_yes = updatedVotesYes }
-                    } else {
-                        newSubmission
-                    }
+                    List.push(newSubmission, currentSubmissions)
                 }
             };
 
-            if (isDraft) {
-                draftFixtureDataSubmissions.put(fixtureId, updatedSubmission);
-            } else {
-                fixtureDataSubmissions.put(fixtureId, updatedSubmission);
-            };
-
-            let newConsensus = recalculateConsensus(fixtureId, isDraft);
-            if (isDraft) {
-                consensusDraftFixtureData.put(fixtureId, newConsensus);
-            } else {
-                consensusFixtureData.put(fixtureId, newConsensus);
-            };
+            fixtureDataSubmissions.put(fixtureId, updatedSubmissions);
+            let newConsensus = recalculateConsensus(fixtureId);
+            consensusFixtureData.put(fixtureId, newConsensus);
         };
 
-        private func recalculateConsensus(fixtureId: T.FixtureId, isDraft: Bool) : T.ConsensusData {
-            var dataSubmission: ?T.DataSubmission = null;
+        private func recalculateConsensus(fixtureId: T.FixtureId) : T.ConsensusData {
+            let foundSubmissions = fixtureDataSubmissions.get(fixtureId);
 
-            if (isDraft) {
-                dataSubmission := draftFixtureDataSubmissions.get(fixtureId);
-            } else {
-                dataSubmission := fixtureDataSubmissions.get(fixtureId);
-            };
-
-            let submissions = switch (dataSubmission) {
-                case (null) { 
-                    List.nil<T.DataSubmission>() 
-                };
-                case (?actualSubmissions) { 
-                    List.push(actualSubmissions, List.nil<T.DataSubmission>()) 
-                };
-            };
-
-
-            var maxVotesSubmission: ?T.DataSubmission = null;
-            var maxVotes: Int = 0;
-
-            List.iterate(submissions, func (submission: T.DataSubmission) {
-                let totalVotesYes = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_yes, 0, func (acc: Int, vote: T.PlayerValuationVote) {
-                    acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
-                });
-
-                let totalVotesNo = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_no, 0, func (acc: Int, vote: T.PlayerValuationVote) {
-                    acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
-                });
-
-                let currentTotalVotes = totalVotesYes - totalVotesNo;
-
-                if (currentTotalVotes > maxVotes) {
-                    maxVotes := currentTotalVotes;
-                    maxVotesSubmission := ?submission;
-                }
-            });
-
-            let (weightedEvents, totalVotesYes, totalVotesNo) = switch (maxVotesSubmission) {
+            switch(foundSubmissions){
                 case (null) {
-                    ([], { amount_e8s = 0 }, { amount_e8s = 0 })
+                    
+                    return {
+                        fixtureId = 0;
+                        events = List.nil();
+                        totalVotes = {amount_e8s = 0};
+                    };
                 };
-                case (?submissionWithMaxVotes) {
-                    let events = List.toArray(submissionWithMaxVotes.events);
+                case (?submissions){
 
-                    let votesYes = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_yes, 0, func (acc: Int, vote: T.PlayerValuationVote) {
-                        acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                    var maxVotesSubmission: ?T.DataSubmission = null;
+                    var maxVotes: Int = 0;
+
+                    List.iterate(submissions, func (submission: T.DataSubmission) {
+                        let totalVotesYes = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_yes, 0, func (acc: Int, vote: T.PlayerValuationVote) {
+                            acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                        });
+
+                        let totalVotesNo = List.foldLeft<T.PlayerValuationVote, Int>(submission.votes_no, 0, func (acc: Int, vote: T.PlayerValuationVote) {
+                            acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                        });
+
+                        let currentTotalVotes = totalVotesYes - totalVotesNo;
+
+                        if (currentTotalVotes > maxVotes) {
+                            maxVotes := currentTotalVotes;
+                            maxVotesSubmission := ?submission;
+                        }
                     });
 
-                    let votesNo = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_no, 0, func (acc: Int, vote: T.PlayerValuationVote) {
-                        acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
-                    });
+                    let (weightedEvents, totalVotesYes, totalVotesNo) = switch (maxVotesSubmission) {
+                        case (null) {
+                            ([], { amount_e8s = 0 }, { amount_e8s = 0 })
+                        };
+                        case (?submissionWithMaxVotes) {
+                            let events = List.toArray(submissionWithMaxVotes.events);
 
-                    (events, { amount_e8s = votesYes }, { amount_e8s = votesNo })
+                            let votesYes = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_yes, 0, func (acc: Int, vote: T.PlayerValuationVote) {
+                                acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                            });
+
+                            let votesNo = List.foldLeft<T.PlayerValuationVote, Int>(submissionWithMaxVotes.votes_no, 0, func (acc: Int, vote: T.PlayerValuationVote) {
+                                acc + Int64.toInt(Int64.fromNat64(vote.votes.amount_e8s));
+                            });
+
+                            (events, { amount_e8s = votesYes }, { amount_e8s = votesNo })
+                        };
+                    };
+
+                    let totalVotesDifference = totalVotesYes.amount_e8s - totalVotesNo.amount_e8s;
+                    let totalVotes: T.Tokens = { amount_e8s = Int64.toNat64(Int64.fromInt(totalVotesDifference)) };
+
+                    return {
+                        fixtureId = fixtureId;
+                        events = List.fromArray(weightedEvents);
+                        totalVotes = totalVotes;
+                    };
                 };
             };
 
-            let totalVotesDifference = totalVotesYes.amount_e8s - totalVotesNo.amount_e8s;
-            let totalVotes: T.Tokens = { amount_e8s = Int64.toNat64(Int64.fromInt(totalVotesDifference)) };
-
-            return {
-                fixtureId = fixtureId;
-                events = List.fromArray(weightedEvents);
-                totalVotes = totalVotes;
-            };
         };
+
 
         public func submitPlayerRevaluations(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber, revaluations: [T.PlayerValuationSubmission]) : () {
             let userVotingPower: Nat64 = getVotingPower(principalId);
@@ -679,14 +629,6 @@ module {
                         case (null) {  };
                         case (?value) {
                             EventData_VotePeriod := value;
-                        };
-                    };
-                };
-                case (#DraftEventData_VoteThreshold) {
-                    switch (proposalPayload.draft_event_data_vote_threshold) {
-                        case (null) {  };
-                        case (?value) {
-                            DraftEventData_VoteThreshold := value;
                         };
                     };
                 };

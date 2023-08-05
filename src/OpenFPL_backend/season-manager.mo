@@ -317,13 +317,5 @@ module {
     public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {
         setAndBackupTimer := ?_setAndBackupTimer;
     };
-    
-
-    //Only return draft data if over threshold for DraftEventData_VoteThreshold
-
-    //Only return event data if over vote threshold
-
-    
-
   };
 }

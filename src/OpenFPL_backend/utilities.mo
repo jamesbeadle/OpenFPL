@@ -40,7 +40,7 @@ module {
         event1.playerId == event2.playerId and
         event1.eventType == event2.eventType and
         event1.eventStartMinute == event2.eventStartMinute and
-        event1.eventEndTime == event2.eventEndTime
+        event1.eventEndMinute == event2.eventEndMinute
     };
 
 

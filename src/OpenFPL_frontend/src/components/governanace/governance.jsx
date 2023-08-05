@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Tabs, Tab } from 'react-bootstrap';
-import ValidateGameData from './validate-fixture-data';
+import FixtureValidationList from './fixture-validation-list';
 
 const Governance = () => {
   
@@ -31,7 +31,7 @@ const Governance = () => {
         <br />
         <Tabs defaultActiveKey="proposals" id="profile-tabs" className="mt-4" activeKey={key} onSelect={(k) => setKey(k)}>
          <Tab eventKey="games" title="Validating Game Data">
-            <ValidateGameData isActive={key === 'games'} />
+            <FixtureValidationList isActive={key === 'games'} />
           </Tab>
         </Tabs>
       </Container>

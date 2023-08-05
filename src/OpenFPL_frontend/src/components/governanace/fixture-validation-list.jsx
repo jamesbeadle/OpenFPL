@@ -4,7 +4,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
 
-const ValidateFxitureData = () => {
+const FixtureValidationList = () => {
   const { authClient, teams, players } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixtures, setFixtures] = useState([]);
@@ -44,7 +44,7 @@ const ValidateFxitureData = () => {
   return (
     <Card className="custom-card mt-1">
       <Card.Body>
-        <h2>Validating Fixture Data</h2>
+        <h2>Validatable Fixtures</h2>
         <h4>{currentGameweek ? `${currentGameweek.season} - ${currentGameweek.gameweek}` : 'Loading gameweek...'}</h4>
         <Table striped bordered hover>
           <thead>
@@ -57,19 +57,17 @@ const ValidateFxitureData = () => {
           </thead>
           <tbody>
             {fixtures.map((fixture, index) => (
-              <tr key={fixture.id}>
-                <td>{index + 1}</td>
-                <td>{`${fixture.team1} vs ${fixture.team2}`}</td>
-                <td>{fixture.status}</td>
-                <td>
-                  {fixture.status === 'Completed' ? (
-                    <Button variant="primary">Enter Draft Data</Button>
-                  ) : (
-                    <Button variant="secondary">Enter Data</Button>
-                  )}
-                </td>
-              </tr>
-            ))}
+                <tr key={fixture.id}>
+                  <td>{index + 1}</td>
+                  <td>{`${teams[fixture.homeTeamId]} vs ${teams[fixture.awayTeamId]}`}</td>
+                  <td>{fixture.status === 2 ? "Completed" : "Active"}</td>
+                  <td>
+                    <Button variant={fixture.status === 2 ? "primary" : "secondary"} href={`add-fixture-data?fixtureId=${fixture.id}`}>
+                      Add Player Event Data
+                    </Button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </Table>
       </Card.Body>
@@ -77,4 +75,4 @@ const ValidateFxitureData = () => {
   );
 };
 
-export default ValidateFxitureData;
+export default FixtureValidationList;
