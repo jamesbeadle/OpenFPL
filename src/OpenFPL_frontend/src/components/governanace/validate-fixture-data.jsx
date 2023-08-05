@@ -4,10 +4,10 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
 
-const ValidateGameData = () => {
+const ValidateFxitureData = () => {
   const { authClient, teams, players } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [games, setGames] = useState([]);
+  const [fixtures, setFixtures] = useState([]);
   const [currentGameweek, setCurrentGameweek] = useState(null);
 
   useEffect(() => {
@@ -19,9 +19,8 @@ const ValidateGameData = () => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         
-        // Assuming there's a method to fetch games that need validation.
-        const gamesToValidate = await open_fpl_backend.getGamesToValidate();
-        setGames(gamesToValidate);
+        const fixturesToValidate = await open_fpl_backend.getValidatableFixtures();
+        setFixtures(fixturesToValidate);
 
       } catch (error) {
         console.error(error);
@@ -37,7 +36,7 @@ const ValidateGameData = () => {
     return (
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
         <Spinner animation="border" />
-        <p className='text-center mt-1'>Loading Games</p>
+        <p className='text-center mt-1'>Loading Fixtures</p>
       </div>
     );
   }
@@ -45,7 +44,7 @@ const ValidateGameData = () => {
   return (
     <Card className="custom-card mt-1">
       <Card.Body>
-        <h2>Validating Game Data</h2>
+        <h2>Validating Fixture Data</h2>
         <h4>{currentGameweek ? `${currentGameweek.season} - ${currentGameweek.gameweek}` : 'Loading gameweek...'}</h4>
         <Table striped bordered hover>
           <thead>
@@ -57,13 +56,13 @@ const ValidateGameData = () => {
             </tr>
           </thead>
           <tbody>
-            {games.map((game, index) => (
-              <tr key={game.id}>
+            {fixtures.map((fixture, index) => (
+              <tr key={fixture.id}>
                 <td>{index + 1}</td>
-                <td>{`${game.team1} vs ${game.team2}`}</td>
-                <td>{game.status}</td>
+                <td>{`${fixture.team1} vs ${fixture.team2}`}</td>
+                <td>{fixture.status}</td>
                 <td>
-                  {game.status === 'Completed' ? (
+                  {fixture.status === 'Completed' ? (
                     <Button variant="primary">Enter Draft Data</Button>
                   ) : (
                     <Button variant="secondary">Enter Data</Button>
@@ -78,4 +77,4 @@ const ValidateGameData = () => {
   );
 };
 
-export default ValidateGameData;
+export default ValidateFxitureData;

@@ -364,6 +364,27 @@ module {
                 };
             } else { return currentSeason; } });
     };
+
+    public func getValidatableFixtures(activeSeasonId: Nat16, activeGameweek: Nat8) : [T.Fixture] {
+        let season = List.find<T.Season>(seasons, func(s: T.Season) { s.id == activeSeasonId });
+        switch(season) {
+            case (null) { };
+            case (?s) {
+                let gameweeks = List.find<T.Gameweek>(s.gameweeks, func(gw: T.Gameweek) { gw.number == activeGameweek });
+                switch(gameweeks){
+                    case (null) { };
+                    case (?gws) {
+                        let validatableFixtures = List.filter<T.Fixture>(gws.fixtures, func(fixture: T.Fixture){
+                            fixture.status == 1;
+                        });
+                        return List.toArray(validatableFixtures);
+                    };
+                };
+            };
+        };
+
+        return [];
+    };
     
 
 

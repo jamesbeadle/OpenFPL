@@ -72,6 +72,10 @@ module {
         return activeFixtures;
     };
 
+    public func getValidatableFixtures(): [T.Fixture] {
+        return seasonsInstance.getValidatableFixtures(activeSeasonId, activeGameweek);
+    };
+
     public func getNextFixtureId() : Nat32 {
         return seasonsInstance.getNextFixtureId();
     };

@@ -372,7 +372,6 @@ const handleConfirmBonusClick = (bonusType) => {
   
   const calculateTeamValue = () => {
     if(fantasyTeam && fantasyTeam.players) {
-      console.log(fantasyTeam.players)
       const totalValue = fantasyTeam.players.reduce((acc, player) => acc + Number(player.value), 0);
       return (totalValue / 4).toFixed(1);
     }

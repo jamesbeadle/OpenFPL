@@ -34,7 +34,10 @@ const MyNavbar = () => {
                 Pick Team
                 <TeamIcon className="custom-icon" ></TeamIcon>
               </Nav.Link> 
-              
+              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">
+                Governance
+                <GovernanceIcon className="custom-icon" ></GovernanceIcon>
+              </Nav.Link> 
               <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link">
                 Profile
                 <ProfileIcon className="custom-icon" ></ProfileIcon>
@@ -62,9 +65,6 @@ export default MyNavbar;
 
 Links to add in
 
-              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">
-                Governance
-                <GovernanceIcon className="custom-icon" ></GovernanceIcon>
-              </Nav.Link> 
+              
 
 */

@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Spinner, Row, Col, Card, Tabs, Tab } from 'react-bootstrap';
-import PlayerValuations from './player-valuations';
-import Proposals from './proposals';
-import ValidateGameData from './validate-game-data';
-import AdvertisingProposals from './advertising-proposals';
+import { Container, Spinner, Tabs, Tab } from 'react-bootstrap';
+import ValidateGameData from './validate-fixture-data';
 
 const Governance = () => {
   
   const [isLoading, setIsLoading] = useState(true);
-  const [key, setKey] = useState('valuations');
+  const [key, setKey] = useState('games');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,17 +30,8 @@ const Governance = () => {
         <h1>OpenFPL DAO Governance</h1>
         <br />
         <Tabs defaultActiveKey="proposals" id="profile-tabs" className="mt-4" activeKey={key} onSelect={(k) => setKey(k)}>
-          <Tab eventKey="valuations" title="Player Valuations">
-            <PlayerValuations isActive={key === 'valuations'} />
-          </Tab>
-          <Tab eventKey="proposals" title="Proposals">
-              <Proposals isActive={key === 'proposals'} />
-          </Tab>  
-          <Tab eventKey="games" title="Validating Game Data">
+         <Tab eventKey="games" title="Validating Game Data">
             <ValidateGameData isActive={key === 'games'} />
-          </Tab>
-          <Tab eventKey="advertising" title="Advertising Proposals">
-            <AdvertisingProposals isActive={key === 'advertising'} />
           </Tab>
         </Tabs>
       </Container>
@@ -51,3 +39,22 @@ const Governance = () => {
 };
 
 export default Governance;
+
+/* Tabs to add in later:
+import PlayerValuations from './player-valuations';
+import Proposals from './proposals';
+import AdvertisingProposals from './advertising-proposals';
+
+
+ <Tab eventKey="valuations" title="Player Valuations">
+            <PlayerValuations isActive={key === 'valuations'} />
+          </Tab>
+          <Tab eventKey="proposals" title="Proposals">
+              <Proposals isActive={key === 'proposals'} />
+          </Tab>  
+          
+          <Tab eventKey="advertising" title="Advertising Proposals">
+            <AdvertisingProposals isActive={key === 'advertising'} />
+          </Tab>
+
+*/

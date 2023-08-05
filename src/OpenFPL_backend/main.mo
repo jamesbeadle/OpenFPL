@@ -36,11 +36,11 @@ actor Self {
   
   let CANISTER_IDS = {
     //JB Local Dev
-    //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
-    //player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
+    token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
+    player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
     //Live canisters
-    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
-    token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
+    //player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    //token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -455,6 +455,11 @@ actor Self {
           return await fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, seasonManager.getActiveGameweek(), existingPlayers); 
         };
     };
+  };
+
+  public shared ({caller}) func getValidatableFixtures() : async [T.Fixture]{
+    assert not Principal.isAnonymous(caller);
+    return seasonManager.getValidatableFixtures();
   };
 
   private func resetTransfers(): async () {
