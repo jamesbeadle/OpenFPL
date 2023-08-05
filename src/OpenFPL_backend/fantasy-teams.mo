@@ -208,7 +208,6 @@ module {
                     let spent = Array.foldLeft<DTOs.PlayerDTO, Nat>(playersAdded, 0, func(sumSoFar, x) = sumSoFar + x.value);
                     var sold: Nat = 0;
                     for (i in Iter.range(0, Array.size(playersRemoved)-1)) {
-                        //get the new players value
                         let newPlayer = await getPlayer(playersRemoved[i]);
                         sold := sold + newPlayer.value;
                     };
@@ -345,7 +344,6 @@ module {
                         newTransfersAvailable := existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
                     };
 
-                    Debug.print(debug_show Array.size(playersAdded));
                     let updatedTeam: T.FantasyTeam = {
                         principalId = principalId;
                         bankBalance = newBankBalance;
