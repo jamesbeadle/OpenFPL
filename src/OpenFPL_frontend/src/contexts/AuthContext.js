@@ -12,61 +12,47 @@ export const AuthProvider = ({ children }) => {
   const [players, setPlayers] = useState([]);
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const deleteIndexedDB = (dbName) => {
-    return new Promise((resolve, reject) => {
-      const request = window.indexedDB.deleteDatabase(dbName);
-    
-      request.onsuccess = () => {
-        console.log('IndexedDB successfully deleted');
-        window.location.reload();
-        resolve();
-      };
-  
-      request.onerror = (event) => {
-        console.error('Error deleting IndexedDB:', event);
-        reject(event);
-      };
-  
-      request.onblocked = () => {
-        console.warn('IndexedDB delete request blocked. Please close all other tabs using the database.');
-      };
-    });
-  };
  
   useEffect(() => {
     const initAuthClient = async () => {
-      try{
-        const authClient = await AuthClient.create({
-          idleOptions: {
-            idleTimeout: 1000 * 60 * 60
-          }
-        });
-        await checkLoginStatus(authClient);
-        setAuthClient(authClient);
-      }
-      catch (error){
-        console.error('Error during AuthClient initialization:', error);
-        await deleteIndexedDB('auth-client-db');
-      }
-      finally{
-        setLoading(false);
-      }
+      const authClient = await AuthClient.create({
+        idleOptions: {
+          idleTimeout: 1000 * 60 * 60
+        }
+      });
+      authClient.idleManager?.registerCallback?.(refreshLogin);
+      setAuthClient(authClient);
+      setLoading(false);
     };
     initAuthClient();
   }, []);
 
   useEffect(() => {
     if (!authClient) return;
-
-    const interval = setInterval(() => {
-      checkLoginStatus(authClient);
-    }, 60000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    checkLoginStatus(authClient);
   }, [authClient]);
+
+  const checkLoginStatus = async (client) => {
+    if(client == null){
+      return false;
+    }
+    const isLoggedIn = await client.isAuthenticated();
+    if (isLoggedIn) {
+      setIsAuthenticated(true);
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const refreshLogin = () => {
+    authClient.login({
+      onSuccess: async () => {
+        const newIdentity = await authClient.getIdentity();
+        setIdentity(newIdentity);
+      },
+    });
+  };
 
   const login = async () => {
     await authClient.login({
@@ -81,36 +67,6 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     await authClient.logout();
     setIsAuthenticated(false);
-  };
-
-  const checkLoginStatus = async (client) => {
-    if(client == null){
-      return false;
-    }
-    const isLoggedIn = await client.isAuthenticated();
-    if (isLoggedIn && isTokenValid(client)) {
-      setIsAuthenticated(true);
-      return true;
-    } else {
-      return false;
-    }
-  };
-  
-
-  const isTokenValid = (client) => {
-    try {
-      const identity = client.getIdentity();
-      if (!identity || !identity._delegation || !identity._delegation.delegations) return false;
-
-      const delegation = identity._delegation.delegations[0];
-      if (!delegation) return false;
-
-      const expiration = BigInt(delegation.delegation.expiration);
-      const currentTime = BigInt(Date.now() * 1000000);
-      return currentTime < expiration;
-    } catch (error) {
-      return false;
-    }
   };
 
   const fetchAllPlayers = async () => {
