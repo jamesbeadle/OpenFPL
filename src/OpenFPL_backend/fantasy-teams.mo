@@ -61,11 +61,12 @@ module {
                     };
 
                     let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+                    
                     if(totalTeamValue > 1200){
                         return #err(#InvalidTeamError);
                     };
 
-                    let teamValueMillions = totalTeamValue * 4_000_000;
+                    let teamValueMillions = totalTeamValue * 250_000;
                     let bank: Nat = 300_000_000 - teamValueMillions;
 
                     var bankBalance = bank;

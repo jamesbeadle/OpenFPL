@@ -58,6 +58,7 @@ module {
         private var Proposal_Submission_e8_Fee: Nat64 = 10_000;
 
         private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
+        private var finaliseFixture : ?((seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) -> async ()) = null;
     
         //system parameter function setters
         public func getEventDataVotePeriod() : Int{
@@ -202,7 +203,7 @@ module {
             return List.toArray(proposals);
         };
 
-        public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : () {
+        public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async () {
             
             let existingSubmissionsForFixture = fixtureDataSubmissions.get(fixtureId);
             switch (existingSubmissionsForFixture) {
@@ -240,6 +241,16 @@ module {
             fixtureDataSubmissions.put(fixtureId, updatedSubmissions);
             let newConsensus = recalculateConsensus(fixtureId);
             consensusFixtureData.put(fixtureId, newConsensus);
+            let consensusAchieved = newConsensus.totalVotes.amount_e8s >= EventData_VoteThreshold;
+ 
+            if(consensusAchieved){
+                switch(finaliseFixture){
+                    case (null) {};
+                    case (?foundFunction){
+                        await foundFunction(0, 0, fixtureId);
+                    };
+                }
+            };
         };
 
         private func recalculateConsensus(fixtureId: T.FixtureId) : T.ConsensusData {
@@ -677,6 +688,10 @@ module {
     
         public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {
             setAndBackupTimer := ?_setAndBackupTimer;
+        };
+    
+        public func setFinaliseFixtureFunction(_finaliseFixture: (seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) -> async ()) {
+            finaliseFixture := ?_finaliseFixture;
         };
 
     }

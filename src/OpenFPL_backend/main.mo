@@ -36,11 +36,11 @@ actor Self {
   
   let CANISTER_IDS = {
     //JB Local Dev
-    token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
-    player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
+    //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
+    //player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
     //Live canisters
-    //player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
-    //token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
+    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -376,6 +376,10 @@ actor Self {
 
   private stable var stable_timers: [T.TimerInfo] = [];
 
+  private func finaliseFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId): async (){
+    await seasonManager.fixtureConsensusReached(seasonId, gameweekNumber, fixtureId);
+  };
+
   let governanceInstance = Governance.Governance(transferPlayer, loanPlayer, recallPlayer, createPlayer,
       updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam);
 
@@ -477,10 +481,7 @@ actor Self {
       return;
     };
 
-    governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, playerEvents);
-
-    
-    
+    await governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, playerEvents);
   };
 
   private func resetTransfers(): async () {
@@ -548,6 +549,7 @@ actor Self {
     governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
     governanceInstance.setTimerBackupFunction(setAndBackupTimer);
     seasonManager.setTimerBackupFunction(setAndBackupTimer);
+    governanceInstance.setFinaliseFixtureFunction(finaliseFixture);
   //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
 
   //IMPLEMENT: SUBMIT PROPOSAL SUBMISSION FEE ON SUBMISSION OF PROPOSAL ON FRONT END

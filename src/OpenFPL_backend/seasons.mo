@@ -277,7 +277,7 @@ module {
                                     awayTeamId = fixture.awayTeamId;
                                     homeGoals = fixture.homeGoals;
                                     awayGoals = fixture.awayGoals;
-                                    status = fixture.status; 
+                                    status = 3; 
                                     events = playerEventData;
                                     highestScoringPlayerId = fixture.highestScoringPlayerId;
                                 };

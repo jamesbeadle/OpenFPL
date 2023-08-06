@@ -486,14 +486,13 @@ const handleConfirmBonusClick = (bonusType) => {
       let position = positionsToFill[i];
       const positionMapping = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
 
-
      for (let j = 0; j < sortedPlayers.length; j++) {
         if (positionMapping[sortedPlayers[j].position] === position && 
-            Number(sortedPlayers[j].value) <= remainingBudget &&
+            (Number(sortedPlayers[j].value) * 4) <= remainingBudget &&
             !newTeam.some((teamPlayer) => teamPlayer.id === sortedPlayers[j].id)
         ) {
           newTeam.push(sortedPlayers[j]);
-          remainingBudget -= Number(sortedPlayers[j].value);
+          remainingBudget -= Number(sortedPlayers[j].value) / 4;
           sortedPlayers.splice(j, 1);
           positionsToFill.splice(i, 1);
           i--;

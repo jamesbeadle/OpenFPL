@@ -168,6 +168,29 @@ module {
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
 
+        await checkGameweekFinished();
+    };
+
+    public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async (){
+        
+        let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+
+        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
+            let fixture = activeFixtures[i];
+            if(fixture.id == fixtureId and fixture.status == 2){
+                let updatedFixture = await seasonsInstance.updateStatus(seasonId, gameweekNumber, fixtureId, 3);
+                activeFixturesBuffer.add(updatedFixture);
+            } else {
+                activeFixturesBuffer.add(fixture);
+            };
+        };
+        
+        activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
+
+        await checkGameweekFinished();
+    };
+
+    private func checkGameweekFinished() : async (){
         let remainingFixtures = Array.find(activeFixtures, func (fixture: T.Fixture): Bool {
             return fixture.status < 3;
         });
@@ -183,10 +206,10 @@ module {
         let fixturesWithHighestPlayerId = await calculatePlayerPoints(activeGameweek, activeFixtures);
         await seasonsInstance.updateHighestPlayerIds(activeSeasonId, activeGameweek, fixturesWithHighestPlayerId);
         await calculateFantasyTeamScores(activeSeasonId, activeGameweek, activeFixtures);
-        await distributeRewards();
-        await settleUserBets();
         await revaluePlayers(activeSeasonId, activeGameweek);
         await resetTransfers();
+        //await distributeRewards(); //IMPLEMENT POST SNS
+        //await settleUserBets(); //IMPLEMENT POST SNS
         
         transfersAllowed := true;
     };
@@ -201,7 +224,7 @@ module {
 
         activeGameweek += 1;
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-        await mintWeeklyRewardsPool();
+        //await mintWeeklyRewardsPool(); //IMPLEMENT POST SNS
 
         let gameweekBeginDuration: Timer.Duration = #nanoseconds (Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
         switch(setAndBackupTimer) {
@@ -317,7 +340,7 @@ module {
     public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {
         setAndBackupTimer := ?_setAndBackupTimer;
     };
-
+    
     public func getFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async T.Fixture {
         return await seasonsInstance.getFixture(seasonId, gameweekNumber, fixtureId);
     };
