@@ -234,15 +234,12 @@ const AddFixtureData = () => {
   
     return initialStats;
   };
-  
 
   return (
     
     <Container className="flex-grow-1 my-5">
       <h1>Manage Fixture Data</h1>
       <br />
-<p>Home goals: {fixture.homeGoals}</p>
-<p>Away goals: {fixture.awayGoals}</p>
       
       <Card className="custom-card mt-1">
         <Card.Header>
@@ -291,10 +288,43 @@ const AddFixtureData = () => {
           </Tabs>
 
           <div className="add-fixture-data">
-
-            <Button className="mt-3" variant='success' onClick={handleSave}>
-                Save Player Events
-            </Button>
+              <Button className="mt-3 mb-3" variant='success' onClick={handleSave} 
+                disabled={
+                  !fixture.appearances || 
+                  fixture.appearances === 0 || 
+                  fixture.appearances !== selectedPlayers.homeTeam.length + selectedPlayers.awayTeam.length
+              }>
+                  Save Player Events
+              </Button>
+              <Row>
+                <Col xs={12} md={3}>
+                  Appearances: {fixture.appearances ? fixture.appearances : 0}
+                </Col>
+                <Col xs={12} md={3}>
+                  Goals: {fixture.appearances ? fixture.goals : 0}
+                </Col>
+                <Col xs={12} md={3}>
+                  Assists: {fixture.assists ? fixture.assists : 0}
+                </Col>
+                <Col xs={12} md={3}>
+                  Red Cards: {fixture.redCards ? fixture.redCards : 0}
+                </Col>
+                <Col xs={12} md={3}>
+                  Yellow Cards: {fixture.yellowCards ? fixture.yellowCards : 0}
+                </Col>
+                <Col xs={12} md={3}>
+                  Penalties Missed: {fixture.penaltyMissed ? fixture.penaltyMissed : 0}
+                </Col>
+                <Col xs={12} md={3}>
+                  Penalties Saved: {fixture.penaltySaves ? fixture.penaltySaves : 0}
+                </Col>
+                <Col xs={12} md={3}>
+                  Keeper Saves: {fixture.keeperSaves ? fixture.keeperSaves : 0}
+                </Col>
+                <Col xs={12} md={3}>
+                  Own Goals: {fixture.ownGoals ? fixture.ownGoals : 0}
+                </Col>
+              </Row>
             <PlayerSelectionModal 
               show={showPlayerSelectionModal} 
               onHide={() => setShowPlayerSelectionModal(false)}
