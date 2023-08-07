@@ -25,6 +25,10 @@ import Time "mo:base/Time";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Int "mo:base/Int";
+import TrieMap "mo:base/TrieMap";
+import Nat "mo:base/Nat";
+import Hash "mo:base/Hash";
+import Utilities "utilities";
 
 actor Self {
 
@@ -500,27 +504,93 @@ actor Self {
     //update the fixture score
 
   };
+  
+
 
   private func validatePlayerEvents(playerEvents: [T.PlayerEventData]) : Bool {
 
-    //no time min below 0
+    let eventsBelow0 =  Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
+        return event.eventStartMinute < 0;
+    });
 
-    //no time max above 90
+    if(Array.size(eventsBelow0) > 0){
+      return false;
+    };
 
-    //max 1 red card per player
+    let eventsAbove90 =  Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
+      return event.eventStartMinute > 90;
+    });
 
-    //max 2 yellow cards per player
+    if(Array.size(eventsAbove90) > 0){
+      return false;
+    };
 
-    //if 2 yellow cards make sure red card too
+    let playerEventsMap: TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>> = TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>>(Utilities.eqNat16, Utilities.hashNat16);
 
-    //no assist with goal on the same minute
+    
+    for (playerEvent in Iter.fromArray(playerEvents)) {
+        switch (playerEventsMap.get(playerEvent.playerId)) {
+            case (null) { };
+            case (?existingEvents) {
+                playerEventsMap.put(playerEvent.playerId, List.push<T.PlayerEventData>(playerEvent, existingEvents));
+            };
+        }
+    };
+    
+    for ((playerId, events) in playerEventsMap.entries()) { 
+      let redCards = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+          return event.eventType == 9; // Red Card
+      });
 
-    //no penalty save without penalty miss
+      if (List.size<T.PlayerEventData>(redCards) > 1) {
+          return false;
+      };
 
+      let yellowCards = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+          return event.eventType == 8; // Yellow Card
+      });
 
+      if (List.size<T.PlayerEventData>(yellowCards) > 2) {
+          return false;
+      };
 
+      if (List.size<T.PlayerEventData>(yellowCards) == 2 and List.size<T.PlayerEventData>(redCards) != 1) {
+          return false;
+      };
+
+      let assists = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+          return event.eventType == 2; // Goal Assisted
+      });
+
+      for (assist in Iter.fromList(assists)) {
+          let goalsAtSameMinute = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+              return event.eventType == 1 and event.eventStartMinute == assist.eventStartMinute; // Goal Scored at the same minute
+          });
+
+          if (List.size<T.PlayerEventData>(goalsAtSameMinute) == 0) {
+              return false;
+          }
+      };
+
+        let penaltySaves = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+            return event.eventType == 6; // Penalty Saved
+        });
+
+        for (penaltySave in Iter.fromList(penaltySaves)) {
+            let penaltyMissesAtSameMinute = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+                return event.eventType == 7 and event.eventStartMinute == penaltySave.eventStartMinute; // Penalty Missed at the same minute
+            });
+
+            if (List.size<T.PlayerEventData>(penaltyMissesAtSameMinute) == 0) {
+                return false;
+            }
+        };
+    };
+    
     return true;
   };
+
+
 
   private func resetTransfers(): async () {
     await fantasyTeamsInstance.resetTransfers();
