@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import { StarIcon, RecordIcon, StarOutlineIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, StopCircleIcon, PenaltyMissIcon} from '../icons';
 import PlayerEventsModal from './player-events-modal';
 import PlayerSelectionModal from './select-players-modal';
+import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
 
 const AddFixtureData = () => {
   const location = useLocation();
@@ -18,6 +19,8 @@ const AddFixtureData = () => {
   const [fixture, setFixture] = useState(null);
   const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);
   const [showPlayerEventModal, setShowPlayerEventModal] = useState(false);
+  const [showConfirmDataModal, setShowConfirmDataModal] = useState(false);
+  
   const [editingPlayerEvent, setEditingPlayerEvent] = useState(null);
   const [key, setKey] = useState('homeTeam');
   const [teamPlayers, setTeamPlayers] = useState([]);
@@ -136,7 +139,7 @@ const AddFixtureData = () => {
     );
   };
 
-  const handleSave = async () => {
+  const handleSaveFixtureData = async () => {
     try {
       const playerEventsArray = [];
       for (const [playerId, playerEvents] of Object.entries(playerEventMap)) {
@@ -288,7 +291,7 @@ const AddFixtureData = () => {
           </Tabs>
 
           <div className="add-fixture-data">
-              <Button className="mt-3 mb-3" variant='success' onClick={handleSave} 
+              <Button className="mt-3 mb-3" variant='success' onClick={() => setShowConfirmDataModal(true)} 
                 disabled={
                   !fixture.appearances || 
                   fixture.appearances === 0 || 
@@ -339,6 +342,12 @@ const AddFixtureData = () => {
               onPlayerEventAdded={handlePlayerEventAdded}
               playerEventMap={playerEventMap}
               player={editingPlayerEvent}
+            />
+            
+            <ConfirmFixtureDataModal 
+              show={showConfirmDataModal} 
+              onHide={() => setShowConfirmDataModal(false)}
+              onConfirm={handleSaveFixtureData}
             />
           </div>
         </Card.Body>
