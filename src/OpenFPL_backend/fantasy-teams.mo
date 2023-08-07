@@ -513,7 +513,7 @@ module {
             }
         };
 
-        public func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]): async () {
+        public func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8): async () {
             
             let allPlayersList = await getAllPlayersMap(seasonId, gameweek);
             var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);

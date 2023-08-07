@@ -191,30 +191,26 @@ actor Self {
         */
     };
 
-    public func calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, gameweekFixtures: [T.Fixture]) : async [T.Fixture] {
+    public func calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture {
 
         let playerEventsMap: HashMap.HashMap<Nat16, [T.PlayerEventData]> = HashMap.HashMap<Nat16, [T.PlayerEventData]>(200, Utilities.eqNat16, Utilities.hashNat16);
-        for (i in Iter.range(0, Array.size(gameweekFixtures)-1)) {  
-            
-            let fixture = gameweekFixtures[i];
-            let events = List.toArray<T.PlayerEventData>(fixture.events);
+        let events = List.toArray<T.PlayerEventData>(fixture.events);
 
-            for (j in Iter.range(0, Array.size(events)-1)) {
-                let event = events[j];
-                let playerId: Nat16 = event.playerId;
-                switch (playerEventsMap.get(playerId)) {
-                    case (null) {
-                        playerEventsMap.put(playerId, [event]);
-                    };
-                    case (?existingEvents) {
-                        let existingEventsBuffer = Buffer.fromArray<T.PlayerEventData>(existingEvents);
-                        existingEventsBuffer.add(event);
-                        playerEventsMap.put(playerId, Buffer.toArray(existingEventsBuffer));
-                    };
+        for (j in Iter.range(0, Array.size(events)-1)) {
+            let event = events[j];
+            let playerId: Nat16 = event.playerId;
+            switch (playerEventsMap.get(playerId)) {
+                case (null) {
+                    playerEventsMap.put(playerId, [event]);
+                };
+                case (?existingEvents) {
+                    let existingEventsBuffer = Buffer.fromArray<T.PlayerEventData>(existingEvents);
+                    existingEventsBuffer.add(event);
+                    playerEventsMap.put(playerId, Buffer.toArray(existingEventsBuffer));
                 };
             };
         };
-
+        
         let playerScoresMap: HashMap.HashMap<Nat16, Int16> = HashMap.HashMap<Nat16, Int16>(200, Utilities.eqNat16, Utilities.hashNat16);
         for ((playerId, events) in playerEventsMap.entries()) {
             var currentPlayer = await getPlayer(playerId);
@@ -293,49 +289,42 @@ actor Self {
             };
         };
 
+        var highestScore: Int16 = 0;
+        var highestScoringPlayerId: Nat16 = 0;
+        var isUniqueHighScore: Bool = true; 
 
-        var updatedFixtures: [T.Fixture] = [];
-        let updatedFixturesBuffer = Buffer.fromArray<T.Fixture>(updatedFixtures);
+        // Create a buffer to hold unique playerIds
+        let uniquePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
 
-        for (i in Iter.range(0, Array.size(gameweekFixtures)-1)) {  
-            let fixture = gameweekFixtures[i];
-            let fixtureEvents = List.toArray<T.PlayerEventData>(fixture.events);
-            var highestScore: Int16 = 0;
-            var highestScoringPlayerId: Nat16 = 0;
-            var isUniqueHighScore: Bool = true; 
-
-            // Create a buffer to hold unique playerIds
-            let uniquePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
-
-            for (event in List.toIter(fixture.events)) {
-            if (not Buffer.contains<Nat16>(uniquePlayerIdsBuffer, event.playerId, func (a: Nat16, b: Nat16): Bool { a == b })) {
-                    uniquePlayerIdsBuffer.add(event.playerId);
-                };
+        for (event in List.toIter(fixture.events)) {
+        if (not Buffer.contains<Nat16>(uniquePlayerIdsBuffer, event.playerId, func (a: Nat16, b: Nat16): Bool { a == b })) {
+                uniquePlayerIdsBuffer.add(event.playerId);
             };
+        };
 
-            let uniquePlayerIds = Buffer.toArray<Nat16>(uniquePlayerIdsBuffer);
+        let uniquePlayerIds = Buffer.toArray<Nat16>(uniquePlayerIdsBuffer);
 
-            for (j in Iter.range(0, Array.size(uniquePlayerIds)-1)) {  
-                let playerId = uniquePlayerIds[j];
-                switch (playerScoresMap.get(playerId)) {
-                    case (?playerScore) {
-                        if (playerScore > highestScore) {
-                            highestScore := playerScore;
-                            highestScoringPlayerId := playerId;
-                            isUniqueHighScore := true;
-                        } else if (playerScore == highestScore) {
-                            isUniqueHighScore := false;
-                        };
+        for (j in Iter.range(0, Array.size(uniquePlayerIds)-1)) {  
+            let playerId = uniquePlayerIds[j];
+            switch (playerScoresMap.get(playerId)) {
+                case (?playerScore) {
+                    if (playerScore > highestScore) {
+                        highestScore := playerScore;
+                        highestScoringPlayerId := playerId;
+                        isUniqueHighScore := true;
+                    } else if (playerScore == highestScore) {
+                        isUniqueHighScore := false;
                     };
-                    case null {};
                 };
+                case null {};
             };
+        };
 
-            var newHighScoringPlayerId: Nat16 = 0;
-            if(isUniqueHighScore){
-            newHighScoringPlayerId := highestScoringPlayerId;
-            };
-            let updatedFixture = {
+        var newHighScoringPlayerId: Nat16 = 0;
+        if(isUniqueHighScore){
+        newHighScoringPlayerId := highestScoringPlayerId;
+        };
+        let updatedFixture = {
             id = fixture.id;
             seasonId = fixture.seasonId;
             gameweek = fixture.gameweek;
@@ -347,13 +336,9 @@ actor Self {
             status = fixture.status;
             events = fixture.events;
             highestScoringPlayerId = newHighScoringPlayerId;
-            };
-
-            updatedFixturesBuffer.add(updatedFixture);
         };
 
-        updatedFixtures := Buffer.toArray<T.Fixture>(updatedFixturesBuffer);
-        return updatedFixtures;
+        return updatedFixture;
     };
 
     func calculateAggregatePlayerEvents(events: [T.PlayerEventData], playerPosition: Nat8): Int16 {

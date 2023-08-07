@@ -326,21 +326,18 @@ module {
         };
     };
 
-    public func updateHighestPlayerIds(seasonId: Nat16, gameweek: Nat8, updatedFixtures: [T.Fixture]) : async () {
+    public func updateHighestPlayerId(seasonId: Nat16, gameweek: Nat8, updatedFixture: T.Fixture) : async () {
         seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
             if (season.id == seasonId) {
                 let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
                     if (gw.number == gameweek) {
-                        let newFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
-                            for (updatedFixture in List.toIter(List.fromArray(updatedFixtures))) {
-                                if (fixture.id == updatedFixture.id) {
-                                    return updatedFixture;
-                                }
-                            };
-                            return fixture;
-                        });
-
-                        return {number = gw.number; canisterId = gw.canisterId; fixtures = newFixtures};
+                        let updatedFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
+                        if (fixture.id == updatedFixture.id) {
+                            return updatedFixture;
+                        };
+                        return fixture;
+                    });
+                        return {number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
                     } else {
                         return gw;
                     };

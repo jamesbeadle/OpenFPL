@@ -56,7 +56,7 @@ actor Self {
     getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)];
     revaluePlayers: (List.List<T.RevaluedPlayer>) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
-    calculatePlayerPoints: (gameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async [T.Fixture];
+    calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture;
     transferPlayer: (proposalPayload: T.TransferPlayerPayload) -> async ();
     loanPlayer: (proposalPayload: T.LoanPlayerPayload) -> async ();
     recallPlayer: (proposalPayload: T.RecallPlayerPayload) -> async ();
@@ -473,6 +473,11 @@ actor Self {
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, playerEvents: [T.PlayerEventData]) : async (){
     assert not Principal.isAnonymous(caller);
 
+    let validPlayerEvents = validatePlayerEvents(playerEvents);
+    if(not validPlayerEvents){
+      return;
+    };
+
     if(governanceInstance.getVotingPower(Principal.toText(caller)) == 0){
       return;
     };
@@ -485,15 +490,44 @@ actor Self {
       return;
     };
 
+    //infer additional player events
+      //goals conceded
+      //clean sheet
+
+
     await governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, playerEvents);
+    
+    //update the fixture score
+
+  };
+
+  private func validatePlayerEvents(playerEvents: [T.PlayerEventData]) : Bool {
+
+    //no time min below 0
+
+    //no time max above 90
+
+    //max 1 red card per player
+
+    //max 2 yellow cards per player
+
+    //if 2 yellow cards make sure red card too
+
+    //no assist with goal on the same minute
+
+    //no penalty save without penalty miss
+
+
+
+    return true;
   };
 
   private func resetTransfers(): async () {
     await fantasyTeamsInstance.resetTransfers();
   };
 
-  private func calculatePlayerPoints(activeGameweek: Nat8, gameweekFixtures: [T.Fixture]): async [T.Fixture] {
-    return await playerCanister.calculatePlayerPoints(activeGameweek, gameweekFixtures);
+  private func calculatePlayerScores(activeSeason: T.SeasonId, activeGameweek: T.GameweekNumber, fixture: T.Fixture): async T.Fixture {
+    return await playerCanister.calculatePlayerScores(activeSeason, activeGameweek, fixture);
   };  
 
   private func getConsensusPlayerEventData(gameweekId: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData>{
@@ -517,8 +551,8 @@ actor Self {
     await fantasyTeamsInstance.snapshotGameweek(seaasonId);
   };
 
-  private func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8, fixtures: [T.Fixture]) : async (){
-    return await fantasyTeamsInstance.calculateFantasyTeamScores(seasonId, gameweek, fixtures);
+  private func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8) : async (){
+    return await fantasyTeamsInstance.calculateFantasyTeamScores(seasonId, gameweek);
   };
 
   private func resetFantasyTeams(): async () {
@@ -541,7 +575,7 @@ actor Self {
   //intialise season manager
   let seasonManager = SeasonManager.SeasonManager(
     resetTransfers, 
-    calculatePlayerPoints, 
+    calculatePlayerScores, 
     distributeRewards, 
     settleUserBets, 
     revaluePlayers, 

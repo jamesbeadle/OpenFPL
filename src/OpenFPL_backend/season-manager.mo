@@ -18,14 +18,14 @@ module {
 
   public class SeasonManager(
     resetTransfers: () -> async (),
-    calculatePlayerPoints: (activeGameweek: Nat8, gameweekFixtures: [T.Fixture]) -> async [T.Fixture],
+    calculatePlayerScores: (activeSeason: T.SeasonId, activeGameweek: T.GameweekNumber, fixture: T.Fixture) -> async T.Fixture,
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
     revaluePlayers: (Nat16, Nat8) -> async (),
     snapshotGameweek: (seaasonId: Nat16) -> async (),
     mintWeeklyRewardsPool: () -> async (),
     mintAnnualRewardsPool: () -> async (),
-    calculateFantasyTeamScores: (Nat16, Nat8, [T.Fixture]) -> async (),
+    calculateFantasyTeamScores: (Nat16, Nat8) -> async (),
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async (),
@@ -178,10 +178,10 @@ module {
             } else {
                 activeFixturesBuffer.add(fixture);
             };
+            await finaliseFixture(fixture);
         };
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
-
         await checkGameweekFinished();
     };
 
@@ -197,11 +197,17 @@ module {
             } else {
                 activeFixturesBuffer.add(fixture);
             };
+            await finaliseFixture(fixture);
         };
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
-
         await checkGameweekFinished();
+    };
+
+    private func finaliseFixture(fixture: T.Fixture) : async (){
+        let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
+        await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
+        await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
     };
 
     private func checkGameweekFinished() : async (){
@@ -217,11 +223,8 @@ module {
 
     private func gameweekVerified() : async (){
           
-        let fixturesWithHighestPlayerId = await calculatePlayerPoints(activeGameweek, activeFixtures);
-        await seasonsInstance.updateHighestPlayerIds(activeSeasonId, activeGameweek, fixturesWithHighestPlayerId);
-        await calculateFantasyTeamScores(activeSeasonId, activeGameweek, activeFixtures);
-        await revaluePlayers(activeSeasonId, activeGameweek);
         await resetTransfers();
+        //await revaluePlayers(activeSeasonId, activeGameweek); - //IMPLEMENT POST SNS
         //await distributeRewards(); //IMPLEMENT POST SNS
         //await settleUserBets(); //IMPLEMENT POST SNS
         
@@ -231,7 +234,7 @@ module {
     public func setNextGameweek() : async (){
         if(activeGameweek == 38) {
             await seasonsInstance.createNewSeason(activeSeasonId);
-            await mintAnnualRewardsPool();
+            //await mintAnnualRewardsPool(); //IMPLEMENT POST SNS
             await resetFantasyTeams();
             return;
         };
