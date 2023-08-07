@@ -27,25 +27,38 @@ const AddFixtureData = () => {
   });
   const [playerEventMap, setPlayerEventMap] = useState({});
 
+ 
   const handlePlayerSelection = (team, playerIds) => {
-    const prevPlayerIds = selectedPlayers[team];
-    const removedPlayerIds = prevPlayerIds.filter(id => !playerIds.includes(id));
-
-    setPlayerEventMap(prevState => {
-      let newState = { ...prevState };
-      removedPlayerIds.forEach(id => {
-        delete newState[id];
+    // Remove events for any deselected players
+    const currentPlayerIds = selectedPlayers[team];
+    const removedPlayerIds = currentPlayerIds.filter(id => !playerIds.includes(id));
+    let remainingPlayerEventMap = playerEventMap; // Initialize remainingPlayerEventMap to be the same as the current playerEventMap
+    if (removedPlayerIds.length > 0) {
+      removedPlayerIds.forEach(removedPlayerId => {
+        const {[removedPlayerId]: value, ...newRemainingPlayerEventMap} = remainingPlayerEventMap;
+        remainingPlayerEventMap = newRemainingPlayerEventMap; // Update remainingPlayerEventMap to remove the deselected player
       });
-      return newState;
-    });
-
+    }
+  
+    setPlayerEventMap(remainingPlayerEventMap);
+  
+    // Update selectedPlayers state
     setSelectedPlayers(prevState => ({
       ...prevState,
       [team]: playerIds,
     }));
-
+  
+    // Calculate and set the new fixture stats
+    const newFixtureStats = calculateFixtureStats(remainingPlayerEventMap, players, fixture); // Calculate the new fixture stats with the updated playerEventMap
+    setFixture(prevFixture => ({
+      ...prevFixture,
+      ...newFixtureStats
+    }));
+  
     setShowPlayerSelectionModal(false);
   };
+  
+
   
   useEffect(() => {
     const fetchData = async () => {
@@ -96,39 +109,23 @@ const AddFixtureData = () => {
   
 
   const handlePlayerEventAdded = (playerId, newEvents) => {
-    let homeGoals = fixture.homeGoals;
-    let awayGoals = fixture.awayGoals;
-
-    newEvents.forEach(event => {
-      const player = players.find(player => player.id === event.playerId);
-      
-      if (event.eventType === 1) {
-        if (player.teamId === fixture.homeTeamId) {
-          homeGoals += 1;
-        } else {
-          awayGoals += 1;
-        }
-      } else if (event.eventType === 10) { 
-        if (player.teamId === fixture.homeTeamId) {
-          awayGoals += 1;
-        } else {
-          homeGoals += 1;
-        }
-      }
-    });
-
-    setFixture({
-      ...fixture,
-      homeGoals: homeGoals,
-      awayGoals: awayGoals
-    });
-
-    // Set the player event in the map
-    setPlayerEventMap(prevState => ({
-      ...prevState,
+    // Calculate the new playerEventMap
+    const newPlayerEventMap = {
+      ...playerEventMap,
       [playerId]: newEvents
+    };
+
+    // Add events to playerEventMap
+    setPlayerEventMap(newPlayerEventMap);
+  
+    // Calculate and set the new fixture stats
+    const newFixtureStats = calculateFixtureStats(newPlayerEventMap, players, fixture);
+    setFixture(prevFixture => ({
+      ...prevFixture,
+      ...newFixtureStats
     }));
   };
+
 
   if (isLoading) {
     return (
@@ -174,6 +171,69 @@ const AddFixtureData = () => {
     setShowPlayerSelectionModal(true);
   };
   
+  const calculateFixtureStats = (playerEventMap, players, fixture) => {
+    const initialStats = {
+      homeGoals: 0,
+      awayGoals: 0,
+      goals: 0,
+      assists: 0,
+      redCards: 0,
+      yellowCards: 0,
+      appearances: 0,
+      penaltyMissed: 0,
+      penaltySaves: 0,
+      keeperSaves: 0,
+      ownGoals: 0
+    };
+  
+    Object.values(playerEventMap).flat().forEach((event) => {
+      const playerTeam = players.find(player => player.id === event.playerId).teamId;
+      const isHomeTeam = playerTeam === fixture.homeTeamId;
+  
+      switch(event.eventType) {
+        case 0: // Appearance
+          initialStats.appearances++
+          break;
+        case 1: // Goal Scored
+          isHomeTeam ? initialStats.homeGoals++ : initialStats.awayGoals++;
+          initialStats.goals++
+          break;
+        case 2: // Goal Assisted
+          initialStats.assists++
+          break;
+        case 4: // Keeper Save
+          initialStats.assists++
+          break;
+        case 2: // Penalty Save
+          initialStats.penaltySaves++
+          break;
+        case 7: // Penalty Miss
+          initialStats.penaltyMissed++
+          break;
+        case 8: // Yellow Card
+          initialStats.yellowCards++
+          break;
+        case 9: // Red Card
+          initialStats.redCards++
+          break;
+        case 10: // Own Goal
+          isHomeTeam ? initialStats.awayGoals++ : initialStats.homeGoals++;
+          initialStats.ownGoals++;
+          initialStats.goals++;
+          break;
+        case eventTypeX: // Assist
+          isHomeTeam ? initialStats.homeAssists++ : initialStats.awayAssists++;
+          initialStats.ownGoals++;
+          initialStats.goals++;
+          break;
+        // Add cases for other event types here
+        default:
+          break;
+      }
+    });
+  
+    return initialStats;
+  };
   
 
   return (
@@ -181,6 +241,8 @@ const AddFixtureData = () => {
     <Container className="flex-grow-1 my-5">
       <h1>Manage Fixture Data</h1>
       <br />
+<p>Home goals: {fixture.homeGoals}</p>
+<p>Away goals: {fixture.awayGoals}</p>
       
       <Card className="custom-card mt-1">
         <Card.Header>
