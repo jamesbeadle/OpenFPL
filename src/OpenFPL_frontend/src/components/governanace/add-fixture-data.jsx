@@ -154,7 +154,7 @@ const AddFixtureData = () => {
         });
       }
       console.log(playerEventsArray)
-      await open_fpl_backend.savePlayerEvents(playerEventsArray);
+      await open_fpl_backend.savePlayerEvents(fixture.id, playerEventsArray);
     } catch (error) {
       console.error('Failed to save player events', error);
     }
