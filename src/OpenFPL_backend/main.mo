@@ -36,11 +36,11 @@ actor Self {
   
   let CANISTER_IDS = {
     //JB Local Dev
-    //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
-    //player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
+    token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
+    player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
     //Live canisters
-    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
-    token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
+    //player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    //token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -91,6 +91,10 @@ actor Self {
 
   public query ({caller}) func getFixtures() : async [T.Fixture]{
     return seasonManager.getFixtures();
+  };
+
+  public shared ({caller}) func getFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async T.Fixture{
+    return await seasonManager.getFixture(seasonId, gameweekNumber, fixtureId);
   };
 
   public query ({caller}) func getActiveGameweekFixtures() : async [T.Fixture]{
@@ -528,6 +532,11 @@ actor Self {
   private func mintAnnualRewardsPool(): async () {
     //IMPLEMENT
   };
+
+  public func initGenesisSeason(): async (){
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691415000000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    await seasonManager.init_genesis_season(firstFixture);
+  };
   
   //intialise season manager
   let seasonManager = SeasonManager.SeasonManager(
@@ -550,7 +559,8 @@ actor Self {
     governanceInstance.setTimerBackupFunction(setAndBackupTimer);
     seasonManager.setTimerBackupFunction(setAndBackupTimer);
     governanceInstance.setFinaliseFixtureFunction(finaliseFixture);
-  //seasonManager.init_genesis_season();  ONLY UNCOMMENT WHEN READY TO LAUNCH
+
+
 
   //IMPLEMENT: SUBMIT PROPOSAL SUBMISSION FEE ON SUBMISSION OF PROPOSAL ON FRONT END
   

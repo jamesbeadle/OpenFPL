@@ -1,23 +1,56 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Card, Row, Col, Spinner, Button } from 'react-bootstrap';
+import { Card, Row, Col, Spinner, Button, Container, Tabs, Tab } from 'react-bootstrap';
 import { AuthContext } from "../../contexts/AuthContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { useLocation } from 'react-router-dom';
 
 import { StarIcon, RecordIcon, StarOutlineIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, StopCircleIcon, PenaltyMissIcon} from '../icons';
+import PlayerEventsModal from './player-events-modal';
+import PlayerSelectionModal from './select-players-modal';
 
-const AddFixtureData = ({ match }) => {
-  const fixtureId = match.params.fixtureId;
+const AddFixtureData = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const fixtureId = queryParams.get('fixtureId');
+
   const { teams, players } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixture, setFixture] = useState(null);
-  const [playerEvents, setPlayerEvents] = useState([]);
+  const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);
   const [showPlayerEventModal, setShowPlayerEventModal] = useState(false);
   const [editingPlayerEvent, setEditingPlayerEvent] = useState(null);
+  const [key, setKey] = useState('homeTeam');
+  const [teamPlayers, setTeamPlayers] = useState([]);
+  const [selectedPlayers, setSelectedPlayers] = useState({
+    homeTeam: [],
+    awayTeam: [],
+  });
+  const [playerEventMap, setPlayerEventMap] = useState({});
+
+  const handlePlayerSelection = (team, playerIds) => {
+    const prevPlayerIds = selectedPlayers[team];
+    const removedPlayerIds = prevPlayerIds.filter(id => !playerIds.includes(id));
+
+    setPlayerEventMap(prevState => {
+      let newState = { ...prevState };
+      removedPlayerIds.forEach(id => {
+        delete newState[id];
+      });
+      return newState;
+    });
+
+    setSelectedPlayers(prevState => ({
+      ...prevState,
+      [team]: playerIds,
+    }));
+
+    setShowPlayerSelectionModal(false);
+  };
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedFixture = await open_fpl_backend.getFixture(fixtureId);
+        const fetchedFixture = await open_fpl_backend.getFixture(0,0,Number(fixtureId));
         setFixture(fetchedFixture);
       } catch (error) {
         console.error(error);
@@ -29,120 +62,72 @@ const AddFixtureData = ({ match }) => {
     fetchData();
   }, [fixtureId]);
 
-  const renderPlayerCard = (playerEvent) => {
-    const player = players[playerEvent.playerId];
+  
+  const renderPlayerCard = (playerId) => {
+    const player = players.find(p => p.id == playerId);
+    
+    // Calculate the total events for this player.
+    const totalEvents = playerEventMap[playerId]?.length || 0;
 
-    const appearanceEvent = playerEvent.events.find(event => event.eventType === 0);
-    if (!appearanceEvent) {
-        console.error(`No appearance event found for player ${playerEvent.playerId}`);
-        return null;  // or handle this situation in another way
-    }
-    const { eventStartMinute, eventEndMinute } = appearanceEvent;
-  
-  
-    // Counting events
-    const counts = {
-      goals: 0,
-      assists: 0,
-      keeperSaves: 0,
-      penaltySaves: 0,
-      penaltyMisses: 0,
-      yellowCards: 0,
-      redCards: 0,
-      ownGoals: 0,
-      cleanSheets: 0, 
-      highestScoring: 0,
-      goalsConceded: 0
-    };
-  
-    // Group events by their types
-    for (const event of playerEvent.events) {
-      switch (event.eventType) {
-        case 1: counts.goals++; break;
-        case 2: counts.assists++; break;
-        case 3: counts.goalsConceded++; break;
-        case 4: counts.keeperSaves++; break;
-        case 5: counts.cleanSheets++; break;
-        case 6: counts.penaltySaves++; break;
-        case 7: counts.penaltyMisses++; break;
-        case 8: counts.yellowCards++; break;
-        case 9: counts.redCards++; break;
-        case 10: counts.ownGoals++; break;
-        case 11: counts.highestScoring++; break;
-        default: break;
-      }
-    }
-  
     return (
-      <Card className="player-card">
-        <Card.Header>
-          <h3>{player.surname}</h3>
-          <p>{player.firstname}</p>
-        </Card.Header>
-        <Card.Body>
-          <p>Minutes Played: {eventStartMinute}-{eventEndMinute} mins</p>
-          {counts.goals > 0 && <p>Goals Scored: {counts.goals}</p>}
-          {counts.assists > 0 && <p>Assists: {counts.assists}</p>}
-          {counts.goalsConceded > 0 && <p>Goals Conceded: {counts.goalsConceded}</p>}
-          {counts.cleanSheets > 0 && <p>Clean Sheet</p>}
-          {counts.keeperSaves > 0 &&  <p>Saves: {counts.keeperSaves}</p>}
-          {counts.penaltySaves > 0 &&  <p>Penalties Saved: {counts.penaltySaves}</p>}
-          {counts.penaltyMisses > 0 &&  <p>Penalties Missed: {counts.penaltyMisses}</p>}
-          {counts.yellowCards > 0 && <p>Yellow Cards: {counts.yellowCards}</p>}
-          {counts.redCards > 0 && <p>Red Cards: {counts.redCards}</p>}
-          {counts.ownGoals > 0 && <p>Own Goals: {counts.ownGoals}</p>}
-          {player.position === 0 || player.position === 1 ? <p>Clean Sheet</p> : null}
-          {counts.highestScoring > 0 ? <p>Highest Scoring Player</p> : null}
-          <Button onClick={() => handleEditPlayerEvents(playerEvent)}>Edit</Button>
-
-        </Card.Body>
-      </Card>
+      <Col xs={12} md={3} key={playerId} >
+        <Card className="player-card mb-4">
+          <Card.Header>
+            <h5>{player.lastName}</h5>
+            <p className='small-text mb-0 mt-0'>{player.firstName}</p>
+          </Card.Header>
+          <Card.Body>
+            <p>Events: {totalEvents}</p>
+            <Button onClick={() => handleEditPlayerEvents(player)}>Update</Button>
+          </Card.Body>
+        </Card>
+      </Col>
     );
   };
 
-  const handleEditPlayerEvents = (playerEvent) => {
-      setEditingPlayerEvent(playerEvent);
-      setShowPlayerEventModal(true);
+  const handleEditPlayerEvents = (player) => {
+    const playerEvents = playerEventMap[player.id];
+    setEditingPlayerEvent({
+      ...player,
+      events: playerEvents,
+    });
+    setShowPlayerEventModal(true);
   };
+  
 
-  const handlePlayerEventUpdated = (updatedEvent) => {
-      setPlayerEvents(prevEvents => 
-          prevEvents.map(event => 
-              event.playerId === updatedEvent.playerId ? updatedEvent : event
-          )
-      );
-  };
-
-  const handlePlayerEventAdded = (events) => {
+  const handlePlayerEventAdded = (playerId, newEvents) => {
     let homeGoals = fixture.homeGoals;
     let awayGoals = fixture.awayGoals;
 
-    events.forEach(event => {
-        const player = players[event.playerId];
-        if (event.eventType === 1) {
-            if (player.teamId === fixture.homeTeamId) {
-                homeGoals += 1;
-            } else {
-                awayGoals += 1;
-            }
-        } else if (event.eventType === 10) { 
-            if (player.teamId === fixture.homeTeamId) {
-                awayGoals += 1;
-            } else {
-                homeGoals += 1;
-            }
+    newEvents.forEach(event => {
+      const player = players.find(player => player.id === event.playerId);
+      
+      if (event.eventType === 1) {
+        if (player.teamId === fixture.homeTeamId) {
+          homeGoals += 1;
+        } else {
+          awayGoals += 1;
         }
+      } else if (event.eventType === 10) { 
+        if (player.teamId === fixture.homeTeamId) {
+          awayGoals += 1;
+        } else {
+          homeGoals += 1;
+        }
+      }
     });
 
     setFixture({
-        ...fixture,
-        homeGoals: homeGoals,
-        awayGoals: awayGoals
+      ...fixture,
+      homeGoals: homeGoals,
+      awayGoals: awayGoals
     });
 
-    let inferredEvents = inferEvents([...playerEvents, ...events]);
-
-    setPlayerEvents(inferredEvents);
+    // Set the player event in the map
+    setPlayerEventMap(prevState => ({
+      ...prevState,
+      [playerId]: newEvents
+    }));
   };
 
   if (isLoading) {
@@ -156,89 +141,117 @@ const AddFixtureData = ({ match }) => {
 
   const handleSave = async () => {
     try {
-        await open_fpl_backend.savePlayerEvents(playerEvents);
-        alert('Events saved successfully!');
-
-    } catch (error) {
-        console.error('Failed to save player events', error);
-        alert('Error saving player events.');
-    }
-  };
-  
-  const inferEvents = (events) => {
-    const modifiedEvents = [...events];
-  
-    for (let event of modifiedEvents) {
-      const player = players[event.playerId];
-      if ([0, 1].includes(player.position)) {
-        const goalsConceded = player.teamId === fixture.homeTeamId ? fixture.awayGoals : fixture.homeGoals;
-  
-        // Infer Goals Conceded
-        if (goalsConceded > 0 && !event.events.some(e => e.eventType === 3)) {
-          event.events.push({
-            eventType: 3,
-            eventStartMinute: 0,
-            eventEndTime: 90,
+      const playerEventsArray = [];
+      for (const [playerId, playerEvents] of Object.entries(playerEventMap)) {
+        playerEvents.forEach(event => {
+          playerEventsArray.push({
+            fixtureId: fixture.id,
+            playerId: Number(playerId),
+            eventType: event.type,
+            eventStartMinute: event.startMinute,
+            eventEndMinute: event.endMinute,
           });
-        }
-  
-        // Infer Clean Sheet
-        if (goalsConceded === 0 && !event.events.some(e => e.eventType === 5)) {
-          event.events.push({
-            eventType: 5,
-            eventStartMinute: 0,
-            eventEndTime: 90,
-          });
-        }
+        });
       }
+      await open_fpl_backend.savePlayerEvents(playerEventsArray);
+    } catch (error) {
+      console.error('Failed to save player events', error);
     }
-  
-    const scores = {}; 
-    for (let event of modifiedEvents) {
-      scores[event.playerId] = (scores[event.playerId] || 0) + 1;
-    }
-
-    const highestScore = Math.max(...Object.values(scores));
-    const highestScoringPlayers = Object.keys(scores).filter(playerId => scores[playerId] === highestScore);
-    if (highestScoringPlayers.length === 1) {
-      modifiedEvents.push({
-        fixtureId,
-        playerId: highestScoringPlayers[0],
-        eventType: 11, 
-        eventStartMinute: 0,
-        eventEndTime: 90,
-      });
-    }
-  
-    return modifiedEvents;
   };
+  
+
+  const getTeamNameFromId = (teamId) => {
+    const team = teams.find(team => team.id === teamId);
+    if(!team){
+      return;
+    }
+    return team.friendlyName;
+  };
+
+  const addTeamPlayers = (teamId, teamType) => {
+    const filteredPlayers = players.filter(player => teamId === "" || player.teamId === Number(teamId));
+    setTeamPlayers(filteredPlayers);
+    setShowPlayerSelectionModal(true);
+  };
+  
   
 
   return (
-    <div className="add-fixture-data">
-      <Row className="fixture-header">
-        <Col>{fixture.homeGoals}</Col>
-        <Col>{teams[fixture.homeTeamId]}</Col>
-        <Col>V</Col>
-        <Col>{teams[fixture.awayTeamId]}</Col>
-        <Col>{fixture.awayGoals}</Col>
-      </Row>
+    
+    <Container className="flex-grow-1 my-5">
+      <h1>Manage Fixture Data</h1>
+      <br />
       
-      <div className="players-grid">
-        {playerEvents.map(event => renderPlayerCard(event))}
-      </div>
+      <Card className="custom-card mt-1">
+        <Card.Header>
+          <Row className="fixture-header mt-4 mb-4 text-center">
+            <Col className='align-self-center' xs={2}><p className='w-100 m-0 p-0 text-center'>{fixture.homeGoals}</p></Col>
+            <Col className='align-self-center' xs={3}><p className='w-100 m-0 p-0 text-center small-text'>{getTeamNameFromId(fixture.homeTeamId)}</p></Col>
+            <Col className='align-self-center v-symbol' xs={2}>v</Col>
+            <Col className='align-self-center' xs={3}><p className='w-100 m-0 p-0 text-center small-text'>{getTeamNameFromId(fixture.awayTeamId)}</p></Col>
+            <Col className='align-self-center' xs={2}><p className='w-100 m-0 p-0 text-center'>{fixture.awayGoals}</p></Col>
+          </Row>
+        </Card.Header>
+        <Card.Body>
+          <Tabs defaultActiveKey="homeTeam" id="profile-tabs" className="mt-4" activeKey={key} onSelect={(k) => setKey(k)}>
+            <Tab eventKey="homeTeam" title={getTeamNameFromId(fixture.homeTeamId)}>
+              <Container className="flex-grow-1 my-3">
+                  <Row className="align-items-center mb-4">
+                    <Col>
+                      <h5>All Players</h5>
+                    </Col>
+                    <Col className="d-flex justify-content-end">
+                    <Button onClick={() => addTeamPlayers(fixture.homeTeamId, 'homeTeam')} variant="primary">Select Players</Button>
 
-      <Button className="mt-3" onClick={handleSave}>
-          Save Player Events
-      </Button>
-      <PlayerEventModal 
-          show={showPlayerEventModal} 
-          onHide={() => setShowPlayerEventModal(false)}
-          onPlayerEventAdded={handlePlayerEventAdded}
-          onPlayerEventUpdated={handlePlayerEventUpdated}
-          playerEvent={editingPlayerEvent}
-      />
-    </div>
+                    </Col>
+                  </Row>
+                  <Row>
+                    {selectedPlayers.homeTeam.map(playerId => renderPlayerCard(playerId))}
+                  </Row>
+              </Container>
+            </Tab>
+            <Tab eventKey="awayTeam" title={getTeamNameFromId(fixture.awayTeamId)}>
+              <Container className="flex-grow-1 my-3">
+                <Row className="align-items-center mb-4">
+                  <Col>
+                    <h5>All Players</h5>
+                  </Col>
+                  <Col className="d-flex justify-content-end">
+                  <Button onClick={() => addTeamPlayers(fixture.awayTeamId, 'awayTeam')} variant="primary">Select Players</Button>
+
+                  </Col>
+                </Row>
+                <Row>
+                  {selectedPlayers.awayTeam.map(playerId => renderPlayerCard(playerId))}
+                </Row>
+              </Container>
+            </Tab>
+          </Tabs>
+
+          <div className="add-fixture-data">
+
+            <Button className="mt-3" variant='success' onClick={handleSave}>
+                Save Player Events
+            </Button>
+            <PlayerSelectionModal 
+              show={showPlayerSelectionModal} 
+              onHide={() => setShowPlayerSelectionModal(false)}
+              onPlayersSelected={handlePlayerSelection}
+              teamPlayers={teamPlayers}
+              selectedTeam={key}
+              selectedPlayers={selectedPlayers}
+            />
+             <PlayerEventsModal 
+              show={showPlayerEventModal} 
+              onHide={() => setShowPlayerEventModal(false)}
+              onPlayerEventAdded={handlePlayerEventAdded}
+              playerEventMap={playerEventMap}
+              player={editingPlayerEvent}
+            />
+          </div>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 

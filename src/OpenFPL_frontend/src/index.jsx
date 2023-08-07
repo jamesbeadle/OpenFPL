@@ -19,6 +19,7 @@ import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
 import Homepage from "./components/homepage";
 import FundedWhitepaper from "./components/whitepaper/funded_whitepaper";
+import AddFixtureData from "./components/governanace/add-fixture-data";
 
 const PrivateWindowFallback = () => {
   return (
@@ -83,6 +84,7 @@ const App = () => {
               <Route path="/dao" element={<DAO   />} />
               <Route path="/governance" element={<Governance   />} />
               <Route path="/pick-team" element={<PickTeam   />} />
+              <Route path="/add-fixture-data" element={<AddFixtureData   />} />
             </Routes>
           <MyFooter />
         </div>

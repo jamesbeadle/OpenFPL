@@ -31,8 +31,6 @@ const Homepage = () => {
     }, []);
 
     const fetchViewData = async () => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
         const fixturesData = await open_fpl_backend.getFixtures();
         setFixtures(fixturesData);
@@ -201,8 +199,8 @@ const Homepage = () => {
                         <td className='text-center status'>
                             <Badge 
                                 className={
-                                    fixture.status === 1 ? 'bg-primary' : 
-                                    fixture.status === 2 ? 'bg-success' : 'bg-secondary'
+                                    fixture.status === 1 ? 'bg-primary w-100' : 
+                                    fixture.status === 2 ? 'bg-success w-100' : 'bg-secondary w-100'
                                 } 
                                 style={{ padding: '0.5rem' }}
                             >
@@ -227,8 +225,15 @@ const Homepage = () => {
                 <Col md={4} xs={12}>
                     <Card className='mb-2'>
                         <Card.Body>
+                        { (countdown.days < 0 || countdown.hours < 0 || countdown.minutes < 0 || countdown.seconds < 0) ? 
+                        <>
+                            <Card.Title>Gameweek Active</Card.Title>
+                        </>
+                        : 
+                        <>
                             <Card.Title>Gameweek Begins:</Card.Title>
-                            {<h5 className="display-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s</h5>}
+                            <h5 className="display-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s</h5>
+                        </>}    
                         </Card.Body>
                     </Card>
 

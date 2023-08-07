@@ -3,18 +3,23 @@ import { Card, Table, Button, Spinner } from 'react-bootstrap';
 import { AuthContext } from "../../contexts/AuthContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
+import { Link } from "react-router-dom";
 
 const FixtureValidationList = () => {
   const { authClient, teams, players } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixtures, setFixtures] = useState([]);
   const [currentGameweek, setCurrentGameweek] = useState(null);
+  const [currentSeason, setCurrentSeason] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
         setCurrentGameweek(currentGameweekData);
+
+        const currentSeasonData = await open_fpl_backend.getCurrentSeason();
+        setCurrentSeason(currentSeasonData);
 
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
@@ -32,6 +37,14 @@ const FixtureValidationList = () => {
     fetchData();
   }, [authClient, teams, players]);
 
+  const getTeamNameFromId = (teamId) => {
+    const team = teams.find(team => team.id === teamId);
+    if(!team){
+      return;
+    }
+    return team.friendlyName;
+  }
+
   if (isLoading) {
     return (
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
@@ -43,9 +56,8 @@ const FixtureValidationList = () => {
 
   return (
     <Card className="custom-card mt-1">
+      <Card.Header>{`Season ${currentSeason.name}`} - {`Gameweek ${currentGameweek}`}</Card.Header>
       <Card.Body>
-        <h2>Validatable Fixtures</h2>
-        <h4>{currentGameweek ? `${currentGameweek.season} - ${currentGameweek.gameweek}` : 'Loading gameweek...'}</h4>
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -59,10 +71,10 @@ const FixtureValidationList = () => {
             {fixtures.map((fixture, index) => (
                 <tr key={fixture.id}>
                   <td>{index + 1}</td>
-                  <td>{`${teams[fixture.homeTeamId]} vs ${teams[fixture.awayTeamId]}`}</td>
+                  <td>{`${getTeamNameFromId(fixture.homeTeamId)} vs ${getTeamNameFromId(fixture.awayTeamId)}`}</td>
                   <td>{fixture.status === 2 ? "Completed" : "Active"}</td>
                   <td>
-                    <Button variant={fixture.status === 2 ? "primary" : "secondary"} href={`add-fixture-data?fixtureId=${fixture.id}`}>
+                    <Button as={Link} variant={fixture.status === 2 ? "primary" : "secondary"} to={`/add-fixture-data?fixtureId=${fixture.id}`}>
                       Add Player Event Data
                     </Button>
                   </td>

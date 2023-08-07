@@ -29,8 +29,8 @@ const Governance = () => {
       <Container className="flex-grow-1 my-5">
         <h1>OpenFPL DAO Governance</h1>
         <br />
-        <Tabs defaultActiveKey="proposals" id="profile-tabs" className="mt-4" activeKey={key} onSelect={(k) => setKey(k)}>
-         <Tab eventKey="games" title="Validating Game Data">
+        <Tabs defaultActiveKey="games" id="profile-tabs" className="mt-4" activeKey={key} onSelect={(k) => setKey(k)}>
+         <Tab eventKey="games" title="Fixture Validation">
             <FixtureValidationList isActive={key === 'games'} />
           </Tab>
         </Tabs>
