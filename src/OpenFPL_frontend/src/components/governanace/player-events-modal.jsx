@@ -5,9 +5,9 @@ import { AuthContext } from "../../contexts/AuthContext";
 const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEventMap  }) => {
     const { teams, players } = useContext(AuthContext);
     const [playerEvents, setPlayerEvents] = useState([]);
-    const [eventType, setEventType] = useState("");
-    const [eventStartTime, setEventStartTime] = useState(null);
-    const [eventEndTime, setEventEndTime] = useState(null);
+    const [eventType, setEventType] = useState("-1");
+    const [eventStartTime, setEventStartTime] = useState("0");
+    const [eventEndTime, setEventEndTime] = useState("0");
 
     useEffect(() => {
         if(!player){
@@ -17,8 +17,8 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
         setPlayerEvents(existingEvents);
         
         setEventType("");
-        setEventStartTime(null);
-        setEventEndTime(null);
+        setEventStartTime("");
+        setEventEndTime("");
     }, [player, playerEventMap]);
     
 
@@ -78,6 +78,7 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
             setPlayerEvents(updatedEvents);
             onPlayerEventAdded(player.id, updatedEvents);
         }
+        setEventStartTime(""); setEventEndTime("");
     };
     
     
@@ -101,7 +102,7 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
                         <Form.Control 
                             as="select"
                             value={eventType}
-                            onChange={(e) => setEventType(e.target.value)}>
+                            onChange={(e) => {setEventType(e.target.value); setEventStartTime(""); setEventEndTime("");}}>
                                 <option value="">Select Event</option>
                                 {player && getEventOptions(player.position).map(option => (
                                     <option key={option.id} value={option.id}>
@@ -115,36 +116,39 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
                 {eventType !== "0" ? (
                 <Form.Group as={Row} className='mb-2'>
                             <Col xs={6}>
-                                <Form.Control 
-                                    type="number" 
-                                    placeholder="Event Time" 
-                                    min={0}
-                                    max={90}
-                                    onChange={(e) => {
-                                        setEventStartTime(e.target.value);
-                                        setEventEndTime(e.target.value);
-                                    }}
+                            <Form.Control 
+                                type="number" 
+                                placeholder="Event End Time" 
+                                min={0}
+                                max={90}
+                                value={Number(eventEndTime)}   // convert string to number
+                                onChange={(e) => {
+                                    setEventStartTime(e.target.value);
+                                    setEventEndTime(e.target.value);
+                                }}
                                 />
                             </Col>
                 </Form.Group>
                     ) : (
                         <Form.Group as={Row} className='mb-2'>
                             <Col xs={6}>
-                                <Form.Control 
-                                    type="number" 
-                                    placeholder="Event Start Time" 
-                                    min={0}
-                                    max={90}
-                                    onChange={(e) => setEventStartTime(e.target.value)}
+                            <Form.Control 
+                                type="number" 
+                                placeholder="Event Start Time" 
+                                min={0}
+                                max={90}
+                                value={Number(eventStartTime)}   // convert string to number
+                                onChange={(e) => setEventStartTime(e.target.value)}
                                 />
                             </Col>
                             <Col xs={6}>
-                                <Form.Control 
-                                    type="number" 
-                                    placeholder="Event End Time" 
-                                    min={0}
-                                    max={90}
-                                    onChange={(e) => setEventEndTime(e.target.value)}
+                            <Form.Control 
+                                type="number" 
+                                placeholder="Event End Time" 
+                                min={0}
+                                max={90}
+                                value={Number(eventEndTime)}   // convert string to number
+                                onChange={(e) => setEventEndTime(e.target.value)}
                                 />
                             </Col>
                         </Form.Group>

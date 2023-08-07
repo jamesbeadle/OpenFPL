@@ -147,12 +147,13 @@ const AddFixtureData = () => {
           playerEventsArray.push({
             fixtureId: fixture.id,
             playerId: Number(playerId),
-            eventType: event.type,
-            eventStartMinute: event.startMinute,
-            eventEndMinute: event.endMinute,
+            eventType: Number(event.eventType),
+            eventStartMinute: Number(event.eventStartTime),
+            eventEndMinute: Number(event.eventEndTime),
           });
         });
       }
+      console.log(playerEventsArray)
       await open_fpl_backend.savePlayerEvents(playerEventsArray);
     } catch (error) {
       console.error('Failed to save player events', error);
