@@ -143,6 +143,7 @@ const AddFixtureData = () => {
     try {
       const playerEventsArray = [];
       for (const [playerId, playerEvents] of Object.entries(playerEventMap)) {
+        const playerTeamId = players.find(p => p.id == playerId)?.teamId;
         playerEvents.forEach(event => {
           playerEventsArray.push({
             fixtureId: fixture.id,
@@ -150,6 +151,7 @@ const AddFixtureData = () => {
             eventType: Number(event.eventType),
             eventStartMinute: Number(event.eventStartTime),
             eventEndMinute: Number(event.eventEndTime),
+            teamId: playerTeamId
           });
         });
       }

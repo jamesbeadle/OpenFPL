@@ -101,7 +101,7 @@ module Types{
     };
 
     public type PlayerSeason = {
-        year: Nat16;
+        id: Nat16;
         gameweeks: List.List<PlayerGameweek>;
     };
 
@@ -156,6 +156,7 @@ module Types{
         bankBalance: Float;
         playerIds: [PlayerId];
         captainId: Nat16;
+        gameweek: ?GameweekNumber;
         goalGetterGameweek: GameweekNumber;
         goalGetterPlayerId: PlayerId;
         passMasterGameweek: GameweekNumber;
@@ -217,6 +218,7 @@ module Types{
         eventType: Nat8;
         eventStartMinute: Nat8; //use to record event time of all other events
         eventEndMinute: Nat8; //currently only used for Appearance
+        teamId: TeamId;
     };
 
     public type DataSubmission = {

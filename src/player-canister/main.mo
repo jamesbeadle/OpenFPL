@@ -17,6 +17,7 @@ import Int16 "mo:base/Int16";
 import Utilities "../OpenFPL_backend/utilities";
 import Timer "mo:base/Timer";
 import Time "mo:base/Time";
+import Debug "mo:base/Debug";
 
 actor Self {
 
@@ -79,7 +80,7 @@ actor Self {
             var assists: Int16 = 0;
 
             for (season in Iter.fromList(player.seasons)) {
-                if (season.year == seasonId) {
+                if (season.id == seasonId) {
                     for (gw in Iter.fromList(season.gameweeks)) {
 
                         if (gw.number == gameweek) {
@@ -111,6 +112,7 @@ actor Self {
                 saves = saves;
                 assists = assists;
             };
+            playersMap.put(player.id, scoreDTO);
         };
         return Iter.toArray(playersMap.entries());
     };
@@ -135,7 +137,7 @@ actor Self {
         };
     };
 
-    public func revaluePlayers(seasonId: Nat16, gameweek: Nat8, revaluedPlayers: List.List<T.RevaluedPlayer>) : async () {
+    public shared func revaluePlayers(seasonId: Nat16, gameweek: Nat8, revaluedPlayers: List.List<T.RevaluedPlayer>) : async () {
         /*
         let changeAmount: Float = 250000000;
 
@@ -191,13 +193,32 @@ actor Self {
         */
     };
 
-    public func calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture {
-
+    public shared ({caller}) func calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture {
+        var homeGoalsCount: Nat8 = 0;
+        var awayGoalsCount: Nat8 = 0;
+        
         let playerEventsMap: HashMap.HashMap<Nat16, [T.PlayerEventData]> = HashMap.HashMap<Nat16, [T.PlayerEventData]>(200, Utilities.eqNat16, Utilities.hashNat16);
-        let events = List.toArray<T.PlayerEventData>(fixture.events);
+        
+        for (event in Iter.fromList(fixture.events)) {
+            
+            switch(event.eventType) {
+                case 1 {
+                    if (event.teamId == fixture.homeTeamId) {
+                        homeGoalsCount += 1;
+                    } else if (event.teamId == fixture.awayTeamId) {
+                        awayGoalsCount += 1;
+                    }
+                };
+                case 10 {
+                    if (event.teamId == fixture.homeTeamId) {
+                        awayGoalsCount += 1;
+                    } else if (event.teamId == fixture.awayTeamId) {
+                        homeGoalsCount += 1;
+                    }
+                };
+                case _ {};  
+            };
 
-        for (j in Iter.range(0, Array.size(events)-1)) {
-            let event = events[j];
             let playerId: Nat16 = event.playerId;
             switch (playerEventsMap.get(playerId)) {
                 case (null) {
@@ -224,76 +245,122 @@ actor Self {
             );
 
             let aggregateScore = calculateAggregatePlayerEvents(events, currentPlayer.position);
+            
             playerScoresMap.put(playerId, totalScore + aggregateScore);
         };
 
-            
+
         for ((playerId, score) in playerScoresMap.entries()) {
+            
             let player = await getPlayer(playerId);
-            switch (?player) {
-                case null {};
-                case (?p) {
-                    let updatedSeasons = List.map<T.PlayerSeason, T.PlayerSeason>(
-                        p.seasons,
-                        func (season: T.PlayerSeason) : T.PlayerSeason {
-                            if (season.year != seasonId) {
-                                return season;
+            var updatedSeasons: List.List<T.PlayerSeason> = List.nil<T.PlayerSeason>();
+            let playerSpecificEvents = playerEventsMap.get(playerId);
+            switch(playerSpecificEvents){
+                case (null) {};
+                case (?foundEvents){
+                    if(player.seasons == null){ 
+                        let newGameweek: T.PlayerGameweek = {
+                            number = gameweek;
+                            events = List.fromArray<T.PlayerEventData>(foundEvents);
+                            points = score;
+                        };
+                        let newSeason: T.PlayerSeason = {
+                            id = seasonId;
+                            gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
+                        };
+                        updatedSeasons := List.fromArray<T.PlayerSeason>([newSeason]);
+                    } else { //alerady got seasons
+                        let currentSeason = List.find<T.PlayerSeason>(player.seasons, func (s: T.PlayerSeason) : Bool {
+                            s.id == seasonId
+                        });
+
+                        if (currentSeason == null) {
+                            let newGameweek: T.PlayerGameweek = {
+                                number = gameweek;
+                                events = List.fromArray<T.PlayerEventData>(foundEvents);
+                                points = score;
                             };
-                            
-                            let updatedGameweeks = List.map<T.PlayerGameweek, T.PlayerGameweek>(
-                                season.gameweeks,
-                                func (gw: T.PlayerGameweek) : T.PlayerGameweek {
-                                    if (gw.number != gameweek) {
-                                        return gw;
-                                    };
-                                    
-                                    return {
-                                        number = gw.number;
-                                        events = gw.events;
+                            let newSeason: T.PlayerSeason = {
+                                id = seasonId;
+                                gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
+                            };
+                            updatedSeasons := List.append<T.PlayerSeason>(player.seasons, List.fromArray<T.PlayerSeason>([newSeason]));
+
+                        } else {
+                            updatedSeasons := List.map<T.PlayerSeason, T.PlayerSeason>(player.seasons, func (season: T.PlayerSeason) : T.PlayerSeason {
+                                
+                                if (season.id != seasonId) {
+                                    return season;
+                                };
+
+                                let currentGameweek = List.find<T.PlayerGameweek>(season.gameweeks, func (gw: T.PlayerGameweek) : Bool {
+                                    gw.number == gameweek
+                                });
+
+                                if (currentGameweek == null) {
+                                    let newGameweek: T.PlayerGameweek = {
+                                        number = gameweek;
+                                        events = List.fromArray<T.PlayerEventData>(foundEvents);
                                         points = score;
                                     };
+                                    let updatedGameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
+                                    let updatedSeason: T.PlayerSeason = {
+                                        id = season.id;
+                                        gameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
+                                    };
+                                    return updatedSeason;
+                                } else {
+                                    let updatedGameweeks = List.map<T.PlayerGameweek, T.PlayerGameweek>(
+                                        season.gameweeks,
+                                        func (gw: T.PlayerGameweek) : T.PlayerGameweek {
+                                            if (gw.number != gameweek) {
+                                                return gw;
+                                            };
+                                            return {
+                                                number = gw.number;
+                                                events = fixture.events;
+                                                points = score;
+                                            };
+                                        }
+                                    );
+                                    return {
+                                        id = season.id;
+                                        gameweeks = updatedGameweeks;
+                                    };
                                 }
-                            );
-                            
-                            return {
-                                year = season.year;
-                                gameweeks = updatedGameweeks;
-                            };
+                            });
                         }
-                    );
-
-                    let updatedPlayer = {
-                        id = p.id;
-                        teamId = p.teamId;
-                        position = p.position;
-                        firstName = p.firstName;
-                        lastName = p.lastName;
-                        shirtNumber = p.shirtNumber;
-                        value = p.value;
-                        dateOfBirth = p.dateOfBirth;
-                        nationality = p.nationality;
-                        seasons = updatedSeasons;
-                        valueHistory = p.valueHistory;
-                        onLoan = p.onLoan;
-                        parentTeamId = p.parentTeamId;
-                        isInjured = p.isInjured;
-                        injuryHistory = p.injuryHistory;
-                        retirementDate = p.retirementDate;
                     };
-
-                    players := List.map<T.Player, T.Player>(players, func (player: T.Player): T.Player {
-                        if (player.id == updatedPlayer.id) { updatedPlayer } else { player }
-                    });
-
                 };
             };
-        };
 
+            let updatedPlayer = {
+                id = player.id;
+                teamId = player.teamId;
+                position = player.position;
+                firstName = player.firstName;
+                lastName = player.lastName;
+                shirtNumber = player.shirtNumber;
+                value = player.value;
+                dateOfBirth = player.dateOfBirth;
+                nationality = player.nationality;
+                seasons = updatedSeasons;
+                valueHistory = player.valueHistory;
+                onLoan = player.onLoan;
+                parentTeamId = player.parentTeamId;
+                isInjured = player.isInjured;
+                injuryHistory = player.injuryHistory;
+                retirementDate = player.retirementDate;
+            };
+         
+            players := List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
+                if (p.id == updatedPlayer.id) { updatedPlayer } else { p }
+            });
+        };
+        
         var highestScore: Int16 = 0;
         var highestScoringPlayerId: Nat16 = 0;
         var isUniqueHighScore: Bool = true; 
-
-        // Create a buffer to hold unique playerIds
         let uniquePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
 
         for (event in List.toIter(fixture.events)) {
@@ -322,7 +389,7 @@ actor Self {
 
         var newHighScoringPlayerId: Nat16 = 0;
         if(isUniqueHighScore){
-        newHighScoringPlayerId := highestScoringPlayerId;
+            newHighScoringPlayerId := highestScoringPlayerId;
         };
         let updatedFixture = {
             id = fixture.id;
@@ -331,13 +398,13 @@ actor Self {
             homeTeamId = fixture.homeTeamId;
             awayTeamId = fixture.awayTeamId;
             kickOff = fixture.kickOff;
-            homeGoals = fixture.homeGoals;
-            awayGoals = fixture.awayGoals;
+            homeGoals = homeGoalsCount;
+            awayGoals = awayGoalsCount;
             status = fixture.status;
             events = fixture.events;
             highestScoringPlayerId = newHighScoringPlayerId;
         };
-
+        
         return updatedFixture;
     };
 
@@ -386,25 +453,25 @@ actor Self {
                     case _ { return 15; };  // Goalkeeper or defender
                 }
             };  
-            case 3 { return 0; };  // Handled in aggregate
-            case 4 { 
+            case 4 { return 0; };
+            case 5 { 
                 switch (playerPosition) {
                     case 0 { return 10; };
                     case 1 { return 10; };
                     case _ { return 0; };
                 }
             };
-            case 5 { return 20; };  // Goalkeeper saves a penalty
-            case 6 { return -15; };  // Player misses a penalty
-            case 7 { return -5; };   // Yellow Card
-            case 8 { return -20; };  // Red Card
-            case 9 { return -10; };  // Own Goal
-            case 10 { return 0; };  // Handled after all players calculated
+            case 6 { return 20; };  // Goalkeeper saves a penalty
+            case 7 { return -15; };  // Player misses a penalty
+            case 8 { return -5; };   // Yellow Card
+            case 9 { return -20; };  // Red Card
+            case 10 { return -10; };  // Own Goal
+            case 11 { return 0; };  // Handled after all players calculated
             case _ { return 0; };
         };
     };
     
-    public func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {
+    public shared func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {
         let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
         switch(player){
             case (null) { };
@@ -438,7 +505,7 @@ actor Self {
         };
     };
 
-    public func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {
+    public shared func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {
         let playerToLoan = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
         switch(playerToLoan) {
             case (null) { };
@@ -602,7 +669,7 @@ actor Self {
 
     private func defaultCallback() : async () { };
 
-    public func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
+    public shared func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
         let playerToRecall = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
         switch(playerToRecall) {
             case (null) { };
@@ -644,7 +711,7 @@ actor Self {
     };
 
 
-    public func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
+    public shared func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
         let newPlayer: T.Player = {
             id = Nat16.fromNat(nextPlayerId + 1);
             teamId = proposalPayload.teamId;
@@ -667,7 +734,7 @@ actor Self {
         nextPlayerId += 1;
     };
 
-    public func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {
+    public shared func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {
         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
             if (currentPlayer.id == proposalPayload.playerId) {
                 return {
@@ -694,7 +761,7 @@ actor Self {
         });
     };
     
-    public func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {
+    public shared func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {
         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
             if (currentPlayer.id == proposalPayload.playerId) {
                 if (proposalPayload.recovered) {
@@ -758,7 +825,7 @@ actor Self {
         });
     };
     
-    public func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
+    public shared func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
         let playerToRetire = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
         switch(playerToRetire) {
             case (null) { };
@@ -790,7 +857,7 @@ actor Self {
         };
     };
 
-    public func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {
+    public shared func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {
         let playerToUnretire = List.find<T.Player>(retiredPlayers, func(p: T.Player) { p.id == proposalPayload.playerId });
         switch(playerToUnretire) {
             case (null) { };

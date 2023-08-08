@@ -14,6 +14,7 @@ import Nat "mo:base/Nat";
 import Hash "mo:base/Hash";
 import Int "mo:base/Int";
 import Timer "mo:base/Timer";
+import Debug "mo:base/Debug";
 
 module {
     public class Governance(
@@ -33,7 +34,9 @@ module {
         
         let admins : [Text] = [
             //JB Local
-            "eqlhf-ppkq7-roa5i-4wu6r-jumy3-g2xrc-vfdd5-wtoeu-n7xre-vsktn-lqe"
+            "eqlhf-ppkq7-roa5i-4wu6r-jumy3-g2xrc-vfdd5-wtoeu-n7xre-vsktn-lqe",
+            "2bpwg-2lec5-batrn-wycrl-tc3up-enl3o-4qwcx-zrmts-k45c2-5zqga-2ae",
+            "gucw5-y5hwr-kfoai-cus4i-x34gj-v2nlc-fib7q-nkuah-lw5y2-c7dln-yae"
             //JB Live
             //"opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"
         ];
@@ -51,7 +54,7 @@ module {
         //system parameters
         private var EventData_VotePeriod: Int = oneHour * 12;
         private var Proposal_VotePeriod: Int = oneHour * 12;
-        private var EventData_VoteThreshold: Nat64 = 1_000_000;
+        private var EventData_VoteThreshold: Nat64 = 100_000;
         private var Revaluation_VoteThreshold: Nat64 = 1_000_000;
         private var Proposal_VoteThreshold: Nat64 = 1_000_000;
         private var Max_Votes_Per_User: Nat64 = 100_000;
@@ -219,13 +222,18 @@ module {
             
             let userVotingPower: Nat64 = getVotingPower(principalId);
             let currentTime = Time.now();
+        
+            let votes: T.PlayerValuationVote = {
+                principalId = Principal.fromText(principalId);
+                votes = {amount_e8s = userVotingPower};
+            };
 
             let newSubmission: T.DataSubmission = {
                 fixtureId = fixtureId;
                 proposer = principalId;
                 timestamp = currentTime;
                 events = List.fromArray(playerEventData);
-                votes_yes = List.nil<T.PlayerValuationVote>();
+                votes_yes = List.fromArray<T.PlayerValuationVote>([votes]);
                 votes_no = List.nil<T.PlayerValuationVote>();
             };
 
@@ -241,8 +249,9 @@ module {
             fixtureDataSubmissions.put(fixtureId, updatedSubmissions);
             let newConsensus = recalculateConsensus(fixtureId);
             consensusFixtureData.put(fixtureId, newConsensus);
+            
             let consensusAchieved = newConsensus.totalVotes.amount_e8s >= EventData_VoteThreshold;
- 
+       
             if(consensusAchieved){
                 switch(finaliseFixture){
                     case (null) {};
@@ -255,7 +264,7 @@ module {
 
         private func recalculateConsensus(fixtureId: T.FixtureId) : T.ConsensusData {
             let foundSubmissions = fixtureDataSubmissions.get(fixtureId);
-
+        
             switch(foundSubmissions){
                 case (null) {
                     

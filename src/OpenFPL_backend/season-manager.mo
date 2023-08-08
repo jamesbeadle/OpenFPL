@@ -22,7 +22,7 @@ module {
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
     revaluePlayers: (Nat16, Nat8) -> async (),
-    snapshotGameweek: (seaasonId: Nat16) -> async (),
+    snapshotGameweek: (seasonId: Nat16, gameweek: Nat8) -> async (),
     mintWeeklyRewardsPool: () -> async (),
     mintAnnualRewardsPool: () -> async (),
     calculateFantasyTeamScores: (Nat16, Nat8) -> async (),
@@ -44,20 +44,15 @@ module {
 
     //definitions
     //private let oneHour = 1_000_000_000 * 60 * 60;
-    private let oneHour = 1_000_000_000 * 60;
+    private let oneHour = 1_000_000_000 * 5;
     
     private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
     public func init_genesis_season(firstFixture: T.Fixture) : async () {
-        Debug.print(debug_show "Now" # Int.toText(Time.now()));
-        Debug.print(debug_show "First Fixture Time" # Int.toText(firstFixture.kickOff));
-        Debug.print(debug_show "One Hour" # Int.toText(oneHour));
         let genesisSeasonDuration: Timer.Duration = #nanoseconds (Int.abs(firstFixture.kickOff - Time.now() - oneHour));
-        Debug.print(debug_show genesisSeasonDuration);
         switch(setAndBackupTimer) {
             case (null) { };
             case (?actualFunction) {
-                Debug.print(debug_show "init genesis season");
                 await actualFunction(genesisSeasonDuration, "gameweekBeginExpired", 0);
             };
         };
@@ -92,10 +87,9 @@ module {
     };
 
     public func gameweekBegin() : async (){
-        Debug.print(debug_show "gameweek begin");
         transfersAllowed := false;
 
-        await snapshotGameweek(activeSeasonId);
+        await snapshotGameweek(activeSeasonId, activeGameweek);
 
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         var gameKickOffTimers = List.nil<T.TimerInfo>(); 
@@ -104,9 +98,6 @@ module {
             switch(setAndBackupTimer) {
                 case (null) { };
                 case (?actualFunction) {
-                    Debug.print(debug_show "setting kickoff timer");
-                    Debug.print(debug_show activeFixtures[i].id);
-                    Debug.print(debug_show gameKickOffDuration);
                     await actualFunction(gameKickOffDuration, "gameKickOffExpired", activeFixtures[i].id);
                 };
             };
@@ -115,12 +106,9 @@ module {
 
     public func gameKickOff() : async (){
 
-        Debug.print(debug_show "Game kicked off");
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
         
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
-            Debug.print(debug_show "Checking kickoff time now " # Int.toText(Time.now()) # " v the kick off time: " # Int.toText(activeFixtures[i].kickOff));
-            Debug.print(debug_show Nat8.toText(activeFixtures[i].status));
             if(activeFixtures[i].kickOff <= Time.now() and activeFixtures[i].status == 0){
                 
                 let updatedFixture = await seasonsInstance.updateStatus(activeSeasonId, activeGameweek, activeFixtures[i].id, 1);
@@ -175,10 +163,10 @@ module {
                 let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id);
                 let updatedFixture = await seasonsInstance.savePlayerEventData(activeSeasonId, activeGameweek, activeFixtures[i].id, consensusPlayerEventData);
                 activeFixturesBuffer.add(updatedFixture);
+                await finaliseFixture(updatedFixture);
             } else {
                 activeFixturesBuffer.add(fixture);
             };
-            await finaliseFixture(fixture);
         };
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
@@ -186,18 +174,29 @@ module {
     };
 
     public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async (){
-        
+        var getSeasonId = seasonId;
+        if(getSeasonId == 0){
+            getSeasonId := activeSeasonId;
+        };
+
+        var getGameweekNumber = gameweekNumber;
+        if(getGameweekNumber == 0){
+            getGameweekNumber := activeGameweek;
+        };
+
+
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             let fixture = activeFixtures[i];
             if(fixture.id == fixtureId and fixture.status == 2){
-                let updatedFixture = await seasonsInstance.updateStatus(seasonId, gameweekNumber, fixtureId, 3);
+                let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id);
+                let updatedFixture = await seasonsInstance.savePlayerEventData(activeSeasonId, activeGameweek, activeFixtures[i].id, consensusPlayerEventData);
                 activeFixturesBuffer.add(updatedFixture);
+                await finaliseFixture(updatedFixture);
             } else {
                 activeFixturesBuffer.add(fixture);
             };
-            await finaliseFixture(fixture);
         };
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);

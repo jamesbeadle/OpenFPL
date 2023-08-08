@@ -514,7 +514,6 @@ module {
         };
 
         public func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8): async () {
-            
             let allPlayersList = await getAllPlayersMap(seasonId, gameweek);
             var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
             for ((key, value) in Iter.fromArray(allPlayersList)) {
@@ -597,31 +596,62 @@ module {
                     let updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(ufTeam.history, func(season: T.FantasyTeamSeason): T.FantasyTeamSeason {
                         if (season.seasonId == seasonId) {
                             let updatedGameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(snapshot: T.FantasyTeamSnapshot): T.FantasyTeamSnapshot {
-                                if (snapshot.goalGetterGameweek == gameweek) {
-                                    return {
-                                        principalId = snapshot.principalId;
-                                        transfersAvailable = snapshot.transfersAvailable;
-                                        bankBalance = snapshot.bankBalance;
-                                        playerIds = snapshot.playerIds;
-                                        captainId = snapshot.captainId;
-                                        goalGetterGameweek = snapshot.goalGetterGameweek;
-                                        goalGetterPlayerId = snapshot.goalGetterPlayerId;
-                                        passMasterGameweek = snapshot.passMasterGameweek;
-                                        passMasterPlayerId = snapshot.passMasterPlayerId;
-                                        noEntryGameweek = snapshot.noEntryGameweek;
-                                        noEntryPlayerId = snapshot.noEntryPlayerId;
-                                        teamBoostGameweek = snapshot.teamBoostGameweek;
-                                        teamBoostTeamId = snapshot.teamBoostTeamId;
-                                        safeHandsGameweek = snapshot.safeHandsGameweek;
-                                        safeHandsPlayerId = snapshot.safeHandsPlayerId;
-                                        captainFantasticGameweek = snapshot.captainFantasticGameweek;
-                                        captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
-                                        braceBonusGameweek = snapshot.braceBonusGameweek;
-                                        hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
-                                        points = teamPoints;
+                                switch(snapshot.gameweek){
+                                    case (null) {
+                                        return {
+                                            bankBalance = 0;
+                                            braceBonusGameweek = 0;
+                                            captainFantasticGameweek = 0;
+                                            captainFantasticPlayerId = 0;
+                                            captainId = 0;
+                                            gameweek = ?0;
+                                            goalGetterGameweek = 0;
+                                            goalGetterPlayerId = 0;
+                                            hatTrickHeroGameweek = 0;
+                                            noEntryGameweek = 0;
+                                            noEntryPlayerId = 0;
+                                            passMasterGameweek = 0;
+                                            passMasterPlayerId = 0;
+                                            playerIds = [];
+                                            points = 0;
+                                            principalId = "";
+                                            safeHandsGameweek = 0;
+                                            safeHandsPlayerId = 0;
+                                            teamBoostGameweek = 0;
+                                            teamBoostTeamId = 0;
+                                            transfersAvailable = 0;
+                                        };
                                     };
-                                };
-                                return snapshot;
+                                    case  (?foundGW){
+                                        if (foundGW == gameweek) {
+                                            return {
+                                                principalId = snapshot.principalId;
+                                                gameweek = snapshot.gameweek;
+                                                transfersAvailable = snapshot.transfersAvailable;
+                                                bankBalance = snapshot.bankBalance;
+                                                playerIds = snapshot.playerIds;
+                                                captainId = snapshot.captainId;
+                                                goalGetterGameweek = snapshot.goalGetterGameweek;
+                                                goalGetterPlayerId = snapshot.goalGetterPlayerId;
+                                                passMasterGameweek = snapshot.passMasterGameweek;
+                                                passMasterPlayerId = snapshot.passMasterPlayerId;
+                                                noEntryGameweek = snapshot.noEntryGameweek;
+                                                noEntryPlayerId = snapshot.noEntryPlayerId;
+                                                teamBoostGameweek = snapshot.teamBoostGameweek;
+                                                teamBoostTeamId = snapshot.teamBoostTeamId;
+                                                safeHandsGameweek = snapshot.safeHandsGameweek;
+                                                safeHandsPlayerId = snapshot.safeHandsPlayerId;
+                                                captainFantasticGameweek = snapshot.captainFantasticGameweek;
+                                                captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
+                                                braceBonusGameweek = snapshot.braceBonusGameweek;
+                                                hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
+                                                points = teamPoints;
+                                            };
+                                        };
+                                        return snapshot;
+                                    };
+                                }
+                                
                             });
                             return {
                                 seasonId = season.seasonId;
@@ -782,10 +812,11 @@ module {
 
         };
 
-        public func snapshotGameweek(seasonId: Nat16): async () {
+        public func snapshotGameweek(seasonId: Nat16, gameweek: T.GameweekNumber): async () {
             for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {
                 let newSnapshot: T.FantasyTeamSnapshot = {
                     principalId = userFantasyTeam.fantasyTeam.principalId;
+                    gameweek = ?gameweek;
                     transfersAvailable = userFantasyTeam.fantasyTeam.transfersAvailable;
                     bankBalance = userFantasyTeam.fantasyTeam.bankBalance;
                     playerIds = userFantasyTeam.fantasyTeam.playerIds;

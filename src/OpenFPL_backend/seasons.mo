@@ -11,6 +11,7 @@ import Char "mo:base/Char";
 import Nat8 "mo:base/Nat8";
 import Timer "mo:base/Timer";
 import Int "mo:base/Int";
+import Debug "mo:base/Debug";
 
 module {
     

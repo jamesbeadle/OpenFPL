@@ -51,6 +51,7 @@ const Homepage = () => {
         setSeasonTop10(seasonTop10Data.entries);
     
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
+        console.log(weeklyTop10Data.entries)
         setWeeklyTop10(weeklyTop10Data.entries);
     };
     
