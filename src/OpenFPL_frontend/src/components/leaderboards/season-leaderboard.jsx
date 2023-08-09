@@ -5,7 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 
-const LeagueStandings = () => {
+const Leaderboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { authClient } = useContext(AuthContext);
     const [managers, setManagers] = useState([]);
@@ -116,4 +116,4 @@ const LeagueStandings = () => {
     );
 };
 
-export default LeagueStandings;
+export default Leaderboard;

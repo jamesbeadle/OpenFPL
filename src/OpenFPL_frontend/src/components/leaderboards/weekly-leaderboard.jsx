@@ -5,7 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 
-const WeeklyLeagueStandings = () => {
+const WeeklyLeaderboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { authClient } = useContext(AuthContext);
     const [managers, setManagers] = useState([]);
@@ -30,9 +30,9 @@ const WeeklyLeagueStandings = () => {
     useEffect(() => {
         const fetchIntialData = async () => {
             await fetchSeasons();
-            const activeSeason = await fetchActiveSeasonId();
-            const activeGameweek = await fetchActiveGameweek();
-            await fetchViewData(activeSeason, activeGameweek);
+            await fetchActiveSeasonId();
+            await fetchActiveGameweek();
+            await fetchViewData(selectedSeason, selectedGameweek);
             setIsLoading(false);
         };
         fetchIntialData();
@@ -56,7 +56,7 @@ const WeeklyLeagueStandings = () => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
-        const activeGameweekData = await open_fpl_backend.getActiveGameweek();
+        const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
         setSelectedGameweek(activeGameweekData);
     };
     
@@ -64,15 +64,15 @@ const WeeklyLeagueStandings = () => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
-        const activeSeasonIdData = await open_fpl_backend.getActiveSeasonId();
-        setSelectedSeason(activeSeasonIdData);
+        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
+        setSelectedSeason(activeSeasonData.id);
     };
 
     const fetchViewData = async (season, gameweek) => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    
         const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage); // Update the backend call if needed
+        console.log(leaderboardData)
         setManagers(leaderboardData.entries);
     };
 
@@ -85,7 +85,7 @@ const WeeklyLeagueStandings = () => {
     };
 
     const renderedData = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(manager => (
-        <tr key={manager.position}>
+        <tr key={manager.principalId}>
             <td>{manager.position}</td>
             <td>{manager.username}</td>
             <td>{manager.score}</td>
@@ -136,4 +136,4 @@ const WeeklyLeagueStandings = () => {
     );
 };
 
-export default WeeklyLeagueStandings;
+export default WeeklyLeaderboard;

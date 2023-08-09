@@ -4,6 +4,7 @@ import { SmallFixtureIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
+import { Link } from '../../../../node_modules/react-router-dom/dist/index';
 
 const Homepage = () => {
   
@@ -223,13 +224,15 @@ const Homepage = () => {
                         <td className='text-center status'>
                             <Badge 
                                 className={
-                                    fixture.status === 1 ? 'bg-primary w-100' : 
-                                    fixture.status === 2 ? 'bg-success w-100' : 'bg-secondary w-100'
+                                    fixture.status === 1 ? 'bg-info w-100' : 
+                                    fixture.status === 2 ? 'bg-success w-100' :
+                                    fixture.status === 3 ? 'bg-primary w-100' : 'bg-secondary w-100'
                                 } 
                                 style={{ padding: '0.5rem' }}
                             >
                                 {fixture.status === 1 ? 'Active' : 
-                                    fixture.status === 2 ? 'Completed' : 'Unplayed'}
+                                    fixture.status === 2 ? 'In Consensus' :
+                                        fixture.status === 3 ? 'Verified' : 'Unplayed'}
                             </Badge>
                         </td>
                     </tr>
@@ -282,7 +285,7 @@ const Homepage = () => {
                                             </thead>
                                             <tbody>
                                                 {weeklyTop10.map((leader) => (
-                                                <tr key={Number(leader.position)}>
+                                                <tr key={leader.principalId}>
                                                     <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
                                                     <td className='text-center text-truncate'>{leader.username}</td>
                                                     <td className='text-center'>{leader.points}</td>
@@ -291,7 +294,7 @@ const Homepage = () => {
                                             </tbody>
                                         </Table>
                                         <div style={{ textAlign: 'right' }}>
-                                        <   Button href="/weekly-leaderboard">View All</Button>
+                                        <   Button as={Link} to="/weekly-leaderboard">View All</Button>
                                         </div>
                                     </>
                                     )}
@@ -313,7 +316,7 @@ const Homepage = () => {
                                         </thead>
                                         <tbody>
                                             {seasonTop10.map((leader) => (
-                                            <tr key={Number(leader.position)}>
+                                            <tr key={leader.principalId}>
                                                 <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
                                                 <td className='text-center text-truncate'>{leader.username}</td>
                                                 <td className='text-center'>{leader.points}</td>
@@ -322,7 +325,7 @@ const Homepage = () => {
                                         </tbody>
                                     </Table>
                                     <div style={{ textAlign: 'right' }}>
-                                        <Button href="/leaderboard">View All</Button>
+                                        <Button as={Link} to="/leaderboard">View All</Button>
                                     </div>
                                     </>
                                     )}

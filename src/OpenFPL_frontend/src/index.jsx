@@ -20,6 +20,8 @@ import PickTeam from "./components/gameplay/pick-team";
 import Homepage from "./components/homepage";
 import FundedWhitepaper from "./components/whitepaper/funded_whitepaper";
 import AddFixtureData from "./components/governanace/add-fixture-data";
+import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
+import Leaderboard from "./components/leaderboards/season-leaderboard";
 
 const PrivateWindowFallback = () => {
   return (
@@ -85,6 +87,8 @@ const App = () => {
               <Route path="/governance" element={<Governance   />} />
               <Route path="/pick-team" element={<PickTeam   />} />
               <Route path="/add-fixture-data" element={<AddFixtureData   />} />
+              <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard   />} />
+              <Route path="/leaderboard" element={<Leaderboard   />} />
             </Routes>
           <MyFooter />
         </div>
