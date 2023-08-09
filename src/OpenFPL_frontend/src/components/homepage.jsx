@@ -287,7 +287,7 @@ const Homepage = () => {
                                                 {weeklyTop10.map((leader) => (
                                                 <tr key={leader.principalId}>
                                                     <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
-                                                    <td className='text-center text-truncate'>{leader.username}</td>
+                                                    <td className='text-center text-truncate'>{leader.principalId == leader.username ? 'Unknown' : leader.username}</td>
                                                     <td className='text-center'>{leader.points}</td>
                                                 </tr>
                                                 ))}
@@ -318,7 +318,7 @@ const Homepage = () => {
                                             {seasonTop10.map((leader) => (
                                             <tr key={leader.principalId}>
                                                 <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
-                                                <td className='text-center text-truncate'>{leader.username}</td>
+                                                <td className='text-center text-truncate'>{leader.principalId == leader.username ? 'Unknown' : leader.username}</td>
                                                 <td className='text-center'>{leader.points}</td>
                                             </tr>
                                             ))}

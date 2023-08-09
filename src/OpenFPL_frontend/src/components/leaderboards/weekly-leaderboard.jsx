@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Spinner, Table, Pagination, Form } from 'react-bootstrap';
+import { Container, Spinner, Table, Pagination, Form, Card, Row, Col } from 'react-bootstrap';
 
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
@@ -86,9 +86,9 @@ const WeeklyLeaderboard = () => {
 
     const renderedData = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(manager => (
         <tr key={manager.principalId}>
-            <td>{manager.position}</td>
-            <td>{manager.username}</td>
-            <td>{manager.score}</td>
+            <td className='text-center'>{manager.positionText}</td>
+            <td className='text-center'>{manager.principalId == manager.username ? 'Unknown' : manager.username}</td>
+            <td className='text-center'>{manager.points}</td>
         </tr>
     ));
 
@@ -101,30 +101,43 @@ const WeeklyLeaderboard = () => {
         ) 
         :
         <Container>
-             <Form.Group controlId="seasonSelect">
-                <Form.Label>Select Season</Form.Label>
-                <Form.Control as="select" value={selectedSeason} onChange={e => {
-                    setSelectedSeason(Number(e.target.value));
-                    setSelectedGameweek(1);
-                }}>
-                    {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name} ${season.year}`}</option>)}
-                </Form.Control>
-            </Form.Group>
+            <Card className='mb-2'>
+                <Card.Body>
+                <Card.Title className='mb-2'>
+                    Weekly Leaderboard
+                </Card.Title>
+                <Row className='mb-2'>
+                    <Col xs={12} md={6}>
+                        <Form.Group controlId="seasonSelect">
+                            <Form.Label>Select Season</Form.Label>
+                            <Form.Control as="select" value={selectedSeason} onChange={e => {
+                                setSelectedSeason(Number(e.target.value));
+                                setSelectedGameweek(1);
+                            }}>
+                                {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name} ${season.year}`}</option>)}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                    <Col xs={12} md={6}>
+                        <Form.Group controlId="gameweekSelect">
+                            <Form.Label>Select Gameweek</Form.Label>
+                            <Form.Control as="select" value={selectedGameweek} onChange={e => setSelectedGameweek(Number(e.target.value))}>
+                                {Array.from({ length: 38 }, (_, index) => (
+                                    <option key={index + 1} value={index + 1}>Gameweek {index + 1}</option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                
 
-            <Form.Group controlId="gameweekSelect">
-                <Form.Label>Select Gameweek</Form.Label>
-                <Form.Control as="select" value={selectedGameweek} onChange={e => setSelectedGameweek(Number(e.target.value))}>
-                    {Array.from({ length: 38 }, (_, index) => (
-                        <option key={index + 1} value={index + 1}>Gameweek {index + 1}</option>
-                    ))}
-                </Form.Control>
-            </Form.Group>
+            
             <Table  responsive bordered className="table-fixed light-table">
                 <thead>
                     <tr>
-                        <th>Position</th>
-                        <th>Username</th>
-                        <th>Score</th>
+                        <th className='top10-num-col text-center'><small>Pos.</small></th>
+                        <th className='top10-name-col text-center'><small>Manager</small></th>
+                        <th className='top10-points-col text-center'><small>Points</small></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -132,6 +145,9 @@ const WeeklyLeaderboard = () => {
                 </tbody>
             </Table>
             <Pagination>{renderedPaginationItems}</Pagination>
+                </Card.Body>
+            </Card>
+             
         </Container>
     );
 };
