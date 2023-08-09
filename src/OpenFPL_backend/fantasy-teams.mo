@@ -14,6 +14,7 @@ import Option "mo:base/Option";
 import Utilities "utilities";
 import Int "mo:base/Int";
 import Debug "mo:base/Debug";
+import Int16 "mo:base/Int16";
 
 module {
     public class FantasyTeams(
@@ -643,6 +644,7 @@ module {
         private func calculateLeaderboards(seasonId: Nat16, gameweek: Nat8): () {
 
             func createLeaderboardEntry(principalId: Text, username: Text, team: T.UserFantasyTeam, points: Int16): T.LeaderboardEntry {
+                Debug.print(principalId # " " # Int16.toText(points));
                 return {
                     position = 0;  
                     positionText = "";
@@ -679,7 +681,9 @@ module {
                 func (pair) { 
                     let userProfile = Array.find<(Text, T.Profile)>(allUserProfiles, func(p: (Text, T.Profile)): Bool { return p.0 == pair.0; });
                     switch(userProfile){
-                        case (null) (return {points = 0; position = 0; positionText = ""; principalId = ""; username = ""});
+                        case (null) {
+                            return createLeaderboardEntry(pair.0, pair.0, pair.1, totalPointsForSeason(pair.1, seasonId));
+                        };
                         case (?foundProfile){
                             return createLeaderboardEntry(pair.0, foundProfile.1.displayName, pair.1, totalPointsForSeason(pair.1, seasonId)); }
                         };
