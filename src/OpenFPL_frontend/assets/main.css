@@ -240,3 +240,21 @@ Table{
   text-align: center;
 }
 
+
+.top10-num-col{
+  width: 20%;
+}
+
+.top10-name-col{
+  width: 50%;
+}
+
+.top10-points-col{
+  width: 30%;
+}
+
+.table-col-yes,
+.table-col-no,
+.table-col-status {
+  width: 10%;
+}

@@ -37,11 +37,21 @@ const Homepage = () => {
 
         const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
+        //const nextKickoff = Math.min(...kickOffs) - 3600000;
         const nextKickoff = Math.min(...kickOffs);
+        const currentTime = new Date().getTime();
+    
         
-        if (!isNaN(nextKickoff)) {
+        if (currentTime < nextKickoff) {
             const timeLeft = computeTimeLeft(nextKickoff);
             setCountdown(timeLeft);
+        } else {
+            setCountdown({
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0
+            });
         }
 
         const managerCountData = await open_fpl_backend.getTotalManagers();
@@ -93,10 +103,23 @@ const Homepage = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
+            //const nextKickoff = Math.min(...kickOffs) - 3600000;
             const nextKickoff = Math.min(...kickOffs);
-            if (!isNaN(nextKickoff)) {
+            console.log(nextKickoff)
+        
+            const currentTime = new Date().getTime();
+    
+            if (currentTime < nextKickoff) {
                 const timeLeft = computeTimeLeft(nextKickoff);
                 setCountdown(timeLeft);
+            } else {
+                setCountdown({
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0
+                });
+                clearInterval(timer);
             }
         }, 1000);
         
@@ -165,7 +188,7 @@ const Homepage = () => {
 
     <Card.Body>
 
-        <Table responsive>
+        <Table responsive >
             <tbody>
             {getCurrentGameweekFixtures().map((fixture, idx) => {
                 const homeTeam = getTeamById(fixture.homeTeamId);
@@ -226,15 +249,15 @@ const Homepage = () => {
                 <Col md={4} xs={12}>
                     <Card className='mb-2'>
                         <Card.Body>
-                        { (countdown.days < 0 || countdown.hours < 0 || countdown.minutes < 0 || countdown.seconds < 0) ? 
-                        <>
-                            <Card.Title>Gameweek Active</Card.Title>
-                        </>
-                        : 
-                        <>
-                            <Card.Title>Gameweek Begins:</Card.Title>
-                            <h5 className="display-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s</h5>
-                        </>}    
+                            <Card.Title>
+                                {countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0
+                                    ? "Gameweek Active"
+                                    : "Gameweek Begins:"
+                                }
+                            </Card.Title>
+                            {countdown.days > 0 || countdown.hours > 0 || countdown.minutes > 0 || countdown.seconds > 0 ? (
+                                <h5 className="display-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s</h5>
+                            ) : null}
                         </Card.Body>
                     </Card>
 
@@ -249,20 +272,20 @@ const Homepage = () => {
                                     )}
                                     {weeklyTop10.length > 0 && (
                                     <>
-                                        <Table responsive className='text-center'>
+                                        <Table responsive bordered className="table-fixed light-table">
                                             <thead>
                                                 <tr>
-                                                <th>#</th>
-                                                <th>Username</th>
-                                                <th>Points</th>
+                                                    <th className='top10-num-col text-center'><small>Pos.</small></th>
+                                                    <th className='top10-name-col text-center'><small>Manager</small></th>
+                                                    <th className='top10-points-col text-center'><small>Points</small></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {weeklyTop10.map((leader) => (
-                                                <tr key={leader.position}>
-                                                    <td>{leader.position}</td>
-                                                    <td>{leader.username}</td>
-                                                    <td>{leader.points}</td>
+                                                <tr key={Number(leader.position)}>
+                                                    <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
+                                                    <td className='text-center text-truncate'>{leader.username}</td>
+                                                    <td className='text-center'>{leader.points}</td>
                                                 </tr>
                                                 ))}
                                             </tbody>
@@ -280,20 +303,20 @@ const Homepage = () => {
                                     )}
                                     {seasonTop10.length > 0 && (
                                     <>
-                                    <Table responsive className='text-center'>
+                                    <Table responsive bordered className="table-fixed light-table">
                                         <thead>
                                             <tr>
-                                            <th>#</th>
-                                            <th>Username</th>
-                                            <th>Points</th>
+                                                <th className='top10-num-col text-center'><small>Pos.</small></th>
+                                                <th className='top10-name-col text-center'><small>Manager</small></th>
+                                                <th className='top10-points-col text-center'><small>Points</small></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {seasonTop10.map((leader) => (
-                                            <tr key={leader.position}>
-                                                <td>{leader.position}</td>
-                                                <td>{leader.username}</td>
-                                                <td>{leader.points}</td>
+                                            <tr key={Number(leader.position)}>
+                                                <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
+                                                <td className='text-center text-truncate'>{leader.username}</td>
+                                                <td className='text-center'>{leader.points}</td>
                                             </tr>
                                             ))}
                                         </tbody>

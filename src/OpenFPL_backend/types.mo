@@ -156,7 +156,7 @@ module Types{
         bankBalance: Float;
         playerIds: [PlayerId];
         captainId: Nat16;
-        gameweek: ?GameweekNumber;
+        gameweek: GameweekNumber;
         goalGetterGameweek: GameweekNumber;
         goalGetterPlayerId: PlayerId;
         passMasterGameweek: GameweekNumber;
@@ -182,7 +182,7 @@ module Types{
     public type PaginatedLeaderboard = {
         seasonId: SeasonId;
         gameweek: GameweekNumber;
-        entries: List.List<LeaderboardEntry>;
+        entries: [LeaderboardEntry];
         totalEntries: Nat;
     };
 

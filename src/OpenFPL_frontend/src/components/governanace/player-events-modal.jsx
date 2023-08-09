@@ -159,7 +159,7 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
                     </Col>
                 </Form.Group>
 
-                <Table striped bordered hover responsive="md">
+                <Table responsive bordered className="table-fixed light-table">
                     <thead>
                         <tr>
                             <th>Event Type</th>

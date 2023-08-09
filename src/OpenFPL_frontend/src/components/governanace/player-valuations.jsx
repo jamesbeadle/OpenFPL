@@ -175,7 +175,7 @@ const PlayerValuations = ({ isActive }) => {
           </Col>
         </Row>
 
-        <Table bordered hover responsive="md">
+        <Table responsive bordered className="table-fixed light-table">
           <thead>
             <tr>
               <th>#</th>

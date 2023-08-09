@@ -140,6 +140,7 @@ const AddFixtureData = () => {
   };
 
   const handleSaveFixtureData = async () => {
+    setShowConfirmDataModal(false);
     try {
       const playerEventsArray = [];
       for (const [playerId, playerEvents] of Object.entries(playerEventMap)) {

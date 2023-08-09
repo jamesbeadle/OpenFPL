@@ -99,7 +99,7 @@ const LeagueStandings = () => {
                     {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name} ${season.year}`}</option>)}
                 </Form.Control>
             </Form.Group>
-            <Table striped bordered hover>
+            <Table responsive bordered className="table-fixed light-table">
                 <thead>
                     <tr>
                         <th>Position</th>

@@ -10,6 +10,7 @@ import SelectPlayerModal from './select-player-modal';
 import SelectFantasyPlayerModal from './select-fantasy-player-modal';
 import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
+import { Link } from "react-router-dom";
 
 
 const PickTeam = () => {
@@ -50,6 +51,7 @@ const PickTeam = () => {
     3: [1]
   };
   const isTeamValid = invalidTeamMessage === null;
+  const [transfersActive, setTransfersAllowed] = useState(true);
 
   useEffect(() => {
     if(players.length == 0 || teams.length == 0){
@@ -73,6 +75,14 @@ const PickTeam = () => {
           return;
         }
 
+        
+        const transfersAllowedData = await open_fpl_backend.getTransfersAllowed();
+        setTransfersAllowed(transfersAllowedData);
+
+        if(!transfersAllowedData){
+          return;
+        };
+        
         
         const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
         setCurrentGameweek(currentGameweekData);
@@ -567,173 +577,178 @@ const handleConfirmBonusClick = (bonusType) => {
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
         <Spinner animation="border" />
         <p className='text-center mt-1'>{loadingText}</p>
-      </div>) :
-      <Container className="flex-grow-1 my-5 pitch-bg mt-0">
-        <Row className="mb-4">
-          <Col md={9}>
-            <Card className="mt-4">
-              <Card.Header>
-                <Row className="justify-content-between align-items-center">
-                  <Col xs={12} md={3} className='mb-1'>
-                    Team Selection<br />
-                    <small className='small-text'>Season: {currentSeason.name}</small><br />
-                    <small className='small-text'>Gameweek: {currentGameweek}</small>
-                  </Col>
-                  <Col xs={12} md={9}>
-                    <Card className="p-2 summary-panel">
-                      <Row className='align-items-center text-center small-text'>
-                        <Col xs={4} md={4}>
-                          <p style={{marginBottom: 0}}>
-                            £{calculateTeamValue()}m
-                            <br />
-                            <small>Team Value</small>
-                          </p>
-                        </Col>
-                        <Col xs={4} md={4}>
-                          <p style={{marginBottom: 0}}>
-                            £{(fantasyTeam.bankBalance).toFixed(1)}m
-                            <br />
-                            <small>Bank Balance</small>
-                          </p>
-                        </Col>
-                        <Col xs={4} md={4}>
-                          <p style={{marginBottom: 0}}>
-                            {
-                              (fantasyTeam === null || currentGameweek === 1) ? 
-                                'Unlimited' 
-                                : 
-                                
-                                (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
-                            }
-                            <br />
-                            <small>Transfers Available</small>
-                          </p>
-                        </Col>
+      </div>) : transfersActive ? (
+        <Container className="flex-grow-1 my-5 pitch-bg mt-0">
+          <Row className="mb-4">
+            <Col md={9}>
+              <Card className="mt-4">
+                <Card.Header>
+                  <Row className="justify-content-between align-items-center">
+                    <Col xs={12} md={3} className='mb-1'>
+                      Team Selection<br />
+                      <small className='small-text'>Season: {currentSeason.name}</small><br />
+                      <small className='small-text'>Gameweek: {currentGameweek}</small>
+                    </Col>
+                    <Col xs={12} md={9}>
+                      <Card className="p-2 summary-panel">
+                        <Row className='align-items-center text-center small-text'>
+                          <Col xs={4} md={4}>
+                            <p style={{marginBottom: 0}}>
+                              £{calculateTeamValue()}m
+                              <br />
+                              <small>Team Value</small>
+                            </p>
+                          </Col>
+                          <Col xs={4} md={4}>
+                            <p style={{marginBottom: 0}}>
+                              £{(fantasyTeam.bankBalance).toFixed(1)}m
+                              <br />
+                              <small>Bank Balance</small>
+                            </p>
+                          </Col>
+                          <Col xs={4} md={4}>
+                            <p style={{marginBottom: 0}}>
+                              {
+                                (fantasyTeam === null || currentGameweek === 1) ? 
+                                  'Unlimited' 
+                                  : 
+                                  
+                                  (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
+                              }
+                              <br />
+                              <small>Transfers Available</small>
+                            </p>
+                          </Col>
 
-                      </Row>
-                    </Card>
-                  </Col>
-                </Row>
-              </Card.Header>
-              <Card.Body>
-                <Row className='mb-2'>
-                  <Col md={10}>
-                    <div className='d-flex align-items-center mb-4 mb-md-0'>
-                      <StarIcon color="#807A00" width="15pt" height="15pt" />
-                      <p style={{marginLeft: '1rem'}} className='mb-0'><small>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</small></p>
-                    </div>
-                  </Col>
-                  <Col md={2} className='d-flex align-items-center'>
-                    <Button style={{marginLeft: '0.8rem', marginRight: '0.8rem'}}  variant="secondary white-text w-100" onClick={handleAutoFill}>AutoFill</Button>
-                  </Col>
-                </Row>
-                <Row>
-                  {fantasyTeam && fantasyTeam.players && renderPlayerSlots(fantasyTeam.players, fantasyTeam.captainId, handleCaptainSelection)}
-                </Row>
-              </Card.Body>
-
-            </Card>
-            <Card className="mt-4">
-              <Card.Header>Bonuses</Card.Header>
-              <Card.Body>
-                <Row >
-                {bonuses.map((bonus, index) => {
-                  const bonusPlayerId = fantasyTeam?.[`${bonus.propertyName}PlayerId`];
-                  const bonusTeamId = fantasyTeam?.[`${bonus.propertyName}TeamId`];
-                  const bonusGameweek = fantasyTeam?.[`${bonus.propertyName}Gameweek`];
-                  const bonusUsed = bonusGameweek !== null && bonusGameweek !== 0 && bonusGameweek !== undefined;
-                  const bonusUsedInCurrentWeek = fantasyTeam && fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek;
-                  const otherBonusUsedInCurrentWeek = bonuses.some((otherBonus) => {
-                  if (otherBonus.propertyName === bonus.propertyName) return false; 
-                    const otherBonusGameweek = fantasyTeam?.[`${otherBonus.propertyName}Gameweek`];
-                    return otherBonusGameweek === currentGameweek;
-                  });
-                
-                  let bonusTarget = "";
-                  if (bonusPlayerId) {
-                    bonusTarget = getPlayerNameFromId(bonusPlayerId);
-                  } else if (bonusTeamId) {
-                    bonusTarget = getTeamNameFromId(bonusTeamId);
-                  } else if(bonusUsed) {
-                    bonusTarget = `Played Gameweek ${bonusGameweek}`;
-                  }
-
-                  let isBonusActive = !bonusUsed;
-                  let useButton = (
-                    <div style={{marginLeft: '1rem', marginRight: '1rem'}}>
-                      <Button variant="info" className="w-100 mb-4" onClick={() => handleBonusClick(bonus.id)}>
-                        Use
-                      </Button>
-                    </div>
-                  );
-
-                  if (bonusUsed) {
-                    useButton = <div className='text-center mb-4'><small>{`Used in Gameweek ${bonusGameweek}`}</small></div>;
-                  } 
-                
-                  if (otherBonusUsedInCurrentWeek) {
-                    isBonusActive = false;
-                    useButton = <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} className='text-center small-text mb-2'>You can only use 1 bonus each week.</p>;
-                  }
-                  
-                  return (
-                    <Col xs={12} md={3} key={index} className='mb-3'>
-                      <Card style={{ opacity: isBonusActive ? 1 : 0.5 }}>
-                        <div className='bonus-card-item'>
-                          <div className='text-center mb-2 mt-2'>
-                            {bonus.icon}
-                          </div>
-                          <div className='text-center mx-1'>{bonus.name}</div>
-                          {useButton}
-                        </div>
+                        </Row>
                       </Card>
                     </Col>
-                  );
-                })}
+                  </Row>
+                </Card.Header>
+                <Card.Body>
+                  <Row className='mb-2'>
+                    <Col md={10}>
+                      <div className='d-flex align-items-center mb-4 mb-md-0'>
+                        <StarIcon color="#807A00" width="15pt" height="15pt" />
+                        <p style={{marginLeft: '1rem'}} className='mb-0'><small>Make a player your captain by selecting their star icon to receive double points for that player in the next gameweek.</small></p>
+                      </div>
+                    </Col>
+                    <Col md={2} className='d-flex align-items-center'>
+                      <Button style={{marginLeft: '0.8rem', marginRight: '0.8rem'}}  variant="secondary white-text w-100" onClick={handleAutoFill}>AutoFill</Button>
+                    </Col>
+                  </Row>
+                  <Row>
+                    {fantasyTeam && fantasyTeam.players && renderPlayerSlots(fantasyTeam.players, fantasyTeam.captainId, handleCaptainSelection)}
+                  </Row>
+                </Card.Body>
 
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-          <Col md={3}>
-            <Fixtures teams={teams} />
-          </Col>
-        </Row>
+              </Card>
+              <Card className="mt-4">
+                <Card.Header>Bonuses</Card.Header>
+                <Card.Body>
+                  <Row >
+                  {bonuses.map((bonus, index) => {
+                    const bonusPlayerId = fantasyTeam?.[`${bonus.propertyName}PlayerId`];
+                    const bonusTeamId = fantasyTeam?.[`${bonus.propertyName}TeamId`];
+                    const bonusGameweek = fantasyTeam?.[`${bonus.propertyName}Gameweek`];
+                    const bonusUsed = bonusGameweek !== null && bonusGameweek !== 0 && bonusGameweek !== undefined;
+                    const bonusUsedInCurrentWeek = fantasyTeam && fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek;
+                    const otherBonusUsedInCurrentWeek = bonuses.some((otherBonus) => {
+                    if (otherBonus.propertyName === bonus.propertyName) return false; 
+                      const otherBonusGameweek = fantasyTeam?.[`${otherBonus.propertyName}Gameweek`];
+                      return otherBonusGameweek === currentGameweek;
+                    });
+                  
+                    let bonusTarget = "";
+                    if (bonusPlayerId) {
+                      bonusTarget = getPlayerNameFromId(bonusPlayerId);
+                    } else if (bonusTeamId) {
+                      bonusTarget = getTeamNameFromId(bonusTeamId);
+                    } else if(bonusUsed) {
+                      bonusTarget = `Played Gameweek ${bonusGameweek}`;
+                    }
 
-        {fantasyTeam && fantasyTeam.players && (
-            <SelectPlayerModal 
-            show={showSelectPlayerModal} 
-            handleClose={() => setShowSelectPlayerModal(false)} 
-            handleConfirm={handlePlayerConfirm}
+                    let isBonusActive = !bonusUsed;
+                    let useButton = (
+                      <div style={{marginLeft: '1rem', marginRight: '1rem'}}>
+                        <Button variant="info" className="w-100 mb-4" onClick={() => handleBonusClick(bonus.id)}>
+                          Use
+                        </Button>
+                      </div>
+                    );
+
+                    if (bonusUsed) {
+                      useButton = <div className='text-center mb-4'><small>{`Used in Gameweek ${bonusGameweek}`}</small></div>;
+                    } 
+                  
+                    if (otherBonusUsedInCurrentWeek) {
+                      isBonusActive = false;
+                      useButton = <p style={{width: 'calc(100% - 1rem)', margin: '0rem 0.5rem'}} className='text-center small-text mb-2'>You can only use 1 bonus each week.</p>;
+                    }
+                    
+                    return (
+                      <Col xs={12} md={3} key={index} className='mb-3'>
+                        <Card style={{ opacity: isBonusActive ? 1 : 0.5 }}>
+                          <div className='bonus-card-item'>
+                            <div className='text-center mb-2 mt-2'>
+                              {bonus.icon}
+                            </div>
+                            <div className='text-center mx-1'>{bonus.name}</div>
+                            {useButton}
+                          </div>
+                        </Card>
+                      </Col>
+                    );
+                  })}
+
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={3}>
+              <Fixtures teams={teams} />
+            </Col>
+          </Row>
+
+          {fantasyTeam && fantasyTeam.players && (
+              <SelectPlayerModal 
+              show={showSelectPlayerModal} 
+              handleClose={() => setShowSelectPlayerModal(false)} 
+              handleConfirm={handlePlayerConfirm}
+              fantasyTeam={fantasyTeam}
+            />
+          )}
+          
+          
+          {showSelectFantasyPlayerModal && <SelectFantasyPlayerModal 
+            show={showSelectFantasyPlayerModal}
+            handleClose={() => setShowSelectFantasyPlayerModal(false)}
+            handleConfirm={handleConfirmPlayerBonusClick}
             fantasyTeam={fantasyTeam}
-          />
-        )}
-        
-        
-        {showSelectFantasyPlayerModal && <SelectFantasyPlayerModal 
-          show={showSelectFantasyPlayerModal}
-          handleClose={() => setShowSelectFantasyPlayerModal(false)}
-          handleConfirm={handleConfirmPlayerBonusClick}
-          fantasyTeam={fantasyTeam}
-          positions={positionsForBonus[selectedBonusId]}
-          bonusType={selectedBonusId}
-        />}
+            positions={positionsForBonus[selectedBonusId]}
+            bonusType={selectedBonusId}
+          />}
 
-        {showSelectBonusTeamModal && <SelectBonusTeamModal
-          show={showSelectBonusTeamModal}
-          handleClose={() => setShowSelectBonusTeamModal(false)}
-          handleConfirm={handleConfirmTeamBonusClick}
-          bonusType={selectedBonusId}
-        />}
+          {showSelectBonusTeamModal && <SelectBonusTeamModal
+            show={showSelectBonusTeamModal}
+            handleClose={() => setShowSelectBonusTeamModal(false)}
+            handleConfirm={handleConfirmTeamBonusClick}
+            bonusType={selectedBonusId}
+          />}
 
-        {showConfirmBonusModal && <ConfirmBonusModal
-          show={showConfirmBonusModal}
-          handleClose={() => setShowConfirmBonusModal(false)}
-          handleConfirm={handleConfirmBonusClick}
-          bonusType={selectedBonusId}
-        />}
-        
-      </Container>
+          {showConfirmBonusModal && <ConfirmBonusModal
+            show={showConfirmBonusModal}
+            handleClose={() => setShowConfirmBonusModal(false)}
+            handleConfirm={handleConfirmBonusClick}
+            bonusType={selectedBonusId}
+          />}
+          
+        </Container>
+      ) :
+      <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
+        <p className='text-center mt-1'>Transfers are inactive while the gameweek is active. This will be updated in a future release.</p>
+        <Button as={Link} to='/'>Home</Button>
+      </div> 
   );
 };
 

@@ -71,7 +71,7 @@ const Proposals = ({ isActive }) => {
           </Dropdown.Menu>
         </Dropdown>
 
-        <Table bordered responsive className="mt-1 custom-table">
+        <Table responsive bordered className="table-fixed light-table mt-1 custom-table">
         <thead>
           <tr>
             <th className="table-col-id"><small>Id</small></th>

@@ -80,7 +80,11 @@ actor Self {
     return await playerCanister.getPlayer(playerId);
   }; 
 
-  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer);
+  private func getProfiles(): [(Text, T.Profile)] {
+    return profilesInstance.getProfiles();
+  }; 
+
+  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer, getProfiles);
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
     return seasonManager.getActiveGameweek();
@@ -104,6 +108,10 @@ actor Self {
 
   public query ({caller}) func getActiveGameweekFixtures() : async [T.Fixture]{
     return seasonManager.getActiveGameweekFixtures();
+  };
+
+  public query ({caller}) func getTransfersAllowed() : async Bool {
+    return seasonManager.getTransfersAllowed();
   };
 
   //Profile Functions
@@ -237,12 +245,29 @@ actor Self {
   };
 
   //League functions
-  public shared query ({caller}) func getSeasonTop10() : async T.Leaderboard {
-      return fantasyTeamsInstance.getSeasonTop10(seasonManager.getActiveSeasonId());
+  public shared query ({caller}) func getSeasonTop10() : async T.PaginatedLeaderboard {
+      
+      let top10 = fantasyTeamsInstance.getSeasonTop10(seasonManager.getActiveSeasonId());
+      
+      return {
+        seasonId = top10.seasonId;
+        gameweek = top10.gameweek;
+        entries = List.toArray(top10.entries);
+        totalEntries = 10;
+      };
+      
+      
   };
 
-  public shared query ({caller}) func getWeeklyTop10() : async T.Leaderboard {
-      return fantasyTeamsInstance.getWeeklyTop10(seasonManager.getActiveSeasonId(), seasonManager.getActiveGameweek());
+  public shared query ({caller}) func getWeeklyTop10() : async T.PaginatedLeaderboard {
+    let top10 = fantasyTeamsInstance.getWeeklyTop10(seasonManager.getActiveSeasonId(), seasonManager.getActiveGameweek());
+      
+      return {
+        seasonId = top10.seasonId;
+        gameweek = top10.gameweek;
+        entries = List.toArray(top10.entries);
+        totalEntries = 10;
+      };
   };
 
   public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
@@ -790,8 +815,14 @@ actor Self {
   };
 
   public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691531400000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691582700000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
     await seasonManager.init_genesis_season(firstFixture);
+  };
+
+  //TEST FUNCTION
+
+  public func getAllFantasyTeams(): async [(Text, T.UserFantasyTeam)]{
+    return fantasyTeamsInstance.getFantasyTeams();
   };
   
   //intialise season manager
@@ -845,6 +876,42 @@ actor Self {
   private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
   private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
   
+  /*
+  public type OldUserFantasyTeam = {
+      fantasyTeam: T.FantasyTeam;
+      history: List.List<OldFantasyTeamSeason>;
+  };
+
+  public type OldFantasyTeamSeason = {
+      seasonId: T.SeasonId;
+      totalPoints: Int16;
+      gameweeks: List.List<OldFantasyTeamSnapshot>;
+  };
+
+  public type OldFantasyTeamSnapshot = {
+      principalId: Text;
+      transfersAvailable: Nat8;
+      bankBalance: Float;
+      playerIds: [T.PlayerId];
+      captainId: Nat16;
+      goalGetterGameweek: T.GameweekNumber;
+      goalGetterPlayerId: T.PlayerId;
+      passMasterGameweek: T.GameweekNumber;
+      passMasterPlayerId: T.PlayerId;
+      noEntryGameweek: T.GameweekNumber;
+      noEntryPlayerId: T.PlayerId;
+      teamBoostGameweek: T.GameweekNumber;
+      teamBoostTeamId: T.TeamId;
+      safeHandsGameweek: T.GameweekNumber;
+      safeHandsPlayerId: T.PlayerId;
+      captainFantasticGameweek: T.GameweekNumber;
+      captainFantasticPlayerId: T.PlayerId;
+      braceBonusGameweek: T.GameweekNumber;
+      hatTrickHeroGameweek: T.GameweekNumber;
+      points: Int16;
+  };
+  */
+
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
     stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
@@ -873,6 +940,9 @@ actor Self {
 
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
+
+    //fantasyTeamsBackupAdj();
+    
     fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_transfers_allowed, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
@@ -887,6 +957,25 @@ actor Self {
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
     recreateTimers();
   };
+/*
+  func fantasyTeamsBackupAdj(){
+
+    //Added gameweek field to FantasyTeamSnapshot
+    
+    let tmp_stable_fantasy_teams: [(Text, OldUserFantasyTeam)] = stable_fantasy_teams;
+
+    let newTeamsBuffer = Buffer.fromArray<(Text, T.UserFantasyTeam)>([]);
+
+    for(team in Iter.fromArray(tmp_stable_fantasy_teams)){
+      let newFantasyTeam: T.UserFantasyTeam = {
+        fantasyTeam = team.1.fantasyTeam;
+        history = List.nil();
+      };
+      newTeamsBuffer.add((team.0, newFantasyTeam));
+    };
+    fantasyTeamsInstance.setData(Buffer.toArray<(Text, T.UserFantasyTeam)>(newTeamsBuffer));
+  };
+  */
 
   private func recreateTimers(){
       let currentTime = Time.now();

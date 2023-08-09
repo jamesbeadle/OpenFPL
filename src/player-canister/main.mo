@@ -246,6 +246,7 @@ actor Self {
 
             let aggregateScore = calculateAggregatePlayerEvents(events, currentPlayer.position);
             
+            Debug.print(debug_show playerId # " " # Int16.toText(totalScore));
             playerScoresMap.put(playerId, totalScore + aggregateScore);
         };
 
