@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Spinner,Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { useParams } from 'react-router-dom';
 import PlayerDetailsModal from './player-details-modal';
@@ -22,16 +22,79 @@ const ViewPoints = () => {
         fetchData();
     }, []);
 
+    
+    const extractPlayerData = (playerDTO) => {
+        let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
+        playerDTO.events.forEach(event => {
+            console.log(event)
+            switch(event.eventType) {
+                case 0:
+                    appearance += 1;
+                    break;
+                case 1:
+                    goals += 1;
+                    break;
+                case 2:
+                    assists += 1;
+                    break;
+                case 3:
+                    goalsConceded += 1;
+                    break;
+                case 4:
+                    saves += 1;
+                    break;
+                case 5:
+                    cleanSheets += 1;
+                    break;
+                case 6:
+                    penaltySaves += 1;
+                    break;
+                case 7:
+                    missedPenalties += 1;
+                    break;
+                case 8:
+                    yellowCards += 1;
+                    break;
+                case 9:
+                    redCards += 1;
+                    break;
+                case 10:
+                    ownGoals += 1;
+                    break;
+                case 11:
+                    highestScoringPlayerId += 1;
+                    break;
+            }
+        });
+    
+        return {
+            ...playerDTO,
+            gameweekData: {
+                appearance,
+                goals,
+                assists,
+                goalsConceded,
+                saves,
+                cleanSheets,
+                penaltySaves,
+                missedPenalties,
+                yellowCards,
+                redCards,
+                ownGoals,
+                highestScoringPlayerId
+            }
+        };
+    };
+
     const fetchViewData = async () => {
         const fixturesData = await open_fpl_backend.getFixtures();
         setFixtures(fixturesData);
         const fetchedFantasyTeam = await open_fpl_backend.getFantasyTeamForGameweek(manager, Number(season), Number(gameweek)); 
-        console.log(fetchedFantasyTeam)
-        const detailedPlayers = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));
-        console.log(detailedPlayers)
-       setFantasyTeam({
-        ...fetchedFantasyTeam,
-        players: detailedPlayers,
+        const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));
+        const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
+        setFantasyTeam({
+            ...fetchedFantasyTeam,
+            players: detailedPlayers,
         });
     };
 
@@ -45,6 +108,7 @@ const ViewPoints = () => {
         setShowModal(false);
     }
 
+    
     const renderPlayerPoints = (player) => {
         const playerScore = calculatePlayerScore(player, fantasyTeam, fixtures);
         return (
@@ -69,14 +133,17 @@ const ViewPoints = () => {
     }
 
     const calculatePlayerScore = (playerDTO, fantasyTeamDTO, fixtures) => {
-        if (!playerDTO.gameweekData) {
+        console.log(playerDTO)
+        if (!playerDTO) {
             console.error("No gameweekData found for player:", playerDTO);
             return 0; // or some default value
         }
         
-        let score = playerDTO.gameweekData.points;
+        let score = playerDTO.points;
 
-        score += 5;
+        if(playerDTO.gameweekData.appearance > 0){
+            score += 5 * playerDTO.gameweekData.appearance;
+        }
     
         if (playerDTO.position === 0) {
             if (playerDTO.gameweekData.saves >= 3) {

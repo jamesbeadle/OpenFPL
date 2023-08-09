@@ -70,7 +70,7 @@ actor Self {
     setPlayerInjury: (proposalPayload: T.SetPlayerInjuryPayload) -> async ();
     retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async ();
     unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async ();
-    getPlayersDetailsForGameweek: (playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) -> async [T.PlayerGameweek];
+    getPlayersDetailsForGameweek: (playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) -> async [DTOs.PlayerPointsDTO];
   };
 
   private func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8): async [(Nat16, DTOs.PlayerScoreDTO)] {
@@ -830,7 +830,7 @@ actor Self {
       return await fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
   };
 
-  public shared ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [T.PlayerGameweek] {
+  public shared ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [DTOs.PlayerPointsDTO] {
       return await playerCanister.getPlayersDetailsForGameweek(playerIds, seasonId, gameweek);
   };
   

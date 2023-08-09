@@ -63,10 +63,10 @@ actor Self {
             }});
     };
 
-    public shared query ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [T.PlayerGameweek] {
+    public shared query ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [DTOs.PlayerPointsDTO] {
         assert not Principal.isAnonymous(caller);
         
-        var playerDetailsBuffer = Buffer.fromArray<T.PlayerGameweek>([]);
+        var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
 
         label playerDetailsLoop for (player in Iter.fromList(players)) {
             if (Array.find<T.PlayerId>(playerIds, func(id) { id == player.id }) == null or player.onLoan) {
@@ -82,16 +82,21 @@ actor Self {
 
                         if (gw.number == gameweek) {
                             points := gw.points;
-                            events := gw.events;
+                            events := List.filter<T.PlayerEventData>(gw.events, func(event: T.PlayerEventData) : Bool {
+                                return event.playerId != player.id;
+                            });
                         };
                     }
                 }
             };
 
-            let playerGameweek: T.PlayerGameweek = {
-                number = gameweek;
+            let playerGameweek: DTOs.PlayerPointsDTO = {
+                id = player.id;
                 points = points;
-                events = events;
+                teamId = player.teamId;
+                position = player.position;
+                events = List.toArray(events);
+                gameweek = gameweek;
             };
             playerDetailsBuffer.add(playerGameweek);
         };

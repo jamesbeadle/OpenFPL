@@ -49,5 +49,14 @@ module DTOs {
         assists: Int16;
         events: List.List<T.PlayerEventData>;
     };
+
+    public type PlayerPointsDTO = {
+        id: Nat16;
+        gameweek: T.GameweekNumber;
+        points: Int16;
+        teamId: Nat16;
+        position: Nat8;
+        events: [T.PlayerEventData];
+    };
     
 }
