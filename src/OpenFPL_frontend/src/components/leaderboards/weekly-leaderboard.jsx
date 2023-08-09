@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Spinner, Table, Pagination, Form, Card, Row, Col } from 'react-bootstrap';
+import { Container, Spinner, Table, Pagination, Form, Card, Row, Col, Button } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
@@ -89,6 +90,7 @@ const WeeklyLeaderboard = () => {
             <td className='text-center'>{manager.positionText}</td>
             <td className='text-center'>{manager.principalId == manager.username ? 'Unknown' : manager.username}</td>
             <td className='text-center'>{manager.points}</td>
+            <td className='text-center'><Button as={Link} to={`/view-points?manager=${manager.principalId}&season=${selectedSeason}&gw=${selectedGameweek}`}>View</Button></td>
         </tr>
     ));
 
@@ -138,6 +140,7 @@ const WeeklyLeaderboard = () => {
                         <th className='top10-num-col text-center'><small>Pos.</small></th>
                         <th className='top10-name-col text-center'><small>Manager</small></th>
                         <th className='top10-points-col text-center'><small>Points</small></th>
+                        <th className='top10-button-col text-center'></th>
                     </tr>
                 </thead>
                 <tbody>

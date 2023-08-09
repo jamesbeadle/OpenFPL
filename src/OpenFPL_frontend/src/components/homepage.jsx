@@ -4,7 +4,7 @@ import { SmallFixtureIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
-import { Link } from '../../../../node_modules/react-router-dom/dist/index';
+import { Link } from "react-router-dom";
 
 const Homepage = () => {
   

@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Spinner, Table, Pagination, Form, Card, Row, Col } from 'react-bootstrap';
+import { Container, Spinner, Table, Pagination, Form, Card, Row, Col, Button } from 'react-bootstrap';
 
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { Link } from "react-router-dom";
 
 const SeasonLeaderboard = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -115,7 +116,7 @@ const SeasonLeaderboard = () => {
                 <thead>
                     <tr>
                         <th className='top10-num-col text-center'><small>Pos.</small></th>
-                        <th className='top10-name-col text-center'><small>Manager</small></th>
+                        <th className='top10-name-large-col text-center'><small>Manager</small></th>
                         <th className='top10-points-col text-center'><small>Points</small></th>
                     </tr>
                 </thead>
