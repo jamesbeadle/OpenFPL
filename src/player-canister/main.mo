@@ -63,6 +63,44 @@ actor Self {
             }});
     };
 
+    public shared query ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [T.PlayerGameweek] {
+        assert not Principal.isAnonymous(caller);
+        
+        var playerDetailsBuffer = Buffer.fromArray<T.PlayerGameweek>([]);
+
+        label playerDetailsLoop for (player in Iter.fromList(players)) {
+            if (Array.find<T.PlayerId>(playerIds, func(id) { id == player.id }) == null or player.onLoan) {
+                continue playerDetailsLoop;
+            };
+
+            var points: Int16 = 0;
+            var events: List.List<T.PlayerEventData> = List.nil();
+
+            for (season in Iter.fromList(player.seasons)) {
+                if (season.id == seasonId) {
+                    for (gw in Iter.fromList(season.gameweeks)) {
+
+                        if (gw.number == gameweek) {
+                            points := gw.points;
+                            events := gw.events;
+                        };
+                    }
+                }
+            };
+
+            let playerGameweek: T.PlayerGameweek = {
+                number = gameweek;
+                points = points;
+                events = events;
+            };
+            playerDetailsBuffer.add(playerGameweek);
+        };
+
+        return Buffer.toArray(playerDetailsBuffer);
+    };
+
+
+
     public query ({caller}) func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
         assert not Principal.isAnonymous(caller);
 

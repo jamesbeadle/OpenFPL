@@ -70,6 +70,7 @@ actor Self {
     setPlayerInjury: (proposalPayload: T.SetPlayerInjuryPayload) -> async ();
     retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async ();
     unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async ();
+    getPlayersDetailsForGameweek: (playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) -> async [T.PlayerGameweek];
   };
 
   private func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8): async [(Nat16, DTOs.PlayerScoreDTO)] {
@@ -823,6 +824,14 @@ actor Self {
 
   public func getAllFantasyTeams(): async [(Text, T.UserFantasyTeam)]{
     return fantasyTeamsInstance.getFantasyTeams();
+  };
+
+  public shared ({caller}) func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
+      return await fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
+  };
+
+  public shared ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [T.PlayerGameweek] {
+      return await playerCanister.getPlayersDetailsForGameweek(playerIds, seasonId, gameweek);
   };
   
   //intialise season manager

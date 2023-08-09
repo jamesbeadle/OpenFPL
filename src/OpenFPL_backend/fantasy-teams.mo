@@ -941,6 +941,46 @@ module {
             };
         };
 
+        public func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
+            let emptySnapshot: T.FantasyTeamSnapshot = { principalId = ""; transfersAvailable = 0; bankBalance = 0.0;  playerIds = [];
+                captainId = 0; gameweek = 0; goalGetterGameweek = 0; goalGetterPlayerId = 0; passMasterGameweek = 0;
+                passMasterPlayerId = 0; noEntryGameweek = 0; noEntryPlayerId = 0; teamBoostGameweek = 0; teamBoostTeamId = 0;
+                safeHandsGameweek = 0; safeHandsPlayerId = 0; captainFantasticGameweek = 0; captainFantasticPlayerId = 0; braceBonusGameweek = 0;
+                hatTrickHeroGameweek = 0; points = 0;
+            };
+            let fantasyTeam = fantasyTeams.get(managerId);
+            switch(fantasyTeam){
+                case (null){ return emptySnapshot; };
+                case (?foundTeam){ 
+                    
+                    let teamHistory = foundTeam.history;
+                    switch(teamHistory){
+                        case (null){ return emptySnapshot; };
+                        case (foundHistory){
+                            let foundSeason = List.find<T.FantasyTeamSeason>(foundHistory, func (season: T.FantasyTeamSeason): Bool {
+                                return season.seasonId == seasonId;
+                            });
+                            switch(foundSeason){
+                                case (null) { return emptySnapshot; };
+                                case (?fs) {
+                                    let foundGameweek = List.find<T.FantasyTeamSnapshot>(fs.gameweeks, func (gw: T.FantasyTeamSnapshot): Bool {
+                                        return gw.gameweek == gameweek;
+                                    });
+                                    switch(foundGameweek){
+                                        case (null) { return emptySnapshot; };
+                                        case (?fgw) { return fgw; };
+                                    }
+                                };
+                            };
+
+                        };
+
+                    };
+                }
+            };
+        };
+
+
         public func getSeasonTop10(activeSeasonId: Nat16) : T.Leaderboard {
             switch (seasonLeaderboards.get(activeSeasonId)) {
                 case (null) {

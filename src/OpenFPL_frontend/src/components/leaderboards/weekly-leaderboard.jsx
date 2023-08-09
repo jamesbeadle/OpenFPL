@@ -89,7 +89,7 @@ const WeeklyLeaderboard = () => {
             <td className='text-center'>{manager.positionText}</td>
             <td className='text-center'>{manager.principalId == manager.username ? 'Unknown' : manager.username}</td>
             <td className='text-center'>{manager.points}</td>
-            <td className='text-center'><Button as={Link} to={`/view-points?manager=${manager.principalId}&season=${selectedSeason}&gw=${selectedGameweek}`}>View</Button></td>
+            <td className='text-center'><Button as={Link} to={`/view-points/${manager.principalId}/${selectedSeason}/${selectedGameweek}`}>View</Button></td>
         </tr>
     ));
 

@@ -22,6 +22,7 @@ import FundedWhitepaper from "./components/whitepaper/funded_whitepaper";
 import AddFixtureData from "./components/governanace/add-fixture-data";
 import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
 import Leaderboard from "./components/leaderboards/season-leaderboard";
+import ViewPoints from "./components/gameplay/view-points";
 
 const PrivateWindowFallback = () => {
   return (
@@ -89,6 +90,7 @@ const App = () => {
               <Route path="/add-fixture-data" element={<AddFixtureData   />} />
               <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard   />} />
               <Route path="/leaderboard" element={<Leaderboard   />} />
+              <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
             </Routes>
           <MyFooter />
         </div>
