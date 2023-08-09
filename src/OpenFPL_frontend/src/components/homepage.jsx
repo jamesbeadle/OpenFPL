@@ -62,7 +62,6 @@ const Homepage = () => {
         setSeasonTop10(seasonTop10Data.entries);
     
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
-        console.log(weeklyTop10Data.entries)
         setWeeklyTop10(weeklyTop10Data.entries);
     };
     
@@ -106,7 +105,6 @@ const Homepage = () => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
             //const nextKickoff = Math.min(...kickOffs) - 3600000;
             const nextKickoff = Math.min(...kickOffs);
-            console.log(nextKickoff)
         
             const currentTime = new Date().getTime();
     

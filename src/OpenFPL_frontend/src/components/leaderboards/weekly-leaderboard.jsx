@@ -73,7 +73,6 @@ const WeeklyLeaderboard = () => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage); // Update the backend call if needed
-        console.log(leaderboardData)
         setManagers(leaderboardData.entries);
     };
 
