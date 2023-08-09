@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Spinner, Button } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { useParams } from 'react-router-dom';
 import PlayerDetailsModal from './player-details-modal';
 
@@ -13,6 +14,7 @@ const ViewPoints = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [fixtures, setFixtures] = useState([]);
+    const [players, setPlayers] = useState([]);
    
     useEffect(() => {
         const fetchData = async () => {
@@ -92,6 +94,8 @@ const ViewPoints = () => {
         const fetchedFantasyTeam = await open_fpl_backend.getFantasyTeamForGameweek(manager, Number(season), Number(gameweek)); 
         const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));
         const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
+        const playerData = await player_canister.getAllPlayers();
+        setPlayers(playerData);
         setFantasyTeam({
             ...fetchedFantasyTeam,
             players: detailedPlayers,
@@ -109,37 +113,37 @@ const ViewPoints = () => {
     }
 
     
-    const renderPlayerPoints = (player) => {
-        const playerScore = calculatePlayerScore(player, fantasyTeam, fixtures);
+    const renderPlayerPoints = (playerDTO) => {
+        const player = players.find(p => p.id === playerDTO.id);
+        const playerScore = calculatePlayerScore(playerDTO, fantasyTeam, fixtures);
         return (
         <Card key={player.id}>
             <Row className='mx-1 mt-2'>
-            <Col xs={12}>
-                <Row>
-                <Col xs={6}>
-                    <h5>{player.firstName} {player.lastName}</h5>
+                <Col xs={12}>
+                    <Row>
+                    <Col xs={6}>
+                        <h5>{player.firstName} {player.lastName}</h5>
+                    </Col>
+                    <Col xs={3}>
+                        <p>{playerScore} pts</p>
+                    </Col>
+                    <Col xs={3}>
+                        <Button onClick={() => handleShowModal(player)}>Details</Button>
+                    </Col>
+                    </Row>
                 </Col>
-                <Col xs={3}>
-                    <p>{playerScore} pts</p>
-                </Col>
-                <Col xs={3}>
-                    <Button onClick={() => handleShowModal(player)}>Details</Button>
-                </Col>
-                </Row>
-            </Col>
             </Row>
         </Card>
         );
     }
 
     const calculatePlayerScore = (playerDTO, fantasyTeamDTO, fixtures) => {
-        console.log(playerDTO)
         if (!playerDTO) {
             console.error("No gameweekData found for player:", playerDTO);
-            return 0; // or some default value
+            return 0;
         }
         
-        let score = playerDTO.points;
+        let score = 0; 
 
         if(playerDTO.gameweekData.appearance > 0){
             score += 5 * playerDTO.gameweekData.appearance;
@@ -186,7 +190,6 @@ const ViewPoints = () => {
             score -= 5;
         }
 
-        
         if (fantasyTeamDTO.goalGetterGameweek === playerDTO.gameweek && fantasyTeamDTO.goalGetterPlayerId === playerDTO.id) {
             score += playerDTO.gameweekData.goals * 20; 
         }

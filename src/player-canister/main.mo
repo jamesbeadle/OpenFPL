@@ -26,8 +26,7 @@ actor Self {
     private var retiredPlayers = List.fromArray<T.Player>([]);
 
     public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
-        assert not Principal.isAnonymous(caller);
-
+        
         func compare(player1: T.Player, player2: T.Player) : Bool {
             return player1.value >= player2.value;
         };
