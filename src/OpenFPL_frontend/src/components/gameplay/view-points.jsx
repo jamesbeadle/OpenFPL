@@ -13,6 +13,7 @@ const ViewPoints = () => {
     });
     const [showModal, setShowModal] = useState(false);
     const [selectedPlayer, setSelectedPlayer] = useState(null);
+    const [selectedPlayerDTO, setSelectedPlayerDTO] = useState(null);
     const [fixtures, setFixtures] = useState([]);
     const [players, setPlayers] = useState([]);
    
@@ -102,38 +103,34 @@ const ViewPoints = () => {
         });
     };
 
-    const handleShowModal = (player) => {
+    const handleShowModal = (player, playerDTO) => {
         setSelectedPlayer(player);
+        setSelectedPlayerDTO(playerDTO);
         setShowModal(true);
     }
-
+    
     const handleCloseModal = () => {
         setSelectedPlayer(null);
         setShowModal(false);
     }
+    
 
     
     const renderPlayerPoints = (playerDTO) => {
         const player = players.find(p => p.id === playerDTO.id);
         const playerScore = calculatePlayerScore(playerDTO, fantasyTeam, fixtures);
         return (
-        <Card key={player.id}>
-            <Row className='mx-1 mt-2'>
-                <Col xs={12}>
-                    <Row>
-                    <Col xs={6}>
-                        <h5>{player.firstName} {player.lastName}</h5>
-                    </Col>
-                    <Col xs={3}>
-                        <p>{playerScore} pts</p>
-                    </Col>
-                    <Col xs={3}>
-                        <Button onClick={() => handleShowModal(player)}>Details</Button>
-                    </Col>
-                    </Row>
+            <Row key={player.id} className='mb-2 mt-2 align-items-center'>
+                <Col className='d-flex align-items-center justify-content-center' xs={4}>
+                    <p className='small-text text-truncate' style={{marginBottom: '0px'}}>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</p>
+                </Col>
+                <Col className='d-flex align-items-center justify-content-center' xs={4}>
+                    <p className='small-text' style={{marginBottom: '0px'}}>{playerScore} pts</p>
+                </Col>
+                <Col className='d-inline-flex align-items-center justify-content-center' xs={4}>
+                    <Button onClick={() => handleShowModal(player, playerDTO)}><label className='small-text' >Details</label></Button>
                 </Col>
             </Row>
-        </Card>
         );
     }
 
@@ -250,10 +247,10 @@ const ViewPoints = () => {
         ) :
         <Container className="flex-grow-1 my-5">
             <Row className="mb-4">
-            <Col md={9}>
+            <Col md={12}>
                 <Card className="mt-4">
                 <Card.Header>
-                    {}
+                    Fantasy Team Score
                 </Card.Header>
                 <Card.Body>
                     {fantasyTeam && fantasyTeam.players && fantasyTeam.players.map(player => renderPlayerPoints(player))}
@@ -261,7 +258,7 @@ const ViewPoints = () => {
                 </Card>
             </Col>
             </Row>    
-            {selectedPlayer && <PlayerDetailsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} />}
+            {selectedPlayer && selectedPlayerDTO && <PlayerDetailsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} />}
     
         </Container>
         );
