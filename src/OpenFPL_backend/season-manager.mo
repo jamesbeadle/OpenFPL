@@ -214,6 +214,8 @@ module {
             return fixture.status < 3;
         });
 
+        Debug.print("remainingFixtures");
+        Debug.print(debug_show remainingFixtures);
         if(Option.isNull(remainingFixtures)) {
             await gameweekVerified();
             await setNextGameweek();

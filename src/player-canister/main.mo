@@ -67,6 +67,9 @@ actor Self {
         
         var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
 
+
+        
+
         label playerDetailsLoop for (player in Iter.fromList(players)) {
             if (Array.find<T.PlayerId>(playerIds, func(id) { id == player.id }) == null or player.onLoan) {
                 continue playerDetailsLoop;
@@ -75,6 +78,10 @@ actor Self {
             var points: Int16 = 0;
             var events: List.List<T.PlayerEventData> = List.nil();
 
+            Debug.print(debug_show "player");
+            Debug.print(debug_show player);
+            Debug.print(debug_show "player.seasons");
+            Debug.print(debug_show player.seasons);
             for (season in Iter.fromList(player.seasons)) {
                 if (season.id == seasonId) {
                     for (gw in Iter.fromList(season.gameweeks)) {
@@ -82,8 +89,10 @@ actor Self {
                         if (gw.number == gameweek) {
                             points := gw.points;
                             events := List.filter<T.PlayerEventData>(gw.events, func(event: T.PlayerEventData) : Bool {
-                                return event.playerId != player.id;
+                                return event.playerId == player.id;
                             });
+                            Debug.print(debug_show "events");
+                            Debug.print(debug_show events);
                         };
                     }
                 }
@@ -106,7 +115,7 @@ actor Self {
 
 
     public query ({caller}) func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
-        assert not Principal.isAnonymous(caller);
+        //assert not Principal.isAnonymous(caller);
 
         var playersMap: HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
         label playerMapLoop for (player in Iter.fromList(players)) { 

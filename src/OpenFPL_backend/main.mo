@@ -816,7 +816,7 @@ actor Self {
   };
 
   public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691583600000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    let firstFixture: T.Fixture =    { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691697600000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
     await seasonManager.init_genesis_season(firstFixture);
   };
 

@@ -180,6 +180,7 @@ const handleConfirmPlayerBonusClick = (data) => {
         [bonusGameweekProperty]: currentGameweek,
         [bonusPlayerProperty]: data.playerId
     }));
+    setSelectedBonusId(bonusObject.id);
     setSelectedBonusPlayerId(data.playerId);
 
     setShowSelectFantasyPlayerModal(false);
@@ -202,6 +203,7 @@ const handleConfirmTeamBonusClick = (data) => {
         [bonusGameweekProperty]: currentGameweek,
         [bonusTeamProperty]: data.teamId
     }));
+    setSelectedBonusId(bonusObject.id);
     setSelectedBonusTeamId(data.teamId);
 
     setShowSelectBonusTeamModal(false);
@@ -221,11 +223,9 @@ const handleConfirmBonusClick = (bonusType) => {
         ...prevFantasyTeam,
         [bonusGameweekProperty]: currentGameweek
     }));
+    setSelectedBonusId(bonusObject.id);
 
     setShowConfirmBonusModal(false);
-    setSelectedBonusId(null);
-    setSelectedPlayerId(null);
-    setSelectedTeamId(null);
 };
   
   const getInvalidTeamMessage = () => {
@@ -394,8 +394,9 @@ const handleConfirmBonusClick = (bonusType) => {
     try {
       
       const newPlayerIds = fantasyTeam.players.map(player => Number(player.id));
-     const identity = authClient.getIdentity();
+      const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      console.log(selectedBonusId)
       await open_fpl_backend.saveFantasyTeam(newPlayerIds, fantasyTeam.captainId ? Number(fantasyTeam.captainId) : 0, selectedBonusId ? Number(selectedBonusId) : 0, selectedBonusPlayerId ? Number(selectedBonusPlayerId) : 0, selectedBonusTeamId ? Number(selectedBonusTeamId) : 0);
       await fetchViewData();
       setIsLoading(false);

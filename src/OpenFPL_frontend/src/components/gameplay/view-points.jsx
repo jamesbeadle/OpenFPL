@@ -28,8 +28,8 @@ const ViewPoints = () => {
     
     const extractPlayerData = (playerDTO) => {
         let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
+        console.log(playerDTO)
         playerDTO.events.forEach(event => {
-            console.log(event)
             switch(event.eventType) {
                 case 0:
                     appearance += 1;
@@ -94,7 +94,10 @@ const ViewPoints = () => {
         setFixtures(fixturesData);
         const fetchedFantasyTeam = await open_fpl_backend.getFantasyTeamForGameweek(manager, Number(season), Number(gameweek)); 
         const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));
+        
         const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
+        console.log("detailedPlayersRaw")
+        console.log(detailedPlayersRaw)
         const playerData = await player_canister.getAllPlayers();
         setPlayers(playerData);
         setFantasyTeam({
@@ -141,6 +144,9 @@ const ViewPoints = () => {
         }
         
         let score = 0; 
+        console.log(playerDTO)
+        console.log(fantasyTeamDTO)
+        console.log(fixtures)
 
         if(playerDTO.gameweekData.appearance > 0){
             score += 5 * playerDTO.gameweekData.appearance;

@@ -8,16 +8,19 @@ const SelectFantasyPlayerModal = ({ show, handleClose, handleConfirm, fantasyTea
   const { teams } = useContext(AuthContext);
   
   const filteredPlayers = positions 
-  ? players.filter(player => positions.includes(player.position) && fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id))
+  ? players.filter(player => positions.includes(player.position) && 
+  fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id))
   : players.filter(player => fantasyTeam.players.some(fantasyPlayer => fantasyPlayer.id === player.id));
   
   const bonusTitle = (bonusType == 1) ? "Bonus: Goal Getter" :
                       (bonusType == 2) ? "Bonus: Pass Master" :
-                      (bonusType == 3) ? "Bonus: No Entry" : "";
+                      (bonusType == 3) ? "Bonus: No Entry" :
+                      (bonusType == 5) ? "Bonus: Safe Hands" : "";
 
 const description = (bonusType == 1) ? "Play your Goal Getter bonus to receive triple points for each goal scored for any selected player." :
   (bonusType == 2) ? "Play your Pass Master bonus to receive triple points for each assist for any selected player." :
-  (bonusType == 3) ? "Play your No Entry bonus to receieve triple points on any defenders score if they keep a clean sheet." : "";
+  (bonusType == 3) ? "Play your No Entry bonus to receieve triple points on any defenders score if they keep a clean sheet." :
+  (bonusType == 5) ? "Play your Safe Hands bonus to receieve a X3 multiplier on your goalkeeper if they make 5 saves in a match." : "";
 
 
   const handleSubmit = (data) => {
