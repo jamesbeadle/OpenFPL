@@ -38,11 +38,9 @@ const Homepage = () => {
 
         const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-        //const nextKickoff = Math.min(...kickOffs) - 3600000;
-        const nextKickoff = Math.min(...kickOffs);
+        const nextKickoff = Math.min(...kickOffs) - 3600000;
         const currentTime = new Date().getTime();
     
-        
         if (currentTime < nextKickoff) {
             const timeLeft = computeTimeLeft(nextKickoff);
             setCountdown(timeLeft);
@@ -103,9 +101,8 @@ const Homepage = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-            //const nextKickoff = Math.min(...kickOffs) - 3600000;
-            const nextKickoff = Math.min(...kickOffs);
-        
+            const nextKickoff = Math.min(...kickOffs) - 3600000;
+            
             const currentTime = new Date().getTime();
     
             if (currentTime < nextKickoff) {

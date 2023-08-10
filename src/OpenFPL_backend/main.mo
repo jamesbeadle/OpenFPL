@@ -41,11 +41,11 @@ actor Self {
   
   let CANISTER_IDS = {
     //JB Local Dev
-    token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
-    player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
+    //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
+    //player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
     //Live canisters
-    //player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
-    //token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
+    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -886,7 +886,6 @@ actor Self {
   private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
   private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
   
-  /*
   public type OldUserFantasyTeam = {
       fantasyTeam: T.FantasyTeam;
       history: List.List<OldFantasyTeamSeason>;
@@ -920,7 +919,6 @@ actor Self {
       hatTrickHeroGameweek: T.GameweekNumber;
       points: Int16;
   };
-  */
 
   system func preupgrade() {
     stable_profiles := profilesInstance.getProfiles();
@@ -951,9 +949,9 @@ actor Self {
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
 
-    //fantasyTeamsBackupAdj();
+    fantasyTeamsBackupAdj();
     
-    fantasyTeamsInstance.setData(stable_fantasy_teams);
+    //fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_transfers_allowed, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
     teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
@@ -965,9 +963,8 @@ actor Self {
     governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
     governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
-    recreateTimers();
+    //recreateTimers();
   };
-/*
   func fantasyTeamsBackupAdj(){
 
     //Added gameweek field to FantasyTeamSnapshot
@@ -985,6 +982,7 @@ actor Self {
     };
     fantasyTeamsInstance.setData(Buffer.toArray<(Text, T.UserFantasyTeam)>(newTeamsBuffer));
   };
+/*
   */
 
   private func recreateTimers(){

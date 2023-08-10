@@ -43,8 +43,8 @@ module {
     private let seasonsInstance = Seasons.Seasons();
 
     //definitions
-    //private let oneHour = 1_000_000_000 * 60 * 60;
-    private let oneHour = 1_000_000_000 * 60;
+    private let oneHour = 1_000_000_000 * 60 * 60;
+    //private let oneHour = 1_000_000_000 * 60; ONE HOUR AS ONE MINUTE FOR TESTING
     
     private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
@@ -65,7 +65,7 @@ module {
             activeGameweek :=  stable_active_gameweek; 
             transfersAllowed :=  stable_transfers_allowed; 
             activeFixtures := stable_active_fixtures; 
-            seasonsInstance.setSeasons(stable_seasons);
+            //seasonsInstance.setSeasons(stable_seasons);
             seasonsInstance.setNextFixtureId(stable_next_fixture_id);
             seasonsInstance.setNextSeasonId(stable_next_season_id);
     };
