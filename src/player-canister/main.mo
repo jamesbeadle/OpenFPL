@@ -67,9 +67,6 @@ actor Self {
         
         var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
 
-
-        
-
         label playerDetailsLoop for (player in Iter.fromList(players)) {
             if (Array.find<T.PlayerId>(playerIds, func(id) { id == player.id }) == null or player.onLoan) {
                 continue playerDetailsLoop;
@@ -78,10 +75,6 @@ actor Self {
             var points: Int16 = 0;
             var events: List.List<T.PlayerEventData> = List.nil();
 
-            Debug.print(debug_show "player");
-            Debug.print(debug_show player);
-            Debug.print(debug_show "player.seasons");
-            Debug.print(debug_show player.seasons);
             for (season in Iter.fromList(player.seasons)) {
                 if (season.id == seasonId) {
                     for (gw in Iter.fromList(season.gameweeks)) {
@@ -91,8 +84,6 @@ actor Self {
                             events := List.filter<T.PlayerEventData>(gw.events, func(event: T.PlayerEventData) : Bool {
                                 return event.playerId == player.id;
                             });
-                            Debug.print(debug_show "events");
-                            Debug.print(debug_show events);
                         };
                     }
                 }

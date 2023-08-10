@@ -632,11 +632,14 @@ module {
                         };
                         case (?foundHistory){
                             var seasonFound: Bool = false;
+                            var seasonTotalPoints: Int16 = 0;
                             updatedFantasyTeamHistory := List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(?foundHistory, func(season: T.FantasyTeamSeason): T.FantasyTeamSeason {
                                 if(season.seasonId == seasonId){
                                     seasonFound := true;
                                     var gameweekFound: Bool = false;
+                                    seasonTotalPoints := teamPoints;
                                     var updatedGameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(snapshot: T.FantasyTeamSnapshot): T.FantasyTeamSnapshot {
+                                       seasonTotalPoints += snapshot.points;
                                        if(snapshot.gameweek == gameweek){
                                             gameweekFound := true;
                                             return fantasyTeamSnapshot;
@@ -650,7 +653,7 @@ module {
                                     
                                     return {
                                         seasonId = season.seasonId;
-                                        totalPoints = season.totalPoints + teamPoints;
+                                        totalPoints = seasonTotalPoints;
                                         gameweeks = updatedGameweeks;
                                     };
                                 } else { return season; };
