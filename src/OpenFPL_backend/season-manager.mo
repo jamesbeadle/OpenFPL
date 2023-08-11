@@ -65,7 +65,7 @@ module {
             activeGameweek :=  stable_active_gameweek; 
             transfersAllowed :=  stable_transfers_allowed; 
             activeFixtures := stable_active_fixtures; 
-            //seasonsInstance.setSeasons(stable_seasons);
+            seasonsInstance.setSeasons(stable_seasons);
             seasonsInstance.setNextFixtureId(stable_next_fixture_id);
             seasonsInstance.setNextSeasonId(stable_next_season_id);
     };

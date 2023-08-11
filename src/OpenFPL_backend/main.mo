@@ -681,9 +681,6 @@ actor Self {
     await governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, Buffer.toArray(playerEventsBuffer));
   };
 
-  
-
-
   private func validatePlayerEvents(playerEvents: [T.PlayerEventData]) : Bool {
 
     let eventsBelow0 =  Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
@@ -766,8 +763,6 @@ actor Self {
 
     return true;
   };
-
-
 
   private func resetTransfers(): async () {
     await fantasyTeamsInstance.resetTransfers();
@@ -886,43 +881,10 @@ actor Self {
   private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
   private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
   
-  public type OldUserFantasyTeam = {
-      fantasyTeam: T.FantasyTeam;
-      history: List.List<OldFantasyTeamSeason>;
-  };
-
-  public type OldFantasyTeamSeason = {
-      seasonId: T.SeasonId;
-      totalPoints: Int16;
-      gameweeks: List.List<OldFantasyTeamSnapshot>;
-  };
-
-  public type OldFantasyTeamSnapshot = {
-      principalId: Text;
-      transfersAvailable: Nat8;
-      bankBalance: Float;
-      playerIds: [T.PlayerId];
-      captainId: Nat16;
-      goalGetterGameweek: T.GameweekNumber;
-      goalGetterPlayerId: T.PlayerId;
-      passMasterGameweek: T.GameweekNumber;
-      passMasterPlayerId: T.PlayerId;
-      noEntryGameweek: T.GameweekNumber;
-      noEntryPlayerId: T.PlayerId;
-      teamBoostGameweek: T.GameweekNumber;
-      teamBoostTeamId: T.TeamId;
-      safeHandsGameweek: T.GameweekNumber;
-      safeHandsPlayerId: T.PlayerId;
-      captainFantasticGameweek: T.GameweekNumber;
-      captainFantasticPlayerId: T.PlayerId;
-      braceBonusGameweek: T.GameweekNumber;
-      hatTrickHeroGameweek: T.GameweekNumber;
-      points: Int16;
-  };
-
   system func preupgrade() {
-    stable_profiles := profilesInstance.getProfiles();
+
     stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
+    stable_profiles := profilesInstance.getProfiles();
     stable_active_season_id := seasonManager.getActiveSeasonId();
     stable_active_gameweek := seasonManager.getActiveGameweek();
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
@@ -949,42 +911,21 @@ actor Self {
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
 
-    fantasyTeamsBackupAdj();
-    
-    //fantasyTeamsInstance.setData(stable_fantasy_teams);
+    fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_transfers_allowed, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
     teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
     governanceInstance.setData(stable_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals, stable_consensus_fixture_data);
     governanceInstance.setEventDataVotePeriod(stable_event_data_vote_period);
-    //governanceInstance.setEventDataVoteThreshold(stable_event_data_vote_threshold);
+    governanceInstance.setEventDataVoteThreshold(stable_event_data_vote_threshold);
     governanceInstance.setRevaluationVoteThreshold(stable_revaluation_vote_threshold);
     governanceInstance.setProposalVoteThreshold(stable_proposal_vote_threshold);
     governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
     governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
-    //recreateTimers();
+    recreateTimers();
   };
-  func fantasyTeamsBackupAdj(){
-
-    //Added gameweek field to FantasyTeamSnapshot
-    
-    let tmp_stable_fantasy_teams: [(Text, OldUserFantasyTeam)] = stable_fantasy_teams;
-
-    let newTeamsBuffer = Buffer.fromArray<(Text, T.UserFantasyTeam)>([]);
-
-    for(team in Iter.fromArray(tmp_stable_fantasy_teams)){
-      let newFantasyTeam: T.UserFantasyTeam = {
-        fantasyTeam = team.1.fantasyTeam;
-        history = List.nil();
-      };
-      newTeamsBuffer.add((team.0, newFantasyTeam));
-    };
-    fantasyTeamsInstance.setData(Buffer.toArray<(Text, T.UserFantasyTeam)>(newTeamsBuffer));
-  };
-/*
-  */
-
+  
   private func recreateTimers(){
       let currentTime = Time.now();
       for (timerInfo in Iter.fromArray(stable_timers)) {
@@ -1022,5 +963,5 @@ actor Self {
           }
       }
   };
-
+  
 };
