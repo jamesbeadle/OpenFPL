@@ -286,9 +286,7 @@ actor Self {
                 }
             );
 
-            let aggregateScore = calculateAggregatePlayerEvents(events, currentPlayer.position);
-            
-            Debug.print(debug_show playerId # " " # Int16.toText(totalScore));
+            let aggregateScore = calculateAggregatePlayerEvents(events, currentPlayer.position);       
             playerScoresMap.put(playerId, totalScore + aggregateScore);
         };
 
@@ -407,7 +405,7 @@ actor Self {
         let uniquePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
 
         for (event in List.toIter(fixture.events)) {
-        if (not Buffer.contains<Nat16>(uniquePlayerIdsBuffer, event.playerId, func (a: Nat16, b: Nat16): Bool { a == b })) {
+            if (not Buffer.contains<Nat16>(uniquePlayerIdsBuffer, event.playerId, func (a: Nat16, b: Nat16): Bool { a == b })) {
                 uniquePlayerIdsBuffer.add(event.playerId);
             };
         };

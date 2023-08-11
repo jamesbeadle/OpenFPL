@@ -38,6 +38,7 @@ const Homepage = () => {
 
         const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
+        //const nextKickoff = Math.min(...kickOffs) - 60000; //test mode only 
         const nextKickoff = Math.min(...kickOffs) - 3600000;
         const currentTime = new Date().getTime();
     
@@ -102,7 +103,8 @@ const Homepage = () => {
         const timer = setInterval(() => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
             const nextKickoff = Math.min(...kickOffs) - 3600000;
-            
+            //const nextKickoff = Math.min(...kickOffs) - 60000; //test mode only 
+
             const currentTime = new Date().getTime();
     
             if (currentTime < nextKickoff) {

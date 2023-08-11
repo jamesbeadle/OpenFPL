@@ -44,7 +44,7 @@ module {
 
     //definitions
     private let oneHour = 1_000_000_000 * 60 * 60;
-    //private let oneHour = 1_000_000_000 * 60; ONE HOUR AS ONE MINUTE FOR TESTING
+    //private let oneHour = 1_000_000_000 * 60; //ONE HOUR AS ONE MINUTE FOR TESTING
     
     private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
@@ -214,8 +214,6 @@ module {
             return fixture.status < 3;
         });
 
-        Debug.print("remainingFixtures");
-        Debug.print(debug_show remainingFixtures);
         if(Option.isNull(remainingFixtures)) {
             await gameweekVerified();
             await setNextGameweek();
@@ -280,6 +278,10 @@ module {
 
     public func getFixtures() : [T.Fixture] {
         return seasonsInstance.getSeasonFixtures(activeSeasonId);
+    };
+
+    public func getGameweekFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [T.Fixture] {
+        return seasonsInstance.getGameweekFixtures(seasonId, gameweek);
     };
 
     public func getActiveGameweekFixtures() : [T.Fixture] {

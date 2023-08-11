@@ -32,14 +32,17 @@ module {
 
         private let oneHour = 1_000_000_000 * 60 * 60;
         
+        /*
+        //Local for test
         let admins : [Text] = [
-            //JB Local
-            /*
             "eqlhf-ppkq7-roa5i-4wu6r-jumy3-g2xrc-vfdd5-wtoeu-n7xre-vsktn-lqe",
             "2bpwg-2lec5-batrn-wycrl-tc3up-enl3o-4qwcx-zrmts-k45c2-5zqga-2ae",
             "gucw5-y5hwr-kfoai-cus4i-x34gj-v2nlc-fib7q-nkuah-lw5y2-c7dln-yae"
-            */
-            //JB Live
+        ];
+        */
+
+        //Live
+        let admins : [Text] = [
             "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"
         ];
 
@@ -208,7 +211,7 @@ module {
             return List.toArray(proposals);
         };
 
-        public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async () {
+        public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, allPlayerEventData: [T.PlayerEventData]) : async () {
             
             let existingSubmissionsForFixture = fixtureDataSubmissions.get(fixtureId);
             switch (existingSubmissionsForFixture) {
@@ -234,7 +237,7 @@ module {
                 fixtureId = fixtureId;
                 proposer = principalId;
                 timestamp = currentTime;
-                events = List.fromArray(playerEventData);
+                events = List.fromArray(allPlayerEventData);
                 votes_yes = List.fromArray<T.PlayerValuationVote>([votes]);
                 votes_no = List.nil<T.PlayerValuationVote>();
             };

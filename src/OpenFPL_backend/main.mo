@@ -39,11 +39,15 @@ actor Self {
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
+  /*
+  //JB Local Dev Testing
   let CANISTER_IDS = {
-    //JB Local Dev
-    //token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
-    //player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
-    //Live canisters
+    token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
+    player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
+  };
+  */
+  //Live canisters  
+  let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   };
@@ -501,10 +505,10 @@ actor Self {
     return seasonManager.getValidatableFixtures();
   };
 
-  public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, playerEvents: [T.PlayerEventData]) : async (){
+  public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, allPlayerEvents: [T.PlayerEventData]) : async (){
     
     assert not Principal.isAnonymous(caller);
-    let validPlayerEvents = validatePlayerEvents(playerEvents);
+    let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
     
     if(not validPlayerEvents){
       return;
@@ -522,25 +526,27 @@ actor Self {
       return;
     };
 
-    let playerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(playerEvents);
+    let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(allPlayerEvents);
 
     let allPlayers = await playerCanister.getAllPlayers();
 
-    let homeTeamPlayerIdsRaw: [Nat16] = Array.map<T.PlayerEventData, Nat16>(Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
-        return event.teamId == fixture.homeTeamId;
-    }), func(event: T.PlayerEventData): Nat16 {
+    let homeTeamPlayerIdsRaw: [Nat16] = Array.map<T.PlayerEventData, Nat16>(
+      Array.filter<T.PlayerEventData>(allPlayerEvents, func(event: T.PlayerEventData) : Bool {
+        return event.teamId == fixture.homeTeamId;}), 
+      func(event: T.PlayerEventData): Nat16 {
         return event.playerId;
-    });
+      }
+    );
 
-    let awayTeamPlayerIdsRaw: [Nat16] = Array.map<T.PlayerEventData, Nat16>(Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
-        return event.teamId == fixture.awayTeamId;
-    }), func(event: T.PlayerEventData): Nat16 {
+    let awayTeamPlayerIdsRaw: [Nat16] = Array.map<T.PlayerEventData, Nat16>(
+      Array.filter<T.PlayerEventData>(allPlayerEvents, func(event: T.PlayerEventData) : Bool {
+        return event.teamId == fixture.awayTeamId;}), 
+      func(event: T.PlayerEventData): Nat16 {
         return event.playerId;
-    });
+      }
+    );
 
-    // Step 2: Extract unique IDs
-
-    let homeTeamDefensivePlayerIds: [Nat16] = Array.filter<Nat16>(homeTeamPlayerIdsRaw, func(id: Nat16): Bool {
+   let homeTeamDefensivePlayerIds: [Nat16] = Array.filter<Nat16>(homeTeamPlayerIdsRaw, func(id: Nat16): Bool {
         let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == id; });
         
         return switch (player) {
@@ -559,6 +565,7 @@ actor Self {
             };
         };
     });
+        
 
     let awayTeamDefensivePlayerIds: [Nat16] = Array.filter<Nat16>(awayTeamPlayerIdsRaw, func(id: Nat16): Bool {
         let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == id; });
@@ -580,13 +587,12 @@ actor Self {
         };
     });
 
-
     // Get goals for each team
-    let homeTeamGoals = Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
+    let homeTeamGoals = Array.filter<T.PlayerEventData>(allPlayerEvents, func(event: T.PlayerEventData) : Bool {
         return event.teamId == fixture.homeTeamId and event.eventType == 1;
     });
 
-    let awayTeamGoals = Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
+    let awayTeamGoals = Array.filter<T.PlayerEventData>(allPlayerEvents, func(event: T.PlayerEventData) : Bool {
         return event.teamId == fixture.awayTeamId and event.eventType == 1;
     });
 
@@ -606,7 +612,7 @@ actor Self {
                 teamId = actualPlayer.teamId;
                 position = actualPlayer.position;
               };
-              playerEventsBuffer.add(cleanSheetEvent);
+              allPlayerEventsBuffer.add(cleanSheetEvent);
             };
         };
       };
@@ -627,7 +633,7 @@ actor Self {
                   teamId = actualPlayer.teamId;
                   position = actualPlayer.position;
                 };
-                playerEventsBuffer.add(concededEvent);
+                allPlayerEventsBuffer.add(concededEvent);
               };
           };
         };
@@ -650,7 +656,7 @@ actor Self {
                 teamId = actualPlayer.teamId;
                 position = actualPlayer.position;
               };
-              playerEventsBuffer.add(cleanSheetEvent);
+              allPlayerEventsBuffer.add(cleanSheetEvent);
             };
         };
       };
@@ -671,14 +677,14 @@ actor Self {
                   teamId = actualPlayer.teamId;
                   position = actualPlayer.position;
                 };
-                playerEventsBuffer.add(concededEvent);
+                allPlayerEventsBuffer.add(concededEvent);
               };
           };
         };
       };
     };
 
-    await governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, Buffer.toArray(playerEventsBuffer));
+    await governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, Buffer.toArray(allPlayerEventsBuffer));
   };
 
   private func validatePlayerEvents(playerEvents: [T.PlayerEventData]) : Bool {
@@ -802,6 +808,10 @@ actor Self {
     await fantasyTeamsInstance.resetFantasyTeams();
   };
 
+  private func getGameweekFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber): [T.Fixture] {
+    return seasonManager.getGameweekFixtures(seasonId, gameweek);
+  }; 
+
   private func mintWeeklyRewardsPool(): async () {
     //IMPLEMENT
   };
@@ -810,13 +820,13 @@ actor Self {
     //IMPLEMENT
   };
 
+  /* ONLY TO BE USED IN TEST 
   public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691703300000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691760600000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
     await seasonManager.init_genesis_season(firstFixture);
   };
 
 
-  /* ONLY TO BE USED IN TEST 
   public func getAllFantasyTeams(): async [(Text, T.UserFantasyTeam)]{
     return fantasyTeamsInstance.getFantasyTeams();
   };
@@ -847,11 +857,11 @@ actor Self {
     governanceInstance.getEventDataVotePeriod(),
     stable_timers);
     
-    governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
-    governanceInstance.setTimerBackupFunction(setAndBackupTimer);
-    seasonManager.setTimerBackupFunction(setAndBackupTimer);
-    governanceInstance.setFinaliseFixtureFunction(finaliseFixture);
-
+  governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
+  governanceInstance.setTimerBackupFunction(setAndBackupTimer);
+  seasonManager.setTimerBackupFunction(setAndBackupTimer);
+  governanceInstance.setFinaliseFixtureFunction(finaliseFixture);
+  fantasyTeamsInstance.setGetFixturesFunction(getGameweekFixtures);
 
 
   //IMPLEMENT: SUBMIT PROPOSAL SUBMISSION FEE ON SUBMISSION OF PROPOSAL ON FRONT END
@@ -910,7 +920,6 @@ actor Self {
 
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
-
     fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_transfers_allowed, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
