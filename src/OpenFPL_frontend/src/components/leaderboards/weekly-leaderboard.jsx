@@ -94,8 +94,7 @@ const WeeklyLeaderboard = () => {
             <td className='text-center'>{manager.points}</td>
             <td className='text-center'><Button as={Link} 
             to={{
-                pathname: `/view-points/${manager.principalId}/${selectedSeason}/${selectedGameweek}`,
-                state: { rank: (manager.positionText == "-") ? `T${Number(manager.position)}` : Number(manager.position)  }
+                pathname: `/view-points/${manager.principalId}/${selectedSeason}/${selectedGameweek}`
             }}>View</Button></td>
         </tr>
     ));

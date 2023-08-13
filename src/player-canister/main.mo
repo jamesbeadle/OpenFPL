@@ -945,6 +945,7 @@ actor Self {
         };
         nextPlayerId := stable_next_player_id;
         recreateTimers();
+        patchIncorrectConcededEvents();
     };
 
     private func recreateTimers(){
@@ -967,5 +968,54 @@ actor Self {
         }
     };
 
+    private func patchIncorrectConcededEvents(){
+
+        let playerIdsWithIncorrectConcededEvents: [Nat16] = [264,276,271,269,273,275,217,226,219,221,225,172,182,177,176,179,180];
+
+        players := List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
+
+            let existingId = Array.find<Nat16>(playerIdsWithIncorrectConcededEvents, func (x: Nat16): Bool {x == p.id});
+            switch(existingId){
+                case (null) { return p; };
+                case (?foundId) { 
+                    let updatedSeasons = List.map<T.PlayerSeason, T.PlayerSeason>(p.seasons, func(season: T.PlayerSeason) : T.PlayerSeason {
+                        return {
+                            id = season.id;
+                            gameweeks = List.map<T.PlayerGameweek, T.PlayerGameweek>(season.gameweeks, func(playerGameweek: T.PlayerGameweek) : T.PlayerGameweek{
+                                return {
+                                    number = playerGameweek.number;
+                                    events = List.filter<T.PlayerEventData>(playerGameweek.events, func(playerEvent: T.PlayerEventData){
+                                        playerEvent.eventType != 3;
+                                    });
+                                    points = playerGameweek.points;
+                                }    
+                            });
+                        };
+                    });
+
+                    let adjustedPlayer: T.Player = {
+                        id = p.id;
+                        teamId = p.teamId;
+                        position = p.position;
+                        firstName = p.firstName;
+                        lastName = p.lastName;
+                        shirtNumber = p.shirtNumber;
+                        value = p.value;
+                        dateOfBirth = p.dateOfBirth;
+                        nationality = p.nationality;
+                        seasons = updatedSeasons;
+                        valueHistory = p.valueHistory;
+                        onLoan = p.onLoan;
+                        parentTeamId = p.parentTeamId;
+                        isInjured = p.isInjured;
+                        injuryHistory = p.injuryHistory;
+                        retirementDate = p.retirementDate;
+                    };
+
+                    return adjustedPlayer;
+                };
+            }
+        });      
+    };
 
 };

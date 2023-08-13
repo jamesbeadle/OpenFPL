@@ -568,11 +568,6 @@ module {
                                 totalScore += calculateAssistPoints(player.position, player.assists);
                             };
 
-                            // Handle captain bonus
-                            if (playerId == userFantasyTeam.captainId) {
-                                totalScore := totalScore * 2;
-                            };
-
                             // No Entry
                             if(userFantasyTeam.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
                                 totalScore := totalScore * 3;
@@ -601,6 +596,11 @@ module {
                             // Hat Trick Hero
                             if(userFantasyTeam.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
                                 totalScore := totalScore * 3;
+                            };
+
+                            // Handle captain bonus
+                            if (playerId == userFantasyTeam.captainId) {
+                                totalScore := totalScore * 2;
                             };
 
                             totalTeamPoints += totalScore;

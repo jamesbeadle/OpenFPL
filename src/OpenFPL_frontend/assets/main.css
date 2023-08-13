@@ -332,3 +332,23 @@ Table{
 .col-right {
   text-align: right;
 }
+
+.points-team-col{
+  width: 15%;
+}
+
+.points-name-col{
+  width: 40%;
+}
+
+.points-points-col{
+  width: 15%;
+}
+
+.points-button-col{
+  width: 30%;
+}
+
+.points-description-col { width: 50%; }
+.points-count-col { width: 25%; }
+.points-value-col { width: 25%; }

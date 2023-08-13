@@ -39,18 +39,18 @@ actor Self {
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
-  //USE FOR LOCAL DEV
-  /*
+  
+  /*//USE FOR LOCAL DEV
   let CANISTER_IDS = {
     token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
     player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
-  };
-  */
+  };*/
   //Live canisters  
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-  };
+  }; 
+  
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
   { 
@@ -612,7 +612,6 @@ actor Self {
             case (null) { false; };
             case (?actualPlayer) {
                 if (actualPlayer.position == 0 or actualPlayer.position == 1) {
-                    // Check uniqueness of player id in awayTeamPlayerIdsRaw
                     let foundId = Array.find<Nat16>(awayTeamPlayerIdsRaw, func(x: Nat16): Bool { return x == id; });
                     switch (foundId) {
                         case (null) { false; };
@@ -701,7 +700,7 @@ actor Self {
     } else {
       //add home team conceded events
       for (goal in Iter.fromArray(awayTeamGoals)) {
-        for(playerId in Iter.fromArray(awayTeamDefensivePlayerIds)){
+        for(playerId in Iter.fromArray(homeTeamDefensivePlayerIds)){
           let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
           switch (player) {
               case (null) {  };
@@ -858,23 +857,6 @@ actor Self {
     //IMPLEMENT
   };
 
-  /* ONLY TO BE USED IN TEST LOCAL DEV ONLY
-  
-  public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691898600000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
-    await seasonManager.init_genesis_season(firstFixture);
-  };
-
-  public func deactivateTransfers(): async (){
-    await seasonManager.setTransfersNotAllowed();
-  };
-
-
-  public func getAllFantasyTeams(): async [(Text, T.UserFantasyTeam)]{
-    return fantasyTeamsInstance.getFantasyTeams();
-  };
-  */
-
   public shared ({caller}) func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
       return await fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
   };
@@ -1016,5 +998,25 @@ actor Self {
           }
       }
   };
+
+  
+
+  /* ONLY TO BE USED IN TEST LOCAL DEV ONLY
+  
+
+  public func initGenesisSeason(): async (){
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691952300000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    await seasonManager.init_genesis_season(firstFixture);
+  };
+
+  public func deactivateTransfers(): async (){
+    await seasonManager.setTransfersNotAllowed();
+  };
+
+
+  public func getAllFantasyTeams(): async [(Text, T.UserFantasyTeam)]{
+    return fantasyTeamsInstance.getFantasyTeams();
+  };
+  */
   
 };
