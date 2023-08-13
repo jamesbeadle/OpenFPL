@@ -22,7 +22,7 @@ const MyNavbar = () => {
     <Navbar expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)}>
-          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '150px', maxHeight: '100%' }} /> <small className="small-text"><b>BETA TEST</b></small>
+          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '150px', maxHeight: '100%' }} /> <small className="small-text"><b>BETA</b></small>
         </Navbar.Brand>
     
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
