@@ -16,9 +16,9 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
         const existingEvents = playerEventMap[player.id] || [];
         setPlayerEvents(existingEvents);
         
-        setEventType("");
-        setEventStartTime("");
-        setEventEndTime("");
+        setEventType("-1");
+        setEventStartTime("0");
+        setEventEndTime("0");
     }, [player, playerEventMap]);
     
 
@@ -78,7 +78,8 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
             setPlayerEvents(updatedEvents);
             onPlayerEventAdded(player.id, updatedEvents);
         }
-        setEventStartTime(""); setEventEndTime("");
+        setEventStartTime(""); 
+        setEventEndTime("");
     };
     
     
@@ -121,7 +122,7 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
                                 placeholder="Event End Time" 
                                 min={0}
                                 max={90}
-                                value={Number(eventEndTime)}   // convert string to number
+                                value={Number(eventEndTime)}
                                 onChange={(e) => {
                                     setEventStartTime(e.target.value);
                                     setEventEndTime(e.target.value);
@@ -137,7 +138,7 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
                                 placeholder="Event Start Time" 
                                 min={0}
                                 max={90}
-                                value={Number(eventStartTime)}   // convert string to number
+                                value={Number(eventStartTime)}
                                 onChange={(e) => setEventStartTime(e.target.value)}
                                 />
                             </Col>

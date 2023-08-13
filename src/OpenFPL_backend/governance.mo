@@ -32,8 +32,8 @@ module {
 
         private let oneHour = 1_000_000_000 * 60 * 60;
         
+        ////USE FOR LOCAL DEV
         /*
-        //Local for test
         let admins : [Text] = [
             "eqlhf-ppkq7-roa5i-4wu6r-jumy3-g2xrc-vfdd5-wtoeu-n7xre-vsktn-lqe",
             "2bpwg-2lec5-batrn-wycrl-tc3up-enl3o-4qwcx-zrmts-k45c2-5zqga-2ae",

@@ -39,8 +39,8 @@ actor Self {
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
+  //USE FOR LOCAL DEV
   /*
-  //JB Local Dev Testing
   let CANISTER_IDS = {
     token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
     player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
@@ -155,6 +155,44 @@ actor Self {
 
     let profileDTO: DTOs.ProfileDTO = {
       principalName = principalName;
+      icpDepositAddress = icpDepositAddress;
+      fplDepositAddress = fplDepositAddress;
+      displayName = displayName;
+      membershipType = membershipType;
+      profilePicture = profilePicture;
+      favouriteTeamId = favouriteTeamId;
+      createDate = createDate;
+      reputation = reputation;
+    };
+
+    return profileDTO;
+  };
+
+  public shared ({caller}) func getPublicProfileDTO(principalId: Text) : async DTOs.ProfileDTO {
+    var icpDepositAddress = Blob.fromArray([]);
+    var fplDepositAddress = Blob.fromArray([]);
+    var displayName = "";
+    var membershipType = Nat8.fromNat(0);
+    var profilePicture = Blob.fromArray([]);
+    var favouriteTeamId = Nat16.fromNat(0);
+    var createDate: Int = 0;
+    var reputation = Nat32.fromNat(0);
+
+    var profile = profilesInstance.getProfile(Principal.toText(caller));
+    
+    switch(profile){
+      case (null){};
+      case (?p){
+        displayName := p.displayName;
+        membershipType := p.membershipType;
+        profilePicture := p.profilePicture;
+        favouriteTeamId := p.favouriteTeamId;
+        reputation := p.reputation;
+      };
+    };
+
+    let profileDTO: DTOs.ProfileDTO = {
+      principalName = principalId;
       icpDepositAddress = icpDepositAddress;
       fplDepositAddress = fplDepositAddress;
       displayName = displayName;
@@ -820,10 +858,15 @@ actor Self {
     //IMPLEMENT
   };
 
-  /* ONLY TO BE USED IN TEST 
+  /* ONLY TO BE USED IN TEST LOCAL DEV ONLY
+  
   public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691760600000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691898600000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
     await seasonManager.init_genesis_season(firstFixture);
+  };
+
+  public func deactivateTransfers(): async (){
+    await seasonManager.setTransfersNotAllowed();
   };
 
 
@@ -934,6 +977,7 @@ actor Self {
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
     recreateTimers();
   };
+  
   
   private func recreateTimers(){
       let currentTime = Time.now();

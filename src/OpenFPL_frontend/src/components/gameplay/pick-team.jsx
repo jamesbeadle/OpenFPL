@@ -653,7 +653,6 @@ const handleConfirmBonusClick = (bonusType) => {
                     const bonusTeamId = fantasyTeam?.[`${bonus.propertyName}TeamId`];
                     const bonusGameweek = fantasyTeam?.[`${bonus.propertyName}Gameweek`];
                     const bonusUsed = bonusGameweek !== null && bonusGameweek !== 0 && bonusGameweek !== undefined;
-                    const bonusUsedInCurrentWeek = fantasyTeam && fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek;
                     const otherBonusUsedInCurrentWeek = bonuses.some((otherBonus) => {
                     if (otherBonus.propertyName === bonus.propertyName) return false; 
                       const otherBonusGameweek = fantasyTeam?.[`${otherBonus.propertyName}Gameweek`];
@@ -679,7 +678,11 @@ const handleConfirmBonusClick = (bonusType) => {
                     );
 
                     if (bonusUsed) {
-                      useButton = <div className='text-center mb-4'><small>{`Used in Gameweek ${bonusGameweek}`}</small></div>;
+                      useButton = <div className='text-center mb-4'>
+                          <small>{`Used in Gameweek ${bonusGameweek}`}</small>
+                          <br />
+                          <small>{`Team: ${bonusTarget}`}</small>
+                        </div>;
                     } 
                   
                     if (otherBonusUsedInCurrentWeek) {

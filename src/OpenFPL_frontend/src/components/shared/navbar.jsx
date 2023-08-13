@@ -3,10 +3,9 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import Button from 'react-bootstrap/Button';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
-import { LogoutIcon, ProfileIcon, GovernanceIcon, TeamIcon, WalletIcon } from '../icons';
+import { ProfileIcon, GovernanceIcon, TeamIcon, WalletIcon } from '../icons';
 
 const MyNavbar = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
@@ -23,7 +22,7 @@ const MyNavbar = () => {
     <Navbar expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)}>
-          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '200px', maxHeight: '100%' }} />
+          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '150px', maxHeight: '100%' }} /> <small className="small-text"><b>BETA TEST</b></small>
         </Navbar.Brand>
     
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />

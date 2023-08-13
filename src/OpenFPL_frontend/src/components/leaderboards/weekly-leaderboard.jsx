@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Table, Pagination, Form, Card, Row, Col, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
@@ -9,16 +8,19 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 const WeeklyLeaderboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { authClient } = useContext(AuthContext);
-    const [managers, setManagers] = useState([]);
+    const [managers, setManagers] = useState({
+        totalEntries: 0n,
+        seasonId: 0,
+        entries: [],
+        gameweek: 0
+      });
     const [seasons, setSeasons] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedSeason, setSelectedSeason] = useState(1);
     const [selectedGameweek, setSelectedGameweek] = useState(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 25;
     
-    const totalPages = Math.ceil(managers.length / itemsPerPage);
-
-    const renderedPaginationItems = Array.from({ length: totalPages }, (_, index) => (
+    const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
         <Pagination.Item 
             key={index + 1} 
             active={index + 1 === currentPage} 
@@ -49,6 +51,7 @@ const WeeklyLeaderboard = () => {
     }, [currentPage]);
 
     const fetchData = async () => {
+        setIsLoading(true);
         await fetchViewData(selectedSeason, selectedGameweek);
         setIsLoading(false);
     };
@@ -72,8 +75,8 @@ const WeeklyLeaderboard = () => {
     const fetchViewData = async (season, gameweek) => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-        const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage); // Update the backend call if needed
-        setManagers(leaderboardData.entries);
+        const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
+        setManagers(leaderboardData);
     };
 
     const fetchSeasons = async () => {
@@ -84,12 +87,16 @@ const WeeklyLeaderboard = () => {
         setSeasons(seasonList); 
     };
 
-    const renderedData = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(manager => (
+    const renderedData = managers.entries && managers.entries.map(manager => (
         <tr key={manager.principalId}>
             <td className='text-center'>{manager.positionText}</td>
             <td className='text-center'>{manager.principalId == manager.username ? 'Unknown' : manager.username}</td>
             <td className='text-center'>{manager.points}</td>
-            <td className='text-center'><Button as={Link} to={`/view-points/${manager.principalId}/${selectedSeason}/${selectedGameweek}`}>View</Button></td>
+            <td className='text-center'><Button as={Link} 
+            to={{
+                pathname: `/view-points/${manager.principalId}/${selectedSeason}/${selectedGameweek}`,
+                state: { rank: (manager.positionText == "-") ? `T${Number(manager.position)}` : Number(manager.position)  }
+            }}>View</Button></td>
         </tr>
     ));
 
@@ -133,7 +140,7 @@ const WeeklyLeaderboard = () => {
                 
 
             
-            <Table  responsive bordered className="table-fixed light-table">
+            <Table  responsive bordered className="table-fixed">
                 <thead>
                     <tr>
                         <th className='top10-num-col text-center'><small>Pos.</small></th>

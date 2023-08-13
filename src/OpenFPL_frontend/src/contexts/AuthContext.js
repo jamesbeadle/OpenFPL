@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [players, setPlayers] = useState([]);
   const [teams, setTeams] = useState([]);
+  const [userPrincipal, setUserPrincipal] = useState("");
   const [loading, setLoading] = useState(true);
  
   useEffect(() => {
@@ -22,6 +23,8 @@ export const AuthProvider = ({ children }) => {
       });
       authClient.idleManager?.registerCallback?.(refreshLogin);
       setAuthClient(authClient);
+      setUserPrincipal(authClient.getIdentity().getPrincipal());
+
       setLoading(false);
     };
     initAuthClient();
@@ -39,6 +42,8 @@ export const AuthProvider = ({ children }) => {
     const isLoggedIn = await client.isAuthenticated();
     if (isLoggedIn) {
       setIsAuthenticated(true);
+      const newPrincipal = await authClient.getIdentity().getPrincipal();
+      setUserPrincipal(newPrincipal.toText());
       return true;
     } else {
       return false;
@@ -48,8 +53,8 @@ export const AuthProvider = ({ children }) => {
   const refreshLogin = () => {
     authClient.login({
       onSuccess: async () => {
-        const newIdentity = await authClient.getIdentity();
-        setIdentity(newIdentity);
+        const newPrincipal = await authClient.getIdentity().getPrincipal();
+        setUserPrincipal(newPrincipal.toText());
       },
     });
   };
@@ -59,6 +64,8 @@ export const AuthProvider = ({ children }) => {
       identityProvider: process.env.II_URL,
       maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
       onSuccess: async () => {
+        const newPrincipal = await authClient.getIdentity().getPrincipal();
+        setUserPrincipal(newPrincipal.toText());
         setIsAuthenticated(true);
       }
     });
@@ -66,6 +73,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await authClient.logout();
+    setUserPrincipal("");
     setIsAuthenticated(false);
   };
 
@@ -92,7 +100,7 @@ export const AuthProvider = ({ children }) => {
   }, [isAuthenticated]);
 
   return (
-    <AuthContext.Provider value={ { authClient, isAuthenticated, setIsAuthenticated, login, logout, players, teams  }}>
+    <AuthContext.Provider value={ { authClient, isAuthenticated, setIsAuthenticated, login, logout, players, teams, userPrincipal  }}>
       {!loading && children}
     </AuthContext.Provider>
   );

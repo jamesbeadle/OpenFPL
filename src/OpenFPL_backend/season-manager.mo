@@ -44,7 +44,7 @@ module {
 
     //definitions
     private let oneHour = 1_000_000_000 * 60 * 60;
-    //private let oneHour = 1_000_000_000 * 60; //ONE HOUR AS ONE MINUTE FOR TESTING
+    //private let oneHour = 1_000_000_000 * 60; //ONE HOUR AS ONE MINUTE USE FOR LOCAL DEV
     
     private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
@@ -375,5 +375,18 @@ module {
 
         return await seasonsInstance.getFixture(getSeasonId, getGameweekNumber, fixtureId);
     };
+
+    /* Used for test only
+    //REMOVE
+    public func setTransfersAllowed() : async () {
+        transfersAllowed := true;
+    };
+    
+    //REMOVE
+    public func setTransfersNotAllowed() : async () {
+        transfersAllowed := false;
+    };
+    */
+    
   };
 }

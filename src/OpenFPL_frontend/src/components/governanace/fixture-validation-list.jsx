@@ -58,7 +58,7 @@ const FixtureValidationList = () => {
     <Card className="custom-card mt-1">
       <Card.Header>{`Season ${currentSeason.name}`} - {`Gameweek ${currentGameweek}`}</Card.Header>
       <Card.Body>
-        <Table responsive bordered className="table-fixed light-table">
+        <Table responsive bordered className="table-fixed">
           <thead>
             <tr>
               <th>#</th>

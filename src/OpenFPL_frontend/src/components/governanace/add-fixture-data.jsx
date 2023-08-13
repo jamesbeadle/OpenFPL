@@ -60,8 +60,37 @@ const AddFixtureData = () => {
   
     setShowPlayerSelectionModal(false);
   };
-  
 
+  const handleClearDraft = () => {
+    localStorage.removeItem("fixtureDraft");
+  };
+
+  const handleClearAllEvents = () => {
+    setPlayerEventMap({});
+    setSelectedPlayers({
+      homeTeam: [],
+      awayTeam: [],
+    });
+  };
+  
+  
+  
+  useEffect(() => {
+    const draft = localStorage.getItem("fixtureDraft");
+    if (draft) {
+      const reviver = (key, value) => {
+          if (typeof value === 'string' && /^[0-9]+n$/.test(value)) {
+              return BigInt(value.slice(0, -1));
+          }
+          return value;
+      };
+      const { selectedPlayers, playerEventMap, fixture } = JSON.parse(draft, reviver);
+      setSelectedPlayers(selectedPlayers);
+      setPlayerEventMap(playerEventMap);
+      setFixture(fixture);
+    }
+  }, []);
+  
   
   useEffect(() => {
     const fetchData = async () => {
@@ -77,6 +106,23 @@ const AddFixtureData = () => {
 
     fetchData();
   }, [fixtureId]);
+
+  const handleSaveAsDraft = () => {
+      const replacer = (key, value) => {
+          if (typeof value === 'bigint') {
+              return value.toString() + "n"; // Convert BigInt to string and append "n" to distinguish
+          }
+          return value;
+      };
+
+      localStorage.setItem("fixtureDraft", JSON.stringify({
+        selectedPlayers,
+        playerEventMap,
+        fixture,
+      }, replacer));
+  };
+
+  
 
   
   const renderPlayerCard = (playerId) => {
@@ -294,14 +340,35 @@ const AddFixtureData = () => {
           </Tabs>
 
           <div className="add-fixture-data">
-              <Button className="mt-3 mb-3" variant='success' onClick={() => setShowConfirmDataModal(true)} 
-                disabled={
-                  !fixture.appearances || 
-                  fixture.appearances === 0 || 
-                  fixture.appearances !== selectedPlayers.homeTeam.length + selectedPlayers.awayTeam.length
-              }>
-                  Save Player Events
-              </Button>
+            <Row>
+              <Col xs={12} md={3}>
+                <Button className="mt-3 mb-3 mr-2" variant='danger' onClick={handleClearAllEvents}>
+                    Clear All Events
+                </Button>
+              </Col>
+              <Col xs={12} md={3}>
+                <Button className="mt-3 mb-3 mr-2" variant='warning' onClick={handleSaveAsDraft}>
+                    Save as Draft
+                </Button>
+              </Col>
+              <Col xs={12} md={3}>
+                <Button className="mt-3 mb-3" variant='secondary' onClick={handleClearDraft}>
+                    Clear Draft
+                </Button>
+              </Col>
+              <Col xs={12} md={3}>
+                <Button className="mt-3 mb-3" variant='success' onClick={() => setShowConfirmDataModal(true)} 
+              disabled={
+                !fixture.appearances || 
+                fixture.appearances === 0 || 
+                fixture.appearances !== selectedPlayers.homeTeam.length + selectedPlayers.awayTeam.length
+            }>
+                Save Player Events
+            </Button>
+              </Col>
+            </Row>
+
+          
               <Row>
                 <Col xs={12} md={3}>
                   Appearances: {fixture.appearances ? fixture.appearances : 0}

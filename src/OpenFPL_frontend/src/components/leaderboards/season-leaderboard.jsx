@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Spinner, Table, Pagination, Form, Card, Row, Col, Button } from 'react-bootstrap';
-
+import { Container, Spinner, Table, Pagination, Form, Card, Row, Col } from 'react-bootstrap';
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
-import { Link } from "react-router-dom";
 
 const SeasonLeaderboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { authClient } = useContext(AuthContext);
-    const [managers, setManagers] = useState([]);
+    const [managers, setManagers] = useState({
+        totalEntries: 0n,
+        seasonId: 0,
+        entries: [],
+        gameweek: 0
+      });
     const [seasons, setSeasons] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedSeason, setSelectedSeason] = useState(1);
-    const itemsPerPage = 10;
-    
-    const totalPages = Math.ceil(managers.length / itemsPerPage);
-
-    const renderedPaginationItems = Array.from({ length: totalPages }, (_, index) => (
+    const itemsPerPage = 25;
+  
+    const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
         <Pagination.Item 
             key={index + 1} 
             active={index + 1 === currentPage} 
@@ -63,7 +64,7 @@ const SeasonLeaderboard = () => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage); // Update the backend call if needed
-        setManagers(leaderboardData.entries);
+        setManagers(leaderboardData);
     };
 
     const fetchSeasons = async () => {
@@ -74,7 +75,7 @@ const SeasonLeaderboard = () => {
         setSeasons(seasonList); 
     };
 
-    const renderedData = managers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(manager => (
+    const renderedData = managers.entries && managers.entries.map(manager => (
         <tr key={manager.principalId}>
             <td className='text-center'>{manager.positionText}</td>
             <td className='text-center'>{manager.principalId == manager.username ? 'Unknown' : manager.username}</td>
@@ -111,7 +112,7 @@ const SeasonLeaderboard = () => {
                 
 
             
-            <Table  responsive bordered className="table-fixed light-table">
+            <Table  responsive bordered className="table-fixed">
                 <thead>
                     <tr>
                         <th className='top10-num-col text-center'><small>Pos.</small></th>

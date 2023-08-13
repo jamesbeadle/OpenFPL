@@ -9,12 +9,13 @@ import { Link } from "react-router-dom";
 const Homepage = () => {
   
     const [isLoading, setIsLoading] = useState(true);
-    const { authClient, teams } = useContext(AuthContext);
+    const { authClient, teams, userPrincipal } = useContext(AuthContext);
     const [fixtures, setFixtures] = useState([]);
     const [managerCount, setManagerCount] = useState(0);
     const [seasonTop10, setSeasonTop10] = useState([]);
     const [weeklyTop10, setWeeklyTop10] = useState([]);
     const [currentGameweek, setCurrentGameweek] = useState(1);
+    const [currentSeason, setCurrentSeason] = useState(1);
     const [countdown, setCountdown] = useState({
         days: 0,
         hours: 0,
@@ -25,6 +26,8 @@ const Homepage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+        await fetchActiveSeasonId();
+        await fetchActiveGameweek();
         await fetchViewData();
         setIsLoading(false);
         };
@@ -38,7 +41,7 @@ const Homepage = () => {
 
         const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-        //const nextKickoff = Math.min(...kickOffs) - 60000; //test mode only 
+        //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
         const nextKickoff = Math.min(...kickOffs) - 3600000;
         const currentTime = new Date().getTime();
     
@@ -62,6 +65,20 @@ const Homepage = () => {
     
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
         setWeeklyTop10(weeklyTop10Data.entries);
+    };
+
+    const fetchActiveGameweek = async () => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+        const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
+        setCurrentGameweek(activeGameweekData);
+    };
+    
+    const fetchActiveSeasonId = async () => {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
+        setCurrentSeason(activeSeasonData);
     };
     
     const getTeamById = (teamId) => {
@@ -103,7 +120,7 @@ const Homepage = () => {
         const timer = setInterval(() => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
             const nextKickoff = Math.min(...kickOffs) - 3600000;
-            //const nextKickoff = Math.min(...kickOffs) - 60000; //test mode only 
+            //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
 
             const currentTime = new Date().getTime();
     
@@ -123,6 +140,49 @@ const Homepage = () => {
         
         return () => clearInterval(timer);
     }, [currentGameweek, fixtures]);
+
+    const renderStatusBadge = (fixture) => {
+        const currentTime = new Date().getTime();
+        const kickoffTime = nanoSecondsToMillis(Number(fixture.kickOff));
+        const oneHourInMilliseconds = 3600000;
+    
+        // Check if status is 0 and the time difference is less than an hour
+        if (fixture.status === 0 && kickoffTime - currentTime <= oneHourInMilliseconds) {
+            return (
+                <Badge className='bg-warning w-100' style={{ padding: '0.5rem' }}>
+                    Pre-Game
+                </Badge>
+            );
+        }
+    
+        switch (fixture.status) {
+            case 1:
+                return (
+                    <Badge className='bg-info w-100' style={{ padding: '0.5rem' }}>
+                        Active
+                    </Badge>
+                );
+            case 2:
+                return (
+                    <Badge className='bg-success w-100' style={{ padding: '0.5rem' }}>
+                        In Consensus
+                    </Badge>
+                );
+            case 3:
+                return (
+                    <Badge className='bg-primary w-100' style={{ padding: '0.5rem' }}>
+                        Verified
+                    </Badge>
+                );
+            default:
+                return (
+                    <Badge className='bg-secondary w-100' style={{ padding: '0.5rem' }}>
+                        Unplayed
+                    </Badge>
+                );
+        }
+    };
+    
     
     
     const totalPrizePool = 0;
@@ -143,8 +203,8 @@ const Homepage = () => {
                             <Card className="h-100">
                                 <Card.Body>
                                     <Card.Title>Gameweek</Card.Title>
-                                    <h5 className="display-sm">1</h5> 
-                                    <Card.Text>2023/24</Card.Text>
+                                    <h5 className="display-sm">{currentGameweek}</h5> 
+                                    <Card.Text>{currentSeason.name}</Card.Text>
                                 </Card.Body>
                             </Card>
                         </Col>
@@ -219,27 +279,16 @@ const Homepage = () => {
                         <td className="away-team-name">{awayTeam.friendlyName}</td>
                         <td className="text-muted text-center score">{fixture.score ? fixture.score : '-'}</td>
                         <td className='text-center status'>
-                            <Badge 
-                                className={
-                                    fixture.status === 1 ? 'bg-info w-100' : 
-                                    fixture.status === 2 ? 'bg-success w-100' :
-                                    fixture.status === 3 ? 'bg-primary w-100' : 'bg-secondary w-100'
-                                } 
-                                style={{ padding: '0.5rem' }}
-                            >
-                                {fixture.status === 1 ? 'Active' : 
-                                    fixture.status === 2 ? 'In Consensus' :
-                                        fixture.status === 3 ? 'Verified' : 'Unplayed'}
-                            </Badge>
+                            {renderStatusBadge(fixture)}
                         </td>
                     </tr>
                 );
             })}
             </tbody>
         </Table>
-        <div className="mt- 2mb-2" style={{ textAlign: 'right' }}>
-            <Button>View Gameweek Points</Button>
-        </div>
+        { userPrincipal && <div className="mt- 2mb-2" style={{ textAlign: 'right' }}>
+            <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${currentGameweek}`}>View Gameweek Points</Button>
+        </div>}
     </Card.Body>
 </Card>
 
@@ -272,7 +321,7 @@ const Homepage = () => {
                                     )}
                                     {weeklyTop10.length > 0 && (
                                     <>
-                                        <Table responsive bordered className="table-fixed light-table">
+                                        <Table responsive bordered className="table-fixed">
                                             <thead>
                                                 <tr>
                                                     <th className='top10-num-col text-center'><small>Pos.</small></th>
@@ -303,7 +352,7 @@ const Homepage = () => {
                                     )}
                                     {seasonTop10.length > 0 && (
                                     <>
-                                    <Table responsive bordered className="table-fixed light-table">
+                                    <Table responsive bordered className="table-fixed">
                                         <thead>
                                             <tr>
                                                 <th className='top10-num-col text-center'><small>Pos.</small></th>

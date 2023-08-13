@@ -12,6 +12,8 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
   const [page, setPage] = useState(0);
   const count = 10;
   const [viewData, setViewData] = useState({ players: [], totalEntries: 0 }); 
+  const [filterSurname, setFilterSurname] = useState("");
+
 
   const positionOptions = [
     { id: 0, name: "Goalkeeper" },
@@ -37,6 +39,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
     .filter(player => filterPosition === "" || player.position === Number(filterPosition))
     .filter(player => minValue === "" || player.value >= (Number(minValue) * 4))
     .filter(player => maxValue === "" || player.value <= (Number(maxValue) * 4))
+    .filter(player => filterSurname === "" || player.lastName.toLowerCase().includes(filterSurname.toLowerCase()))
 
     const totalEntries = filteredPlayers.length; 
     const paginatedPlayers = filteredPlayers.slice(page * count, (page + 1) * count);
@@ -66,6 +69,11 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
 
   const handleChangeFilterPosition = (event) => {
     setFilterPosition(event.target.value);
+    setPage(0);
+  };
+  
+  const handleChangeFilterSurname = (event) => {
+    setFilterSurname(event.target.value);
     setPage(0);
   };
 
@@ -134,6 +142,14 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
               </Form.Group>
             </Col>
           </Row>
+          <Row className="mt-2">
+            <Col xs={12}>
+                <Form.Group controlId="surnameFilter">
+                    <Form.Label>Filter by Surname:</Form.Label>
+                    <Form.Control type="text" placeholder="Search by surname" value={filterSurname || ''} onChange={handleChangeFilterSurname} />
+                </Form.Group>
+            </Col>
+        </Row>
         </Form>
         <Row>
           <Col>
