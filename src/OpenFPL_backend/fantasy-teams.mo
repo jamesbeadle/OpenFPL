@@ -936,11 +936,39 @@ module {
         };
 
         public func getWeeklyTop10(activeSeasonId: Nat16, activeGameweek: Nat8) : T.Leaderboard {
-            switch (seasonLeaderboards.get(activeSeasonId)) {
+
+            var getSeasonId = activeSeasonId;
+            var getGameweekId = activeGameweek;
+
+            //if current season first game is not active then show last week
+            var gameweekFixtures: [T.Fixture] = [];
+            switch(getGameweekFixtures) {
+                case (null) { };
+                case (?actualFunction) {
+                    gameweekFixtures := actualFunction(activeSeasonId, activeGameweek);
+
+                    let fixturesBegun = Array.filter<T.Fixture>(gameweekFixtures, func(fixture: T.Fixture) : Bool {
+                        return fixture.status > 0;
+                    });
+
+                    if(Array.size(fixturesBegun) == 0){
+                        if(getGameweekId == 1){
+                            getGameweekId := 38;
+                            getSeasonId -= 1; 
+                        }
+                        else{
+                            getGameweekId -= 1;
+                        };
+                    }
+                };
+            };
+
+
+            switch (seasonLeaderboards.get(getSeasonId)) {
                 case (null) {
                     return {
-                        seasonId = activeSeasonId;
-                        gameweek = activeGameweek;
+                        seasonId = getSeasonId;
+                        gameweek = getGameweekId;
                         entries = List.nil();
                     };
                 };
@@ -948,22 +976,22 @@ module {
                 case (?seasonData) {
                     let allGameweekLeaderboards = seasonData.gameweekLeaderboards;
                     let matchingGameweekLeaderboard = List.find(allGameweekLeaderboards, func(leaderboard: T.Leaderboard): Bool {
-                        return leaderboard.gameweek == activeGameweek;
+                        return leaderboard.gameweek == getGameweekId;
                     });
 
                     switch (matchingGameweekLeaderboard) {
                         case (null) {
                             return {
-                                seasonId = activeSeasonId;
-                                gameweek = activeGameweek;
+                                seasonId = getSeasonId;
+                                gameweek = getGameweekId;
                                 entries = List.nil();
                             };
                         };
                         case (?foundLeaderboard) {
                             let top10Entries = List.take(foundLeaderboard.entries, 10);
                             return {
-                                seasonId = activeSeasonId;
-                                gameweek = activeGameweek;
+                                seasonId = getSeasonId;
+                                gameweek = getGameweekId;
                                 entries = top10Entries;
                             };
                         };
