@@ -40,17 +40,18 @@ actor Self {
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
   
-  /*//USE FOR LOCAL DEV
+  //USE FOR LOCAL DEV
+  /*
   let CANISTER_IDS = {
     token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
     player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
-  };*/
+  }; 
+  */
   //Live canisters  
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-  }; 
-  
+  };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
   { 
@@ -75,6 +76,7 @@ actor Self {
     retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async ();
     unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async ();
     getPlayersDetailsForGameweek: (playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) -> async [DTOs.PlayerPointsDTO];
+    recalculatePlayerScores: (fixture: T.Fixture, seasonId: Nat16, gameweek: Nat8) -> async ();
   };
 
   private func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8): async [(Nat16, DTOs.PlayerScoreDTO)] {
@@ -633,7 +635,18 @@ actor Self {
         return event.teamId == fixture.awayTeamId and event.eventType == 1;
     });
 
-    if(Array.size(homeTeamGoals) == 0){
+    let homeTeamOwnGoals = Array.filter<T.PlayerEventData>(allPlayerEvents, func(event: T.PlayerEventData) : Bool {
+      return event.teamId == fixture.homeTeamId and event.eventType == 10;
+    });
+
+    let awayTeamOwnGoals = Array.filter<T.PlayerEventData>(allPlayerEvents, func(event: T.PlayerEventData) : Bool {
+      return event.teamId == fixture.awayTeamId and event.eventType == 10;
+    });
+
+    let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
+    let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
+
+    if(totalHomeScored == 0){
       //add away team clean sheets
       for(playerId in Iter.fromArray(awayTeamDefensivePlayerIds)){
         let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
@@ -677,7 +690,7 @@ actor Self {
       };
     };
 
-    if(Array.size(awayTeamGoals) == 0){
+    if(totalAwayScored == 0){
       //add home team clean sheets
       for(playerId in Iter.fromArray(homeTeamDefensivePlayerIds)){
         let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
@@ -999,24 +1012,96 @@ actor Self {
       }
   };
 
-  
+  public func recalculateFantasyTeamScores(seasonId: T.SeasonId, gameweek: T.GameweekNumber): async (){
+
+    //this function needs to reset the snapshot points
+
+    //it gets all the players from the player canister with the correct points
+
+    //It then gets the gameweek fixtures using the season and gamewek passsed in
+
+    //the  begins a loop through the fantasy team entries
+      //then a loop through all the players in the fantasy team
+      //the score from the player canister is used as a base value
+
+
+    //now you have the correct score you update the snapshot
+      //look for a fantasy team as there has to be one
+      //if the fantasy team has no history then just add this
+      //if it has a history already
+        //find the current season
+          //find the current gameweek snapshot
+
+
+
+    await calculateFantasyTeamScores(seasonId,gameweek);
+  };
+
+  public func recaulatePlayerScores(seasonId: Nat16, gameweek: Nat8): async (){
+    //get all fixtures
+    let fixture1 = await getFixture(1,1,1);
+    let fixture2 = await getFixture(1,1,2);
+    let fixture3 = await getFixture(1,1,3);
+    let fixture4 = await getFixture(1,1,4);
+    let fixture5 = await getFixture(1,1,5);
+    let fixture6 = await getFixture(1,1,6);
+    let fixture7 = await getFixture(1,1,7);
+    let fixture8 = await getFixture(1,1,8);
+    let fixture9 = await getFixture(1,1,9);
+    let fixture10 = await getFixture(1,1,10);
+
+    let allFixtures: [T.Fixture] = [fixture1, fixture2, fixture3, fixture4, fixture5, fixture6, fixture7, fixture8, fixture9, fixture10]; 
+    for(fixture in Iter.fromArray(allFixtures)){
+      await playerCanister.recalculatePlayerScores(fixture, seasonId, gameweek);
+    };
+  }; 
 
   /* ONLY TO BE USED IN TEST LOCAL DEV ONLY
+
   
+   
+  
+  public func recaluclateLeaderboards(seasonId: Nat16, gameweek: Nat8): async (){
+    
+  
+  public func initGenesisSeason(): async (){
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692070200000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    await seasonManager.init_genesis_season(firstFixture);
+  };  
+  
+    let allPlayers = await playerCanister.getAllPlayersMap(seasonId, gameweek);
+
+    //get all fixtures
+    let allFixtures = await getActiveGameweekFixtures();
+    for(fixture in Iter.fromArray(allFixtures)){
+      await playerCanister.recalculatePlayerScores(fixture, seasonId, gameweek);
+      let playerEventBuffer = Buffer.fromArray<T.PlayerEventData>([]);
+      let fixturePlayers = Array.filter<(Nat16, DTOs.PlayerScoreDTO)>(allPlayers, func(player: (Nat16, DTOs.PlayerScoreDTO)) : Bool {
+          return fixture.homeTeamId == player.1.teamId or fixture.awayTeamId == player.1.teamId;
+      });
+
+      for(player in Iter.fromArray(fixturePlayers)){
+        playerEventBuffer.append(Buffer.fromArray(List.toArray<T.PlayerEventData>(player.1.events)));
+      };
+      await seasonManager.updateFixturePlayerEventData(seasonId, gameweek, fixture.id, List.fromArray(Buffer.toArray(playerEventBuffer)));
+    };
+
+    await calculateFantasyTeamScores(seasonId,gameweek);
+  };  
 
   public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1691952300000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692070200000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
     await seasonManager.init_genesis_season(firstFixture);
-  };
+  };  
 
   public func deactivateTransfers(): async (){
     await seasonManager.setTransfersNotAllowed();
   };
 
+  */
+  
 
   public func getAllFantasyTeams(): async [(Text, T.UserFantasyTeam)]{
     return fantasyTeamsInstance.getFantasyTeams();
   };
-  */
-  
 };

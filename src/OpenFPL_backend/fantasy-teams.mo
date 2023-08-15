@@ -539,25 +539,15 @@ module {
             for ((key, value) in fantasyTeams.entries()) {
                 let userFantasyTeam = value.fantasyTeam;
                 var totalTeamPoints: Int16 = 0;
-                 for (i in Iter.range(0, Array.size(userFantasyTeam.playerIds)-1)) {
+                for (i in Iter.range(0, Array.size(userFantasyTeam.playerIds)-1)) {
                     let playerId = userFantasyTeam.playerIds[i];
                     let playerData = allPlayers.get(playerId);
                     switch (playerData) {
                         case (null) {};
                         case (?player) {
+
                             var totalScore: Int16 = player.points;
-
-                            let highestScoringFixture = Array.find<T.Fixture>(gameweekFixtures, func(fixture: T.Fixture): Bool { 
-                                return fixture.highestScoringPlayerId == playerId; 
-                            });
                             
-                            switch(highestScoringFixture){
-                                case (null) {};
-                                case (?fixture){
-                                    totalScore += 25;
-                                };
-                            };
-
                             // Goal Getter
                             if(userFantasyTeam.goalGetterGameweek == gameweek and userFantasyTeam.goalGetterPlayerId == playerId) {
                                 totalScore += calculateGoalPoints(player.position, player.goalsScored);
@@ -657,19 +647,22 @@ module {
                             var seasonFound: Bool = false;
                             var seasonTotalPoints: Int16 = 0;
                             updatedFantasyTeamHistory := List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(?foundHistory, func(season: T.FantasyTeamSeason): T.FantasyTeamSeason {
+                                
                                 if(season.seasonId == seasonId){
                                     seasonFound := true;
                                     var gameweekFound: Bool = false;
                                     var updatedGameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(snapshot: T.FantasyTeamSnapshot): T.FantasyTeamSnapshot {
-                                       seasonTotalPoints += snapshot.points;
                                        if(snapshot.gameweek == gameweek){
+                                            seasonTotalPoints += teamPoints;
                                             gameweekFound := true;
                                             return fantasyTeamSnapshot;
-                                       } else {return snapshot };   
+                                       } else {
+                                            seasonTotalPoints += snapshot.points;
+                                            return snapshot 
+                                        };   
                                     });
                                     
                                     if(not gameweekFound){
-                                        //add snapshot to found season in existing history
                                         updatedGameweeks := List.append<T.FantasyTeamSnapshot>(updatedGameweeks, List.fromArray([fantasyTeamSnapshot]));
                                     };
                                     
@@ -682,7 +675,6 @@ module {
                             });
 
                             if(not seasonFound){
-                                //add season to existing history
                                 let newFantasyTeamSeason: T.FantasyTeamSeason = {
                                     seasonId = seasonId;
                                     totalPoints = teamPoints;
@@ -694,7 +686,6 @@ module {
                         };
                     };
 
-                    //set user fantasy team history:
                     let updatedUserFantasyTeam: T.UserFantasyTeam = {
                         fantasyTeam = ufTeam.fantasyTeam;
                         history = updatedFantasyTeamHistory;

@@ -39,13 +39,13 @@ module {
             "2bpwg-2lec5-batrn-wycrl-tc3up-enl3o-4qwcx-zrmts-k45c2-5zqga-2ae",
             "gucw5-y5hwr-kfoai-cus4i-x34gj-v2nlc-fib7q-nkuah-lw5y2-c7dln-yae"
         ];
-        */
+        
 
+*/
         //Live
         let admins : [Text] = [
             "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"
         ];
-
         private var fixtureDataSubmissions: HashMap.HashMap<T.FixtureId, List.List<T.DataSubmission>> = 
             HashMap.HashMap<T.FixtureId, List.List<T.DataSubmission>>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var playerRevaluationSubmissions: HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> = 

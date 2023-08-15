@@ -92,7 +92,6 @@ const ViewPoints = () => {
             );
             
             setSortedPlayers(sortedPlayers);
-            console.log(sortedPlayers); // Check the sorted players
         }
     }, [fantasyTeam]);
     
@@ -142,7 +141,7 @@ const ViewPoints = () => {
                     break;
                 case 3:
                     goalsConceded += 1;
-                    if(player.position < 2 && goalsConceded % 2 == 0){
+                    if(playerDTO.position < 2 && goalsConceded % 2 == 0){
                         goalsConcededPoints += -15;
                     };
                     break;
@@ -151,8 +150,8 @@ const ViewPoints = () => {
                     break;
                 case 5:
                     cleanSheets += 1;
-                    if(player.position < 2 && goalsConceded == 0){
-                        cleanSheetsPoints += 10;
+                    if(playerDTO.position < 2 && goalsConceded == 0){
+                        cleanSheetPoints += 10;
                     };
                     break;
                 case 6:
@@ -224,8 +223,6 @@ const ViewPoints = () => {
 
         var bonusName = "";
         var bonusPoints = 0;
-        
-        console.log(playerDTO)
 
         if(fantasyTeam.goalGetterGameweek == gameweek && fantasyTeam.goalGetterPlayerId == player.id) {
             bonusName = "Goal Getter";

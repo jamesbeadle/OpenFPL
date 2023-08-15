@@ -386,6 +386,10 @@ module {
     public func setTransfersNotAllowed() : async () {
         transfersAllowed := false;
     };
+    
+    public func updateFixturePlayerEventData(seasonId: Nat16, gameweek: Nat8, fixtureId: T.FixtureId, events: List.List<T.PlayerEventData>) : async () {
+        await seasonsInstance.updateFixturePlayerEventData(seasonId, gameweek, fixtureId, events);
+    };
     */
     
   };
