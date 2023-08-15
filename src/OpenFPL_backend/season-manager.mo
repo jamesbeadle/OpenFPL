@@ -375,27 +375,6 @@ module {
 
         return await seasonsInstance.getFixture(getSeasonId, getGameweekNumber, fixtureId);
     };
-
-    
-
-    /* Used for test only
-    public func adjustDuplicatedEvents() {
-        seasonsInstance.adjustDuplicatedEvents();
-    };
-    //REMOVE
-    public func setTransfersAllowed() : async () {
-        transfersAllowed := true;
-    };
-    
-    //REMOVE
-    public func setTransfersNotAllowed() : async () {
-        transfersAllowed := false;
-    };
-    
-    public func updateFixturePlayerEventData(seasonId: Nat16, gameweek: Nat8, fixtureId: T.FixtureId, events: List.List<T.PlayerEventData>) : async () {
-        await seasonsInstance.updateFixturePlayerEventData(seasonId, gameweek, fixtureId, events);
-    };
-    */
     
   };
 }
