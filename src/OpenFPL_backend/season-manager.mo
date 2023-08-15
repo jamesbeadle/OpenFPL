@@ -376,7 +376,12 @@ module {
         return await seasonsInstance.getFixture(getSeasonId, getGameweekNumber, fixtureId);
     };
 
+    
+
     /* Used for test only
+    public func adjustDuplicatedEvents() {
+        seasonsInstance.adjustDuplicatedEvents();
+    };
     //REMOVE
     public func setTransfersAllowed() : async () {
         transfersAllowed := true;

@@ -537,67 +537,88 @@ module {
             };
             
             for ((key, value) in fantasyTeams.entries()) {
-                let userFantasyTeam = value.fantasyTeam;
-                var totalTeamPoints: Int16 = 0;
-                for (i in Iter.range(0, Array.size(userFantasyTeam.playerIds)-1)) {
-                    let playerId = userFantasyTeam.playerIds[i];
-                    let playerData = allPlayers.get(playerId);
-                    switch (playerData) {
-                        case (null) {};
-                        case (?player) {
 
-                            var totalScore: Int16 = player.points;
-                            
-                            // Goal Getter
-                            if(userFantasyTeam.goalGetterGameweek == gameweek and userFantasyTeam.goalGetterPlayerId == playerId) {
-                                totalScore += calculateGoalPoints(player.position, player.goalsScored);
+                let currentSeason = List.find<T.FantasyTeamSeason>(value.history, func(teamSeason: T.FantasyTeamSeason) : Bool {
+                    return teamSeason.seasonId == seasonId;
+                });
+
+                switch(currentSeason){
+                    case (null) { return; };
+                    case (?foundSeason){
+                        let currentSnapshot = List.find<T.FantasyTeamSnapshot>(foundSeason.gameweeks, func(snapshot: T.FantasyTeamSnapshot) : Bool {
+                            return snapshot.gameweek == gameweek;
+                        });
+                        switch(currentSnapshot){
+                            case (null) { return; };
+                            case (?foundSnapshot){
+
+                                let userFantasyTeam = foundSnapshot;
+                                var totalTeamPoints: Int16 = 0;
+                                for (i in Iter.range(0, Array.size(userFantasyTeam.playerIds)-1)) {
+                                    let playerId = userFantasyTeam.playerIds[i];
+                                    let playerData = allPlayers.get(playerId);
+                                    switch (playerData) {
+                                        case (null) {};
+                                        case (?player) {
+
+                                            var totalScore: Int16 = player.points;
+                                            
+                                            // Goal Getter
+                                            if(userFantasyTeam.goalGetterGameweek == gameweek and userFantasyTeam.goalGetterPlayerId == playerId) {
+                                                totalScore += calculateGoalPoints(player.position, player.goalsScored);
+                                            };
+
+                                            // Pass Master
+                                            if(userFantasyTeam.passMasterGameweek == gameweek and userFantasyTeam.passMasterPlayerId == playerId) {
+                                                totalScore += calculateAssistPoints(player.position, player.assists);
+                                            };
+
+                                            // No Entry
+                                            if(userFantasyTeam.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
+                                                totalScore := totalScore * 3;
+                                            };
+
+                                            // Team Boost
+                                            if(userFantasyTeam.teamBoostGameweek == gameweek and player.teamId == userFantasyTeam.teamBoostTeamId) {
+                                                totalScore := totalScore * 2;
+                                            };
+
+                                            // Safe Hands
+                                            if(userFantasyTeam.safeHandsGameweek == gameweek and player.position == 0 and player.saves > 4) {
+                                                totalScore := totalScore * 3;
+                                            };
+
+                                            // Captain Fantastic
+                                            if(userFantasyTeam.captainFantasticGameweek == gameweek and userFantasyTeam.captainId == playerId and player.goalsScored > 0) {
+                                                totalScore := totalScore * 2;
+                                            };
+
+                                            // Brace Bonus
+                                            if(userFantasyTeam.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
+                                                totalScore := totalScore * 2;
+                                            };
+
+                                            // Hat Trick Hero
+                                            if(userFantasyTeam.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
+                                                totalScore := totalScore * 3;
+                                            };
+
+                                            // Handle captain bonus
+                                            if (playerId == userFantasyTeam.captainId) {
+                                                totalScore := totalScore * 2;
+                                            };
+
+                                            totalTeamPoints += totalScore;
+                                        };
+                                    }
+                                };
+                                updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
                             };
+                        }
 
-                            // Pass Master
-                            if(userFantasyTeam.passMasterGameweek == gameweek and userFantasyTeam.passMasterPlayerId == playerId) {
-                                totalScore += calculateAssistPoints(player.position, player.assists);
-                            };
 
-                            // No Entry
-                            if(userFantasyTeam.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
-                                totalScore := totalScore * 3;
-                            };
-
-                            // Team Boost
-                            if(userFantasyTeam.teamBoostGameweek == gameweek and player.teamId == userFantasyTeam.teamBoostTeamId) {
-                                totalScore := totalScore * 2;
-                            };
-
-                            // Safe Hands
-                            if(userFantasyTeam.safeHandsGameweek == gameweek and player.position == 0 and player.saves > 4) {
-                                totalScore := totalScore * 3;
-                            };
-
-                            // Captain Fantastic
-                            if(userFantasyTeam.captainFantasticGameweek == gameweek and userFantasyTeam.captainId == playerId and player.goalsScored > 0) {
-                                totalScore := totalScore * 2;
-                            };
-
-                            // Brace Bonus
-                            if(userFantasyTeam.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
-                                totalScore := totalScore * 2;
-                            };
-
-                            // Hat Trick Hero
-                            if(userFantasyTeam.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
-                                totalScore := totalScore * 3;
-                            };
-
-                            // Handle captain bonus
-                            if (playerId == userFantasyTeam.captainId) {
-                                totalScore := totalScore * 2;
-                            };
-
-                            totalTeamPoints += totalScore;
-                        };
-                    }
+                    };
                 };
-                updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
             };
             calculateLeaderboards(seasonId, gameweek);
         };
@@ -1060,7 +1081,6 @@ module {
             };
         };
 
-
         public func getSeasonTop10(activeSeasonId: Nat16) : T.Leaderboard {
             switch (seasonLeaderboards.get(activeSeasonId)) {
                 case (null) {
@@ -1154,6 +1174,105 @@ module {
                 return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
             };
         };
+
+        /* Used for test
+        public func adjustLeaderboardEntries(){
+
+            func assignPositionText(sortedEntries: List.List<T.LeaderboardEntry>): List.List<T.LeaderboardEntry> {
+                var position = 1;
+                var previousScore: ?Int16 = null;
+                var currentPosition = 1;
+
+                func updatePosition(entry: T.LeaderboardEntry) : T.LeaderboardEntry {
+                    if (previousScore == null) {
+                        previousScore := ?entry.points;
+                        let updatedEntry = {entry with positionText = Int.toText(position)};
+                        currentPosition += 1;
+                        return updatedEntry;
+                    } else if (previousScore == ?entry.points) {
+                        currentPosition += 1;
+                        return {entry with positionText = "-"};
+                    } else {
+                        position := currentPosition;
+                        previousScore := ?entry.points;
+                        let updatedEntry = {entry with positionText = Int.toText(position)};
+                        currentPosition += 1;
+                        return updatedEntry;
+                    }
+                };
+
+                return List.map(sortedEntries, updatePosition);
+            };
+
+            var validPrincipals: List.List<Text> = List.nil();
+
+
+            //get array of valid player principals that should be on the leaderboard
+            for((principalId, userFantasyTeam) in fantasyTeams.entries()){
+                   if(userFantasyTeam.history != null){
+                        validPrincipals := List.append(validPrincipals, List.fromArray([principalId]));
+                   };
+            };
+
+            for ((seasonId, leaderboards) in seasonLeaderboards.entries()) {
+
+                var updatedGameweekLeaderboards: List.List<T.Leaderboard> = List.nil();
+
+                for(gameweekLeaderboard in Iter.fromList(leaderboards.gameweekLeaderboards)){
+
+                    var updatedGameweekLeaderboardEntries = List.nil<T.LeaderboardEntry>();
+                    for(entry in List.toIter(gameweekLeaderboard.entries)){
+                        
+                        let validEntry = List.find(validPrincipals, func (principalId: Text): Bool {
+                            return entry.principalId == principalId;
+                        });
+
+                        if(Option.isSome(validEntry)){
+                            
+                            updatedGameweekLeaderboardEntries := assignPositionText(List.append(updatedGameweekLeaderboardEntries, List.fromArray([entry])));
+                        };
+                        
+                    };
+
+                    let updatedGameweekLeaderboard: T.Leaderboard = {
+                        entries = updatedGameweekLeaderboardEntries;
+                        gameweek = gameweekLeaderboard.gameweek;
+                        seasonId = seasonId;
+                    };
+                        
+                    updatedGameweekLeaderboards := List.append(updatedGameweekLeaderboards, List.fromArray([updatedGameweekLeaderboard]));
+                    
+                };
+
+                var updatedSeasonLeaderboardEntries = List.nil<T.LeaderboardEntry>();
+                for(entry in List.toIter(leaderboards.seasonLeaderboard.entries)){
+                    
+                    let validEntry = List.find(validPrincipals, func (principalId: Text): Bool {
+                        return entry.principalId == principalId;
+                    });
+
+                    if(Option.isSome(validEntry)){
+                        updatedSeasonLeaderboardEntries := List.append(updatedSeasonLeaderboardEntries, List.fromArray([entry]))
+                    };
+                    
+                };
+
+                var updatedSeasonLeaderboard: T.Leaderboard = {
+                    entries = assignPositionText(updatedSeasonLeaderboardEntries);
+                    gameweek = 0;
+                    seasonId = seasonId;
+                };
+
+                let newSeasonLeaderboards: T.SeasonLeaderboards = {
+                    seasonLeaderboard = updatedSeasonLeaderboard;
+                    gameweekLeaderboards = updatedGameweekLeaderboards;
+                };
+
+                seasonLeaderboards.put(seasonId, newSeasonLeaderboards)
+            };
+            
+        };
+        */
 
     }
     

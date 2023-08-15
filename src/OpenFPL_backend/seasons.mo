@@ -424,8 +424,79 @@ module {
 
         return [];
     };
+
+    
+  
+    private func removeDuplicates(events: List.List<T.PlayerEventData>): List.List<T.PlayerEventData> {
+    var seenEvents: List.List<(T.PlayerEventData)> = List.nil<(T.PlayerEventData)>();
+        return List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData): Bool {
+            let uniqueTuple: T.PlayerEventData = {
+                fixtureId = event.fixtureId;
+                playerId = event.playerId;
+                eventType = event.eventType;
+                eventStartMinute = event.eventStartMinute;
+                eventEndMinute = event.eventEndMinute;
+                teamId = event.teamId;
+            };
+            if (isTupleSeen(seenEvents, uniqueTuple)) {
+                return false;
+            } else {
+                seenEvents := List.append<T.PlayerEventData>(seenEvents, List.fromArray<T.PlayerEventData>([uniqueTuple]));
+                return true;
+            }
+        });
+    };
+
+    private func isTupleSeen(seenEvents: List.List<(T.PlayerEventData)>, uniqueTuple: (T.PlayerEventData)): Bool {
+        switch (seenEvents) {
+            case (null) { return false; };
+            case (?(head, tail)) {
+                if (head == uniqueTuple) {
+                    return true;
+                } else {
+                    return isTupleSeen(tail, uniqueTuple);
+                }
+            }
+        }
+    };
     
     /* Test only
+
+
+    public func adjustDuplicatedEvents() {
+        seasons := List.map<T.Season, T.Season>(seasons, func (s: T.Season): T.Season {
+            let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(s.gameweeks, func(gameweek: T.Gameweek) : T.Gameweek {
+                return {
+                    number = gameweek.number;
+                    canisterId = gameweek.canisterId;
+                    fixtures = List.map<T.Fixture, T.Fixture>(gameweek.fixtures, func(fixture: T.Fixture) : T.Fixture {
+                        return {
+                            id = fixture.id;
+                            seasonId = fixture.seasonId;
+                            gameweek = fixture.gameweek;
+                            kickOff = fixture.kickOff;
+                            homeTeamId = fixture.homeTeamId;
+                            awayTeamId = fixture.awayTeamId;
+                            homeGoals = fixture.homeGoals;
+                            awayGoals = fixture.awayGoals;
+                            status = fixture.status;
+                            events = removeDuplicates(fixture.events);
+                            highestScoringPlayerId = fixture.highestScoringPlayerId;
+                        }    
+                    });
+                };
+            });
+            return {
+                id = s.id;
+                name = s.name;
+                year = s.year;
+                postponedFixtures = s.postponedFixtures;
+                gameweeks = updatedGameweeks;
+            };
+        }); 
+    };
+
+
     public func updateFixturePlayerEventData(seasonId: Nat16, gameweek: Nat8, fixtureId: T.FixtureId, events: List.List<T.PlayerEventData>) : async () {
         seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
             if (season.id == seasonId) {

@@ -1012,6 +1012,10 @@ actor Self {
       }
   };
 
+  /* ONLY TO BE USED IN TEST LOCAL DEV ONLY
+
+
+
   public func recalculateFantasyTeamScores(seasonId: T.SeasonId, gameweek: T.GameweekNumber): async (){
 
     //this function needs to reset the snapshot points
@@ -1037,6 +1041,19 @@ actor Self {
     await calculateFantasyTeamScores(seasonId,gameweek);
   };
 
+  public func adjustLeaderboardEntries(){
+      //remove any leaderboard entries whose team history is null
+      fantasyTeamsInstance.adjustLeaderboardEntries();
+  };
+
+  
+  public func adjustDuplicatedEvents(){
+      
+      seasonManager.adjustDuplicatedEvents();
+  };
+  
+   
+
   public func recaulatePlayerScores(seasonId: Nat16, gameweek: Nat8): async (){
     //get all fixtures
     let fixture1 = await getFixture(1,1,1);
@@ -1055,11 +1072,6 @@ actor Self {
       await playerCanister.recalculatePlayerScores(fixture, seasonId, gameweek);
     };
   }; 
-
-  /* ONLY TO BE USED IN TEST LOCAL DEV ONLY
-
-  
-   
   
   public func recaluclateLeaderboards(seasonId: Nat16, gameweek: Nat8): async (){
     
@@ -1098,10 +1110,26 @@ actor Self {
     await seasonManager.setTransfersNotAllowed();
   };
 
-  */
-  
 
   public func getAllFantasyTeams(): async [(Text, T.UserFantasyTeam)]{
-    return fantasyTeamsInstance.getFantasyTeams();
+    let allTeams = fantasyTeamsInstance.getFantasyTeams();
+    var counter = 0;
+    let adjustedTeamsBuffer = Buffer.fromArray<(Text, T.UserFantasyTeam)>([]);
+    for(team in Iter.fromArray(allTeams)){
+      if(counter >= 122){
+        let updatedTeam: T.UserFantasyTeam = {
+          fantasyTeam = team.1.fantasyTeam;
+          history = List.nil();
+        };
+        adjustedTeamsBuffer.add((updatedTeam.fantasyTeam.principalId, updatedTeam));
+      }
+      else{
+        adjustedTeamsBuffer.add(team);
+      };
+      counter += 1;
+    };
+    return Buffer.toArray(adjustedTeamsBuffer);
   };
+  */
+  
 };
