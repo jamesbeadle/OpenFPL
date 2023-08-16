@@ -27,7 +27,7 @@ const PickTeam = () => {
     {id: 2, name: 'Pass Master', propertyName: 'passMaster', icon: <PersonBoxIcon />},
     {id: 3, name: 'No Entry', propertyName: 'noEntry', icon: <StopIcon />},
     {id: 4, name: 'Team Boost', propertyName: 'teamBoost', icon: <PersonUpIcon />},
-    {id: 5, name: 'Safe Hands', propertyName: 'safaHands', icon: <PersonIcon />},
+    {id: 5, name: 'Safe Hands', propertyName: 'safeHands', icon: <PersonIcon />},
     {id: 6, name: 'Captain Fantastic', propertyName: 'captainFantastic', icon: <CaptainIcon />},
     {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus', icon: <TwoIcon />},
     {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero', icon: <ThreeIcon />}
