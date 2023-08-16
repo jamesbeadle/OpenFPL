@@ -40,18 +40,18 @@ actor Self {
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
   
-  //USE FOR LOCAL DEV
   /*
+  //USE FOR LOCAL DEV
   let CANISTER_IDS = {
     token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
     player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
-  }; 
+  };
   */
   //Live canisters  
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-  };
+  }; 
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
   { 
@@ -83,6 +83,10 @@ actor Self {
     return await playerCanister.getAllPlayersMap(seasonId, gameweek);
   }; 
 
+  private func getAllPlayers(): async [DTOs.PlayerDTO] {
+    return await playerCanister.getAllPlayers();
+  }; 
+
   private func getPlayer(playerId: Nat16): async T.Player {
     return await playerCanister.getPlayer(playerId);
   }; 
@@ -91,7 +95,7 @@ actor Self {
     return profilesInstance.getProfiles();
   }; 
 
-  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer, getProfiles);
+  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer, getProfiles, getAllPlayers);
 
   public shared ({caller}) func getCurrentGameweek() : async Nat8 {
     return seasonManager.getActiveGameweek();
@@ -1011,5 +1015,23 @@ actor Self {
           }
       }
   };
+
+/*
+  public func initGenesisSeason(): async (){
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    await seasonManager.init_genesis_season(firstFixture);
+  };
+  public func fixBankBalances() : async () {
+    await fantasyTeamsInstance.fixBankBalances();
+  };
+
+  public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
+    return fantasyTeamsInstance.getFantasyTeams();
+  };
+
+  //
   
+  
+  
+  */
 };

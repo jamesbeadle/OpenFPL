@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button, Pagination } from 'react-bootstrap';
 import { SmallFixtureIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
-import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { Link } from "react-router-dom";
 
@@ -68,15 +67,11 @@ const Homepage = () => {
     };
 
     const fetchActiveGameweek = async () => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
         setCurrentGameweek(activeGameweekData);
     };
     
     const fetchActiveSeasonId = async () => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         const activeSeasonData = await open_fpl_backend.getCurrentSeason();
         setCurrentSeason(activeSeasonData);
     };

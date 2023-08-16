@@ -23,6 +23,7 @@ import AddFixtureData from "./components/governanace/add-fixture-data";
 import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
 import Leaderboard from "./components/leaderboards/season-leaderboard";
 import ViewPoints from "./components/gameplay/view-points";
+import { AuthGuard } from "./components/auth-guard";
 
 const PrivateWindowFallback = () => {
   return (
@@ -83,14 +84,30 @@ const App = () => {
               <Route path="/definitions" element={<Definitions   />} />
               <Route path="/terms" element={<Terms   />} />
               <Route path="/architecture" element={<Architecture   />} />
-              <Route path="/profile" element={<Profile   />} />
+              <Route path="/profile" element={
+                <AuthGuard>
+                  <Profile   />
+                </AuthGuard>
+              }/>
               <Route path="/dao" element={<DAO   />} />
-              <Route path="/governance" element={<Governance   />} />
-              <Route path="/pick-team" element={<PickTeam   />} />
-              <Route path="/add-fixture-data" element={<AddFixtureData   />} />
+              <Route path="/governance" element={
+                <AuthGuard>
+                  <Governance   />
+                </AuthGuard>
+              }/>
+              <Route path="/add-fixture-data" element={
+                <AuthGuard>
+                  <AddFixtureData   />
+                </AuthGuard>
+              }/>
               <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard   />} />
               <Route path="/leaderboard" element={<Leaderboard   />} />
               <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
+              <Route path="/pick-team" element={
+                <AuthGuard>
+                  <PickTeam   />
+                </AuthGuard>
+              } />
             </Routes>
           <MyFooter />
         </div>

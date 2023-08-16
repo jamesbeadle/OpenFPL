@@ -45,9 +45,8 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
     const paginatedPlayers = filteredPlayers.slice(page * count, (page + 1) * count);
   
     setViewData({ players: paginatedPlayers, totalEntries: totalEntries });
-  }, [players, filterTeamId, filterPosition, page, minValue, maxValue]);
+  }, [players, filterTeamId, filterPosition, page, minValue, maxValue, filterSurname]);
   
-
   const handlePageChange = (pageNumber) => {
     setPage(pageNumber);
   };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
-import { StarIcon, RecordIcon, StarOutlineIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
+import { StarIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
 import { Actor } from "@dfinity/agent";
@@ -11,7 +11,6 @@ import SelectFantasyPlayerModal from './select-fantasy-player-modal';
 import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
 import { Link } from "react-router-dom";
-
 
 const PickTeam = () => {
   const { authClient, teams, players } = useContext(AuthContext);
@@ -94,7 +93,8 @@ const PickTeam = () => {
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         
         let fantasyTeamData = await open_fpl_backend.getFantasyTeam();
-        if(!fantasyTeamData){
+        
+        if(fantasyTeamData.playerIds.length == 0){
           return;
         }
 
@@ -106,8 +106,8 @@ const PickTeam = () => {
 
         fantasyTeamData = {
           ...fantasyTeamData,
-          players: teamPlayers || [],
-          bankBalance: (fantasyTeamData.bankBalance / 1_000_000) || 300
+            players: teamPlayers || [],
+            bankBalance: fantasyTeamData.bankBalance / 1_000_000
         };
         setFantasyTeam(fantasyTeamData);
         
@@ -392,11 +392,9 @@ const handleConfirmBonusClick = (bonusType) => {
     setLoadingText("Saving Team");
     setIsLoading(true);
     try {
-      
       const newPlayerIds = fantasyTeam.players.map(player => Number(player.id));
       const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-      console.log(selectedBonusId)
       await open_fpl_backend.saveFantasyTeam(newPlayerIds, fantasyTeam.captainId ? Number(fantasyTeam.captainId) : 0, selectedBonusId ? Number(selectedBonusId) : 0, selectedBonusPlayerId ? Number(selectedBonusPlayerId) : 0, selectedBonusTeamId ? Number(selectedBonusTeamId) : 0);
       await fetchViewData();
       setIsLoading(false);
@@ -660,12 +658,15 @@ const handleConfirmBonusClick = (bonusType) => {
                     });
                   
                     let bonusTarget = "";
+                    let bonusDescription = "";
                     if (bonusPlayerId) {
                       bonusTarget = getPlayerNameFromId(bonusPlayerId);
+                      bonusDescription = "Player: ";
                     } else if (bonusTeamId) {
                       bonusTarget = getTeamNameFromId(bonusTeamId);
+                      bonusDescription = "Team: ";
                     } else if(bonusUsed) {
-                      bonusTarget = `Played Gameweek ${bonusGameweek}`;
+                      bonusTarget = ``;
                     }
 
                     let isBonusActive = !bonusUsed;
@@ -681,7 +682,7 @@ const handleConfirmBonusClick = (bonusType) => {
                       useButton = <div className='text-center mb-4'>
                           <small>{`Used in Gameweek ${bonusGameweek}`}</small>
                           <br />
-                          <small>{`Team: ${bonusTarget}`}</small>
+                          <small>{`${bonusDescription}${bonusTarget}`}</small>
                         </div>;
                     } 
                   

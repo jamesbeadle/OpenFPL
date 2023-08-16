@@ -20,7 +20,8 @@ module {
     public class FantasyTeams(
         getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
         getPlayer: (playerId: Nat16) -> async T.Player,
-        getProfiles: () -> [(Text, T.Profile)]){
+        getProfiles: () -> [(Text, T.Profile)],
+        getAllPlayers: () -> async [DTOs.PlayerDTO]){
         
         private var fantasyTeams: HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
         private var seasonLeaderboards: HashMap.HashMap<Nat16, T.SeasonLeaderboards> = HashMap.HashMap<Nat16, T.SeasonLeaderboards>(100, Utilities.eqNat16, Utilities.hashNat16);
@@ -87,9 +88,7 @@ module {
                     var teamBoostGameweek = Nat8.fromNat(0);
                     var teamBoostTeamId = Nat16.fromNat(0);
                     var safeHandsGameweek = Nat8.fromNat(0);
-                    var safeHandsPlayerId = Nat16.fromNat(0);
                     var captainFantasticGameweek = Nat8.fromNat(0);
-                    var captainFantasticPlayerId = Nat16.fromNat(0);
                     var braceBonusGameweek = Nat8.fromNat(0);
                     var hatTrickHeroGameweek = Nat8.fromNat(0);
                     var newCaptainId = captainId;
@@ -127,15 +126,13 @@ module {
                         teamBoostTeamId := bonusTeamId;
                     };
 
-                    if(bonusId == 5 and bonusPlayerId > 0){
+                    if(bonusId == 5){
                         safeHandsGameweek := gameweek;
-                        safeHandsPlayerId := bonusPlayerId;
                     };
 
 
-                    if(bonusId == 6 and bonusPlayerId > 0){
+                    if(bonusId == 6){
                         captainFantasticGameweek := gameweek;
-                        captainFantasticPlayerId := bonusPlayerId;
                     };
 
 
@@ -163,9 +160,9 @@ module {
                         teamBoostGameweek = teamBoostGameweek;
                         teamBoostTeamId = teamBoostTeamId;
                         safeHandsGameweek = safeHandsGameweek;
-                        safeHandsPlayerId = safeHandsPlayerId;
+                        safeHandsPlayerId = 0;
                         captainFantasticGameweek = captainFantasticGameweek;
-                        captainFantasticPlayerId = captainFantasticPlayerId;
+                        captainFantasticPlayerId = 0;
                         braceBonusGameweek = braceBonusGameweek;
                         hatTrickHeroGameweek = hatTrickHeroGameweek;
                     };
@@ -284,9 +281,7 @@ module {
                     var teamBoostGameweek = existingTeam.teamBoostGameweek;
                     var teamBoostTeamId = existingTeam.teamBoostTeamId;
                     var safeHandsGameweek = existingTeam.safeHandsGameweek;
-                    var safeHandsPlayerId = existingTeam.safeHandsPlayerId;
                     var captainFantasticGameweek = existingTeam.captainFantasticGameweek;
-                    var captainFantasticPlayerId = existingTeam.captainFantasticPlayerId;
                     var braceBonusGameweek = existingTeam.braceBonusGameweek;
                     var hatTrickHeroGameweek = existingTeam.hatTrickHeroGameweek;
                     var newCaptainId = captainId;
@@ -324,15 +319,12 @@ module {
                         teamBoostTeamId := bonusTeamId;
                     };
 
-                    if(bonusId == 5 and bonusPlayerId > 0){
+                    if(bonusId == 5){
                         safeHandsGameweek := gameweek;
-                        safeHandsPlayerId := bonusPlayerId;
                     };
 
-
-                    if(bonusId == 6 and bonusPlayerId > 0){
+                    if(bonusId == 6){
                         captainFantasticGameweek := gameweek;
-                        captainFantasticPlayerId := bonusPlayerId;
                     };
 
 
@@ -368,9 +360,9 @@ module {
                         teamBoostGameweek = teamBoostGameweek;
                         teamBoostTeamId = teamBoostTeamId;
                         safeHandsGameweek = safeHandsGameweek;
-                        safeHandsPlayerId = safeHandsPlayerId;
+                        safeHandsPlayerId = 0;
                         captainFantasticGameweek = captainFantasticGameweek;
-                        captainFantasticPlayerId = captainFantasticPlayerId;
+                        captainFantasticPlayerId = 0;
                         braceBonusGameweek = braceBonusGameweek;
                         hatTrickHeroGameweek = hatTrickHeroGameweek;
                     };
@@ -467,18 +459,6 @@ module {
                     case(null) { return false; };
                     case(?player) {
                         if (player.position != 1) { return false; };
-                    };
-                };
-            };
-
-            if (bonusId == 5) {
-                let bonusPlayer = List.find<DTOs.PlayerDTO>(List.fromArray(players), func (player: DTOs.PlayerDTO): Bool {
-                    return player.id == bonusPlayerId;
-                });
-                switch(bonusPlayer){
-                    case(null) { return false; };
-                    case(?player) {
-                        if (player.position != 0) { return false; };
                     };
                 };
             };
@@ -1203,6 +1183,64 @@ module {
             };
         };
 
-    }
+        
+  /*
+        public func fixBankBalances() : async (){
+            
+            let allPlayers = await getAllPlayers();
+            var updatedFantasyTeams: HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
+            
+            for ((key, value) in fantasyTeams.entries()) {
+
+                let newPlayers = Array.filter<DTOs.PlayerDTO>(allPlayers, func (player: DTOs.PlayerDTO): Bool {
+                    let playerId = player.id;
+                    let isPlayerIdInNewTeam = Array.find(value.fantasyTeam.playerIds, func (id: Nat16): Bool {
+                        return id == playerId;
+                    });
+                    return Option.isSome(isPlayerIdInNewTeam);
+                });
+
+                let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(newPlayers, func (player: DTOs.PlayerDTO) : Nat { return player.value; });
+                let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+                var bankValue: Float = 300_000_000 - Float.fromInt((totalTeamValue*250_000)); 
+                if(bankValue < 0){
+                    bankValue := 0;
+                };
+
+                let updateFantasyTeam: T.FantasyTeam = {
+                    principalId = value.fantasyTeam.principalId;
+                    transfersAvailable = value.fantasyTeam.transfersAvailable;
+                    bankBalance = bankValue;
+                    playerIds = value.fantasyTeam.playerIds;
+                    captainId = value.fantasyTeam.captainId;
+                    goalGetterGameweek = value.fantasyTeam.goalGetterGameweek;
+                    goalGetterPlayerId = value.fantasyTeam.goalGetterPlayerId;
+                    passMasterGameweek = value.fantasyTeam.passMasterGameweek;
+                    passMasterPlayerId = value.fantasyTeam.passMasterPlayerId;
+                    noEntryGameweek = value.fantasyTeam.noEntryGameweek;
+                    noEntryPlayerId = value.fantasyTeam.noEntryPlayerId;
+                    teamBoostGameweek = value.fantasyTeam.teamBoostGameweek;
+                    teamBoostTeamId = value.fantasyTeam.teamBoostTeamId;
+                    safeHandsGameweek = value.fantasyTeam.safeHandsGameweek;
+                    safeHandsPlayerId = value.fantasyTeam.safeHandsPlayerId;
+                    captainFantasticGameweek = value.fantasyTeam.captainFantasticGameweek;
+                    captainFantasticPlayerId = value.fantasyTeam.captainFantasticPlayerId;
+                    braceBonusGameweek = value.fantasyTeam.braceBonusGameweek;
+                    hatTrickHeroGameweek = value.fantasyTeam.hatTrickHeroGameweek;
+                };
+
+                let updatedUserTeam: T.UserFantasyTeam = {
+                    fantasyTeam = updateFantasyTeam;
+                    history = value.history;
+                };
+                
+                updatedFantasyTeams.put(key, updatedUserTeam);
+            };
+
+            fantasyTeams := updatedFantasyTeams;
+        };
+
+    */
+    };
     
 }

@@ -5,14 +5,12 @@ import { player_canister as player_canister } from '../../../../declarations/pla
 import { useParams } from 'react-router-dom';
 import PlayerDetailsModal from './player-details-modal';
 import LogoImage from "../../../assets/logo.png";
-import { useLocation } from 'react-router-dom';
 import ProfileImage from '../../../assets/profile_placeholder.png';
 import { PlayerIcon, StarIcon, StarOutlineIcon } from '../icons';
 
 
 const ViewPoints = () => {
     const { manager, gameweek, season } = useParams();
-    const location = useLocation();
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [fantasyTeam, setFantasyTeam] = useState({

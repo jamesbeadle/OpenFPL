@@ -1025,6 +1025,7 @@ actor Self {
         }
     };
 
+    /*
     public shared func recalculatePlayerScores(fixture: T.Fixture, seasonId: Nat16, gameweek: Nat8) : async () {
         ignore await calculatePlayerScores(seasonId,gameweek,fixture);
     };
@@ -1103,7 +1104,6 @@ actor Self {
             }
         }
     };
-
-
+    */
 
 };

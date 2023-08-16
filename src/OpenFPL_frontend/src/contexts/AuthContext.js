@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { AuthClient } from "@dfinity/auth-client";
-import { Actor } from "@dfinity/agent";
 import { player_canister as player_canister } from '../../../declarations/player_canister';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 
@@ -16,24 +15,31 @@ export const AuthProvider = ({ children }) => {
  
   useEffect(() => {
     const initAuthClient = async () => {
-      const authClient = await AuthClient.create({
-        idleOptions: {
-          idleTimeout: 1000 * 60 * 60
-        }
-      });
-      authClient.idleManager?.registerCallback?.(refreshLogin);
-      setAuthClient(authClient);
-      setUserPrincipal(authClient.getIdentity().getPrincipal());
+        const newAuthClient = await AuthClient.create({
+            idleOptions: {
+                idleTimeout: 1000 * 60 * 60
+            }
+        });
 
-      setLoading(false);
+        if (newAuthClient) {
+            newAuthClient.idleManager?.registerCallback?.(refreshLogin);
+            setAuthClient(newAuthClient);
+            const isLoggedIn = await checkLoginStatus(newAuthClient);
+            setLoading(!isLoggedIn);  // Set loading to false only after checking login status
+        } else {
+            setLoading(false);  // This is in case there was an issue creating the authClient
+        }
     };
     initAuthClient();
-  }, []);
+}, []);
+
 
   useEffect(() => {
-    if (!authClient) return;
-    checkLoginStatus(authClient);
+      if(authClient) {
+          checkLoginStatus(authClient);
+      }
   }, [authClient]);
+
 
   const checkLoginStatus = async (client) => {
     if(client == null){
@@ -42,13 +48,14 @@ export const AuthProvider = ({ children }) => {
     const isLoggedIn = await client.isAuthenticated();
     if (isLoggedIn) {
       setIsAuthenticated(true);
-      const newPrincipal = await authClient.getIdentity().getPrincipal();
+      const newPrincipal = await client.getIdentity().getPrincipal(); // Use client directly
       setUserPrincipal(newPrincipal.toText());
       return true;
     } else {
       return false;
     }
-  };
+};
+
 
   const refreshLogin = () => {
     authClient.login({
@@ -82,8 +89,6 @@ export const AuthProvider = ({ children }) => {
       return;
     }
     
-    const identity = authClient.getIdentity();
-    Actor.agentOf(player_canister).replaceIdentity(identity);
     const allPlayersData = await player_canister.getAllPlayers();
     setPlayers(allPlayersData);
   };

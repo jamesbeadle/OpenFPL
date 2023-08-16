@@ -3,20 +3,13 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
 import { ProfileIcon, GovernanceIcon, TeamIcon, WalletIcon } from '../icons';
 
 const MyNavbar = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/");
-    }
-  }, [isAuthenticated]);
 
   return (
     <Navbar expand="lg">
