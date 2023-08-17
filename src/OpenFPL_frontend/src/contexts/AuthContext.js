@@ -8,30 +8,35 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userPrincipal, setUserPrincipal] = useState("");
   const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
  
   useEffect(() => {
     const initAuthClient = async () => {
-      const newAuthClient = await AuthClient.create({
+      try{
+        const authClient = await AuthClient.create({
           idleOptions: {
-              idleTimeout: 1000 * 60 * 60
+            idleTimeout: 1000 * 60 * 60
           }
-      });
-    
-      setAuthClient(newAuthClient);
-    
-      if (newAuthClient) {
-          newAuthClient.idleManager?.registerCallback?.(refreshLogin);
-          const isLoggedIn = await checkLoginStatus(newAuthClient);
-          setIsAuthenticated(isLoggedIn);
+        });
+        await checkLoginStatus(authClient);
+
+        setAuthClient(authClient);
       }
+      catch (error){
+        console.error('Error during AuthClient initialization:', error);
+      }
+      finally{
+        setLoading(false);
+      }
+      setInitialized(true);
+    };
     
-      setLoading(false);
-    };    
     initAuthClient();
-}, []);
+  }, []);
 
 
   useEffect(() => {
+      if (!authClient) return;
       if(authClient) {
           checkLoginStatus(authClient);
       }
@@ -51,16 +56,6 @@ export const AuthProvider = ({ children }) => {
     } else {
       return false;
     }
-};
-
-
-  const refreshLogin = () => {
-    authClient.login({
-      onSuccess: async () => {
-        const newPrincipal = await authClient.getIdentity().getPrincipal();
-        setUserPrincipal(newPrincipal.toText());
-      },
-    });
   };
 
   const login = async () => {
@@ -82,7 +77,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={ { authClient, isAuthenticated, setIsAuthenticated, login, logout, userPrincipal  }}>
+    <AuthContext.Provider value={ { authClient, isAuthenticated, login, logout, userPrincipal, initialized }}>
+
       {!loading && children}
     </AuthContext.Provider>
   );

@@ -3,15 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 export const AuthGuard = ({ children }) => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, loading, initialized } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("here")
-    if (!isAuthenticated) {
+    if (initialized && !loading && !isAuthenticated) {
       navigate("/");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, loading, initialized]);
+  
+
+  if (loading) {
+    // Render a loading spinner or any placeholder you prefer
+    return <div>Loading...</div>;
+  }
 
   return isAuthenticated ? children : null;
+  
 };

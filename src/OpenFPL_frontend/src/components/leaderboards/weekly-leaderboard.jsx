@@ -34,16 +34,16 @@ const WeeklyLeaderboard = () => {
         const fetchData = async () => {
             setIsLoading(true);
             
-            if (!selectedSeason || !selectedGameweek) {
+            if (selectedSeason && selectedGameweek) {
                 await fetchSeasons();
                 const activeSeasonData = await fetchActiveSeasonId();
                 const activeGameweekData = await fetchActiveGameweek();
     
                 setSelectedSeason(activeSeasonData.id);
                 setSelectedGameweek(activeGameweekData);
+                await fetchViewData(selectedSeason || activeSeasonData.id, selectedGameweek || activeGameweekData);
             }
     
-            await fetchViewData(selectedSeason || activeSeasonData.id, selectedGameweek || activeGameweekData);
             setIsLoading(false);
         };
     

@@ -40,18 +40,18 @@ actor Self {
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
   
+  /*
   //USE FOR LOCAL DEV
   let CANISTER_IDS = {
     token_canister = "tqtu6-byaaa-aaaaa-aaana-cai";
     player_canister = "wqmuk-5qaaa-aaaaa-aaaqq-cai";
   };
-  /*
+  */
   //Live canisters  
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   }; 
-  */
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
   { 
