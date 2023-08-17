@@ -136,6 +136,11 @@ module.exports = {
           to: ".ic-assets.json5",
           noErrorOnMissing: true
         },
+        {
+          from: `src/${frontendDirectory}/src/.well-known/ic-domains`,
+          to: ".well-known/ic-domains",
+          noErrorOnMissing: true
+        }
       ],
     }),
   ],
