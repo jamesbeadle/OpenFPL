@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Table, Pagination, Form, Card, Row, Col, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../contexts/AuthContext";
-import { Actor } from "@dfinity/agent";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 
 const WeeklyLeaderboard = () => {
     const [isLoading, setIsLoading] = useState(true);
-    const { authClient } = useContext(AuthContext);
     const [managers, setManagers] = useState({
         totalEntries: 0n,
         seasonId: 0,
@@ -19,6 +16,7 @@ const WeeklyLeaderboard = () => {
     const [selectedSeason, setSelectedSeason] = useState(1);
     const [selectedGameweek, setSelectedGameweek] = useState(1);
     const itemsPerPage = 25;
+    const [isInitialSetupDone, setIsInitialSetupDone] = useState(false);
     
     const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
         <Pagination.Item 
@@ -31,52 +29,57 @@ const WeeklyLeaderboard = () => {
     ));
 
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
+        const fetchInitialData = async () => {
+            await fetchSeasons();
+            const activeSeasonData = await fetchActiveSeasonId();
+            const activeGameweekData = await fetchActiveGameweek();
             
-            if (selectedSeason && selectedGameweek) {
-                await fetchSeasons();
-                const activeSeasonData = await fetchActiveSeasonId();
-                const activeGameweekData = await fetchActiveGameweek();
-    
-                setSelectedSeason(activeSeasonData.id);
-                setSelectedGameweek(activeGameweekData);
-                await fetchViewData(selectedSeason || activeSeasonData.id, selectedGameweek || activeGameweekData);
+            if(!activeSeasonData || !activeGameweekData){
+                return;
             }
-    
-            setIsLoading(false);
+            setSelectedSeason(activeSeasonData);
+            setSelectedGameweek(activeGameweekData);
+            setIsInitialSetupDone(true);
         };
     
+        fetchInitialData();
+    }, []);
+
+    useEffect(() => {
+        if (!selectedSeason || !selectedGameweek || !isInitialSetupDone) {
+            return;
+        };
+        const fetchData = async () => {
+            setIsLoading(true);
+            await fetchViewData(selectedSeason, selectedGameweek);
+            setIsLoading(false);
+        };
+        
         fetchData();
-    }, [selectedGameweek, selectedSeason, currentPage]);
+    }, [selectedSeason, selectedGameweek, currentPage, isInitialSetupDone]);
+
 
     const fetchActiveGameweek = async () => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-        
-        const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
-        return activeGameweekData;
+        try {
+            const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
+            return activeGameweekData;
+        } catch(error) {
+            console.error("Error fetching active gameweek: ", error);
+        }
     };
     
-    const fetchActiveSeasonId = async () => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
+    const fetchActiveSeasonId = async () => {
         const activeSeasonData = await open_fpl_backend.getCurrentSeason();
         return activeSeasonData.id;
     };
 
     const fetchViewData = async (season, gameweek) => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
         setManagers(leaderboardData);
     };
 
     const fetchSeasons = async () => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    
         const seasonList = await open_fpl_backend.getSeasons();
         setSeasons(seasonList); 
     };

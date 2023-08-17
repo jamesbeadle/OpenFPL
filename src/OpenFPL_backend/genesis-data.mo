@@ -4,6 +4,7 @@ import List "mo:base/List";
 
 module GenesisData {
      
+    /*
     public func get_genesis_seasons(): [T.Season] {
         return [
             { id = 1; name = "2023/24"; year = 2023; postponedFixtures = List.fromArray<T.Fixture>([]); gameweeks = List.fromArray<T.Gameweek>([
@@ -463,6 +464,7 @@ module GenesisData {
             ]); }
         ]
     };
+     */
     public func get_genesis_teams(): [T.Team] {
         return [
             { id = 1; name = "Arsenal"; primaryColourHex = "#f00000"; secondaryColourHex = "#ffffff"; friendlyName = "Arsenal"; abbreviatedName = "ARS"; },
@@ -1031,22 +1033,21 @@ module GenesisData {
         ];
     };
     
-    /*
     //USE FOR LOCAL DEV
      public func get_genesis_seasons(): [T.Season] {
         return [
             { id = 1; name = "2023/24"; year = 2023; postponedFixtures = List.fromArray<T.Fixture>([]); gameweeks = List.fromArray<T.Gameweek>([
                 { id = 1; number = 1; canisterId = ""; fixtures = List.fromArray<T.Fixture>([
-                    { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 2; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 1; awayTeamId = 16; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 3; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 3; awayTeamId = 19; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 4; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 5; awayTeamId = 12; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 5; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 9; awayTeamId = 10; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 6; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 17; awayTeamId = 8; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 7; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 15; awayTeamId = 2; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 8; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 4; awayTeamId = 18; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 9; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 7; awayTeamId = 11; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
-                    { id = 10; seasonId = 1; gameweek = 1; kickOff = 1692228600000000000; homeTeamId = 14; awayTeamId = 20; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+                    { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 2; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 1; awayTeamId = 16; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 3; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 3; awayTeamId = 19; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 4; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 5; awayTeamId = 12; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 5; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 9; awayTeamId = 10; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 6; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 17; awayTeamId = 8; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 7; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 15; awayTeamId = 2; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 8; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 4; awayTeamId = 18; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 9; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 7; awayTeamId = 11; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
+{ id = 10; seasonId = 1; gameweek = 1; kickOff = 1692276300000000000; homeTeamId = 14; awayTeamId = 20; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
                 ]) },
                 { id = 2; number = 2; canisterId = ""; fixtures = List.fromArray<T.Fixture>([
                     { id = 11; seasonId = 1; gameweek = 2; kickOff = 1692536400000000000; homeTeamId = 2; awayTeamId = 9; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; },
@@ -1492,6 +1493,5 @@ module GenesisData {
             ]); }
         ]
     };
-     */
     
 }

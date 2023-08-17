@@ -45,8 +45,8 @@ const Homepage = () => {
 
         const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === activeGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-        //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
-        const nextKickoff = Math.min(...kickOffs) - 3600000;
+        const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
+        //const nextKickoff = Math.min(...kickOffs) - 3600000;
         const currentTime = new Date().getTime();
     
         if (currentTime < nextKickoff) {
@@ -124,8 +124,8 @@ const Homepage = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-            const nextKickoff = Math.min(...kickOffs) - 3600000;
-            //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
+            //const nextKickoff = Math.min(...kickOffs) - 3600000;
+            const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
 
             const currentTime = new Date().getTime();
     
@@ -288,7 +288,7 @@ const Homepage = () => {
             </tbody>
         </Table>
         { 
-            isAuthenticated && 
+            !isLoading && isAuthenticated && 
             (activeGameweek < currentGameweek || (activeGameweek == currentGameweek && isActiveGameweek)) &&
             <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
                 <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${currentGameweek}`}>View Gameweek Points</Button>

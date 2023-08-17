@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import PlayerEventsModal from './player-events-modal';
 import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
+import { useNavigate } from 'react-router-dom';
 
 const AddFixtureData = () => {
   const location = useLocation();
@@ -29,6 +30,7 @@ const AddFixtureData = () => {
     awayTeam: [],
   });
   const [playerEventMap, setPlayerEventMap] = useState({});
+  const navigate = useNavigate();
 
  
   const handlePlayerSelection = (team, playerIds) => {
@@ -204,7 +206,13 @@ const AddFixtureData = () => {
           });
         });
       }
+      setIsLoading(true);
       await open_fpl_backend.savePlayerEvents(fixture.id, playerEventsArray);
+      handleClearDraft();
+
+      //redirect to consensus page
+      navigate('/governance')
+
     } catch (error) {
       console.error('Failed to save player events', error);
     }

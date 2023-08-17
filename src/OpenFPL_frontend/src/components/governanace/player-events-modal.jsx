@@ -64,8 +64,8 @@ const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEven
             const newEvent = {
                 playerId: player.id,
                 eventType: Number(eventType),
-                eventStartTime: eventStartTime,
-                eventEndTime: eventEndTime
+                eventStartTime: Number(eventStartTime),
+                eventEndTime: Number(eventEndTime)
             };
             let updatedEvents = [];
             if (Array.isArray(playerEvents)) {
