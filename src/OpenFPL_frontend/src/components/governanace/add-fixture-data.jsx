@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Spinner, Button, Container, Tabs, Tab } from 'react-bootstrap';
-import { AuthContext } from "../../contexts/AuthContext";
+import { TeamsContext } from "../../contexts/TeamsContext";
+import { PlayersContext } from "../../contexts/PlayersContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { useLocation } from 'react-router-dom';
-
-import { StarIcon, RecordIcon, StarOutlineIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, StopCircleIcon, PenaltyMissIcon} from '../icons';
 import PlayerEventsModal from './player-events-modal';
 import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
@@ -14,7 +13,8 @@ const AddFixtureData = () => {
   const queryParams = new URLSearchParams(location.search);
   const fixtureId = queryParams.get('fixtureId');
 
-  const { teams, players } = useContext(AuthContext);
+  const { teams } = useContext(TeamsContext);
+  const { players } = useContext(PlayersContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixture, setFixture] = useState(null);
   const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);
@@ -62,7 +62,8 @@ const AddFixtureData = () => {
   };
 
   const handleClearDraft = () => {
-    localStorage.removeItem("fixtureDraft");
+      const draftKey = `fixtureDraft_${fixtureId}`;
+      localStorage.removeItem(draftKey);
   };
 
   const handleClearAllEvents = () => {
@@ -73,10 +74,9 @@ const AddFixtureData = () => {
     });
   };
   
-  
-  
   useEffect(() => {
-    const draft = localStorage.getItem("fixtureDraft");
+    const draftKey = `fixtureDraft_${fixtureId}`;
+    const draft = localStorage.getItem(draftKey);
     if (draft) {
       const reviver = (key, value) => {
           if (typeof value === 'string' && /^[0-9]+n$/.test(value)) {
@@ -115,11 +115,13 @@ const AddFixtureData = () => {
           return value;
       };
 
-      localStorage.setItem("fixtureDraft", JSON.stringify({
+      
+    const draftKey = `fixtureDraft_${fixtureId}`;
+    localStorage.setItem(draftKey, JSON.stringify({
         selectedPlayers,
         playerEventMap,
         fixture,
-      }, replacer));
+    }, replacer));
   };
 
   

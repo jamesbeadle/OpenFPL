@@ -2,11 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
+import { TeamsContext } from "../../contexts/TeamsContext";
 import { Actor } from "@dfinity/agent";
 import { FixtureIcon } from '../icons';
 
 const Fixtures = () => {
-  const { authClient, teams } = useContext(AuthContext);
+  const { authClient } = useContext(AuthContext);
+  const { teams } = useContext(TeamsContext);
   const [isLoading, setIsLoading] = useState(true);
 
   const [allFixtures, setAllFixtures] = useState([]);

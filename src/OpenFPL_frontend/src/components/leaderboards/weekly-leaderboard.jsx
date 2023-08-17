@@ -31,37 +31,31 @@ const WeeklyLeaderboard = () => {
     ));
 
     useEffect(() => {
-        const fetchIntialData = async () => {
-            await fetchSeasons();
-            await fetchActiveSeasonId();
-            await fetchActiveGameweek();
-            await fetchViewData(selectedSeason, selectedGameweek);
+        const fetchData = async () => {
+            setIsLoading(true);
+            
+            if (!selectedSeason || !selectedGameweek) {
+                await fetchSeasons();
+                const activeSeasonData = await fetchActiveSeasonId();
+                const activeGameweekData = await fetchActiveGameweek();
+    
+                setSelectedSeason(activeSeasonData.id);
+                setSelectedGameweek(activeGameweekData);
+            }
+    
+            await fetchViewData(selectedSeason || activeSeasonData.id, selectedGameweek || activeGameweekData);
             setIsLoading(false);
         };
-        fetchIntialData();
-    }, []);
-
-    useEffect(() => {
-        setCurrentPage(1);
-        fetchData();
-    }, [selectedGameweek, selectedSeason]);
     
-    useEffect(() => {
         fetchData();
-    }, [currentPage]);
-
-    const fetchData = async () => {
-        setIsLoading(true);
-        await fetchViewData(selectedSeason, selectedGameweek);
-        setIsLoading(false);
-    };
+    }, [selectedGameweek, selectedSeason, currentPage]);
 
     const fetchActiveGameweek = async () => {
         const identity = authClient.getIdentity();
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    
+        
         const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
-        setSelectedGameweek(activeGameweekData);
+        return activeGameweekData;
     };
     
     const fetchActiveSeasonId = async () => {
@@ -69,7 +63,7 @@ const WeeklyLeaderboard = () => {
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
         const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        setSelectedSeason(activeSeasonData.id);
+        return activeSeasonData.id;
     };
 
     const fetchViewData = async (season, gameweek) => {
@@ -91,11 +85,11 @@ const WeeklyLeaderboard = () => {
         <tr key={manager.principalId}>
             <td className='text-center'>{manager.positionText}</td>
             <td className='text-center'>{manager.principalId == manager.username ? 'Unknown' : manager.username}</td>
-            <td className='text-center'>{manager.points}</td>
             <td className='text-center'><Button as={Link} 
-            to={{
-                pathname: `/view-points/${manager.principalId}/${selectedSeason}/${selectedGameweek}`
-            }}>View</Button></td>
+                to={{
+                    pathname: `/view-points/${manager.principalId}/${selectedSeason}/${selectedGameweek}`
+                }}>{manager.points}</Button>
+            </td>
         </tr>
     ));
 
@@ -145,7 +139,6 @@ const WeeklyLeaderboard = () => {
                         <th className='top10-num-col text-center'><small>Pos.</small></th>
                         <th className='top10-name-col text-center'><small>Manager</small></th>
                         <th className='top10-points-col text-center'><small>Points</small></th>
-                        <th className='top10-button-col text-center'></th>
                     </tr>
                 </thead>
                 <tbody>

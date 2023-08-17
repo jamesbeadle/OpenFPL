@@ -29,51 +29,38 @@ const SeasonLeaderboard = () => {
     ));
 
     useEffect(() => {
-        const fetchIntialData = async () => {
-            await fetchSeasons();
-            await fetchActiveSeasonId();
-            await fetchViewData(selectedSeason);
+        const fetchData = async () => {
+            setIsLoading(true);
+    
+            const [seasonList, activeSeasonData] = await Promise.all([
+                open_fpl_backend.getSeasons(),
+                open_fpl_backend.getCurrentSeason()
+            ]);
+    
+            setSeasons(seasonList);
+            setSelectedSeason(activeSeasonData.id);
+    
+            const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(activeSeasonData.id), itemsPerPage, (currentPage - 1) * itemsPerPage);
+            setManagers(leaderboardData);
+    
             setIsLoading(false);
         };
-        fetchIntialData();
+    
+        fetchData();
     }, []);
-
-    useEffect(() => {
-        setCurrentPage(1);
-        fetchData();
-    }, [selectedSeason]);
     
     useEffect(() => {
-        fetchData();
-    }, [currentPage]);
-
-    const fetchData = async () => {
-        await fetchViewData(selectedSeason);
-        setIsLoading(false);
-    };
+        const fetchLeaderboardData = async () => {
+            setIsLoading(true);
     
-    const fetchActiveSeasonId = async () => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+            const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(selectedSeason), itemsPerPage, (currentPage - 1) * itemsPerPage);
+            setManagers(leaderboardData);
     
-        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        setSelectedSeason(activeSeasonData.id);
-    };
-
-    const fetchViewData = async (season) => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-        const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage); // Update the backend call if needed
-        setManagers(leaderboardData);
-    };
-
-    const fetchSeasons = async () => {
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+            setIsLoading(false);
+        };
     
-        const seasonList = await open_fpl_backend.getSeasons();
-        setSeasons(seasonList); 
-    };
+        fetchLeaderboardData();
+    }, [selectedSeason, currentPage]);
 
     const renderedData = managers.entries && managers.entries.map(manager => (
         <tr key={manager.principalId}>

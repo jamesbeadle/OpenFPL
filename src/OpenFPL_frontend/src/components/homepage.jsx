@@ -2,17 +2,19 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button, Pagination } from 'react-bootstrap';
 import { SmallFixtureIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
+import { TeamsContext } from "../contexts/TeamsContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { Link } from "react-router-dom";
 
 const Homepage = () => {
-  
+
     const [isLoading, setIsLoading] = useState(true);
-    const { authClient, teams, userPrincipal } = useContext(AuthContext);
+    const { userPrincipal, isAuthenticated } = useContext(AuthContext);
+    const { teams } = useContext(TeamsContext);
     const [fixtures, setFixtures] = useState([]);
     const [managerCount, setManagerCount] = useState(0);
     const [seasonTop10, setSeasonTop10] = useState([]);
-    const [weeklyTop10, setWeeklyTop10] = useState([]);
+    const [weeklyTop10, setWeeklyTop10] = useState();
     const [currentGameweek, setCurrentGameweek] = useState(1);
     const [currentSeason, setCurrentSeason] = useState(1);
     const [countdown, setCountdown] = useState({
@@ -21,9 +23,12 @@ const Homepage = () => {
         minutes: 0,
         seconds: 0
     });
-    
+    const [activeGameweek, setActiveGameweek] = useState(1);
+    const [isActiveGameweek, setIsActiveGameweek] = useState(false);
 
+    
     useEffect(() => {
+        
         const fetchData = async () => {
         await fetchActiveSeasonId();
         await fetchActiveGameweek();
@@ -38,15 +43,16 @@ const Homepage = () => {
         const fixturesData = await open_fpl_backend.getFixtures();
         setFixtures(fixturesData);
 
-        const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
+        const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === activeGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-        //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
-        const nextKickoff = Math.min(...kickOffs) - 3600000;
+        const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
+        //const nextKickoff = Math.min(...kickOffs) - 3600000;
         const currentTime = new Date().getTime();
     
         if (currentTime < nextKickoff) {
             const timeLeft = computeTimeLeft(nextKickoff);
             setCountdown(timeLeft);
+            setIsActiveGameweek(false); // Not an active gameweek
         } else {
             setCountdown({
                 days: 0,
@@ -54,7 +60,9 @@ const Homepage = () => {
                 minutes: 0,
                 seconds: 0
             });
+            setIsActiveGameweek(true);
         }
+        
 
         const managerCountData = await open_fpl_backend.getTotalManagers();
         setManagerCount(Number(managerCountData));
@@ -63,12 +71,14 @@ const Homepage = () => {
         setSeasonTop10(seasonTop10Data.entries);
     
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
-        setWeeklyTop10(weeklyTop10Data.entries);
+        setWeeklyTop10(weeklyTop10Data);
+
     };
 
     const fetchActiveGameweek = async () => {
         const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
         setCurrentGameweek(activeGameweekData);
+        setActiveGameweek(activeGameweekData);
     };
     
     const fetchActiveSeasonId = async () => {
@@ -82,18 +92,18 @@ const Homepage = () => {
     };
 
     const getCurrentGameweekFixtures = () => {
-        return fixtures.filter(fixture => fixture.gameweek === currentGameweek);
+        return fixtures.filter(fixture => fixture.gameweek === activeGameweek);
     };
 
     const handlePrevGameweek = () => {
-        if (currentGameweek > 1) {
-            setCurrentGameweek(prevGameweek => prevGameweek - 1);
+        if (activeGameweek > 1) {
+            setActiveGameweek(prevGameweek => prevGameweek - 1);
         }
       };
       
       const handleNextGameweek = () => {
-        if (currentGameweek < 38) {
-            setCurrentGameweek(nextGameweek => nextGameweek + 1);
+        if (activeGameweek < 38) {
+            setActiveGameweek(nextGameweek => nextGameweek + 1);
         }
       };
     
@@ -114,21 +124,17 @@ const Homepage = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-            const nextKickoff = Math.min(...kickOffs) - 3600000;
-            //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
+            //const nextKickoff = Math.min(...kickOffs) - 3600000;
+            const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
 
             const currentTime = new Date().getTime();
     
             if (currentTime < nextKickoff) {
                 const timeLeft = computeTimeLeft(nextKickoff);
                 setCountdown(timeLeft);
+                setIsActiveGameweek(false); // Gameweek is not active yet
             } else {
-                setCountdown({
-                    days: 0,
-                    hours: 0,
-                    minutes: 0,
-                    seconds: 0
-                });
+                setIsActiveGameweek(true); // Gameweek is active
                 clearInterval(timer);
             }
         }, 1000);
@@ -231,9 +237,9 @@ const Homepage = () => {
         </Col>
         <Col xs={8} className="d-flex justify-content-end align-items-center">
             <Pagination className="my-auto"> {/* Apply my-auto to vertically center this component */}
-                <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={currentGameweek === 1} />
-                <Pagination.Item><small className='small-text'>Gameweek {currentGameweek}</small></Pagination.Item>
-                <Pagination.Next onClick={() => handleNextGameweek()} disabled={currentGameweek === 38} />
+                <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={activeGameweek === 1} />
+                <Pagination.Item><small className='small-text'>Gameweek {activeGameweek}</small></Pagination.Item>
+                <Pagination.Next onClick={() => handleNextGameweek()} disabled={activeGameweek === 38} />
             </Pagination>
         </Col>
     </Row>
@@ -272,7 +278,7 @@ const Homepage = () => {
                             />
                         </td>
                         <td className="away-team-name">{awayTeam.friendlyName}</td>
-                        <td className="text-muted text-center score">{fixture.score ? fixture.score : '-'}</td>
+                        <td className="text-muted text-center score">{fixture.status == 3 ? `${fixture.homeGoals}-${fixture.awayGoals}` : '-'}</td>
                         <td className='text-center status'>
                             {renderStatusBadge(fixture)}
                         </td>
@@ -281,9 +287,13 @@ const Homepage = () => {
             })}
             </tbody>
         </Table>
-        { userPrincipal && <div className="mt- 2mb-2" style={{ textAlign: 'right' }}>
-            <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${currentGameweek}`}>View Gameweek Points</Button>
-        </div>}
+        { 
+            isAuthenticated && 
+            (activeGameweek < currentGameweek || (activeGameweek == currentGameweek && isActiveGameweek)) &&
+            <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
+                <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${currentGameweek}`}>View Gameweek Points</Button>
+            </div>
+        }
     </Card.Body>
 </Card>
 
@@ -293,15 +303,12 @@ const Homepage = () => {
                 <Col md={4} xs={12}>
                     <Card className='mb-2'>
                         <Card.Body>
-                            <Card.Title>
-                                {countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0
-                                    ? "Gameweek Active"
-                                    : "Gameweek Begins:"
-                                }
-                            </Card.Title>
-                            {countdown.days > 0 || countdown.hours > 0 || countdown.minutes > 0 || countdown.seconds > 0 ? (
-                                <h5 className="display-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s</h5>
-                            ) : null}
+                        <Card.Title>
+                            {isActiveGameweek ? "Gameweek Active" : "Gameweek Begins:"}
+                        </Card.Title>
+                        {!isActiveGameweek ? (
+                            <h5 className="display-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s</h5>
+                        ) : null}
                         </Card.Body>
                     </Card>
 
@@ -311,10 +318,10 @@ const Homepage = () => {
                             <Tabs defaultActiveKey="gameweek" id="leaderboard-tabs">
                                 <Tab eventKey="gameweek" title="Gameweek">
                                     <br />
-                                    {weeklyTop10.length == 0 && (
+                                    {weeklyTop10.entries.length == 0 && (
                                         <p className='mt-2'>No entries.</p>
                                     )}
-                                    {weeklyTop10.length > 0 && (
+                                    {weeklyTop10.entries.length > 0 && (
                                     <>
                                         <Table responsive bordered className="table-fixed">
                                             <thead>
@@ -325,11 +332,16 @@ const Homepage = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {weeklyTop10.map((leader) => (
+                                                {weeklyTop10.entries.map((leader) => (
                                                 <tr key={leader.principalId}>
                                                     <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
                                                     <td className='text-center text-truncate'>{leader.principalId == leader.username ? 'Unknown' : leader.username}</td>
-                                                    <td className='text-center'>{leader.points}</td>
+                                                    <td className='text-center'>
+                                                        <Button as={Link} className='p-0 w-100 clear-button' 
+                                                        to={{
+                                                            pathname: `/view-points/${leader.principalId}/${weeklyTop10.seasonId}/${weeklyTop10.gameweek}`
+                                                        }}>{leader.points}</Button>
+                                                    </td>
                                                 </tr>
                                                 ))}
                                             </tbody>

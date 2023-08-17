@@ -3,6 +3,8 @@ import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { StarIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
+import { TeamsContext } from "../../contexts/TeamsContext";
+import { PlayersContext } from "../../contexts/PlayersContext";
 import { Actor } from "@dfinity/agent";
 import PlayerSlot from './player-slot';
 import Fixtures from './fixtures';
@@ -13,7 +15,9 @@ import ConfirmBonusModal from './confirm-bonus-modal';
 import { Link } from "react-router-dom";
 
 const PickTeam = () => {
-  const { authClient, teams, players } = useContext(AuthContext);
+  const { authClient } = useContext(AuthContext);
+  const { teams } = useContext(TeamsContext);
+  const { players } = useContext(PlayersContext);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState("Loading Team");
   const [fantasyTeam, setFantasyTeam] = useState({
@@ -51,6 +55,8 @@ const PickTeam = () => {
   };
   const isTeamValid = invalidTeamMessage === null;
   const [transfersActive, setTransfersAllowed] = useState(true);
+  const [removedPlayers, setRemovedPlayers] = useState([]);
+
 
   useEffect(() => {
     if(players.length == 0 || teams.length == 0){
@@ -130,6 +136,10 @@ const PickTeam = () => {
       updatedFantasyTeam.players[selectedSlot] = player;
       updatedFantasyTeam.bankBalance -= Number(player.value) / 4;
 
+      if (!removedPlayers.includes(player.id)) {
+        updatedFantasyTeam.transfersAvailable -= 1;
+      }
+
       updatedFantasyTeam.players.sort((a, b) => {
         if (a.position < b.position) {
           return -1;
@@ -146,6 +156,8 @@ const PickTeam = () => {
   
       return updatedFantasyTeam;
     });
+    setRemovedPlayers(prevRemovedPlayers => prevRemovedPlayers.filter(id => id !== player.id));
+
     setShowSelectPlayerModal(false);
   };
   const handleBonusClick = (bonusId) => {
@@ -378,6 +390,9 @@ const handleConfirmBonusClick = (bonusType) => {
 
       return updatedFantasyTeam;
     });
+
+    setRemovedPlayers(prevRemovedPlayers => [...prevRemovedPlayers, playerId]);
+
   };
   
   const calculateTeamValue = () => {

@@ -7,6 +7,7 @@ export const AuthGuard = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("here")
     if (!isAuthenticated) {
       navigate("/");
     }

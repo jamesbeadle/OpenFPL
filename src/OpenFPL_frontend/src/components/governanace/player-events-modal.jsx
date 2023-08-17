@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, Dropdown, Form, Button, Row, Col, Table } from 'react-bootstrap';
-import { AuthContext } from "../../contexts/AuthContext";
+import { Modal, Form, Button, Row, Col, Table } from 'react-bootstrap';
 
 const PlayerEventModal = ({ show, onHide, onPlayerEventAdded, player, playerEventMap  }) => {
-    const { teams, players } = useContext(AuthContext);
     const [playerEvents, setPlayerEvents] = useState([]);
     const [eventType, setEventType] = useState("-1");
     const [eventStartTime, setEventStartTime] = useState("0");

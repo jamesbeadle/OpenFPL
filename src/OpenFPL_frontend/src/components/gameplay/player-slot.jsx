@@ -2,11 +2,12 @@ import React, { useContext } from 'react';
 import { Card, Button, Col, Row } from 'react-bootstrap';
 import { StarIcon, StarOutlineIcon,  PlayerIcon, TransferIcon, RecordIcon, PersonBoxIcon, StopIcon, PersonUpIcon, PersonIcon, CaptainIcon, TwoIcon, ThreeIcon } from '../icons';
 import getFlag from '../country-flag';
-import { AuthContext } from "../../contexts/AuthContext";
+
+import { TeamsContext } from "../../contexts/TeamsContext";
 
 const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellButton, handleSellPlayer, bonusId }) => {
   
-  const { teams } = useContext(AuthContext);
+  const { teams } = useContext(TeamsContext);
   const isCaptain = player.id === captainId;
   const positionCodes = ['GK', 'DF', 'MF', 'FW'];
   const bonusIcons = {

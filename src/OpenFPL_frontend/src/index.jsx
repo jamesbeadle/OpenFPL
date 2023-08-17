@@ -24,94 +24,56 @@ import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
 import Leaderboard from "./components/leaderboards/season-leaderboard";
 import ViewPoints from "./components/gameplay/view-points";
 import { AuthGuard } from "./components/auth-guard";
-
-const PrivateWindowFallback = () => {
-  return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-      <h3 className="text-center">You cannot play from a private browser window.</h3>
-      <img src={Logo} alt="openfpl" style={{ maxWidth: '200px', maxHeight: '100%', marginTop: '50px' }} />
-      
-    </div>
-  );
-};
+import { TeamsProvider } from "./contexts/TeamsContext";
+import { PlayersProvider } from "./contexts/PlayersContext";
 
 const App = () => {
-
-  const [isPrivateWindow, setIsPrivateWindow] = React.useState(false);
-
-  React.useEffect(() => {
-    if (window.indexedDB) {
-      const request = window.indexedDB.open("TestDB");
-
-      request.onerror = () => {
-        setIsPrivateWindow(true);
-      };
-
-      request.onsuccess = (event) => {
-        const db = event.target.result;
-        db.close();
-        const deleteRequest = window.indexedDB.deleteDatabase("TestDB");
-  
-        deleteRequest.onerror = (event) => {
-          console.error("Failed to delete TestDB", event);
-        };
-  
-        deleteRequest.onsuccess = () => {
-          //console.log("TestDB deleted successfully");
-        };
-      };
-    } else {
-      setIsPrivateWindow(true);
-    }
-  }, []);
-
-  if (isPrivateWindow) {
-    return (
-      <PrivateWindowFallback />
-    );
-  }
  
   return (
     <AuthProvider>
-      <Router>
-        <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-          <MyNavbar />
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route path="/funded-whitepaper" element={<FundedWhitepaper   />} />
-              <Route path="/whitepaper" element={<Whitepaper   />} />
-              <Route path="/gameplay" element={<Gameplay   />} />
-              <Route path="/definitions" element={<Definitions   />} />
-              <Route path="/terms" element={<Terms   />} />
-              <Route path="/architecture" element={<Architecture   />} />
-              <Route path="/profile" element={
-                <AuthGuard>
-                  <Profile   />
-                </AuthGuard>
-              }/>
-              <Route path="/dao" element={<DAO   />} />
-              <Route path="/governance" element={
-                <AuthGuard>
-                  <Governance   />
-                </AuthGuard>
-              }/>
-              <Route path="/add-fixture-data" element={
-                <AuthGuard>
-                  <AddFixtureData   />
-                </AuthGuard>
-              }/>
-              <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard   />} />
-              <Route path="/leaderboard" element={<Leaderboard   />} />
-              <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
-              <Route path="/pick-team" element={
-                <AuthGuard>
-                  <PickTeam   />
-                </AuthGuard>
-              } />
-            </Routes>
-          <MyFooter />
-        </div>
-      </Router>   
+      <TeamsProvider>
+        <PlayersProvider>
+          <Router>
+            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+              <MyNavbar />
+                <Routes>
+                  <Route path="/" element={<Homepage />} />
+                  <Route path="/funded-whitepaper" element={<FundedWhitepaper   />} />
+                  <Route path="/whitepaper" element={<Whitepaper   />} />
+                  <Route path="/gameplay" element={<Gameplay   />} />
+                  <Route path="/definitions" element={<Definitions   />} />
+                  <Route path="/terms" element={<Terms   />} />
+                  <Route path="/architecture" element={<Architecture   />} />
+                  <Route path="/profile" element={
+                    <AuthGuard>
+                      <Profile   />
+                    </AuthGuard>
+                  }/>
+                  <Route path="/dao" element={<DAO   />} />
+                  <Route path="/governance" element={
+                    <AuthGuard>
+                      <Governance   />
+                    </AuthGuard>
+                  }/>
+                  <Route path="/add-fixture-data" element={
+                    <AuthGuard>
+                      <AddFixtureData   />
+                    </AuthGuard>
+                  }/>
+                  <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard   />} />
+                  <Route path="/leaderboard" element={<Leaderboard   />} />
+                  <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
+                  <Route path="/pick-team" element={
+                    <AuthGuard>
+                      <PickTeam   />
+                    </AuthGuard>
+                  } />
+                </Routes>
+              <MyFooter />
+            </div>
+          </Router>   
+        </PlayersProvider>
+      </TeamsProvider>
   </AuthProvider>
   );
 };

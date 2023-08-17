@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { AuthClient } from "@dfinity/auth-client";
-import { player_canister as player_canister } from '../../../declarations/player_canister';
-import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
   const [authClient, setAuthClient] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [players, setPlayers] = useState([]);
-  const [teams, setTeams] = useState([]);
   const [userPrincipal, setUserPrincipal] = useState("");
   const [loading, setLoading] = useState(true);
  
   useEffect(() => {
     const initAuthClient = async () => {
-        const newAuthClient = await AuthClient.create({
-            idleOptions: {
-                idleTimeout: 1000 * 60 * 60
-            }
-        });
-
-        if (newAuthClient) {
-            newAuthClient.idleManager?.registerCallback?.(refreshLogin);
-            setAuthClient(newAuthClient);
-            const isLoggedIn = await checkLoginStatus(newAuthClient);
-            setLoading(!isLoggedIn);  // Set loading to false only after checking login status
-        } else {
-            setLoading(false);  // This is in case there was an issue creating the authClient
-        }
-    };
+      const newAuthClient = await AuthClient.create({
+          idleOptions: {
+              idleTimeout: 1000 * 60 * 60
+          }
+      });
+    
+      setAuthClient(newAuthClient);
+    
+      if (newAuthClient) {
+          newAuthClient.idleManager?.registerCallback?.(refreshLogin);
+          const isLoggedIn = await checkLoginStatus(newAuthClient);
+          setIsAuthenticated(isLoggedIn);
+      }
+    
+      setLoading(false);
+    };    
     initAuthClient();
 }, []);
 
@@ -48,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     const isLoggedIn = await client.isAuthenticated();
     if (isLoggedIn) {
       setIsAuthenticated(true);
-      const newPrincipal = await client.getIdentity().getPrincipal(); // Use client directly
+      const newPrincipal = await client.getIdentity().getPrincipal(); 
       setUserPrincipal(newPrincipal.toText());
       return true;
     } else {
@@ -84,28 +81,8 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const fetchAllPlayers = async () => {
-    if (!isAuthenticated) {
-      return;
-    }
-    
-    const allPlayersData = await player_canister.getAllPlayers();
-    setPlayers(allPlayersData);
-  };
-
-  
-  const fetchAllTeams = async () => {
-    const teamsData = await open_fpl_backend.getTeams();
-    setTeams(teamsData);
-  };
-
-  useEffect(() => {
-    fetchAllTeams();
-    fetchAllPlayers();
-  }, [isAuthenticated]);
-
   return (
-    <AuthContext.Provider value={ { authClient, isAuthenticated, setIsAuthenticated, login, logout, players, teams, userPrincipal  }}>
+    <AuthContext.Provider value={ { authClient, isAuthenticated, setIsAuthenticated, login, logout, userPrincipal  }}>
       {!loading && children}
     </AuthContext.Provider>
   );

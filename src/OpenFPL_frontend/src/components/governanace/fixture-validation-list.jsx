@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Table, Button, Spinner } from 'react-bootstrap';
 import { AuthContext } from "../../contexts/AuthContext";
+import { TeamsContext } from "../../contexts/TeamsContext";
+import { PlayersContext } from "../../contexts/PlayersContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
 import { Link } from "react-router-dom";
 
 const FixtureValidationList = () => {
-  const { authClient, teams, players } = useContext(AuthContext);
+  const { authClient } = useContext(AuthContext);
+  const { teams } = useContext(TeamsContext);
+  const { players } = useContext(PlayersContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixtures, setFixtures] = useState([]);
   const [currentGameweek, setCurrentGameweek] = useState(null);

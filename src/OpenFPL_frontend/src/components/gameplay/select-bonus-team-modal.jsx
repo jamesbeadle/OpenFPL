@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Modal, Button, Container, Row, Col } from 'react-bootstrap';
-import { AuthContext } from "../../contexts/AuthContext";
+import { TeamsContext } from "../../contexts/TeamsContext";
 
 const SelectBonusTeamModal = ({ show, handleClose, handleConfirm, bonusType  }) => {
   
-  const { teams } = useContext(AuthContext);
+  const { teams } = useContext(TeamsContext);
  
   const handleSubmit = (data) => {
     handleConfirm(data);

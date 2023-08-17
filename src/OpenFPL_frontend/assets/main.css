@@ -352,3 +352,7 @@ Table{
 .points-description-col { width: 50%; }
 .points-count-col { width: 25%; }
 .points-value-col { width: 25%; }
+
+.clear-button{
+  background-color: transparent !important; 
+};

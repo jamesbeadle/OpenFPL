@@ -3,13 +3,13 @@ import { Card, Spinner, Table, Button, Form, Modal, ButtonGroup, Col, Row } from
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import getFlag from '../country-flag';
 import { getAgeFromDOB } from '../helpers';
-import { AuthContext } from "../../contexts/AuthContext";
+import { PlayersContext } from "../../contexts/PlayersContext";
 
 
 const POSITION_LABELS = ["GK", "DEF", "MID", "FWD"];
 
 const PlayerValuations = ({ isActive }) => {
-  const { players } = useContext(AuthContext);
+  const { players } = useContext(PlayersContext);
 
   const [isLoading, setIsLoading] = useState(false);
   const [viewData, setViewData] = useState([]);
