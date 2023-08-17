@@ -8,7 +8,6 @@ import MyNavbar from './components/shared/navbar';
 import MyFooter from './components/shared/footer';
 import Profile from "./components/profile/profile";
 
-import Logo from '../assets/logo.png';
 import Whitepaper from "./components/whitepaper/whitepaper";
 import Gameplay from "./components/whitepaper/gameplay";
 import Terms from "./components/terms";
@@ -23,7 +22,6 @@ import AddFixtureData from "./components/governanace/fixture-validation/add-fixt
 import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
 import Leaderboard from "./components/leaderboards/season-leaderboard";
 import ViewPoints from "./components/gameplay/view-points";
-import { AuthGuard } from "./components/auth-guard";
 import { TeamsProvider } from "./contexts/TeamsContext";
 import { PlayersProvider } from "./contexts/PlayersContext";
 
@@ -38,36 +36,20 @@ const App = () => {
               <MyNavbar />
                 <Routes>
                   <Route path="/" element={<Homepage />} />
-                  <Route path="/funded-whitepaper" element={<FundedWhitepaper   />} />
+                  <Route path="/funded-whitepaper" element={<FundedWhitepaper />} />
                   <Route path="/whitepaper" element={<Whitepaper   />} />
                   <Route path="/gameplay" element={<Gameplay   />} />
                   <Route path="/definitions" element={<Definitions   />} />
                   <Route path="/terms" element={<Terms   />} />
-                  <Route path="/architecture" element={<Architecture   />} />
-                  <Route path="/profile" element={
-                    <AuthGuard>
-                      <Profile   />
-                    </AuthGuard>
-                  }/>
-                  <Route path="/dao" element={<DAO   />} />
-                  <Route path="/governance" element={
-                    <AuthGuard>
-                      <Governance   />
-                    </AuthGuard>
-                  }/>
-                  <Route path="/add-fixture-data" element={
-                    <AuthGuard>
-                      <AddFixtureData   />
-                    </AuthGuard>
-                  }/>
-                  <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard   />} />
-                  <Route path="/leaderboard" element={<Leaderboard   />} />
+                  <Route path="/architecture" element={<Architecture />} />
+                  <Route path="/profile" element={<Profile /> }/>
+                  <Route path="/dao" element={<DAO />} />
+                  <Route path="/governance" element={<Governance /> }/>
+                  <Route path="/add-fixture-data" element={<AddFixtureData /> }/>
+                  <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
                   <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
-                  <Route path="/pick-team" element={
-                    <AuthGuard>
-                      <PickTeam   />
-                    </AuthGuard>
-                  } />
+                  <Route path="/pick-team" element={ <PickTeam   /> } />
                 </Routes>
               <MyFooter />
             </div>
