@@ -25,7 +25,7 @@ const Homepage = () => {
     });
     const [activeGameweek, setActiveGameweek] = useState(1);
     const [isActiveGameweek, setIsActiveGameweek] = useState(false);
-
+    const [shouldShowButton, setShouldShowButton] = useState(false);
     
     useEffect(() => {
         
@@ -73,6 +73,10 @@ const Homepage = () => {
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
         setWeeklyTop10(weeklyTop10Data);
 
+        const shouldBeVisible = isAuthenticated && (activeGameweek < currentGameweek || (activeGameweek === currentGameweek && isActiveGameweek));
+        setShouldShowButton(shouldBeVisible);
+
+
     };
 
     const fetchActiveGameweek = async () => {
@@ -98,14 +102,26 @@ const Homepage = () => {
     const handlePrevGameweek = () => {
         if (activeGameweek > 1) {
             setActiveGameweek(prevGameweek => prevGameweek - 1);
+        
+            const newGameweek = activeGameweek - 1;
+            setButtonVisibility(newGameweek);
         }
       };
       
       const handleNextGameweek = () => {
         if (activeGameweek < 38) {
             setActiveGameweek(nextGameweek => nextGameweek + 1);
+        
+            const newGameweek = activeGameweek + 1;
+            setButtonVisibility(newGameweek);
         }
       };
+
+      const setButtonVisibility = (newGameweek) => {
+        const shouldBeVisible = isAuthenticated && (newGameweek < currentGameweek || (newGameweek === currentGameweek && isActiveGameweek));
+        setShouldShowButton(shouldBeVisible);
+    };
+    
     
 
       const nanoSecondsToMillis = (nanos) => nanos / 1000000; // Convert nanoseconds to milliseconds
@@ -288,8 +304,7 @@ const Homepage = () => {
             </tbody>
         </Table>
         { 
-            !isLoading && isAuthenticated && 
-            (activeGameweek < currentGameweek || (activeGameweek == currentGameweek && isActiveGameweek)) &&
+            shouldShowButton &&
             <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
                 <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${activeGameweek}`}>View Gameweek Points</Button>
             </div>
