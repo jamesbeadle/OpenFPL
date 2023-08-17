@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Tabs, Tab } from 'react-bootstrap';
-import FixtureValidationList from './fixture-validation-list';
+import FixtureValidationList from './fixture-validation/fixture-validation-list';
 
 const Governance = () => {
   

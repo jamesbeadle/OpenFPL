@@ -355,4 +355,16 @@ Table{
 
 .clear-button{
   background-color: transparent !important; 
-};
+}
+
+.cleared-text{
+  color: #C23E65 !important;
+}
+
+.saved-text{
+  color: #67F5C9 !important;
+}
+
+.saved-text{
+  color: #67F5C9 !important;
+}

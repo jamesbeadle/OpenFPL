@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Table, Button, Spinner } from 'react-bootstrap';
-import { AuthContext } from "../../contexts/AuthContext";
-import { TeamsContext } from "../../contexts/TeamsContext";
-import { PlayersContext } from "../../contexts/PlayersContext";
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { AuthContext } from "../../../contexts/AuthContext";
+import { TeamsContext } from "../../../contexts/TeamsContext";
+import { PlayersContext } from "../../../contexts/PlayersContext";
+import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
 import { Link } from "react-router-dom";
 

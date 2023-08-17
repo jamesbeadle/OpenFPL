@@ -19,7 +19,7 @@ import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
 import Homepage from "./components/homepage";
 import FundedWhitepaper from "./components/whitepaper/funded_whitepaper";
-import AddFixtureData from "./components/governanace/add-fixture-data";
+import AddFixtureData from "./components/governanace/fixture-validation/add-fixture-data";
 import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
 import Leaderboard from "./components/leaderboards/season-leaderboard";
 import ViewPoints from "./components/gameplay/view-points";

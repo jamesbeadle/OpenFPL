@@ -4,7 +4,6 @@ import List "mo:base/List";
 
 module GenesisData {
      
-    /*
     public func get_genesis_seasons(): [T.Season] {
         return [
             { id = 1; name = "2023/24"; year = 2023; postponedFixtures = List.fromArray<T.Fixture>([]); gameweeks = List.fromArray<T.Gameweek>([
@@ -464,7 +463,7 @@ module GenesisData {
             ]); }
         ]
     };
-     */
+
     public func get_genesis_teams(): [T.Team] {
         return [
             { id = 1; name = "Arsenal"; primaryColourHex = "#f00000"; secondaryColourHex = "#ffffff"; friendlyName = "Arsenal"; abbreviatedName = "ARS"; },
@@ -1034,6 +1033,7 @@ module GenesisData {
     };
     
     //USE FOR LOCAL DEV
+    /*
      public func get_genesis_seasons(): [T.Season] {
         return [
             { id = 1; name = "2023/24"; year = 2023; postponedFixtures = List.fromArray<T.Fixture>([]); gameweeks = List.fromArray<T.Gameweek>([
@@ -1493,5 +1493,6 @@ module GenesisData {
             ]); }
         ]
     };
+    */
     
 }

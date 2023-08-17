@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Spinner, Button, Container, Tabs, Tab } from 'react-bootstrap';
-import { TeamsContext } from "../../contexts/TeamsContext";
-import { PlayersContext } from "../../contexts/PlayersContext";
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { TeamsContext } from "../../../contexts/TeamsContext";
+import { PlayersContext } from "../../../contexts/PlayersContext";
+import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
 import { useLocation } from 'react-router-dom';
-import PlayerEventsModal from './player-events-modal';
-import PlayerSelectionModal from './select-players-modal';
+import PlayerEventsModal from '../player-events-modal';
+import PlayerSelectionModal from '../select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,6 +31,8 @@ const AddFixtureData = () => {
   });
   const [playerEventMap, setPlayerEventMap] = useState({});
   const navigate = useNavigate();
+  const [showDraftCleared, setShowDraftCleared] = useState(false);
+  const [showDraftSaved, setShowDraftSaved] = useState(false);
 
  
   const handlePlayerSelection = (team, playerIds) => {
@@ -64,8 +66,11 @@ const AddFixtureData = () => {
   };
 
   const handleClearDraft = () => {
+      handleClearAllEvents();
       const draftKey = `fixtureDraft_${fixtureId}`;
       localStorage.removeItem(draftKey);
+      setShowDraftCleared(true);
+      setShowDraftSaved(false);
   };
 
   const handleClearAllEvents = () => {
@@ -124,6 +129,8 @@ const AddFixtureData = () => {
         playerEventMap,
         fixture,
     }, replacer));
+    setShowDraftCleared(false);
+    setShowDraftSaved(true);
   };
 
   
@@ -351,23 +358,20 @@ const AddFixtureData = () => {
 
           <div className="add-fixture-data">
             <Row>
-              <Col xs={12} md={3}>
-                <Button className="mt-3 mb-3 mr-2" variant='danger' onClick={handleClearAllEvents}>
-                    Clear All Events
-                </Button>
-              </Col>
-              <Col xs={12} md={3}>
-                <Button className="mt-3 mb-3 mr-2" variant='warning' onClick={handleSaveAsDraft}>
-                    Save as Draft
-                </Button>
-              </Col>
-              <Col xs={12} md={3}>
-                <Button className="mt-3 mb-3" variant='secondary' onClick={handleClearDraft}>
+              <Col xs={12} md={4}>
+                <Button className="mt-3 mb-3" variant='danger' onClick={handleClearDraft}>
                     Clear Draft
                 </Button>
+                {showDraftCleared && <p className='cleared-text'>Cleared.</p>}
               </Col>
-              <Col xs={12} md={3}>
-                <Button className="mt-3 mb-3" variant='success' onClick={() => setShowConfirmDataModal(true)} 
+              <Col xs={12} md={4}>
+                <Button className="mt-3 mb-3 mr-2" variant='success' onClick={handleSaveAsDraft}>
+                    Save as Draft
+                </Button>
+                {showDraftSaved && <p className='saved-text'>Saved.</p>}
+              </Col>
+              <Col xs={12} md={4}>
+                <Button className="mt-3 mb-3" variant='primary' onClick={() => setShowConfirmDataModal(true)} 
               disabled={
                 !fixture.appearances || 
                 fixture.appearances === 0 || 
