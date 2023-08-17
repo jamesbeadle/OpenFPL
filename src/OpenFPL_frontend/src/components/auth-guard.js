@@ -14,8 +14,7 @@ export const AuthGuard = ({ children }) => {
   
 
   if (loading) {
-    // Render a loading spinner or any placeholder you prefer
-    return <div>Loading...</div>;
+    return;
   }
 
   return isAuthenticated ? children : null;
