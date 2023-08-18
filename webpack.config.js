@@ -123,6 +123,7 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: "development",
       II_URL: internetIdentityUrl,
+      DFX_NETWORK: network,
       ...canisterEnvVariables,
     }),
     new webpack.ProvidePlugin({
@@ -133,7 +134,7 @@ module.exports = {
       patterns: [
         {
           from: `src/${frontendDirectory}/assets/.ic-assets.json*`,
-          to: ".ic-assets.json5",
+          to: ".ic-assets.json",
           noErrorOnMissing: true
         },
         {
