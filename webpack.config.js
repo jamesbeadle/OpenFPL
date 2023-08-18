@@ -132,12 +132,12 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: `src/${frontendDirectory}/src/.ic-assets.json*`,
+          from: `src/${frontendDirectory}/assets/.ic-assets.json*`,
           to: ".ic-assets.json5",
           noErrorOnMissing: true
         },
         {
-          from: `src/${frontendDirectory}/src/.well-known/ic-domains`,
+          from: `src/${frontendDirectory}/assets/.well-known/ic-domains`,
           to: ".well-known/ic-domains",
           noErrorOnMissing: true
         }
