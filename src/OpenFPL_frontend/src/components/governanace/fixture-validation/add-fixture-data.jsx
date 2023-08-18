@@ -36,7 +36,6 @@ const AddFixtureData = () => {
 
  
   const handlePlayerSelection = (team, playerIds) => {
-    // Remove events for any deselected players
     const currentPlayerIds = selectedPlayers[team];
     const removedPlayerIds = currentPlayerIds.filter(id => !playerIds.includes(id));
     let remainingPlayerEventMap = playerEventMap; // Initialize remainingPlayerEventMap to be the same as the current playerEventMap
@@ -49,13 +48,11 @@ const AddFixtureData = () => {
   
     setPlayerEventMap(remainingPlayerEventMap);
   
-    // Update selectedPlayers state
     setSelectedPlayers(prevState => ({
       ...prevState,
       [team]: playerIds,
     }));
   
-    // Calculate and set the new fixture stats
     const newFixtureStats = calculateFixtureStats(remainingPlayerEventMap, players, fixture); // Calculate the new fixture stats with the updated playerEventMap
     setFixture(prevFixture => ({
       ...prevFixture,
@@ -98,7 +95,6 @@ const AddFixtureData = () => {
     }
   }, []);
   
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -139,7 +135,6 @@ const AddFixtureData = () => {
   const renderPlayerCard = (playerId) => {
     const player = players.find(p => p.id == playerId);
     
-    // Calculate the total events for this player.
     const totalEvents = playerEventMap[playerId]?.length || 0;
 
     return (
@@ -169,17 +164,14 @@ const AddFixtureData = () => {
   
 
   const handlePlayerEventAdded = (playerId, newEvents) => {
-    // Calculate the new playerEventMap
     const newPlayerEventMap = {
       ...playerEventMap,
       [playerId]: newEvents
     };
 
-    // Add events to playerEventMap
-    setPlayerEventMap(newPlayerEventMap);
+     setPlayerEventMap(newPlayerEventMap);
   
-    // Calculate and set the new fixture stats
-    const newFixtureStats = calculateFixtureStats(newPlayerEventMap, players, fixture);
+     const newFixtureStats = calculateFixtureStats(newPlayerEventMap, players, fixture);
     setFixture(prevFixture => ({
       ...prevFixture,
       ...newFixtureStats
@@ -288,12 +280,6 @@ const AddFixtureData = () => {
         case 10: // Own Goal
           isHomeTeam ? initialStats.awayGoals++ : initialStats.homeGoals++;
           initialStats.ownGoals++;
-          initialStats.goals++;
-          break;
-        case eventTypeX: // Assist
-          isHomeTeam ? initialStats.homeAssists++ : initialStats.awayAssists++;
-          initialStats.ownGoals++;
-          initialStats.goals++;
           break;
         // Add cases for other event types here
         default:
