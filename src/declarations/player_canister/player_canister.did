@@ -1,0 +1,212 @@
+type ValueHistory = 
+ record {
+   gameweek: nat8;
+   newValue: float64;
+   oldValue: float64;
+   seasonId: nat16;
+ };
+type UpdatePlayerPayload = 
+ record {
+   dateOfBirth: int;
+   firstName: text;
+   lastName: text;
+   nationality: text;
+   playerId: PlayerId;
+   position: nat8;
+   shirtNumber: nat8;
+   teamId: TeamId;
+ };
+type UnretirePlayerPayload = record {playerId: PlayerId;};
+type TransferPlayerPayload = 
+ record {
+   newTeamId: TeamId;
+   playerId: PlayerId;
+ };
+type TeamId = nat16;
+type SetPlayerInjuryPayload = 
+ record {
+   expectedEndDate: int;
+   injuryDescription: text;
+   playerId: PlayerId;
+   recovered: bool;
+ };
+type SeasonId = nat16;
+type RevaluedPlayer = 
+ record {
+   direction: RevaluationDirection;
+   playerId: PlayerId;
+ };
+type RevaluationDirection = 
+ variant {
+   Decrease;
+   Increase;
+ };
+type RetirePlayerPayload = 
+ record {
+   playerId: PlayerId;
+   retirementDate: int;
+ };
+type RecallPlayerPayload = record {playerId: PlayerId;};
+type PlayerSeason = 
+ record {
+   gameweeks: List_3;
+   id: nat16;
+ };
+type PlayerScoreDTO = 
+ record {
+   assists: int16;
+   events: List_4;
+   goalsConceded: int16;
+   goalsScored: int16;
+   id: nat16;
+   points: int16;
+   position: nat8;
+   saves: int16;
+   teamId: nat16;
+ };
+type PlayerPointsDTO = 
+ record {
+   events: vec PlayerEventData;
+   gameweek: GameweekNumber;
+   id: nat16;
+   points: int16;
+   position: nat8;
+   teamId: nat16;
+ };
+type PlayerId = nat16;
+type PlayerGameweek = 
+ record {
+   events: List_4;
+   number: nat8;
+   points: int16;
+ };
+type PlayerEventData = 
+ record {
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: nat8;
+   fixtureId: FixtureId;
+   playerId: nat16;
+   teamId: TeamId;
+ };
+type PlayerDTO = 
+ record {
+   dateOfBirth: int;
+   firstName: text;
+   id: nat16;
+   lastName: text;
+   nationality: text;
+   position: nat8;
+   shirtNumber: nat8;
+   teamId: nat16;
+   totalPoints: nat16;
+   value: nat;
+ };
+type Player = 
+ record {
+   dateOfBirth: int;
+   firstName: text;
+   id: PlayerId;
+   injuryHistory: List_1;
+   isInjured: bool;
+   lastName: text;
+   nationality: text;
+   onLoan: bool;
+   parentTeamId: nat16;
+   position: nat8;
+   retirementDate: int;
+   seasons: List_2;
+   shirtNumber: nat8;
+   teamId: TeamId;
+   value: nat;
+   valueHistory: List_5;
+ };
+type LoanPlayerPayload = 
+ record {
+   loanEndDate: int;
+   loanTeamId: TeamId;
+   playerId: PlayerId;
+ };
+type List_5 = 
+ opt record {
+       ValueHistory;
+       List_5;
+     };
+type List_4 = 
+ opt record {
+       PlayerEventData;
+       List_4;
+     };
+type List_3 = 
+ opt record {
+       PlayerGameweek;
+       List_3;
+     };
+type List_2 = 
+ opt record {
+       PlayerSeason;
+       List_2;
+     };
+type List_1 = 
+ opt record {
+       InjuryHistory;
+       List_1;
+     };
+type List = 
+ opt record {
+       RevaluedPlayer;
+       List;
+     };
+type InjuryHistory = 
+ record {
+   description: text;
+   expectedEndDate: int;
+ };
+type GameweekNumber = nat8;
+type FixtureId = nat32;
+type Fixture = 
+ record {
+   awayGoals: nat8;
+   awayTeamId: TeamId;
+   events: List_4;
+   gameweek: GameweekNumber;
+   highestScoringPlayerId: nat16;
+   homeGoals: nat8;
+   homeTeamId: TeamId;
+   id: nat32;
+   kickOff: int;
+   seasonId: SeasonId;
+   status: nat8;
+ };
+type CreatePlayerPayload = 
+ record {
+   dateOfBirth: int;
+   firstName: text;
+   lastName: text;
+   nationality: text;
+   position: nat8;
+   shirtNumber: nat8;
+   teamId: TeamId;
+   value: nat;
+ };
+service : {
+  calculatePlayerScores: (nat16, nat8, Fixture) -> (Fixture);
+  createPlayer: (CreatePlayerPayload) -> ();
+  getAllPlayers: () -> (vec PlayerDTO) query;
+  getAllPlayersMap: (nat16, nat8) ->
+   (vec record {
+          nat16;
+          PlayerScoreDTO;
+        }) query;
+  getPlayer: (nat16) -> (Player) query;
+  getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
+   (vec PlayerPointsDTO) query;
+  loanPlayer: (LoanPlayerPayload) -> ();
+  recallPlayer: (RecallPlayerPayload) -> ();
+  retirePlayer: (RetirePlayerPayload) -> ();
+  revaluePlayers: (nat16, nat8, List) -> ();
+  setPlayerInjury: (SetPlayerInjuryPayload) -> ();
+  transferPlayer: (TransferPlayerPayload) -> ();
+  unretirePlayer: (UnretirePlayerPayload) -> ();
+  updatePlayer: (UpdatePlayerPayload) -> ();
+}

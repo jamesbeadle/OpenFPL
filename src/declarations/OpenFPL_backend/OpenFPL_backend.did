@@ -1,0 +1,198 @@
+type TeamId = nat16;
+type Team = 
+ record {
+   abbreviatedName: text;
+   friendlyName: text;
+   id: nat16;
+   name: text;
+   primaryColourHex: text;
+   secondaryColourHex: text;
+ };
+type SeasonId = nat16;
+type Season = 
+ record {
+   gameweeks: List_1;
+   id: nat16;
+   name: text;
+   postponedFixtures: List_2;
+   year: nat16;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok;
+ };
+type ProfileDTO = 
+ record {
+   createDate: int;
+   displayName: text;
+   favouriteTeamId: nat16;
+   fplDepositAddress: blob;
+   icpDepositAddress: blob;
+   membershipType: nat8;
+   principalName: text;
+   profilePicture: blob;
+   reputation: nat32;
+ };
+type PlayerPointsDTO = 
+ record {
+   events: vec PlayerEventData;
+   gameweek: GameweekNumber;
+   id: nat16;
+   points: int16;
+   position: nat8;
+   teamId: nat16;
+ };
+type PlayerId = nat16;
+type PlayerEventData = 
+ record {
+   eventEndMinute: nat8;
+   eventStartMinute: nat8;
+   eventType: nat8;
+   fixtureId: FixtureId;
+   playerId: nat16;
+   teamId: TeamId;
+ };
+type PaginatedLeaderboard = 
+ record {
+   entries: vec LeaderboardEntry;
+   gameweek: GameweekNumber;
+   seasonId: SeasonId;
+   totalEntries: nat;
+ };
+type List_2 = 
+ opt record {
+       Fixture;
+       List_2;
+     };
+type List_1 = 
+ opt record {
+       Gameweek;
+       List_1;
+     };
+type List = 
+ opt record {
+       PlayerEventData;
+       List;
+     };
+type LeaderboardEntry = 
+ record {
+   points: int16;
+   position: int;
+   positionText: text;
+   principalId: text;
+   username: text;
+ };
+type GameweekNumber = nat8;
+type Gameweek = 
+ record {
+   canisterId: text;
+   fixtures: List_2;
+   number: GameweekNumber;
+ };
+type FixtureId = nat32;
+type Fixture = 
+ record {
+   awayGoals: nat8;
+   awayTeamId: TeamId;
+   events: List;
+   gameweek: GameweekNumber;
+   highestScoringPlayerId: nat16;
+   homeGoals: nat8;
+   homeTeamId: TeamId;
+   id: nat32;
+   kickOff: int;
+   seasonId: SeasonId;
+   status: nat8;
+ };
+type FantasyTeamSnapshot = 
+ record {
+   bankBalance: float64;
+   braceBonusGameweek: GameweekNumber;
+   captainFantasticGameweek: GameweekNumber;
+   captainFantasticPlayerId: PlayerId;
+   captainId: nat16;
+   gameweek: GameweekNumber;
+   goalGetterGameweek: GameweekNumber;
+   goalGetterPlayerId: PlayerId;
+   hatTrickHeroGameweek: GameweekNumber;
+   noEntryGameweek: GameweekNumber;
+   noEntryPlayerId: PlayerId;
+   passMasterGameweek: GameweekNumber;
+   passMasterPlayerId: PlayerId;
+   playerIds: vec PlayerId;
+   points: int16;
+   principalId: text;
+   safeHandsGameweek: GameweekNumber;
+   safeHandsPlayerId: PlayerId;
+   teamBoostGameweek: GameweekNumber;
+   teamBoostTeamId: TeamId;
+   transfersAvailable: nat8;
+ };
+type FantasyTeam = 
+ record {
+   bankBalance: float64;
+   braceBonusGameweek: GameweekNumber;
+   captainFantasticGameweek: GameweekNumber;
+   captainFantasticPlayerId: PlayerId;
+   captainId: PlayerId;
+   goalGetterGameweek: GameweekNumber;
+   goalGetterPlayerId: PlayerId;
+   hatTrickHeroGameweek: GameweekNumber;
+   noEntryGameweek: GameweekNumber;
+   noEntryPlayerId: PlayerId;
+   passMasterGameweek: GameweekNumber;
+   passMasterPlayerId: PlayerId;
+   playerIds: vec PlayerId;
+   principalId: text;
+   safeHandsGameweek: GameweekNumber;
+   safeHandsPlayerId: PlayerId;
+   teamBoostGameweek: GameweekNumber;
+   teamBoostTeamId: TeamId;
+   transfersAvailable: nat8;
+ };
+type Error = 
+ variant {
+   AlreadyExists;
+   DecodeError;
+   InvalidTeamError;
+   NotAllowed;
+   NotAuthorized;
+   NotFound;
+ };
+type AccountBalanceDTO = 
+ record {
+   fplBalance: nat64;
+   icpBalance: nat64;
+ };
+service : {
+  getAccountBalanceDTO: () -> (AccountBalanceDTO);
+  getActiveGameweekFixtures: () -> (vec Fixture) query;
+  getCurrentGameweek: () -> (nat8);
+  getCurrentSeason: () -> (Season);
+  getFantasyTeam: () -> (FantasyTeam) query;
+  getFantasyTeamForGameweek: (text, nat16, nat8) -> (FantasyTeamSnapshot);
+  getFixture: (SeasonId, GameweekNumber, FixtureId) -> (Fixture);
+  getFixtures: () -> (vec Fixture) query;
+  getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
+   (vec PlayerPointsDTO);
+  getProfileDTO: () -> (ProfileDTO);
+  getPublicProfileDTO: (text) -> (ProfileDTO);
+  getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;
+  getSeasonTop10: () -> (PaginatedLeaderboard) query;
+  getSeasons: () -> (vec Season) query;
+  getTeams: () -> (vec Team) query;
+  getTotalManagers: () -> (nat) query;
+  getTransfersAllowed: () -> (bool) query;
+  getValidatableFixtures: () -> (vec Fixture) query;
+  getWeeklyLeaderboard: (nat16, nat8, nat, nat) ->
+   (PaginatedLeaderboard) query;
+  getWeeklyTop10: () -> (PaginatedLeaderboard) query;
+  isDisplayNameValid: (text) -> (bool) query;
+  saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
+  savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
+  updateDisplayName: (text) -> (Result);
+  updateFavouriteTeam: (nat16) -> (Result);
+  updateProfilePicture: (blob) -> (Result);
+  withdrawICP: (float64, text) -> (Result);
+}
