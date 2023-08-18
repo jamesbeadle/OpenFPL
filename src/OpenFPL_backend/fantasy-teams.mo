@@ -145,6 +145,27 @@ module {
                         hatTrickHeroGameweek := gameweek;
                     };
 
+                    var captainFantasticPlayerId: T.PlayerId = 0;
+                    var safeHandsPlayerId: T.PlayerId = 0;
+
+                    if(captainFantasticGameweek == gameweek){
+                        captainFantasticPlayerId := newCaptainId;
+                    };
+
+                    if(safeHandsGameweek == gameweek){
+
+                        let goalKeeper = List.find<DTOs.PlayerDTO>(List.fromArray(sortedPlayers), func (player: DTOs.PlayerDTO): Bool {
+                            return player.position == 0;
+                        });
+
+                        switch(goalKeeper){
+                            case (null){ };
+                            case (?gk){
+                                safeHandsPlayerId := gk.id;
+                            };
+                        };
+                    };
+
                     var newTeam: T.FantasyTeam = {
                         principalId = principalId;
                         bankBalance = Float.fromInt(bankBalance);
@@ -160,9 +181,9 @@ module {
                         teamBoostGameweek = teamBoostGameweek;
                         teamBoostTeamId = teamBoostTeamId;
                         safeHandsGameweek = safeHandsGameweek;
-                        safeHandsPlayerId = 0;
+                        safeHandsPlayerId = safeHandsPlayerId;
                         captainFantasticGameweek = captainFantasticGameweek;
-                        captainFantasticPlayerId = 0;
+                        captainFantasticPlayerId = captainFantasticPlayerId;
                         braceBonusGameweek = braceBonusGameweek;
                         hatTrickHeroGameweek = hatTrickHeroGameweek;
                     };
@@ -345,6 +366,27 @@ module {
                         newTransfersAvailable := existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
                     };
 
+                    var captainFantasticPlayerId: T.PlayerId = 0;
+                    var safeHandsPlayerId: T.PlayerId = 0;
+
+                    if(captainFantasticGameweek == gameweek){
+                        captainFantasticPlayerId := newCaptainId;
+                    };
+
+                    if(safeHandsGameweek == gameweek){
+
+                        let goalKeeper = List.find<DTOs.PlayerDTO>(List.fromArray(sortedPlayers), func (player: DTOs.PlayerDTO): Bool {
+                            return player.position == 0;
+                        });
+
+                        switch(goalKeeper){
+                            case (null){ };
+                            case (?gk){
+                                safeHandsPlayerId := gk.id;
+                            };
+                        };
+                    };
+
                     let updatedTeam: T.FantasyTeam = {
                         principalId = principalId;
                         bankBalance = newBankBalance;
@@ -360,9 +402,9 @@ module {
                         teamBoostGameweek = teamBoostGameweek;
                         teamBoostTeamId = teamBoostTeamId;
                         safeHandsGameweek = safeHandsGameweek;
-                        safeHandsPlayerId = 0;
+                        safeHandsPlayerId = safeHandsPlayerId;
                         captainFantasticGameweek = captainFantasticGameweek;
-                        captainFantasticPlayerId = 0;
+                        captainFantasticPlayerId = captainFantasticPlayerId;
                         braceBonusGameweek = braceBonusGameweek;
                         hatTrickHeroGameweek = hatTrickHeroGameweek;
                     };
@@ -871,7 +913,7 @@ module {
                     safeHandsGameweek = userFantasyTeam.fantasyTeam.safeHandsGameweek;
                     safeHandsPlayerId = userFantasyTeam.fantasyTeam.safeHandsPlayerId;
                     captainFantasticGameweek = userFantasyTeam.fantasyTeam.captainFantasticGameweek;
-                    captainFantasticPlayerId = userFantasyTeam.fantasyTeam.captainFantasticPlayerId;
+                    captainFantasticPlayerId =  userFantasyTeam.fantasyTeam.captainFantasticPlayerId;
                     braceBonusGameweek = userFantasyTeam.fantasyTeam.braceBonusGameweek;
                     hatTrickHeroGameweek = userFantasyTeam.fantasyTeam.hatTrickHeroGameweek;
                     points = 0;

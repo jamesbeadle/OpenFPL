@@ -324,9 +324,6 @@ const ViewPoints = () => {
             score -= pointsForPenaltyMiss * playerDTO.gameweekData.missedPenalties;
         }
 
-        if (playerDTO.position === 0 || playerDTO.position === 1) {
-        }
-
         if (playerDTO.gameweekData.ownGoals > 0) {
             score -= pointsForOwnGoal * playerDTO.gameweekData.ownGoals;
         }
