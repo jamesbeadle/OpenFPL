@@ -148,6 +148,7 @@ export interface ValueHistory {
 export interface _SERVICE {
   'calculatePlayerScores' : ActorMethod<[number, number, Fixture], Fixture>,
   'createPlayer' : ActorMethod<[CreatePlayerPayload], undefined>,
+  'dataAdj' : ActorMethod<[], undefined>,
   'getAllPlayers' : ActorMethod<[], Array<PlayerDTO>>,
   'getAllPlayersMap' : ActorMethod<
     [number, number],

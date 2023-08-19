@@ -5,10 +5,13 @@ export interface AccountBalanceDTO {
   'icpBalance' : bigint,
   'fplBalance' : bigint,
 }
-export interface ConsensusData {
+export interface DataSubmission {
   'fixtureId' : FixtureId,
-  'totalVotes' : Tokens,
+  'votes_no' : List_4,
   'events' : List,
+  'timestamp' : bigint,
+  'proposer' : string,
+  'votes_yes' : List_4,
 }
 export type Error = { 'DecodeError' : null } |
   { 'NotAllowed' : null } |
@@ -90,6 +93,8 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
+export type List_3 = [] | [[DataSubmission, List_3]];
+export type List_4 = [] | [[PlayerValuationVote, List_4]];
 export interface PaginatedLeaderboard {
   'totalEntries' : bigint,
   'seasonId' : SeasonId,
@@ -112,6 +117,10 @@ export interface PlayerPointsDTO {
   'position' : number,
   'gameweek' : GameweekNumber,
   'points' : number,
+}
+export interface PlayerValuationVote {
+  'votes' : Tokens,
+  'principalId' : Principal,
 }
 export interface ProfileDTO {
   'icpDepositAddress' : Uint8Array | number[],
@@ -148,10 +157,7 @@ export interface _SERVICE {
   'fixIncorrectData' : ActorMethod<[GameweekNumber], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
-  'getConsensusData' : ActorMethod<
-    [GameweekNumber, FixtureId],
-    Array<[FixtureId, ConsensusData]>
-  >,
+  'getConsensusData' : ActorMethod<[], Array<[FixtureId, List_3]>>,
   'getCurrentGameweek' : ActorMethod<[], number>,
   'getCurrentSeason' : ActorMethod<[], Season>,
   'getFantasyTeam' : ActorMethod<[], FantasyTeam>,
@@ -183,6 +189,7 @@ export interface _SERVICE {
   >,
   'getWeeklyTop10' : ActorMethod<[], PaginatedLeaderboard>,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
+  'removeIncorrectPlayerEventData' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

@@ -460,5 +460,43 @@ module {
         }
     };
 
+    //TEST REMOVE
+    public func removeIncorrectPlayerEventData() : async () {
+    
+        seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
+            if (season.id == 1) {
+                let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
+                    if (gw.number == 2) {           
+                        let updatedFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
+                            if (fixture.id == 11) {
+                                return {
+                                    id = fixture.id;
+                                    seasonId = fixture.seasonId;
+                                    gameweek = fixture.gameweek;
+                                    kickOff = fixture.kickOff;
+                                    homeTeamId = fixture.homeTeamId;
+                                    awayTeamId = fixture.awayTeamId;
+                                    homeGoals = 0;
+                                    awayGoals = 0;
+                                    status = 0; 
+                                    events = List.nil<T.PlayerEventData>();
+                                    highestScoringPlayerId = 0;
+                                };
+                            } else {
+                                return fixture;
+                            }
+                        });
+                        return {number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
+                    } else {
+                        return gw;
+                    }
+                });
+                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks; postponedFixtures = season.postponedFixtures;};
+            } else {
+                return season;
+            }
+        });
+    };
+
   }
 }

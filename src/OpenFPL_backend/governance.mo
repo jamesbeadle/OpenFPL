@@ -32,18 +32,17 @@ module {
 
         private let oneHour = 1_000_000_000 * 60 * 60;
         
+        /*
         ////USE FOR LOCAL DEV
         let admins : [Text] = [
             "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"
         ];
-        
+        */
 
-        /*
         //Live
         let admins : [Text] = [
             "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"
         ];
-        */
         private var fixtureDataSubmissions: HashMap.HashMap<T.FixtureId, List.List<T.DataSubmission>> = 
             HashMap.HashMap<T.FixtureId, List.List<T.DataSubmission>>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var playerRevaluationSubmissions: HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> = 
@@ -158,10 +157,9 @@ module {
 
             proposals := List.fromArray(stable_proposals);
 
-            let consensusIterator = Iter.fromArray(stable_consensus_fixture_data);
             consensusFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
-                consensusIterator,
-                Iter.size(consensusIterator),
+                stable_consensus_fixture_data.vals(),
+                stable_consensus_fixture_data.size(),
                 Utilities.eqNat32, 
                 Utilities.hashNat32
             );
@@ -704,6 +702,17 @@ module {
     
         public func setFinaliseFixtureFunction(_finaliseFixture: (seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) -> async ()) {
             finaliseFixture := ?_finaliseFixture;
+        };
+
+        //REMOVE JUST FOR TESTING
+        public func resetConsensusData(stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)]) {
+
+            consensusFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
+                stable_consensus_fixture_data.vals(),
+                stable_consensus_fixture_data.size(),
+                Utilities.eqNat32, 
+                Utilities.hashNat32
+            );
         };
 
     }

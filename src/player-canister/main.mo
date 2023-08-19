@@ -103,8 +103,6 @@ actor Self {
         return Buffer.toArray(playerDetailsBuffer);
     };
 
-
-
     public query ({caller}) func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
         //assert not Principal.isAnonymous(caller);
 
@@ -1023,6 +1021,45 @@ actor Self {
                 };
             }
         }
+    };
+
+    public func dataAdj() : async (){
+
+        var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
+                
+            let updatedPlayer: T.Player = {
+                id = p.id;
+                teamId = p.teamId;
+                position = p.position;
+                firstName = p.firstName;
+                lastName = p.lastName;
+                shirtNumber = p.shirtNumber;
+                value = p.value;
+                dateOfBirth = p.dateOfBirth;
+                nationality = p.nationality;
+                seasons = List.nil<T.PlayerSeason>();
+                valueHistory = p.valueHistory;
+                onLoan = p.onLoan;
+                parentTeamId = p.parentTeamId;
+                isInjured = p.isInjured;
+                injuryHistory = p.injuryHistory;
+                retirementDate = p.retirementDate;
+            };
+            return updatedPlayer;
+        });
+
+        players := updatedPlayers;
+
+            
+        //Adjust James Trafford Position to 0
+        //Adjust Lawrence Vigourous position to 0
+        //Add AnAss Zaroury to Burnley - CHECK IF IN THERE
+        //move thomas party to defender from midfield 
+        //Move robert sanchez to chelsea from brighton
+        
+
+
+
     };
 
     /*

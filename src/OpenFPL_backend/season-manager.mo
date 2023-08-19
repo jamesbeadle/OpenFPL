@@ -43,8 +43,8 @@ module {
     private let seasonsInstance = Seasons.Seasons();
 
     //definitions
-    //private let oneHour = 1_000_000_000 * 60 * 60;
-    private let oneHour = 1_000_000_000 * 60; //ONE HOUR AS ONE MINUTE USE FOR LOCAL DEV
+    private let oneHour = 1_000_000_000 * 60 * 60;
+    //private let oneHour = 1_000_000_000 * 60; //ONE HOUR AS ONE MINUTE USE FOR LOCAL DEV
     
     private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
@@ -203,7 +203,7 @@ module {
         await checkGameweekFinished();
     };
 
-    private func finaliseFixture(fixture: T.Fixture) : async (){
+    public func finaliseFixture(fixture: T.Fixture) : async (){
         let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
         await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
         await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
@@ -376,5 +376,28 @@ module {
         return await seasonsInstance.getFixture(getSeasonId, getGameweekNumber, fixtureId);
     };
     
+
+    //TEST ONLY REMOVE
+    public func savePlayerEventData(seasonId: Nat16, gameweek: Nat8, fixtureId: Nat32, playerEventData: List.List<T.PlayerEventData>) : async T.Fixture {
+        return await seasonsInstance.savePlayerEventData(seasonId, gameweek, fixtureId, playerEventData);
+    };
+
+    public func recalculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture {
+        return await calculatePlayerScores(seasonId, gameweek, fixture);
+    };
+
+    public func updateHighestPlayerId(seasonId: Nat16, gameweek: Nat8, updatedFixture: T.Fixture) : async () {
+        await seasonsInstance.updateHighestPlayerId(seasonId, gameweek, updatedFixture);
+    };
+
+    public func recalculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8) : async () {
+        await calculateFantasyTeamScores(seasonId, gameweek);
+    };
+
+    public func removeIncorrectPlayerEventData() : async () {
+        await seasonsInstance.removeIncorrectPlayerEventData();
+    };
+
+
   };
 }

@@ -35,6 +35,11 @@ type ProfileDTO =
    profilePicture: blob;
    reputation: nat32;
  };
+type PlayerValuationVote = 
+ record {
+   principalId: principal;
+   votes: Tokens;
+ };
 type PlayerPointsDTO = 
  record {
    events: vec PlayerEventData;
@@ -61,6 +66,16 @@ type PaginatedLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
+type List_4 = 
+ opt record {
+       PlayerValuationVote;
+       List_4;
+     };
+type List_3 = 
+ opt record {
+       DataSubmission;
+       List_3;
+     };
 type List_2 = 
  opt record {
        Fixture;
@@ -161,11 +176,14 @@ type Error =
    NotAuthorized;
    NotFound;
  };
-type ConsensusData = 
+type DataSubmission = 
  record {
    events: List;
    fixtureId: FixtureId;
-   totalVotes: Tokens;
+   proposer: text;
+   timestamp: int;
+   votes_no: List_4;
+   votes_yes: List_4;
  };
 type AccountBalanceDTO = 
  record {
@@ -176,11 +194,10 @@ service : {
   fixIncorrectData: (GameweekNumber) -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
-  getConsensusData: (GameweekNumber, FixtureId) ->
-   (vec record {
-          FixtureId;
-          ConsensusData;
-        });
+  getConsensusData: () -> (vec record {
+                                 FixtureId;
+                                 List_3;
+                               });
   getCurrentGameweek: () -> (nat8);
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;
@@ -202,6 +219,7 @@ service : {
    (PaginatedLeaderboard) query;
   getWeeklyTop10: () -> (PaginatedLeaderboard) query;
   isDisplayNameValid: (text) -> (bool) query;
+  removeIncorrectPlayerEventData: () -> ();
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateDisplayName: (text) -> (Result);

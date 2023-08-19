@@ -158,6 +158,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'createPlayer' : IDL.Func([CreatePlayerPayload], [], []),
+    'dataAdj' : IDL.Func([], [], []),
     'getAllPlayers' : IDL.Func([], [IDL.Vec(PlayerDTO)], ['query']),
     'getAllPlayersMap' : IDL.Func(
         [IDL.Nat16, IDL.Nat8],
