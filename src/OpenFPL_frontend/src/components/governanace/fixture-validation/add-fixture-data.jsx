@@ -262,10 +262,10 @@ const AddFixtureData = () => {
         case 2: // Goal Assisted
           initialStats.assists++
           break;
-        case 4: // Keeper Save
-          initialStats.assists++
+        case 4: 
+          initialStats.keeperSaves++
           break;
-        case 2: // Penalty Save
+        case 6: 
           initialStats.penaltySaves++
           break;
         case 7: // Penalty Miss

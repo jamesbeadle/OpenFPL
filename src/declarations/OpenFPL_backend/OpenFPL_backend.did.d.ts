@@ -5,6 +5,11 @@ export interface AccountBalanceDTO {
   'icpBalance' : bigint,
   'fplBalance' : bigint,
 }
+export interface ConsensusData {
+  'fixtureId' : FixtureId,
+  'totalVotes' : Tokens,
+  'events' : List,
+}
 export type Error = { 'DecodeError' : null } |
   { 'NotAllowed' : null } |
   { 'NotFound' : null } |
@@ -138,9 +143,15 @@ export interface Team {
   'primaryColourHex' : string,
 }
 export type TeamId = number;
+export interface Tokens { 'amount_e8s' : bigint }
 export interface _SERVICE {
+  'fixIncorrectData' : ActorMethod<[GameweekNumber], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
+  'getConsensusData' : ActorMethod<
+    [GameweekNumber, FixtureId],
+    Array<[FixtureId, ConsensusData]>
+  >,
   'getCurrentGameweek' : ActorMethod<[], number>,
   'getCurrentSeason' : ActorMethod<[], Season>,
   'getFantasyTeam' : ActorMethod<[], FantasyTeam>,

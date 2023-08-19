@@ -23,7 +23,7 @@ const PickTeam = () => {
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
     bankBalance: 300,
-    transfersAvailable: 0
+    transfersAvailable: 2
   });
   
   const [bonuses, setBonuses] = useState([
@@ -131,6 +131,10 @@ const PickTeam = () => {
   };
 
   const handlePlayerConfirm = (player) => {
+    if(fantasyTeam.transfersAvailable > 0 && currentGameweek > 1){
+      setShowSelectPlayerModal(false);
+      return;
+    };
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       updatedFantasyTeam.players[selectedSlot] = player;
@@ -160,6 +164,7 @@ const PickTeam = () => {
 
     setShowSelectPlayerModal(false);
   };
+  
   const handleBonusClick = (bonusId) => {
     // Check if a bonus has already been applied for the current gameweek
     if (bonuses.some(bonus => fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek)) {
@@ -282,6 +287,7 @@ const handleConfirmBonusClick = (bonusType) => {
   const renderPlayerSlots = () => {
     let rows = [];
     let cols = [];
+    const disableSellButton = fantasyTeam.transfersAvailable <= 0 && currentGameweek > 1;
     for (let i = 0; i < 12; i++) {
       const player = fantasyTeam.players[i] || null;
     
@@ -305,7 +311,7 @@ const handleConfirmBonusClick = (bonusType) => {
         );
       } else {
         cols.push(
-          <Col md={3} key={i} className="align-items-center">
+          <Col md={3} key={'player-' + (i + 1)} className="align-items-center">
             {player && fantasyTeam ? ((() => {
               let bonusId;
               if (fantasyTeam.goalGetterPlayerId === player.id && fantasyTeam.goalGetterGameweek === currentGameweek) {
@@ -325,6 +331,7 @@ const handleConfirmBonusClick = (bonusType) => {
                   handleCaptainSelection={handleCaptainSelection} 
                   handleSellPlayer={handleSellPlayer}
                   bonusId={bonusId}
+                  disableSellButton={disableSellButton}
                 />
               );
             })()

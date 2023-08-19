@@ -1,3 +1,4 @@
+type Tokens = record {amount_e8s: nat64;};
 type TeamId = nat16;
 type Team = 
  record {
@@ -160,14 +161,26 @@ type Error =
    NotAuthorized;
    NotFound;
  };
+type ConsensusData = 
+ record {
+   events: List;
+   fixtureId: FixtureId;
+   totalVotes: Tokens;
+ };
 type AccountBalanceDTO = 
  record {
    fplBalance: nat64;
    icpBalance: nat64;
  };
 service : {
+  fixIncorrectData: (GameweekNumber) -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
+  getConsensusData: (GameweekNumber, FixtureId) ->
+   (vec record {
+          FixtureId;
+          ConsensusData;
+        });
   getCurrentGameweek: () -> (nat8);
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;

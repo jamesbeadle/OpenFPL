@@ -5,7 +5,7 @@ import getFlag from '../country-flag';
 
 import { TeamsContext } from "../../contexts/TeamsContext";
 
-const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellButton, handleSellPlayer, bonusId }) => {
+const PlayerDetails = ({ player, captainId, handleCaptainSelection, handleSellPlayer, bonusId, disableSellButton }) => {
   
   const { teams } = useContext(TeamsContext);
   const isCaptain = player.id === captainId;
@@ -102,15 +102,19 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, disableSellB
     )
   };
 
-  const PlayerSlot = ({ player, slotNumber, handlePlayerSelection, captainId, handleCaptainSelection, handleSellPlayer, bonusId }) => (
+  const PlayerSlot = ({ player, slotNumber, handlePlayerSelection, captainId, handleCaptainSelection, handleSellPlayer, bonusId, disableSellButton  }) => (
     <Col className='d-flex mt-2 mb-2'>
       <div className='player-slot w-100'>
         {player 
-          ? <PlayerDetails player={player} captainId={captainId} handleCaptainSelection={handleCaptainSelection} 
-          handleSellPlayer={() => handleSellPlayer(player.id)} bonusId={bonusId}  /> 
+          ? <PlayerDetails player={player} 
+              captainId={captainId} 
+              handleCaptainSelection={handleCaptainSelection} 
+              handleSellPlayer={() => handleSellPlayer(player.id)} 
+              bonusId={bonusId}
+              disableSellButton={disableSellButton} /> 
           : <Card className='mb-1 h-100 d-flex flex-column justify-content-center'>
               <Card.Body className='d-flex align-items-center justify-content-center'>
-                <Button className="d-flex align-items-center justify-content-center p-3" onClick={() => handlePlayerSelection(i)}>
+                <Button className="d-flex align-items-center justify-content-center p-3" onClick={() => handlePlayerSelection(slotNumber)}>
                   Add player
                 </Button>
               </Card.Body>
