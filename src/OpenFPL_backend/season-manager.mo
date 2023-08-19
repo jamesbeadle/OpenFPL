@@ -190,8 +190,8 @@ module {
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             let fixture = activeFixtures[i];
             if(fixture.id == fixtureId and fixture.status == 2){
-                let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id);
-                let updatedFixture = await seasonsInstance.savePlayerEventData(activeSeasonId, activeGameweek, activeFixtures[i].id, consensusPlayerEventData);
+                let consensusPlayerEventData = await getConsensusPlayerEventData(getGameweekNumber, fixture.id);
+                let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, consensusPlayerEventData);
                 activeFixturesBuffer.add(updatedFixture);
                 await finaliseFixture(updatedFixture);
             } else {

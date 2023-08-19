@@ -851,6 +851,10 @@ actor Self {
     await fantasyTeamsInstance.resetFantasyTeams();
   };
 
+  public func getFixturesByWeek(seasonId: T.SeasonId, gameweek: T.GameweekNumber): async [T.Fixture] {
+    return seasonManager.getGameweekFixtures(seasonId, gameweek);
+  }; 
+
   private func getGameweekFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber): [T.Fixture] {
     return seasonManager.getGameweekFixtures(seasonId, gameweek);
   }; 
@@ -1005,12 +1009,26 @@ actor Self {
       }
   };
 
+
+  public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
+    return fantasyTeamsInstance.getFantasyTeams();
+  };
+
+  public func recalculateSnapshotTotals() : async (){
+    await fantasyTeamsInstance.recalculateSnapshotTotals();
+  };
+
+  
+  
+/*
+
+
   //TEST ONLY
   public func getConsensusData(): async [(T.FixtureId, List.List<T.DataSubmission>)]{
     return governanceInstance.getFixtureDataSubmissions();
   };
 
-  public func fixIncorrectData(gameweek: T.GameweekNumber) : async (){
+  public func fixIncorrectData() : async (){
     
     var newConsensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
     
@@ -1841,7 +1859,7 @@ actor Self {
     let updatedFixture8 = await seasonManager.savePlayerEventData(1, 1, 8, fixture8Data.events);
     let updatedFixture9 = await seasonManager.savePlayerEventData(1, 1, 9, fixture9Data.events);
     let updatedFixture10 = await seasonManager.savePlayerEventData(1, 1, 10, fixture10Data.events);
-    let updatedFixture11 = await seasonManager.savePlayerEventData(1, 2, 17, fixture17Data.events);
+    let updatedFixture17 = await seasonManager.savePlayerEventData(1, 2, 17, fixture17Data.events);
 
 
     let fixtureWithHighestPlayerId1 = await seasonManager.recalculatePlayerScores(1, 1, updatedFixture1);
@@ -1854,7 +1872,7 @@ actor Self {
     let fixtureWithHighestPlayerId8 = await seasonManager.recalculatePlayerScores(1, 1, updatedFixture8);
     let fixtureWithHighestPlayerId9 = await seasonManager.recalculatePlayerScores(1, 1, updatedFixture9);
     let fixtureWithHighestPlayerId10 = await seasonManager.recalculatePlayerScores(1, 1, updatedFixture10);
-    let fixtureWithHighestPlayerId11 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture11);
+    let fixtureWithHighestPlayerId17 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture17);
 
     await seasonManager.updateHighestPlayerId(1, 1, fixtureWithHighestPlayerId1);
     await seasonManager.updateHighestPlayerId(1, 1, fixtureWithHighestPlayerId2);
@@ -1867,7 +1885,7 @@ actor Self {
     await seasonManager.updateHighestPlayerId(1, 1, fixtureWithHighestPlayerId9);
     await seasonManager.updateHighestPlayerId(1, 1, fixtureWithHighestPlayerId10);
 
-    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId11);
+    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId17);
 
     await seasonManager.recalculateFantasyTeamScores(1, 1);
     await seasonManager.recalculateFantasyTeamScores(1, 2);
@@ -1878,8 +1896,14 @@ actor Self {
   public func removeIncorrectPlayerEventData() : async (){
     await seasonManager.removeIncorrectPlayerEventData();
   };
-  
-/*
+
+  public func testClearSnapshotPoints() : async [(Text, T.UserFantasyTeam)]{
+    return await fantasyTeamsInstance.testClearSnapshotPoints();
+  };
+
+  public func clearSnapshotPoints() : async (){
+    return await fantasyTeamsInstance.clearSnapshotPoints();
+  };
   
   public func initGenesisSeason(): async (){
     let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692435000000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
@@ -1888,10 +1912,6 @@ actor Self {
   
   public func fixBankBalances() : async () {
     await fantasyTeamsInstance.fixBankBalances();
-  };
-
-  public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
-    return fantasyTeamsInstance.getFantasyTeams();
   };
 
   //
