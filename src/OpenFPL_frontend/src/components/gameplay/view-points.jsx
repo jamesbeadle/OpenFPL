@@ -317,19 +317,19 @@ const ViewPoints = () => {
         }
 
         if (playerDTO.gameweekData.redCards > 0) {
-            score -= pointsForRedCard;
+            score += pointsForRedCard;
         }
 
         if (playerDTO.gameweekData.missedPenalties > 0) {
-            score -= pointsForPenaltyMiss * playerDTO.gameweekData.missedPenalties;
+            score += pointsForPenaltyMiss * playerDTO.gameweekData.missedPenalties;
         }
 
         if (playerDTO.gameweekData.ownGoals > 0) {
-            score -= pointsForOwnGoal * playerDTO.gameweekData.ownGoals;
+            score += pointsForOwnGoal * playerDTO.gameweekData.ownGoals;
         }
 
         if (playerDTO.gameweekData.yellowCards > 0) {
-            score -= pointsForYellowCard * playerDTO.gameweekData.yellowCards;
+            score += pointsForYellowCard * playerDTO.gameweekData.yellowCards;
         }
     
         switch(playerDTO.position){
@@ -348,7 +348,7 @@ const ViewPoints = () => {
                     score += pointsForCleanSheet;
                 }
                 if (playerDTO.gameweekData.goalsConceded >= 2) {
-                    score -= Math.floor(playerDTO.gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
+                    score += Math.floor(playerDTO.gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
                 }
 
                 break;
@@ -360,7 +360,7 @@ const ViewPoints = () => {
                     score += pointsForCleanSheet;
                 }
                 if (playerDTO.gameweekData.goalsConceded >= 2) {
-                    score -= Math.floor(playerDTO.gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
+                    score += Math.floor(playerDTO.gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
                 }
 
                 break;

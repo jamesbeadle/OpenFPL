@@ -17,7 +17,8 @@ const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams,
       }, [player]);
 
     const updatePoints = () => {
-        var totalPoints = 5;
+        var totalPoints = 0;
+        totalPoints += gameweekData.appearance * 5;
         totalPoints += gameweekData.goalPoints;
         totalPoints += gameweekData.assistPoints;
         totalPoints += gameweekData.goalsConcededPoints
@@ -56,8 +57,8 @@ const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams,
                                 <tbody>
                                     <tr>
                                         <td>Appearance</td>
-                                        <td className='text-center'>1</td>
-                                        <td className='text-center'>5</td>
+                                        <td className='text-center'>{gameweekData.appearance > 0 ? "1" : "-"}</td>
+                                        <td className='text-center'>{gameweekData.appearance > 0 ? "5" : "-"}</td>
                                     </tr>
                                     <tr>
                                         <td>Goals</td>
