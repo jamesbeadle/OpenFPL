@@ -15,6 +15,7 @@ import Utilities "utilities";
 import Int "mo:base/Int";
 import Debug "mo:base/Debug";
 import Int16 "mo:base/Int16";
+import Buffer "mo:base/Buffer";
 
 module {
     public class FantasyTeams(
@@ -574,10 +575,9 @@ module {
                             case (null) { return; };
                             case (?foundSnapshot){
 
-                                let userFantasyTeam = foundSnapshot;
                                 var totalTeamPoints: Int16 = 0;
-                                for (i in Iter.range(0, Array.size(userFantasyTeam.playerIds)-1)) {
-                                    let playerId = userFantasyTeam.playerIds[i];
+                                for (i in Iter.range(0, Array.size(foundSnapshot.playerIds)-1)) {
+                                    let playerId = foundSnapshot.playerIds[i];
                                     let playerData = allPlayers.get(playerId);
                                     switch (playerData) {
                                         case (null) {};
@@ -586,47 +586,47 @@ module {
                                             var totalScore: Int16 = player.points;
                                             
                                             // Goal Getter
-                                            if(userFantasyTeam.goalGetterGameweek == gameweek and userFantasyTeam.goalGetterPlayerId == playerId) {
+                                            if(foundSnapshot.goalGetterGameweek == gameweek and foundSnapshot.goalGetterPlayerId == playerId) {
                                                 totalScore += calculateGoalPoints(player.position, player.goalsScored);
                                             };
 
                                             // Pass Master
-                                            if(userFantasyTeam.passMasterGameweek == gameweek and userFantasyTeam.passMasterPlayerId == playerId) {
+                                            if(foundSnapshot.passMasterGameweek == gameweek and foundSnapshot.passMasterPlayerId == playerId) {
                                                 totalScore += calculateAssistPoints(player.position, player.assists);
                                             };
 
                                             // No Entry
-                                            if(userFantasyTeam.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
+                                            if(foundSnapshot.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
                                                 totalScore := totalScore * 3;
                                             };
 
                                             // Team Boost
-                                            if(userFantasyTeam.teamBoostGameweek == gameweek and player.teamId == userFantasyTeam.teamBoostTeamId) {
+                                            if(foundSnapshot.teamBoostGameweek == gameweek and player.teamId == foundSnapshot.teamBoostTeamId) {
                                                 totalScore := totalScore * 2;
                                             };
 
                                             // Safe Hands
-                                            if(userFantasyTeam.safeHandsGameweek == gameweek and player.position == 0 and player.saves > 4) {
+                                            if(foundSnapshot.safeHandsGameweek == gameweek and player.position == 0 and player.saves > 4) {
                                                 totalScore := totalScore * 3;
                                             };
 
                                             // Captain Fantastic
-                                            if(userFantasyTeam.captainFantasticGameweek == gameweek and userFantasyTeam.captainId == playerId and player.goalsScored > 0) {
+                                            if(foundSnapshot.captainFantasticGameweek == gameweek and foundSnapshot.captainId == playerId and player.goalsScored > 0) {
                                                 totalScore := totalScore * 2;
                                             };
 
                                             // Brace Bonus
-                                            if(userFantasyTeam.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
+                                            if(foundSnapshot.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
                                                 totalScore := totalScore * 2;
                                             };
 
                                             // Hat Trick Hero
-                                            if(userFantasyTeam.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
+                                            if(foundSnapshot.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
                                                 totalScore := totalScore * 3;
                                             };
 
                                             // Handle captain bonus
-                                            if (playerId == userFantasyTeam.captainId) {
+                                            if (playerId == foundSnapshot.captainId) {
                                                 totalScore := totalScore * 2;
                                             };
 
@@ -651,87 +651,69 @@ module {
             switch(userFantasyTeam) {
                 case (null) { }; 
                 case (?ufTeam) {
-   
-                    let fantasyTeamSnapshot: T.FantasyTeamSnapshot = {
-                        principalId = principalId;
-                        gameweek = gameweek;
-                        transfersAvailable = ufTeam.fantasyTeam.transfersAvailable;
-                        bankBalance = ufTeam.fantasyTeam.bankBalance;
-                        playerIds = ufTeam.fantasyTeam.playerIds;
-                        captainId = ufTeam.fantasyTeam.captainId;
-                        goalGetterGameweek = ufTeam.fantasyTeam.goalGetterGameweek;
-                        goalGetterPlayerId = ufTeam.fantasyTeam.goalGetterPlayerId;
-                        passMasterGameweek = ufTeam.fantasyTeam.passMasterGameweek;
-                        passMasterPlayerId = ufTeam.fantasyTeam.passMasterPlayerId;
-                        noEntryGameweek = ufTeam.fantasyTeam.noEntryGameweek;
-                        noEntryPlayerId = ufTeam.fantasyTeam.noEntryPlayerId;
-                        teamBoostGameweek = ufTeam.fantasyTeam.teamBoostGameweek;
-                        teamBoostTeamId = ufTeam.fantasyTeam.teamBoostTeamId;
-                        safeHandsGameweek = ufTeam.fantasyTeam.safeHandsGameweek;
-                        safeHandsPlayerId = ufTeam.fantasyTeam.safeHandsPlayerId;
-                        captainFantasticGameweek = ufTeam.fantasyTeam.captainFantasticGameweek;
-                        captainFantasticPlayerId = ufTeam.fantasyTeam.captainFantasticPlayerId;
-                        braceBonusGameweek = ufTeam.fantasyTeam.braceBonusGameweek;
-                        hatTrickHeroGameweek = ufTeam.fantasyTeam.hatTrickHeroGameweek;
-                        points = teamPoints;
-                    };
 
-                    var updatedFantasyTeamHistory: List.List<T.FantasyTeamSeason> = List.nil();
+                    let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]); 
 
                     switch(ufTeam.history){
-                        case (null) {
-                            updatedFantasyTeamHistory := List.fromArray([{
-                                seasonId = seasonId;
-                                totalPoints = teamPoints;
-                                gameweeks = List.fromArray([fantasyTeamSnapshot]);
-                            }]);      
-                        };
-                        case (?foundHistory){
-                            var seasonFound: Bool = false;
-                            var seasonTotalPoints: Int16 = 0;
-                            updatedFantasyTeamHistory := List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(?foundHistory, func(season: T.FantasyTeamSeason): T.FantasyTeamSeason {
-                                
+                        case (null) {};
+                        case (existingHistory){
+                            for(season in List.toIter<T.FantasyTeamSeason>(existingHistory)){
                                 if(season.seasonId == seasonId){
-                                    seasonFound := true;
-                                    var gameweekFound: Bool = false;
-                                    var updatedGameweeks = List.map<T.FantasyTeamSnapshot, T.FantasyTeamSnapshot>(season.gameweeks, func(snapshot: T.FantasyTeamSnapshot): T.FantasyTeamSnapshot {
-                                       if(snapshot.gameweek == gameweek){
-                                            seasonTotalPoints += teamPoints;
-                                            gameweekFound := true;
-                                            return fantasyTeamSnapshot;
-                                       } else {
-                                            seasonTotalPoints += snapshot.points;
-                                            return snapshot;
-                                        };   
-                                    });
+                                    let snapshotBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]); 
                                     
-                                    if(not gameweekFound){
-                                        updatedGameweeks := List.append<T.FantasyTeamSnapshot>(updatedGameweeks, List.fromArray([fantasyTeamSnapshot]));
+                                    for(snapshot in List.toIter<T.FantasyTeamSnapshot>(season.gameweeks)){
+                                        if(snapshot.gameweek == gameweek){
+
+                                            let updatedSnapshot: T.FantasyTeamSnapshot = {
+                                                principalId = principalId;
+                                                gameweek = gameweek;
+                                                transfersAvailable = snapshot.transfersAvailable;
+                                                bankBalance = snapshot.bankBalance;
+                                                playerIds = snapshot.playerIds;
+                                                captainId = snapshot.captainId;
+                                                goalGetterGameweek = snapshot.goalGetterGameweek;
+                                                goalGetterPlayerId = snapshot.goalGetterPlayerId;
+                                                passMasterGameweek = snapshot.passMasterGameweek;
+                                                passMasterPlayerId = snapshot.passMasterPlayerId;
+                                                noEntryGameweek = snapshot.noEntryGameweek;
+                                                noEntryPlayerId = snapshot.noEntryPlayerId;
+                                                teamBoostGameweek = snapshot.teamBoostGameweek;
+                                                teamBoostTeamId = snapshot.teamBoostTeamId;
+                                                safeHandsGameweek = snapshot.safeHandsGameweek;
+                                                safeHandsPlayerId = snapshot.safeHandsPlayerId;
+                                                captainFantasticGameweek = snapshot.captainFantasticGameweek;
+                                                captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
+                                                braceBonusGameweek = snapshot.braceBonusGameweek;
+                                                hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
+                                                points = teamPoints;
+                                            };
+
+                                            snapshotBuffer.add(updatedSnapshot);
+
+                                        } else { snapshotBuffer.add(snapshot)};
                                     };
-                                    
-                                    return {
+
+                                    let gameweekSnapshots = Buffer.toArray<T.FantasyTeamSnapshot>(snapshotBuffer);
+
+                                    let totalSeasonPoints = Array.foldLeft<T.FantasyTeamSnapshot, Int16>(gameweekSnapshots, 0, 
+                                        func(sumSoFar, x) = sumSoFar + x.points);
+
+                                    let updatedSeason: T.FantasyTeamSeason = {
+                                        gameweeks = List.fromArray(gameweekSnapshots);
                                         seasonId = season.seasonId;
-                                        totalPoints = seasonTotalPoints;
-                                        gameweeks = updatedGameweeks;
+                                        totalPoints = totalSeasonPoints;
                                     };
-                                } else { return season; };
-                            });
 
-                            if(not seasonFound){
-                                let newFantasyTeamSeason: T.FantasyTeamSeason = {
-                                    seasonId = seasonId;
-                                    totalPoints = teamPoints;
-                                    gameweeks = List.fromArray([fantasyTeamSnapshot]);
-                                };
-                                updatedFantasyTeamHistory := List.append<T.FantasyTeamSeason>(?foundHistory, List.fromArray([newFantasyTeamSeason]));
+                                    teamHistoryBuffer.add(updatedSeason);
+                                    
+                                } else { teamHistoryBuffer.add(season); };
                             };
-
                         };
                     };
-
+                    
                     let updatedUserFantasyTeam: T.UserFantasyTeam = {
                         fantasyTeam = ufTeam.fantasyTeam;
-                        history = updatedFantasyTeamHistory;
+                        history = List.fromArray(Buffer.toArray<T.FantasyTeamSeason>(teamHistoryBuffer));
                     };
                     fantasyTeams.put(principalId, updatedUserFantasyTeam);
                 };
@@ -1227,6 +1209,7 @@ module {
         
         public func recalculateSnapshotTotals() : async (){
             await calculateFantasyTeamScores(1,1);
+            await calculateFantasyTeamScores(1,2);
         };
         
   /*

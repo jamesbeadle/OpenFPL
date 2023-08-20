@@ -308,7 +308,7 @@ actor Self {
                             gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
                         };
                         updatedSeasons := List.fromArray<T.PlayerSeason>([newSeason]);
-                    } else { //alerady got seasons
+                    } else { 
                         let currentSeason = List.find<T.PlayerSeason>(player.seasons, func (s: T.PlayerSeason) : Bool {
                             s.id == seasonId
                         });

@@ -333,17 +333,15 @@ module {
                 let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
                     if (gw.number == gameweek) {
                         let updatedFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
-                        if (fixture.id == updatedFixture.id) {
-                            return updatedFixture;
-                        };
-                        return fixture;
-                    });
+                            if (fixture.id == updatedFixture.id) {
+                                return updatedFixture;
+                            } else { return fixture }
+                        });
                         return {number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
                     } else {
                         return gw;
                     };
                 });
-                
                 return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks; postponedFixtures = season.postponedFixtures;};
             } else {
                 return season;
