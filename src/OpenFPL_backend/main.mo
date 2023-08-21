@@ -1010,6 +1010,11 @@ actor Self {
   };
 
 
+
+  
+  
+/*
+
   public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
     return fantasyTeamsInstance.getFantasyTeams();
   };
@@ -1021,11 +1026,6 @@ actor Self {
   public func resetGameweek1SnapshotPoints(){
     await fantasyTeamsInstance.resetGameweek1SnapshotPoints();
   };
-
-  
-  
-/*
-
 
   //TEST ONLY
   public func getConsensusData(): async [(T.FixtureId, List.List<T.DataSubmission>)]{

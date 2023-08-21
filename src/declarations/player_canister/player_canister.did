@@ -190,9 +190,9 @@ type CreatePlayerPayload =
    value: nat;
  };
 service : {
+  addMissingPlayers: () -> ();
   calculatePlayerScores: (nat16, nat8, Fixture) -> (Fixture);
   createPlayer: (CreatePlayerPayload) -> ();
-  dataAdj: () -> ();
   getAllPlayers: () -> (vec PlayerDTO) query;
   getAllPlayersMap: (nat16, nat8) ->
    (vec record {
@@ -207,6 +207,7 @@ service : {
   retirePlayer: (RetirePlayerPayload) -> ();
   revaluePlayers: (nat16, nat8, List) -> ();
   setPlayerInjury: (SetPlayerInjuryPayload) -> ();
+  squadAdjustments: () -> ();
   transferPlayer: (TransferPlayerPayload) -> ();
   unretirePlayer: (UnretirePlayerPayload) -> ();
   updatePlayer: (UpdatePlayerPayload) -> ();
