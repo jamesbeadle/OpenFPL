@@ -1009,6 +1009,10 @@ actor Self {
       }
   };
 
+  
+  
+/*
+
 public func fixAllData() : async (){
     
     var newConsensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
@@ -2445,10 +2449,6 @@ public func fixAllData() : async (){
 
     
   };
-
-  
-  
-/*
 
   public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
     return fantasyTeamsInstance.getFantasyTeams();

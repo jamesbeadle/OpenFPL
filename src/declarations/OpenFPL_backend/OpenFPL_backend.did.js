@@ -141,7 +141,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
   return IDL.Service({
-    'fixAllData' : IDL.Func([], [], []),
     'getAccountBalanceDTO' : IDL.Func([], [AccountBalanceDTO], []),
     'getActiveGameweekFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
     'getCurrentGameweek' : IDL.Func([], [IDL.Nat8], []),

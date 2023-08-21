@@ -139,7 +139,6 @@ export interface Team {
 }
 export type TeamId = number;
 export interface _SERVICE {
-  'fixAllData' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
   'getCurrentGameweek' : ActorMethod<[], number>,
