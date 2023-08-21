@@ -27,7 +27,7 @@ const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams,
         totalPoints += gameweekData.penaltySaves * 20;
         totalPoints += gameweekData.missedPenalties * -15
         totalPoints += gameweekData.yellowCards * -5;
-        totalPoints += gameweekData.redCards > 0 ? 20 : 0;
+        totalPoints += gameweekData.redCards > 0 ? -20 : 0;
         totalPoints += gameweekData.ownGoals * -10;
         totalPoints += gameweekData.highestScoringPlayerId > 0 ? 25 : 0;
         setPoints(totalPoints);

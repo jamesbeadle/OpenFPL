@@ -247,7 +247,7 @@ const ViewPoints = () => {
             bonusPoints = totalScore * 3;
         };
 
-        if(fantasyTeam.captainFantasticGameweek == gameweek && fantasyTeam.captainId == playerId && playerDTO.gameweekData.goals > 0) {
+        if(fantasyTeam.captainFantasticGameweek == gameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0) {
             bonusName = "Captain Fantastic";
             bonusPoints = totalScore * 2;
         };
@@ -394,7 +394,7 @@ const ViewPoints = () => {
             score = score * 3;
         }
     
-        if (fantasyTeamDTO.captainFantasticGameweek === playerDTO.gameweek && fantasyTeamDTO.captainFantasticPlayerId === playerDTO.id && playerDTO.gameweekData.goals > 0) {
+        if (fantasyTeamDTO.captainFantasticGameweek === playerDTO.gameweek && fantasyTeamDTO.captainId === playerDTO.id && playerDTO.gameweekData.goals > 0) {
             score = score * 2;
         }
     
@@ -471,7 +471,7 @@ const ViewPoints = () => {
         }
     
         if (fantasyTeam.safeHandsGameweek === Number(gameweek)) {
-            const player = fantasyTeam.players.find(p => p.id === fantasyTeam.safeHandsPlayerId);
+            const player = fantasyTeam.players.find(p => p.position === 0);
             if (player) {
                 bonusDetails.push({
                     name: 'Safe Hands',
@@ -481,7 +481,7 @@ const ViewPoints = () => {
         }
     
         if (fantasyTeam.captainFantasticGameweek === Number(gameweek)) {
-            const player = fantasyTeam.players.find(p => p.id === fantasyTeam.captainFantasticPlayerId);
+            const player = fantasyTeam.players.find(p => p.id === fantasyTeam.captainId);
             if (player) {
                 bonusDetails.push({
                     name: 'Captain Fantastic',

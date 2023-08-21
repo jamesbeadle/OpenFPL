@@ -186,6 +186,7 @@ export interface _SERVICE {
   'getWeeklyTop10' : ActorMethod<[], PaginatedLeaderboard>,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
   'recalculateSnapshotTotals' : ActorMethod<[], undefined>,
+  'resetGameweek1SnapshotPoints' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

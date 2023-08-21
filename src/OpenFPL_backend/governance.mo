@@ -32,13 +32,13 @@ module {
 
         private let oneHour = 1_000_000_000 * 60 * 60;
         
-        /*
         ////USE FOR LOCAL DEV
+/*
         let admins : [Text] = [
             "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"
         ];
         */
-
+        
         //Live
         let admins : [Text] = [
             "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"
