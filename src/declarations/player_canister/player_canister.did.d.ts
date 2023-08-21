@@ -146,7 +146,6 @@ export interface ValueHistory {
   'gameweek' : number,
 }
 export interface _SERVICE {
-  'addMissingPlayers' : ActorMethod<[], undefined>,
   'calculatePlayerScores' : ActorMethod<[number, number, Fixture], Fixture>,
   'createPlayer' : ActorMethod<[CreatePlayerPayload], undefined>,
   'getAllPlayers' : ActorMethod<[], Array<PlayerDTO>>,
@@ -164,7 +163,6 @@ export interface _SERVICE {
   'retirePlayer' : ActorMethod<[RetirePlayerPayload], undefined>,
   'revaluePlayers' : ActorMethod<[number, number, List], undefined>,
   'setPlayerInjury' : ActorMethod<[SetPlayerInjuryPayload], undefined>,
-  'squadAdjustments' : ActorMethod<[], undefined>,
   'transferPlayer' : ActorMethod<[TransferPlayerPayload], undefined>,
   'unretirePlayer' : ActorMethod<[UnretirePlayerPayload], undefined>,
   'updatePlayer' : ActorMethod<[UpdatePlayerPayload], undefined>,

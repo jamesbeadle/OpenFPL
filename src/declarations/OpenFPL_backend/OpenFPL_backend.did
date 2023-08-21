@@ -166,6 +166,7 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
+  fixAllData: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
   getCurrentGameweek: () -> (nat8);

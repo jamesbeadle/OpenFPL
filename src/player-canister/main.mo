@@ -1023,6 +1023,8 @@ actor Self {
         }
     };
 
+    /*
+
     public func addMissingPlayers() : async (){
         
         var updatedPlayers = players;
@@ -1073,8 +1075,6 @@ actor Self {
 
         players := updatedPlayers;
     };
-
-    /*
 
     public func dataAdj() : async (){
         

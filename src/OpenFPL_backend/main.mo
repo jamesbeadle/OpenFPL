@@ -1009,30 +1009,7 @@ actor Self {
       }
   };
 
-
-
-  
-  
-/*
-
-  public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
-    return fantasyTeamsInstance.getFantasyTeams();
-  };
-
-  public func recalculateSnapshotTotals() : async (){
-    await fantasyTeamsInstance.recalculateSnapshotTotals();
-  };
-
-  public func resetGameweek1SnapshotPoints(){
-    await fantasyTeamsInstance.resetGameweek1SnapshotPoints();
-  };
-
-  //TEST ONLY
-  public func getConsensusData(): async [(T.FixtureId, List.List<T.DataSubmission>)]{
-    return governanceInstance.getFixtureDataSubmissions();
-  };
-
-  public func fixIncorrectData() : async (){
+public func fixAllData() : async (){
     
     var newConsensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
     
@@ -1107,7 +1084,9 @@ actor Self {
         {fixtureId=1; playerId=277; eventStartMinute=4; eventEndMinute=4; teamId=13; eventType=2},
         {fixtureId=1; playerId=287; eventStartMinute=4; eventEndMinute=4; teamId=13; eventType=1},
         {fixtureId=1; playerId=287; eventStartMinute=36; eventEndMinute=36; teamId=13; eventType=1},
-        {fixtureId=1; playerId=288; eventStartMinute=36; eventEndMinute=36; teamId=13; eventType=2}
+        {fixtureId=1; playerId=288; eventStartMinute=36; eventEndMinute=36; teamId=13; eventType=2},
+        {fixtureId=1; playerId=571; eventStartMinute=61; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=1; playerId=571; eventStartMinute=90; eventEndMinute=90; teamId=13; eventType=9}
       ]);
     };
 
@@ -1756,6 +1735,308 @@ actor Self {
       ]);
     };
 
+    let fixture11Data: T.ConsensusData = { 
+      fixtureId = 11;
+      totalVotes = {amount_e8s = 1_000_000};
+      events = List.fromArray<T.PlayerEventData>([
+        {fixtureId=11; playerId=31; eventStartMinute=1; eventEndMinute=1; teamId=2; eventType=4},
+        {fixtureId=11; playerId=31; eventStartMinute=2; eventEndMinute=2; teamId=2; eventType=4},
+        {fixtureId=11; playerId=31; eventStartMinute=0; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=33; eventStartMinute=0; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=35; eventStartMinute=64; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=36; eventStartMinute=0; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=40; eventStartMinute=0; eventEndMinute=0; teamId=2; eventType=8},
+        {fixtureId=11; playerId=40; eventStartMinute=0; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=41; eventStartMinute=0; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=42; eventStartMinute=0; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=44; eventStartMinute=63; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=46; eventStartMinute=0; eventEndMinute=0; teamId=2; eventType=8},
+        {fixtureId=11; playerId=46; eventStartMinute=24; eventEndMinute=24; teamId=2; eventType=1},
+        {fixtureId=11; playerId=46; eventStartMinute=0; eventEndMinute=64; teamId=2; eventType=0},
+        {fixtureId=11; playerId=47; eventStartMinute=18; eventEndMinute=18; teamId=2; eventType=1},
+        {fixtureId=11; playerId=47; eventStartMinute=0; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=49; eventStartMinute=18; eventEndMinute=18; teamId=2; eventType=2},
+        {fixtureId=11; playerId=49; eventStartMinute=51; eventEndMinute=51; teamId=2; eventType=1},
+        {fixtureId=11; playerId=49; eventStartMinute=0; eventEndMinute=63; teamId=2; eventType=0},
+        {fixtureId=11; playerId=50; eventStartMinute=64; eventEndMinute=85; teamId=2; eventType=0},
+        {fixtureId=11; playerId=54; eventStartMinute=0; eventEndMinute=64; teamId=2; eventType=0},
+        {fixtureId=11; playerId=55; eventStartMinute=0; eventEndMinute=74; teamId=2; eventType=0},
+        {fixtureId=11; playerId=56; eventStartMinute=75; eventEndMinute=75; teamId=2; eventType=1},
+        {fixtureId=11; playerId=56; eventStartMinute=74; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=57; eventStartMinute=0; eventEndMinute=0; teamId=2; eventType=8},
+        {fixtureId=11; playerId=57; eventStartMinute=85; eventEndMinute=90; teamId=2; eventType=0},
+        {fixtureId=11; playerId=194; eventStartMinute=1; eventEndMinute=1; teamId=9; eventType=4},
+        {fixtureId=11; playerId=194; eventStartMinute=2; eventEndMinute=2; teamId=9; eventType=4},
+        {fixtureId=11; playerId=194; eventStartMinute=3; eventEndMinute=3; teamId=9; eventType=4},
+        {fixtureId=11; playerId=194; eventStartMinute=0; eventEndMinute=0; teamId=9; eventType=8},
+        {fixtureId=11; playerId=194; eventStartMinute=0; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=197; eventStartMinute=0; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=199; eventStartMinute=0; eventEndMinute=0; teamId=9; eventType=8},
+        {fixtureId=11; playerId=199; eventStartMinute=0; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=203; eventStartMinute=0; eventEndMinute=0; teamId=9; eventType=8},
+        {fixtureId=11; playerId=203; eventStartMinute=0; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=205; eventStartMinute=0; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=206; eventStartMinute=0; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=207; eventStartMinute=0; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=208; eventStartMinute=0; eventEndMinute=0; teamId=9; eventType=8},
+        {fixtureId=11; playerId=208; eventStartMinute=0; eventEndMinute=45; teamId=9; eventType=0},
+        {fixtureId=11; playerId=209; eventStartMinute=0; eventEndMinute=51; teamId=9; eventType=0},
+        {fixtureId=11; playerId=213; eventStartMinute=38; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=214; eventStartMinute=0; eventEndMinute=38; teamId=9; eventType=0},
+        {fixtureId=11; playerId=215; eventStartMinute=51; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=216; eventStartMinute=0; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=552; eventStartMinute=45; eventEndMinute=90; teamId=9; eventType=0},
+        {fixtureId=11; playerId=194; eventStartMinute=24; eventEndMinute=24; teamId=9; eventType=3},
+        {fixtureId=11; playerId=197; eventStartMinute=24; eventEndMinute=24; teamId=9; eventType=3},
+        {fixtureId=11; playerId=199; eventStartMinute=24; eventEndMinute=24; teamId=9; eventType=3},
+        {fixtureId=11; playerId=203; eventStartMinute=24; eventEndMinute=24; teamId=9; eventType=3},
+        {fixtureId=11; playerId=216; eventStartMinute=24; eventEndMinute=24; teamId=9; eventType=3},
+        {fixtureId=11; playerId=194; eventStartMinute=18; eventEndMinute=18; teamId=9; eventType=3},
+        {fixtureId=11; playerId=197; eventStartMinute=18; eventEndMinute=18; teamId=9; eventType=3},
+        {fixtureId=11; playerId=199; eventStartMinute=18; eventEndMinute=18; teamId=9; eventType=3},
+        {fixtureId=11; playerId=203; eventStartMinute=18; eventEndMinute=18; teamId=9; eventType=3},
+        {fixtureId=11; playerId=216; eventStartMinute=18; eventEndMinute=18; teamId=9; eventType=3},
+        {fixtureId=11; playerId=194; eventStartMinute=51; eventEndMinute=51; teamId=9; eventType=3},
+        {fixtureId=11; playerId=197; eventStartMinute=51; eventEndMinute=51; teamId=9; eventType=3},
+        {fixtureId=11; playerId=199; eventStartMinute=51; eventEndMinute=51; teamId=9; eventType=3},
+        {fixtureId=11; playerId=203; eventStartMinute=51; eventEndMinute=51; teamId=9; eventType=3},
+        {fixtureId=11; playerId=216; eventStartMinute=51; eventEndMinute=51; teamId=9; eventType=3},
+        {fixtureId=11; playerId=194; eventStartMinute=75; eventEndMinute=75; teamId=9; eventType=3},
+        {fixtureId=11; playerId=197; eventStartMinute=75; eventEndMinute=75; teamId=9; eventType=3},
+        {fixtureId=11; playerId=199; eventStartMinute=75; eventEndMinute=75; teamId=9; eventType=3},
+        {fixtureId=11; playerId=203; eventStartMinute=75; eventEndMinute=75; teamId=9; eventType=3},
+        {fixtureId=11; playerId=216; eventStartMinute=75; eventEndMinute=75; teamId=9; eventType=3},
+        {fixtureId=11; playerId=31; eventStartMinute=90; eventEndMinute=90; teamId=2; eventType=5},
+        {fixtureId=11; playerId=33; eventStartMinute=90; eventEndMinute=90; teamId=2; eventType=5},
+        {fixtureId=11; playerId=35; eventStartMinute=90; eventEndMinute=90; teamId=2; eventType=5},
+        {fixtureId=11; playerId=36; eventStartMinute=90; eventEndMinute=90; teamId=2; eventType=5},
+        {fixtureId=11; playerId=40; eventStartMinute=90; eventEndMinute=90; teamId=2; eventType=5},
+        {fixtureId=11; playerId=41; eventStartMinute=90; eventEndMinute=90; teamId=2; eventType=5}
+      ]);
+    };
+
+    let fixture13Data: T.ConsensusData = { 
+      fixtureId = 13;
+      totalVotes = {amount_e8s = 1_000_000};
+      events = List.fromArray<T.PlayerEventData>([
+        {fixtureId=13; playerId=88; eventStartMinute=0; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=90; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=2},
+        {fixtureId=13; playerId=90; eventStartMinute=89; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=91; eventStartMinute=0; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=96; eventStartMinute=0; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=97; eventStartMinute=0; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=97; eventStartMinute=0; eventEndMinute=0; teamId=4; eventType=8},
+        {fixtureId=13; playerId=98; eventStartMinute=0; eventEndMinute=78; teamId=4; eventType=0},
+        {fixtureId=13; playerId=98; eventStartMinute=0; eventEndMinute=0; teamId=4; eventType=8},
+        {fixtureId=13; playerId=99; eventStartMinute=78; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=100; eventStartMinute=0; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=101; eventStartMinute=0; eventEndMinute=79; teamId=4; eventType=0},
+        {fixtureId=13; playerId=102; eventStartMinute=0; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=103; eventStartMinute=79; eventEndMinute=89; teamId=4; eventType=0},
+        {fixtureId=13; playerId=108; eventStartMinute=79; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=109; eventStartMinute=71; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=110; eventStartMinute=0; eventEndMinute=90; teamId=4; eventType=0},
+        {fixtureId=13; playerId=110; eventStartMinute=66; eventEndMinute=66; teamId=4; eventType=1},
+        {fixtureId=13; playerId=110; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=1},
+        {fixtureId=13; playerId=111; eventStartMinute=0; eventEndMinute=71; teamId=4; eventType=0},
+        {fixtureId=13; playerId=113; eventStartMinute=0; eventEndMinute=79; teamId=4; eventType=0},
+        {fixtureId=13; playerId=113; eventStartMinute=44; eventEndMinute=44; teamId=4; eventType=1},
+        {fixtureId=13; playerId=217; eventStartMinute=0; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=219; eventStartMinute=0; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=221; eventStartMinute=0; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=221; eventStartMinute=0; eventEndMinute=0; teamId=10; eventType=9},
+        {fixtureId=13; playerId=224; eventStartMinute=67; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=225; eventStartMinute=0; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=226; eventStartMinute=0; eventEndMinute=86; teamId=10; eventType=0},
+        {fixtureId=13; playerId=227; eventStartMinute=67; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=227; eventStartMinute=0; eventEndMinute=0; teamId=10; eventType=8},
+        {fixtureId=13; playerId=228; eventStartMinute=0; eventEndMinute=67; teamId=10; eventType=0},
+        {fixtureId=13; playerId=228; eventStartMinute=0; eventEndMinute=0; teamId=10; eventType=8},
+        {fixtureId=13; playerId=229; eventStartMinute=0; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=232; eventStartMinute=0; eventEndMinute=68; teamId=10; eventType=0},
+        {fixtureId=13; playerId=233; eventStartMinute=0; eventEndMinute=67; teamId=10; eventType=0},
+        {fixtureId=13; playerId=234; eventStartMinute=68; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=235; eventStartMinute=0; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=236; eventStartMinute=86; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=240; eventStartMinute=0; eventEndMinute=86; teamId=10; eventType=0},
+        {fixtureId=13; playerId=562; eventStartMinute=86; eventEndMinute=90; teamId=10; eventType=0},
+        {fixtureId=13; playerId=88; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=5},
+        {fixtureId=13; playerId=90; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=5},
+        {fixtureId=13; playerId=91; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=5},
+        {fixtureId=13; playerId=96; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=5},
+        {fixtureId=13; playerId=97; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=5},
+        {fixtureId=13; playerId=98; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=5},
+        {fixtureId=13; playerId=99; eventStartMinute=90; eventEndMinute=90; teamId=4; eventType=5},
+        {fixtureId=13; playerId=217; eventStartMinute=66; eventEndMinute=66; teamId=10; eventType=3},
+        {fixtureId=13; playerId=219; eventStartMinute=66; eventEndMinute=66; teamId=10; eventType=3},
+        {fixtureId=13; playerId=221; eventStartMinute=66; eventEndMinute=66; teamId=10; eventType=3},
+        {fixtureId=13; playerId=224; eventStartMinute=66; eventEndMinute=66; teamId=10; eventType=3},
+        {fixtureId=13; playerId=225; eventStartMinute=66; eventEndMinute=66; teamId=10; eventType=3},
+        {fixtureId=13; playerId=226; eventStartMinute=66; eventEndMinute=66; teamId=10; eventType=3},
+        {fixtureId=13; playerId=217; eventStartMinute=90; eventEndMinute=90; teamId=10; eventType=3},
+        {fixtureId=13; playerId=219; eventStartMinute=90; eventEndMinute=90; teamId=10; eventType=3},
+        {fixtureId=13; playerId=221; eventStartMinute=90; eventEndMinute=90; teamId=10; eventType=3},
+        {fixtureId=13; playerId=224; eventStartMinute=90; eventEndMinute=90; teamId=10; eventType=3},
+        {fixtureId=13; playerId=225; eventStartMinute=90; eventEndMinute=90; teamId=10; eventType=3},
+        {fixtureId=13; playerId=226; eventStartMinute=90; eventEndMinute=90; teamId=10; eventType=3},
+        {fixtureId=13; playerId=217; eventStartMinute=44; eventEndMinute=44; teamId=10; eventType=3},
+        {fixtureId=13; playerId=219; eventStartMinute=44; eventEndMinute=44; teamId=10; eventType=3},
+        {fixtureId=13; playerId=221; eventStartMinute=44; eventEndMinute=44; teamId=10; eventType=3},
+        {fixtureId=13; playerId=224; eventStartMinute=44; eventEndMinute=44; teamId=10; eventType=3},
+        {fixtureId=13; playerId=225; eventStartMinute=44; eventEndMinute=44; teamId=10; eventType=3},
+        {fixtureId=13; playerId=226; eventStartMinute=44; eventEndMinute=44; teamId=10; eventType=3},
+        {fixtureId=13; playerId=88; eventStartMinute=1; eventEndMinute=1; teamId=4; eventType=4},
+        {fixtureId=13; playerId=88; eventStartMinute=2; eventEndMinute=2; teamId=4; eventType=4},
+        {fixtureId=13; playerId=217; eventStartMinute=1; eventEndMinute=1; teamId=10; eventType=4},
+        {fixtureId=13; playerId=217; eventStartMinute=2; eventEndMinute=2; teamId=10; eventType=4},
+        {fixtureId=13; playerId=217; eventStartMinute=3; eventEndMinute=3; teamId=10; eventType=4},
+        {fixtureId=13; playerId=217; eventStartMinute=4; eventEndMinute=4; teamId=10; eventType=4},
+        {fixtureId=13; playerId=217; eventStartMinute=5; eventEndMinute=5; teamId=10; eventType=4}
+      ]);
+    };
+
+    let fixture14Data: T.ConsensusData = { 
+      fixtureId = 14;
+      totalVotes = {amount_e8s = 1_000_000};
+      events = List.fromArray<T.PlayerEventData>([
+        {fixtureId=14; playerId=59; eventStartMinute=1; eventEndMinute=1; teamId=3; eventType=4},
+        {fixtureId=14; playerId=59; eventStartMinute=2; eventEndMinute=2; teamId=3; eventType=4},
+        {fixtureId=14; playerId=59; eventStartMinute=3; eventEndMinute=3; teamId=3; eventType=4},
+        {fixtureId=14; playerId=59; eventStartMinute=4; eventEndMinute=4; teamId=3; eventType=4},
+        {fixtureId=14; playerId=59; eventStartMinute=5; eventEndMinute=5; teamId=3; eventType=4},
+        {fixtureId=14; playerId=59; eventStartMinute=6; eventEndMinute=6; teamId=3; eventType=4},
+        {fixtureId=14; playerId=59; eventStartMinute=7; eventEndMinute=7; teamId=3; eventType=4},
+        {fixtureId=14; playerId=59; eventStartMinute=8; eventEndMinute=8; teamId=3; eventType=4},
+        {fixtureId=14; playerId=59; eventStartMinute=0; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=59; eventStartMinute=0; eventEndMinute=0; teamId=3; eventType=8},
+        {fixtureId=14; playerId=62; eventStartMinute=0; eventEndMinute=84; teamId=3; eventType=0},
+        {fixtureId=14; playerId=63; eventStartMinute=0; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=64; eventStartMinute=76; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=69; eventStartMinute=0; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=70; eventStartMinute=0; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=72; eventStartMinute=0; eventEndMinute=0; teamId=3; eventType=8},
+        {fixtureId=14; playerId=72; eventStartMinute=76; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=73; eventStartMinute=0; eventEndMinute=63; teamId=3; eventType=0},
+        {fixtureId=14; playerId=74; eventStartMinute=0; eventEndMinute=76; teamId=3; eventType=0},
+        {fixtureId=14; playerId=76; eventStartMinute=84; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=78; eventStartMinute=3; eventEndMinute=3; teamId=3; eventType=2},
+        {fixtureId=14; playerId=78; eventStartMinute=0; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=80; eventStartMinute=63; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=81; eventStartMinute=3; eventEndMinute=3; teamId=3; eventType=1},
+        {fixtureId=14; playerId=81; eventStartMinute=0; eventEndMinute=76; teamId=3; eventType=0},
+        {fixtureId=14; playerId=82; eventStartMinute=0; eventEndMinute=0; teamId=3; eventType=8},
+        {fixtureId=14; playerId=82; eventStartMinute=0; eventEndMinute=63; teamId=3; eventType=0},
+        {fixtureId=14; playerId=85; eventStartMinute=63; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=242; eventStartMinute=0; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=242; eventStartMinute=1; eventEndMinute=1; teamId=11; eventType=4},
+        {fixtureId=14; playerId=242; eventStartMinute=2; eventEndMinute=2; teamId=11; eventType=4},
+        {fixtureId=14; playerId=242; eventStartMinute=3; eventEndMinute=3; teamId=11; eventType=4},
+        {fixtureId=14; playerId=242; eventStartMinute=4; eventEndMinute=4; teamId=11; eventType=4},
+        {fixtureId=14; playerId=242; eventStartMinute=0; eventEndMinute=0; teamId=11; eventType=8},
+        {fixtureId=14; playerId=245; eventStartMinute=0; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=246; eventStartMinute=0; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=247; eventStartMinute=76; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=250; eventStartMinute=0; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=251; eventStartMinute=86; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=252; eventStartMinute=0; eventEndMinute=76; teamId=11; eventType=0},
+        {fixtureId=14; playerId=256; eventStartMinute=76; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=257; eventStartMinute=27; eventEndMinute=27; teamId=11; eventType=1},
+        {fixtureId=14; playerId=257; eventStartMinute=0; eventEndMinute=86; teamId=11; eventType=0},
+        {fixtureId=14; playerId=258; eventStartMinute=0; eventEndMinute=63; teamId=11; eventType=0},
+        {fixtureId=14; playerId=259; eventStartMinute=62; eventEndMinute=62; teamId=11; eventType=1},
+        {fixtureId=14; playerId=259; eventStartMinute=0; eventEndMinute=76; teamId=11; eventType=0},
+        {fixtureId=14; playerId=260; eventStartMinute=36; eventEndMinute=36; teamId=11; eventType=1},
+        {fixtureId=14; playerId=260; eventStartMinute=36; eventEndMinute=36; teamId=11; eventType=7},
+        {fixtureId=14; playerId=260; eventStartMinute=0; eventEndMinute=86; teamId=11; eventType=0},
+        {fixtureId=14; playerId=261; eventStartMinute=86; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=262; eventStartMinute=58; eventEndMinute=58; teamId=11; eventType=9},
+        {fixtureId=14; playerId=262; eventStartMinute=0; eventEndMinute=58; teamId=11; eventType=0},
+        {fixtureId=14; playerId=263; eventStartMinute=0; eventEndMinute=90; teamId=11; eventType=0},
+        {fixtureId=14; playerId=547; eventStartMinute=0; eventEndMinute=90; teamId=3; eventType=0},
+        {fixtureId=14; playerId=59; eventStartMinute=27; eventEndMinute=27; teamId=3; eventType=3},
+        {fixtureId=14; playerId=62; eventStartMinute=27; eventEndMinute=27; teamId=3; eventType=3},
+        {fixtureId=14; playerId=63; eventStartMinute=27; eventEndMinute=27; teamId=3; eventType=3},
+        {fixtureId=14; playerId=64; eventStartMinute=27; eventEndMinute=27; teamId=3; eventType=3},
+        {fixtureId=14; playerId=69; eventStartMinute=27; eventEndMinute=27; teamId=3; eventType=3},
+        {fixtureId=14; playerId=547; eventStartMinute=27; eventEndMinute=27; teamId=3; eventType=3},
+        {fixtureId=14; playerId=59; eventStartMinute=62; eventEndMinute=62; teamId=3; eventType=3},
+        {fixtureId=14; playerId=62; eventStartMinute=62; eventEndMinute=62; teamId=3; eventType=3},
+        {fixtureId=14; playerId=63; eventStartMinute=62; eventEndMinute=62; teamId=3; eventType=3},
+        {fixtureId=14; playerId=64; eventStartMinute=62; eventEndMinute=62; teamId=3; eventType=3},
+        {fixtureId=14; playerId=69; eventStartMinute=62; eventEndMinute=62; teamId=3; eventType=3},
+        {fixtureId=14; playerId=547; eventStartMinute=62; eventEndMinute=62; teamId=3; eventType=3},
+        {fixtureId=14; playerId=59; eventStartMinute=36; eventEndMinute=36; teamId=3; eventType=3},
+        {fixtureId=14; playerId=62; eventStartMinute=36; eventEndMinute=36; teamId=3; eventType=3},
+        {fixtureId=14; playerId=63; eventStartMinute=36; eventEndMinute=36; teamId=3; eventType=3},
+        {fixtureId=14; playerId=64; eventStartMinute=36; eventEndMinute=36; teamId=3; eventType=3},
+        {fixtureId=14; playerId=69; eventStartMinute=36; eventEndMinute=36; teamId=3; eventType=3},
+        {fixtureId=14; playerId=547; eventStartMinute=36; eventEndMinute=36; teamId=3; eventType=3},
+        {fixtureId=14; playerId=242; eventStartMinute=3; eventEndMinute=3; teamId=11; eventType=3},
+        {fixtureId=14; playerId=245; eventStartMinute=3; eventEndMinute=3; teamId=11; eventType=3},
+        {fixtureId=14; playerId=246; eventStartMinute=3; eventEndMinute=3; teamId=11; eventType=3},
+        {fixtureId=14; playerId=247; eventStartMinute=3; eventEndMinute=3; teamId=11; eventType=3},
+        {fixtureId=14; playerId=250; eventStartMinute=3; eventEndMinute=3; teamId=11; eventType=3},
+        {fixtureId=14; playerId=251; eventStartMinute=3; eventEndMinute=3; teamId=11; eventType=3},
+        {fixtureId=14; playerId=252; eventStartMinute=3; eventEndMinute=3; teamId=11; eventType=3},
+        {fixtureId=14; playerId=59; eventStartMinute=0; eventEndMinute=0; teamId=3; eventType=6}
+      ]);
+    };
+
+    let fixture16Data: T.ConsensusData = { 
+      fixtureId = 16;
+      totalVotes = {amount_e8s = 1_000_000};
+      events = List.fromArray<T.PlayerEventData>([
+        {fixtureId=16; playerId=264; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=264; eventStartMinute=1; eventEndMinute=1; teamId=13; eventType=4},
+        {fixtureId=16; playerId=268; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=271; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=276; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=277; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=280; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=284; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=284; eventStartMinute=31; eventEndMinute=31; teamId=13; eventType=2},
+        {fixtureId=16; playerId=285; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=287; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=288; eventStartMinute=31; eventEndMinute=31; teamId=13; eventType=1},
+        {fixtureId=16; playerId=288; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=288; eventStartMinute=0; eventEndMinute=0; teamId=13; eventType=8},
+        {fixtureId=16; playerId=319; eventStartMinute=1; eventEndMinute=1; teamId=15; eventType=4},
+        {fixtureId=16; playerId=319; eventStartMinute=2; eventEndMinute=2; teamId=15; eventType=4},
+        {fixtureId=16; playerId=319; eventStartMinute=3; eventEndMinute=3; teamId=15; eventType=4},
+        {fixtureId=16; playerId=319; eventStartMinute=0; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=323; eventStartMinute=0; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=324; eventStartMinute=0; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=327; eventStartMinute=0; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=329; eventStartMinute=0; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=333; eventStartMinute=0; eventEndMinute=0; teamId=15; eventType=8},
+        {fixtureId=16; playerId=333; eventStartMinute=0; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=336; eventStartMinute=57; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=339; eventStartMinute=0; eventEndMinute=0; teamId=15; eventType=8},
+        {fixtureId=16; playerId=339; eventStartMinute=0; eventEndMinute=57; teamId=15; eventType=0},
+        {fixtureId=16; playerId=340; eventStartMinute=0; eventEndMinute=0; teamId=15; eventType=8},
+        {fixtureId=16; playerId=340; eventStartMinute=56; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=341; eventStartMinute=67; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=342; eventStartMinute=0; eventEndMinute=0; teamId=15; eventType=8},
+        {fixtureId=16; playerId=342; eventStartMinute=0; eventEndMinute=56; teamId=15; eventType=0},
+        {fixtureId=16; playerId=344; eventStartMinute=0; eventEndMinute=86; teamId=15; eventType=0},
+        {fixtureId=16; playerId=347; eventStartMinute=0; eventEndMinute=66; teamId=15; eventType=0},
+        {fixtureId=16; playerId=348; eventStartMinute=66; eventEndMinute=90; teamId=15; eventType=0},
+        {fixtureId=16; playerId=542; eventStartMinute=0; eventEndMinute=90; teamId=13; eventType=0},
+        {fixtureId=16; playerId=561; eventStartMinute=0; eventEndMinute=0; teamId=15; eventType=8},
+        {fixtureId=16; playerId=561; eventStartMinute=0; eventEndMinute=67; teamId=15; eventType=0},
+        {fixtureId=16; playerId=319; eventStartMinute=31; eventEndMinute=31; teamId=15; eventType=3},
+        {fixtureId=16; playerId=323; eventStartMinute=31; eventEndMinute=31; teamId=15; eventType=3},
+        {fixtureId=16; playerId=324; eventStartMinute=31; eventEndMinute=31; teamId=15; eventType=3},
+        {fixtureId=16; playerId=327; eventStartMinute=31; eventEndMinute=31; teamId=15; eventType=3},
+        {fixtureId=16; playerId=329; eventStartMinute=31; eventEndMinute=31; teamId=15; eventType=3},
+        {fixtureId=16; playerId=264; eventStartMinute=90; eventEndMinute=90; teamId=13; eventType=5},
+        {fixtureId=16; playerId=268; eventStartMinute=90; eventEndMinute=90; teamId=13; eventType=5},
+        {fixtureId=16; playerId=271; eventStartMinute=90; eventEndMinute=90; teamId=13; eventType=5},
+        {fixtureId=16; playerId=276; eventStartMinute=90; eventEndMinute=90; teamId=13; eventType=5},
+        {fixtureId=16; playerId=542; eventStartMinute=90; eventEndMinute=90; teamId=13; eventType=5}
+      ]);
+    };
+
     let fixture17Data: T.ConsensusData = { 
       fixtureId = 17;
       totalVotes = {amount_e8s = 1_000_000};
@@ -1838,6 +2119,246 @@ actor Self {
         {fixtureId=17; playerId=359; eventStartMinute=48; eventEndMinute=48; teamId=16; eventType=3}
       ]);
     };
+
+    let fixture18Data: T.ConsensusData = { 
+      fixtureId = 18;
+      totalVotes = {amount_e8s = 1_000_000};
+      events = List.fromArray<T.PlayerEventData>([
+        {fixtureId=18; playerId=291; eventStartMinute=1; eventEndMinute=1; teamId=14; eventType=4},
+        {fixtureId=18; playerId=291; eventStartMinute=2; eventEndMinute=2; teamId=14; eventType=4},
+        {fixtureId=18; playerId=291; eventStartMinute=3; eventEndMinute=3; teamId=14; eventType=4},
+        {fixtureId=18; playerId=291; eventStartMinute=4; eventEndMinute=4; teamId=14; eventType=4},
+        {fixtureId=18; playerId=291; eventStartMinute=5; eventEndMinute=5; teamId=14; eventType=4},
+        {fixtureId=18; playerId=291; eventStartMinute=0; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=292; eventStartMinute=83; eventEndMinute=83; teamId=14; eventType=10},
+        {fixtureId=18; playerId=292; eventStartMinute=0; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=293; eventStartMinute=0; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=298; eventStartMinute=0; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=302; eventStartMinute=66; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=303; eventStartMinute=0; eventEndMinute=0; teamId=14; eventType=8},
+        {fixtureId=18; playerId=303; eventStartMinute=0; eventEndMinute=66; teamId=14; eventType=0},
+        {fixtureId=18; playerId=304; eventStartMinute=0; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=306; eventStartMinute=66; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=310; eventStartMinute=0; eventEndMinute=85; teamId=14; eventType=0},
+        {fixtureId=18; playerId=311; eventStartMinute=0; eventEndMinute=0; teamId=14; eventType=8},
+        {fixtureId=18; playerId=311; eventStartMinute=0; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=312; eventStartMinute=0; eventEndMinute=85; teamId=14; eventType=0},
+        {fixtureId=18; playerId=313; eventStartMinute=66; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=314; eventStartMinute=0; eventEndMinute=66; teamId=14; eventType=0},
+        {fixtureId=18; playerId=315; eventStartMinute=0; eventEndMinute=0; teamId=14; eventType=8},
+        {fixtureId=18; playerId=315; eventStartMinute=0; eventEndMinute=66; teamId=14; eventType=0},
+        {fixtureId=18; playerId=317; eventStartMinute=85; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=318; eventStartMinute=85; eventEndMinute=90; teamId=14; eventType=0},
+        {fixtureId=18; playerId=383; eventStartMinute=1; eventEndMinute=1; teamId=18; eventType=4},
+        {fixtureId=18; playerId=383; eventStartMinute=2; eventEndMinute=2; teamId=18; eventType=4},
+        {fixtureId=18; playerId=383; eventStartMinute=3; eventEndMinute=3; teamId=18; eventType=4},
+        {fixtureId=18; playerId=383; eventStartMinute=4; eventEndMinute=4; teamId=18; eventType=4},
+        {fixtureId=18; playerId=383; eventStartMinute=5; eventEndMinute=5; teamId=18; eventType=4},
+        {fixtureId=18; playerId=383; eventStartMinute=6; eventEndMinute=6; teamId=18; eventType=4},
+        {fixtureId=18; playerId=383; eventStartMinute=0; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=388; eventStartMinute=0; eventEndMinute=0; teamId=18; eventType=8},
+        {fixtureId=18; playerId=388; eventStartMinute=70; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=390; eventStartMinute=0; eventEndMinute=70; teamId=18; eventType=0},
+        {fixtureId=18; playerId=391; eventStartMinute=0; eventEndMinute=86; teamId=18; eventType=0},
+        {fixtureId=18; playerId=392; eventStartMinute=86; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=395; eventStartMinute=76; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=397; eventStartMinute=0; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=398; eventStartMinute=49; eventEndMinute=49; teamId=18; eventType=1},
+        {fixtureId=18; playerId=398; eventStartMinute=0; eventEndMinute=76; teamId=18; eventType=0},
+        {fixtureId=18; playerId=400; eventStartMinute=70; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=401; eventStartMinute=88; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=402; eventStartMinute=0; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=404; eventStartMinute=0; eventEndMinute=88; teamId=18; eventType=0},
+        {fixtureId=18; playerId=406; eventStartMinute=0; eventEndMinute=70; teamId=18; eventType=0},
+        {fixtureId=18; playerId=407; eventStartMinute=0; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=539; eventStartMinute=0; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=558; eventStartMinute=0; eventEndMinute=90; teamId=18; eventType=0},
+        {fixtureId=18; playerId=291; eventStartMinute=49; eventEndMinute=49; teamId=14; eventType=3},
+        {fixtureId=18; playerId=292; eventStartMinute=49; eventEndMinute=49; teamId=14; eventType=3},
+        {fixtureId=18; playerId=293; eventStartMinute=49; eventEndMinute=49; teamId=14; eventType=3},
+        {fixtureId=18; playerId=298; eventStartMinute=49; eventEndMinute=49; teamId=14; eventType=3},
+        {fixtureId=18; playerId=302; eventStartMinute=49; eventEndMinute=49; teamId=14; eventType=3},
+        {fixtureId=18; playerId=303; eventStartMinute=49; eventEndMinute=49; teamId=14; eventType=3},
+        {fixtureId=18; playerId=383; eventStartMinute=90; eventEndMinute=90; teamId=18; eventType=5},
+        {fixtureId=18; playerId=388; eventStartMinute=90; eventEndMinute=90; teamId=18; eventType=5},
+        {fixtureId=18; playerId=390; eventStartMinute=90; eventEndMinute=90; teamId=18; eventType=5},
+        {fixtureId=18; playerId=391; eventStartMinute=90; eventEndMinute=90; teamId=18; eventType=5},
+        {fixtureId=18; playerId=392; eventStartMinute=90; eventEndMinute=90; teamId=18; eventType=5},
+        {fixtureId=18; playerId=539; eventStartMinute=90; eventEndMinute=90; teamId=18; eventType=5},
+        {fixtureId=18; playerId=558; eventStartMinute=90; eventEndMinute=90; teamId=18; eventType=5}
+      ]);
+    };
+
+    let fixture19Data: T.ConsensusData = { 
+      fixtureId = 19;
+      totalVotes = {amount_e8s = 1_000_000};
+      events = List.fromArray<T.PlayerEventData>([
+        {fixtureId=19; playerId=115; eventStartMinute=1; eventEndMinute=1; teamId=7; eventType=4},
+        {fixtureId=19; playerId=115; eventStartMinute=2; eventEndMinute=2; teamId=7; eventType=4},
+        {fixtureId=19; playerId=115; eventStartMinute=3; eventEndMinute=3; teamId=7; eventType=4},
+        {fixtureId=19; playerId=115; eventStartMinute=0; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=126; eventStartMinute=61; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=150; eventStartMinute=0; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=151; eventStartMinute=0; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=152; eventStartMinute=0; eventEndMinute=61; teamId=7; eventType=0},
+        {fixtureId=19; playerId=157; eventStartMinute=0; eventEndMinute=83; teamId=7; eventType=0},
+        {fixtureId=19; playerId=158; eventStartMinute=1; eventEndMinute=1; teamId=7; eventType=7},
+        {fixtureId=19; playerId=158; eventStartMinute=0; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=159; eventStartMinute=0; eventEndMinute=75; teamId=7; eventType=0},
+        {fixtureId=19; playerId=160; eventStartMinute=28; eventEndMinute=28; teamId=7; eventType=1},
+        {fixtureId=19; playerId=160; eventStartMinute=0; eventEndMinute=0; teamId=7; eventType=8},
+        {fixtureId=19; playerId=160; eventStartMinute=0; eventEndMinute=45; teamId=7; eventType=0},
+        {fixtureId=19; playerId=161; eventStartMinute=0; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=163; eventStartMinute=75; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=170; eventStartMinute=0; eventEndMinute=0; teamId=7; eventType=8},
+        {fixtureId=19; playerId=170; eventStartMinute=0; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=408; eventStartMinute=1; eventEndMinute=1; teamId=19; eventType=4},
+        {fixtureId=19; playerId=408; eventStartMinute=2; eventEndMinute=2; teamId=19; eventType=4},
+        {fixtureId=19; playerId=408; eventStartMinute=3; eventEndMinute=3; teamId=19; eventType=4},
+        {fixtureId=19; playerId=408; eventStartMinute=1; eventEndMinute=1; teamId=19; eventType=6},
+        {fixtureId=19; playerId=408; eventStartMinute=0; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=410; eventStartMinute=7; eventEndMinute=7; teamId=19; eventType=1},
+        {fixtureId=19; playerId=410; eventStartMinute=0; eventEndMinute=0; teamId=19; eventType=9},
+        {fixtureId=19; playerId=410; eventStartMinute=0; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=411; eventStartMinute=0; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=413; eventStartMinute=69; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=414; eventStartMinute=0; eventEndMinute=0; teamId=19; eventType=8},
+        {fixtureId=19; playerId=414; eventStartMinute=0; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=417; eventStartMinute=0; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=419; eventStartMinute=0; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=422; eventStartMinute=90; eventEndMinute=90; teamId=19; eventType=1},
+        {fixtureId=19; playerId=422; eventStartMinute=0; eventEndMinute=0; teamId=19; eventType=8},
+        {fixtureId=19; playerId=422; eventStartMinute=0; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=423; eventStartMinute=0; eventEndMinute=69; teamId=19; eventType=0},
+        {fixtureId=19; playerId=425; eventStartMinute=0; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=428; eventStartMinute=53; eventEndMinute=53; teamId=19; eventType=1},
+        {fixtureId=19; playerId=428; eventStartMinute=0; eventEndMinute=76; teamId=19; eventType=0},
+        {fixtureId=19; playerId=540; eventStartMinute=0; eventEndMinute=0; teamId=7; eventType=8},
+        {fixtureId=19; playerId=540; eventStartMinute=0; eventEndMinute=90; teamId=7; eventType=0},
+        {fixtureId=19; playerId=548; eventStartMinute=76; eventEndMinute=90; teamId=19; eventType=0},
+        {fixtureId=19; playerId=559; eventStartMinute=7; eventEndMinute=7; teamId=19; eventType=2},
+        {fixtureId=19; playerId=559; eventStartMinute=53; eventEndMinute=53; teamId=19; eventType=2},
+        {fixtureId=19; playerId=559; eventStartMinute=0; eventEndMinute=81; teamId=19; eventType=0},
+        {fixtureId=19; playerId=115; eventStartMinute=7; eventEndMinute=7; teamId=7; eventType=3},
+        {fixtureId=19; playerId=150; eventStartMinute=7; eventEndMinute=7; teamId=7; eventType=3},
+        {fixtureId=19; playerId=151; eventStartMinute=7; eventEndMinute=7; teamId=7; eventType=3},
+        {fixtureId=19; playerId=152; eventStartMinute=7; eventEndMinute=7; teamId=7; eventType=3},
+        {fixtureId=19; playerId=157; eventStartMinute=7; eventEndMinute=7; teamId=7; eventType=3},
+        {fixtureId=19; playerId=540; eventStartMinute=7; eventEndMinute=7; teamId=7; eventType=3},
+        {fixtureId=19; playerId=115; eventStartMinute=90; eventEndMinute=90; teamId=7; eventType=3},
+        {fixtureId=19; playerId=150; eventStartMinute=90; eventEndMinute=90; teamId=7; eventType=3},
+        {fixtureId=19; playerId=151; eventStartMinute=90; eventEndMinute=90; teamId=7; eventType=3},
+        {fixtureId=19; playerId=152; eventStartMinute=90; eventEndMinute=90; teamId=7; eventType=3},
+        {fixtureId=19; playerId=157; eventStartMinute=90; eventEndMinute=90; teamId=7; eventType=3},
+        {fixtureId=19; playerId=540; eventStartMinute=90; eventEndMinute=90; teamId=7; eventType=3},
+        {fixtureId=19; playerId=115; eventStartMinute=53; eventEndMinute=53; teamId=7; eventType=3},
+        {fixtureId=19; playerId=150; eventStartMinute=53; eventEndMinute=53; teamId=7; eventType=3},
+        {fixtureId=19; playerId=151; eventStartMinute=53; eventEndMinute=53; teamId=7; eventType=3},
+        {fixtureId=19; playerId=152; eventStartMinute=53; eventEndMinute=53; teamId=7; eventType=3},
+        {fixtureId=19; playerId=157; eventStartMinute=53; eventEndMinute=53; teamId=7; eventType=3},
+        {fixtureId=19; playerId=540; eventStartMinute=53; eventEndMinute=53; teamId=7; eventType=3},
+        {fixtureId=19; playerId=408; eventStartMinute=28; eventEndMinute=28; teamId=19; eventType=3},
+        {fixtureId=19; playerId=410; eventStartMinute=28; eventEndMinute=28; teamId=19; eventType=3},
+        {fixtureId=19; playerId=411; eventStartMinute=28; eventEndMinute=28; teamId=19; eventType=3},
+        {fixtureId=19; playerId=413; eventStartMinute=28; eventEndMinute=28; teamId=19; eventType=3},
+        {fixtureId=19; playerId=414; eventStartMinute=28; eventEndMinute=28; teamId=19; eventType=3},
+        {fixtureId=19; playerId=417; eventStartMinute=28; eventEndMinute=28; teamId=19; eventType=3}
+      ]);
+    };
+
+    let fixture20Data: T.ConsensusData = { 
+      fixtureId = 20;
+      totalVotes = {amount_e8s = 1_000_000};
+      events = List.fromArray<T.PlayerEventData>([
+        {fixtureId=20; playerId=116; eventStartMinute=1; eventEndMinute=1; teamId=5; eventType=4},
+        {fixtureId=20; playerId=116; eventStartMinute=2; eventEndMinute=2; teamId=5; eventType=4},
+        {fixtureId=20; playerId=116; eventStartMinute=3; eventEndMinute=3; teamId=5; eventType=4},
+        {fixtureId=20; playerId=116; eventStartMinute=4; eventEndMinute=4; teamId=5; eventType=4},
+        {fixtureId=20; playerId=116; eventStartMinute=0; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=119; eventStartMinute=0; eventEndMinute=0; teamId=5; eventType=8},
+        {fixtureId=20; playerId=119; eventStartMinute=0; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=120; eventStartMinute=0; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=122; eventStartMinute=46; eventEndMinute=46; teamId=5; eventType=1},
+        {fixtureId=20; playerId=122; eventStartMinute=15; eventEndMinute=15; teamId=5; eventType=2},
+        {fixtureId=20; playerId=122; eventStartMinute=0; eventEndMinute=0; teamId=5; eventType=8},
+        {fixtureId=20; playerId=122; eventStartMinute=0; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=124; eventStartMinute=57; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=127; eventStartMinute=0; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=129; eventStartMinute=0; eventEndMinute=0; teamId=5; eventType=8},
+        {fixtureId=20; playerId=129; eventStartMinute=0; eventEndMinute=81; teamId=5; eventType=0},
+        {fixtureId=20; playerId=131; eventStartMinute=0; eventEndMinute=0; teamId=5; eventType=8},
+        {fixtureId=20; playerId=131; eventStartMinute=0; eventEndMinute=57; teamId=5; eventType=0},
+        {fixtureId=20; playerId=132; eventStartMinute=81; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=135; eventStartMinute=81; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=136; eventStartMinute=15; eventEndMinute=15; teamId=5; eventType=1},
+        {fixtureId=20; playerId=136; eventStartMinute=46; eventEndMinute=46; teamId=5; eventType=2},
+        {fixtureId=20; playerId=136; eventStartMinute=0; eventEndMinute=81; teamId=5; eventType=0},
+        {fixtureId=20; playerId=137; eventStartMinute=51; eventEndMinute=51; teamId=5; eventType=1},
+        {fixtureId=20; playerId=137; eventStartMinute=55; eventEndMinute=55; teamId=5; eventType=1},
+        {fixtureId=20; playerId=137; eventStartMinute=0; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=139; eventStartMinute=67; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=140; eventStartMinute=51; eventEndMinute=51; teamId=5; eventType=2},
+        {fixtureId=20; playerId=140; eventStartMinute=55; eventEndMinute=55; teamId=5; eventType=2},
+        {fixtureId=20; playerId=140; eventStartMinute=0; eventEndMinute=0; teamId=5; eventType=8},
+        {fixtureId=20; playerId=140; eventStartMinute=0; eventEndMinute=67; teamId=5; eventType=0},
+        {fixtureId=20; playerId=142; eventStartMinute=0; eventEndMinute=57; teamId=5; eventType=0},
+        {fixtureId=20; playerId=430; eventStartMinute=1; eventEndMinute=1; teamId=20; eventType=4},
+        {fixtureId=20; playerId=430; eventStartMinute=2; eventEndMinute=2; teamId=20; eventType=4},
+        {fixtureId=20; playerId=430; eventStartMinute=3; eventEndMinute=3; teamId=20; eventType=4},
+        {fixtureId=20; playerId=430; eventStartMinute=4; eventEndMinute=4; teamId=20; eventType=4},
+        {fixtureId=20; playerId=430; eventStartMinute=0; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=432; eventStartMinute=0; eventEndMinute=0; teamId=20; eventType=8},
+        {fixtureId=20; playerId=432; eventStartMinute=0; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=434; eventStartMinute=0; eventEndMinute=0; teamId=20; eventType=8},
+        {fixtureId=20; playerId=434; eventStartMinute=0; eventEndMinute=71; teamId=20; eventType=0},
+        {fixtureId=20; playerId=435; eventStartMinute=0; eventEndMinute=86; teamId=20; eventType=0},
+        {fixtureId=20; playerId=437; eventStartMinute=86; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=438; eventStartMinute=0; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=441; eventStartMinute=0; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=444; eventStartMinute=90; eventEndMinute=90; teamId=20; eventType=9},
+        {fixtureId=20; playerId=444; eventStartMinute=0; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=445; eventStartMinute=71; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=449; eventStartMinute=0; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=450; eventStartMinute=61; eventEndMinute=61; teamId=20; eventType=2},
+        {fixtureId=20; playerId=450; eventStartMinute=56; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=451; eventStartMinute=0; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=453; eventStartMinute=0; eventEndMinute=55; teamId=20; eventType=0},
+        {fixtureId=20; playerId=454; eventStartMinute=61; eventEndMinute=61; teamId=20; eventType=1},
+        {fixtureId=20; playerId=454; eventStartMinute=0; eventEndMinute=0; teamId=20; eventType=8},
+        {fixtureId=20; playerId=454; eventStartMinute=55; eventEndMinute=90; teamId=20; eventType=0},
+        {fixtureId=20; playerId=541; eventStartMinute=0; eventEndMinute=0; teamId=5; eventType=8},
+        {fixtureId=20; playerId=541; eventStartMinute=57; eventEndMinute=90; teamId=5; eventType=0},
+        {fixtureId=20; playerId=116; eventStartMinute=61; eventEndMinute=61; teamId=5; eventType=3},
+        {fixtureId=20; playerId=119; eventStartMinute=61; eventEndMinute=61; teamId=5; eventType=3},
+        {fixtureId=20; playerId=120; eventStartMinute=61; eventEndMinute=61; teamId=5; eventType=3},
+        {fixtureId=20; playerId=122; eventStartMinute=61; eventEndMinute=61; teamId=5; eventType=3},
+        {fixtureId=20; playerId=124; eventStartMinute=61; eventEndMinute=61; teamId=5; eventType=3},
+        {fixtureId=20; playerId=430; eventStartMinute=46; eventEndMinute=46; teamId=20; eventType=3},
+        {fixtureId=20; playerId=432; eventStartMinute=46; eventEndMinute=46; teamId=20; eventType=3},
+        {fixtureId=20; playerId=434; eventStartMinute=46; eventEndMinute=46; teamId=20; eventType=3},
+        {fixtureId=20; playerId=435; eventStartMinute=46; eventEndMinute=46; teamId=20; eventType=3},
+        {fixtureId=20; playerId=437; eventStartMinute=46; eventEndMinute=46; teamId=20; eventType=3},
+        {fixtureId=20; playerId=438; eventStartMinute=46; eventEndMinute=46; teamId=20; eventType=3},
+        {fixtureId=20; playerId=430; eventStartMinute=15; eventEndMinute=15; teamId=20; eventType=3},
+        {fixtureId=20; playerId=432; eventStartMinute=15; eventEndMinute=15; teamId=20; eventType=3},
+        {fixtureId=20; playerId=434; eventStartMinute=15; eventEndMinute=15; teamId=20; eventType=3},
+        {fixtureId=20; playerId=435; eventStartMinute=15; eventEndMinute=15; teamId=20; eventType=3},
+        {fixtureId=20; playerId=437; eventStartMinute=15; eventEndMinute=15; teamId=20; eventType=3},
+        {fixtureId=20; playerId=438; eventStartMinute=15; eventEndMinute=15; teamId=20; eventType=3},
+        {fixtureId=20; playerId=430; eventStartMinute=51; eventEndMinute=51; teamId=20; eventType=3},
+        {fixtureId=20; playerId=432; eventStartMinute=51; eventEndMinute=51; teamId=20; eventType=3},
+        {fixtureId=20; playerId=434; eventStartMinute=51; eventEndMinute=51; teamId=20; eventType=3},
+        {fixtureId=20; playerId=435; eventStartMinute=51; eventEndMinute=51; teamId=20; eventType=3},
+        {fixtureId=20; playerId=437; eventStartMinute=51; eventEndMinute=51; teamId=20; eventType=3},
+        {fixtureId=20; playerId=438; eventStartMinute=51; eventEndMinute=51; teamId=20; eventType=3},
+        {fixtureId=20; playerId=430; eventStartMinute=55; eventEndMinute=55; teamId=20; eventType=3},
+        {fixtureId=20; playerId=432; eventStartMinute=55; eventEndMinute=55; teamId=20; eventType=3},
+        {fixtureId=20; playerId=434; eventStartMinute=55; eventEndMinute=55; teamId=20; eventType=3},
+        {fixtureId=20; playerId=435; eventStartMinute=55; eventEndMinute=55; teamId=20; eventType=3},
+        {fixtureId=20; playerId=437; eventStartMinute=55; eventEndMinute=55; teamId=20; eventType=3},
+        {fixtureId=20; playerId=438; eventStartMinute=55; eventEndMinute=55; teamId=20; eventType=3}
+      ]);
+    };
     
     newConsensusFixtureData.put(1, fixture1Data);
     newConsensusFixtureData.put(2, fixture2Data);
@@ -1849,7 +2370,14 @@ actor Self {
     newConsensusFixtureData.put(8, fixture8Data);
     newConsensusFixtureData.put(9, fixture9Data);
     newConsensusFixtureData.put(10, fixture10Data);
+    newConsensusFixtureData.put(11, fixture11Data);
+    newConsensusFixtureData.put(13, fixture13Data);
+    newConsensusFixtureData.put(14, fixture14Data);
+    newConsensusFixtureData.put(16, fixture16Data);
     newConsensusFixtureData.put(17, fixture17Data);
+    newConsensusFixtureData.put(18, fixture18Data);
+    newConsensusFixtureData.put(19, fixture19Data);
+    newConsensusFixtureData.put(20, fixture20Data);
 
     governanceInstance.resetConsensusData(Iter.toArray(newConsensusFixtureData.entries()));
 
@@ -1863,7 +2391,14 @@ actor Self {
     let updatedFixture8 = await seasonManager.savePlayerEventData(1, 1, 8, fixture8Data.events);
     let updatedFixture9 = await seasonManager.savePlayerEventData(1, 1, 9, fixture9Data.events);
     let updatedFixture10 = await seasonManager.savePlayerEventData(1, 1, 10, fixture10Data.events);
+    let updatedFixture11 = await seasonManager.savePlayerEventData(1, 2, 11, fixture11Data.events);
+    let updatedFixture13 = await seasonManager.savePlayerEventData(1, 2, 13, fixture13Data.events);
+    let updatedFixture14 = await seasonManager.savePlayerEventData(1, 2, 14, fixture14Data.events);
+    let updatedFixture16 = await seasonManager.savePlayerEventData(1, 2, 16, fixture16Data.events);
     let updatedFixture17 = await seasonManager.savePlayerEventData(1, 2, 17, fixture17Data.events);
+    let updatedFixture18 = await seasonManager.savePlayerEventData(1, 2, 18, fixture18Data.events);
+    let updatedFixture19 = await seasonManager.savePlayerEventData(1, 2, 19, fixture19Data.events);
+    let updatedFixture20 = await seasonManager.savePlayerEventData(1, 2, 20, fixture20Data.events);
 
 
     let fixtureWithHighestPlayerId1 = await seasonManager.recalculatePlayerScores(1, 1, updatedFixture1);
@@ -1876,7 +2411,14 @@ actor Self {
     let fixtureWithHighestPlayerId8 = await seasonManager.recalculatePlayerScores(1, 1, updatedFixture8);
     let fixtureWithHighestPlayerId9 = await seasonManager.recalculatePlayerScores(1, 1, updatedFixture9);
     let fixtureWithHighestPlayerId10 = await seasonManager.recalculatePlayerScores(1, 1, updatedFixture10);
+    let fixtureWithHighestPlayerId11 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture11);
+    let fixtureWithHighestPlayerId13 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture13);
+    let fixtureWithHighestPlayerId14 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture14);
+    let fixtureWithHighestPlayerId16 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture16);
     let fixtureWithHighestPlayerId17 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture17);
+    let fixtureWithHighestPlayerId18 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture18);
+    let fixtureWithHighestPlayerId19 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture19);
+    let fixtureWithHighestPlayerId20 = await seasonManager.recalculatePlayerScores(1, 2, updatedFixture20);
 
     await seasonManager.updateHighestPlayerId(1, 1, fixtureWithHighestPlayerId1);
     await seasonManager.updateHighestPlayerId(1, 1, fixtureWithHighestPlayerId2);
@@ -1889,7 +2431,14 @@ actor Self {
     await seasonManager.updateHighestPlayerId(1, 1, fixtureWithHighestPlayerId9);
     await seasonManager.updateHighestPlayerId(1, 1, fixtureWithHighestPlayerId10);
 
+    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId11);
+    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId13);
+    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId14);
+    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId16);
     await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId17);
+    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId18);
+    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId19);
+    await seasonManager.updateHighestPlayerId(1, 2, fixtureWithHighestPlayerId20);
 
     await seasonManager.recalculateFantasyTeamScores(1, 1);
     await seasonManager.recalculateFantasyTeamScores(1, 2);
@@ -1897,6 +2446,28 @@ actor Self {
     
   };
 
+  
+  
+/*
+
+  public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
+    return fantasyTeamsInstance.getFantasyTeams();
+  };
+
+  public func recalculateSnapshotTotals() : async (){
+    await fantasyTeamsInstance.recalculateSnapshotTotals();
+  };
+
+  public func resetGameweek1SnapshotPoints(){
+    await fantasyTeamsInstance.resetGameweek1SnapshotPoints();
+  };
+
+  //TEST ONLY
+  public func getConsensusData(): async [(T.FixtureId, List.List<T.DataSubmission>)]{
+    return governanceInstance.getFixtureDataSubmissions();
+  };
+
+  
   public func removeIncorrectPlayerEventData() : async (){
     await seasonManager.removeIncorrectPlayerEventData();
   };
