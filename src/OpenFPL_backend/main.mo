@@ -40,18 +40,18 @@ actor Self {
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
   
-  /*
   //USE FOR LOCAL DEV
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
   };
-  */
+  /*
   //Live canisters  
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   }; 
+  */
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
   { 
@@ -1008,44 +1008,22 @@ actor Self {
       }
   };
 
-  //TEST ONLY
-  public func getConsensusData(): async [(T.FixtureId, List.List<T.DataSubmission>)]{
-    return governanceInstance.getFixtureDataSubmissions();
-  };
-  
-  
-/*
-
-
-  public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
-    return fantasyTeamsInstance.getFantasyTeams();
-  };
-
-  
-  public func removeIncorrectPlayerEventData() : async (){
-    await seasonManager.removeIncorrectPlayerEventData();
-  };
-
-  public func testClearSnapshotPoints() : async [(Text, T.UserFantasyTeam)]{
-    return await fantasyTeamsInstance.testClearSnapshotPoints();
-  };
-
-  public func clearSnapshotPoints() : async (){
-    return await fantasyTeamsInstance.clearSnapshotPoints();
-  };
   
   public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692435000000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692670800000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
     await seasonManager.init_genesis_season(firstFixture);
   };
   
-  public func fixBankBalances() : async () {
-    await fantasyTeamsInstance.fixBankBalances();
-  };
+  
+  /* Functions for testing only
 
-  //
-  
-  
-  
+    public func getConsensusData(): async [(T.FixtureId, List.List<T.DataSubmission>)]{
+      return governanceInstance.getFixtureDataSubmissions();
+    };
+
+    public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
+      return fantasyTeamsInstance.getFantasyTeams();
+    };
+    
   */
 };

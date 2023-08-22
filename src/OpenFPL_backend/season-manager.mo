@@ -43,8 +43,8 @@ module {
     private let seasonsInstance = Seasons.Seasons();
 
     //definitions
-    private let oneHour = 1_000_000_000 * 60 * 60;
-    //private let oneHour = 1_000_000_000 * 60; //ONE HOUR AS ONE MINUTE USE FOR LOCAL DEV
+    //private let oneHour = 1_000_000_000 * 60 * 60;
+    private let oneHour = 1_000_000_000 * 60; //ONE HOUR AS ONE MINUTE USE FOR LOCAL DEV
     
     private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
@@ -390,14 +390,11 @@ module {
         await seasonsInstance.updateHighestPlayerId(seasonId, gameweek, updatedFixture);
     };
 
+    /* For testing only
     public func recalculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8) : async () {
         await calculateFantasyTeamScores(seasonId, gameweek);
     };
-
-    public func removeIncorrectPlayerEventData() : async () {
-        await seasonsInstance.removeIncorrectPlayerEventData();
-    };
-
+    */
 
   };
 }

@@ -218,6 +218,7 @@ service : {
   getWeeklyLeaderboard: (nat16, nat8, nat, nat) ->
    (PaginatedLeaderboard) query;
   getWeeklyTop10: () -> (PaginatedLeaderboard) query;
+  initGenesisSeason: () -> ();
   isDisplayNameValid: (text) -> (bool) query;
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();

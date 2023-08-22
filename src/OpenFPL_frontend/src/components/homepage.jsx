@@ -45,13 +45,14 @@ const Homepage = () => {
 
         const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === filterGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-        //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
-        const nextKickoff = Math.min(...kickOffs) - 3600000;
+        const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
+        //const nextKickoff = Math.min(...kickOffs) - 3600000;
         const currentTime = new Date().getTime();
     
         if (currentTime < nextKickoff) {
             const timeLeft = computeTimeLeft(nextKickoff);
             setCountdown(timeLeft);
+            
             setIsActiveGameweek(false); // Not an active gameweek
         } else {
             setCountdown({
@@ -72,11 +73,6 @@ const Homepage = () => {
     
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
         setWeeklyTop10(weeklyTop10Data);
-
-        const shouldBeVisible = isAuthenticated && (filterGameweek < currentGameweek || (filterGameweek === currentGameweek && isActiveGameweek));
-        setShouldShowButton(shouldBeVisible);
-
-
     };
 
     const fetchActiveGameweek = async () => {
@@ -139,9 +135,11 @@ const Homepage = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
-            const nextKickoff = Math.min(...kickOffs) - 3600000;
-            //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
-
+            if(kickOffs.length == 0){
+                return;
+            };
+            //const nextKickoff = Math.min(...kickOffs) - 3600000;
+            const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
             const currentTime = new Date().getTime();
     
             if (currentTime < nextKickoff) {
@@ -156,6 +154,10 @@ const Homepage = () => {
         
         return () => clearInterval(timer);
     }, [currentGameweek, fixtures]);
+
+    useEffect(() => {
+        setButtonVisibility(currentGameweek)
+    }, [isActiveGameweek]);
 
     const renderStatusBadge = (fixture) => {
         const currentTime = new Date().getTime();
