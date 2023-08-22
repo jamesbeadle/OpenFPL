@@ -36,7 +36,8 @@ function initCanisterEnv() {
 }
 const canisterEnvVariables = initCanisterEnv();
 
-const internetIdentityUrl = network === "local" ? `http://localhost:8080/?canisterId=${canisterEnvVariables["INTERNET_IDENTITY_CANISTER_ID"]}` : `https://identity.ic0.app`
+//const internetIdentityUrl = network === "local" ? `http://localhost:8080/?canisterId=${canisterEnvVariables["INTERNET_IDENTITY_CANISTER_ID"]}` : `https://identity.ic0.app`
+const internetIdentityUrl = network === "local" ? `http://localhost:8080/?canisterId=qhbym-qaaaa-aaaaa-aaafq-cai` : `https://identity.ic0.app`
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 

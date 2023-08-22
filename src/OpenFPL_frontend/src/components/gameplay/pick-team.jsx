@@ -131,10 +131,6 @@ const PickTeam = () => {
   };
 
   const handlePlayerConfirm = (player) => {
-    if(fantasyTeam.transfersAvailable > 0 && currentGameweek > 1){
-      setShowSelectPlayerModal(false);
-      return;
-    };
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       updatedFantasyTeam.players[selectedSlot] = player;
@@ -157,6 +153,9 @@ const PickTeam = () => {
       
         return 0;
       });
+
+      const sortedPlayers = [...updatedFantasyTeam.players].sort((a, b) => Number(b.value) - Number(a.value));
+      updatedFantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
   
       return updatedFantasyTeam;
     });
@@ -287,7 +286,7 @@ const handleConfirmBonusClick = (bonusType) => {
   const renderPlayerSlots = () => {
     let rows = [];
     let cols = [];
-    const disableSellButton = fantasyTeam.transfersAvailable <= 0 && currentGameweek > 1;
+    const disableSellButton = (fantasyTeam.transfersAvailable <= 0 && currentGameweek > 1) || (fantasyTeam.players.length == 9 && currentGameweek > 1);
     for (let i = 0; i < 12; i++) {
       const player = fantasyTeam.players[i] || null;
     
@@ -389,11 +388,6 @@ const handleConfirmBonusClick = (bonusType) => {
           updatedFantasyTeam[`${bonus.propertyName}PlayerId`] = null;
         }
       });
-
-      if (updatedFantasyTeam.captainId === playerId) {
-          const sortedPlayers = [...updatedFantasyTeam.players].sort((a, b) => Number(b.value) - Number(a.value));
-          updatedFantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
-      }
 
       return updatedFantasyTeam;
     });

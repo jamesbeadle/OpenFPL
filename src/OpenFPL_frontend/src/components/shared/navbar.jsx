@@ -19,9 +19,9 @@ const MyNavbar = () => {
   }, [isAuthenticated]);
 
   return (
-    <Navbar expand="lg">
+    <Navbar expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container>
-        <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)} onToggle={() => setExpanded(!expanded)}>
+        <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)}>
           <img src={LogoImage} alt="openFPL" style={{ maxWidth: '150px', maxHeight: '100%' }} /> <small className="small-text"><b>BETA</b></small>
         </Navbar.Brand>
     
@@ -29,20 +29,20 @@ const MyNavbar = () => {
         <Navbar.Collapse  id="responsive-navbar-nav" className="justify-content-end">
           {isAuthenticated && 
             <>
-              <Nav.Link as={Link} to="/pick-team" onClick={() => setExpanded(false)}  className="custom-nav-link">
+              <Nav.Link as={Link} to="/pick-team" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
                 Pick Team
                 <TeamIcon className="custom-icon" ></TeamIcon>
               </Nav.Link> 
-              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link">
+              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
                 Governance
                 <GovernanceIcon className="custom-icon" ></GovernanceIcon>
               </Nav.Link> 
-              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link">
+              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
                 Profile
                 <ProfileIcon className="custom-icon" ></ProfileIcon>
               </Nav.Link> 
               <Nav.Link onClick={() => {logout(); setExpanded(false);}} className="custom-nav-link mt-2 mt-md-0">
-                <button className="wallet-icon">Disconnect <WalletIcon className="custom-icon" ></WalletIcon></button>
+                <button style={{padding: 0}} className="wallet-icon">Disconnect <WalletIcon className="custom-icon" ></WalletIcon></button>
               </Nav.Link> 
             </>
           }

@@ -5,6 +5,7 @@ import TwitterIcon from '../../../assets/twitter.png';
 import DiscordIcon from '../../../assets/discord.png';
 import OpenChatIcon from '../../../assets/openchat.png';
 import TelegramLogo from '../../../assets/telegram.png';
+import GitHubLogo from '../../../assets/github.png';
 import LogoImage from '../../../assets/logo.png';
 
 const MyFooter = () => {
@@ -28,6 +29,9 @@ const MyFooter = () => {
                 </a>
                 <a href="https://t.co/vVkquMrdOu" target="_blank" rel="noopener noreferrer">
                   <img src={TelegramLogo} alt="OpenChat" className="social-icon" />
+                </a>
+                <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer">
+                  <img src={GitHubLogo} alt="GitHub" className="social-icon" />
                 </a>
             </div>
             <img src={LogoImage} alt="openFPL" style={{ maxWidth: '100px', maxHeight: '100%', marginTop: '10px' }} />

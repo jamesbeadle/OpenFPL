@@ -374,7 +374,7 @@ const AddFixtureData = () => {
                   Appearances: {fixture.appearances ? fixture.appearances : 0}
                 </Col>
                 <Col xs={12} md={3}>
-                  Goals: {fixture.appearances ? fixture.goals : 0}
+                  Goals: {fixture.goals ? fixture.goals : 0}
                 </Col>
                 <Col xs={12} md={3}>
                   Assists: {fixture.assists ? fixture.assists : 0}

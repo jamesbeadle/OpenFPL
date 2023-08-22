@@ -23,7 +23,7 @@ const Homepage = () => {
         minutes: 0,
         seconds: 0
     });
-    const [activeGameweek, setActiveGameweek] = useState(1);
+    const [filterGameweek, setFilterGameweek] = useState(1);
     const [isActiveGameweek, setIsActiveGameweek] = useState(false);
     const [shouldShowButton, setShouldShowButton] = useState(false);
     
@@ -43,7 +43,7 @@ const Homepage = () => {
         const fixturesData = await open_fpl_backend.getFixtures();
         setFixtures(fixturesData);
 
-        const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === activeGameweek);
+        const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === filterGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
         //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
         const nextKickoff = Math.min(...kickOffs) - 3600000;
@@ -73,7 +73,7 @@ const Homepage = () => {
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
         setWeeklyTop10(weeklyTop10Data);
 
-        const shouldBeVisible = isAuthenticated && (activeGameweek < currentGameweek || (activeGameweek === currentGameweek && isActiveGameweek));
+        const shouldBeVisible = isAuthenticated && (filterGameweek < currentGameweek || (filterGameweek === currentGameweek && isActiveGameweek));
         setShouldShowButton(shouldBeVisible);
 
 
@@ -82,7 +82,7 @@ const Homepage = () => {
     const fetchActiveGameweek = async () => {
         const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
         setCurrentGameweek(activeGameweekData);
-        setActiveGameweek(activeGameweekData);
+        setFilterGameweek(activeGameweekData);
     };
     
     const fetchActiveSeasonId = async () => {
@@ -96,23 +96,22 @@ const Homepage = () => {
     };
 
     const getCurrentGameweekFixtures = () => {
-        return fixtures.filter(fixture => fixture.gameweek === activeGameweek);
+        return fixtures.filter(fixture => fixture.gameweek === filterGameweek);
     };
 
     const handlePrevGameweek = () => {
-        if (activeGameweek > 1) {
-            setActiveGameweek(prevGameweek => prevGameweek - 1);
-        
-            const newGameweek = activeGameweek - 1;
+        if (filterGameweek > 1) {
+            setFilterGameweek(prevGameweek => prevGameweek - 1);
+            const newGameweek = filterGameweek - 1;
             setButtonVisibility(newGameweek);
         }
       };
       
       const handleNextGameweek = () => {
-        if (activeGameweek < 38) {
-            setActiveGameweek(nextGameweek => nextGameweek + 1);
+        if (filterGameweek < 38) {
+            setFilterGameweek(nextGameweek => nextGameweek + 1);
         
-            const newGameweek = activeGameweek + 1;
+            const newGameweek = filterGameweek + 1;
             setButtonVisibility(newGameweek);
         }
       };
@@ -253,9 +252,9 @@ const Homepage = () => {
         </Col>
         <Col xs={8} className="d-flex justify-content-end align-items-center">
             <Pagination className="my-auto"> {/* Apply my-auto to vertically center this component */}
-                <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={activeGameweek === 1} />
-                <Pagination.Item><small className='small-text'>Gameweek {activeGameweek}</small></Pagination.Item>
-                <Pagination.Next onClick={() => handleNextGameweek()} disabled={activeGameweek === 38} />
+                <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={filterGameweek === 1} />
+                <Pagination.Item><small className='small-text'>Gameweek {filterGameweek}</small></Pagination.Item>
+                <Pagination.Next onClick={() => handleNextGameweek()} disabled={filterGameweek === 38} />
             </Pagination>
         </Col>
     </Row>
@@ -306,7 +305,7 @@ const Homepage = () => {
         { 
             shouldShowButton &&
             <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
-                <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${activeGameweek}`}>View Gameweek Points</Button>
+                <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${filterGameweek}`}>View Gameweek Points</Button>
             </div>
         }
     </Card.Body>

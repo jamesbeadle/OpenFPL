@@ -1023,6 +1023,16 @@ actor Self {
         }
     };
 
+    public func addMissingPlayers() : async (){
+        
+        var updatedPlayers = players;
+
+        players := List.append(players, List.fromArray<T.Player>([
+            {id = 572; teamId = 8; firstName = "Jesurun"; lastName = "Rak-Sakyi"; shirtNumber = 49; value = 42; dateOfBirth = 1033776000000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
+            {id = 573; teamId = 8; firstName = "Naouirou"; lastName = "Ahamada"; shirtNumber = 29; value = 42; dateOfBirth = 1017360000000000000; nationality = "France"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();}
+        ]));
+    };
+
     /*
 
     public func addMissingPlayers() : async (){
