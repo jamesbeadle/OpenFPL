@@ -1,4 +1,3 @@
-type Tokens = record {amount_e8s: nat64;};
 type TeamId = nat16;
 type Team = 
  record {
@@ -35,11 +34,6 @@ type ProfileDTO =
    profilePicture: blob;
    reputation: nat32;
  };
-type PlayerValuationVote = 
- record {
-   principalId: principal;
-   votes: Tokens;
- };
 type PlayerPointsDTO = 
  record {
    events: vec PlayerEventData;
@@ -66,16 +60,6 @@ type PaginatedLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
-type List_4 = 
- opt record {
-       PlayerValuationVote;
-       List_4;
-     };
-type List_3 = 
- opt record {
-       DataSubmission;
-       List_3;
-     };
 type List_2 = 
  opt record {
        Fixture;
@@ -176,15 +160,6 @@ type Error =
    NotAuthorized;
    NotFound;
  };
-type DataSubmission = 
- record {
-   events: List;
-   fixtureId: FixtureId;
-   proposer: text;
-   timestamp: int;
-   votes_no: List_4;
-   votes_yes: List_4;
- };
 type AccountBalanceDTO = 
  record {
    fplBalance: nat64;
@@ -193,10 +168,6 @@ type AccountBalanceDTO =
 service : {
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
-  getConsensusData: () -> (vec record {
-                                 FixtureId;
-                                 List_3;
-                               });
   getCurrentGameweek: () -> (nat8);
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;

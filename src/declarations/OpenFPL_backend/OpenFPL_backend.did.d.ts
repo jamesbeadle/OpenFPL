@@ -5,14 +5,6 @@ export interface AccountBalanceDTO {
   'icpBalance' : bigint,
   'fplBalance' : bigint,
 }
-export interface DataSubmission {
-  'fixtureId' : FixtureId,
-  'votes_no' : List_4,
-  'events' : List,
-  'timestamp' : bigint,
-  'proposer' : string,
-  'votes_yes' : List_4,
-}
 export type Error = { 'DecodeError' : null } |
   { 'NotAllowed' : null } |
   { 'NotFound' : null } |
@@ -93,8 +85,6 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
-export type List_3 = [] | [[DataSubmission, List_3]];
-export type List_4 = [] | [[PlayerValuationVote, List_4]];
 export interface PaginatedLeaderboard {
   'totalEntries' : bigint,
   'seasonId' : SeasonId,
@@ -117,10 +107,6 @@ export interface PlayerPointsDTO {
   'position' : number,
   'gameweek' : GameweekNumber,
   'points' : number,
-}
-export interface PlayerValuationVote {
-  'votes' : Tokens,
-  'principalId' : Principal,
 }
 export interface ProfileDTO {
   'icpDepositAddress' : Uint8Array | number[],
@@ -152,11 +138,9 @@ export interface Team {
   'primaryColourHex' : string,
 }
 export type TeamId = number;
-export interface Tokens { 'amount_e8s' : bigint }
 export interface _SERVICE {
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
-  'getConsensusData' : ActorMethod<[], Array<[FixtureId, List_3]>>,
   'getCurrentGameweek' : ActorMethod<[], number>,
   'getCurrentSeason' : ActorMethod<[], Season>,
   'getFantasyTeam' : ActorMethod<[], FantasyTeam>,

@@ -2,8 +2,6 @@ export const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
   const List_1 = IDL.Rec();
   const List_2 = IDL.Rec();
-  const List_3 = IDL.Rec();
-  const List_4 = IDL.Rec();
   const AccountBalanceDTO = IDL.Record({
     'icpBalance' : IDL.Nat64,
     'fplBalance' : IDL.Nat64,
@@ -34,21 +32,6 @@ export const idlFactory = ({ IDL }) => {
     'gameweek' : GameweekNumber,
     'awayGoals' : IDL.Nat8,
   });
-  const Tokens = IDL.Record({ 'amount_e8s' : IDL.Nat64 });
-  const PlayerValuationVote = IDL.Record({
-    'votes' : Tokens,
-    'principalId' : IDL.Principal,
-  });
-  List_4.fill(IDL.Opt(IDL.Tuple(PlayerValuationVote, List_4)));
-  const DataSubmission = IDL.Record({
-    'fixtureId' : FixtureId,
-    'votes_no' : List_4,
-    'events' : List,
-    'timestamp' : IDL.Int,
-    'proposer' : IDL.Text,
-    'votes_yes' : List_4,
-  });
-  List_3.fill(IDL.Opt(IDL.Tuple(DataSubmission, List_3)));
   List_2.fill(IDL.Opt(IDL.Tuple(Fixture, List_2)));
   const Gameweek = IDL.Record({
     'number' : GameweekNumber,
@@ -160,11 +143,6 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'getAccountBalanceDTO' : IDL.Func([], [AccountBalanceDTO], []),
     'getActiveGameweekFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
-    'getConsensusData' : IDL.Func(
-        [],
-        [IDL.Vec(IDL.Tuple(FixtureId, List_3))],
-        [],
-      ),
     'getCurrentGameweek' : IDL.Func([], [IDL.Nat8], []),
     'getCurrentSeason' : IDL.Func([], [Season], []),
     'getFantasyTeam' : IDL.Func([], [FantasyTeam], ['query']),
