@@ -186,7 +186,6 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getWeeklyTop10' : IDL.Func([], [PaginatedLeaderboard], ['query']),
-    'initGenesisSeason' : IDL.Func([], [], []),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],

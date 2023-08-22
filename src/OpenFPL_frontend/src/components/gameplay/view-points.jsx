@@ -430,7 +430,7 @@ const ViewPoints = () => {
 
         let bonusDetails = {name: 'No Bonus Played', player: '', team: ''};
 
-        if (fantasyTeam.goalGetterGameweek === Number(gameweek)) {
+        if (fantasyTeam.goalGetterGameweek == Number(gameweek)) {
             const player = fantasyTeam.players.find(p => p.id === fantasyTeam.goalGetterPlayerId);
             if (player) {
                 bonusDetails = {
@@ -440,7 +440,7 @@ const ViewPoints = () => {
             }
         }
     
-        if (fantasyTeam.passMasterGameweek === Number(gameweek)) {
+        if (fantasyTeam.passMasterGameweek == Number(gameweek)) {
             const player = fantasyTeam.players.find(p => p.id === fantasyTeam.passMasterPlayerId);
             if (player) {
                 bonusDetails.push({
@@ -450,7 +450,7 @@ const ViewPoints = () => {
             }
         }
     
-        if (fantasyTeam.noEntryGameweek === Number(gameweek)) {
+        if (fantasyTeam.noEntryGameweek == Number(gameweek)) {
             const player = fantasyTeam.players.find(p => p.id === fantasyTeam.noEntryPlayerId);
             if (player) {
                 bonusDetails.push({
@@ -460,7 +460,7 @@ const ViewPoints = () => {
             }
         }
     
-        if (fantasyTeam.teamBoostGameweek === Number(gameweek)) {
+        if (fantasyTeam.teamBoostGameweek == Number(gameweek)) {
             const team = teams.find(t => t.id === fantasyTeam.teamBoostTeamId);
             if (team) {
                 bonusDetails.push({
@@ -470,7 +470,7 @@ const ViewPoints = () => {
             }
         }
     
-        if (fantasyTeam.safeHandsGameweek === Number(gameweek)) {
+        if (fantasyTeam.safeHandsGameweek == Number(gameweek)) {
             const player = fantasyTeam.players.find(p => p.position === 0);
             if (player) {
                 bonusDetails.push({
@@ -480,7 +480,7 @@ const ViewPoints = () => {
             }
         }
     
-        if (fantasyTeam.captainFantasticGameweek === Number(gameweek)) {
+        if (fantasyTeam.captainFantasticGameweek == Number(gameweek)) {
             const player = fantasyTeam.players.find(p => p.id === fantasyTeam.captainId);
             if (player) {
                 bonusDetails.push({
@@ -490,13 +490,13 @@ const ViewPoints = () => {
             }
         }
     
-        if (fantasyTeam.braceBonusGameweek === Number(gameweek)) {
+        if (fantasyTeam.braceBonusGameweek == Number(gameweek)) {
             bonusDetails.push({
                 name: 'Pass Master'
             });
         }
     
-        if (fantasyTeam.hatTrickHeroGameweek === Number(gameweek)) {
+        if (fantasyTeam.hatTrickHeroGameweek == Number(gameweek)) {
             bonusDetails.push({
                 name: 'Hat-trick Hero'
             });

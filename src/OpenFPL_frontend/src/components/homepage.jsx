@@ -73,6 +73,9 @@ const Homepage = () => {
     
         const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
         setWeeklyTop10(weeklyTop10Data);
+
+        
+        setButtonVisibility(currentGameweek);
     };
 
     const fetchActiveGameweek = async () => {
@@ -113,7 +116,7 @@ const Homepage = () => {
       };
 
       const setButtonVisibility = (newGameweek) => {
-        const shouldBeVisible = isAuthenticated && (newGameweek < currentGameweek || (newGameweek === currentGameweek && isActiveGameweek));
+        const shouldBeVisible = !isLoading && isAuthenticated && (newGameweek < currentGameweek || (newGameweek === currentGameweek && isActiveGameweek));
         setShouldShowButton(shouldBeVisible);
     };
     
@@ -154,10 +157,6 @@ const Homepage = () => {
         
         return () => clearInterval(timer);
     }, [currentGameweek, fixtures]);
-
-    useEffect(() => {
-        setButtonVisibility(currentGameweek)
-    }, [isActiveGameweek]);
 
     const renderStatusBadge = (fixture) => {
         const currentTime = new Date().getTime();

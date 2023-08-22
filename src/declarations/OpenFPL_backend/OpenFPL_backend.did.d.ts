@@ -172,7 +172,6 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'getWeeklyTop10' : ActorMethod<[], PaginatedLeaderboard>,
-  'initGenesisSeason' : ActorMethod<[], undefined>,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],

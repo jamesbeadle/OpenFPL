@@ -5,8 +5,8 @@ import { PlayersContext } from "../../contexts/PlayersContext";
 
 const SelectFantasyPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, positions, bonusType }) => {
   
-  const { players } = useContext(TeamsContext);
-  const { teams } = useContext(PlayersContext);
+  const { players } = useContext(PlayersContext);
+  const { teams } = useContext(TeamsContext);
   
   const filteredPlayers = positions 
   ? players.filter(player => positions.includes(player.position) && 
@@ -67,7 +67,7 @@ const description = (bonusType == 1) ? "Play your Goal Getter bonus to receive t
                 <p className='small-text m-0'>{teams.find(team => team.id === player.teamId).abbreviatedName}</p>
               </Col>
               <Col xs={2} className='d-flex align-self-center'>
-                <p className='small-text m-0'>{`£${player.value}m`}</p>
+                <p className='small-text m-0'>{`£${(Number(player.value) / 4).toFixed(2)}m`}</p>
               </Col>
               <Col xs={3} className='d-flex align-self-center'>
                 <Button className="w-100" variant="primary" onClick={() => { handleSubmit({ playerId: player.id, bonusType }); }}>

@@ -205,7 +205,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
                 <p className='small-text m-0'>{teams.find(team => team.id === player.teamId).abbreviatedName}</p>
               </Col>
               <Col xs={2} className='d-flex align-self-center'>
-                <p className='small-text m-0'>{`£${(Number(player.value) / 4).toFixed(1)}m`}</p>
+                <p className='small-text m-0'>{`£${(Number(player.value) / 4).toFixed(2)}m`}</p>
               </Col>
               <Col xs={1} className='d-flex align-self-center'>
                 <p className='small-text m-0'>{player.totalPoints}</p>

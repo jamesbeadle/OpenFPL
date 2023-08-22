@@ -896,9 +896,6 @@ actor Self {
   seasonManager.setTimerBackupFunction(setAndBackupTimer);
   governanceInstance.setFinaliseFixtureFunction(finaliseFixture);
   fantasyTeamsInstance.setGetFixturesFunction(getGameweekFixtures);
-
-
-  //IMPLEMENT: SUBMIT PROPOSAL SUBMISSION FEE ON SUBMISSION OF PROPOSAL ON FRONT END
   
   //stable variable backup
   private stable var stable_profiles: [(Text, T.Profile)] = [];
@@ -950,9 +947,13 @@ actor Self {
     stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
     stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
     stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
+    Debug.print(debug_show "Pre upgrade: stable_consensus_fixture_data");
+    Debug.print(debug_show stable_consensus_fixture_data);
   };
 
   system func postupgrade() {
+    Debug.print(debug_show "Post upgrade: stable_consensus_fixture_data");
+    Debug.print(debug_show stable_consensus_fixture_data);
     profilesInstance.setData(stable_profiles);
     fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_transfers_allowed, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
@@ -968,7 +969,6 @@ actor Self {
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
     recreateTimers();
   };
-  
   
   private func recreateTimers(){
       let currentTime = Time.now();
@@ -1007,18 +1007,12 @@ actor Self {
           }
       }
   };
-
-  
-  public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692670800000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
-    await seasonManager.init_genesis_season(firstFixture);
-  };
-  
   
   /* Functions for testing only
 
-    public func getConsensusData(): async [(T.FixtureId, List.List<T.DataSubmission>)]{
-      return governanceInstance.getFixtureDataSubmissions();
+    public func initGenesisSeasons(): async (){
+      let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692679200000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
+      await seasonManager.init_genesis_season(firstFixture);
     };
 
     public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {

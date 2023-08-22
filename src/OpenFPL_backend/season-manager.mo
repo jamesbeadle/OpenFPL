@@ -132,6 +132,8 @@ module {
     public func gameCompleted() : async () {
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
+        let timerCreatedTimes = Buffer.fromArray<Int>([]);
+        
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             if((activeFixtures[i].kickOff + (oneHour * 2)) <= Time.now() and activeFixtures[i].status == 1) {
 
@@ -140,10 +142,13 @@ module {
 
                 let votingPeriodOverDuration: Timer.Duration = #nanoseconds (Int.abs((Time.now() + EventData_VotingPeriod) - Time.now()));
                 
-                switch(setAndBackupTimer) {
-                    case (null) { };
-                    case (?actualFunction) {
-                        await actualFunction(votingPeriodOverDuration, "votingPeriodOverExpired", activeFixtures[i].id);
+                if(not Buffer.contains<Int>(timerCreatedTimes, updatedFixture.kickOff, Int.equal)){
+                    switch(setAndBackupTimer) {
+                        case (null) { };
+                        case (?actualFunction) {
+                            await actualFunction(votingPeriodOverDuration, "votingPeriodOverExpired", activeFixtures[i].id);
+                            timerCreatedTimes.add(updatedFixture.kickOff);
+                        };
                     };
                 };
             } else {
