@@ -17,11 +17,17 @@ const Fixtures = () => {
   
   useEffect(() => {
     const fetchData = async () => {
+      await fetchActiveGameweek();
       await fetchViewData();
       setIsLoading(false);
     };
     fetchData();
   }, []);
+
+  const fetchActiveGameweek = async () => {
+      const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
+      setCurrentGameweek(activeGameweekData);
+  };
   
   const fetchViewData = async () => {
     const identity = authClient.getIdentity();

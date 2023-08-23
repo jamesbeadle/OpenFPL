@@ -160,6 +160,7 @@ const handlePlayerConfirm = (player) => {
     return updatedFantasyTeam;
   });
   setRemovedPlayers(prevRemovedPlayers => prevRemovedPlayers.filter(id => id !== player.id));
+  setAddedPlayers(prevAddedPlayers => [...prevAddedPlayers, player.id]);
 
   setShowSelectPlayerModal(false);
 };

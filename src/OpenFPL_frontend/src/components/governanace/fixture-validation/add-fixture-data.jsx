@@ -5,7 +5,7 @@ import { PlayersContext } from "../../../contexts/PlayersContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
 import { useLocation } from 'react-router-dom';
 import PlayerEventsModal from '../player-events-modal';
-import PlayerSelectionModal from '../select-players-modal';
+import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,13 +36,15 @@ const AddFixtureData = () => {
 
  
   const handlePlayerSelection = (team, playerIds) => {
+    console.log(selectedPlayers)
     const currentPlayerIds = selectedPlayers[team];
     const removedPlayerIds = currentPlayerIds.filter(id => !playerIds.includes(id));
-    let remainingPlayerEventMap = playerEventMap; // Initialize remainingPlayerEventMap to be the same as the current playerEventMap
+    let remainingPlayerEventMap = { ...playerEventMap }; // Create a shallow copy of the playerEventMap
+
     if (removedPlayerIds.length > 0) {
       removedPlayerIds.forEach(removedPlayerId => {
         const {[removedPlayerId]: value, ...newRemainingPlayerEventMap} = remainingPlayerEventMap;
-        remainingPlayerEventMap = newRemainingPlayerEventMap; // Update remainingPlayerEventMap to remove the deselected player
+        remainingPlayerEventMap = newRemainingPlayerEventMap;
       });
     }
   
@@ -53,7 +55,7 @@ const AddFixtureData = () => {
       [team]: playerIds,
     }));
   
-    const newFixtureStats = calculateFixtureStats(remainingPlayerEventMap, players, fixture); // Calculate the new fixture stats with the updated playerEventMap
+    const newFixtureStats = calculateFixtureStats(remainingPlayerEventMap, players, fixture);
     setFixture(prevFixture => ({
       ...prevFixture,
       ...newFixtureStats
