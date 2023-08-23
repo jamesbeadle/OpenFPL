@@ -72,8 +72,6 @@ const ViewPoints = () => {
         } else {
             setProfilePicSrc(ProfileImage);
         }
-
-        getBonusDetails();
     };
     useEffect(() => {
         if (fantasyTeam && fantasyTeam.players) {
@@ -90,6 +88,7 @@ const ViewPoints = () => {
             );
             
             setSortedPlayers(sortedPlayers);
+            getBonusDetails();
         }
     }, [fantasyTeam]);
     
@@ -221,6 +220,7 @@ const ViewPoints = () => {
 
         var bonusName = "";
         var bonusPoints = 0;
+        var totalScore = playerDTO.points;
 
         if(fantasyTeam.goalGetterGameweek == gameweek && fantasyTeam.goalGetterPlayerId == player.id) {
             bonusName = "Goal Getter";
@@ -234,32 +234,32 @@ const ViewPoints = () => {
 
         if(fantasyTeam.noEntryGameweek == gameweek && (player.position < 2) && player.goalsConceded == 0) {
             bonusName = "No Entry";
-            bonusPoints = totalScore * 3;
+            bonusPoints = totalScore * 2;
         };
 
         if(fantasyTeam.teamBoostGameweek == gameweek && player.teamId == fantasyTeam.teamBoostTeamId) {
             bonusName = "Team Boost";
-            bonusPoints = totalScore * 2;
+            bonusPoints = totalScore;
         };
 
         if(fantasyTeam.safeHandsGameweek == gameweek && player.position == 0 && playerDTO.gameweekData.saves > 4) {
             bonusName = "Safe Hands";
-            bonusPoints = totalScore * 3;
+            bonusPoints = totalScore * 2;
         };
 
         if(fantasyTeam.captainFantasticGameweek == gameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0) {
             bonusName = "Captain Fantastic";
-            bonusPoints = totalScore * 2;
+            bonusPoints = totalScore;
         };
 
         if(fantasyTeam.braceBonusGameweek == gameweek && playerDTO.gameweekData.goals >= 2) {
             bonusName = "Brace Bonus";
-            bonusPoints = totalScore * 2;
+            bonusPoints = totalScore;
         };
 
         if(fantasyTeam.hatTrickHeroGameweek == gameweek && playerDTO.gameweekData.goals >= 3) {
             bonusName = "Hat-trick Hero";
-            bonusPoints = totalScore * 3;
+            bonusPoints = totalScore * 2;
         };
     
         return (
@@ -389,8 +389,7 @@ const ViewPoints = () => {
             score = score * 3; 
         }
     
-        if (fantasyTeamDTO.safeHandsGameweek === playerDTO.gameweek && fantasyTeamDTO.safeHandsPlayerId === playerDTO.id && 
-            playerDTO.position === 0 && playerDTO.gameweekData.saves >= 5) {
+        if (fantasyTeamDTO.safeHandsGameweek === playerDTO.gameweek && playerDTO.position === 0 && playerDTO.gameweekData.saves >= 5) {
             score = score * 3;
         }
     
@@ -427,79 +426,81 @@ const ViewPoints = () => {
     };
 
     const getBonusDetails = () => {
-
+        if(fantasyTeam.players.length == 0){
+            return;
+        }
+        
         let bonusDetails = {name: 'No Bonus Played', player: '', team: ''};
-
         if (fantasyTeam.goalGetterGameweek == Number(gameweek)) {
-            const player = fantasyTeam.players.find(p => p.id === fantasyTeam.goalGetterPlayerId);
+            const player = players.find(p => p.id === fantasyTeam.goalGetterPlayerId);
             if (player) {
                 bonusDetails = {
                     name: 'Goal Getter',
-                    player: `${player.firstName} ${player.lastName}`
+                    player: `${player.firstName.charAt(0)}. ${player.lastName}`
                 };
             }
         }
     
         if (fantasyTeam.passMasterGameweek == Number(gameweek)) {
-            const player = fantasyTeam.players.find(p => p.id === fantasyTeam.passMasterPlayerId);
+            const player = players.find(p => p.id === fantasyTeam.passMasterPlayerId);
             if (player) {
-                bonusDetails.push({
+                bonusDetails = {
                     name: 'Pass Master',
-                    player: `${player.firstName} ${player.lastName}`
-                });
+                    player: `${player.firstName.charAt(0)}. ${player.lastName}`
+                };
             }
         }
     
         if (fantasyTeam.noEntryGameweek == Number(gameweek)) {
-            const player = fantasyTeam.players.find(p => p.id === fantasyTeam.noEntryPlayerId);
+            const player = players.find(p => p.id === fantasyTeam.noEntryPlayerId);
             if (player) {
-                bonusDetails.push({
+                bonusDetails = {
                     name: 'No Entry',
-                    player: `${player.firstName} ${player.lastName}`
-                });
+                    player: `${player.firstName.charAt(0)}. ${player.lastName}`
+                };
             }
         }
     
         if (fantasyTeam.teamBoostGameweek == Number(gameweek)) {
             const team = teams.find(t => t.id === fantasyTeam.teamBoostTeamId);
             if (team) {
-                bonusDetails.push({
+                bonusDetails = {
                     name: 'Team Boost',
                     player: `${team.friendlyName}`
-                });
+                };
             }
         }
     
         if (fantasyTeam.safeHandsGameweek == Number(gameweek)) {
-            const player = fantasyTeam.players.find(p => p.position === 0);
-            if (player) {
-                bonusDetails.push({
+            const goalkeeper = players.find(p => fantasyTeam.playerIds.includes(p.id) && p.position === 0);
+            if (goalkeeper) {
+                bonusDetails = {
                     name: 'Safe Hands',
-                    player: `${player.firstName} ${player.lastName}`
-                });
+                    player: `${goalkeeper.firstName.charAt(0)}. ${goalkeeper.lastName}`
+                };
             }
         }
     
         if (fantasyTeam.captainFantasticGameweek == Number(gameweek)) {
-            const player = fantasyTeam.players.find(p => p.id === fantasyTeam.captainId);
+            const player = players.find(p => p.id === fantasyTeam.captainId);
             if (player) {
-                bonusDetails.push({
+                bonusDetails = {
                     name: 'Captain Fantastic',
-                    player: `${player.firstName} ${player.lastName}`
-                });
+                    player: `${player.firstName.charAt(0)}. ${player.lastName}`
+                };
             }
         }
     
         if (fantasyTeam.braceBonusGameweek == Number(gameweek)) {
-            bonusDetails.push({
+            bonusDetails = {
                 name: 'Pass Master'
-            });
+            };
         }
     
         if (fantasyTeam.hatTrickHeroGameweek == Number(gameweek)) {
-            bonusDetails.push({
+            bonusDetails = {
                 name: 'Hat-trick Hero'
-            });
+            };
         }
         
         setGameweekBonus(bonusDetails);

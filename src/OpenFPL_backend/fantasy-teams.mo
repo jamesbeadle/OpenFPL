@@ -1128,20 +1128,20 @@ module {
 
         func calculateGoalPoints(position: Nat8, goalsScored: Int16) : Int16 {
             switch (position) {
-                case 0 { return 20 * goalsScored; };
-                case 1 { return 20 * goalsScored; };
-                case 2 { return 15 * goalsScored; };
-                case 3 { return 10 * goalsScored; };
+                case 0 { return 40 * goalsScored; };
+                case 1 { return 40 * goalsScored; };
+                case 2 { return 30 * goalsScored; };
+                case 3 { return 20 * goalsScored; };
                 case _ { return 0; };
             };
         };
 
         func calculateAssistPoints(position: Nat8, assists: Int16) : Int16 {
             switch (position) {
-                case 0 { return 15 * assists; };
-                case 1 { return 15 * assists; };
-                case 2 { return 10 * assists; };
-                case 3 { return 10 * assists; };
+                case 0 { return 30 * assists; };
+                case 1 { return 30 * assists; };
+                case 2 { return 20 * assists; };
+                case 3 { return 20 * assists; };
                 case _ { return 0; };
             };
         };
@@ -1202,60 +1202,6 @@ module {
         public func recalculateSnapshotTotals() : async (){
             await calculateFantasyTeamScores(1,1);
             await calculateFantasyTeamScores(1,2);
-        };
-
-        public func resetGameweek1SnapshotPoints() : async (){
-            var updatedFantasyTeams: HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
-
-            for ((key, value) in fantasyTeams.entries()) {
-                let updatedFantasyTeam: T.UserFantasyTeam = {
-                    fantasyTeam = value.fantasyTeam;
-                    history = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(value.history, func(season: T.FantasyTeamSeason): T.FantasyTeamSeason {
-                        if(season.seasonId == 1){
-
-                            let updatedGameweeks = List.map<T.FantasyTeamSnapshot,T.FantasyTeamSnapshot>(season.gameweeks, func(snapshot: T.FantasyTeamSnapshot){
-                                if(snapshot.gameweek == 1){
-                                    return {
-                                        bankBalance = snapshot.bankBalance;
-                                        braceBonusGameweek = snapshot.braceBonusGameweek;
-                                        captainFantasticGameweek = snapshot.captainFantasticGameweek;
-                                        captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
-                                        captainId = snapshot.captainId;
-                                        gameweek = snapshot.gameweek;
-                                        goalGetterGameweek = snapshot.goalGetterGameweek;
-                                        goalGetterPlayerId = snapshot.goalGetterPlayerId;
-                                        hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
-                                        noEntryGameweek = snapshot.noEntryGameweek;
-                                        noEntryPlayerId = snapshot.noEntryPlayerId;
-                                        passMasterGameweek = snapshot.passMasterGameweek;
-                                        passMasterPlayerId = snapshot.passMasterPlayerId;
-                                        playerIds = snapshot.playerIds;
-                                        points = 0;
-                                        principalId = snapshot.principalId;
-                                        safeHandsGameweek = snapshot.safeHandsGameweek;
-                                        safeHandsPlayerId = snapshot.safeHandsPlayerId;
-                                        teamBoostGameweek = snapshot.teamBoostGameweek;
-                                        teamBoostTeamId = snapshot.teamBoostTeamId;
-                                        transfersAvailable = snapshot.transfersAvailable;
-                                    }
-
-                                } else { return snapshot; };
-                                
-                            });
-
-                            return {
-                                seasonId = season.seasonId;
-                                gameweeks = updatedGameweeks;
-                                totalPoints = 0;
-                            };
-                        } else {return season };
-                    });
-                };
-                
-                updatedFantasyTeams.put(key,updatedFantasyTeam);
-            };
-
-            fantasyTeams := updatedFantasyTeams;
         };
         
     };

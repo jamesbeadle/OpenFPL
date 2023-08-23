@@ -381,25 +381,5 @@ module {
         return await seasonsInstance.getFixture(getSeasonId, getGameweekNumber, fixtureId);
     };
     
-
-    //TEST ONLY REMOVE
-    public func savePlayerEventData(seasonId: Nat16, gameweek: Nat8, fixtureId: Nat32, playerEventData: List.List<T.PlayerEventData>) : async T.Fixture {
-        return await seasonsInstance.savePlayerEventData(seasonId, gameweek, fixtureId, playerEventData);
-    };
-
-    public func recalculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture {
-        return await calculatePlayerScores(seasonId, gameweek, fixture);
-    };
-
-    public func updateHighestPlayerId(seasonId: Nat16, gameweek: Nat8, updatedFixture: T.Fixture) : async () {
-        await seasonsInstance.updateHighestPlayerId(seasonId, gameweek, updatedFixture);
-    };
-
-    /* For testing only
-    public func recalculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8) : async () {
-        await calculateFantasyTeamScores(seasonId, gameweek);
-    };
-    */
-
   };
 }

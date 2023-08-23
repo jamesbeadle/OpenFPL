@@ -2,6 +2,8 @@ export const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
   const List_1 = IDL.Rec();
   const List_2 = IDL.Rec();
+  const List_3 = IDL.Rec();
+  const List_4 = IDL.Rec();
   const AccountBalanceDTO = IDL.Record({
     'icpBalance' : IDL.Nat64,
     'fplBalance' : IDL.Nat64,
@@ -91,6 +93,17 @@ export const idlFactory = ({ IDL }) => {
     'captainId' : IDL.Nat16,
     'points' : IDL.Int16,
   });
+  List_4.fill(IDL.Opt(IDL.Tuple(FantasyTeamSnapshot, List_4)));
+  const FantasyTeamSeason = IDL.Record({
+    'seasonId' : SeasonId,
+    'gameweeks' : List_4,
+    'totalPoints' : IDL.Int16,
+  });
+  List_3.fill(IDL.Opt(IDL.Tuple(FantasyTeamSeason, List_3)));
+  const UserFantasyTeam = IDL.Record({
+    'fantasyTeam' : FantasyTeam,
+    'history' : List_3,
+  });
   const PlayerPointsDTO = IDL.Record({
     'id' : IDL.Nat16,
     'events' : IDL.Vec(PlayerEventData),
@@ -151,6 +164,11 @@ export const idlFactory = ({ IDL }) => {
         [FantasyTeamSnapshot],
         [],
       ),
+    'getFantasyTeams' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, UserFantasyTeam))],
+        [],
+      ),
     'getFixture' : IDL.Func(
         [SeasonId, GameweekNumber, FixtureId],
         [Fixture],
@@ -187,6 +205,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getWeeklyTop10' : IDL.Func([], [PaginatedLeaderboard], ['query']),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'recalculateSnapshotTotals' : IDL.Func([], [], []),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
         [Result],

@@ -56,7 +56,7 @@ const PickTeam = () => {
   const isTeamValid = invalidTeamMessage === null;
   const [transfersActive, setTransfersAllowed] = useState(true);
   const [removedPlayers, setRemovedPlayers] = useState([]);
-
+  const [addedPlayers, setAddedPlayers] = useState([]);
 
   useEffect(() => {
     if(players.length == 0 || teams.length == 0){
@@ -125,46 +125,46 @@ const PickTeam = () => {
 };
 
   
-  const handlePlayerSelection = (slotNumber) => {
-    setSelectedSlot(slotNumber);
-    setShowSelectPlayerModal(true);
-  };
+const handlePlayerSelection = (slotNumber) => {
+  setSelectedSlot(slotNumber);
+  setShowSelectPlayerModal(true);
+};
 
-  const handlePlayerConfirm = (player) => {
-    setFantasyTeam(prevFantasyTeam => {
-      const updatedFantasyTeam = {...prevFantasyTeam};
-      updatedFantasyTeam.players[selectedSlot] = player;
-      updatedFantasyTeam.bankBalance -= Number(player.value) / 4;
+const handlePlayerConfirm = (player) => {
+  setFantasyTeam(prevFantasyTeam => {
+    const updatedFantasyTeam = {...prevFantasyTeam};
+    updatedFantasyTeam.players[selectedSlot] = player;
+    updatedFantasyTeam.bankBalance -= Number(player.value) / 4;
 
-      if (!removedPlayers.includes(player.id)) {
-        updatedFantasyTeam.transfersAvailable -= 1;
+    if (!removedPlayers.includes(player.id)) {
+      updatedFantasyTeam.transfersAvailable -= 1;
+    }
+
+    updatedFantasyTeam.players.sort((a, b) => {
+      if (a.position < b.position) {
+        return -1;
+      } else if (a.position > b.position) {
+        return 1;
       }
-
-      updatedFantasyTeam.players.sort((a, b) => {
-        if (a.position < b.position) {
-          return -1;
-        } else if (a.position > b.position) {
-          return 1;
-        }
-        
-        if (a.position === b.position) {
-          return Number(b.value) - Number(a.value);
-        }
       
-        return 0;
-      });
-
-      const sortedPlayers = [...updatedFantasyTeam.players].sort((a, b) => Number(b.value) - Number(a.value));
-      updatedFantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
-  
-      return updatedFantasyTeam;
+      if (a.position === b.position) {
+        return Number(b.value) - Number(a.value);
+      }
+    
+      return 0;
     });
-    setRemovedPlayers(prevRemovedPlayers => prevRemovedPlayers.filter(id => id !== player.id));
 
-    setShowSelectPlayerModal(false);
-  };
+    const sortedPlayers = [...updatedFantasyTeam.players].sort((a, b) => Number(b.value) - Number(a.value));
+    updatedFantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
+
+    return updatedFantasyTeam;
+  });
+  setRemovedPlayers(prevRemovedPlayers => prevRemovedPlayers.filter(id => id !== player.id));
+
+  setShowSelectPlayerModal(false);
+};
   
-  const handleBonusClick = (bonusId) => {
+const handleBonusClick = (bonusId) => {
     // Check if a bonus has already been applied for the current gameweek
     if (bonuses.some(bonus => fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek)) {
         return;
@@ -286,10 +286,10 @@ const handleConfirmBonusClick = (bonusType) => {
   const renderPlayerSlots = () => {
     let rows = [];
     let cols = [];
-    const disableSellButton = (fantasyTeam.transfersAvailable <= 0 && currentGameweek > 1) || (fantasyTeam.players.length == 9 && currentGameweek > 1);
+    
     for (let i = 0; i < 12; i++) {
       const player = fantasyTeam.players[i] || null;
-    
+      let disableSellButton = player ? ((fantasyTeam.transfersAvailable <= 0 && currentGameweek > 1) || (fantasyTeam.players.length == 9 && currentGameweek > 1)) && !addedPlayers.includes(player.id) : false; 
       if(i === 11) {
         cols.push(
           <Col md={3} key={'save'} className="d-flex align-items-center">
@@ -393,7 +393,7 @@ const handleConfirmBonusClick = (bonusType) => {
     });
 
     setRemovedPlayers(prevRemovedPlayers => [...prevRemovedPlayers, playerId]);
-
+    setAddedPlayers(prevAddedPlayers => prevAddedPlayers.filter(id => id !== playerId));
   };
   
   const calculateTeamValue = () => {

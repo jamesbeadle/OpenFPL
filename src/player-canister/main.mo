@@ -126,15 +126,15 @@ actor Self {
                         if (gw.number == gameweek) {
                             points := gw.points;
                             events := gw.events;
-                        };
 
-                        for (event in Iter.fromList(gw.events)) {
-                            switch (event.eventType) {
-                                case (1) { goalsScored += 1; }; 
-                                case (2) { assists += 1; };
-                                case (3) { goalsConceded += 1; };
-                                case (4) { saves += 1; };
-                                case _ {};
+                            for (event in Iter.fromList(gw.events)) {
+                                switch (event.eventType) {
+                                    case (1) { goalsScored += 1; }; 
+                                    case (2) { assists += 1; };
+                                    case (3) { goalsConceded += 1; };
+                                    case (4) { saves += 1; };
+                                    case _ {};
+                                };
                             };
                         };
                     }

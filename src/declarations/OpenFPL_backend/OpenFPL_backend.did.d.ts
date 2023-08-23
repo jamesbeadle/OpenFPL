@@ -32,6 +32,11 @@ export interface FantasyTeam {
   'passMasterPlayerId' : PlayerId,
   'captainId' : PlayerId,
 }
+export interface FantasyTeamSeason {
+  'seasonId' : SeasonId,
+  'gameweeks' : List_4,
+  'totalPoints' : number,
+}
 export interface FantasyTeamSnapshot {
   'playerIds' : Uint16Array | number[],
   'goalGetterPlayerId' : PlayerId,
@@ -85,6 +90,8 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
+export type List_3 = [] | [[FantasyTeamSeason, List_3]];
+export type List_4 = [] | [[FantasyTeamSnapshot, List_4]];
 export interface PaginatedLeaderboard {
   'totalEntries' : bigint,
   'seasonId' : SeasonId,
@@ -138,6 +145,10 @@ export interface Team {
   'primaryColourHex' : string,
 }
 export type TeamId = number;
+export interface UserFantasyTeam {
+  'fantasyTeam' : FantasyTeam,
+  'history' : List_3,
+}
 export interface _SERVICE {
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
@@ -148,6 +159,7 @@ export interface _SERVICE {
     [string, number, number],
     FantasyTeamSnapshot
   >,
+  'getFantasyTeams' : ActorMethod<[], Array<[string, UserFantasyTeam]>>,
   'getFixture' : ActorMethod<[SeasonId, GameweekNumber, FixtureId], Fixture>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
   'getFixturesByWeek' : ActorMethod<[SeasonId, GameweekNumber], Array<Fixture>>,
@@ -173,6 +185,7 @@ export interface _SERVICE {
   >,
   'getWeeklyTop10' : ActorMethod<[], PaginatedLeaderboard>,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
+  'recalculateSnapshotTotals' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

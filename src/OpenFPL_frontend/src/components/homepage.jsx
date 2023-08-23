@@ -43,7 +43,7 @@ const Homepage = () => {
         const fixturesData = await open_fpl_backend.getFixtures();
         setFixtures(fixturesData);
 
-        const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === filterGameweek);
+        const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
         const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
         //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
         const nextKickoff = Math.min(...kickOffs) - 3600000;
