@@ -152,7 +152,6 @@ export const idlFactory = ({ IDL }) => {
     'firstName' : IDL.Text,
   });
   return IDL.Service({
-    'addMissingPlayers' : IDL.Func([], [], []),
     'calculatePlayerScores' : IDL.Func(
         [IDL.Nat16, IDL.Nat8, Fixture],
         [Fixture],
