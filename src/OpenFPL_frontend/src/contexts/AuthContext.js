@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const OLD_MAINNET_IDENTITY_SERVICE_URL = "https://identity.ic0.app";
   const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
-  const NNS_IC_APP_DERIVATION_ORIGIN = "https://nns.ic0.app";
+  const NNS_IC_APP_DERIVATION_ORIGIN = "https://bgpwv-eqaaa-aaaal-qb6eq-cai.icp0.io";
   
   
   const getIdentityProvider = () => {
