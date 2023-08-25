@@ -142,6 +142,11 @@ module.exports = {
           from: `src/${frontendDirectory}/assets/.well-known/ic-domains`,
           to: ".well-known/ic-domains",
           noErrorOnMissing: true
+        },
+        {
+          from: `src/${frontendDirectory}/assets/.well-known/ii-alternative-origins`,
+          to: ".well-known/ii-alternative-origins",
+          noErrorOnMissing: true
         }
       ],
     }),
