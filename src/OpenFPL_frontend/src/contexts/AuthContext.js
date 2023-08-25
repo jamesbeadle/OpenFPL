@@ -9,6 +9,24 @@ export const AuthProvider = ({ children }) => {
   const [userPrincipal, setUserPrincipal] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const OLD_MAINNET_IDENTITY_SERVICE_URL = "https://identity.ic0.app";
+  const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
+  const NNS_IC_APP_DERIVATION_ORIGIN = "https://nns.ic0.app";
+  
+  
+  const getIdentityProvider = () => {
+    if (location.host === "nns.ic0.app") {
+      return OLD_MAINNET_IDENTITY_SERVICE_URL;
+    }
+    return process.env.II_URL;
+  };
+
+  const isNnsAlternativeOrigin = () => {
+    return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
+  };
+
+  
+
   const deleteIndexedDB = (dbName) => {
     return new Promise((resolve, reject) => {
       const request = window.indexedDB.deleteDatabase(dbName);
@@ -66,7 +84,10 @@ export const AuthProvider = ({ children }) => {
 
   const login = async () => {
     await authClient.login({
-      identityProvider: process.env.II_URL,
+      identityProvider: getIdentityProvider(),
+      ...(isNnsAlternativeOrigin() && {
+        derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN,
+      }),
       maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
       onSuccess: async () => {
         const newPrincipal = await authClient.getIdentity().getPrincipal();
