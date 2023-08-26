@@ -44,7 +44,7 @@ const Homepage = () => {
         setFixtures(fixturesData);
 
         const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
-        const kickOffs = currentFixtures.map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
+        const kickOffs = currentFixtures.map(fixture => computeTimeLeft(Number(fixture.kickOff)));
         //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
         const nextKickoff = Math.min(...kickOffs) - 3600000;
         const currentTime = new Date().getTime();
@@ -121,12 +121,14 @@ const Homepage = () => {
     };
     
     
-
-      const nanoSecondsToMillis = (nanos) => nanos / 1000000; // Convert nanoseconds to milliseconds
-        const computeTimeLeft = (kickoff) => {
-            const now = new Date().getTime();
-            const distance = kickoff - now;
-
+    const nanoSecondsToMillis = (nanos) => {
+        return Number(BigInt(nanos) / BigInt(1000000)); // Convert nanoseconds to milliseconds
+    };
+    
+    const computeTimeLeft = (kickoff) => {
+        const now = new Date().getTime();
+        const distance = kickoff - now;
+    
         return {
             days: Math.floor(distance / (1000 * 60 * 60 * 24)),
             hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
@@ -134,10 +136,11 @@ const Homepage = () => {
             seconds: Math.floor((distance % (1000 * 60)) / 1000)
         };
     };
+    
 
     useEffect(() => {
         const timer = setInterval(() => {
-            const kickOffs = getCurrentGameweekFixtures().map(fixture => nanoSecondsToMillis(Number(fixture.kickOff)));
+            const kickOffs = getCurrentGameweekFixtures().map(fixture => computeTimeLeft(Number(fixture.kickOff)));
             if(kickOffs.length == 0){
                 return;
             };
@@ -160,7 +163,7 @@ const Homepage = () => {
 
     const renderStatusBadge = (fixture) => {
         const currentTime = new Date().getTime();
-        const kickoffTime = nanoSecondsToMillis(Number(fixture.kickOff));
+        const kickoffTime = computeTimeLeft(Number(fixture.kickOff));
         const oneHourInMilliseconds = 3600000;
     
         // Check if status is 0 and the time difference is less than an hour
@@ -199,8 +202,19 @@ const Homepage = () => {
                 );
         }
     };
+
+    const groupByDate = (fixtures) => {
+        return fixtures.reduce((acc, fixture) => {
+            const date = (new Date(nanoSecondsToMillis(fixture.kickOff))).toDateString();
+            if (!acc[date]) {
+                acc[date] = [];
+            }
+            acc[date].push(fixture);
+            return acc;
+        }, {});
+    }
     
-    
+    const groupedFixtures = groupByDate(getCurrentGameweekFixtures());
     
     const totalPrizePool = 0;
 
@@ -246,71 +260,77 @@ const Homepage = () => {
                     </Row>
                 
                     <Card className="mb-4">
-                    <Card.Header>
-    <Row className="align-items-center p-2">
-        <Col xs={4}>
-            Fixtures
-        </Col>
-        <Col xs={8} className="d-flex justify-content-end align-items-center">
-            <Pagination className="my-auto"> {/* Apply my-auto to vertically center this component */}
-                <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={filterGameweek === 1} />
-                <Pagination.Item><small className='small-text'>Gameweek {filterGameweek}</small></Pagination.Item>
-                <Pagination.Next onClick={() => handleNextGameweek()} disabled={filterGameweek === 38} />
-            </Pagination>
-        </Col>
-    </Row>
-</Card.Header>
+                        <Card.Header>
+                            <Row className="align-items-center p-2">
+                                <Col xs={4}>
+                                    Fixtures
+                                </Col>
+                                <Col xs={8} className="d-flex justify-content-end align-items-center">
+                                    <Pagination className="my-auto">
+                                        <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={filterGameweek === 1} />
+                                        <Pagination.Item><small className='small-text'>Gameweek {filterGameweek}</small></Pagination.Item>
+                                        <Pagination.Next onClick={() => handleNextGameweek()} disabled={filterGameweek === 38} />
+                                    </Pagination>
+                                </Col>
+                            </Row>
+                        </Card.Header>
 
-    <Card.Body>
+                        <Card.Body>
 
-        <Table responsive >
-            <tbody>
-            {getCurrentGameweekFixtures().map((fixture, idx) => {
-                const homeTeam = getTeamById(fixture.homeTeamId);
-                const awayTeam = getTeamById(fixture.awayTeamId);
-                
-                if(!homeTeam || !awayTeam) {
-                    console.error("One of the teams is missing for fixture: ", fixture);
-                    return null;
-                }
-
-                return (
-                    
-                    <tr key={idx} className="align-middle">
-                        
-                        <td className="home-team-name" style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>
-
-                        <td className="home-team-icon text-center">
-                            <SmallFixtureIcon 
-                                primaryColour={homeTeam.primaryColourHex}
-                                secondaryColour={homeTeam.secondaryColourHex} 
-                            />
-                        </td>
-                        <td className="text-center align-self-center v-symbol">v</td>
-                        <td className="text-center away-team-icon">
-                            <SmallFixtureIcon 
-                                primaryColour={awayTeam.primaryColourHex}
-                                secondaryColour={awayTeam.secondaryColourHex} 
-                            />
-                        </td>
-                        <td className="away-team-name">{awayTeam.friendlyName}</td>
-                        <td className="text-muted text-center score">{fixture.status == 3 ? `${fixture.homeGoals}-${fixture.awayGoals}` : '-'}</td>
-                        <td className='text-center status'>
-                            {renderStatusBadge(fixture)}
-                        </td>
+                        <Table responsive>
+    <tbody>
+        {Object.entries(groupedFixtures).map(([date, fixturesForDate], dateIdx) => {
+            return (
+                <React.Fragment key={dateIdx}>
+                    <tr>
+                        <td colSpan="5" className="date-header text-center small-text">{date}</td>
+                        <td colSpan="2"></td>
                     </tr>
-                );
-            })}
-            </tbody>
-        </Table>
-        { 
-            shouldShowButton &&
-            <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
-                <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${filterGameweek}`}>View Gameweek Points</Button>
-            </div>
-        }
-    </Card.Body>
-</Card>
+                    {fixturesForDate.map((fixture, idx) => {
+                        const homeTeam = getTeamById(fixture.homeTeamId);
+                        const awayTeam = getTeamById(fixture.awayTeamId);
+                        if (!homeTeam || !awayTeam) {
+                            console.error("One of the teams is missing for fixture: ", fixture);
+                            return null;
+                        }
+                        return (
+                            <tr key={idx} className="align-middle">
+                                <td className="home-team-name" style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>
+                                <td className="home-team-icon text-center">
+                                    <SmallFixtureIcon
+                                        primaryColour={homeTeam.primaryColourHex}
+                                        secondaryColour={homeTeam.secondaryColourHex}
+                                    />
+                                </td>
+                                <td className="text-center align-self-center v-symbol">v</td>
+                                <td className="text-center away-team-icon">
+                                    <SmallFixtureIcon
+                                        primaryColour={awayTeam.primaryColourHex}
+                                        secondaryColour={awayTeam.secondaryColourHex}
+                                    />
+                                </td>
+                                <td className="away-team-name">{awayTeam.friendlyName}</td>
+                                <td className="text-muted text-center score">{fixture.status === 3 ? `${fixture.homeGoals}-${fixture.awayGoals}` : '-'}</td>
+                                <td className='text-center status'>
+                                    {renderStatusBadge(fixture)}
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </React.Fragment>
+            );
+        })}
+    </tbody>
+</Table>
+
+                            { 
+                                shouldShowButton &&
+                                <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
+                                    <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${filterGameweek}`}>View Gameweek Points</Button>
+                                </div>
+                            }
+                        </Card.Body>
+                    </Card>
 
 
                 </Col>
