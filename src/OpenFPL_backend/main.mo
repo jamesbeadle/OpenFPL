@@ -1011,7 +1011,11 @@ actor Self {
   
   
   /* Functions for testing only
-
+  
+  public func atmpResetTransfers(): async () {
+    await resetTransfers();
+  };
+  
   public func recalculateSnapshotTotals() : async (){
     await fantasyTeamsInstance.recalculateSnapshotTotals();
   };
