@@ -24,49 +24,29 @@ export const AuthProvider = ({ children }) => {
     return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
   };
 
-  const deleteIndexedDB = (dbName) => {
-    return new Promise((resolve, reject) => {
-      const request = window.indexedDB.deleteDatabase(dbName);
-    
-      request.onsuccess = () => {
-        console.log('IndexedDB successfully deleted');
-        window.location.reload();
-        resolve();
-      };
-  
-      request.onerror = (event) => {
-        console.error('Error deleting IndexedDB:', event);
-        reject(event);
-      };
-  
-      request.onblocked = () => {
-        console.warn('IndexedDB delete request blocked. Please close all other tabs using the database.');
-      };
-    });
+  const initAuthClient = async () => {
+    try{
+      const authClient = await AuthClient.create({
+        idleOptions: {
+          idleTimeout: 1000 * 60 * 60
+        }
+      });
+      await checkLoginStatus(authClient);
+      setAuthClient(authClient);
+    }
+    catch (error){
+      console.error('Error during AuthClient initialization:', error);
+      await deleteIndexedDB('auth-client-db');
+    }
+    finally{
+      setLoading(false);
+    }
   };
- 
+
   useEffect(() => {
-    const initAuthClient = async () => {
-      try{
-        const authClient = await AuthClient.create({
-          idleOptions: {
-            idleTimeout: 1000 * 60 * 60
-          }
-        });
-        await checkLoginStatus(authClient);
-        setAuthClient(authClient);
-      }
-      catch (error){
-        console.error('Error during AuthClient initialization:', error);
-        await deleteIndexedDB('auth-client-db');
-      }
-      finally{
-        setLoading(false);
-      }
-    };
     initAuthClient();
   }, []);
-  
+
   useEffect(() => {
     if (!authClient) return;
 
@@ -74,60 +54,65 @@ export const AuthProvider = ({ children }) => {
       checkLoginStatus(authClient);
     }, 60000);
 
-    return () => {
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [authClient]);
 
   const login = async () => {
-    await authClient.login({
-      identityProvider: getIdentityProvider(),
-      ...(isNnsAlternativeOrigin() && {
-        derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN,
-      }),
-      maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
-      onSuccess: async () => {
-        const newPrincipal = await authClient.getIdentity().getPrincipal();
-        setUserPrincipal(newPrincipal.toText());
-        setIsAuthenticated(true);
-      }
-    });
+    try {
+      await authClient.login({
+        identityProvider: getIdentityProvider(),
+        ...(isNnsAlternativeOrigin() && {
+          derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN,
+        }),
+        maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
+        onSuccess: async () => {
+          const principal = await authClient.getIdentity().getPrincipal();
+          setUserPrincipal(principal.toText());
+          setIsAuthenticated(true);
+        }
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+    }
   };
 
   const logout = async () => {
-    await authClient.logout();
-    setUserPrincipal("");
-    setIsAuthenticated(false);
+    try {
+      await authClient.logout();
+      setUserPrincipal("");
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
-
   const checkLoginStatus = async (client) => {
-    if(client == null){
-      return false;
-    }
+    if (!client) return;
+
     const isLoggedIn = await client.isAuthenticated();
     if (isLoggedIn && isTokenValid(client)) {
+      const principal = await client.getIdentity().getPrincipal(); 
+      setUserPrincipal(principal.toText());
       setIsAuthenticated(true);
-      const newPrincipal = await client.getIdentity().getPrincipal(); 
-      setUserPrincipal(newPrincipal.toText());
-      return true;
     } else {
-      return false;
+      setUserPrincipal("");
+      setIsAuthenticated(false);
     }
   };
 
   const isTokenValid = (client) => {
     try {
       const identity = client.getIdentity();
-      if (!identity || !identity._delegation || !identity._delegation.delegations) return false;
+      if (!identity) return false;
 
-      const delegation = identity._delegation.delegations[0];
+      const delegation = identity._delegation?.delegations?.[0];
       if (!delegation) return false;
 
       const expiration = BigInt(delegation.delegation.expiration);
       const currentTime = BigInt(Date.now() * 1000000);
       return currentTime < expiration;
     } catch (error) {
+      console.error('Token validation error:', error);
       return false;
     }
   };
