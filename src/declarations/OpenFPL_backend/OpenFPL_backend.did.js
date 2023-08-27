@@ -178,7 +178,6 @@ export const idlFactory = ({ IDL }) => {
     'getSeasons' : IDL.Func([], [IDL.Vec(Season)], ['query']),
     'getTeams' : IDL.Func([], [IDL.Vec(Team)], ['query']),
     'getTotalManagers' : IDL.Func([], [IDL.Nat], ['query']),
-    'getTransfersAllowed' : IDL.Func([], [IDL.Bool], ['query']),
     'getValidatableFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
     'getWeeklyLeaderboard' : IDL.Func(
         [IDL.Nat16, IDL.Nat8, IDL.Nat, IDL.Nat],

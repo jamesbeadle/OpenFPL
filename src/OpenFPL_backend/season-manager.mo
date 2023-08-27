@@ -34,8 +34,7 @@ module {
 
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
-    private var transfersAllowed: Bool = true;
-
+    
     //timer data
     private var activeFixtures: [T.Fixture] = [];
     
@@ -59,11 +58,10 @@ module {
     };
 
 
-    public func setData(stable_seasons: [T.Season], stable_active_season_id: Nat16, stable_active_gameweek: Nat8, stable_transfers_allowed: Bool, 
+    public func setData(stable_seasons: [T.Season], stable_active_season_id: Nat16, stable_active_gameweek: Nat8, 
         stable_active_fixtures: [T.Fixture], stable_next_fixture_id: Nat32, stable_next_season_id: Nat16){
             activeSeasonId := stable_active_season_id;
             activeGameweek :=  stable_active_gameweek; 
-            transfersAllowed :=  stable_transfers_allowed; 
             activeFixtures := stable_active_fixtures; 
             seasonsInstance.setSeasons(stable_seasons);
             seasonsInstance.setNextFixtureId(stable_next_fixture_id);
@@ -87,9 +85,10 @@ module {
     };
 
     public func gameweekBegin() : async (){
-        transfersAllowed := false;
-
+        
         await snapshotGameweek(activeSeasonId, activeGameweek);
+        
+        await resetTransfers();
 
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         var gameKickOffTimers = List.nil<T.TimerInfo>(); 
@@ -227,12 +226,9 @@ module {
 
     private func gameweekVerified() : async (){
           
-        await resetTransfers();
         //await revaluePlayers(activeSeasonId, activeGameweek); - //IMPLEMENT POST SNS
         //await distributeRewards(); //IMPLEMENT POST SNS
         //await settleUserBets(); //IMPLEMENT POST SNS
-        
-        transfersAllowed := true;
     };
 
     public func setNextGameweek() : async (){
@@ -291,10 +287,6 @@ module {
 
     public func getActiveGameweekFixtures() : [T.Fixture] {
         return seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-    };
-
-    public func getTransfersAllowed() : Bool {
-        return transfersAllowed;
     };
     
     public func getSeasons() : [T.Season] {
