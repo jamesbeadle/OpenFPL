@@ -184,7 +184,6 @@ service : {
   getSeasons: () -> (vec Season) query;
   getTeams: () -> (vec Team) query;
   getTotalManagers: () -> (nat) query;
-  getTransfersAllowed: () -> (bool) query;
   getValidatableFixtures: () -> (vec Fixture) query;
   getWeeklyLeaderboard: (nat16, nat8, nat, nat) ->
    (PaginatedLeaderboard) query;

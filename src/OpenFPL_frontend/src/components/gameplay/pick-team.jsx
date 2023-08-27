@@ -12,7 +12,6 @@ import SelectPlayerModal from './select-player-modal';
 import SelectFantasyPlayerModal from './select-fantasy-player-modal';
 import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
-import { Link } from "react-router-dom";
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -54,7 +53,6 @@ const PickTeam = () => {
     3: [1]
   };
   const isTeamValid = invalidTeamMessage === null;
-  const [transfersActive, setTransfersAllowed] = useState(true);
   const [removedPlayers, setRemovedPlayers] = useState([]);
   const [addedPlayers, setAddedPlayers] = useState([]);
 
@@ -79,15 +77,6 @@ const PickTeam = () => {
         if(players.length == 0){
           return;
         }
-
-        
-        const transfersAllowedData = await open_fpl_backend.getTransfersAllowed();
-        setTransfersAllowed(transfersAllowedData);
-
-        if(!transfersAllowedData){
-          return;
-        };
-        
         
         const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
         setCurrentGameweek(currentGameweekData);
@@ -593,7 +582,7 @@ const handleConfirmBonusClick = (bonusType) => {
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
         <Spinner animation="border" />
         <p className='text-center mt-1'>{loadingText}</p>
-      </div>) : transfersActive ? (
+      </div>) : (
         <Container className="flex-grow-1 my-5 pitch-bg mt-0">
           <Row className="mb-4">
             <Col md={9}>
@@ -766,11 +755,7 @@ const handleConfirmBonusClick = (bonusType) => {
           />}
           
         </Container>
-      ) :
-      <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
-        <p className='text-center mt-1'>Transfers are inactive while the gameweek is active. This will be updated in a future release.</p>
-        <Button as={Link} to='/'>Home</Button>
-      </div> 
+      )
   );
 };
 

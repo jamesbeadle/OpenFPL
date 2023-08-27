@@ -121,10 +121,6 @@ actor Self {
     return seasonManager.getActiveGameweekFixtures();
   };
 
-  public query ({caller}) func getTransfersAllowed() : async Bool {
-    return seasonManager.getTransfersAllowed();
-  };
-
   //Profile Functions
   public shared ({caller}) func getProfileDTO() : async DTOs.ProfileDTO {
     assert not Principal.isAnonymous(caller);
@@ -508,10 +504,6 @@ actor Self {
 
   public shared ({caller}) func saveFantasyTeam(newPlayerIds: [Nat16], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
-
-    if(not seasonManager.getTransfersAllowed()){
-      return #err(#NotAllowed);
-    };
 
     let principalId = Principal.toText(caller);
     let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(principalId);
@@ -905,7 +897,7 @@ actor Self {
   private stable var stable_fixture_data_submissions: [(T.FixtureId, List.List<T.DataSubmission>)] = [];
   private stable var stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
   private stable var stable_proposals: [T.Proposal] = [];
-  private stable var stable_transfers_allowed : Bool = true;
+  private stable var stable_transfers_allowed : Bool = true; //CAN REMOVE
   private stable var stable_active_fixtures : [T.Fixture] = [];
   private stable var stable_next_fixture_id : Nat32 = 0;
   private stable var stable_next_season_id : Nat16 = 0;
@@ -931,7 +923,7 @@ actor Self {
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
     stable_player_revaluation_submissions := governanceInstance.getPlayerRevaluationSubmissions();
     stable_proposals := governanceInstance.getProposals();
-    stable_transfers_allowed := seasonManager.getTransfersAllowed();
+    stable_transfers_allowed := true;
     stable_active_fixtures := seasonManager.getActiveFixtures();
     stable_next_fixture_id := seasonManager.getNextFixtureId();
     stable_next_season_id := seasonManager.getNextSeasonId();
@@ -947,16 +939,12 @@ actor Self {
     stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
     stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
     stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
-    Debug.print(debug_show "Pre upgrade: stable_consensus_fixture_data");
-    Debug.print(debug_show stable_consensus_fixture_data);
   };
 
   system func postupgrade() {
-    Debug.print(debug_show "Post upgrade: stable_consensus_fixture_data");
-    Debug.print(debug_show stable_consensus_fixture_data);
     profilesInstance.setData(stable_profiles);
     fantasyTeamsInstance.setData(stable_fantasy_teams);
-    seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_transfers_allowed, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
+    seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
     stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
     teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
     governanceInstance.setData(stable_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals, stable_consensus_fixture_data);
@@ -1011,6 +999,9 @@ actor Self {
   
   /* Functions for testing only
 
+  public func atmpResetTransfers(): async () {
+    await resetTransfers();
+  };
 
   public func recalculateSnapshotTotals() : async (){
     await fantasyTeamsInstance.recalculateSnapshotTotals();

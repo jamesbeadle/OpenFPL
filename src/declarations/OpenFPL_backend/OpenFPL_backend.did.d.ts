@@ -165,7 +165,6 @@ export interface _SERVICE {
   'getSeasons' : ActorMethod<[], Array<Season>>,
   'getTeams' : ActorMethod<[], Array<Team>>,
   'getTotalManagers' : ActorMethod<[], bigint>,
-  'getTransfersAllowed' : ActorMethod<[], boolean>,
   'getValidatableFixtures' : ActorMethod<[], Array<Fixture>>,
   'getWeeklyLeaderboard' : ActorMethod<
     [number, number, bigint, bigint],
