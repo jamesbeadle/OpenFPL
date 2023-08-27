@@ -190,6 +190,7 @@ type CreatePlayerPayload =
    value: nat;
  };
 service : {
+  addMissingPlayers: () -> ();
   calculatePlayerScores: (nat16, nat8, Fixture) -> (Fixture);
   createPlayer: (CreatePlayerPayload) -> ();
   getAllPlayers: () -> (vec PlayerDTO) query;

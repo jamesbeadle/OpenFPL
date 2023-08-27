@@ -1009,8 +1009,12 @@ actor Self {
   };
     
   
+  
   /* Functions for testing only
 
+  public func adjustFixtures() : async (){
+    await seasonManager.adjustFixtures();
+  };
 
   public func recalculateSnapshotTotals() : async (){
     await fantasyTeamsInstance.recalculateSnapshotTotals();
