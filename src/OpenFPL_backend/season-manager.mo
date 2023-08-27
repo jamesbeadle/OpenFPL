@@ -372,6 +372,12 @@ module {
 
         return await seasonsInstance.getFixture(getSeasonId, getGameweekNumber, fixtureId);
     };
+
+    /*
+    public func adjustFixtures() : async (){
+        await seasonsInstance.adjustFixtures();
+    };
+    */
     
   };
 }
