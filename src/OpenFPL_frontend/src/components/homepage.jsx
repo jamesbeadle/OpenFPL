@@ -15,7 +15,7 @@ const Homepage = () => {
     const [managerCount, setManagerCount] = useState(0);
     const [seasonTop10, setSeasonTop10] = useState([]);
     const [weeklyTop10, setWeeklyTop10] = useState();
-    const [currentGameweek, setCurrentGameweek] = useState(1);
+    const [currentGameweek, setCurrentGameweek] = useState(0);
     const [currentSeason, setCurrentSeason] = useState(1);
     const [countdown, setCountdown] = useState({
         days: 0,
@@ -32,11 +32,29 @@ const Homepage = () => {
         const fetchData = async () => {
         await fetchActiveSeasonId();
         await fetchActiveGameweek();
-        await fetchViewData();
-        setIsLoading(false);
         };
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if(currentGameweek == 0){ return; }
+        const fetchData  = async () => {
+            await fetchViewData();
+            setIsLoading(false);
+        };
+        fetchData();
+
+    }, [currentGameweek]);
+
+    useEffect(() => {
+        if(isLoading || fixtures.length == 0){
+            return;
+        }
+        const fetchData = async () => {
+            setButtonVisibility(currentGameweek);
+        };
+        fetchData();
+    }, [isLoading, fixtures]);
 
     const fetchViewData = async () => {
     
@@ -45,15 +63,19 @@ const Homepage = () => {
 
         const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
         const kickOffs = currentFixtures.map(fixture => computeTimeLeft(Number(fixture.kickOff)));
-        //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
-        const nextKickoff = Math.min(...kickOffs) - 3600000;
-        const currentTime = new Date().getTime();
-    
-        if (currentTime < nextKickoff) {
-            const timeLeft = computeTimeLeft(nextKickoff);
-            setCountdown(timeLeft);
-            
-            setIsActiveGameweek(false); // Not an active gameweek
+
+        const kickOffsInMillis = kickOffs.map(obj => 
+            obj.days * 24 * 60 * 60 * 1000 + 
+            obj.hours * 60 * 60 * 1000 + 
+            obj.minutes * 60 * 1000 + 
+            obj.seconds * 1000
+        );
+
+        const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
+        
+        if (timeUntilGameweekBegins > 0) {
+            setCountdown(msToTime(timeUntilGameweekBegins));
+            setIsActiveGameweek(false);
         } else {
             setCountdown({
                 days: 0,
@@ -63,7 +85,6 @@ const Homepage = () => {
             });
             setIsActiveGameweek(true);
         }
-        
 
         const managerCountData = await open_fpl_backend.getTotalManagers();
         setManagerCount(Number(managerCountData));
@@ -75,7 +96,6 @@ const Homepage = () => {
         setWeeklyTop10(weeklyTop10Data);
 
         
-        setButtonVisibility(currentGameweek);
     };
 
     const fetchActiveGameweek = async () => {
@@ -127,7 +147,7 @@ const Homepage = () => {
     
     const computeTimeLeft = (kickoff) => {
         const now = new Date().getTime();
-        const distance = kickoff - now;
+        const distance = nanoSecondsToMillis(kickoff) - now;
     
         return {
             days: Math.floor(distance / (1000 * 60 * 60 * 24)),
@@ -141,16 +161,22 @@ const Homepage = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             const kickOffs = getCurrentGameweekFixtures().map(fixture => computeTimeLeft(Number(fixture.kickOff)));
+            
             if(kickOffs.length == 0){
                 return;
             };
-            const nextKickoff = Math.min(...kickOffs) - 3600000;
-            //const nextKickoff = Math.min(...kickOffs) - 60000; //USE FOR LOCAL DEV 
-            const currentTime = new Date().getTime();
-    
-            if (currentTime < nextKickoff) {
-                const timeLeft = computeTimeLeft(nextKickoff);
-                setCountdown(timeLeft);
+
+            const kickOffsInMillis = kickOffs.map(obj => 
+                obj.days * 24 * 60 * 60 * 1000 + 
+                obj.hours * 60 * 60 * 1000 + 
+                obj.minutes * 60 * 1000 + 
+                obj.seconds * 1000
+            );
+
+            const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
+        
+            if (timeUntilGameweekBegins > 0) {
+                setCountdown(msToTime(timeUntilGameweekBegins));    
                 setIsActiveGameweek(false);
             } else {
                 setIsActiveGameweek(true);
@@ -213,6 +239,21 @@ const Homepage = () => {
             return acc;
         }, {});
     }
+
+    const msToTime = (duration) => {
+        const seconds = Math.floor((duration / 1000) % 60);
+        const minutes = Math.floor((duration / (1000 * 60)) % 60);
+        const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+        const days = Math.floor(duration / (1000 * 60 * 60 * 24));
+    
+        return {
+            days,
+            hours,
+            minutes,
+            seconds
+        };
+    }
+    
     
     const groupedFixtures = groupByDate(getCurrentGameweekFixtures());
     

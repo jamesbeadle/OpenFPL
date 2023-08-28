@@ -493,7 +493,7 @@ const ViewPoints = () => {
     
         if (fantasyTeam.braceBonusGameweek == Number(gameweek)) {
             bonusDetails = {
-                name: 'Pass Master'
+                name: 'Brace Bonus'
             };
         }
     
