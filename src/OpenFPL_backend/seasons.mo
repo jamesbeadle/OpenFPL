@@ -422,36 +422,5 @@ module {
 
         return [];
     };
-
-    /*
-    public func adjustFixtures() : async (){
-
-        let updatedFixture1: T.Fixture = { id = 25; seasonId = 1; gameweek = 3; kickOff = 1693141200000000000; homeTeamId = 6; awayTeamId = 2; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
-
-        seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
-            if (season.id == 1) {
-                
-                let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
-                    if (gw.number == 3) {
-                        let updatedFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
-                            if (fixture.id == 25) {
-                                return updatedFixture1; 
-                            } else { return fixture; }
-                        });
-                        return {number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
-                    } else {
-                        return gw;
-                    }
-                });
-                
-                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks; postponedFixtures = season.postponedFixtures;};
-            } else {
-                return season;
-            }
-        });
-
-        
-    };
-    */
   }
 }

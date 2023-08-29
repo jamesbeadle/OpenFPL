@@ -368,3 +368,7 @@ Table{
 .saved-text{
   color: #67F5C9 !important;
 }
+
+.player-score-top-row{
+  border-color: transparent;
+}
