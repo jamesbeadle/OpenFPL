@@ -37,8 +37,8 @@ module {
         let admins : [Text] = [
             "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"
         ];
-        
         */
+        
          //Live
         let admins : [Text] = [
             "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"
@@ -704,6 +704,17 @@ module {
         public func setFinaliseFixtureFunction(_finaliseFixture: (seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) -> async ()) {
             finaliseFixture := ?_finaliseFixture;
         };
+
+        public func resetConsensusData (data: [(T.FixtureId, T.ConsensusData)]) : (){
+            consensusFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
+                data.vals(),
+                data.size(),
+                Utilities.eqNat32, 
+                Utilities.hashNat32
+            );
+        };
+
+        
 
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Container, Row, Col, Card, Spinner, Button, Image, Table } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
@@ -86,7 +86,6 @@ const ViewPoints = () => {
             const sortedPlayers = [...playersWithUpdatedScores].sort((a, b) => 
                 Number(b.points) - Number(a.points)
             );
-            
             setSortedPlayers(sortedPlayers);
             getBonusDetails();
         }
@@ -263,29 +262,76 @@ const ViewPoints = () => {
         };
     
         return (
-            <tr key={player.id}>
-                <td className='points-team-col text-center align-middle'>
-                    <PlayerIcon width={20} height={20} primaryColour={getTeamById(player.teamId).primaryColourHex} secondaryColour={getTeamById(player.teamId).secondaryColourHex} />
-                </td>
-                <td className='points-name-col align-middle'>
-                    {isCaptain
-                        ? <StarIcon 
-                            color="#807A00" 
-                            width="15" 
-                            height="15" 
-                            style={{ marginRight: '5px' }}
-                          />
-                        : <StarOutlineIcon 
-                            color="#807A00" 
-                            width="15" 
-                            height="15" 
-                            style={{ marginRight: '5px' }}
-                          />}
-                    <small style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>{player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} {player.lastName} ({positionCodes[player.position]})</small>
-                </td>
-                <td className='points-points-col align-middle text-center'>{playerDTO.points}</td>
-                <td style={{paddingLeft: 0, paddingRight: 0}} className='points-button-col align-middle'><Button className='w-100' onClick={() => handleShowModal(player, playerDTO, isCaptain, bonusName, bonusPoints)}><label className='small-text' >Details</label></Button></td>
-            </tr>
+            <Fragment key={player.id}>
+
+                <Row className='mt-2 p-2' style={{borderBottom: 'solid thin'}}>
+                    <Col xs={12} md={4} className='p-0'>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <div style={{ marginRight: '10px', textAlign: 'center' }}>
+                                {isCaptain
+                                    ? <StarIcon 
+                                        color="#807A00" 
+                                        width="15" 
+                                        height="15" 
+                                    />
+                                    : <StarOutlineIcon 
+                                        color="#807A00" 
+                                        width="15" 
+                                        height="15" 
+                                    />}
+                                <br />
+                                {positionCodes[player.position]}
+                                <br />
+                                <PlayerIcon width={20} height={20} 
+                                    primaryColour={getTeamById(player.teamId).primaryColourHex} 
+                                    secondaryColour={getTeamById(player.teamId).secondaryColourHex} />
+                            </div>
+                            <div>
+                                <h5 className='mb-0 p-0' style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
+                                    {player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} 
+                                    {player.lastName} 
+                                </h5>
+                                <small className='small-text p-0' style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
+                                    {getTeamById(player.teamId).name}
+                                </small>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col xs={10} md={7}>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                            <div style={{ width: '100%' }}>
+                                <Row>
+                                    <Col className='small-text'>
+                                        <Row className='mb-1'>GS: {playerDTO.gameweekData.goals}</Row>
+                                        <Row className='mt-1'>A: {playerDTO.gameweekData.assists}</Row>
+                                    </Col>
+                                    <Col className='small-text'>
+                                        <Row className='mb-1'>CS: {playerDTO.gameweekData.cleanSheets}</Row>
+                                        <Row className='mt-1'>GC: {playerDTO.gameweekData.goalsConceded}</Row>
+                                    </Col>
+                                    <Col className='small-text'>
+                                        <Row className='mb-1'>PS: {playerDTO.gameweekData.penaltySaves}</Row>
+                                        <Row className='mt-1'>S: {playerDTO.gameweekData.saves}</Row>
+                                    </Col>
+                                    <Col className='small-text'>
+                                        <Row className='mb-1'>MP: {playerDTO.gameweekData.missedPenalties}</Row>
+                                        <Row className='mt-1'>OG: {playerDTO.gameweekData.ownGoals}</Row>
+                                    </Col>
+                                    <Col className='small-text'>
+                                        <Row className='mb-1'>YC: {playerDTO.gameweekData.yellowCards}</Row>
+                                        <Row className='mt-1'>RC: {playerDTO.gameweekData.redCards}</Row>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                    </Col>
+
+                    <Col xs={2} md={1} className='text-center p-0'>
+                        <Button className='w-100 h-100' onClick={() => handleShowModal(player, playerDTO, isCaptain, bonusName, bonusPoints)}><label className='small-text'>{playerDTO.points} Pts</label></Button>
+                    </Col>
+                </Row>
+            </Fragment>
+            
         );
     }
     
@@ -556,16 +602,31 @@ const ViewPoints = () => {
                         </Col>
                     </Row>
 
-                    <Table responsive className="table-fixed mt-2">
-                        <tbody>
-                            {sortedPlayers.map(player => renderPlayer(player, player.id == fantasyTeam.captainId, fantasyTeam))}
-                        </tbody>
-                    </Table>
-
-                    <div className='text-center'>
+                    <Container className='mt-4'>
+                        {sortedPlayers.map(player => renderPlayer(player, player.id == fantasyTeam.captainId, fantasyTeam))}
+                    </Container>
+                    
+                    <div className='text-center mt-2'>
                         <div>{gameweekBonus.name}</div>
                         <div>{gameweekBonus.player}</div>
                     </div>
+
+                    <Container className='mt-4 small-text mb-4'>
+                        <h5>Data Key:</h5>
+                        <Row>
+                            <Col xs={6} md={3}><strong>GS:</strong> Goals</Col>
+                            <Col xs={6} md={3}><strong>A:</strong> Assists</Col>
+                            <Col xs={6} md={3}><strong>CS:</strong> Clean Sheets</Col>
+                            <Col xs={6} md={3}><strong>GC:</strong> Goals Conceded</Col>
+                            <Col xs={6} md={3}><strong>PS:</strong> Penalty Saves</Col>
+                            <Col xs={6} md={3}><strong>S:</strong> Saves</Col>
+                            <Col xs={6} md={3}><strong>MP:</strong> Missed Penalties</Col>
+                            <Col xs={6} md={3}><strong>OG:</strong> Own Goals</Col>
+                            <Col xs={6} md={3}><strong>YC:</strong> Yellow Cards</Col>
+                            <Col xs={6} md={3}><strong>RC:</strong> Red Cards</Col>
+                        </Row>
+                    </Container>
+
                 </Card.Body>
             </Card>
    

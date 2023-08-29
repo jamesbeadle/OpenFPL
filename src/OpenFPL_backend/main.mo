@@ -995,32 +995,7 @@ actor Self {
           }
       }
   };
-    
-  
-  
-  /* Functions for testing only
-   
-  public func atmpResetTransfers(): async () {
-    await resetTransfers();
-  };
-  
-  public func recalculateSnapshotTotals() : async (){
-    await fantasyTeamsInstance.recalculateSnapshotTotals();
-  };
 
-  public func getFantasyTeams() : async [(Text, T.UserFantasyTeam)] {
-    return fantasyTeamsInstance.getFantasyTeams();
-  };
 
-  public func initGenesisSeason(): async (){
-    let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692814800000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
-    await seasonManager.init_genesis_season(firstFixture);
-  };
 
-    public func initGenesisSeason(): async (){
-      let firstFixture: T.Fixture = { id = 1; seasonId = 1; gameweek = 1; kickOff = 1692814800000000000; homeTeamId = 6; awayTeamId = 13; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; };
-      await seasonManager.init_genesis_season(firstFixture);
-    };
-    
-  */
 };
