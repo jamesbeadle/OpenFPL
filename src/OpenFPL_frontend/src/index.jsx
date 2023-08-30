@@ -24,6 +24,7 @@ import Leaderboard from "./components/leaderboards/season-leaderboard";
 import ViewPoints from "./components/gameplay/view-points";
 import { TeamsProvider } from "./contexts/TeamsContext";
 import { PlayersProvider } from "./contexts/PlayersContext";
+import LeagueTable from "./components/league-table";
 
 const App = () => {
  
@@ -50,6 +51,7 @@ const App = () => {
                   <Route path="/leaderboard" element={<Leaderboard />} />
                   <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
                   <Route path="/pick-team" element={ <PickTeam   /> } />
+                  <Route path="/league-table" element={ <LeagueTable   /> } />
                 </Routes>
               <MyFooter />
             </div>
