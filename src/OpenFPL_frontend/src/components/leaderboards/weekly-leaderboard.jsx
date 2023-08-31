@@ -118,7 +118,7 @@ const WeeklyLeaderboard = () => {
                                 setSelectedSeason(Number(e.target.value));
                                 setSelectedGameweek(1);
                             }}>
-                                {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name} ${season.year}`}</option>)}
+                                {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
                             </Form.Control>
                         </Form.Group>
                     </Col>
