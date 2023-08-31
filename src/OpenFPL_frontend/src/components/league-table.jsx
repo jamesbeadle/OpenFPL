@@ -1,20 +1,74 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Table } from 'react-bootstrap';
+import React, { useState, useEffect, useContext } from 'react';
+import { Form, Spinner, Container, Card, Row, Col } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
+import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
+import { TeamsContext } from "../contexts/TeamsContext";
 
-const LeagueTable = ({ fixturesData, columns }) => {
-    const [selectedGameweek, setSelectedGameweek] = useState(38); // Default to the last gameweek
+const LeagueTable = ({ columns }) => {
+    const { teams } = useContext(TeamsContext);
+    const [isLoading, setIsLoading] = useState(true);
+    const [seasons, setSeasons] = useState([]);
+    const [selectedSeason, setSelectedSeason] = useState(1);
+    const [selectedGameweek, setSelectedGameweek] = useState(1);
     const [tableData, setTableData] = useState([]);
     const defaultColumns = [
-        'Position', 'Team', 'Played', 'Wins', 'Draws', 'Losses', 'Goals For', 'Goals Against', 'Goal Difference', 'Points'
+        'Pos', 'Team', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'
     ];
     const activeColumns = columns || defaultColumns;
+    const [fixtures, setFixtures] = useState([]);
 
     useEffect(() => {
+        const fetchData = async () => {
+            await fetchSeasons();
+            await fetchFixtures();
+            const activeSeasonData = await fetchActiveSeasonId();
+            const activeGameweekData = await fetchActiveGameweek();
+            setSelectedSeason(activeSeasonData);
+            setSelectedGameweek(activeGameweekData);
+            setIsLoading(false);
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        
+        if(fixtures.length == 0){
+            return;
+        }
         updateTableData();
-    }, [fixturesData, selectedGameweek]);
+    }, [selectedSeason, selectedGameweek, fixtures]);
+
+    
+    const fetchFixtures = async () => {
+        const fixturesData = await open_fpl_backend.getFixtures();
+        
+        setFixtures(fixturesData);
+    };
+
+    const fetchActiveGameweek = async () => {
+        try {
+            const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
+            return activeGameweekData;
+        } catch(error) {
+            console.error("Error fetching active gameweek: ", error);
+        }
+    };
+    
+    const fetchActiveSeasonId = async () => {
+        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
+        return activeSeasonData.id;
+    };
+
+    const fetchSeasons = async () => {
+        const seasonList = await open_fpl_backend.getSeasons();
+        setSeasons(seasonList); 
+    };
+
+    const shouldHideColumn = (column) => { 
+        return column === 'W' || column === 'D' || column === 'L' || column === 'GF' || column === 'GA';
+    };
 
     const updateTableData = () => {
-        // A helper function to initialize a team's data if it's not already in our table
         const initTeamData = (teamId, table) => {
             if (!table[teamId]) {
                 table[teamId] = {
@@ -32,8 +86,7 @@ const LeagueTable = ({ fixturesData, columns }) => {
     
         let tempTable = {};
     
-        // Filter fixtures up to the selected gameweek and with status 3 (Data Finalised)
-        const relevantFixtures = fixturesData.filter(fixture => 
+        const relevantFixtures = fixtures.filter(fixture => 
             fixture.status === 3 && fixture.gameweek <= selectedGameweek);
     
         for (let fixture of relevantFixtures) {
@@ -49,7 +102,6 @@ const LeagueTable = ({ fixturesData, columns }) => {
             tempTable[fixture.awayTeamId].goalsFor += fixture.awayGoals;
             tempTable[fixture.awayTeamId].goalsAgainst += fixture.homeGoals;
     
-            // Handle Wins, Draws, and Losses
             if (fixture.homeGoals > fixture.awayGoals) {
                 tempTable[fixture.homeTeamId].wins++;
                 tempTable[fixture.homeTeamId].points += 3;
@@ -83,47 +135,107 @@ const LeagueTable = ({ fixturesData, columns }) => {
     
         setTableData(sortedTableData);
     };
+
+    const getTeamNameFromId = (teamId) => {
+      const team = teams.find(team => team.id === teamId);
+      if(!team){
+        return;
+      }
+      return team.friendlyName;
+    }
+
+    const columnToBootstrapClasses = (column) => {
+        switch (column) {
+            case 'Pos':
+                return 'col-2 col-md-1';
+            case 'Team':
+                return 'col-4 col-md-3';
+            case 'P':
+                return 'col-2 col-md-1';
+            case 'W':
+                return 'col-0 col-md-1';
+            case 'D':
+                return 'col-0 col-md-1';
+            case 'L':
+                return 'col-0 col-md-1';
+            case 'GF':
+                return 'col-0 col-md-1';
+            case 'GA':
+                return 'col-0 col-md-1';
+            case 'GD':
+                return 'col-2 col-md-1';
+            case 'Pts':
+                return 'col-2 col-md-1';
+            default:
+                return 'col';
+        }
+    };
     
 
     return (
-        <div>
-            <Form.Group controlId="gameweekSelect">
-                <Form.Label>Select Gameweek</Form.Label>
-                <Form.Control as="select" value={selectedGameweek} onChange={e => {
-                    setSelectedGameweek(Number(e.target.value));
-                }}>
-                    {Array.from({ length: 38 }, (_, i) => (
-                        <option key={i} value={i + 1}>Gameweek {i + 1}</option>
-                    ))}
-                </Form.Control>
-            </Form.Group>
-
-            <Table responsive bordered>
-                <thead>
-                    <tr>
-                        {activeColumns.map(column => (
-                            <th key={column}>{column}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {tableData.map((team, idx) => (
-                        <tr key={team.teamId}>
-                            {activeColumns.includes('Position') && <td>{idx + 1}</td>}
-                            {activeColumns.includes('Team') && <td>{team.teamId /* Replace with team name if available */}</td>}
-                            {activeColumns.includes('Played') && <td>{team.played}</td>}
-                            {activeColumns.includes('Wins') && <td>{team.wins}</td>}
-                            {activeColumns.includes('Draws') && <td>{team.draws}</td>}
-                            {activeColumns.includes('Losses') && <td>{team.losses}</td>}
-                            {activeColumns.includes('Goals For') && <td>{team.goalsFor}</td>}
-                            {activeColumns.includes('Goals Against') && <td>{team.goalsAgainst}</td>}
-                            {activeColumns.includes('Goal Difference') && <td>{team.goalsFor - team.goalsAgainst}</td>}
-                            {activeColumns.includes('Points') && <td>{team.points}</td>}
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+        isLoading ? (
+        <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
+            <Spinner animation="border" />
+            <p className='text-center mt-1'>Loading</p>
         </div>
+        ) 
+        :
+        <Container>
+            <Card className='mb-2 mt-4'>
+                <Card.Body>
+                    <Card.Title className='mb-2'>
+                        Premier League Table
+                    </Card.Title>
+                    <Row className='mb-2 mt-2'>
+                        <Col xs={12} md={6} className='mt-2'>
+                            <Form.Group controlId="seasonSelect">
+                                <Form.Label>Select Season</Form.Label>
+                                <Form.Control as="select" value={selectedSeason} onChange={e => {
+                                    setSelectedSeason(Number(e.target.value));
+                                    setSelectedGameweek(1);
+                                }}>
+                                    {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                        <Col xs={12} md={6} className='mt-2'>
+                            <Form.Group controlId="gameweekSelect">
+                                <Form.Label>Select Gameweek</Form.Label>
+                                <Form.Control as="select" value={selectedGameweek} onChange={e => setSelectedGameweek(Number(e.target.value))}>
+                                    {Array.from({ length: 38 }, (_, index) => (
+                                        <option key={index + 1} value={index + 1}>Gameweek {index + 1}</option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Container>
+                        <Row>
+                            {activeColumns.map(column => (
+                                <Col key={column} className={`${columnToBootstrapClasses(column)} ${shouldHideColumn(column) ? "d-none d-sm-block" : ""}`}>{column}</Col>
+                            ))}
+                        </Row>
+                        {tableData.map((team, idx) => (
+                            <Row key={`id-${idx}`}>
+                                <Col className={`${columnToBootstrapClasses('Pos')} ${shouldHideColumn('Pos') ? "d-none d-sm-block" : ""}`}>{idx + 1}</Col>
+                                <Col className={`${columnToBootstrapClasses('Team')} ${shouldHideColumn('Team') ? "d-none d-sm-block" : ""}`}><LinkContainer to="/team"><a className='nav-link-brand'>{getTeamNameFromId(team.teamId)}</a></LinkContainer></Col>
+                                <Col className={`${columnToBootstrapClasses('P')} ${shouldHideColumn('P') ? "d-none d-sm-block" : ""}`}>{team.played}</Col>
+                                <Col className={`${columnToBootstrapClasses('W')} ${shouldHideColumn('W') ? "d-none d-sm-block" : ""}`}>{team.wins}</Col>
+                                <Col className={`${columnToBootstrapClasses('D')} ${shouldHideColumn('D') ? "d-none d-sm-block" : ""}`}>{team.draws}</Col>
+                                <Col className={`${columnToBootstrapClasses('L')} ${shouldHideColumn('L') ? "d-none d-sm-block" : ""}`}>{team.losses}</Col>
+                                <Col className={`${columnToBootstrapClasses('GF')} ${shouldHideColumn('GF') ? "d-none d-sm-block" : ""}`}>{team.goalsFor}</Col>
+                                <Col className={`${columnToBootstrapClasses('GA')} ${shouldHideColumn('GA') ? "d-none d-sm-block" : ""}`}>{team.goalsAgainst}</Col>
+                                <Col className={`${columnToBootstrapClasses('GD')} ${shouldHideColumn('GD') ? "d-none d-sm-block" : ""}`}>{team.goalsFor - team.goalsAgainst}</Col>
+                                <Col className={`${columnToBootstrapClasses('Pts')} ${shouldHideColumn('Pts') ? "d-none d-sm-block" : ""}`}>{team.points}</Col>
+                            </Row>
+                        ))}
+                    </Container>
+
+                </Card.Body>
+            </Card>
+             
+        </Container>
     );
 };
 

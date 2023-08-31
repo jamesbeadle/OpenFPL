@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
-import { ProfileIcon, GovernanceIcon, TeamIcon, WalletIcon } from '../icons';
+import { ProfileIcon, GovernanceIcon, TeamIcon, WalletIcon, TableIcon } from '../icons';
 
 const MyNavbar = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
@@ -34,8 +34,8 @@ const MyNavbar = () => {
                 <TeamIcon className="custom-icon" ></TeamIcon>
               </Nav.Link> 
               <Nav.Link as={Link} to="/league-table" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
-                Premier League Table
-                <GovernanceIcon className="custom-icon" ></GovernanceIcon>
+                Table
+                <TableIcon className="custom-icon" ></TableIcon>
               </Nav.Link> 
               <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
                 Governance

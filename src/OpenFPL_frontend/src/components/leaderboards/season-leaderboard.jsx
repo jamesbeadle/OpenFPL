@@ -100,7 +100,7 @@ useEffect(() => {
                                     setSelectedSeason(Number(e.target.value));
                                 }}>
 
-                                    {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name} ${season.year}`}</option>)}
+                                    {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
                                 </Form.Control>
                             </Form.Group>
                         </Col>
