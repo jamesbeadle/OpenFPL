@@ -92,6 +92,8 @@ const LeagueTable = ({ columns }) => {
         for (let fixture of relevantFixtures) {
             initTeamData(fixture.homeTeamId, tempTable);
             initTeamData(fixture.awayTeamId, tempTable);
+            tempTable[fixture.homeTeamId].id = fixture.homeTeamId;
+            tempTable[fixture.awayTeamId].id = fixture.awayTeamId;
     
             tempTable[fixture.homeTeamId].played++;
             tempTable[fixture.awayTeamId].played++;
@@ -219,7 +221,7 @@ const LeagueTable = ({ columns }) => {
                         {tableData.map((team, idx) => (
                             <Row key={`id-${idx}`}>
                                 <Col className={`${columnToBootstrapClasses('Pos')} ${shouldHideColumn('Pos') ? "d-none d-sm-block" : ""}`}>{idx + 1}</Col>
-                                <Col className={`${columnToBootstrapClasses('Team')} ${shouldHideColumn('Team') ? "d-none d-sm-block" : ""}`}><LinkContainer to="/team"><a className='nav-link-brand'>{getTeamNameFromId(team.teamId)}</a></LinkContainer></Col>
+                                <Col className={`${columnToBootstrapClasses('Team')} ${shouldHideColumn('Team') ? "d-none d-sm-block" : ""}`}><LinkContainer to={`/club/${team.id}`}><a className='nav-link-brand'>{getTeamNameFromId(team.teamId)}</a></LinkContainer></Col>
                                 <Col className={`${columnToBootstrapClasses('P')} ${shouldHideColumn('P') ? "d-none d-sm-block" : ""}`}>{team.played}</Col>
                                 <Col className={`${columnToBootstrapClasses('W')} ${shouldHideColumn('W') ? "d-none d-sm-block" : ""}`}>{team.wins}</Col>
                                 <Col className={`${columnToBootstrapClasses('D')} ${shouldHideColumn('D') ? "d-none d-sm-block" : ""}`}>{team.draws}</Col>

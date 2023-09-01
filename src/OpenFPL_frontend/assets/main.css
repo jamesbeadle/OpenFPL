@@ -372,3 +372,25 @@ Table{
 .player-score-top-row{
   border-color: transparent;
 }
+
+.team-details {
+  margin-top: 15px;
+}
+
+.team-details h5 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.team-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.player-group {
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
