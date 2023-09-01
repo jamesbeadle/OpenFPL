@@ -113,6 +113,10 @@ actor Self {
     return seasonManager.getFixtures();
   };
 
+  public query ({caller}) func getFixturesForSeason(seasonId: T.SeasonId) : async [T.Fixture]{
+    return seasonManager.getFixturesForSeason(seasonId);
+  };
+
   public shared ({caller}) func getFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async T.Fixture{
     return await seasonManager.getFixture(seasonId, gameweekNumber, fixtureId);
   };

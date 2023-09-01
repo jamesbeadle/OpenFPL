@@ -162,6 +162,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(Fixture)],
         [],
       ),
+    'getFixturesForSeason' : IDL.Func(
+        [SeasonId],
+        [IDL.Vec(Fixture)],
+        ['query'],
+      ),
     'getPlayersDetailsForGameweek' : IDL.Func(
         [IDL.Vec(PlayerId), IDL.Nat16, IDL.Nat8],
         [IDL.Vec(PlayerPointsDTO)],

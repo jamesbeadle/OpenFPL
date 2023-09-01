@@ -151,6 +151,7 @@ export interface _SERVICE {
   'getFixture' : ActorMethod<[SeasonId, GameweekNumber, FixtureId], Fixture>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
   'getFixturesByWeek' : ActorMethod<[SeasonId, GameweekNumber], Array<Fixture>>,
+  'getFixturesForSeason' : ActorMethod<[SeasonId], Array<Fixture>>,
   'getPlayersDetailsForGameweek' : ActorMethod<
     [Uint16Array | number[], number, number],
     Array<PlayerPointsDTO>

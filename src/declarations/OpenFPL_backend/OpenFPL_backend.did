@@ -175,6 +175,7 @@ service : {
   getFixture: (SeasonId, GameweekNumber, FixtureId) -> (Fixture);
   getFixtures: () -> (vec Fixture) query;
   getFixturesByWeek: (SeasonId, GameweekNumber) -> (vec Fixture);
+  getFixturesForSeason: (SeasonId) -> (vec Fixture) query;
   getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
    (vec PlayerPointsDTO);
   getProfileDTO: () -> (ProfileDTO);

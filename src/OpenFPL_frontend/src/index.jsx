@@ -25,7 +25,8 @@ import ViewPoints from "./components/gameplay/view-points";
 import { TeamsProvider } from "./contexts/TeamsContext";
 import { PlayersProvider } from "./contexts/PlayersContext";
 import LeagueTable from "./components/league-table";
-import TeamDetails from "./components/data/team-details";
+import ClubDetails from "./components/data/club-details";
+import PlayerDetails from "./components/data/player-details";
 
 const App = () => {
  
@@ -53,7 +54,8 @@ const App = () => {
                   <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
                   <Route path="/pick-team" element={ <PickTeam   /> } />
                   <Route path="/league-table" element={ <LeagueTable   /> } />
-                  <Route path="/team" element={ <TeamDetails   /> } />
+                  <Route path="/club/:teamId" element={ <ClubDetails   /> } />
+                  <Route path="/player/:playerId" element={ <PlayerDetails   /> } />
                 </Routes>
               <MyFooter />
             </div>

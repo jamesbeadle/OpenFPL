@@ -280,6 +280,10 @@ module {
         return seasonsInstance.getSeasonFixtures(activeSeasonId);
     };
 
+    public func getFixturesForSeason(seasonId: T.SeasonId) : [T.Fixture] {
+        return seasonsInstance.getSeasonFixtures(seasonId);
+    };
+
     public func getGameweekFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [T.Fixture] {
         return seasonsInstance.getGameweekFixtures(seasonId, gameweek);
     };
