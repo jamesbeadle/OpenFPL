@@ -71,6 +71,25 @@ export interface PlayerDTO {
   'lastName' : string,
   'firstName' : string,
 }
+export interface PlayerDetailDTO {
+  'id' : PlayerId,
+  'value' : bigint,
+  'dateOfBirth' : bigint,
+  'injuryHistory' : Array<InjuryHistory>,
+  'seasonId' : SeasonId,
+  'isInjured' : boolean,
+  'gameweeks' : Array<PlayerGameweekDTO>,
+  'nationality' : string,
+  'retirementDate' : bigint,
+  'valueHistory' : Array<ValueHistory>,
+  'shirtNumber' : number,
+  'teamId' : TeamId,
+  'position' : number,
+  'parentTeamId' : number,
+  'lastName' : string,
+  'onLoan' : boolean,
+  'firstName' : string,
+}
 export interface PlayerEventData {
   'fixtureId' : FixtureId,
   'playerId' : number,
@@ -81,6 +100,12 @@ export interface PlayerEventData {
 }
 export interface PlayerGameweek {
   'events' : List_4,
+  'number' : number,
+  'points' : number,
+}
+export interface PlayerGameweekDTO {
+  'fixtureId' : FixtureId,
+  'events' : Array<PlayerEventData>,
   'number' : number,
   'points' : number,
 }
@@ -154,6 +179,7 @@ export interface _SERVICE {
     Array<[number, PlayerScoreDTO]>
   >,
   'getPlayer' : ActorMethod<[number], Player>,
+  'getPlayerDetails' : ActorMethod<[number, SeasonId], PlayerDetailDTO>,
   'getPlayersDetailsForGameweek' : ActorMethod<
     [Uint16Array | number[], number, number],
     Array<PlayerPointsDTO>

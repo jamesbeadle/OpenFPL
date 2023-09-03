@@ -103,6 +103,31 @@ export const idlFactory = ({ IDL }) => {
     'onLoan' : IDL.Bool,
     'firstName' : IDL.Text,
   });
+  const PlayerGameweekDTO = IDL.Record({
+    'fixtureId' : FixtureId,
+    'events' : IDL.Vec(PlayerEventData),
+    'number' : IDL.Nat8,
+    'points' : IDL.Int16,
+  });
+  const PlayerDetailDTO = IDL.Record({
+    'id' : PlayerId,
+    'value' : IDL.Nat,
+    'dateOfBirth' : IDL.Int,
+    'injuryHistory' : IDL.Vec(InjuryHistory),
+    'seasonId' : SeasonId,
+    'isInjured' : IDL.Bool,
+    'gameweeks' : IDL.Vec(PlayerGameweekDTO),
+    'nationality' : IDL.Text,
+    'retirementDate' : IDL.Int,
+    'valueHistory' : IDL.Vec(ValueHistory),
+    'shirtNumber' : IDL.Nat8,
+    'teamId' : TeamId,
+    'position' : IDL.Nat8,
+    'parentTeamId' : IDL.Nat16,
+    'lastName' : IDL.Text,
+    'onLoan' : IDL.Bool,
+    'firstName' : IDL.Text,
+  });
   const PlayerPointsDTO = IDL.Record({
     'id' : IDL.Nat16,
     'events' : IDL.Vec(PlayerEventData),
@@ -165,6 +190,11 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getPlayer' : IDL.Func([IDL.Nat16], [Player], ['query']),
+    'getPlayerDetails' : IDL.Func(
+        [IDL.Nat16, SeasonId],
+        [PlayerDetailDTO],
+        ['query'],
+      ),
     'getPlayersDetailsForGameweek' : IDL.Func(
         [IDL.Vec(PlayerId), IDL.Nat16, IDL.Nat8],
         [IDL.Vec(PlayerPointsDTO)],

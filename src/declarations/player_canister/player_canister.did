@@ -74,6 +74,13 @@ type PlayerPointsDTO =
    teamId: nat16;
  };
 type PlayerId = nat16;
+type PlayerGameweekDTO = 
+ record {
+   events: vec PlayerEventData;
+   fixtureId: FixtureId;
+   number: nat8;
+   points: int16;
+ };
 type PlayerGameweek = 
  record {
    events: List_4;
@@ -88,6 +95,26 @@ type PlayerEventData =
    fixtureId: FixtureId;
    playerId: nat16;
    teamId: TeamId;
+ };
+type PlayerDetailDTO = 
+ record {
+   dateOfBirth: int;
+   firstName: text;
+   gameweeks: vec PlayerGameweekDTO;
+   id: PlayerId;
+   injuryHistory: vec InjuryHistory;
+   isInjured: bool;
+   lastName: text;
+   nationality: text;
+   onLoan: bool;
+   parentTeamId: nat16;
+   position: nat8;
+   retirementDate: int;
+   seasonId: SeasonId;
+   shirtNumber: nat8;
+   teamId: TeamId;
+   value: nat;
+   valueHistory: vec ValueHistory;
  };
 type PlayerDTO = 
  record {
@@ -199,6 +226,7 @@ service : {
           PlayerScoreDTO;
         }) query;
   getPlayer: (nat16) -> (Player) query;
+  getPlayerDetails: (nat16, SeasonId) -> (PlayerDetailDTO) query;
   getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
    (vec PlayerPointsDTO) query;
   loanPlayer: (LoanPlayerPayload) -> ();

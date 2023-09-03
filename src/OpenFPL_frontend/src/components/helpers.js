@@ -11,3 +11,11 @@ export const getAgeFromDOB = dob => {
     const ageDate = new Date(ageDifMs);
     return Math.abs(ageDate.getUTCFullYear() - 1970);
 };
+
+export const formatDOB = dob => {
+    const birthDate = new Date(dob / 1000000);
+    const day = String(birthDate.getDate()).padStart(2, '0');
+    const month = String(birthDate.getMonth() + 1).padStart(2, '0');
+    const year = birthDate.getFullYear();
+    return `${day}/${month}/${year}`;
+};
