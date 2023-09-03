@@ -58,5 +58,33 @@ module DTOs {
         position: Nat8;
         events: [T.PlayerEventData];
     };
+
+    public type PlayerDetailDTO = {
+        id: T.PlayerId;
+        teamId: T.TeamId;
+        position: Nat8;
+        firstName: Text;
+        lastName: Text;
+        shirtNumber: Nat8;
+        value: Nat;
+        dateOfBirth: Int;
+        nationality: Text;
+        seasonId: T.SeasonId;
+        gameweeks: [PlayerGameweekDTO];
+        valueHistory: [T.ValueHistory];
+        onLoan: Bool;
+        parentTeamId: Nat16;
+        isInjured: Bool;
+        injuryHistory: [T.InjuryHistory];
+        retirementDate: Int;
+    };
+
+    public type PlayerGameweekDTO = {
+        number: Nat8;
+        events: [T.PlayerEventData];
+        points: Int16;
+        fixtureId: T.FixtureId;
+    };
+
     
 }

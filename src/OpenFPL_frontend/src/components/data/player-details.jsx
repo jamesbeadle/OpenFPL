@@ -1,25 +1,41 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Container, Card, Tab, Tabs, Spinner, Form, Row, Col } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import ClubProposals from './club-proposals';
+import { Container, Card, Spinner, Row, Col, Form, Table, Accordion, Button } from 'react-bootstrap';
 import { TeamsContext } from "../../contexts/TeamsContext";
-import { PlayersContext } from "../../contexts/PlayersContext";
 import { useParams } from 'react-router-dom';
+import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
-import { SmallFixtureIcon } from '../icons';
-import { getAgeFromDOB } from '../helpers';
+import { getAgeFromDOB, formatDOB } from '../helpers';
 import getFlag from '../country-flag';
+import PlayerDetailModal from './player-detail-modal';
 
 const PlayerDetails = ({  }) => {
     const { playerId } = useParams();
-    const { players } = useContext(PlayersContext);
+    const { teams } = useContext(TeamsContext);
+    const [fixtures, setFixtures] = useState([]);
+    const [seasons, setSeasons] = useState([]);
     const [player, setPlayer] = useState(null);
+    const [selectedSeason, setSelectedSeason] = useState(1);
+    const [selectedPlayer, setSelectedPlayer] = useState(null);
+    const [selectedPlayerGameweek, setSelectedPlayerGameweek] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     
     useEffect(() => {
         const fetchInitialData = async () => {
-            const playerDetails = players.find(p => p.id === Number(playerId));
+            
+            const fixturesData = await open_fpl_backend.getFixtures();
+            setFixtures(fixturesData);
+
+            const seasonList = await open_fpl_backend.getSeasons();
+            setSeasons(seasonList); 
+
+            const activeSeasonData = await open_fpl_backend.getCurrentSeason();
+            setSelectedSeason(activeSeasonData);
+           
+            const playerDetails = await player_canister.getPlayerDetails(Number(playerId), Number(activeSeasonData.id));
             setPlayer(playerDetails);
+            console.log(playerDetails)
+           
             setIsLoading(false);
         };
 
@@ -27,18 +43,46 @@ const PlayerDetails = ({  }) => {
     }, []);
 
     useEffect(() => {
-        if (!players || !playerId) {
-            return;
-        };
-        const fetchData = async () => {
-            setIsLoading(true);
-            const playerDetails = players.find(p => p.id === Number(playerId));
-            setPlayer(playerDetails);
-            setIsLoading(false);
-        };
+        
+    }, [selectedSeason]);
 
-        fetchData();
-    }, [playerId, players]);
+
+    const getTeamNameFromId = (teamId) => {
+      const team = teams.find(team => team.id === teamId);
+      if(!team){
+        return;
+      }
+      return team.friendlyName;
+    }
+
+    const getGameweekTeamName = (fixtureId, playerTeamId) => {
+        const fixture = fixtures.find(fixture => fixture.id === fixtureId); 
+        if(!fixture){
+            return;
+        }
+
+        if(playerTeamId == fixture.homeTeamId){
+            return teams.find(team => team.id == fixture.awayTeamId).friendlyName;
+        }
+
+        if(playerTeamId == fixture.awayTeamId){
+            return teams.find(team => team.id == fixture.homeTeamId).friendlyName;
+        }
+
+      return "";
+    }
+
+    const handleShowModal = (player, playerGameweek) => {
+        setSelectedPlayer(player);
+        setSelectedPlayerGameweek(playerGameweek);
+        setShowModal(true);
+    }
+    
+    const handleCloseModal = () => {
+        setSelectedPlayer(null);
+        setSelectedPlayerGameweek(null);
+        setShowModal(false);
+    }
 
     return (
         isLoading || !player ? (
@@ -51,11 +95,55 @@ const PlayerDetails = ({  }) => {
             <Card className='mb-2 mt-4'>
                 <Card.Body>
                     <Card.Title className='mb-2'>
-                        {player.firstName} {player.lastName}
+                        {getFlag(player.nationality)} {player.firstName} {player.lastName}
                     </Card.Title>
-                    <p className='mt-2'>Player Details Coming Soon</p>
+                    <Row>
+                        <p>{getTeamNameFromId(player.teamId)}</p>
+                    </Row>
+                    <Row>
+                        <p>Value: {`£${(Number(player.value) / 4).toFixed(1)}m`}</p>
+                    </Row>
+                    <Row>
+                        <p>Born: {formatDOB(Number(player.dateOfBirth))} ({getAgeFromDOB(Number(player.dateOfBirth))})</p>
+                    </Row>
+                    <h5>Gameweek History</h5>
+
+                    <Row className='mb-2'>
+                        <Col xs={12} md={6}>
+                            <Form.Group controlId="seasonSelect">
+                                <Form.Label>Select Season</Form.Label>
+                                <Form.Control as="select" value={selectedSeason || ''} onChange={e => {
+                                    setSelectedSeason(Number(e.target.value));
+                                }}>
+
+                                    {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+
+                    <Container>
+                        <Row className='mt-2 mt-2'>
+                            <Col xs={2}>GW</Col>
+                            <Col xs={5}>Opponent</Col>
+                            <Col xs={2}>Pts</Col>
+                            <Col xs={3}></Col>
+                        </Row>
+                        {selectedSeason && (
+                            player.gameweeks.map(gw => (
+                                <Row className='mt-2 mt-2' key={`gw-${gw.number}`}>
+                                    <Col xs={2}>{gw.number}</Col>
+                                    <Col xs={5}>{getGameweekTeamName(gw.fixtureId, player.teamId)}</Col>
+                                    <Col xs={2}>{gw.points}</Col>
+                                    <Col xs={3}><Button className='w-100 h-100' onClick={() => handleShowModal(player, gw)}><label className='small-text'>Details</label></Button></Col>
+                                </Row>
+                            ))                  
+                        )}
+                    </Container>
+
                 </Card.Body>
             </Card>
+            {selectedPlayer && selectedPlayerGameweek && <PlayerDetailModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerGameweek={selectedPlayerGameweek} teams={teams} />}
         </Container>
         )
     );
