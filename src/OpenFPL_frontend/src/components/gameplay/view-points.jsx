@@ -20,7 +20,6 @@ const ViewPoints = () => {
     const [selectedPlayerDTO, setSelectedPlayerDTO] = useState(null);
     const [selectedPlayerCaptain, setSelectedPlayerCaptain] = useState(false);
     const [selectedPlayerBonusName, setSelectedPlayerBonusName] = useState('');
-    const [selectedPlayerBonusPoints, setSelectedPlayerBonusPoints] = useState(0);
     
     const [teams, setTeams] = useState([]);
     const [fixtures, setFixtures] = useState([]);
@@ -73,18 +72,24 @@ const ViewPoints = () => {
             setProfilePicSrc(ProfileImage);
         }
     };
+
     useEffect(() => {
         if (fantasyTeam && fantasyTeam.players) {
             const playersWithUpdatedScores = fantasyTeam.players.map(player => {
                 const score = calculatePlayerScore(player, fantasyTeam, fixtures);
+                const bonusPoints = calculateBonusPoints(player, fantasyTeam, score);
+                const captainPoints = player.id == fantasyTeam.captainId ? (score + bonusPoints) : 0;
+                
                 return {
                     ...player,
-                    points: score
+                    points: score,
+                    bonusPoints: bonusPoints,
+                    totalPoints: score + bonusPoints + captainPoints
                 };
             });
     
             const sortedPlayers = [...playersWithUpdatedScores].sort((a, b) => 
-                Number(b.points) - Number(a.points)
+                Number(b.totalPoints) - Number(a.totalPoints)
             );
             setSortedPlayers(sortedPlayers);
             getBonusDetails();
@@ -194,71 +199,41 @@ const ViewPoints = () => {
         };
     };
     
-    const calculateGoalPoints = (position, goalsScored) => {
-        switch (position) {
-            case 0: { return 40 * goalsScored; };
-            case 1: { return 40 * goalsScored; };
-            case 2: { return 30 * goalsScored; };
-            case 3: { return 20 * goalsScored; };
-            default: { return 0; };
-        };
-    };
-    
-    const calculateAssistPoints = (position, goalsAssisted) => {
-        switch (position) {
-            case 0: { return 30 * goalsAssisted; };
-            case 1: { return 30 * goalsAssisted; };
-            case 2: { return 20 * goalsAssisted; };
-            case 3: { return 20 * goalsAssisted; };
-            default: { return 0; };
-        };
-    };
-
     const renderPlayer = (playerDTO, isCaptain, fantasyTeam) => {
         const player = players.find(p => p.id === playerDTO.id);
 
         var bonusName = "";
-        var bonusPoints = 0;
-        var totalScore = playerDTO.points;
 
         if(fantasyTeam.goalGetterGameweek == gameweek && fantasyTeam.goalGetterPlayerId == player.id) {
             bonusName = "Goal Getter";
-            bonusPoints = calculateGoalPoints(player.position, playerDTO.gameweekData.goals);
         };
 
         if(fantasyTeam.passMasterGameweek == gameweek && fantasyTeam.passMasterPlayerId == player.id) {
             bonusName = "Pass Master";
-            bonusPoints = calculateAssistPoints(player.position, playerDTO.gameweekData.assists);
         };
 
         if(fantasyTeam.noEntryGameweek == gameweek && (player.position < 2) && player.goalsConceded == 0) {
             bonusName = "No Entry";
-            bonusPoints = totalScore * 2;
         };
 
         if(fantasyTeam.teamBoostGameweek == gameweek && player.teamId == fantasyTeam.teamBoostTeamId) {
             bonusName = "Team Boost";
-            bonusPoints = totalScore;
         };
 
         if(fantasyTeam.safeHandsGameweek == gameweek && player.position == 0 && playerDTO.gameweekData.saves > 4) {
             bonusName = "Safe Hands";
-            bonusPoints = totalScore * 2;
         };
 
         if(fantasyTeam.captainFantasticGameweek == gameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0) {
             bonusName = "Captain Fantastic";
-            bonusPoints = totalScore;
         };
 
         if(fantasyTeam.braceBonusGameweek == gameweek && playerDTO.gameweekData.goals >= 2) {
             bonusName = "Brace Bonus";
-            bonusPoints = totalScore;
         };
 
         if(fantasyTeam.hatTrickHeroGameweek == gameweek && playerDTO.gameweekData.goals >= 3) {
             bonusName = "Hat-trick Hero";
-            bonusPoints = totalScore * 2;
         };
     
         return (
@@ -327,14 +302,13 @@ const ViewPoints = () => {
                     </Col>
 
                     <Col xs={2} md={1} className='text-center p-0'>
-                        <Button className='w-100 h-100' onClick={() => handleShowModal(player, playerDTO, isCaptain, bonusName, bonusPoints)}><label className='small-text'>{playerDTO.points} Pts</label></Button>
+                        <Button className='w-100 h-100' onClick={() => handleShowModal(player, playerDTO, isCaptain, bonusName)}><label className='small-text'>{playerDTO.totalPoints} Pts</label></Button>
                     </Col>
                 </Row>
             </Fragment>
             
         );
     }
-    
 
     const calculatePlayerScore = (playerDTO, fantasyTeamDTO, fixtures) => {
         if (!playerDTO) {
@@ -419,41 +393,6 @@ const ViewPoints = () => {
                 pointsForAssist = 10; 
                 break;
         };
-
-
-        score += (fantasyTeamDTO.goalGetterGameweek === playerDTO.gameweek && fantasyTeamDTO.goalGetterPlayerId === playerDTO.id) ? 
-            (playerDTO.gameweekData.goals * pointsForGoal) * 3 : 
-            playerDTO.gameweekData.goals * pointsForGoal;
-
-        score += (fantasyTeamDTO.passMasterGameweek === playerDTO.gameweek && fantasyTeamDTO.passMasterPlayerId === playerDTO.id) ? 
-            (playerDTO.gameweekData.assists * pointsForAssist) * 3 : 
-            playerDTO.gameweekData.assists * pointsForAssist;
-
-
-        if (fantasyTeamDTO.noEntryGameweek === playerDTO.gameweek && fantasyTeamDTO.noEntryPlayerId === playerDTO.id && 
-            (playerDTO.position === 0 || playerDTO.position === 1) && playerDTO.gameweekData.cleanSheets) {
-            score = score * 3; 
-        }
-    
-        if (fantasyTeamDTO.safeHandsGameweek === playerDTO.gameweek && playerDTO.position === 0 && playerDTO.gameweekData.saves >= 5) {
-            score = score * 3;
-        }
-    
-        if (fantasyTeamDTO.captainFantasticGameweek === playerDTO.gameweek && fantasyTeamDTO.captainId === playerDTO.id && playerDTO.gameweekData.goals > 0) {
-            score = score * 2;
-        }
-    
-        if (fantasyTeamDTO.braceBonusGameweek === playerDTO.gameweek && playerDTO.gameweekData.goals >= 2) {
-            score = score * 2;
-        }
-    
-        if (fantasyTeamDTO.hatTrickHeroGameweek === playerDTO.gameweek && playerDTO.gameweekData.goals >= 3) {
-            score = score * 3;
-        }
-    
-        if (fantasyTeamDTO.teamBoostGameweek === playerDTO.gameweek && playerDTO.teamId === fantasyTeamDTO.teamBoostTeamId) {
-            score = score * 2;
-        }
     
         const gameweekFixtures = fixtures ? fixtures.filter(fixture => fixture.gameweek === playerDTO.gameweek) : [];
         const playerFixture = gameweekFixtures.find(fixture => 
@@ -463,12 +402,77 @@ const ViewPoints = () => {
         if (playerFixture) {
             score += pointsForHighestScore;
         }
+
+        
+        score += playerDTO.gameweekData.goals * pointsForGoal;
+
+        score += playerDTO.gameweekData.assists * pointsForAssist;
+
+        return score;
+    };
     
-        if (fantasyTeamDTO.captainId === playerDTO.id) {
-            score = score * 2;
+    const calculateBonusPoints = (playerDTO, fantasyTeamDTO, points) => {
+        if (!playerDTO) {
+            console.error("No gameweekData found for player:", playerDTO);
+            return 0;
+        }
+        
+        let bonusPoints = 0; 
+        var pointsForGoal = 0;
+        var pointsForAssist = 0;
+        switch(playerDTO.position){
+            case 0:
+                pointsForGoal = 20;
+                pointsForAssist = 15;  
+                break;
+            case 1:
+                pointsForGoal = 20;
+                pointsForAssist = 15; 
+                break;
+            case 2:
+                pointsForGoal = 15;
+                pointsForAssist = 10; 
+                break;
+            case 3:
+                pointsForGoal = 10;
+                pointsForAssist = 10; 
+                break;
+        };
+
+        if(fantasyTeamDTO.goalGetterGameweek === playerDTO.gameweek && fantasyTeamDTO.goalGetterPlayerId === playerDTO.id){
+            bonusPoints = playerDTO.gameweekData.goals * pointsForGoal * 2;
+        }
+
+        if(fantasyTeamDTO.passMasterGameweek === playerDTO.gameweek && fantasyTeamDTO.passMasterPlayerId === playerDTO.id){
+            bonusPoints = playerDTO.gameweekData.assists * pointsForAssist * 2;
+        }
+        
+        if (fantasyTeamDTO.noEntryGameweek === playerDTO.gameweek && fantasyTeamDTO.noEntryPlayerId === playerDTO.id && 
+            (playerDTO.position === 0 || playerDTO.position === 1) && playerDTO.gameweekData.cleanSheets) {
+            bonusPoints = points * 2; 
         }
     
-        return score;
+        if (fantasyTeamDTO.safeHandsGameweek === playerDTO.gameweek && playerDTO.position === 0 && playerDTO.gameweekData.saves >= 5) {
+            bonusPoints = points * 2; 
+        }
+    
+        if (fantasyTeamDTO.captainFantasticGameweek === playerDTO.gameweek && fantasyTeamDTO.captainId === playerDTO.id && playerDTO.gameweekData.goals > 0) {
+            bonusPoints = points; 
+        }
+    
+        if (fantasyTeamDTO.braceBonusGameweek === playerDTO.gameweek && playerDTO.gameweekData.goals >= 2) {
+            bonusPoints = points; 
+        }
+    
+        if (fantasyTeamDTO.hatTrickHeroGameweek === playerDTO.gameweek && playerDTO.gameweekData.goals >= 3) {
+            bonusPoints = points * 2; 
+        }
+    
+        if (fantasyTeamDTO.teamBoostGameweek === playerDTO.gameweek && playerDTO.teamId === fantasyTeamDTO.teamBoostTeamId) {
+            bonusPoints = points;
+        }
+    
+        return bonusPoints;
     };
 
     const getBonusDetails = () => {
@@ -555,12 +559,11 @@ const ViewPoints = () => {
     }
     
 
-    const handleShowModal = (player, playerDTO, isCaptain, bonusName, bonusPoints) => {
+    const handleShowModal = (player, playerDTO, isCaptain, bonusName) => {
         setSelectedPlayer(player);
         setSelectedPlayerDTO(playerDTO);
         setSelectedPlayerCaptain(isCaptain);
         setSelectedPlayerBonusName(bonusName);
-        setSelectedPlayerBonusPoints(bonusPoints);
         setShowModal(true);
     }
     
@@ -630,7 +633,7 @@ const ViewPoints = () => {
                 </Card.Body>
             </Card>
    
-            {selectedPlayer && selectedPlayerDTO && <PlayerDetailsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} gameweek={gameweek} teams={teams} isCaptain={selectedPlayerCaptain} bonusName={selectedPlayerBonusName} bonusPoints={selectedPlayerBonusPoints}/>}
+            {selectedPlayer && selectedPlayerDTO && <PlayerDetailsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} gameweek={gameweek} teams={teams} isCaptain={selectedPlayerCaptain} bonusName={selectedPlayerBonusName} />}
     
         </Container>
         );

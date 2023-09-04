@@ -1,36 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Table, Container, Card } from 'react-bootstrap';
 
-const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams, isCaptain, bonusName, bonusPoints }) => {
+const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams, isCaptain, bonusName }) => {
     if (!player || !playerDTO || !playerDTO.gameweekData) return null;
 
     const { gameweekData } = playerDTO;
     
-    const [points, setPoints] = useState(0);
-    
     const getTeamById = (teamId) => {
       return teams.find(team => team.id === teamId);
-    }
-
-    useEffect(() => {
-        updatePoints();
-      }, [player]);
-
-    const updatePoints = () => {
-        var totalPoints = 0;
-        totalPoints += gameweekData.appearance * 5;
-        totalPoints += gameweekData.goalPoints;
-        totalPoints += gameweekData.assistPoints;
-        totalPoints += gameweekData.goalsConcededPoints
-        totalPoints += Math.floor(gameweekData.saves / 3) * 5;
-        totalPoints += gameweekData.cleanSheetPoints
-        totalPoints += gameweekData.penaltySaves * 20;
-        totalPoints += gameweekData.missedPenalties * -15
-        totalPoints += gameweekData.yellowCards * -5;
-        totalPoints += gameweekData.redCards > 0 ? -20 : 0;
-        totalPoints += gameweekData.ownGoals * -10;
-        totalPoints += gameweekData.highestScoringPlayerId > 0 ? 25 : 0;
-        setPoints(totalPoints);
     }
 
     return (
@@ -127,20 +104,25 @@ const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams,
                                     <tr>
                                         <td>Points</td>
                                         <td className='text-center'>-</td>
-                                        <td className='text-center'>{points}</td>
+                                        <td className='text-center'>{playerDTO.points}</td>
                                     </tr>
                                     <tr>
                                         <td>{bonusName}</td>
                                         <td className='text-center'>-</td>
-                                        <td className='text-center'>{bonusPoints}</td>
+                                        <td className='text-center'>{playerDTO.bonusPoints}</td>
                                     </tr>
                                     {isCaptain && (
                                         <tr>
                                             <td>Captain Bonus</td>
                                             <td className='text-center'>x2</td>
-                                            <td className='text-center'>{(points + bonusPoints) * 2}</td>
+                                            <td className='text-center'>{playerDTO.points + playerDTO.bonusPoints}</td>
                                         </tr>
                                     )}
+                                    <tr>
+                                        <td>Total</td>
+                                        <td className='text-center'>-</td>
+                                        <td className='text-center'>{playerDTO.totalPoints}</td>
+                                    </tr>
                                 </tbody>
                             </Table>
                         </Card.Body>
