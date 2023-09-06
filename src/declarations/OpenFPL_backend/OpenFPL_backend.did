@@ -24,6 +24,7 @@ type Result =
  };
 type ProfileDTO = 
  record {
+   canUpdateFavouriteTeam: bool;
    createDate: int;
    displayName: text;
    favouriteTeamId: nat16;
@@ -179,6 +180,7 @@ service : {
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
   getCurrentGameweek: () -> (nat8);
+  getCurrentMonth: () -> (nat8);
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;
   getFantasyTeamForGameweek: (text, nat16, nat8) -> (FantasyTeamSnapshot);

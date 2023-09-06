@@ -121,6 +121,7 @@ export interface ProfileDTO {
   'displayName' : string,
   'fplDepositAddress' : Uint8Array | number[],
   'createDate' : bigint,
+  'canUpdateFavouriteTeam' : boolean,
   'reputation' : number,
   'principalName' : string,
   'profilePicture' : Uint8Array | number[],
@@ -153,6 +154,7 @@ export interface _SERVICE {
     PaginatedClubLeaderboard
   >,
   'getCurrentGameweek' : ActorMethod<[], number>,
+  'getCurrentMonth' : ActorMethod<[], number>,
   'getCurrentSeason' : ActorMethod<[], Season>,
   'getFantasyTeam' : ActorMethod<[], FantasyTeam>,
   'getFantasyTeamForGameweek' : ActorMethod<

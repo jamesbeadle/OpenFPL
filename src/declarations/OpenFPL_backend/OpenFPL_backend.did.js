@@ -119,6 +119,7 @@ export const idlFactory = ({ IDL }) => {
     'displayName' : IDL.Text,
     'fplDepositAddress' : IDL.Vec(IDL.Nat8),
     'createDate' : IDL.Int,
+    'canUpdateFavouriteTeam' : IDL.Bool,
     'reputation' : IDL.Nat32,
     'principalName' : IDL.Text,
     'profilePicture' : IDL.Vec(IDL.Nat8),
@@ -156,6 +157,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getCurrentGameweek' : IDL.Func([], [IDL.Nat8], []),
+    'getCurrentMonth' : IDL.Func([], [IDL.Nat8], []),
     'getCurrentSeason' : IDL.Func([], [Season], []),
     'getFantasyTeam' : IDL.Func([], [FantasyTeam], ['query']),
     'getFantasyTeamForGameweek' : IDL.Func(

@@ -13,6 +13,7 @@ module DTOs {
         favouriteTeamId: Nat16;
         createDate: Int;
         reputation: Nat32;
+        canUpdateFavouriteTeam: Bool;
     };
 
     public type AccountBalanceDTO = {

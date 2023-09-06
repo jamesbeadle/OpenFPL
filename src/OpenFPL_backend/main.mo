@@ -150,6 +150,7 @@ actor Self {
     var favouriteTeamId = Nat16.fromNat(0);
     var createDate: Int = 0;
     var reputation = Nat32.fromNat(0);
+    var canUpdateFavouriteTeam = true;
 
     var profile = profilesInstance.getProfile(Principal.toText(caller));
     
@@ -169,6 +170,7 @@ actor Self {
         favouriteTeamId := p.favouriteTeamId;
         createDate := p.createDate;
         reputation := p.reputation;
+        canUpdateFavouriteTeam := p.favouriteTeamId == 0 or not seasonManager.seasonActive();
       };
     };
 
@@ -182,6 +184,7 @@ actor Self {
       favouriteTeamId = favouriteTeamId;
       createDate = createDate;
       reputation = reputation;
+      canUpdateFavouriteTeam = canUpdateFavouriteTeam;
     };
 
     return profileDTO;
@@ -220,6 +223,7 @@ actor Self {
       favouriteTeamId = favouriteTeamId;
       createDate = createDate;
       reputation = reputation;
+      canUpdateFavouriteTeam = false;
     };
 
     return profileDTO;
@@ -238,8 +242,16 @@ actor Self {
   public shared ({caller}) func updateFavouriteTeam(favouriteTeamId :Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
 
-    assert not seasonManager.seasonActive();
-
+    var profile = profilesInstance.getProfile(Principal.toText(caller));
+    switch(profile){
+      case (null){ assert not false; };
+      case (?foundProfile){
+        if(foundProfile.favouriteTeamId > 0){
+          assert not seasonManager.seasonActive();
+        };
+      };
+    };
+    
     return profilesInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
   };
 
