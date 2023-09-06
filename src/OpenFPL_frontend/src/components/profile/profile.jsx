@@ -155,7 +155,6 @@ const Profile = () => {
   };
   
   const handleFavoriteTeamChange = async (event) => {
-    setIsLoading(true);
     setSelectedTeamId(Number(event.target.value));
     let team = teams.find(t => t.id === Number(event.target.value));
     setSelectedTeamName(team.name);
@@ -163,10 +162,12 @@ const Profile = () => {
   };
   
   const handleConfirmFavouriteTeamClick = async (favouriteTeamId) => {
+    setIsLoading(true);
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     await open_fpl_backend.updateFavouriteTeam(Number(favouriteTeamId));
     setShowConfirmFavouriteTeamModal(false);
+    setFavouriteTeam(Number(favouriteTeamId));
     setIsLoading(false);
   };
 
