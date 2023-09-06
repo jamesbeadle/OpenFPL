@@ -67,7 +67,7 @@ module {
             return fantasyTeams.get(principalId);
         };
 
-        public func createFantasyTeam(principalId: Text, gameweek: Nat8, newPlayers: [DTOs.PlayerDTO], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : Result.Result<(), T.Error> {
+        public func createFantasyTeam(principalId: Text, teamName: Text, favouriteTeamId: T.TeamId, gameweek: Nat8,newPlayers: [DTOs.PlayerDTO], captainId: Nat16, bonusId: Nat8, bonusPlayerId: Nat16, bonusTeamId: Nat16) : Result.Result<(), T.Error> {
 
              let existingTeam = fantasyTeams.get(principalId);
             
@@ -86,8 +86,7 @@ module {
                         return #err(#InvalidTeamError);
                     };
 
-                    let teamValueMillions = totalTeamValue * 250_000;
-                    let bank: Nat = 300_000_000 - teamValueMillions;
+                    let bank: Nat = 1200 - totalTeamValue;
 
                     var bankBalance = bank;
                     var goalGetterGameweek = Nat8.fromNat(0);
@@ -179,7 +178,7 @@ module {
 
                     var newTeam: T.FantasyTeam = {
                         principalId = principalId;
-                        bankBalance = Float.fromInt(bankBalance);
+                        bankBalance = bankBalance;
                         playerIds = allPlayerIds;
                         transfersAvailable = 2;
                         captainId = newCaptainId;
@@ -197,6 +196,8 @@ module {
                         captainFantasticPlayerId = captainFantasticPlayerId;
                         braceBonusGameweek = braceBonusGameweek;
                         hatTrickHeroGameweek = hatTrickHeroGameweek;
+                        teamName = teamName;
+                        favouriteTeamId = favouriteTeamId;
                     };
 
                     let newUserTeam: T.UserFantasyTeam = {
@@ -250,12 +251,9 @@ module {
                         sold := sold + newPlayer.value;
                     };
 
-                    let netSpendQMs: Int = spent - sold;
-                    let netSpendM: Float = Float.fromInt(netSpendQMs) / 4.0;
-                    
-                    let netSpend: Float = netSpendM * 1_000_000;
+                    let netSpendQMs: Nat = spent - sold;
 
-                    if(netSpend > existingTeam.bankBalance){
+                    if(netSpendQMs > existingTeam.bankBalance){
                         return #err(#InvalidTeamError);
                     };
                 
@@ -317,7 +315,7 @@ module {
                     var braceBonusGameweek = existingTeam.braceBonusGameweek;
                     var hatTrickHeroGameweek = existingTeam.hatTrickHeroGameweek;
                     var newCaptainId = captainId;
-
+                    
                     let sortedPlayers = sortPlayers(newPlayers);       
                     let allPlayerIds = Array.map<DTOs.PlayerDTO, Nat16>(sortedPlayers, func (player: DTOs.PlayerDTO) : Nat16 { return player.id; });    
                     
@@ -369,7 +367,7 @@ module {
                         hatTrickHeroGameweek := gameweek;
                     };
                    
-                    let newBankBalance: Float = existingTeam.bankBalance - netSpend;
+                    let newBankBalance: Nat = existingTeam.bankBalance - netSpendQMs;
 
                     var newTransfersAvailable: Nat8 = 2;
 
@@ -418,6 +416,8 @@ module {
                         captainFantasticPlayerId = captainFantasticPlayerId;
                         braceBonusGameweek = braceBonusGameweek;
                         hatTrickHeroGameweek = hatTrickHeroGameweek;
+                        favouriteTeamId = existingTeam.favouriteTeamId;
+                        teamName = existingTeam.teamName;
                     };
 
                     let updatedUserTeam: T.UserFantasyTeam = {
@@ -543,6 +543,8 @@ module {
                     captainFantasticPlayerId = userFantasyTeam.captainFantasticPlayerId;
                     braceBonusGameweek = userFantasyTeam.braceBonusGameweek;
                     hatTrickHeroGameweek = userFantasyTeam.hatTrickHeroGameweek;
+                    teamName = userFantasyTeam.teamName;
+                    favouriteTeamId = userFantasyTeam.favouriteTeamId;
                 };
                 
                 let updatedUserTeam: T.UserFantasyTeam = {
@@ -688,6 +690,8 @@ module {
                                                 captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
                                                 braceBonusGameweek = snapshot.braceBonusGameweek;
                                                 hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
+                                                favouriteTeamId = snapshot.favouriteTeamId;
+                                                teamName = snapshot.teamName;
                                                 points = teamPoints;
                                             };
 
@@ -827,57 +831,45 @@ module {
             seasonLeaderboards.put(seasonId, updatedSeasonLeaderboard);
 
         };
-
+/*
         private func calculateMonthlyLeaderboards(seasonId: Nat16, gameweek: Nat8): (){
 
             var monthGameweeks: List.List<Nat8> = List.nil();
-
-            var gameweekMonth: Nat8 = 0;
+            var gameweekMonth: Nat8 = 0; 
+            
+            func getLatestFixtureTime(fixtures: [T.Fixture]): Int {
+                    var latestFixtureTime = fixtures[0].kickOff;
+                for(fixture in Iter.fromArray<T.Fixture>(fixtures)){
+                    if(fixture.kickOff > latestFixtureTime){
+                        latestFixtureTime := fixture.kickOff;
+                    };
+                };
+                return latestFixtureTime;
+            };
 
             switch(getGameweekFixtures) {
                 case (null) { };
                 case (?actualFunction) {
-                    let fixtures = actualFunction(seasonId, gameweek);
+                    let activeGameweekFixtures = actualFunction(seasonId, gameweek);
+                    Debug.print(debug_show activeGameweekFixtures);
+                    gameweekMonth := Utilities.unixTimeToMonth(getLatestFixtureTime(activeGameweekFixtures));
 
-                    var latestFixtureTime = fixtures[0].kickOff;
-                    for(fixture in Iter.fromArray<T.Fixture>(fixtures)){
-                        if(fixture.kickOff > latestFixtureTime){
-                            latestFixtureTime := fixture.kickOff;
-                        };
-                    };
-
-                    gameweekMonth := Utilities.unixTimeToMonth(latestFixtureTime);
+                    var currentGameweek = gameweek;
+                    monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
+                    
+                    label gameweekLoop while (currentGameweek > 1) {
+                        currentGameweek -= 1;
+                        let currentFixtures = actualFunction(seasonId, currentGameweek);
+                        let currentMonth = Utilities.unixTimeToMonth(getLatestFixtureTime(currentFixtures));
+                        if (currentMonth == gameweekMonth) {
+                            monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
+                        } else {
+                            break gameweekLoop;
+                        }
+                    }
                 }
             };
 
-            monthGameweeks := List.append(monthGameweeks, List.fromArray([gameweek]));
-
-            var currentGameweek = gameweek - 1;
-            var currentGameweekMonth = gameweekMonth;
-
-            label check while (currentGameweek > 0) {
-                switch(getGameweekFixtures) {
-                    case (null) { };
-                    case (?actualFunction) {
-                        let currentFixtures = actualFunction(seasonId, currentGameweek);
-                        var currentFixtureTime = currentFixtures[0].kickOff;
-                        for(fixture in Iter.fromArray<T.Fixture>(currentFixtures)){
-                            if(fixture.kickOff > currentFixtureTime){
-                                currentFixtureTime := fixture.kickOff;
-                            };
-                        };
-                        currentGameweekMonth := Utilities.unixTimeToMonth(currentFixtureTime);
-                    }
-                };
-
-                if (currentGameweekMonth != gameweekMonth) {
-                    break check;
-                } else {
-                    monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
-                };
-
-                currentGameweek -= 1;
-            };
 
             let allUserProfiles = getProfiles();
             let profilesMap = HashMap.fromIter<Text, T.Profile>(allUserProfiles.vals(), allUserProfiles.size(), Text.equal, Text.hash);
@@ -937,6 +929,104 @@ module {
 
             monthlyLeaderboards.put(seasonId, updatedLeaderboards);
         };
+*/
+
+       private func calculateMonthlyLeaderboards(seasonId: Nat16, gameweek: Nat8): () {
+
+            var monthGameweeks: List.List<Nat8> = List.nil();
+            var gameweekMonth: Nat8 = 0; 
+
+            func getLatestFixtureTime(fixtures: [T.Fixture]): Int {
+                return Array.foldLeft(fixtures, fixtures[0].kickOff, func(acc: Int, fixture: T.Fixture): Int {
+                    if (fixture.kickOff > acc) {
+                        return fixture.kickOff;
+                    } else {
+                        return acc;
+                    }
+                });
+            };
+
+            switch (getGameweekFixtures) {
+                case (null) {  };
+                case (?actualFunction) { 
+                    let activeGameweekFixtures = actualFunction(seasonId, gameweek); 
+                    if (activeGameweekFixtures.size() > 0) {
+                        gameweekMonth := Utilities.unixTimeToMonth(getLatestFixtureTime(activeGameweekFixtures));
+                        monthGameweeks := List.append(monthGameweeks, List.fromArray([gameweek]));
+
+                        var currentGameweek = gameweek;
+                        label gwLoop while (currentGameweek > 1) {
+                            currentGameweek -= 1;
+                            let currentFixtures = actualFunction(seasonId, currentGameweek);
+                            let currentMonth = Utilities.unixTimeToMonth(getLatestFixtureTime(currentFixtures));
+                            if (currentMonth == gameweekMonth) {
+                                monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
+                            } else {
+                                break gwLoop;
+                            }
+                        }
+                    };
+                    
+                     };
+            };
+
+            let allUserProfiles = getProfiles();
+            let profilesMap = HashMap.fromIter<Text, T.Profile>(allUserProfiles.vals(), allUserProfiles.size(), Text.equal, Text.hash);
+            let clubGroup = groupByTeam(fantasyTeams, profilesMap);
+            var updatedLeaderboards = List.nil<T.ClubLeaderboard>();
+
+            for ((clubId, userTeams) : (T.TeamId, [(Text, T.UserFantasyTeam)]) in clubGroup.entries()) {
+                
+                let filteredTeams = List.filter<(Text, T.UserFantasyTeam)>(
+                    List.fromArray(userTeams), 
+                    func(team: (Text, T.UserFantasyTeam)): Bool {
+                        return team.1.fantasyTeam.favouriteTeamId != 0;
+                    });
+
+                let monthEntries = List.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
+                    filteredTeams,
+                    func(pair: (Text, T.UserFantasyTeam)): T.LeaderboardEntry {
+                        let userProfile = profilesMap.get(pair.0);
+                        switch(userProfile){
+                            case (null) {
+                                return createLeaderboardEntry(pair.0, pair.0, pair.1, totalPointsForMonth(pair.1, seasonId, monthGameweeks));
+                            };
+                            case (?foundProfile) {
+                                return createLeaderboardEntry(pair.0, foundProfile.displayName, pair.1, totalPointsForMonth(pair.1, seasonId, monthGameweeks));
+                            };
+                        }
+                    });
+
+
+                
+
+                let clubMonthlyLeaderboard: T.ClubLeaderboard = {
+                    seasonId = seasonId;
+                    month = gameweekMonth;
+                    clubId = clubId;
+                    entries = monthEntries;
+                };
+
+                updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([clubMonthlyLeaderboard]));
+            };
+
+            var seasonMonthlyLeaderboards = List.nil<T.ClubLeaderboard>();
+
+            switch(monthlyLeaderboards.get(seasonId)) {
+                case (null){ };
+                case (?value) { seasonMonthlyLeaderboards := value };
+            };
+
+            for (leaderboard in Iter.fromList(seasonMonthlyLeaderboards)) {
+                if (not (leaderboard.month == gameweekMonth)) { 
+                    updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([leaderboard]));
+                }
+            };
+
+            monthlyLeaderboards.put(seasonId, updatedLeaderboards);
+        };
+
+
 
         private func createLeaderboardEntry(principalId: Text, username: Text, team: T.UserFantasyTeam, points: Int16): T.LeaderboardEntry {
             return {
@@ -1058,6 +1148,8 @@ module {
                     captainFantasticPlayerId =  userFantasyTeam.fantasyTeam.captainFantasticPlayerId;
                     braceBonusGameweek = userFantasyTeam.fantasyTeam.braceBonusGameweek;
                     hatTrickHeroGameweek = userFantasyTeam.fantasyTeam.hatTrickHeroGameweek;
+                    teamName = userFantasyTeam.fantasyTeam.teamName;
+                    favouriteTeamId = userFantasyTeam.fantasyTeam.favouriteTeamId;
                     points = 0;
                 };
 
@@ -1276,11 +1368,11 @@ module {
         };
 
         public func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
-            let emptySnapshot: T.FantasyTeamSnapshot = { principalId = ""; transfersAvailable = 0; bankBalance = 0.0;  playerIds = [];
+            let emptySnapshot: T.FantasyTeamSnapshot = { principalId = ""; transfersAvailable = 0; bankBalance = 0;  playerIds = [];
                 captainId = 0; gameweek = 0; goalGetterGameweek = 0; goalGetterPlayerId = 0; passMasterGameweek = 0;
                 passMasterPlayerId = 0; noEntryGameweek = 0; noEntryPlayerId = 0; teamBoostGameweek = 0; teamBoostTeamId = 0;
                 safeHandsGameweek = 0; safeHandsPlayerId = 0; captainFantasticGameweek = 0; captainFantasticPlayerId = 0; braceBonusGameweek = 0;
-                hatTrickHeroGameweek = 0; points = 0;
+                hatTrickHeroGameweek = 0; points = 0; favouriteTeamId = 0; teamName = "";
             };
             let fantasyTeam = fantasyTeams.get(managerId);
             switch(fantasyTeam){
@@ -1373,7 +1465,7 @@ module {
             return {
                 principalId = principalId;
                 transfersAvailable = 2;
-                bankBalance = 300_000_000;
+                bankBalance = 1200;
                 playerIds = [];
                 captainId = 0;
                 goalGetterGameweek = 0;
@@ -1390,6 +1482,8 @@ module {
                 captainFantasticPlayerId = 0;
                 braceBonusGameweek = 0;
                 hatTrickHeroGameweek = 0;
+                teamName = "";
+                favouriteTeamId = 0;
             };
         };
         
@@ -1408,9 +1502,8 @@ module {
             };
         };
         
-        public func recalculateSnapshotTotals() : async (){
-            await calculateFantasyTeamScores(1,1);
-            await calculateFantasyTeamScores(1,2);
+        public func recalculateClubLeaderboards() : async (){
+            calculateMonthlyLeaderboards(1,1);
         };
         
     };

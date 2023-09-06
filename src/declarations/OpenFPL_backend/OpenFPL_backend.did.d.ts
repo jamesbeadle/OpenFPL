@@ -186,6 +186,7 @@ export interface _SERVICE {
   >,
   'getWeeklyTop10' : ActorMethod<[], PaginatedLeaderboard>,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
+  'recalculateClubLeaderboards' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

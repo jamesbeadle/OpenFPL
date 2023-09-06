@@ -45,13 +45,13 @@ actor Self {
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
-  };
+  }; 
   */
   //Live canisters  
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-  }; 
+  };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
   { 
@@ -530,6 +530,8 @@ actor Self {
           captainFantasticPlayerId = 0;
           braceBonusGameweek = 0;
           hatTrickHeroGameweek = 0;
+          favouriteTeamId = 0;
+          teamName = "";
         }; };
         case (?team) 
         { 
@@ -554,8 +556,20 @@ actor Self {
         return Option.isSome(isPlayerIdInNewTeam);
     });
 
+    var teamName = principalId;
+    var favouriteTeamId: T.TeamId = 0;
+
+    var userProfile = profilesInstance.getProfile(principalId);
+    switch(userProfile){
+      case (null){ };
+      case (?foundProfile){
+        teamName := foundProfile.displayName;
+        favouriteTeamId := foundProfile.favouriteTeamId;
+      };
+    };
+
     switch (fantasyTeam) {
-        case (null) { return fantasyTeamsInstance.createFantasyTeam(principalId, seasonManager.getActiveGameweek(), newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId); };
+        case (null) { return fantasyTeamsInstance.createFantasyTeam(principalId, teamName, favouriteTeamId, seasonManager.getActiveGameweek(), newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId); };
         case (?team) 
         { 
 
@@ -1033,6 +1047,10 @@ actor Self {
               };
           }
       }
+  };
+
+  public shared func recalculateClubLeaderboards() : async (){
+    await fantasyTeamsInstance.recalculateClubLeaderboards();
   };
 
 

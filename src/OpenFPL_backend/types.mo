@@ -118,8 +118,10 @@ module Types{
 
     public type FantasyTeam = {
         principalId: Text;
+        teamName: Text;
+        favouriteTeamId: TeamId;
         transfersAvailable: Nat8;
-        bankBalance: Float;
+        bankBalance: Nat; //Value in £0.25m units
         playerIds: [PlayerId];
         captainId: PlayerId;
         goalGetterGameweek: GameweekNumber;
@@ -152,8 +154,10 @@ module Types{
 
     public type FantasyTeamSnapshot = {
         principalId: Text;
+        teamName: Text;
+        favouriteTeamId: TeamId;
         transfersAvailable: Nat8;
-        bankBalance: Float;
+        bankBalance: Nat; //Value in £0.25m units
         playerIds: [PlayerId];
         captainId: Nat16;
         gameweek: GameweekNumber;
