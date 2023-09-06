@@ -60,6 +60,14 @@ type PaginatedLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
+type PaginatedClubLeaderboard = 
+ record {
+   clubId: TeamId;
+   entries: vec LeaderboardEntry;
+   month: nat8;
+   seasonId: SeasonId;
+   totalEntries: nat;
+ };
 type List_2 = 
  opt record {
        Fixture;
@@ -168,6 +176,8 @@ type AccountBalanceDTO =
 service : {
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
+  getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
+   (PaginatedClubLeaderboard) query;
   getCurrentGameweek: () -> (nat8);
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;

@@ -104,6 +104,19 @@ actor Self {
   public shared ({caller}) func getCurrentSeason() : async T.Season {
     return await seasonManager.getActiveSeason();
   };
+
+  public shared ({caller}) func getCurrentMonth() : async Nat8 {
+    let fixtures = await getActiveGameweekFixtures();
+
+    var latestFixtureTime = fixtures[0].kickOff;
+    for(fixture in Iter.fromArray<T.Fixture>(fixtures)){
+        if(fixture.kickOff > latestFixtureTime){
+            latestFixtureTime := fixture.kickOff;
+        };
+    };
+
+    return Utilities.unixTimeToMonth(latestFixtureTime);
+  };
   
   public query func getTeams() : async [T.Team] {
     return teamsInstance.getTeams();
@@ -224,6 +237,9 @@ actor Self {
 
   public shared ({caller}) func updateFavouriteTeam(favouriteTeamId :Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+
+    assert not seasonManager.seasonActive();
+
     return profilesInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
   };
 
@@ -294,7 +310,7 @@ actor Self {
   };
 
   //League functions
-  public shared query ({caller}) func getSeasonTop10() : async T.PaginatedLeaderboard {
+  public shared query ({caller}) func getSeasonTop10() : async DTOs.PaginatedLeaderboard {
       
       let top10 = fantasyTeamsInstance.getSeasonTop10(seasonManager.getActiveSeasonId());
       
@@ -308,7 +324,7 @@ actor Self {
       
   };
 
-  public shared query ({caller}) func getWeeklyTop10() : async T.PaginatedLeaderboard {
+  public shared query ({caller}) func getWeeklyTop10() : async DTOs.PaginatedLeaderboard {
     let top10 = fantasyTeamsInstance.getWeeklyTop10(seasonManager.getActiveSeasonId(), seasonManager.getActiveGameweek());
       
       return {
@@ -319,12 +335,16 @@ actor Self {
       };
   };
 
-  public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
+  public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async DTOs.PaginatedLeaderboard {
       return fantasyTeamsInstance.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
   };
 
-  public shared query ({caller}) func getSeasonLeaderboard(seasonId: Nat16, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
+  public shared query ({caller}) func getSeasonLeaderboard(seasonId: Nat16, limit: Nat, offset: Nat) : async DTOs.PaginatedLeaderboard {
       return fantasyTeamsInstance.getSeasonLeaderboard(seasonId, limit, offset);
+  };
+
+  public shared query ({caller}) func getClubLeaderboard(seasonId: Nat16, month: Nat8, clubId: T.TeamId, limit: Nat, offset: Nat) : async DTOs.PaginatedClubLeaderboard {
+      return fantasyTeamsInstance.getClubLeaderboard(seasonId, month, clubId, limit, offset);
   };
   
   private func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
@@ -917,6 +937,7 @@ actor Self {
   private stable var stable_proposal_submission_e8_fee : Nat64 = 0;
   private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
   private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
+  private stable var stable_monthly_leaderboards: [(T.SeasonId, List.List<T.ClubLeaderboard>)] = [];
   
   system func preupgrade() {
 
@@ -943,6 +964,7 @@ actor Self {
     stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
     stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
     stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
+    stable_monthly_leaderboards := fantasyTeamsInstance.getMonthlyLeaderboards();
   };
 
   system func postupgrade() {
@@ -959,6 +981,7 @@ actor Self {
     governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
     governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
+    fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
     recreateTimers();
   };
   

@@ -226,6 +226,11 @@ const Profile = () => {
                                 </Form.Control>
                               </Form.Group>
                             </ListGroup.Item>
+                            <ListGroup.Item className="mt-1 mb-1">
+                              <Button as={Link} to={`/club-leaderboard/${favouriteTeam}`}>View Club Leaderboard</Button>
+                            </ListGroup.Item>
+                            
+
                           </Col>
                         </Row>
 

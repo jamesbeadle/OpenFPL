@@ -86,5 +86,20 @@ module DTOs {
         fixtureId: T.FixtureId;
     };
 
+    public type PaginatedLeaderboard = {
+        seasonId: T.SeasonId;
+        gameweek: T.GameweekNumber;
+        entries: [T.LeaderboardEntry];
+        totalEntries: Nat;
+    };
+
+    public type PaginatedClubLeaderboard = {
+        seasonId: T.SeasonId;
+        month: Nat8;
+        clubId: T.TeamId;
+        entries: [T.LeaderboardEntry];
+        totalEntries: Nat;
+    };
+
     
 }

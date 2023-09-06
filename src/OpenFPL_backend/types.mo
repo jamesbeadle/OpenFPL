@@ -179,11 +179,11 @@ module Types{
         gameweekLeaderboards: List.List<Leaderboard>;
     };
 
-    public type PaginatedLeaderboard = {
+    public type ClubLeaderboard = {
         seasonId: SeasonId;
-        gameweek: GameweekNumber;
-        entries: [LeaderboardEntry];
-        totalEntries: Nat;
+        month: Nat8;
+        clubId: TeamId;
+        entries: List.List<LeaderboardEntry>;      
     };
 
     public type Leaderboard = {

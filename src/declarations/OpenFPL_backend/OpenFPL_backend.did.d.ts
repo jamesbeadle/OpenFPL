@@ -85,6 +85,13 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
+export interface PaginatedClubLeaderboard {
+  'month' : number,
+  'clubId' : TeamId,
+  'totalEntries' : bigint,
+  'seasonId' : SeasonId,
+  'entries' : Array<LeaderboardEntry>,
+}
 export interface PaginatedLeaderboard {
   'totalEntries' : bigint,
   'seasonId' : SeasonId,
@@ -141,6 +148,10 @@ export type TeamId = number;
 export interface _SERVICE {
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
+  'getClubLeaderboard' : ActorMethod<
+    [number, number, TeamId, bigint, bigint],
+    PaginatedClubLeaderboard
+  >,
   'getCurrentGameweek' : ActorMethod<[], number>,
   'getCurrentSeason' : ActorMethod<[], Season>,
   'getFantasyTeam' : ActorMethod<[], FantasyTeam>,

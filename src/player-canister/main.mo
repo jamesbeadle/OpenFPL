@@ -47,7 +47,12 @@ actor Self {
         });
 
         let sortedPlayers = mergeSort(nonLoanPlayers);
-        return Array.map<T.Player, DTOs.PlayerDTO>(List.toArray(sortedPlayers), func (player: T.Player) : DTOs.PlayerDTO { 
+
+        let filteredPlayers = List.filter<T.Player>(sortedPlayers, func(player: T.Player) : Bool {
+            return player.teamId > 0;
+        });
+
+        return Array.map<T.Player, DTOs.PlayerDTO>(List.toArray(filteredPlayers), func (player: T.Player) : DTOs.PlayerDTO { 
             return {
                 id = player.id;
                 firstName = player.firstName;

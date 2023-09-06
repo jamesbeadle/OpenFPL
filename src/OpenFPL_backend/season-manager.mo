@@ -66,6 +66,19 @@ module {
             seasonsInstance.setNextFixtureId(stable_next_fixture_id);
             seasonsInstance.setNextSeasonId(stable_next_season_id);
     };
+
+    public func seasonActive() : Bool {
+        
+        if(activeGameweek > 1){
+            return true;
+        };
+
+        if(List.some(List.fromArray(activeFixtures), func(fixture: T.Fixture): Bool { return fixture.status > 0; })) {
+            return true;
+        };
+        
+        return false;
+    };
     
     public func getActiveFixtures() : [T.Fixture] {
         return activeFixtures;

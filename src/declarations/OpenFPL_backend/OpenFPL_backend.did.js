@@ -32,6 +32,20 @@ export const idlFactory = ({ IDL }) => {
     'gameweek' : GameweekNumber,
     'awayGoals' : IDL.Nat8,
   });
+  const LeaderboardEntry = IDL.Record({
+    'username' : IDL.Text,
+    'positionText' : IDL.Text,
+    'position' : IDL.Int,
+    'principalId' : IDL.Text,
+    'points' : IDL.Int16,
+  });
+  const PaginatedClubLeaderboard = IDL.Record({
+    'month' : IDL.Nat8,
+    'clubId' : TeamId,
+    'totalEntries' : IDL.Nat,
+    'seasonId' : SeasonId,
+    'entries' : IDL.Vec(LeaderboardEntry),
+  });
   List_2.fill(IDL.Opt(IDL.Tuple(Fixture, List_2)));
   const Gameweek = IDL.Record({
     'number' : GameweekNumber,
@@ -110,13 +124,6 @@ export const idlFactory = ({ IDL }) => {
     'profilePicture' : IDL.Vec(IDL.Nat8),
     'membershipType' : IDL.Nat8,
   });
-  const LeaderboardEntry = IDL.Record({
-    'username' : IDL.Text,
-    'positionText' : IDL.Text,
-    'position' : IDL.Int,
-    'principalId' : IDL.Text,
-    'points' : IDL.Int16,
-  });
   const PaginatedLeaderboard = IDL.Record({
     'totalEntries' : IDL.Nat,
     'seasonId' : SeasonId,
@@ -143,6 +150,11 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'getAccountBalanceDTO' : IDL.Func([], [AccountBalanceDTO], []),
     'getActiveGameweekFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
+    'getClubLeaderboard' : IDL.Func(
+        [IDL.Nat16, IDL.Nat8, TeamId, IDL.Nat, IDL.Nat],
+        [PaginatedClubLeaderboard],
+        ['query'],
+      ),
     'getCurrentGameweek' : IDL.Func([], [IDL.Nat8], []),
     'getCurrentSeason' : IDL.Func([], [Season], []),
     'getFantasyTeam' : IDL.Func([], [FantasyTeam], ['query']),
