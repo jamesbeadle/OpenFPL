@@ -754,36 +754,19 @@ module {
 
                 return List.map(sortedEntries, updatePosition);
             };
-
-
-            let allUserProfiles = getProfiles();
            
             let seasonEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
                 Iter.toArray(fantasyTeams.entries()),
                 func (pair) { 
-                    let userProfile = Array.find<(Text, T.Profile)>(allUserProfiles, func(p: (Text, T.Profile)): Bool { return p.0 == pair.0; });
-                    switch(userProfile){
-                        case (null) {
-                            return createLeaderboardEntry(pair.0, pair.0, pair.1, totalPointsForSeason(pair.1, seasonId));
-                        };
-                        case (?foundProfile){
-                            return createLeaderboardEntry(pair.0, foundProfile.1.displayName, pair.1, totalPointsForSeason(pair.1, seasonId)); }
-                        };
-                    }
+                    return createLeaderboardEntry(pair.0, pair.1.fantasyTeam.teamName, pair.1, totalPointsForSeason(pair.1, seasonId)); 
+                }
+
             );
 
             let gameweekEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
                 Iter.toArray(fantasyTeams.entries()),
                 func (pair) { 
-                    let userProfile = Array.find<(Text, T.Profile)>(allUserProfiles, func(p: (Text, T.Profile)): Bool { return p.0 == pair.0; });
-                    switch(userProfile){
-                        case (null) {
-                            return createLeaderboardEntry(pair.0, pair.0, pair.1, totalPointsForGameweek(pair.1, seasonId, gameweek)); 
-                        };  
-                        case (?foundProfile){
-                            return createLeaderboardEntry(pair.0, foundProfile.1.displayName, pair.1, totalPointsForGameweek(pair.1, seasonId, gameweek)); 
-                        };
-                    }
+                    return createLeaderboardEntry(pair.0, pair.1.fantasyTeam.teamName, pair.1, totalPointsForGameweek(pair.1, seasonId, gameweek)); 
                 }
             );
 
@@ -831,107 +814,8 @@ module {
             seasonLeaderboards.put(seasonId, updatedSeasonLeaderboard);
 
         };
-/*
-        private func calculateMonthlyLeaderboards(seasonId: Nat16, gameweek: Nat8): (){
 
-            var monthGameweeks: List.List<Nat8> = List.nil();
-            var gameweekMonth: Nat8 = 0; 
-            
-            func getLatestFixtureTime(fixtures: [T.Fixture]): Int {
-                    var latestFixtureTime = fixtures[0].kickOff;
-                for(fixture in Iter.fromArray<T.Fixture>(fixtures)){
-                    if(fixture.kickOff > latestFixtureTime){
-                        latestFixtureTime := fixture.kickOff;
-                    };
-                };
-                return latestFixtureTime;
-            };
-
-            switch(getGameweekFixtures) {
-                case (null) { };
-                case (?actualFunction) {
-                    let activeGameweekFixtures = actualFunction(seasonId, gameweek);
-                    Debug.print(debug_show activeGameweekFixtures);
-                    gameweekMonth := Utilities.unixTimeToMonth(getLatestFixtureTime(activeGameweekFixtures));
-
-                    var currentGameweek = gameweek;
-                    monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
-                    
-                    label gameweekLoop while (currentGameweek > 1) {
-                        currentGameweek -= 1;
-                        let currentFixtures = actualFunction(seasonId, currentGameweek);
-                        let currentMonth = Utilities.unixTimeToMonth(getLatestFixtureTime(currentFixtures));
-                        if (currentMonth == gameweekMonth) {
-                            monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
-                        } else {
-                            break gameweekLoop;
-                        }
-                    }
-                }
-            };
-
-
-            let allUserProfiles = getProfiles();
-            let profilesMap = HashMap.fromIter<Text, T.Profile>(allUserProfiles.vals(), allUserProfiles.size(), Text.equal, Text.hash);
-            let clubGroup = groupByTeam(fantasyTeams, profilesMap);
-            let seasonMonthlyLeaderboards = monthlyLeaderboards.get(seasonId);
-            var updatedLeaderboards = List.nil<T.ClubLeaderboard>();
-                
-            for((clubId, userTeams) : (T.TeamId, [(Text, T.UserFantasyTeam)]) in clubGroup.entries()){
-                    
-                let filteredUserTeams = Array.filter(userTeams, func(team: (Text, T.UserFantasyTeam)): Bool {
-                    let userProfile = Array.find<(Text, T.Profile)>(allUserProfiles, func(p: (Text, T.Profile)): Bool { return p.0 == team.0; });
-                    switch(userProfile){
-                        case (null) { return false; };
-                        case (?foundProfile) {
-                            return foundProfile.1.favouriteTeamId != 0;
-                        };
-                    };
-                });
-
-                let userTeamMap = HashMap.fromIter<Text, T.UserFantasyTeam>(filteredUserTeams.vals(), filteredUserTeams.size(), Text.equal, Text.hash);
-                let monthEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
-                    Iter.toArray(userTeamMap.entries()),
-                    func (pair) { 
-                        let userProfile = Array.find<(Text, T.Profile)>(allUserProfiles, func(p: (Text, T.Profile)): Bool { return p.0 == pair.0; });
-                        switch(userProfile){
-                            case (null) {
-                                return createLeaderboardEntry(pair.0, pair.0, pair.1, totalPointsForMonth(pair.1, seasonId, monthGameweeks));
-                            };
-                            case (?foundProfile){
-                                return createLeaderboardEntry(pair.0, foundProfile.1.displayName, pair.1, totalPointsForMonth(pair.1, seasonId, monthGameweeks)); }
-                            };
-                        }
-                );
-
-                let clubMonthlyLeaderboard: T.ClubLeaderboard = {
-                    seasonId = seasonId;
-                    month = gameweekMonth;
-                    clubId = clubId;
-                    entries = List.fromArray(monthEntries);
-                };
-
-                switch(seasonMonthlyLeaderboards){
-                    case (null) {
-                        updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([clubMonthlyLeaderboard]));
-                    };
-                    case (?foundMonthlyLeaderboards){
-                        for(leaderboard in Iter.fromList(foundMonthlyLeaderboards)){
-                            if(leaderboard.month == gameweekMonth and leaderboard.clubId == clubId){
-                                updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([clubMonthlyLeaderboard]));
-                            } else { 
-                                updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([leaderboard]));
-                            }
-                        };
-                    };
-                };
-            };
-
-            monthlyLeaderboards.put(seasonId, updatedLeaderboards);
-        };
-*/
-
-       private func calculateMonthlyLeaderboards(seasonId: Nat16, gameweek: Nat8): () {
+        private func calculateMonthlyLeaderboards(seasonId: Nat16, gameweek: Nat8): () {
 
             var monthGameweeks: List.List<Nat8> = List.nil();
             var gameweekMonth: Nat8 = 0; 
@@ -986,19 +870,9 @@ module {
                 let monthEntries = List.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
                     filteredTeams,
                     func(pair: (Text, T.UserFantasyTeam)): T.LeaderboardEntry {
-                        let userProfile = profilesMap.get(pair.0);
-                        switch(userProfile){
-                            case (null) {
-                                return createLeaderboardEntry(pair.0, pair.0, pair.1, totalPointsForMonth(pair.1, seasonId, monthGameweeks));
-                            };
-                            case (?foundProfile) {
-                                return createLeaderboardEntry(pair.0, foundProfile.displayName, pair.1, totalPointsForMonth(pair.1, seasonId, monthGameweeks));
-                            };
-                        }
-                    });
-
-
-                
+                        return createLeaderboardEntry(pair.0, pair.1.fantasyTeam.teamName, pair.1, totalPointsForMonth(pair.1, seasonId, monthGameweeks));
+                    }
+                );
 
                 let clubMonthlyLeaderboard: T.ClubLeaderboard = {
                     seasonId = seasonId;
@@ -1025,8 +899,6 @@ module {
 
             monthlyLeaderboards.put(seasonId, updatedLeaderboards);
         };
-
-
 
         private func createLeaderboardEntry(principalId: Text, username: Text, team: T.UserFantasyTeam, points: Int16): T.LeaderboardEntry {
             return {
