@@ -1333,6 +1333,89 @@ module {
             }
         };
 
+        public func updateDisplayName(principalName: Text, displayName: Text) : () {
+            let existingTeam = fantasyTeams.get(principalName);
+            switch (existingTeam) {
+                case (null) { };
+                case (?foundTeam) {
+                    if(foundTeam.fantasyTeam.teamName == displayName){
+                        return;
+                    };
+
+                    let updatedFantasyTeam: T.FantasyTeam = {
+                        principalId = foundTeam.fantasyTeam.principalId;
+                        teamName = displayName;
+                        favouriteTeamId = foundTeam.fantasyTeam.favouriteTeamId;
+                        transfersAvailable = foundTeam.fantasyTeam.transfersAvailable;
+                        bankBalance = foundTeam.fantasyTeam.bankBalance;
+                        playerIds = foundTeam.fantasyTeam.playerIds;
+                        captainId = foundTeam.fantasyTeam.captainId;
+                        goalGetterGameweek = foundTeam.fantasyTeam.goalGetterGameweek;
+                        goalGetterPlayerId = foundTeam.fantasyTeam.goalGetterPlayerId;
+                        passMasterGameweek = foundTeam.fantasyTeam.passMasterGameweek;
+                        passMasterPlayerId = foundTeam.fantasyTeam.passMasterPlayerId;
+                        noEntryGameweek = foundTeam.fantasyTeam.noEntryGameweek;
+                        noEntryPlayerId = foundTeam.fantasyTeam.noEntryPlayerId;
+                        teamBoostGameweek = foundTeam.fantasyTeam.teamBoostGameweek;
+                        teamBoostTeamId = foundTeam.fantasyTeam.teamBoostTeamId;
+                        safeHandsGameweek = foundTeam.fantasyTeam.safeHandsGameweek;
+                        safeHandsPlayerId = foundTeam.fantasyTeam.safeHandsPlayerId;
+                        captainFantasticGameweek = foundTeam.fantasyTeam.captainFantasticGameweek;
+                        captainFantasticPlayerId = foundTeam.fantasyTeam.captainFantasticPlayerId;
+                        braceBonusGameweek = foundTeam.fantasyTeam.braceBonusGameweek;
+                        hatTrickHeroGameweek = foundTeam.fantasyTeam.hatTrickHeroGameweek;
+                    };
+
+                    let updatedUserFantasyTeam: T.UserFantasyTeam = {
+                        fantasyTeam = updatedFantasyTeam;
+                        history = foundTeam.history;
+                    };
+
+                    fantasyTeams.put(principalName, updatedUserFantasyTeam);
+                };
+            };
+        };
+
+        public func updateFavouriteTeam(principalName: Text, favouriteTeamId: Nat16) : () {
+            let existingTeam = fantasyTeams.get(principalName);
+            switch (existingTeam) {
+                case (null) { };
+                case (?foundTeam) {
+
+                    let updatedFantasyTeam: T.FantasyTeam = {
+                        principalId = foundTeam.fantasyTeam.principalId;
+                        teamName = foundTeam.fantasyTeam.teamName;
+                        favouriteTeamId = favouriteTeamId;
+                        transfersAvailable = foundTeam.fantasyTeam.transfersAvailable;
+                        bankBalance = foundTeam.fantasyTeam.bankBalance;
+                        playerIds = foundTeam.fantasyTeam.playerIds;
+                        captainId = foundTeam.fantasyTeam.captainId;
+                        goalGetterGameweek = foundTeam.fantasyTeam.goalGetterGameweek;
+                        goalGetterPlayerId = foundTeam.fantasyTeam.goalGetterPlayerId;
+                        passMasterGameweek = foundTeam.fantasyTeam.passMasterGameweek;
+                        passMasterPlayerId = foundTeam.fantasyTeam.passMasterPlayerId;
+                        noEntryGameweek = foundTeam.fantasyTeam.noEntryGameweek;
+                        noEntryPlayerId = foundTeam.fantasyTeam.noEntryPlayerId;
+                        teamBoostGameweek = foundTeam.fantasyTeam.teamBoostGameweek;
+                        teamBoostTeamId = foundTeam.fantasyTeam.teamBoostTeamId;
+                        safeHandsGameweek = foundTeam.fantasyTeam.safeHandsGameweek;
+                        safeHandsPlayerId = foundTeam.fantasyTeam.safeHandsPlayerId;
+                        captainFantasticGameweek = foundTeam.fantasyTeam.captainFantasticGameweek;
+                        captainFantasticPlayerId = foundTeam.fantasyTeam.captainFantasticPlayerId;
+                        braceBonusGameweek = foundTeam.fantasyTeam.braceBonusGameweek;
+                        hatTrickHeroGameweek = foundTeam.fantasyTeam.hatTrickHeroGameweek;
+                    };
+
+                    let updatedUserFantasyTeam: T.UserFantasyTeam = {
+                        fantasyTeam = updatedFantasyTeam;
+                        history = foundTeam.history;
+                    };
+
+                    fantasyTeams.put(principalName, updatedUserFantasyTeam);
+                };
+            };
+        };
+
         private func clearFantasyTeam(principalId: Text) : T.FantasyTeam {
             return {
                 principalId = principalId;

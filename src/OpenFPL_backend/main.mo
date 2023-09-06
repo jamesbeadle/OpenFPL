@@ -236,6 +236,12 @@ actor Self {
 
   public shared ({caller}) func updateDisplayName(displayName :Text) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    
+    let invalidName = not profilesInstance.isDisplayNameValid(displayName);
+
+    assert not invalidName;
+
+    fantasyTeamsInstance.updateDisplayName(Principal.toText(caller), displayName);
     return profilesInstance.updateDisplayName(Principal.toText(caller), displayName);
   };
 
@@ -251,7 +257,8 @@ actor Self {
         };
       };
     };
-    
+
+    fantasyTeamsInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
     return profilesInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
   };
 
