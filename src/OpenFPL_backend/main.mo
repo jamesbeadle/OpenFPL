@@ -1060,6 +1060,10 @@ actor Self {
     await fantasyTeamsInstance.recalculateClubLeaderboards();
   };
 
+  public shared func getFantasyTeams() : async [(Text, T.UserFantasyTeam)]{
+    return fantasyTeamsInstance.getFantasyTeams();
+  };
+
 
 
 };

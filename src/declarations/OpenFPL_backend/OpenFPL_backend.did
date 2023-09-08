@@ -1,3 +1,8 @@
+type UserFantasyTeam = 
+ record {
+   fantasyTeam: FantasyTeam;
+   history: List_3;
+ };
 type TeamId = nat16;
 type Team = 
  record {
@@ -69,6 +74,16 @@ type PaginatedClubLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
+type List_4 = 
+ opt record {
+       FantasyTeamSnapshot;
+       List_4;
+     };
+type List_3 = 
+ opt record {
+       FantasyTeamSeason;
+       List_3;
+     };
 type List_2 = 
  opt record {
        Fixture;
@@ -116,11 +131,12 @@ type Fixture =
  };
 type FantasyTeamSnapshot = 
  record {
-   bankBalance: float64;
+   bankBalance: nat;
    braceBonusGameweek: GameweekNumber;
    captainFantasticGameweek: GameweekNumber;
    captainFantasticPlayerId: PlayerId;
    captainId: nat16;
+   favouriteTeamId: TeamId;
    gameweek: GameweekNumber;
    goalGetterGameweek: GameweekNumber;
    goalGetterPlayerId: PlayerId;
@@ -136,15 +152,23 @@ type FantasyTeamSnapshot =
    safeHandsPlayerId: PlayerId;
    teamBoostGameweek: GameweekNumber;
    teamBoostTeamId: TeamId;
+   teamName: text;
    transfersAvailable: nat8;
+ };
+type FantasyTeamSeason = 
+ record {
+   gameweeks: List_4;
+   seasonId: SeasonId;
+   totalPoints: int16;
  };
 type FantasyTeam = 
  record {
-   bankBalance: float64;
+   bankBalance: nat;
    braceBonusGameweek: GameweekNumber;
    captainFantasticGameweek: GameweekNumber;
    captainFantasticPlayerId: PlayerId;
    captainId: PlayerId;
+   favouriteTeamId: TeamId;
    goalGetterGameweek: GameweekNumber;
    goalGetterPlayerId: PlayerId;
    hatTrickHeroGameweek: GameweekNumber;
@@ -158,6 +182,7 @@ type FantasyTeam =
    safeHandsPlayerId: PlayerId;
    teamBoostGameweek: GameweekNumber;
    teamBoostTeamId: TeamId;
+   teamName: text;
    transfersAvailable: nat8;
  };
 type Error = 
@@ -184,6 +209,10 @@ service : {
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;
   getFantasyTeamForGameweek: (text, nat16, nat8) -> (FantasyTeamSnapshot);
+  getFantasyTeams: () -> (vec record {
+                                text;
+                                UserFantasyTeam;
+                              });
   getFixture: (SeasonId, GameweekNumber, FixtureId) -> (Fixture);
   getFixtures: () -> (vec Fixture) query;
   getFixturesByWeek: (SeasonId, GameweekNumber) -> (vec Fixture);
