@@ -32,6 +32,16 @@ module {
         public func setGetFixturesFunction(_getGameweekFixtures: ((seasonId: T.SeasonId, gameweek: T.GameweekNumber) -> [T.Fixture])) {
             getGameweekFixtures := ?_getGameweekFixtures;
         };
+
+        public func getMonthlyLeaderboards() : [(T.SeasonId, List.List<T.ClubLeaderboard>)] {
+            return Iter.toArray(monthlyLeaderboards.entries());
+        };
+        
+        public func setDataForMonthlyLeaderboards(data: [(T.SeasonId, List.List<T.ClubLeaderboard>)]) {
+            monthlyLeaderboards := HashMap.fromIter<T.SeasonId, List.List<T.ClubLeaderboard>>(
+                data.vals(), data.size(), Utilities.eqNat16, Utilities.hashNat16
+            );
+        };
         
         public func setData(stable_fantasy_teams: [(Text, T.UserFantasyTeam)]){
             fantasyTeams := HashMap.fromIter<Text, T.UserFantasyTeam>(

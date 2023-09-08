@@ -179,6 +179,13 @@ module Types{
         gameweekLeaderboards: List.List<Leaderboard>;
     };
 
+    public type ClubLeaderboard = {
+        seasonId: SeasonId;
+        month: Nat8;
+        clubId: TeamId;
+        entries: List.List<LeaderboardEntry>;      
+    };
+	
     public type PaginatedLeaderboard = {
         seasonId: SeasonId;
         gameweek: GameweekNumber;
