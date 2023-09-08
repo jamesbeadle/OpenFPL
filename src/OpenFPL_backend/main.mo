@@ -1000,6 +1000,10 @@ actor Self {
       }
   };
 
+  public shared func getFantasyTeams() : async [(Text, T.UserFantasyTeam)]{
+    return fantasyTeamsInstance.getFantasyTeams();
+  };
+
 
 
 };
