@@ -1066,6 +1066,18 @@ actor Self {
     return fantasyTeamsInstance.getFantasyTeams();
   };
 
+  public func addFantasyTeams() : async () {
+    let fantasyTeams: [(Text, T.UserFantasyTeam)] = [];
+    //Set Bank Balances
+    fantasyTeamsInstance.resetBankBalances();
+
+    //Set Team Name 
+    //Set Favourite Team Id
+    let allProfiles = profilesInstance.getProfiles();
+    fantasyTeamsInstance.setProfileInformation(allProfiles);
+
+  };
+
   public func getAddTeamsFunction(fantasyTeams: [(Text, T.UserFantasyTeam)]) : async Text {
       var output = "let fantasyTeams: [(Text, T.UserFantasyTeam)] = [";
       for ((principal, team) in Iter.fromArray(fantasyTeams)) {

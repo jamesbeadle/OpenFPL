@@ -1460,6 +1460,14 @@ module {
         public func recalculateClubLeaderboards() : async (){
             calculateMonthlyLeaderboards(1,1);
         };
+
+        public func resetBankBalances() : (){
+            //reset fantasy team bank balances and snapshot balances based on the player ids
+        };
+
+        public func setProfileInformation(allProfiles: [(Text, T.Profile)]) : (){
+            //set the favourite team id and team name based on profile for fantasy team and snapshots
+        };
         
     };
     
