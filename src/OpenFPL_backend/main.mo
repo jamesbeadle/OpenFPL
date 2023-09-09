@@ -1040,7 +1040,7 @@ actor Self {
             "teamBoostGameweek=" # Nat8.toText(fantasyTeam.teamBoostGameweek) #  "; " #
             "teamBoostTeamId=" # Nat16.toText(fantasyTeam.teamBoostTeamId) #  "; " #
             "favouriteTeamId=0; " #
-            "teamName=\"\"" #
+            "teamName=\"\"; " #
             "transfersAvailable=" # Nat8.toText(fantasyTeam.transfersAvailable) # 
             "; }"; 
           
