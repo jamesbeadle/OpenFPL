@@ -1023,7 +1023,7 @@ actor Self {
           // Convert FantasyTeam
           var fantasyTeamText = "{playerIds = [" # joinPlayers(fantasyTeam.playerIds, ", ") # "]; " # 
             "captainId=" # Nat16.toText(fantasyTeam.captainId) # "; " #
-            "bankBalance=" # Float.toText(fantasyTeam.bankBalance) #  "; " #
+            "bankBalance=0;" #
             "braceBonusGameweek=" # Nat8.toText(fantasyTeam.braceBonusGameweek) #  "; " #
             "captainFantasticGameweek=" # Nat8.toText(fantasyTeam.captainFantasticGameweek) #  "; " #
             "captainFantasticPlayerId=" # Nat16.toText(fantasyTeam.captainFantasticPlayerId) #  "; " #
@@ -1046,14 +1046,13 @@ actor Self {
           var historyTextsBuffer = Buffer.fromArray<Text>([]);
           for (season in Iter.fromList(history)) {
 
-              
               var gameweekTextHistoryBuffer = Buffer.fromArray<Text>([]);
 
               for(gameweek in Iter.fromList(season.gameweeks)){
 
                 var gameweekText = "{playerIds = [" # joinPlayers(gameweek.playerIds, ", ") # "]; " # 
                 "captainId=" # Nat16.toText(gameweek.captainId) # "; " #
-                "bankBalance=" # Float.toText(gameweek.bankBalance) #  "; " #
+                "bankBalance=0;" #
                 "braceBonusGameweek=" # Nat8.toText(gameweek.braceBonusGameweek) #  "; " #
                 "captainFantasticGameweek=" # Nat8.toText(gameweek.captainFantasticGameweek) #  "; " #
                 "captainFantasticPlayerId=" # Nat16.toText(gameweek.captainFantasticPlayerId) #  "; " #
