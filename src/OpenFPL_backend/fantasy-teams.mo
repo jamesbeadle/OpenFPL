@@ -3,7 +3,6 @@ import DTOs "DTOs";
 import List "mo:base/List";
 import Array "mo:base/Array";
 import Iter "mo:base/Iter";
-import Float "mo:base/Float";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
 import Order "mo:base/Order";
@@ -729,32 +728,6 @@ module {
 
         private func calculateLeaderboards(seasonId: Nat16, gameweek: Nat8): () {
 
-            func assignPositionText(sortedEntries: List.List<T.LeaderboardEntry>): List.List<T.LeaderboardEntry> {
-                var position = 1;
-                var previousScore: ?Int16 = null;
-                var currentPosition = 1;
-
-                func updatePosition(entry: T.LeaderboardEntry) : T.LeaderboardEntry {
-                    if (previousScore == null) {
-                        previousScore := ?entry.points;
-                        let updatedEntry = {entry with positionText = Int.toText(position)};
-                        currentPosition += 1;
-                        return updatedEntry;
-                    } else if (previousScore == ?entry.points) {
-                        currentPosition += 1;
-                        return {entry with positionText = "-"};
-                    } else {
-                        position := currentPosition;
-                        previousScore := ?entry.points;
-                        let updatedEntry = {entry with positionText = Int.toText(position)};
-                        currentPosition += 1;
-                        return updatedEntry;
-                    }
-                };
-
-                return List.map(sortedEntries, updatePosition);
-            };
-           
             let seasonEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
                 Iter.toArray(fantasyTeams.entries()),
                 func (pair) { 
@@ -874,15 +847,19 @@ module {
                     }
                 );
 
+                let sortedMonthEntries = List.reverse(mergeSort(monthEntries));
+                let positionedGameweekEntries = assignPositionText(sortedMonthEntries);
+
                 let clubMonthlyLeaderboard: T.ClubLeaderboard = {
                     seasonId = seasonId;
                     month = gameweekMonth;
                     clubId = clubId;
-                    entries = monthEntries;
+                    entries = positionedGameweekEntries;
                 };
 
                 updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([clubMonthlyLeaderboard]));
             };
+
 
             var seasonMonthlyLeaderboards = List.nil<T.ClubLeaderboard>();
 
@@ -909,6 +886,33 @@ module {
                 points = points;
             };
         };
+
+        private func assignPositionText(sortedEntries: List.List<T.LeaderboardEntry>): List.List<T.LeaderboardEntry> {
+            var position = 1;
+            var previousScore: ?Int16 = null;
+            var currentPosition = 1;
+
+            func updatePosition(entry: T.LeaderboardEntry) : T.LeaderboardEntry {
+                if (previousScore == null) {
+                    previousScore := ?entry.points;
+                    let updatedEntry = {entry with positionText = Int.toText(position)};
+                    currentPosition += 1;
+                    return updatedEntry;
+                } else if (previousScore == ?entry.points) {
+                    currentPosition += 1;
+                    return {entry with positionText = "-"};
+                } else {
+                    position := currentPosition;
+                    previousScore := ?entry.points;
+                    let updatedEntry = {entry with positionText = Int.toText(position)};
+                    currentPosition += 1;
+                    return updatedEntry;
+                }
+            };
+
+            return List.map(sortedEntries, updatePosition);
+        };
+        
 
         private func groupByTeam(fantasyTeams: HashMap.HashMap<Text, T.UserFantasyTeam>, allProfiles: HashMap.HashMap<Text, T.Profile>): HashMap.HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]> {
             let groupedTeams: HashMap.HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]> = HashMap. HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]>(10, Utilities.eqNat16, Utilities.hashNat16);
@@ -1461,12 +1465,125 @@ module {
             calculateMonthlyLeaderboards(1,1);
         };
 
-        public func resetBankBalances() : (){
-            //reset fantasy team bank balances and snapshot balances based on the player ids
-        };
+        public func updateFantasyTeams() : async (){
 
-        public func setProfileInformation(allProfiles: [(Text, T.Profile)]) : (){
-            //set the favourite team id and team name based on profile for fantasy team and snapshots
+            let allPlayers = await getAllPlayers();
+            let allUserProfiles = getProfiles();
+            let profilesMap = HashMap.fromIter<Text, T.Profile>(allUserProfiles.vals(), allUserProfiles.size(), Text.equal, Text.hash);
+
+            for ((key, value) in fantasyTeams.entries()) {
+
+                switch(profilesMap.get(key)){
+                    case (null) {};
+                    case (?foundProfile){
+
+                        
+                    
+                let players = Array.filter<DTOs.PlayerDTO>(allPlayers, func (player: DTOs.PlayerDTO): Bool {
+                    let playerId = player.id;
+                    let isPlayerIdInTeam = Array.find(value.fantasyTeam.playerIds, func (id: Nat16): Bool {
+                        return id == playerId;
+                    });
+                    return Option.isSome(isPlayerIdInTeam);
+                });
+
+                let spent = Array.foldLeft<DTOs.PlayerDTO, Nat>(players, 0, func(sumSoFar, x) = sumSoFar + x.value);
+
+                let newBankBalance: Nat = 1200 - spent;
+
+                let userFantasyTeam = value.fantasyTeam;
+                let updatedTeam = { 
+                    principalId = userFantasyTeam.principalId;
+                    transfersAvailable = userFantasyTeam.transfersAvailable;
+                    bankBalance = newBankBalance;
+                    playerIds = userFantasyTeam.playerIds;
+                    captainId = userFantasyTeam.captainId;
+                    goalGetterGameweek = userFantasyTeam.goalGetterGameweek;
+                    goalGetterPlayerId = userFantasyTeam.goalGetterPlayerId;
+                    passMasterGameweek = userFantasyTeam.passMasterGameweek;
+                    passMasterPlayerId = userFantasyTeam.passMasterPlayerId;
+                    noEntryGameweek = userFantasyTeam.noEntryGameweek;
+                    noEntryPlayerId = userFantasyTeam.noEntryPlayerId;
+                    teamBoostGameweek = userFantasyTeam.teamBoostGameweek;
+                    teamBoostTeamId = userFantasyTeam.teamBoostTeamId;
+                    safeHandsGameweek = userFantasyTeam.safeHandsGameweek;
+                    safeHandsPlayerId = userFantasyTeam.safeHandsPlayerId;
+                    captainFantasticGameweek = userFantasyTeam.captainFantasticGameweek;
+                    captainFantasticPlayerId = userFantasyTeam.captainFantasticPlayerId;
+                    braceBonusGameweek = userFantasyTeam.braceBonusGameweek;
+                    hatTrickHeroGameweek = userFantasyTeam.hatTrickHeroGameweek;
+                    teamName = foundProfile.displayName;
+                    favouriteTeamId = foundProfile.favouriteTeamId;
+                };
+
+                let updatedHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
+
+                for(season in Iter.fromList(value.history)){
+
+                    let updatedGameweekBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+
+                    for(gameweek in Iter.fromList(season.gameweeks)){
+                        
+                        let players = Array.filter<DTOs.PlayerDTO>(allPlayers, func (player: DTOs.PlayerDTO): Bool {
+                            let playerId = player.id;
+                            let isPlayerIdInTeam = Array.find(gameweek.playerIds, func (id: Nat16): Bool {
+                                return id == playerId;
+                            });
+                            return Option.isSome(isPlayerIdInTeam);
+                        });
+
+                        let gw_spent = Array.foldLeft<DTOs.PlayerDTO, Nat>(players, 0, func(sumSoFar, x) = sumSoFar + x.value);
+                        let gw_newBankBalance: Nat = 1200 - spent;
+
+                        let updatedGameweek: T.FantasyTeamSnapshot = {
+                            principalId = gameweek.principalId;
+                            transfersAvailable = gameweek.transfersAvailable;
+                            bankBalance = gw_newBankBalance;
+                            playerIds = gameweek.playerIds;
+                            captainId = gameweek.captainId;
+                            goalGetterGameweek = gameweek.goalGetterGameweek;
+                            goalGetterPlayerId = gameweek.goalGetterPlayerId;
+                            passMasterGameweek = gameweek.passMasterGameweek;
+                            passMasterPlayerId = gameweek.passMasterPlayerId;
+                            noEntryGameweek = gameweek.noEntryGameweek;
+                            noEntryPlayerId = gameweek.noEntryPlayerId;
+                            teamBoostGameweek = gameweek.teamBoostGameweek;
+                            teamBoostTeamId = gameweek.teamBoostTeamId;
+                            safeHandsGameweek = gameweek.safeHandsGameweek;
+                            safeHandsPlayerId = gameweek.safeHandsPlayerId;
+                            captainFantasticGameweek = gameweek.captainFantasticGameweek;
+                            captainFantasticPlayerId = gameweek.captainFantasticPlayerId;
+                            braceBonusGameweek = gameweek.braceBonusGameweek;
+                            hatTrickHeroGameweek = gameweek.hatTrickHeroGameweek;
+                            teamName = foundProfile.displayName;
+                            favouriteTeamId = foundProfile.favouriteTeamId;
+                            gameweek = gameweek.gameweek;
+                            points = gameweek.points;
+                        };
+
+                        updatedGameweekBuffer.add(updatedGameweek);
+
+                    };
+
+                    
+                    let updatedSeason: T.FantasyTeamSeason = {
+                        seasonId = season.seasonId;
+                        totalPoints = season.totalPoints;
+                        gameweeks = List.fromArray(Buffer.toArray<T.FantasyTeamSnapshot>(updatedGameweekBuffer));
+                    };
+                    updatedHistoryBuffer.add(updatedSeason);
+                };
+                
+                let updatedUserTeam: T.UserFantasyTeam = {
+                    fantasyTeam = updatedTeam;
+                    history = List.fromArray(Buffer.toArray<T.FantasyTeamSeason>(updatedHistoryBuffer));
+                };
+
+                fantasyTeams.put(key, updatedUserTeam);
+
+                    };
+                };
+            }
         };
         
     };

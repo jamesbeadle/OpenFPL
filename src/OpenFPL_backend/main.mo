@@ -1062,20 +1062,19 @@ actor Self {
     await fantasyTeamsInstance.recalculateClubLeaderboards();
   };
 
+
+  /*
   public shared func getFantasyTeams() : async [(Text, T.UserFantasyTeam)]{
     return fantasyTeamsInstance.getFantasyTeams();
   };
 
   public func addFantasyTeams() : async () {
     let fantasyTeams: [(Text, T.UserFantasyTeam)] = [];
-    //Set Bank Balances
-    fantasyTeamsInstance.resetBankBalances();
+    fantasyTeamsInstance.setData(fantasyTeams);
+  };
 
-    //Set Team Name 
-    //Set Favourite Team Id
-    let allProfiles = profilesInstance.getProfiles();
-    fantasyTeamsInstance.setProfileInformation(allProfiles);
-
+  public func updateFantasyTeamDetails() : async () {
+    await fantasyTeamsInstance.updateFantasyTeams();
   };
 
   public func getAddTeamsFunction(fantasyTeams: [(Text, T.UserFantasyTeam)]) : async Text {
@@ -1128,7 +1127,7 @@ actor Self {
       };
       return result;
   };
-
+*/
 
 
 

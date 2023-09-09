@@ -183,6 +183,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'createPlayer' : IDL.Func([CreatePlayerPayload], [], []),
+    'getActivePlayers' : IDL.Func([], [IDL.Vec(PlayerDTO)], ['query']),
     'getAllPlayers' : IDL.Func([], [IDL.Vec(PlayerDTO)], ['query']),
     'getAllPlayersMap' : IDL.Func(
         [IDL.Nat16, IDL.Nat8],
@@ -205,6 +206,7 @@ export const idlFactory = ({ IDL }) => {
     'retirePlayer' : IDL.Func([RetirePlayerPayload], [], []),
     'revaluePlayers' : IDL.Func([IDL.Nat16, IDL.Nat8, List], [], []),
     'setPlayerInjury' : IDL.Func([SetPlayerInjuryPayload], [], []),
+    'squadAdjustments' : IDL.Func([], [], []),
     'transferPlayer' : IDL.Func([TransferPlayerPayload], [], []),
     'unretirePlayer' : IDL.Func([UnretirePlayerPayload], [], []),
     'updatePlayer' : IDL.Func([UpdatePlayerPayload], [], []),

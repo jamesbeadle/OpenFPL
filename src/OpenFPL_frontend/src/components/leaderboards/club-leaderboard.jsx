@@ -70,6 +70,7 @@ const ClubLeaderboard = () => {
 
     const fetchViewData = async (season, month) => {
         const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(teamId), itemsPerPage, (currentPage - 1) * itemsPerPage);
+        console.log(leaderboardData)
         setManagers(leaderboardData);
     };
 

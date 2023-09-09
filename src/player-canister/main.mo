@@ -42,6 +42,40 @@ actor Self {
             };
         };
 
+        let sortedPlayers = mergeSort(players);
+
+        return Array.map<T.Player, DTOs.PlayerDTO>(List.toArray(sortedPlayers), func (player: T.Player) : DTOs.PlayerDTO { 
+            return {
+                id = player.id;
+                firstName = player.firstName;
+                lastName = player.lastName;
+                teamId = player.teamId;
+                position = player.position;
+                shirtNumber = player.shirtNumber;
+                value = player.value;
+                dateOfBirth = player.dateOfBirth;
+                nationality = player.nationality;
+                totalPoints = 0;
+            }});
+    };
+
+    public shared query ({caller}) func getActivePlayers() : async [DTOs.PlayerDTO] {
+        
+        func compare(player1: T.Player, player2: T.Player) : Bool {
+            return player1.value >= player2.value;
+        };
+
+        func mergeSort(entries: List.List<T.Player>) : List.List<T.Player> {
+            let len = List.size(entries);
+            
+            if (len <= 1) {
+                return entries;
+            } else {
+                let (firstHalf, secondHalf) = List.split(len / 2, entries);
+                return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
+            };
+        };
+
         let nonLoanPlayers = List.filter<T.Player>(players, func (player: T.Player) : Bool {
             return player.onLoan == false;
         });

@@ -88,6 +88,7 @@ const PickTeam = () => {
         Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
         
         let fantasyTeamData = await open_fpl_backend.getFantasyTeam();
+        console.log(fantasyTeamData)
         
         if(fantasyTeamData.playerIds.length == 0){
           return;
@@ -98,11 +99,13 @@ const PickTeam = () => {
         const teamPlayers = playerIdArray
           .map(id => players.find(player => player.id === id))
           .filter(Boolean); 
+        
+        const roundedValue = (Number(fantasyTeamData.bankBalance) / 4).toFixed(2);
 
         fantasyTeamData = {
           ...fantasyTeamData,
             players: teamPlayers || [],
-            bankBalance: fantasyTeamData.bankBalance / 1_000_000
+            bankBalance: Math.round(roundedValue * 4) / 4
         };
         setFantasyTeam(fantasyTeamData);
         
