@@ -187,8 +187,10 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
+  addFantasyTeams: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
+  getAddTeamsFunction: () -> (text);
   getCurrentGameweek: () -> (nat8);
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;

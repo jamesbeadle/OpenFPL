@@ -150,8 +150,10 @@ export interface UserFantasyTeam {
   'history' : List_3,
 }
 export interface _SERVICE {
+  'addFantasyTeams' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
+  'getAddTeamsFunction' : ActorMethod<[], string>,
   'getCurrentGameweek' : ActorMethod<[], number>,
   'getCurrentSeason' : ActorMethod<[], Season>,
   'getFantasyTeam' : ActorMethod<[], FantasyTeam>,
