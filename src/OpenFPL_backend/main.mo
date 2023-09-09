@@ -1073,7 +1073,7 @@ actor Self {
                 "points=" # Int16.toText(gameweek.points) #  "; " #
                 "gameweek=" # Nat8.toText(gameweek.gameweek) #  "; " #
                 "favouriteTeamId=0; " #
-                "teamName=\"\"" #
+                "teamName=\"\"; " #
                 "transfersAvailable=" # Nat8.toText(gameweek.transfersAvailable) # 
                 "; }"; 
                 gameweekTextHistoryBuffer.add(gameweekText);
