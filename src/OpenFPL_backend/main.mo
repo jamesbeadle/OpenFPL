@@ -1039,6 +1039,8 @@ actor Self {
             "safeHandsPlayerId=" # Nat16.toText(fantasyTeam.safeHandsPlayerId) #  "; " #
             "teamBoostGameweek=" # Nat8.toText(fantasyTeam.teamBoostGameweek) #  "; " #
             "teamBoostTeamId=" # Nat16.toText(fantasyTeam.teamBoostTeamId) #  "; " #
+            "favouriteTeamId=0; " #
+            "teamName=\"\"" #
             "transfersAvailable=" # Nat8.toText(fantasyTeam.transfersAvailable) # 
             "; }"; 
           
@@ -1070,6 +1072,8 @@ actor Self {
                 "teamBoostTeamId=" # Nat16.toText(gameweek.teamBoostTeamId) #  "; " #
                 "points=" # Int16.toText(gameweek.points) #  "; " #
                 "gameweek=" # Nat8.toText(gameweek.gameweek) #  "; " #
+                "favouriteTeamId=0; " #
+                "teamName=\"\"" #
                 "transfersAvailable=" # Nat8.toText(gameweek.transfersAvailable) # 
                 "; }"; 
                 gameweekTextHistoryBuffer.add(gameweekText);
