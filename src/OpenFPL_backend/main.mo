@@ -31,6 +31,8 @@ import Hash "mo:base/Hash";
 import Utilities "utilities";
 import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
+import Text "mo:base/Text";
+import Int16 "mo:base/Int16";
 
 actor Self {
 
@@ -1063,6 +1065,59 @@ actor Self {
   public shared func getFantasyTeams() : async [(Text, T.UserFantasyTeam)]{
     return fantasyTeamsInstance.getFantasyTeams();
   };
+
+  public func getAddTeamsFunction(fantasyTeams: [(Text, T.UserFantasyTeam)]) : async Text {
+      var output = "let fantasyTeams: [(Text, T.UserFantasyTeam)] = [";
+      for ((principal, team) in Iter.fromArray(fantasyTeams)) {
+          let fantasyTeam = team.fantasyTeam;
+          let history = team.history;
+          
+          // Convert FantasyTeam
+          var fantasyTeamText = "{playerIds = [" # joinPlayers(fantasyTeam.playerIds, ", ") # "]; captainId=" # Nat16.toText(fantasyTeam.captainId) # "; ... }"; // Continue for all fields
+          
+          // Convert History
+          var historyTextsBuffer = Buffer.fromArray<Text>([]);
+          for (season in Iter.fromList(history)) {
+              var seasonText = "{ seasonId=" # Nat16.toText(season.seasonId) # "; totalPoints=" # Int16.toText(season.totalPoints) # "; ... }"; // Continue for all fields, including gameweeks
+              historyTextsBuffer.add(seasonText);
+          };
+          let allHistoryText = "List.fromArray<T.FantasyTeamSeason>([" # joinText(Buffer.toArray(historyTextsBuffer), ", ") # "])";
+          
+          output #= "(" # principal # ", {" # "fantasyTeam = " # fantasyTeamText # "; history = " # allHistoryText # "}),";
+      };
+      output #= "];";
+      return output;
+  };
+
+  private func joinPlayers(arr: [T.PlayerId], delimiter: Text) : Text {
+      var result = "";
+      let len: Int = Array.size<T.PlayerId>(arr);
+      var i : Nat = 0;
+      for (item in Iter.fromArray(arr)) {
+          result #= Nat16.toText(item);
+          if (i != len - 1) {
+              result #= delimiter;
+          };
+          i += 1;
+      };
+      return result;
+  };
+
+  private func joinText(arr: [Text], delimiter: Text) : Text {
+      var result = "";
+      let len: Int = Array.size<Text>(arr);
+      var i : Nat = 0;
+      for (item in Iter.fromArray(arr)) {
+          result #= item;
+          if (i != len - 1) {
+              result #= delimiter;
+          };
+          i += 1;
+      };
+      return result;
+  };
+
+
 
 
 
