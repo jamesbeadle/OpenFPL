@@ -235,7 +235,6 @@ service : {
   retirePlayer: (RetirePlayerPayload) -> ();
   revaluePlayers: (nat16, nat8, List) -> ();
   setPlayerInjury: (SetPlayerInjuryPayload) -> ();
-  squadAdjustments: () -> ();
   transferPlayer: (TransferPlayerPayload) -> ();
   unretirePlayer: (UnretirePlayerPayload) -> ();
   updatePlayer: (UpdatePlayerPayload) -> ();

@@ -190,7 +190,6 @@ export interface _SERVICE {
   'retirePlayer' : ActorMethod<[RetirePlayerPayload], undefined>,
   'revaluePlayers' : ActorMethod<[number, number, List], undefined>,
   'setPlayerInjury' : ActorMethod<[SetPlayerInjuryPayload], undefined>,
-  'squadAdjustments' : ActorMethod<[], undefined>,
   'transferPlayer' : ActorMethod<[TransferPlayerPayload], undefined>,
   'unretirePlayer' : ActorMethod<[UnretirePlayerPayload], undefined>,
   'updatePlayer' : ActorMethod<[UpdatePlayerPayload], undefined>,

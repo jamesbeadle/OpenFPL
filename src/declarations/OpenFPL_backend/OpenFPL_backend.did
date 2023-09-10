@@ -179,6 +179,7 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
+  clearClubLeaderboards: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->

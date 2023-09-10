@@ -60,7 +60,10 @@ module {
 
     public func unixTimeToMonth(unixTime: Int) : Nat8 {
         let secondsInADay = 86400;
-        let days = unixTime / secondsInADay;
+        let seconds = unixTime / 1000000000;
+
+        let days = seconds / secondsInADay;
+
         let years = (1970 + days / 365);
         let leapYears: Int = (years - 1969) / 4 - (years - 1901) / 100 + (years - 1600) / 400;
         let dayOfYear: Int = days - (years - 1970) * 365 - leapYears;

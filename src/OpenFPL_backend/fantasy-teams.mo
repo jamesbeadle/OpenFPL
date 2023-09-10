@@ -824,7 +824,7 @@ module {
                         }
                     };
                     
-                     };
+                };
             };
 
             let allUserProfiles = getProfiles();
@@ -1463,6 +1463,13 @@ module {
         
         public func recalculateClubLeaderboards() : async (){
             calculateMonthlyLeaderboards(1,1);
+            calculateMonthlyLeaderboards(1,2);
+            calculateMonthlyLeaderboards(1,3);
+            calculateMonthlyLeaderboards(1,4);
+        };
+
+        public func clearMonthlyLeaderboards() : async (){
+            monthlyLeaderboards := HashMap.HashMap<T.SeasonId, List.List<T.ClubLeaderboard>>(100, Utilities.eqNat16, Utilities.hashNat16);
         };
 
         public func updateFantasyTeams() : async (){

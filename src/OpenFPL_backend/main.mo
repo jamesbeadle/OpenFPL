@@ -1062,6 +1062,10 @@ actor Self {
     await fantasyTeamsInstance.recalculateClubLeaderboards();
   };
 
+  public shared func clearClubLeaderboards() : async (){
+    await fantasyTeamsInstance.clearMonthlyLeaderboards();
+  };
+
 
   /*
   public shared func getFantasyTeams() : async [(Text, T.UserFantasyTeam)]{

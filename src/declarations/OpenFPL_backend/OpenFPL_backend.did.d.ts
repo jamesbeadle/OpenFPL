@@ -151,6 +151,7 @@ export interface Team {
 }
 export type TeamId = number;
 export interface _SERVICE {
+  'clearClubLeaderboards' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
   'getClubLeaderboard' : ActorMethod<

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Table, Pagination, Form, Card, Row, Col } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { useParams } from 'react-router-dom';
+import { TeamsContext } from "../../contexts/TeamsContext";
 
 const ClubLeaderboard = () => {
+    const { teams } = useContext(TeamsContext);
     const { teamId } = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const [managers, setManagers] = useState({
@@ -18,6 +20,8 @@ const ClubLeaderboard = () => {
     const [selectedMonth, setSelectedMonth] = useState(null);
     const itemsPerPage = 25;
     const [isInitialSetupDone, setIsInitialSetupDone] = useState(false);
+    const [selectedClub, setSelectedClub] = useState(teamId);
+
   
     const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
         <Pagination.Item 
@@ -51,12 +55,12 @@ const ClubLeaderboard = () => {
         };
         const fetchData = async () => {
             setIsLoading(true);
-            await fetchViewData(selectedSeason, selectedMonth);
+            await fetchViewData(selectedSeason, selectedMonth, selectedClub);
             setIsLoading(false);
         };
 
         fetchData();
-    }, [selectedSeason, selectedMonth, currentPage, isInitialSetupDone]);
+    }, [selectedSeason, selectedMonth, currentPage, isInitialSetupDone, selectedClub]);
 
     const fetchActiveSeasonId = async () => {
         const activeSeasonData = await open_fpl_backend.getCurrentSeason();
@@ -68,11 +72,10 @@ const ClubLeaderboard = () => {
         return activeMonthData;
     };
 
-    const fetchViewData = async (season, month) => {
-        const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(teamId), itemsPerPage, (currentPage - 1) * itemsPerPage);
-        console.log(leaderboardData)
+    const fetchViewData = async (season, month, club) => {
+        const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
         setManagers(leaderboardData);
-    };
+    };    
 
     const fetchSeasons = async () => {
         const seasonList = await open_fpl_backend.getSeasons();
@@ -103,7 +106,15 @@ const ClubLeaderboard = () => {
                         Club Leaderboard
                     </Card.Title>
                     <Row className='mb-2'>
-                        <Col xs={12} md={6}>
+                        <Col xs={12} md={4}>
+                            <Form.Group controlId="clubSelect">
+                                <Form.Label>Select Club</Form.Label>
+                                <Form.Control as="select" value={selectedClub || ''} onChange={e => setSelectedClub(Number(e.target.value))}>
+                                    {teams.map(club => <option key={club.id} value={club.id}>{club.friendlyName}</option>)}
+                                </Form.Control>
+                            </Form.Group>
+                        </Col>
+                        <Col xs={12} md={4}>
                             <Form.Group controlId="seasonSelect">
                                 <Form.Label>Select Season</Form.Label>
                                 <Form.Control as="select" value={selectedSeason || ''} onChange={e => {
@@ -114,7 +125,7 @@ const ClubLeaderboard = () => {
                                 </Form.Control>
                             </Form.Group>
                         </Col>
-                        <Col xs={12} md={6}>
+                        <Col xs={12} md={4}>
                             <Form.Group controlId="gameweekSelect">
                                 <Form.Label>Select Month</Form.Label>
                                 <Form.Control as="select" value={selectedMonth || ''} onChange={e => setSelectedMonth(Number(e.target.value))}>
