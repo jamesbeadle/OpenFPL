@@ -277,8 +277,8 @@ module {
         };
     };
 
-    public func getActiveSeason() : async T.Season {
-        return await seasonsInstance.getSeason(activeSeasonId);
+    public func getActiveSeason() : T.Season {
+        return seasonsInstance.getSeason(activeSeasonId);
     };
 
     public func getActiveSeasonId() : Nat16 {

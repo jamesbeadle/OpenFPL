@@ -19,9 +19,7 @@ const UnretirePlayerProposal = () => {
 
     const fetchRetiredPlayersFromBackend = async () => {
         try {
-            // Replace with your actual data fetching logic for retired players
-            const data = await open_fpl_backend.getRetiredPlayers();
-            return data;
+            //get retired players
         } catch (error) {
             console.error("Error fetching retired players: ", error);
             return [];

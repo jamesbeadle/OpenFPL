@@ -461,5 +461,11 @@ module Types{
         hash: Text;
     };
 
+    public type SystemState = {
+        activeSeason: Season;
+        activeGameweek: GameweekNumber;
+        activeMonth: Nat8;
+    };
+
 
 }

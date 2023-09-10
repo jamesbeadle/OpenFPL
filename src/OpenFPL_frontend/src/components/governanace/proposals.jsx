@@ -23,10 +23,7 @@ const Proposals = ({ isActive }) => {
   const fetchProposals = async () => {
     setIsLoading(true);
     try {
-      const identity = authClient.getIdentity();
-      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-      const activeProposals = await open_fpl_backend.getActiveProposals();
-      setData(activeProposals);
+      //get active proposals
     } catch (error) {
       console.error("Failed to fetch active proposals", error);
     } finally {

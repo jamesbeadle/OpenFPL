@@ -41,6 +41,14 @@ actor Self {
   let teamsInstance = Teams.Teams();
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
+
+  private var dataCacheHashes: List.List<T.DataCache> = List.fromArray([
+    { category = "teams"; hash = "DEFAULT_VALUE" },
+    { category = "fixtures"; hash = "DEFAULT_VALUE" },
+    { category = "seasons"; hash = "DEFAULT_VALUE" },
+    { category = "system_state"; hash = "DEFAULT_VALUE" }
+  ]);
+
   
   /*
   //USE FOR LOCAL DEV
@@ -99,16 +107,8 @@ actor Self {
 
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer, getProfiles, getAllPlayers);
 
-  public shared ({caller}) func getCurrentGameweek() : async Nat8 {
-    return seasonManager.getActiveGameweek();
-  };
-
-  public shared ({caller}) func getCurrentSeason() : async T.Season {
-    return await seasonManager.getActiveSeason();
-  };
-
-  public shared ({caller}) func getCurrentMonth() : async Nat8 {
-    let fixtures = await getActiveGameweekFixtures();
+  public query func getSystemState() : async T.SystemState {
+    let fixtures = seasonManager.getActiveGameweekFixtures();
 
     var latestFixtureTime = fixtures[0].kickOff;
     for(fixture in Iter.fromArray<T.Fixture>(fixtures)){
@@ -117,7 +117,11 @@ actor Self {
         };
     };
 
-    return Utilities.unixTimeToMonth(latestFixtureTime);
+    return {
+      activeSeason = seasonManager.getActiveSeason();
+      activeGameweek = seasonManager.getActiveGameweek();
+      activeMonth = Utilities.unixTimeToMonth(latestFixtureTime);
+    }
   };
   
   public query func getTeams() : async [T.Team] {
@@ -135,11 +139,7 @@ actor Self {
   public shared ({caller}) func getFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async T.Fixture{
     return await seasonManager.getFixture(seasonId, gameweekNumber, fixtureId);
   };
-
-  public query ({caller}) func getActiveGameweekFixtures() : async [T.Fixture]{
-    return seasonManager.getActiveGameweekFixtures();
-  };
-
+  
   //Profile Functions
   public shared ({caller}) func getProfileDTO() : async DTOs.ProfileDTO {
     assert not Principal.isAnonymous(caller);
@@ -924,6 +924,10 @@ actor Self {
   public shared ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [DTOs.PlayerPointsDTO] {
       return await playerCanister.getPlayersDetailsForGameweek(playerIds, seasonId, gameweek);
   };
+
+  public shared query func getDataHashes() : async [T.DataCache] {
+    return List.toArray(dataCacheHashes);
+  };
   
   //intialise season manager
   let seasonManager = SeasonManager.SeasonManager(
@@ -1057,123 +1061,6 @@ actor Self {
           }
       }
   };
-
-  public shared func getFantasyTeams() : async [(Text, T.UserFantasyTeam)]{
-    return fantasyTeamsInstance.getFantasyTeams();
-  };
-
-  public func addFantasyTeams() : async () {
-    
-  };
-
-  public shared func getAddTeamsFunction() : async Text {
-      let fantasyTeams = fantasyTeamsInstance.getFantasyTeams();
-      var output = "let fantasyTeams: [(Text, T.UserFantasyTeam)] = [";
-      for ((principal, team) in Iter.fromArray(fantasyTeams)) {
-          let fantasyTeam = team.fantasyTeam;
-          let history = team.history;
-          
-          // Convert FantasyTeam
-          var fantasyTeamText = "{playerIds = [" # joinPlayers(fantasyTeam.playerIds, ", ") # "]; " # 
-            "captainId=" # Nat16.toText(fantasyTeam.captainId) # "; " #
-            "bankBalance=0;" #
-            "braceBonusGameweek=" # Nat8.toText(fantasyTeam.braceBonusGameweek) #  "; " #
-            "captainFantasticGameweek=" # Nat8.toText(fantasyTeam.captainFantasticGameweek) #  "; " #
-            "captainFantasticPlayerId=" # Nat16.toText(fantasyTeam.captainFantasticPlayerId) #  "; " #
-            "goalGetterGameweek=" # Nat8.toText(fantasyTeam.goalGetterGameweek) #  "; " #
-            "goalGetterPlayerId=" # Nat16.toText(fantasyTeam.goalGetterPlayerId) #  "; " #
-            "hatTrickHeroGameweek=" # Nat8.toText(fantasyTeam.hatTrickHeroGameweek) #  "; " #
-            "noEntryGameweek=" # Nat8.toText(fantasyTeam.noEntryGameweek) #  "; " #
-            "noEntryPlayerId=" # Nat16.toText(fantasyTeam.noEntryPlayerId) #  "; " #
-            "passMasterGameweek=" # Nat8.toText(fantasyTeam.passMasterGameweek) #  "; " #
-            "passMasterPlayerId=" # Nat16.toText(fantasyTeam.passMasterPlayerId) #  "; " #
-            "principalId=\"" # fantasyTeam.principalId # "\"" #  "; " #
-            "safeHandsGameweek=" # Nat8.toText(fantasyTeam.safeHandsGameweek) #  "; " #
-            "safeHandsPlayerId=" # Nat16.toText(fantasyTeam.safeHandsPlayerId) #  "; " #
-            "teamBoostGameweek=" # Nat8.toText(fantasyTeam.teamBoostGameweek) #  "; " #
-            "teamBoostTeamId=" # Nat16.toText(fantasyTeam.teamBoostTeamId) #  "; " #
-            "favouriteTeamId=0; " #
-            "teamName=\"\"; " #
-            "transfersAvailable=" # Nat8.toText(fantasyTeam.transfersAvailable) # 
-            "; }"; 
-          
-          // Convert History
-          var historyTextsBuffer = Buffer.fromArray<Text>([]);
-          for (season in Iter.fromList(history)) {
-
-              var gameweekTextHistoryBuffer = Buffer.fromArray<Text>([]);
-
-              for(gameweek in Iter.fromList(season.gameweeks)){
-
-                var gameweekText = "{playerIds = [" # joinPlayers(gameweek.playerIds, ", ") # "]; " # 
-                "captainId=" # Nat16.toText(gameweek.captainId) # "; " #
-                "bankBalance=0;" #
-                "braceBonusGameweek=" # Nat8.toText(gameweek.braceBonusGameweek) #  "; " #
-                "captainFantasticGameweek=" # Nat8.toText(gameweek.captainFantasticGameweek) #  "; " #
-                "captainFantasticPlayerId=" # Nat16.toText(gameweek.captainFantasticPlayerId) #  "; " #
-                "goalGetterGameweek=" # Nat8.toText(gameweek.goalGetterGameweek) #  "; " #
-                "goalGetterPlayerId=" # Nat16.toText(gameweek.goalGetterPlayerId) #  "; " #
-                "hatTrickHeroGameweek=" # Nat8.toText(gameweek.hatTrickHeroGameweek) #  "; " #
-                "noEntryGameweek=" # Nat8.toText(gameweek.noEntryGameweek) #  "; " #
-                "noEntryPlayerId=" # Nat16.toText(gameweek.noEntryPlayerId) #  "; " #
-                "passMasterGameweek=" # Nat8.toText(gameweek.passMasterGameweek) #  "; " #
-                "passMasterPlayerId=" # Nat16.toText(gameweek.passMasterPlayerId) #  "; " #
-                "principalId=\"" # gameweek.principalId # "\"" # "; " #
-                "safeHandsGameweek=" # Nat8.toText(gameweek.safeHandsGameweek) #  "; " #
-                "safeHandsPlayerId=" # Nat16.toText(gameweek.safeHandsPlayerId) #  "; " #
-                "teamBoostGameweek=" # Nat8.toText(gameweek.teamBoostGameweek) #  "; " #
-                "teamBoostTeamId=" # Nat16.toText(gameweek.teamBoostTeamId) #  "; " #
-                "points=" # Int16.toText(gameweek.points) #  "; " #
-                "gameweek=" # Nat8.toText(gameweek.gameweek) #  "; " #
-                "favouriteTeamId=0; " #
-                "teamName=\"\"; " #
-                "transfersAvailable=" # Nat8.toText(gameweek.transfersAvailable) # 
-                "; }"; 
-                gameweekTextHistoryBuffer.add(gameweekText);
-              };
-
-              let allGameweekText = "List.fromArray<T.FantasyTeamSnapshot>([" # joinText(Buffer.toArray(gameweekTextHistoryBuffer), ", ") # "])";
-
-              var seasonText = "{ seasonId=" # Nat16.toText(season.seasonId) # "; totalPoints=" # Int16.toText(season.totalPoints) # "; gameweeks= "# allGameweekText #"}"; 
-
-              historyTextsBuffer.add(seasonText);
-          };
-          let allHistoryText = "List.fromArray<T.FantasyTeamSeason>([" # joinText(Buffer.toArray(historyTextsBuffer), ", ") # "])";
-          
-          output #= "(\"" # principal # "\", {" # "fantasyTeam = " # fantasyTeamText # "; history = " # allHistoryText # "}),";
-      };
-      output #= "];";
-      return output;
-  };
-
-  private func joinPlayers(arr: [T.PlayerId], delimiter: Text) : Text {
-      var result = "";
-      let len: Int = Array.size<T.PlayerId>(arr);
-      var i : Nat = 0;
-      for (item in Iter.fromArray(arr)) {
-          result #= Nat16.toText(item);
-          if (i != len - 1) {
-              result #= delimiter;
-          };
-          i += 1;
-      };
-      return result;
-  };
-
-  private func joinText(arr: [Text], delimiter: Text) : Text {
-      var result = "";
-      let len: Int = Array.size<Text>(arr);
-      var i : Nat = 0;
-      for (item in Iter.fromArray(arr)) {
-          result #= item;
-          if (i != len - 1) {
-              result #= delimiter;
-          };
-          i += 1;
-      };
-      return result;
-  };
-
 
 
 

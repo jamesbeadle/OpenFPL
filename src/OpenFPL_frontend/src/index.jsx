@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import '../assets/custom.scss';
 import { AuthProvider } from "./contexts/AuthContext";
+import { DataProvider } from "./contexts/DataContext";
 
 import MyNavbar from './components/shared/navbar';
 import MyFooter from './components/shared/footer';
@@ -22,8 +23,6 @@ import AddFixtureData from "./components/governanace/fixture-validation/add-fixt
 import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
 import Leaderboard from "./components/leaderboards/season-leaderboard";
 import ViewPoints from "./components/gameplay/view-points";
-import { TeamsProvider } from "./contexts/TeamsContext";
-import { PlayersProvider } from "./contexts/PlayersContext";
 import LeagueTable from "./components/league-table";
 import ClubDetails from "./components/data/club-details";
 import PlayerDetails from "./components/data/player-details";
@@ -33,37 +32,35 @@ const App = () => {
  
   return (
     <AuthProvider>
-      <TeamsProvider>
-        <PlayersProvider>
-          <Router>
-            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-              <MyNavbar />
-                <Routes>
-                  <Route path="/" element={<Homepage />} />
-                  <Route path="/funded-whitepaper" element={<FundedWhitepaper />} />
-                  <Route path="/whitepaper" element={<Whitepaper   />} />
-                  <Route path="/gameplay" element={<Gameplay   />} />
-                  <Route path="/definitions" element={<Definitions   />} />
-                  <Route path="/terms" element={<Terms   />} />
-                  <Route path="/architecture" element={<Architecture />} />
-                  <Route path="/profile" element={<Profile /> }/>
-                  <Route path="/dao" element={<DAO />} />
-                  <Route path="/governance" element={<Governance /> }/>
-                  <Route path="/add-fixture-data" element={<AddFixtureData /> }/>
-                  <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard />} />
-                  <Route path="/leaderboard" element={<Leaderboard />} />
-                  <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
-                  <Route path="/pick-team" element={ <PickTeam   /> } />
-                  <Route path="/league-table" element={ <LeagueTable   /> } />
-                  <Route path="/club/:teamId" element={ <ClubDetails   /> } />
-                  <Route path="/player/:playerId" element={ <PlayerDetails   /> } />
-                  <Route path="/club-leaderboard/:teamId" element={ <ClubLeaderboard   /> } />
-                </Routes>
-              <MyFooter />
-            </div>
-          </Router>   
-        </PlayersProvider>
-      </TeamsProvider>
+      <DataProvider>
+        <Router>
+          <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+            <MyNavbar />
+              <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/funded-whitepaper" element={<FundedWhitepaper />} />
+                <Route path="/whitepaper" element={<Whitepaper   />} />
+                <Route path="/gameplay" element={<Gameplay   />} />
+                <Route path="/definitions" element={<Definitions   />} />
+                <Route path="/terms" element={<Terms   />} />
+                <Route path="/architecture" element={<Architecture />} />
+                <Route path="/profile" element={<Profile /> }/>
+                <Route path="/dao" element={<DAO />} />
+                <Route path="/governance" element={<Governance /> }/>
+                <Route path="/add-fixture-data" element={<AddFixtureData /> }/>
+                <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
+                <Route path="/pick-team" element={ <PickTeam   /> } />
+                <Route path="/league-table" element={ <LeagueTable   /> } />
+                <Route path="/club/:teamId" element={ <ClubDetails   /> } />
+                <Route path="/player/:playerId" element={ <PlayerDetails   /> } />
+                <Route path="/club-leaderboard/:teamId" element={ <ClubLeaderboard   /> } />
+              </Routes>
+            <MyFooter />
+          </div>
+        </Router>   
+      </DataProvider>
   </AuthProvider>
   );
 };
