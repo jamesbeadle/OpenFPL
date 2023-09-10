@@ -66,7 +66,6 @@ type PaginatedLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
-
 type PaginatedClubLeaderboard = 
  record {
    clubId: TeamId;
@@ -204,6 +203,7 @@ service : {
   addFantasyTeams: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
+  getAddTeamsFunction: () -> (text);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
   getCurrentGameweek: () -> (nat8);

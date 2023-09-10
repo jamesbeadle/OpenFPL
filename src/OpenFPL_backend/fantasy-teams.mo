@@ -55,19 +55,9 @@ module {
         public func getSeasonLeaderboards() : [(Nat16, T.SeasonLeaderboards)] {
             return Iter.toArray(seasonLeaderboards.entries());
         };
-
-        public func getMonthlyLeaderboards() : [(T.SeasonId, List.List<T.ClubLeaderboard>)] {
-            return Iter.toArray(monthlyLeaderboards.entries());
-        };
         
         public func setDataForSeasonLeaderboards(data: [(Nat16, T.SeasonLeaderboards)]) {
             seasonLeaderboards := HashMap.fromIter<Nat16, T.SeasonLeaderboards>(
-                data.vals(), data.size(), Utilities.eqNat16, Utilities.hashNat16
-            );
-        };
-        
-        public func setDataForMonthlyLeaderboards(data: [(T.SeasonId, List.List<T.ClubLeaderboard>)]) {
-            monthlyLeaderboards := HashMap.fromIter<T.SeasonId, List.List<T.ClubLeaderboard>>(
                 data.vals(), data.size(), Utilities.eqNat16, Utilities.hashNat16
             );
         };

@@ -94,6 +94,8 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
+export type List_3 = [] | [[FantasyTeamSeason, List_3]];
+export type List_4 = [] | [[FantasyTeamSnapshot, List_4]];
 export interface PaginatedClubLeaderboard {
   'month' : number,
   'clubId' : TeamId,
@@ -101,8 +103,6 @@ export interface PaginatedClubLeaderboard {
   'seasonId' : SeasonId,
   'entries' : Array<LeaderboardEntry>,
 }
-export type List_3 = [] | [[FantasyTeamSeason, List_3]];
-export type List_4 = [] | [[FantasyTeamSnapshot, List_4]];
 export interface PaginatedLeaderboard {
   'totalEntries' : bigint,
   'seasonId' : SeasonId,
@@ -165,6 +165,7 @@ export interface _SERVICE {
   'addFantasyTeams' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
+  'getAddTeamsFunction' : ActorMethod<[], string>,
   'getClubLeaderboard' : ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard
