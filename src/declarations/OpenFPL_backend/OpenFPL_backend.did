@@ -1,3 +1,8 @@
+type UserFantasyTeam = 
+ record {
+   fantasyTeam: FantasyTeam;
+   history: List_3;
+ };
 type TeamId = nat16;
 type Team = 
  record {
@@ -61,6 +66,7 @@ type PaginatedLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
+
 type PaginatedClubLeaderboard = 
  record {
    clubId: TeamId;
@@ -69,6 +75,16 @@ type PaginatedClubLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
+type List_4 = 
+ opt record {
+       FantasyTeamSnapshot;
+       List_4;
+     };
+type List_3 = 
+ opt record {
+       FantasyTeamSeason;
+       List_3;
+     };
 type List_2 = 
  opt record {
        Fixture;
@@ -140,6 +156,12 @@ type FantasyTeamSnapshot =
    teamName: text;
    transfersAvailable: nat8;
  };
+type FantasyTeamSeason = 
+ record {
+   gameweeks: List_4;
+   seasonId: SeasonId;
+   totalPoints: int16;
+ };
 type FantasyTeam = 
  record {
    bankBalance: nat;
@@ -179,6 +201,7 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
+  addFantasyTeams: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
@@ -188,6 +211,10 @@ service : {
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;
   getFantasyTeamForGameweek: (text, nat16, nat8) -> (FantasyTeamSnapshot);
+  getFantasyTeams: () -> (vec record {
+                                text;
+                                UserFantasyTeam;
+                              });
   getFixture: (SeasonId, GameweekNumber, FixtureId) -> (Fixture);
   getFixtures: () -> (vec Fixture) query;
   getFixturesByWeek: (SeasonId, GameweekNumber) -> (vec Fixture);

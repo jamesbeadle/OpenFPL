@@ -34,6 +34,11 @@ export interface FantasyTeam {
   'passMasterPlayerId' : PlayerId,
   'captainId' : PlayerId,
 }
+export interface FantasyTeamSeason {
+  'seasonId' : SeasonId,
+  'gameweeks' : List_4,
+  'totalPoints' : number,
+}
 export interface FantasyTeamSnapshot {
   'playerIds' : Uint16Array | number[],
   'teamName' : string,
@@ -96,6 +101,8 @@ export interface PaginatedClubLeaderboard {
   'seasonId' : SeasonId,
   'entries' : Array<LeaderboardEntry>,
 }
+export type List_3 = [] | [[FantasyTeamSeason, List_3]];
+export type List_4 = [] | [[FantasyTeamSnapshot, List_4]];
 export interface PaginatedLeaderboard {
   'totalEntries' : bigint,
   'seasonId' : SeasonId,
@@ -150,7 +157,12 @@ export interface Team {
   'primaryColourHex' : string,
 }
 export type TeamId = number;
+export interface UserFantasyTeam {
+  'fantasyTeam' : FantasyTeam,
+  'history' : List_3,
+}
 export interface _SERVICE {
+  'addFantasyTeams' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
   'getClubLeaderboard' : ActorMethod<
@@ -165,6 +177,7 @@ export interface _SERVICE {
     [string, number, number],
     FantasyTeamSnapshot
   >,
+  'getFantasyTeams' : ActorMethod<[], Array<[string, UserFantasyTeam]>>,
   'getFixture' : ActorMethod<[SeasonId, GameweekNumber, FixtureId], Fixture>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
   'getFixturesByWeek' : ActorMethod<[SeasonId, GameweekNumber], Array<Fixture>>,
