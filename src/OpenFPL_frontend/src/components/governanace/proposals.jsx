@@ -47,7 +47,6 @@ const Proposals = ({ isActive }) => {
     );
   }
 
-  // If not loading, render your component
   return (
     <Card className="custom-card mt-1">
       <Card.Body>

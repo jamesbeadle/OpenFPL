@@ -1,36 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Table, Button, Spinner } from 'react-bootstrap';
 import { AuthContext } from "../../../contexts/AuthContext";
-import { TeamsContext } from "../../../contexts/TeamsContext";
-import { PlayersContext } from "../../../contexts/PlayersContext";
-import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
-import { Actor } from "@dfinity/agent";
+import { DataContext } from "../../../contexts/DataContext";
+import { fetchValidatableFixtures } from "../../../AuthFunctions";
 import { Link } from "react-router-dom";
+import { getTeamById } from '../../helpers';
 
 const FixtureValidationList = () => {
   const { authClient } = useContext(AuthContext);
-  const { teams } = useContext(TeamsContext);
-  const { players } = useContext(PlayersContext);
-  const [isLoading, setIsLoading] = useState(true);
+  const { teams, players, systemState } = useContext(DataContext);
   const [fixtures, setFixtures] = useState([]);
-  const [currentGameweek, setCurrentGameweek] = useState(null);
-  const [currentSeason, setCurrentSeason] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
+  const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason.id);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
-        setCurrentGameweek(currentGameweekData);
-
-        const currentSeasonData = await open_fpl_backend.getCurrentSeason();
-        setCurrentSeason(currentSeasonData);
-
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-        
-        const fixturesToValidate = await open_fpl_backend.getValidatableFixtures();
+        const fixturesToValidate = await fetchValidatableFixtures(authClient);
         setFixtures(fixturesToValidate);
-
       } catch (error) {
         console.error(error);
       } finally {
@@ -40,14 +28,6 @@ const FixtureValidationList = () => {
 
     fetchData();
   }, [authClient, teams, players]);
-
-  const getTeamNameFromId = (teamId) => {
-    const team = teams.find(team => team.id === teamId);
-    if(!team){
-      return;
-    }
-    return team.friendlyName;
-  }
 
   if (isLoading) {
     return (
@@ -75,7 +55,7 @@ const FixtureValidationList = () => {
             {fixtures.map((fixture, index) => (
                 <tr key={fixture.id}>
                   <td>{index + 1}</td>
-                  <td>{`${getTeamNameFromId(fixture.homeTeamId)} vs ${getTeamNameFromId(fixture.awayTeamId)}`}</td>
+                  <td>{`${getTeamById(teams, fixture.homeTeamId).name} vs ${getTeamById(teams, fixture.awayTeamId).name}`}</td>
                   <td>{fixture.status === 2 ? "Completed" : "Active"}</td>
                   <td>
                     <Button as={Link} variant={fixture.status === 2 ? "primary" : "secondary"} to={`/add-fixture-data?fixtureId=${fixture.id}`}>
