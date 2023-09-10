@@ -29,6 +29,7 @@ type Result =
  };
 type ProfileDTO = 
  record {
+   canUpdateFavouriteTeam: bool;
    createDate: int;
    displayName: text;
    favouriteTeamId: nat16;
@@ -62,6 +63,15 @@ type PaginatedLeaderboard =
  record {
    entries: vec LeaderboardEntry;
    gameweek: GameweekNumber;
+   seasonId: SeasonId;
+   totalEntries: nat;
+ };
+
+type PaginatedClubLeaderboard = 
+ record {
+   clubId: TeamId;
+   entries: vec LeaderboardEntry;
+   month: nat8;
    seasonId: SeasonId;
    totalEntries: nat;
  };
@@ -122,11 +132,12 @@ type Fixture =
  };
 type FantasyTeamSnapshot = 
  record {
-   bankBalance: float64;
+   bankBalance: nat;
    braceBonusGameweek: GameweekNumber;
    captainFantasticGameweek: GameweekNumber;
    captainFantasticPlayerId: PlayerId;
    captainId: nat16;
+   favouriteTeamId: TeamId;
    gameweek: GameweekNumber;
    goalGetterGameweek: GameweekNumber;
    goalGetterPlayerId: PlayerId;
@@ -142,6 +153,7 @@ type FantasyTeamSnapshot =
    safeHandsPlayerId: PlayerId;
    teamBoostGameweek: GameweekNumber;
    teamBoostTeamId: TeamId;
+   teamName: text;
    transfersAvailable: nat8;
  };
 type FantasyTeamSeason = 
@@ -152,11 +164,12 @@ type FantasyTeamSeason =
  };
 type FantasyTeam = 
  record {
-   bankBalance: float64;
+   bankBalance: nat;
    braceBonusGameweek: GameweekNumber;
    captainFantasticGameweek: GameweekNumber;
    captainFantasticPlayerId: PlayerId;
    captainId: PlayerId;
+   favouriteTeamId: TeamId;
    goalGetterGameweek: GameweekNumber;
    goalGetterPlayerId: PlayerId;
    hatTrickHeroGameweek: GameweekNumber;
@@ -170,6 +183,7 @@ type FantasyTeam =
    safeHandsPlayerId: PlayerId;
    teamBoostGameweek: GameweekNumber;
    teamBoostTeamId: TeamId;
+   teamName: text;
    transfersAvailable: nat8;
  };
 type Error = 
@@ -190,8 +204,10 @@ service : {
   addFantasyTeams: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
-  getAddTeamsFunction: () -> (text);
+  getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
+   (PaginatedClubLeaderboard) query;
   getCurrentGameweek: () -> (nat8);
+  getCurrentMonth: () -> (nat8);
   getCurrentSeason: () -> (Season);
   getFantasyTeam: () -> (FantasyTeam) query;
   getFantasyTeamForGameweek: (text, nat16, nat8) -> (FantasyTeamSnapshot);

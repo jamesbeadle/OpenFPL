@@ -13,7 +13,9 @@ export type Error = { 'DecodeError' : null } |
   { 'InvalidTeamError' : null };
 export interface FantasyTeam {
   'playerIds' : Uint16Array | number[],
+  'teamName' : string,
   'goalGetterPlayerId' : PlayerId,
+  'favouriteTeamId' : TeamId,
   'hatTrickHeroGameweek' : GameweekNumber,
   'transfersAvailable' : number,
   'teamBoostGameweek' : GameweekNumber,
@@ -24,7 +26,7 @@ export interface FantasyTeam {
   'braceBonusGameweek' : GameweekNumber,
   'passMasterGameweek' : GameweekNumber,
   'goalGetterGameweek' : GameweekNumber,
-  'bankBalance' : number,
+  'bankBalance' : bigint,
   'captainFantasticPlayerId' : PlayerId,
   'noEntryGameweek' : GameweekNumber,
   'safeHandsGameweek' : GameweekNumber,
@@ -39,7 +41,9 @@ export interface FantasyTeamSeason {
 }
 export interface FantasyTeamSnapshot {
   'playerIds' : Uint16Array | number[],
+  'teamName' : string,
   'goalGetterPlayerId' : PlayerId,
+  'favouriteTeamId' : TeamId,
   'hatTrickHeroGameweek' : GameweekNumber,
   'transfersAvailable' : number,
   'teamBoostGameweek' : GameweekNumber,
@@ -50,7 +54,7 @@ export interface FantasyTeamSnapshot {
   'braceBonusGameweek' : GameweekNumber,
   'passMasterGameweek' : GameweekNumber,
   'goalGetterGameweek' : GameweekNumber,
-  'bankBalance' : number,
+  'bankBalance' : bigint,
   'captainFantasticPlayerId' : PlayerId,
   'gameweek' : GameweekNumber,
   'noEntryGameweek' : GameweekNumber,
@@ -90,6 +94,13 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
+export interface PaginatedClubLeaderboard {
+  'month' : number,
+  'clubId' : TeamId,
+  'totalEntries' : bigint,
+  'seasonId' : SeasonId,
+  'entries' : Array<LeaderboardEntry>,
+}
 export type List_3 = [] | [[FantasyTeamSeason, List_3]];
 export type List_4 = [] | [[FantasyTeamSnapshot, List_4]];
 export interface PaginatedLeaderboard {
@@ -121,6 +132,7 @@ export interface ProfileDTO {
   'displayName' : string,
   'fplDepositAddress' : Uint8Array | number[],
   'createDate' : bigint,
+  'canUpdateFavouriteTeam' : boolean,
   'reputation' : number,
   'principalName' : string,
   'profilePicture' : Uint8Array | number[],
@@ -153,8 +165,12 @@ export interface _SERVICE {
   'addFantasyTeams' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
-  'getAddTeamsFunction' : ActorMethod<[], string>,
+  'getClubLeaderboard' : ActorMethod<
+    [number, number, TeamId, bigint, bigint],
+    PaginatedClubLeaderboard
+  >,
   'getCurrentGameweek' : ActorMethod<[], number>,
+  'getCurrentMonth' : ActorMethod<[], number>,
   'getCurrentSeason' : ActorMethod<[], Season>,
   'getFantasyTeam' : ActorMethod<[], FantasyTeam>,
   'getFantasyTeamForGameweek' : ActorMethod<

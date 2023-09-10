@@ -13,6 +13,7 @@ module DTOs {
         favouriteTeamId: Nat16;
         createDate: Int;
         reputation: Nat32;
+        canUpdateFavouriteTeam: Bool;
     };
 
     public type AccountBalanceDTO = {
@@ -84,6 +85,21 @@ module DTOs {
         events: [T.PlayerEventData];
         points: Int16;
         fixtureId: T.FixtureId;
+    };
+
+    public type PaginatedLeaderboard = {
+        seasonId: T.SeasonId;
+        gameweek: T.GameweekNumber;
+        entries: [T.LeaderboardEntry];
+        totalEntries: Nat;
+    };
+
+    public type PaginatedClubLeaderboard = {
+        seasonId: T.SeasonId;
+        month: Nat8;
+        clubId: T.TeamId;
+        entries: [T.LeaderboardEntry];
+        totalEntries: Nat;
     };
 
     

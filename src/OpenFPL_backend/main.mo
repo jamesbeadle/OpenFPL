@@ -31,8 +31,8 @@ import Hash "mo:base/Hash";
 import Utilities "utilities";
 import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
+import Text "mo:base/Text";
 import Int16 "mo:base/Int16";
-import Float "mo:base/Float";
 
 actor Self {
 
@@ -47,13 +47,13 @@ actor Self {
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
-  };
+  }; 
   */
   //Live canisters  
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-  }; 
+  };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
   { 
@@ -106,6 +106,19 @@ actor Self {
   public shared ({caller}) func getCurrentSeason() : async T.Season {
     return await seasonManager.getActiveSeason();
   };
+
+  public shared ({caller}) func getCurrentMonth() : async Nat8 {
+    let fixtures = await getActiveGameweekFixtures();
+
+    var latestFixtureTime = fixtures[0].kickOff;
+    for(fixture in Iter.fromArray<T.Fixture>(fixtures)){
+        if(fixture.kickOff > latestFixtureTime){
+            latestFixtureTime := fixture.kickOff;
+        };
+    };
+
+    return Utilities.unixTimeToMonth(latestFixtureTime);
+  };
   
   public query func getTeams() : async [T.Team] {
     return teamsInstance.getTeams();
@@ -139,6 +152,7 @@ actor Self {
     var favouriteTeamId = Nat16.fromNat(0);
     var createDate: Int = 0;
     var reputation = Nat32.fromNat(0);
+    var canUpdateFavouriteTeam = true;
 
     var profile = profilesInstance.getProfile(Principal.toText(caller));
     
@@ -158,6 +172,7 @@ actor Self {
         favouriteTeamId := p.favouriteTeamId;
         createDate := p.createDate;
         reputation := p.reputation;
+        canUpdateFavouriteTeam := p.favouriteTeamId == 0 or not seasonManager.seasonActive();
       };
     };
 
@@ -171,6 +186,7 @@ actor Self {
       favouriteTeamId = favouriteTeamId;
       createDate = createDate;
       reputation = reputation;
+      canUpdateFavouriteTeam = canUpdateFavouriteTeam;
     };
 
     return profileDTO;
@@ -209,6 +225,7 @@ actor Self {
       favouriteTeamId = favouriteTeamId;
       createDate = createDate;
       reputation = reputation;
+      canUpdateFavouriteTeam = false;
     };
 
     return profileDTO;
@@ -221,11 +238,29 @@ actor Self {
 
   public shared ({caller}) func updateDisplayName(displayName :Text) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+    
+    let invalidName = not profilesInstance.isDisplayNameValid(displayName);
+
+    assert not invalidName;
+
+    fantasyTeamsInstance.updateDisplayName(Principal.toText(caller), displayName);
     return profilesInstance.updateDisplayName(Principal.toText(caller), displayName);
   };
 
   public shared ({caller}) func updateFavouriteTeam(favouriteTeamId :Nat16) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
+
+    var profile = profilesInstance.getProfile(Principal.toText(caller));
+    switch(profile){
+      case (null){ assert not false; };
+      case (?foundProfile){
+        if(foundProfile.favouriteTeamId > 0){
+          assert not seasonManager.seasonActive();
+        };
+      };
+    };
+
+    fantasyTeamsInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
     return profilesInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
   };
 
@@ -296,7 +331,7 @@ actor Self {
   };
 
   //League functions
-  public shared query ({caller}) func getSeasonTop10() : async T.PaginatedLeaderboard {
+  public shared query ({caller}) func getSeasonTop10() : async DTOs.PaginatedLeaderboard {
       
       let top10 = fantasyTeamsInstance.getSeasonTop10(seasonManager.getActiveSeasonId());
       
@@ -310,7 +345,7 @@ actor Self {
       
   };
 
-  public shared query ({caller}) func getWeeklyTop10() : async T.PaginatedLeaderboard {
+  public shared query ({caller}) func getWeeklyTop10() : async DTOs.PaginatedLeaderboard {
     let top10 = fantasyTeamsInstance.getWeeklyTop10(seasonManager.getActiveSeasonId(), seasonManager.getActiveGameweek());
       
       return {
@@ -321,12 +356,16 @@ actor Self {
       };
   };
 
-  public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
+  public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async DTOs.PaginatedLeaderboard {
       return fantasyTeamsInstance.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
   };
 
-  public shared query ({caller}) func getSeasonLeaderboard(seasonId: Nat16, limit: Nat, offset: Nat) : async T.PaginatedLeaderboard {
+  public shared query ({caller}) func getSeasonLeaderboard(seasonId: Nat16, limit: Nat, offset: Nat) : async DTOs.PaginatedLeaderboard {
       return fantasyTeamsInstance.getSeasonLeaderboard(seasonId, limit, offset);
+  };
+
+  public shared query ({caller}) func getClubLeaderboard(seasonId: Nat16, month: Nat8, clubId: T.TeamId, limit: Nat, offset: Nat) : async DTOs.PaginatedClubLeaderboard {
+      return fantasyTeamsInstance.getClubLeaderboard(seasonId, month, clubId, limit, offset);
   };
   
   private func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
@@ -500,6 +539,8 @@ actor Self {
           captainFantasticPlayerId = 0;
           braceBonusGameweek = 0;
           hatTrickHeroGameweek = 0;
+          favouriteTeamId = 0;
+          teamName = "";
         }; };
         case (?team) 
         { 
@@ -524,8 +565,20 @@ actor Self {
         return Option.isSome(isPlayerIdInNewTeam);
     });
 
+    var teamName = principalId;
+    var favouriteTeamId: T.TeamId = 0;
+
+    var userProfile = profilesInstance.getProfile(principalId);
+    switch(userProfile){
+      case (null){ };
+      case (?foundProfile){
+        teamName := foundProfile.displayName;
+        favouriteTeamId := foundProfile.favouriteTeamId;
+      };
+    };
+
     switch (fantasyTeam) {
-        case (null) { return fantasyTeamsInstance.createFantasyTeam(principalId, seasonManager.getActiveGameweek(), newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId); };
+        case (null) { return fantasyTeamsInstance.createFantasyTeam(principalId, teamName, favouriteTeamId, seasonManager.getActiveGameweek(), newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId); };
         case (?team) 
         { 
 
@@ -1120,6 +1173,7 @@ actor Self {
       };
       return result;
   };
+
 
 
 

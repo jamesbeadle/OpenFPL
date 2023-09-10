@@ -58,4 +58,31 @@ module {
         return true;
     };
 
+    public func unixTimeToMonth(unixTime: Int) : Nat8 {
+        let secondsInADay = 86400;
+        let seconds = unixTime / 1000000000;
+
+        let days = seconds / secondsInADay;
+
+        let years = (1970 + days / 365);
+        let leapYears: Int = (years - 1969) / 4 - (years - 1901) / 100 + (years - 1600) / 400;
+        let dayOfYear: Int = days - (years - 1970) * 365 - leapYears;
+        let isLeapYear = (years % 4 == 0 and (years % 100 != 0 or years % 400 == 0));
+        var monthEnds = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+        if(isLeapYear){
+            monthEnds := [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
+        }; 
+
+        var month = 0;
+
+        label check for (m in Iter.range(0, 11)) {
+            if (dayOfYear < monthEnds[m+1]) {
+                month := m;
+                break check;
+            }
+        };
+
+        return Nat8.fromNat(month + 1); // To make it 1-based
+    };
+
 };

@@ -27,6 +27,7 @@ import { PlayersProvider } from "./contexts/PlayersContext";
 import LeagueTable from "./components/league-table";
 import ClubDetails from "./components/data/club-details";
 import PlayerDetails from "./components/data/player-details";
+import ClubLeaderboard from "./components/leaderboards/club-leaderboard";
 
 const App = () => {
  
@@ -56,6 +57,7 @@ const App = () => {
                   <Route path="/league-table" element={ <LeagueTable   /> } />
                   <Route path="/club/:teamId" element={ <ClubDetails   /> } />
                   <Route path="/player/:playerId" element={ <PlayerDetails   /> } />
+                  <Route path="/club-leaderboard/:teamId" element={ <ClubLeaderboard   /> } />
                 </Routes>
               <MyFooter />
             </div>

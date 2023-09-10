@@ -34,6 +34,20 @@ export const idlFactory = ({ IDL }) => {
     'gameweek' : GameweekNumber,
     'awayGoals' : IDL.Nat8,
   });
+  const LeaderboardEntry = IDL.Record({
+    'username' : IDL.Text,
+    'positionText' : IDL.Text,
+    'position' : IDL.Int,
+    'principalId' : IDL.Text,
+    'points' : IDL.Int16,
+  });
+  const PaginatedClubLeaderboard = IDL.Record({
+    'month' : IDL.Nat8,
+    'clubId' : TeamId,
+    'totalEntries' : IDL.Nat,
+    'seasonId' : SeasonId,
+    'entries' : IDL.Vec(LeaderboardEntry),
+  });
   List_2.fill(IDL.Opt(IDL.Tuple(Fixture, List_2)));
   const Gameweek = IDL.Record({
     'number' : GameweekNumber,
@@ -51,7 +65,9 @@ export const idlFactory = ({ IDL }) => {
   const PlayerId = IDL.Nat16;
   const FantasyTeam = IDL.Record({
     'playerIds' : IDL.Vec(PlayerId),
+    'teamName' : IDL.Text,
     'goalGetterPlayerId' : PlayerId,
+    'favouriteTeamId' : TeamId,
     'hatTrickHeroGameweek' : GameweekNumber,
     'transfersAvailable' : IDL.Nat8,
     'teamBoostGameweek' : GameweekNumber,
@@ -62,7 +78,7 @@ export const idlFactory = ({ IDL }) => {
     'braceBonusGameweek' : GameweekNumber,
     'passMasterGameweek' : GameweekNumber,
     'goalGetterGameweek' : GameweekNumber,
-    'bankBalance' : IDL.Float64,
+    'bankBalance' : IDL.Nat,
     'captainFantasticPlayerId' : PlayerId,
     'noEntryGameweek' : GameweekNumber,
     'safeHandsGameweek' : GameweekNumber,
@@ -72,7 +88,9 @@ export const idlFactory = ({ IDL }) => {
   });
   const FantasyTeamSnapshot = IDL.Record({
     'playerIds' : IDL.Vec(PlayerId),
+    'teamName' : IDL.Text,
     'goalGetterPlayerId' : PlayerId,
+    'favouriteTeamId' : TeamId,
     'hatTrickHeroGameweek' : GameweekNumber,
     'transfersAvailable' : IDL.Nat8,
     'teamBoostGameweek' : GameweekNumber,
@@ -83,7 +101,7 @@ export const idlFactory = ({ IDL }) => {
     'braceBonusGameweek' : GameweekNumber,
     'passMasterGameweek' : GameweekNumber,
     'goalGetterGameweek' : GameweekNumber,
-    'bankBalance' : IDL.Float64,
+    'bankBalance' : IDL.Nat,
     'captainFantasticPlayerId' : PlayerId,
     'gameweek' : GameweekNumber,
     'noEntryGameweek' : GameweekNumber,
@@ -118,17 +136,11 @@ export const idlFactory = ({ IDL }) => {
     'displayName' : IDL.Text,
     'fplDepositAddress' : IDL.Vec(IDL.Nat8),
     'createDate' : IDL.Int,
+    'canUpdateFavouriteTeam' : IDL.Bool,
     'reputation' : IDL.Nat32,
     'principalName' : IDL.Text,
     'profilePicture' : IDL.Vec(IDL.Nat8),
     'membershipType' : IDL.Nat8,
-  });
-  const LeaderboardEntry = IDL.Record({
-    'username' : IDL.Text,
-    'positionText' : IDL.Text,
-    'position' : IDL.Int,
-    'principalId' : IDL.Text,
-    'points' : IDL.Int16,
   });
   const PaginatedLeaderboard = IDL.Record({
     'totalEntries' : IDL.Nat,
@@ -157,8 +169,13 @@ export const idlFactory = ({ IDL }) => {
     'addFantasyTeams' : IDL.Func([], [], []),
     'getAccountBalanceDTO' : IDL.Func([], [AccountBalanceDTO], []),
     'getActiveGameweekFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
-    'getAddTeamsFunction' : IDL.Func([], [IDL.Text], []),
+    'getClubLeaderboard' : IDL.Func(
+        [IDL.Nat16, IDL.Nat8, TeamId, IDL.Nat, IDL.Nat],
+        [PaginatedClubLeaderboard],
+        ['query'],
+      ),
     'getCurrentGameweek' : IDL.Func([], [IDL.Nat8], []),
+    'getCurrentMonth' : IDL.Func([], [IDL.Nat8], []),
     'getCurrentSeason' : IDL.Func([], [Season], []),
     'getFantasyTeam' : IDL.Func([], [FantasyTeam], ['query']),
     'getFantasyTeamForGameweek' : IDL.Func(

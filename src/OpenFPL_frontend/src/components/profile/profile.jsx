@@ -11,6 +11,8 @@ import UpdateProfilePictureModal from './update-profile-picture-modal';
 import UpgradeMembershipModal from './upgrade-membership-modal';
 import { EditIcon, CopyIcon, StarIcon } from '../icons';
 import ProfileImage from '../../../assets/profile_placeholder.png';
+import { Link } from "react-router-dom";
+import ConfirmFavouriteTeamModal from './confirm-favourite-team-modal';
 
 const Profile = () => {
 
@@ -34,7 +36,11 @@ const Profile = () => {
   const [viewData, setViewData] = useState(null);
   const [icpAddressCopied, setICPAddressCopied] = useState(false);
   const [fplAddressCopied, setFPLAddressCopied] = useState(false);
-  
+
+  const [showConfirmFavouriteTeamModal, setShowConfirmFavouriteTeamModal] = useState(false);
+  const [selectedTeamId, setSelectedTeamId] = useState(null);
+  const [selectedTeamName, setSelectedTeamName] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchTeams();
@@ -149,11 +155,19 @@ const Profile = () => {
   };
   
   const handleFavoriteTeamChange = async (event) => {
+    setSelectedTeamId(Number(event.target.value));
+    let team = teams.find(t => t.id === Number(event.target.value));
+    setSelectedTeamName(team.name);
+    setShowConfirmFavouriteTeamModal(true);
+  };
+  
+  const handleConfirmFavouriteTeamClick = async (favouriteTeamId) => {
     setIsLoading(true);
-    setFavouriteTeam(Number(event.target.value));
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    await open_fpl_backend.updateFavouriteTeam(Number(event.target.value));
+    await open_fpl_backend.updateFavouriteTeam(Number(favouriteTeamId));
+    setShowConfirmFavouriteTeamModal(false);
+    setFavouriteTeam(Number(favouriteTeamId));
     setIsLoading(false);
   };
 
@@ -216,7 +230,7 @@ const Profile = () => {
                             <ListGroup.Item className="mt-1 mb-1">
                               <Form.Group controlId="favouriteTeam">
                                 <Form.Label>Favorite Team</Form.Label>
-                                <Form.Control as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange}>
+                                <Form.Control as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange} disabled={!viewData.canUpdateFavouriteTeam}>
                                     <option value="">Select Favourite Team</option>
                                       {teams.map((team) => (
                                       <option key={team.id} value={team.id}>
@@ -226,6 +240,11 @@ const Profile = () => {
                                 </Form.Control>
                               </Form.Group>
                             </ListGroup.Item>
+                            <ListGroup.Item className="mt-1 mb-1">
+                              <Button as={Link} to={`/club-leaderboard/${favouriteTeam}`}>View Club Leaderboard</Button>
+                            </ListGroup.Item>
+                            
+
                           </Col>
                         </Row>
 
@@ -345,6 +364,15 @@ const Profile = () => {
               <h3 className='mt-4'>Governance History Coming Soon</h3>
             </Tab>
           </Tabs>
+
+          {showConfirmFavouriteTeamModal && <ConfirmFavouriteTeamModal
+            show={showConfirmFavouriteTeamModal}
+            handleClose={() => { setShowConfirmFavouriteTeamModal(false); setSelectedTeamId(null); } }
+            handleConfirm={handleConfirmFavouriteTeamClick}
+            teamId={selectedTeamId}
+            teamName={selectedTeamName}
+          />}
+
         </Container>
     )
   );
