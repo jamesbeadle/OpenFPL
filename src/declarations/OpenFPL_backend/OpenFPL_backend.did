@@ -179,7 +179,6 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
-  clearClubLeaderboards: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getActiveGameweekFixtures: () -> (vec Fixture) query;
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
@@ -207,7 +206,6 @@ service : {
    (PaginatedLeaderboard) query;
   getWeeklyTop10: () -> (PaginatedLeaderboard) query;
   isDisplayNameValid: (text) -> (bool) query;
-  recalculateClubLeaderboards: () -> ();
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateDisplayName: (text) -> (Result);

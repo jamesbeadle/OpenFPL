@@ -151,7 +151,6 @@ export interface Team {
 }
 export type TeamId = number;
 export interface _SERVICE {
-  'clearClubLeaderboards' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
   'getClubLeaderboard' : ActorMethod<
@@ -191,7 +190,6 @@ export interface _SERVICE {
   >,
   'getWeeklyTop10' : ActorMethod<[], PaginatedLeaderboard>,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
-  'recalculateClubLeaderboards' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

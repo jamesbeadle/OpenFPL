@@ -153,7 +153,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : Error });
   return IDL.Service({
-    'clearClubLeaderboards' : IDL.Func([], [], []),
     'getAccountBalanceDTO' : IDL.Func([], [AccountBalanceDTO], []),
     'getActiveGameweekFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
     'getClubLeaderboard' : IDL.Func(
@@ -210,7 +209,6 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getWeeklyTop10' : IDL.Func([], [PaginatedLeaderboard], ['query']),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
-    'recalculateClubLeaderboards' : IDL.Func([], [], []),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
         [Result],
