@@ -34,7 +34,6 @@ const PlayerDetails = ({  }) => {
            
             const playerDetails = await player_canister.getPlayerDetails(Number(playerId), Number(activeSeasonData.id));
             setPlayer(playerDetails);
-            console.log(playerDetails)
            
             setIsLoading(false);
         };

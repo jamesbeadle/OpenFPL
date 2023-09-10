@@ -24,6 +24,7 @@ actor Self {
     private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
     private var nextPlayerId : Nat = 560;
     private var retiredPlayers = List.fromArray<T.Player>([]);
+    private var playerDataCache: T.DataCache = { category = "players"; hash = "DEFAULT_VALUE"; };
 
     public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
         
@@ -1114,6 +1115,10 @@ actor Self {
                 });
             };
         };
+    };
+
+    public shared query func getPlayerDataCache() : async T.DataCache {
+        return playerDataCache;
     };
 
     private stable var stable_players: [T.Player] = [];

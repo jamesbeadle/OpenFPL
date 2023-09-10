@@ -11,6 +11,7 @@ export interface CreatePlayerPayload {
   'lastName' : string,
   'firstName' : string,
 }
+export interface DataCache { 'hash' : string, 'category' : string }
 export interface Fixture {
   'id' : number,
   'status' : number,
@@ -180,6 +181,7 @@ export interface _SERVICE {
     Array<[number, PlayerScoreDTO]>
   >,
   'getPlayer' : ActorMethod<[number], Player>,
+  'getPlayerDataCache' : ActorMethod<[], DataCache>,
   'getPlayerDetails' : ActorMethod<[number, SeasonId], PlayerDetailDTO>,
   'getPlayersDetailsForGameweek' : ActorMethod<
     [Uint16Array | number[], number, number],

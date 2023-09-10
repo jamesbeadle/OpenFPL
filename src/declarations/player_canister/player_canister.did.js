@@ -103,6 +103,7 @@ export const idlFactory = ({ IDL }) => {
     'onLoan' : IDL.Bool,
     'firstName' : IDL.Text,
   });
+  const DataCache = IDL.Record({ 'hash' : IDL.Text, 'category' : IDL.Text });
   const PlayerGameweekDTO = IDL.Record({
     'fixtureId' : FixtureId,
     'events' : IDL.Vec(PlayerEventData),
@@ -191,6 +192,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getPlayer' : IDL.Func([IDL.Nat16], [Player], ['query']),
+    'getPlayerDataCache' : IDL.Func([], [DataCache], ['query']),
     'getPlayerDetails' : IDL.Func(
         [IDL.Nat16, SeasonId],
         [PlayerDetailDTO],

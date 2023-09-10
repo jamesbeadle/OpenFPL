@@ -36,7 +36,6 @@ const AddFixtureData = () => {
 
  
   const handlePlayerSelection = (team, playerIds) => {
-    console.log(selectedPlayers)
     const currentPlayerIds = selectedPlayers[team];
     const removedPlayerIds = currentPlayerIds.filter(id => !playerIds.includes(id));
     let remainingPlayerEventMap = { ...playerEventMap }; // Create a shallow copy of the playerEventMap

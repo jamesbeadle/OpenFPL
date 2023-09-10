@@ -205,6 +205,11 @@ type Fixture =
    seasonId: SeasonId;
    status: nat8;
  };
+type DataCache = 
+ record {
+   category: text;
+   hash: text;
+ };
 type CreatePlayerPayload = 
  record {
    dateOfBirth: int;
@@ -227,6 +232,7 @@ service : {
           PlayerScoreDTO;
         }) query;
   getPlayer: (nat16) -> (Player) query;
+  getPlayerDataCache: () -> (DataCache) query;
   getPlayerDetails: (nat16, SeasonId) -> (PlayerDetailDTO) query;
   getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
    (vec PlayerPointsDTO) query;

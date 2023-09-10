@@ -456,6 +456,10 @@ module Types{
         expires: Int;
     };
 
+    public type DataCache = {
+        category: Text;
+        hash: Text;
+    };
 
 
 }
