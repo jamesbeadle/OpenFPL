@@ -5,6 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
 import { Actor } from "@dfinity/agent";
 import { FixtureIcon } from '../icons';
+import { getTeamById } from '../../helpers';
 
 const Fixtures = () => {
   const { authClient } = useContext(AuthContext);
@@ -52,10 +53,6 @@ const Fixtures = () => {
   const handleGameweekChange = (change) => {
     setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
   }
-
-  const getTeamById = (teamId) => {
-    return teams.find(team => team.id === teamId);
-  }
   
   
   return (
@@ -88,21 +85,21 @@ const Fixtures = () => {
                 <Row className='align-items-center small-text mt-2' key={fixture.id}>
                     <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                       <div style={{padding: '0 5px'}}>
-                          <FixtureIcon primaryColour={getTeamById(fixture.homeTeamId).primaryColourHex} secondaryColour={getTeamById(fixture.homeTeamId).secondaryColourHex} />
+                          <FixtureIcon primaryColour={getTeamById(teams, fixture.homeTeamId).primaryColourHex} secondaryColour={getTeamById(teams, fixture.homeTeamId).secondaryColourHex} />
                       </div>
                     </Col>
                     <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                      <p style={{margin: 0}}><small>{getTeamById(fixture.homeTeamId).abbreviatedName}</small></p>
+                      <p style={{margin: 0}}><small>{getTeamById(teams, fixture.homeTeamId).abbreviatedName}</small></p>
                     </Col>
                     <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
                       <small style={{margin: 0}}>vs</small>
                     </Col>
                     <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                      <p style={{margin: 0}}><small>{getTeamById(fixture.awayTeamId).abbreviatedName}</small></p>
+                      <p style={{margin: 0}}><small>{getTeamById(teams, fixture.awayTeamId).abbreviatedName}</small></p>
                     </Col>
                     <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                       <div style={{padding: '0 5px'}}>
-                          <FixtureIcon primaryColour={getTeamById(fixture.awayTeamId).primaryColourHex} secondaryColour={getTeamById(fixture.awayTeamId).secondaryColourHex} />
+                          <FixtureIcon primaryColour={getTeamById(teams, fixture.awayTeamId).primaryColourHex} secondaryColour={getTeamById(teams, fixture.awayTeamId).secondaryColourHex} />
                       </div>
                     </Col>
                 </Row>

@@ -8,6 +8,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import { SmallFixtureIcon } from '../icons';
 import { getAgeFromDOB } from '../helpers';
 import getFlag from '../country-flag';
+import { getTeamById } from '../../helpers';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -112,11 +113,6 @@ const ClubDetails = ({  }) => {
             })            
         };
     });
-
-    const getTeamById = (teamId) => {
-        const team = teams.find(team => team.id === teamId);
-        return team;
-    };
 
     const renderStatusBadge = (fixture) => {
         const currentTime = new Date().getTime();
@@ -295,8 +291,8 @@ const ClubDetails = ({  }) => {
                                     <Table responsive>
                                         <tbody>
                                             {fixtures.map(fixture => {
-                                                const homeTeam = getTeamById(fixture.homeTeamId);
-                                                const awayTeam = getTeamById(fixture.awayTeamId);
+                                                const homeTeam = getTeamById(teams, fixture.homeTeamId);
+                                                const awayTeam = getTeamById(teams, fixture.awayTeamId);
                                                 return (
                                                     <tr key={`fixture-${fixture.id}`} className="align-middle">
                                                         <td className="home-team-name" style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>

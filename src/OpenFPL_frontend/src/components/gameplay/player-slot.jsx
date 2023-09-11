@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Card, Button, Col, Row } from 'react-bootstrap';
 import { StarIcon, StarOutlineIcon,  PlayerIcon, TransferIcon, RecordIcon, PersonBoxIcon, StopIcon, PersonUpIcon, PersonIcon, CaptainIcon, TwoIcon, ThreeIcon } from '../icons';
 import getFlag from '../country-flag';
+import { getTeamById } from '../../helpers';
 
 import { DataContext } from "../../contexts/DataContext";
 
@@ -26,10 +27,6 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, handleSellPl
     handleCaptainSelection(player.id);
   };
 
-  const getTeamById = (teamId) => {
-    return teams.find(team => team.id === teamId);
-  }
-
   return (      
     <Card className={`justify-content-center ${isCaptain ? 'captain' : ''}`}>
       <Row className='mx-1 mt-2'>
@@ -39,7 +36,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, handleSellPl
               <p style={{fontSize: '0.8rem'}} className='text-center mb-0'>{player.shirtNumber == 0 ? '-' : player.shirtNumber}</p>
               <p style={{fontSize: '0.8rem'}} className='text-center mb-1'>{positionCodes[player.position]}</p>  
             </div>
-            <PlayerIcon primaryColour={getTeamById(player.teamId).primaryColourHex} secondaryColour={getTeamById(player.teamId).secondaryColourHex} />
+            <PlayerIcon primaryColour={getTeamById(teams, player.teamId).primaryColourHex} secondaryColour={getTeamById(teams, player.teamId).secondaryColourHex} />
           </Row>
         </Col>
         <Col xs={9}>
@@ -72,7 +69,7 @@ const PlayerDetails = ({ player, captainId, handleCaptainSelection, handleSellPl
             <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               <span style={{fontSize: '0.94rem'}} className='mb-0'>
                 <p className='w-100 mb-0'>
-                  <small>{getTeamById(player.teamId).friendlyName}</small>
+                  <small>{getTeamById(teams, player.teamId).friendlyName}</small>
                 </p>
                 <p className='w-100'>
                   <small>{`£${(Number(player.value) / 4).toFixed(1)}m`}</small>

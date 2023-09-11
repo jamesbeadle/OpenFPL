@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Table, Container, Card } from 'react-bootstrap';
+import { getTeamById } from '../../helpers';
 
 const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams, isCaptain, bonusName }) => {
     if (!player || !playerDTO || !playerDTO.gameweekData) return null;
 
     const { gameweekData } = playerDTO;
-    
-    const getTeamById = (teamId) => {
-      return teams.find(team => team.id === teamId);
-    }
-
     return (
         <Modal show={show} onHide={onClose}>
             <Modal.Header closeButton>
                 <Modal.Title>
                     {(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName} - Gameweek {gameweek}
                     <br />
-                    <p className='small-text'>{getTeamById(player.teamId).name}</p>
+                    <p className='small-text'>{getTeamById(teams, player.teamId).name}</p>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>

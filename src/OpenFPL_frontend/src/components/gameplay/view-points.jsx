@@ -7,6 +7,7 @@ import PlayerDetailsModal from './player-details-modal';
 import LogoImage from "../../../assets/logo.png";
 import ProfileImage from '../../../assets/profile_placeholder.png';
 import { PlayerIcon, StarIcon, StarOutlineIcon } from '../icons';
+import { getTeamById } from '../../helpers';
 
 import { DataContext } from "../../contexts/DataContext";
 
@@ -88,13 +89,6 @@ const ViewPoints = () => {
             getBonusDetails();
         }
     }, [fantasyTeam]);
-    
-    
-    
-    const getTeamById = (teamId) => {
-        const team = teams.find(team => team.id === teamId);
-        return team;
-    };
     
     const extractPlayerData = (playerDTO) => {
         let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
@@ -251,8 +245,8 @@ const ViewPoints = () => {
                                 {positionCodes[player.position]}
                                 <br />
                                 <PlayerIcon width={20} height={20} 
-                                    primaryColour={getTeamById(player.teamId).primaryColourHex} 
-                                    secondaryColour={getTeamById(player.teamId).secondaryColourHex} />
+                                    primaryColour={getTeamById(teams, player.teamId).primaryColourHex} 
+                                    secondaryColour={getTeamById(teams, player.teamId).secondaryColourHex} />
                             </div>
                             <div>
                                 <h5 className='mb-0 p-0' style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
@@ -260,7 +254,7 @@ const ViewPoints = () => {
                                     {player.lastName} 
                                 </h5>
                                 <small className='small-text p-0' style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
-                                    {getTeamById(player.teamId).name}
+                                    {getTeamById(teams, player.teamId).name}
                                 </small>
                             </div>
                         </div>
