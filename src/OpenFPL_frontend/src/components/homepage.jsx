@@ -10,7 +10,7 @@ import { msToTime, nanoSecondsToMillis, getTeamById, groupFixturesByDate } from 
 const Homepage = () => {
 
     const { userPrincipal, isAuthenticated } = useContext(AuthContext);
-    const { teams, fixtures, systemState } = useContext(DataContext);
+    const { teams, fixtures, systemState, seasonLeaderboard, weeklyLeaderboard } = useContext(DataContext);
 
     const [isLoading, setIsLoading] = useState(true);
     const [managerCount, setManagerCount] = useState(0);
@@ -71,10 +71,10 @@ const Homepage = () => {
         const managerCountData = await open_fpl_backend.getTotalManagers();
         setManagerCount(Number(managerCountData));
 
-        const seasonTop10Data = await open_fpl_backend.getSeasonTop10();
+        const seasonTop10Data = weeklyLeaderboard.slice(0, 10);
         setSeasonTop10(seasonTop10Data.entries);
         
-        const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
+        const weeklyTop10Data = seasonLeaderboard.slice(0, 10);
         setWeeklyTop10(weeklyTop10Data);
     };
 

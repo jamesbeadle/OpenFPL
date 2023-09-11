@@ -333,32 +333,6 @@ actor Self {
       return seasonManager.getSeasons();
   };
 
-  //League functions
-  public shared query ({caller}) func getSeasonTop10() : async DTOs.PaginatedLeaderboard {
-      
-      let top10 = fantasyTeamsInstance.getSeasonTop10(seasonManager.getActiveSeasonId());
-      
-      return {
-        seasonId = top10.seasonId;
-        gameweek = top10.gameweek;
-        entries = List.toArray(top10.entries);
-        totalEntries = 10;
-      };
-      
-      
-  };
-
-  public shared query ({caller}) func getWeeklyTop10() : async DTOs.PaginatedLeaderboard {
-    let top10 = fantasyTeamsInstance.getWeeklyTop10(seasonManager.getActiveSeasonId(), seasonManager.getActiveGameweek());
-      
-      return {
-        seasonId = top10.seasonId;
-        gameweek = top10.gameweek;
-        entries = List.toArray(top10.entries);
-        totalEntries = 10;
-      };
-  };
-
   public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async DTOs.PaginatedLeaderboard {
       return fantasyTeamsInstance.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
   };
