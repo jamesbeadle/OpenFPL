@@ -8,7 +8,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import { SmallFixtureIcon } from '../icons';
 import { getAgeFromDOB } from '../helpers';
 import getFlag from '../country-flag';
-import { getTeamById } from '../../helpers';
+import { getTeamById, nanoSecondsToMillis } from '../../helpers';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -165,10 +165,6 @@ const ClubDetails = ({  }) => {
             minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
             seconds: Math.floor((distance % (1000 * 60)) / 1000)
         };
-    };
-
-    const nanoSecondsToMillis = (nanos) => {
-        return Number(BigInt(nanos) / BigInt(1000000)); // Convert nanoseconds to milliseconds
     };
 
     return (
