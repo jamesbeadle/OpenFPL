@@ -954,6 +954,7 @@ actor Self {
   private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
   private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
   private stable var stable_monthly_leaderboards: [(T.SeasonId, List.List<T.ClubLeaderboard>)] = [];
+  private stable var stable_data_cache_hashes: [T.DataCache] = [];
   
   system func preupgrade() {
 
@@ -981,6 +982,7 @@ actor Self {
     stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
     stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
     stable_monthly_leaderboards := fantasyTeamsInstance.getMonthlyLeaderboards();
+    stable_data_cache_hashes := List.toArray(dataCacheHashes);
   };
 
   system func postupgrade() {
@@ -998,6 +1000,7 @@ actor Self {
     governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
     fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
+    dataCacheHashes := List.fromArray(stable_data_cache_hashes);
     recreateTimers();
   };
   

@@ -24,7 +24,7 @@ actor Self {
     private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
     private var nextPlayerId : Nat = 560;
     private var retiredPlayers = List.fromArray<T.Player>([]);
-    private var playerDataCache: T.DataCache = { category = "players"; hash = "DEFAULT_VALUE"; };
+    private var playersDataCache: T.DataCache = { category = "players"; hash = "DEFAULT_VALUE"; };
 
     public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
         
@@ -1117,22 +1117,25 @@ actor Self {
         };
     };
 
-    public shared query func getPlayerDataCache() : async T.DataCache {
-        return playerDataCache;
+    public shared query func getPlayersDataCache() : async T.DataCache {
+        return playersDataCache;
     };
 
     private stable var stable_players: [T.Player] = [];
     private stable var stable_next_player_id : Nat = 0;
     private stable var stable_timers: [T.TimerInfo] = [];
+    private stable var stable_players_data_cache: T.DataCache = playersDataCache;
 
     system func preupgrade() {
         stable_players := List.toArray(players);
         stable_next_player_id := nextPlayerId;
+        stable_players_data_cache := playersDataCache;
     };
 
     system func postupgrade() {
         players := List.fromArray(stable_players);
         nextPlayerId := stable_next_player_id;
+        playersDataCache := stable_players_data_cache;
         recreateTimers();
     };
 

@@ -22,7 +22,7 @@ export const DataProvider = ({ children }) => {
     const init = async () => {
         const currentHashArray = await open_fpl_backend.getCurrentHashes();
         setCurrentHashes(currentHashArray);
-        const currentPlayerHash = await player_canister.getPlayerDataCache();
+        const currentPlayerHash = await player_canister.getPlayersDataCache();
         await initPlayerData(currentPlayerHash);
         await initTeamsData(currentHashArray.find(item => item.category === 'teams'));
         await initSeasonsData(currentHashArray.find(item => item.category === 'seasons'));
