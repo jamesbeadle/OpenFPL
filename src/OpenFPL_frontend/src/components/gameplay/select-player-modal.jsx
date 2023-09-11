@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Button, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
-import { TeamsContext } from "../../contexts/TeamsContext";
-import { PlayersContext } from "../../contexts/PlayersContext";
+import { DataContext } from "../../contexts/DataContext";
 
 const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) => {
   
-  const { teams } = useContext(TeamsContext);
-  const { players } = useContext(PlayersContext);
+  const { players, teams } = useContext(DataContext);
   const [filterTeamId, setFilterTeamId] = useState("");
   const [filterPosition, setFilterPosition] = useState("");
   const [minValue, setMinValue] = useState("");

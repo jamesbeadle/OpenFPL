@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Spinner, ListGroup, Tabs, Tab, Form,
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../contexts/AuthContext";
+import { DataContext } from "../../contexts/DataContext";
 import { toHexString } from '../helpers';
 import UpdateNameModal from './update-name-modal';
 import WithdrawICPModal from './withdraw-icp-modal';
@@ -17,6 +18,7 @@ import ConfirmFavouriteTeamModal from './confirm-favourite-team-modal';
 const Profile = () => {
 
   const { authClient } = useContext(AuthContext);
+  const { teams } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [showUpdateNameModal, setShowUpdateNameModal] = useState(false);
   const [showUpdateProfilePictureModal, setShowUpdateProfilePictureModal] = useState(false);
@@ -32,7 +34,6 @@ const Profile = () => {
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
   const [joinedDate, setJoinedDate] = useState('');
 
-  const [teams, setTeamsData] = useState([]);
   const [viewData, setViewData] = useState(null);
   const [icpAddressCopied, setICPAddressCopied] = useState(false);
   const [fplAddressCopied, setFPLAddressCopied] = useState(false);
@@ -43,19 +44,11 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchTeams();
       await fetchViewData();
       setIsLoading(false);
     };
     fetchData();
   }, []);
-
-  
-  
-  const fetchTeams = async () => {
-    const teamsData = await open_fpl_backend.getTeams();
-    setTeamsData(teamsData);
-  };
 
   useEffect(() => {
     if(!viewData){

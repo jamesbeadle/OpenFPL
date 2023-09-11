@@ -8,9 +8,11 @@ import LogoImage from "../../../assets/logo.png";
 import ProfileImage from '../../../assets/profile_placeholder.png';
 import { PlayerIcon, StarIcon, StarOutlineIcon } from '../icons';
 
+import { DataContext } from "../../contexts/DataContext";
 
 const ViewPoints = () => {
     const { manager, gameweek, season } = useParams();
+    const { players, teams, fixtures } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [fantasyTeam, setFantasyTeam] = useState({
@@ -20,10 +22,7 @@ const ViewPoints = () => {
     const [selectedPlayerDTO, setSelectedPlayerDTO] = useState(null);
     const [selectedPlayerCaptain, setSelectedPlayerCaptain] = useState(false);
     const [selectedPlayerBonusName, setSelectedPlayerBonusName] = useState('');
-    
-    const [teams, setTeams] = useState([]);
-    const [fixtures, setFixtures] = useState([]);
-    const [players, setPlayers] = useState([]);
+
     const positionCodes = ['GK', 'DF', 'MF', 'FW'];
     const [gameweekBonus, setGameweekBonus] = useState({name: 'No Bonus Played', player: '', team: ''});
     const [profile, setProfile] = useState(null);
@@ -40,13 +39,7 @@ const ViewPoints = () => {
     }, []);
 
     const fetchViewData = async () => {
-        
-        const teamsData = await open_fpl_backend.getTeams();
-        setTeams(teamsData);
-        
-        const fixturesData = await open_fpl_backend.getFixtures();
-        setFixtures(fixturesData);
-        
+                
         const fetchedFantasyTeam = await open_fpl_backend.getFantasyTeamForGameweek(manager, Number(season), Number(gameweek)); 
         const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));
         

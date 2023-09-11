@@ -1,20 +1,17 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Container, Card, Spinner, Row, Col, Form, Table, Accordion, Button } from 'react-bootstrap';
-import { TeamsContext } from "../../contexts/TeamsContext";
+import { DataContext } from "../../contexts/DataContext";
 import { useParams } from 'react-router-dom';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { getAgeFromDOB, formatDOB } from '../helpers';
 import getFlag from '../country-flag';
 import PlayerDetailModal from './player-detail-modal';
 
 const PlayerDetails = ({  }) => {
     const { playerId } = useParams();
-    const { teams } = useContext(TeamsContext);
-    const [fixtures, setFixtures] = useState([]);
-    const [seasons, setSeasons] = useState([]);
+    const { teams, seasons, fixtures, systemState } = useContext(DataContext);
     const [player, setPlayer] = useState(null);
-    const [selectedSeason, setSelectedSeason] = useState(1);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
     const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [selectedPlayerGameweek, setSelectedPlayerGameweek] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -22,19 +19,9 @@ const PlayerDetails = ({  }) => {
     
     useEffect(() => {
         const fetchInitialData = async () => {
-            
-            const fixturesData = await open_fpl_backend.getFixtures();
-            setFixtures(fixturesData);
-
-            const seasonList = await open_fpl_backend.getSeasons();
-            setSeasons(seasonList); 
-
-            const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-            setSelectedSeason(activeSeasonData);
            
             const playerDetails = await player_canister.getPlayerDetails(Number(playerId), Number(activeSeasonData.id));
             setPlayer(playerDetails);
-           
             setIsLoading(false);
         };
 

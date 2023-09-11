@@ -2,8 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Container, Card, Tab, Tabs, Spinner, Form, Row, Col, Badge, Table } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import ClubProposals from './club-proposals';
-import { TeamsContext } from "../../contexts/TeamsContext";
-import { PlayersContext } from "../../contexts/PlayersContext";
+import { DataContext } from "../../contexts/DataContext";
 import { useParams } from 'react-router-dom';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { SmallFixtureIcon } from '../icons';
@@ -15,14 +14,12 @@ const ClubDetails = ({  }) => {
     const [key, setKey] = useState('players');
     
     const { teamId } = useParams();
-    const { teams } = useContext(TeamsContext);
-    const { players } = useContext(PlayersContext);
+    const { teams, players, seasons, systemState } = useContext(DataContext);
     
     const [team, setTeam] = useState(null);
     const [fixtures, setFixtures] = useState([]);
     const [allTeamFixtures, setAllTeamFixtures] = useState([]);
-    const [seasons, setSeasons] = useState([]);
-    const [selectedSeason, setSelectedSeason] = useState(1);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
     const POSITION_MAP = {
         0: 'Goalkeeper',
         1: 'Defender',
@@ -34,10 +31,6 @@ const ClubDetails = ({  }) => {
     
     useEffect(() => {
         const fetchInitialData = async () => {
-            await fetchSeasons();
-            
-            const activeSeasonData = await fetchActiveSeasonId();
-            setSelectedSeason(activeSeasonData);
             
             const teamDetails = teams.find(t => t.id === Number(teamId));
             setTeam(teamDetails);
@@ -66,11 +59,9 @@ const ClubDetails = ({  }) => {
 
             let filteredTeamFixtures = allTeamFixtures
             .filter(f => {
-                // Filter based on home and away
                 if (fixtureFilter === 'home' && f.homeTeamId !== Number(teamId)) return false;
                 if (fixtureFilter === 'away' && f.awayTeamId !== Number(teamId)) return false;
 
-                // Filter based on date range
                 if (dateRange.start && f.kickOff < dateRange.start) return false;
                 if (dateRange.end && f.kickOff > dateRange.end) return false;
 
@@ -102,18 +93,6 @@ const ClubDetails = ({  }) => {
         fetchFixturesForSeason(selectedSeason);
     }, [selectedSeason]);
     
-    
-
-    const fetchSeasons = async () => {
-        const seasonList = await open_fpl_backend.getSeasons();
-        setSeasons(seasonList);
-    };
-
-    const fetchActiveSeasonId = async () => {
-        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        return activeSeasonData.id;
-    };
-
     const teamPlayers = players.filter(player => player.teamId === Number(teamId));
 
     const groupPlayersByPosition = (players) => {
@@ -144,7 +123,6 @@ const ClubDetails = ({  }) => {
         const kickoffTime = computeTimeLeft(Number(fixture.kickOff));
         const oneHourInMilliseconds = 3600000;
     
-        // Check if status is 0 and the time difference is less than an hour
         if (fixture.status === 0 && kickoffTime - currentTime <= oneHourInMilliseconds) {
             return (
                 <Badge className='bg-warning w-100' style={{ padding: '0.5rem' }}>

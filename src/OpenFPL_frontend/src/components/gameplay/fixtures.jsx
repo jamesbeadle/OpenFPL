@@ -2,17 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
-import { TeamsContext } from "../../contexts/TeamsContext";
+import { DataContext } from "../../contexts/DataContext";
 import { Actor } from "@dfinity/agent";
 import { FixtureIcon } from '../icons';
 
 const Fixtures = () => {
   const { authClient } = useContext(AuthContext);
-  const { teams } = useContext(TeamsContext);
+  const { teams, fixtures } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [allFixtures, setAllFixtures] = useState([]);
-  const [fixtures, setFixtures] = useState([]);
   const [currentGameweek, setCurrentGameweek] = useState(1);
   
   useEffect(() => {
@@ -26,9 +23,6 @@ const Fixtures = () => {
   const fetchViewData = async () => {
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-  
-    const fixturesData = await open_fpl_backend.getFixtures();
-    setAllFixtures(fixturesData);
     
     const currentDateTime = new Date();
     const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
@@ -51,9 +45,9 @@ const Fixtures = () => {
 
 
   useEffect(() => {
-    const filteredFixtures = allFixtures.filter(fixture => fixture.gameweek === currentGameweek);
+    const filteredFixtures = fixtures.filter(fixture => fixture.gameweek === currentGameweek);
     setFixtures(filteredFixtures);
-  }, [allFixtures, currentGameweek]);
+  }, [fixtures, currentGameweek]);
 
   const handleGameweekChange = (change) => {
     setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));

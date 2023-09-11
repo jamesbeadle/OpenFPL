@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Spinner, Button, Container, Tabs, Tab } from 'react-bootstrap';
-import { TeamsContext } from "../../../contexts/TeamsContext";
-import { PlayersContext } from "../../../contexts/PlayersContext";
+import { DataContext } from "../../../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
 import { useLocation } from 'react-router-dom';
 import PlayerEventsModal from '../player-events-modal';
@@ -14,8 +13,7 @@ const AddFixtureData = () => {
   const queryParams = new URLSearchParams(location.search);
   const fixtureId = queryParams.get('fixtureId');
 
-  const { teams } = useContext(TeamsContext);
-  const { players } = useContext(PlayersContext);
+  const { teams } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixture, setFixture] = useState(null);
   const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);

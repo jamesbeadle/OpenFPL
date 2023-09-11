@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Table, Pagination, Form, Card, Row, Col } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { DataContext } from "../../contexts/DataContext";
 
 const SeasonLeaderboard = () => {
+    const { seasons, systemState } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
     const [managers, setManagers] = useState({
         totalEntries: 0n,
@@ -10,11 +12,9 @@ const SeasonLeaderboard = () => {
         entries: [],
         gameweek: 0
       });
-    const [seasons, setSeasons] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedSeason, setSelectedSeason] = useState(null);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
     const itemsPerPage = 25;
-    const [isInitialSetupDone, setIsInitialSetupDone] = useState(false);
   
     const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
         <Pagination.Item 
@@ -25,50 +25,41 @@ const SeasonLeaderboard = () => {
             {index + 1}
         </Pagination.Item>
     ));
-    
+
     useEffect(() => {
-        const fetchInitialData = async () => {
-            await fetchSeasons();
-            const activeSeasonData = await fetchActiveSeasonId();
-            if(!activeSeasonData){
-                return;
-            }
-            setSelectedSeason(activeSeasonData);
-            setIsInitialSetupDone(true);
+        if (!selectedSeason) {
+            return;
+        };
+        const fetchData = async () => {
+            setIsLoading(true);
+            await fetchViewData(selectedSeason);
+            setIsLoading(false);
         };
 
-        fetchInitialData();
-    }, []);
+        fetchData();
+    }, [selectedSeason, currentPage]);
 
-useEffect(() => {
-    if (!selectedSeason || !isInitialSetupDone) {
-        return;
-    };
-    const fetchData = async () => {
-        setIsLoading(true);
-        await fetchViewData(selectedSeason);
-        setIsLoading(false);
-    };
-
-    fetchData();
-}, [selectedSeason, currentPage, isInitialSetupDone]);
-
-
-    const fetchActiveSeasonId = async () => {
-        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        return activeSeasonData.id;
-    };
-
-    const fetchViewData = async (season, gameweek) => {
-        const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage);
-        setManagers(leaderboardData);
-    };
-
-    const fetchSeasons = async () => {
-        const seasonList = await open_fpl_backend.getSeasons();
-        setSeasons(seasonList); 
-    };
+    const fetchViewData = async (season) => {
+        let cachedData;
+        if (currentPage <= 4) {
+            const cacheKey = `season_leaderboard_data_page_${currentPage}`;
+            cachedData = JSON.parse(localStorage.getItem(cacheKey) || '{}');
+        }
     
+        // If cached data exists and matches our criteria (season), use it
+        if (cachedData && cachedData.seasonId === season) {
+            setManagers(cachedData);
+        } else {
+            const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage);
+            setManagers(leaderboardData);
+    
+            // Cache the data if it's one of the first 4 pages
+            if (currentPage <= 4) {
+                const cacheKey = `season_leaderboard_data_page_${currentPage}`;
+                localStorage.setItem(cacheKey, JSON.stringify(leaderboardData));
+            }
+        }
+    };
 
     const renderedData = managers.entries && managers.entries.map(manager => (
         <tr key={manager.principalId}>
