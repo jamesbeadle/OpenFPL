@@ -102,5 +102,11 @@ module DTOs {
         totalEntries: Nat;
     };
 
+    public type SeasonDTO = {
+        id: T.SeasonId;
+        name: Text;
+        year: Nat16;
+    };
+
     
 }

@@ -9,9 +9,10 @@ import { getTeamById } from '../helpers';
 
 const Fixtures = () => {
   const { authClient } = useContext(AuthContext);
-  const { teams, fixtures } = useContext(DataContext);
+  const { teams, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(1);
+  const [filteredFixtures, setFilteredFixtures] = useState([]);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -26,9 +27,7 @@ const Fixtures = () => {
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
     
     const currentDateTime = new Date();
-    const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
-   
-    const currentGameweekFixtures = fixturesData.filter(fixture => fixture.gameweek === activeGameweekData);
+    const currentGameweekFixtures = fixtures.filter(fixture => fixture.gameweek === systemState.activeGameweek);
     currentGameweekFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
 
     const kickOffInMilliseconds = Number(currentGameweekFixtures[0].kickOff) / 1000000;
@@ -37,17 +36,17 @@ const Fixtures = () => {
     const oneHourBeforeFirstFixture = new Date(firstFixtureTime - 3600000); // Subtract 1 hour from the fixture's start time
    
     if (currentDateTime >= oneHourBeforeFirstFixture) {
-        setCurrentGameweek(activeGameweekData + 1);
+        setCurrentGameweek(systemState.activeGameweek + 1);
     }
     else{
-      setCurrentGameweek(activeGameweekData);  
+      setCurrentGameweek(systemState.activeGameweek);  
     }
   };
 
 
   useEffect(() => {
-    const filteredFixtures = fixtures.filter(fixture => fixture.gameweek === currentGameweek);
-    setFixtures(filteredFixtures);
+    const filteredFixturesData = fixtures.filter(fixture => fixture.gameweek === currentGameweek);
+    setFilteredFixtures(filteredFixturesData);
   }, [fixtures, currentGameweek]);
 
   const handleGameweekChange = (change) => {
@@ -81,7 +80,7 @@ const Fixtures = () => {
                 </div>
             </Row>
             <br />
-            {fixtures.map((fixture, i) => (
+            {filteredFixtures.map((fixture, i) => (
                 <Row className='align-items-center small-text mt-2' key={fixture.id}>
                     <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                       <div style={{padding: '0 5px'}}>

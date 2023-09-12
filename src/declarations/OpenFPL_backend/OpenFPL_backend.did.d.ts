@@ -141,6 +141,7 @@ export interface Season {
   'year' : number,
   'gameweeks' : List_1,
 }
+export interface SeasonDTO { 'id' : SeasonId, 'name' : string, 'year' : number }
 export type SeasonId = number;
 export interface SystemState {
   'activeMonth' : number,
@@ -187,7 +188,7 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'getSeasonLeaderboardCache' : ActorMethod<[number], PaginatedLeaderboard>,
-  'getSeasons' : ActorMethod<[], Array<Season>>,
+  'getSeasons' : ActorMethod<[], Array<SeasonDTO>>,
   'getSystemState' : ActorMethod<[], SystemState>,
   'getTeams' : ActorMethod<[], Array<Team>>,
   'getTotalManagers' : ActorMethod<[], bigint>,

@@ -77,7 +77,7 @@ const PickTeam = () => {
           return;
         }
         
-        let fantasyTeamData = fetchFantasyTeam(authClient);
+        let fantasyTeamData = await fetchFantasyTeam(authClient);
         if(fantasyTeamData.playerIds.length == 0){
           return;
         }

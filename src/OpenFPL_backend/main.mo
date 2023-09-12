@@ -54,18 +54,18 @@ actor Self {
   ]);
 
   
-  /*
   //USE FOR LOCAL DEV
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
   }; 
-  */
+  /*
   //Live canisters  
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
   };
+  */
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
   { 
@@ -330,8 +330,15 @@ actor Self {
   };
 
   //Season Functions
-  public shared query ({caller}) func getSeasons() : async [T.Season] {
-      return seasonManager.getSeasons();
+  public shared query ({caller}) func getSeasons() : async [DTOs.SeasonDTO] {
+    let seasons = seasonManager.getSeasons();
+    return Array.map<T.Season, DTOs.SeasonDTO>(seasons, func (season: T.Season): DTOs.SeasonDTO {
+      return{
+        id = season.id;
+        name = season.name;
+        year = season.year;
+      }
+    });
   };
 
   public shared query ({caller}) func getWeeklyLeaderboard(seasonId: Nat16, gameweek: Nat8, limit: Nat, offset: Nat) : async DTOs.PaginatedLeaderboard {

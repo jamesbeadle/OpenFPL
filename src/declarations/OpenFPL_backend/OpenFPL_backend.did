@@ -15,6 +15,12 @@ type SystemState =
    activeSeason: Season;
  };
 type SeasonId = nat16;
+type SeasonDTO = 
+ record {
+   id: SeasonId;
+   name: text;
+   year: nat16;
+ };
 type Season = 
  record {
    gameweeks: List_1;
@@ -208,7 +214,7 @@ service : {
   getPublicProfileDTO: (text) -> (ProfileDTO);
   getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;
   getSeasonLeaderboardCache: (nat16) -> (PaginatedLeaderboard) query;
-  getSeasons: () -> (vec Season) query;
+  getSeasons: () -> (vec SeasonDTO) query;
   getSystemState: () -> (SystemState) query;
   getTeams: () -> (vec Team) query;
   getTotalManagers: () -> (nat) query;

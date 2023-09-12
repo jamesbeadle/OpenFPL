@@ -122,6 +122,11 @@ export const idlFactory = ({ IDL }) => {
     'entries' : IDL.Vec(LeaderboardEntry),
     'gameweek' : GameweekNumber,
   });
+  const SeasonDTO = IDL.Record({
+    'id' : SeasonId,
+    'name' : IDL.Text,
+    'year' : IDL.Nat16,
+  });
   List_2.fill(IDL.Opt(IDL.Tuple(Fixture, List_2)));
   const Gameweek = IDL.Record({
     'number' : GameweekNumber,
@@ -210,7 +215,7 @@ export const idlFactory = ({ IDL }) => {
         [PaginatedLeaderboard],
         ['query'],
       ),
-    'getSeasons' : IDL.Func([], [IDL.Vec(Season)], ['query']),
+    'getSeasons' : IDL.Func([], [IDL.Vec(SeasonDTO)], ['query']),
     'getSystemState' : IDL.Func([], [SystemState], ['query']),
     'getTeams' : IDL.Func([], [IDL.Vec(Team)], ['query']),
     'getTotalManagers' : IDL.Func([], [IDL.Nat], ['query']),

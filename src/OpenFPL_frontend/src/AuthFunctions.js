@@ -7,7 +7,8 @@ export const fetchFantasyTeam = async (authClient) => {
   try {
     const identity = authClient.getIdentity();
     agent.replaceIdentity(identity);
-    return await agent.getFantasyTeam();
+    var team = await open_fpl_backend.getFantasyTeam();
+    return team;
   } catch (error) {
     console.error(error);
     throw error;
@@ -18,7 +19,7 @@ export const fetchValidatableFixtures = async (authClient) => {
   try {
     const identity = authClient.getIdentity();
     agent.replaceIdentity(identity);
-    return await agent.getValidatableFixtures();
+    return await open_fpl_backend.getValidatableFixtures();
   } catch (error) {
     console.error(error);
     throw error;

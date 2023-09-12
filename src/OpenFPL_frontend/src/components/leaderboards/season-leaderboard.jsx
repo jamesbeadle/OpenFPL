@@ -1,17 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Table, Pagination, Form, Card, Row, Col } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { DataContext } from "../../contexts/DataContext";
 
 const SeasonLeaderboard = () => {
-    const { seasons, systemState } = useContext(DataContext);
+    const { seasons, systemState, seasonLeaderboard } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [managers, setManagers] = useState({
-        totalEntries: 0n,
-        seasonId: 0,
-        entries: [],
-        gameweek: 0
-      });
+    const [managers, setManagers] = useState(seasonLeaderboard);
+    console.log(seasonLeaderboard)
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
     const itemsPerPage = 25;
@@ -40,28 +36,9 @@ const SeasonLeaderboard = () => {
     }, [selectedSeason, currentPage]);
 
     const fetchViewData = async (season) => {
-        const initialCacheKey = `season_leaderboard_hash`;
-        const cachedData = JSON.parse(localStorage.getItem(initialCacheKey) || '{}');
-        const currentHashArray = await open_fpl_backend.getCurrentHashes();
-        const seasonLeaderboardHashObject = currentHashArray.find(item => item.category === 'weekly_leaderboard');
-        
         if (currentPage <= 4) {
-            const cacheKey = `season_leaderboard_hash`;
-            cachedData = JSON.parse(localStorage.getItem(cacheKey) || '{}');
-        }
-    
-        // If cached data exists and matches our criteria (season), use it
-        if (cachedData && cachedData.seasonId === season) {
-            setManagers(cachedData);
-        } else {
             const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage);
             setManagers(leaderboardData);
-    
-            // Cache the data if it's one of the first 4 pages
-            if (currentPage <= 4) {
-                const cacheKey = `season_leaderboard_data`;
-                localStorage.setItem(cacheKey, JSON.stringify(leaderboardData));
-            }
         }
     };
 

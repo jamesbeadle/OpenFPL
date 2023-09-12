@@ -58,7 +58,7 @@ export const DataProvider = ({ children }) => {
     const cachedPlayers = JSON.parse(cachedPlayersData || '[]');
         
     try {
-        if (cachedPlayers.length === 0 || cachedHash !== playerHash.hash) {
+        if (!playerHash || cachedPlayers.length === 0 || cachedHash !== playerHash.hash) {
           await fetchAllPlayers();
         } else {
           setPlayers(cachedPlayers);
@@ -212,7 +212,7 @@ export const DataProvider = ({ children }) => {
         const cachedHash = localStorage.getItem('weekly_leaderboard_hash');
         const cachedData = localStorage.getItem('weekly_leaderboard_data');
         const parsedData = JSON.parse(cachedData || '{}');
-        
+           
         if (!hashObj || hashObj.hash !== cachedHash || Object.keys(parsedData).length === 0) {
             fetchWeeklyLeaderboard(hashObj);
         } else {
@@ -223,8 +223,7 @@ export const DataProvider = ({ children }) => {
     const fetchWeeklyLeaderboard = async (hashObj) => {
         try {
             const weeklyLeaderboardData = await open_fpl_backend.getWeeklyLeaderboardCache(Number(systemState.activeSeason.id), Number(systemState.activeGameweek));
-            console.log(weeklyLeaderboardData)
-            if (hashObj) {
+           if (hashObj) {
                 localStorage.setItem('weekly_leaderboard_hash', hashObj.hash);
                 localStorage.setItem('weekly_leaderboard_data', JSON.stringify(weeklyLeaderboardData, replacer));
             } else {
@@ -280,7 +279,6 @@ export const DataProvider = ({ children }) => {
     const fetchSeasonLeaderboard = async (hashObj) => {
         try {
             const seasonLeaderboardData = await open_fpl_backend.getSeasonLeaderboardCache(Number(systemState.activeSeason.id));
-            console.log(seasonLeaderboardData)
             if (hashObj) {
                 localStorage.setItem('season_leaderboard_hash', hashObj.hash);
                 localStorage.setItem('season_leaderboard_data', JSON.stringify(seasonLeaderboardData, replacer));

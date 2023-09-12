@@ -15,7 +15,7 @@ const Homepage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [managerCount, setManagerCount] = useState(0);
     const [seasonTop10, setSeasonTop10] = useState([]);
-    const [weeklyTop10, setWeeklyTop10] = useState();
+    const [weeklyTop10, setWeeklyTop10] = useState([]);
     const [filterGameweek, setFilterGameweek] = useState(1);
     const [isActiveGameweek, setIsActiveGameweek] = useState(false);
     const [shouldShowButton, setShouldShowButton] = useState(false);
@@ -35,13 +35,20 @@ const Homepage = () => {
             if (filterGameweek === 0) return;
 
             await updateCountdowns();
-            await updateManagerData();
-
             setIsLoading(false);
         };
         
         fetchViewData();
     }, [filterGameweek, fixtures, isAuthenticated]);
+
+    useEffect(() => {
+        const fetchViewData = async () => {
+            if(Object.keys(seasonLeaderboard).length === 0 || Object.keys(weeklyLeaderboard).length === 0) { return; }
+            await updateManagerData();
+        };
+        
+        fetchViewData();
+    }, [seasonLeaderboard, weeklyLeaderboard]);
 
     useEffect(() => {
         const timer = setInterval(updateCountdowns, 1000);
@@ -74,10 +81,10 @@ const Homepage = () => {
         const managerCountData = await open_fpl_backend.getTotalManagers();
         setManagerCount(Number(managerCountData));
 
-        const seasonTop10Data = weeklyLeaderboard.entries.slice(0, 10);
+        const seasonTop10Data = seasonLeaderboard.entries.slice(0, 10);
         setSeasonTop10(seasonTop10Data);
         
-        const weeklyTop10Data = seasonLeaderboard.entries.slice(0, 10);
+        const weeklyTop10Data = weeklyLeaderboard.entries.slice(0, 10);
         setWeeklyTop10(weeklyTop10Data);
     };
 
