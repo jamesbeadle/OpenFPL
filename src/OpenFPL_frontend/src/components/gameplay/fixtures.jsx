@@ -5,7 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
 import { Actor } from "@dfinity/agent";
 import { FixtureIcon } from '../icons';
-import { getTeamById } from '../../helpers';
+import { getTeamById } from '../helpers';
 
 const Fixtures = () => {
   const { authClient } = useContext(AuthContext);

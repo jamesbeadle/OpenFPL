@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Table, Container, Card } from 'react-bootstrap';
-import { getTeamById } from '../../helpers';
+import { getTeamById } from '../helpers';
 
 const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams, isCaptain, bonusName }) => {
     if (!player || !playerDTO || !playerDTO.gameweekData) return null;

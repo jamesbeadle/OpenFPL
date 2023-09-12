@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Card, Button, Col, Row } from 'react-bootstrap';
 import { StarIcon, StarOutlineIcon,  PlayerIcon, TransferIcon, RecordIcon, PersonBoxIcon, StopIcon, PersonUpIcon, PersonIcon, CaptainIcon, TwoIcon, ThreeIcon } from '../icons';
 import getFlag from '../country-flag';
-import { getTeamById } from '../../helpers';
+import { getTeamById } from '../helpers';
 
 import { DataContext } from "../../contexts/DataContext";
 

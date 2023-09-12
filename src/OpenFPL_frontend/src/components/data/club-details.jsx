@@ -8,7 +8,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import { SmallFixtureIcon } from '../icons';
 import { getAgeFromDOB } from '../helpers';
 import getFlag from '../country-flag';
-import { getTeamById, nanoSecondsToMillis } from '../../helpers';
+import { getTeamById, nanoSecondsToMillis } from '../helpers';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);

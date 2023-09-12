@@ -3,6 +3,17 @@ import { Actor } from "@dfinity/agent";
 
 const agent = Actor.agentOf(open_fpl_backend);
 
+export const fetchFantasyTeam = async (authClient) => {
+  try {
+    const identity = authClient.getIdentity();
+    agent.replaceIdentity(identity);
+    return await agent.getFantasyTeam();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export const fetchValidatableFixtures = async (authClient) => {
   try {
     const identity = authClient.getIdentity();

@@ -11,7 +11,7 @@ import SelectPlayerModal from './select-player-modal';
 import SelectFantasyPlayerModal from './select-fantasy-player-modal';
 import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
-import { fetchFantasyTeam } from "../../../AuthFunctions";
+import { fetchFantasyTeam } from "../../AuthFunctions";
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -77,7 +77,7 @@ const PickTeam = () => {
           return;
         }
         
-        let fantasyTeamData = fetchFantasyTeam();
+        let fantasyTeamData = fetchFantasyTeam(authClient);
         if(fantasyTeamData.playerIds.length == 0){
           return;
         }

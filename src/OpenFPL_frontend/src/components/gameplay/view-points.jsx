@@ -7,7 +7,7 @@ import PlayerDetailsModal from './player-details-modal';
 import LogoImage from "../../../assets/logo.png";
 import ProfileImage from '../../../assets/profile_placeholder.png';
 import { PlayerIcon, StarIcon, StarOutlineIcon } from '../icons';
-import { getTeamById } from '../../helpers';
+import { getTeamById } from '../helpers';
 
 import { DataContext } from "../../contexts/DataContext";
 
