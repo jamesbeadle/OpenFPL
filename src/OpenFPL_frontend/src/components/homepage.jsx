@@ -23,11 +23,14 @@ const Homepage = () => {
 
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
     const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason.id);
-
-    const groupedFixtures = groupFixturesByDate(getCurrentGameweekFixtures());
+    const [groupedFixtures, setGroupedFixtures] = useState([]);
     const totalPrizePool = 0;
     
     useEffect(() => {
+        if (!fixtures || fixtures.length === 0) {
+            return;
+        }
+        setGroupedFixtures(groupFixturesByDate(getCurrentGameweekFixtures()));
         const fetchViewData = async () => {
             if (filterGameweek === 0) return;
 
@@ -71,10 +74,10 @@ const Homepage = () => {
         const managerCountData = await open_fpl_backend.getTotalManagers();
         setManagerCount(Number(managerCountData));
 
-        const seasonTop10Data = weeklyLeaderboard.slice(0, 10);
-        setSeasonTop10(seasonTop10Data.entries);
+        const seasonTop10Data = weeklyLeaderboard.entries.slice(0, 10);
+        setSeasonTop10(seasonTop10Data);
         
-        const weeklyTop10Data = seasonLeaderboard.slice(0, 10);
+        const weeklyTop10Data = seasonLeaderboard.entries.slice(0, 10);
         setWeeklyTop10(weeklyTop10Data);
     };
 

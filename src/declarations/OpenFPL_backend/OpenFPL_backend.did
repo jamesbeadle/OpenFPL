@@ -219,6 +219,7 @@ service : {
   isDisplayNameValid: (text) -> (bool) query;
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
+  setDefaultHashes: () -> () oneway;
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
   updateHashForCategory: (text) -> ();

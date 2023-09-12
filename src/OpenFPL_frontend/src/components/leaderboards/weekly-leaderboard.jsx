@@ -45,7 +45,7 @@ const WeeklyLeaderboard = () => {
     const fetchViewData = async (season, gameweek) => {
         const initialCacheKey = `weekly_leaderboard_hash`;
         const cachedData = JSON.parse(localStorage.getItem(initialCacheKey) || '{}');
-        const currentHashArray = await open_fpl_backend.getCurrentHashes();
+        const currentHashArray = await open_fpl_backend.getDataHashes();
         const weeklyLeaderboardHashObject = currentHashArray.find(item => item.category === 'weekly_leaderboard');
         
         if (currentPage <= 4 && cachedData && cachedData.hash === weeklyLeaderboardHashObject.hash && cachedData.seasonId === season && cachedData.gameweek === gameweek) {

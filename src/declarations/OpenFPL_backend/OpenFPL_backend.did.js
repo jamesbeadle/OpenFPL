@@ -236,6 +236,7 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'setDefaultHashes' : IDL.Func([], [], ['oneway']),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
     'updateHashForCategory' : IDL.Func([IDL.Text], [], []),

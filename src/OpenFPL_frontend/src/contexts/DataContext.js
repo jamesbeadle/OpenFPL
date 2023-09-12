@@ -18,7 +18,7 @@ export const DataProvider = ({ children }) => {
  
   useEffect(() => {
     const checkAndUpdateData = async () => {
-        const currentHashArray = await open_fpl_backend.getCurrentHashes();
+        const currentHashArray = await open_fpl_backend.getDataHashes();
         setCurrentHashes(currentHashArray);
         const currentPlayerHash = await player_canister.getPlayersDataCache();
         await initPlayerData(currentPlayerHash);
@@ -30,15 +30,16 @@ export const DataProvider = ({ children }) => {
 
     let duration = 60000 * 5;
     const intervalId = setInterval(checkAndUpdateData, duration); 
-
+    checkAndUpdateData();
     return () => {
         clearInterval(intervalId);
     };
   }, []);
 
   useEffect(() => {
+    
     if(!systemState || Object.keys(systemState).length === 0){
-        return null;
+        return;
     }
     const initLeaderboards = async () => {
         
@@ -86,13 +87,7 @@ export const DataProvider = ({ children }) => {
     const cachedTeams = JSON.parse(cachedTeamsData || '[]');
     
     try {
-        
-        if (!teamsHash) {
-            console.error("No hash found for teams.");
-            return;
-        }
-
-        if (cachedTeams.length === 0 || cachedHash !== teamsHash) {
+        if (!teamsHash || cachedTeams.length === 0 || cachedHash !== teamsHash) {
             await fetchAllTeams(teamsHash);
         } else {
             setTeams(cachedTeams);
@@ -124,12 +119,7 @@ export const DataProvider = ({ children }) => {
         const cachedSeasons = JSON.parse(cachedSeasonsData || '[]');
     
         try {
-            if (!seasonsHash) {
-                console.error("No hash found for seasons.");
-                return;
-            }
-        
-            if (cachedSeasons.length === 0 || cachedHash !== seasonsHash) {
+            if (!seasonsHash || cachedSeasons.length === 0 || cachedHash !== seasonsHash) {
                 await fetchAllSeasons(seasonsHash);
             } else {
                 setSeasons(cachedSeasons);
@@ -161,12 +151,7 @@ export const DataProvider = ({ children }) => {
         const cachedFixtures = JSON.parse(cachedFixturesData || '[]');
     
         try {
-            if (!fixturesHash) {
-                console.error("No hash found for fixtures.");
-                return;
-            }
-        
-            if (cachedFixtures.length === 0 || cachedHash !== fixturesHash) {
+            if (!fixturesHash || cachedFixtures.length === 0 || cachedHash !== fixturesHash) {
                 await fetchAllFixtures(fixturesHash);
             } else {
                 setFixtures(cachedFixtures);
@@ -178,15 +163,15 @@ export const DataProvider = ({ children }) => {
     
     const fetchAllFixtures = async (fixturesHash) => {
         try {
-        const allFixturesData = await open_fpl_backend.getFixtures();
-        setFixtures(allFixturesData);
-    
-        if (fixturesHash) {
-            localStorage.setItem('fixtures_hash', fixturesHash.hash);
-            localStorage.setItem('fixtures_data', JSON.stringify(allFixturesData, replacer));
-        } else {
-            console.error("No hash found for fixtures.");
-        }
+            const allFixturesData = await open_fpl_backend.getFixtures();
+            setFixtures(allFixturesData);
+        
+            if (fixturesHash) {
+                localStorage.setItem('fixtures_hash', fixturesHash.hash);
+                localStorage.setItem('fixtures_data', JSON.stringify(allFixturesData, replacer));
+            } else {
+                console.error("No hash found for fixtures.");
+            }
         } catch (error) {
             console.error("Error fetching fixtures:", error);
         }
@@ -196,15 +181,10 @@ export const DataProvider = ({ children }) => {
         const cachedHash = localStorage.getItem('system_state_hash');
         const cachedSystemStateData = localStorage.getItem('system_state_data');
         const cachedSystemState = JSON.parse(cachedSystemStateData || null);
-    
         try {
-            if (!systemStateHash) {
-                console.error("No hash found for system state.");
-                return;
-            }
         
-            if (cachedSystemState != null || cachedHash !== systemStateHash) {
-                await fetchSystemState();
+            if (!systemStateHash || cachedSystemState != null || cachedHash !== systemStateHash) {
+                await fetchSystemState(systemStateHash);
             } else {
                 setSystemState(cachedSystemState);
             }
@@ -217,7 +197,6 @@ export const DataProvider = ({ children }) => {
         try {
             const systemStateData = await open_fpl_backend.getSystemState();
             setSystemState(systemStateData);
-         
             if (systemStateHash) {
                 localStorage.setItem('system_state_hash', systemStateHash.hash);
                 localStorage.setItem('system_state_data', JSON.stringify(systemStateData, replacer));
@@ -244,7 +223,7 @@ export const DataProvider = ({ children }) => {
     const fetchWeeklyLeaderboard = async (hashObj) => {
         try {
             const weeklyLeaderboardData = await open_fpl_backend.getWeeklyLeaderboardCache(Number(systemState.activeSeason.id), Number(systemState.activeGameweek));
-            
+            console.log(weeklyLeaderboardData)
             if (hashObj) {
                 localStorage.setItem('weekly_leaderboard_hash', hashObj.hash);
                 localStorage.setItem('weekly_leaderboard_data', JSON.stringify(weeklyLeaderboardData, replacer));
@@ -292,7 +271,7 @@ export const DataProvider = ({ children }) => {
         const parsedData = JSON.parse(cachedData || '{}');
         
         if (!hashObj || hashObj.hash !== cachedHash || Object.keys(parsedData).length === 0) {
-            fetchSeasonLeaderboard(hashArray);
+            fetchSeasonLeaderboard(hashObj);
         } else {
             setSeasonLeaderboard(parsedData);
         }
@@ -301,7 +280,7 @@ export const DataProvider = ({ children }) => {
     const fetchSeasonLeaderboard = async (hashObj) => {
         try {
             const seasonLeaderboardData = await open_fpl_backend.getSeasonLeaderboardCache(Number(systemState.activeSeason.id));
-            
+            console.log(seasonLeaderboardData)
             if (hashObj) {
                 localStorage.setItem('season_leaderboard_hash', hashObj.hash);
                 localStorage.setItem('season_leaderboard_data', JSON.stringify(seasonLeaderboardData, replacer));
@@ -316,7 +295,7 @@ export const DataProvider = ({ children }) => {
     };
     
     function replacer(key, value) {
-        if ((key === 'dateOfBirth' || key === 'value'|| key === 'kickOff') && typeof value === 'bigint') {
+        if ((key === 'dateOfBirth' || key === 'value'|| key === 'kickOff' || key === 'totalEntries'|| key === 'position') && typeof value === 'bigint') {
         return Number(value);
         }
         return value;

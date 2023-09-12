@@ -209,6 +209,7 @@ export interface _SERVICE {
     [FixtureId, Array<PlayerEventData>],
     undefined
   >,
+  'setDefaultHashes' : ActorMethod<[], undefined>,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
   'updateHashForCategory' : ActorMethod<[string], undefined>,
