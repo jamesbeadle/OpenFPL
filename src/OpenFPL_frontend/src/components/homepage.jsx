@@ -22,7 +22,7 @@ const Homepage = () => {
     const [countdown, setCountdown] = useState(0);
 
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
-    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason.id);
+    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
     const [groupedFixtures, setGroupedFixtures] = useState([]);
     const totalPrizePool = 0;
     
