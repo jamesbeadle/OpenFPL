@@ -1178,6 +1178,37 @@ module {
             };
         };
 
+        public func getClubLeaderboards(seasonId: T.SeasonId, month: Nat8, limit: Nat, offset: Nat) : [DTOs.PaginatedClubLeaderboard] {
+            
+            let defaultLeaderboard = {
+                seasonId = seasonId;
+                month = month;
+                clubId = 0;
+                entries = [];
+                totalEntries = 0;
+            };
+            
+            switch (monthlyLeaderboards.get(seasonId)) {
+                case (null) { return []; };
+                case (?foundMonthlyLeaderboards) {
+                    
+                    let monthlyLeaderboards = List.filter<T.ClubLeaderboard>(foundMonthlyLeaderboards, func (monthlyLeaderboard: T.ClubLeaderboard): Bool {
+                        return monthlyLeaderboard.month == month;
+                    });
+
+                    return List.toArray(List.map<T.ClubLeaderboard, DTOs.PaginatedClubLeaderboard>(monthlyLeaderboards, func (monthlyLeaderboard: T.ClubLeaderboard): DTOs.PaginatedClubLeaderboard {
+                        return {
+                            seasonId = monthlyLeaderboard.seasonId;
+                            month = monthlyLeaderboard.month;
+                            clubId = monthlyLeaderboard.clubId;
+                            entries = List.toArray(monthlyLeaderboard.entries);
+                            totalEntries = List.size(monthlyLeaderboard.entries);
+                        };
+                    }));
+                };
+            };
+        };
+
         public func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
             let emptySnapshot: T.FantasyTeamSnapshot = { principalId = ""; transfersAvailable = 0; bankBalance = 0;  playerIds = [];
                 captainId = 0; gameweek = 0; goalGetterGameweek = 0; goalGetterPlayerId = 0; passMasterGameweek = 0;

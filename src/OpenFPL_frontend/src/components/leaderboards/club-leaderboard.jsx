@@ -43,41 +43,39 @@ const ClubLeaderboard = () => {
         if (!selectedSeason || !selectedMonth || !isInitialSetupDone) {
             return;
         };
+        
         const fetchData = async () => {
             setIsLoading(true);
-            await fetchViewData(selectedSeason, selectedMonth, selectedClub);
+            
+            const cacheKey = `monthly_leaderboard_hash`;
+            const cachedData = JSON.parse(localStorage.getItem(cacheKey) || '[]');
+            
+            if (cachedData.length > 0 && currentPage <= 4) {
+                const leaderboardData = cachedData.find(item => item.clubId === Number(selectedClub));
+                setManagers(leaderboardData);
+            } else {
+                await fetchViewData(selectedSeason, selectedMonth, selectedClub);
+            }
+    
             setIsLoading(false);
         };
-
+    
         fetchData();
     }, [selectedSeason, selectedMonth, currentPage, isInitialSetupDone, selectedClub]);
+    
 
     const fetchViewData = async (season, month, club) => {
-        // Create a cache key for the current data
-        let cacheKey;
-        if (currentPage <= 4) {
-            cacheKey = `club_leaderboard_data_page_${currentPage}_season_${season}_month_${month}_club_${club}`;
-            const cachedData = JSON.parse(localStorage.getItem(cacheKey) || '{}');
-            
-            // If cached data exists, use it
-            if (cachedData && cachedData.seasonId === season && cachedData.month === month && cachedData.club === club) {
-                setManagers(cachedData);
-                return;
-            }
-        }
-        
-        // If no cached data, fetch from backend
         const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
         setManagers(leaderboardData);
     
-        // Cache the data if it's one of the first 4 pages
         if (currentPage <= 4) {
-            leaderboardData.seasonId = season;  // Ensure the season is set
-            leaderboardData.month = month;      // Ensure the month is set
-            leaderboardData.club = club;        // Ensure the club is set
-            localStorage.setItem(cacheKey, JSON.stringify(leaderboardData));
+            const cacheKey = `monthly_leaderboards_data`;
+            const cachedData = JSON.parse(localStorage.getItem(cacheKey) || '[]');
+            const updatedData = [...cachedData.filter(item => item.clubId !== Number(club)), leaderboardData];
+            localStorage.setItem(cacheKey, JSON.stringify(updatedData));
         }
     };
+    
         
 
     const renderedData = managers.entries && managers.entries.map(manager => (

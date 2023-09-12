@@ -33,6 +33,7 @@ import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Int16 "mo:base/Int16";
+import SHA224 "./SHA224";
 
 actor Self {
 
@@ -343,6 +344,18 @@ actor Self {
 
   public shared query ({caller}) func getClubLeaderboard(seasonId: Nat16, month: Nat8, clubId: T.TeamId, limit: Nat, offset: Nat) : async DTOs.PaginatedClubLeaderboard {
       return fantasyTeamsInstance.getClubLeaderboard(seasonId, month, clubId, limit, offset);
+  };
+
+  public shared query ({caller}) func getWeeklyLeaderboardCache(seasonId: Nat16, gameweek: Nat8) : async DTOs.PaginatedLeaderboard {
+      return fantasyTeamsInstance.getWeeklyLeaderboard(seasonId, gameweek, 100, 0);
+  };
+
+  public shared query ({caller}) func getSeasonLeaderboardCache(seasonId: Nat16) : async DTOs.PaginatedLeaderboard {
+      return fantasyTeamsInstance.getSeasonLeaderboard(seasonId, 100, 0);
+  };
+
+  public shared query ({caller}) func getClubLeaderboardsCache(seasonId: Nat16, month: Nat8) : async [DTOs.PaginatedClubLeaderboard] {
+      return fantasyTeamsInstance.getClubLeaderboards(seasonId, month, 100, 0);
   };
   
   private func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
@@ -878,6 +891,10 @@ actor Self {
     await fantasyTeamsInstance.resetFantasyTeams();
   };
 
+  private func updateCacheHash(category: Text): async (){
+    await updateHashForCategory(category);
+  };
+
   public func getFixturesByWeek(seasonId: T.SeasonId, gameweek: T.GameweekNumber): async [T.Fixture] {
     return seasonManager.getGameweekFixtures(seasonId, gameweek);
   }; 
@@ -905,6 +922,20 @@ actor Self {
   public shared query func getDataHashes() : async [T.DataCache] {
     return List.toArray(dataCacheHashes);
   };
+
+  public func updateHashForCategory(category: Text): async () {
+    
+      let hashBuffer = Buffer.fromArray<T.DataCache>([]);
+
+      for(hashObj in Iter.fromList(dataCacheHashes)){
+        if(hashObj.category == category){
+          let randomHash = await SHA224.getRandomHash();
+          hashBuffer.add({ category = hashObj.category; hash = randomHash; });
+        } else { hashBuffer.add(hashObj); };
+      };
+
+      dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+  };
   
   //intialise season manager
   let seasonManager = SeasonManager.SeasonManager(
@@ -920,6 +951,7 @@ actor Self {
     getConsensusPlayerEventData,
     getAllPlayersMap,
     resetFantasyTeams,
+    updateCacheHash,
     governanceInstance.getEventDataVotePeriod(),
     stable_timers);
     

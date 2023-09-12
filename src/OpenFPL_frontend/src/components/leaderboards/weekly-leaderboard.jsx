@@ -32,7 +32,7 @@ const WeeklyLeaderboard = () => {
         if (!selectedSeason || !selectedGameweek || !isInitialSetupDone) {
             return;
         };
-    
+
         const fetchData = async () => {
             setIsLoading(true);
             await fetchViewData(selectedSeason, selectedGameweek);
@@ -41,27 +41,24 @@ const WeeklyLeaderboard = () => {
         
         fetchData();
     }, [selectedSeason, selectedGameweek, currentPage, isInitialSetupDone]);
-    
 
     const fetchViewData = async (season, gameweek) => {
-        let cachedData;
-        if (currentPage <= 4) {
-            const cacheKey = `weekly_leaderboard_data_page_${currentPage}`;
-            cachedData = JSON.parse(localStorage.getItem(cacheKey) || '{}');
-        }
-    
-        // If cached data exists and matches our criteria (season and gameweek), use it
-        if (cachedData && cachedData.seasonId === season && cachedData.gameweek === gameweek) {
+        const initialCacheKey = `weekly_leaderboard_hash`;
+        const cachedData = JSON.parse(localStorage.getItem(initialCacheKey) || '{}');
+        const currentHashArray = await open_fpl_backend.getCurrentHashes();
+        const weeklyLeaderboardHashObject = currentHashArray.find(item => item.category === 'weekly_leaderboard');
+        
+        if (currentPage <= 4 && cachedData && cachedData.hash === weeklyLeaderboardHashObject.hash && cachedData.seasonId === season && cachedData.gameweek === gameweek) {
             setManagers(cachedData);
         } else {
             const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
-            setManagers(leaderboardData);
-    
-            // Cache the data if it's one of the first 4 pages
-            if (currentPage <= 4) {
-                const cacheKey = `weekly_leaderboard_data_page_${currentPage}`;
-                localStorage.setItem(cacheKey, JSON.stringify(leaderboardData));
+            
+            if (currentPage <= 4) { 
+                leaderboardData.hash = weeklyLeaderboardHashObject.hash;  // Add the hash to the data for caching purposes
+                localStorage.setItem(initialCacheKey, JSON.stringify(leaderboardData)); // Store only initial data
             }
+            
+            setManagers(leaderboardData);
         }
     };
     

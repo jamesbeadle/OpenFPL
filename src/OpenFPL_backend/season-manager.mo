@@ -29,6 +29,7 @@ module {
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async (),
+    updateCacheHash: (category: Text) -> async (),
     EventData_VotingPeriod: Int,
     stable_timers: [T.TimerInfo]) {
 
@@ -248,6 +249,10 @@ module {
             await seasonsInstance.createNewSeason(activeSeasonId);
             //await mintAnnualRewardsPool(); //IMPLEMENT POST SNS
             await resetFantasyTeams();
+            await updateCacheHash("system_state");
+            await updateCacheHash("weekly_leaderboard");
+            await updateCacheHash("monthly_leaderboards");
+            await updateCacheHash("season_leaderboard");
             return;
         };
 

@@ -18,6 +18,8 @@ import Utilities "../OpenFPL_backend/utilities";
 import Timer "mo:base/Timer";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
+import Nat64 "mo:base/Nat64";
+import SHA224 "../OpenFPL_backend/SHA224";
 
 actor Self {
 
@@ -1081,6 +1083,7 @@ actor Self {
                 players := List.filter<T.Player>(players, func(currentPlayer: T.Player) : Bool {
                     return currentPlayer.id != proposalPayload.playerId;
                 });
+                await updateHashForPlayers("Players");
             };
         };
     };
@@ -1157,6 +1160,11 @@ actor Self {
                 };
             }
         }
+    };
+    
+    public func updateHashForPlayers(category: Text): async () {
+        let randomHash = await SHA224.getRandomHash();
+        playersDataCache := { category = category; hash = randomHash; };
     };
 
     /*

@@ -13,7 +13,7 @@ const AddFixtureData = () => {
   const queryParams = new URLSearchParams(location.search);
   const fixtureId = queryParams.get('fixtureId');
 
-  const { teams } = useContext(DataContext);
+  const { teams, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixture, setFixture] = useState(null);
   const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);
@@ -78,6 +78,7 @@ const AddFixtureData = () => {
   };
   
   useEffect(() => {
+    checkAndClearCacheIfNewGameweek();
     const draftKey = `fixtureDraft_${fixtureId}`;
     const draft = localStorage.getItem(draftKey);
     if (draft) {
@@ -93,6 +94,7 @@ const AddFixtureData = () => {
       setFixture(fixture);
     }
   }, []);
+
   
   useEffect(() => {
     const fetchData = async () => {
@@ -128,7 +130,24 @@ const AddFixtureData = () => {
     setShowDraftSaved(true);
   };
 
-  
+  const checkAndClearCacheIfNewGameweek = async () => {
+
+      const currentGameweek = systemState.activeGameweek;
+      const lastKnownGameweek = localStorage.getItem('lastKnownGameweek');
+    
+      if (!lastKnownGameweek || Number(lastKnownGameweek) !== currentGameweek) {
+          clearFixtureCache();
+          localStorage.setItem('lastKnownGameweek', String(currentGameweek));
+      }
+  };
+
+  const clearFixtureCache = () => {
+      for (const key in localStorage) {
+          if (key.startsWith("fixtureDraft_")) {
+              localStorage.removeItem(key);
+          }
+      }
+  };
 
   
   const renderPlayerCard = (playerId) => {

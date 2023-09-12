@@ -40,9 +40,13 @@ const SeasonLeaderboard = () => {
     }, [selectedSeason, currentPage]);
 
     const fetchViewData = async (season) => {
-        let cachedData;
+        const initialCacheKey = `season_leaderboard_hash`;
+        const cachedData = JSON.parse(localStorage.getItem(initialCacheKey) || '{}');
+        const currentHashArray = await open_fpl_backend.getCurrentHashes();
+        const seasonLeaderboardHashObject = currentHashArray.find(item => item.category === 'weekly_leaderboard');
+        
         if (currentPage <= 4) {
-            const cacheKey = `season_leaderboard_data_page_${currentPage}`;
+            const cacheKey = `season_leaderboard_hash`;
             cachedData = JSON.parse(localStorage.getItem(cacheKey) || '{}');
         }
     
@@ -55,7 +59,7 @@ const SeasonLeaderboard = () => {
     
             // Cache the data if it's one of the first 4 pages
             if (currentPage <= 4) {
-                const cacheKey = `season_leaderboard_data_page_${currentPage}`;
+                const cacheKey = `season_leaderboard_data`;
                 localStorage.setItem(cacheKey, JSON.stringify(leaderboardData));
             }
         }
