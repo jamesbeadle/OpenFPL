@@ -26,6 +26,7 @@ const LeagueTable = ({ columns }) => {
     };
 
     const updateTableData = () => {
+        setIsLoading(true);
         const initTeamData = (teamId, table) => {
             if (!table[teamId]) {
                 table[teamId] = {
@@ -42,7 +43,7 @@ const LeagueTable = ({ columns }) => {
         };
     
         let tempTable = {};
-    
+        
         const relevantFixtures = fixtures.filter(fixture => 
             fixture.status === 3 && fixture.gameweek <= selectedGameweek);
     
@@ -93,6 +94,7 @@ const LeagueTable = ({ columns }) => {
         });
     
         setTableData(sortedTableData);
+        setIsLoading(false);
     };
 
     const getTeamNameFromId = (teamId) => {
