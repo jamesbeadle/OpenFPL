@@ -16,7 +16,7 @@ const Homepage = () => {
     const [managerCount, setManagerCount] = useState(0);
     const [seasonTop10, setSeasonTop10] = useState([]);
     const [weeklyTop10, setWeeklyTop10] = useState([]);
-    const [filterGameweek, setFilterGameweek] = useState(1);
+    const [filterGameweek, setFilterGameweek] = useState(systemState.activeGameweek);
     const [isActiveGameweek, setIsActiveGameweek] = useState(false);
     const [shouldShowButton, setShouldShowButton] = useState(false);
     const [countdown, setCountdown] = useState(0);
