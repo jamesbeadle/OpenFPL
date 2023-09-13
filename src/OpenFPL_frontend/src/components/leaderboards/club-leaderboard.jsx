@@ -18,7 +18,6 @@ const ClubLeaderboard = () => {
     const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeasonId);
     const [selectedMonth, setSelectedMonth] = useState(systemState.activeMonth);
     const itemsPerPage = 25;
-    const [isInitialSetupDone, setIsInitialSetupDone] = useState(false);
     const [selectedClub, setSelectedClub] = useState(teamId);
   
     const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
@@ -30,17 +29,9 @@ const ClubLeaderboard = () => {
             {index + 1}
         </Pagination.Item>
     ));
-    
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            setIsInitialSetupDone(true);
-        };
-
-        fetchInitialData();
-    }, []);
 
     useEffect(() => {
-        if (!selectedSeason || !selectedMonth || !isInitialSetupDone) {
+        if (!selectedSeason || !selectedMonth) {
             return;
         };
         
@@ -61,7 +52,7 @@ const ClubLeaderboard = () => {
         };
     
         fetchData();
-    }, [selectedSeason, selectedMonth, currentPage, isInitialSetupDone, selectedClub]);
+    }, [selectedSeason, selectedMonth, currentPage, selectedClub]);
     
 
     const fetchViewData = async (season, month, club) => {

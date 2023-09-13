@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Table, Pagination, Form, Card, Row, Col, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import { DataContext } from "../../contexts/DataContext";
@@ -29,7 +29,7 @@ const WeeklyLeaderboard = () => {
     ));
 
     useEffect(() => {
-        if (!selectedSeason || !selectedGameweek || !isInitialSetupDone) {
+        if (!selectedSeason || !selectedGameweek) {
             return;
         };
 
@@ -40,7 +40,7 @@ const WeeklyLeaderboard = () => {
         };
         
         fetchData();
-    }, [selectedSeason, selectedGameweek, currentPage, isInitialSetupDone]);
+    }, [selectedSeason, selectedGameweek, currentPage]);
 
     const fetchViewData = async (season, gameweek) => {
         const initialCacheKey = `weekly_leaderboard_hash`;

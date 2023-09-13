@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { Container, Row, Col, Card, Spinner, Button, Image, Table } from 'react-bootstrap';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
+import { Container, Row, Col, Card, Spinner, Button, Image } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { useParams } from 'react-router-dom';
@@ -45,8 +45,6 @@ const ViewPoints = () => {
         const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));
         
         const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
-        const playerData = await player_canister.getAllPlayers();
-        setPlayers(playerData);
         
         setFantasyTeam({
             ...fetchedFantasyTeam,
@@ -57,11 +55,9 @@ const ViewPoints = () => {
         setProfile(profileData);
         
         if (profileData.profilePicture && profileData.profilePicture.length > 0) {
-        
             const blob = new Blob([profileData.profilePicture]);
             const blobUrl = URL.createObjectURL(blob);
             setProfilePicSrc(blobUrl);
-    
         } else {
             setProfilePicSrc(ProfileImage);
         }

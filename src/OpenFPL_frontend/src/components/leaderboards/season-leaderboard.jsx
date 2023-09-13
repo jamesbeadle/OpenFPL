@@ -7,7 +7,6 @@ const SeasonLeaderboard = () => {
     const { seasons, systemState, seasonLeaderboard } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
     const [managers, setManagers] = useState(seasonLeaderboard);
-    console.log(seasonLeaderboard)
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
     const itemsPerPage = 25;
