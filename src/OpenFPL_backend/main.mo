@@ -132,7 +132,6 @@ actor Self {
     return teamsInstance.getTeams();
   };
 
-
   public query ({caller}) func getFixtures() : async [T.Fixture]{
     return seasonManager.getFixtures();
   };
@@ -163,7 +162,6 @@ actor Self {
     return await seasonManager.getFixture(seasonId, gameweekNumber, fixtureId);
   };
   
-  //Profile Functions
   public shared ({caller}) func getProfileDTO() : async DTOs.ProfileDTO {
     assert not Principal.isAnonymous(caller);
     let principalName = Principal.toText(caller);
@@ -214,8 +212,8 @@ actor Self {
 
     return profileDTO;
   };
-
-  public shared ({caller}) func getPublicProfileDTO(principalId: Text) : async DTOs.ProfileDTO {
+  
+  public shared query ({caller}) func getPublicProfileDTO(principalId: Text) : async DTOs.ProfileDTO {
     var icpDepositAddress = Blob.fromArray([]);
     var fplDepositAddress = Blob.fromArray([]);
     var displayName = "";

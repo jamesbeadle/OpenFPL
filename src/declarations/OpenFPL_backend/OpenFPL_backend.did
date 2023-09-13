@@ -225,7 +225,7 @@ service : {
   getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
    (vec PlayerPointsDTO);
   getProfileDTO: () -> (ProfileDTO);
-  getPublicProfileDTO: (text) -> (ProfileDTO);
+  getPublicProfileDTO: (text) -> (ProfileDTO) query;
   getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;
   getSeasonLeaderboardCache: (nat16) -> (PaginatedLeaderboard) query;
   getSeasons: () -> (vec SeasonDTO) query;

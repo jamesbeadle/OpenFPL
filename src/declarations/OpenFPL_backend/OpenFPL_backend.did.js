@@ -213,7 +213,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'getProfileDTO' : IDL.Func([], [ProfileDTO], []),
-    'getPublicProfileDTO' : IDL.Func([IDL.Text], [ProfileDTO], []),
+    'getPublicProfileDTO' : IDL.Func([IDL.Text], [ProfileDTO], ['query']),
     'getSeasonLeaderboard' : IDL.Func(
         [IDL.Nat16, IDL.Nat, IDL.Nat],
         [PaginatedLeaderboard],
