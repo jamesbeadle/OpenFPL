@@ -43,7 +43,7 @@ const ClubLeaderboard = () => {
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const slicedData = {
-                ...monthlyLeaderboards,
+                ...monthlyLeaderboards.find(x => x.clubId == selectedClub),
                 entries: monthlyLeaderboards.find(x => x.clubId == selectedClub).entries.slice(start, end)
             };
             setManagers(slicedData);
