@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { DataContext } from "../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { Link } from "react-router-dom";
-import { msToTime, nanoSecondsToMillis, getTeamById, groupFixturesByDate } from './helpers';
+import { msToTime, computeTimeLeft, getTeamById, groupFixturesByDate } from './helpers';
 
 const Homepage = () => {
 
@@ -84,24 +84,18 @@ const Homepage = () => {
         const seasonTop10Data = seasonLeaderboard.entries.slice(0, 10);
         setSeasonTop10(seasonTop10Data);
         
-        const weeklyTop10Data = weeklyLeaderboard.entries.slice(0, 10);
+        const weeklyTop10Data = weeklyLeaderboard.entries.slice(0, 10).map(entry => ({
+            ...entry,
+            seasonId: weeklyLeaderboard.seasonId,
+            gameweek: weeklyLeaderboard.gameweek
+        }));
+        
         setWeeklyTop10(weeklyTop10Data);
+        
     };
 
     const getCurrentGameweekFixtures = () => {
         return fixtures.filter(fixture => fixture.gameweek === filterGameweek);
-    };
-    
-    const computeTimeLeft = (kickoff) => {
-        const now = new Date().getTime();
-        const distance = nanoSecondsToMillis(kickoff) - now;
-    
-        return {
-            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-            seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        };
     };
 
     const handlePrevGameweek = () => {
@@ -292,10 +286,10 @@ const Homepage = () => {
                             <Tabs defaultActiveKey="gameweek" id="leaderboard-tabs">
                                 <Tab eventKey="gameweek" title="Gameweek">
                                     <br />
-                                    {weeklyTop10.entries.length == 0 && (
+                                    {weeklyTop10.length == 0 && (
                                         <p className='mt-2'>No entries.</p>
                                     )}
-                                    {weeklyTop10.entries.length > 0 && (
+                                    {weeklyTop10.length > 0 && (
                                     <>
                                         <Table responsive bordered className="table-fixed">
                                             <thead>
@@ -306,14 +300,14 @@ const Homepage = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {weeklyTop10.entries.map((leader) => (
+                                                {weeklyTop10.map((leader) => (
                                                 <tr key={leader.principalId}>
                                                     <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
                                                     <td className='text-center text-truncate'>{leader.principalId == leader.username ? 'Unknown' : leader.username}</td>
                                                     <td className='text-center'>
                                                         <Button as={Link} className='p-0 w-100 clear-button' 
                                                         to={{
-                                                            pathname: `/view-points/${leader.principalId}/${weeklyTop10.seasonId}/${weeklyTop10.gameweek}`
+                                                            pathname: `/view-points/${leader.principalId}/${leader.seasonId}/${leader.gameweek}`
                                                         }}>{leader.points}</Button>
                                                     </td>
                                                 </tr>

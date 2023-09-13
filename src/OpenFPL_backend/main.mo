@@ -930,18 +930,6 @@ actor Self {
     return List.toArray(dataCacheHashes);
   };
 
-  public shared func setDefaultHashes() : () {
-      dataCacheHashes := List.fromArray([
-      { category = "teams"; hash = "DEFAULT_VALUE" },
-      { category = "fixtures"; hash = "DEFAULT_VALUE" },
-      { category = "seasons"; hash = "DEFAULT_VALUE" },
-      { category = "system_state"; hash = "DEFAULT_VALUE" },
-      { category = "weekly_leaderboard"; hash = "DEFAULT_VALUE" },
-      { category = "monthly_leaderboards"; hash = "DEFAULT_VALUE" },
-      { category = "season_leaderboard"; hash = "DEFAULT_VALUE" }
-    ]);
-  };
-
   public func updateHashForCategory(category: Text): async () {
     
       let hashBuffer = Buffer.fromArray<T.DataCache>([]);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { player_canister as player_canister } from '../../../declarations/player_canister';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
+import { computeTimeLeft } from '../components/helpers';
 
 export const DataContext = React.createContext();
 
@@ -50,7 +51,7 @@ export const DataProvider = ({ children }) => {
         setLoading(false);  
     };
     initLeaderboards();
-  }, [systemState]);
+  }, [systemState, fixtures]);
 
   const initPlayerData = async (playerHash) => {
     const cachedHash = localStorage.getItem('players_hash');
@@ -209,6 +210,9 @@ export const DataProvider = ({ children }) => {
     };
 
     const initWeeklyLeaderboard = async (hashObj) => {
+        if(fixtures.length == 0){
+            return;
+        }
         const cachedHash = localStorage.getItem('weekly_leaderboard_hash');
         const cachedData = localStorage.getItem('weekly_leaderboard_data');
         const parsedData = JSON.parse(cachedData || '{}');
@@ -222,8 +226,23 @@ export const DataProvider = ({ children }) => {
     
     const fetchWeeklyLeaderboard = async (hashObj) => {
         try {
-            const weeklyLeaderboardData = await open_fpl_backend.getWeeklyLeaderboardCache(Number(systemState.activeSeason.id), Number(systemState.activeGameweek));
-           if (hashObj) {
+            var gameweek = Number(systemState.activeGameweek);
+            const kickOffs = fixtures.filter(x => x.gameweek === gameweek).map(fixture => computeTimeLeft(Number(fixture.kickOff)));
+            
+            const kickOffsInMillis = kickOffs.map(obj => 
+                obj.days * 24 * 60 * 60 * 1000 + 
+                obj.hours * 60 * 60 * 1000 + 
+                obj.minutes * 60 * 1000 + 
+                obj.seconds * 1000
+            );
+
+            const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
+            if (timeUntilGameweekBegins > 0 && gameweek > 1) {
+                gameweek -= 1;
+            }
+            
+            const weeklyLeaderboardData = await open_fpl_backend.getWeeklyLeaderboardCache(Number(systemState.activeSeason.id), gameweek);
+            if (hashObj) {
                 localStorage.setItem('weekly_leaderboard_hash', hashObj.hash);
                 localStorage.setItem('weekly_leaderboard_data', JSON.stringify(weeklyLeaderboardData, replacer));
             } else {
@@ -237,6 +256,9 @@ export const DataProvider = ({ children }) => {
     };
 
     const initMonthlyLeaderboards = async (hashObj) => {
+        if(fixtures.length == 0){
+            return;
+        }
         const cachedHash = localStorage.getItem('monthly_leaderboard_hash');
         const cachedData = localStorage.getItem('monthly_leaderboard_data');
         const parsedData = JSON.parse(cachedData || '[]');
@@ -265,6 +287,9 @@ export const DataProvider = ({ children }) => {
     };
 
     const initSeasonLeaderboard = async (hashObj) => {
+        if(fixtures.length == 0){
+            return;
+        }
         const cachedHash = localStorage.getItem('season_leaderboard_hash');
         const cachedData = localStorage.getItem('season_leaderboard_data');
         const parsedData = JSON.parse(cachedData || '{}');

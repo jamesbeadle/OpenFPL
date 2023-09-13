@@ -8,7 +8,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/Op
 import { SmallFixtureIcon } from '../icons';
 import { getAgeFromDOB } from '../helpers';
 import getFlag from '../country-flag';
-import { getTeamById, nanoSecondsToMillis } from '../helpers';
+import { getTeamById, computeTimeLeft } from '../helpers';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -153,18 +153,6 @@ const ClubDetails = ({  }) => {
                     </Badge>
                 );
         }
-    };
-
-    const computeTimeLeft = (kickoff) => {
-        const now = new Date().getTime();
-        const distance = nanoSecondsToMillis(kickoff) - now;
-    
-        return {
-            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-            seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        };
     };
 
     return (
