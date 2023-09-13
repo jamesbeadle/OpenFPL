@@ -59,7 +59,7 @@ export const DataProvider = ({ children }) => {
         
     try {
         if (!playerHash || cachedPlayers.length === 0 || cachedHash !== playerHash.hash) {
-          await fetchAllPlayers();
+          await fetchAllPlayers(playerHash);
         } else {
           setPlayers(cachedPlayers);
         }
@@ -73,7 +73,7 @@ export const DataProvider = ({ children }) => {
         const allPlayersData = await player_canister.getAllPlayers();
         setPlayers(allPlayersData);
         
-        localStorage.setItem('players_hash', playersHash);
+        localStorage.setItem('players_hash', playersHash.hash);
         localStorage.setItem('players_data', JSON.stringify(allPlayersData, replacer));
 
     } catch (error) {

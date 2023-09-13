@@ -36,7 +36,7 @@ const ClubDetails = ({  }) => {
             const teamDetails = teams.find(t => t.id === Number(teamId));
             setTeam(teamDetails);
 
-            const fixturesData = await open_fpl_backend.getFixturesForSeason(activeSeasonData);
+            const fixturesData = await open_fpl_backend.getFixturesForSeason(systemState.activeSeason.id);
             
             let teamFixtures = fixturesData
             .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
@@ -200,7 +200,7 @@ const ClubDetails = ({  }) => {
                                                     <Col xs={2}>Age</Col> 
                                             </Row>
                                             {group.players.map(player => (
-                                                <Row key={player.shirtNumber}>
+                                                <Row key={`detail-${player.id}`}>
                                                     <Col className='text-center' xs={1}>{player.shirtNumber == 0 ? '-' : player.shirtNumber}</Col>
                                                     <Col xs={5}>{getFlag(player.nationality)} <LinkContainer style={{marginLeft: '0.25rem'}} to={`/player/${player.id}`}><a className='nav-link-brand'>{player.firstName} {player.lastName}</a></LinkContainer></Col> 
                                                     <Col xs={3}>{`£${(Number(player.value) / 4).toFixed(1)}m`}</Col> 

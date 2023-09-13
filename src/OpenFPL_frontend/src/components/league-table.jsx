@@ -92,7 +92,7 @@ const LeagueTable = ({ columns }) => {
 
             return a.goalsAgainst - b.goalsAgainst;
         });
-    
+        
         setTableData(sortedTableData);
         setIsLoading(false);
     };
