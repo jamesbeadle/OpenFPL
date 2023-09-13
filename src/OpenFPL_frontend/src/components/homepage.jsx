@@ -13,7 +13,7 @@ const Homepage = () => {
     const { teams, fixtures, systemState, seasonLeaderboard, weeklyLeaderboard } = useContext(DataContext);
 
     const [isLoading, setIsLoading] = useState(true);
-    const [managerCount, setManagerCount] = useState(0);
+    const [managerCount, setManagerCount] = useState(-1);
     const [seasonTop10, setSeasonTop10] = useState([]);
     const [weeklyTop10, setWeeklyTop10] = useState([]);
     const [filterGameweek, setFilterGameweek] = useState(systemState.activeGameweek);
@@ -176,7 +176,7 @@ const Homepage = () => {
                             <Card className="h-100">
                                 <Card.Body>
                                     <Card.Title>Managers</Card.Title>
-                                    <h5 className="display-sm">{managerCount.toLocaleString()}</h5> 
+                                    <h5 className="display-sm">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</h5> 
                                     <Card.Text>Total</Card.Text>
                                 </Card.Body>
                             </Card>
