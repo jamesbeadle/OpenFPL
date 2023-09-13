@@ -38,7 +38,7 @@ const WeeklyLeaderboard = () => {
     }, [selectedSeason, selectedGameweek, currentPage]);
 
     const fetchViewData = async (season, gameweek) => {
-        if(currentPage <= 4 && gameweek == weeklyLeaderboard){
+        if(currentPage <= 4 && gameweek == weeklyLeaderboard.gameweek){
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const slicedData = {
