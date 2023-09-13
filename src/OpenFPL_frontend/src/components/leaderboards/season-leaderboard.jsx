@@ -36,7 +36,13 @@ const SeasonLeaderboard = () => {
 
     const fetchViewData = async (season) => {
         if(currentPage <= 4 && season == systemState.activeSeason.id){
-            setManagers(seasonLeaderboard);
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const slicedData = {
+                ...seasonLeaderboard,
+                entries: seasonLeaderboard.entries.slice(start, end)
+            };
+            setManagers(slicedData);
         }
         else{
             const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage);

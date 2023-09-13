@@ -8,9 +8,9 @@ const ClubLeaderboard = () => {
     const { teams, seasons, systemState, monthlyLeaderboards } = useContext(DataContext);
     const { teamId } = useParams();
     const [isLoading, setIsLoading] = useState(true);
-    const [managers, setManagers] = useState(monthlyLeaderboards.find(x => x.clubId == teamId));
+    const [managers, setManagers] = useState({entries: [], totalEntries: 0});
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeasonId);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
     const [selectedMonth, setSelectedMonth] = useState(systemState.activeMonth);
     const itemsPerPage = 25;
     const [selectedClub, setSelectedClub] = useState(teamId);
@@ -26,36 +26,31 @@ const ClubLeaderboard = () => {
     ));
 
     useEffect(() => {
-        if (!selectedSeason || !selectedMonth) {
+        if (!selectedSeason || !selectedMonth || monthlyLeaderboards.length === 0) {
             return;
         };
-        
-        const cachedData = monthlyLeaderboards.find(x => x.clubId == selectedClub && x.seasonId == selectedSeason && x.month == selectedMonth);
-    
-        if (!cachedData) {
-            const fetchData = async () => {
-                setIsLoading(true);
-                await fetchViewData(selectedSeason, selectedMonth, selectedClub);
-                setIsLoading(false);
-            };
-    
-            fetchData();
-        } else {
-            setManagers(cachedData);
+        const fetchData = async () => {
+            setIsLoading(true);
+            await fetchViewData(selectedSeason, selectedMonth, selectedClub);
             setIsLoading(false);
-        }
-    }, [selectedSeason, selectedMonth, currentPage, selectedClub]);
+        };
+        
+        fetchData();
+    }, [selectedSeason, selectedMonth, currentPage, selectedClub, monthlyLeaderboards]);
     
     const fetchViewData = async (season, month, club) => {
-        if (currentPage > 4) {
-            const cachedData = monthlyLeaderboards.find(x => x.clubId == club && x.seasonId == season && x.month == month);
-            
-            if (cachedData) {
-                setManagers(cachedData);
-            } else {
-                const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
-                setManagers(leaderboardData);
-            }
+        if(currentPage <= 4 && month == systemState.activeMonth){
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const slicedData = {
+                ...monthlyLeaderboards,
+                entries: monthlyLeaderboards.find(x => x.clubId == selectedClub).entries.slice(start, end)
+            };
+            setManagers(slicedData);
+        }
+        else{
+            const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
+            setManagers(leaderboardData);
         }
     };
 
