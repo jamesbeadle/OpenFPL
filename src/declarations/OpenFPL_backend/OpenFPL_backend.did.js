@@ -240,7 +240,6 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
-    'resetHashes' : IDL.Func([], [], []),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
         [Result],
@@ -251,7 +250,6 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
-    'testUpdateHash' : IDL.Func([], [], []),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
     'updateHashForCategory' : IDL.Func([IDL.Text], [], []),

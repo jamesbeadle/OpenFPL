@@ -26,8 +26,12 @@ actor Self {
     private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
     private var nextPlayerId : Nat = 560;
     private var retiredPlayers = List.fromArray<T.Player>([]);
-    private var playersDataCache: T.DataCache = { category = "players"; hash = "DEFAULT_VALUE"; };
 
+    private var dataCacheHashes: List.List<T.DataCache> = List.fromArray([
+        { category = "players"; hash = "DEFAULT_VALUE" },
+        { category = "playerEventData"; hash = "DEFAULT_VALUE" }
+    ]);
+  
     public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
         
         func compare(player1: T.Player, player2: T.Player) : Bool {
@@ -1083,7 +1087,7 @@ actor Self {
                 players := List.filter<T.Player>(players, func(currentPlayer: T.Player) : Bool {
                     return currentPlayer.id != proposalPayload.playerId;
                 });
-                await updateHashForPlayers("Players");
+                await updateHashForCategory("players");
             };
         };
     };
@@ -1120,25 +1124,25 @@ actor Self {
         };
     };
 
-    public shared query func getPlayersDataCache() : async T.DataCache {
-        return playersDataCache;
+    public shared query func getDataHashes() : async [T.DataCache] {
+        return List.toArray(dataCacheHashes);
     };
 
     private stable var stable_players: [T.Player] = [];
     private stable var stable_next_player_id : Nat = 0;
     private stable var stable_timers: [T.TimerInfo] = [];
-    private stable var stable_players_data_cache: T.DataCache = playersDataCache;
+    private stable var stable_data_cache_hashes: [T.DataCache] = [];
 
     system func preupgrade() {
         stable_players := List.toArray(players);
         stable_next_player_id := nextPlayerId;
-        stable_players_data_cache := playersDataCache;
+        stable_data_cache_hashes := List.toArray(dataCacheHashes);
     };
 
     system func postupgrade() {
         players := List.fromArray(stable_players);
         nextPlayerId := stable_next_player_id;
-        playersDataCache := stable_players_data_cache;
+        dataCacheHashes := List.fromArray(stable_data_cache_hashes);
         recreateTimers();
     };
 
@@ -1161,10 +1165,26 @@ actor Self {
             }
         }
     };
-    
-    public func updateHashForPlayers(category: Text): async () {
-        let randomHash = await SHA224.getRandomHash();
-        playersDataCache := { category = category; hash = randomHash; };
+
+    public func updateHashForCategory(category: Text): async () {
+        
+        let hashBuffer = Buffer.fromArray<T.DataCache>([]);
+
+        for(hashObj in Iter.fromList(dataCacheHashes)){
+            if(hashObj.category == category){
+            let randomHash = await SHA224.getRandomHash();
+            hashBuffer.add({ category = hashObj.category; hash = randomHash; });
+            } else { hashBuffer.add(hashObj); };
+        };
+
+        dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+    };
+
+    public shared func setDefaultHashes(): async () {
+        dataCacheHashes := List.fromArray([
+            { category = "players"; hash = "DEFAULT_VALUE" },
+            { category = "playerEventData"; hash = "DEFAULT_VALUE" }
+        ]);
     };
 
     /*

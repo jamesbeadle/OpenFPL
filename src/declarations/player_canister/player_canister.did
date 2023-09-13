@@ -231,18 +231,19 @@ service : {
           nat16;
           PlayerScoreDTO;
         }) query;
+  getDataHashes: () -> (vec DataCache) query;
   getPlayer: (nat16) -> (Player) query;
   getPlayerDetails: (nat16, SeasonId) -> (PlayerDetailDTO) query;
-  getPlayersDataCache: () -> (DataCache) query;
   getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
    (vec PlayerPointsDTO) query;
   loanPlayer: (LoanPlayerPayload) -> ();
   recallPlayer: (RecallPlayerPayload) -> ();
   retirePlayer: (RetirePlayerPayload) -> ();
   revaluePlayers: (nat16, nat8, List) -> ();
+  setDefaultHashes: () -> ();
   setPlayerInjury: (SetPlayerInjuryPayload) -> ();
   transferPlayer: (TransferPlayerPayload) -> ();
   unretirePlayer: (UnretirePlayerPayload) -> ();
-  updateHashForPlayers: (text) -> ();
+  updateHashForCategory: (text) -> ();
   updatePlayer: (UpdatePlayerPayload) -> ();
 }

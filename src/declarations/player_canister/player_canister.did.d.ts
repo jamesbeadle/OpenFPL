@@ -180,9 +180,9 @@ export interface _SERVICE {
     [number, number],
     Array<[number, PlayerScoreDTO]>
   >,
+  'getDataHashes' : ActorMethod<[], Array<DataCache>>,
   'getPlayer' : ActorMethod<[number], Player>,
   'getPlayerDetails' : ActorMethod<[number, SeasonId], PlayerDetailDTO>,
-  'getPlayersDataCache' : ActorMethod<[], DataCache>,
   'getPlayersDetailsForGameweek' : ActorMethod<
     [Uint16Array | number[], number, number],
     Array<PlayerPointsDTO>
@@ -191,9 +191,10 @@ export interface _SERVICE {
   'recallPlayer' : ActorMethod<[RecallPlayerPayload], undefined>,
   'retirePlayer' : ActorMethod<[RetirePlayerPayload], undefined>,
   'revaluePlayers' : ActorMethod<[number, number, List], undefined>,
+  'setDefaultHashes' : ActorMethod<[], undefined>,
   'setPlayerInjury' : ActorMethod<[SetPlayerInjuryPayload], undefined>,
   'transferPlayer' : ActorMethod<[TransferPlayerPayload], undefined>,
   'unretirePlayer' : ActorMethod<[UnretirePlayerPayload], undefined>,
-  'updateHashForPlayers' : ActorMethod<[string], undefined>,
+  'updateHashForCategory' : ActorMethod<[string], undefined>,
   'updatePlayer' : ActorMethod<[UpdatePlayerPayload], undefined>,
 }

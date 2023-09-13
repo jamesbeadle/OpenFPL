@@ -10,23 +10,26 @@ export const DataProvider = ({ children }) => {
   const [teams, setTeams] = useState([]);
   const [seasons, setSeasons] = useState([]);
   const [fixtures, setFixtures] = useState([]);
+  const [playerEvents, setPlayerEvents] = useState([]);
   const [systemState, setSystemState] = useState(null);
   const [weeklyLeaderboard, setWeeklyLeaderboard] = useState({});
   const [monthlyLeaderboards, setMonthlyLeaderboards] = useState([]);
   const [seasonLeaderboard, setSeasonLeaderboard] = useState({});
-  const [currentHashes, setCurrentHashes] = useState([]);
+  const [backendCanisterHashes, setBackendCanisterHashes] = useState([]);
+  const [playerCanisterHashes, setPlayerCanisterHashes] = useState([]);
   const [loading, setLoading] = useState(true);
  
   useEffect(() => {
     const checkAndUpdateData = async () => {
-        const currentHashArray = await open_fpl_backend.getDataHashes();
-        setCurrentHashes(currentHashArray);
-        const currentPlayerHash = await player_canister.getPlayersDataCache();
-        await initPlayerData(currentPlayerHash);
-        await initTeamsData(currentHashArray.find(item => item.category === 'teams'));
-        await initSeasonsData(currentHashArray.find(item => item.category === 'seasons'));
-        await initFixturesData(currentHashArray.find(item => item.category === 'fixtures'));
-        await initSystemState(currentHashArray.find(item => item.category === 'system_state'));
+        const backendHashArray = await open_fpl_backend.getDataHashes();
+        setBackendCanisterHashes(backendHashArray);
+        const playerHashArray = await player_canister.getDataHashes();
+        setPlayerCanisterHashes(playerHashArray);
+        await initPlayerData(playerHashArray.find(item => item.category === 'players'));
+        await initTeamsData(backendHashArray.find(item => item.category === 'teams'));
+        await initSeasonsData(backendHashArray.find(item => item.category === 'seasons'));
+        await initFixturesData(backendHashArray.find(item => item.category === 'fixtures'));
+        await initSystemState(backendHashArray.find(item => item.category === 'system_state'));
     };
 
     let duration = 60000 * 5;
@@ -44,10 +47,10 @@ export const DataProvider = ({ children }) => {
     }
     const initLeaderboards = async () => {
         
-        await initWeeklyLeaderboard(currentHashes.find(item => item.category === 'weekly_leaderboard'));
-        await initMonthlyLeaderboards(currentHashes.find(item => item.category === 'monthly_leaderboards'));
-        await initSeasonLeaderboard(currentHashes.find(item => item.category === 'season_leaderboard'));  
-        
+        await initWeeklyLeaderboard(backendCanisterHashes.find(item => item.category === 'weekly_leaderboard'));
+        await initMonthlyLeaderboards(backendCanisterHashes.find(item => item.category === 'monthly_leaderboards'));
+        await initSeasonLeaderboard(backendCanisterHashes.find(item => item.category === 'season_leaderboard'));  
+        await initPlayerEventsData(playerCanisterHashes.find(item => item.category === 'playerEventData'));        
         setLoading(false);  
     };
     initLeaderboards();
@@ -79,6 +82,51 @@ export const DataProvider = ({ children }) => {
 
     } catch (error) {
         console.error("Error fetching all players:", error);
+    }
+  };
+
+  const initPlayerEventsData = async (playerEventDataHash) => {
+    const cachedHash = localStorage.getItem('player_events_hash');
+    const cachedPlayerEventsData = localStorage.getItem('player_events_data');
+    const cachedPlayerEvents = JSON.parse(cachedPlayerEventsData || '[]');
+        
+    try {
+        if (!playerEventDataHash || cachedPlayerEvents.length === 0 || cachedHash !== playerEventDataHash.hash) {
+          await fetchAllPlayerEventsData(playerEventDataHash);
+        } else {
+            setPlayerEvents(cachedPlayerEvents);
+        }
+      } catch (error) {
+          console.error("Error fetching player event data cache:", error);
+      }
+  };
+
+  const fetchAllPlayerEventsData = async (playerEventsHash) => {
+    try {
+
+        var gameweek = Number(systemState.activeGameweek);
+        const kickOffs = fixtures.filter(x => x.gameweek === gameweek).map(fixture => computeTimeLeft(Number(fixture.kickOff)));
+        
+        const kickOffsInMillis = kickOffs.map(obj => 
+            obj.days * 24 * 60 * 60 * 1000 + 
+            obj.hours * 60 * 60 * 1000 + 
+            obj.minutes * 60 * 1000 + 
+            obj.seconds * 1000
+        );
+
+        const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
+        if (timeUntilGameweekBegins > 0 && gameweek > 1) {
+            gameweek -= 1;
+        }
+        
+        const allPlayersData = await player_canister.getAllPlayersMap(systemState.activeSeason.id, gameweek);
+        setPlayerEvents(allPlayersData);
+        
+        localStorage.setItem('player_events_hash', playerEventsHash.hash);
+        localStorage.setItem('player_events_data', JSON.stringify(allPlayersData, replacer));
+
+    } catch (error) {
+        console.error("Error fetching all player events:", error);
     }
   };
 
@@ -326,7 +374,7 @@ export const DataProvider = ({ children }) => {
     }
 
     return (
-        <DataContext.Provider value={ { teams, seasons, fixtures, players, systemState, weeklyLeaderboard, monthlyLeaderboards, seasonLeaderboard }}>
+        <DataContext.Provider value={ { teams, seasons, fixtures, players, systemState, weeklyLeaderboard, monthlyLeaderboards, seasonLeaderboard, playerEvents }}>
             {!loading && children}
         </DataContext.Provider>
     );
