@@ -164,7 +164,7 @@ export const DataProvider = ({ children }) => {
     
     const fetchAllFixtures = async (fixturesHash) => {
         try {
-            const allFixturesData = await open_fpl_backend.getFixtures();
+            const allFixturesData = await open_fpl_backend.getFixtureDTOs();
             setFixtures(allFixturesData);
         
             if (fixturesHash) {

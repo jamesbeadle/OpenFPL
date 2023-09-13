@@ -132,10 +132,29 @@ actor Self {
     return teamsInstance.getTeams();
   };
 
+
   public query ({caller}) func getFixtures() : async [T.Fixture]{
     return seasonManager.getFixtures();
   };
-
+  
+  public query ({caller}) func getFixtureDTOs() : async [DTOs.FixtureDTO]{
+    return Array.map<T.Fixture, DTOs.FixtureDTO>(seasonManager.getFixtures(), func (fixture: T.Fixture): DTOs.FixtureDTO {
+      return{
+        id = fixture.id;
+        seasonId = fixture.seasonId;
+        gameweek = fixture.gameweek;
+        kickOff = fixture.kickOff;
+        homeTeamId = fixture.homeTeamId;
+        awayTeamId = fixture.awayTeamId;
+        homeGoals = fixture.homeGoals;
+        awayGoals = fixture.awayGoals;
+        status = fixture.status;
+        highestScoringPlayerId = fixture.highestScoringPlayerId;
+        events = [];
+      }
+    });
+  };
+  
   public query ({caller}) func getFixturesForSeason(seasonId: T.SeasonId) : async [T.Fixture]{
     return seasonManager.getFixturesForSeason(seasonId);
   };
@@ -902,10 +921,6 @@ actor Self {
     await updateHashForCategory(category);
   };
 
-  public func getFixturesByWeek(seasonId: T.SeasonId, gameweek: T.GameweekNumber): async [T.Fixture] {
-    return seasonManager.getGameweekFixtures(seasonId, gameweek);
-  }; 
-
   private func getGameweekFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber): [T.Fixture] {
     return seasonManager.getGameweekFixtures(seasonId, gameweek);
   }; 
@@ -1081,7 +1096,21 @@ actor Self {
       }
   };
 
+  public shared func testUpdateHash() : async () {
+    await updateHashForCategory("fixtures");
+  };
 
+  public shared func resetHashes() : async () {
+    dataCacheHashes := List.fromArray([
+      { category = "teams"; hash = "DEFAULT_VALUE" },
+      { category = "fixtures"; hash = "DEFAULT_VALUE" },
+      { category = "seasons"; hash = "DEFAULT_VALUE" },
+      { category = "system_state"; hash = "DEFAULT_VALUE" },
+      { category = "weekly_leaderboard"; hash = "DEFAULT_VALUE" },
+      { category = "monthly_leaderboards"; hash = "DEFAULT_VALUE" },
+      { category = "season_leaderboard"; hash = "DEFAULT_VALUE" }
+    ]);
+  };
 
 
 };

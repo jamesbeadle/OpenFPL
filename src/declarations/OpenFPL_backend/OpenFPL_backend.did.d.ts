@@ -73,6 +73,19 @@ export interface Fixture {
   'gameweek' : GameweekNumber,
   'awayGoals' : number,
 }
+export interface FixtureDTO {
+  'id' : number,
+  'status' : number,
+  'awayTeamId' : TeamId,
+  'highestScoringPlayerId' : number,
+  'homeTeamId' : TeamId,
+  'seasonId' : SeasonId,
+  'events' : Array<PlayerEventData>,
+  'kickOff' : bigint,
+  'homeGoals' : number,
+  'gameweek' : GameweekNumber,
+  'awayGoals' : number,
+}
 export type FixtureId = number;
 export interface Gameweek {
   'number' : GameweekNumber,
@@ -174,8 +187,8 @@ export interface _SERVICE {
     FantasyTeamSnapshot
   >,
   'getFixture' : ActorMethod<[SeasonId, GameweekNumber, FixtureId], Fixture>,
+  'getFixtureDTOs' : ActorMethod<[], Array<FixtureDTO>>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
-  'getFixturesByWeek' : ActorMethod<[SeasonId, GameweekNumber], Array<Fixture>>,
   'getFixturesForSeason' : ActorMethod<[SeasonId], Array<Fixture>>,
   'getPlayersDetailsForGameweek' : ActorMethod<
     [Uint16Array | number[], number, number],
@@ -202,6 +215,7 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
+  'resetHashes' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result
@@ -210,6 +224,7 @@ export interface _SERVICE {
     [FixtureId, Array<PlayerEventData>],
     undefined
   >,
+  'testUpdateHash' : ActorMethod<[], undefined>,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
   'updateHashForCategory' : ActorMethod<[string], undefined>,

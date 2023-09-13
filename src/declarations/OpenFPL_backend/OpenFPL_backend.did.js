@@ -96,6 +96,19 @@ export const idlFactory = ({ IDL }) => {
     'gameweek' : GameweekNumber,
     'awayGoals' : IDL.Nat8,
   });
+  const FixtureDTO = IDL.Record({
+    'id' : IDL.Nat32,
+    'status' : IDL.Nat8,
+    'awayTeamId' : TeamId,
+    'highestScoringPlayerId' : IDL.Nat16,
+    'homeTeamId' : TeamId,
+    'seasonId' : SeasonId,
+    'events' : IDL.Vec(PlayerEventData),
+    'kickOff' : IDL.Int,
+    'homeGoals' : IDL.Nat8,
+    'gameweek' : GameweekNumber,
+    'awayGoals' : IDL.Nat8,
+  });
   const PlayerPointsDTO = IDL.Record({
     'id' : IDL.Nat16,
     'events' : IDL.Vec(PlayerEventData),
@@ -187,12 +200,8 @@ export const idlFactory = ({ IDL }) => {
         [Fixture],
         [],
       ),
+    'getFixtureDTOs' : IDL.Func([], [IDL.Vec(FixtureDTO)], ['query']),
     'getFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
-    'getFixturesByWeek' : IDL.Func(
-        [SeasonId, GameweekNumber],
-        [IDL.Vec(Fixture)],
-        [],
-      ),
     'getFixturesForSeason' : IDL.Func(
         [SeasonId],
         [IDL.Vec(Fixture)],
@@ -231,6 +240,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'resetHashes' : IDL.Func([], [], []),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
         [Result],
@@ -241,6 +251,7 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'testUpdateHash' : IDL.Func([], [], []),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
     'updateHashForCategory' : IDL.Func([IDL.Text], [], []),
