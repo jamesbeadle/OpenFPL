@@ -5,15 +5,10 @@ import { useParams } from 'react-router-dom';
 import { DataContext } from "../../contexts/DataContext";
 
 const ClubLeaderboard = () => {
-    const { teams, seasons, systemState } = useContext(DataContext);
+    const { teams, seasons, systemState, monthlyLeaderboards } = useContext(DataContext);
     const { teamId } = useParams();
     const [isLoading, setIsLoading] = useState(true);
-    const [managers, setManagers] = useState({
-        totalEntries: 0n,
-        seasonId: 0,
-        entries: [],
-        gameweek: 0
-      });
+    const [managers, setManagers] = useState(monthlyLeaderboards.find(x => x.clubId == teamId));
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeasonId);
     const [selectedMonth, setSelectedMonth] = useState(systemState.activeMonth);
@@ -35,39 +30,34 @@ const ClubLeaderboard = () => {
             return;
         };
         
-        const fetchData = async () => {
-            setIsLoading(true);
-            
-            const cacheKey = `monthly_leaderboard_hash`;
-            const cachedData = JSON.parse(localStorage.getItem(cacheKey) || '[]');
-            
-            if (cachedData.length > 0 && currentPage <= 4) {
-                const leaderboardData = cachedData.find(item => item.clubId === Number(selectedClub));
-                setManagers(leaderboardData);
-            } else {
+        const cachedData = monthlyLeaderboards.find(x => x.clubId == selectedClub && x.seasonId == selectedSeason && x.month == selectedMonth);
+    
+        if (!cachedData) {
+            const fetchData = async () => {
+                setIsLoading(true);
                 await fetchViewData(selectedSeason, selectedMonth, selectedClub);
-            }
+                setIsLoading(false);
+            };
     
+            fetchData();
+        } else {
+            setManagers(cachedData);
             setIsLoading(false);
-        };
-    
-        fetchData();
+        }
     }, [selectedSeason, selectedMonth, currentPage, selectedClub]);
     
-
     const fetchViewData = async (season, month, club) => {
-        const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
-        setManagers(leaderboardData);
-    
-        if (currentPage <= 4) {
-            const cacheKey = `monthly_leaderboards_data`;
-            const cachedData = JSON.parse(localStorage.getItem(cacheKey) || '[]');
-            const updatedData = [...cachedData.filter(item => item.clubId !== Number(club)), leaderboardData];
-            localStorage.setItem(cacheKey, JSON.stringify(updatedData));
+        if (currentPage > 4) {
+            const cachedData = monthlyLeaderboards.find(x => x.clubId == club && x.seasonId == season && x.month == month);
+            
+            if (cachedData) {
+                setManagers(cachedData);
+            } else {
+                const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
+                setManagers(leaderboardData);
+            }
         }
     };
-    
-        
 
     const renderedData = managers.entries && managers.entries.map(manager => (
         <tr key={manager.principalId}>
@@ -95,7 +85,7 @@ const ClubLeaderboard = () => {
                         <Col xs={12} md={4}>
                             <Form.Group controlId="clubSelect">
                                 <Form.Label>Select Club</Form.Label>
-                                <Form.Control as="select" value={selectedClub || ''} onChange={e => setSelectedClub(Number(e.target.value))}>
+                                <Form.Control as="select" value={selectedClub || ''} onChange={e => { setSelectedClub(Number(e.target.value));  setCurrentPage(1); }}>
                                     {teams.map(club => <option key={club.id} value={club.id}>{club.friendlyName}</option>)}
                                 </Form.Control>
                             </Form.Group>
@@ -105,6 +95,7 @@ const ClubLeaderboard = () => {
                                 <Form.Label>Select Season</Form.Label>
                                 <Form.Control as="select" value={selectedSeason || ''} onChange={e => {
                                     setSelectedSeason(Number(e.target.value));
+                                    setCurrentPage(1);
                                 }}>
 
                                     {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
@@ -114,7 +105,7 @@ const ClubLeaderboard = () => {
                         <Col xs={12} md={4}>
                             <Form.Group controlId="gameweekSelect">
                                 <Form.Label>Select Month</Form.Label>
-                                <Form.Control as="select" value={selectedMonth || ''} onChange={e => setSelectedMonth(Number(e.target.value))}>
+                                <Form.Control as="select" value={selectedMonth || ''} onChange={e => { setSelectedMonth(Number(e.target.value));  setCurrentPage(1);}}>
                                     <option key={1} value={1}>January</option>
                                     <option key={2} value={2}>February</option>
                                     <option key={3} value={3}>March</option>

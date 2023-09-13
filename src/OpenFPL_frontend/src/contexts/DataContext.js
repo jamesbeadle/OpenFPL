@@ -242,6 +242,7 @@ export const DataProvider = ({ children }) => {
             }
             
             const weeklyLeaderboardData = await open_fpl_backend.getWeeklyLeaderboardCache(Number(systemState.activeSeason.id), gameweek);
+            
             if (hashObj) {
                 localStorage.setItem('weekly_leaderboard_hash', hashObj.hash);
                 localStorage.setItem('weekly_leaderboard_data', JSON.stringify(weeklyLeaderboardData, replacer));

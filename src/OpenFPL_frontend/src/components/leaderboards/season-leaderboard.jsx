@@ -35,7 +35,10 @@ const SeasonLeaderboard = () => {
     }, [selectedSeason, currentPage]);
 
     const fetchViewData = async (season) => {
-        if (currentPage <= 4) {
+        if(currentPage <= 4 && season == systemState.activeSeason.id){
+            setManagers(seasonLeaderboard);
+        }
+        else{
             const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage);
             setManagers(leaderboardData);
         }
@@ -69,6 +72,7 @@ const SeasonLeaderboard = () => {
                                 <Form.Label>Select Season</Form.Label>
                                 <Form.Control as="select" value={selectedSeason || ''} onChange={e => {
                                     setSelectedSeason(Number(e.target.value));
+                                    setCurrentPage(1);
                                 }}>
 
                                     {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
