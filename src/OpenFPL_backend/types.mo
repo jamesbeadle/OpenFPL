@@ -465,6 +465,7 @@ module Types{
         activeSeason: Season;
         activeGameweek: GameweekNumber;
         activeMonth: Nat8;
+        focusGameweek: GameweekNumber;
     };
 
 

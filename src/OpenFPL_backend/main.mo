@@ -53,6 +53,7 @@ actor Self {
     { category = "season_leaderboard"; hash = "DEFAULT_VALUE" }
   ]);
 
+  private let oneHour = 1_000_000_000 * 60 * 60;
   
   /*
   //USE FOR LOCAL DEV
@@ -89,7 +90,6 @@ actor Self {
     setPlayerInjury: (proposalPayload: T.SetPlayerInjuryPayload) -> async ();
     retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async ();
     unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async ();
-    getPlayersDetailsForGameweek: (playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) -> async [DTOs.PlayerPointsDTO];
     recalculatePlayerScores: (fixture: T.Fixture, seasonId: Nat16, gameweek: Nat8) -> async ();
   };
 
@@ -114,17 +114,29 @@ actor Self {
   public query func getSystemState() : async T.SystemState {
     let fixtures = seasonManager.getActiveGameweekFixtures();
 
+    var earliestFixtureTime = fixtures[0].kickOff;
     var latestFixtureTime = fixtures[0].kickOff;
+    
     for(fixture in Iter.fromArray<T.Fixture>(fixtures)){
         if(fixture.kickOff > latestFixtureTime){
             latestFixtureTime := fixture.kickOff;
         };
+        if(fixture.kickOff < earliestFixtureTime){
+            earliestFixtureTime := fixture.kickOff;
+        };
+    };
+    var activeGameweek = seasonManager.getActiveGameweek();
+    var focusGameweek: T.GameweekNumber = activeGameweek;
+        
+    if(earliestFixtureTime - oneHour > Time.now() and activeGameweek > 1){
+      focusGameweek := activeGameweek - 1;
     };
 
     return {
       activeSeason = seasonManager.getActiveSeason();
-      activeGameweek = seasonManager.getActiveGameweek();
+      activeGameweek = activeGameweek;
       activeMonth = Utilities.unixTimeToMonth(latestFixtureTime);
+      focusGameweek = focusGameweek;
     }
   };
   
@@ -931,12 +943,8 @@ actor Self {
     //IMPLEMENT
   };
 
-  public shared ({caller}) func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
-      return await fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
-  };
-
-  public shared ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [DTOs.PlayerPointsDTO] {
-      return await playerCanister.getPlayersDetailsForGameweek(playerIds, seasonId, gameweek);
+  public shared query ({caller}) func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
+      return fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
   };
 
   public shared query func getDataHashes() : async [T.DataCache] {

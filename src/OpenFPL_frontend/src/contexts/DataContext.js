@@ -119,7 +119,7 @@ export const DataProvider = ({ children }) => {
             gameweek -= 1;
         }
         
-        const allPlayersData = await player_canister.getAllPlayersMap(systemState.activeSeason.id, gameweek);
+        const allPlayersData = await player_canister.getPlayerDetailsForGameweek(systemState.activeSeason.id, gameweek);
         setPlayerEvents(allPlayersData);
         
         localStorage.setItem('player_events_hash', playerEventsHash.hash);

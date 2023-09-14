@@ -13,6 +13,7 @@ type SystemState =
    activeGameweek: GameweekNumber;
    activeMonth: nat8;
    activeSeason: Season;
+   focusGameweek: GameweekNumber;
  };
 type SeasonId = nat16;
 type SeasonDTO = 
@@ -46,15 +47,6 @@ type ProfileDTO =
    principalName: text;
    profilePicture: blob;
    reputation: nat32;
- };
-type PlayerPointsDTO = 
- record {
-   events: vec PlayerEventData;
-   gameweek: GameweekNumber;
-   id: nat16;
-   points: int16;
-   position: nat8;
-   teamId: nat16;
  };
 type PlayerId = nat16;
 type PlayerEventData = 
@@ -217,13 +209,12 @@ service : {
    (vec PaginatedClubLeaderboard) query;
   getDataHashes: () -> (vec DataCache) query;
   getFantasyTeam: () -> (FantasyTeam) query;
-  getFantasyTeamForGameweek: (text, nat16, nat8) -> (FantasyTeamSnapshot);
+  getFantasyTeamForGameweek: (text, nat16, nat8) ->
+   (FantasyTeamSnapshot) query;
   getFixture: (SeasonId, GameweekNumber, FixtureId) -> (Fixture);
   getFixtureDTOs: () -> (vec FixtureDTO) query;
   getFixtures: () -> (vec Fixture) query;
   getFixturesForSeason: (SeasonId) -> (vec Fixture) query;
-  getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
-   (vec PlayerPointsDTO);
   getProfileDTO: () -> (ProfileDTO);
   getPublicProfileDTO: (text) -> (ProfileDTO) query;
   getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;

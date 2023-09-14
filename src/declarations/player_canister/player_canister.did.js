@@ -198,6 +198,11 @@ export const idlFactory = ({ IDL }) => {
         [PlayerDetailDTO],
         ['query'],
       ),
+    'getPlayerDetailsForGameweek' : IDL.Func(
+        [IDL.Nat16, IDL.Nat8],
+        [IDL.Vec(PlayerPointsDTO)],
+        ['query'],
+      ),
     'getPlayersDetailsForGameweek' : IDL.Func(
         [IDL.Vec(PlayerId), IDL.Nat16, IDL.Nat8],
         [IDL.Vec(PlayerPointsDTO)],

@@ -234,6 +234,7 @@ service : {
   getDataHashes: () -> (vec DataCache) query;
   getPlayer: (nat16) -> (Player) query;
   getPlayerDetails: (nat16, SeasonId) -> (PlayerDetailDTO) query;
+  getPlayerDetailsForGameweek: (nat16, nat8) -> (vec PlayerPointsDTO) query;
   getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
    (vec PlayerPointsDTO) query;
   loanPlayer: (LoanPlayerPayload) -> ();

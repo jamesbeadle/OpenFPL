@@ -13,7 +13,7 @@ import { DataContext } from "../../contexts/DataContext";
 
 const ViewPoints = () => {
     const { manager, gameweek, season } = useParams();
-    const { players, teams, fixtures } = useContext(DataContext);
+    const { players, teams, fixtures, playerEvents, systemState } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [fantasyTeam, setFantasyTeam] = useState({
@@ -32,24 +32,36 @@ const ViewPoints = () => {
 
    
     useEffect(() => {
+        if(!playerEvents || playerEvents.length === 0 || !teams || teams.length === 0){
+            return;
+        }
         const fetchData = async () => {
             await fetchViewData();
             setIsLoading(false);
         };
         fetchData();
-    }, []);
+    }, [playerEvents, teams]);
 
     const fetchViewData = async () => {
-                
         const fetchedFantasyTeam = await open_fpl_backend.getFantasyTeamForGameweek(manager, Number(season), Number(gameweek)); 
-        const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));
+        if(gameweek == systemState.focusGameweek){
+            const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
+            const playersInTeam = detailedPlayers.filter(player => fetchedFantasyTeam.playerIds.includes(player.id));
         
-        const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
-        
-        setFantasyTeam({
-            ...fetchedFantasyTeam,
-            players: detailedPlayers,
-        });
+            setFantasyTeam({
+                ...fetchedFantasyTeam,
+                players: playersInTeam,
+            });
+        }
+        else
+        {
+            const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));    
+            const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
+            setFantasyTeam({
+                ...fetchedFantasyTeam,
+                players: detailedPlayers,
+            });
+        }
 
         const profileData = await open_fpl_backend.getPublicProfileDTO(manager);
         setProfile(profileData);
@@ -81,6 +93,7 @@ const ViewPoints = () => {
             const sortedPlayers = [...playersWithUpdatedScores].sort((a, b) => 
                 Number(b.totalPoints) - Number(a.totalPoints)
             );
+            
             setSortedPlayers(sortedPlayers);
             getBonusDetails();
         }
@@ -218,7 +231,7 @@ const ViewPoints = () => {
         if(fantasyTeam.hatTrickHeroGameweek == gameweek && playerDTO.gameweekData.goals >= 3) {
             bonusName = "Hat-trick Hero";
         };
-    
+
         return (
             <Fragment key={player.id}>
 

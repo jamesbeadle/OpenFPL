@@ -183,6 +183,10 @@ export interface _SERVICE {
   'getDataHashes' : ActorMethod<[], Array<DataCache>>,
   'getPlayer' : ActorMethod<[number], Player>,
   'getPlayerDetails' : ActorMethod<[number, SeasonId], PlayerDetailDTO>,
+  'getPlayerDetailsForGameweek' : ActorMethod<
+    [number, number],
+    Array<PlayerPointsDTO>
+  >,
   'getPlayersDetailsForGameweek' : ActorMethod<
     [Uint16Array | number[], number, number],
     Array<PlayerPointsDTO>

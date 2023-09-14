@@ -125,14 +125,6 @@ export interface PlayerEventData {
   'eventType' : number,
 }
 export type PlayerId = number;
-export interface PlayerPointsDTO {
-  'id' : number,
-  'events' : Array<PlayerEventData>,
-  'teamId' : number,
-  'position' : number,
-  'gameweek' : GameweekNumber,
-  'points' : number,
-}
 export interface ProfileDTO {
   'icpDepositAddress' : Uint8Array | number[],
   'favouriteTeamId' : number,
@@ -158,6 +150,7 @@ export interface SeasonDTO { 'id' : SeasonId, 'name' : string, 'year' : number }
 export type SeasonId = number;
 export interface SystemState {
   'activeMonth' : number,
+  'focusGameweek' : GameweekNumber,
   'activeSeason' : Season,
   'activeGameweek' : GameweekNumber,
 }
@@ -190,10 +183,6 @@ export interface _SERVICE {
   'getFixtureDTOs' : ActorMethod<[], Array<FixtureDTO>>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
   'getFixturesForSeason' : ActorMethod<[SeasonId], Array<Fixture>>,
-  'getPlayersDetailsForGameweek' : ActorMethod<
-    [Uint16Array | number[], number, number],
-    Array<PlayerPointsDTO>
-  >,
   'getProfileDTO' : ActorMethod<[], ProfileDTO>,
   'getPublicProfileDTO' : ActorMethod<[string], ProfileDTO>,
   'getSeasonLeaderboard' : ActorMethod<

@@ -139,6 +139,7 @@ module {
             };
         };
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
+        await updateCacheHash("fixtures");
     };
 
     public func gameCompleted() : async () {
@@ -169,6 +170,7 @@ module {
         };
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
+        await updateCacheHash("fixtures");
     };
 
     public func votingPeriodOver() : async (){
@@ -188,6 +190,7 @@ module {
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
         await checkGameweekFinished();
+        await updateCacheHash("fixtures");
     };
 
     public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async (){
@@ -218,6 +221,7 @@ module {
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
         await checkGameweekFinished();
+        await updateCacheHash("fixtures");
     };
 
     public func finaliseFixture(fixture: T.Fixture) : async (){

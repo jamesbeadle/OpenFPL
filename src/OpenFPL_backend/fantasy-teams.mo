@@ -1209,7 +1209,7 @@ module {
             };
         };
 
-        public func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
+        public func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : T.FantasyTeamSnapshot {
             let emptySnapshot: T.FantasyTeamSnapshot = { principalId = ""; transfersAvailable = 0; bankBalance = 0;  playerIds = [];
                 captainId = 0; gameweek = 0; goalGetterGameweek = 0; goalGetterPlayerId = 0; passMasterGameweek = 0;
                 passMasterPlayerId = 0; noEntryGameweek = 0; noEntryPlayerId = 0; teamBoostGameweek = 0; teamBoostTeamId = 0;

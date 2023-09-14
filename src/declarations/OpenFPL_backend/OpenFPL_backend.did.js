@@ -109,14 +109,6 @@ export const idlFactory = ({ IDL }) => {
     'gameweek' : GameweekNumber,
     'awayGoals' : IDL.Nat8,
   });
-  const PlayerPointsDTO = IDL.Record({
-    'id' : IDL.Nat16,
-    'events' : IDL.Vec(PlayerEventData),
-    'teamId' : IDL.Nat16,
-    'position' : IDL.Nat8,
-    'gameweek' : GameweekNumber,
-    'points' : IDL.Int16,
-  });
   const ProfileDTO = IDL.Record({
     'icpDepositAddress' : IDL.Vec(IDL.Nat8),
     'favouriteTeamId' : IDL.Nat16,
@@ -156,6 +148,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const SystemState = IDL.Record({
     'activeMonth' : IDL.Nat8,
+    'focusGameweek' : GameweekNumber,
     'activeSeason' : Season,
     'activeGameweek' : GameweekNumber,
   });
@@ -193,7 +186,7 @@ export const idlFactory = ({ IDL }) => {
     'getFantasyTeamForGameweek' : IDL.Func(
         [IDL.Text, IDL.Nat16, IDL.Nat8],
         [FantasyTeamSnapshot],
-        [],
+        ['query'],
       ),
     'getFixture' : IDL.Func(
         [SeasonId, GameweekNumber, FixtureId],
@@ -206,11 +199,6 @@ export const idlFactory = ({ IDL }) => {
         [SeasonId],
         [IDL.Vec(Fixture)],
         ['query'],
-      ),
-    'getPlayersDetailsForGameweek' : IDL.Func(
-        [IDL.Vec(PlayerId), IDL.Nat16, IDL.Nat8],
-        [IDL.Vec(PlayerPointsDTO)],
-        [],
       ),
     'getProfileDTO' : IDL.Func([], [ProfileDTO], []),
     'getPublicProfileDTO' : IDL.Func([IDL.Text], [ProfileDTO], ['query']),
