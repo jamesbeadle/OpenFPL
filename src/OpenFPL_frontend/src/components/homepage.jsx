@@ -2,116 +2,96 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button, Pagination } from 'react-bootstrap';
 import { SmallFixtureIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
-import { TeamsContext } from "../contexts/TeamsContext";
+import { DataContext } from "../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { Link } from "react-router-dom";
+import { msToTime, computeTimeLeft, getTeamById, groupFixturesByDate } from './helpers';
 
 const Homepage = () => {
 
-    const [isLoading, setIsLoading] = useState(true);
     const { userPrincipal, isAuthenticated } = useContext(AuthContext);
-    const { teams } = useContext(TeamsContext);
-    const [fixtures, setFixtures] = useState([]);
-    const [managerCount, setManagerCount] = useState(0);
+    const { teams, fixtures, systemState, seasonLeaderboard, weeklyLeaderboard } = useContext(DataContext);
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [managerCount, setManagerCount] = useState(-1);
     const [seasonTop10, setSeasonTop10] = useState([]);
-    const [weeklyTop10, setWeeklyTop10] = useState();
-    const [currentGameweek, setCurrentGameweek] = useState(0);
-    const [currentSeason, setCurrentSeason] = useState(1);
-    const [countdown, setCountdown] = useState({
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0
-    });
-    const [filterGameweek, setFilterGameweek] = useState(1);
+    const [weeklyTop10, setWeeklyTop10] = useState([]);
+    const [filterGameweek, setFilterGameweek] = useState(systemState.activeGameweek);
     const [isActiveGameweek, setIsActiveGameweek] = useState(false);
     const [shouldShowButton, setShouldShowButton] = useState(false);
+    const [countdown, setCountdown] = useState(0);
+
+    const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
+    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
+    const [groupedFixtures, setGroupedFixtures] = useState([]);
+    const totalPrizePool = 0;
     
     useEffect(() => {
-        
-        const fetchData = async () => {
-        await fetchActiveSeasonId();
-        await fetchActiveGameweek();
-        };
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        if(currentGameweek == 0){ return; }
-        const fetchData  = async () => {
-            await fetchViewData();
-            setIsLoading(false);
-        };
-        fetchData();
-
-    }, [currentGameweek]);
-
-    useEffect(() => {
-        if(isLoading || fixtures.length == 0){
+        if (!fixtures || fixtures.length === 0) {
             return;
         }
-        const fetchData = async () => {
-            setButtonVisibility(currentGameweek);
+        setGroupedFixtures(groupFixturesByDate(getCurrentGameweekFixtures()));
+        const fetchViewData = async () => {
+            if (filterGameweek === 0) return;
+
+            await updateCountdowns();
+            setIsLoading(false);
         };
-        fetchData();
-    }, [isLoading, fixtures]);
+        
+        fetchViewData();
+    }, [filterGameweek, fixtures, isAuthenticated]);
 
-    const fetchViewData = async () => {
-    
-        const fixturesData = await open_fpl_backend.getFixtures();
-        setFixtures(fixturesData);
+    useEffect(() => {
+        const fetchViewData = async () => {
+            if(Object.keys(seasonLeaderboard).length === 0 || Object.keys(weeklyLeaderboard).length === 0) { return; }
+            await updateManagerData();
+        };
+        
+        fetchViewData();
+    }, [seasonLeaderboard, weeklyLeaderboard]);
 
-        const currentFixtures = fixturesData.filter(fixture => fixture.gameweek === currentGameweek);
+    useEffect(() => {
+        const timer = setInterval(updateCountdowns, 1000);
+        return () => clearInterval(timer);
+    }, [filterGameweek, fixtures]);
+
+    const updateCountdowns = async () => {
+        const currentFixtures = getCurrentGameweekFixtures();
         const kickOffs = currentFixtures.map(fixture => computeTimeLeft(Number(fixture.kickOff)));
-
+    
         const kickOffsInMillis = kickOffs.map(obj => 
             obj.days * 24 * 60 * 60 * 1000 + 
             obj.hours * 60 * 60 * 1000 + 
             obj.minutes * 60 * 1000 + 
             obj.seconds * 1000
         );
-
+    
         const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
         
         if (timeUntilGameweekBegins > 0) {
             setCountdown(msToTime(timeUntilGameweekBegins));
             setIsActiveGameweek(false);
         } else {
-            setCountdown({
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 0
-            });
+            setCountdown(msToTime(0));
             setIsActiveGameweek(true);
         }
+    };
 
+    const updateManagerData = async () => {
         const managerCountData = await open_fpl_backend.getTotalManagers();
         setManagerCount(Number(managerCountData));
 
-        const seasonTop10Data = await open_fpl_backend.getSeasonTop10();
-        setSeasonTop10(seasonTop10Data.entries);
-    
-        const weeklyTop10Data = await open_fpl_backend.getWeeklyTop10();
-        setWeeklyTop10(weeklyTop10Data);
-
+        const seasonTop10Data = seasonLeaderboard.entries.slice(0, 10);
+        setSeasonTop10(seasonTop10Data);
         
-    };
-
-    const fetchActiveGameweek = async () => {
-        const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
-        setCurrentGameweek(activeGameweekData);
-        setFilterGameweek(activeGameweekData);
-    };
-    
-    const fetchActiveSeasonId = async () => {
-        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        setCurrentSeason(activeSeasonData);
-    };
-    
-    const getTeamById = (teamId) => {
-        const team = teams.find(team => team.id === teamId);
-        return team;
+        const weeklyTop10Data = weeklyLeaderboard.entries.slice(0, 10).map(entry => ({
+            ...entry,
+            seasonId: weeklyLeaderboard.seasonId,
+            gameweek: weeklyLeaderboard.gameweek
+        }));
+        
+        setWeeklyTop10(weeklyTop10Data);
+        
     };
 
     const getCurrentGameweekFixtures = () => {
@@ -140,133 +120,45 @@ const Homepage = () => {
         setShouldShowButton(shouldBeVisible);
     };
     
-    
-    const nanoSecondsToMillis = (nanos) => {
-        return Number(BigInt(nanos) / BigInt(1000000)); // Convert nanoseconds to milliseconds
-    };
-    
-    const computeTimeLeft = (kickoff) => {
-        const now = new Date().getTime();
-        const distance = nanoSecondsToMillis(kickoff) - now;
-    
-        return {
-            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-            seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        };
-    };
-    
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            const kickOffs = getCurrentGameweekFixtures().map(fixture => computeTimeLeft(Number(fixture.kickOff)));
-            
-            if(kickOffs.length == 0){
-                return;
-            };
-
-            const kickOffsInMillis = kickOffs.map(obj => 
-                obj.days * 24 * 60 * 60 * 1000 + 
-                obj.hours * 60 * 60 * 1000 + 
-                obj.minutes * 60 * 1000 + 
-                obj.seconds * 1000
-            );
-
-            const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
-        
-            if (timeUntilGameweekBegins > 0) {
-                setCountdown(msToTime(timeUntilGameweekBegins));    
-                setIsActiveGameweek(false);
-            } else {
-                setIsActiveGameweek(true);
-                clearInterval(timer);
-            }
-        }, 1000);
-        
-        return () => clearInterval(timer);
-    }, [currentGameweek, fixtures]);
-
     const renderStatusBadge = (fixture) => {
         const currentTime = new Date().getTime();
         const kickoffTime = computeTimeLeft(Number(fixture.kickOff));
         const oneHourInMilliseconds = 3600000;
     
-        // Check if status is 0 and the time difference is less than an hour
         if (fixture.status === 0 && kickoffTime - currentTime <= oneHourInMilliseconds) {
             return (
-                <Badge className='bg-warning w-100' style={{ padding: '0.5rem' }}>
-                    Pre-Game
-                </Badge>
+                <Badge className='bg-warning w-100' style={{ padding: '0.5rem' }}>Pre-Game</Badge>
             );
         }
     
         switch (fixture.status) {
             case 1:
                 return (
-                    <Badge className='bg-info w-100' style={{ padding: '0.5rem' }}>
-                        Active
-                    </Badge>
+                    <Badge className='bg-info w-100' style={{ padding: '0.5rem' }}>Active</Badge>
                 );
             case 2:
                 return (
-                    <Badge className='bg-success w-100' style={{ padding: '0.5rem' }}>
-                        In Consensus
-                    </Badge>
+                    <Badge className='bg-success w-100' style={{ padding: '0.5rem' }}>In Consensus</Badge>
                 );
             case 3:
                 return (
-                    <Badge className='bg-primary w-100' style={{ padding: '0.5rem' }}>
-                        Verified
-                    </Badge>
+                    <Badge className='bg-primary w-100' style={{ padding: '0.5rem' }}>Verified</Badge>
                 );
             default:
                 return (
-                    <Badge className='bg-secondary w-100' style={{ padding: '0.5rem' }}>
-                        Unplayed
-                    </Badge>
+                    <Badge className='bg-secondary w-100' style={{ padding: '0.5rem' }}>Unplayed</Badge>
                 );
         }
     };
-
-    const groupByDate = (fixtures) => {
-        return fixtures.reduce((acc, fixture) => {
-            const date = (new Date(nanoSecondsToMillis(fixture.kickOff))).toDateString();
-            if (!acc[date]) {
-                acc[date] = [];
-            }
-            acc[date].push(fixture);
-            return acc;
-        }, {});
-    }
-
-    const msToTime = (duration) => {
-        const seconds = Math.floor((duration / 1000) % 60);
-        const minutes = Math.floor((duration / (1000 * 60)) % 60);
-        const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-        const days = Math.floor(duration / (1000 * 60 * 60 * 24));
     
-        return {
-            days,
-            hours,
-            minutes,
-            seconds
-        };
-    }
-    
-    
-    const groupedFixtures = groupByDate(getCurrentGameweekFixtures());
-    
-    const totalPrizePool = 0;
 
     return (
         isLoading ? (
-        <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
-            <Spinner animation="border" />
-            <p className='text-center mt-1'>Loading</p>
-        </div>
-        ) 
-        :
+            <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
+                <Spinner animation="border" />
+                <p className='text-center mt-1'>Loading</p>
+            </div>
+        ) :
         <Container className="flex-grow-1 my-1">
             <Row>
                 <Col md={8} xs={12}>
@@ -284,7 +176,7 @@ const Homepage = () => {
                             <Card className="h-100">
                                 <Card.Body>
                                     <Card.Title>Managers</Card.Title>
-                                    <h5 className="display-sm">{managerCount.toLocaleString()}</h5> 
+                                    <h5 className="display-sm">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</h5> 
                                     <Card.Text>Total</Card.Text>
                                 </Card.Body>
                             </Card>
@@ -328,8 +220,8 @@ const Homepage = () => {
                         <td colSpan="2"></td>
                     </tr>
                     {fixturesForDate.map((fixture, idx) => {
-                        const homeTeam = getTeamById(fixture.homeTeamId);
-                        const awayTeam = getTeamById(fixture.awayTeamId);
+                        const homeTeam = getTeamById(teams, fixture.homeTeamId);
+                        const awayTeam = getTeamById(teams, fixture.awayTeamId);
                         if (!homeTeam || !awayTeam) {
                             console.error("One of the teams is missing for fixture: ", fixture);
                             return null;
@@ -394,10 +286,10 @@ const Homepage = () => {
                             <Tabs defaultActiveKey="gameweek" id="leaderboard-tabs">
                                 <Tab eventKey="gameweek" title="Gameweek">
                                     <br />
-                                    {weeklyTop10.entries.length == 0 && (
+                                    {weeklyTop10.length == 0 && (
                                         <p className='mt-2'>No entries.</p>
                                     )}
-                                    {weeklyTop10.entries.length > 0 && (
+                                    {weeklyTop10.length > 0 && (
                                     <>
                                         <Table responsive bordered className="table-fixed">
                                             <thead>
@@ -408,14 +300,14 @@ const Homepage = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {weeklyTop10.entries.map((leader) => (
+                                                {weeklyTop10.map((leader) => (
                                                 <tr key={leader.principalId}>
                                                     <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
                                                     <td className='text-center text-truncate'>{leader.principalId == leader.username ? 'Unknown' : leader.username}</td>
                                                     <td className='text-center'>
                                                         <Button as={Link} className='p-0 w-100 clear-button' 
                                                         to={{
-                                                            pathname: `/view-points/${leader.principalId}/${weeklyTop10.seasonId}/${weeklyTop10.gameweek}`
+                                                            pathname: `/view-points/${leader.principalId}/${leader.seasonId}/${leader.gameweek}`
                                                         }}>{leader.points}</Button>
                                                     </td>
                                                 </tr>

@@ -456,6 +456,17 @@ module Types{
         expires: Int;
     };
 
+    public type DataCache = {
+        category: Text;
+        hash: Text;
+    };
+
+    public type SystemState = {
+        activeSeason: Season;
+        activeGameweek: GameweekNumber;
+        activeMonth: Nat8;
+        focusGameweek: GameweekNumber;
+    };
 
 
 }

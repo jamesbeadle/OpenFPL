@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import '../assets/custom.scss';
 import { AuthProvider } from "./contexts/AuthContext";
+import { DataProvider } from "./contexts/DataContext";
 
 import MyNavbar from './components/shared/navbar';
 import MyFooter from './components/shared/footer';
@@ -22,8 +23,6 @@ import AddFixtureData from "./components/governanace/fixture-validation/add-fixt
 import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
 import Leaderboard from "./components/leaderboards/season-leaderboard";
 import ViewPoints from "./components/gameplay/view-points";
-import { TeamsProvider } from "./contexts/TeamsContext";
-import { PlayersProvider } from "./contexts/PlayersContext";
 import LeagueTable from "./components/league-table";
 import ClubDetails from "./components/data/club-details";
 import PlayerDetails from "./components/data/player-details";
@@ -33,9 +32,8 @@ const App = () => {
  
   return (
     <AuthProvider>
-      <TeamsProvider>
-        <PlayersProvider>
-          <Router>
+        <Router>
+          <DataProvider>
             <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
               <MyNavbar />
                 <Routes>
@@ -61,9 +59,8 @@ const App = () => {
                 </Routes>
               <MyFooter />
             </div>
-          </Router>   
-        </PlayersProvider>
-      </TeamsProvider>
+          </DataProvider>
+        </Router>   
   </AuthProvider>
   );
 };

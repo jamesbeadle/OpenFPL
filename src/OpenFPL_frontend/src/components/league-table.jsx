@@ -1,74 +1,32 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Form, Spinner, Container, Card, Row, Col } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
-import { TeamsContext } from "../contexts/TeamsContext";
+import { DataContext } from "../contexts/DataContext";
 
 const LeagueTable = ({ columns }) => {
-    const { teams } = useContext(TeamsContext);
+    const { teams, seasons, fixtures, systemState } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [seasons, setSeasons] = useState([]);
-    const [selectedSeason, setSelectedSeason] = useState(1);
-    const [selectedGameweek, setSelectedGameweek] = useState(1);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
+    const [selectedGameweek, setSelectedGameweek] = useState(systemState.activeGameweek);
     const [tableData, setTableData] = useState([]);
     const defaultColumns = [
         'Pos', 'Team', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'
     ];
     const activeColumns = columns || defaultColumns;
-    const [fixtures, setFixtures] = useState([]);
-
+    
     useEffect(() => {
-        const fetchData = async () => {
-            await fetchSeasons();
-            await fetchFixtures();
-            const activeSeasonData = await fetchActiveSeasonId();
-            const activeGameweekData = await fetchActiveGameweek();
-            setSelectedSeason(activeSeasonData);
-            setSelectedGameweek(activeGameweekData);
-            setIsLoading(false);
-        };
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        
         if(fixtures.length == 0){
             return;
         }
         updateTableData();
     }, [selectedSeason, selectedGameweek, fixtures]);
 
-    
-    const fetchFixtures = async () => {
-        const fixturesData = await open_fpl_backend.getFixtures();
-        
-        setFixtures(fixturesData);
-    };
-
-    const fetchActiveGameweek = async () => {
-        try {
-            const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
-            return activeGameweekData;
-        } catch(error) {
-            console.error("Error fetching active gameweek: ", error);
-        }
-    };
-    
-    const fetchActiveSeasonId = async () => {
-        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        return activeSeasonData.id;
-    };
-
-    const fetchSeasons = async () => {
-        const seasonList = await open_fpl_backend.getSeasons();
-        setSeasons(seasonList); 
-    };
-
     const shouldHideColumn = (column) => { 
         return column === 'W' || column === 'D' || column === 'L' || column === 'GF' || column === 'GA';
     };
 
     const updateTableData = () => {
+        setIsLoading(true);
         const initTeamData = (teamId, table) => {
             if (!table[teamId]) {
                 table[teamId] = {
@@ -85,7 +43,7 @@ const LeagueTable = ({ columns }) => {
         };
     
         let tempTable = {};
-    
+        
         const relevantFixtures = fixtures.filter(fixture => 
             fixture.status === 3 && fixture.gameweek <= selectedGameweek);
     
@@ -134,8 +92,9 @@ const LeagueTable = ({ columns }) => {
 
             return a.goalsAgainst - b.goalsAgainst;
         });
-    
+        
         setTableData(sortedTableData);
+        setIsLoading(false);
     };
 
     const getTeamNameFromId = (teamId) => {

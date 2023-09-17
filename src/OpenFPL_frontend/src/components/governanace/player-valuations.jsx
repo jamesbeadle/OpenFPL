@@ -1,94 +1,51 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Card, Spinner, Table, Button, Form, Modal, ButtonGroup, Col, Row } from 'react-bootstrap';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import getFlag from '../country-flag';
 import { getAgeFromDOB } from '../helpers';
-import { PlayersContext } from "../../contexts/PlayersContext";
-
+import { DataContext } from "../../contexts/DataContext";
 
 const POSITION_LABELS = ["GK", "DEF", "MID", "FWD"];
+const COUNT = 25;
 
 const PlayerValuations = ({ isActive }) => {
-  const { players } = useContext(PlayersContext);
-
-  const [isLoading, setIsLoading] = useState(false);
+  const { players, teams } = useContext(DataContext);
   const [viewData, setViewData] = useState([]);
-  const [teams, setTeamsData] = useState([]);
-  const [filterTeam, setFilterTeam] = useState(0);
-  const [filterPosition, setFilterPosition] = useState(-1);
+  const [filter, setFilter] = useState({ team: 0, position: -1, page: 0 });
   const [remainingVotes, setRemainingVotes] = useState(20);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedVote, setSelectedVote] = useState(null);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [modalState, setModalState] = useState({ show: false, voteType: null, player: null });
   const [teamColours, setTeamColours] = useState({});
-  const [page, setPage] = useState(0);
-  const count = 25;
-
+  const [isLoading, setIsLoading] = useState(false);
+  
+  
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const teamsData = await open_fpl_backend.getTeams();
-      setTeamsData(teamsData);
-
-      const teamColors = {};
-        teamsData.forEach(team => {
-        teamColors[team.id] = {
-          primary: team.primaryColourHex,
-          secondary: team.secondaryColourHex
-        };
-      });
-      setTeamColours(teamColors);
-
-      setIsLoading(false);
-    };
-
-    if (isActive) {
-      fetchData();
-    }
-  }, [isActive]);
-
-  useEffect(() => {
-    if(!teams){
-      return;
-    }
+    if (!isActive) return;
     
-    const fetchData = async () => {
-      setIsLoading(true);
-      await fetchViewData(filterTeam, filterPosition, page);
-      setIsLoading(false);
-    };
-      
-    if (isActive) {
-      fetchData();
-    }
-  }, [isActive, teams, page, filterTeam, filterPosition]);
-  
-  const handleFilterTeamChange = async (event) => {
+    const teamColors = teams.reduce((acc, team) => {
+      acc[team.id] = { primary: team.primaryColourHex, secondary: team.secondaryColourHex };
+      return acc;
+    }, {});
+    
+    setTeamColours(teamColors);
+    fetchData();
+  }, [isActive, teams, filter]);
+
+  const fetchData = async () => {
     setIsLoading(true);
-    setFilterTeam(Number(event.target.value));
-    setPage(0);
-    await fetchViewData(event.target.value, filterPosition, 0);
+    await fetchViewData(filter.team, filter.position, filter.page);
     setIsLoading(false);
-  };
-  
-  const handleFilterPositionChange = async (event) => {
-    setIsLoading(true);
-    setFilterPosition(Number(event.target.value));
-    setPage(0);
-    await fetchViewData(filterTeam, event.target.value, 0);
   };
 
   const fetchViewData = (teamId, positionId, pageNumber) => {
-    setIsLoading(true);
     const filteredPlayers = players
       .filter(player => (teamId === 0 || player.teamId === teamId) && (positionId === -1 || player.position === positionId))
-      .slice(pageNumber * count, (pageNumber + 1) * count);
+      .slice(pageNumber * COUNT, (pageNumber + 1) * COUNT);
     
     setViewData({ players: filteredPlayers, totalEntries: filteredPlayers.length });
-  
-    setIsLoading(false);
   };
   
+  const handleFilterChange = (field, value) => {
+    setFilter(prevFilter => ({ ...prevFilter, [field]: value, page: 0 }));
+  };
 
   if (isLoading) {
     return (
@@ -100,41 +57,31 @@ const PlayerValuations = ({ isActive }) => {
   }
   
   const handleVote = (voteType, player) => {
-    setSelectedVote(voteType);
-    setSelectedPlayer(player);
-    setShowConfirmModal(true);
+    setModalState({ show: true, voteType, player });
   };
-
-  // function to handle vote confirmation
-  const confirmVote = () => {
-    // Subtract from remaining votes
-    setRemainingVotes(remainingVotes - 1);
-    
-    // Apply vote logic here (add to total votes, calculate percentage, etc.)
   
-    // Close modal
-    setShowConfirmModal(false);
+  const confirmVote = () => {
+    setRemainingVotes(prevVotes => prevVotes - 1);   
+    setModalState({ show: false, voteType: null, player: null });
   };
-
+  
   const handlePageChange = (change) => {
-    setPage((prevPage) => prevPage + change);
+    setFilter(prevFilter => ({ ...prevFilter, page: filter.page + change }));
   };
 
-  // Modal for vote confirmation
   const VoteConfirmationModal = () => (
-    <Modal show={showConfirmModal} onHide={() => setShowConfirmModal(false)}>
+    <Modal show={modalState.show} onHide={() => setModalState({ show: false, voteType: null, player: null })}>
       <Modal.Header closeButton>
         <Modal.Title>Confirm Your Vote</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Are you sure you want to rate {selectedPlayer?.lastName} as {selectedVote}?</Modal.Body>
+      <Modal.Body>Are you sure you want to rate {modalState.player?.lastName} as {modalState.voteType}?</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => setShowConfirmModal(false)}>Cancel</Button>
+        <Button variant="secondary" onClick={() => setModalState({ show: false, voteType: null, player: null })}>Cancel</Button>
         <Button variant="primary" onClick={confirmVote}>Confirm</Button>
       </Modal.Footer>
     </Modal>
   );
 
-  // If not loading, render your component
   return (
     <Card className="custom-card mt-1">
       <Card.Body>
@@ -144,14 +91,13 @@ const PlayerValuations = ({ isActive }) => {
 
         <p>You have {remainingVotes}/20 players you can vote for this week.</p>
 
-        {/* Add the modal */}
         <VoteConfirmationModal />
 
         <Row className="mb-4">
           <Col>
             <Form.Group controlId="filterTeam">
               <Form.Label>Filter Team:</Form.Label>
-              <Form.Control as="select" value={filterTeam || 0} onChange={handleFilterTeamChange}>
+              <Form.Control as="select" value={filter.team || 0} onChange={(e) => handleFilterChange("team", +e.target.value)}>
                   <option value="">All</option>
                     {teams.map((team) => (
                     <option key={team.id} value={team.id}>
@@ -164,7 +110,7 @@ const PlayerValuations = ({ isActive }) => {
           <Col>
             <Form.Group controlId="filterPosition">
               <Form.Label>Filter Position:</Form.Label>
-              <Form.Control as="select" value={filterPosition || 0} onChange={handleFilterPositionChange}>
+              <Form.Control as="select" value={filter.position || -1} onChange={(e) => handleFilterChange("position", +e.target.value)}>
                   <option value="-1">All</option>
                   <option value="0">Goalkeeper</option>
                   <option value="1">Defender</option>
@@ -190,7 +136,7 @@ const PlayerValuations = ({ isActive }) => {
               <tr key={player.id}>
                 <td className='align-middle'>
                   <div className='d-flex flex-column justify-content-center'>
-                    <span>{(player.shirtNumber == 0) ? '-' : player.shirtNumber}</span>
+                    <span>{(player.shirtNumber === 0) ? '-' : player.shirtNumber}</span>
                   </div>
                 </td>
                 <td className='align-middle'>
@@ -258,14 +204,14 @@ const PlayerValuations = ({ isActive }) => {
         </Table>
         <div className="d-flex justify-content-center mt-3 mb-3">
           <ButtonGroup>
-            <Button className="primary" onClick={() => handlePageChange(-1)} disabled={page === 0}>
+            <Button className="primary" onClick={() => handlePageChange(-1)} disabled={filter.page === 0}>
               Prior
             </Button>
             <div className="d-flex align-items-center">
-              <p className="mb-0 mx-4">Page {page + 1} / {Math.ceil(viewData.totalEntries / count)}</p>
+              <p className="mb-0 mx-4">Page {filter.page + 1} / {Math.ceil(viewData.totalEntries / COUNT)}</p>
             </div>
 
-            <Button className="primary" onClick={() => handlePageChange(1)} disabled={(page + 1) >= Math.ceil(viewData.totalEntries / count)}>
+            <Button className="primary" onClick={() => handlePageChange(1)} disabled={(filter.page + 1) >= Math.ceil(viewData.totalEntries / COUNT)}>
               Next
             </Button>
           </ButtonGroup>

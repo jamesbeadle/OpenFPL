@@ -2,27 +2,25 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Container, Card, Tab, Tabs, Spinner, Form, Row, Col, Badge, Table } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import ClubProposals from './club-proposals';
-import { TeamsContext } from "../../contexts/TeamsContext";
-import { PlayersContext } from "../../contexts/PlayersContext";
+import { DataContext } from "../../contexts/DataContext";
 import { useParams } from 'react-router-dom';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { SmallFixtureIcon } from '../icons';
 import { getAgeFromDOB } from '../helpers';
 import getFlag from '../country-flag';
+import { getTeamById, computeTimeLeft } from '../helpers';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [key, setKey] = useState('players');
     
     const { teamId } = useParams();
-    const { teams } = useContext(TeamsContext);
-    const { players } = useContext(PlayersContext);
+    const { teams, players, seasons, systemState } = useContext(DataContext);
     
     const [team, setTeam] = useState(null);
     const [fixtures, setFixtures] = useState([]);
     const [allTeamFixtures, setAllTeamFixtures] = useState([]);
-    const [seasons, setSeasons] = useState([]);
-    const [selectedSeason, setSelectedSeason] = useState(1);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
     const POSITION_MAP = {
         0: 'Goalkeeper',
         1: 'Defender',
@@ -34,15 +32,11 @@ const ClubDetails = ({  }) => {
     
     useEffect(() => {
         const fetchInitialData = async () => {
-            await fetchSeasons();
-            
-            const activeSeasonData = await fetchActiveSeasonId();
-            setSelectedSeason(activeSeasonData);
             
             const teamDetails = teams.find(t => t.id === Number(teamId));
             setTeam(teamDetails);
 
-            const fixturesData = await open_fpl_backend.getFixturesForSeason(activeSeasonData);
+            const fixturesData = await open_fpl_backend.getFixturesForSeason(systemState.activeSeason.id);
             
             let teamFixtures = fixturesData
             .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
@@ -66,11 +60,9 @@ const ClubDetails = ({  }) => {
 
             let filteredTeamFixtures = allTeamFixtures
             .filter(f => {
-                // Filter based on home and away
                 if (fixtureFilter === 'home' && f.homeTeamId !== Number(teamId)) return false;
                 if (fixtureFilter === 'away' && f.awayTeamId !== Number(teamId)) return false;
 
-                // Filter based on date range
                 if (dateRange.start && f.kickOff < dateRange.start) return false;
                 if (dateRange.end && f.kickOff > dateRange.end) return false;
 
@@ -102,18 +94,6 @@ const ClubDetails = ({  }) => {
         fetchFixturesForSeason(selectedSeason);
     }, [selectedSeason]);
     
-    
-
-    const fetchSeasons = async () => {
-        const seasonList = await open_fpl_backend.getSeasons();
-        setSeasons(seasonList);
-    };
-
-    const fetchActiveSeasonId = async () => {
-        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        return activeSeasonData.id;
-    };
-
     const teamPlayers = players.filter(player => player.teamId === Number(teamId));
 
     const groupPlayersByPosition = (players) => {
@@ -134,17 +114,11 @@ const ClubDetails = ({  }) => {
         };
     });
 
-    const getTeamById = (teamId) => {
-        const team = teams.find(team => team.id === teamId);
-        return team;
-    };
-
     const renderStatusBadge = (fixture) => {
         const currentTime = new Date().getTime();
         const kickoffTime = computeTimeLeft(Number(fixture.kickOff));
         const oneHourInMilliseconds = 3600000;
     
-        // Check if status is 0 and the time difference is less than an hour
         if (fixture.status === 0 && kickoffTime - currentTime <= oneHourInMilliseconds) {
             return (
                 <Badge className='bg-warning w-100' style={{ padding: '0.5rem' }}>
@@ -181,22 +155,6 @@ const ClubDetails = ({  }) => {
         }
     };
 
-    const computeTimeLeft = (kickoff) => {
-        const now = new Date().getTime();
-        const distance = nanoSecondsToMillis(kickoff) - now;
-    
-        return {
-            days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-            hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-            minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-            seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        };
-    };
-
-    const nanoSecondsToMillis = (nanos) => {
-        return Number(BigInt(nanos) / BigInt(1000000)); // Convert nanoseconds to milliseconds
-    };
-
     return (
         isLoading || !team ? (
             <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
@@ -230,7 +188,7 @@ const ClubDetails = ({  }) => {
                                                     <Col xs={2}>Age</Col> 
                                             </Row>
                                             {group.players.map(player => (
-                                                <Row key={player.shirtNumber}>
+                                                <Row key={`detail-${player.id}`}>
                                                     <Col className='text-center' xs={1}>{player.shirtNumber == 0 ? '-' : player.shirtNumber}</Col>
                                                     <Col xs={5}>{getFlag(player.nationality)} <LinkContainer style={{marginLeft: '0.25rem'}} to={`/player/${player.id}`}><a className='nav-link-brand'>{player.firstName} {player.lastName}</a></LinkContainer></Col> 
                                                     <Col xs={3}>{`£${(Number(player.value) / 4).toFixed(1)}m`}</Col> 
@@ -317,8 +275,8 @@ const ClubDetails = ({  }) => {
                                     <Table responsive>
                                         <tbody>
                                             {fixtures.map(fixture => {
-                                                const homeTeam = getTeamById(fixture.homeTeamId);
-                                                const awayTeam = getTeamById(fixture.awayTeamId);
+                                                const homeTeam = getTeamById(teams, fixture.homeTeamId);
+                                                const awayTeam = getTeamById(teams, fixture.awayTeamId);
                                                 return (
                                                     <tr key={`fixture-${fixture.id}`} className="align-middle">
                                                         <td className="home-team-name" style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>

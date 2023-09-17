@@ -1,8 +1,3 @@
-type UserFantasyTeam = 
- record {
-   fantasyTeam: FantasyTeam;
-   history: List_3;
- };
 type TeamId = nat16;
 type Team = 
  record {
@@ -13,7 +8,20 @@ type Team =
    primaryColourHex: text;
    secondaryColourHex: text;
  };
+type SystemState = 
+ record {
+   activeGameweek: GameweekNumber;
+   activeMonth: nat8;
+   activeSeason: Season;
+   focusGameweek: GameweekNumber;
+ };
 type SeasonId = nat16;
+type SeasonDTO = 
+ record {
+   id: SeasonId;
+   name: text;
+   year: nat16;
+ };
 type Season = 
  record {
    gameweeks: List_1;
@@ -40,15 +48,6 @@ type ProfileDTO =
    profilePicture: blob;
    reputation: nat32;
  };
-type PlayerPointsDTO = 
- record {
-   events: vec PlayerEventData;
-   gameweek: GameweekNumber;
-   id: nat16;
-   points: int16;
-   position: nat8;
-   teamId: nat16;
- };
 type PlayerId = nat16;
 type PlayerEventData = 
  record {
@@ -74,16 +73,6 @@ type PaginatedClubLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
-type List_4 = 
- opt record {
-       FantasyTeamSnapshot;
-       List_4;
-     };
-type List_3 = 
- opt record {
-       FantasyTeamSeason;
-       List_3;
-     };
 type List_2 = 
  opt record {
        Fixture;
@@ -115,6 +104,20 @@ type Gameweek =
    number: GameweekNumber;
  };
 type FixtureId = nat32;
+type FixtureDTO = 
+ record {
+   awayGoals: nat8;
+   awayTeamId: TeamId;
+   events: vec PlayerEventData;
+   gameweek: GameweekNumber;
+   highestScoringPlayerId: nat16;
+   homeGoals: nat8;
+   homeTeamId: TeamId;
+   id: nat32;
+   kickOff: int;
+   seasonId: SeasonId;
+   status: nat8;
+ };
 type Fixture = 
  record {
    awayGoals: nat8;
@@ -155,12 +158,6 @@ type FantasyTeamSnapshot =
    teamName: text;
    transfersAvailable: nat8;
  };
-type FantasyTeamSeason = 
- record {
-   gameweeks: List_4;
-   seasonId: SeasonId;
-   totalPoints: int16;
- };
 type FantasyTeam = 
  record {
    bankBalance: nat;
@@ -194,49 +191,48 @@ type Error =
    NotAuthorized;
    NotFound;
  };
+type DataCache = 
+ record {
+   category: text;
+   hash: text;
+ };
 type AccountBalanceDTO = 
  record {
    fplBalance: nat64;
    icpBalance: nat64;
  };
 service : {
-  addFantasyTeams: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
-  getActiveGameweekFixtures: () -> (vec Fixture) query;
-  getAddTeamsFunction: () -> (text);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
-  getCurrentGameweek: () -> (nat8);
-  getCurrentMonth: () -> (nat8);
-  getCurrentSeason: () -> (Season);
+  getClubLeaderboardsCache: (nat16, nat8) ->
+   (vec PaginatedClubLeaderboard) query;
+  getDataHashes: () -> (vec DataCache) query;
   getFantasyTeam: () -> (FantasyTeam) query;
-  getFantasyTeamForGameweek: (text, nat16, nat8) -> (FantasyTeamSnapshot);
-  getFantasyTeams: () -> (vec record {
-                                text;
-                                UserFantasyTeam;
-                              });
+  getFantasyTeamForGameweek: (text, nat16, nat8) ->
+   (FantasyTeamSnapshot) query;
   getFixture: (SeasonId, GameweekNumber, FixtureId) -> (Fixture);
+  getFixtureDTOs: () -> (vec FixtureDTO) query;
   getFixtures: () -> (vec Fixture) query;
-  getFixturesByWeek: (SeasonId, GameweekNumber) -> (vec Fixture);
   getFixturesForSeason: (SeasonId) -> (vec Fixture) query;
-  getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
-   (vec PlayerPointsDTO);
   getProfileDTO: () -> (ProfileDTO);
-  getPublicProfileDTO: (text) -> (ProfileDTO);
+  getPublicProfileDTO: (text) -> (ProfileDTO) query;
   getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;
-  getSeasonTop10: () -> (PaginatedLeaderboard) query;
-  getSeasons: () -> (vec Season) query;
+  getSeasonLeaderboardCache: (nat16) -> (PaginatedLeaderboard) query;
+  getSeasons: () -> (vec SeasonDTO) query;
+  getSystemState: () -> (SystemState) query;
   getTeams: () -> (vec Team) query;
   getTotalManagers: () -> (nat) query;
   getValidatableFixtures: () -> (vec Fixture) query;
   getWeeklyLeaderboard: (nat16, nat8, nat, nat) ->
    (PaginatedLeaderboard) query;
-  getWeeklyTop10: () -> (PaginatedLeaderboard) query;
+  getWeeklyLeaderboardCache: (nat16, nat8) -> (PaginatedLeaderboard) query;
   isDisplayNameValid: (text) -> (bool) query;
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
+  updateHashForCategory: (text) -> ();
   updateProfilePicture: (blob) -> (Result);
   withdrawICP: (float64, text) -> (Result);
 }

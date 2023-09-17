@@ -1,15 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../../../declarations/OpenFPL_backend';
-import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../../../contexts/AuthContext";
+import { DataContext } from "../../../../contexts/DataContext";
 
 const RetirePlayerProposal = () => {
     const { authClient } = useContext(AuthContext);
+    const { players, teams } = useContext(DataContext);
 
-    const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState("");
-    const [players, setPlayers] = useState([]);
     const [selectedPlayer, setSelectedPlayer] = useState("");
     const [submitStatus, setSubmitStatus] = useState(null);
 
@@ -21,8 +20,6 @@ const RetirePlayerProposal = () => {
 
     const fetchTeamsFromBackend = async () => {
         try {
-            // Replace with your actual data fetching logic for teams
-            const data = await open_fpl_backend.getTeams();
             return data;
         } catch (error) {
             console.error("Error fetching teams: ", error);
@@ -37,17 +34,6 @@ const RetirePlayerProposal = () => {
         fetchPlayersFromBackend(teamId)
         .then(data => setPlayers(data))
         .catch(err => console.error(err));
-    }
-
-    const fetchPlayersFromBackend = async (teamId) => {
-        try {
-            // Replace with your actual data fetching logic for players
-            const data = await open_fpl_backend.getPlayersByTeam(teamId);
-            return data;
-        } catch (error) {
-            console.error("Error fetching players: ", error);
-            return [];
-        }
     }
 
     const handleRetirePlayer = async (e) => {

@@ -1067,71 +1067,6 @@ module {
             fantasyTeams.size();
         };
 
-        public func getWeeklyTop10(activeSeasonId: Nat16, activeGameweek: Nat8) : T.Leaderboard {
-
-            var getSeasonId = activeSeasonId;
-            var getGameweekId = activeGameweek;
-
-            //if current season first game is not active then show last week
-            var gameweekFixtures: [T.Fixture] = [];
-            switch(getGameweekFixtures) {
-                case (null) { };
-                case (?actualFunction) {
-                    gameweekFixtures := actualFunction(activeSeasonId, activeGameweek);
-
-                    let fixturesBegun = Array.filter<T.Fixture>(gameweekFixtures, func(fixture: T.Fixture) : Bool {
-                        return fixture.status > 0;
-                    });
-
-                    if(Array.size(fixturesBegun) == 0){
-                        if(getGameweekId == 1){
-                            getGameweekId := 38;
-                            getSeasonId -= 1; 
-                        }
-                        else{
-                            getGameweekId -= 1;
-                        };
-                    }
-                };
-            };
-
-
-            switch (seasonLeaderboards.get(getSeasonId)) {
-                case (null) {
-                    return {
-                        seasonId = getSeasonId;
-                        gameweek = getGameweekId;
-                        entries = List.nil();
-                    };
-                };
-                
-                case (?seasonData) {
-                    let allGameweekLeaderboards = seasonData.gameweekLeaderboards;
-                    let matchingGameweekLeaderboard = List.find(allGameweekLeaderboards, func(leaderboard: T.Leaderboard): Bool {
-                        return leaderboard.gameweek == getGameweekId;
-                    });
-
-                    switch (matchingGameweekLeaderboard) {
-                        case (null) {
-                            return {
-                                seasonId = getSeasonId;
-                                gameweek = getGameweekId;
-                                entries = List.nil();
-                            };
-                        };
-                        case (?foundLeaderboard) {
-                            let top10Entries = List.take(foundLeaderboard.entries, 10);
-                            return {
-                                seasonId = getSeasonId;
-                                gameweek = getGameweekId;
-                                entries = top10Entries;
-                            };
-                        };
-                    };
-                };
-            };
-        };
-
         public func getWeeklyLeaderboard(activeSeasonId: Nat16, activeGameweek: Nat8, limit: Nat, offset: Nat) : DTOs.PaginatedLeaderboard {
             switch (seasonLeaderboards.get(activeSeasonId)) {
                 case (null) {
@@ -1243,7 +1178,38 @@ module {
             };
         };
 
-        public func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
+        public func getClubLeaderboards(seasonId: T.SeasonId, month: Nat8, limit: Nat, offset: Nat) : [DTOs.PaginatedClubLeaderboard] {
+            
+            let defaultLeaderboard = {
+                seasonId = seasonId;
+                month = month;
+                clubId = 0;
+                entries = [];
+                totalEntries = 0;
+            };
+            
+            switch (monthlyLeaderboards.get(seasonId)) {
+                case (null) { return []; };
+                case (?foundMonthlyLeaderboards) {
+                    
+                    let monthlyLeaderboards = List.filter<T.ClubLeaderboard>(foundMonthlyLeaderboards, func (monthlyLeaderboard: T.ClubLeaderboard): Bool {
+                        return monthlyLeaderboard.month == month;
+                    });
+
+                    return List.toArray(List.map<T.ClubLeaderboard, DTOs.PaginatedClubLeaderboard>(monthlyLeaderboards, func (monthlyLeaderboard: T.ClubLeaderboard): DTOs.PaginatedClubLeaderboard {
+                        return {
+                            seasonId = monthlyLeaderboard.seasonId;
+                            month = monthlyLeaderboard.month;
+                            clubId = monthlyLeaderboard.clubId;
+                            entries = List.toArray(monthlyLeaderboard.entries);
+                            totalEntries = List.size(monthlyLeaderboard.entries);
+                        };
+                    }));
+                };
+            };
+        };
+
+        public func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : T.FantasyTeamSnapshot {
             let emptySnapshot: T.FantasyTeamSnapshot = { principalId = ""; transfersAvailable = 0; bankBalance = 0;  playerIds = [];
                 captainId = 0; gameweek = 0; goalGetterGameweek = 0; goalGetterPlayerId = 0; passMasterGameweek = 0;
                 passMasterPlayerId = 0; noEntryGameweek = 0; noEntryPlayerId = 0; teamBoostGameweek = 0; teamBoostTeamId = 0;
@@ -1279,27 +1245,6 @@ module {
 
                     };
                 }
-            };
-        };
-
-        public func getSeasonTop10(activeSeasonId: Nat16) : T.Leaderboard {
-            switch (seasonLeaderboards.get(activeSeasonId)) {
-                case (null) {
-                    return {
-                        seasonId = activeSeasonId;
-                        gameweek = 0; 
-                        entries = List.nil();
-                    };
-                };
-              
-                case (?seasonData) {
-                    let top10Entries = List.take(seasonData.seasonLeaderboard.entries, 10);
-                    return {
-                        seasonId = activeSeasonId;
-                        gameweek = 0; 
-                        entries = top10Entries;
-                    };
-                };
             };
         };
 

@@ -64,6 +64,7 @@ export const idlFactory = ({ IDL }) => {
     'position' : IDL.Nat8,
     'points' : IDL.Int16,
   });
+  const DataCache = IDL.Record({ 'hash' : IDL.Text, 'category' : IDL.Text });
   const PlayerId = IDL.Nat16;
   const PlayerGameweek = IDL.Record({
     'events' : List_4,
@@ -190,10 +191,16 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO))],
         ['query'],
       ),
+    'getDataHashes' : IDL.Func([], [IDL.Vec(DataCache)], ['query']),
     'getPlayer' : IDL.Func([IDL.Nat16], [Player], ['query']),
     'getPlayerDetails' : IDL.Func(
         [IDL.Nat16, SeasonId],
         [PlayerDetailDTO],
+        ['query'],
+      ),
+    'getPlayerDetailsForGameweek' : IDL.Func(
+        [IDL.Nat16, IDL.Nat8],
+        [IDL.Vec(PlayerPointsDTO)],
         ['query'],
       ),
     'getPlayersDetailsForGameweek' : IDL.Func(
@@ -208,7 +215,9 @@ export const idlFactory = ({ IDL }) => {
     'setPlayerInjury' : IDL.Func([SetPlayerInjuryPayload], [], []),
     'transferPlayer' : IDL.Func([TransferPlayerPayload], [], []),
     'unretirePlayer' : IDL.Func([UnretirePlayerPayload], [], []),
+    'updateHashForCategory' : IDL.Func([IDL.Text], [], []),
     'updatePlayer' : IDL.Func([UpdatePlayerPayload], [], []),
+    'updatePlayerEventDataCache' : IDL.Func([], [], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

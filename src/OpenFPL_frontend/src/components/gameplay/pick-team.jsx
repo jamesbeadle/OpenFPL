@@ -3,8 +3,7 @@ import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { StarIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
-import { TeamsContext } from "../../contexts/TeamsContext";
-import { PlayersContext } from "../../contexts/PlayersContext";
+import { DataContext } from "../../contexts/DataContext";
 import { Actor } from "@dfinity/agent";
 import PlayerSlot from './player-slot';
 import Fixtures from './fixtures';
@@ -12,11 +11,11 @@ import SelectPlayerModal from './select-player-modal';
 import SelectFantasyPlayerModal from './select-fantasy-player-modal';
 import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
+import { fetchFantasyTeam } from "../../AuthFunctions";
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
-  const { teams } = useContext(TeamsContext);
-  const { players } = useContext(PlayersContext);
+  const { teams, players, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState("Loading Team");
   const [fantasyTeam, setFantasyTeam] = useState({
@@ -41,8 +40,8 @@ const PickTeam = () => {
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [currentGameweek, setCurrentGameweek] = useState(null);
-  const [currentSeason, setCurrentSeason] = useState(null);
+  const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
+  const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
   const [selectedBonusId, setSelectedBonusId] = useState(null);
   const [selectedBonusPlayerId, setSelectedBonusPlayerId] = useState(null);
@@ -78,18 +77,7 @@ const PickTeam = () => {
           return;
         }
         
-        const currentGameweekData = await open_fpl_backend.getCurrentGameweek();
-        setCurrentGameweek(currentGameweekData);
-        
-        const currentSeasonData = await open_fpl_backend.getCurrentSeason();
-        setCurrentSeason(currentSeasonData);
-        
-        const identity = authClient.getIdentity();
-        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-        
-        let fantasyTeamData = await open_fpl_backend.getFantasyTeam();
-        console.log(fantasyTeamData)
-        
+        let fantasyTeamData = await fetchFantasyTeam(authClient);
         if(fantasyTeamData.playerIds.length == 0){
           return;
         }

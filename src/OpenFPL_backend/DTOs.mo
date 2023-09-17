@@ -102,5 +102,25 @@ module DTOs {
         totalEntries: Nat;
     };
 
+    public type SeasonDTO = {
+        id: T.SeasonId;
+        name: Text;
+        year: Nat16;
+    };
+
+    public type FixtureDTO = {
+        id: Nat32;
+        seasonId: T.SeasonId;
+        gameweek: T.GameweekNumber;
+        kickOff: Int;
+        homeTeamId: T.TeamId;
+        awayTeamId: T.TeamId;
+        homeGoals: Nat8;
+        awayGoals: Nat8;
+        status: Nat8; 
+        highestScoringPlayerId: Nat16;
+        events: [T.PlayerEventData];
+    };
+
     
 }

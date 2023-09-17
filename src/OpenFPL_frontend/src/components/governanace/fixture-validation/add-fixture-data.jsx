@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Spinner, Button, Container, Tabs, Tab } from 'react-bootstrap';
-import { TeamsContext } from "../../../contexts/TeamsContext";
-import { PlayersContext } from "../../../contexts/PlayersContext";
+import { DataContext } from "../../../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
 import { useLocation } from 'react-router-dom';
 import PlayerEventsModal from '../player-events-modal';
@@ -14,8 +13,7 @@ const AddFixtureData = () => {
   const queryParams = new URLSearchParams(location.search);
   const fixtureId = queryParams.get('fixtureId');
 
-  const { teams } = useContext(TeamsContext);
-  const { players } = useContext(PlayersContext);
+  const { teams, systemState, players } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixture, setFixture] = useState(null);
   const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);
@@ -24,7 +22,7 @@ const AddFixtureData = () => {
   
   const [editingPlayerEvent, setEditingPlayerEvent] = useState(null);
   const [key, setKey] = useState('homeTeam');
-  const [teamPlayers, setTeamPlayers] = useState([]);
+  const [teamPlayers, setTeamPlayers] = useState(players.filter(x => x.teamId > 0));
   const [selectedPlayers, setSelectedPlayers] = useState({
     homeTeam: [],
     awayTeam: [],
@@ -36,7 +34,6 @@ const AddFixtureData = () => {
 
  
   const handlePlayerSelection = (team, playerIds) => {
-    console.log(selectedPlayers)
     const currentPlayerIds = selectedPlayers[team];
     const removedPlayerIds = currentPlayerIds.filter(id => !playerIds.includes(id));
     let remainingPlayerEventMap = { ...playerEventMap }; // Create a shallow copy of the playerEventMap
@@ -81,6 +78,7 @@ const AddFixtureData = () => {
   };
   
   useEffect(() => {
+    checkAndClearCacheIfNewGameweek();
     const draftKey = `fixtureDraft_${fixtureId}`;
     const draft = localStorage.getItem(draftKey);
     if (draft) {
@@ -96,6 +94,7 @@ const AddFixtureData = () => {
       setFixture(fixture);
     }
   }, []);
+
   
   useEffect(() => {
     const fetchData = async () => {
@@ -131,7 +130,24 @@ const AddFixtureData = () => {
     setShowDraftSaved(true);
   };
 
-  
+  const checkAndClearCacheIfNewGameweek = async () => {
+
+      const currentGameweek = systemState.activeGameweek;
+      const lastKnownGameweek = localStorage.getItem('lastKnownGameweek');
+    
+      if (!lastKnownGameweek || Number(lastKnownGameweek) !== currentGameweek) {
+          clearFixtureCache();
+          localStorage.setItem('lastKnownGameweek', String(currentGameweek));
+      }
+  };
+
+  const clearFixtureCache = () => {
+      for (const key in localStorage) {
+          if (key.startsWith("fixtureDraft_")) {
+              localStorage.removeItem(key);
+          }
+      }
+  };
 
   
   const renderPlayerCard = (playerId) => {

@@ -1,22 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Table, Pagination, Form, Card, Row, Col, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import { DataContext } from "../../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 
 const WeeklyLeaderboard = () => {
+    const { seasons, systemState, weeklyLeaderboard } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [managers, setManagers] = useState({
-        totalEntries: 0n,
-        seasonId: 0,
-        entries: [],
-        gameweek: 0
-      });
-    const [seasons, setSeasons] = useState([]);
+    const [managers, setManagers] = useState(weeklyLeaderboard);
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedSeason, setSelectedSeason] = useState(1);
-    const [selectedGameweek, setSelectedGameweek] = useState(1);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
+    const [selectedGameweek, setSelectedGameweek] = useState(weeklyLeaderboard.gameweek);
     const itemsPerPage = 25;
-    const [isInitialSetupDone, setIsInitialSetupDone] = useState(false);
     
     const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
         <Pagination.Item 
@@ -29,26 +24,10 @@ const WeeklyLeaderboard = () => {
     ));
 
     useEffect(() => {
-        const fetchInitialData = async () => {
-            await fetchSeasons();
-            const activeSeasonData = await fetchActiveSeasonId();
-            const activeGameweekData = await fetchActiveGameweek();
-            
-            if(!activeSeasonData || !activeGameweekData){
-                return;
-            }
-            setSelectedSeason(activeSeasonData);
-            setSelectedGameweek(activeGameweekData);
-            setIsInitialSetupDone(true);
-        };
-    
-        fetchInitialData();
-    }, []);
-
-    useEffect(() => {
-        if (!selectedSeason || !selectedGameweek || !isInitialSetupDone) {
+        if (!selectedSeason || !selectedGameweek) {
             return;
         };
+
         const fetchData = async () => {
             setIsLoading(true);
             await fetchViewData(selectedSeason, selectedGameweek);
@@ -56,34 +35,24 @@ const WeeklyLeaderboard = () => {
         };
         
         fetchData();
-    }, [selectedSeason, selectedGameweek, currentPage, isInitialSetupDone]);
+    }, [selectedSeason, selectedGameweek, currentPage]);
 
-
-    const fetchActiveGameweek = async () => {
-        try {
-            const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
-            return activeGameweekData;
-        } catch(error) {
-            console.error("Error fetching active gameweek: ", error);
+    const fetchViewData = async (season, gameweek) => {
+        if(currentPage <= 4 && gameweek == weeklyLeaderboard.gameweek){
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const slicedData = {
+                ...weeklyLeaderboard,
+                entries: weeklyLeaderboard.entries.slice(start, end)
+            };
+            setManagers(slicedData);
+        }
+        else{
+            const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
+            setManagers(leaderboardData);
         }
     };
     
-    
-    const fetchActiveSeasonId = async () => {
-        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        return activeSeasonData.id;
-    };
-
-    const fetchViewData = async (season, gameweek) => {
-        const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
-        setManagers(leaderboardData);
-    };
-
-    const fetchSeasons = async () => {
-        const seasonList = await open_fpl_backend.getSeasons();
-        setSeasons(seasonList); 
-    };
-
     const renderedData = managers.entries && managers.entries.map(manager => (
         <tr key={manager.principalId}>
             <td className='text-center'>{manager.positionText}</td>
@@ -117,6 +86,7 @@ const WeeklyLeaderboard = () => {
                             <Form.Control as="select" value={selectedSeason} onChange={e => {
                                 setSelectedSeason(Number(e.target.value));
                                 setSelectedGameweek(1);
+                                setCurrentPage(1);
                             }}>
                                 {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
                             </Form.Control>
@@ -125,7 +95,7 @@ const WeeklyLeaderboard = () => {
                     <Col xs={12} md={6}>
                         <Form.Group controlId="gameweekSelect">
                             <Form.Label>Select Gameweek</Form.Label>
-                            <Form.Control as="select" value={selectedGameweek} onChange={e => setSelectedGameweek(Number(e.target.value))}>
+                            <Form.Control as="select" value={selectedGameweek} onChange={e => {setSelectedGameweek(Number(e.target.value)); setCurrentPage(1);}}>
                                 {Array.from({ length: 38 }, (_, index) => (
                                     <option key={index + 1} value={index + 1}>Gameweek {index + 1}</option>
                                 ))}

@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Table, Container, Card } from 'react-bootstrap';
+import { getTeamById } from '../helpers';
 
 const PlayerDetailModal = ({ show, onClose, player, playerGameweek, teams }) => {
     if (!player || !playerGameweek) return null;
     
-    const getTeamById = (teamId) => {
-      return teams.find(team => team.id === teamId);
-    }
-
     const getEventName = (eventType) => {
         const eventNames = [
             "Appearance",
@@ -33,7 +30,7 @@ const PlayerDetailModal = ({ show, onClose, player, playerGameweek, teams }) => 
                 <Modal.Title>
                     {(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
                     <br />
-                    <p className='small-text'>{getTeamById(player.teamId).name}</p>
+                    <p className='small-text'>{getTeamById(teams, player.teamId).name}</p>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>

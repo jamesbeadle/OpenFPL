@@ -2,26 +2,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Table, Pagination, Form, Card, Row, Col } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { useParams } from 'react-router-dom';
-import { TeamsContext } from "../../contexts/TeamsContext";
+import { DataContext } from "../../contexts/DataContext";
 
 const ClubLeaderboard = () => {
-    const { teams } = useContext(TeamsContext);
+    const { teams, seasons, systemState, monthlyLeaderboards } = useContext(DataContext);
     const { teamId } = useParams();
     const [isLoading, setIsLoading] = useState(true);
-    const [managers, setManagers] = useState({
-        totalEntries: 0n,
-        seasonId: 0,
-        entries: [],
-        gameweek: 0
-      });
-    const [seasons, setSeasons] = useState([]);
+    const [managers, setManagers] = useState({entries: [], totalEntries: 0});
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedSeason, setSelectedSeason] = useState(null);
-    const [selectedMonth, setSelectedMonth] = useState(null);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
+    const [selectedMonth, setSelectedMonth] = useState(systemState.activeMonth);
     const itemsPerPage = 25;
-    const [isInitialSetupDone, setIsInitialSetupDone] = useState(false);
     const [selectedClub, setSelectedClub] = useState(teamId);
-
   
     const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
         <Pagination.Item 
@@ -32,25 +24,9 @@ const ClubLeaderboard = () => {
             {index + 1}
         </Pagination.Item>
     ));
-    
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            await fetchSeasons();
-
-            const activeSeasonData = await fetchActiveSeasonId();
-            setSelectedSeason(activeSeasonData);
-
-            const activeMonthData = await fetchActiveMonth();
-            setSelectedMonth(activeMonthData);
-
-            setIsInitialSetupDone(true);
-        };
-
-        fetchInitialData();
-    }, []);
 
     useEffect(() => {
-        if (!selectedSeason || !selectedMonth || !isInitialSetupDone) {
+        if (!selectedSeason || !selectedMonth || monthlyLeaderboards.length === 0) {
             return;
         };
         const fetchData = async () => {
@@ -58,30 +34,25 @@ const ClubLeaderboard = () => {
             await fetchViewData(selectedSeason, selectedMonth, selectedClub);
             setIsLoading(false);
         };
-
+        
         fetchData();
-    }, [selectedSeason, selectedMonth, currentPage, isInitialSetupDone, selectedClub]);
-
-    const fetchActiveSeasonId = async () => {
-        const activeSeasonData = await open_fpl_backend.getCurrentSeason();
-        return activeSeasonData.id;
-    };
-
-    const fetchActiveMonth = async () => {
-        const activeMonthData = await open_fpl_backend.getCurrentMonth();
-        return activeMonthData;
-    };
-
-    const fetchViewData = async (season, month, club) => {
-        const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
-        setManagers(leaderboardData);
-    };    
-
-    const fetchSeasons = async () => {
-        const seasonList = await open_fpl_backend.getSeasons();
-        setSeasons(seasonList); 
-    };
+    }, [selectedSeason, selectedMonth, currentPage, selectedClub, monthlyLeaderboards]);
     
+    const fetchViewData = async (season, month, club) => {
+        if(currentPage <= 4 && month == systemState.activeMonth){
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const slicedData = {
+                ...monthlyLeaderboards.find(x => x.clubId == selectedClub),
+                entries: monthlyLeaderboards.find(x => x.clubId == selectedClub).entries.slice(start, end)
+            };
+            setManagers(slicedData);
+        }
+        else{
+            const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
+            setManagers(leaderboardData);
+        }
+    };
 
     const renderedData = managers.entries && managers.entries.map(manager => (
         <tr key={manager.principalId}>
@@ -109,7 +80,7 @@ const ClubLeaderboard = () => {
                         <Col xs={12} md={4}>
                             <Form.Group controlId="clubSelect">
                                 <Form.Label>Select Club</Form.Label>
-                                <Form.Control as="select" value={selectedClub || ''} onChange={e => setSelectedClub(Number(e.target.value))}>
+                                <Form.Control as="select" value={selectedClub || ''} onChange={e => { setSelectedClub(Number(e.target.value));  setCurrentPage(1); }}>
                                     {teams.map(club => <option key={club.id} value={club.id}>{club.friendlyName}</option>)}
                                 </Form.Control>
                             </Form.Group>
@@ -119,6 +90,7 @@ const ClubLeaderboard = () => {
                                 <Form.Label>Select Season</Form.Label>
                                 <Form.Control as="select" value={selectedSeason || ''} onChange={e => {
                                     setSelectedSeason(Number(e.target.value));
+                                    setCurrentPage(1);
                                 }}>
 
                                     {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
@@ -128,7 +100,7 @@ const ClubLeaderboard = () => {
                         <Col xs={12} md={4}>
                             <Form.Group controlId="gameweekSelect">
                                 <Form.Label>Select Month</Form.Label>
-                                <Form.Control as="select" value={selectedMonth || ''} onChange={e => setSelectedMonth(Number(e.target.value))}>
+                                <Form.Control as="select" value={selectedMonth || ''} onChange={e => { setSelectedMonth(Number(e.target.value));  setCurrentPage(1);}}>
                                     <option key={1} value={1}>January</option>
                                     <option key={2} value={2}>February</option>
                                     <option key={3} value={3}>March</option>

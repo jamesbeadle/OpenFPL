@@ -2,18 +2,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
-import { TeamsContext } from "../../contexts/TeamsContext";
+import { DataContext } from "../../contexts/DataContext";
 import { Actor } from "@dfinity/agent";
 import { FixtureIcon } from '../icons';
+import { getTeamById } from '../helpers';
 
 const Fixtures = () => {
   const { authClient } = useContext(AuthContext);
-  const { teams } = useContext(TeamsContext);
+  const { teams, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
-
-  const [allFixtures, setAllFixtures] = useState([]);
-  const [fixtures, setFixtures] = useState([]);
   const [currentGameweek, setCurrentGameweek] = useState(1);
+  const [filteredFixtures, setFilteredFixtures] = useState([]);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -26,14 +25,9 @@ const Fixtures = () => {
   const fetchViewData = async () => {
     const identity = authClient.getIdentity();
     Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-  
-    const fixturesData = await open_fpl_backend.getFixtures();
-    setAllFixtures(fixturesData);
     
     const currentDateTime = new Date();
-    const activeGameweekData = await open_fpl_backend.getCurrentGameweek();
-   
-    const currentGameweekFixtures = fixturesData.filter(fixture => fixture.gameweek === activeGameweekData);
+    const currentGameweekFixtures = fixtures.filter(fixture => fixture.gameweek === systemState.activeGameweek);
     currentGameweekFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
 
     const kickOffInMilliseconds = Number(currentGameweekFixtures[0].kickOff) / 1000000;
@@ -42,25 +36,21 @@ const Fixtures = () => {
     const oneHourBeforeFirstFixture = new Date(firstFixtureTime - 3600000); // Subtract 1 hour from the fixture's start time
    
     if (currentDateTime >= oneHourBeforeFirstFixture) {
-        setCurrentGameweek(activeGameweekData + 1);
+        setCurrentGameweek(systemState.activeGameweek + 1);
     }
     else{
-      setCurrentGameweek(activeGameweekData);  
+      setCurrentGameweek(systemState.activeGameweek);  
     }
   };
 
 
   useEffect(() => {
-    const filteredFixtures = allFixtures.filter(fixture => fixture.gameweek === currentGameweek);
-    setFixtures(filteredFixtures);
-  }, [allFixtures, currentGameweek]);
+    const filteredFixturesData = fixtures.filter(fixture => fixture.gameweek === currentGameweek);
+    setFilteredFixtures(filteredFixturesData);
+  }, [fixtures, currentGameweek]);
 
   const handleGameweekChange = (change) => {
     setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
-  }
-
-  const getTeamById = (teamId) => {
-    return teams.find(team => team.id === teamId);
   }
   
   
@@ -90,25 +80,25 @@ const Fixtures = () => {
                 </div>
             </Row>
             <br />
-            {fixtures.map((fixture, i) => (
+            {filteredFixtures.map((fixture, i) => (
                 <Row className='align-items-center small-text mt-2' key={fixture.id}>
                     <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                       <div style={{padding: '0 5px'}}>
-                          <FixtureIcon primaryColour={getTeamById(fixture.homeTeamId).primaryColourHex} secondaryColour={getTeamById(fixture.homeTeamId).secondaryColourHex} />
+                          <FixtureIcon primaryColour={getTeamById(teams, fixture.homeTeamId).primaryColourHex} secondaryColour={getTeamById(teams, fixture.homeTeamId).secondaryColourHex} />
                       </div>
                     </Col>
                     <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                      <p style={{margin: 0}}><small>{getTeamById(fixture.homeTeamId).abbreviatedName}</small></p>
+                      <p style={{margin: 0}}><small>{getTeamById(teams, fixture.homeTeamId).abbreviatedName}</small></p>
                     </Col>
                     <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
                       <small style={{margin: 0}}>vs</small>
                     </Col>
                     <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                      <p style={{margin: 0}}><small>{getTeamById(fixture.awayTeamId).abbreviatedName}</small></p>
+                      <p style={{margin: 0}}><small>{getTeamById(teams, fixture.awayTeamId).abbreviatedName}</small></p>
                     </Col>
                     <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
                       <div style={{padding: '0 5px'}}>
-                          <FixtureIcon primaryColour={getTeamById(fixture.awayTeamId).primaryColourHex} secondaryColour={getTeamById(fixture.awayTeamId).secondaryColourHex} />
+                          <FixtureIcon primaryColour={getTeamById(teams, fixture.awayTeamId).primaryColourHex} secondaryColour={getTeamById(teams, fixture.awayTeamId).secondaryColourHex} />
                       </div>
                     </Col>
                 </Row>

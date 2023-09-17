@@ -29,8 +29,10 @@ module {
     getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async (),
+    updateCacheHash: (category: Text) -> async (),
     EventData_VotingPeriod: Int,
-    stable_timers: [T.TimerInfo]) {
+    stable_timers: [T.TimerInfo],
+    updatePlayerEventDataCache: () -> async ()) {
 
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
@@ -138,6 +140,7 @@ module {
             };
         };
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
+        await updateCacheHash("fixtures");
     };
 
     public func gameCompleted() : async () {
@@ -168,6 +171,7 @@ module {
         };
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
+        await updateCacheHash("fixtures");
     };
 
     public func votingPeriodOver() : async (){
@@ -187,6 +191,11 @@ module {
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
         await checkGameweekFinished();
+        await updateCacheHash("fixtures");
+        await updateCacheHash("weekly_leaderboard");
+        await updateCacheHash("monthly_leaderboards");
+        await updateCacheHash("season_leaderboard");
+        await updatePlayerEventDataCache();
     };
 
     public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async (){
@@ -217,6 +226,11 @@ module {
         
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
         await checkGameweekFinished();
+        await updateCacheHash("fixtures");
+        await updateCacheHash("weekly_leaderboard");
+        await updateCacheHash("monthly_leaderboards");
+        await updateCacheHash("season_leaderboard");
+        await updatePlayerEventDataCache();
     };
 
     public func finaliseFixture(fixture: T.Fixture) : async (){
@@ -248,6 +262,10 @@ module {
             await seasonsInstance.createNewSeason(activeSeasonId);
             //await mintAnnualRewardsPool(); //IMPLEMENT POST SNS
             await resetFantasyTeams();
+            await updateCacheHash("system_state");
+            await updateCacheHash("weekly_leaderboard");
+            await updateCacheHash("monthly_leaderboards");
+            await updateCacheHash("season_leaderboard");
             return;
         };
 
@@ -277,8 +295,8 @@ module {
         };
     };
 
-    public func getActiveSeason() : async T.Season {
-        return await seasonsInstance.getSeason(activeSeasonId);
+    public func getActiveSeason() : T.Season {
+        return seasonsInstance.getSeason(activeSeasonId);
     };
 
     public func getActiveSeasonId() : Nat16 {
@@ -308,7 +326,7 @@ module {
     public func getSeasons() : [T.Season] {
         return seasonsInstance.getSeasons();
     };
-
+    
     public func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
         seasonsInstance.addInitialFixtures(proposalPayload);
     };

@@ -5,6 +5,7 @@ export interface AccountBalanceDTO {
   'icpBalance' : bigint,
   'fplBalance' : bigint,
 }
+export interface DataCache { 'hash' : string, 'category' : string }
 export type Error = { 'DecodeError' : null } |
   { 'NotAllowed' : null } |
   { 'NotFound' : null } |
@@ -33,11 +34,6 @@ export interface FantasyTeam {
   'principalId' : string,
   'passMasterPlayerId' : PlayerId,
   'captainId' : PlayerId,
-}
-export interface FantasyTeamSeason {
-  'seasonId' : SeasonId,
-  'gameweeks' : List_4,
-  'totalPoints' : number,
 }
 export interface FantasyTeamSnapshot {
   'playerIds' : Uint16Array | number[],
@@ -77,6 +73,19 @@ export interface Fixture {
   'gameweek' : GameweekNumber,
   'awayGoals' : number,
 }
+export interface FixtureDTO {
+  'id' : number,
+  'status' : number,
+  'awayTeamId' : TeamId,
+  'highestScoringPlayerId' : number,
+  'homeTeamId' : TeamId,
+  'seasonId' : SeasonId,
+  'events' : Array<PlayerEventData>,
+  'kickOff' : bigint,
+  'homeGoals' : number,
+  'gameweek' : GameweekNumber,
+  'awayGoals' : number,
+}
 export type FixtureId = number;
 export interface Gameweek {
   'number' : GameweekNumber,
@@ -94,8 +103,6 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
-export type List_3 = [] | [[FantasyTeamSeason, List_3]];
-export type List_4 = [] | [[FantasyTeamSnapshot, List_4]];
 export interface PaginatedClubLeaderboard {
   'month' : number,
   'clubId' : TeamId,
@@ -118,14 +125,6 @@ export interface PlayerEventData {
   'eventType' : number,
 }
 export type PlayerId = number;
-export interface PlayerPointsDTO {
-  'id' : number,
-  'events' : Array<PlayerEventData>,
-  'teamId' : number,
-  'position' : number,
-  'gameweek' : GameweekNumber,
-  'points' : number,
-}
 export interface ProfileDTO {
   'icpDepositAddress' : Uint8Array | number[],
   'favouriteTeamId' : number,
@@ -147,7 +146,14 @@ export interface Season {
   'year' : number,
   'gameweeks' : List_1,
 }
+export interface SeasonDTO { 'id' : SeasonId, 'name' : string, 'year' : number }
 export type SeasonId = number;
+export interface SystemState {
+  'activeMonth' : number,
+  'focusGameweek' : GameweekNumber,
+  'activeSeason' : Season,
+  'activeGameweek' : GameweekNumber,
+}
 export interface Team {
   'id' : number,
   'secondaryColourHex' : string,
@@ -157,44 +163,35 @@ export interface Team {
   'primaryColourHex' : string,
 }
 export type TeamId = number;
-export interface UserFantasyTeam {
-  'fantasyTeam' : FantasyTeam,
-  'history' : List_3,
-}
 export interface _SERVICE {
-  'addFantasyTeams' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
-  'getActiveGameweekFixtures' : ActorMethod<[], Array<Fixture>>,
-  'getAddTeamsFunction' : ActorMethod<[], string>,
   'getClubLeaderboard' : ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard
   >,
-  'getCurrentGameweek' : ActorMethod<[], number>,
-  'getCurrentMonth' : ActorMethod<[], number>,
-  'getCurrentSeason' : ActorMethod<[], Season>,
+  'getClubLeaderboardsCache' : ActorMethod<
+    [number, number],
+    Array<PaginatedClubLeaderboard>
+  >,
+  'getDataHashes' : ActorMethod<[], Array<DataCache>>,
   'getFantasyTeam' : ActorMethod<[], FantasyTeam>,
   'getFantasyTeamForGameweek' : ActorMethod<
     [string, number, number],
     FantasyTeamSnapshot
   >,
-  'getFantasyTeams' : ActorMethod<[], Array<[string, UserFantasyTeam]>>,
   'getFixture' : ActorMethod<[SeasonId, GameweekNumber, FixtureId], Fixture>,
+  'getFixtureDTOs' : ActorMethod<[], Array<FixtureDTO>>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
-  'getFixturesByWeek' : ActorMethod<[SeasonId, GameweekNumber], Array<Fixture>>,
   'getFixturesForSeason' : ActorMethod<[SeasonId], Array<Fixture>>,
-  'getPlayersDetailsForGameweek' : ActorMethod<
-    [Uint16Array | number[], number, number],
-    Array<PlayerPointsDTO>
-  >,
   'getProfileDTO' : ActorMethod<[], ProfileDTO>,
   'getPublicProfileDTO' : ActorMethod<[string], ProfileDTO>,
   'getSeasonLeaderboard' : ActorMethod<
     [number, bigint, bigint],
     PaginatedLeaderboard
   >,
-  'getSeasonTop10' : ActorMethod<[], PaginatedLeaderboard>,
-  'getSeasons' : ActorMethod<[], Array<Season>>,
+  'getSeasonLeaderboardCache' : ActorMethod<[number], PaginatedLeaderboard>,
+  'getSeasons' : ActorMethod<[], Array<SeasonDTO>>,
+  'getSystemState' : ActorMethod<[], SystemState>,
   'getTeams' : ActorMethod<[], Array<Team>>,
   'getTotalManagers' : ActorMethod<[], bigint>,
   'getValidatableFixtures' : ActorMethod<[], Array<Fixture>>,
@@ -202,7 +199,10 @@ export interface _SERVICE {
     [number, number, bigint, bigint],
     PaginatedLeaderboard
   >,
-  'getWeeklyTop10' : ActorMethod<[], PaginatedLeaderboard>,
+  'getWeeklyLeaderboardCache' : ActorMethod<
+    [number, number],
+    PaginatedLeaderboard
+  >,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
@@ -214,6 +214,7 @@ export interface _SERVICE {
   >,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
+  'updateHashForCategory' : ActorMethod<[string], undefined>,
   'updateProfilePicture' : ActorMethod<[Uint8Array | number[]], Result>,
   'withdrawICP' : ActorMethod<[number, string], Result>,
 }

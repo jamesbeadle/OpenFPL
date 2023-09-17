@@ -135,7 +135,7 @@ module {
         };
     };
 
-    public func getSeason(seasonId: Nat16) : async T.Season {
+    public func getSeason(seasonId: Nat16) : T.Season {
         let season = List.find<T.Season>(seasons, func (season: T.Season): Bool {
             return season.id == seasonId;
         });

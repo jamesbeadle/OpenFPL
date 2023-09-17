@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { Container, Row, Col, Card, Spinner, Button, Image, Table } from 'react-bootstrap';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
+import { Container, Row, Col, Card, Spinner, Button, Image } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { useParams } from 'react-router-dom';
@@ -7,10 +7,13 @@ import PlayerDetailsModal from './player-details-modal';
 import LogoImage from "../../../assets/logo.png";
 import ProfileImage from '../../../assets/profile_placeholder.png';
 import { PlayerIcon, StarIcon, StarOutlineIcon } from '../icons';
+import { getTeamById } from '../helpers';
 
+import { DataContext } from "../../contexts/DataContext";
 
 const ViewPoints = () => {
     const { manager, gameweek, season } = useParams();
+    const { players, teams, fixtures, playerEvents, systemState } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [fantasyTeam, setFantasyTeam] = useState({
@@ -20,10 +23,7 @@ const ViewPoints = () => {
     const [selectedPlayerDTO, setSelectedPlayerDTO] = useState(null);
     const [selectedPlayerCaptain, setSelectedPlayerCaptain] = useState(false);
     const [selectedPlayerBonusName, setSelectedPlayerBonusName] = useState('');
-    
-    const [teams, setTeams] = useState([]);
-    const [fixtures, setFixtures] = useState([]);
-    const [players, setPlayers] = useState([]);
+
     const positionCodes = ['GK', 'DF', 'MF', 'FW'];
     const [gameweekBonus, setGameweekBonus] = useState({name: 'No Bonus Played', player: '', team: ''});
     const [profile, setProfile] = useState(null);
@@ -32,42 +32,44 @@ const ViewPoints = () => {
 
    
     useEffect(() => {
+        if(!playerEvents || playerEvents.length === 0 || !teams || teams.length === 0){
+            return;
+        }
         const fetchData = async () => {
             await fetchViewData();
             setIsLoading(false);
         };
         fetchData();
-    }, []);
+    }, [playerEvents, teams]);
 
     const fetchViewData = async () => {
-        
-        const teamsData = await open_fpl_backend.getTeams();
-        setTeams(teamsData);
-        
-        const fixturesData = await open_fpl_backend.getFixtures();
-        setFixtures(fixturesData);
-        
         const fetchedFantasyTeam = await open_fpl_backend.getFantasyTeamForGameweek(manager, Number(season), Number(gameweek)); 
-        const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));
+        if(gameweek == systemState.focusGameweek){
+            const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
+            const playersInTeam = detailedPlayers.filter(player => fetchedFantasyTeam.playerIds.includes(player.id));
         
-        const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
-        const playerData = await player_canister.getAllPlayers();
-        setPlayers(playerData);
-        
-        setFantasyTeam({
-            ...fetchedFantasyTeam,
-            players: detailedPlayers,
-        });
+            setFantasyTeam({
+                ...fetchedFantasyTeam,
+                players: playersInTeam,
+            });
+        }
+        else
+        {
+            const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));    
+            const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
+            setFantasyTeam({
+                ...fetchedFantasyTeam,
+                players: detailedPlayers,
+            });
+        }
 
         const profileData = await open_fpl_backend.getPublicProfileDTO(manager);
         setProfile(profileData);
         
         if (profileData.profilePicture && profileData.profilePicture.length > 0) {
-        
             const blob = new Blob([profileData.profilePicture]);
             const blobUrl = URL.createObjectURL(blob);
             setProfilePicSrc(blobUrl);
-    
         } else {
             setProfilePicSrc(ProfileImage);
         }
@@ -91,17 +93,11 @@ const ViewPoints = () => {
             const sortedPlayers = [...playersWithUpdatedScores].sort((a, b) => 
                 Number(b.totalPoints) - Number(a.totalPoints)
             );
+            
             setSortedPlayers(sortedPlayers);
             getBonusDetails();
         }
     }, [fantasyTeam]);
-    
-    
-    
-    const getTeamById = (teamId) => {
-        const team = teams.find(team => team.id === teamId);
-        return team;
-    };
     
     const extractPlayerData = (playerDTO) => {
         let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
@@ -235,7 +231,7 @@ const ViewPoints = () => {
         if(fantasyTeam.hatTrickHeroGameweek == gameweek && playerDTO.gameweekData.goals >= 3) {
             bonusName = "Hat-trick Hero";
         };
-    
+
         return (
             <Fragment key={player.id}>
 
@@ -258,8 +254,8 @@ const ViewPoints = () => {
                                 {positionCodes[player.position]}
                                 <br />
                                 <PlayerIcon width={20} height={20} 
-                                    primaryColour={getTeamById(player.teamId).primaryColourHex} 
-                                    secondaryColour={getTeamById(player.teamId).secondaryColourHex} />
+                                    primaryColour={getTeamById(teams, player.teamId).primaryColourHex} 
+                                    secondaryColour={getTeamById(teams, player.teamId).secondaryColourHex} />
                             </div>
                             <div>
                                 <h5 className='mb-0 p-0' style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
@@ -267,7 +263,7 @@ const ViewPoints = () => {
                                     {player.lastName} 
                                 </h5>
                                 <small className='small-text p-0' style={{overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'}}>
-                                    {getTeamById(player.teamId).name}
+                                    {getTeamById(teams, player.teamId).name}
                                 </small>
                             </div>
                         </div>

@@ -18,6 +18,8 @@ import Utilities "../OpenFPL_backend/utilities";
 import Timer "mo:base/Timer";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
+import Nat64 "mo:base/Nat64";
+import SHA224 "../OpenFPL_backend/SHA224";
 
 actor Self {
 
@@ -25,6 +27,11 @@ actor Self {
     private var nextPlayerId : Nat = 560;
     private var retiredPlayers = List.fromArray<T.Player>([]);
 
+    private var dataCacheHashes: List.List<T.DataCache> = List.fromArray([
+        { category = "players"; hash = "DEFAULT_VALUE" },
+        { category = "playerEventData"; hash = "DEFAULT_VALUE" }
+    ]);
+  
     public shared query ({caller}) func getAllPlayers() : async [DTOs.PlayerDTO] {
         
         func compare(player1: T.Player, player2: T.Player) : Bool {
@@ -101,6 +108,42 @@ actor Self {
             }});
     };
 
+    public shared query ({caller}) func getPlayerDetailsForGameweek(seasonId: Nat16, gameweek: Nat8) : async [DTOs.PlayerPointsDTO] {
+        
+        var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
+
+        label playerDetailsLoop for (player in Iter.fromList(players)) {
+            var points: Int16 = 0;
+            var events: List.List<T.PlayerEventData> = List.nil();
+
+            for (season in Iter.fromList(player.seasons)) {
+                if (season.id == seasonId) {
+                    for (gw in Iter.fromList(season.gameweeks)) {
+
+                        if (gw.number == gameweek) {
+                            points := gw.points;
+                            events := List.filter<T.PlayerEventData>(gw.events, func(event: T.PlayerEventData) : Bool {
+                                return event.playerId == player.id;
+                            });
+                        };
+                    }
+                }
+            };
+
+            let playerGameweek: DTOs.PlayerPointsDTO = {
+                id = player.id;
+                points = points;
+                teamId = player.teamId;
+                position = player.position;
+                events = List.toArray(events);
+                gameweek = gameweek;
+            };
+            playerDetailsBuffer.add(playerGameweek);
+        };
+
+        return Buffer.toArray(playerDetailsBuffer);
+    };
+
     public shared query ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [DTOs.PlayerPointsDTO] {
         assert not Principal.isAnonymous(caller);
         
@@ -143,8 +186,6 @@ actor Self {
     };
 
     public query ({caller}) func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
-        //assert not Principal.isAnonymous(caller);
-
         var playersMap: HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
         label playerMapLoop for (player in Iter.fromList(players)) { 
             if (player.onLoan) {
@@ -1080,6 +1121,7 @@ actor Self {
                 players := List.filter<T.Player>(players, func(currentPlayer: T.Player) : Bool {
                     return currentPlayer.id != proposalPayload.playerId;
                 });
+                await updateHashForCategory("players");
             };
         };
     };
@@ -1116,18 +1158,25 @@ actor Self {
         };
     };
 
+    public shared query func getDataHashes() : async [T.DataCache] {
+        return List.toArray(dataCacheHashes);
+    };
+
     private stable var stable_players: [T.Player] = [];
     private stable var stable_next_player_id : Nat = 0;
     private stable var stable_timers: [T.TimerInfo] = [];
+    private stable var stable_data_cache_hashes: [T.DataCache] = [];
 
     system func preupgrade() {
         stable_players := List.toArray(players);
         stable_next_player_id := nextPlayerId;
+        stable_data_cache_hashes := List.toArray(dataCacheHashes);
     };
 
     system func postupgrade() {
         players := List.fromArray(stable_players);
         nextPlayerId := stable_next_player_id;
+        dataCacheHashes := List.fromArray(stable_data_cache_hashes);
         recreateTimers();
     };
 
@@ -1151,15 +1200,53 @@ actor Self {
         }
     };
 
-    /*
+    public shared func updatePlayerEventDataCache() : async (){
+        await updateHashForCategory("playerEventData");
+    };
+
+    public func updateHashForCategory(category: Text): async () {
+        
+        let hashBuffer = Buffer.fromArray<T.DataCache>([]);
+
+        for(hashObj in Iter.fromList(dataCacheHashes)){
+            if(hashObj.category == category){
+            let randomHash = await SHA224.getRandomHash();
+            hashBuffer.add({ category = hashObj.category; hash = randomHash; });
+            } else { hashBuffer.add(hashObj); };
+        };
+
+        dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+    };
+/*
+
 
     public func squadAdjustments() : async (){
         var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
 
-            if(p.id == 11){
+            if(p.id == 372){
                 let updatedPlayer: T.Player = {
                     id = p.id;
-                    teamId = 16;
+                    teamId = 18;
+                    position = p.position;
+                    firstName = p.firstName;
+                    lastName = p.lastName;
+                    shirtNumber = p.shirtNumber;
+                    value = p.value;
+                    dateOfBirth = p.dateOfBirth;
+                    nationality = p.nationality;
+                    seasons = p.seasons;
+                    valueHistory = p.valueHistory;
+                    onLoan = p.onLoan;
+                    parentTeamId = p.parentTeamId;
+                    isInjured = p.isInjured;
+                    injuryHistory = p.injuryHistory;
+                    retirementDate = p.retirementDate;
+                };
+                return updatedPlayer;
+            } else if (p.id == 513){
+                let updatedPlayer: T.Player = {
+                    id = p.id;
+                    teamId = 17;
                     position = p.position;
                     firstName = p.firstName;
                     lastName = p.lastName;
@@ -1180,17 +1267,27 @@ actor Self {
         });
 
         players := updatedPlayers;
+        await updateHashForCategory("players");
     };
 
     public func addMissingPlayers() : async (){
         
-        var updatedPlayers = players;
 
         players := List.append(players, List.fromArray<T.Player>([
-            {id = 589; teamId = 7; firstName = "Cole"; lastName = "Palmer"; shirtNumber = 20; value = 60; dateOfBirth = 1020643200000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 590; teamId = 16; firstName = "Gonzalo"; lastName = "Montiel"; shirtNumber = 29; value = 42; dateOfBirth = 852076800000000000; nationality = "Argentina"; position = 1; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();}
+            {id = 598; teamId = 14; firstName = "Hannibal"; lastName = "Mejbri"; shirtNumber = 46; value = 38; dateOfBirth = 1043107200000000000; nationality = "France"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
+            {id = 599; teamId = 5; firstName = "Ansu"; lastName = "Fati"; shirtNumber = 31; value = 126; dateOfBirth = 1036022400000000000; nationality = "Guinea-Bissau"; position = 3; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();}
         ]));
+        */
+
+    /*
+
+    public shared func setDefaultHashes(): async () {
+        dataCacheHashes := List.fromArray([
+            { category = "players"; hash = "DEFAULT_VALUE" },
+            { category = "playerEventData"; hash = "DEFAULT_VALUE" }
+        ]);
     };
+
 
     public func squadAdjustments() : async (){
         var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
