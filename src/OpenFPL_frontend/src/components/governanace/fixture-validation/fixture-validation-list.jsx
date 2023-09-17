@@ -12,7 +12,7 @@ const FixtureValidationList = () => {
   const [fixtures, setFixtures] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
-  const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason.id);
+  const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
 
   useEffect(() => {
     const fetchData = async () => {
