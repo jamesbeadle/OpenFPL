@@ -1,3 +1,8 @@
+type UserFantasyTeam = 
+ record {
+   fantasyTeam: FantasyTeam;
+   history: List;
+ };
 type TeamId = nat16;
 type Team = 
  record {
@@ -24,10 +29,10 @@ type SeasonDTO =
  };
 type Season = 
  record {
-   gameweeks: List_1;
+   gameweeks: List_3;
    id: nat16;
    name: text;
-   postponedFixtures: List_2;
+   postponedFixtures: List_4;
    year: nat16;
  };
 type Result = 
@@ -73,19 +78,29 @@ type PaginatedClubLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
-type List_2 = 
+type List_4 = 
  opt record {
        Fixture;
+       List_4;
+     };
+type List_3 = 
+ opt record {
+       Gameweek;
+       List_3;
+     };
+type List_2 = 
+ opt record {
+       PlayerEventData;
        List_2;
      };
 type List_1 = 
  opt record {
-       Gameweek;
+       FantasyTeamSnapshot;
        List_1;
      };
 type List = 
  opt record {
-       PlayerEventData;
+       FantasyTeamSeason;
        List;
      };
 type LeaderboardEntry = 
@@ -100,7 +115,7 @@ type GameweekNumber = nat8;
 type Gameweek = 
  record {
    canisterId: text;
-   fixtures: List_2;
+   fixtures: List_4;
    number: GameweekNumber;
  };
 type FixtureId = nat32;
@@ -122,7 +137,7 @@ type Fixture =
  record {
    awayGoals: nat8;
    awayTeamId: TeamId;
-   events: List;
+   events: List_2;
    gameweek: GameweekNumber;
    highestScoringPlayerId: nat16;
    homeGoals: nat8;
@@ -157,6 +172,12 @@ type FantasyTeamSnapshot =
    teamBoostTeamId: TeamId;
    teamName: text;
    transfersAvailable: nat8;
+ };
+type FantasyTeamSeason = 
+ record {
+   gameweeks: List_1;
+   seasonId: SeasonId;
+   totalPoints: int16;
  };
 type FantasyTeam = 
  record {
@@ -202,7 +223,9 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
+  fixMissingProfiles: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
+  getAllProfilesDEV: () -> (vec ProfileDTO);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
   getClubLeaderboardsCache: (nat16, nat8) ->
@@ -211,17 +234,23 @@ service : {
   getFantasyTeam: () -> (FantasyTeam) query;
   getFantasyTeamForGameweek: (text, nat16, nat8) ->
    (FantasyTeamSnapshot) query;
+  getFantasyTeamsDEV: () -> (vec record {
+                                   text;
+                                   UserFantasyTeam;
+                                 });
   getFixture: (SeasonId, GameweekNumber, FixtureId) -> (Fixture);
   getFixtureDTOs: () -> (vec FixtureDTO) query;
   getFixtures: () -> (vec Fixture) query;
   getFixturesForSeason: (SeasonId) -> (vec Fixture) query;
   getProfileDTO: () -> (ProfileDTO);
+  getProfilesWithoutTeamsCount: () -> (nat);
   getPublicProfileDTO: (text) -> (ProfileDTO) query;
   getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;
   getSeasonLeaderboardCache: (nat16) -> (PaginatedLeaderboard) query;
   getSeasons: () -> (vec SeasonDTO) query;
   getSystemState: () -> (SystemState) query;
   getTeams: () -> (vec Team) query;
+  getTeamsWithoutProfiles: () -> (vec UserFantasyTeam);
   getTotalManagers: () -> (nat) query;
   getValidatableFixtures: () -> (vec Fixture) query;
   getWeeklyLeaderboard: (nat16, nat8, nat, nat) ->
@@ -230,6 +259,10 @@ service : {
   isDisplayNameValid: (text) -> (bool) query;
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
+  testUpdatingFantasyTeams: () -> (vec record {
+                                         text;
+                                         UserFantasyTeam;
+                                       });
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
   updateHashForCategory: (text) -> ();

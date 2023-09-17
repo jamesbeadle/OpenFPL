@@ -597,7 +597,19 @@ actor Self {
 
     var userProfile = profilesInstance.getProfile(principalId);
     switch(userProfile){
-      case (null){ };
+      case (null){ 
+
+          profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
+          let newProfile = profilesInstance.getProfile(Principal.toText(caller));
+          switch(newProfile){
+            case (null) {};
+            case (?foundNewProfile){
+              teamName := foundNewProfile.displayName;
+              favouriteTeamId := foundNewProfile.favouriteTeamId;
+
+            };
+          };
+      };
       case (?foundProfile){
         teamName := foundProfile.displayName;
         favouriteTeamId := foundProfile.favouriteTeamId;

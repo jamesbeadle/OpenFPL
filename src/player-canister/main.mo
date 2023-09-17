@@ -1217,36 +1217,15 @@ actor Self {
 
         dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
     };
-/*
 
-
+/*  
     public func squadAdjustments() : async (){
         var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
 
-            if(p.id == 372){
+            if(p.id == 215){
                 let updatedPlayer: T.Player = {
                     id = p.id;
-                    teamId = 18;
-                    position = p.position;
-                    firstName = p.firstName;
-                    lastName = p.lastName;
-                    shirtNumber = p.shirtNumber;
-                    value = p.value;
-                    dateOfBirth = p.dateOfBirth;
-                    nationality = p.nationality;
-                    seasons = p.seasons;
-                    valueHistory = p.valueHistory;
-                    onLoan = p.onLoan;
-                    parentTeamId = p.parentTeamId;
-                    isInjured = p.isInjured;
-                    injuryHistory = p.injuryHistory;
-                    retirementDate = p.retirementDate;
-                };
-                return updatedPlayer;
-            } else if (p.id == 513){
-                let updatedPlayer: T.Player = {
-                    id = p.id;
-                    teamId = 17;
+                    teamId = 4;
                     position = p.position;
                     firstName = p.firstName;
                     lastName = p.lastName;
@@ -1269,6 +1248,8 @@ actor Self {
         players := updatedPlayers;
         await updateHashForCategory("players");
     };
+
+
 
     public func addMissingPlayers() : async (){
         
