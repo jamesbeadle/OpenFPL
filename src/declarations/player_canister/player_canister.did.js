@@ -212,12 +212,12 @@ export const idlFactory = ({ IDL }) => {
     'recallPlayer' : IDL.Func([RecallPlayerPayload], [], []),
     'retirePlayer' : IDL.Func([RetirePlayerPayload], [], []),
     'revaluePlayers' : IDL.Func([IDL.Nat16, IDL.Nat8, List], [], []),
-    'setDefaultHashes' : IDL.Func([], [], []),
     'setPlayerInjury' : IDL.Func([SetPlayerInjuryPayload], [], []),
     'transferPlayer' : IDL.Func([TransferPlayerPayload], [], []),
     'unretirePlayer' : IDL.Func([UnretirePlayerPayload], [], []),
     'updateHashForCategory' : IDL.Func([IDL.Text], [], []),
     'updatePlayer' : IDL.Func([UpdatePlayerPayload], [], []),
+    'updatePlayerEventDataCache' : IDL.Func([], [], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

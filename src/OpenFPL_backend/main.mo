@@ -91,6 +91,7 @@ actor Self {
     retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async ();
     unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async ();
     recalculatePlayerScores: (fixture: T.Fixture, seasonId: Nat16, gameweek: Nat8) -> async ();
+    updatePlayerEventDataCache: () -> async ()
   };
 
   private func getAllPlayersMap(seasonId: Nat16, gameweek: Nat8): async [(Nat16, DTOs.PlayerScoreDTO)] {
@@ -931,6 +932,10 @@ actor Self {
     await updateHashForCategory(category);
   };
 
+  private func updatePlayerEventDataCache(): async (){
+    await playerCanister.updatePlayerEventDataCache();
+  };
+
   private func getGameweekFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber): [T.Fixture] {
     return seasonManager.getGameweekFixtures(seasonId, gameweek);
   }; 
@@ -981,7 +986,8 @@ actor Self {
     resetFantasyTeams,
     updateCacheHash,
     governanceInstance.getEventDataVotePeriod(),
-    stable_timers);
+    stable_timers,
+    updatePlayerEventDataCache);
     
   governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
   governanceInstance.setTimerBackupFunction(setAndBackupTimer);

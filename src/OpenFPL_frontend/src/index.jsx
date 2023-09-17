@@ -32,35 +32,35 @@ const App = () => {
  
   return (
     <AuthProvider>
-      <DataProvider>
         <Router>
-          <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-            <MyNavbar />
-              <Routes>
-                <Route path="/" element={<Homepage />} />
-                <Route path="/funded-whitepaper" element={<FundedWhitepaper />} />
-                <Route path="/whitepaper" element={<Whitepaper   />} />
-                <Route path="/gameplay" element={<Gameplay   />} />
-                <Route path="/definitions" element={<Definitions   />} />
-                <Route path="/terms" element={<Terms   />} />
-                <Route path="/architecture" element={<Architecture />} />
-                <Route path="/profile" element={<Profile /> }/>
-                <Route path="/dao" element={<DAO />} />
-                <Route path="/governance" element={<Governance /> }/>
-                <Route path="/add-fixture-data" element={<AddFixtureData /> }/>
-                <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
-                <Route path="/pick-team" element={ <PickTeam   /> } />
-                <Route path="/league-table" element={ <LeagueTable   /> } />
-                <Route path="/club/:teamId" element={ <ClubDetails   /> } />
-                <Route path="/player/:playerId" element={ <PlayerDetails   /> } />
-                <Route path="/club-leaderboard/:teamId" element={ <ClubLeaderboard   /> } />
-              </Routes>
-            <MyFooter />
-          </div>
+          <DataProvider>
+            <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+              <MyNavbar />
+                <Routes>
+                  <Route path="/" element={<Homepage />} />
+                  <Route path="/funded-whitepaper" element={<FundedWhitepaper />} />
+                  <Route path="/whitepaper" element={<Whitepaper   />} />
+                  <Route path="/gameplay" element={<Gameplay   />} />
+                  <Route path="/definitions" element={<Definitions   />} />
+                  <Route path="/terms" element={<Terms   />} />
+                  <Route path="/architecture" element={<Architecture />} />
+                  <Route path="/profile" element={<Profile /> }/>
+                  <Route path="/dao" element={<DAO />} />
+                  <Route path="/governance" element={<Governance /> }/>
+                  <Route path="/add-fixture-data" element={<AddFixtureData /> }/>
+                  <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/view-points/:manager/:season/:gameweek" element={<ViewPoints />} />
+                  <Route path="/pick-team" element={ <PickTeam   /> } />
+                  <Route path="/league-table" element={ <LeagueTable   /> } />
+                  <Route path="/club/:teamId" element={ <ClubDetails   /> } />
+                  <Route path="/player/:playerId" element={ <PlayerDetails   /> } />
+                  <Route path="/club-leaderboard/:teamId" element={ <ClubLeaderboard   /> } />
+                </Routes>
+              <MyFooter />
+            </div>
+          </DataProvider>
         </Router>   
-      </DataProvider>
   </AuthProvider>
   );
 };

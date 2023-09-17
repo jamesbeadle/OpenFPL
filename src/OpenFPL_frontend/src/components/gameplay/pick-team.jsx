@@ -40,8 +40,8 @@ const PickTeam = () => {
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [currentGameweek, setCurrentGameweek] = useState(systemState.activeSeason.id);
-  const [currentSeason, setCurrentSeason] = useState(systemState.activeGameweek);
+  const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
+  const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
   const [selectedBonusId, setSelectedBonusId] = useState(null);
   const [selectedBonusPlayerId, setSelectedBonusPlayerId] = useState(null);

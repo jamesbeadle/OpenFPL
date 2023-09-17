@@ -1200,6 +1200,10 @@ actor Self {
         }
     };
 
+    public shared func updatePlayerEventDataCache() : async (){
+        await updateHashForCategory("playerEventData");
+    };
+
     public func updateHashForCategory(category: Text): async () {
         
         let hashBuffer = Buffer.fromArray<T.DataCache>([]);
@@ -1213,23 +1217,36 @@ actor Self {
 
         dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
     };
+/*
 
-    public shared func setDefaultHashes(): async () {
-        dataCacheHashes := List.fromArray([
-            { category = "players"; hash = "DEFAULT_VALUE" },
-            { category = "playerEventData"; hash = "DEFAULT_VALUE" }
-        ]);
-    };
-
-    /*
 
     public func squadAdjustments() : async (){
         var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
 
-            if(p.id == 11){
+            if(p.id == 372){
                 let updatedPlayer: T.Player = {
                     id = p.id;
-                    teamId = 16;
+                    teamId = 18;
+                    position = p.position;
+                    firstName = p.firstName;
+                    lastName = p.lastName;
+                    shirtNumber = p.shirtNumber;
+                    value = p.value;
+                    dateOfBirth = p.dateOfBirth;
+                    nationality = p.nationality;
+                    seasons = p.seasons;
+                    valueHistory = p.valueHistory;
+                    onLoan = p.onLoan;
+                    parentTeamId = p.parentTeamId;
+                    isInjured = p.isInjured;
+                    injuryHistory = p.injuryHistory;
+                    retirementDate = p.retirementDate;
+                };
+                return updatedPlayer;
+            } else if (p.id == 513){
+                let updatedPlayer: T.Player = {
+                    id = p.id;
+                    teamId = 17;
                     position = p.position;
                     firstName = p.firstName;
                     lastName = p.lastName;
@@ -1250,17 +1267,27 @@ actor Self {
         });
 
         players := updatedPlayers;
+        await updateHashForCategory("players");
     };
 
     public func addMissingPlayers() : async (){
         
-        var updatedPlayers = players;
 
         players := List.append(players, List.fromArray<T.Player>([
-            {id = 589; teamId = 7; firstName = "Cole"; lastName = "Palmer"; shirtNumber = 20; value = 60; dateOfBirth = 1020643200000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 590; teamId = 16; firstName = "Gonzalo"; lastName = "Montiel"; shirtNumber = 29; value = 42; dateOfBirth = 852076800000000000; nationality = "Argentina"; position = 1; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();}
+            {id = 598; teamId = 14; firstName = "Hannibal"; lastName = "Mejbri"; shirtNumber = 46; value = 38; dateOfBirth = 1043107200000000000; nationality = "France"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
+            {id = 599; teamId = 5; firstName = "Ansu"; lastName = "Fati"; shirtNumber = 31; value = 126; dateOfBirth = 1036022400000000000; nationality = "Guinea-Bissau"; position = 3; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();}
         ]));
+        */
+
+    /*
+
+    public shared func setDefaultHashes(): async () {
+        dataCacheHashes := List.fromArray([
+            { category = "players"; hash = "DEFAULT_VALUE" },
+            { category = "playerEventData"; hash = "DEFAULT_VALUE" }
+        ]);
     };
+
 
     public func squadAdjustments() : async (){
         var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {

@@ -13,7 +13,7 @@ const AddFixtureData = () => {
   const queryParams = new URLSearchParams(location.search);
   const fixtureId = queryParams.get('fixtureId');
 
-  const { teams, systemState } = useContext(DataContext);
+  const { teams, systemState, players } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixture, setFixture] = useState(null);
   const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);
@@ -22,7 +22,7 @@ const AddFixtureData = () => {
   
   const [editingPlayerEvent, setEditingPlayerEvent] = useState(null);
   const [key, setKey] = useState('homeTeam');
-  const [teamPlayers, setTeamPlayers] = useState([]);
+  const [teamPlayers, setTeamPlayers] = useState(players.filter(x => x.teamId > 0));
   const [selectedPlayers, setSelectedPlayers] = useState({
     homeTeam: [],
     awayTeam: [],

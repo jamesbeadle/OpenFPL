@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { player_canister as player_canister } from '../../../declarations/player_canister';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { computeTimeLeft } from '../components/helpers';
@@ -6,20 +7,20 @@ import { computeTimeLeft } from '../components/helpers';
 export const DataContext = React.createContext();
 
 export const DataProvider = ({ children }) => {
-  const [players, setPlayers] = useState([]);
-  const [teams, setTeams] = useState([]);
-  const [seasons, setSeasons] = useState([]);
-  const [fixtures, setFixtures] = useState([]);
-  const [playerEvents, setPlayerEvents] = useState([]);
-  const [systemState, setSystemState] = useState(null);
-  const [weeklyLeaderboard, setWeeklyLeaderboard] = useState({});
-  const [monthlyLeaderboards, setMonthlyLeaderboards] = useState([]);
-  const [seasonLeaderboard, setSeasonLeaderboard] = useState({});
-  const [backendCanisterHashes, setBackendCanisterHashes] = useState([]);
-  const [playerCanisterHashes, setPlayerCanisterHashes] = useState([]);
-  const [loading, setLoading] = useState(true);
- 
-  useEffect(() => {
+    const location = useLocation();
+    const [players, setPlayers] = useState([]);
+    const [teams, setTeams] = useState([]);
+    const [seasons, setSeasons] = useState([]);
+    const [fixtures, setFixtures] = useState([]);
+    const [playerEvents, setPlayerEvents] = useState([]);
+    const [systemState, setSystemState] = useState(null);
+    const [weeklyLeaderboard, setWeeklyLeaderboard] = useState({});
+    const [monthlyLeaderboards, setMonthlyLeaderboards] = useState([]);
+    const [seasonLeaderboard, setSeasonLeaderboard] = useState({});
+    const [backendCanisterHashes, setBackendCanisterHashes] = useState([]);
+    const [playerCanisterHashes, setPlayerCanisterHashes] = useState([]);
+    const [loading, setLoading] = useState(true);
+  
     const checkAndUpdateData = async () => {
         const backendHashArray = await open_fpl_backend.getDataHashes();
         setBackendCanisterHashes(backendHashArray);
@@ -32,16 +33,16 @@ export const DataProvider = ({ children }) => {
         await initSystemState(backendHashArray.find(item => item.category === 'system_state'));
     };
 
-    let duration = 60000 * 5;
-    const intervalId = setInterval(checkAndUpdateData, duration); 
-    checkAndUpdateData();
-    return () => {
-        clearInterval(intervalId);
-    };
-  }, []);
+    useEffect(() => {
+        checkAndUpdateData();
+    }, []);
 
-  useEffect(() => {
-    
+    useEffect(() => {
+        checkAndUpdateData();
+    }, [location.pathname]);
+
+    useEffect(() => {
+
     if(!systemState || Object.keys(systemState).length === 0){
         return;
     }
@@ -53,120 +54,120 @@ export const DataProvider = ({ children }) => {
         await initPlayerEventsData(playerCanisterHashes.find(item => item.category === 'playerEventData'));        
         setLoading(false);  
     };
-    initLeaderboards();
-  }, [systemState, fixtures]);
+        initLeaderboards();
+    }, [systemState, fixtures]);
 
-  const initPlayerData = async (playerHash) => {
-    const cachedHash = localStorage.getItem('players_hash');
-    const cachedPlayersData = localStorage.getItem('players_data');
-    const cachedPlayers = JSON.parse(cachedPlayersData || '[]');
-        
-    try {
-        if (!playerHash || cachedPlayers.length === 0 || cachedHash !== playerHash.hash) {
-          await fetchAllPlayers(playerHash);
-        } else {
-          setPlayers(cachedPlayers);
+    const initPlayerData = async (playerHash) => {
+        const cachedHash = localStorage.getItem('players_hash');
+        const cachedPlayersData = localStorage.getItem('players_data');
+        const cachedPlayers = JSON.parse(cachedPlayersData || '[]');
+            
+        try {
+            if (!playerHash || cachedPlayers.length === 0 || cachedHash !== playerHash.hash) {
+                await fetchAllPlayers(playerHash);
+            } else {
+                setPlayers(cachedPlayers);
+            }
+        } catch (error) {
+            console.error("Error fetching player data cache:", error);
         }
-      } catch (error) {
-          console.error("Error fetching player data cache:", error);
-      }
-  };
+    };
 
-  const fetchAllPlayers = async (playersHash) => {
-    try {
-        const allPlayersData = await player_canister.getAllPlayers();
-        setPlayers(allPlayersData);
-        
-        localStorage.setItem('players_hash', playersHash.hash);
-        localStorage.setItem('players_data', JSON.stringify(allPlayersData, replacer));
+    const fetchAllPlayers = async (playersHash) => {
+        try {
+            const allPlayersData = await player_canister.getAllPlayers();
+            setPlayers(allPlayersData);
+            
+            localStorage.setItem('players_hash', playersHash.hash);
+            localStorage.setItem('players_data', JSON.stringify(allPlayersData, replacer));
 
-    } catch (error) {
-        console.error("Error fetching all players:", error);
-    }
-  };
-
-  const initPlayerEventsData = async (playerEventDataHash) => {
-    const cachedHash = localStorage.getItem('player_events_hash');
-    const cachedPlayerEventsData = localStorage.getItem('player_events_data');
-    const cachedPlayerEvents = JSON.parse(cachedPlayerEventsData || '[]');
-        
-    try {
-        if (!playerEventDataHash || cachedPlayerEvents.length === 0 || cachedHash !== playerEventDataHash.hash) {
-          await fetchAllPlayerEventsData(playerEventDataHash);
-        } else {
-            setPlayerEvents(cachedPlayerEvents);
+        } catch (error) {
+            console.error("Error fetching all players:", error);
         }
-      } catch (error) {
-          console.error("Error fetching player event data cache:", error);
-      }
-  };
+    };
 
-  const fetchAllPlayerEventsData = async (playerEventsHash) => {
-    try {
-
-        var gameweek = Number(systemState.activeGameweek);
-        const kickOffs = fixtures.filter(x => x.gameweek === gameweek).map(fixture => computeTimeLeft(Number(fixture.kickOff)));
-        
-        const kickOffsInMillis = kickOffs.map(obj => 
-            obj.days * 24 * 60 * 60 * 1000 + 
-            obj.hours * 60 * 60 * 1000 + 
-            obj.minutes * 60 * 1000 + 
-            obj.seconds * 1000
-        );
-
-        const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
-        if (timeUntilGameweekBegins > 0 && gameweek > 1) {
-            gameweek -= 1;
+    const initPlayerEventsData = async (playerEventDataHash) => {
+        const cachedHash = localStorage.getItem('player_events_hash');
+        const cachedPlayerEventsData = localStorage.getItem('player_events_data');
+        const cachedPlayerEvents = JSON.parse(cachedPlayerEventsData || '[]');
+            
+        try {
+            if (!playerEventDataHash || cachedPlayerEvents.length === 0 || cachedHash !== playerEventDataHash.hash) {
+                await fetchAllPlayerEventsData(playerEventDataHash);
+            } else {
+                setPlayerEvents(cachedPlayerEvents);
+            }
+        } catch (error) {
+            console.error("Error fetching player event data cache:", error);
         }
-        
-        const allPlayersData = await player_canister.getPlayerDetailsForGameweek(systemState.activeSeason.id, gameweek);
-        setPlayerEvents(allPlayersData);
-        
-        localStorage.setItem('player_events_hash', playerEventsHash.hash);
-        localStorage.setItem('player_events_data', JSON.stringify(allPlayersData, replacer));
+    };
 
-    } catch (error) {
-        console.error("Error fetching all player events:", error);
-    }
-  };
+    const fetchAllPlayerEventsData = async (playerEventsHash) => {
+        try {
 
-  const initTeamsData = async (teamsHash) => {
-    const cachedHash = localStorage.getItem('teams_hash');
-    const cachedTeamsData = localStorage.getItem('teams_data');
-    const cachedTeams = JSON.parse(cachedTeamsData || '[]');
-    
-    try {
-        if (!teamsHash || cachedTeams.length === 0 || cachedHash !== teamsHash) {
-            await fetchAllTeams(teamsHash);
-        } else {
-            setTeams(cachedTeams);
+            var gameweek = Number(systemState.activeGameweek);
+            const kickOffs = fixtures.filter(x => x.gameweek === gameweek).map(fixture => computeTimeLeft(Number(fixture.kickOff)));
+            
+            const kickOffsInMillis = kickOffs.map(obj => 
+                obj.days * 24 * 60 * 60 * 1000 + 
+                obj.hours * 60 * 60 * 1000 + 
+                obj.minutes * 60 * 1000 + 
+                obj.seconds * 1000
+            );
+
+            const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
+            if (timeUntilGameweekBegins > 0 && gameweek > 1) {
+                gameweek -= 1;
+            }
+            
+            const allPlayersData = await player_canister.getPlayerDetailsForGameweek(systemState.activeSeason.id, gameweek);
+            setPlayerEvents(allPlayersData);
+            
+            localStorage.setItem('player_events_hash', playerEventsHash.hash);
+            localStorage.setItem('player_events_data', JSON.stringify(allPlayersData, replacer));
+
+        } catch (error) {
+            console.error("Error fetching all player events:", error);
         }
-    } catch (error) {
-        console.error("Error fetching teams data cache:", error);
-    }
+    };
+
+    const initTeamsData = async (teamsHash) => {
+        const cachedHash = localStorage.getItem('teams_hash');
+        const cachedTeamsData = localStorage.getItem('teams_data');
+        const cachedTeams = JSON.parse(cachedTeamsData || '[]');
+
+        try {
+            if (!teamsHash || cachedTeams.length === 0 || cachedHash !== teamsHash) {
+                await fetchAllTeams(teamsHash);
+            } else {
+                setTeams(cachedTeams);
+            }
+        } catch (error) {
+            console.error("Error fetching teams data cache:", error);
+        }
     };
 
     const fetchAllTeams = async (teamsHash) => {
-        try {
-            const allTeamsData = await open_fpl_backend.getTeams();
-            setTeams(allTeamsData);
-            
-            if (teamsHash) {
-                localStorage.setItem('teams_hash', teamsHash.hash);
-                localStorage.setItem('teams_data', JSON.stringify(allTeamsData, replacer));
-            } else {
-                console.error("No hash found for teams.");
+            try {
+                const allTeamsData = await open_fpl_backend.getTeams();
+                setTeams(allTeamsData);
+                
+                if (teamsHash) {
+                    localStorage.setItem('teams_hash', teamsHash.hash);
+                    localStorage.setItem('teams_data', JSON.stringify(allTeamsData, replacer));
+                } else {
+                    console.error("No hash found for teams.");
+                }
+            } catch (error) {
+                console.error("Error fetching teams:", error);
             }
-        } catch (error) {
-            console.error("Error fetching teams:", error);
-        }
     };
-    
+
     const initSeasonsData = async (seasonsHash) => {
         const cachedHash = localStorage.getItem('seasons_hash');
         const cachedSeasonsData = localStorage.getItem('seasons_data');
         const cachedSeasons = JSON.parse(cachedSeasonsData || '[]');
-    
+
         try {
             if (!seasonsHash || cachedSeasons.length === 0 || cachedHash !== seasonsHash) {
                 await fetchAllSeasons(seasonsHash);
@@ -177,12 +178,12 @@ export const DataProvider = ({ children }) => {
             console.error("Error fetching seasons data cache:", error);
         }
     };
-    
+
     const fetchAllSeasons = async (seasonsHash) => {
         try {
         const allSeasonsData = await open_fpl_backend.getSeasons();
         setSeasons(allSeasonsData);
-    
+
         if (seasonsHash) {
             localStorage.setItem('seasons_hash', seasonsHash.hash);
             localStorage.setItem('seasons_data', JSON.stringify(allSeasonsData, replacer));
@@ -193,12 +194,12 @@ export const DataProvider = ({ children }) => {
             console.error("Error fetching seasons:", error);
         }
     };
-    
+
     const initFixturesData = async (fixturesHash) => {
         const cachedHash = localStorage.getItem('fixtures_hash');
         const cachedFixturesData = localStorage.getItem('fixtures_data');
         const cachedFixtures = JSON.parse(cachedFixturesData || '[]');
-    
+
         try {
             if (!fixturesHash || cachedFixtures.length === 0 || cachedHash !== fixturesHash) {
                 await fetchAllFixtures(fixturesHash);
@@ -209,7 +210,7 @@ export const DataProvider = ({ children }) => {
             console.error("Error fetching fixtures data cache:", error);
         }
     };
-    
+
     const fetchAllFixtures = async (fixturesHash) => {
         try {
             const allFixturesData = await open_fpl_backend.getFixtureDTOs();
@@ -225,7 +226,7 @@ export const DataProvider = ({ children }) => {
             console.error("Error fetching fixtures:", error);
         }
     };
-    
+
     const initSystemState = async (systemStateHash) => {
         const cachedHash = localStorage.getItem('system_state_hash');
         const cachedSystemStateData = localStorage.getItem('system_state_data');
@@ -241,7 +242,7 @@ export const DataProvider = ({ children }) => {
             console.error("Error fetching cached system state:", error);
         }
     };
-    
+
     const fetchSystemState = async (systemStateHash) => {
         try {
             const systemStateData = await open_fpl_backend.getSystemState();
@@ -264,14 +265,14 @@ export const DataProvider = ({ children }) => {
         const cachedHash = localStorage.getItem('weekly_leaderboard_hash');
         const cachedData = localStorage.getItem('weekly_leaderboard_data');
         const parsedData = JSON.parse(cachedData || '{}');
-           
+            
         if (!hashObj || hashObj.hash !== cachedHash || Object.keys(parsedData).length === 0) {
             fetchWeeklyLeaderboard(hashObj);
         } else {
             setWeeklyLeaderboard(parsedData);
         }
     };
-    
+
     const fetchWeeklyLeaderboard = async (hashObj) => {
         try {
             var gameweek = Number(systemState.activeGameweek);
@@ -318,7 +319,7 @@ export const DataProvider = ({ children }) => {
             setMonthlyLeaderboards(parsedData);
         }
     };
-    
+
     const fetchMonthlyLeaderboards = async (hashObj) => {
         try {
             const monthlyLeaderboardsData = await open_fpl_backend.getClubLeaderboardsCache(Number(systemState.activeSeason.id), Number(systemState.activeMonth));
@@ -349,7 +350,7 @@ export const DataProvider = ({ children }) => {
             setSeasonLeaderboard(parsedData);
         }
     };
-    
+
     const fetchSeasonLeaderboard = async (hashObj) => {
         try {
             const seasonLeaderboardData = await open_fpl_backend.getSeasonLeaderboardCache(Number(systemState.activeSeason.id));
@@ -365,7 +366,7 @@ export const DataProvider = ({ children }) => {
             console.error("Error fetching season leaderboard:", error);
         }
     };
-    
+
     function replacer(key, value) {
         if ((key === 'dateOfBirth' || key === 'value'|| key === 'kickOff' || key === 'totalEntries'|| key === 'position') && typeof value === 'bigint') {
         return Number(value);

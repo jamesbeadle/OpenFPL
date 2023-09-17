@@ -55,7 +55,7 @@ const ViewPoints = () => {
         }
         else
         {
-            const detailedPlayersRaw = await open_fpl_backend.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));    
+            const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));    
             const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
             setFantasyTeam({
                 ...fetchedFantasyTeam,

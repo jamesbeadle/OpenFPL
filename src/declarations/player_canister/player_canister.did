@@ -241,10 +241,10 @@ service : {
   recallPlayer: (RecallPlayerPayload) -> ();
   retirePlayer: (RetirePlayerPayload) -> ();
   revaluePlayers: (nat16, nat8, List) -> ();
-  setDefaultHashes: () -> ();
   setPlayerInjury: (SetPlayerInjuryPayload) -> ();
   transferPlayer: (TransferPlayerPayload) -> ();
   unretirePlayer: (UnretirePlayerPayload) -> ();
   updateHashForCategory: (text) -> ();
   updatePlayer: (UpdatePlayerPayload) -> ();
+  updatePlayerEventDataCache: () -> ();
 }

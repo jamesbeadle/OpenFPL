@@ -31,7 +31,8 @@ module {
     resetFantasyTeams: () -> async (),
     updateCacheHash: (category: Text) -> async (),
     EventData_VotingPeriod: Int,
-    stable_timers: [T.TimerInfo]) {
+    stable_timers: [T.TimerInfo],
+    updatePlayerEventDataCache: () -> async ()) {
 
     private var activeSeasonId: Nat16 = 1;
     private var activeGameweek: Nat8 = 1;
@@ -191,6 +192,10 @@ module {
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
         await checkGameweekFinished();
         await updateCacheHash("fixtures");
+        await updateCacheHash("weekly_leaderboard");
+        await updateCacheHash("monthly_leaderboards");
+        await updateCacheHash("season_leaderboard");
+        await updatePlayerEventDataCache();
     };
 
     public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async (){
@@ -222,6 +227,10 @@ module {
         activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
         await checkGameweekFinished();
         await updateCacheHash("fixtures");
+        await updateCacheHash("weekly_leaderboard");
+        await updateCacheHash("monthly_leaderboards");
+        await updateCacheHash("season_leaderboard");
+        await updatePlayerEventDataCache();
     };
 
     public func finaliseFixture(fixture: T.Fixture) : async (){

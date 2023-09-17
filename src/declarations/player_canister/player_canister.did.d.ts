@@ -195,10 +195,10 @@ export interface _SERVICE {
   'recallPlayer' : ActorMethod<[RecallPlayerPayload], undefined>,
   'retirePlayer' : ActorMethod<[RetirePlayerPayload], undefined>,
   'revaluePlayers' : ActorMethod<[number, number, List], undefined>,
-  'setDefaultHashes' : ActorMethod<[], undefined>,
   'setPlayerInjury' : ActorMethod<[SetPlayerInjuryPayload], undefined>,
   'transferPlayer' : ActorMethod<[TransferPlayerPayload], undefined>,
   'unretirePlayer' : ActorMethod<[UnretirePlayerPayload], undefined>,
   'updateHashForCategory' : ActorMethod<[string], undefined>,
   'updatePlayer' : ActorMethod<[UpdatePlayerPayload], undefined>,
+  'updatePlayerEventDataCache' : ActorMethod<[], undefined>,
 }
