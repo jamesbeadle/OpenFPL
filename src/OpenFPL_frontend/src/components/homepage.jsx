@@ -35,6 +35,7 @@ const Homepage = () => {
             if (filterGameweek === 0) return;
 
             await updateCountdowns();
+            setButtonVisibility(currentGameweek);
             setIsLoading(false);
         };
         
