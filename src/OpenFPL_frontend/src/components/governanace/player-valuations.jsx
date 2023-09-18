@@ -61,8 +61,43 @@ const PlayerValuations = ({ isActive }) => {
   }
   
   const canVoteForPlayer = (playerId) => {
-    // Check if user hasn't voted for this player this season and hasn't reached their 20 vote limit this gameweek
-    return !(userVotes.thisSeason.includes(playerId) || userVotes.thisWeek.length >= 20);
+    return !userVotes.thisSeason.includes(playerId);
+  };
+
+  const AlreadyRevaluedText = ({ playerId }) => {
+    if (canVoteForPlayer(playerId)) return null;
+    return <p className="text-muted">Already Valued</p>;
+  };
+
+  
+  const VoteButtons = ({ player }) => {
+    if (!canVoteForPlayer(player.id)) return null;
+    return (
+      <Row className="no-gutters">
+        <Col>
+          <Button 
+            variant="danger" 
+            style={{width: '100%'}} 
+            onClick={() => handleVote("negative", player)} 
+            disabled={userVotes.thisWeek.length >= 20}
+          >
+            Update -£0.25m
+          </Button>
+          <p className="text-center mt-1">50%</p>
+        </Col>
+        <Col>
+          <Button 
+            variant="success" 
+            style={{width: '100%'}} 
+            onClick={() => handleVote("positive", player)} 
+            disabled={userVotes.thisWeek.length >= 20}
+          >
+            Update +£0.25m
+          </Button>
+          <p className="text-center mt-1">50%</p>
+        </Col>
+      </Row>
+    );
   };
  
   const handleVote = async (voteType, player) => {
@@ -219,16 +254,8 @@ const PlayerValuations = ({ isActive }) => {
                   <h5 className='ml-4'>£{parseFloat(player.value).toFixed(2)}m</h5>
                 </td>
                 <td>
-                  <Row className="no-gutters">
-                    <Col>
-                      <Button variant="danger" style={{width: '100%'}} onClick={() => handleVote("negative", player)} disabled={!canVoteForPlayer(player.id)} >Update -£0.25m</Button>
-                      <p className="text-center mt-1">50%</p>
-                    </Col>
-                    <Col>
-                      <Button variant="success" style={{width: '100%'}} onClick={() => handleVote("positive", player)} disabled={!canVoteForPlayer(player.id)} >Update +£0.25m</Button>
-                      <p className="text-center mt-1">50%</p>
-                    </Col>
-                  </Row>
+                  <AlreadyRevaluedText playerId={player.id} />
+                  <VoteButtons player={player} />
                   <Row>
                     <Col>
                       <p className="text-center"><small>Total Weekly Votes: 0</small></p>

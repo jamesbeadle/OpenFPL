@@ -7,12 +7,14 @@ import PlayerEventsModal from '../player-events-modal';
 import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
 import { useNavigate } from 'react-router-dom';
+import { useSnsGovernance } from "../../contexts/SNSGovernanceContext";
 
 const AddFixtureData = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const fixtureId = queryParams.get('fixtureId');
-
+  const { fetchExistingProposal, voteOnProposal, createNewProposal } = useSnsGovernance();
+  
   const { teams, systemState, players } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixture, setFixture] = useState(null);
