@@ -1,43 +1,45 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';  // Added useEffect
-import snsGovernance from './path_to_services/snsGovernance';
-import { SnsProposalDecisionStatus } from "@dfinity/sns/dist/enums/governance.enums";
+import React, { useState, useEffect } from 'react';
+import { SnsGovernanceCanister } from 'dfinity/sns';
+import { SnsProposalDecisionStatus } from "dfinity/sns/dist/enums/governance.enums";
 
-const SnsGovernanceContext = createContext();
+const SnsGovernanceContext = React.createContext();
 
-export const useSnsGovernance = () => {
-    return useContext(SnsGovernanceContext);
-};
-
-export const SnsGovernanceProvider = ({ children, canisterId }) => {
-    const [neurons, setNeurons] = useState([]);
-    const [proposals, setProposals] = useState([]);  // Added this state initialization
+export const SnsGovernanceProvider = ({ children }) => {
+    const location = useLocation();
     const [activeValuationProposals, setActiveValuationProposals] = useState([]);
     const [activeFixtureDataProposals, setActiveFixtureDataProposals] = useState([]);
     const [activeGovernanceProposals, setActiveGovernanceProposals] = useState([]);
+    const [alreadyValuedPlayerIds, setAlreadyValuedPlayerIds ] = useState([]);
+    const [remainingWeeklyValuationVotes, setRemainingWeeklyValuationVotes ] = useState([]);
     
-    const instance = snsGovernance.createInstance(canisterId);
-    
+    const [loading, setLoading] = useState(true);
+  
+    const getData = async () => {
+        await fetchProposalsByType(CustomProposalType.PLAYER_VALUATION, setActiveValuationProposals);
+        await fetchProposalsByType(CustomProposalType.FIXTURE_DATA, setActiveFixtureDataProposals);
+        await fetchProposalsByType(CustomProposalType.MOVE_PLAYER_BETWEEN_TEAM, setActiveGovernanceProposals);
+        await fetchRemainingWeeklyValuationVotes();
+        await fetchAlreadyValuedPlayerIds();
+        setLoading(false);
+    };
+
     useEffect(() => {
-        fetchPlayerValuationProposals();
-        fetchAddedFixtureDataProposals();
-        fetchSystemUpdateProposals();
+        getData();
     }, []);
 
-    const fetchPlayerValuationProposals = () => fetchProposalsByType(1n, setActiveValuationProposals);
-    const fetchAddedFixtureDataProposals = () => fetchProposalsByType(2n, setActiveFixtureDataProposals);
-    const fetchSystemUpdateProposals = () => fetchProposalsByType(3n, setActiveGovernanceProposals);
-    
-    const fetchNeurons = async () => {
-        const result = await snsGovernance.listNeurons(instance, {});
-        setNeurons(result.neurons);
-    };
+    useEffect(() => {
+        if (location.pathname !== '/governance') {
+            return;
+        }
+        getData();
+    }, [location.pathname]);
 
     const fetchProposalsByType = async (type, setActiveFunction) => {
         const params = {
             includeStatus: [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN],
             includeType: [type]
         };
-        const result = await snsGovernance.listProposals(instance, params);
+        const result = await SnsGovernanceCanister.listProposals(instance, params);
         if (setActiveFunction) {
             setActiveFunction(result.proposals);
         } else {
@@ -45,14 +47,69 @@ export const SnsGovernanceProvider = ({ children, canisterId }) => {
         }
     };
 
-    
-    const fetchProposals = async () => {
-        const result = await snsGovernance.listProposals(instance, {});
-        setProposals(result.proposals);
+    const fetchAlreadyValuedPlayerIds = async () => {
+        //IMPLEMENT
+        setAlreadyValuedPlayerIds([]);
     };
 
-    const getProposal = async (params) => {
-        return await snsGovernance.getProposal(instance, params);
+    const fetchRemainingWeeklyValuationVotes = async () => {
+        //IMPLEMENT
+        setRemainingWeeklyValuationVotes([]);
+    };
+
+    const revaluePlayerUp = async (playerId) => {
+
+        const existingProposal = activeValuationProposals.find(x => x.type == 'REVALUE PLAYER UP' && x.playerId == playerId);
+
+        if(existingProposal){
+
+/*
+
+
+export interface SnsRegisterVoteParams extends SnsNeuronManagementParams {
+  vote: SnsVote;
+  proposalId: ProposalId;
+}
+
+export enum SnsVote {
+  Unspecified = 0,
+  Yes = 1,
+  No = 2,
+}
+
+*/
+
+
+            //submit the vote
+        }
+        else{
+            const newProposalId = await createNewRevaluePlayerUpProposal(player.id);
+            //submit the vote
+        }
+        getData();
+    };
+
+    const revaluePlayerDown = async (playerId) => {
+        const existingProposal = activeValuationProposals.find(x => x.type == 'REVALUE PLAYER DOWN' && x.playerId == playerId);
+
+        if(existingProposal){
+            //submit the vote
+        }
+        else{
+            const newProposalId = await createNewRevaluePlayerDownProposal(player.id);
+            
+                //submit the vote
+
+        }
+        getData();
+    };
+
+    const createNewRevaluePlayerUpProposal = async (playerId) => {
+
+    };
+
+    const createNewRevaluePlayerDownProposal = async (playerId) => {
+
     };
 
     const CustomProposalType = {
@@ -61,24 +118,9 @@ export const SnsGovernanceProvider = ({ children, canisterId }) => {
         MOVE_PLAYER_BETWEEN_TEAM: 3n
     };
 
-    const fetchActivePlayerValuationProposals = () => fetchProposalsByType(CustomProposalType.PLAYER_VALUATION);
-    const fetchActiveFixtureDataProposals = () => fetchProposalsByType(CustomProposalType.FIXTURE_DATA);
-    const fetchActiveMovePlayerBetweenTeamProposals = () => fetchProposalsByType(CustomProposalType.MOVE_PLAYER_BETWEEN_TEAM);
-
-    const value = {
-        neurons,
-        proposals,
-        fetchNeurons,
-        fetchProposals,
-        getProposal,
-        fetchActivePlayerValuationProposals,
-        fetchActiveFixtureDataProposals,
-        fetchActiveMovePlayerBetweenTeamProposals
-    };
-
     return (
-        <SnsGovernanceContext.Provider value={value}>
-            {children}
+        <SnsGovernanceContext.Provider value={{ activeFixtureDataProposals, activeGovernanceProposals, alreadyValuedPlayerIds, remainingWeeklyValuationVotes }}>
+            {!loading && children}
         </SnsGovernanceContext.Provider>
     );
 };

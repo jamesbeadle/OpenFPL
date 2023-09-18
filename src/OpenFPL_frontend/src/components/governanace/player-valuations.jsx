@@ -11,16 +11,15 @@ const COUNT = 25;
 
 const PlayerValuations = ({ isActive }) => {
   const { players, teams } = useContext(DataContext);
-  const { fetchExistingProposal, voteOnProposal, createNewProposal, userVotes } = useSnsGovernance();
+  const { alreadyValuedPlayerIds, remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown } = useSnsGovernance();
   
   const [viewData, setViewData] = useState([]);
   const [filter, setFilter] = useState({ team: 0, position: -1, page: 0 });
-  const [remainingVotes, setRemainingVotes] = useState(20 - userVotes.thisWeek.length); 
+  const [remainingVotes, setRemainingVotes] = useState(remainingVotes); 
   const [modalState, setModalState] = useState({ show: false, voteType: null, player: null });
   const [teamColours, setTeamColours] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  
   useEffect(() => {
     if (!isActive) return;
     
@@ -60,73 +59,21 @@ const PlayerValuations = ({ isActive }) => {
     );
   }
   
-  const canVoteForPlayer = (playerId) => {
-    return !userVotes.thisSeason.includes(playerId);
-  };
-
-  const AlreadyRevaluedText = ({ playerId }) => {
-    if (canVoteForPlayer(playerId)) return null;
-    return <p className="text-muted">Already Valued</p>;
-  };
-
-  
-  const VoteButtons = ({ player }) => {
-    if (!canVoteForPlayer(player.id)) return null;
-    return (
-      <Row className="no-gutters">
-        <Col>
-          <Button 
-            variant="danger" 
-            style={{width: '100%'}} 
-            onClick={() => handleVote("negative", player)} 
-            disabled={userVotes.thisWeek.length >= 20}
-          >
-            Update -£0.25m
-          </Button>
-          <p className="text-center mt-1">50%</p>
-        </Col>
-        <Col>
-          <Button 
-            variant="success" 
-            style={{width: '100%'}} 
-            onClick={() => handleVote("positive", player)} 
-            disabled={userVotes.thisWeek.length >= 20}
-          >
-            Update +£0.25m
-          </Button>
-          <p className="text-center mt-1">50%</p>
-        </Col>
-      </Row>
-    );
-  };
- 
-  const handleVote = async (voteType, player) => {
-    if (!canVoteForPlayer(player.id)) {
-      return;
-    }
-  
+  const handleVote = async (voteType, playerId) => {
     setIsLoading(true);
-  
     try {
-      // Check for an existing valuation proposal for the player in the specified direction
-      const existingProposal = await fetchExistingProposal(player.id, voteType);
-      
-      if (existingProposal) {
-        // If a proposal already exists, add the user's vote to it
-        await voteOnProposal(existingProposal.id, voteType);
-      } else {
-        // If not, create a new proposal and then vote on it
-        const newProposalId = await createNewProposal(player.id, voteType);
-        await voteOnProposal(newProposalId, voteType);
+      switch(voteType){
+        case "positive":
+          revaluePlayerUp(playerId);
+          break;
+        case "negative":
+          revaluePlayerUp(playerId);
+          break;
+        default:
+          break
       }
-  
-      // Update remaining votes and display the confirmation modal
-      setRemainingVotes(prev => prev - 1);
-      setModalState({ show: true, voteType, player });
-  
     } catch (error) {
       console.error("Error during the voting process:", error);
-      // Handle this error appropriately, e.g., show a notification to the user
     } finally {
       setIsLoading(false);
     }
@@ -254,8 +201,34 @@ const PlayerValuations = ({ isActive }) => {
                   <h5 className='ml-4'>£{parseFloat(player.value).toFixed(2)}m</h5>
                 </td>
                 <td>
-                  <AlreadyRevaluedText playerId={player.id} />
-                  <VoteButtons player={player} />
+                  { alreadyValuedPlayerIds.includes(playerId) ? 
+                    <p className="text-muted">Already Valued</p> :
+                      
+                    <Row className="no-gutters">
+                      <Col>
+                        <Button 
+                          variant="danger" 
+                          style={{width: '100%'}} 
+                          onClick={() => handleVote("negative", player.id)} 
+                          disabled={remainingWeeklyValuationVotes.length === 0}
+                        >
+                          Update -£0.25m
+                        </Button>
+                        <p className="text-center mt-1">50%</p>
+                      </Col>
+                      <Col>
+                        <Button 
+                          variant="success" 
+                          style={{width: '100%'}} 
+                          onClick={() => handleVote("positive", player.id)} 
+                          disabled={remainingWeeklyValuationVotes.length === 0}
+                        >
+                          Update +£0.25m
+                        </Button>
+                        <p className="text-center mt-1">50%</p>
+                      </Col>
+                    </Row>
+                  }
                   <Row>
                     <Col>
                       <p className="text-center"><small>Total Weekly Votes: 0</small></p>
