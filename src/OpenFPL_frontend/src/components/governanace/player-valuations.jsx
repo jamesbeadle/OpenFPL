@@ -3,19 +3,23 @@ import { Card, Spinner, Table, Button, Form, Modal, ButtonGroup, Col, Row } from
 import getFlag from '../country-flag';
 import { getAgeFromDOB } from '../helpers';
 import { DataContext } from "../../contexts/DataContext";
+import { useSnsGovernance } from "../../contexts/SNSGovernanceContext";
+
 
 const POSITION_LABELS = ["GK", "DEF", "MID", "FWD"];
 const COUNT = 25;
 
 const PlayerValuations = ({ isActive }) => {
   const { players, teams } = useContext(DataContext);
+  const { fetchExistingProposal, voteOnProposal, createNewProposal, userVotes } = useSnsGovernance();
+  
   const [viewData, setViewData] = useState([]);
   const [filter, setFilter] = useState({ team: 0, position: -1, page: 0 });
-  const [remainingVotes, setRemainingVotes] = useState(20);
+  const [remainingVotes, setRemainingVotes] = useState(20 - userVotes.thisWeek.length); 
   const [modalState, setModalState] = useState({ show: false, voteType: null, player: null });
   const [teamColours, setTeamColours] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  
+
   
   useEffect(() => {
     if (!isActive) return;
@@ -56,8 +60,41 @@ const PlayerValuations = ({ isActive }) => {
     );
   }
   
-  const handleVote = (voteType, player) => {
-    setModalState({ show: true, voteType, player });
+  const canVoteForPlayer = (playerId) => {
+    // Check if user hasn't voted for this player this season and hasn't reached their 20 vote limit this gameweek
+    return !(userVotes.thisSeason.includes(playerId) || userVotes.thisWeek.length >= 20);
+  };
+ 
+  const handleVote = async (voteType, player) => {
+    if (!canVoteForPlayer(player.id)) {
+      return;
+    }
+  
+    setIsLoading(true);
+  
+    try {
+      // Check for an existing valuation proposal for the player in the specified direction
+      const existingProposal = await fetchExistingProposal(player.id, voteType);
+      
+      if (existingProposal) {
+        // If a proposal already exists, add the user's vote to it
+        await voteOnProposal(existingProposal.id, voteType);
+      } else {
+        // If not, create a new proposal and then vote on it
+        const newProposalId = await createNewProposal(player.id, voteType);
+        await voteOnProposal(newProposalId, voteType);
+      }
+  
+      // Update remaining votes and display the confirmation modal
+      setRemainingVotes(prev => prev - 1);
+      setModalState({ show: true, voteType, player });
+  
+    } catch (error) {
+      console.error("Error during the voting process:", error);
+      // Handle this error appropriately, e.g., show a notification to the user
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const confirmVote = () => {
@@ -184,11 +221,11 @@ const PlayerValuations = ({ isActive }) => {
                 <td>
                   <Row className="no-gutters">
                     <Col>
-                      <Button variant="danger" style={{width: '100%'}} onClick={() => handleVote("negative", player)}>Update -£0.25m</Button>
+                      <Button variant="danger" style={{width: '100%'}} onClick={() => handleVote("negative", player)} disabled={!canVoteForPlayer(player.id)} >Update -£0.25m</Button>
                       <p className="text-center mt-1">50%</p>
                     </Col>
                     <Col>
-                      <Button variant="success" style={{width: '100%'}} onClick={() => handleVote("positive", player)}>Update +£0.25m</Button>
+                      <Button variant="success" style={{width: '100%'}} onClick={() => handleVote("positive", player)} disabled={!canVoteForPlayer(player.id)} >Update +£0.25m</Button>
                       <p className="text-center mt-1">50%</p>
                     </Col>
                   </Row>
