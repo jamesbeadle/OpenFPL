@@ -62,29 +62,20 @@ export const SnsGovernanceProvider = ({ children }) => {
         const existingProposal = activeValuationProposals.find(x => x.type == 'REVALUE PLAYER UP' && x.playerId == playerId);
 
         if(existingProposal){
-
-/*
-
-
-export interface SnsRegisterVoteParams extends SnsNeuronManagementParams {
-  vote: SnsVote;
-  proposalId: ProposalId;
-}
-
-export enum SnsVote {
-  Unspecified = 0,
-  Yes = 1,
-  No = 2,
-}
-
-*/
-
-
-            //submit the vote
+            const voteParams = {
+                vote: SnsVote.Yes,
+                proposalId: existingProposal.id
+            };
+            await SnsGovernanceCanister.registerVote(voteParams);
         }
         else{
             const newProposalId = await createNewRevaluePlayerUpProposal(player.id);
-            //submit the vote
+            
+            const voteParams = {
+                vote: SnsVote.Yes,
+                proposalId: newProposalId
+            };
+            await SnsGovernanceCanister.registerVote(voteParams);
         }
         getData();
     };

@@ -15,6 +15,7 @@ import Hash "mo:base/Hash";
 import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 import Debug "mo:base/Debug";
+import SNSGovernance "Ledger";
 
 module {
     public class Governance(
@@ -31,7 +32,10 @@ module {
         updateTeam: (proposalPayload: T.UpdateTeamPayload) -> async ()){
 
         private let oneHour = 1_000_000_000 * 60 * 60;
+        private let governanceCanister  : SNSGovernance.Interface = actor(SNSGovernance.CANISTER_ID);
         
+        //
+
         /*
         //USE FOR LOCAL DEV
         let admins : [Text] = [
