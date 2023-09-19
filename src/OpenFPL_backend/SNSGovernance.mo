@@ -480,12 +480,6 @@ module {
         open_time_window : ?TimeWindow;
     };
 
-    public type Interface = actor {
-        list_neurons: ListNeurons       -> async ListNeuronsResponse;
-        list_proposals: ListProposalInfo -> async ListProposalInfoResponse;
-        manage_neuron: ManageNeuron -> async ManageNeuronResponse;
-    };
-
     public type NeuronBasketConstructionParameters = {
         dissolve_delay_interval : ?Duration;
         count : ?Nat64;
@@ -549,38 +543,35 @@ module {
         refreshed_neuron_id : ?NeuronId;
     };
 
-    type MergeResponse = {
+    public type MergeResponse = {
         target_neuron : ?Neuron;
         source_neuron : ?Neuron;
         target_neuron_info : ?NeuronInfo;
         source_neuron_info : ?NeuronInfo;
     };
 
-    type MakeProposalResponse = {
+    public type MakeProposalResponse = {
         proposal_id : ?NeuronId;
     };
 
-    type StakeMaturityResponse = {
+    public type StakeMaturityResponse = {
         maturity_e8s : Nat64;
         staked_maturity_e8s : Nat64;
     };
 
-    type MergeMaturityResponse = {
+    public type MergeMaturityResponse = {
         merged_maturity_e8s : Nat64;
         new_stake_e8s : Nat64;
     };
 
-    type DisburseResponse = {
+    public type DisburseResponse = {
         transfer_block_height : Nat64;
     };
 
-
-
-
-
-
-
-
-
+    public type Interface = actor {
+        list_neurons: ListNeurons -> async ListNeuronsResponse;
+        list_proposals: ListProposalInfo -> async ListProposalInfoResponse;
+        manage_neuron: ManageNeuron -> async ManageNeuronResponse;
+    };
 
 };
