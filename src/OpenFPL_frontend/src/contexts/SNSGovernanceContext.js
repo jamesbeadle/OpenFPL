@@ -97,13 +97,15 @@ export const SnsGovernanceProvider = ({ children }) => {
             const activeProposals = await SnsGovernanceCanister.listProposals({
                 includeStatus: [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN]
             });
-    
-            const matchingProposalUp = activeProposals.find(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUp && IDL.decode(InitArgs, proposal.payload).playerId === player.id;
+
+            const matchingProposalDown = activeProposals.filter(proposal => {
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdDown && IDL.decode(InitArgs, proposal.payload).playerId === player.id;
             });
-    
-            const matchingProposalDown = activeProposals.find(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdDown && IDL.decode(InitArgs, proposal.payload).playerId === player.id;
+
+            const matchingProposalUp = activeProposals.filter(proposal => {
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUp && IDL.decode(InitArgs, proposal.payload).playerId === player.id;
             });
     
             if (matchingProposalDown) {
@@ -144,13 +146,15 @@ export const SnsGovernanceProvider = ({ children }) => {
             const activeProposals = await SnsGovernanceCanister.listProposals({
                 includeStatus: [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN]
             });
-    
-            const matchingProposalDown = activeProposals.find(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdDown && IDL.decode(InitArgs, proposal.payload).playerId === player.id;
+            
+            const matchingProposalDown = activeProposals.filter(proposal => {
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdDown && IDL.decode(InitArgs, proposal.payload).playerId === player.id;
             });
-    
-            const matchingProposalUp = activeProposals.find(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUp && IDL.decode(InitArgs, proposal.payload).playerId === player.id;
+
+            const matchingProposalUp = activeProposals.filter(proposal => {
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUp && IDL.decode(InitArgs, proposal.payload).playerId === player.id;
             });
     
             if (matchingProposalUp) {
@@ -195,7 +199,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdFixtureData;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -250,7 +255,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdAddFixtures;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -310,7 +316,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdReschedule;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -352,7 +359,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdTransfer;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -395,7 +403,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdLoan;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -438,7 +447,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdRecall;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -478,7 +488,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdCreate;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -518,7 +529,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -558,7 +570,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdInjury;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -598,7 +611,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdRetire;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -638,7 +652,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUnretire;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -678,7 +693,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdFormerTeam;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -718,7 +734,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdPromote;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -759,7 +776,8 @@ export const SnsGovernanceProvider = ({ children }) => {
             });
     
             const relevantProposals = activeProposals.filter(proposal => {
-                return proposal.action[0]?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                const action = proposal.proposal?.action[0];
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
