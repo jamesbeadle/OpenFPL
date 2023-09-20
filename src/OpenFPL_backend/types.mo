@@ -273,7 +273,6 @@ module Types{
         #RetirePlayer : RetirePlayerPayload;
         #UnretirePlayer : UnretirePlayerPayload;
         #PromoteTeam : PromoteTeamPayload;
-        #RelegateTeam : RelegateTeamPayload;
         #UpdateTeam : UpdateTeamPayload;
         #UpdateSystemParameters : UpdateSystemParametersPayload;
     };
