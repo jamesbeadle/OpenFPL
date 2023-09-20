@@ -87,7 +87,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to increase the value of ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${player.id})`));
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -103,7 +103,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to decrease the value of ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${player.id})`));
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -114,14 +114,29 @@ export const SnsGovernanceProvider = ({ children }) => {
         }
     };
 
-    const submitFixtureData = async (userPrincipal, fixture, allPlayerEventData) => {
+    function constructPlayerEventDataString(events) {
+        return events.map(event => `
+            record {
+                fixtureId=${event.fixtureId};
+                playerId=${event.playerId};
+                eventType=${event.eventType};
+                eventStartMinute=${event.eventStartMinute};
+                eventEndMinute=${event.eventEndMinute};
+                teamId=${event.teamId};
+            }
+        `).join('; ');
+    }
+    
+    const submitFixtureData = async (userPrincipal, fixture, playerEvents) => {
         const proposalTitle = "Fixture Event Data Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to add event data to fixture 
             ${getTeamById(teams, fixture.homeTeamId).abbreviateName} v ${getTeamById(teams, fixture.awayTeamId).abbreviateName}.`;
-
-            const payload = IDL.encode(InitArgs, (`(${fixture.id} ${allPlayerEventData})`));
-
+    
+        const playerEventDataString = constructPlayerEventDataString(playerEvents);
+    
+        const payload = IDL.encode(InitArgs, `(record { fixtureId: ${fixture.id}; playerEventData: vec {${playerEventDataString}} })`);
+    
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -131,13 +146,33 @@ export const SnsGovernanceProvider = ({ children }) => {
         }
     };
 
-    const addIninitalFixtures = async (userPrincipal, season, allSeasonFixtures) => {
+    function constructFixtureString(fixtures) {
+        return fixtures.map(fixture => `
+            record {
+                id=${fixture.id};
+                seasonId=${fixture.seasonId};
+                gameweek=${fixture.gameweek};
+                kickOff=${fixture.kickOff};
+                homeTeamId=${fixture.homeTeamId};
+                awayTeamId=${fixture.awayTeamId};
+                homeGoals=0;
+                awayGoals=0;
+                status=0;
+                events=vec {};
+                highestScoringPlayerId=0;
+            }
+        `).join('; ');
+    }
+    
+    const addIninitalFixtures = async (userPrincipal, season, seasonFixtures) => {
         const proposalTitle = "Initial Season Fixtures Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to add initial fixtures to season ${season.name}.`;
-
-        const payload = IDL.encode(InitArgs, (`(${season.id} ${allSeasonFixtures})`));
-
+    
+        const seasonFixturesString = constructFixtureString(seasonFixtures);
+    
+        const payload = IDL.encode(InitArgs, `(record { seasonId: ${season.id}; seasonFixtures: vec {${seasonFixturesString}} })`);
+    
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -152,14 +187,14 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to reschedule fixture 
             ${getTeamById(teams, fixture.homeTeamId).abbreviateName} v ${getTeamById(teams, fixture.awayTeamId).abbreviateName}.`;
-
-        const payload = IDL.encode(InitArgs, (`(${fixture.id} ${gameweek} ${updatedFixtureDate})`));
-
+    
+        const payload = IDL.encode(InitArgs, `(record { fixtureId=${fixture.id}; gameweek=${gameweek}; updatedFixtureDate=${updatedFixtureDate} })`);
+    
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 5000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -168,14 +203,14 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalTitle = "Transfer Player Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to transfer player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, currentTeamId).abbreviateName} to ${getTeamById(teams, newTeamId).abbreviateName}.`;
-
-        const payload = IDL.encode(InitArgs, (`(${player.id} ${currentTeamId} ${newTeamId})`));
+        
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; currentTeamId=${currentTeamId}; newTeamId=${newTeamId} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 6000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -185,13 +220,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to loan player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, parentTeamId).abbreviateName} to ${getTeamById(teams, loanTeamId).abbreviateName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${playerId} ${parentTeamId} ${loanTeamId} ${loanEndDate})`));
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; parentTeamId=${parentTeamId}; loanTeamId=${loanTeamId}; loanEndDate=${loanEndDate} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 7000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -201,13 +236,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to recall loan for player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${player.id})`));
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 8000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -217,14 +252,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to add new player ${firstName} ${lastName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${teamId} ${position} ${firstName} ${lastName} ${shirtNumber} 
-            ${value} ${dateOfBirth} ${nationality})`));
+        const payload = IDL.encode(InitArgs, `(record { teamId=${teamId}; position=${position}; firstName=${firstName}; lastName=${lastName}; shirtNumber=${shirtNumber}; value=${value}; dateOfBirth=${dateOfBirth}; nationality=${nationality} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 9000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -234,14 +268,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to update new player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${position} ${firstName} ${lastName} ${shirtNumber} 
-            ${dateOfBirth} ${nationality})`));
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; position=${position}; firstName=${firstName}; lastName=${lastName}; shirtNumber=${shirtNumber}; dateOfBirth=${dateOfBirth}; nationality=${nationality} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 10000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -251,13 +284,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to update player injury status for player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${player.id} ${description} ${expectedEndDate})`));
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; description=${description}; expectedEndDate=${expectedEndDate} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 11000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -267,13 +300,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to retire player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${player.id} ${retirementDate}`));
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; retirementDate=${retirementDate} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 12000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -283,13 +316,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to unretire player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = IDL.encode(InitArgs, (`(${player.id}`));
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 13000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -299,13 +332,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to promote team ${getTeamById(teams, teamId).abbreviateName}} to the Premier League.`;
 
-        const payload = IDL.encode(InitArgs, (`(${teamId}`));
+        const payload = IDL.encode(InitArgs, `(record { teamId=${teamId} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 14000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -315,13 +348,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to promote ${name} to the Premier League.`;
 
-        const payload = IDL.encode(InitArgs, (`(${name} ${friendlyName} ${abbreviatedName} ${primaryHexColour} ${secondaryHexColour} ${thirdHexColour}`));
+        const payload = IDL.encode(InitArgs, `(record { name=${name}; friendlyName=${friendlyName}; abbreviatedName=${abbreviatedName}; primaryHexColour=${primaryHexColour}; secondaryHexColour=${secondaryHexColour}; thirdHexColour=${thirdHexColour} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 15000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
@@ -331,13 +364,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to update ${getTeamById(teams, teamId).abbreviateName}} team details.`;
 
-        const payload = IDL.encode(InitArgs, (`(${teamId} ${name} ${friendlyName} ${abbreviatedName} ${primaryHexColour} ${secondaryHexColour} ${thirdHexColour}`));
+        const payload = IDL.encode(InitArgs, `(record { teamId=${teamId}; name=${name}; friendlyName=${friendlyName}; abbreviatedName=${abbreviatedName}; primaryHexColour=${primaryHexColour}; secondaryHexColour=${secondaryHexColour}; thirdHexColour=${thirdHexColour} })`);
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
             const manageNeuronRequest = createManageNeuronRequestForProposal(
-                neuronId, proposalTitle, proposalUrl, proposalSummary, 4000, payload);
+                neuronId, proposalTitle, proposalUrl, proposalSummary, 16000, payload);
             await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
         }
     };
