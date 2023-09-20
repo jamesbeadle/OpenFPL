@@ -447,11 +447,6 @@ actor Self {
     await teamsInstance.updateTeam(proposalPayload);
   };
 
-  private func proposalExpiredCallback() : async () {
-    await governanceInstance.proposalExpired();
-    removeExpiredTimers();
-  };
-
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBegin();
     removeExpiredTimers();
@@ -483,9 +478,6 @@ actor Self {
   
   private func setAndBackupTimer(duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) : async () {
     let jobId: Timer.TimerId = switch(callbackName) {
-        case "proposalExpired" {
-            Timer.setTimer(duration, proposalExpiredCallback);
-        };
         case "gameweekBeginExpired" {
             Timer.setTimer(duration, gameweekBeginExpiredCallback);
         };
@@ -639,6 +631,7 @@ actor Self {
     return seasonManager.getValidatableFixtures();
   };
 
+  /* This function is now called via the sns-js governance canister so I can remove this endpoint and deal with it via the generic functions executing on proposal completion
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, allPlayerEvents: [T.PlayerEventData]) : async (){
     
     assert not Principal.isAnonymous(caller);
@@ -682,7 +675,7 @@ actor Self {
     for(playerId in Iter.fromArray<Nat16>(Buffer.toArray(homeTeamPlayerIdsBuffer))){
       let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
           switch (player) {
-              case (null) { /* do nothing */ };
+              case (null) {  };
               case (?actualPlayer) {
                   if (actualPlayer.position == 0 or actualPlayer.position == 1) {
                       if(Array.find<Nat16>(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer), func(x: Nat16): Bool { return x == playerId; }) == null) {
@@ -696,7 +689,7 @@ actor Self {
     for(playerId in Iter.fromArray<Nat16>(Buffer.toArray(awayTeamPlayerIdsBuffer))){
       let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
           switch (player) {
-              case (null) { /* do nothing */ };
+              case (null) {  };
               case (?actualPlayer) {
                   if (actualPlayer.position == 0 or actualPlayer.position == 1) {
                       if(Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x: Nat16): Bool { return x == playerId; }) == null) {
@@ -818,6 +811,7 @@ actor Self {
 
     await governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, Buffer.toArray(allPlayerEventsBuffer));
   };
+  */
 
   private func validatePlayerEvents(playerEvents: [T.PlayerEventData]) : Bool {
 
@@ -911,9 +905,11 @@ actor Self {
     return adjFixtures;
   };  
 
+  /* Remove as I will get from the governance canister
   private func getConsensusPlayerEventData(gameweekId: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData>{
     return await governanceInstance.getConsensusPlayerEventData(gameweekId, fixtureId);
   };
+  */
 
   private func distributeRewards(): async () {
     await rewardsInstance.distributeRewards();
@@ -924,7 +920,8 @@ actor Self {
   };
 
   private func revaluePlayers(activeSeasonId: Nat16, activeGameweek: Nat8): async (){
-    let revaluedPlayers = await governanceInstance.getRevaluedPlayers(activeSeasonId, activeGameweek);
+    //let revaluedPlayers = await governanceInstance.getRevaluedPlayers(activeSeasonId, activeGameweek);
+    let revaluedPlayers = List.nil<T.RevaluedPlayer>(); // NEED TO SET THIS FROM THE GOVERNANCE CANISTER
     await playerCanister.revaluePlayers(revaluedPlayers);
   };
 
@@ -993,11 +990,11 @@ actor Self {
     mintWeeklyRewardsPool, 
     mintAnnualRewardsPool, 
     calculateFantasyTeamScores, 
-    getConsensusPlayerEventData,
+    //getConsensusPlayerEventData,
     getAllPlayersMap,
     resetFantasyTeams,
     updateCacheHash,
-    governanceInstance.getEventDataVotePeriod(),
+    //governanceInstance.getEventDataVotePeriod(), I shouldn't use timers I should use the governance canister
     stable_timers,
     updatePlayerEventDataCache);
     
@@ -1012,10 +1009,8 @@ actor Self {
   private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
-  private stable var stable_fixture_data_submissions: [(T.FixtureId, List.List<T.DataSubmission>)] = [];
-  private stable var stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
-  private stable var stable_proposals: [T.Proposal] = [];
-  private stable var stable_transfers_allowed : Bool = true; //CAN REMOVE
+  //private stable var stable_fixture_data_submissions: [(T.FixtureId, List.List<T.DataSubmission>)] = [];
+  //private stable var stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
   private stable var stable_active_fixtures : [T.Fixture] = [];
   private stable var stable_next_fixture_id : Nat32 = 0;
   private stable var stable_next_season_id : Nat16 = 0;
@@ -1023,14 +1018,14 @@ actor Self {
   private stable var stable_teams : [T.Team] = [];
   private stable var stable_relegated_teams : [T.Team] = [];
   private stable var stable_next_team_id : Nat16 = 0;
-  private stable var stable_event_data_vote_period : Int = 0;
-  private stable var stable_event_data_vote_threshold : Nat64 = 0;
-  private stable var stable_revaluation_vote_threshold : Nat64 = 0;
-  private stable var stable_proposal_vote_threshold : Nat64 = 0;
+  //private stable var stable_event_data_vote_period : Int = 0;
+  //private stable var stable_event_data_vote_threshold : Nat64 = 0;
+  //private stable var stable_revaluation_vote_threshold : Nat64 = 0;
+  //private stable var stable_proposal_vote_threshold : Nat64 = 0;
   private stable var stable_max_votes_per_user : Nat64 = 0;
-  private stable var stable_proposal_submission_e8_fee : Nat64 = 0;
+  //private stable var stable_proposal_submission_e8_fee : Nat64 = 0;
   private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
-  private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
+  //private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
   private stable var stable_monthly_leaderboards: [(T.SeasonId, List.List<T.ClubLeaderboard>)] = [];
   private stable var stable_data_cache_hashes: [T.DataCache] = [];
   
@@ -1040,10 +1035,8 @@ actor Self {
     stable_profiles := profilesInstance.getProfiles();
     stable_active_season_id := seasonManager.getActiveSeasonId();
     stable_active_gameweek := seasonManager.getActiveGameweek();
-    stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
-    stable_player_revaluation_submissions := governanceInstance.getPlayerRevaluationSubmissions();
-    stable_proposals := governanceInstance.getProposals();
-    stable_transfers_allowed := true;
+    //stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
+    //stable_player_revaluation_submissions := governanceInstance.getPlayerRevaluationSubmissions();
     stable_active_fixtures := seasonManager.getActiveFixtures();
     stable_next_fixture_id := seasonManager.getNextFixtureId();
     stable_next_season_id := seasonManager.getNextSeasonId();
@@ -1051,14 +1044,14 @@ actor Self {
     stable_teams := teamsInstance.getTeams();
     stable_relegated_teams := teamsInstance.getRelegatedTeams();
     stable_next_team_id := teamsInstance.getNextTeamId();
-    stable_event_data_vote_period := governanceInstance.getEventDataVotePeriod();
-    stable_event_data_vote_threshold := governanceInstance.getEventDataVoteThreshold();
-    stable_revaluation_vote_threshold := governanceInstance.getRevaluationVoteThreshold();
-    stable_proposal_vote_threshold := governanceInstance.getProposalVoteThreshold();
-    stable_max_votes_per_user := governanceInstance.getMaxVotesPerUser();
-    stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
+    //stable_event_data_vote_period := governanceInstance.getEventDataVotePeriod();
+    //stable_event_data_vote_threshold := governanceInstance.getEventDataVoteThreshold();
+    //stable_revaluation_vote_threshold := governanceInstance.getRevaluationVoteThreshold();
+    //stable_proposal_vote_threshold := governanceInstance.getProposalVoteThreshold();
+    //stable_max_votes_per_user := governanceInstance.getMaxVotesPerUser();
+    //stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
     stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
-    stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
+    //stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
     stable_monthly_leaderboards := fantasyTeamsInstance.getMonthlyLeaderboards();
     stable_data_cache_hashes := List.toArray(dataCacheHashes);
   };
@@ -1067,15 +1060,15 @@ actor Self {
     profilesInstance.setData(stable_profiles);
     fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
-    stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
+    //stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
     teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
-    governanceInstance.setData(stable_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals, stable_consensus_fixture_data);
-    governanceInstance.setEventDataVotePeriod(stable_event_data_vote_period);
-    governanceInstance.setEventDataVoteThreshold(stable_event_data_vote_threshold);
-    governanceInstance.setRevaluationVoteThreshold(stable_revaluation_vote_threshold);
-    governanceInstance.setProposalVoteThreshold(stable_proposal_vote_threshold);
-    governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
-    governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
+    //governanceInstance.setData(stable_consensus_fixture_data);
+    //governanceInstance.setEventDataVotePeriod(stable_event_data_vote_period);
+    //governanceInstance.setEventDataVoteThreshold(stable_event_data_vote_threshold);
+    //governanceInstance.setRevaluationVoteThreshold(stable_revaluation_vote_threshold);
+    //governanceInstance.setProposalVoteThreshold(stable_proposal_vote_threshold);
+    //governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
+    //governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
     fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
     dataCacheHashes := List.fromArray(stable_data_cache_hashes);
@@ -1091,10 +1084,6 @@ actor Self {
               let duration: Timer.Duration =  #nanoseconds(Int.abs(remainingDuration));
 
               switch(timerInfo.callbackName) {
-                  case "proposalExpired" {
-                      Debug.print(debug_show "recreate proposalExpired");
-                      ignore Timer.setTimer(duration, proposalExpiredCallback);
-                  };
                   case "gameweekBeginExpired" {
                       Debug.print(debug_show "recreate gameweekBeginExpired");
                       ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);

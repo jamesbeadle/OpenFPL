@@ -33,32 +33,24 @@ module {
 
         private let oneHour = 1_000_000_000 * 60 * 60;
         private let governanceCanister  : SNSGovernance.Interface = actor(SNSGovernance.CANISTER_ID);
-        
-        //
+
+        //really all of these could be extracted from the governance canister and probably should:
 
         /*
-        //USE FOR LOCAL DEV
-        let admins : [Text] = [
-            "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"
-        ];
-        */
-        
-        //Live
-        let admins : [Text] = [
-            "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"
-        ];
-        
         private var fixtureDataSubmissions: HashMap.HashMap<T.FixtureId, List.List<T.DataSubmission>> = 
             HashMap.HashMap<T.FixtureId, List.List<T.DataSubmission>>(22, Utilities.eqNat32, Utilities.hashNat32);
         private var playerRevaluationSubmissions: HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> = 
             HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>>> (20, Utilities.eqNat16, Utilities.hashNat16);
-        private var proposals: List.List<T.Proposal> = List.nil<T.Proposal>();
         private var consensusFixtureData: HashMap.HashMap<T.FixtureId, T.ConsensusData> = HashMap.HashMap<T.FixtureId, T.ConsensusData>(22, Utilities.eqNat32, Utilities.hashNat32);
-        
+        */
+
         private var addInitialFixtures : ?((T.AddInitialFixturesPayload) -> async ()) = null;
         private var rescheduleFixture : ?((T.RescheduleFixturePayload) -> async ()) = null;
+        private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
+        private var finaliseFixture : ?((seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) -> async ()) = null;
 
-        //system parameters
+        //system parameters - I guess I need to check whether I can set these times based on proposal type as some proposals should take longer than 12 hours
+        /*
         private var EventData_VotePeriod: Int = oneHour * 12;
         private var Proposal_VotePeriod: Int = oneHour * 12;
         private var EventData_VoteThreshold: Nat64 = 100_000;
@@ -67,9 +59,7 @@ module {
         private var Max_Votes_Per_User: Nat64 = 100_000;
         private var Proposal_Submission_e8_Fee: Nat64 = 10_000;
 
-        private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
-        private var finaliseFixture : ?((seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) -> async ()) = null;
-    
+        
         //system parameter function setters
         public func getEventDataVotePeriod() : Int{
             return EventData_VotePeriod;
@@ -118,58 +108,14 @@ module {
         public func setProposalSubmissione8Fee(newValue: Nat64){
             Proposal_Submission_e8_Fee := newValue;
         };
+        */
 
         public func setFixtureFunctions(_addInitialFixtures: (proposalPayload: T.AddInitialFixturesPayload) -> async (), _rescheduleFixture: (proposalPayload: T.RescheduleFixturePayload) -> async ()) {
             addInitialFixtures := ?_addInitialFixtures;
             rescheduleFixture := ?_rescheduleFixture;
         };
 
-        public func setData(
-            stable_fixture_data_submissions: [(T.FixtureId, List.List<T.DataSubmission>)], 
-            stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))],
-            stable_proposals: [T.Proposal],
-            stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)]) {
-
-            // Type definitions
-            type InnerMapType = HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>;
-            type MidMapType = HashMap.HashMap<T.GameweekNumber, InnerMapType>;
-            type OuterMapType = HashMap.HashMap<T.SeasonId, MidMapType>;
-
-            // Iterators
-            let fixtureDataIterator = Iter.fromArray(stable_fixture_data_submissions);
-
-            fixtureDataSubmissions := HashMap.fromIter<T.FixtureId, List.List<T.DataSubmission>>(
-                fixtureDataIterator,
-                Iter.size(fixtureDataIterator),
-                Utilities.eqNat32, 
-                Utilities.hashNat32
-            );
-            
-            var outerMap: OuterMapType = HashMap.HashMap<T.SeasonId, MidMapType>(Iter.size(Iter.fromArray(stable_player_revaluation_submissions)), Utilities.eqNat16, Utilities.hashNat16);
-            for ((seasonId, (gameweek, data)) in Iter.fromArray(stable_player_revaluation_submissions)) {
-                let (playerId, submissions) = data;
-
-                let innerMap: InnerMapType = HashMap.HashMap<T.PlayerId, List.List<T.PlayerValuationSubmission>>(1, Utilities.eqNat16, Utilities.hashNat16);
-                innerMap.put(playerId, submissions);
-                
-                let midMap: MidMapType = HashMap.HashMap<T.GameweekNumber, InnerMapType>(1, Utilities.eqNat8, Utilities.hashNat8);
-                midMap.put(gameweek, innerMap);
-                
-                outerMap.put(seasonId, midMap);
-            };
-
-            playerRevaluationSubmissions := outerMap;
-
-            proposals := List.fromArray(stable_proposals);
-
-            consensusFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
-                stable_consensus_fixture_data.vals(),
-                stable_consensus_fixture_data.size(),
-                Utilities.eqNat32, 
-                Utilities.hashNat32
-            );
-        };
-
+        /* Need to get from governance canister
         public func getVotingPower(principalId: Text) : Nat64 {
             switch (Array.find<Text>(admins, func (admin) { admin == principalId })) {
                 case null { return 0; };
@@ -182,7 +128,9 @@ module {
                 };
             };
         };
+        */
         
+        /*
         public func getFixtureDataSubmissions() : [(T.FixtureId, List.List<T.DataSubmission>)] {
             return Iter.toArray(fixtureDataSubmissions.entries());
         };
@@ -190,7 +138,9 @@ module {
         public func getConsensusFixtureData() : [(T.FixtureId, T.ConsensusData)] {
             return Iter.toArray(consensusFixtureData.entries());
         };
+        */
 
+        /*
         public func getPlayerRevaluationSubmissions() : [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] {
             var results: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
             var resultsBuffer = Buffer.fromArray<(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))>(results);
@@ -207,11 +157,9 @@ module {
             results := Buffer.toArray(resultsBuffer);
             return results;
         };
+        */
 
-        public func getProposals() : [T.Proposal]{
-            return List.toArray(proposals);
-        };
-
+        /* This will be replaced with the governance function to add the data via a proposal
         public func submitPlayerEventData(principalId: Text, fixtureId: T.FixtureId, allPlayerEventData: [T.PlayerEventData]) : async () {
             
             let existingSubmissionsForFixture = fixtureDataSubmissions.get(fixtureId);
@@ -267,7 +215,9 @@ module {
                 }
             };
         };
+        */
 
+        /* Consensus should be calculated from the governance canister
         private func recalculateConsensus(fixtureId: T.FixtureId) : T.ConsensusData {
             let foundSubmissions = fixtureDataSubmissions.get(fixtureId);
         
@@ -333,8 +283,9 @@ module {
             };
 
         };
+        */
 
-
+        /* Needs to be done via proposal
         public func submitPlayerRevaluations(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber, revaluations: [T.PlayerValuationSubmission]) : () {
             let userVotingPower: Nat64 = getVotingPower(principalId);
 
@@ -376,214 +327,9 @@ module {
                 };
             }
         };
+        */
 
-        public func voteOnProposal(principalId: Text, proposalId: T.ProposalId, voteChoice: T.VoteChoice) : () {
-            let userVotingPower: Nat64 = getVotingPower(principalId);
-            
-            let proposalOpt: ?T.Proposal = findProposalById(proposalId);
-
-            switch (proposalOpt) {
-                case (null) { };
-                case (?proposal) {
-                    if (not hasUserVoted(Principal.fromText(principalId), proposal)) {
-                        castVote(Principal.fromText(principalId), proposal, voteChoice, userVotingPower);
-                    };
-                };
-            }
-        };
-
-        private func findProposalById(proposalId: T.ProposalId) : ?T.Proposal {
-            var current: List.List<T.Proposal> = proposals;
-            while (switch current {
-                case null { false };
-                case (?((head, tail))) {
-                    if (head.id == proposalId) { true } else {
-                        current := tail;
-                        false
-                    }
-                }
-            }) {};
-            switch current {
-                case null { return null; };
-                case (?((head, _))) { return ?head; };
-            }
-        };
-
-        private func hasUserVoted(principal: Principal, proposal: T.Proposal) : Bool {
-            let hasVotedYes = Array.find<T.PlayerValuationVote>(List.toArray(proposal.votes_yes), func (vote: T.PlayerValuationVote) : Bool {
-                return vote.principalId == principal;
-            }) != null;
-
-            let hasVotedNo = Array.find<T.PlayerValuationVote>(List.toArray(proposal.votes_no), func (vote: T.PlayerValuationVote) : Bool {
-                return vote.principalId == principal;
-            }) != null;
-
-            return hasVotedYes or hasVotedNo;
-        };
-
-        private func castVote(principal: Principal, proposal: T.Proposal, voteChoice: T.VoteChoice, votingPower: Nat64) : () {
-            let userVote: T.PlayerValuationVote = {
-                principalId = principal;
-                votes = { amount_e8s = votingPower };
-            };
-
-            let updatedProposal: T.Proposal = {
-                id = proposal.id;
-                votes_no = switch (voteChoice) {
-                    case (#Yes) { proposal.votes_no };
-                    case (#No) { List.append(?(userVote, null), proposal.votes_no) };
-                };
-                votes_yes = switch (voteChoice) {
-                    case (#Yes) { List.append(?(userVote, null), proposal.votes_yes) };
-                    case (#No) { proposal.votes_yes };
-                };
-                voters = List.append(?(principal, null), proposal.voters);
-                state = proposal.state;
-                timestamp = proposal.timestamp;
-                proposer = proposal.proposer;
-                payload = proposal.payload;
-                proposalType = proposal.proposalType;
-                data = proposal.data;
-            };
-
-            func replaceInList(current: List.List<T.Proposal>, found: Bool) : (List.List<T.Proposal>, Bool) {
-                switch current {
-                    case null {
-                        return (null, found);
-                    };
-                    case (?((head, tail))) {
-                        if (head.id == proposal.id and not found) {
-                            let (newTail, _) = replaceInList(tail, true);
-                            return (?(updatedProposal, newTail), true);
-                        } else {
-                            let (newTail, wasReplaced) = replaceInList(tail, found);
-                            return (?(head, newTail), wasReplaced);
-                        };
-                    };
-                };
-            };
-
-            let (newProposals, _) = replaceInList(proposals, false);
-            proposals := newProposals;
-        };
-
-        public func submitProposal(proposer: Principal, payload: T.ProposalPayload, proposalType: T.ProposalType, data: T.PayloadData) : async Nat {
-            let newId = List.size<T.Proposal>(proposals) + 1;
-
-            let newProposal: T.Proposal = {
-                id = newId;
-                votes_no = List.nil<T.PlayerValuationVote>();
-                voters = List.nil<Principal>();
-                state = #open;
-                timestamp = Time.now();
-                proposer = proposer;
-                votes_yes = List.nil<T.PlayerValuationVote>();
-                payload = payload;
-                proposalType = proposalType;
-                data = data;
-            };
-
-            proposals := List.append(?(newProposal, null), proposals);
-
-            let proposalTimerDuration : Timer.Duration = #nanoseconds (Int.abs((Time.now() + Proposal_VotePeriod) - Time.now()));
-            switch(setAndBackupTimer) {
-                case (null) { };
-                case (?actualFunction) {
-                    await actualFunction(proposalTimerDuration, "proposalExpired", 0);
-                };
-            };
-            
-            return newId;
-        };
-
-
-        public func proposalExpired() : async () {
-            
-            var updatedProposals = List.nil<T.Proposal>();
-            
-            for (proposal in Iter.fromList<T.Proposal>(proposals)) {
-                if (Time.now() - proposal.timestamp > Proposal_VotePeriod) {
-                    let yesVotes = Nat64.fromNat(List.size<T.PlayerValuationVote>(proposal.votes_yes));
-                    let noVotes = Nat64.fromNat(List.size<T.PlayerValuationVote>(proposal.votes_no));
-                    
-                    if (yesVotes > noVotes and yesVotes > Proposal_VoteThreshold) {
-                        await executeProposal(proposal);
-                        updatedProposals := List.append(?(proposal, null), updatedProposals);
-                    } else {
-                        let updatedProposal: T.Proposal = {
-                            id = proposal.id;
-                            votes_no = proposal.votes_no;
-                            voters = proposal.voters;
-                            state = #rejected;
-                            timestamp = proposal.timestamp;
-                            proposer = proposal.proposer;
-                            votes_yes = proposal.votes_yes;
-                            payload = proposal.payload;
-                            proposalType = proposal.proposalType;
-                            data = proposal.data;
-                        };
-                        updatedProposals := List.append(?(updatedProposal, null), updatedProposals);
-                    }
-                } else {
-                    updatedProposals := List.append(?(proposal, null), updatedProposals);
-                }
-            };
-            proposals := updatedProposals;
-        };
-
-        private func executeProposal(proposal: T.Proposal) : async () {
-            switch (proposal.data) {
-                 case (#AddInitialFixtures(payload)) {
-                    switch (addInitialFixtures) {
-                        case (null) { };
-                        case (?f) { await f(payload); };
-                    };
-                };
-                case (#RescheduleFixture(payload)) {
-                    switch (rescheduleFixture) {
-                        case (null) {  };
-                        case (?f) { await f(payload); };
-                    };
-                };
-                case (#TransferPlayer(payload)) {
-                    await transferPlayer(payload);
-                };
-                case (#LoanPlayer(payload)) {
-                    await loanPlayer(payload);
-                };
-                case (#RecallPlayer(payload)) {
-                    await recallPlayer(payload);
-                };
-                case (#CreatePlayer(payload)) {
-                    await createPlayer(payload);
-                };
-                case (#UpdatePlayer(payload)) {
-                    await updatePlayer(payload);
-                };
-                case (#SetPlayerInjury(payload)) {
-                    await setPlayerInjury(payload);
-                };
-                case (#RetirePlayer(payload)) {
-                    await retirePlayer(payload);
-                };
-                case (#UnretirePlayer(payload)) {
-                    await unretirePlayer(payload);
-                };
-                case (#PromoteTeam(payload)) {
-                    await promoteTeam(payload);
-                };
-                case (#RelegateTeam(payload)) {
-                    await relegateTeam(payload);
-                };
-                case (#UpdateTeam(payload)) {
-                    await updateTeam(payload);
-                };
-                case (#UpdateSystemParameters(payload)) {
-                    await updateSystemParameters(payload);
-                };
-            };
-        };
-
+        /* Will be set on successful execution of a proposal
         public func getConsensusPlayerEventData(gameweek: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData> {
             let consensusDataOption = consensusFixtureData.get(fixtureId);
             
@@ -596,7 +342,9 @@ module {
                 };
             };
         };
+        */
 
+        /* Need to get the players to be revalued from the governance canister
         public func getRevaluedPlayers(seasonId: Nat16, gameweek: Nat8) : async List.List<T.RevaluedPlayer> {
             var revaluedPlayers: List.List<T.RevaluedPlayer> = List.nil<T.RevaluedPlayer>();
 
@@ -647,7 +395,8 @@ module {
             };
             return revaluedPlayers;
         };
-        
+        */
+        /* Add individual execution events instead of this
         private func updateSystemParameters(proposalPayload: T.UpdateSystemParametersPayload) : async () {
             switch (proposalPayload.flag) {
                 case (#EventData_VotePeriod) {
@@ -700,6 +449,7 @@ module {
                 };
             };
         };
+        */
     
         public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {
             setAndBackupTimer := ?_setAndBackupTimer;
@@ -709,6 +459,7 @@ module {
             finaliseFixture := ?_finaliseFixture;
         };
 
+/* Remove as no longer storing this data
         public func resetConsensusData (data: [(T.FixtureId, T.ConsensusData)]) : (){
             consensusFixtureData := HashMap.fromIter<T.FixtureId, T.ConsensusData>(
                 data.vals(),
@@ -717,7 +468,7 @@ module {
                 Utilities.hashNat32
             );
         };
-
+*/
         
 
     }

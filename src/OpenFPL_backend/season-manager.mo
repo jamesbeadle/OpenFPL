@@ -26,11 +26,11 @@ module {
     mintWeeklyRewardsPool: () -> async (),
     mintAnnualRewardsPool: () -> async (),
     calculateFantasyTeamScores: (Nat16, Nat8) -> async (),
-    getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
+    //getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async (),
     updateCacheHash: (category: Text) -> async (),
-    EventData_VotingPeriod: Int,
+    //EventData_VotingPeriod: Int,
     stable_timers: [T.TimerInfo],
     updatePlayerEventDataCache: () -> async ()) {
 
@@ -144,6 +144,7 @@ module {
     };
 
     public func gameCompleted() : async () {
+        let EventData_VotingPeriod = 0; // NEED TO SET THIS FROM THE GOVERNANCE CANISTER BUT IT NEEDS TO BE THE TIME SPECIFIC TO FIXTURE DATA COLLECTION
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
         let timerCreatedTimes = Buffer.fromArray<Int>([]);
@@ -174,13 +175,17 @@ module {
         await updateCacheHash("fixtures");
     };
 
+    /* Voting period over will be triggered by the internal working of the governance canister, we just need this to be the execution function without a new timer?
+    */
     public func votingPeriodOver() : async (){
+        let EventData_VotingPeriod = 0; // NEED TO SET THIS FROM THE GOVERNANCE CANISTER BUT IT NEEDS TO BE THE TIME SPECIFIC TO FIXTURE DATA COLLECTION
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             let fixture = activeFixtures[i];
             if((fixture.kickOff + EventData_VotingPeriod) <= Time.now() and fixture.status == 2) {
-                let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id);
+                //let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id); //Get from governance canister passed proposal
+                let consensusPlayerEventData = List.nil<T.PlayerEventData>(); //NEED TO SET FROM GOVERNANCE
                 let updatedFixture = await seasonsInstance.savePlayerEventData(activeSeasonId, activeGameweek, activeFixtures[i].id, consensusPlayerEventData);
                 activeFixturesBuffer.add(updatedFixture);
                 await finaliseFixture(updatedFixture);
@@ -215,7 +220,8 @@ module {
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             let fixture = activeFixtures[i];
             if(fixture.id == fixtureId and fixture.status == 2){
-                let consensusPlayerEventData = await getConsensusPlayerEventData(getGameweekNumber, fixture.id);
+                //let consensusPlayerEventData = await getConsensusPlayerEventData(getGameweekNumber, fixture.id);
+                let consensusPlayerEventData = List.nil<T.PlayerEventData>(); //NEED TO SET FROM GOVERNANCE
                 let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, consensusPlayerEventData);
                 activeFixturesBuffer.add(updatedFixture);
                 await finaliseFixture(updatedFixture);
