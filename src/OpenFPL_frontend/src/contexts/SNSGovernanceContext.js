@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SnsGovernanceCanister } from 'dfinity/sns';
 import { SnsProposalDecisionStatus } from "dfinity/sns/dist/enums/governance.enums";
 
-const SnsGovernanceContext = React.createContext();
+export const SnsGovernanceContext = React.createContext();
 
 export const SnsGovernanceProvider = ({ children }) => {
     const location = useLocation();
@@ -57,60 +57,59 @@ export const SnsGovernanceProvider = ({ children }) => {
         setRemainingWeeklyValuationVotes([]);
     };
 
-    const revaluePlayerUp = async (playerId) => {
-
-        const existingProposal = activeValuationProposals.find(x => x.type == 'REVALUE PLAYER UP' && x.playerId == playerId);
-
-        if(existingProposal){
-            const voteParams = {
-                vote: SnsVote.Yes,
-                proposalId: existingProposal.id
-            };
-            await SnsGovernanceCanister.registerVote(voteParams);
-        }
-        else{
-            const newProposalId = await createNewRevaluePlayerUpProposal(player.id);
-            
-            const voteParams = {
-                vote: SnsVote.Yes,
-                proposalId: newProposalId
-            };
-            await SnsGovernanceCanister.registerVote(voteParams);
-        }
-        getData();
+    const createManageNeuronRequestForProposal = (neuronId, title, url, summary, function_id, payload) => {
+        return {
+            id: [{ NeuronId: neuronId }],
+            command: [{
+                MakeProposal: {
+                    title: title,
+                    url: url,
+                    summary: summary,
+                    action: {
+                        ExecuteGenericNervousSystemFunction: {
+                            function_id: function_id,
+                            payload: payload
+                        }
+                    }
+                }
+            }],
+            neuron_id_or_subaccount: [{ NeuronId: neuronId }] 
+        };
     };
 
+    const revaluePlayerUp = async (playerId, userPrincipal) => {
+        const proposalTitle = "Execute generic function for player";
+        const proposalUrl = "https://openfpl.xyz/governance";
+        const proposalSummary = `Proposal to execute a generic function for player ${playerId}.`;
+
+        const payload = encodePayload(`(${playerId})`); //IMPLEMENT ENCODING FUNCTION
+
+        const neurons = await listNeurons({ principal: userPrincipal });
+        for (const neuron of neurons) {
+            const neuronId = neuron.id[0].NeuronId.toString();
+            const manageNeuronRequest = createManageNeuronRequestForProposal(neuronId, proposalTitle, proposalUrl, proposalSummary, 1000, payload);
+            await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
+        }
+    };
+    
     const revaluePlayerDown = async (playerId) => {
-        const existingProposal = activeValuationProposals.find(x => x.type == 'REVALUE PLAYER DOWN' && x.playerId == playerId);
-
-        if(existingProposal){
-            //submit the vote
-        }
-        else{
-            const newProposalId = await createNewRevaluePlayerDownProposal(player.id);
-            
-                //submit the vote
-
-        }
-        getData();
-    };
-
-    const createNewRevaluePlayerUpProposal = async (playerId) => {
-
-    };
-
-    const createNewRevaluePlayerDownProposal = async (playerId) => {
-
-    };
-
-    const CustomProposalType = {
-        PLAYER_VALUATION: 1n,
-        FIXTURE_DATA: 2n,
-        MOVE_PLAYER_BETWEEN_TEAM: 3n
+        const proposalTitle = "Revalue Player Down";
+        const proposalUrl = "https://openfpl.xyz/governance";
+        const proposalSummary = `Proposal to revalue player ${playerId} upwards.`;
+        const actionType = "Motion";
+        const actionParams = {
+            motion_text: `Proposal to revalue player ${playerId} upwards in value.`
+        };
+    
+        const neuronId = ""; // ??
+        const manageNeuronRequest = createManageNeuronRequestForProposal(neuronId, proposalTitle, proposalUrl, proposalSummary, actionType, actionParams);
+    
+        await SnsGovernanceCanister.manageNeuron(manageNeuronRequest);
+        await fetchAlreadyValuedPlayerIds();
     };
 
     return (
-        <SnsGovernanceContext.Provider value={{ activeFixtureDataProposals, activeGovernanceProposals, alreadyValuedPlayerIds, remainingWeeklyValuationVotes }}>
+        <SnsGovernanceContext.Provider value={{ activeFixtureDataProposals, activeGovernanceProposals, alreadyValuedPlayerIds, remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown }}>
             {!loading && children}
         </SnsGovernanceContext.Provider>
     );

@@ -3,15 +3,14 @@ import { Card, Spinner, Table, Button, Form, Modal, ButtonGroup, Col, Row } from
 import getFlag from '../country-flag';
 import { getAgeFromDOB } from '../helpers';
 import { DataContext } from "../../contexts/DataContext";
-import { useSnsGovernance } from "../../contexts/SNSGovernanceContext";
-
+import { SnsGovernanceContext } from "../../contexts/SNSGovernanceContext";
 
 const POSITION_LABELS = ["GK", "DEF", "MID", "FWD"];
 const COUNT = 25;
 
 const PlayerValuations = ({ isActive }) => {
   const { players, teams } = useContext(DataContext);
-  const { alreadyValuedPlayerIds, remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown } = useSnsGovernance();
+  const { alreadyValuedPlayerIds, remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown } = useContext(SnsGovernanceContext);
   
   const [viewData, setViewData] = useState([]);
   const [filter, setFilter] = useState({ team: 0, position: -1, page: 0 });
@@ -67,7 +66,7 @@ const PlayerValuations = ({ isActive }) => {
           revaluePlayerUp(playerId);
           break;
         case "negative":
-          revaluePlayerUp(playerId);
+          revaluePlayerDown(playerId);
           break;
         default:
           break

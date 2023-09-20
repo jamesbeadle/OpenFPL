@@ -631,6 +631,10 @@ actor Self {
     return seasonManager.getValidatableFixtures();
   };
 
+  public shared func validateRevaluePlayerUp() : async (){
+    
+  };
+
   /* This function is now called via the sns-js governance canister so I can remove this endpoint and deal with it via the generic functions executing on proposal completion
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, allPlayerEvents: [T.PlayerEventData]) : async (){
     
