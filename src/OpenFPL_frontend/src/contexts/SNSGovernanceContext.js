@@ -3,6 +3,7 @@ import { SnsGovernanceCanister } from 'dfinity/sns';
 import { SnsProposalDecisionStatus } from "dfinity/sns/dist/enums/governance.enums";
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById } from './helpers';
+import { IDL } from "@dfinity/candid";
 
 export const SnsGovernanceContext = React.createContext();
 
@@ -14,6 +15,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     const [activeGovernanceProposals, setActiveGovernanceProposals] = useState([]);
     const [alreadyValuedPlayerIds, setAlreadyValuedPlayerIds ] = useState([]);
     const [remainingWeeklyValuationVotes, setRemainingWeeklyValuationVotes ] = useState([]);
+    const InitArgs = IDL.Record({ 'rrkah-fqaaa-aaaaa-aaaaq-cai' : IDL.Principal });
     
     const [loading, setLoading] = useState(true);
   
@@ -85,7 +87,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to increase the value of ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = encodePayload(`(${player.id})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${player.id})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -101,7 +103,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to decrease the value of ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = encodePayload(`(${player.id})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${player.id})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -118,7 +120,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to add event data to fixture 
             ${getTeamById(teams, fixture.homeTeamId).abbreviateName} v ${getTeamById(teams, fixture.awayTeamId).abbreviateName}.`;
 
-        const payload = encodePayload(`(${fixture.id} ${allPlayerEventData})`); //IMPLEMENT ENCODING FUNCTION
+            const payload = IDL.encode(InitArgs, (`(${fixture.id} ${allPlayerEventData})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -134,7 +136,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to add initial fixtures to season ${season.name}.`;
 
-        const payload = encodePayload(`(${season.id} ${allSeasonFixtures})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${season.id} ${allSeasonFixtures})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -151,7 +153,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to reschedule fixture 
             ${getTeamById(teams, fixture.homeTeamId).abbreviateName} v ${getTeamById(teams, fixture.awayTeamId).abbreviateName}.`;
 
-        const payload = encodePayload(`(${fixture.id} ${gameweek} ${updatedFixtureDate})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${fixture.id} ${gameweek} ${updatedFixtureDate})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -167,7 +169,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to transfer player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, currentTeamId).abbreviateName} to ${getTeamById(teams, newTeamId).abbreviateName}.`;
 
-        const payload = encodePayload(`(${player.id} ${currentTeamId} ${newTeamId})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${player.id} ${currentTeamId} ${newTeamId})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -183,7 +185,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to loan player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, parentTeamId).abbreviateName} to ${getTeamById(teams, loanTeamId).abbreviateName}.`;
 
-        const payload = encodePayload(`(${playerId} ${parentTeamId} ${loanTeamId} ${loanEndDate})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${playerId} ${parentTeamId} ${loanTeamId} ${loanEndDate})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -199,7 +201,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to recall loan for player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = encodePayload(`(${player.id})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${player.id})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -215,8 +217,8 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to add new player ${firstName} ${lastName}.`;
 
-        const payload = encodePayload(`(${teamId} ${position} ${firstName} ${lastName} ${shirtNumber} 
-            ${value} ${dateOfBirth} ${nationality})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${teamId} ${position} ${firstName} ${lastName} ${shirtNumber} 
+            ${value} ${dateOfBirth} ${nationality})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -232,8 +234,8 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to update new player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = encodePayload(`(${position} ${firstName} ${lastName} ${shirtNumber} 
-            ${dateOfBirth} ${nationality})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${position} ${firstName} ${lastName} ${shirtNumber} 
+            ${dateOfBirth} ${nationality})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -249,7 +251,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to update player injury status for player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = encodePayload(`(${player.id} ${description} ${expectedEndDate})`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${player.id} ${description} ${expectedEndDate})`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -265,7 +267,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to retire player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = encodePayload(`(${player.id} ${retirementDate}`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${player.id} ${retirementDate}`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -281,7 +283,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to unretire player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
 
-        const payload = encodePayload(`(${player.id}`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${player.id}`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -297,7 +299,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to promote team ${getTeamById(teams, teamId).abbreviateName}} to the Premier League.`;
 
-        const payload = encodePayload(`(${teamId}`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${teamId}`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -313,7 +315,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to promote ${name} to the Premier League.`;
 
-        const payload = encodePayload(`(${name} ${friendlyName} ${abbreviatedName} ${primaryHexColour} ${secondaryHexColour} ${thirdHexColour}`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${name} ${friendlyName} ${abbreviatedName} ${primaryHexColour} ${secondaryHexColour} ${thirdHexColour}`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -329,7 +331,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to update ${getTeamById(teams, teamId).abbreviateName}} team details.`;
 
-        const payload = encodePayload(`(${teamId} ${name} ${friendlyName} ${abbreviatedName} ${primaryHexColour} ${secondaryHexColour} ${thirdHexColour}`); //IMPLEMENT ENCODING FUNCTION
+        const payload = IDL.encode(InitArgs, (`(${teamId} ${name} ${friendlyName} ${abbreviatedName} ${primaryHexColour} ${secondaryHexColour} ${thirdHexColour}`));
 
         const neurons = await listNeurons({ principal: userPrincipal });
         for (const neuron of neurons) {
@@ -341,7 +343,10 @@ export const SnsGovernanceProvider = ({ children }) => {
     };
 
     return (
-        <SnsGovernanceContext.Provider value={{ activeFixtureDataProposals, activeGovernanceProposals, alreadyValuedPlayerIds, remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown }}>
+        <SnsGovernanceContext.Provider value={{ activeFixtureDataProposals, activeGovernanceProposals, alreadyValuedPlayerIds, 
+            remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown, submitFixtureData, addIninitalFixtures, rescheduleFixture, 
+            transferPlayer, loanPlayer, recallPlayer, createPlayer, updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteFormerTeam, promoteNewTeam,
+            updateTeamProposal }}>
             {!loading && children}
         </SnsGovernanceContext.Provider>
     );
