@@ -252,7 +252,7 @@ actor Self {
                 valueHistory = List.nil<T.ValueHistory>();
                 onLoan = false; parentTeamId = 0;
                 isInjured = false; injuryHistory = List.nil<T.InjuryHistory>();
-                retirementDate = 0; } };
+                retirementDate = 0; transferHistory = List.nil<T.TransferHistory>(); } };
             case (?player) { return player; };
         };
     };
@@ -346,60 +346,88 @@ actor Self {
         };
     };
 
-    public shared func revaluePlayers(seasonId: Nat16, gameweek: Nat8, revaluedPlayers: List.List<T.RevaluedPlayer>) : async () {
-        /*
-        let changeAmount: Float = 250000000;
-
-        for (revaluedPlayer in Iter.fromList(revaluedPlayers)) {
-            var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
-                if (p.id == revaluedPlayer.playerId) {
-                    var newValue = p.value;
-
-                    switch (revaluedPlayer.direction) {
-                        case (#Increase) {
-                            newValue += changeAmount;
-                        };
-                        case (#Decrease) {
-                            if (p.value > changeAmount) {
-                                newValue -= changeAmount;
-                            }
-                        };
-                    };
-        
-                    let historyEntry: T.ValueHistory = {
-                        seasonId = seasonId;
-                        gameweek = gameweek;
-                        oldValue = p.value;
-                        newValue = newValue;
-                    };
-
-                    let updatedPlayer: T.Player = {
-                            id = p.id;
-                            teamId = p.teamId;
-                            position = p.position;
-                            firstName = p.firstName;
-                            lastName = p.lastName;
-                            shirtNumber = p.shirtNumber;
-                            value = newValue;
-                            dateOfBirth = p.dateOfBirth;
-                            nationality = p.nationality;
-                            seasons = p.seasons;
-                            valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
-                            onLoan = p.onLoan;
-                            parentTeamId = p.parentTeamId;
-                            isInjured = p.isInjured;
-                            injuryHistory = p.injuryHistory;
-                            retirementDate = p.retirementDate;
-                    };
-
-                    return updatedPlayer;
+    public shared func revaluePlayerUp(playerId: T.PlayerId, activeSeasonId: T.SeasonId, activeGameweek: T.GameweekNumber) : async (){
+        var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
+            if (p.id == playerId) {
+                var newValue = p.value;
+                newValue += 1;
+                
+                let historyEntry: T.ValueHistory = {
+                    seasonId = activeSeasonId;
+                    gameweek = activeGameweek;
+                    oldValue = p.value;
+                    newValue = newValue;
                 };
-                return p;
-            });
 
-            players := updatedPlayers;
-        }
-        */
+                let updatedPlayer: T.Player = {
+                    id = p.id;
+                    teamId = p.teamId;
+                    position = p.position;
+                    firstName = p.firstName;
+                    lastName = p.lastName;
+                    shirtNumber = p.shirtNumber;
+                    value = newValue;
+                    dateOfBirth = p.dateOfBirth;
+                    nationality = p.nationality;
+                    seasons = p.seasons;
+                    valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
+                    onLoan = p.onLoan;
+                    parentTeamId = p.parentTeamId;
+                    isInjured = p.isInjured;
+                    injuryHistory = p.injuryHistory;
+                    retirementDate = p.retirementDate;
+                    transferHistory = p.transferHistory;
+                };
+
+                return updatedPlayer;
+            };
+            return p;
+        });
+
+        players := updatedPlayers;
+    };
+
+    public shared func revaluePlayerDown(playerId: T.PlayerId, activeSeasonId: T.SeasonId, activeGameweek: T.GameweekNumber){
+        var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
+            if (p.id == playerId) {
+                var newValue = p.value;
+                if(newValue >= 1){
+                    newValue -= 1;
+                };
+    
+                let historyEntry: T.ValueHistory = {
+                    seasonId = activeSeasonId;
+                    gameweek = activeGameweek;
+                    oldValue = p.value;
+                    newValue = newValue;
+                };
+
+                let updatedPlayer: T.Player = {
+                    id = p.id;
+                    teamId = p.teamId;
+                    position = p.position;
+                    firstName = p.firstName;
+                    lastName = p.lastName;
+                    shirtNumber = p.shirtNumber;
+                    value = newValue;
+                    dateOfBirth = p.dateOfBirth;
+                    nationality = p.nationality;
+                    seasons = p.seasons;
+                    valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
+                    onLoan = p.onLoan;
+                    parentTeamId = p.parentTeamId;
+                    isInjured = p.isInjured;
+                    injuryHistory = p.injuryHistory;
+                    retirementDate = p.retirementDate;
+                    transferHistory = p.transferHistory;
+                };
+
+                return updatedPlayer;
+            };
+            return p;
+        });
+
+        players := updatedPlayers;
     };
 
     public shared ({caller}) func calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture {
@@ -559,6 +587,7 @@ actor Self {
                 isInjured = player.isInjured;
                 injuryHistory = player.injuryHistory;
                 retirementDate = player.retirementDate;
+                transferHistory = player.transferHistory;
             };
          
             players := List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
@@ -667,6 +696,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
+                    transferHistory = p.transferHistory;
                 };
 
             } else {return p};
@@ -739,11 +769,20 @@ actor Self {
         };
     };
     
-    public shared func transferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async () {
+    public shared func transferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) : async () {
         let player = List.find<T.Player>(players, func(p: T.Player) { p.id == playerId });
         switch(player){
             case (null) { };
             case (?p) {
+
+                let newTransferHistoryEntry: T.TransferHistory = {
+                    transferDate = Time.now();
+                    transferGameweek = currentGameweek;
+                    transferSeason = currentSeasonId;
+                    fromTeam = currentTeamId;
+                    toTeam = newTeamId;
+                };
+
                 let updatedPlayer: T.Player = {
                     id = p.id;
                     teamId = newTeamId;
@@ -761,6 +800,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
+                    transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == updatedPlayer.id) {
@@ -795,6 +835,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
+                    transferHistory = p.transferHistory;
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == loanedPlayer.id) {
@@ -869,6 +910,7 @@ actor Self {
                             isInjured = p.isInjured;
                             injuryHistory = p.injuryHistory;
                             retirementDate = p.retirementDate;
+                            transferHistory = p.transferHistory;
                         };
 
                         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -915,6 +957,7 @@ actor Self {
                             isInjured = p.isInjured;
                             injuryHistory = p.injuryHistory;
                             retirementDate = p.retirementDate;
+                            transferHistory = p.transferHistory;
                         };
 
                         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -960,6 +1003,7 @@ actor Self {
                         isInjured = p.isInjured;
                         injuryHistory = p.injuryHistory;
                         retirementDate = p.retirementDate;
+                        transferHistory = p.transferHistory;
                     };
 
                     players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -997,6 +1041,7 @@ actor Self {
             isInjured = false;
             injuryHistory = List.nil<T.InjuryHistory>();
             retirementDate = 0;
+            transferHistory = List.nil<T.TransferHistory>();
         };
         players := List.push(newPlayer, players);
         nextPlayerId += 1;
@@ -1022,6 +1067,7 @@ actor Self {
                     isInjured = currentPlayer.isInjured;
                     injuryHistory = currentPlayer.injuryHistory;
                     retirementDate = currentPlayer.retirementDate;
+                    transferHistory = currentPlayer.transferHistory;
                 };
             } else {
                 return currentPlayer;
@@ -1038,6 +1084,7 @@ actor Self {
                         if (injury.expectedEndDate > Time.now()) {
                             return {
                                 description = injury.description;
+                                injuryStartDate = injury.injuryStartDate;
                                 expectedEndDate = Time.now();
                             };
                         } else {
@@ -1062,11 +1109,13 @@ actor Self {
                         isInjured = false;
                         injuryHistory = updatedInjuryHistory;
                         retirementDate = currentPlayer.retirementDate;
+                        transferHistory = currentPlayer.transferHistory;
                     };
                 } else {
                     let newInjury: T.InjuryHistory = {
                         description = description;
                         expectedEndDate = expectedEndDate;
+                        injuryStartDate = Time.now();
                     };
 
                     return {
@@ -1086,6 +1135,7 @@ actor Self {
                         isInjured = true;
                         injuryHistory = List.push(newInjury, currentPlayer.injuryHistory);
                         retirementDate = currentPlayer.retirementDate;
+                        transferHistory = currentPlayer.transferHistory;
                     };
                 }
             } else {
@@ -1116,6 +1166,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = retirementDate;
+                    transferHistory = p.transferHistory;
                 };
                 
                 retiredPlayers := List.push(retiredPlayer, retiredPlayers);
@@ -1149,6 +1200,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = 0;
+                    transferHistory = p.transferHistory;
                 };
                 
                 players := List.push(activePlayer, players);

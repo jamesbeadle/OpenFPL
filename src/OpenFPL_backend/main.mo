@@ -81,7 +81,8 @@ actor Self {
   { 
     getAllPlayers: () -> async [DTOs.PlayerDTO];
     getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)];
-    revaluePlayers: (List.List<T.RevaluedPlayer>) -> async ();
+    revaluePlayerUp: (playerId: T.PlayerId, activeSeasonId: T.SeasonId, activeGameweek: T.GameweekNumber) -> async (); 
+    revaluePlayerDown: (playerId: T.PlayerId, activeSeasonId: T.SeasonId, activeGameweek: T.GameweekNumber) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
     calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture;
     transferPlayer: (playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) -> async ();
@@ -1056,32 +1057,16 @@ actor Self {
     return #ok();
   }; 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   //Governance target methods
 
   public shared func executeRevaluePlayerUp(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    await playerCanister.revaluePlayerUp(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+    return #ok();
   };
 
   public shared func executeRevaluePlayerDown(seasonId: T.SeasonId, gameweek: T.GameweekNumber, playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    await playerCanister.revaluePlayerDown(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+    return #ok();
   };
 
   public shared func executeSubmitFixtureData(fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async Result.Result<(), T.Error>{
@@ -1258,7 +1243,11 @@ actor Self {
     return #ok();
   };
 
+
+
+
   public shared func executeTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+    await playerCanister.transferPlayer(playerId, currentTeamId, newTeamId);
     return #ok();
   };
 
@@ -1301,6 +1290,9 @@ actor Self {
   public shared func executeUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
     return #ok();
   };
+
+
+
 
   //Private functions passed to class instances
   private func resetTransfers(): async () {
