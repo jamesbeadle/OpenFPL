@@ -105,7 +105,6 @@ export const SnsGovernanceProvider = ({ children }) => {
     
         setRemainingWeeklyValuationVotes(Math.max(0, remainingVotes));
     };
-    
 
     const createManageNeuronRequestForProposal = (neuronId, title, url, summary, function_id, payload) => {
         return {
@@ -430,8 +429,7 @@ export const SnsGovernanceProvider = ({ children }) => {
             }
         }
     };
-    
-
+   
     const loanPlayer = async (player, parentTeamId, loanTeamId, loanEndDate) => {
         const functionIdLoan = 7000;
         const proposalTitle = "Loan Player Proposal";
@@ -565,7 +563,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         }
     };
 
-    const updatePlayer = async (position, player, firstName, lastName, shirtNumber, dateOfBirth, nationality) => {
+    const updatePlayer = async (player, position, firstName, lastName, shirtNumber, dateOfBirth, nationality) => {
         const functionIdUpdate = 10000;
         const proposalTitle = "Update Player Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
@@ -822,8 +820,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         }
     };
     
-
-    const updateTeamProposal = async (teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour) => {
+    const updateTeam = async (teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour) => {
         const functionIdUpdate = 16000; 
         const proposalTitle = "Update Team Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
@@ -870,11 +867,10 @@ export const SnsGovernanceProvider = ({ children }) => {
         }
     };
     
-
     return (
         <SnsGovernanceContext.Provider value={{ alreadyValuedPlayerIds, remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown, submitFixtureData, addIninitalFixtures, 
                 rescheduleFixture, transferPlayer, loanPlayer, recallPlayer, createPlayer, updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteFormerTeam, 
-                    promoteNewTeam, updateTeamProposal }}>
+                    promoteNewTeam, updateTeam }}>
             {!loading && children}
         </SnsGovernanceContext.Provider>
     );

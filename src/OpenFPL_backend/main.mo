@@ -631,9 +631,184 @@ actor Self {
     return seasonManager.getValidatableFixtures();
   };
 
-  public shared func validateRevaluePlayerUp() : async (){
-    
+  //Governance canister validation and target methods
+
+  public shared func validateRevaluePlayerUp(seasonId: T.SeasonId, gameweek: T.GameweekNumber, playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
   };
+
+  public shared func executeRevaluePlayerUp(seasonId: T.SeasonId, gameweek: T.GameweekNumber, playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateRevaluePlayerDown(seasonId: T.SeasonId, gameweek: T.GameweekNumber, playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeRevaluePlayerDown(seasonId: T.SeasonId, gameweek: T.GameweekNumber, playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateSubmitFixtureData(fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeSubmitFixtureData(fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
+    
+    //there should be no initial fixtures for the season currently
+    
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateRescheduleFixtures(fixtureId: T.FixtureId, gameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeRescheduleFixture(fixtureId: T.FixtureId, gameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validatePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
+    
+    //ensure there are less than the 20 required teams
+    //ensure it is after the last game of the season
+    //ensure that it is for when the active season has no fixtures
+    
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validatePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    
+    //ensure there are less than the 20 required teams
+    //ensure it is after the last game of the season
+    //ensure that it is for when the active season has no fixtures
+    
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+
+
+  
 
   /* This function is now called via the sns-js governance canister so I can remove this endpoint and deal with it via the generic functions executing on proposal completion
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, allPlayerEvents: [T.PlayerEventData]) : async (){
