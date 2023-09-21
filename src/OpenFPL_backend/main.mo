@@ -565,23 +565,6 @@ actor Self {
     };
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   //Governance canister validation 
   public shared func validateRevaluePlayerUp(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
     return #ok();
@@ -859,7 +842,6 @@ actor Self {
   };
 
   public shared func validateTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
-    
 
     let player = await playerCanister.getPlayer(playerId);
     if(player.id == 0){
@@ -928,6 +910,11 @@ actor Self {
 
   public shared func validateUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
     
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0){
+      return #err(#InvalidData);
+    };
+
     if(Text.size(firstName) > 50){
       return #err(#InvalidData);
     };
@@ -952,36 +939,120 @@ actor Self {
   };
 
   public shared func validateSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0 or player.isInjured){
+      return #err(#InvalidData);
+    };
     return #ok();
   };
 
   public shared func validateRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0 or player.retirementDate > 0){
+      return #err(#InvalidData);
+    };
     return #ok();
   };
 
   public shared func validateUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0 or player.retirementDate == 0){
+      return #err(#InvalidData);
+    };
     return #ok();
   };
 
   public shared func validatePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
     
-    //ensure there are less than the 20 required teams
-    //ensure it is after the last game of the season
-    //ensure that it is for when the active season has no fixtures
+    let allTeams = teamsInstance.getTeams();
+
+    if(Array.size(allTeams) >= 20){
+      return #err(#InvalidData);
+    };
+
+    let activeSeason = seasonManager.getActiveSeason();
+    let seasonFixtures = seasonManager.getFixturesForSeason(activeSeason.id);
+    if(Array.size(seasonFixtures) > 0){
+      return #err(#InvalidData);
+    };
     
     return #ok();
   };
 
   public shared func validatePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
     
-    //ensure there are less than the 20 required teams
-    //ensure it is after the last game of the season
-    //ensure that it is for when the active season has no fixtures
+    let allTeams = teamsInstance.getTeams();
+
+    if(Array.size(allTeams) >= 20){
+      return #err(#InvalidData);
+    };
+
+    let activeSeason = seasonManager.getActiveSeason();
+    let seasonFixtures = seasonManager.getFixturesForSeason(activeSeason.id);
+    if(Array.size(seasonFixtures) > 0){
+      return #err(#InvalidData);
+    };
+    
+    if(Text.size(name) > 100){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(friendlyName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(abbreviatedName) != 3){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(primaryHexColour)){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(secondaryHexColour)){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(thirdHexColour)){
+      return #err(#InvalidData);
+    };
     
     return #ok();
   };
 
   public shared func validateUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    
+    switch(teamsInstance.getTeam(teamId)){
+      case (null) {
+        return #err(#InvalidData);
+      };
+      case (?foundTeam){ };
+    };
+    
+    if(Text.size(name) > 100){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(friendlyName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(abbreviatedName) != 3){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(primaryHexColour)){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(secondaryHexColour)){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(thirdHexColour)){
+      return #err(#InvalidData);
+    };
+    
     return #ok();
   }; 
   

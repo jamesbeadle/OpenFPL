@@ -10,6 +10,7 @@ import Time "mo:base/Time";
 import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Int64 "mo:base/Int64";
+import Text "mo:base/Text";
 
 module {
     public let eqNat8 = func (a: Nat8, b: Nat8) : Bool {
@@ -191,6 +192,27 @@ module {
         };
 
         return Nat64.toNat(Int64.toNat64(Int64.fromInt(age)));
+    };
+
+    public func validateHexColor(hex: Text) : Bool {
+        
+        if (Text.size(hex) != 7 or not Text.startsWith(hex, #text "#")) {
+        return false;
+        };
+        
+        let hexChars = "0123456789abcdefABCDEF";
+        let strippedHex = switch (Text.stripStart(hex, #text "#")) {
+        case (?h) h;
+        case null hex;
+        };
+
+        for (char in Text.toIter(strippedHex)) {
+        if (not Text.contains(hexChars, #char char)) {
+            return false;
+        };
+        };
+        
+        return true;
     };
 
 
