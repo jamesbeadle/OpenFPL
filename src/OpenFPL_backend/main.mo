@@ -83,14 +83,14 @@ actor Self {
     revaluePlayers: (List.List<T.RevaluedPlayer>) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
     calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture;
-    transferPlayer: (proposalPayload: T.TransferPlayerPayload) -> async ();
-    loanPlayer: (proposalPayload: T.LoanPlayerPayload) -> async ();
-    recallPlayer: (proposalPayload: T.RecallPlayerPayload) -> async ();
-    createPlayer: (proposalPayload: T.CreatePlayerPayload) -> async ();
-    updatePlayer: (proposalPayload: T.UpdatePlayerPayload) -> async ();
-    setPlayerInjury: (proposalPayload: T.SetPlayerInjuryPayload) -> async ();
-    retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async ();
-    unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async ();
+    transferPlayer: (playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) -> async ();
+    loanPlayer: (playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) -> async ();
+    recallPlayer: (playerId: T.PlayerId) -> async ();
+    createPlayer: (teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) -> async ();
+    updatePlayer: (playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) -> async ();
+    setPlayerInjury: (playerId: T.PlayerId, description: Text, expectedEndDate: Int) -> async ();
+    retirePlayer: (playerId: T.PlayerId, retirementDate: Int) -> async ();
+    unretirePlayer: (playerId: T.PlayerId) -> async ();
     recalculatePlayerScores: (fixture: T.Fixture, seasonId: Nat16, gameweek: Nat8) -> async ();
     updatePlayerEventDataCache: () -> async ()
   };
@@ -974,21 +974,37 @@ actor Self {
   };
 
   public shared func executeAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    await seasonManager.addInitialFixtures(seasonId, seasonFixtures);
+    return #ok();
   };
 
-  public shared func validateRescheduleFixtures(fixtureId: T.FixtureId, gameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+  public shared func validateRescheduleFixtures(fixtureId: T.FixtureId, currentFixtureGameweek: T.GameweekNumber, updatedFixtureGameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
+    if(updatedFixtureDate <= Time.now()){
+      return #err(#InvalidData);  
+    };
+
+    if(updatedFixtureGameweek <= seasonManager.getActiveGameweek()){
+      return #err(#InvalidData);  
+    };
+
+    let fixture = await seasonManager.getFixture(seasonManager.getActiveSeason().id, currentFixtureGameweek, fixtureId);
+    if(fixture.id == 0 or fixture.status == 3){
+      return #err(#InvalidData);  
+    };
+    
+    return #ok();
   };
 
-  public shared func executeRescheduleFixture(fixtureId: T.FixtureId, gameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+  public shared func executeRescheduleFixture(fixtureId: T.FixtureId, currentFixtureGameweek: T.GameweekNumber, updatedFixtureGameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
+    await seasonManager.rescheduleFixture(fixtureId, currentFixtureGameweek, updatedFixtureGameweek, updatedFixtureDate);
+    return #ok();
   };
 
   public shared func validateTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+    
+    //valid player?
+    //new club is premier league team
+    
     return #err(#NotAllowed);
     //return #ok();
   };
@@ -999,73 +1015,65 @@ actor Self {
   };
 
   public shared func validateLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+
+    //loan ends in the future
+
+    //player id is valid
+    //parent team id is Premier League unless 0
+    
+    return #ok();
   };
 
   public shared func executeLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validateRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executeRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validateCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executeCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validateUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executeUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validateSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executeSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validateRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executeRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validateUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executeUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validatePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
@@ -1074,13 +1082,11 @@ actor Self {
     //ensure it is after the last game of the season
     //ensure that it is for when the active season has no fixtures
     
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validatePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
@@ -1089,25 +1095,22 @@ actor Self {
     //ensure it is after the last game of the season
     //ensure that it is for when the active season has no fixtures
     
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+   return #ok();
   };
 
   public shared func validateUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func executeUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
+  //Private functions passed to class instances
   private func resetTransfers(): async () {
     await fantasyTeamsInstance.resetTransfers();
   };

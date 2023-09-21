@@ -244,13 +244,13 @@ export const SnsGovernanceProvider = ({ children }) => {
         `).join('; ');
     };
 
-    const rescheduleFixture = async (fixture, gameweek, updatedFixtureDate) => {
+    const rescheduleFixture = async (fixture, currentFixtureGameweek, updatedFixtureGameweek, updatedFixtureDate) => {
         const functionIdReschedule = 5000;
         const proposalTitle = "Reschedule Fixture Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to reschedule fixture 
             ${getTeamById(teams, fixture.homeTeamId).abbreviateName} v ${getTeamById(teams, fixture.awayTeamId).abbreviateName}.`;
-        const payload = IDL.encode(InitArgs, `(record { fixtureId=${fixture.id}; gameweek=${gameweek}; updatedFixtureDate=${updatedFixtureDate} })`);
+        const payload = IDL.encode(InitArgs, `(record { fixtureId=${fixture.id}; currentFixtureGameweek=${currentFixtureGameweek}; updatedFixtureGameweek=${updatedFixtureGameweek}; updatedFixtureDate=${updatedFixtureDate} })`);
         await submitProposal(proposalTitle, proposalUrl, proposalSummary, functionIdReschedule, payload);
     };
 

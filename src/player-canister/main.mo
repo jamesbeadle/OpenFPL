@@ -739,14 +739,14 @@ actor Self {
         };
     };
     
-    public shared func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {
-        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+    public shared func transferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async () {
+        let player = List.find<T.Player>(players, func(p: T.Player) { p.id == playerId });
         switch(player){
             case (null) { };
             case (?p) {
                 let updatedPlayer: T.Player = {
                     id = p.id;
-                    teamId = proposalPayload.newTeamId;
+                    teamId = newTeamId;
                     position = p.position;
                     firstName = p.firstName;
                     lastName = p.lastName;
@@ -773,14 +773,14 @@ actor Self {
         };
     };
 
-    public shared func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {
-        let playerToLoan = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+    public shared func loanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async () {
+        let playerToLoan = List.find<T.Player>(players, func(p: T.Player) { p.id == playerId });
         switch(playerToLoan) {
             case (null) { };
             case (?p) {
                 let loanedPlayer: T.Player = {
                     id = p.id;
-                    teamId = proposalPayload.loanTeamId;
+                    teamId = loanTeamId;
                     position = p.position;
                     firstName = p.firstName;
                     lastName = p.lastName;
@@ -804,8 +804,8 @@ actor Self {
                     }
                 });
                 
-                let loanTimerDuration = #nanoseconds (Int.abs((proposalPayload.loanEndDate - Time.now())));
-                await setAndBackupTimer(loanTimerDuration, "loanExpired", proposalPayload.playerId);
+                let loanTimerDuration = #nanoseconds (Int.abs((loanEndDate - Time.now())));
+                await setAndBackupTimer(loanTimerDuration, "loanExpired", playerId);
             };
         };
     };
@@ -937,8 +937,8 @@ actor Self {
 
     private func defaultCallback() : async () { };
 
-    public shared func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
-        let playerToRecall = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+    public shared func recallPlayer(playerId: T.PlayerId) : async () {
+        let playerToRecall = List.find<T.Player>(players, func(p: T.Player) { p.id == playerId });
         switch(playerToRecall) {
             case (null) { };
             case (?p) {
@@ -979,17 +979,17 @@ actor Self {
     };
 
 
-    public shared func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
+    public shared func createPlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async () {
         let newPlayer: T.Player = {
             id = Nat16.fromNat(nextPlayerId + 1);
-            teamId = proposalPayload.teamId;
-            position = proposalPayload.position;
-            firstName = proposalPayload.firstName;
-            lastName = proposalPayload.lastName;
-            shirtNumber = proposalPayload.shirtNumber;
-            value = proposalPayload.value;
-            dateOfBirth = proposalPayload.dateOfBirth;
-            nationality = proposalPayload.nationality;
+            teamId = teamId;
+            position = position;
+            firstName = firstName;
+            lastName = lastName;
+            shirtNumber = shirtNumber;
+            value = value;
+            dateOfBirth = dateOfBirth;
+            nationality = nationality;
             seasons = List.nil<T.PlayerSeason>();
             valueHistory = List.nil<T.ValueHistory>();
             onLoan = false;
@@ -1002,19 +1002,19 @@ actor Self {
         nextPlayerId += 1;
     };
 
-    public shared func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {
+    public shared func updatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async () {
         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
-            if (currentPlayer.id == proposalPayload.playerId) {
+            if (currentPlayer.id == playerId) {
                 return {
                     id = currentPlayer.id;
-                    teamId = proposalPayload.teamId;
-                    position = proposalPayload.position;
-                    firstName = proposalPayload.firstName;
-                    lastName = proposalPayload.lastName;
-                    shirtNumber = proposalPayload.shirtNumber;
+                    teamId = currentPlayer.teamId;
+                    position = position;
+                    firstName = firstName;
+                    lastName = lastName;
+                    shirtNumber = shirtNumber;
                     value = currentPlayer.value;
-                    dateOfBirth = proposalPayload.dateOfBirth;
-                    nationality = proposalPayload.nationality;
+                    dateOfBirth = dateOfBirth;
+                    nationality = nationality;
                     seasons = currentPlayer.seasons;
                     valueHistory = currentPlayer.valueHistory;
                     onLoan = currentPlayer.onLoan;
@@ -1029,10 +1029,11 @@ actor Self {
         });
     };
     
-    public shared func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {
+    public shared func setPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async () {
         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
-            if (currentPlayer.id == proposalPayload.playerId) {
-                if (proposalPayload.recovered) {
+            if (currentPlayer.id == playerId) {
+
+                if(expectedEndDate <= Time.now()){
                     let updatedInjuryHistory = List.map<T.InjuryHistory, T.InjuryHistory>(currentPlayer.injuryHistory, func(injury: T.InjuryHistory) : T.InjuryHistory {
                         if (injury.expectedEndDate > Time.now()) {
                             return {
@@ -1064,8 +1065,8 @@ actor Self {
                     };
                 } else {
                     let newInjury: T.InjuryHistory = {
-                        description = proposalPayload.injuryDescription;
-                        expectedEndDate = proposalPayload.expectedEndDate;
+                        description = description;
+                        expectedEndDate = expectedEndDate;
                     };
 
                     return {
@@ -1093,8 +1094,8 @@ actor Self {
         });
     };
     
-    public shared func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
-        let playerToRetire = List.find<T.Player>(players, func(p: T.Player) { p.id == proposalPayload.playerId });
+    public shared func retirePlayer(playerId: T.PlayerId, retirementDate: Int) : async () {
+        let playerToRetire = List.find<T.Player>(players, func(p: T.Player) { p.id == playerId });
         switch(playerToRetire) {
             case (null) { };
             case (?p) {
@@ -1114,20 +1115,20 @@ actor Self {
                     parentTeamId = p.parentTeamId;
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
-                    retirementDate = proposalPayload.retirementDate;
+                    retirementDate = retirementDate;
                 };
                 
                 retiredPlayers := List.push(retiredPlayer, retiredPlayers);
                 players := List.filter<T.Player>(players, func(currentPlayer: T.Player) : Bool {
-                    return currentPlayer.id != proposalPayload.playerId;
+                    return currentPlayer.id != playerId;
                 });
                 await updateHashForCategory("players");
             };
         };
     };
 
-    public shared func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {
-        let playerToUnretire = List.find<T.Player>(retiredPlayers, func(p: T.Player) { p.id == proposalPayload.playerId });
+    public shared func unretirePlayer(playerId: T.PlayerId) : async () {
+        let playerToUnretire = List.find<T.Player>(retiredPlayers, func(p: T.Player) { p.id == playerId });
         switch(playerToUnretire) {
             case (null) { };
             case (?p) {
@@ -1152,7 +1153,7 @@ actor Self {
                 
                 players := List.push(activePlayer, players);
                 retiredPlayers := List.filter<T.Player>(retiredPlayers, func(currentPlayer: T.Player) : Bool {
-                    return currentPlayer.id != proposalPayload.playerId;
+                    return currentPlayer.id != playerId;
                 });
             };
         };
