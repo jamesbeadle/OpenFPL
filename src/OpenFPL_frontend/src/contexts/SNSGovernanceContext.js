@@ -9,7 +9,7 @@ import { IDL } from "@dfinity/candid";
 export const SnsGovernanceContext = React.createContext();
 
 export const SnsGovernanceProvider = ({ children }) => {
-    const { teams, activeState } = useContext(DataContext);
+    const { teams, systemState } = useContext(DataContext);
     const { authClient } = useContext(AuthContext);
     const location = useLocation();
     const [alreadyValuedPlayerIds, setAlreadyValuedPlayerIds ] = useState([]);
@@ -17,13 +17,22 @@ export const SnsGovernanceProvider = ({ children }) => {
     const InitArgs = IDL.Record({ 'rrkah-fqaaa-aaaaa-aaaaq-cai' : IDL.Principal });
     
     const [loading, setLoading] = useState(true);
+    const [hasNeurons, setHasNeurons] = useState(false);
   
     const getData = async () => {
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: authClient.getPrincipal() });
+        
+        if (!neurons || neurons.length === 0) {
+            setLoading(false);
+            return;
+        }
+        setHasNeurons(true);
+    
         await fetchRemainingWeeklyValuationVotes();
         await fetchAlreadyValuedPlayerIds();
         setLoading(false);
     };
-
+    
     useEffect(() => {
         getData();
     }, []);
@@ -50,7 +59,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             for (const proposal of batch) {
                 const proposalSeasonId = IDL.decode(InitArgs, proposal.payload).seasonId;
-                if (proposalSeasonId !== activeState.seasonId) {
+                if (proposalSeasonId !== systemState.activeSeason.id) {
                     return proposals;
                 }
                 proposals.push(proposal);
@@ -86,20 +95,12 @@ export const SnsGovernanceProvider = ({ children }) => {
         }
 
         setAlreadyValuedPlayerIds([...new Set(playerIds)]);
-    };
 
-    const fetchRemainingWeeklyValuationVotes = async (currentGameWeekStartTimestamp) => {
         const totalVotesAllowedPerWeek = 20;
-        
-        const seasonProposals = await fetchAlreadyValuedPlayerIds(currentSeasonId);
-        
-        // Filter out the proposals made within the current gameweek.
         const currentGameWeekProposals = seasonProposals.filter(proposal => {
-            const proposalTimestamp = proposal.proposal_timestamp_seconds;
-            return proposalTimestamp >= currentGameWeekStartTimestamp;
+            const proposalGameWeek = IDL.decode(InitArgs, proposal.payload).gameWeek;
+            return proposalGameWeek === systemState.activeGameweek;
         });
-    
-        // Calculate the remaining votes.
         const remainingVotes = totalVotesAllowedPerWeek - currentGameWeekProposals.length;
     
         setRemainingWeeklyValuationVotes(Math.max(0, remainingVotes));
@@ -133,7 +134,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummaryUp = `Proposal to increase the value of ${player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
-        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
+        const payload = IDL.encode(InitArgs, `(record { seasonId=${systemState.activeSeason.id}; gameweek=${systemState.activeGameweek} playerId=${player.id} })`);
         const neurons = await SnsGovernanceCanister.listNeurons({ principal: authClient.getPrincipal() });
     
         for (const neuron of neurons) {
@@ -183,7 +184,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummaryDown = `Proposal to decrease the value of ${player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
-        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
+        const payload = IDL.encode(InitArgs, `(record { seasonId=${systemState.activeSeason.id}; gameweek=${systemState.activeGameweek} playerId=${player.id} })`);
         const neurons = await SnsGovernanceCanister.listNeurons({ principal: authClient.getPrincipal() });
     
         for (const neuron of neurons) {
