@@ -33,6 +33,7 @@ import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Int16 "mo:base/Int16";
 import SHA224 "./SHA224";
+import SNSGovernance "./SNSGovernance";
 
 actor Self {
 
@@ -65,6 +66,7 @@ actor Self {
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
+    governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -73,6 +75,8 @@ actor Self {
     icrc1_total_supply: () -> async Nat;
     icrc1_balance_of: (T.Account) -> async Nat;
   };
+
+  let governanceCanister: SNSGovernance.Interface = actor (CANISTER_IDS.governance_canister);
   
   //Player Canister
 
@@ -464,8 +468,6 @@ actor Self {
     stable_timers := Buffer.toArray(timerBuffer);
   };
 
-  private stable var stable_timers: [T.TimerInfo] = [];
-
   //Fantasy team functions
   public shared query ({caller}) func getTotalManagers() : async Nat {
       return fantasyTeamsInstance.getTotalManagers();
@@ -566,36 +568,45 @@ actor Self {
     };
   };
 
-  public shared query ({caller}) func getValidatableFixtures() : async [T.Fixture]{
-    assert not Principal.isAnonymous(caller);
-    return seasonManager.getValidatableFixtures();
-  };
 
-  //Governance canister validation and target methods
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //Governance canister validation 
 
   public shared func validateRevaluePlayerUp(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-
+    let existingRevaluationProposals = governanceCanister.list_proposals(
+      {
+        before_proposal = { id = 1 };
+        exclude_topic = 1;
+        include_all_manage_neuron_proposals = true;
+        include_reward_status = 1;
+        include_status = 1;
+        limit = 100;
+      }
+    );
     //there is not already an existing proposal to revalue this player up
 
-    return #err(#NotAllowed);
-    //return #ok();
-  };
-
-  public shared func executeRevaluePlayerUp(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validateRevaluePlayerDown(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
     //there is not already an existing proposal to revalue this player down
 
-    return #err(#NotAllowed);
-    //return #ok();
-  };
-
-  public shared func executeRevaluePlayerDown(seasonId: T.SeasonId, gameweek: T.GameweekNumber, playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
+    return #ok();
   };
 
   public shared func validateSubmitFixtureData(fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async Result.Result<(), T.Error>{
@@ -696,6 +707,227 @@ actor Self {
     };
 
     return true;
+  };
+
+  public shared func validateAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
+    
+    let findIndex = func(arr: [T.TeamId], value: T.TeamId) : ?Nat {
+        for (i in Array.keys(arr)) {
+            if (arr[i] == value) {
+                return ?(i);
+            }
+        };
+        return null;
+    };
+
+    //there should be no fixtures for the season currently
+    let currentSeason = seasonManager.getSeason(seasonId);
+    if(currentSeason.id == 0){
+        return #err(#InvalidData);
+    };
+
+    for(gameweek in Iter.fromList(currentSeason.gameweeks)){
+      if(List.size(gameweek.fixtures) > 0){
+          return #err(#InvalidData);
+      };
+    };
+
+    //there are 380 fixtures
+    if(Array.size(seasonFixtures) != 380){
+      return #err(#InvalidData);
+    };
+
+    let teams = await getTeams();
+    let teamIds = Array.map<T.Team, T.TeamId>(teams, func(t: T.Team) : T.TeamId { return t.id });
+
+    let uniqueTeamIdsBuffer = Buffer.fromArray<T.TeamId>([]);
+
+    for (teamId in Iter.fromArray(teamIds)) {
+        if (not Buffer.contains<T.TeamId>(uniqueTeamIdsBuffer, teamId, func (a: T.TeamId, b: T.TeamId): Bool { a == b })) {
+            uniqueTeamIdsBuffer.add(teamId);
+        };
+    };
+
+    //there are 20 teams 
+    let uniqueTeamIds = Buffer.toArray<T.TeamId>(uniqueTeamIdsBuffer);
+    if(Array.size(uniqueTeamIds) != 20){
+      return #err(#InvalidData);
+    };
+
+    //19 home games and 19 away games for each team
+    let homeGamesCount = Array.tabulate<Nat>(Array.size(uniqueTeamIds), func(_: Nat) { return 0; });
+    let awayGamesCount = Array.tabulate<Nat>(Array.size(uniqueTeamIds), func(_: Nat) { return 0; });
+    
+    let homeGamesBuffer = Buffer.fromArray<Nat>(homeGamesCount);
+    let awayGamesBuffer = Buffer.fromArray<Nat>(awayGamesCount);
+
+    for (f in Iter.fromArray(seasonFixtures)) {
+      
+    //all default values are set correctly for starting fixture, scores and statuses etc
+      if (f.homeGoals != 0 or
+          f.awayGoals != 0 or
+          f.status != 0 or
+          not List.isNil(f.events) or
+          f.highestScoringPlayerId != 0) {
+          return #err(#InvalidData);
+      };
+
+      //all team ids exist
+      let homeTeam = Array.find<T.TeamId>(teamIds, func(teamId: T.TeamId): Bool { return teamId == f.homeTeamId; });
+      let awayTeam = Array.find<T.TeamId>(teamIds, func(teamId: T.TeamId): Bool { return teamId == f.awayTeamId; });
+      if(homeTeam == null or awayTeam == null){
+        return #err(#InvalidData);
+      };
+
+      let homeTeamIndexOpt = findIndex(uniqueTeamIds, f.homeTeamId);
+      let awayTeamIndexOpt = findIndex(uniqueTeamIds, f.awayTeamId);
+
+      label check switch (homeTeamIndexOpt, awayTeamIndexOpt) {
+        case (?(homeTeamIndex), ?(awayTeamIndex)){
+            let currentHomeGames = homeGamesBuffer.get(homeTeamIndex);
+            let currentAwayGames = awayGamesBuffer.get(awayTeamIndex);
+            homeGamesBuffer.put(homeTeamIndex, currentHomeGames + 1);
+            awayGamesBuffer.put(awayTeamIndex, currentAwayGames + 1);
+            break check;
+        };
+        case _{
+          return #err(#InvalidData);
+        };  
+      };
+      
+    };
+
+    let gameweekFixturesBuffer = Buffer.fromArray<Nat>(Array.tabulate<Nat>(38, func(_: Nat) { return 0; }));
+
+    for (f in Iter.fromArray(seasonFixtures)) {
+      let gameweekIndex = f.gameweek - 1;
+      let currentCount = gameweekFixturesBuffer.get(Nat8.toNat(gameweekIndex));
+      gameweekFixturesBuffer.put(Nat8.toNat(gameweekIndex), currentCount + 1);
+    };
+
+    for (i in Iter.fromArray(Buffer.toArray(gameweekFixturesBuffer))) {
+      if (gameweekFixturesBuffer.get(i) != 10) {
+        return #err(#InvalidData);
+      };
+    };
+
+    for (i in Iter.fromArray(Buffer.toArray(homeGamesBuffer))) {
+        if (homeGamesBuffer.get(i) != 19 or awayGamesBuffer.get(i) != 19) {
+            return #err(#InvalidData);
+        };
+    };
+    
+    return #ok();
+  };
+
+  public shared func validateRescheduleFixtures(fixtureId: T.FixtureId, currentFixtureGameweek: T.GameweekNumber, updatedFixtureGameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
+    if(updatedFixtureDate <= Time.now()){
+      return #err(#InvalidData);  
+    };
+
+    if(updatedFixtureGameweek <= seasonManager.getActiveGameweek()){
+      return #err(#InvalidData);  
+    };
+
+    let fixture = await seasonManager.getFixture(seasonManager.getActiveSeason().id, currentFixtureGameweek, fixtureId);
+    if(fixture.id == 0 or fixture.status == 3){
+      return #err(#InvalidData);  
+    };
+    
+    return #ok();
+  };
+
+  public shared func validateLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
+
+    //loan ends in the future
+
+    //player id is valid
+    //parent team id is Premier League unless 0
+    
+    return #ok();
+  };
+
+  public shared func validateTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+    
+    //valid player?
+    //new club is premier league team
+    
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func validateRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #ok();
+  };
+
+  public shared func validateCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    return #ok();
+  };
+
+  public shared func validateUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    return #ok();
+  };
+
+  public shared func validateSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
+    return #ok();
+  };
+
+  public shared func validateRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
+    return #ok();
+  };
+
+  public shared func validateUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #ok();
+  };
+
+  public shared func validatePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
+    
+    //ensure there are less than the 20 required teams
+    //ensure it is after the last game of the season
+    //ensure that it is for when the active season has no fixtures
+    
+    return #ok();
+  };
+
+  public shared func validatePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    
+    //ensure there are less than the 20 required teams
+    //ensure it is after the last game of the season
+    //ensure that it is for when the active season has no fixtures
+    
+    return #ok();
+  };
+
+  public shared func validateUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    return #ok();
+  }; 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //Governance target methods
+
+  public shared func executeRevaluePlayerUp(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
+  };
+
+  public shared func executeRevaluePlayerDown(seasonId: T.SeasonId, gameweek: T.GameweekNumber, playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #err(#NotAllowed);
+    //return #ok();
   };
 
   public shared func executeSubmitFixtureData(fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async Result.Result<(), T.Error>{
@@ -862,136 +1094,8 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
-    
-    let findIndex = func(arr: [T.TeamId], value: T.TeamId) : ?Nat {
-        for (i in Array.keys(arr)) {
-            if (arr[i] == value) {
-                return ?(i);
-            }
-        };
-        return null;
-    };
-
-    //there should be no fixtures for the season currently
-    let currentSeason = seasonManager.getSeason(seasonId);
-    if(currentSeason.id == 0){
-        return #err(#InvalidData);
-    };
-
-    for(gameweek in Iter.fromList(currentSeason.gameweeks)){
-      if(List.size(gameweek.fixtures) > 0){
-          return #err(#InvalidData);
-      };
-    };
-
-    //there are 380 fixtures
-    if(Array.size(seasonFixtures) != 380){
-      return #err(#InvalidData);
-    };
-
-    let teams = await getTeams();
-    let teamIds = Array.map<T.Team, T.TeamId>(teams, func(t: T.Team) : T.TeamId { return t.id });
-
-    let uniqueTeamIdsBuffer = Buffer.fromArray<T.TeamId>([]);
-
-    for (teamId in Iter.fromArray(teamIds)) {
-        if (not Buffer.contains<T.TeamId>(uniqueTeamIdsBuffer, teamId, func (a: T.TeamId, b: T.TeamId): Bool { a == b })) {
-            uniqueTeamIdsBuffer.add(teamId);
-        };
-    };
-
-    //there are 20 teams 
-    let uniqueTeamIds = Buffer.toArray<T.TeamId>(uniqueTeamIdsBuffer);
-    if(Array.size(uniqueTeamIds) != 20){
-      return #err(#InvalidData);
-    };
-
-    //19 home games and 19 away games for each team
-    let homeGamesCount = Array.tabulate<Nat>(Array.size(uniqueTeamIds), func(_: Nat) { return 0; });
-    let awayGamesCount = Array.tabulate<Nat>(Array.size(uniqueTeamIds), func(_: Nat) { return 0; });
-    
-    let homeGamesBuffer = Buffer.fromArray<Nat>(homeGamesCount);
-    let awayGamesBuffer = Buffer.fromArray<Nat>(awayGamesCount);
-
-    for (f in Iter.fromArray(seasonFixtures)) {
-      
-    //all default values are set correctly for starting fixture, scores and statuses etc
-      if (f.homeGoals != 0 or
-          f.awayGoals != 0 or
-          f.status != 0 or
-          not List.isNil(f.events) or
-          f.highestScoringPlayerId != 0) {
-          return #err(#InvalidData);
-      };
-
-      //all team ids exist
-      let homeTeam = Array.find<T.TeamId>(teamIds, func(teamId: T.TeamId): Bool { return teamId == f.homeTeamId; });
-      let awayTeam = Array.find<T.TeamId>(teamIds, func(teamId: T.TeamId): Bool { return teamId == f.awayTeamId; });
-      if(homeTeam == null or awayTeam == null){
-        return #err(#InvalidData);
-      };
-
-      let homeTeamIndexOpt = findIndex(uniqueTeamIds, f.homeTeamId);
-      let awayTeamIndexOpt = findIndex(uniqueTeamIds, f.awayTeamId);
-
-      label check switch (homeTeamIndexOpt, awayTeamIndexOpt) {
-        case (?(homeTeamIndex), ?(awayTeamIndex)){
-            let currentHomeGames = homeGamesBuffer.get(homeTeamIndex);
-            let currentAwayGames = awayGamesBuffer.get(awayTeamIndex);
-            homeGamesBuffer.put(homeTeamIndex, currentHomeGames + 1);
-            awayGamesBuffer.put(awayTeamIndex, currentAwayGames + 1);
-            break check;
-        };
-        case _{
-          return #err(#InvalidData);
-        };  
-      };
-      
-    };
-
-    let gameweekFixturesBuffer = Buffer.fromArray<Nat>(Array.tabulate<Nat>(38, func(_: Nat) { return 0; }));
-
-    for (f in Iter.fromArray(seasonFixtures)) {
-      let gameweekIndex = f.gameweek - 1;
-      let currentCount = gameweekFixturesBuffer.get(Nat8.toNat(gameweekIndex));
-      gameweekFixturesBuffer.put(Nat8.toNat(gameweekIndex), currentCount + 1);
-    };
-
-    for (i in Iter.fromArray(Buffer.toArray(gameweekFixturesBuffer))) {
-      if (gameweekFixturesBuffer.get(i) != 10) {
-        return #err(#InvalidData);
-      };
-    };
-
-    for (i in Iter.fromArray(Buffer.toArray(homeGamesBuffer))) {
-        if (homeGamesBuffer.get(i) != 19 or awayGamesBuffer.get(i) != 19) {
-            return #err(#InvalidData);
-        };
-    };
-    
-    return #ok();
-  };
-
   public shared func executeAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
     await seasonManager.addInitialFixtures(seasonId, seasonFixtures);
-    return #ok();
-  };
-
-  public shared func validateRescheduleFixtures(fixtureId: T.FixtureId, currentFixtureGameweek: T.GameweekNumber, updatedFixtureGameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
-    if(updatedFixtureDate <= Time.now()){
-      return #err(#InvalidData);  
-    };
-
-    if(updatedFixtureGameweek <= seasonManager.getActiveGameweek()){
-      return #err(#InvalidData);  
-    };
-
-    let fixture = await seasonManager.getFixture(seasonManager.getActiveSeason().id, currentFixtureGameweek, fixtureId);
-    if(fixture.id == 0 or fixture.status == 3){
-      return #err(#InvalidData);  
-    };
-    
     return #ok();
   };
 
@@ -1000,27 +1104,7 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
-    
-    //valid player?
-    //new club is premier league team
-    
-    return #err(#NotAllowed);
-    //return #ok();
-  };
-
   public shared func executeTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
-    return #err(#NotAllowed);
-    //return #ok();
-  };
-
-  public shared func validateLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
-
-    //loan ends in the future
-
-    //player id is valid
-    //parent team id is Premier League unless 0
-    
     return #ok();
   };
 
@@ -1028,15 +1112,7 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #ok();
-  };
-
   public shared func executeRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    return #ok();
-  };
-
-  public shared func validateCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
     return #ok();
   };
 
@@ -1044,15 +1120,7 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
-    return #ok();
-  };
-
   public shared func executeUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
-    return #ok();
-  };
-
-  public shared func validateSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
     return #ok();
   };
 
@@ -1060,15 +1128,7 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
-    return #ok();
-  };
-
   public shared func executeRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
-    return #ok();
-  };
-
-  public shared func validateUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
     return #ok();
   };
 
@@ -1076,34 +1136,12 @@ actor Self {
     return #ok();
   };
 
-  public shared func validatePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
-    
-    //ensure there are less than the 20 required teams
-    //ensure it is after the last game of the season
-    //ensure that it is for when the active season has no fixtures
-    
-    return #ok();
-  };
-
   public shared func executePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
-    return #ok();
-  };
-
-  public shared func validatePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
-    
-    //ensure there are less than the 20 required teams
-    //ensure it is after the last game of the season
-    //ensure that it is for when the active season has no fixtures
-    
     return #ok();
   };
 
   public shared func executePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
    return #ok();
-  };
-
-  public shared func validateUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
-    return #ok();
   };
 
   public shared func executeUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
@@ -1126,12 +1164,6 @@ actor Self {
 
   private func settleUserBets(): async (){
     await privateLeaguesInstance.settleUserBets();
-  };
-
-  private func revaluePlayers(activeSeasonId: Nat16, activeGameweek: Nat8): async (){
-    //let revaluedPlayers = await governanceInstance.getRevaluedPlayers(activeSeasonId, activeGameweek);
-    let revaluedPlayers = List.nil<T.RevaluedPlayer>(); // NEED TO SET THIS FROM THE GOVERNANCE CANISTER
-    await playerCanister.revaluePlayers(revaluedPlayers);
   };
 
   private func snapshotGameweek(seasonId: Nat16, gameweek: Nat8): async (){
@@ -1175,13 +1207,14 @@ actor Self {
     return List.toArray(dataCacheHashes);
   };
   
+  private stable var stable_timers: [T.TimerInfo] = [];
+
   //intialise season manager
   let seasonManager = SeasonManager.SeasonManager(
     resetTransfers, 
     calculatePlayerScores, 
     distributeRewards, 
     settleUserBets, 
-    revaluePlayers, 
     snapshotGameweek,  
     calculateFantasyTeamScores, 
     getAllPlayersMap,

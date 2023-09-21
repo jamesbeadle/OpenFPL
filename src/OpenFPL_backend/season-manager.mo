@@ -21,7 +21,6 @@ module {
     calculatePlayerScores: (activeSeason: T.SeasonId, activeGameweek: T.GameweekNumber, fixture: T.Fixture) -> async T.Fixture,
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
-    revaluePlayers: (Nat16, Nat8) -> async (),
     snapshotGameweek: (seasonId: Nat16, gameweek: Nat8) -> async (),
     calculateFantasyTeamScores: (Nat16, Nat8) -> async (),
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
@@ -80,10 +79,6 @@ module {
     
     public func getActiveFixtures() : [T.Fixture] {
         return activeFixtures;
-    };
-
-    public func getValidatableFixtures(): [T.Fixture] {
-        return seasonsInstance.getValidatableFixtures(activeSeasonId, activeGameweek);
     };
 
     public func getNextFixtureId() : Nat32 {
@@ -222,9 +217,7 @@ module {
         };
     };
 
-    private func gameweekVerified() : async (){
-          
-        //await revaluePlayers(activeSeasonId, activeGameweek); - //IMPLEMENT POST SNS
+    private func gameweekVerified() : async (){  
         //await distributeRewards(); //IMPLEMENT POST SNS
         //await settleUserBets(); //IMPLEMENT POST SNS
     };

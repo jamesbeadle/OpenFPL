@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Card, Table, Button, Spinner } from 'react-bootstrap';
 import { AuthContext } from "../../../contexts/AuthContext";
 import { DataContext } from "../../../contexts/DataContext";
-import { fetchValidatableFixtures } from "../../../AuthFunctions";
 import { Link } from "react-router-dom";
 import { getTeamById } from '../../helpers';
 
@@ -17,7 +16,7 @@ const FixtureValidationList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fixturesToValidate = await fetchValidatableFixtures(authClient);
+        const fixturesToValidate = await fetchValidatableFixtures(authClient);//THIS WHOLE VIEW IS GOING
         setFixtures(fixturesToValidate);
       } catch (error) {
         console.error(error);

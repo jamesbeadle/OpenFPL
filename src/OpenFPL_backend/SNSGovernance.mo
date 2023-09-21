@@ -569,9 +569,7 @@ module {
     };
 
     public type Interface = actor {
-        list_neurons: ListNeurons -> async ListNeuronsResponse;
         list_proposals: ListProposalInfo -> async ListProposalInfoResponse;
-        manage_neuron: ManageNeuron -> async ManageNeuronResponse;
     };
 
 };
