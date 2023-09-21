@@ -33,7 +33,6 @@ import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Int16 "mo:base/Int16";
 import SHA224 "./SHA224";
-import SNSGovernance "./SNSGovernance";
 
 actor Self {
 
@@ -75,8 +74,6 @@ actor Self {
     icrc1_total_supply: () -> async Nat;
     icrc1_balance_of: (T.Account) -> async Nat;
   };
-
-  let governanceCanister: SNSGovernance.Interface = actor (CANISTER_IDS.governance_canister);
   
   //Player Canister
 
@@ -586,26 +583,11 @@ actor Self {
 
 
   //Governance canister validation 
-
   public shared func validateRevaluePlayerUp(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    let existingRevaluationProposals = governanceCanister.list_proposals(
-      {
-        before_proposal = { id = 1 };
-        exclude_topic = 1;
-        include_all_manage_neuron_proposals = true;
-        include_reward_status = 1;
-        include_status = 1;
-        limit = 100;
-      }
-    );
-    //there is not already an existing proposal to revalue this player up
-
     return #ok();
   };
 
   public shared func validateRevaluePlayerDown(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
-    //there is not already an existing proposal to revalue this player down
-
     return #ok();
   };
 
@@ -839,32 +821,133 @@ actor Self {
 
   public shared func validateLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
 
-    //loan ends in the future
+    if(loanEndDate <= Time.now()){
+      return #err(#InvalidData);
+    };
 
-    //player id is valid
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0){
+      return #err(#InvalidData);
+    };
+
+    //player is not already on loan
+    if(player.onLoan){
+      return #err(#InvalidData);
+    };
+
     //parent team id is Premier League unless 0
-    
+    if(parentTeamId > 0){
+      switch(teamsInstance.getTeam(parentTeamId)){
+        case (null) {
+          return #err(#InvalidData);
+        };
+        case (?foundTeam){ };
+      };
+    };
+
+    //loan team exists unless 0
+    if(loanTeamId > 0){
+      switch(teamsInstance.getTeam(loanTeamId)){
+        case (null) {
+          return #err(#InvalidData);
+        };
+        case (?foundTeam){ };
+      };
+    };
+
     return #ok();
   };
 
   public shared func validateTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
     
-    //valid player?
-    //new club is premier league team
+
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0){
+      return #err(#InvalidData);
+    };
     
-    return #err(#NotAllowed);
-    //return #ok();
+    //new club is premier league team
+    if(newTeamId > 0){
+      switch(teamsInstance.getTeam(newTeamId)){
+        case (null) {
+          return #err(#InvalidData);
+        };
+        case (?foundTeam){ };
+      };
+    };
+    
+    return #ok();
   };
 
   public shared func validateRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0){
+      return #err(#InvalidData);
+    };
+
+    //player is on loan
+    if(not player.onLoan){
+      return #err(#InvalidData);
+    };
+
     return #ok();
   };
 
   public shared func validateCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    
+    switch(teamsInstance.getTeam(teamId)){
+      case (null) {
+        return #err(#InvalidData);
+      };
+      case (?foundTeam){ };
+    };
+
+    if(Text.size(firstName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(lastName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(position > 3){
+      return #err(#InvalidData);
+    };  
+
+    if(not Utilities.isNationalityValid(nationality)){
+      return #err(#InvalidData);
+    };
+
+    if(Utilities.calculateAgeFromUnix(dateOfBirth) < 16){
+      return #err(#InvalidData);
+    };
+    
     return #ok();
   };
 
   public shared func validateUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    
+    if(Text.size(firstName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(lastName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(position > 3){
+      return #err(#InvalidData);
+    };  
+
+    if(not Utilities.isNationalityValid(nationality)){
+      return #err(#InvalidData);
+    };
+
+    if(Utilities.calculateAgeFromUnix(dateOfBirth) < 16){
+      return #err(#InvalidData);
+    };
+    
     return #ok();
   };
 

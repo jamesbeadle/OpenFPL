@@ -3,6 +3,7 @@ import Result "mo:base/Result";
 import T "types";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
+import Iter "mo:base/Iter";
 import GenesisData "genesis-data";
 
 module {
@@ -31,6 +32,15 @@ module {
         });
         let sortedTeams = List.fromArray(sortedArray);
         return sortedArray;
+    };
+
+    public func getTeam(teamId: T.TeamId) : ?T.Team {
+        for(team in Iter.fromList(teams)){
+            if(team.id == teamId){
+                return ?team;
+            }
+        };
+        return null;
     };
 
     public func getRelegatedTeams() : [T.Team] {

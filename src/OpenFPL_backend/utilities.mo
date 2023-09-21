@@ -5,6 +5,11 @@ import Nat8 "mo:base/Nat8";
 import T "./types";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
+import List "mo:base/List";
+import Time "mo:base/Time";
+import Nat "mo:base/Nat";
+import Nat64 "mo:base/Nat64";
+import Int64 "mo:base/Int64";
 
 module {
     public let eqNat8 = func (a: Nat8, b: Nat8) : Bool {
@@ -84,5 +89,110 @@ module {
 
         return Nat8.fromNat(month + 1); // To make it 1-based
     };
+
+    public func isNationalityValid(checkNationality: Text) : Bool{
+        let nationalities = List.fromArray<Text>([
+            "Albania",
+            "Algeria",
+            "Argentina",
+            "Australia",
+            "Austria",
+            "Belgium",
+            "Bosnia and Herzegovina",
+            "Brazil",
+            "Burkina Faso",
+            "Cameroon",
+            "Canada",
+            "Colombia",
+            "Costa Rica",
+            "Ivory Coast",
+            "Croatia",
+            "Czech Republic",
+            "Denmark",
+            "DR Congo",
+            "Ecuador",
+            "Egypt",
+            "England",
+            "Estonia",
+            "Finland",
+            "France",
+            "Gabon",
+            "Germany",
+            "Ghana",
+            "Greece",
+            "Grenada",
+            "Guinea",
+            "Iceland",
+            "Iran",
+            "Ireland",
+            "Israel",
+            "Italy",
+            "Ivory Coast",
+            "Jamaica",
+            "Japan",
+            "Macedonia",
+            "Mali",
+            "Mexico",
+            "Montserrat",
+            "Morocco",
+            "Netherlands",
+            "Nigeria",
+            "Northern Ireland",
+            "Norway",
+            "Paraguay",
+            "Poland",
+            "Portugal",
+            "Scotland",
+            "Senegal",
+            "Serbia",
+            "Slovakia",
+            "South Africa",
+            "South Korea",
+            "Spain",
+            "Sweden",
+            "Switzerland",
+            "Tunisia",
+            "Turkey",
+            "Ukraine",
+            "United States",
+            "Uruguay",
+            "Wales",
+            "Zimbabwe",
+        ]);
+        
+        for(nationality in Iter.fromList(nationalities)){
+            if(nationality == checkNationality){
+                return true;
+            }
+        };
+
+        return false;
+    };
+
+    public func calculateAgeFromUnix(dobUnix: Int) : Nat {
+        let secondsInADay: Int = 86400;
+        let currentUnixTime: Int = Time.now();
+        
+        let currentDays: Int = currentUnixTime / secondsInADay;
+        let dobDays: Int = dobUnix / secondsInADay;
+
+        let currentYear: Int = 1970 + currentDays / 365;
+        let dobYear: Int = 1970 + dobDays / 365;
+        
+        let currentLeapYears: Int = (currentYear - 1969) / 4 - (currentYear - 1901) / 100 + (currentYear - 1600) / 400;
+        let dobLeapYears: Int = (dobYear - 1969) / 4 - (dobYear - 1901) / 100 + (dobYear - 1600) / 400;
+
+        let currentDayOfYear: Int = currentDays - (currentYear - 1970) * 365 - currentLeapYears;
+        let dobDayOfYear: Int = dobDays - (dobYear - 1970) * 365 - dobLeapYears;
+
+        var age: Int = currentYear - dobYear;
+        if (currentDayOfYear < dobDayOfYear) {
+            age := age - 1;
+        };
+
+        return Nat64.toNat(Int64.toNat64(Int64.fromInt(age)));
+    };
+
+
 
 };
