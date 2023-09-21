@@ -599,7 +599,6 @@ actor Self {
   };
 
   public shared func validateSubmitFixtureData(fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async Result.Result<(), T.Error>{
-    
     let validPlayerEvents = validatePlayerEvents(playerEventData);
     if(not validPlayerEvents){
       return #err(#InvalidData);
@@ -614,7 +613,6 @@ actor Self {
     };
 
     return #ok();
-
   };
 
   private func validatePlayerEvents(playerEvents: [T.PlayerEventData]) : Bool {
@@ -717,7 +715,6 @@ actor Self {
             awayTeamPlayerIdsBuffer.add(event.playerId);
         };
     };
-
       
     let homeTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
     let awayTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
@@ -867,10 +864,113 @@ actor Self {
 
   public shared func validateAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
     
+    let findIndex = func(arr: [T.TeamId], value: T.TeamId) : ?Nat {
+        for (i in Array.keys(arr)) {
+            if (arr[i] == value) {
+                return ?(i);
+            }
+        };
+        return null;
+    };
+
     //there should be no fixtures for the season currently
+    let currentSeason = seasonManager.getSeason(seasonId);
+    if(currentSeason.id == 0){
+        return #err(#InvalidData);
+    };
+
+    for(gameweek in Iter.fromList(currentSeason.gameweeks)){
+      if(List.size(gameweek.fixtures) > 0){
+          return #err(#InvalidData);
+      };
+    };
+
+    //there are 380 fixtures
+    if(Array.size(seasonFixtures) != 380){
+      return #err(#InvalidData);
+    };
+
+    let teams = await getTeams();
+    let teamIds = Array.map<T.Team, T.TeamId>(teams, func(t: T.Team) : T.TeamId { return t.id });
+
+    let uniqueTeamIdsBuffer = Buffer.fromArray<T.TeamId>([]);
+
+    for (teamId in Iter.fromArray(teamIds)) {
+        if (not Buffer.contains<T.TeamId>(uniqueTeamIdsBuffer, teamId, func (a: T.TeamId, b: T.TeamId): Bool { a == b })) {
+            uniqueTeamIdsBuffer.add(teamId);
+        };
+    };
+
+    //there are 20 teams 
+    let uniqueTeamIds = Buffer.toArray<T.TeamId>(uniqueTeamIdsBuffer);
+    if(Array.size(uniqueTeamIds) != 20){
+      return #err(#InvalidData);
+    };
+
+    //19 home games and 19 away games for each team
+    let homeGamesCount = Array.tabulate<Nat>(Array.size(uniqueTeamIds), func(_: Nat) { return 0; });
+    let awayGamesCount = Array.tabulate<Nat>(Array.size(uniqueTeamIds), func(_: Nat) { return 0; });
     
-    return #err(#NotAllowed);
-    //return #ok();
+    let homeGamesBuffer = Buffer.fromArray<Nat>(homeGamesCount);
+    let awayGamesBuffer = Buffer.fromArray<Nat>(awayGamesCount);
+
+    for (f in Iter.fromArray(seasonFixtures)) {
+      
+    //all default values are set correctly for starting fixture, scores and statuses etc
+      if (f.homeGoals != 0 or
+          f.awayGoals != 0 or
+          f.status != 0 or
+          not List.isNil(f.events) or
+          f.highestScoringPlayerId != 0) {
+          return #err(#InvalidData);
+      };
+
+      //all team ids exist
+      let homeTeam = Array.find<T.TeamId>(teamIds, func(teamId: T.TeamId): Bool { return teamId == f.homeTeamId; });
+      let awayTeam = Array.find<T.TeamId>(teamIds, func(teamId: T.TeamId): Bool { return teamId == f.awayTeamId; });
+      if(homeTeam == null or awayTeam == null){
+        return #err(#InvalidData);
+      };
+
+      let homeTeamIndexOpt = findIndex(uniqueTeamIds, f.homeTeamId);
+      let awayTeamIndexOpt = findIndex(uniqueTeamIds, f.awayTeamId);
+
+      label check switch (homeTeamIndexOpt, awayTeamIndexOpt) {
+        case (?(homeTeamIndex), ?(awayTeamIndex)){
+            let currentHomeGames = homeGamesBuffer.get(homeTeamIndex);
+            let currentAwayGames = awayGamesBuffer.get(awayTeamIndex);
+            homeGamesBuffer.put(homeTeamIndex, currentHomeGames + 1);
+            awayGamesBuffer.put(awayTeamIndex, currentAwayGames + 1);
+            break check;
+        };
+        case _{
+          return #err(#InvalidData);
+        };  
+      };
+      
+    };
+
+    let gameweekFixturesBuffer = Buffer.fromArray<Nat>(Array.tabulate<Nat>(38, func(_: Nat) { return 0; }));
+
+    for (f in Iter.fromArray(seasonFixtures)) {
+      let gameweekIndex = f.gameweek - 1;
+      let currentCount = gameweekFixturesBuffer.get(Nat8.toNat(gameweekIndex));
+      gameweekFixturesBuffer.put(Nat8.toNat(gameweekIndex), currentCount + 1);
+    };
+
+    for (i in Iter.fromArray(Buffer.toArray(gameweekFixturesBuffer))) {
+      if (gameweekFixturesBuffer.get(i) != 10) {
+        return #err(#InvalidData);
+      };
+    };
+
+    for (i in Iter.fromArray(Buffer.toArray(homeGamesBuffer))) {
+        if (homeGamesBuffer.get(i) != 19 or awayGamesBuffer.get(i) != 19) {
+            return #err(#InvalidData);
+        };
+    };
+    
+    return #ok();
   };
 
   public shared func executeAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{

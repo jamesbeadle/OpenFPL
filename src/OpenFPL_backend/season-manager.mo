@@ -266,6 +266,10 @@ module {
         };
     };
 
+    public func getSeason(seasonId: T.SeasonId) : T.Season {
+        return seasonsInstance.getSeason(seasonId);
+    };
+
     public func getActiveSeason() : T.Season {
         return seasonsInstance.getSeason(activeSeasonId);
     };
