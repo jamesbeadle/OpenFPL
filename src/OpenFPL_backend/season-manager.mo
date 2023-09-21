@@ -23,14 +23,10 @@ module {
     settleUserBets: () -> async (),
     revaluePlayers: (Nat16, Nat8) -> async (),
     snapshotGameweek: (seasonId: Nat16, gameweek: Nat8) -> async (),
-    mintWeeklyRewardsPool: () -> async (),
-    mintAnnualRewardsPool: () -> async (),
     calculateFantasyTeamScores: (Nat16, Nat8) -> async (),
-    //getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async (),
     updateCacheHash: (category: Text) -> async (),
-    //EventData_VotingPeriod: Int,
     stable_timers: [T.TimerInfo],
     updatePlayerEventDataCache: () -> async ()) {
 
@@ -175,34 +171,6 @@ module {
         await updateCacheHash("fixtures");
     };
 
-    /* Voting period over will be triggered by the internal working of the governance canister, we just need this to be the execution function without a new timer?
-    */
-    public func votingPeriodOver() : async (){
-        let EventData_VotingPeriod = 0; // NEED TO SET THIS FROM THE GOVERNANCE CANISTER BUT IT NEEDS TO BE THE TIME SPECIFIC TO FIXTURE DATA COLLECTION
-        let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
-
-        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
-            let fixture = activeFixtures[i];
-            if((fixture.kickOff + EventData_VotingPeriod) <= Time.now() and fixture.status == 2) {
-                //let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id); //Get from governance canister passed proposal
-                let consensusPlayerEventData = List.nil<T.PlayerEventData>(); //NEED TO SET FROM GOVERNANCE
-                let updatedFixture = await seasonsInstance.savePlayerEventData(activeSeasonId, activeGameweek, activeFixtures[i].id, consensusPlayerEventData);
-                activeFixturesBuffer.add(updatedFixture);
-                await finaliseFixture(updatedFixture);
-            } else {
-                activeFixturesBuffer.add(fixture);
-            };
-        };
-        
-        activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
-        await checkGameweekFinished();
-        await updateCacheHash("fixtures");
-        await updateCacheHash("weekly_leaderboard");
-        await updateCacheHash("monthly_leaderboards");
-        await updateCacheHash("season_leaderboard");
-        await updatePlayerEventDataCache();
-    };
-
     public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async (){
         var getSeasonId = seasonId;
         if(getSeasonId == 0){
@@ -277,8 +245,7 @@ module {
 
         activeGameweek += 1;
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-        //await mintWeeklyRewardsPool(); //IMPLEMENT POST SNS
-
+       
         let gameweekBeginDuration: Timer.Duration = #nanoseconds (Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
         switch(setAndBackupTimer) {
             case (null) { };
