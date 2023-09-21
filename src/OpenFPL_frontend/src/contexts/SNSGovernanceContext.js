@@ -33,19 +33,6 @@ export const SnsGovernanceProvider = ({ children }) => {
         getData();
     }, [location.pathname]);
 
-    const fetchProposalsByType = async (type, setActiveFunction) => {
-        const params = {
-            includeStatus: [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN],
-            includeType: [type]
-        };
-        const result = await SnsGovernanceCanister.listProposals(instance, params);
-        if (setActiveFunction) {
-            setActiveFunction(result.proposals);
-        } else {
-            return result.proposals;
-        }
-    };
-
     const fetchAlreadyValuedPlayerIds = async () => {
         //IMPLEMENT
         setAlreadyValuedPlayerIds([]);
