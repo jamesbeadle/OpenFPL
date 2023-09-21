@@ -16,6 +16,7 @@ module Types{
         #NotAllowed;
         #DecodeError;
         #InvalidTeamError;
+        #InvalidData
     };
     
     public type Profile = {

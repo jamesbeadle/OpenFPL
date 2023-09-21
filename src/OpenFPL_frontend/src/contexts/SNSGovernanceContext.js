@@ -67,7 +67,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummaryUp = `Proposal to increase the value of ${player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
-        const payload = IDL.encode(InitArgs, `(record { seasonId=${systemState.activeSeason.id}; gameweek=${systemState.activeGameweek} playerId=${player.id} })`);
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
         const neurons = await SnsGovernanceCanister.listNeurons({ principal: authClient.getPrincipal() });
     
         for (const neuron of neurons) {
@@ -117,7 +117,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummaryDown = `Proposal to decrease the value of ${player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
-        const payload = IDL.encode(InitArgs, `(record { seasonId=${systemState.activeSeason.id}; gameweek=${systemState.activeGameweek} playerId=${player.id} })`);
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
         const neurons = await SnsGovernanceCanister.listNeurons({ principal: authClient.getPrincipal() });
     
         for (const neuron of neurons) {

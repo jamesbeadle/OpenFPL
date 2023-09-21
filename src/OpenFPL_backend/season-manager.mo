@@ -171,7 +171,7 @@ module {
         await updateCacheHash("fixtures");
     };
 
-    public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async (){
+    public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId, consensusPlayerEventData: [T.PlayerEventData]) : async (){
         var getSeasonId = seasonId;
         if(getSeasonId == 0){
             getSeasonId := activeSeasonId;
@@ -188,9 +188,7 @@ module {
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             let fixture = activeFixtures[i];
             if(fixture.id == fixtureId and fixture.status == 2){
-                //let consensusPlayerEventData = await getConsensusPlayerEventData(getGameweekNumber, fixture.id);
-                let consensusPlayerEventData = List.nil<T.PlayerEventData>(); //NEED TO SET FROM GOVERNANCE
-                let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, consensusPlayerEventData);
+                let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
                 activeFixturesBuffer.add(updatedFixture);
                 await finaliseFixture(updatedFixture);
             } else {
