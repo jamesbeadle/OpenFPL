@@ -10,9 +10,6 @@ export const SnsGovernanceContext = React.createContext();
 export const SnsGovernanceProvider = ({ children }) => {
     const { teams } = useContext(DataContext);
     const location = useLocation();
-    const [activeValuationProposals, setActiveValuationProposals] = useState([]);
-    const [activeFixtureDataProposals, setActiveFixtureDataProposals] = useState([]);
-    const [activeGovernanceProposals, setActiveGovernanceProposals] = useState([]);
     const [alreadyValuedPlayerIds, setAlreadyValuedPlayerIds ] = useState([]);
     const [remainingWeeklyValuationVotes, setRemainingWeeklyValuationVotes ] = useState([]);
     const InitArgs = IDL.Record({ 'rrkah-fqaaa-aaaaa-aaaaq-cai' : IDL.Principal });
@@ -20,9 +17,6 @@ export const SnsGovernanceProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
   
     const getData = async () => {
-        await fetchProposalsByType(1000, setActiveValuationProposals);
-        await fetchProposalsByType(2000, setActiveFixtureDataProposals);
-        await fetchProposalsByType(3000, setActiveGovernanceProposals);
         await fetchRemainingWeeklyValuationVotes();
         await fetchAlreadyValuedPlayerIds();
         setLoading(false);
@@ -826,10 +820,9 @@ export const SnsGovernanceProvider = ({ children }) => {
     
 
     return (
-        <SnsGovernanceContext.Provider value={{ activeFixtureDataProposals, activeGovernanceProposals, alreadyValuedPlayerIds, 
-            remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown, submitFixtureData, addIninitalFixtures, rescheduleFixture, 
-            transferPlayer, loanPlayer, recallPlayer, createPlayer, updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteFormerTeam, promoteNewTeam,
-            updateTeamProposal }}>
+        <SnsGovernanceContext.Provider value={{ alreadyValuedPlayerIds, remainingWeeklyValuationVotes, revaluePlayerUp, revaluePlayerDown, submitFixtureData, addIninitalFixtures, 
+                rescheduleFixture, transferPlayer, loanPlayer, recallPlayer, createPlayer, updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteFormerTeam, 
+                    promoteNewTeam, updateTeamProposal }}>
             {!loading && children}
         </SnsGovernanceContext.Provider>
     );
