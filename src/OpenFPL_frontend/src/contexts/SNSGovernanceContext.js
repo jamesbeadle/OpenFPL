@@ -90,7 +90,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummaryUp = `Proposal to increase the value of ${player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -139,7 +139,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummaryDown = `Proposal to decrease the value of ${player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -181,7 +181,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     };
     
     const submitFixtureData = async (userPrincipal, fixture, playerEvents) => {
-        const functionIdFixtureData = 3000; // ID for "Fixture Event Data Proposal" function
+        const functionIdFixtureData = 3000;
         const proposalTitle = "Fixture Event Data Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to add event data to fixture 
@@ -189,7 +189,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
         const playerEventDataString = constructPlayerEventDataString(playerEvents);
         const payload = IDL.encode(InitArgs, `(record { fixtureId: ${fixture.id}; playerEventData: vec {${playerEventDataString}} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -245,7 +245,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
         const seasonFixturesString = constructFixtureString(seasonFixtures);
         const payload = IDL.encode(InitArgs, `(record { seasonId: ${season.id}; seasonFixtures: vec {${seasonFixturesString}} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -306,7 +306,7 @@ export const SnsGovernanceProvider = ({ children }) => {
             ${getTeamById(teams, fixture.homeTeamId).abbreviateName} v ${getTeamById(teams, fixture.awayTeamId).abbreviateName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { fixtureId=${fixture.id}; gameweek=${gameweek}; updatedFixtureDate=${updatedFixtureDate} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -349,7 +349,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to transfer player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, currentTeamId).abbreviateName} to ${getTeamById(teams, newTeamId).abbreviateName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; currentTeamId=${currentTeamId}; newTeamId=${newTeamId} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -393,7 +393,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to loan player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, parentTeamId).abbreviateName} to ${getTeamById(teams, loanTeamId).abbreviateName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; parentTeamId=${parentTeamId}; loanTeamId=${loanTeamId}; loanEndDate=${loanEndDate} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -437,7 +437,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to recall loan for player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -478,7 +478,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to add new player ${firstName} ${lastName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { teamId=${teamId}; position=${position}; firstName=${firstName}; lastName=${lastName}; shirtNumber=${shirtNumber}; value=${value}; dateOfBirth=${dateOfBirth}; nationality=${nationality} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -526,7 +526,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to update new player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; position=${position}; firstName=${firstName}; lastName=${lastName}; shirtNumber=${shirtNumber}; dateOfBirth=${dateOfBirth}; nationality=${nationality} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -573,7 +573,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to update player injury status for player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; description=${description}; expectedEndDate=${expectedEndDate} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -608,13 +608,13 @@ export const SnsGovernanceProvider = ({ children }) => {
     };
 
     const retirePlayer = async (userPrincipal, player, retirementDate) => {
-        const functionIdRetire = 12000; // ID for "Player Retirement Proposal" function
+        const functionIdRetire = 12000;
         const proposalTitle = "Player Retirement Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to retire player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; retirementDate=${retirementDate} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -655,7 +655,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to unretire player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName}.`;
     
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -696,7 +696,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to promote team ${getTeamById(teams, teamId).abbreviateName}} to the Premier League.`;
     
         const payload = IDL.encode(InitArgs, `(record { teamId=${teamId} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -737,7 +737,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to promote ${name} to the Premier League.`;
     
         const payload = IDL.encode(InitArgs, `(record { name=${name}; friendlyName=${friendlyName}; abbreviatedName=${abbreviatedName}; primaryHexColour=${primaryHexColour}; secondaryHexColour=${secondaryHexColour}; thirdHexColour=${thirdHexColour} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
@@ -784,7 +784,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalSummary = `Proposal to update ${getTeamById(teams, teamId).abbreviatedName} team details.`;
     
         const payload = IDL.encode(InitArgs, `(record { teamId=${teamId}; name=${name}; friendlyName=${friendlyName}; abbreviatedName=${abbreviatedName}; primaryHexColour=${primaryHexColour}; secondaryHexColour=${secondaryHexColour}; thirdHexColour=${thirdHexColour} })`);
-        const neurons = await listNeurons({ principal: userPrincipal });
+        const neurons = await SnsGovernanceCanister.listNeurons({ principal: userPrincipal });
     
         for (const neuron of neurons) {
             const neuronId = neuron.id[0].NeuronId.toString();
