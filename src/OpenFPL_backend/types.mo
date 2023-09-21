@@ -109,6 +109,7 @@ module Types{
         transferSeason: SeasonId;
         fromTeam: TeamId;
         toTeam: TeamId;
+        loanEndDate: Int;
     };
 
     public type PlayerSeason = {

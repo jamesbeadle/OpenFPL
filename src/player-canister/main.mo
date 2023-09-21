@@ -781,6 +781,7 @@ actor Self {
                     transferSeason = currentSeasonId;
                     fromTeam = currentTeamId;
                     toTeam = newTeamId;
+                    loanEndDate = 0;
                 };
 
                 let updatedPlayer: T.Player = {
@@ -813,11 +814,22 @@ actor Self {
         };
     };
 
-    public shared func loanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async () {
+    public shared func loanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) : async () {
         let playerToLoan = List.find<T.Player>(players, func(p: T.Player) { p.id == playerId });
         switch(playerToLoan) {
             case (null) { };
             case (?p) {
+                
+                let newTransferHistoryEntry: T.TransferHistory = {
+                    transferDate = Time.now();
+                    transferGameweek = currentGameweek;
+                    transferSeason = currentSeasonId;
+                    fromTeam = parentTeamId;
+                    toTeam = loanTeamId;
+                    loanEndDate = loanEndDate;
+                };
+        
+        
                 let loanedPlayer: T.Player = {
                     id = p.id;
                     teamId = loanTeamId;
@@ -835,7 +847,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
-                    transferHistory = p.transferHistory;
+                    transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == loanedPlayer.id) {
