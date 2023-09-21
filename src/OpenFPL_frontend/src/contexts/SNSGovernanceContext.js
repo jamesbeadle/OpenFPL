@@ -317,7 +317,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdReschedule;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -360,7 +360,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdTransfer;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -404,7 +404,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdLoan;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -448,7 +448,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdRecall;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -489,12 +489,19 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdCreate;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
                 const decodedPayload = IDL.decode(InitArgs, proposal.payload);
-                return decodedPayload.teamId === teamId && decodedPayload.position === position && decodedPayload.firstName === firstName && decodedPayload.lastName === lastName && decodedPayload.shirtNumber === shirtNumber && decodedPayload.value === value && decodedPayload.dateOfBirth === dateOfBirth && decodedPayload.nationality === nationality;
+                return decodedPayload.teamId === teamId 
+                    && decodedPayload.position === position 
+                    && decodedPayload.firstName === firstName 
+                    && decodedPayload.lastName === lastName 
+                    && decodedPayload.shirtNumber === shirtNumber 
+                    && decodedPayload.value === value 
+                    && decodedPayload.dateOfBirth === dateOfBirth 
+                    && decodedPayload.nationality === nationality;
             });
     
             if (matchingProposal) {
@@ -535,7 +542,13 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const matchingProposal = relevantProposals.find(proposal => {
                 const decodedPayload = IDL.decode(InitArgs, proposal.payload);
-                return decodedPayload.playerId === player.id && decodedPayload.position === position && decodedPayload.firstName === firstName && decodedPayload.lastName === lastName && decodedPayload.shirtNumber === shirtNumber && decodedPayload.dateOfBirth === dateOfBirth && decodedPayload.nationality === nationality;
+                return decodedPayload.playerId === player.id 
+                    && decodedPayload.position === position 
+                    && decodedPayload.firstName === firstName 
+                    && decodedPayload.lastName === lastName 
+                    && decodedPayload.shirtNumber === shirtNumber 
+                    && decodedPayload.dateOfBirth === dateOfBirth 
+                    && decodedPayload.nationality === nationality;
             });
     
             if (matchingProposal) {
@@ -571,7 +584,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdInjury;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -612,7 +625,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdRetire;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -653,7 +666,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUnretire;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -694,7 +707,7 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdFormerTeam;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
@@ -735,12 +748,17 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const relevantProposals = activeProposals.filter(proposal => {
                 const action = proposal.proposal?.action[0];
-                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdUpdate;
+                return action?.ExecuteGenericNervousSystemFunction?.function_id === functionIdPromote;
             });
     
             const matchingProposal = relevantProposals.find(proposal => {
                 const decodedPayload = IDL.decode(InitArgs, proposal.payload);
-                return decodedPayload.name === name;
+                return decodedPayload.name === name && 
+                       decodedPayload.friendlyName === friendlyName && 
+                       decodedPayload.abbreviatedName === abbreviatedName && 
+                       decodedPayload.primaryHexColour === primaryHexColour && 
+                       decodedPayload.secondaryHexColour === secondaryHexColour && 
+                       decodedPayload.thirdHexColour === thirdHexColour;
             });
     
             if (matchingProposal) {
@@ -782,7 +800,13 @@ export const SnsGovernanceProvider = ({ children }) => {
     
             const matchingProposal = relevantProposals.find(proposal => {
                 const decodedPayload = IDL.decode(InitArgs, proposal.payload);
-                return decodedPayload.teamId === teamId; 
+                return decodedPayload.teamId === teamId && 
+                       decodedPayload.name === name && 
+                       decodedPayload.friendlyName === friendlyName && 
+                       decodedPayload.abbreviatedName === abbreviatedName && 
+                       decodedPayload.primaryHexColour === primaryHexColour && 
+                       decodedPayload.secondaryHexColour === secondaryHexColour && 
+                       decodedPayload.thirdHexColour === thirdHexColour;
             });
     
             if (matchingProposal) {
