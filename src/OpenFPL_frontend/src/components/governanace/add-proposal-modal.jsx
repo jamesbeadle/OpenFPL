@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
-import { AuthContext } from "../../contexts/AuthContext";
 import AddInitialFixturesProposal from './proposals/fixtures/add-initial-fixtures';
 import RescheduleFixtureProposal from './proposals/fixtures/reschedule-fixture-proposal';
 import PlayerInjuryProposal from './proposals/player/player-injury-proposal';
@@ -18,25 +17,26 @@ import UpdateSystemProposal from './proposals/general/update-system-proposal';
 const proposalCategories = [
   { label: 'Player', value: 'player' },
   { label: 'Fixtures', value: 'fixture' },
-  { label: 'Team', value: 'team' },
-  { label: 'General', value: 'general' }
+  { label: 'Team', value: 'team' }
 ];
 
 const proposalTypes = [
-  { label: 'Add Initial Fixtures Proposal', value: 'add-initial-fixtures', category: 'fixture', component: AddInitialFixturesProposal },
-  { label: 'Reschedule Fixture Proposal', value: 'reschedule-fixture', category: 'fixture', component: RescheduleFixtureProposal },
+  { label: 'Increase Player Value', value: 'revalue-player-up', category: 'player', component: null },
+  { label: 'Decrease Player Value', value: 'revalue-player-down', category: 'player', component: null },
   { label: 'Player Injury Proposal', value: 'player-injury', category: 'player', component: PlayerInjuryProposal },
+  { label: 'Create Player Proposal', value: 'player-retirement', category: 'player', component: AddPlayerProposal },
+  { label: 'Update Player Proposal', value: 'add-season', category: 'player', component: UpdatePlayerProposal },
   { label: 'Transfer Player Proposal', value: 'transfer-player', category: 'player', component: TransferPlayerProposal },
   { label: 'Loan Player Proposal', value: 'add-player', category: 'player', component: LoanPlayerProposal },
   { label: 'Recall Loan Proposal', value: 'update-player', category: 'player', component: TransferPlayerProposal },
-  { label: 'Create Player Proposal', value: 'player-retirement', category: 'player', component: AddPlayerProposal },
-  { label: 'Update Player Proposal', value: 'add-season', category: 'player', component: UpdatePlayerProposal },
   { label: 'Retire Player Proposal', value: 'remove-season', category: 'player', component: RetirePlayerProposal },
   { label: 'Unretire Player Proposal', value: 'update-season', category: 'player', component: UnretirePlayerProposal },
-  { label: 'Promote Team Proposal', value: 'promote-team', category: 'team', component: PromoteTeamProposal },
-  { label: 'Relegate Team Proposal', value: 'relegate-team', category: 'team', component: RelegateTeamProposal },
-  { label: 'Update Team Proposal', value: 'update-team', category: 'team', component: UpdateTeamProposal },
-  { label: 'Update System Proposal', value: 'update-system', category: 'general', component: UpdateSystemProposal }
+  { label: 'Add Fixture Data', value: 'add-fixture-data', category: 'fixture', component: RescheduleFixtureProposal },
+  { label: 'Reschedule Fixture Proposal', value: 'reschedule-fixture', category: 'fixture', component: RescheduleFixtureProposal },
+  { label: 'Add Initial Fixtures Proposal', value: 'add-initial-fixtures', category: 'fixture', component: AddInitialFixturesProposal },
+  { label: 'Promote Former Team Proposal', value: 'promote-former-team', category: 'team', component: PromoteTeamProposal },
+  { label: 'Promote New Team Proposal', value: 'promote-new-team', category: 'team', component: PromoteTeamProposal },
+  { label: 'Update Team Proposal', value: 'update-team', category: 'team', component: UpdateTeamProposal }
 ];
 
 const AddProposalModal = ({ show, onHide }) => {

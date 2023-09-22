@@ -3,7 +3,7 @@ import { Card, Row, Col, Spinner, Button, Container, Tabs, Tab } from 'react-boo
 import { DataContext } from "../../../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
 import { useLocation } from 'react-router-dom';
-import PlayerEventsModal from '../player-events-modal';
+import PlayerEventsModal from './player-events-modal';
 import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
 import { useNavigate } from 'react-router-dom';
