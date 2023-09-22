@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-const PromoteTeamProposal = () => {
+const PromoteNewTeamProposal = () => {
     const [relegatedTeams, setRelegatedTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState("");
     const [newTeamName, setNewTeamName] = useState("");
@@ -77,5 +77,5 @@ const PromoteTeamProposal = () => {
     );
 };
 
-export default PromoteTeamProposal;
+export default PromoteNewTeamProposal;
 

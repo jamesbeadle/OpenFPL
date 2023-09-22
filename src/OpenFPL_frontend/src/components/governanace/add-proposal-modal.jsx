@@ -12,8 +12,8 @@ import UnretirePlayerProposal from './proposals/player/unretire-player-proposal'
 import UpdateTeamProposal from './proposals/team/update-team-proposal';
 import PromoteFormerTeamProposal from './proposals/team/promote-former-team-proposal';
 import PromoteNewTeamProposal from './proposals/team/promote-new-team-proposal';
-import IncreasePlayerValueProposal from './proposals/player/increase-player-value';
-import DecreasePlayerValueProposal from './proposals/player/decrease-player-value';
+import IncreasePlayerValueProposal from './proposals/player/increase-player-value-proposal';
+import DecreasePlayerValueProposal from './proposals/player/decrease-player-value-proposal';
 import { useHistory } from 'react-router-dom';
 
 const proposalCategories = [
