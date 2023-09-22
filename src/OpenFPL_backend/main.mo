@@ -1253,45 +1253,48 @@ actor Self {
     return #ok();
   };
 
-
-
-
-
-
-
   public shared func executeRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    await playerCanister.recallPlayer(playerId);
     return #ok();
   };
 
   public shared func executeCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    await playerCanister.createPlayer(teamId, position, firstName, lastName, shirtNumber, value, dateOfBirth, nationality);
     return #ok();
   };
 
   public shared func executeUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    await playerCanister.updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality);
     return #ok();
   };
 
   public shared func executeSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
+    await playerCanister.setPlayerInjury(playerId, description, expectedEndDate);
     return #ok();
   };
 
   public shared func executeRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
+    await playerCanister.retirePlayer(playerId, retirementDate);
     return #ok();
   };
 
   public shared func executeUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    await playerCanister.unretirePlayer(playerId);
     return #ok();
   };
 
   public shared func executePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
+    await teamsInstance.promoteFormerTeam(teamId);
     return #ok();
   };
 
   public shared func executePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+   await teamsInstance.promoteNewTeam(name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour);
    return #ok();
   };
 
   public shared func executeUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour);
     return #ok();
   };
 
