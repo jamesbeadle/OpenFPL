@@ -9,10 +9,12 @@ import AddPlayerProposal from './proposals/player/add-player-proposal';
 import UpdatePlayerProposal from './proposals/player/update-player-proposal';
 import RetirePlayerProposal from './proposals/player/retire-player-proposal';
 import UnretirePlayerProposal from './proposals/player/unretire-player-proposal';
-import PromoteTeamProposal from './proposals/team/promote-team-proposal';
-import RelegateTeamProposal from './proposals/team/relegate-team-proposal';
 import UpdateTeamProposal from './proposals/team/update-team-proposal';
-import UpdateSystemProposal from './proposals/general/update-system-proposal';
+import PromoteFormerTeamProposal from './proposals/team/promote-former-team-proposal';
+import PromoteNewTeamProposal from './proposals/team/promote-new-team-proposal';
+import IncreasePlayerValueProposal from './proposals/player/increase-player-value';
+import DecreasePlayerValueProposal from './proposals/player/decrease-player-value';
+import { useHistory } from 'react-router-dom';
 
 const proposalCategories = [
   { label: 'Player', value: 'player' },
@@ -21,8 +23,8 @@ const proposalCategories = [
 ];
 
 const proposalTypes = [
-  { label: 'Increase Player Value', value: 'revalue-player-up', category: 'player', component: null },
-  { label: 'Decrease Player Value', value: 'revalue-player-down', category: 'player', component: null },
+  { label: 'Increase Player Value', value: 'revalue-player-up', category: 'player', component: IncreasePlayerValueProposal },
+  { label: 'Decrease Player Value', value: 'revalue-player-down', category: 'player', component: DecreasePlayerValueProposal },
   { label: 'Player Injury Proposal', value: 'player-injury', category: 'player', component: PlayerInjuryProposal },
   { label: 'Create Player Proposal', value: 'player-retirement', category: 'player', component: AddPlayerProposal },
   { label: 'Update Player Proposal', value: 'add-season', category: 'player', component: UpdatePlayerProposal },
@@ -31,11 +33,11 @@ const proposalTypes = [
   { label: 'Recall Loan Proposal', value: 'update-player', category: 'player', component: TransferPlayerProposal },
   { label: 'Retire Player Proposal', value: 'remove-season', category: 'player', component: RetirePlayerProposal },
   { label: 'Unretire Player Proposal', value: 'update-season', category: 'player', component: UnretirePlayerProposal },
-  { label: 'Add Fixture Data', value: 'add-fixture-data', category: 'fixture', component: RescheduleFixtureProposal },
+  { label: 'Add Fixture Data', value: 'add-fixture-data', category: 'fixture', component: null },
   { label: 'Reschedule Fixture Proposal', value: 'reschedule-fixture', category: 'fixture', component: RescheduleFixtureProposal },
   { label: 'Add Initial Fixtures Proposal', value: 'add-initial-fixtures', category: 'fixture', component: AddInitialFixturesProposal },
-  { label: 'Promote Former Team Proposal', value: 'promote-former-team', category: 'team', component: PromoteTeamProposal },
-  { label: 'Promote New Team Proposal', value: 'promote-new-team', category: 'team', component: PromoteTeamProposal },
+  { label: 'Promote Former Team Proposal', value: 'promote-former-team', category: 'team', component: PromoteFormerTeamProposal },
+  { label: 'Promote New Team Proposal', value: 'promote-new-team', category: 'team', component: PromoteNewTeamProposal },
   { label: 'Update Team Proposal', value: 'update-team', category: 'team', component: UpdateTeamProposal }
 ];
 
@@ -44,6 +46,7 @@ const AddProposalModal = ({ show, onHide }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
+  const history = useHistory();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -53,6 +56,19 @@ const AddProposalModal = ({ show, onHide }) => {
 
   const hideModal = () => {
     onHide(false);
+  };
+
+  const handleTypeChange = (e) => {
+    setSelectedType(e.target.value);
+    const selectedComponent = proposalTypes.find(type => type.value === e.target.value).component;
+    
+    if (!selectedComponent) {
+      history.push('/add-fixture-data');
+    }
+  };
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
   };
 
   const filteredTypes = proposalTypes.filter(type => type.category === selectedCategory);
@@ -72,7 +88,7 @@ const AddProposalModal = ({ show, onHide }) => {
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Proposal Category</Form.Label>
-            <Form.Control as="select" defaultValue="" onChange={(e) => setSelectedCategory(e.target.value)}>
+            <Form.Control as="select" defaultValue="" onChange={handleCategoryChange}>
               <option disabled value="">Select a proposal category</option>
               {proposalCategories.map((category, index) => (
                 <option key={index} value={category.value}>{category.label}</option>
@@ -82,7 +98,7 @@ const AddProposalModal = ({ show, onHide }) => {
           
           <Form.Group className="mb-3">
             <Form.Label>Proposal Type</Form.Label>
-            <Form.Control as="select" defaultValue="" onChange={(e) => setSelectedType(e.target.value)}>
+            <Form.Control as="select" defaultValue="" onChange={handleTypeChange}>
               <option disabled value="">Select a proposal type</option>
               {filteredTypes.map((type, index) => (
                 <option key={index} value={type.value}>{type.label}</option>
