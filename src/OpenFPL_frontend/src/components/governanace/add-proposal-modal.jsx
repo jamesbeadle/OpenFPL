@@ -12,8 +12,7 @@ import UnretirePlayerProposal from './proposals/player/unretire-player-proposal'
 import UpdateTeamProposal from './proposals/team/update-team-proposal';
 import PromoteFormerTeamProposal from './proposals/team/promote-former-team-proposal';
 import PromoteNewTeamProposal from './proposals/team/promote-new-team-proposal';
-import IncreasePlayerValueProposal from './proposals/player/increase-player-value-proposal';
-import DecreasePlayerValueProposal from './proposals/player/decrease-player-value-proposal';
+import RevaluePlayerProposal from './proposals/player/revalue-player-proposal';
 import { useHistory } from 'react-router-dom';
 
 const proposalCategories = [
@@ -23,8 +22,7 @@ const proposalCategories = [
 ];
 
 const proposalTypes = [
-  { label: 'Increase Player Value', value: 'revalue-player-up', category: 'player', component: IncreasePlayerValueProposal },
-  { label: 'Decrease Player Value', value: 'revalue-player-down', category: 'player', component: DecreasePlayerValueProposal },
+  { label: 'Revalue Player Proposal', value: 'revalue-player', category: 'player', component: RevaluePlayerProposal },
   { label: 'Player Injury Proposal', value: 'player-injury', category: 'player', component: PlayerInjuryProposal },
   { label: 'Create Player Proposal', value: 'player-retirement', category: 'player', component: AddPlayerProposal },
   { label: 'Update Player Proposal', value: 'add-season', category: 'player', component: UpdatePlayerProposal },
