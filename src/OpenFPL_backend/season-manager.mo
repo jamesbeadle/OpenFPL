@@ -377,6 +377,11 @@ module {
 
         return await seasonsInstance.getFixture(getSeasonId, getGameweekNumber, fixtureId);
     };
+
+    /*Remove these functions post sns*/
+    public func getValidatableFixtures(): [T.Fixture] {
+        return seasonsInstance.getValidatableFixtures(activeSeasonId, activeGameweek);
+    };
     
   };
 }

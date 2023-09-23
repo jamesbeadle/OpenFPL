@@ -14,3 +14,14 @@ export const fetchFantasyTeam = async (authClient) => {
     throw error;
   }
 }
+
+export const fetchValidatableFixtures = async (authClient) => {
+  try {
+    const identity = authClient.getIdentity();
+    agent.replaceIdentity(identity);
+    return await open_fpl_backend.getValidatableFixtures();
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

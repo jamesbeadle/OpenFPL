@@ -1625,5 +1625,10 @@ actor Self {
   private func finaliseFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId, events: [T.PlayerEventData]): async (){
     await seasonManager.fixtureConsensusReached(seasonId, gameweekNumber, fixtureId, events);
   };
+
+  public shared query ({caller}) func getValidatableFixtures() : async [T.Fixture]{
+    assert not Principal.isAnonymous(caller);
+    return seasonManager.getValidatableFixtures();
+  };
   
 };
