@@ -12,7 +12,6 @@ const UpdateTeamProposal = ({ sendDataToParent }) => {
     const [primaryHexColour, setPrimaryHexColour] = useState("");
     const [secondaryHexColour, setSecondaryHexColour] = useState("");
     const [thirdHexColour, setThirdHexColour] = useState("");
-
     useEffect(() => {
         sendDataToParent({
             teamId,
@@ -25,6 +24,19 @@ const UpdateTeamProposal = ({ sendDataToParent }) => {
         });
     }, [teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour]);
 
+    useEffect(() => {
+        if (teamId) {
+            const selectedTeam = teams.find(team => team.id === teamId);
+            if (selectedTeam) {
+                setName(selectedTeam.name);
+                setFriendlyName(selectedTeam.friendlyName);
+                setAbbreviatedName(selectedTeam.abbreviatedName);
+                setPrimaryHexColour(selectedTeam.primaryHexColour);
+                setSecondaryHexColour(selectedTeam.secondaryHexColour);
+                setThirdHexColour(selectedTeam.thirdHexColour);
+            }
+        }
+    }, [teamId, teams]);
     return (
         <div>
             <Form.Group className="mb-3">

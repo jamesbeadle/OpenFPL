@@ -25,6 +25,24 @@ const UpdatePlayerProposal = ({ sendDataToParent }) => {
         });
     }, [selectedPlayer, position, firstName, lastName, shirtNumber, dateOfBirth, nationality]);
 
+    useEffect(() => {
+        if (selectedPlayer) {
+            const chosenPlayer = players.find(player => player.id === selectedPlayer);
+            if (chosenPlayer) {
+                setPosition(chosenPlayer.position);
+                setFirstName(chosenPlayer.firstName);
+                setLastName(chosenPlayer.lastName);
+                setShirtNumber(chosenPlayer.shirtNumber);
+                
+                // Convert the date from Unix Nanoseconds to the required format for input type=date
+                const dateFromNanoseconds = new Date(chosenPlayer.dateOfBirth / 1000000).toISOString().split('T')[0];
+                setDateOfBirth(dateFromNanoseconds);
+                
+                setNationality(chosenPlayer.nationality);
+            }
+        }
+    }, [selectedPlayer, players]);
+
     return (
         <div>
             <Form.Group className="mb-3">
