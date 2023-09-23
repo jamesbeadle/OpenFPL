@@ -2,9 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import { DataContext } from "../../../../contexts/DataContext";
 
-const IncreasePlayerValueProposal = () => {
+const RevaluePlayerDownProposal = ({ sendDataToParent }) => {
     const { players } = useContext(DataContext);
-  
+    const [selectedPlayer, setSelectedPlayer] = useState("");
+    
+    const handlePlayerSelect = (event) => {
+        setSelectedPlayer(event.target.value);
+        const playerToRevalue = players.find(p => p.id === event.target.value);
+        sendDataToParent(playerToRevalue);
+    };
+    
     return (
         <div>
             <Form.Group className="mb-3">
@@ -20,4 +27,4 @@ const IncreasePlayerValueProposal = () => {
     );
 };
 
-export default IncreasePlayerValueProposal;
+export default RevaluePlayerDownProposal;

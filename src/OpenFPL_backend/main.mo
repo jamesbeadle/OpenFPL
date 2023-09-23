@@ -85,8 +85,8 @@ actor Self {
     revaluePlayerDown: (playerId: T.PlayerId, activeSeasonId: T.SeasonId, activeGameweek: T.GameweekNumber) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
     calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture;
-    transferPlayer: (playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) -> async ();
-    loanPlayer: (playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) -> async ();
+    transferPlayer: (playerId: T.PlayerId, newTeamId: T.TeamId, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) -> async ();
+    loanPlayer: (playerId: T.PlayerId, loanTeamId: T.TeamId, loanEndDate: Int, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) -> async ();
     recallPlayer: (playerId: T.PlayerId) -> async ();
     createPlayer: (teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) -> async ();
     updatePlayer: (playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) -> async ();
@@ -803,7 +803,7 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
+  public shared func validateLoanPlayer(playerId: T.PlayerId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
 
     if(loanEndDate <= Time.now()){
       return #err(#InvalidData);
@@ -819,16 +819,6 @@ actor Self {
       return #err(#InvalidData);
     };
 
-    //parent team id is Premier League unless 0
-    if(parentTeamId > 0){
-      switch(teamsInstance.getTeam(parentTeamId)){
-        case (null) {
-          return #err(#InvalidData);
-        };
-        case (?foundTeam){ };
-      };
-    };
-
     //loan team exists unless 0
     if(loanTeamId > 0){
       switch(teamsInstance.getTeam(loanTeamId)){
@@ -842,7 +832,7 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+  public shared func validateTransferPlayer(playerId: T.PlayerId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
 
     let player = await playerCanister.getPlayer(playerId);
     if(player.id == 0){
@@ -1243,13 +1233,13 @@ actor Self {
     return #ok();
   };
 
-  public shared func executeTransferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
-    await playerCanister.transferPlayer(playerId, currentTeamId, newTeamId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+  public shared func executeTransferPlayer(playerId: T.PlayerId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+    await playerCanister.transferPlayer(playerId, newTeamId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
     return #ok();
   };
 
-  public shared func executeLoanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
-    await playerCanister.loanPlayer(playerId, parentTeamId, loanTeamId, loanEndDate, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+  public shared func executeLoanPlayer(playerId: T.PlayerId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
+    await playerCanister.loanPlayer(playerId, loanTeamId, loanEndDate, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
     return #ok();
   };
 

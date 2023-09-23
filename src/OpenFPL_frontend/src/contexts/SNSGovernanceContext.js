@@ -135,19 +135,19 @@ export const SnsGovernanceProvider = ({ children }) => {
         await submitProposal(proposalTitle, proposalUrl, proposalSummary, 5000, payload);
     };
 
-    const transferPlayer = async (player, currentTeamId, newTeamId) => {
+    const transferPlayer = async (player, newTeamId) => {
         const proposalTitle = "Transfer Player Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
-        const proposalSummary = `Proposal to transfer player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, currentTeamId).abbreviateName} to ${getTeamById(teams, newTeamId).abbreviateName}.`;
-        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; currentTeamId=${currentTeamId}; newTeamId=${newTeamId} })`);
+        const proposalSummary = `Proposal to transfer player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, player.teamId).abbreviateName} to ${getTeamById(teams, newTeamId).abbreviateName}.`;
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; newTeamId=${newTeamId} })`);
         await submitProposal(proposalTitle, proposalUrl, proposalSummary, functionIdTransfer, payload);
     };
    
-    const loanPlayer = async (player, parentTeamId, loanTeamId, loanEndDate) => {
+    const loanPlayer = async (player, loanTeamId, loanEndDate) => {
         const proposalTitle = "Loan Player Proposal";
         const proposalUrl = "https://openfpl.xyz/governance";
-        const proposalSummary = `Proposal to loan player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, parentTeamId).abbreviateName} to ${getTeamById(teams, loanTeamId).abbreviateName}.`;
-        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; parentTeamId=${parentTeamId}; loanTeamId=${loanTeamId}; loanEndDate=${loanEndDate} })`);
+        const proposalSummary = `Proposal to loan player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, player.teamId).abbreviateName} to ${getTeamById(teams, loanTeamId).abbreviateName}.`;
+        const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; loanTeamId=${loanTeamId}; loanEndDate=${loanEndDate} })`);
         await submitProposal(proposalTitle, proposalUrl, proposalSummary, 7000, payload);
     };
 

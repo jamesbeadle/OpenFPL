@@ -769,7 +769,7 @@ actor Self {
         };
     };
     
-    public shared func transferPlayer(playerId: T.PlayerId, currentTeamId: T.TeamId, newTeamId: T.TeamId, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) : async () {
+    public shared func transferPlayer(playerId: T.PlayerId, newTeamId: T.TeamId, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) : async () {
         let player = List.find<T.Player>(players, func(p: T.Player) { p.id == playerId });
         switch(player){
             case (null) { };
@@ -779,7 +779,7 @@ actor Self {
                     transferDate = Time.now();
                     transferGameweek = currentGameweek;
                     transferSeason = currentSeasonId;
-                    fromTeam = currentTeamId;
+                    fromTeam = p.teamId;
                     toTeam = newTeamId;
                     loanEndDate = 0;
                 };
@@ -814,7 +814,7 @@ actor Self {
         };
     };
 
-    public shared func loanPlayer(playerId: T.PlayerId, parentTeamId: T.TeamId, loanTeamId: T.TeamId, loanEndDate: Int, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) : async () {
+    public shared func loanPlayer(playerId: T.PlayerId, loanTeamId: T.TeamId, loanEndDate: Int, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) : async () {
         let playerToLoan = List.find<T.Player>(players, func(p: T.Player) { p.id == playerId });
         switch(playerToLoan) {
             case (null) { };
@@ -824,7 +824,7 @@ actor Self {
                     transferDate = Time.now();
                     transferGameweek = currentGameweek;
                     transferSeason = currentSeasonId;
-                    fromTeam = parentTeamId;
+                    fromTeam = p.teamId;
                     toTeam = loanTeamId;
                     loanEndDate = loanEndDate;
                 };
