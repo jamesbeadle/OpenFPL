@@ -1,85 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form } from 'react-bootstrap';
+import { DataContext } from "../../../../contexts/DataContext";
+import { dateToUnixNanoseconds } from "../../../helpers";
 
-const UpdatePlayerProposal = () => {
-    const [players, setPlayers] = useState([]);
+const UpdatePlayerProposal = ({ sendDataToParent }) => {
+    const { players } = useContext(DataContext);
     const [selectedPlayer, setSelectedPlayer] = useState("");
-    const [playerValue, setPlayerValue] = useState(null);
-    const [playerName, setPlayerName] = useState("");
-    const [playerDOB, setPlayerDOB] = useState("");
+    const [position, setPosition] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [shirtNumber, setShirtNumber] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [nationality, setNationality] = useState("");
 
     useEffect(() => {
-        // Fetch the players data from your backend
-        fetchPlayersFromBackend()
-        .then(data => setPlayers(data))
-        .catch(err => console.error(err));
-    }, []);
-
-    const fetchPlayersFromBackend = async () => {
-        // Replace with your actual data fetching logic
-        const data = [{id: 1, name: "Player 1", value: 10.0, dob: "2001-01-01"}];
-        return data;
-    }
-
-    const handlePlayerSelect = (e) => {
-        const playerId = parseInt(e.target.value, 10); // Parse to integer
-        const player = players.find(player => player.id === playerId); // Match with integer id
-        if (player) {
-          setSelectedPlayer(player.id);
-          setPlayerValue(player.value);
-          setPlayerName(player.name);
-          setPlayerDOB(player.dob);
-        } else {
-          console.error('Player not found:', playerId);
-        }
-    }
+        sendDataToParent({
+            player: selectedPlayer,
+            position,
+            firstName,
+            lastName,
+            shirtNumber,
+            dateOfBirth: dateToUnixNanoseconds(dateOfBirth),
+            nationality
+        });
+    }, [selectedPlayer, position, firstName, lastName, shirtNumber, dateOfBirth, nationality]);
 
     return (
         <div>
             <Form.Group className="mb-3">
-                <Form.Label>Player</Form.Label>
-                <Form.Control as="select" value={selectedPlayer} onChange={handlePlayerSelect}>
-                    <option disabled value="">Select a player</option>
+                <Form.Label>Select Player</Form.Label>
+                <Form.Control as="select" value={selectedPlayer} onChange={e => setSelectedPlayer(e.target.value)}>
+                    <option disabled value="">Choose a player</option>
                     {players.map((player, index) => (
-                    <option key={index} value={player.id}>{player.name}</option>
+                        <option key={index} value={player.id}>{player.firstName} {player.lastName}</option>
                     ))}
                 </Form.Control>
             </Form.Group>
 
-            {selectedPlayer && (
-                <>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Player Name</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            placeholder="Enter player name" 
-                            value={playerName}
-                            onChange={(e) => setPlayerName(e.target.value)}
-                        />
-                    </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Position</Form.Label>
+                <Form.Control type="text" value={position} onChange={e => setPosition(e.target.value)} />
+            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Player Date of Birth</Form.Label>
-                        <Form.Control 
-                            type="date" 
-                            placeholder="Enter player date of birth" 
-                            value={playerDOB}
-                            onChange={(e) => setPlayerDOB(e.target.value)}
-                        />
-                    </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control type="text" value={firstName} onChange={e => setFirstName(e.target.value)} />
+            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Player Value (in millions)</Form.Label>
-                        <Form.Control 
-                            type="number" 
-                            step="0.1" 
-                            placeholder="Enter player value" 
-                            value={playerValue}
-                            onChange={(e) => setPlayerValue(parseFloat(e.target.value))}
-                        />
-                    </Form.Group>
-                </>
-            )}
+            <Form.Group className="mb-3">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Shirt Number</Form.Label>
+                <Form.Control type="number" value={shirtNumber} onChange={e => setShirtNumber(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Date of Birth</Form.Label>
+                <Form.Control type="date" value={dateOfBirth} onChange={e => setDateOfBirth(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Nationality</Form.Label>
+                <Form.Control type="text" value={nationality} onChange={e => setNationality(e.target.value)} />
+            </Form.Group>
         </div>
     );
 };

@@ -1,80 +1,71 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import React, { useState, useContext } from 'react';
+import { Form } from 'react-bootstrap';
+import { DataContext } from "../../../../contexts/DataContext";
 
-const UpdateTeamProposal = () => {
-    const [teams, setTeams] = useState([]);
-    const [selectedTeam, setSelectedTeam] = useState("");
-    const [teamProperName, setTeamProperName] = useState("");
-    const [teamSimpleName, setTeamSimpleName] = useState("");
-    const [homeColour, setHomeColour] = useState("");
-    const [awayColour, setAwayColour] = useState("");
+const UpdateTeamProposal = ({ sendDataToParent }) => {
+    const { teams } = useContext(DataContext);
+
+    const [teamId, setTeamId] = useState("");
+    const [name, setName] = useState("");
+    const [friendlyName, setFriendlyName] = useState("");
+    const [abbreviatedName, setAbbreviatedName] = useState("");
+    const [primaryHexColour, setPrimaryHexColour] = useState("");
+    const [secondaryHexColour, setSecondaryHexColour] = useState("");
+    const [thirdHexColour, setThirdHexColour] = useState("");
 
     useEffect(() => {
-        // Fetch the teams data from your backend
-        fetchTeamsFromBackend()
-        .then(data => setTeams(data))
-        .catch(err => console.error(err));
-    }, []);
-
-    // Replace this function with your actual data fetching logic
-    const fetchTeamsFromBackend = async () => {
-        const data = [{id: 1, properName: "Team Proper 1", simpleName: "Team 1", homeColour: "#FFFFFF", awayColour: "#000000"}];
-        return data;
-    }
-
-    const handleTeamSelect = (e) => {
-        const teamId = parseInt(e.target.value, 10); // Parse to integer
-        const team = teams.find(team => team.id === teamId); // Match with integer id
-        if (team) {
-          setSelectedTeam(team.id);
-          setTeamProperName(team.properName);
-          setTeamSimpleName(team.simpleName);
-          setHomeColour(team.homeColour);
-          setAwayColour(team.awayColour);
-        } else {
-          console.error('Team not found:', teamId);
-        }
-    }
+        sendDataToParent({
+            teamId,
+            name,
+            friendlyName,
+            abbreviatedName,
+            primaryHexColour,
+            secondaryHexColour,
+            thirdHexColour
+        });
+    }, [teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour]);
 
     return (
         <div>
             <Form.Group className="mb-3">
                 <Form.Label>Team</Form.Label>
-                <Form.Control as="select" value={selectedTeam} onChange={handleTeamSelect}>
-                    <option disabled value="">Select a team</option>
+                <Form.Control as="select" value={teamId} onChange={e => setTeamId(e.target.value)}>
+                    <option disabled value="">Select a team to update</option>
                     {teams.map((team, index) => (
-                    <option key={index} value={team.id}>{team.properName}</option>
+                        <option key={index} value={team.id}>{team.name}</option>
                     ))}
                 </Form.Control>
             </Form.Group>
 
-            {selectedTeam && (
-                <>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Proper Name</Form.Label>
-                        <Form.Control type="text" value={teamProperName} onChange={(e) => setTeamProperName(e.target.value)} />
-                    </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Team Name</Form.Label>
+                <Form.Control type="text" value={name} onChange={e => setName(e.target.value)} />
+            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Simple Name</Form.Label>
-                        <Form.Control type="text" value={teamSimpleName} onChange={(e) => setTeamSimpleName(e.target.value)} />
-                    </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Friendly Name</Form.Label>
+                <Form.Control type="text" value={friendlyName} onChange={e => setFriendlyName(e.target.value)} />
+            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Home Colour</Form.Label>
-                        <Form.Control type="color" value={homeColour} onChange={(e) => setHomeColour(e.target.value)} />
-                    </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Abbreviated Name</Form.Label>
+                <Form.Control type="text" value={abbreviatedName} onChange={e => setAbbreviatedName(e.target.value)} />
+            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Away Colour</Form.Label>
-                        <Form.Control type="color" value={awayColour} onChange={(e) => setAwayColour(e.target.value)} />
-                    </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label>Primary Colour (Hex)</Form.Label>
+                <Form.Control type="color" value={primaryHexColour} onChange={e => setPrimaryHexColour(e.target.value)} />
+            </Form.Group>
 
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </>
-            )}
+            <Form.Group className="mb-3">
+                <Form.Label>Secondary Colour (Hex)</Form.Label>
+                <Form.Control type="color" value={secondaryHexColour} onChange={e => setSecondaryHexColour(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Third Colour (Hex)</Form.Label>
+                <Form.Control type="color" value={thirdHexColour} onChange={e => setThirdHexColour(e.target.value)} />
+            </Form.Group>
         </div>
     );
 };
