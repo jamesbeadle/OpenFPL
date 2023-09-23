@@ -43,6 +43,7 @@ const MyFooter = () => {
                   <li><LinkContainer to="/funded-whitepaper"><a>Whitepaper</a></LinkContainer></li>
                   <li><LinkContainer to="/gameplay"><a>Gameplay Rules</a></LinkContainer></li>
                     <li><LinkContainer to="/terms"><a>Terms and Conditions</a></LinkContainer></li>
+                    <li><LinkContainer to="/fixture-validation-list"><a>Fixture Validation (To be removed post SNS)</a></LinkContainer></li>
                 </ul>
               </Col>
             </Row>
