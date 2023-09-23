@@ -49,7 +49,7 @@ const AddProposalModal = ({ show, onHide }) => {
   const [selectedType, setSelectedType] = useState(null);
   const [formData, setFormData] = useState(null);
   const history = useHistory();
-  const { revaluePlayerUp, revaluePlayerDown, addIninitalFixtures, rescheduleFixture, transferPlayer, loanPlayer, recallPlayer, 
+  const { hasNeurons, revaluePlayerUp, revaluePlayerDown, addIninitalFixtures, rescheduleFixture, transferPlayer, loanPlayer, recallPlayer, 
     createPlayer, updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteFormerTeam, promoteNewTeam, updateTeam } = useContext(SnsGovernanceContext);
   const [showOverlay, setShowOverlay] = useState(false);
   
@@ -129,12 +129,8 @@ const AddProposalModal = ({ show, onHide }) => {
   };
   
   const handleOverlaySubmit = () => {
-    handleSubmit();
+    submitProposal();
     setShowOverlay(false);
-  };
-
-  const handleButtonClick = () => {
-    setShowOverlay(true);
   };
   
   return (
@@ -155,7 +151,7 @@ const AddProposalModal = ({ show, onHide }) => {
               <p style={{ color: 'white', marginBottom: '15px' }}>Are you sure you want to submit this proposal?</p>
               <div>
                 <Button variant="danger" onClick={() => setShowOverlay(false)} style={{ marginRight: '10px' }}>Cancel</Button>
-                <Button variant="success" onClick={submitProposal}>Save</Button>
+                <Button variant="success" onClick={handleOverlaySubmit}>Save</Button>
               </div>
             </div>
           )}
@@ -195,7 +191,7 @@ const AddProposalModal = ({ show, onHide }) => {
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={hideModal}>Cancel</Button>
+        <Button variant="secondary" onClick={hideModal} disabled={!hasNeurons}>Cancel</Button>
         <Button onClick={handleSubmit}>Submit</Button>
       </Modal.Footer>
     </Modal>
