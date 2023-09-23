@@ -29,6 +29,7 @@ import ClubDetails from "./components/data/club-details";
 import PlayerDetails from "./components/data/player-details";
 import ClubLeaderboard from "./components/leaderboards/club-leaderboard";
 import FixtureValidationList from "./components/governanace/pre-sns-fixture-validation/fixture-validation-list";
+import PreSNSAddFixtureData from "./components/governanace/pre-sns-fixture-validation/add-fixture-data";
 
 const App = () => {
  
@@ -50,7 +51,8 @@ const App = () => {
                     <Route path="/profile" element={<Profile /> }/>
                     <Route path="/dao" element={<DAO />} />
                     <Route path="/governance" element={<Governance /> }/>
-                    <Route path="/fixture-validation-list" element={<FixtureValidationList /> }/>
+                    <Route path="/fixture-validation-list" element={<FixtureValidationList /*Remove this post sns*/ /> }/>
+                    <Route path="/old-add-fixture-data" element={<PreSNSAddFixtureData /> /*Remove this post sns*/ }/>
                     <Route path="/add-fixture-data" element={<AddFixtureData /> }/>
                     <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard />} />
                     <Route path="/leaderboard" element={<Leaderboard />} />

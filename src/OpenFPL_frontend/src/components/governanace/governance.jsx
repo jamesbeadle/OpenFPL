@@ -3,6 +3,7 @@ import { Container, Spinner, CardDeck, Card, Button, Modal, Dropdown, Pagination
 import { initSnsWrapper, SnsVote, SnsGovernanceCanister } from '@dfinity/sns';
 import { AuthContext } from "../../contexts/AuthContext";
 import AddProposalModal from './add-proposal-modal';
+import { useNavigate } from 'react-router-dom';
 
 const Governance = () => {
   const { authClient } = useContext(AuthContext);
@@ -16,6 +17,7 @@ const Governance = () => {
   const [fixtureValidationPageNum, setFixtureValidationPageNum] = useState(1);
   const [proposalData, setProposalData] = useState([]);
   const [fixtureValidationData, setFixtureValidationData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (activeTab === "Proposals") {
@@ -106,6 +108,10 @@ const Governance = () => {
     setIsLoading(false);
   };
 
+  const loadAddFixtureData = () => {
+    navigate('/add-fixture-data');  
+  };
+
   return (
     isLoading ? (
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
@@ -153,7 +159,7 @@ const Governance = () => {
           </Tab>
           
           <Tab eventKey="Fixture Validation" title="Fixture Validation">
-            <Button className="mb-3 float-right" variant="primary" onClick={() => setShowAddProposalModal(true)}>Create Fixture Proposal</Button>
+            <Button className="mb-3 float-right" variant="primary" onClick={() => loadAddFixtureData()}>Create Fixture Proposal</Button>
             <CardDeck>
               {fixtureValidationData.length == 0 && (
                 <p>No proposals to view.</p>

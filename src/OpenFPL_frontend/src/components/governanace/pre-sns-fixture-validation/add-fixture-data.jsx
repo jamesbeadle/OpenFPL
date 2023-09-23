@@ -8,7 +8,7 @@ import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
 import { useNavigate } from 'react-router-dom';
 
-const AddFixtureData = () => {
+const PreSNSAddFixtureData = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const fixtureId = queryParams.get('fixtureId');
@@ -444,4 +444,4 @@ const AddFixtureData = () => {
   );
 };
 
-export default AddFixtureData;
+export default PreSNSAddFixtureData;
