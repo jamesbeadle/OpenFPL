@@ -51,7 +51,8 @@ const AddProposalModal = ({ show, onHide }) => {
   const history = useHistory();
   const { revaluePlayerUp, revaluePlayerDown, addIninitalFixtures, rescheduleFixture, transferPlayer, loanPlayer, recallPlayer, 
     createPlayer, updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteFormerTeam, promoteNewTeam, updateTeam } = useContext(SnsGovernanceContext);
-
+  const [showOverlay, setShowOverlay] = useState(false);
+  
   const hideModal = () => {
     onHide(false);
   };
@@ -71,7 +72,7 @@ const AddProposalModal = ({ show, onHide }) => {
 
   const filteredTypes = proposalTypes.filter(type => type.category === selectedCategory);
 
-  const handleSubmit = async () => {
+  const submitProposal = async () => {
     switch(selectedType){
       case "revalue-player-up":
         await revaluePlayerUp(formData.player);
@@ -121,9 +122,44 @@ const AddProposalModal = ({ show, onHide }) => {
     }
     onHide(true);
   };
+
+    
+  const handleSubmit = () => {
+    setShowOverlay(true);
+  };
+  
+  const handleOverlaySubmit = () => {
+    handleSubmit();
+    setShowOverlay(false);
+  };
+
+  const handleButtonClick = () => {
+    setShowOverlay(true);
+  };
   
   return (
     <Modal show={show} onHide={hideModal}>
+         {showOverlay && (
+            <div className="overlay" style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0,0,0,0.7)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <p style={{ color: 'white', marginBottom: '15px' }}>Are you sure you want to submit this proposal?</p>
+              <div>
+                <Button variant="danger" onClick={() => setShowOverlay(false)} style={{ marginRight: '10px' }}>Cancel</Button>
+                <Button variant="success" onClick={submitProposal}>Save</Button>
+              </div>
+            </div>
+          )}
+
       {isLoading && (
         <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
           <Spinner animation="border" />
