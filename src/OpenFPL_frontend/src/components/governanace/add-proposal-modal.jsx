@@ -86,7 +86,7 @@ const AddProposalModal = ({ show, onHide }) => {
         await rescheduleFixture(formData.fixture, formData.currentFixtureGameweek, formData.updatedFixtureGameweek, formData.updatedFixtureDate);
         break;
       case 'transfer-player':
-        await rescheduleFixture(formData.player, formData.newTeamId);
+        await transferPlayer(formData.player, formData.newTeamId);
         break;
       case 'loan-player':
         await loanPlayer(formData.player, formData.loanTeamId, formData.loanEndDate);
