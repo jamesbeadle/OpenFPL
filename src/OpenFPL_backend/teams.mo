@@ -86,7 +86,7 @@ module {
             abbreviatedName = abbreviatedName;
             primaryColourHex = primaryHexColour;
             secondaryColourHex = secondaryHexColour;
-            thirdHexColour = thirdHexColour;
+            thirdColourHex = thirdHexColour;
         };
         teams := List.push(newTeam, teams);
         nextTeamId += 1;
@@ -103,7 +103,7 @@ module {
                     friendlyName = friendlyName;
                     primaryColourHex = primaryColourHex;
                     secondaryColourHex = secondaryColourHex;
-                    thirdHexColour = thirdHexColour;
+                    thirdColourHex = thirdHexColour;
                     abbreviatedName = abbreviatedName;
                 };
             } else {
