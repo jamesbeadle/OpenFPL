@@ -1412,7 +1412,6 @@ module {
                 return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
             };
         };
-        
     };
     
 }

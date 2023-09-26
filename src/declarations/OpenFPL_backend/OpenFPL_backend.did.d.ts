@@ -159,6 +159,7 @@ export interface Team {
   'secondaryColourHex' : string,
   'name' : string,
   'friendlyName' : string,
+  'thirdColourHex' : string,
   'abbreviatedName' : string,
   'primaryColourHex' : string,
 }
@@ -204,6 +205,7 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
+  'reuploadTeams' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

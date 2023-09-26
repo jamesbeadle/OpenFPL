@@ -52,6 +52,7 @@ module Types{
         friendlyName: Text;
         primaryColourHex: Text;
         secondaryColourHex: Text;
+        thirdColourHex: Text;
         abbreviatedName: Text;
     };
 

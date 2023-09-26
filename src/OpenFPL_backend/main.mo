@@ -1119,4 +1119,13 @@ actor Self {
           }
       }
   };
+
+  public func reuploadTeams() : async (){
+    await teamsInstance.reuploadTeams();
+    await updateHashForCategory("teams");
+  };
+
+
+
+
 };
