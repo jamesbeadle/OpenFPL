@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { SnsGovernanceCanister } from 'dfinity/sns';
-import { SnsProposalDecisionStatus } from "dfinity/sns/dist/enums/governance.enums";
+import { SnsGovernanceCanister, SnsProposalDecisionStatus } from '@dfinity/sns';
 import { AuthContext } from "./AuthContext";
 import { DataContext } from "./DataContext";
-import { getTeamById } from './helpers';
+import { getTeamById } from '../components/helpers';
 import { IDL } from "@dfinity/candid";
 
 export const SnsGovernanceContext = React.createContext();

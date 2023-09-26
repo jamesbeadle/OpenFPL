@@ -10,6 +10,7 @@ export type Error = { 'DecodeError' : null } |
   { 'NotAllowed' : null } |
   { 'NotFound' : null } |
   { 'NotAuthorized' : null } |
+  { 'InvalidData' : null } |
   { 'AlreadyExists' : null } |
   { 'InvalidTeamError' : null };
 export interface FantasyTeam {
@@ -165,6 +166,43 @@ export interface Team {
 }
 export type TeamId = number;
 export interface _SERVICE {
+  'executeAddInitialFixtures' : ActorMethod<[SeasonId, Array<Fixture>], Result>,
+  'executeCreatePlayer' : ActorMethod<
+    [TeamId, number, string, string, number, bigint, bigint, string],
+    Result
+  >,
+  'executeLoanPlayer' : ActorMethod<[PlayerId, TeamId, bigint], Result>,
+  'executePromoteFormerTeam' : ActorMethod<[TeamId], Result>,
+  'executePromoteNewTeam' : ActorMethod<
+    [string, string, string, string, string, string],
+    Result
+  >,
+  'executeRecallPlayer' : ActorMethod<[PlayerId], Result>,
+  'executeRescheduleFixture' : ActorMethod<
+    [FixtureId, GameweekNumber, GameweekNumber, bigint],
+    Result
+  >,
+  'executeRetirePlayer' : ActorMethod<[PlayerId, bigint], Result>,
+  'executeRevaluePlayerDown' : ActorMethod<
+    [SeasonId, GameweekNumber, PlayerId],
+    Result
+  >,
+  'executeRevaluePlayerUp' : ActorMethod<[PlayerId], Result>,
+  'executeSetPlayerInjury' : ActorMethod<[PlayerId, string, bigint], Result>,
+  'executeSubmitFixtureData' : ActorMethod<
+    [FixtureId, Array<PlayerEventData>],
+    Result
+  >,
+  'executeTransferPlayer' : ActorMethod<[PlayerId, TeamId], Result>,
+  'executeUnretirePlayer' : ActorMethod<[PlayerId], Result>,
+  'executeUpdatePlayer' : ActorMethod<
+    [PlayerId, number, string, string, number, bigint, string],
+    Result
+  >,
+  'executeUpdateTeam' : ActorMethod<
+    [TeamId, string, string, string, string, string, string],
+    Result
+  >,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
   'getClubLeaderboard' : ActorMethod<
     [number, number, TeamId, bigint, bigint],
@@ -205,7 +243,6 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
-  'reuploadTeams' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result
@@ -216,7 +253,43 @@ export interface _SERVICE {
   >,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
-  'updateHashForCategory' : ActorMethod<[string], undefined>,
   'updateProfilePicture' : ActorMethod<[Uint8Array | number[]], Result>,
+  'validateAddInitialFixtures' : ActorMethod<
+    [SeasonId, Array<Fixture>],
+    Result
+  >,
+  'validateCreatePlayer' : ActorMethod<
+    [TeamId, number, string, string, number, bigint, bigint, string],
+    Result
+  >,
+  'validateLoanPlayer' : ActorMethod<[PlayerId, TeamId, bigint], Result>,
+  'validatePromoteFormerTeam' : ActorMethod<[TeamId], Result>,
+  'validatePromoteNewTeam' : ActorMethod<
+    [string, string, string, string, string, string],
+    Result
+  >,
+  'validateRecallPlayer' : ActorMethod<[PlayerId], Result>,
+  'validateRescheduleFixtures' : ActorMethod<
+    [FixtureId, GameweekNumber, GameweekNumber, bigint],
+    Result
+  >,
+  'validateRetirePlayer' : ActorMethod<[PlayerId, bigint], Result>,
+  'validateRevaluePlayerDown' : ActorMethod<[PlayerId], Result>,
+  'validateRevaluePlayerUp' : ActorMethod<[PlayerId], Result>,
+  'validateSetPlayerInjury' : ActorMethod<[PlayerId, string, bigint], Result>,
+  'validateSubmitFixtureData' : ActorMethod<
+    [FixtureId, Array<PlayerEventData>],
+    Result
+  >,
+  'validateTransferPlayer' : ActorMethod<[PlayerId, TeamId], Result>,
+  'validateUnretirePlayer' : ActorMethod<[PlayerId], Result>,
+  'validateUpdatePlayer' : ActorMethod<
+    [PlayerId, number, string, string, number, bigint, string],
+    Result
+  >,
+  'validateUpdateTeam' : ActorMethod<
+    [TeamId, string, string, string, string, string, string],
+    Result
+  >,
   'withdrawICP' : ActorMethod<[number, string], Result>,
 }

@@ -1,16 +1,6 @@
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
-export interface CreatePlayerPayload {
-  'value' : bigint,
-  'dateOfBirth' : bigint,
-  'nationality' : string,
-  'shirtNumber' : number,
-  'teamId' : TeamId,
-  'position' : number,
-  'lastName' : string,
-  'firstName' : string,
-}
 export interface DataCache { 'hash' : string, 'category' : string }
 export interface Fixture {
   'id' : number,
@@ -19,7 +9,7 @@ export interface Fixture {
   'highestScoringPlayerId' : number,
   'homeTeamId' : TeamId,
   'seasonId' : SeasonId,
-  'events' : List_4,
+  'events' : List_3,
   'kickOff' : bigint,
   'homeGoals' : number,
   'gameweek' : GameweekNumber,
@@ -31,27 +21,21 @@ export interface InjuryHistory {
   'description' : string,
   'expectedEndDate' : bigint,
 }
-export type List = [] | [[RevaluedPlayer, List]];
-export type List_1 = [] | [[InjuryHistory, List_1]];
-export type List_2 = [] | [[PlayerSeason, List_2]];
-export type List_3 = [] | [[PlayerGameweek, List_3]];
-export type List_4 = [] | [[PlayerEventData, List_4]];
-export type List_5 = [] | [[ValueHistory, List_5]];
-export interface LoanPlayerPayload {
-  'loanTeamId' : TeamId,
-  'loanEndDate' : bigint,
-  'playerId' : PlayerId,
-}
+export type List = [] | [[InjuryHistory, List]];
+export type List_1 = [] | [[PlayerSeason, List_1]];
+export type List_2 = [] | [[PlayerGameweek, List_2]];
+export type List_3 = [] | [[PlayerEventData, List_3]];
+export type List_4 = [] | [[ValueHistory, List_4]];
 export interface Player {
   'id' : PlayerId,
   'value' : bigint,
-  'seasons' : List_2,
+  'seasons' : List_1,
   'dateOfBirth' : bigint,
-  'injuryHistory' : List_1,
+  'injuryHistory' : List,
   'isInjured' : boolean,
   'nationality' : string,
   'retirementDate' : bigint,
-  'valueHistory' : List_5,
+  'valueHistory' : List_4,
   'shirtNumber' : number,
   'teamId' : TeamId,
   'position' : number,
@@ -100,7 +84,7 @@ export interface PlayerEventData {
   'eventType' : number,
 }
 export interface PlayerGameweek {
-  'events' : List_4,
+  'events' : List_3,
   'number' : number,
   'points' : number,
 }
@@ -125,46 +109,14 @@ export interface PlayerScoreDTO {
   'goalsScored' : number,
   'saves' : number,
   'goalsConceded' : number,
-  'events' : List_4,
+  'events' : List_3,
   'teamId' : number,
   'position' : number,
   'points' : number,
 }
-export interface PlayerSeason { 'id' : number, 'gameweeks' : List_3 }
-export interface RecallPlayerPayload { 'playerId' : PlayerId }
-export interface RetirePlayerPayload {
-  'playerId' : PlayerId,
-  'retirementDate' : bigint,
-}
-export type RevaluationDirection = { 'Decrease' : null } |
-  { 'Increase' : null };
-export interface RevaluedPlayer {
-  'direction' : RevaluationDirection,
-  'playerId' : PlayerId,
-}
+export interface PlayerSeason { 'id' : number, 'gameweeks' : List_2 }
 export type SeasonId = number;
-export interface SetPlayerInjuryPayload {
-  'recovered' : boolean,
-  'playerId' : PlayerId,
-  'injuryDescription' : string,
-  'expectedEndDate' : bigint,
-}
 export type TeamId = number;
-export interface TransferPlayerPayload {
-  'playerId' : PlayerId,
-  'newTeamId' : TeamId,
-}
-export interface UnretirePlayerPayload { 'playerId' : PlayerId }
-export interface UpdatePlayerPayload {
-  'dateOfBirth' : bigint,
-  'playerId' : PlayerId,
-  'nationality' : string,
-  'shirtNumber' : number,
-  'teamId' : TeamId,
-  'position' : number,
-  'lastName' : string,
-  'firstName' : string,
-}
 export interface ValueHistory {
   'oldValue' : number,
   'newValue' : number,
@@ -173,7 +125,10 @@ export interface ValueHistory {
 }
 export interface _SERVICE {
   'calculatePlayerScores' : ActorMethod<[number, number, Fixture], Fixture>,
-  'createPlayer' : ActorMethod<[CreatePlayerPayload], undefined>,
+  'createPlayer' : ActorMethod<
+    [TeamId, number, string, string, number, bigint, bigint, string],
+    undefined
+  >,
   'getActivePlayers' : ActorMethod<[], Array<PlayerDTO>>,
   'getAllPlayers' : ActorMethod<[], Array<PlayerDTO>>,
   'getAllPlayersMap' : ActorMethod<
@@ -191,14 +146,31 @@ export interface _SERVICE {
     [Uint16Array | number[], number, number],
     Array<PlayerPointsDTO>
   >,
-  'loanPlayer' : ActorMethod<[LoanPlayerPayload], undefined>,
-  'recallPlayer' : ActorMethod<[RecallPlayerPayload], undefined>,
-  'retirePlayer' : ActorMethod<[RetirePlayerPayload], undefined>,
-  'revaluePlayers' : ActorMethod<[number, number, List], undefined>,
-  'setPlayerInjury' : ActorMethod<[SetPlayerInjuryPayload], undefined>,
-  'transferPlayer' : ActorMethod<[TransferPlayerPayload], undefined>,
-  'unretirePlayer' : ActorMethod<[UnretirePlayerPayload], undefined>,
+  'getRetiredPlayer' : ActorMethod<[string], Array<Player>>,
+  'loanPlayer' : ActorMethod<
+    [PlayerId, TeamId, bigint, SeasonId, GameweekNumber],
+    undefined
+  >,
+  'recallPlayer' : ActorMethod<[PlayerId], undefined>,
+  'retirePlayer' : ActorMethod<[PlayerId, bigint], undefined>,
+  'revaluePlayerDown' : ActorMethod<
+    [PlayerId, SeasonId, GameweekNumber],
+    undefined
+  >,
+  'revaluePlayerUp' : ActorMethod<
+    [PlayerId, SeasonId, GameweekNumber],
+    undefined
+  >,
+  'setPlayerInjury' : ActorMethod<[PlayerId, string, bigint], undefined>,
+  'transferPlayer' : ActorMethod<
+    [PlayerId, TeamId, SeasonId, GameweekNumber],
+    undefined
+  >,
+  'unretirePlayer' : ActorMethod<[PlayerId], undefined>,
   'updateHashForCategory' : ActorMethod<[string], undefined>,
-  'updatePlayer' : ActorMethod<[UpdatePlayerPayload], undefined>,
+  'updatePlayer' : ActorMethod<
+    [PlayerId, number, string, string, number, bigint, string],
+    undefined
+  >,
   'updatePlayerEventDataCache' : ActorMethod<[], undefined>,
 }

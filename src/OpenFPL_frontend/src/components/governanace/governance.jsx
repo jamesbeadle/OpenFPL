@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Spinner, CardDeck, Card, Button, Modal, Dropdown, Pagination, Tabs, Tab } from 'react-bootstrap';
+import { Container, Spinner, Card, Button, Modal, Pagination, Tabs, Tab } from 'react-bootstrap';
 import { initSnsWrapper, SnsVote, SnsGovernanceCanister } from '@dfinity/sns';
 import { AuthContext } from "../../contexts/AuthContext";
 import AddProposalModal from './add-proposal-modal';
@@ -135,7 +135,6 @@ const Governance = () => {
           <Tab eventKey="Proposals" title="Proposals">
             <Button className="mb-3 float-right" variant="primary" onClick={() => setShowAddProposalModal(true)}>New Proposal</Button>
         
-            <CardDeck>
               {proposalData.length == 0 && (
                 <p>No proposals to view.</p>
               )}
@@ -147,7 +146,6 @@ const Governance = () => {
                   </Card.Body>
                 </Card>
               ))}
-            </CardDeck>
             
             <Pagination className="mt-3">
                 <Pagination.Prev onClick={() => proposalPageNum > 1 && setProposalPageNum(proposalPageNum - 1)} />
@@ -160,7 +158,6 @@ const Governance = () => {
           
           <Tab eventKey="Fixture Validation" title="Fixture Validation">
             <Button className="mb-3 float-right" variant="primary" onClick={() => loadAddFixtureData()}>Create Fixture Proposal</Button>
-            <CardDeck>
               {fixtureValidationData.length == 0 && (
                 <p>No proposals to view.</p>
               )}
@@ -172,7 +169,6 @@ const Governance = () => {
                   </Card.Body>
                 </Card>
               ))}
-            </CardDeck>
             <Pagination className="mt-3">
                 <Pagination.Prev onClick={() => fixtureValidationPageNum > 1 && setFixtureValidationPageNum(fixtureValidationPageNum - 1)} />
                 <Pagination.Item>{fixtureValidationPageNum}</Pagination.Item>

@@ -37,7 +37,6 @@ const App = () => {
     <AuthProvider>
         <Router>
           <DataProvider>
-            <SnsGovernanceContext>
               <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
                 <MyNavbar />
                   <Routes>
@@ -65,7 +64,6 @@ const App = () => {
                   </Routes>
                 <MyFooter />
               </div>
-            </SnsGovernanceContext>
           </DataProvider>
         </Router>   
   </AuthProvider>
@@ -76,3 +74,11 @@ const root = document.getElementById("app");
 createRoot(root).render(
     <App />
 );
+
+
+/*
+Taken out for now
+
+            <SnsGovernanceContext>
+            </SnsGovernanceContext>
+*/

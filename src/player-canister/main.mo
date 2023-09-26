@@ -252,7 +252,9 @@ actor Self {
                 valueHistory = List.nil<T.ValueHistory>();
                 onLoan = false; parentTeamId = 0;
                 isInjured = false; injuryHistory = List.nil<T.InjuryHistory>();
-                retirementDate = 0; transferHistory = List.nil<T.TransferHistory>(); } };
+                retirementDate = 0; 
+                //transferHistory = List.nil<T.TransferHistory>(); 
+                } };
             case (?player) { return player; };
         };
     };
@@ -355,8 +357,8 @@ actor Self {
                 let historyEntry: T.ValueHistory = {
                     seasonId = activeSeasonId;
                     gameweek = activeGameweek;
-                    oldValue = p.value;
-                    newValue = newValue;
+                    oldValue = 0; //p.value;
+                    newValue = 0; //newValue;
                 };
 
                 let updatedPlayer: T.Player = {
@@ -376,7 +378,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
-                    transferHistory = p.transferHistory;
+                    //transferHistory = p.transferHistory;
                 };
 
                 return updatedPlayer;
@@ -398,8 +400,8 @@ actor Self {
                 let historyEntry: T.ValueHistory = {
                     seasonId = activeSeasonId;
                     gameweek = activeGameweek;
-                    oldValue = p.value;
-                    newValue = newValue;
+                    oldValue = 0; //p.value;
+                    newValue = 0; //newValue;
                 };
 
                 let updatedPlayer: T.Player = {
@@ -419,7 +421,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
-                    transferHistory = p.transferHistory;
+                    //transferHistory = p.transferHistory;
                 };
 
                 return updatedPlayer;
@@ -587,7 +589,7 @@ actor Self {
                 isInjured = player.isInjured;
                 injuryHistory = player.injuryHistory;
                 retirementDate = player.retirementDate;
-                transferHistory = player.transferHistory;
+                //transferHistory = player.transferHistory;
             };
          
             players := List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
@@ -696,7 +698,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
-                    transferHistory = p.transferHistory;
+                    //transferHistory = p.transferHistory;
                 };
 
             } else {return p};
@@ -801,7 +803,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
-                    transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
+                    //transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == updatedPlayer.id) {
@@ -847,7 +849,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = p.retirementDate;
-                    transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
+                    //transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
                 };
                 players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
                     if (currentPlayer.id == loanedPlayer.id) {
@@ -922,7 +924,7 @@ actor Self {
                             isInjured = p.isInjured;
                             injuryHistory = p.injuryHistory;
                             retirementDate = p.retirementDate;
-                            transferHistory = p.transferHistory;
+                            //transferHistory = p.transferHistory;
                         };
 
                         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -969,7 +971,7 @@ actor Self {
                             isInjured = p.isInjured;
                             injuryHistory = p.injuryHistory;
                             retirementDate = p.retirementDate;
-                            transferHistory = p.transferHistory;
+                            //transferHistory = p.transferHistory;
                         };
 
                         players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -1015,7 +1017,7 @@ actor Self {
                         isInjured = p.isInjured;
                         injuryHistory = p.injuryHistory;
                         retirementDate = p.retirementDate;
-                        transferHistory = p.transferHistory;
+                        //transferHistory = p.transferHistory;
                     };
 
                     players := List.map<T.Player, T.Player>(players, func(currentPlayer: T.Player) : T.Player {
@@ -1079,7 +1081,7 @@ actor Self {
                     isInjured = currentPlayer.isInjured;
                     injuryHistory = currentPlayer.injuryHistory;
                     retirementDate = currentPlayer.retirementDate;
-                    transferHistory = currentPlayer.transferHistory;
+                    //transferHistory = currentPlayer.transferHistory;
                 };
             } else {
                 return currentPlayer;
@@ -1096,7 +1098,7 @@ actor Self {
                         if (injury.expectedEndDate > Time.now()) {
                             return {
                                 description = injury.description;
-                                injuryStartDate = injury.injuryStartDate;
+                                //injuryStartDate = injury.injuryStartDate;
                                 expectedEndDate = Time.now();
                             };
                         } else {
@@ -1121,13 +1123,13 @@ actor Self {
                         isInjured = false;
                         injuryHistory = updatedInjuryHistory;
                         retirementDate = currentPlayer.retirementDate;
-                        transferHistory = currentPlayer.transferHistory;
+                        //transferHistory = currentPlayer.transferHistory;
                     };
                 } else {
                     let newInjury: T.InjuryHistory = {
                         description = description;
                         expectedEndDate = expectedEndDate;
-                        injuryStartDate = Time.now();
+                        //injuryStartDate = Time.now();
                     };
 
                     return {
@@ -1147,7 +1149,7 @@ actor Self {
                         isInjured = true;
                         injuryHistory = List.push(newInjury, currentPlayer.injuryHistory);
                         retirementDate = currentPlayer.retirementDate;
-                        transferHistory = currentPlayer.transferHistory;
+                        //transferHistory = currentPlayer.transferHistory;
                     };
                 }
             } else {
@@ -1178,7 +1180,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = retirementDate;
-                    transferHistory = p.transferHistory;
+                    //transferHistory = p.transferHistory;
                 };
                 
                 retiredPlayers := List.push(retiredPlayer, retiredPlayers);
@@ -1212,7 +1214,7 @@ actor Self {
                     isInjured = p.isInjured;
                     injuryHistory = p.injuryHistory;
                     retirementDate = 0;
-                    transferHistory = p.transferHistory;
+                    //transferHistory = p.transferHistory;
                 };
                 
                 players := List.push(activePlayer, players);

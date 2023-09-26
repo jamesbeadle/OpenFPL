@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert, InputGroup, Table, Pagination } from 'react-bootstrap';
-import { player_canister as player_canister } from '../../../declarations/player_canister';
+import { player_canister as player_canister } from '../../../../../../declarations/player_canister';
 
 const UnretirePlayerProposal = ({ sendDataToParent }) => {
     const [searchTerm, setSearchTerm] = useState("");

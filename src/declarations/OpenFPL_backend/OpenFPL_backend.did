@@ -187,6 +187,7 @@ type Error =
  variant {
    AlreadyExists;
    DecodeError;
+   InvalidData;
    InvalidTeamError;
    NotAllowed;
    NotAuthorized;
@@ -203,6 +204,25 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
+  executeAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);
+  executeCreatePlayer: (TeamId, nat8, text, text, nat8, nat, int, text) ->
+   (Result);
+  executeLoanPlayer: (PlayerId, TeamId, int) -> (Result);
+  executePromoteFormerTeam: (TeamId) -> (Result);
+  executePromoteNewTeam: (text, text, text, text, text, text) -> (Result);
+  executeRecallPlayer: (PlayerId) -> (Result);
+  executeRescheduleFixture: (FixtureId, GameweekNumber, GameweekNumber,
+   int) -> (Result);
+  executeRetirePlayer: (PlayerId, int) -> (Result);
+  executeRevaluePlayerDown: (SeasonId, GameweekNumber, PlayerId) -> (Result);
+  executeRevaluePlayerUp: (PlayerId) -> (Result);
+  executeSetPlayerInjury: (PlayerId, text, int) -> (Result);
+  executeSubmitFixtureData: (FixtureId, vec PlayerEventData) -> (Result);
+  executeTransferPlayer: (PlayerId, TeamId) -> (Result);
+  executeUnretirePlayer: (PlayerId) -> (Result);
+  executeUpdatePlayer: (PlayerId, nat8, text, text, nat8, int, text) ->
+   (Result);
+  executeUpdateTeam: (TeamId, text, text, text, text, text, text) -> (Result);
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
@@ -229,12 +249,30 @@ service : {
    (PaginatedLeaderboard) query;
   getWeeklyLeaderboardCache: (nat16, nat8) -> (PaginatedLeaderboard) query;
   isDisplayNameValid: (text) -> (bool) query;
-  reuploadTeams: () -> ();
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
-  updateHashForCategory: (text) -> ();
   updateProfilePicture: (blob) -> (Result);
+  validateAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);
+  validateCreatePlayer: (TeamId, nat8, text, text, nat8, nat, int, text) ->
+   (Result);
+  validateLoanPlayer: (PlayerId, TeamId, int) -> (Result);
+  validatePromoteFormerTeam: (TeamId) -> (Result);
+  validatePromoteNewTeam: (text, text, text, text, text, text) -> (Result);
+  validateRecallPlayer: (PlayerId) -> (Result);
+  validateRescheduleFixtures: (FixtureId, GameweekNumber, GameweekNumber,
+   int) -> (Result);
+  validateRetirePlayer: (PlayerId, int) -> (Result);
+  validateRevaluePlayerDown: (PlayerId) -> (Result);
+  validateRevaluePlayerUp: (PlayerId) -> (Result);
+  validateSetPlayerInjury: (PlayerId, text, int) -> (Result);
+  validateSubmitFixtureData: (FixtureId, vec PlayerEventData) -> (Result);
+  validateTransferPlayer: (PlayerId, TeamId) -> (Result);
+  validateUnretirePlayer: (PlayerId) -> (Result);
+  validateUpdatePlayer: (PlayerId, nat8, text, text, nat8, int, text) ->
+   (Result);
+  validateUpdateTeam: (TeamId, text, text, text, text, text, text) ->
+   (Result);
   withdrawICP: (float64, text) -> (Result);
 }

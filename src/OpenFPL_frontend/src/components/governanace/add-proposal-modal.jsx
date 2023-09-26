@@ -14,7 +14,7 @@ import PromoteFormerTeamProposal from './proposals/team/promote-former-team-prop
 import PromoteNewTeamProposal from './proposals/team/promote-new-team-proposal';
 import RevaluePlayerUpProposal from './proposals/player/revalue-player-up-proposal';
 import RevaluePlayerDownProposal from './proposals/player/revalue-player-down-proposal';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { SnsGovernanceContext } from "../../contexts/SNSGovernanceContext";
 
 const proposalCategories = [
@@ -48,7 +48,7 @@ const AddProposalModal = ({ show, onHide }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedType, setSelectedType] = useState(null);
   const [formData, setFormData] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const { hasNeurons, revaluePlayerUp, revaluePlayerDown, addIninitalFixtures, rescheduleFixture, transferPlayer, loanPlayer, recallPlayer, 
     createPlayer, updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteFormerTeam, promoteNewTeam, updateTeam } = useContext(SnsGovernanceContext);
   const [showOverlay, setShowOverlay] = useState(false);
@@ -62,7 +62,7 @@ const AddProposalModal = ({ show, onHide }) => {
     const selectedComponent = proposalTypes.find(type => type.value === e.target.value).component;
     
     if (!selectedComponent) {
-      history.push('/add-fixture-data');
+      navigate('/add-fixture-data');  
     }
   };
 
