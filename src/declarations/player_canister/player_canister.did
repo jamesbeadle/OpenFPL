@@ -126,7 +126,7 @@ type PlayerDTO =
    position: nat8;
    shirtNumber: nat8;
    teamId: nat16;
-   totalPoints: nat16;
+   totalPoints: int16;
    value: nat;
  };
 type Player = 

@@ -112,6 +112,31 @@ module {
         });
     };
 
+    public func reuploadTeams() : async (){
+        teams := List.fromArray<T.Team>([
+            {id=1; secondaryColourHex="#FFFFFF"; thirdColourHex="#F0DCBA"; name="Arsenal"; friendlyName="Arsenal"; abbreviatedName="ARS"; primaryColourHex="#D3121A"},
+            {id=2; secondaryColourHex="#B7D7FE"; thirdColourHex="#FFFFFF"; name="Aston Villa"; friendlyName="Aston Villa"; abbreviatedName="AVL"; primaryColourHex="#CA3E69"},
+            {id=3; secondaryColourHex="#262729"; thirdColourHex="#262729"; name="AFC Bournemouth"; friendlyName="Bournemouth"; abbreviatedName="BOU"; primaryColourHex="#CA2D26"},
+            {id=4; secondaryColourHex="#FFFFFF"; thirdColourHex="#090F14"; name="Brentford"; friendlyName="Brentford"; abbreviatedName="BRE"; primaryColourHex="#CF2E26"},
+            {id=5; secondaryColourHex="#124098"; thirdColourHex="#124098"; name="Brighton & Hove Albion"; friendlyName="Brighton"; abbreviatedName="BRI"; primaryColourHex="#FFFFFF"},
+            {id=6; secondaryColourHex="#A5D9F7"; thirdColourHex="#FFFFFF"; name="Burnley"; friendlyName="Burnley"; abbreviatedName="BUR"; primaryColourHex="#781932"},
+            {id=7; secondaryColourHex="#FFFFFF"; thirdColourHex="#020514"; name="Chelsea"; friendlyName="Chelsea"; abbreviatedName="CHE"; primaryColourHex="#2D57C7"},
+            {id=8; secondaryColourHex="#E12F44"; thirdColourHex="#FFFFFF"; name="Crystal Palace"; friendlyName="Crystal Palace"; abbreviatedName="CRY"; primaryColourHex="#1A47A0"},
+            {id=9; secondaryColourHex="#FFFFFF"; thirdColourHex="#13356D"; name="Everton"; friendlyName="Everton"; abbreviatedName="EVE"; primaryColourHex="#0F3DD1"},
+            {id=10; secondaryColourHex="#B14C5C"; thirdColourHex="#000000"; name="Fulham"; friendlyName="Fulham"; abbreviatedName="FUL"; primaryColourHex="#FFFFFF"},
+            {id=11; secondaryColourHex="#FFFFFF"; thirdColourHex="#2CC4B9"; name="Liverpool"; friendlyName="Liverpool"; abbreviatedName="LIV"; primaryColourHex="#E50113"},
+            {id=12; secondaryColourHex="#FFFFFF"; thirdColourHex="#524360"; name="Luton Town"; friendlyName="Luton"; abbreviatedName="LUT"; primaryColourHex="#F46038"},
+            {id=13; secondaryColourHex="#FFFFFF"; thirdColourHex="#A3E1FE"; name="Manchester City"; friendlyName="Man City"; abbreviatedName="MCI"; primaryColourHex="#569ECD"},
+            {id=14; secondaryColourHex="#FFFFFF"; thirdColourHex="#FEF104"; name="Manchester United"; friendlyName="Man United"; abbreviatedName="MUN"; primaryColourHex="#C00814"},
+            {id=15; secondaryColourHex="#1A1A1A"; thirdColourHex="#1A1A1A"; name="Newcastle United"; friendlyName="Newcastle"; abbreviatedName="NEW"; primaryColourHex="#FFFFFF"},
+            {id=16; secondaryColourHex="#FFFFFF"; thirdColourHex="#FFFFFF"; name="Nottingham Forest"; friendlyName="Nottingham Forest"; abbreviatedName="NFO"; primaryColourHex="#BB212A"},
+            {id=17; secondaryColourHex="#CF1E25"; thirdColourHex="#000000"; name="Sheffield United"; friendlyName="Sheffield United"; abbreviatedName="SHE"; primaryColourHex="#FFFFFF"},
+            {id=18; secondaryColourHex="#001952"; thirdColourHex="#001952"; name="Tottenham Hotspur"; friendlyName="Tottenham"; abbreviatedName="TOT"; primaryColourHex="#FFFFFF"},
+            {id=19; secondaryColourHex="#A7DAF9"; thirdColourHex="#F1D655"; name="West Ham United"; friendlyName="West Ham"; abbreviatedName="WHU"; primaryColourHex="#6D202A"},
+            {id=20; secondaryColourHex="#2D2D23"; thirdColourHex="#2D2D23"; name="Wolverhampton Wanderers"; friendlyName="Wolves"; abbreviatedName="WOL"; primaryColourHex="#F7CA3B"}
+        ]);
+    };
+
 
   }
 }

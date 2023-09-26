@@ -1630,5 +1630,13 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     return seasonManager.getValidatableFixtures();
   };
-  
+
+  public func reuploadTeams() : async (){
+    await teamsInstance.reuploadTeams();
+    await updateHashForCategory("teams");
+  };
+
+
+
+
 };

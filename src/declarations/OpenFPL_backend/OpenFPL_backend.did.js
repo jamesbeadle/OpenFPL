@@ -157,6 +157,7 @@ export const idlFactory = ({ IDL }) => {
     'secondaryColourHex' : IDL.Text,
     'name' : IDL.Text,
     'friendlyName' : IDL.Text,
+    'thirdColourHex' : IDL.Text,
     'abbreviatedName' : IDL.Text,
     'primaryColourHex' : IDL.Text,
   });
@@ -228,6 +229,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'reuploadTeams' : IDL.Func([], [], []),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
         [Result],
