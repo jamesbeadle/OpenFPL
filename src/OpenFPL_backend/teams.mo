@@ -4,13 +4,12 @@ import T "types";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Iter "mo:base/Iter";
-import GenesisData "genesis-data";
 
 module {
     
   public class Teams(){
 
-    private var teams = List.fromArray(GenesisData.get_genesis_teams());
+    private var teams = List.fromArray<T.Team>([]);
     private var nextTeamId : Nat16 = 21;
     private var relegatedTeams = List.fromArray<T.Team>([]);
 

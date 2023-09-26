@@ -43,17 +43,6 @@ module {
     
     private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
-    public func init_genesis_season(firstFixture: T.Fixture) : async () {
-        let genesisSeasonDuration: Timer.Duration = #nanoseconds (Int.abs(firstFixture.kickOff - Time.now() - oneHour));
-        switch(setAndBackupTimer) {
-            case (null) { };
-            case (?actualFunction) {
-                await actualFunction(genesisSeasonDuration, "gameweekBeginExpired", 0);
-            };
-        };
-    };
-
-
     public func setData(stable_seasons: [T.Season], stable_active_season_id: Nat16, stable_active_gameweek: Nat8, 
         stable_active_fixtures: [T.Fixture], stable_next_fixture_id: Nat32, stable_next_season_id: Nat16){
             activeSeasonId := stable_active_season_id;

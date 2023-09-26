@@ -2,7 +2,6 @@ import T "../OpenFPL_backend/types";
 import DTOs "../OpenFPL_backend/DTOs";
 import List "mo:base/List";
 import Principal "mo:base/Principal";
-import GenesisData "../OpenFPL_backend/genesis-data";
 import Nat8 "mo:base/Nat8";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
@@ -24,7 +23,7 @@ import SHA224 "../OpenFPL_backend/SHA224";
 
 actor Self {
 
-    private var players = List.fromArray<T.Player>(GenesisData.get_genesis_players());
+    private var players = List.fromArray<T.Player>([]);
     private var nextPlayerId : Nat = 560;
     private var retiredPlayers = List.fromArray<T.Player>([]);
 

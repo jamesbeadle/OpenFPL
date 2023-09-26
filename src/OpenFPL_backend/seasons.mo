@@ -3,7 +3,6 @@ import Result "mo:base/Result";
 import T "types";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
-import GenesisData "genesis-data";
 import Nat16 "mo:base/Nat16";
 import Iter "mo:base/Iter";
 import Text "mo:base/Text";
@@ -16,7 +15,7 @@ import Debug "mo:base/Debug";
 module {
     
   public class Seasons(){
-    private var seasons = List.fromArray(GenesisData.get_genesis_seasons());
+    private var seasons = List.fromArray<T.Season>([]);
 
     private var nextFixtureId : Nat32 = 381;
     private var nextSeasonId : Nat16 = 2;
