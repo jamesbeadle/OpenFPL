@@ -19,6 +19,7 @@ import Timer "mo:base/Timer";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
+import Text "mo:base/Text";
 import SHA224 "../OpenFPL_backend/SHA224";
 
 actor Self {
@@ -1221,6 +1222,13 @@ actor Self {
                 });
             };
         };
+    };
+    
+    public shared query ({caller}) func getRetiredPlayer(surname: Text) : async [T.Player] {
+        let retiredPlayers = List.filter<T.Player>(players, func(player: T.Player) : Bool {
+           return Text.equal(player.lastName, surname) and player.retirementDate > 0;
+        });
+        return List.toArray(retiredPlayers);
     };
 
     public shared query func getDataHashes() : async [T.DataCache] {
