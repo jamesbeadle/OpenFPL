@@ -140,7 +140,7 @@ export const SnsGovernanceProvider = ({ children }) => {
         const proposalUrl = "https://openfpl.xyz/governance";
         const proposalSummary = `Proposal to transfer player ${player.firstName != "" ? player.firstName.charAt(0) + "." : ""} ${player.lastName} from team ${getTeamById(teams, player.teamId).abbreviateName} to ${getTeamById(teams, newTeamId).abbreviateName}.`;
         const payload = IDL.encode(InitArgs, `(record { playerId=${player.id}; newTeamId=${newTeamId} })`);
-        await submitProposal(proposalTitle, proposalUrl, proposalSummary, functionIdTransfer, payload);
+        await submitProposal(proposalTitle, proposalUrl, proposalSummary, 6000, payload);
     };
    
     const loanPlayer = async (player, loanTeamId, loanEndDate) => {
