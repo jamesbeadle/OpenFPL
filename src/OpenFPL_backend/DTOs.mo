@@ -36,7 +36,7 @@ module DTOs {
         value: Nat;
         dateOfBirth: Int;
         nationality: Text;
-        totalPoints: Nat16;
+        totalPoints: Int16;
     };
 
     public type PlayerScoreDTO = {

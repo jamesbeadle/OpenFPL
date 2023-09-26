@@ -15,6 +15,7 @@ import Int "mo:base/Int";
 import Debug "mo:base/Debug";
 import Int16 "mo:base/Int16";
 import Buffer "mo:base/Buffer";
+import Nat "mo:base/Nat";
 
 module {
     public class FantasyTeams(
@@ -250,7 +251,7 @@ module {
                         sold := sold + newPlayer.value;
                     };
 
-                    let netSpendQMs: Nat = spent - sold;
+                    let netSpendQMs: Int = spent - sold;
 
                     if(netSpendQMs > existingTeam.bankBalance){
                         return #err(#InvalidTeamError);
@@ -366,7 +367,13 @@ module {
                         hatTrickHeroGameweek := gameweek;
                     };
                    
-                    let newBankBalance: Nat = existingTeam.bankBalance - netSpendQMs;
+                    let newBankBalance: Int = existingTeam.bankBalance - netSpendQMs;
+
+                    if(newBankBalance < 0){
+                        return #err(#InvalidTeamError);
+                    };
+
+                    let natBankBalance: Nat = Nat16.toNat(Int16.toNat16(Int16.fromInt(newBankBalance)));
 
                     var newTransfersAvailable: Nat8 = 2;
 
@@ -397,7 +404,7 @@ module {
 
                     let updatedTeam: T.FantasyTeam = {
                         principalId = principalId;
-                        bankBalance = newBankBalance;
+                        bankBalance = natBankBalance;
                         playerIds = allPlayerIds;
                         transfersAvailable = newTransfersAvailable;
                         captainId = newCaptainId;

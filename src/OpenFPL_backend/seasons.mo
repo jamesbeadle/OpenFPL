@@ -422,35 +422,6 @@ module {
 
         return [];
     };
-
-    //USED IN DEV FOR NOW
-    public func updateFixtureDate(updatedFixture: T.Fixture) : async (){
-        seasons := List.map<T.Season, T.Season>(seasons, func (season: T.Season): T.Season {
-            if (season.id == updatedFixture.seasonId) {
-               
-                let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func (gw: T.Gameweek): T.Gameweek {
-                    if (gw.number == updatedFixture.gameweek) {
-                        let updatedFixtures = List.map<T.Fixture, T.Fixture>(gw.fixtures, func (fixture: T.Fixture): T.Fixture {
-                            if (fixture.id == updatedFixture.id) {
-                                return updatedFixture;
-                            } else { return fixture; }
-                        });
-                        return {number = gw.number; canisterId = gw.canisterId; fixtures = updatedFixtures};
-                    } else {
-                        return gw;
-                    }
-                });
-               
-                return {id = season.id; name = season.name; year = season.year; gameweeks = updatedGameweeks; postponedFixtures = season.postponedFixtures;};
-            } else {
-                return season;
-            }
-        });
-
-
-       
-    };
-
     
   }
 }
