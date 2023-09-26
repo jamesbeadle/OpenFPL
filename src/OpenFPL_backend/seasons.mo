@@ -371,14 +371,14 @@ module {
         return result;
     };
 
-    public func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : () {
+    public func addInitialFixtures(seasonId: T.SeasonId, fixtures: [T.Fixture]) : () {
         seasons := List.map<T.Season, T.Season>(seasons, func(currentSeason: T.Season) : T.Season {
-            if (currentSeason.id == proposalPayload.seasonId) {
+            if (currentSeason.id == seasonId) {
 
                 var seasonGameweeks = List.nil<T.Gameweek>();
 
                 for (i in Iter.range(1, 38)) {
-                    let fixturesForCurrentGameweek = Array.filter<T.Fixture>(proposalPayload.fixtures, func (fixture: T.Fixture): Bool {
+                    let fixturesForCurrentGameweek = Array.filter<T.Fixture>(fixtures, func (fixture: T.Fixture): Bool {
                         return Nat8.fromNat(i) == fixture.gameweek;
                     });
 
@@ -402,6 +402,7 @@ module {
             } else { return currentSeason; } });
     };
 
+    /*Remove these functions post sns*/    
     public func getValidatableFixtures(activeSeasonId: Nat16, activeGameweek: Nat8) : [T.Fixture] {
         let season = List.find<T.Season>(seasons, func(s: T.Season) { s.id == activeSeasonId });
         switch(season) {

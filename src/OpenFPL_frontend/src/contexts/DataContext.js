@@ -43,17 +43,17 @@ export const DataProvider = ({ children }) => {
 
     useEffect(() => {
 
-    if(!systemState || Object.keys(systemState).length === 0){
-        return;
-    }
-    const initLeaderboards = async () => {
-        
-        await initWeeklyLeaderboard(backendCanisterHashes.find(item => item.category === 'weekly_leaderboard'));
-        await initMonthlyLeaderboards(backendCanisterHashes.find(item => item.category === 'monthly_leaderboards'));
-        await initSeasonLeaderboard(backendCanisterHashes.find(item => item.category === 'season_leaderboard'));  
-        await initPlayerEventsData(playerCanisterHashes.find(item => item.category === 'playerEventData'));        
-        setLoading(false);  
-    };
+        if(!systemState || Object.keys(systemState).length === 0){
+            return;
+        }
+        const initLeaderboards = async () => {
+            
+            await initWeeklyLeaderboard(backendCanisterHashes.find(item => item.category === 'weekly_leaderboard'));
+            await initMonthlyLeaderboards(backendCanisterHashes.find(item => item.category === 'monthly_leaderboards'));
+            await initSeasonLeaderboard(backendCanisterHashes.find(item => item.category === 'season_leaderboard'));  
+            await initPlayerEventsData(playerCanisterHashes.find(item => item.category === 'playerEventData'));        
+            setLoading(false);  
+        };
         initLeaderboards();
     }, [systemState, fixtures]);
 

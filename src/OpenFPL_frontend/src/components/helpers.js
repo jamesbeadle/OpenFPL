@@ -67,3 +67,10 @@ export const computeTimeLeft = (kickoff) => {
         seconds: Math.floor((distance % (1000 * 60)) / 1000)
     };
 };
+
+export const dateToUnixNanoseconds = (dateString) => {
+    const date = new Date(dateString);
+    return date.getTime() * 1000000;
+};
+
+

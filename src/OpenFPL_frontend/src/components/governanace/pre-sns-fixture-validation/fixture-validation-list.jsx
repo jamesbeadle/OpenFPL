@@ -1,3 +1,5 @@
+/* This file is for Pre-SNS purposes only to add fixture data, a new file will be created to handle this */
+
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Table, Button, Spinner } from 'react-bootstrap';
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -5,6 +7,7 @@ import { DataContext } from "../../../contexts/DataContext";
 import { fetchValidatableFixtures } from "../../../AuthFunctions";
 import { Link } from "react-router-dom";
 import { getTeamById } from '../../helpers';
+import Container from '../../../../../../node_modules/react-bootstrap/esm/Container';
 
 const FixtureValidationList = () => {
   const { authClient } = useContext(AuthContext);
@@ -39,35 +42,37 @@ const FixtureValidationList = () => {
   }
 
   return (
-    <Card className="custom-card mt-1">
-      <Card.Header>{`Season ${currentSeason.name}`} - {`Gameweek ${currentGameweek}`}</Card.Header>
-      <Card.Body>
-        <Table responsive bordered className="table-fixed">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Match</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {fixtures.map((fixture, index) => (
-                <tr key={fixture.id}>
-                  <td>{index + 1}</td>
-                  <td>{`${getTeamById(teams, fixture.homeTeamId).name} vs ${getTeamById(teams, fixture.awayTeamId).name}`}</td>
-                  <td>{fixture.status === 2 ? "Completed" : "Active"}</td>
-                  <td>
-                    <Button as={Link} variant={fixture.status === 2 ? "primary" : "secondary"} to={`/add-fixture-data?fixtureId=${fixture.id}`}>
-                      Add Player Event Data
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
-      </Card.Body>
-    </Card>
+    <Container className="flex-grow-1 my-5">
+      <Card className="custom-card mt-1">
+        <Card.Header>{`Season ${currentSeason.name}`} - {`Gameweek ${currentGameweek}`}</Card.Header>
+        <Card.Body>
+          <Table responsive bordered className="table-fixed">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Match</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fixtures.map((fixture, index) => (
+                  <tr key={fixture.id}>
+                    <td>{index + 1}</td>
+                    <td>{`${getTeamById(teams, fixture.homeTeamId).name} vs ${getTeamById(teams, fixture.awayTeamId).name}`}</td>
+                    <td>{fixture.status === 2 ? "Completed" : "Active"}</td>
+                    <td>
+                      <Button as={Link} variant={fixture.status === 2 ? "primary" : "secondary"} to={`/add-fixture-data?fixtureId=${fixture.id}`}>
+                        Add Player Event Data
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 

@@ -21,16 +21,11 @@ module {
     calculatePlayerScores: (activeSeason: T.SeasonId, activeGameweek: T.GameweekNumber, fixture: T.Fixture) -> async T.Fixture,
     distributeRewards: () -> async (),
     settleUserBets: () -> async (),
-    revaluePlayers: (Nat16, Nat8) -> async (),
     snapshotGameweek: (seasonId: Nat16, gameweek: Nat8) -> async (),
-    mintWeeklyRewardsPool: () -> async (),
-    mintAnnualRewardsPool: () -> async (),
     calculateFantasyTeamScores: (Nat16, Nat8) -> async (),
-    getConsensusPlayerEventData: (Nat8, Nat32) -> async List.List<T.PlayerEventData>,
     getAllPlayersMap: (Nat16, Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     resetFantasyTeams: () -> async (),
     updateCacheHash: (category: Text) -> async (),
-    EventData_VotingPeriod: Int,
     stable_timers: [T.TimerInfo],
     updatePlayerEventDataCache: () -> async ()) {
 
@@ -84,10 +79,6 @@ module {
     
     public func getActiveFixtures() : [T.Fixture] {
         return activeFixtures;
-    };
-
-    public func getValidatableFixtures(): [T.Fixture] {
-        return seasonsInstance.getValidatableFixtures(activeSeasonId, activeGameweek);
     };
 
     public func getNextFixtureId() : Nat32 {
@@ -144,6 +135,7 @@ module {
     };
 
     public func gameCompleted() : async () {
+        let EventData_VotingPeriod = 0; // NEED TO SET THIS FROM THE GOVERNANCE CANISTER BUT IT NEEDS TO BE THE TIME SPECIFIC TO FIXTURE DATA COLLECTION
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
         let timerCreatedTimes = Buffer.fromArray<Int>([]);
@@ -174,31 +166,7 @@ module {
         await updateCacheHash("fixtures");
     };
 
-    public func votingPeriodOver() : async (){
-        let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
-
-        for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
-            let fixture = activeFixtures[i];
-            if((fixture.kickOff + EventData_VotingPeriod) <= Time.now() and fixture.status == 2) {
-                let consensusPlayerEventData = await getConsensusPlayerEventData(activeGameweek, fixture.id);
-                let updatedFixture = await seasonsInstance.savePlayerEventData(activeSeasonId, activeGameweek, activeFixtures[i].id, consensusPlayerEventData);
-                activeFixturesBuffer.add(updatedFixture);
-                await finaliseFixture(updatedFixture);
-            } else {
-                activeFixturesBuffer.add(fixture);
-            };
-        };
-        
-        activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
-        await checkGameweekFinished();
-        await updateCacheHash("fixtures");
-        await updateCacheHash("weekly_leaderboard");
-        await updateCacheHash("monthly_leaderboards");
-        await updateCacheHash("season_leaderboard");
-        await updatePlayerEventDataCache();
-    };
-
-    public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId) : async (){
+    public func fixtureConsensusReached(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId, consensusPlayerEventData: [T.PlayerEventData]) : async (){
         var getSeasonId = seasonId;
         if(getSeasonId == 0){
             getSeasonId := activeSeasonId;
@@ -215,8 +183,7 @@ module {
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             let fixture = activeFixtures[i];
             if(fixture.id == fixtureId and fixture.status == 2){
-                let consensusPlayerEventData = await getConsensusPlayerEventData(getGameweekNumber, fixture.id);
-                let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, consensusPlayerEventData);
+                let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
                 activeFixturesBuffer.add(updatedFixture);
                 await finaliseFixture(updatedFixture);
             } else {
@@ -250,9 +217,7 @@ module {
         };
     };
 
-    private func gameweekVerified() : async (){
-          
-        //await revaluePlayers(activeSeasonId, activeGameweek); - //IMPLEMENT POST SNS
+    private func gameweekVerified() : async (){  
         //await distributeRewards(); //IMPLEMENT POST SNS
         //await settleUserBets(); //IMPLEMENT POST SNS
     };
@@ -271,8 +236,7 @@ module {
 
         activeGameweek += 1;
         activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-        //await mintWeeklyRewardsPool(); //IMPLEMENT POST SNS
-
+       
         let gameweekBeginDuration: Timer.Duration = #nanoseconds (Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
         switch(setAndBackupTimer) {
             case (null) { };
@@ -293,6 +257,10 @@ module {
                 await actualFunction(initialGameweekBeginDuration, "gameweekBeginExpired", 0);
             };
         };
+    };
+
+    public func getSeason(seasonId: T.SeasonId) : T.Season {
+        return seasonsInstance.getSeason(seasonId);
     };
 
     public func getActiveSeason() : T.Season {
@@ -327,40 +295,40 @@ module {
         return seasonsInstance.getSeasons();
     };
     
-    public func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
-        seasonsInstance.addInitialFixtures(proposalPayload);
+    public func addInitialFixtures(seasonId: T.SeasonId, fixtures: [T.Fixture]) : async () {
+        seasonsInstance.addInitialFixtures(seasonId, fixtures);
     };
     
-    public func rescheduleFixture(rescheduleFixture: T.RescheduleFixturePayload) : async () {
+    public func rescheduleFixture(fixtureId: T.FixtureId, currentFixtureGameweek: T.GameweekNumber, updatedFixtureGameweek: T.GameweekNumber, updatedFixtureDate: Int) : async () {
         var allSeasons = List.fromArray(seasonsInstance.getSeasons());
         allSeasons := List.map<T.Season, T.Season>(allSeasons, func(currentSeason: T.Season) : T.Season {
-            if (currentSeason.id == rescheduleFixture.seasonId) {
+            if (currentSeason.id == activeSeasonId) {
                 var updatedGameweeks: List.List<T.Gameweek> = List.nil();
                 var postponedFixtures: List.List<T.Fixture> = List.nil();
                 
                 updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(currentSeason.gameweeks, func(currentGameweek: T.Gameweek) : T.Gameweek {
-                    let updatedFixtures = List.mapFilter<T.Fixture, T.Fixture>(currentGameweek.fixtures, func(currentFixture: T.Fixture) : ?T.Fixture {
-                        if(currentGameweek.number == rescheduleFixture.oldGameweek or currentGameweek.number == rescheduleFixture.newGameweek) {
-                            if(currentFixture.id == rescheduleFixture.fixtureId){
-                                let updatedFixture: T.Fixture = {
-                                    id = currentFixture.id;
-                                    seasonId = currentFixture.seasonId;
-                                    gameweek = rescheduleFixture.newGameweek;
-                                    kickOff = currentFixture.kickOff;
-                                    homeTeamId = currentFixture.homeTeamId;
-                                    awayTeamId = currentFixture.awayTeamId;
-                                    homeGoals = currentFixture.homeGoals;
-                                    awayGoals = currentFixture.awayGoals;
-                                    status = currentFixture.status;
-                                    events = currentFixture.events;
-                                    highestScoringPlayerId = currentFixture.highestScoringPlayerId;
-                                };
-                                if (rescheduleFixture.newGameweek == 0) {
-                                    postponedFixtures := List.push(updatedFixture, currentSeason.postponedFixtures);
-                                    return null;
-                                } else {
-                                    return ?updatedFixture;
-                                }
+                    if(currentGameweek.number == currentFixtureGameweek){
+
+                        let updatedFixtures = List.mapFilter<T.Fixture, T.Fixture>(currentGameweek.fixtures, func(currentFixture: T.Fixture) : ?T.Fixture {
+                        if(currentFixture.id == fixtureId){
+                            let updatedFixture: T.Fixture = {
+                                id = currentFixture.id;
+                                seasonId = currentFixture.seasonId;
+                                gameweek = updatedFixtureGameweek;
+                                kickOff = updatedFixtureDate;
+                                homeTeamId = currentFixture.homeTeamId;
+                                awayTeamId = currentFixture.awayTeamId;
+                                homeGoals = currentFixture.homeGoals;
+                                awayGoals = currentFixture.awayGoals;
+                                status = currentFixture.status;
+                                events = currentFixture.events;
+                                highestScoringPlayerId = currentFixture.highestScoringPlayerId;
+                            };
+                            if (updatedFixtureGameweek == 0) {
+                                postponedFixtures := List.push(updatedFixture, currentSeason.postponedFixtures);
+                                return null;
+                            } else {
+                                return ?updatedFixture;
                             }
                         };
                         return ?currentFixture;
@@ -371,6 +339,9 @@ module {
                         canisterId = currentGameweek.canisterId;
                         fixtures = updatedFixtures; 
                     };
+
+                    } else { return currentGameweek };
+                    
                 });
                 
                 let updatedSeason: T.Season = {
@@ -405,6 +376,11 @@ module {
         };
 
         return await seasonsInstance.getFixture(getSeasonId, getGameweekNumber, fixtureId);
+    };
+
+    /*Remove these functions post sns*/
+    public func getValidatableFixtures(): [T.Fixture] {
+        return seasonsInstance.getValidatableFixtures(activeSeasonId, activeGameweek);
     };
     
   };

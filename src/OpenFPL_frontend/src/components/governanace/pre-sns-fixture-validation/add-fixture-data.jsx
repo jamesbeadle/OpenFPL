@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Spinner, Button, Container, Tabs, Tab } from 'react-bootstrap';
 import { DataContext } from "../../../contexts/DataContext";
-import { SnsGovernanceContext } from "../../../contexts/SNSGovernanceContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
 import { useLocation } from 'react-router-dom';
 import PlayerEventsModal from './player-events-modal';
@@ -9,13 +8,12 @@ import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
 import { useNavigate } from 'react-router-dom';
 
-const AddFixtureData = () => {
+const PreSNSAddFixtureData = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const fixtureId = queryParams.get('fixtureId');
   
   const { teams, systemState, players } = useContext(DataContext);
-  const { submitFixtureData } = useContext(SnsGovernanceContext);
   const [isLoading, setIsLoading] = useState(true);
   const [fixture, setFixture] = useState(null);
   const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);
@@ -116,7 +114,7 @@ const AddFixtureData = () => {
   const handleSaveAsDraft = () => {
       const replacer = (key, value) => {
           if (typeof value === 'bigint') {
-              return value.toString() + "n"; 
+              return value.toString() + "n"; // Convert BigInt to string and append "n" to distinguish
           }
           return value;
       };
@@ -225,12 +223,12 @@ const AddFixtureData = () => {
           });
         });
       }
-      
       setIsLoading(true);
-      await submitFixtureData(fixture, playerEventsArray);
-      
+      await open_fpl_backend.savePlayerEvents(fixture.id, playerEventsArray);
       handleClearDraft();
-      navigate('/governance');  
+
+      //redirect to consensus page
+      navigate('/governance')
 
     } catch (error) {
       console.error('Failed to save player events', error);
@@ -446,4 +444,4 @@ const AddFixtureData = () => {
   );
 };
 
-export default AddFixtureData;
+export default PreSNSAddFixtureData;

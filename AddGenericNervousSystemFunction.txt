@@ -1,0 +1,402 @@
+
+//Revalue Players Up
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Increase a Player's Value \"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to increase a player's value.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 1000 : nat64;
+                name = "Increase Player Value";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateRevaluePlayerUp";                         
+                        target_method_name = opt "executeRevaluePlayerUp";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+quill send message.json
+
+//Revalue Players Down
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Decrease a Player's Value \"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to decrease a player's value.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 2000 : nat64;
+                name = "Decrease Player Value";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateRevaluePlayerDown";                         
+                        target_method_name = opt "executeRevaluePlayerDown";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//submit fixture data
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Submit Fixture Data \"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to submit fixture data.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 3000 : nat64;
+                name = "Submit Fixture Data";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateSubmitFixtureData";                         
+                        target_method_name = opt "executeSubmitFixtureData";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//add initial fixtures
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Add Initial Fixtures \"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to add the initial fixtures to a season.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 4000 : nat64;
+                name = "Add Initial Fixtures";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateAddInitialFixtures";                         
+                        target_method_name = opt "executeAddInitialFixtures";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Reschedule Fixture
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Reschedule a Fixture \"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to reschedule a fixture.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 5000 : nat64;
+                name = "Reschedule a Fixture";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateRescheduleFixture";                         
+                        target_method_name = opt "executeRescheduleFixture";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Transfer Player
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Transfer a Player\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to transfer a player.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 6000 : nat64;
+                name = "Transfer a Player";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateTransferPlayer";                         
+                        target_method_name = opt "executeTransferPlayer";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Loan Player
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Loan a Player\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to loan a player.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 7000 : nat64;
+                name = "Loan a Player";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateLoanPlayer";                         
+                        target_method_name = opt "executeTransferPlayer";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Recall Player
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Recall a Player\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to recall a player.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 8000 : nat64;
+                name = "Recall a Player";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateRecallPlayer";                         
+                        target_method_name = opt "executeRecallPlayer";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Add New Player
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Add New Player\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to add a new player.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 9000 : nat64;
+                name = "Add New Player";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateAddNewPlayer";                         
+                        target_method_name = opt "executeAddNewPlayer";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Update Player
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Update Player\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to update a player.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 10000 : nat64;
+                name = "Update Player";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateUpdatePlayer";                         
+                        target_method_name = opt "executeUpdatePlayer";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Set Player Injury
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Set Player Injury\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to set a player's injury status.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 11000 : nat64;
+                name = "Set Player Injury";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateSetPlayerInjury";                         
+                        target_method_name = opt "executeSetPlayerInjury";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Player Retirement Proposal
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Retire a Player\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to retire a player.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 12000 : nat64;
+                name = "Retire Player";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateRetirePlayer";                         
+                        target_method_name = opt "executeRetirePlayer";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Unretire Player Proposal
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Unretire a Player\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to unretire a player.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 13000 : nat64;
+                name = "Unretire Player";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateUnretirePlayer";                         
+                        target_method_name = opt "executeUnretirePlayer";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Promote Former Team
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Promote Former Team\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to promote a team has previously paritipated in an OpenFPL season.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 14000 : nat64;
+                name = "Promote Former Team";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validatePromoteFormerTeam";                         
+                        target_method_name = opt "executePromoteFormerTeam";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Promote New Team
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Promote New Team\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to promote a new team to the Premier Legaue.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 15000 : nat64;
+                name = "Promote New Team";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validatePromoteNewTeam";                         
+                        target_method_name = opt "executePromoteNewTeam";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json
+
+//Update Team
+
+quill sns --canister-ids-file ./sns_canister_ids.json --pem-file $PEM_FILE make-proposal $PROPOSAL_NEURON_ID --proposal '(
+    record {
+        title = "Add a new custom SNS function to \"Update a Team\"";          
+        url = "https://github.com/jamesbeadle/OpenFPL/blob/master/src/OpenFPL_backend/main.mo";        
+        summary = "Adding a new generic proposal that allows the DAO to update an existing team.";
+        action = opt variant {
+            AddGenericNervousSystemFunction = record {
+                id = 16000 : nat64;
+                name = "Update Team";
+                description = opt "Import the specified proposals group into the specified community.";
+                function_type = opt variant { 
+                    GenericNervousSystemFunction = record { 
+                        validator_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        target_canister_id = opt principal "bboqb-jiaaa-aaaal-qb6ea-cai"; 
+                        validator_method_name = opt "validateUpdateTeam";                         
+                        target_method_name = opt "executeUpdateTeam";
+                    } 
+                };
+            }
+        };
+    }
+)' > message.json

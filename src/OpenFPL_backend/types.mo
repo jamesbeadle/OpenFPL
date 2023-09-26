@@ -16,6 +16,7 @@ module Types{
         #NotAllowed;
         #DecodeError;
         #InvalidTeamError;
+        #InvalidData
     };
     
     public type Profile = {
@@ -86,19 +87,30 @@ module Types{
         parentTeamId: Nat16;
         isInjured: Bool;
         injuryHistory: List.List<InjuryHistory>;
+        transferHistory: List.List<TransferHistory>;
         retirementDate: Int;
     };
 
     public type ValueHistory = {
         seasonId: Nat16;
         gameweek: Nat8;
-        oldValue: Float;
-        newValue: Float;
+        oldValue: Nat;
+        newValue: Nat;
     };
 
     public type InjuryHistory = {
         description: Text;
+        injuryStartDate: Int;
         expectedEndDate: Int;
+    };
+
+    public type TransferHistory = {
+        transferDate: Int;
+        transferGameweek: GameweekNumber;
+        transferSeason: SeasonId;
+        fromTeam: TeamId;
+        toTeam: TeamId;
+        loanEndDate: Int;
     };
 
     public type PlayerSeason = {
@@ -225,210 +237,7 @@ module Types{
         eventEndMinute: Nat8; //currently only used for Appearance
         teamId: TeamId;
     };
-
-    public type DataSubmission = {
-        fixtureId: FixtureId;
-        proposer: Text;
-        timestamp: Int;
-        events: List.List<PlayerEventData>;
-        votes_yes: List.List<PlayerValuationVote>;
-        votes_no: List.List<PlayerValuationVote>;
-    };
-
-    public type PlayerValuationSubmission = {
-        playerId: Nat16;
-        gameweek: GameweekNumber;
-        timestamp: Int;
-        votes_up: List.List<PlayerValuationVote>;
-        votes_down: List.List<PlayerValuationVote>;
-    };
-
-    public type PlayerValuationVote = {
-        principalId: Principal;
-        votes: Tokens;
-    };
-
-    public type Tokens = { amount_e8s : Nat64 };
-    public type Proposal = {
-        id : Nat;
-        votes_no : List.List<PlayerValuationVote>;
-        voters : List.List<Principal>;
-        state : ProposalState;
-        timestamp : Int;
-        proposer : Principal;
-        votes_yes : List.List<PlayerValuationVote>;
-        payload : ProposalPayload;
-        proposalType: ProposalType;
-        data: PayloadData;
-    };
-
-    public type PayloadData = {
-        #AddInitialFixtures : AddInitialFixturesPayload;
-        #RescheduleFixture : RescheduleFixturePayload;
-        #TransferPlayer : TransferPlayerPayload;
-        #LoanPlayer : LoanPlayerPayload;
-        #RecallPlayer : RecallPlayerPayload;
-        #CreatePlayer : CreatePlayerPayload;
-        #UpdatePlayer : UpdatePlayerPayload;
-        #SetPlayerInjury : SetPlayerInjuryPayload;
-        #RetirePlayer : RetirePlayerPayload;
-        #UnretirePlayer : UnretirePlayerPayload;
-        #PromoteTeam : PromoteTeamPayload;
-        #RelegateTeam : RelegateTeamPayload;
-        #UpdateTeam : UpdateTeamPayload;
-        #UpdateSystemParameters : UpdateSystemParametersPayload;
-    };
-
-    public type AddInitialFixturesPayload = {
-        seasonId: SeasonId;
-        fixtures: [Fixture];
-    };
-
-    public type RescheduleFixturePayload = {
-        seasonId: SeasonId;
-        fixtureId: FixtureId;
-        oldGameweek: GameweekNumber;
-        newGameweek: GameweekNumber;
-        newKickOffTime: Int;
-    };
-
-    public type TransferPlayerPayload = {
-        playerId: PlayerId;
-        newTeamId: TeamId;
-    };
-
-    public type LoanPlayerPayload = {
-        playerId: PlayerId;
-        loanTeamId: TeamId;
-        loanEndDate: Int;
-    };
-
-    public type RecallPlayerPayload = {
-        playerId: PlayerId;
-    };
-
-    public type CreatePlayerPayload = {
-        teamId: TeamId;
-        position: Nat8;
-        firstName: Text;
-        lastName: Text;
-        shirtNumber: Nat8;
-        value: Nat;
-        dateOfBirth: Int;
-        nationality: Text;
-    };
-
-    public type UpdatePlayerPayload = {
-        playerId: PlayerId;
-        teamId: TeamId;
-        position: Nat8;
-        firstName: Text;
-        lastName: Text;
-        shirtNumber: Nat8;
-        dateOfBirth: Int;
-        nationality: Text;
-    };
-
-    public type SetPlayerInjuryPayload = {
-        playerId: PlayerId;
-        injuryDescription: Text;
-        expectedEndDate: Int;
-        recovered: Bool;
-    };
-
-    public type RetirePlayerPayload = {
-        playerId: PlayerId;
-        retirementDate: Int;
-    };
-
-    public type UnretirePlayerPayload = {
-        playerId: PlayerId;
-    };
-
-    public type PromoteTeamPayload = {
-        teamId: TeamId;
-        name: Text;
-        friendlyName: Text;
-        primaryColourHex: Text;
-        secondaryColourHex: Text;
-        abbreviatedName: Text;
-    };
-
-    public type RelegateTeamPayload = {
-        teamId: TeamId;
-    };
-
-    public type UpdateTeamPayload = {
-        teamId: TeamId;
-        name: Text;
-        friendlyName: Text;
-        primaryColourHex: Text;
-        secondaryColourHex: Text;
-        abbreviatedName: Text;
-    };
-
-    public type ProposalState = {
-        #failed : Text;
-        #open;
-        #executing;
-        #rejected;
-        #succeeded;
-        #accepted;
-    };
-
-    public type ProposalPayload = {
-        method : Text;
-        canister_id : Principal;
-        message : Blob;
-    };
     
-    public type UpdateFlag = {
-        #EventData_VotePeriod;
-        #EventData_VoteThreshold;
-        #Revaluation_VoteThreshold;
-        #Proposal_VoteThreshold;
-        #Max_Votes_Per_User;
-        #Proposal_Submission_e8_Fee;
-    };
-
-    public type UpdateSystemParametersPayload = {
-        flag: UpdateFlag;
-        event_data_voting_period: ?Int;
-        event_data_vote_threshold: ?Nat64;
-        revalution_vote_threshold: ?Nat64;
-        proposal_vote_threshold: ?Nat64;
-        max_votes_per_user: ?Nat64;
-        proposal_submission_e8_fee: ?Nat64;
-    };
-
-    public type ConsensusData = {
-        fixtureId: FixtureId;
-        events: List.List<PlayerEventData>;
-        totalVotes: Tokens;
-    };
-
-    public type VoteChoice = {
-        #Yes;
-        #No;
-    };
-
-    public type ProposalType = {
-        #AddInitialFixtures;
-        #RescheduleFixture;
-        #TransferPlayer;
-        #LoanPlayer;
-        #RecallPlayer;
-        #CreatePlayer;
-        #UpdatePlayer;
-        #SetPlayerInjury;
-        #RetirePlayer;
-        #UnretirePlayer;
-        #PromoteTeam;
-        #RelegateTeam;
-        #UpdateTeam;
-        #UpdateSystemParameters;
-    };
-
     public type RevaluedPlayer = {
         playerId: PlayerId; 
         direction: RevaluationDirection;

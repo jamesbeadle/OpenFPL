@@ -16,7 +16,6 @@ import Option "mo:base/Option";
 import PlayerCanister "canister:player_canister";
 import T "types";
 import SeasonManager "season-manager";
-import Governance "governance";
 import Rewards "rewards";
 import PrivateLeagues "private-leagues-manager";
 import List "mo:base/List";
@@ -66,6 +65,7 @@ actor Self {
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
+    governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
   };
   
   let tokenCanister = actor (CANISTER_IDS.token_canister): actor 
@@ -75,21 +75,24 @@ actor Self {
     icrc1_balance_of: (T.Account) -> async Nat;
   };
   
+  //Player Canister
+
   let playerCanister = actor (CANISTER_IDS.player_canister): actor 
   { 
     getAllPlayers: () -> async [DTOs.PlayerDTO];
     getAllPlayersMap: (seasonId: Nat16, gameweek: Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)];
-    revaluePlayers: (List.List<T.RevaluedPlayer>) -> async ();
+    revaluePlayerUp: (playerId: T.PlayerId, activeSeasonId: T.SeasonId, activeGameweek: T.GameweekNumber) -> async (); 
+    revaluePlayerDown: (playerId: T.PlayerId, activeSeasonId: T.SeasonId, activeGameweek: T.GameweekNumber) -> async ();
     getPlayer: (playerId: Nat16) -> async T.Player;
     calculatePlayerScores(seasonId: Nat16, gameweek: Nat8, fixture: T.Fixture) : async T.Fixture;
-    transferPlayer: (proposalPayload: T.TransferPlayerPayload) -> async ();
-    loanPlayer: (proposalPayload: T.LoanPlayerPayload) -> async ();
-    recallPlayer: (proposalPayload: T.RecallPlayerPayload) -> async ();
-    createPlayer: (proposalPayload: T.CreatePlayerPayload) -> async ();
-    updatePlayer: (proposalPayload: T.UpdatePlayerPayload) -> async ();
-    setPlayerInjury: (proposalPayload: T.SetPlayerInjuryPayload) -> async ();
-    retirePlayer: (proposalPayload: T.RetirePlayerPayload) -> async ();
-    unretirePlayer: (proposalPayload: T.UnretirePlayerPayload) -> async ();
+    transferPlayer: (playerId: T.PlayerId, newTeamId: T.TeamId, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) -> async ();
+    loanPlayer: (playerId: T.PlayerId, loanTeamId: T.TeamId, loanEndDate: Int, currentSeasonId: T.SeasonId, currentGameweek: T.GameweekNumber) -> async ();
+    recallPlayer: (playerId: T.PlayerId) -> async ();
+    createPlayer: (teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) -> async ();
+    updatePlayer: (playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) -> async ();
+    setPlayerInjury: (playerId: T.PlayerId, description: Text, expectedEndDate: Int) -> async ();
+    retirePlayer: (playerId: T.PlayerId, retirementDate: Int) -> async ();
+    unretirePlayer: (playerId: T.PlayerId) -> async ();
     recalculatePlayerScores: (fixture: T.Fixture, seasonId: Nat16, gameweek: Nat8) -> async ();
     updatePlayerEventDataCache: () -> async ()
   };
@@ -105,6 +108,12 @@ actor Self {
   private func getPlayer(playerId: Nat16): async T.Player {
     return await playerCanister.getPlayer(playerId);
   }; 
+
+
+  //Profile Canister
+
+  //Whatever Canister - This is where I'll put all the entry points when the multicanister architecture is implemented
+
 
   private func getProfiles(): [(Text, T.Profile)] {
     return profilesInstance.getProfiles();
@@ -395,63 +404,6 @@ actor Self {
       return fantasyTeamsInstance.getClubLeaderboards(seasonId, month, 100, 0);
   };
   
-  private func addInitialFixtures(proposalPayload: T.AddInitialFixturesPayload) : async () {
-    await seasonManager.addInitialFixtures(proposalPayload);
-  };
-
-  private func rescheduleFixture(proposalPayload: T.RescheduleFixturePayload) : async () {
-    await seasonManager.rescheduleFixture(proposalPayload);
-  };
-
-  private func transferPlayer(proposalPayload: T.TransferPlayerPayload) : async () {
-    await playerCanister.transferPlayer(proposalPayload);
-  };
-
-  private func loanPlayer(proposalPayload: T.LoanPlayerPayload) : async () {
-    await playerCanister.loanPlayer(proposalPayload);
-  };
-
-  private func recallPlayer(proposalPayload: T.RecallPlayerPayload) : async () {
-    await playerCanister.recallPlayer(proposalPayload);
-  };
-
-  private func createPlayer(proposalPayload: T.CreatePlayerPayload) : async () {
-    await playerCanister.createPlayer(proposalPayload);
-  };
-
-  private func updatePlayer(proposalPayload: T.UpdatePlayerPayload) : async () {
-    await playerCanister.updatePlayer(proposalPayload);
-  };
-
-  private func setPlayerInjury(proposalPayload: T.SetPlayerInjuryPayload) : async () {
-    await playerCanister.setPlayerInjury(proposalPayload);
-  };
-
-  private func retirePlayer(proposalPayload: T.RetirePlayerPayload) : async () {
-    await playerCanister.retirePlayer(proposalPayload);
-  };
-
-  private func unretirePlayer(proposalPayload: T.UnretirePlayerPayload) : async () {
-    await playerCanister.unretirePlayer(proposalPayload);
-  };
-
-  private func promoteTeam(proposalPayload: T.PromoteTeamPayload) : async () {
-    await teamsInstance.promoteTeam(proposalPayload);
-  };
-
-  private func relegateTeam(proposalPayload: T.RelegateTeamPayload) : async () {
-    await teamsInstance.relegateTeam(proposalPayload);
-  };
-
-  private func updateTeam(proposalPayload: T.UpdateTeamPayload) : async () {
-    await teamsInstance.updateTeam(proposalPayload);
-  };
-
-  private func proposalExpiredCallback() : async () {
-    await governanceInstance.proposalExpired();
-    removeExpiredTimers();
-  };
-
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBegin();
     removeExpiredTimers();
@@ -466,11 +418,6 @@ actor Self {
     await seasonManager.gameCompleted();
     removeExpiredTimers();
   };
-
-  private func votingPeriodOverExpiredCallback() : async () {
-    await seasonManager.votingPeriodOver();
-    removeExpiredTimers();
-  };
   
   private func removeExpiredTimers() : () {
       let currentTime = Time.now();
@@ -483,9 +430,6 @@ actor Self {
   
   private func setAndBackupTimer(duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) : async () {
     let jobId: Timer.TimerId = switch(callbackName) {
-        case "proposalExpired" {
-            Timer.setTimer(duration, proposalExpiredCallback);
-        };
         case "gameweekBeginExpired" {
             Timer.setTimer(duration, gameweekBeginExpiredCallback);
         };
@@ -494,9 +438,6 @@ actor Self {
         };
         case "gameCompletedExpired" {
             Timer.setTimer(duration, gameCompletedExpiredCallback);
-        };
-        case "votingPeriodOverExpired" {
-            Timer.setTimer(duration, votingPeriodOverExpiredCallback);
         };
         case _ {
             Timer.setTimer(duration, defaultCallback);
@@ -524,15 +465,6 @@ actor Self {
     timerBuffer.add(timerInfo);
     stable_timers := Buffer.toArray(timerBuffer);
   };
-
-  private stable var stable_timers: [T.TimerInfo] = [];
-
-  private func finaliseFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId): async (){
-    await seasonManager.fixtureConsensusReached(seasonId, gameweekNumber, fixtureId);
-  };
-
-  let governanceInstance = Governance.Governance(transferPlayer, loanPlayer, recallPlayer, createPlayer,
-      updatePlayer, setPlayerInjury, retirePlayer, unretirePlayer, promoteTeam, relegateTeam, updateTeam);
 
   //Fantasy team functions
   public shared query ({caller}) func getTotalManagers() : async Nat {
@@ -634,21 +566,892 @@ actor Self {
     };
   };
 
-  public shared query ({caller}) func getValidatableFixtures() : async [T.Fixture]{
-    assert not Principal.isAnonymous(caller);
-    return seasonManager.getValidatableFixtures();
+  //Governance canister validation 
+  public shared func validateRevaluePlayerUp(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #ok();
   };
 
+  public shared func validateRevaluePlayerDown(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    return #ok();
+  };
+
+  public shared func validateSubmitFixtureData(fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async Result.Result<(), T.Error>{
+    let validPlayerEvents = validatePlayerEvents(playerEventData);
+    if(not validPlayerEvents){
+      return #err(#InvalidData);
+    };
+
+    let activeSeasonId = seasonManager.getActiveSeasonId();
+    let activeGameweek = seasonManager.getActiveGameweek();
+    let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
+
+    if(fixture.status != 2){
+      return #err(#InvalidData);
+    };
+
+    return #ok();
+  };
+
+  private func validatePlayerEvents(playerEvents: [T.PlayerEventData]) : Bool {
+
+    let eventsBelow0 =  Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
+        return event.eventStartMinute < 0;
+    });
+
+    if(Array.size(eventsBelow0) > 0){
+      return false;
+    };
+
+    let eventsAbove90 =  Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
+      return event.eventStartMinute > 90;
+    });
+
+    if(Array.size(eventsAbove90) > 0){
+      return false;
+    };
+
+    let playerEventsMap: TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>> = TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>>(Utilities.eqNat16, Utilities.hashNat16);
+
+    
+    for (playerEvent in Iter.fromArray(playerEvents)) {
+        switch (playerEventsMap.get(playerEvent.playerId)) {
+            case (null) { };
+            case (?existingEvents) {
+                playerEventsMap.put(playerEvent.playerId, List.push<T.PlayerEventData>(playerEvent, existingEvents));
+            };
+        }
+    };
+    
+    for ((playerId, events) in playerEventsMap.entries()) { 
+      let redCards = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+          return event.eventType == 9; // Red Card
+      });
+
+      if (List.size<T.PlayerEventData>(redCards) > 1) {
+          return false;
+      };
+
+      let yellowCards = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+          return event.eventType == 8; // Yellow Card
+      });
+
+      if (List.size<T.PlayerEventData>(yellowCards) > 2) {
+          return false;
+      };
+
+      if (List.size<T.PlayerEventData>(yellowCards) == 2 and List.size<T.PlayerEventData>(redCards) != 1) {
+          return false;
+      };
+
+      let assists = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+          return event.eventType == 2; // Goal Assisted
+      });
+
+      for (assist in Iter.fromList(assists)) {
+          let goalsAtSameMinute = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+              return event.eventType == 1 and event.eventStartMinute == assist.eventStartMinute;
+          });
+
+          if (List.size<T.PlayerEventData>(goalsAtSameMinute) == 0) {
+              return false;
+          }
+      };
+
+      let penaltySaves = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+          return event.eventType == 6;
+      });
+
+      for (penaltySave in Iter.fromList(penaltySaves)) {
+          let penaltyMissesAtSameMinute = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
+              return event.eventType == 7 and event.eventStartMinute == penaltySave.eventStartMinute;
+          });
+
+          if (List.size<T.PlayerEventData>(penaltyMissesAtSameMinute) == 0) {
+              return false;
+          }
+      };
+    };
+
+    return true;
+  };
+
+  public shared func validateAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
+    
+    let findIndex = func(arr: [T.TeamId], value: T.TeamId) : ?Nat {
+        for (i in Array.keys(arr)) {
+            if (arr[i] == value) {
+                return ?(i);
+            }
+        };
+        return null;
+    };
+
+    //there should be no fixtures for the season currently
+    let currentSeason = seasonManager.getSeason(seasonId);
+    if(currentSeason.id == 0){
+        return #err(#InvalidData);
+    };
+
+    for(gameweek in Iter.fromList(currentSeason.gameweeks)){
+      if(List.size(gameweek.fixtures) > 0){
+          return #err(#InvalidData);
+      };
+    };
+
+    //there are 380 fixtures
+    if(Array.size(seasonFixtures) != 380){
+      return #err(#InvalidData);
+    };
+
+    let teams = await getTeams();
+    let teamIds = Array.map<T.Team, T.TeamId>(teams, func(t: T.Team) : T.TeamId { return t.id });
+
+    let uniqueTeamIdsBuffer = Buffer.fromArray<T.TeamId>([]);
+
+    for (teamId in Iter.fromArray(teamIds)) {
+        if (not Buffer.contains<T.TeamId>(uniqueTeamIdsBuffer, teamId, func (a: T.TeamId, b: T.TeamId): Bool { a == b })) {
+            uniqueTeamIdsBuffer.add(teamId);
+        };
+    };
+
+    //there are 20 teams 
+    let uniqueTeamIds = Buffer.toArray<T.TeamId>(uniqueTeamIdsBuffer);
+    if(Array.size(uniqueTeamIds) != 20){
+      return #err(#InvalidData);
+    };
+
+    //19 home games and 19 away games for each team
+    let homeGamesCount = Array.tabulate<Nat>(Array.size(uniqueTeamIds), func(_: Nat) { return 0; });
+    let awayGamesCount = Array.tabulate<Nat>(Array.size(uniqueTeamIds), func(_: Nat) { return 0; });
+    
+    let homeGamesBuffer = Buffer.fromArray<Nat>(homeGamesCount);
+    let awayGamesBuffer = Buffer.fromArray<Nat>(awayGamesCount);
+
+    for (f in Iter.fromArray(seasonFixtures)) {
+      
+    //all default values are set correctly for starting fixture, scores and statuses etc
+      if (f.homeGoals != 0 or
+          f.awayGoals != 0 or
+          f.status != 0 or
+          not List.isNil(f.events) or
+          f.highestScoringPlayerId != 0) {
+          return #err(#InvalidData);
+      };
+
+      //all team ids exist
+      let homeTeam = Array.find<T.TeamId>(teamIds, func(teamId: T.TeamId): Bool { return teamId == f.homeTeamId; });
+      let awayTeam = Array.find<T.TeamId>(teamIds, func(teamId: T.TeamId): Bool { return teamId == f.awayTeamId; });
+      if(homeTeam == null or awayTeam == null){
+        return #err(#InvalidData);
+      };
+
+      let homeTeamIndexOpt = findIndex(uniqueTeamIds, f.homeTeamId);
+      let awayTeamIndexOpt = findIndex(uniqueTeamIds, f.awayTeamId);
+
+      label check switch (homeTeamIndexOpt, awayTeamIndexOpt) {
+        case (?(homeTeamIndex), ?(awayTeamIndex)){
+            let currentHomeGames = homeGamesBuffer.get(homeTeamIndex);
+            let currentAwayGames = awayGamesBuffer.get(awayTeamIndex);
+            homeGamesBuffer.put(homeTeamIndex, currentHomeGames + 1);
+            awayGamesBuffer.put(awayTeamIndex, currentAwayGames + 1);
+            break check;
+        };
+        case _{
+          return #err(#InvalidData);
+        };  
+      };
+      
+    };
+
+    let gameweekFixturesBuffer = Buffer.fromArray<Nat>(Array.tabulate<Nat>(38, func(_: Nat) { return 0; }));
+
+    for (f in Iter.fromArray(seasonFixtures)) {
+      let gameweekIndex = f.gameweek - 1;
+      let currentCount = gameweekFixturesBuffer.get(Nat8.toNat(gameweekIndex));
+      gameweekFixturesBuffer.put(Nat8.toNat(gameweekIndex), currentCount + 1);
+    };
+
+    for (i in Iter.fromArray(Buffer.toArray(gameweekFixturesBuffer))) {
+      if (gameweekFixturesBuffer.get(i) != 10) {
+        return #err(#InvalidData);
+      };
+    };
+
+    for (i in Iter.fromArray(Buffer.toArray(homeGamesBuffer))) {
+        if (homeGamesBuffer.get(i) != 19 or awayGamesBuffer.get(i) != 19) {
+            return #err(#InvalidData);
+        };
+    };
+    
+    return #ok();
+  };
+
+  public shared func validateRescheduleFixtures(fixtureId: T.FixtureId, currentFixtureGameweek: T.GameweekNumber, updatedFixtureGameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
+    if(updatedFixtureDate <= Time.now()){
+      return #err(#InvalidData);  
+    };
+
+    if(updatedFixtureGameweek <= seasonManager.getActiveGameweek()){
+      return #err(#InvalidData);  
+    };
+
+    let fixture = await seasonManager.getFixture(seasonManager.getActiveSeason().id, currentFixtureGameweek, fixtureId);
+    if(fixture.id == 0 or fixture.status == 3){
+      return #err(#InvalidData);  
+    };
+    
+    return #ok();
+  };
+
+  public shared func validateLoanPlayer(playerId: T.PlayerId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
+
+    if(loanEndDate <= Time.now()){
+      return #err(#InvalidData);
+    };
+
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0){
+      return #err(#InvalidData);
+    };
+
+    //player is not already on loan
+    if(player.onLoan){
+      return #err(#InvalidData);
+    };
+
+    //loan team exists unless 0
+    if(loanTeamId > 0){
+      switch(teamsInstance.getTeam(loanTeamId)){
+        case (null) {
+          return #err(#InvalidData);
+        };
+        case (?foundTeam){ };
+      };
+    };
+
+    return #ok();
+  };
+
+  public shared func validateTransferPlayer(playerId: T.PlayerId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0){
+      return #err(#InvalidData);
+    };
+    
+    //new club is premier league team
+    if(newTeamId > 0){
+      switch(teamsInstance.getTeam(newTeamId)){
+        case (null) {
+          return #err(#InvalidData);
+        };
+        case (?foundTeam){ };
+      };
+    };
+    
+    return #ok();
+  };
+
+  public shared func validateRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0){
+      return #err(#InvalidData);
+    };
+
+    //player is on loan
+    if(not player.onLoan){
+      return #err(#InvalidData);
+    };
+
+    return #ok();
+  };
+
+  public shared func validateCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    
+    switch(teamsInstance.getTeam(teamId)){
+      case (null) {
+        return #err(#InvalidData);
+      };
+      case (?foundTeam){ };
+    };
+
+    if(Text.size(firstName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(lastName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(position > 3){
+      return #err(#InvalidData);
+    };  
+
+    if(not Utilities.isNationalityValid(nationality)){
+      return #err(#InvalidData);
+    };
+
+    if(Utilities.calculateAgeFromUnix(dateOfBirth) < 16){
+      return #err(#InvalidData);
+    };
+    
+    return #ok();
+  };
+
+  public shared func validateUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(firstName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(lastName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(position > 3){
+      return #err(#InvalidData);
+    };  
+
+    if(not Utilities.isNationalityValid(nationality)){
+      return #err(#InvalidData);
+    };
+
+    if(Utilities.calculateAgeFromUnix(dateOfBirth) < 16){
+      return #err(#InvalidData);
+    };
+    
+    return #ok();
+  };
+
+  public shared func validateSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0 or player.isInjured){
+      return #err(#InvalidData);
+    };
+    return #ok();
+  };
+
+  public shared func validateRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0 or player.retirementDate > 0){
+      return #err(#InvalidData);
+    };
+    return #ok();
+  };
+
+  public shared func validateUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    let player = await playerCanister.getPlayer(playerId);
+    if(player.id == 0 or player.retirementDate == 0){
+      return #err(#InvalidData);
+    };
+    return #ok();
+  };
+
+  public shared func validatePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
+    
+    let allTeams = teamsInstance.getTeams();
+
+    if(Array.size(allTeams) >= 20){
+      return #err(#InvalidData);
+    };
+
+    let activeSeason = seasonManager.getActiveSeason();
+    let seasonFixtures = seasonManager.getFixturesForSeason(activeSeason.id);
+    if(Array.size(seasonFixtures) > 0){
+      return #err(#InvalidData);
+    };
+    
+    return #ok();
+  };
+
+  public shared func validatePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    
+    let allTeams = teamsInstance.getTeams();
+
+    if(Array.size(allTeams) >= 20){
+      return #err(#InvalidData);
+    };
+
+    let activeSeason = seasonManager.getActiveSeason();
+    let seasonFixtures = seasonManager.getFixturesForSeason(activeSeason.id);
+    if(Array.size(seasonFixtures) > 0){
+      return #err(#InvalidData);
+    };
+    
+    if(Text.size(name) > 100){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(friendlyName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(abbreviatedName) != 3){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(primaryHexColour)){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(secondaryHexColour)){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(thirdHexColour)){
+      return #err(#InvalidData);
+    };
+    
+    return #ok();
+  };
+
+  public shared func validateUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    
+    switch(teamsInstance.getTeam(teamId)){
+      case (null) {
+        return #err(#InvalidData);
+      };
+      case (?foundTeam){ };
+    };
+    
+    if(Text.size(name) > 100){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(friendlyName) > 50){
+      return #err(#InvalidData);
+    };
+
+    if(Text.size(abbreviatedName) != 3){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(primaryHexColour)){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(secondaryHexColour)){
+      return #err(#InvalidData);
+    };
+
+    if(not Utilities.validateHexColor(thirdHexColour)){
+      return #err(#InvalidData);
+    };
+    
+    return #ok();
+  }; 
+  
+  //Governance target methods
+
+  public shared func executeRevaluePlayerUp(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    await playerCanister.revaluePlayerUp(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+    return #ok();
+  };
+
+  public shared func executeRevaluePlayerDown(seasonId: T.SeasonId, gameweek: T.GameweekNumber, playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    await playerCanister.revaluePlayerDown(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+    return #ok();
+  };
+
+  public shared func executeSubmitFixtureData(fixtureId: T.FixtureId, playerEventData: [T.PlayerEventData]) : async Result.Result<(), T.Error>{
+    
+    let activeSeasonId = seasonManager.getActiveSeasonId();
+    let activeGameweek = seasonManager.getActiveGameweek();
+    let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
+    let allPlayers = await playerCanister.getAllPlayers();
+
+    let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+    let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+      
+    for (event in Iter.fromArray(playerEventData)) {
+        if (event.teamId == fixture.homeTeamId) {
+            homeTeamPlayerIdsBuffer.add(event.playerId);
+        } else if (event.teamId == fixture.awayTeamId) {
+            awayTeamPlayerIdsBuffer.add(event.playerId);
+        };
+    };
+      
+    let homeTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+    let awayTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+
+    for(playerId in Iter.fromArray<Nat16>(Buffer.toArray(homeTeamPlayerIdsBuffer))){
+      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
+          switch (player) {
+              case (null) {  };
+              case (?actualPlayer) {
+                  if (actualPlayer.position == 0 or actualPlayer.position == 1) {
+                      if(Array.find<Nat16>(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer), func(x: Nat16): Bool { return x == playerId; }) == null) {
+                          homeTeamDefensivePlayerIdsBuffer.add(playerId);
+                      }
+                  };
+              };
+          };
+    };
+
+    for(playerId in Iter.fromArray<Nat16>(Buffer.toArray(awayTeamPlayerIdsBuffer))){
+      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
+          switch (player) {
+              case (null) {  };
+              case (?actualPlayer) {
+                  if (actualPlayer.position == 0 or actualPlayer.position == 1) {
+                      if(Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x: Nat16): Bool { return x == playerId; }) == null) {
+                          awayTeamDefensivePlayerIdsBuffer.add(playerId);
+                      }
+                  };
+              };
+          };
+    };
+
+    // Get goals for each team
+    let homeTeamGoals = Array.filter<T.PlayerEventData>(playerEventData, func(event: T.PlayerEventData) : Bool {
+        return event.teamId == fixture.homeTeamId and event.eventType == 1;
+    });
+
+    let awayTeamGoals = Array.filter<T.PlayerEventData>(playerEventData, func(event: T.PlayerEventData) : Bool {
+        return event.teamId == fixture.awayTeamId and event.eventType == 1;
+    });
+
+    let homeTeamOwnGoals = Array.filter<T.PlayerEventData>(playerEventData, func(event: T.PlayerEventData) : Bool {
+      return event.teamId == fixture.homeTeamId and event.eventType == 10;
+    });
+
+    let awayTeamOwnGoals = Array.filter<T.PlayerEventData>(playerEventData, func(event: T.PlayerEventData) : Bool {
+      return event.teamId == fixture.awayTeamId and event.eventType == 10;
+    });
+
+    let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
+    let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
+
+    let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(playerEventData);
+
+    if(totalHomeScored == 0){
+      //add away team clean sheets
+      for(playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))){
+        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
+        switch (player) {
+            case (null) {  };
+            case (?actualPlayer) {
+              let cleanSheetEvent: T.PlayerEventData = {
+                fixtureId = fixtureId;
+                playerId = playerId;
+                eventType = 5;
+                eventStartMinute = 90;
+                eventEndMinute = 90;
+                teamId = actualPlayer.teamId;
+                position = actualPlayer.position;
+              };
+              allPlayerEventsBuffer.add(cleanSheetEvent);
+            };
+        };
+      };
+    } else {
+      //add away team conceded events
+      for (goal in Iter.fromArray(homeTeamGoals)) {
+        for(playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))){
+          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
+          switch (player) {
+              case (null) {  };
+              case (?actualPlayer) {
+                let concededEvent: T.PlayerEventData = {
+                  fixtureId = fixtureId;
+                  playerId = actualPlayer.id;
+                  eventType = 3;
+                  eventStartMinute = goal.eventStartMinute;
+                  eventEndMinute = goal.eventStartMinute;
+                  teamId = actualPlayer.teamId;
+                  position = actualPlayer.position;
+                };
+                allPlayerEventsBuffer.add(concededEvent);
+              };
+          };
+        };
+      };
+    };
+
+    if(totalAwayScored == 0){
+      //add home team clean sheets
+      for(playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))){
+        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
+        switch (player) {
+            case (null) {  };
+            case (?actualPlayer) {
+              let cleanSheetEvent: T.PlayerEventData = {
+                fixtureId = fixtureId;
+                playerId = playerId;
+                eventType = 5;
+                eventStartMinute = 90;
+                eventEndMinute = 90;
+                teamId = actualPlayer.teamId;
+                position = actualPlayer.position;
+              };
+              allPlayerEventsBuffer.add(cleanSheetEvent);
+            };
+        };
+      };
+    } else {
+      //add home team conceded events
+      for (goal in Iter.fromArray(awayTeamGoals)) {
+        for(playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))){
+          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p: DTOs.PlayerDTO): Bool { return p.id == playerId; });
+          switch (player) {
+              case (null) {  };
+              case (?actualPlayer) {
+                let concededEvent: T.PlayerEventData = {
+                  fixtureId = goal.fixtureId;
+                  playerId = actualPlayer.id;
+                  eventType = 3;
+                  eventStartMinute = goal.eventStartMinute;
+                  eventEndMinute = goal.eventStartMinute;
+                  teamId = actualPlayer.teamId;
+                  position = actualPlayer.position;
+                };
+                allPlayerEventsBuffer.add(concededEvent);
+              };
+          };
+        };
+      };
+    };
+
+    let fixtureEvents = Buffer.toArray(allPlayerEventsBuffer);
+    await seasonManager.fixtureConsensusReached(fixture.seasonId, fixture.gameweek, fixtureId, fixtureEvents);
+    return #ok();
+  };
+
+  public shared func executeAddInitialFixtures(seasonId: T.SeasonId, seasonFixtures: [T.Fixture]) : async Result.Result<(), T.Error>{
+    await seasonManager.addInitialFixtures(seasonId, seasonFixtures);
+    return #ok();
+  };
+
+  public shared func executeRescheduleFixture(fixtureId: T.FixtureId, currentFixtureGameweek: T.GameweekNumber, updatedFixtureGameweek: T.GameweekNumber, updatedFixtureDate: Int) : async Result.Result<(), T.Error>{
+    await seasonManager.rescheduleFixture(fixtureId, currentFixtureGameweek, updatedFixtureGameweek, updatedFixtureDate);
+    return #ok();
+  };
+
+  public shared func executeTransferPlayer(playerId: T.PlayerId, newTeamId: T.TeamId) : async Result.Result<(), T.Error>{
+    await playerCanister.transferPlayer(playerId, newTeamId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+    return #ok();
+  };
+
+  public shared func executeLoanPlayer(playerId: T.PlayerId, loanTeamId: T.TeamId, loanEndDate: Int) : async Result.Result<(), T.Error>{
+    await playerCanister.loanPlayer(playerId, loanTeamId, loanEndDate, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+    return #ok();
+  };
+
+  public shared func executeRecallPlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    await playerCanister.recallPlayer(playerId);
+    return #ok();
+  };
+
+  public shared func executeCreatePlayer(teamId: T.TeamId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, value: Nat, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    await playerCanister.createPlayer(teamId, position, firstName, lastName, shirtNumber, value, dateOfBirth, nationality);
+    return #ok();
+  };
+
+  public shared func executeUpdatePlayer(playerId: T.PlayerId, position: Nat8, firstName: Text, lastName: Text, shirtNumber: Nat8, dateOfBirth: Int, nationality: Text) : async Result.Result<(), T.Error>{
+    await playerCanister.updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality);
+    return #ok();
+  };
+
+  public shared func executeSetPlayerInjury(playerId: T.PlayerId, description: Text, expectedEndDate: Int) : async Result.Result<(), T.Error>{
+    await playerCanister.setPlayerInjury(playerId, description, expectedEndDate);
+    return #ok();
+  };
+
+  public shared func executeRetirePlayer(playerId: T.PlayerId, retirementDate: Int) : async Result.Result<(), T.Error>{
+    await playerCanister.retirePlayer(playerId, retirementDate);
+    return #ok();
+  };
+
+  public shared func executeUnretirePlayer(playerId: T.PlayerId) : async Result.Result<(), T.Error>{
+    await playerCanister.unretirePlayer(playerId);
+    return #ok();
+  };
+
+  public shared func executePromoteFormerTeam(teamId: T.TeamId) : async Result.Result<(), T.Error>{
+    await teamsInstance.promoteFormerTeam(teamId);
+    return #ok();
+  };
+
+  public shared func executePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+   await teamsInstance.promoteNewTeam(name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour);
+   return #ok();
+  };
+
+  public shared func executeUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
+    await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour);
+    return #ok();
+  };
+
+  //Private functions passed to class instances
+  private func resetTransfers(): async () {
+    await fantasyTeamsInstance.resetTransfers();
+  };
+
+  private func calculatePlayerScores(activeSeason: T.SeasonId, activeGameweek: T.GameweekNumber, fixture: T.Fixture): async T.Fixture {
+    let adjFixtures = await playerCanister.calculatePlayerScores(activeSeason, activeGameweek, fixture); 
+    return adjFixtures;
+  };  
+
+  private func distributeRewards(): async () {
+    await rewardsInstance.distributeRewards();
+  };
+
+  private func settleUserBets(): async (){
+    await privateLeaguesInstance.settleUserBets();
+  };
+
+  private func snapshotGameweek(seasonId: Nat16, gameweek: Nat8): async (){
+    await fantasyTeamsInstance.snapshotGameweek(seasonId, gameweek);
+  };
+
+  private func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8) : async (){
+    return await fantasyTeamsInstance.calculateFantasyTeamScores(seasonId, gameweek);
+  };
+
+  private func resetFantasyTeams(): async () {
+    await fantasyTeamsInstance.resetFantasyTeams();
+  };
+
+  private func updateCacheHash(category: Text): async (){
+    let hashBuffer = Buffer.fromArray<T.DataCache>([]);
+
+      for(hashObj in Iter.fromList(dataCacheHashes)){
+        if(hashObj.category == category){
+          let randomHash = await SHA224.getRandomHash();
+          hashBuffer.add({ category = hashObj.category; hash = randomHash; });
+        } else { hashBuffer.add(hashObj); };
+      };
+
+      dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+  };
+
+  private func updatePlayerEventDataCache(): async (){
+    await playerCanister.updatePlayerEventDataCache();
+  };
+
+  private func getGameweekFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber): [T.Fixture] {
+    return seasonManager.getGameweekFixtures(seasonId, gameweek);
+  }; 
+
+  public shared query ({caller}) func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
+      return fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
+  };
+
+  public shared query func getDataHashes() : async [T.DataCache] {
+    return List.toArray(dataCacheHashes);
+  };
+  
+  private stable var stable_timers: [T.TimerInfo] = [];
+
+  //intialise season manager
+  let seasonManager = SeasonManager.SeasonManager(
+    resetTransfers, 
+    calculatePlayerScores, 
+    distributeRewards, 
+    settleUserBets, 
+    snapshotGameweek,  
+    calculateFantasyTeamScores, 
+    getAllPlayersMap,
+    resetFantasyTeams,
+    updateCacheHash,
+    stable_timers,
+    updatePlayerEventDataCache);
+    
+  seasonManager.setTimerBackupFunction(setAndBackupTimer);
+  fantasyTeamsInstance.setGetFixturesFunction(getGameweekFixtures);
+  
+  //stable variable backup
+  private stable var stable_profiles: [(Text, T.Profile)] = [];
+  private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
+  private stable var stable_active_season_id : Nat16 = 0;
+  private stable var stable_active_gameweek : Nat8 = 0;
+  private stable var stable_active_fixtures : [T.Fixture] = [];
+  private stable var stable_next_fixture_id : Nat32 = 0;
+  private stable var stable_next_season_id : Nat16 = 0;
+  private stable var stable_seasons : [T.Season] = [];
+  private stable var stable_teams : [T.Team] = [];
+  private stable var stable_relegated_teams : [T.Team] = [];
+  private stable var stable_next_team_id : Nat16 = 0;
+  private stable var stable_max_votes_per_user : Nat64 = 0;
+  private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
+  private stable var stable_monthly_leaderboards: [(T.SeasonId, List.List<T.ClubLeaderboard>)] = [];
+  private stable var stable_data_cache_hashes: [T.DataCache] = [];
+  
+  system func preupgrade() {
+
+    stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
+    stable_profiles := profilesInstance.getProfiles();
+    stable_active_season_id := seasonManager.getActiveSeasonId();
+    stable_active_gameweek := seasonManager.getActiveGameweek();
+    stable_active_fixtures := seasonManager.getActiveFixtures();
+    stable_next_fixture_id := seasonManager.getNextFixtureId();
+    stable_next_season_id := seasonManager.getNextSeasonId();
+    stable_seasons := seasonManager.getSeasons();
+    stable_teams := teamsInstance.getTeams();
+    stable_relegated_teams := teamsInstance.getRelegatedTeams();
+    stable_next_team_id := teamsInstance.getNextTeamId();
+    stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
+    stable_monthly_leaderboards := fantasyTeamsInstance.getMonthlyLeaderboards();
+    stable_data_cache_hashes := List.toArray(dataCacheHashes);
+  };
+
+  system func postupgrade() {
+    profilesInstance.setData(stable_profiles);
+    fantasyTeamsInstance.setData(stable_fantasy_teams);
+    seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
+    teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
+    fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
+    fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
+    dataCacheHashes := List.fromArray(stable_data_cache_hashes);
+    recreateTimers();
+  };
+  
+  private func recreateTimers(){
+      let currentTime = Time.now();
+      for (timerInfo in Iter.fromArray(stable_timers)) {
+          let remainingDuration = timerInfo.triggerTime - currentTime;
+
+          if (remainingDuration > 0) { 
+              let duration: Timer.Duration =  #nanoseconds(Int.abs(remainingDuration));
+
+              switch(timerInfo.callbackName) {
+                  case "gameweekBeginExpired" {
+                      Debug.print(debug_show "recreate gameweekBeginExpired");
+                      ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
+                  };
+                  case "gameKickOffExpired" {
+                      Debug.print(debug_show "recreate gameKickOffExpired");
+                      ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
+                  };
+                  case "gameCompletedExpired" {
+                      Debug.print(debug_show "recreate gameCompletedExpired");
+                      ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
+                  };
+                  case _ {
+                      Debug.print(debug_show "recreate unknown");
+                      ignore Timer.setTimer(duration, defaultCallback);
+                  }
+              };
+          }
+      }
+  };
+
+  /* Remove these functions post-sns */
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, allPlayerEvents: [T.PlayerEventData]) : async (){
     
     assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB LIVE
+    //assert Principal.toText(caller) == "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"; JB LOCAL
+
     let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
     
     if(not validPlayerEvents){
-      return;
-    };
-
-    if(governanceInstance.getVotingPower(Principal.toText(caller)) == 0){
       return;
     };
 
@@ -816,308 +1619,16 @@ actor Self {
       };
     };
 
-    await governanceInstance.submitPlayerEventData(Principal.toText(caller), fixtureId, Buffer.toArray(allPlayerEventsBuffer));
+    await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
   };
 
-  private func validatePlayerEvents(playerEvents: [T.PlayerEventData]) : Bool {
-
-    let eventsBelow0 =  Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
-        return event.eventStartMinute < 0;
-    });
-
-    if(Array.size(eventsBelow0) > 0){
-      return false;
-    };
-
-    let eventsAbove90 =  Array.filter<T.PlayerEventData>(playerEvents, func(event: T.PlayerEventData) : Bool {
-      return event.eventStartMinute > 90;
-    });
-
-    if(Array.size(eventsAbove90) > 0){
-      return false;
-    };
-
-    let playerEventsMap: TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>> = TrieMap.TrieMap<T.PlayerId, List.List<T.PlayerEventData>>(Utilities.eqNat16, Utilities.hashNat16);
-
-    
-    for (playerEvent in Iter.fromArray(playerEvents)) {
-        switch (playerEventsMap.get(playerEvent.playerId)) {
-            case (null) { };
-            case (?existingEvents) {
-                playerEventsMap.put(playerEvent.playerId, List.push<T.PlayerEventData>(playerEvent, existingEvents));
-            };
-        }
-    };
-    
-    for ((playerId, events) in playerEventsMap.entries()) { 
-      let redCards = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
-          return event.eventType == 9; // Red Card
-      });
-
-      if (List.size<T.PlayerEventData>(redCards) > 1) {
-          return false;
-      };
-
-      let yellowCards = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
-          return event.eventType == 8; // Yellow Card
-      });
-
-      if (List.size<T.PlayerEventData>(yellowCards) > 2) {
-          return false;
-      };
-
-      if (List.size<T.PlayerEventData>(yellowCards) == 2 and List.size<T.PlayerEventData>(redCards) != 1) {
-          return false;
-      };
-
-      let assists = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
-          return event.eventType == 2; // Goal Assisted
-      });
-
-      for (assist in Iter.fromList(assists)) {
-          let goalsAtSameMinute = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
-              return event.eventType == 1 and event.eventStartMinute == assist.eventStartMinute; // Goal Scored at the same minute
-          });
-
-          if (List.size<T.PlayerEventData>(goalsAtSameMinute) == 0) {
-              return false;
-          }
-      };
-
-        let penaltySaves = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
-            return event.eventType == 6; // Penalty Saved
-        });
-
-        for (penaltySave in Iter.fromList(penaltySaves)) {
-            let penaltyMissesAtSameMinute = List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData) : Bool {
-                return event.eventType == 7 and event.eventStartMinute == penaltySave.eventStartMinute; // Penalty Missed at the same minute
-            });
-
-            if (List.size<T.PlayerEventData>(penaltyMissesAtSameMinute) == 0) {
-                return false;
-            }
-        };
-    };
-
-    return true;
+  private func finaliseFixture(seasonId: T.SeasonId, gameweekNumber: T.GameweekNumber, fixtureId: T.FixtureId, events: [T.PlayerEventData]): async (){
+    await seasonManager.fixtureConsensusReached(seasonId, gameweekNumber, fixtureId, events);
   };
 
-  private func resetTransfers(): async () {
-    await fantasyTeamsInstance.resetTransfers();
-  };
-
-  private func calculatePlayerScores(activeSeason: T.SeasonId, activeGameweek: T.GameweekNumber, fixture: T.Fixture): async T.Fixture {
-    let adjFixtures = await playerCanister.calculatePlayerScores(activeSeason, activeGameweek, fixture); 
-    return adjFixtures;
-  };  
-
-  private func getConsensusPlayerEventData(gameweekId: Nat8, fixtureId: Nat32) : async List.List<T.PlayerEventData>{
-    return await governanceInstance.getConsensusPlayerEventData(gameweekId, fixtureId);
-  };
-
-  private func distributeRewards(): async () {
-    await rewardsInstance.distributeRewards();
-  };
-
-  private func settleUserBets(): async (){
-    await privateLeaguesInstance.settleUserBets();
-  };
-
-  private func revaluePlayers(activeSeasonId: Nat16, activeGameweek: Nat8): async (){
-    let revaluedPlayers = await governanceInstance.getRevaluedPlayers(activeSeasonId, activeGameweek);
-    await playerCanister.revaluePlayers(revaluedPlayers);
-  };
-
-  private func snapshotGameweek(seasonId: Nat16, gameweek: Nat8): async (){
-    await fantasyTeamsInstance.snapshotGameweek(seasonId, gameweek);
-  };
-
-  private func calculateFantasyTeamScores(seasonId: Nat16, gameweek: Nat8) : async (){
-    return await fantasyTeamsInstance.calculateFantasyTeamScores(seasonId, gameweek);
-  };
-
-  private func resetFantasyTeams(): async () {
-    await fantasyTeamsInstance.resetFantasyTeams();
-  };
-
-  private func updateCacheHash(category: Text): async (){
-    await updateHashForCategory(category);
-  };
-
-  private func updatePlayerEventDataCache(): async (){
-    await playerCanister.updatePlayerEventDataCache();
-  };
-
-  private func getGameweekFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber): [T.Fixture] {
-    return seasonManager.getGameweekFixtures(seasonId, gameweek);
-  }; 
-
-  private func mintWeeklyRewardsPool(): async () {
-    //IMPLEMENT
-  };
-
-  private func mintAnnualRewardsPool(): async () {
-    //IMPLEMENT
-  };
-
-  public shared query ({caller}) func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
-      return fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
-  };
-
-  public shared query func getDataHashes() : async [T.DataCache] {
-    return List.toArray(dataCacheHashes);
-  };
-
-  public func updateHashForCategory(category: Text): async () {
-    
-      let hashBuffer = Buffer.fromArray<T.DataCache>([]);
-
-      for(hashObj in Iter.fromList(dataCacheHashes)){
-        if(hashObj.category == category){
-          let randomHash = await SHA224.getRandomHash();
-          hashBuffer.add({ category = hashObj.category; hash = randomHash; });
-        } else { hashBuffer.add(hashObj); };
-      };
-
-      dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
-  };
-  
-  //intialise season manager
-  let seasonManager = SeasonManager.SeasonManager(
-    resetTransfers, 
-    calculatePlayerScores, 
-    distributeRewards, 
-    settleUserBets, 
-    revaluePlayers, 
-    snapshotGameweek, 
-    mintWeeklyRewardsPool, 
-    mintAnnualRewardsPool, 
-    calculateFantasyTeamScores, 
-    getConsensusPlayerEventData,
-    getAllPlayersMap,
-    resetFantasyTeams,
-    updateCacheHash,
-    governanceInstance.getEventDataVotePeriod(),
-    stable_timers,
-    updatePlayerEventDataCache);
-    
-  governanceInstance.setFixtureFunctions(addInitialFixtures, rescheduleFixture);
-  governanceInstance.setTimerBackupFunction(setAndBackupTimer);
-  seasonManager.setTimerBackupFunction(setAndBackupTimer);
-  governanceInstance.setFinaliseFixtureFunction(finaliseFixture);
-  fantasyTeamsInstance.setGetFixturesFunction(getGameweekFixtures);
-  
-  //stable variable backup
-  private stable var stable_profiles: [(Text, T.Profile)] = [];
-  private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
-  private stable var stable_active_season_id : Nat16 = 0;
-  private stable var stable_active_gameweek : Nat8 = 0;
-  private stable var stable_fixture_data_submissions: [(T.FixtureId, List.List<T.DataSubmission>)] = [];
-  private stable var stable_player_revaluation_submissions: [(T.SeasonId, (T.GameweekNumber, (T.PlayerId, List.List<T.PlayerValuationSubmission>)))] = [];
-  private stable var stable_proposals: [T.Proposal] = [];
-  private stable var stable_transfers_allowed : Bool = true; //CAN REMOVE
-  private stable var stable_active_fixtures : [T.Fixture] = [];
-  private stable var stable_next_fixture_id : Nat32 = 0;
-  private stable var stable_next_season_id : Nat16 = 0;
-  private stable var stable_seasons : [T.Season] = [];
-  private stable var stable_teams : [T.Team] = [];
-  private stable var stable_relegated_teams : [T.Team] = [];
-  private stable var stable_next_team_id : Nat16 = 0;
-  private stable var stable_event_data_vote_period : Int = 0;
-  private stable var stable_event_data_vote_threshold : Nat64 = 0;
-  private stable var stable_revaluation_vote_threshold : Nat64 = 0;
-  private stable var stable_proposal_vote_threshold : Nat64 = 0;
-  private stable var stable_max_votes_per_user : Nat64 = 0;
-  private stable var stable_proposal_submission_e8_fee : Nat64 = 0;
-  private stable var stable_season_leaderboards: [(Nat16, T.SeasonLeaderboards)] = [];
-  private stable var stable_consensus_fixture_data: [(T.FixtureId, T.ConsensusData)] = [];
-  private stable var stable_monthly_leaderboards: [(T.SeasonId, List.List<T.ClubLeaderboard>)] = [];
-  private stable var stable_data_cache_hashes: [T.DataCache] = [];
-  
-  system func preupgrade() {
-
-    stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
-    stable_profiles := profilesInstance.getProfiles();
-    stable_active_season_id := seasonManager.getActiveSeasonId();
-    stable_active_gameweek := seasonManager.getActiveGameweek();
-    stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
-    stable_player_revaluation_submissions := governanceInstance.getPlayerRevaluationSubmissions();
-    stable_proposals := governanceInstance.getProposals();
-    stable_transfers_allowed := true;
-    stable_active_fixtures := seasonManager.getActiveFixtures();
-    stable_next_fixture_id := seasonManager.getNextFixtureId();
-    stable_next_season_id := seasonManager.getNextSeasonId();
-    stable_seasons := seasonManager.getSeasons();
-    stable_teams := teamsInstance.getTeams();
-    stable_relegated_teams := teamsInstance.getRelegatedTeams();
-    stable_next_team_id := teamsInstance.getNextTeamId();
-    stable_event_data_vote_period := governanceInstance.getEventDataVotePeriod();
-    stable_event_data_vote_threshold := governanceInstance.getEventDataVoteThreshold();
-    stable_revaluation_vote_threshold := governanceInstance.getRevaluationVoteThreshold();
-    stable_proposal_vote_threshold := governanceInstance.getProposalVoteThreshold();
-    stable_max_votes_per_user := governanceInstance.getMaxVotesPerUser();
-    stable_proposal_submission_e8_fee := governanceInstance.getProposalSubmissione8Fee();
-    stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
-    stable_consensus_fixture_data := governanceInstance.getConsensusFixtureData();
-    stable_monthly_leaderboards := fantasyTeamsInstance.getMonthlyLeaderboards();
-    stable_data_cache_hashes := List.toArray(dataCacheHashes);
-  };
-
-  system func postupgrade() {
-    profilesInstance.setData(stable_profiles);
-    fantasyTeamsInstance.setData(stable_fantasy_teams);
-    seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
-    stable_fixture_data_submissions := governanceInstance.getFixtureDataSubmissions();
-    teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
-    governanceInstance.setData(stable_fixture_data_submissions, stable_player_revaluation_submissions, stable_proposals, stable_consensus_fixture_data);
-    governanceInstance.setEventDataVotePeriod(stable_event_data_vote_period);
-    governanceInstance.setEventDataVoteThreshold(stable_event_data_vote_threshold);
-    governanceInstance.setRevaluationVoteThreshold(stable_revaluation_vote_threshold);
-    governanceInstance.setProposalVoteThreshold(stable_proposal_vote_threshold);
-    governanceInstance.setMaxVotesPerUser(stable_max_votes_per_user);
-    governanceInstance.setProposalSubmissione8Fee(stable_proposal_submission_e8_fee);
-    fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
-    fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
-    dataCacheHashes := List.fromArray(stable_data_cache_hashes);
-    recreateTimers();
-  };
-  
-  private func recreateTimers(){
-      let currentTime = Time.now();
-      for (timerInfo in Iter.fromArray(stable_timers)) {
-          let remainingDuration = timerInfo.triggerTime - currentTime;
-
-          if (remainingDuration > 0) { 
-              let duration: Timer.Duration =  #nanoseconds(Int.abs(remainingDuration));
-
-              switch(timerInfo.callbackName) {
-                  case "proposalExpired" {
-                      Debug.print(debug_show "recreate proposalExpired");
-                      ignore Timer.setTimer(duration, proposalExpiredCallback);
-                  };
-                  case "gameweekBeginExpired" {
-                      Debug.print(debug_show "recreate gameweekBeginExpired");
-                      ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
-                  };
-                  case "gameKickOffExpired" {
-                      Debug.print(debug_show "recreate gameKickOffExpired");
-                      ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
-                  };
-                  case "gameCompletedExpired" {
-                      Debug.print(debug_show "recreate gameCompletedExpired");
-                      ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
-                  };
-                  case "votingPeriodOverExpired" {
-                      Debug.print(debug_show "recreate votingPeriodOverExpired");
-                      ignore Timer.setTimer(duration, votingPeriodOverExpiredCallback);
-                  };
-                  case _ {
-                      Debug.print(debug_show "recreate unknown");
-                      ignore Timer.setTimer(duration, defaultCallback);
-                  }
-              };
-          }
-      }
+  public shared query ({caller}) func getValidatableFixtures() : async [T.Fixture]{
+    assert not Principal.isAnonymous(caller);
+    return seasonManager.getValidatableFixtures();
   };
 
   public func reuploadTeams() : async (){

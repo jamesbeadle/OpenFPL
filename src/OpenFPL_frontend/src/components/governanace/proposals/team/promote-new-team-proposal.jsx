@@ -1,20 +1,16 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { DataContext } from "../../../../contexts/DataContext";
 
-const UpdateTeamProposal = ({ sendDataToParent }) => {
-    const { teams } = useContext(DataContext);
-
-    const [teamId, setTeamId] = useState("");
+const PromoteNewTeamProposal = ({ sendDataToParent }) => {
     const [name, setName] = useState("");
     const [friendlyName, setFriendlyName] = useState("");
     const [abbreviatedName, setAbbreviatedName] = useState("");
     const [primaryHexColour, setPrimaryHexColour] = useState("");
     const [secondaryHexColour, setSecondaryHexColour] = useState("");
     const [thirdHexColour, setThirdHexColour] = useState("");
+
     useEffect(() => {
         sendDataToParent({
-            teamId,
             name,
             friendlyName,
             abbreviatedName,
@@ -22,33 +18,10 @@ const UpdateTeamProposal = ({ sendDataToParent }) => {
             secondaryHexColour,
             thirdHexColour
         });
-    }, [teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour]);
+    }, [name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour]);
 
-    useEffect(() => {
-        if (teamId) {
-            const selectedTeam = teams.find(team => team.id === teamId);
-            if (selectedTeam) {
-                setName(selectedTeam.name);
-                setFriendlyName(selectedTeam.friendlyName);
-                setAbbreviatedName(selectedTeam.abbreviatedName);
-                setPrimaryHexColour(selectedTeam.primaryHexColour);
-                setSecondaryHexColour(selectedTeam.secondaryHexColour);
-                setThirdHexColour(selectedTeam.thirdHexColour);
-            }
-        }
-    }, [teamId, teams]);
     return (
         <div>
-            <Form.Group className="mb-3">
-                <Form.Label>Team</Form.Label>
-                <Form.Control as="select" value={teamId} onChange={e => setTeamId(e.target.value)}>
-                    <option disabled value="">Select a team to update</option>
-                    {teams.map((team, index) => (
-                        <option key={index} value={team.id}>{team.name}</option>
-                    ))}
-                </Form.Control>
-            </Form.Group>
-
             <Form.Group className="mb-3">
                 <Form.Label>Team Name</Form.Label>
                 <Form.Control type="text" value={name} onChange={e => setName(e.target.value)} />
@@ -82,4 +55,4 @@ const UpdateTeamProposal = ({ sendDataToParent }) => {
     );
 };
 
-export default UpdateTeamProposal;
+export default PromoteNewTeamProposal;

@@ -62,12 +62,3 @@ const MyNavbar = () => {
 };
 
 export default MyNavbar;
-
-
-/*
-
-Links to add in
-
-              
-
-*/
