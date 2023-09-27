@@ -85,7 +85,7 @@ const PickTeam = () => {
         const playerIdArray = Object.values(fantasyTeamData.playerIds);
 
         const teamPlayers = playerIdArray
-          .map(id => players.find(player => player.id === id))
+          .map(id => players.filter(player => player.teamId > 0).find(player => player.id === id))
           .filter(Boolean); 
         
         const roundedValue = (Number(fantasyTeamData.bankBalance) / 4).toFixed(2);
