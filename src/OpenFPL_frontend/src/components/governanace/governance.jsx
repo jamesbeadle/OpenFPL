@@ -19,6 +19,7 @@ const Governance = () => {
   const [fixtureValidationData, setFixtureValidationData] = useState([]);
   const navigate = useNavigate();
 
+  /* Implement PostSNS
   useEffect(() => {
     if (activeTab === "Proposals") {
       fetchViewData("Proposals");
@@ -26,7 +27,7 @@ const Governance = () => {
       fetchViewData("Fixture Validation");
     }
   }, [proposalPageNum, fixtureValidationPageNum, activeTab]);
-
+  */
 
   const handleProposalClick = (proposal) => {
     setActiveModalProposal(proposal);
@@ -111,6 +112,11 @@ const Governance = () => {
   const loadAddFixtureData = () => {
     navigate('/add-fixture-data');  
   };
+
+  return (
+    <Container className="flex-grow-1 my-5">
+      <h3 className='mt-5'>SNS Coming Soon</h3>
+    </Container>);
 
   return (
     isLoading ? (
