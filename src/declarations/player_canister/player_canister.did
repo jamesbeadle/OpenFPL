@@ -1,9 +1,18 @@
 type ValueHistory = 
  record {
    gameweek: nat8;
-   newValue: float64;
-   oldValue: float64;
+   newValue: nat;
+   oldValue: nat;
    seasonId: nat16;
+ };
+type TransferHistory = 
+ record {
+   fromTeam: TeamId;
+   loanEndDate: int;
+   toTeam: TeamId;
+   transferDate: int;
+   transferGameweek: GameweekNumber;
+   transferSeason: SeasonId;
  };
 type TeamId = nat16;
 type SeasonId = nat16;
@@ -105,12 +114,18 @@ type Player =
    seasons: List_1;
    shirtNumber: nat8;
    teamId: TeamId;
+   transferHistory: List_4;
    value: nat;
-   valueHistory: List_4;
+   valueHistory: List_5;
  };
-type List_4 = 
+type List_5 = 
  opt record {
        ValueHistory;
+       List_5;
+     };
+type List_4 = 
+ opt record {
+       TransferHistory;
        List_4;
      };
 type List_3 = 
@@ -137,6 +152,7 @@ type InjuryHistory =
  record {
    description: text;
    expectedEndDate: int;
+   injuryStartDate: int;
  };
 type GameweekNumber = nat8;
 type FixtureId = nat32;
@@ -160,6 +176,7 @@ type DataCache =
    hash: text;
  };
 service : {
+  addAllPlayers: () -> ();
   calculatePlayerScores: (nat16, nat8, Fixture) -> (Fixture);
   createPlayer: (TeamId, nat8, text, text, nat8, nat, int, text) -> ();
   getActivePlayers: () -> (vec PlayerDTO) query;

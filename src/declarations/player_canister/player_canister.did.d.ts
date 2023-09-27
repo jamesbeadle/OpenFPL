@@ -19,23 +19,26 @@ export type FixtureId = number;
 export type GameweekNumber = number;
 export interface InjuryHistory {
   'description' : string,
+  'injuryStartDate' : bigint,
   'expectedEndDate' : bigint,
 }
 export type List = [] | [[InjuryHistory, List]];
 export type List_1 = [] | [[PlayerSeason, List_1]];
 export type List_2 = [] | [[PlayerGameweek, List_2]];
 export type List_3 = [] | [[PlayerEventData, List_3]];
-export type List_4 = [] | [[ValueHistory, List_4]];
+export type List_4 = [] | [[TransferHistory, List_4]];
+export type List_5 = [] | [[ValueHistory, List_5]];
 export interface Player {
   'id' : PlayerId,
   'value' : bigint,
   'seasons' : List_1,
   'dateOfBirth' : bigint,
   'injuryHistory' : List,
+  'transferHistory' : List_4,
   'isInjured' : boolean,
   'nationality' : string,
   'retirementDate' : bigint,
-  'valueHistory' : List_4,
+  'valueHistory' : List_5,
   'shirtNumber' : number,
   'teamId' : TeamId,
   'position' : number,
@@ -117,13 +120,22 @@ export interface PlayerScoreDTO {
 export interface PlayerSeason { 'id' : number, 'gameweeks' : List_2 }
 export type SeasonId = number;
 export type TeamId = number;
+export interface TransferHistory {
+  'transferDate' : bigint,
+  'loanEndDate' : bigint,
+  'toTeam' : TeamId,
+  'transferSeason' : SeasonId,
+  'fromTeam' : TeamId,
+  'transferGameweek' : GameweekNumber,
+}
 export interface ValueHistory {
-  'oldValue' : number,
-  'newValue' : number,
+  'oldValue' : bigint,
+  'newValue' : bigint,
   'seasonId' : number,
   'gameweek' : number,
 }
 export interface _SERVICE {
+  'addAllPlayers' : ActorMethod<[], undefined>,
   'calculatePlayerScores' : ActorMethod<[number, number, Fixture], Fixture>,
   'createPlayer' : ActorMethod<
     [TeamId, number, string, string, number, bigint, bigint, string],

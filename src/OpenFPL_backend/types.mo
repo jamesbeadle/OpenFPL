@@ -87,22 +87,20 @@ module Types{
         parentTeamId: Nat16;
         isInjured: Bool;
         injuryHistory: List.List<InjuryHistory>;
-        //transferHistory: List.List<TransferHistory>;
+        transferHistory: List.List<TransferHistory>;
         retirementDate: Int;
     };
 
     public type ValueHistory = {
         seasonId: Nat16;
         gameweek: Nat8;
-        oldValue: Float;
-        newValue: Float;
-        //oldValue: Nat;
-        //newValue: Nat;
+        oldValue: Nat;
+        newValue: Nat;
     };
 
     public type InjuryHistory = {
         description: Text;
-        //injuryStartDate: Int;
+        injuryStartDate: Int;
         expectedEndDate: Int;
     };
 

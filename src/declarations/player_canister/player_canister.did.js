@@ -4,6 +4,7 @@ export const idlFactory = ({ IDL }) => {
   const List_2 = IDL.Rec();
   const List_3 = IDL.Rec();
   const List_4 = IDL.Rec();
+  const List_5 = IDL.Rec();
   const TeamId = IDL.Nat16;
   const SeasonId = IDL.Nat16;
   const FixtureId = IDL.Nat32;
@@ -65,26 +66,37 @@ export const idlFactory = ({ IDL }) => {
   List_1.fill(IDL.Opt(IDL.Tuple(PlayerSeason, List_1)));
   const InjuryHistory = IDL.Record({
     'description' : IDL.Text,
+    'injuryStartDate' : IDL.Int,
     'expectedEndDate' : IDL.Int,
   });
   List.fill(IDL.Opt(IDL.Tuple(InjuryHistory, List)));
+  const TransferHistory = IDL.Record({
+    'transferDate' : IDL.Int,
+    'loanEndDate' : IDL.Int,
+    'toTeam' : TeamId,
+    'transferSeason' : SeasonId,
+    'fromTeam' : TeamId,
+    'transferGameweek' : GameweekNumber,
+  });
+  List_4.fill(IDL.Opt(IDL.Tuple(TransferHistory, List_4)));
   const ValueHistory = IDL.Record({
-    'oldValue' : IDL.Float64,
-    'newValue' : IDL.Float64,
+    'oldValue' : IDL.Nat,
+    'newValue' : IDL.Nat,
     'seasonId' : IDL.Nat16,
     'gameweek' : IDL.Nat8,
   });
-  List_4.fill(IDL.Opt(IDL.Tuple(ValueHistory, List_4)));
+  List_5.fill(IDL.Opt(IDL.Tuple(ValueHistory, List_5)));
   const Player = IDL.Record({
     'id' : PlayerId,
     'value' : IDL.Nat,
     'seasons' : List_1,
     'dateOfBirth' : IDL.Int,
     'injuryHistory' : List,
+    'transferHistory' : List_4,
     'isInjured' : IDL.Bool,
     'nationality' : IDL.Text,
     'retirementDate' : IDL.Int,
-    'valueHistory' : List_4,
+    'valueHistory' : List_5,
     'shirtNumber' : IDL.Nat8,
     'teamId' : TeamId,
     'position' : IDL.Nat8,
@@ -127,6 +139,7 @@ export const idlFactory = ({ IDL }) => {
     'points' : IDL.Int16,
   });
   return IDL.Service({
+    'addAllPlayers' : IDL.Func([], [], []),
     'calculatePlayerScores' : IDL.Func(
         [IDL.Nat16, IDL.Nat8, Fixture],
         [Fixture],
