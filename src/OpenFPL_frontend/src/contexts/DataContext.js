@@ -104,21 +104,7 @@ export const DataProvider = ({ children }) => {
 
     const fetchAllPlayerEventsData = async (playerEventsHash) => {
         try {
-
-            var gameweek = Number(systemState.activeGameweek);
-            const kickOffs = fixtures.filter(x => x.gameweek === gameweek).map(fixture => computeTimeLeft(Number(fixture.kickOff)));
-            
-            const kickOffsInMillis = kickOffs.map(obj => 
-                obj.days * 24 * 60 * 60 * 1000 + 
-                obj.hours * 60 * 60 * 1000 + 
-                obj.minutes * 60 * 1000 + 
-                obj.seconds * 1000
-            );
-
-            const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
-            if (timeUntilGameweekBegins > 0 && gameweek > 1) {
-                gameweek -= 1;
-            }
+            var gameweek = Number(systemState.focusGameweek);
             
             const allPlayersData = await player_canister.getPlayerDetailsForGameweek(systemState.activeSeason.id, gameweek);
             setPlayerEvents(allPlayersData);
@@ -275,20 +261,7 @@ export const DataProvider = ({ children }) => {
 
     const fetchWeeklyLeaderboard = async (hashObj) => {
         try {
-            var gameweek = Number(systemState.activeGameweek);
-            const kickOffs = fixtures.filter(x => x.gameweek === gameweek).map(fixture => computeTimeLeft(Number(fixture.kickOff)));
-            
-            const kickOffsInMillis = kickOffs.map(obj => 
-                obj.days * 24 * 60 * 60 * 1000 + 
-                obj.hours * 60 * 60 * 1000 + 
-                obj.minutes * 60 * 1000 + 
-                obj.seconds * 1000
-            );
-
-            const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
-            if (timeUntilGameweekBegins > 0 && gameweek > 1) {
-                gameweek -= 1;
-            }
+            var gameweek = Number(systemState.focusGameweek);
             
             const weeklyLeaderboardData = await open_fpl_backend.getWeeklyLeaderboardCache(Number(systemState.activeSeason.id), gameweek);
             

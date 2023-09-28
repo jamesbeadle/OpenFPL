@@ -136,12 +136,8 @@ actor Self {
         };
     };
     var activeGameweek = seasonManager.getActiveGameweek();
-    var focusGameweek: T.GameweekNumber = activeGameweek;
+    var focusGameweek = seasonManager.getInterestingGameweek();
         
-    if(earliestFixtureTime - oneHour > Time.now() and activeGameweek > 1){
-      focusGameweek := activeGameweek - 1;
-    };
-
     return {
       activeSeason = seasonManager.getActiveSeason();
       activeGameweek = activeGameweek;

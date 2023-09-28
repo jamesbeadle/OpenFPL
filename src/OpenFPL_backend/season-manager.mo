@@ -29,8 +29,9 @@ module {
     stable_timers: [T.TimerInfo],
     updatePlayerEventDataCache: () -> async ()) {
 
-    private var activeSeasonId: Nat16 = 1;
-    private var activeGameweek: Nat8 = 1;
+    private var activeSeasonId: T.SeasonId = 1;
+    private var activeGameweek: T.GameweekNumber = 1;
+    private var interestingGameweek: T.GameweekNumber = 6;
     
     //timer data
     private var activeFixtures: [T.Fixture] = [];
@@ -166,6 +167,9 @@ module {
             getGameweekNumber := activeGameweek;
         };
 
+        if(interestingGameweek < activeGameweek){
+            interestingGameweek := activeGameweek;
+        };
 
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
@@ -262,6 +266,10 @@ module {
 
     public func getActiveGameweek() : Nat8 {
         return activeGameweek;
+    };
+
+    public func getInterestingGameweek() : Nat8 {
+        return interestingGameweek;
     };
 
     public func getFixtures() : [T.Fixture] {

@@ -18,7 +18,6 @@ const Homepage = () => {
     const [weeklyTop10, setWeeklyTop10] = useState([]);
     const [filterGameweek, setFilterGameweek] = useState(systemState.activeGameweek);
     const [isActiveGameweek, setIsActiveGameweek] = useState(false);
-    const [shouldShowButton, setShouldShowButton] = useState(false);
     const [countdown, setCountdown] = useState(0);
 
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
@@ -35,7 +34,6 @@ const Homepage = () => {
             if (filterGameweek === 0) return;
 
             await updateCountdowns();
-            setButtonVisibility(currentGameweek);
             setIsLoading(false);
         };
         
@@ -102,24 +100,14 @@ const Homepage = () => {
     const handlePrevGameweek = () => {
         if (filterGameweek > 1) {
             setFilterGameweek(prevGameweek => prevGameweek - 1);
-            const newGameweek = filterGameweek - 1;
-            setButtonVisibility(newGameweek);
         }
       };
       
       const handleNextGameweek = () => {
         if (filterGameweek < 38) {
             setFilterGameweek(nextGameweek => nextGameweek + 1);
-        
-            const newGameweek = filterGameweek + 1;
-            setButtonVisibility(newGameweek);
         }
       };
-
-      const setButtonVisibility = (newGameweek) => {
-        const shouldBeVisible = !isLoading && isAuthenticated && (newGameweek < currentGameweek || (newGameweek === currentGameweek && isActiveGameweek));
-        setShouldShowButton(shouldBeVisible);
-    };
     
     const renderStatusBadge = (fixture) => {
         const currentTime = new Date().getTime();
@@ -257,12 +245,16 @@ const Homepage = () => {
     </tbody>
 </Table>
 
-                            { 
-                                shouldShowButton &&
-                                <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
-                                    <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${filterGameweek}`}>View Gameweek Points</Button>
-                                </div>
-                            }
+                            
+{
+  (filterGameweek <= systemState.activeGameweek && (systemState.focusGameweek == systemState.activeGameweek || filterGameweek < systemState.activeGameweek))
+  ? (
+    <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
+      <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${filterGameweek}`}>View Gameweek Points</Button>
+    </div>
+  )
+  : null
+}
                         </Card.Body>
                     </Card>
 
