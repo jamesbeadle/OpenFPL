@@ -49,8 +49,12 @@ const ClubLeaderboard = () => {
             setManagers(slicedData);
         }
         else{
-            const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
-            setManagers(leaderboardData);
+            try{
+                const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
+                setManagers(leaderboardData);    
+            } catch (error){
+                console.log(error);
+            };  
         }
     };
 

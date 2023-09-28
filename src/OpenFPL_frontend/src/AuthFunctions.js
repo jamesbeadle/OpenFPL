@@ -11,7 +11,6 @@ export const fetchFantasyTeam = async (authClient) => {
     return team;
   } catch (error) {
     console.error(error);
-    throw error;
   }
 }
 
@@ -22,6 +21,5 @@ export const fetchValidatableFixtures = async (authClient) => {
     return await open_fpl_backend.getValidatableFixtures();
   } catch (error) {
     console.error(error);
-    throw error;
   }
 }

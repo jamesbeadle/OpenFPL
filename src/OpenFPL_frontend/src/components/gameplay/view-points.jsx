@@ -43,36 +43,44 @@ const ViewPoints = () => {
     }, [playerEvents, teams]);
 
     const fetchViewData = async () => {
-        const fetchedFantasyTeam = await open_fpl_backend.getFantasyTeamForGameweek(manager, Number(season), Number(gameweek)); 
-        if(gameweek == systemState.focusGameweek){
-            const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
-            const playersInTeam = detailedPlayers.filter(player => fetchedFantasyTeam.playerIds.includes(player.id));
-        
-            setFantasyTeam({
-                ...fetchedFantasyTeam,
-                players: playersInTeam,
-            });
-        }
-        else
-        {
-            const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));    
-            const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
-            setFantasyTeam({
-                ...fetchedFantasyTeam,
-                players: detailedPlayers,
-            });
-        }
+        try{
+            
+            const fetchedFantasyTeam = await open_fpl_backend.getFantasyTeamForGameweek(manager, Number(season), Number(gameweek)); 
+            if(gameweek == systemState.focusGameweek){
+                const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
+                const playersInTeam = detailedPlayers.filter(player => fetchedFantasyTeam.playerIds.includes(player.id));
+            
+                setFantasyTeam({
+                    ...fetchedFantasyTeam,
+                    players: playersInTeam,
+                });
+            }
+            else
+            {
+                const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));    
+                const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
+                setFantasyTeam({
+                    ...fetchedFantasyTeam,
+                    players: detailedPlayers,
+                });
+            }
 
-        const profileData = await open_fpl_backend.getPublicProfileDTO(manager);
-        setProfile(profileData);
-        
-        if (profileData.profilePicture && profileData.profilePicture.length > 0) {
-            const blob = new Blob([profileData.profilePicture]);
-            const blobUrl = URL.createObjectURL(blob);
-            setProfilePicSrc(blobUrl);
-        } else {
-            setProfilePicSrc(ProfileImage);
-        }
+            const profileData = await open_fpl_backend.getPublicProfileDTO(manager);
+            setProfile(profileData);
+            
+            if (profileData.profilePicture && profileData.profilePicture.length > 0) {
+                const blob = new Blob([profileData.profilePicture]);
+                const blobUrl = URL.createObjectURL(blob);
+                setProfilePicSrc(blobUrl);
+            } else {
+                setProfilePicSrc(ProfileImage);
+            }
+
+
+
+        } catch (error){
+            console.log(error);
+        };
     };
 
     useEffect(() => {

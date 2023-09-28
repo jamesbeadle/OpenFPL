@@ -77,20 +77,23 @@ const Homepage = () => {
     };
 
     const updateManagerData = async () => {
-        const managerCountData = await open_fpl_backend.getTotalManagers();
-        setManagerCount(Number(managerCountData));
-
-        const seasonTop10Data = seasonLeaderboard.entries.slice(0, 10);
-        setSeasonTop10(seasonTop10Data);
-        
-        const weeklyTop10Data = weeklyLeaderboard.entries.slice(0, 10).map(entry => ({
-            ...entry,
-            seasonId: weeklyLeaderboard.seasonId,
-            gameweek: weeklyLeaderboard.gameweek
-        }));
-        
-        setWeeklyTop10(weeklyTop10Data);
-        
+        try {
+            const managerCountData = await open_fpl_backend.getTotalManagers();
+            setManagerCount(Number(managerCountData));
+    
+            const seasonTop10Data = seasonLeaderboard.entries.slice(0, 10);
+            setSeasonTop10(seasonTop10Data);
+            
+            const weeklyTop10Data = weeklyLeaderboard.entries.slice(0, 10).map(entry => ({
+                ...entry,
+                seasonId: weeklyLeaderboard.seasonId,
+                gameweek: weeklyLeaderboard.gameweek
+            }));
+            
+            setWeeklyTop10(weeklyTop10Data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const getCurrentGameweekFixtures = () => {

@@ -32,13 +32,17 @@ const WithdrawICPModal = ({ show, onHide, balance }) => {
         return;
     }
 
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    await open_fpl_backend.withdrawICP(withdrawAmount - withdrawalFee, withdrawalAddress);
-
-    setWithdrawAmount(0);
-    setWithdrawError(null);
-    onHide(true);
+    try {
+      const identity = authClient.getIdentity();
+      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      await open_fpl_backend.withdrawICP(withdrawAmount - withdrawalFee, withdrawalAddress);  
+    } catch (error){
+      console.log(error)
+    } finally {
+      setWithdrawAmount(0);
+      setWithdrawError(null);
+      onHide(true);
+    }
   };
 
   const isWithdrawalAmountValid = async () => {
@@ -67,17 +71,23 @@ const WithdrawICPModal = ({ show, onHide, balance }) => {
     if(authClient == null){
       return;
     }
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    const isValid = await open_fpl_backend.isWalletValid(withdrawalAddress);
-  
-    if (isValid) {
-      setWithdrawError(null);
-    } else {
-      setWithdrawError('Invalid wallet address.');
+
+    try {
+      const identity = authClient.getIdentity();
+      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      const isValid = await open_fpl_backend.isWalletValid(withdrawalAddress);
+    
+      if (isValid) {
+        setWithdrawError(null);
+      } else {
+        setWithdrawError('Invalid wallet address.');
+      }
+    
+      return isValid;
+    } catch (error) {
+      console.log(error);
+      return false;
     }
-  
-    return isValid;
   };
 
   const hideModal = () => {

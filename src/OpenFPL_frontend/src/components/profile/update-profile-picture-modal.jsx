@@ -33,13 +33,18 @@ const UpdateProfilePictureModal = ({ show, onHide }) => {
             const uint8Array = new Uint8Array(arrayBuffer);
             
             // send the Uint8Array to the backend
-            const identity = authClient.getIdentity();
-            Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-            await open_fpl_backend.updateProfilePicture(uint8Array);
-
-            setPicture(null);
-            setPictureError(null);
-            onHide(true);
+            try{
+                const identity = authClient.getIdentity();
+                Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+                await open_fpl_backend.updateProfilePicture(uint8Array);    
+            }
+            catch (error) {
+                console.log(error);
+            } finally {
+                setPicture(null);
+                setPictureError(null);
+                onHide(true);
+            }
         };
     };
 

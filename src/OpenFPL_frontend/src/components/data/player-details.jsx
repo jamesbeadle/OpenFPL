@@ -19,12 +19,15 @@ const PlayerDetails = ({  }) => {
     
     useEffect(() => {
         const fetchInitialData = async () => {
-           
-            const playerDetails = await player_canister.getPlayerDetails(Number(playerId), Number(systemState.activeSeason.id));
-            setPlayer(playerDetails);
-            setIsLoading(false);
+            try{
+                const playerDetails = await player_canister.getPlayerDetails(Number(playerId), Number(systemState.activeSeason.id));
+                setPlayer(playerDetails);        
+            } catch (error){
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
         };
-
         fetchInitialData();
     }, []);
 

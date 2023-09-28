@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Card, Button, Spinner } from 'react-bootstrap';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
-import { Actor } from "@dfinity/agent";
 import { FixtureIcon } from '../icons';
 import { getTeamById } from '../helpers';
 
 const Fixtures = () => {
-  const { authClient } = useContext(AuthContext);
   const { teams, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(1);
@@ -23,9 +20,7 @@ const Fixtures = () => {
   }, []);
   
   const fetchViewData = async () => {
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    
+  
     const currentDateTime = new Date();
     const currentGameweekFixtures = fixtures.filter(fixture => fixture.gameweek === systemState.activeGameweek);
     currentGameweekFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));

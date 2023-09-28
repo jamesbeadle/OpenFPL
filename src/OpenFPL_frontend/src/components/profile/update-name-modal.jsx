@@ -27,30 +27,42 @@ const UpdateNameModal = ({ show, onHide, displayName }) => {
         return;
     }
     
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    await open_fpl_backend.updateDisplayName(newDisplayName);
+    try{
+      const identity = authClient.getIdentity();
+      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      await open_fpl_backend.updateDisplayName(newDisplayName);
+        
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setNewDisplayName('');
+      setDisplayNameError(null);
+      onHide(true);
+    }
     
-    setNewDisplayName('');
-    setDisplayNameError(null);
-    onHide(true);
+    
   };
 
   const isDisplayNameValid = async () => {
     if(authClient == null){
       return;
     }
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    const isValid = await open_fpl_backend.isDisplayNameValid(newDisplayName);
-  
-    if (isValid) {
-      setDisplayNameError(null);
-    } else {
-      setDisplayNameError('Display name must be between 3 and 20 characters long, no special characters and not already taken.');
+    try{
+      const identity = authClient.getIdentity();
+      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      const isValid = await open_fpl_backend.isDisplayNameValid(newDisplayName);
+    
+      if (isValid) {
+        setDisplayNameError(null);
+      } else {
+        setDisplayNameError('Display name must be between 3 and 20 characters long, no special characters and not already taken.');
+      }
+    
+      return isValid;
+    } catch (error) {
+      console.log(error);
+      return false;
     }
-  
-    return isValid;
   };
 
   const hideModal = () => {

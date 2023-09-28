@@ -48,8 +48,14 @@ const WeeklyLeaderboard = () => {
             setManagers(slicedData);
         }
         else{
-            const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
-            setManagers(leaderboardData);
+            try{
+                const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
+                setManagers(leaderboardData);
+            } catch (error){
+                console.log(error);
+            };  
+            
+            
         }
     };
     

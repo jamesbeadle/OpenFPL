@@ -62,34 +62,42 @@ const Profile = () => {
   }, [viewData]);
 
   const fetchViewData = async () => {
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    const data = await open_fpl_backend.getProfileDTO();
-    setViewData(data);
+    try {
+        const identity = authClient.getIdentity();
+        Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+        const data = await open_fpl_backend.getProfileDTO();
+        setViewData(data);
 
-    const dateInMilliseconds = Number(data.createDate / 1000000n);
-    const date = new Date(dateInMilliseconds);
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const joinDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
-    setJoinedDate(joinDate);
+        const dateInMilliseconds = Number(data.createDate / 1000000n);
+        const date = new Date(dateInMilliseconds);
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const joinDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+        setJoinedDate(joinDate);
 
-    if (data.profilePicture && data.profilePicture.length > 0) {
-     
-      const blob = new Blob([data.profilePicture]);
-      const blobUrl = URL.createObjectURL(blob);
-      setProfilePicSrc(blobUrl);
+        if (data.profilePicture && data.profilePicture.length > 0) {
+        
+          const blob = new Blob([data.profilePicture]);
+          const blobUrl = URL.createObjectURL(blob);
+          setProfilePicSrc(blobUrl);
 
-    } else {
-      setProfilePicSrc(ProfileImage);
-    }
-    setFavouriteTeam(data.favouriteTeamId);
+        } else {
+          setProfilePicSrc(ProfileImage);
+        }
+        setFavouriteTeam(data.favouriteTeamId);
+    } catch (error){
+        console.log(error);
+    };
   };
 
   const fetchAccountBalance = async () => {
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    const data = await open_fpl_backend.getAccountBalanceDTO();
-    setBalanceData(data);
+    try {
+      const identity = authClient.getIdentity();
+      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      const data = await open_fpl_backend.getAccountBalanceDTO();
+      setBalanceData(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const hideUpdateNameModal = async (changed) => {
@@ -155,13 +163,18 @@ const Profile = () => {
   };
   
   const handleConfirmFavouriteTeamClick = async (favouriteTeamId) => {
-    setIsLoading(true);
-    const identity = authClient.getIdentity();
-    Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-    await open_fpl_backend.updateFavouriteTeam(Number(favouriteTeamId));
-    setShowConfirmFavouriteTeamModal(false);
-    setFavouriteTeam(Number(favouriteTeamId));
-    setIsLoading(false);
+    try{
+      setIsLoading(true);
+      const identity = authClient.getIdentity();
+      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      await open_fpl_backend.updateFavouriteTeam(Number(favouriteTeamId));
+      setShowConfirmFavouriteTeamModal(false);
+      setFavouriteTeam(Number(favouriteTeamId));  
+    } catch (error){
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

@@ -22,15 +22,20 @@ export const DataProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
   
     const checkAndUpdateData = async () => {
-        const backendHashArray = await open_fpl_backend.getDataHashes();
-        setBackendCanisterHashes(backendHashArray);
-        const playerHashArray = await player_canister.getDataHashes();
-        setPlayerCanisterHashes(playerHashArray);
-        await initPlayerData(playerHashArray.find(item => item.category === 'players'));
-        await initTeamsData(backendHashArray.find(item => item.category === 'teams'));
-        await initSeasonsData(backendHashArray.find(item => item.category === 'seasons'));
-        await initFixturesData(backendHashArray.find(item => item.category === 'fixtures'));
-        await initSystemState(backendHashArray.find(item => item.category === 'system_state'));
+        try {
+            const backendHashArray = await open_fpl_backend.getDataHashes();
+            setBackendCanisterHashes(backendHashArray);
+            const playerHashArray = await player_canister.getDataHashes();
+            setPlayerCanisterHashes(playerHashArray);
+            await initPlayerData(playerHashArray.find(item => item.category === 'players'));
+            await initTeamsData(backendHashArray.find(item => item.category === 'teams'));
+            await initSeasonsData(backendHashArray.find(item => item.category === 'seasons'));
+            await initFixturesData(backendHashArray.find(item => item.category === 'fixtures'));
+            await initSystemState(backendHashArray.find(item => item.category === 'system_state'));
+        }
+        catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {

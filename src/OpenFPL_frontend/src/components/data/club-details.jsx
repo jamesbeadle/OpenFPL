@@ -32,18 +32,19 @@ const ClubDetails = ({  }) => {
     
     useEffect(() => {
         const fetchInitialData = async () => {
-            
-            const teamDetails = teams.find(t => t.id === Number(teamId));
-            setTeam(teamDetails);
-
-            const fixturesData = await open_fpl_backend.getFixturesForSeason(systemState.activeSeason.id);
-            
-            let teamFixtures = fixturesData
-            .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
-            .sort((a, b) => a.gameweek - b.gameweek);
-            setAllTeamFixtures(teamFixtures)
-
-            setIsLoading(false);
+            try {
+                const teamDetails = teams.find(t => t.id === Number(teamId));
+                setTeam(teamDetails);
+                const fixturesData = await open_fpl_backend.getFixturesForSeason(systemState.activeSeason.id);
+                let teamFixtures = fixturesData
+                .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
+                .sort((a, b) => a.gameweek - b.gameweek);
+                setAllTeamFixtures(teamFixtures)
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         fetchInitialData();
@@ -80,15 +81,18 @@ const ClubDetails = ({  }) => {
     useEffect(() => {
         
         const fetchFixturesForSeason = async (seasonId) => {
-            setIsLoading(true);
-    
-            const fixturesData = await open_fpl_backend.getFixturesForSeason(seasonId);
-            let teamFixtures = fixturesData
-                .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
-                .sort((a, b) => a.gameweek - b.gameweek);
-            setAllTeamFixtures(teamFixtures);
-    
-            setIsLoading(false);
+            try {
+                setIsLoading(true);
+                const fixturesData = await open_fpl_backend.getFixturesForSeason(seasonId);
+                let teamFixtures = fixturesData
+                    .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
+                    .sort((a, b) => a.gameweek - b.gameweek);
+                setAllTeamFixtures(teamFixtures);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
         };
     
         fetchFixturesForSeason(selectedSeason);
