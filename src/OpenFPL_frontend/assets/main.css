@@ -1,41 +1,32 @@
 
 @font-face {
-    font-family: 'Poppins';
-    src: url('Poppints-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
+  font-family: 'Poppins';
+  src: url('Poppins-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-  body {
-    font-family: 'Poppins', sans-serif !important;
-    background-image: url('background.png');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100vh;
-    margin: 0;
-  }
+@font-face {
+  font-family: 'Poppins Medium';
+  src: url('Poppins-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-  .dark-panel{
-    background-color: #242529;
-    opacity: 90%;
-    border: none !important;
-    color: white !important;
-  }
+body {
+  font-family: 'Poppins', sans-serif !important;
+  background-image: url('background.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  margin: 0;
+}
 
-  .custom-icon {
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
-  .navbar{
-    background-color: #242529;
-    opacity: 90%;  
-    height: 80px;
-  }
-  
-
-
+.custom-icon {
+  margin-left: 8px;
+  vertical-align: middle;
+}
 
   
   .table-fixed {

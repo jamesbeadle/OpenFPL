@@ -3,10 +3,12 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import Image from 'react-bootstrap/Image';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
 import { WalletIcon } from '../icons';
 import { useLocation } from 'react-router-dom';
+import ProfileImage from '../../../assets/profile_placeholder.png';
 
 const MyNavbar = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
@@ -14,6 +16,7 @@ const MyNavbar = () => {
   const [expanded, setExpanded] = useState(false);
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
+  const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -25,7 +28,7 @@ const MyNavbar = () => {
     <Navbar className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
         <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)}>
-          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '200px', maxHeight: '100%' }} />
+          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '150px', maxHeight: '100%' }} />
         </Navbar.Brand>
     
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -40,14 +43,14 @@ const MyNavbar = () => {
                 Squad Selection
                 { isActive('/pick-team') && <div className="nav-caret"></div>}
              </Nav.Link> 
-              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/profile') ? 'active-link' : ''}`}>
-                Profile
-                { isActive('/profile') && <div className="nav-caret"></div>}
-              </Nav.Link> 
-              
               <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/governance') ? 'active-link' : ''}`}>
                 Governance
                 { isActive('/governance') && <div className="nav-caret"></div>}
+              </Nav.Link> 
+              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/profile') ? 'active-link' : ''}`}>
+                Profile
+                <Image src={profilePicSrc} roundedCircle className="nav-profile-image" />
+                { isActive('/profile') && <div className="nav-caret"></div>}
               </Nav.Link> 
             </>
           }

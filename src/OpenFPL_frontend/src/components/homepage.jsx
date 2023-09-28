@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button, Pagination } from 'react-bootstrap';
-import { SmallFixtureIcon } from './icons';
+import { BadgeIcon, SmallFixtureIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
 import { DataContext } from "../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
@@ -149,10 +149,132 @@ const Homepage = () => {
         ) :
         <Container fluid>
             <Row>
-                <Col md={8} xs={12}>
+                <Col md={7} xs={12}>
+                    <Card className='mb-3'>
+                        <Row>
+                            <Col xs={4}>
+                                <div class="home-stat-panel">
+                                    <p class="home-stat-header">Gameweek</p>
+                                    <p class="home-stat">{currentGameweek}</p>
+                                    <p class="home-stat-header">{currentSeason.name}</p>    
+                                </div>
+                            </Col>
+                            <Col xs={5}>
+                                <div class="home-stat-panel">
+                                    <p class="home-stat-header">Managers</p>
+                                    <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
+                                    <p class="home-stat-header">Total</p>    
+                                </div>
+                            </Col>
+                            <Col xs={3}>
+                                <div class="home-stat-panel">
+                                    <p class="home-stat-header">This weeks prize pool</p>
+                                    <p class="home-stat">12,242</p>
+                                    <p class="home-stat-header">$FPL Tokens</p>    
+                                </div>
+                            </Col>
+                        </Row>
+                    </Card>
+                </Col>
+
+                <Col md={5} xs={12}>
+                    <Card className='mb-3'>
+                        <Row>
+                            <Col xs={6}>
+                                <div class="home-stat-panel">
+                                    <p class="home-stat-header">Upcoming Game</p>
+                                    <Row>
+                                        <Col xs={3}>
+                                            <p className="home-stat w-100 text-center">02</p>
+                                        </Col>
+                                        <Col xs={1}>
+                                            <p className="w-100 time-colon">:</p>
+                                        </Col>
+                                        <Col xs={3}>
+                                            <p className="home-stat w-100 text-center">02</p>
+                                        </Col>
+                                        <Col xs={1}>
+                                            <p className="w-100 time-colon">:</p>
+                                        </Col>
+                                        <Col xs={3}>
+                                            <p className="home-stat w-100 text-center">02</p>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={3}>
+                                            <p className="home-stat-header text-center w-100">Day</p>    
+                                        </Col>
+                                        <Col xs={1}></Col>
+                                        <Col xs={3}>
+                                            <p className="home-stat-header text-center w-100">Hour</p>    
+                                        </Col>
+                                        <Col xs={1}></Col>
+                                        <Col xs={3}>
+                                            <p className="home-stat-header text-center w-100">Min</p>    
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Col>
+                            <Col xs={6}>
+                                <div class="home-stat-panel">
+                                    <p style={{height: '7.5px'}}></p>
+                                    <Row style={{marginBottom: '8px'}}>
+                                        <Col xs={5}>
+                                            <div className='text-center'>
+                                                <BadgeIcon
+                                                    primaryColour={'#123432'}
+                                                    secondaryColour={'#432123'}
+                                                    thirdColour={'#432123'}
+                                                    width={40}
+                                                    height={40}
+                                                />
+                                            </div>
+                                        </Col>
+                                        <Col xs={2}>
+                                            <p className="w-100 time-colon">vs</p>
+                                        </Col>
+                                        <Col xs={5}>
+                                            <div className='text-center'>
+                                                <BadgeIcon
+                                                    primaryColour={'#123432'}
+                                                    secondaryColour={'#432123'}
+                                                    thirdColour={'#432123'}
+                                                    width={38}
+                                                    height={38}
+                                                />
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col xs={5}>
+                                            <p className="home-stat-header text-center w-100">MUN</p>    
+                                        </Col>
+                                        <Col xs={2}>
+                                            
+                                        </Col>
+                                        <Col xs={5}>
+                                            <p className="home-stat-header text-center w-100">LVP</p>    
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Card>
+                </Col>
+
+
+
+
+
+
+
+
+
+
+                <Col md={7} xs={12}>
                     <Row className="mb-3">
                         <Col md={4} xs={12}>
-                            <Card className="h-100 dark-panel">
+                            <Card className="h-100">
                                 <Card.Body>
                                     <Card.Title>Gameweek</Card.Title>
                                     <h5 className="display-sm">{currentGameweek}</h5> 
@@ -260,7 +382,7 @@ const Homepage = () => {
 
                 </Col>
             
-                <Col md={4} xs={12}>
+                <Col md={5} xs={12}>
                     <Card className='mb-2'>
                         <Card.Body>
                         <Card.Title>
