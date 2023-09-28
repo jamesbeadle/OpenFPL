@@ -133,10 +133,6 @@ const Homepage = () => {
                 return (
                     <Badge className='bg-primary w-100' style={{ padding: '0.5rem' }}>Verified</Badge>
                 );
-            default:
-                return (
-                    <Badge className='bg-secondary w-100' style={{ padding: '0.5rem' }}>Unplayed</Badge>
-                );
         }
     };
     
