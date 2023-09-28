@@ -147,12 +147,12 @@ const Homepage = () => {
                 <p className='text-center mt-1'>Loading</p>
             </div>
         ) :
-        <Container className="flex-grow-1 my-1">
+        <Container fluid>
             <Row>
                 <Col md={8} xs={12}>
                     <Row className="mb-3">
                         <Col md={4} xs={12}>
-                            <Card className="h-100">
+                            <Card className="h-100 dark-panel">
                                 <Card.Body>
                                     <Card.Title>Gameweek</Card.Title>
                                     <h5 className="display-sm">{currentGameweek}</h5> 
