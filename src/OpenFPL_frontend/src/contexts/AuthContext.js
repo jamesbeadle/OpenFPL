@@ -26,17 +26,16 @@ export const AuthProvider = ({ children }) => {
 
   const initAuthClient = async () => {
     try{
-      const authClient = await AuthClient.create({
+      const newAuthClient = await AuthClient.create({
         idleOptions: {
           idleTimeout: 1000 * 60 * 60
         }
       });
-      await checkLoginStatus(authClient);
-      setAuthClient(authClient);
+      await checkLoginStatus(newAuthClient);
+      setAuthClient(newAuthClient);
     }
     catch (error){
       console.error('Error during AuthClient initialization:', error);
-      await deleteIndexedDB('auth-client-db');
     }
     finally{
       setLoading(false);
@@ -46,16 +45,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     initAuthClient();
   }, []);
-
-  useEffect(() => {
-    if (!authClient) return;
-
-    const interval = setInterval(() => {
-      checkLoginStatus(authClient);
-    }, 60000);
-
-    return () => clearInterval(interval);
-  }, [authClient]);
 
   const login = async () => {
     try {
