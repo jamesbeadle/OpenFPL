@@ -23,11 +23,6 @@
     color: white !important;
   }
 
-  .custom-nav-link {
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-
   .custom-icon {
     margin-left: 8px;
     vertical-align: middle;
@@ -36,7 +31,9 @@
   .navbar{
     background-color: #242529;
     opacity: 90%;  
+    height: 80px;
   }
+  
 
 
 

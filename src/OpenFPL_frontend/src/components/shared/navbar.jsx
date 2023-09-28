@@ -5,12 +5,15 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
-import { ProfileIcon, GovernanceIcon, TeamIcon, WalletIcon, TableIcon } from '../icons';
+import { WalletIcon } from '../icons';
+import { useLocation } from 'react-router-dom';
 
 const MyNavbar = () => {
   const { isAuthenticated, login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -19,27 +22,32 @@ const MyNavbar = () => {
   }, [isAuthenticated]);
 
   return (
-    <Navbar className='mb-3' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
+    <Navbar className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
         <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)}>
-          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '100px', maxHeight: '100%' }} />
+          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '200px', maxHeight: '100%' }} />
         </Navbar.Brand>
     
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse  id="responsive-navbar-nav" className="justify-content-end">
           {isAuthenticated && 
             <>
-              <Nav.Link as={Link} to="/pick-team" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
+              <Nav.Link as={Link} to="/" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/') ? 'active-link' : ''}`}>
                 Home
+                { isActive('/') && <div className="nav-caret"></div>}
               </Nav.Link> 
-              <Nav.Link as={Link} to="/league-table" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
+              <Nav.Link as={Link} to="/pick-team" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/league-table') ? 'active-link' : ''}`}>
                 Squad Selection
-              </Nav.Link> 
-              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
+                { isActive('/pick-team') && <div className="nav-caret"></div>}
+             </Nav.Link> 
+              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/profile') ? 'active-link' : ''}`}>
                 Profile
+                { isActive('/profile') && <div className="nav-caret"></div>}
               </Nav.Link> 
-              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)}  className="custom-nav-link mt-2 mt-md-0">
+              
+              <Nav.Link as={Link} to="/governance" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/governance') ? 'active-link' : ''}`}>
                 Governance
+                { isActive('/governance') && <div className="nav-caret"></div>}
               </Nav.Link> 
             </>
           }

@@ -11,9 +11,6 @@ $secondary: #75898F; // Your custom secondary color
 $success: #67F5C9; // Your custom secondary color
 $dark: #F5EA5B; // Your custom secondary color
 
-.navbar-brand, .nav-link{
-    color: #895BF5 !important;
-}
 
 .card{
     background-color: whitesmoke !important;
@@ -42,15 +39,39 @@ $dark: #F5EA5B; // Your custom secondary color
     background-color: inherit !important;
 }
 
-.nav-link{
-    color: black !important;
-}
-
 .btn-primary{
     color: whitesmoke !important;
     border: none !important;
 }
 
-.custom-nav-link{
-    color: black !important;
+
+.nav-link {
+    margin-right: 8px;
+    vertical-align: middle;
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 400;
+    color: #C2C3C4 !important;
+    padding-left: 8px;
+    padding-right: 8px;
 }
+.custom-nav-link {
+    position: relative;
+    width: fit-content;
+    line-height: 80px;
+}
+
+.nav-caret {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: #2CE3A6;
+}
+  
+.active-link {
+    font-weight: 700 !important;
+    color: white !important;
+}
+
