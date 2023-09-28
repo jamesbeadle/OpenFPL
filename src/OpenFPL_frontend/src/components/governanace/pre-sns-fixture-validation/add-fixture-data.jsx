@@ -19,6 +19,7 @@ const PreSNSAddFixtureData = () => {
   const [showPlayerSelectionModal, setShowPlayerSelectionModal] = useState(false);
   const [showPlayerEventModal, setShowPlayerEventModal] = useState(false);
   const [showConfirmDataModal, setShowConfirmDataModal] = useState(false);
+  const [showConfirmClearDraftModal, setShowConfirmClearDraftModal] = useState(false);
   
   const [editingPlayerEvent, setEditingPlayerEvent] = useState(null);
   const [key, setKey] = useState('homeTeam');
@@ -67,6 +68,7 @@ const PreSNSAddFixtureData = () => {
       localStorage.removeItem(draftKey);
       setShowDraftCleared(true);
       setShowDraftSaved(false);
+      setShowConfirmClearDraftModal(false);
   };
 
   const handleClearAllEvents = () => {
@@ -363,7 +365,7 @@ const PreSNSAddFixtureData = () => {
           <div className="add-fixture-data">
             <Row>
               <Col xs={12} md={4}>
-                <Button className="mt-3 mb-3" variant='danger' onClick={handleClearDraft}>
+                <Button className="mt-3 mb-3" variant='danger' onClick={() => setShowConfirmClearDraftModal(true)}>
                     Clear Draft
                 </Button>
                 {showDraftCleared && <p className='cleared-text'>Cleared.</p>}
@@ -436,6 +438,12 @@ const PreSNSAddFixtureData = () => {
               show={showConfirmDataModal} 
               onHide={() => setShowConfirmDataModal(false)}
               onConfirm={handleSaveFixtureData}
+            />
+            
+            <ConfirmClearDraftModal 
+              show={showConfirmClearDraftModal} 
+              onHide={() => setShowConfirmClearDraftModal(false)}
+              onConfirm={handleClearDraft}
             />
           </div>
         </Card.Body>
