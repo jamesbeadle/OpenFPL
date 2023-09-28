@@ -152,14 +152,14 @@ const Homepage = () => {
                 <Col md={7} xs={12}>
                     <Card className='mb-3'>
                         <Row>
-                            <Col xs={4}>
+                            <Col xs={4} className='partial-border'>
                                 <div class="home-stat-panel">
                                     <p class="home-stat-header">Gameweek</p>
                                     <p class="home-stat">{currentGameweek}</p>
                                     <p class="home-stat-header">{currentSeason.name}</p>    
                                 </div>
                             </Col>
-                            <Col xs={5}>
+                            <Col xs={5} className='partial-border'>
                                 <div class="home-stat-panel">
                                     <p class="home-stat-header">Managers</p>
                                     <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
@@ -180,7 +180,7 @@ const Homepage = () => {
                 <Col md={5} xs={12}>
                     <Card className='mb-3'>
                         <Row>
-                            <Col xs={6}>
+                            <Col xs={6} className="partial-border">
                                 <div class="home-stat-panel">
                                     <p class="home-stat-header">Upcoming Game</p>
                                     <Row>
@@ -216,7 +216,7 @@ const Homepage = () => {
                                 </div>
                             </Col>
                             <Col xs={6}>
-                                <div class="home-stat-panel">
+                                <div style={{paddingTop: '15px'}}>
                                     <p style={{height: '7.5px'}}></p>
                                     <Row style={{marginBottom: '8px'}}>
                                         <Col xs={5}>
