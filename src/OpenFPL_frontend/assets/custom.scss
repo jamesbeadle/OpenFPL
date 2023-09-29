@@ -152,17 +152,30 @@
   position: relative;
 }
 
-
-.outer-container {
-  position: relative;
+@media (max-width: 767.98px) {
+  .outer-container {
+    position: relative; /* or static based on your design */
+  }
 }
 
-.vertical-divider {
-  position: absolute;
-  height: 50%; /* Modify as needed */
-  width: 1px;
-  background-color: #333; /* Color of the divider */
-  top: 50%;
-  left: 50%; /* Adjust this */
-  transform: translateY(-50%);
+@media (min-width: 768px) {
+  .outer-container {
+    position: relative;
+  }
+  .vertical-divider-1 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 30%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  .vertical-divider-2 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 70.25%;
+    width: 1px;
+    background-color: #37393C;
+  }
 }
