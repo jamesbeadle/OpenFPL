@@ -195,5 +195,13 @@
 }
 .nav-tabs .nav-link:not(.active) {
   color: #C2C3C4 !important;
+  border-left: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
 }
 
+.home-tab-panel{
+  padding-left: 30px;
+  padding-right: 30px;
+}

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Card, Button, Spinner } from 'react-bootstrap';
-import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
 import { FixtureIcon } from '../icons';
 import { getTeamById } from '../helpers';
 
 const Fixtures = () => {
+  console.log(getTeamById)
   const { teams, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(1);

@@ -6,6 +6,7 @@ import { DataContext } from "../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { Link } from "react-router-dom";
 import { msToTime, computeTimeLeft, getTeamById, groupFixturesByDate } from './helpers';
+import Fixtures from './gameplay/fixtures';
 
 const Homepage = () => {
 
@@ -287,10 +288,11 @@ const Homepage = () => {
                 <Col xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
-                            <div className="home-stat-panel flex-grow-1">
+                            <div className="home-tab-panel flex-grow-1">
                             <Tabs defaultActiveKey="fixtures" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)}>
                                 
                                 <Tab eventKey="fixtures" title="Fixtures">
+                                    {activeKey === 'fixtures' && <Fixtures />}
                                 </Tab>
                                 <Tab eventKey="gameweek-points" title="Gameweek Points">
                                 </Tab>
