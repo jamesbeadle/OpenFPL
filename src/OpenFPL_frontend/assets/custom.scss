@@ -1,6 +1,5 @@
 @import '~bootstrap/scss/bootstrap';
 
-
 .navbar{
     background-color: #242529;
     opacity: 90%;  
@@ -54,7 +53,8 @@
 
 .home-stat-panel{
     padding-left: 30px;
-    padding-top: 15px;;
+    padding-right: 30px;
+    padding-top: 15px;
     padding-bottom: 15px;
 }
 
@@ -64,11 +64,46 @@
     margin-bottom: 0;
 }
 
-.home-stat{
-    width:100%;
-    font-size: 38px;
-    margin-bottom: 0;
+/* Extra small devices (phones) */
+@media (max-width: 575.98px) {  
+    .home-stat{
+        width:100%;
+        font-size: 20px;
+        margin-bottom: 0;
+    }
 }
+  
+  /* Small devices (portrait tablets and large phones) */
+  @media (min-width: 576px) and (max-width: 767.98px) {  
+    /* Your CSS */
+  }
+  
+  /* Medium devices (landscape tablets) */
+  @media (min-width: 768px) and (max-width: 991.98px) {  
+    /* Your CSS */
+  }
+  
+  /* Large devices (laptops/desktops) */
+  @media (min-width: 992px) and (max-width: 1199.98px) {  
+    .home-stat{
+        width:100%;
+        font-size: 20px;
+        margin-bottom: 0;
+    }
+  }
+  
+  /* Extra large devices (large laptops and desktops) */
+  @media (min-width: 1200px) {   
+    .home-stat{
+        width:100%;
+        font-size: 26px;
+        margin-bottom: 0;
+    }
+    .badge{
+        width: 100%;
+    }
+  }
+  
 
 .time-colon {
     display: flex;
@@ -80,17 +115,6 @@
     position: relative;
   }
   
-  .divider {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    background-color: #37393C;
-    width: 1px;
-    height: 90%;
-  }
-
   .partial-border {
     position: relative;
   }
@@ -104,3 +128,40 @@
     width: 1px;
     background-color: #37393C;
   }
+
+  .stat-row-1{
+    min-height: 20px;
+  }
+  .stat-row-2{
+    min-height: 40px;
+  }
+  .stat-row-3{
+    min-height: 20px;
+  }
+
+
+  .add-colon::after {
+    content: ":";
+    position: absolute;
+    right: -10px; /* adjust as needed */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.add-colon {
+  position: relative;
+}
+.add-divider::after {
+  content: "";
+  position: absolute;
+  right: 0; /* adjust as needed */
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: white; /* change color as needed */
+}
+
+
+.add-divider {
+position: relative;
+}

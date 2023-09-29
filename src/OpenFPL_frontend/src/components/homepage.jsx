@@ -151,82 +151,92 @@ const Homepage = () => {
             <Row>
                 <Col md={7} xs={12}>
                     <Card className='mb-3'>
-                        <Row>
-                            <Col xs={4} className='partial-border'>
-                                <div class="home-stat-panel">
-                                    <p class="home-stat-header">Gameweek</p>
+                        <div class="home-stat-panel">  
+                            <Row className="stat-row-1">
+                                <Col xs={4}>
+                                    <p class="home-stat-header w-100">Gameweek</p>
+                                </Col>
+                                <Col xs={5}>
+                                    <p class="home-stat-header w-100">Managers</p>
+                                </Col>
+                                <Col xs={3}>
+                                    <p class="home-stat-header w-100">Weekly Prize Pool</p>
+                                </Col>
+                            </Row>
+                            <Row className="stat-row-2">
+                                <Col xs={4}>
                                     <p class="home-stat">{currentGameweek}</p>
-                                    <p class="home-stat-header">{currentSeason.name}</p>    
-                                </div>
-                            </Col>
-                            <Col xs={5} className='partial-border'>
-                                <div class="home-stat-panel">
-                                    <p class="home-stat-header">Managers</p>
+                                </Col>
+                                <Col xs={5}>
                                     <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
-                                    <p class="home-stat-header">Total</p>    
-                                </div>
-                            </Col>
-                            <Col xs={3}>
-                                <div class="home-stat-panel">
-                                    <p class="home-stat-header">This weeks prize pool</p>
+                                </Col>
+                                <Col xs={3}>
                                     <p class="home-stat">12,242</p>
-                                    <p class="home-stat-header">$FPL Tokens</p>    
-                                </div>
-                            </Col>
-                        </Row>
+                                </Col>
+                            </Row>
+                            <Row className="stat-row-3">
+                                <Col xs={4}>
+                                    <p class="home-stat-header">{currentSeason.name}</p>   
+                                </Col>
+                                <Col xs={5}>
+                                    <p class="home-stat-header">Total</p>    
+                                </Col>
+                                <Col xs={3}>
+                                    <p class="home-stat-header">$FPL Tokens</p>   
+                                </Col>
+                            </Row>
+                        </div>
                     </Card>
                 </Col>
 
                 <Col md={5} xs={12}>
-                    <Card className='mb-3'>
-                        <Row>
-                            <Col xs={6} className="partial-border">
-                                <div class="home-stat-panel">
-                                    <p class="home-stat-header">Upcoming Game</p>
+                    <Card>
+                        <div class="home-stat-panel">      
+                            <Row className="stat-row-1">
+                                <p class="home-stat-header w-100">Upcoming Game</p>    
+                            </Row>
+                            <Row className="stat-row-2">
+                                <Col xs={12} md={6}  className="add-divider">
                                     <Row>
-                                        <Col xs={3}>
+                                        <Col xs={4} className="add-colon">
                                             <p className="home-stat w-100 text-center">02</p>
                                         </Col>
-                                        <Col xs={1}>
-                                            <p className="w-100 time-colon">:</p>
+                                        <Col xs={4} className="add-colon">
+                                        <p className="home-stat w-100 text-center">02</p>
+
                                         </Col>
-                                        <Col xs={3}>
-                                            <p className="home-stat w-100 text-center">02</p>
-                                        </Col>
-                                        <Col xs={1}>
-                                            <p className="w-100 time-colon">:</p>
-                                        </Col>
-                                        <Col xs={3}>
-                                            <p className="home-stat w-100 text-center">02</p>
+                                        <Col xs={4}>
+                                        <p className="home-stat w-100 text-center">02</p>
+                                
                                         </Col>
                                     </Row>
-                                    <Row>
-                                        <Col xs={3}>
-                                            <p className="home-stat-header text-center w-100">Day</p>    
-                                        </Col>
-                                        <Col xs={1}></Col>
-                                        <Col xs={3}>
-                                            <p className="home-stat-header text-center w-100">Hour</p>    
-                                        </Col>
-                                        <Col xs={1}></Col>
-                                        <Col xs={3}>
-                                            <p className="home-stat-header text-center w-100">Min</p>    
+                                    <Row className="stat-row-3">
+                                        
+                                    <Col xs={12}>
+                                            <Row>
+                                                <Col xs={4}>
+                                                    <p className="home-stat-header text-center w-100">Day</p> 
+                                                </Col>
+                                                <Col xs={4}>
+                                                    <p className="home-stat-header text-center w-100">Hour</p>   
+                                                </Col>
+                                                <Col xs={4}>
+                                                    <p className="home-stat-header text-center w-100">Min</p>    
+                                                </Col>
+                                            </Row>
                                         </Col>
                                     </Row>
-                                </div>
-                            </Col>
-                            <Col xs={6}>
-                                <div style={{paddingTop: '15px'}}>
-                                    <p style={{height: '7.5px'}}></p>
-                                    <Row style={{marginBottom: '8px'}}>
+                                </Col>
+                                <Col xs={12} md={6} className="mt-4 mt-md-0">
+                                    <Row>
                                         <Col xs={5}>
-                                            <div className='text-center'>
+                                            <div className='text-center badge w-100'>
                                                 <BadgeIcon
                                                     primaryColour={'#123432'}
                                                     secondaryColour={'#432123'}
                                                     thirdColour={'#432123'}
-                                                    width={40}
-                                                    height={40}
+                                                    width={26}
+                                                    height={26}
                                                 />
                                             </div>
                                         </Col>
@@ -234,239 +244,34 @@ const Homepage = () => {
                                             <p className="w-100 time-colon">vs</p>
                                         </Col>
                                         <Col xs={5}>
-                                            <div className='text-center'>
+                                            <div className='text-center badge w-100'>
                                                 <BadgeIcon
                                                     primaryColour={'#123432'}
                                                     secondaryColour={'#432123'}
                                                     thirdColour={'#432123'}
-                                                    width={38}
-                                                    height={38}
+                                                    width={26}
+                                                    height={26}
                                                 />
                                             </div>
                                         </Col>
                                     </Row>
-                                    <Row>
-                                        <Col xs={5}>
-                                            <p className="home-stat-header text-center w-100">MUN</p>    
-                                        </Col>
-                                        <Col xs={2}>
-                                            
-                                        </Col>
-                                        <Col xs={5}>
-                                            <p className="home-stat-header text-center w-100">LVP</p>    
+                                    <Row className="stat-row-3">
+                                        <Col xs={12}>
+                                            <Row>
+                                                <Col xs={5}>
+                                                <p className="home-stat-header text-center w-100">MUN</p>
+                                                </Col>
+                                                <Col xs={2}>
+                                            </Col>
+                                                <Col xs={5}>
+                                                <p className="home-stat-header text-center w-100">LVP</p>  
+                                                </Col>
+                                            </Row>
                                         </Col>
                                     </Row>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Card>
-                </Col>
-
-
-
-
-
-
-
-
-
-
-                <Col md={7} xs={12}>
-                    <Row className="mb-3">
-                        <Col md={4} xs={12}>
-                            <Card className="h-100">
-                                <Card.Body>
-                                    <Card.Title>Gameweek</Card.Title>
-                                    <h5 className="display-sm">{currentGameweek}</h5> 
-                                    <Card.Text>{currentSeason.name}</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={4} xs={12}>
-                            <Card className="h-100">
-                                <Card.Body>
-                                    <Card.Title>Managers</Card.Title>
-                                    <h5 className="display-sm">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</h5> 
-                                    <Card.Text>Total</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={4} xs={12}>
-                            <Card className="h-100">
-                                <Card.Body>
-                                    <Card.Title>Weekly Prize Pool</Card.Title>
-                                    <h5 className="display-sm"><small>{totalPrizePool.toLocaleString()}</small></h5> 
-                                    <Card.Text>$FPL</Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                
-                    <Card className="mb-4">
-                        <Card.Header>
-                            <Row className="align-items-center p-2">
-                                <Col xs={4}>
-                                    Fixtures
-                                </Col>
-                                <Col xs={8} className="d-flex justify-content-end align-items-center">
-                                    <Pagination className="my-auto">
-                                        <Pagination.Prev onClick={() => handlePrevGameweek()} disabled={filterGameweek === 1} />
-                                        <Pagination.Item><small className='small-text'>Gameweek {filterGameweek}</small></Pagination.Item>
-                                        <Pagination.Next onClick={() => handleNextGameweek()} disabled={filterGameweek === 38} />
-                                    </Pagination>
                                 </Col>
                             </Row>
-                        </Card.Header>
-
-                        <Card.Body>
-
-                        <Table responsive>
-    <tbody>
-        {Object.entries(groupedFixtures).map(([date, fixturesForDate], dateIdx) => {
-            return (
-                <React.Fragment key={dateIdx}>
-                    <tr>
-                        <td colSpan="5" className="date-header text-center small-text">{date}</td>
-                        <td colSpan="2"></td>
-                    </tr>
-                    {fixturesForDate.map((fixture, idx) => {
-                        const homeTeam = getTeamById(teams, fixture.homeTeamId);
-                        const awayTeam = getTeamById(teams, fixture.awayTeamId);
-                        if (!homeTeam || !awayTeam) {
-                            console.error("One of the teams is missing for fixture: ", fixture);
-                            return null;
-                        }
-                        return (
-                            <tr key={idx} className="align-middle">
-                                <td className="home-team-name" style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>
-                                <td className="home-team-icon text-center">
-                                    <SmallFixtureIcon
-                                        primaryColour={homeTeam.primaryColourHex}
-                                        secondaryColour={homeTeam.secondaryColourHex}
-                                    />
-                                </td>
-                                <td className="text-center align-self-center v-symbol">v</td>
-                                <td className="text-center away-team-icon">
-                                    <SmallFixtureIcon
-                                        primaryColour={awayTeam.primaryColourHex}
-                                        secondaryColour={awayTeam.secondaryColourHex}
-                                    />
-                                </td>
-                                <td className="away-team-name">{awayTeam.friendlyName}</td>
-                                <td className="text-muted text-center score">{fixture.status === 3 ? `${fixture.homeGoals}-${fixture.awayGoals}` : '-'}</td>
-                                <td className='text-center status'>
-                                    {renderStatusBadge(fixture)}
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </React.Fragment>
-            );
-        })}
-    </tbody>
-</Table>
-
-                            
-{
-  (filterGameweek <= systemState.activeGameweek && (systemState.focusGameweek == systemState.activeGameweek || filterGameweek < systemState.activeGameweek))
-  ? (
-    <div className="mt-2 mb-2" style={{ textAlign: 'right' }}>
-      <Button as={Link} to={`/view-points/${userPrincipal}/${currentSeason.id}/${filterGameweek}`}>View Gameweek Points</Button>
-    </div>
-  )
-  : null
-}
-                        </Card.Body>
-                    </Card>
-
-
-                </Col>
-            
-                <Col md={5} xs={12}>
-                    <Card className='mb-2'>
-                        <Card.Body>
-                        <Card.Title>
-                            {isActiveGameweek ? "Gameweek Active" : "Gameweek Begins:"}
-                        </Card.Title>
-                        {!isActiveGameweek ? (
-                            <h5 className="display-sm">{countdown.days}d {countdown.hours}h {countdown.minutes}m {countdown.seconds}s</h5>
-                        ) : null}
-                        </Card.Body>
-                    </Card>
-
-                    <Card className="mb-4">
-                        <Card.Header>Leaderboard</Card.Header>
-                        <Card.Body>
-                            <Tabs defaultActiveKey="gameweek" id="leaderboard-tabs">
-                                <Tab eventKey="gameweek" title="Gameweek">
-                                    <br />
-                                    {weeklyTop10.length == 0 && (
-                                        <p className='mt-2'>No entries.</p>
-                                    )}
-                                    {weeklyTop10.length > 0 && (
-                                    <>
-                                        <Table responsive bordered className="table-fixed">
-                                            <thead>
-                                                <tr>
-                                                    <th className='top10-num-col text-center'><small>Pos.</small></th>
-                                                    <th className='top10-name-col text-center'><small>Manager</small></th>
-                                                    <th className='top10-points-col text-center'><small>Points</small></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {weeklyTop10.map((leader) => (
-                                                <tr key={leader.principalId}>
-                                                    <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
-                                                    <td className='text-center text-truncate'>{leader.principalId == leader.username ? 'Unknown' : leader.username}</td>
-                                                    <td className='text-center'>
-                                                        <Button as={Link} className='p-0 w-100 clear-button' 
-                                                        to={{
-                                                            pathname: `/view-points/${leader.principalId}/${leader.seasonId}/${leader.gameweek}`
-                                                        }}>{leader.points}</Button>
-                                                    </td>
-                                                </tr>
-                                                ))}
-                                            </tbody>
-                                        </Table>
-                                        <div style={{ textAlign: 'right' }}>
-                                        <   Button as={Link} to="/weekly-leaderboard">View All</Button>
-                                        </div>
-                                    </>
-                                    )}
-                                </Tab>
-                                <Tab eventKey="season" title="Season">
-                                    <br />
-                                    {seasonTop10.length == 0 && (
-                                        <p className='mt-2'>No entries.</p>
-                                    )}
-                                    {seasonTop10.length > 0 && (
-                                    <>
-                                    <Table responsive bordered className="table-fixed">
-                                        <thead>
-                                            <tr>
-                                                <th className='top10-num-col text-center'><small>Pos.</small></th>
-                                                <th className='top10-name-col text-center'><small>Manager</small></th>
-                                                <th className='top10-points-col text-center'><small>Points</small></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {seasonTop10.map((leader) => (
-                                            <tr key={leader.principalId}>
-                                                <td className='text-center'>{leader.positionText == "" ? "-" : leader.positionText}</td>
-                                                <td className='text-center text-truncate'>{leader.principalId == leader.username ? 'Unknown' : leader.username}</td>
-                                                <td className='text-center'>{leader.points}</td>
-                                            </tr>
-                                            ))}
-                                        </tbody>
-                                    </Table>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <Button as={Link} to="/leaderboard">View All</Button>
-                                    </div>
-                                    </>
-                                    )}
-                                </Tab>
-                            </Tabs>
-                        </Card.Body>
+                        </div>
                     </Card>
                 </Col>
             </Row>
