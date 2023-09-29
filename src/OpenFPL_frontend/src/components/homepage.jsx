@@ -151,41 +151,45 @@ const Homepage = () => {
             <Row>
                 <Col md={7} xs={12}>
                     <Card className='mb-3'>
-                        <div class="home-stat-panel">  
-                            <Row className="stat-row-1">
-                                <Col xs={4}>
-                                    <p class="home-stat-header w-100">Gameweek</p>
-                                </Col>
-                                <Col xs={5}>
-                                    <p class="home-stat-header w-100">Managers</p>
-                                </Col>
-                                <Col xs={3}>
-                                    <p class="home-stat-header w-100">Weekly Prize Pool</p>
-                                </Col>
-                            </Row>
-                            <Row className="stat-row-2">
-                                <Col xs={4}>
-                                    <p class="home-stat">{currentGameweek}</p>
-                                </Col>
-                                <Col xs={5}>
-                                    <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
-                                </Col>
-                                <Col xs={3}>
-                                    <p class="home-stat">12,242</p>
-                                </Col>
-                            </Row>
-                            <Row className="stat-row-3">
-                                <Col xs={4}>
-                                    <p class="home-stat-header">{currentSeason.name}</p>   
-                                </Col>
-                                <Col xs={5}>
-                                    <p class="home-stat-header">Total</p>    
-                                </Col>
-                                <Col xs={3}>
-                                    <p class="home-stat-header">$FPL Tokens</p>   
-                                </Col>
-                            </Row>
+                        <div className="outer-container">
+                            <div class="home-stat-panel">  
+                                <Row className="stat-row-1">
+                                    <Col xs={4}>
+                                        <p class="home-stat-header w-100">Gameweek</p>
+                                    </Col>
+                                    <Col xs={5}>
+                                        <p class="home-stat-header w-100">Managers</p>
+                                    </Col>
+                                    <Col xs={3}>
+                                        <p class="home-stat-header w-100">Weekly Prize Pool</p>
+                                    </Col>
+                                </Row>
+                                <Row className="stat-row-2">
+                                    <Col xs={4}>
+                                        <p class="home-stat">{currentGameweek}</p>
+                                    </Col>
+                                    <Col xs={5}>
+                                        <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
+                                    </Col>
+                                    <Col xs={3}>
+                                        <p class="home-stat">12,242</p>
+                                    </Col>
+                                </Row>
+                                <Row className="stat-row-3">
+                                    <Col xs={4}>
+                                        <p class="home-stat-header">{currentSeason.name}</p>   
+                                    </Col>
+                                    <Col xs={5}>
+                                        <p class="home-stat-header">Total</p>    
+                                    </Col>
+                                    <Col xs={3}>
+                                        <p class="home-stat-header">$FPL Tokens</p>   
+                                    </Col>
+                                </Row>
+                            </div>
+                            <div className="vertical-divider"></div>
                         </div>
+
                     </Card>
                 </Col>
 
@@ -196,7 +200,7 @@ const Homepage = () => {
                                 <p class="home-stat-header w-100">Upcoming Game</p>    
                             </Row>
                             <Row className="stat-row-2">
-                                <Col xs={12} md={6}  className="add-divider">
+                                <Col xs={12} md={6}>
                                     <Row>
                                         <Col xs={4} className="add-colon">
                                             <p className="home-stat w-100 text-center">02</p>

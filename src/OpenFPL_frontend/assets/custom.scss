@@ -151,17 +151,18 @@
 .add-colon {
   position: relative;
 }
-.add-divider::after {
-  content: "";
-  position: absolute;
-  right: 0; /* adjust as needed */
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background-color: white; /* change color as needed */
+
+
+.outer-container {
+  position: relative;
 }
 
-
-.add-divider {
-position: relative;
+.vertical-divider {
+  position: absolute;
+  height: 50%; /* Modify as needed */
+  width: 1px;
+  background-color: #333; /* Color of the divider */
+  top: 50%;
+  left: 50%; /* Adjust this */
+  transform: translateY(-50%);
 }
