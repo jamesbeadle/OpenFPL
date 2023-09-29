@@ -24,6 +24,8 @@ const Homepage = () => {
     const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
     const [groupedFixtures, setGroupedFixtures] = useState([]);
     const totalPrizePool = 0;
+    const [activeKey, setActiveKey] = useState("fixtures");
+
     
     useEffect(() => {
         if (!fixtures || fixtures.length === 0) {
@@ -151,46 +153,46 @@ const Homepage = () => {
             <Row>
                 <Col md={7} xs={12}>
                     <Card className='mb-3'>
-                    <div className="outer-container d-flex">
-                        <div className="home-stat-panel flex-grow-1">
-                            
-                            <Row className="stat-row-1">
-                                <Col xs={4}>
-                                    <p class="home-stat-header w-100">Gameweek</p>
-                                </Col>
-                                <Col xs={5}>
-                                    <p class="home-stat-header w-100">Managers</p>
-                                </Col>
-                                <Col xs={3}>
-                                    <p class="home-stat-header w-100">Weekly Prize Pool</p>
-                                </Col>
-                            </Row>
-                            <Row className="stat-row-2">
-                                <Col xs={4}>
-                                    <p class="home-stat">{currentGameweek}</p>
-                                </Col>
-                                <Col xs={5}>
-                                    <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
-                                </Col>
-                                <Col xs={3}>
-                                    <p class="home-stat">12,242</p>
-                                </Col>
-                            </Row>
-                            <Row className="stat-row-3">
-                                <Col xs={4}>
-                                    <p class="home-stat-header">{currentSeason.name}</p>   
-                                </Col>
-                                <Col xs={5}>
-                                    <p class="home-stat-header">Total</p>    
-                                </Col>
-                                <Col xs={3}>
-                                    <p class="home-stat-header">$FPL Tokens</p>   
-                                </Col>
-                            </Row>
+                        <div className="outer-container d-flex">
+                            <div className="home-stat-panel flex-grow-1">
+                                
+                                <Row className="stat-row-1">
+                                    <Col xs={4}>
+                                        <p class="home-stat-header w-100">Gameweek</p>
+                                    </Col>
+                                    <Col xs={5}>
+                                        <p class="home-stat-header w-100">Managers</p>
+                                    </Col>
+                                    <Col xs={3}>
+                                        <p class="home-stat-header w-100">Weekly Prize Pool</p>
+                                    </Col>
+                                </Row>
+                                <Row className="stat-row-2">
+                                    <Col xs={4}>
+                                        <p class="home-stat">{currentGameweek}</p>
+                                    </Col>
+                                    <Col xs={5}>
+                                        <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
+                                    </Col>
+                                    <Col xs={3}>
+                                        <p class="home-stat">12,242</p>
+                                    </Col>
+                                </Row>
+                                <Row className="stat-row-3">
+                                    <Col xs={4}>
+                                        <p class="home-stat-header">{currentSeason.name}</p>   
+                                    </Col>
+                                    <Col xs={5}>
+                                        <p class="home-stat-header">Total</p>    
+                                    </Col>
+                                    <Col xs={3}>
+                                        <p class="home-stat-header">$FPL Tokens</p>   
+                                    </Col>
+                                </Row>
+                            </div>
+                            <div className="d-none d-md-block vertical-divider-1"></div> {/* Hidden for mobile */}
+                            <div className="d-none d-md-block vertical-divider-2"></div> {/* Hidden for mobile */}
                         </div>
-                        <div className="d-none d-md-block vertical-divider-1"></div> {/* Hidden for mobile */}
-                        <div className="d-none d-md-block vertical-divider-2"></div> {/* Hidden for mobile */}
-                    </div>
                     </Card>
                 </Col>
 
@@ -280,6 +282,29 @@ const Homepage = () => {
                     </Card>
                 </Col>
             </Row>
+            
+            <Row className="mt-2">
+                <Col xs={12}>
+                    <Card>
+                        <div className="outer-container d-flex">
+                            <div className="home-stat-panel flex-grow-1">
+                            <Tabs defaultActiveKey="fixtures" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)}>
+                                
+                                <Tab eventKey="fixtures" title="Fixtures">
+                                </Tab>
+                                <Tab eventKey="gameweek-points" title="Gameweek Points">
+                                </Tab>
+                                <Tab eventKey="league-table" title="Premier League Table">
+                                </Tab>
+                                <Tab eventKey="leaderboards" title="Leaderboards">
+                                </Tab>
+                                </Tabs>
+                            </div>
+                        </div>
+                    </Card>
+                </Col>
+            </Row>
+
         </Container>
     );
 };
