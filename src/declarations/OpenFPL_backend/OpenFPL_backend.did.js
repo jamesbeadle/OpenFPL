@@ -172,6 +172,7 @@ export const idlFactory = ({ IDL }) => {
     'primaryColourHex' : IDL.Text,
   });
   return IDL.Service({
+    'addInitialData' : IDL.Func([], [], []),
     'executeAddInitialFixtures' : IDL.Func(
         [SeasonId, IDL.Vec(Fixture)],
         [Result],

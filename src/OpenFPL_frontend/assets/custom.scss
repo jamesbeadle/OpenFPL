@@ -178,6 +178,14 @@
     width: 1px;
     background-color: #37393C;
   }
+  .vertical-divider-3 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 50%;
+    width: 1px;
+    background-color: #37393C;
+  }
 }
 
 .nav-tabs{
@@ -201,7 +209,92 @@
   border-bottom: none;
 }
 
-.home-tab-panel{
+.home-tab-header{
   padding-left: 30px;
   padding-right: 30px;
+}
+
+.fpl-btn{
+  background-color: #2CE3A6 !important;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 2px !important;
+  color: black !important;
+};
+
+.tab-panel{
+  background-color: #2E323A !important; 
+}
+
+.dark-tab-row{
+  background-color: #242529 !important; 
+}
+
+.social-icons {
+  background-color: #37393C;
+  opacity: 95%;
+  border-radius: 2px;
+  padding: 5px;
+}
+
+.logo-text{
+  letter-spacing: 2px;
+  font-size: 20px;
+}
+
+.fixture-unplayed::before {
+  content: "";
+  height: 100%;
+  width: 5px;
+  background-color: #C2C3C4;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.fixture-active::before {
+  content: "";
+  height: 100%;
+  width: 5px;
+  background-color: #2C8BE3;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.fixture-consensus::before {
+  content: "";
+  height: 100%;
+  width: 5px;
+  background-color: #2CE3A6;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.fixture-verified::before {
+  content: "";
+  height: 100%;
+  width: 5px;
+  background-color: #7F56F1;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.fixture-pregame::before {
+  content: "";
+  height: 100%;
+  width: 5px;
+  background-color: #EF857F;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.status-text {
+  position: relative;
+  padding-left: 16px; /* adjust as needed */
 }

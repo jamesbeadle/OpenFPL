@@ -34,8 +34,8 @@ body {
   }
 
   .social-icon {
-    width: 32px;
-    height: 32px;
+    width: 16px;
+    height: 16px;
     margin: 0 10px;
   }
 
@@ -365,4 +365,8 @@ Table{
   margin: 10px 0;
   padding: 10px;
   border-radius: 4px;
+}
+
+.footer-link{
+  font-size: 10px;
 }

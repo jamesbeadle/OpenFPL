@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
-import { FixtureIcon } from '../icons';
-import { getTeamById } from '../helpers';
+import { getTeamById,groupFixturesByDate, computeTimeLeft } from '../helpers';
+import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
 
 const Fixtures = () => {
-  console.log(getTeamById)
   const { teams, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(1);
@@ -41,67 +40,160 @@ const Fixtures = () => {
 
   useEffect(() => {
     const filteredFixturesData = fixtures.filter(fixture => fixture.gameweek === currentGameweek);
-    setFilteredFixtures(filteredFixturesData);
+    setFilteredFixtures(groupFixturesByDate(filteredFixturesData));
   }, [fixtures, currentGameweek]);
 
   const handleGameweekChange = (change) => {
     setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
   }
+
+  
+    
+  const renderStatusBadge = (fixture) => {
+    const currentTime = new Date().getTime();
+    const kickoffTime = computeTimeLeft(Number(fixture.kickOff));
+    const oneHourInMilliseconds = 3600000;
+
+    if (fixture.status === 0 && kickoffTime - currentTime <= oneHourInMilliseconds) {
+        return (
+            <p className="status-text pregame">Pre-Game</p>
+        );
+    }
+
+    switch (fixture.status) {
+        case 1:
+            return (
+              <p className="status-text fixture-active">Active</p>
+            );
+        case 2:
+            return (
+              <p className="status-text fixture-consensus">In Consensus</p>
+            );
+        case 3:
+            return (
+              <p className="status-text fixture-verified">Verified</p>
+            );
+    }
+    return (<p className="status-text fixture-unplayed">Unplayed</p>
+    );
+  };
   
   
   return (
-    
-      <Card className="mt-4 mb-4">
-        <Card.Header>
-        Fixtures
-        </Card.Header>
-        <Card.Body>
+      <>
         {isLoading ? (
           <div className="d-flex flex-column align-items-center justify-content-center">
             <Spinner animation="border" />
             <p className='text-center mt-1'>Loading Fixtures</p>
           </div>) 
           :
-          <>
-            <Row className="d-flex align-items-center">
-                <div style={{flex: 1, padding: '0 5px'}}>
-                    <Button className="w-100 justify-content-center" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>{"<"}</Button>
-                </div>
-                <div style={{flex: 3, textAlign: 'center', padding: '0 5px'}}>
+          <div className="dark-tab-row p-4 w-100 mx-0">
+            <Row>
+              <Col md={12}>
+                <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                  <div>
+                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1} 
+                      style={{ marginRight: '10px' }} >
+                      <ArrowLeft />
+                    </Button>
+                  </div>
+                  <div>
+                    <small>Season {currentGameweek}</small>
+                  </div>
+                  <div style={{ marginRight: 50}}>
+                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38} 
+                      style={{ marginLeft: '10px' }} >
+                      <ArrowRight />
+                    </Button>
+                  </div>
+                  <div>
+                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
+                      style={{ marginRight: '10px' }} >
+                      <ArrowLeft />
+                    </Button>
+                  </div>
+                  <div>
                     <small>Gameweek {currentGameweek}</small>
+                  </div>
+                  <div>
+                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
+                      style={{ marginLeft: '10px' }} >
+                      <ArrowRight />
+                    </Button>
+                  </div>
                 </div>
-                <div style={{flex: 1, padding: '0 5px'}}>
-                    <Button className="w-100 justify-content-center" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>{">"}</Button>
-                </div>
+              </Col>
             </Row>
-            <br />
-            {filteredFixtures.map((fixture, i) => (
-                <Row className='align-items-center small-text mt-2' key={fixture.id}>
-                    <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
-                      <div style={{padding: '0 5px'}}>
-                          <FixtureIcon primaryColour={getTeamById(teams, fixture.homeTeamId).primaryColourHex} secondaryColour={getTeamById(teams, fixture.homeTeamId).secondaryColourHex} />
-                      </div>
-                    </Col>
-                    <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                      <p style={{margin: 0}}><small>{getTeamById(teams, fixture.homeTeamId).abbreviatedName}</small></p>
-                    </Col>
-                    <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                      <small style={{margin: 0}}>vs</small>
-                    </Col>
-                    <Col xs={3} className='text-center d-flex justify-content-center align-items-center' style={{margin: 0}}>
-                      <p style={{margin: 0}}><small>{getTeamById(teams, fixture.awayTeamId).abbreviatedName}</small></p>
-                    </Col>
-                    <Col xs={2} className='text-center d-flex justify-content-center align-items-center' style={{padding: 0}}>
-                      <div style={{padding: '0 5px'}}>
-                          <FixtureIcon primaryColour={getTeamById(teams, fixture.awayTeamId).primaryColourHex} secondaryColour={getTeamById(teams, fixture.awayTeamId).secondaryColourHex} />
-                      </div>
-                    </Col>
-                </Row>
-            ))}
-          </>
+
+            <Row>
+              {Object.entries(filteredFixtures).map(([date, fixturesForDate], dateIdx) => {
+                return (
+                    <React.Fragment key={dateIdx}>
+                        <Row>
+                            <Col className="date-header text-center small-text">{date}</Col>
+                        </Row>
+                        {fixturesForDate.map((fixture, idx) => {
+                            const homeTeam = getTeamById(teams, fixture.homeTeamId);
+                            const awayTeam = getTeamById(teams, fixture.awayTeamId);
+                            if (!homeTeam || !awayTeam) {
+                                console.error("One of the teams is missing for fixture: ", fixture);
+                                return null;
+                            }
+                            return (
+                              <Row className='mt-2' key={fixture.id}>
+                                <Col xs={2}>
+                                  <p>
+                                    <BadgeIcon
+                                        primaryColour={'#123432'}
+                                        secondaryColour={'#432123'}
+                                        thirdColour={'#432123'}
+                                        width={26}
+                                        height={26}
+                                        marginRight={10}
+                                    />
+                                  {getTeamById(teams, fixture.homeTeamId).friendlyName}</p>
+                                </Col>
+                                <Col xs={1}>
+                                  <p className="w-100 text-center">vs</p>
+                                </Col>
+                                <Col xs={1}></Col>
+                                <Col xs={2}>
+                                  <p>
+                                    <BadgeIcon
+                                        primaryColour={'#123432'}
+                                        secondaryColour={'#432123'}
+                                        thirdColour={'#432123'}
+                                        width={26}
+                                        height={26}
+                                        marginRight={10}
+                                    />
+                                  {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
+
+                                </Col>
+                                <Col xs={4}>
+                                  <p>
+                                <ClockIcon
+                                        primaryColour={'#123432'}
+                                        secondaryColour={'#432123'}
+                                        thirdColour={'#432123'}
+                                        marginRight={10}
+                                    /> 05:30AM</p>
+                                </Col>
+                                <Col xs={1}>
+                                  {renderStatusBadge(fixture)}
+                                </Col>
+
+                            </Row>
+                            );
+                        })}
+                    </React.Fragment>
+                );
+              })}
+
+            </Row>
+          </div>
       }
-        </Card.Body>
-    </Card>
+      </>
   );
 };
 

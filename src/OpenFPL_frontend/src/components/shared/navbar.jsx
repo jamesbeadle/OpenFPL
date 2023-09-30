@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Image from 'react-bootstrap/Image';
 import { Link, useNavigate } from "react-router-dom";
 import LogoImage from "../../../assets/logo.png";
-import { WalletIcon } from '../icons';
+import { LogoIcon, WalletIcon } from '../icons';
 import { useLocation } from 'react-router-dom';
 import ProfileImage from '../../../assets/profile_placeholder.png';
 
@@ -27,10 +27,10 @@ const MyNavbar = () => {
   return (
     <Navbar className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
-        <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)}>
-          <img src={LogoImage} alt="openFPL" style={{ maxWidth: '150px', maxHeight: '100%' }} />
-        </Navbar.Brand>
-    
+          <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)} className="d-flex align-items-center" style={{color: "white", fontSize: "small"}}>
+            <LogoIcon width={20} marginRight={10} /> <b className="logo-text">OPENFPL</b>
+          </Navbar.Brand>
+
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse  id="responsive-navbar-nav" className="justify-content-end">
           {isAuthenticated && 

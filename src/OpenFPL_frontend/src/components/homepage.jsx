@@ -191,94 +191,97 @@ const Homepage = () => {
                                     </Col>
                                 </Row>
                             </div>
-                            <div className="d-none d-md-block vertical-divider-1"></div> {/* Hidden for mobile */}
-                            <div className="d-none d-md-block vertical-divider-2"></div> {/* Hidden for mobile */}
+                            <div className="d-none d-md-block vertical-divider-1"></div>
+                            <div className="d-none d-md-block vertical-divider-2"></div>
                         </div>
                     </Card>
                 </Col>
 
                 <Col md={5} xs={12}>
                     <Card>
-                        <div class="home-stat-panel">      
-                            <Row className="stat-row-1">
-                                <p class="home-stat-header w-100">Upcoming Game</p>    
-                            </Row>
-                            <Row className="stat-row-2">
-                                <Col xs={12} md={6}>
-                                    <Row>
-                                        <Col xs={4} className="add-colon">
-                                            <p className="home-stat w-100 text-center">02</p>
-                                        </Col>
-                                        <Col xs={4} className="add-colon">
-                                        <p className="home-stat w-100 text-center">02</p>
-
-                                        </Col>
-                                        <Col xs={4}>
-                                        <p className="home-stat w-100 text-center">02</p>
-                                
-                                        </Col>
-                                    </Row>
-                                    <Row className="stat-row-3">
-                                        
-                                    <Col xs={12}>
-                                            <Row>
-                                                <Col xs={4}>
-                                                    <p className="home-stat-header text-center w-100">Day</p> 
-                                                </Col>
-                                                <Col xs={4}>
-                                                    <p className="home-stat-header text-center w-100">Hour</p>   
-                                                </Col>
-                                                <Col xs={4}>
-                                                    <p className="home-stat-header text-center w-100">Min</p>    
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                                <Col xs={12} md={6} className="mt-4 mt-md-0">
-                                    <Row>
-                                        <Col xs={5}>
-                                            <div className='text-center badge w-100'>
-                                                <BadgeIcon
-                                                    primaryColour={'#123432'}
-                                                    secondaryColour={'#432123'}
-                                                    thirdColour={'#432123'}
-                                                    width={26}
-                                                    height={26}
-                                                />
-                                            </div>
-                                        </Col>
-                                        <Col xs={2}>
-                                            <p className="w-100 time-colon">vs</p>
-                                        </Col>
-                                        <Col xs={5}>
-                                            <div className='text-center badge w-100'>
-                                                <BadgeIcon
-                                                    primaryColour={'#123432'}
-                                                    secondaryColour={'#432123'}
-                                                    thirdColour={'#432123'}
-                                                    width={26}
-                                                    height={26}
-                                                />
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                    <Row className="stat-row-3">
-                                        <Col xs={12}>
-                                            <Row>
-                                                <Col xs={5}>
-                                                <p className="home-stat-header text-center w-100">MUN</p>
-                                                </Col>
-                                                <Col xs={2}>
+                        <div className="outer-container d-flex">
+                            <div class="home-stat-panel flex-grow-1">      
+                                <Row className="stat-row-1">
+                                    <p class="home-stat-header w-100">Upcoming Game</p>    
+                                </Row>
+                                <Row className="stat-row-2">
+                                    <Col xs={12} md={6}>
+                                        <Row>
+                                            <Col xs={4} className="add-colon">
+                                                <p className="home-stat w-100 text-center">02</p>
                                             </Col>
-                                                <Col xs={5}>
-                                                <p className="home-stat-header text-center w-100">LVP</p>  
+                                            <Col xs={4} className="add-colon">
+                                            <p className="home-stat w-100 text-center">02</p>
+
+                                            </Col>
+                                            <Col xs={4}>
+                                            <p className="home-stat w-100 text-center">02</p>
+                                    
+                                            </Col>
+                                        </Row>
+                                        <Row className="stat-row-3">
+                                            
+                                        <Col xs={12}>
+                                                <Row>
+                                                    <Col xs={4}>
+                                                        <p className="home-stat-header text-center w-100">Day</p> 
+                                                    </Col>
+                                                    <Col xs={4}>
+                                                        <p className="home-stat-header text-center w-100">Hour</p>   
+                                                    </Col>
+                                                    <Col xs={4}>
+                                                        <p className="home-stat-header text-center w-100">Min</p>    
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                    <Col xs={12} md={6} className="mt-4 mt-md-0">
+                                        <Row>
+                                            <Col xs={5}>
+                                                <div className='text-center badge w-100'>
+                                                    <BadgeIcon
+                                                        primaryColour={'#123432'}
+                                                        secondaryColour={'#432123'}
+                                                        thirdColour={'#432123'}
+                                                        width={26}
+                                                        height={26}
+                                                    />
+                                                </div>
+                                            </Col>
+                                            <Col xs={2}>
+                                                <p className="w-100 time-colon">vs</p>
+                                            </Col>
+                                            <Col xs={5}>
+                                                <div className='text-center badge w-100'>
+                                                    <BadgeIcon
+                                                        primaryColour={'#123432'}
+                                                        secondaryColour={'#432123'}
+                                                        thirdColour={'#432123'}
+                                                        width={26}
+                                                        height={26}
+                                                    />
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        <Row className="stat-row-3">
+                                            <Col xs={12}>
+                                                <Row>
+                                                    <Col xs={5}>
+                                                    <p className="home-stat-header text-center w-100">MUN</p>
+                                                    </Col>
+                                                    <Col xs={2}>
                                                 </Col>
-                                            </Row>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
+                                                    <Col xs={5}>
+                                                    <p className="home-stat-header text-center w-100">LVP</p>  
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                </Row>
+                            </div>
+                            <div className="d-none d-md-block vertical-divider-3"></div>
                         </div>
                     </Card>
                 </Col>
@@ -288,25 +291,24 @@ const Homepage = () => {
                 <Col xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
-                            <div className="home-tab-panel flex-grow-1">
-                            <Tabs defaultActiveKey="fixtures" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)}>
+                            <div className="flex-grow-1 tab-panel">
+                                <Tabs className="home-tab-header" defaultActiveKey="fixtures" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)}>
                                 
-                                <Tab eventKey="fixtures" title="Fixtures">
-                                    {activeKey === 'fixtures' && <Fixtures />}
-                                </Tab>
-                                <Tab eventKey="gameweek-points" title="Gameweek Points">
-                                </Tab>
-                                <Tab eventKey="league-table" title="Premier League Table">
-                                </Tab>
-                                <Tab eventKey="leaderboards" title="Leaderboards">
-                                </Tab>
+                                    <Tab eventKey="fixtures" title="Fixtures">
+                                        {activeKey === 'fixtures' && <Fixtures />}
+                                    </Tab>
+                                    <Tab eventKey="gameweek-points" title="Gameweek Points">
+                                    </Tab>
+                                    <Tab eventKey="league-table" title="Premier League Table">
+                                    </Tab>
+                                    <Tab eventKey="leaderboards" title="Leaderboards">
+                                    </Tab>
                                 </Tabs>
                             </div>
                         </div>
                     </Card>
                 </Col>
             </Row>
-
         </Container>
     );
 };

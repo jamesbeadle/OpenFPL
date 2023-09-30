@@ -11,13 +11,10 @@ import LogoImage from '../../../assets/logo.png';
 const MyFooter = () => {
   return (
     <footer className="footer mt-auto py-3 custom-footer">
-      <Container>
+      <Container fluid>
         <Row>
-          <Col md={4} className="text-start">
-            {/* Place additional content if needed */}
-          </Col>
-          <Col md={4} xs={12} className="text-center">
-            <div className="social-icons">
+          <Col md={4}>
+            <p className='social-icons' style={{display: 'inline-block'}}>
                 <a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer">
                   <img src={OpenChatIcon} alt="OpenChat" className="social-icon" />
                 </a>
@@ -33,17 +30,19 @@ const MyFooter = () => {
                 <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer">
                   <img src={GitHubLogo} alt="GitHub" className="social-icon" />
                 </a>
-            </div>
+            </p>
+          </Col>
+          <Col md={4} xs={12} className="text-center">
             <img src={LogoImage} alt="openFPL" style={{ maxWidth: '100px', maxHeight: '100%', marginTop: '10px' }} />
           </Col>
           <Col md={4} xs={12} className="text-md-end text-center">
             <Row className="mt-4">
               <Col md={12} xs={12}>
                 <ul className="footer-links">
-                  <li><LinkContainer to="/funded-whitepaper"><a>Whitepaper</a></LinkContainer></li>
-                  <li><LinkContainer to="/gameplay"><a>Gameplay Rules</a></LinkContainer></li>
-                    <li><LinkContainer to="/terms"><a>Terms and Conditions</a></LinkContainer></li>
-                    <li><LinkContainer to="/fixture-validation-list" /*Remove this post sns*/><a>Fixture Validation (To be removed post SNS)</a></LinkContainer></li>
+                  <li><LinkContainer to="/funded-whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer></li>
+                  <li><LinkContainer to="/gameplay"><a className='footer-link'>Gameplay Rules</a></LinkContainer></li>
+                    <li><LinkContainer to="/terms"><a className='footer-link'>Terms and Conditions</a></LinkContainer></li>
+                    <li><LinkContainer to="/fixture-validation-list" /*Remove this post sns*/><a className='footer-link'>Fixture Validation (To be removed post SNS)</a></LinkContainer></li>
                 </ul>
               </Col>
             </Row>

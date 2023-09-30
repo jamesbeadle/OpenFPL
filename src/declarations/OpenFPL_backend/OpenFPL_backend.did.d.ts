@@ -166,6 +166,7 @@ export interface Team {
 }
 export type TeamId = number;
 export interface _SERVICE {
+  'addInitialData' : ActorMethod<[], undefined>,
   'executeAddInitialFixtures' : ActorMethod<[SeasonId, Array<Fixture>], Result>,
   'executeCreatePlayer' : ActorMethod<
     [TeamId, number, string, string, number, bigint, bigint, string],

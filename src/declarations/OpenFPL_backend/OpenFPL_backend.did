@@ -204,6 +204,7 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
+  addInitialData: () -> ();
   executeAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);
   executeCreatePlayer: (TeamId, nat8, text, text, nat8, nat, int, text) ->
    (Result);
