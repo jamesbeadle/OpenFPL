@@ -89,35 +89,35 @@ const Fixtures = () => {
           :
           <div className="dark-tab-row w-100 mx-0">
             <Row>
-              <Col md={12} className="mt-3 mb-2">
-                <div className='px-4' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                  <div>
+              <Col md={12}>
+                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1} 
-                      style={{ marginRight: '10px' }} >
+                      style={{ marginRight: '16px' }} >
                       <ArrowLeft />
                     </Button>
                   </div>
-                  <div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <small>Season {currentGameweek}</small>
                   </div>
-                  <div style={{ marginRight: 50}}>
+                  <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38} 
-                      style={{ marginLeft: '10px' }} >
+                      style={{ marginLeft: '16px' }} >
                       <ArrowRight />
                     </Button>
                   </div>
-                  <div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
-                      style={{ marginRight: '10px' }} >
+                      style={{ marginRight: '16px' }} >
                       <ArrowLeft />
                     </Button>
                   </div>
-                  <div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <small>Gameweek {currentGameweek}</small>
                   </div>
-                  <div>
+                  <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
-                      style={{ marginLeft: '10px' }} >
+                      style={{ marginLeft: '16px' }} >
                       <ArrowRight />
                     </Button>
                   </div>
@@ -131,8 +131,8 @@ const Fixtures = () => {
                     <Container key={dateIdx}>
                       <Row>
                         <Col xs={12}>
-                          <div className='light-background date-row w-100'>
-                            <p className="w-100 date-header mt-2">{date}</p>
+                          <div className='light-background date-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
+                            <p className="w-100 date-header">{date}</p>
                           </div>
                         </Col>  
                       </Row>

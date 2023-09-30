@@ -275,13 +275,16 @@
 }
 
 .date-row {
-  padding-left: 10px;
+  height: 46px;
+  padding-left: 32px;
+  border-top: 1px solid #454B56;
+  border-bottom: 1px solid #454B56;
 }
 
 .date-header{
-  padding: 5px !important;
   font-family: 600 !important;
   font-size: 12px !important;
+  margin: 0 !important;
 }
 
 .table-row{
@@ -305,4 +308,9 @@
   height: 55px;
   font-size: 18px;
   margin-right: 20px;
+}
+
+.filter-row{
+  margin-left: 32px;
+  height: 72px;
 }
