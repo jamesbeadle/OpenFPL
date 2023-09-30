@@ -45,9 +45,10 @@ module {
     private var setAndBackupTimer : ?((duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) = null;
         
     public func setData(stable_seasons: [T.Season], stable_active_season_id: Nat16, stable_active_gameweek: Nat8, 
-        stable_active_fixtures: [T.Fixture], stable_next_fixture_id: Nat32, stable_next_season_id: Nat16){
+        stable_active_fixtures: [T.Fixture], stable_next_fixture_id: Nat32, stable_next_season_id: Nat16, stable_interesting_gameweek: Nat8){
             activeSeasonId := stable_active_season_id;
             activeGameweek :=  stable_active_gameweek; 
+            interestingGameweek :=  stable_interesting_gameweek; 
             activeFixtures := stable_active_fixtures; 
             seasonsInstance.setSeasons(stable_seasons);
             seasonsInstance.setNextFixtureId(stable_next_fixture_id);
@@ -190,6 +191,7 @@ module {
         await updateCacheHash("weekly_leaderboard");
         await updateCacheHash("monthly_leaderboards");
         await updateCacheHash("season_leaderboard");
+        await updateCacheHash("system_state");
         await updatePlayerEventDataCache();
     };
 

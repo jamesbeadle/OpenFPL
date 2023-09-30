@@ -301,6 +301,7 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'updateCache' : IDL.Func([IDL.Text], [], []),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
     'updateProfilePicture' : IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),

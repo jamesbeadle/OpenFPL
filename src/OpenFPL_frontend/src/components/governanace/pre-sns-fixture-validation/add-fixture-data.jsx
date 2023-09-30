@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import PlayerEventsModal from './player-events-modal';
 import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
+import ConfirmClearDraftModal from './confirm-clear-draft-modal';
 import { useNavigate } from 'react-router-dom';
 
 const PreSNSAddFixtureData = () => {
