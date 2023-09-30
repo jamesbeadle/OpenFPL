@@ -38,7 +38,11 @@
     height: 4px;
     background-color: #2CE3A6;
 }
-  
+
+.footer-logo-text{
+  letter-spacing: 2px;
+}
+
 .active-link {
     font-weight: 700 !important;
     color: white !important;
@@ -287,13 +291,51 @@
   margin: 0 !important;
 }
 
-.table-row{
+
+.table-row {
+  display: flex;
+  align-items: center;
+  height: 80px;
   border-bottom: #454B56 1px solid !important;
-  padding: 5px;
   padding-left: 30px;
   padding-right: 30px;
-  height: 80px;
+  margin-top: 16px;
 }
+
+.date-header {
+  width: 100%;
+}
+
+.col-home-team,
+.col-away-team,
+.col-vs,
+.col-time,
+.col-badge {
+  flex: 0 0 auto;
+}
+
+.col-home-team {
+  width: 17.5%;
+}
+
+.col-vs {
+  width: 5%;
+}
+
+.col-away-team {
+  margin-left: 10%;
+  width: 17.5%;
+}
+
+.col-time {
+  width: 40%;
+  text-align: center;
+}
+
+.col-badge {
+  width: 10%;
+}
+
 
 .fixture-team-name{
   font-weight: 600;

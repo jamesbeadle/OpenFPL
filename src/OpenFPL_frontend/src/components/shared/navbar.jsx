@@ -5,7 +5,6 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Image from 'react-bootstrap/Image';
 import { Link, useNavigate } from "react-router-dom";
-import LogoImage from "../../../assets/logo.png";
 import { LogoIcon, WalletIcon } from '../icons';
 import { useLocation } from 'react-router-dom';
 import ProfileImage from '../../../assets/profile_placeholder.png';

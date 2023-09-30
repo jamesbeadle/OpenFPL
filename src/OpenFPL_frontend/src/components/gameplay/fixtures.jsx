@@ -181,6 +181,8 @@ const Fixtures = () => {
                                                 secondaryColour={'#432123'}
                                                 thirdColour={'#432123'}
                                                 marginRight={10}
+                                                width={20}
+                                                height={20}
                                             /> 05:30AM</p>
                                 </div>
                                   <div className="col-badge">

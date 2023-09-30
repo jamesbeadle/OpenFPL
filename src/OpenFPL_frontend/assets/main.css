@@ -171,6 +171,7 @@ Table{
 .wallet-icon{
   background-color: transparent !important;
   border: none !important;
+  color: white !important;
 }
 
 .home-team-name {
@@ -362,48 +363,4 @@ Table{
 
 .footer-link{
   font-size: 10px;
-}
-
-.container {
-  width: 100%;
-}
-
-.date-row,
-.table-row {
-  display: flex;
-  align-items: center;
-}
-
-.date-header {
-  width: 100%;
-}
-
-.col-home-team,
-.col-away-team,
-.col-vs,
-.col-time,
-.col-badge {
-  flex: 0 0 auto;
-}
-
-.col-home-team {
-  width: 17.5%;
-}
-
-.col-vs {
-  width: 5%;
-}
-
-.col-away-team {
-  margin-left: 10%;
-  width: 17.5%;
-}
-
-.col-time {
-  width: 40%;
-  text-align: center;
-}
-
-.col-badge {
-  width: 10%;
 }

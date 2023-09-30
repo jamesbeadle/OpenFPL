@@ -7,6 +7,7 @@ import OpenChatIcon from '../../../assets/openchat.png';
 import TelegramLogo from '../../../assets/telegram.png';
 import GitHubLogo from '../../../assets/github.png';
 import LogoImage from '../../../assets/logo.png';
+import { LogoIcon } from '../icons';
 
 const MyFooter = () => {
   return (
@@ -33,12 +34,12 @@ const MyFooter = () => {
             </p>
           </Col>
           <Col md={4} xs={12} className="text-center">
-            <img src={LogoImage} alt="openFPL" style={{ maxWidth: '100px', maxHeight: '100%', marginTop: '10px' }} />
           </Col>
           <Col md={4} xs={12} className="text-md-end text-center">
             <Row className="mt-4">
               <Col md={12} xs={12}>
                 <ul className="footer-links">
+                  <li><LogoIcon width={16} height={16} fill={'#FFFFFF'} /> <b className="footer-logo-text">OPENFPL</b></li>
                   <li><LinkContainer to="/funded-whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer></li>
                   <li><LinkContainer to="/gameplay"><a className='footer-link'>Gameplay Rules</a></LinkContainer></li>
                     <li><LinkContainer to="/terms"><a className='footer-link'>Terms and Conditions</a></LinkContainer></li>
