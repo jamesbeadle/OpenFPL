@@ -7,7 +7,8 @@ import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
 const Fixtures = () => {
   const { teams, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentGameweek, setCurrentGameweek] = useState(1);
+  const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
+  const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [filteredFixtures, setFilteredFixtures] = useState([]);
   
   useEffect(() => {
@@ -98,7 +99,7 @@ const Fixtures = () => {
                     </Button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <small>Season {currentGameweek}</small>
+                    <small>{currentSeason.name}</small>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38} 

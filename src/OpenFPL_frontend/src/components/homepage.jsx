@@ -1,106 +1,91 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button, Pagination } from 'react-bootstrap';
-import { BadgeIcon, CombinedIcon } from './icons';
+import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge } from 'react-bootstrap';
+import { CombinedIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
 import { DataContext } from "../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
-import { Link } from "react-router-dom";
-import { msToTime, computeTimeLeft, getTeamById, groupFixturesByDate } from './helpers';
+import { computeTimeLeft } from './helpers';
 import Fixtures from './gameplay/fixtures';
 
 const Homepage = () => {
 
-    const { userPrincipal, isAuthenticated } = useContext(AuthContext);
-    const { teams, fixtures, systemState, seasonLeaderboard, weeklyLeaderboard } = useContext(DataContext);
+    const { isAuthenticated } = useContext(AuthContext);
+    const { fixtures, systemState, teams } = useContext(DataContext);
 
     const [isLoading, setIsLoading] = useState(true);
-    const [managerCount, setManagerCount] = useState(-1);
-    const [seasonTop10, setSeasonTop10] = useState([]);
-    const [weeklyTop10, setWeeklyTop10] = useState([]);
-    const [filterGameweek, setFilterGameweek] = useState(systemState.activeGameweek);
-    const [isActiveGameweek, setIsActiveGameweek] = useState(false);
-    const [countdown, setCountdown] = useState(0);
-
-    const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
     const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
-    const [groupedFixtures, setGroupedFixtures] = useState([]);
-    const totalPrizePool = 0;
+    const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
+    const [filterSeason, setFilterSeason] = useState(systemState.activeSeason.id);
+    const [filterGameweek, setFilterGameweek] = useState(systemState.activeGameweek);
     const [activeKey, setActiveKey] = useState("fixtures");
-
+    
+    const [managerCount, setManagerCount] = useState(-1);
+    const [nextFixture, setNextFixture] = useState(null);
+    const [nextFixtureHomeTeam, setNextFixtureHomeTeam] = useState(null);
+    const [nextFixtureAwayTeam, setNextFixtureAwayTeam] = useState(null);
+    const [days, setDays] = useState(0);
+    const [hours, setHours] = useState(0);
+    const [minutes, setMinutes] = useState(0);
+    const totalPrizePool = 0; //To be implemented
     
     useEffect(() => {
-        if (!fixtures || fixtures.length === 0) {
-            return;
-        }
-        setGroupedFixtures(groupFixturesByDate(getCurrentGameweekFixtures()));
         const fetchViewData = async () => {
-            if (filterGameweek === 0) return;
-
+            if (filterSeason == 0 || filterGameweek === 0){
+                setIsLoading(false);    
+                return;
+            } 
             await updateCountdowns();
             setIsLoading(false);
         };
         
         fetchViewData();
-    }, [filterGameweek, fixtures, isAuthenticated]);
+    }, [filterSeason, filterGameweek, isAuthenticated]);
+
 
     useEffect(() => {
-        const fetchViewData = async () => {
-            if(Object.keys(seasonLeaderboard).length === 0 || Object.keys(weeklyLeaderboard).length === 0) { return; }
-            await updateManagerData();
+        const fetchManagerCount = async () => {
+            try{
+                const managerCountData = await open_fpl_backend.getTotalManagers();
+                setManagerCount(Number(managerCountData));
+            } catch (error){
+                console.log(error);
+            }
         };
-        
-        fetchViewData();
-    }, [seasonLeaderboard, weeklyLeaderboard]);
 
-    useEffect(() => {
+        fetchManagerCount();
         const timer = setInterval(updateCountdowns, 1000);
-        return () => clearInterval(timer);
-    }, [filterGameweek, fixtures]);
+        return () => clearInterval(timer);    
+    }, []);
 
     const updateCountdowns = async () => {
-        const currentFixtures = getCurrentGameweekFixtures();
-        const kickOffs = currentFixtures.map(fixture => computeTimeLeft(Number(fixture.kickOff)));
-    
-        const kickOffsInMillis = kickOffs.map(obj => 
-            obj.days * 24 * 60 * 60 * 1000 + 
-            obj.hours * 60 * 60 * 1000 + 
-            obj.minutes * 60 * 1000 + 
-            obj.seconds * 1000
-        );
-    
-        const timeUntilGameweekBegins = Math.min(...kickOffsInMillis) - 3600000;
+        const sortedFixtures = fixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
         
-        if (timeUntilGameweekBegins > 0) {
-            setCountdown(msToTime(timeUntilGameweekBegins));
-            setIsActiveGameweek(false);
-        } else {
-            setCountdown(msToTime(0));
-            setIsActiveGameweek(true);
-        }
-    };
+        const currentTime = Date.now();
+        const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
+        setNextFixture(fixture);
+        setNextFixtureHomeTeam(teams.find(x => x.id == fixture.homeTeamId));
+        setNextFixtureAwayTeam(teams.find(x => x.id == fixture.awayTeamId));
 
-    const updateManagerData = async () => {
-        try {
-            const managerCountData = await open_fpl_backend.getTotalManagers();
-            setManagerCount(Number(managerCountData));
+        if (fixture) {
+            const timeLeft = computeTimeLeft(Number(fixture.kickOff));
+            const timeLeftInMillis = 
+                timeLeft.days * 24 * 60 * 60 * 1000 + 
+                timeLeft.hours * 60 * 60 * 1000 + 
+                timeLeft.minutes * 60 * 1000 + 
+                timeLeft.seconds * 1000;
+            
+            const d = -Math.floor(timeLeftInMillis / (1000 * 60 * 60 * 24));
+            const h = -Math.floor((timeLeftInMillis % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = -Math.floor((timeLeftInMillis % (1000 * 60 * 60)) / (1000 * 60));
     
-            const seasonTop10Data = seasonLeaderboard.entries.slice(0, 10);
-            setSeasonTop10(seasonTop10Data);
-            
-            const weeklyTop10Data = weeklyLeaderboard.entries.slice(0, 10).map(entry => ({
-                ...entry,
-                seasonId: weeklyLeaderboard.seasonId,
-                gameweek: weeklyLeaderboard.gameweek
-            }));
-            
-            setWeeklyTop10(weeklyTop10Data);
-        } catch (error) {
-            console.error(error);
+            setDays(d);
+            setHours(h);
+            setMinutes(m);
+        } else {
+            setDays(0);
+            setHours(0);
+            setMinutes(0);
         }
-    };
-
-    const getCurrentGameweekFixtures = () => {
-        return fixtures.filter(fixture => fixture.gameweek === filterGameweek);
     };
 
     const handlePrevGameweek = () => {
@@ -109,39 +94,11 @@ const Homepage = () => {
         }
       };
       
-      const handleNextGameweek = () => {
+    const handleNextGameweek = () => {
         if (filterGameweek < 38) {
             setFilterGameweek(nextGameweek => nextGameweek + 1);
         }
-      };
-    
-    const renderStatusBadge = (fixture) => {
-        const currentTime = new Date().getTime();
-        const kickoffTime = computeTimeLeft(Number(fixture.kickOff));
-        const oneHourInMilliseconds = 3600000;
-    
-        if (fixture.status === 0 && kickoffTime - currentTime <= oneHourInMilliseconds) {
-            return (
-                <Badge className='bg-warning w-100' style={{ padding: '0.5rem' }}>Pre-Game</Badge>
-            );
-        }
-    
-        switch (fixture.status) {
-            case 1:
-                return (
-                    <Badge className='bg-info w-100' style={{ padding: '0.5rem' }}>Active</Badge>
-                );
-            case 2:
-                return (
-                    <Badge className='bg-success w-100' style={{ padding: '0.5rem' }}>In Consensus</Badge>
-                );
-            case 3:
-                return (
-                    <Badge className='bg-primary w-100' style={{ padding: '0.5rem' }}>Verified</Badge>
-                );
-        }
     };
-    
 
     return (
         isLoading ? (
@@ -176,7 +133,7 @@ const Homepage = () => {
                                         <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
                                     </Col>
                                     <Col xs={3}>
-                                        <p class="home-stat">12,242</p>
+                                        <p class="home-stat">{totalPrizePool}</p>
                                     </Col>
                                 </Row>
                                 <Row className="stat-row-3">
@@ -208,15 +165,13 @@ const Homepage = () => {
                                         </Row>
                                         <Row>
                                             <Col xs={4} className="add-colon">
-                                                <p className="home-stat w-100 text-center">02</p>
+                                                <p className="home-stat w-100 text-center">{String(days).padStart(2, '0')}</p>
                                             </Col>
                                             <Col xs={4} className="add-colon">
-                                            <p className="home-stat w-100 text-center">02</p>
-
+                                                <p className="home-stat w-100 text-center">{String(hours).padStart(2, '0')}</p>
                                             </Col>
                                             <Col xs={4}>
-                                            <p className="home-stat w-100 text-center">02</p>
-                                    
+                                                <p className="home-stat w-100 text-center">{String(minutes).padStart(2, '0')}</p>
                                             </Col>
                                         </Row>
                                         <Row className="stat-row-3">
@@ -241,9 +196,9 @@ const Homepage = () => {
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
                                                     <CombinedIcon
-                                                        primaryColour={'#123432'}
-                                                        secondaryColour={'#432123'}
-                                                        thirdColour={'#432123'}
+                                                        primaryColour={nextFixtureHomeTeam.primaryHexColour}
+                                                        secondaryColour={nextFixtureHomeTeam.SecondaryHexColour}
+                                                        thirdColour={nextFixtureHomeTeam.thirdHexColour}
                                                         width={80}
                                                         height={80}
                                                     />
@@ -255,9 +210,9 @@ const Homepage = () => {
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
                                                     <CombinedIcon
-                                                        primaryColour={'#123432'}
-                                                        secondaryColour={'#432123'}
-                                                        thirdColour={'#432123'}
+                                                        primaryColour={nextFixtureAwayTeam.primaryHexColour}
+                                                        secondaryColour={nextFixtureAwayTeam.SecondaryHexColour}
+                                                        thirdColour={nextFixtureAwayTeam.thirdHexColour}
                                                         width={80}
                                                         height={80}
                                                     />
@@ -268,12 +223,12 @@ const Homepage = () => {
                                             <Col xs={12}>
                                                 <Row>
                                                     <Col xs={5}>
-                                                    <p className="home-stat-header text-center w-100">MUN</p>
+                                                    <p className="home-stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>
                                                     </Col>
                                                     <Col xs={2}>
                                                 </Col>
                                                     <Col xs={5}>
-                                                    <p className="home-stat-header text-center w-100">LVP</p>  
+                                                    <p className="home-stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>  
                                                     </Col>
                                                 </Row>
                                             </Col>
