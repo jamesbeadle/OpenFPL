@@ -224,7 +224,7 @@
   color: black !important;
 };
 
-.tab-panel{
+.light-background{
   background-color: #2E323A !important; 
 }
 
@@ -297,4 +297,18 @@
 .status-text {
   position: relative;
   padding-left: 16px; /* adjust as needed */
+}
+
+.date-row {
+  padding-left: 10px;
+}
+
+.date-header{
+  padding: 5px !important;
+  font-family: 600 !important;
+  font-size: 12px !important;
+}
+
+.table-row{
+  border-bottom: #454B56 1px solid !important;
 }

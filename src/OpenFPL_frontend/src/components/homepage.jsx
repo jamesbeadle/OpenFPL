@@ -291,7 +291,7 @@ const Homepage = () => {
                 <Col xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
-                            <div className="flex-grow-1 tab-panel">
+                            <div className="flex-grow-1 light-background">
                                 <Tabs className="home-tab-header" defaultActiveKey="fixtures" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)}>
                                 
                                     <Tab eventKey="fixtures" title="Fixtures">

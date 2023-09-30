@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Row, Col, Card, Button, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
 import { getTeamById,groupFixturesByDate, computeTimeLeft } from '../helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
@@ -87,10 +87,10 @@ const Fixtures = () => {
             <p className='text-center mt-1'>Loading Fixtures</p>
           </div>) 
           :
-          <div className="dark-tab-row p-4 w-100 mx-0">
+          <div className="dark-tab-row w-100 mx-0">
             <Row>
-              <Col md={12}>
-                <div style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+              <Col md={12} className="mt-3 mb-2">
+                <div className='px-4' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                   <div>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1} 
                       style={{ marginRight: '10px' }} >
@@ -128,10 +128,15 @@ const Fixtures = () => {
             <Row>
               {Object.entries(filteredFixtures).map(([date, fixturesForDate], dateIdx) => {
                 return (
-                    <React.Fragment key={dateIdx}>
-                        <Row>
-                            <Col className="date-header text-center small-text">{date}</Col>
-                        </Row>
+                    <Container key={dateIdx}>
+                      <Row>
+                        <Col xs={12}>
+                          <div className='light-background date-row w-100'>
+                            <p className="w-100 date-header mt-2">{date}</p>
+                          </div>
+                        </Col>  
+                      </Row>
+                        
                         {fixturesForDate.map((fixture, idx) => {
                             const homeTeam = getTeamById(teams, fixture.homeTeamId);
                             const awayTeam = getTeamById(teams, fixture.awayTeamId);
@@ -140,53 +145,59 @@ const Fixtures = () => {
                                 return null;
                             }
                             return (
-                              <Row className='mt-2' key={fixture.id}>
-                                <Col xs={2}>
-                                  <p>
-                                    <BadgeIcon
-                                        primaryColour={'#123432'}
-                                        secondaryColour={'#432123'}
-                                        thirdColour={'#432123'}
-                                        width={26}
-                                        height={26}
-                                        marginRight={10}
-                                    />
-                                  {getTeamById(teams, fixture.homeTeamId).friendlyName}</p>
-                                </Col>
-                                <Col xs={1}>
-                                  <p className="w-100 text-center">vs</p>
-                                </Col>
-                                <Col xs={1}></Col>
-                                <Col xs={2}>
-                                  <p>
-                                    <BadgeIcon
-                                        primaryColour={'#123432'}
-                                        secondaryColour={'#432123'}
-                                        thirdColour={'#432123'}
-                                        width={26}
-                                        height={26}
-                                        marginRight={10}
-                                    />
-                                  {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
+                              <Row>
+                                <Col xs={12}>
+                                  <div className='table-row w-100'>
+                                    <Row key={fixture.id}>
+                                      <Col xs={2}>
+                                        <p>
+                                          <BadgeIcon
+                                              primaryColour={'#123432'}
+                                              secondaryColour={'#432123'}
+                                              thirdColour={'#432123'}
+                                              width={26}
+                                              height={26}
+                                              marginRight={10}
+                                          />
+                                        {getTeamById(teams, fixture.homeTeamId).friendlyName}</p>
+                                      </Col>
+                                      <Col xs={1}>
+                                        <p className="w-100 text-center">vs</p>
+                                      </Col>
+                                      <Col xs={1}></Col>
+                                      <Col xs={2}>
+                                        <p>
+                                          <BadgeIcon
+                                              primaryColour={'#123432'}
+                                              secondaryColour={'#432123'}
+                                              thirdColour={'#432123'}
+                                              width={26}
+                                              height={26}
+                                              marginRight={10}
+                                          />
+                                        {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
 
-                                </Col>
-                                <Col xs={4}>
-                                  <p>
-                                <ClockIcon
-                                        primaryColour={'#123432'}
-                                        secondaryColour={'#432123'}
-                                        thirdColour={'#432123'}
-                                        marginRight={10}
-                                    /> 05:30AM</p>
-                                </Col>
-                                <Col xs={1}>
-                                  {renderStatusBadge(fixture)}
-                                </Col>
+                                      </Col>
+                                      <Col xs={4}>
+                                        <p>
+                                      <ClockIcon
+                                              primaryColour={'#123432'}
+                                              secondaryColour={'#432123'}
+                                              thirdColour={'#432123'}
+                                              marginRight={10}
+                                          /> 05:30AM</p>
+                                      </Col>
+                                      <Col xs={1}>
+                                        {renderStatusBadge(fixture)}
+                                      </Col>
 
-                            </Row>
+                                  </Row>
+                                  </div>
+                                </Col>  
+                              </Row>
                             );
                         })}
-                    </React.Fragment>
+                    </Container>
                 );
               })}
 
