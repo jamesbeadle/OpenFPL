@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Spinner, Row, Col, Card, Tabs, Tab, Badge, Table, Button, Pagination } from 'react-bootstrap';
-import { BadgeIcon, SmallFixtureIcon } from './icons';
+import { BadgeIcon, CombinedIcon } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
 import { DataContext } from "../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
@@ -159,7 +159,7 @@ const Homepage = () => {
                                 
                                 <Row className="stat-row-1">
                                     <Col xs={4}>
-                                        <p class="home-stat-header w-100">Gameweek</p>
+                                        <p style={{paddingLeft: '40px'}} class="home-stat-header w-100">Gameweek</p>
                                     </Col>
                                     <Col xs={5}>
                                         <p class="home-stat-header w-100">Managers</p>
@@ -170,7 +170,7 @@ const Homepage = () => {
                                 </Row>
                                 <Row className="stat-row-2">
                                     <Col xs={4}>
-                                        <p class="home-stat">{currentGameweek}</p>
+                                        <p style={{paddingLeft: '40px'}} class="home-stat">{currentGameweek}</p>
                                     </Col>
                                     <Col xs={5}>
                                         <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
@@ -181,7 +181,7 @@ const Homepage = () => {
                                 </Row>
                                 <Row className="stat-row-3">
                                     <Col xs={4}>
-                                        <p class="home-stat-header">{currentSeason.name}</p>   
+                                        <p style={{paddingLeft: '40px'}} class="home-stat-header">{currentSeason.name}</p>   
                                     </Col>
                                     <Col xs={5}>
                                         <p class="home-stat-header">Total</p>    
@@ -200,12 +200,12 @@ const Homepage = () => {
                 <Col md={5} xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
-                            <div class="home-stat-panel flex-grow-1">      
-                                <Row className="stat-row-1">
-                                    <p class="home-stat-header w-100">Upcoming Game</p>    
-                                </Row>
+                            <div class="home-stat-panel flex-grow-1">  
                                 <Row className="stat-row-2">
-                                    <Col xs={12} md={6}>
+                                    <Col xs={12} md={6}>    
+                                        <Row className="stat-row-1">
+                                            <p style={{paddingLeft: '32px'}} class="home-stat-header w-100">Upcoming Game</p>    
+                                        </Row>
                                         <Row>
                                             <Col xs={4} className="add-colon">
                                                 <p className="home-stat w-100 text-center">02</p>
@@ -240,12 +240,12 @@ const Homepage = () => {
                                         <Row>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
-                                                    <BadgeIcon
+                                                    <CombinedIcon
                                                         primaryColour={'#123432'}
                                                         secondaryColour={'#432123'}
                                                         thirdColour={'#432123'}
-                                                        width={26}
-                                                        height={26}
+                                                        width={80}
+                                                        height={80}
                                                     />
                                                 </div>
                                             </Col>
@@ -254,12 +254,12 @@ const Homepage = () => {
                                             </Col>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
-                                                    <BadgeIcon
+                                                    <CombinedIcon
                                                         primaryColour={'#123432'}
                                                         secondaryColour={'#432123'}
                                                         thirdColour={'#432123'}
-                                                        width={26}
-                                                        height={26}
+                                                        width={80}
+                                                        height={80}
                                                     />
                                                 </div>
                                             </Col>
@@ -299,9 +299,9 @@ const Homepage = () => {
                                     </Tab>
                                     <Tab eventKey="gameweek-points" title="Gameweek Points">
                                     </Tab>
-                                    <Tab eventKey="league-table" title="Premier League Table">
-                                    </Tab>
                                     <Tab eventKey="leaderboards" title="Leaderboards">
+                                    </Tab>
+                                    <Tab eventKey="league-table" title="League Table">
                                     </Tab>
                                 </Tabs>
                             </div>

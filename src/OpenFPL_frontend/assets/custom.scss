@@ -3,7 +3,11 @@
 .navbar{
     background-color: #242529;
     opacity: 90%;  
-    height: 60px;
+    height: 80px;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
   
 
@@ -17,10 +21,13 @@
     padding-left: 8px;
     padding-right: 8px;
 }
+
 .custom-nav-link {
     position: relative;
     width: fit-content;
     line-height: 80px;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .nav-caret {
@@ -29,7 +36,6 @@
     left: 0;
     width: 100%;
     height: 4px;
-    margin-bottom:10px !important;
     background-color: #2CE3A6;
 }
   
@@ -39,8 +45,8 @@
 }
 
 .nav-profile-image{
-  max-width: 25px;
-  margin-left: 10px;
+  max-width: 40px;
+  margin-left: 32px;
 }
 
 .card{
@@ -52,58 +58,25 @@
 }
 
 .home-stat-panel{
-    padding-left: 30px;
-    padding-right: 30px;
     padding-top: 15px;
     padding-bottom: 15px;
+    height: 158px;
 }
 
 .home-stat-header{
     width:100%;
-    font-size: 10px;
+    font-size: 16px;
     margin-bottom: 0;
-}
+    color: #B1B1B1;
+    font-weight: 400;
+}   
 
-/* Extra small devices (phones) */
-@media (max-width: 575.98px) {  
-    .home-stat{
-        width:100%;
-        font-size: 20px;
-        margin-bottom: 0;
-    }
+.home-stat{
+    width:100%;
+    font-size: 48px;
+    margin-bottom: 0;
+    font-weight: 500;
 }
-  
-  /* Small devices (portrait tablets and large phones) */
-  @media (min-width: 576px) and (max-width: 767.98px) {  
-    /* Your CSS */
-  }
-  
-  /* Medium devices (landscape tablets) */
-  @media (min-width: 768px) and (max-width: 991.98px) {  
-    /* Your CSS */
-  }
-  
-  /* Large devices (laptops/desktops) */
-  @media (min-width: 992px) and (max-width: 1199.98px) {  
-    .home-stat{
-        width:100%;
-        font-size: 20px;
-        margin-bottom: 0;
-    }
-  }
-  
-  /* Extra large devices (large laptops and desktops) */
-  @media (min-width: 1200px) {   
-    .home-stat{
-        width:100%;
-        font-size: 26px;
-        margin-bottom: 0;
-    }
-    .badge{
-        width: 100%;
-    }
-  }
-  
 
 .time-colon {
     display: flex;
@@ -212,6 +185,7 @@
 .home-tab-header{
   padding-left: 30px;
   padding-right: 30px;
+  height: 55px;
 }
 
 .fpl-btn{
@@ -242,6 +216,7 @@
 .logo-text{
   letter-spacing: 2px;
   font-size: 20px;
+  font-weight: 700;
 }
 
 .fixture-unplayed::before {
@@ -311,4 +286,23 @@
 
 .table-row{
   border-bottom: #454B56 1px solid !important;
+  padding: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+  height: 80px;
+}
+
+.fixture-team-name{
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.badge{
+  padding-bottom: 12px;
+}
+
+.home-tab-header .nav-link {
+  height: 55px;
+  font-size: 18px;
+  margin-right: 20px;
 }

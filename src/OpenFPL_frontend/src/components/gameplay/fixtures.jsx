@@ -147,17 +147,17 @@ const Fixtures = () => {
                             return (
                               <Row>
                                 <Col xs={12}>
-                                  <div className='table-row w-100'>
+                                  <div className='table-row w-100 mt-3'>
                                     <Row key={fixture.id}>
                                       <Col xs={2}>
-                                        <p>
+                                        <p className='fixture-team-name'>
                                           <BadgeIcon
                                               primaryColour={'#123432'}
                                               secondaryColour={'#432123'}
                                               thirdColour={'#432123'}
-                                              width={26}
-                                              height={26}
-                                              marginRight={10}
+                                              width={48}
+                                              height={48}
+                                              marginRight={16}
                                           />
                                         {getTeamById(teams, fixture.homeTeamId).friendlyName}</p>
                                       </Col>
@@ -166,19 +166,20 @@ const Fixtures = () => {
                                       </Col>
                                       <Col xs={1}></Col>
                                       <Col xs={2}>
-                                        <p>
+                                        <p className='fixture-team-name'>
                                           <BadgeIcon
                                               primaryColour={'#123432'}
                                               secondaryColour={'#432123'}
                                               thirdColour={'#432123'}
-                                              width={26}
-                                              height={26}
-                                              marginRight={10}
+                                              width={48}
+                                              height={48}
+                                              marginRight={16}
                                           />
                                         {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
 
                                       </Col>
-                                      <Col xs={4}>
+                                      <Col xs={4} style={{ display: 'flex', alignItems: 'center' }}>
+
                                         <p>
                                       <ClockIcon
                                               primaryColour={'#123432'}
@@ -187,7 +188,7 @@ const Fixtures = () => {
                                               marginRight={10}
                                           /> 05:30AM</p>
                                       </Col>
-                                      <Col xs={1}>
+                                      <Col xs={1} style={{ display: 'flex', alignItems: 'center' }}>
                                         {renderStatusBadge(fixture)}
                                       </Col>
 
