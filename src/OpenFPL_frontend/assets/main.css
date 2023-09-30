@@ -15,6 +15,7 @@
 
 body {
   font-family: 'Poppins', sans-serif !important;
+  color: white !important;
   background-image: url('background.png');
   background-position: center;
   background-repeat: no-repeat;
@@ -47,17 +48,13 @@ body {
     padding: 0;
     font-size: 0.8rem;
   }
-
-  footer{
-    color: whitesmoke !important;
-  }
   
   .footer-links li {
     line-height: 1.6;
   }
 
   .footer a{
-    color:whitesmoke !important;
+    color:white !important;
   }
     
   .customOverlay {
@@ -169,10 +166,6 @@ Table{
 
 .light-table{
   color: black !important;
-}
-
-.nav-tabs .nav-link:not(.active) {
-  color: whitesmoke !important;
 }
 
 .wallet-icon{
@@ -369,4 +362,48 @@ Table{
 
 .footer-link{
   font-size: 10px;
+}
+
+.container {
+  width: 100%;
+}
+
+.date-row,
+.table-row {
+  display: flex;
+  align-items: center;
+}
+
+.date-header {
+  width: 100%;
+}
+
+.col-home-team,
+.col-away-team,
+.col-vs,
+.col-time,
+.col-badge {
+  flex: 0 0 auto;
+}
+
+.col-home-team {
+  width: 17.5%;
+}
+
+.col-vs {
+  width: 5%;
+}
+
+.col-away-team {
+  margin-left: 10%;
+  width: 17.5%;
+}
+
+.col-time {
+  width: 40%;
+  text-align: center;
+}
+
+.col-badge {
+  width: 10%;
 }

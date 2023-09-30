@@ -145,57 +145,48 @@ const Fixtures = () => {
                                 return null;
                             }
                             return (
-                              <Row>
-                                <Col xs={12}>
-                                  <div className='table-row w-100 mt-3'>
-                                    <Row key={fixture.id}>
-                                      <Col xs={2}>
-                                        <p className='fixture-team-name'>
-                                          <BadgeIcon
-                                              primaryColour={'#123432'}
-                                              secondaryColour={'#432123'}
-                                              thirdColour={'#432123'}
-                                              width={48}
-                                              height={48}
-                                              marginRight={16}
-                                          />
-                                        {getTeamById(teams, fixture.homeTeamId).friendlyName}</p>
-                                      </Col>
-                                      <Col xs={1}>
-                                        <p className="w-100 text-center">vs</p>
-                                      </Col>
-                                      <Col xs={1}></Col>
-                                      <Col xs={2}>
-                                        <p className='fixture-team-name'>
-                                          <BadgeIcon
-                                              primaryColour={'#123432'}
-                                              secondaryColour={'#432123'}
-                                              thirdColour={'#432123'}
-                                              width={48}
-                                              height={48}
-                                              marginRight={16}
-                                          />
-                                        {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
-
-                                      </Col>
-                                      <Col xs={4} style={{ display: 'flex', alignItems: 'center' }}>
-
-                                        <p>
-                                      <ClockIcon
-                                              primaryColour={'#123432'}
-                                              secondaryColour={'#432123'}
-                                              thirdColour={'#432123'}
-                                              marginRight={10}
-                                          /> 05:30AM</p>
-                                      </Col>
-                                      <Col xs={1} style={{ display: 'flex', alignItems: 'center' }}>
-                                        {renderStatusBadge(fixture)}
-                                      </Col>
-
-                                  </Row>
-                                  </div>
-                                </Col>  
-                              </Row>
+                              <div className="table-row">
+                                <div className="col-home-team">
+                                  <p className='fixture-team-name'>
+                                            <BadgeIcon
+                                                primaryColour={'#123432'}
+                                                secondaryColour={'#432123'}
+                                                thirdColour={'#432123'}
+                                                width={48}
+                                                height={48}
+                                                marginRight={16}
+                                            />
+                                          {getTeamById(teams, fixture.homeTeamId).friendlyName}
+                                    </p>
+                                </div>
+                                <div className="col-vs">
+                                  <p className="w-100 text-center">vs</p>
+                                </div>
+                                <div className="col-away-team">
+                                  <p className='fixture-team-name'>
+                                    <BadgeIcon
+                                          primaryColour={'#123432'}
+                                          secondaryColour={'#432123'}
+                                          thirdColour={'#432123'}
+                                          width={48}
+                                          height={48}
+                                          marginRight={16}
+                                      />
+                                    {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
+                                </div>
+                                <div className="col-time">
+                                <p>
+                                  <ClockIcon
+                                                primaryColour={'#123432'}
+                                                secondaryColour={'#432123'}
+                                                thirdColour={'#432123'}
+                                                marginRight={10}
+                                            /> 05:30AM</p>
+                                </div>
+                                  <div className="col-badge">
+                                {renderStatusBadge(fixture)}
+                               </div>
+                              </div>
                             );
                         })}
                     </Container>

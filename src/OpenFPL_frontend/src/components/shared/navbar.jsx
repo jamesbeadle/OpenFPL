@@ -56,7 +56,6 @@ const MyNavbar = () => {
           }
           {!isAuthenticated && 
             <button className="wallet-icon" onClick={() => { login(); setExpanded(false); }}>Connect <WalletIcon className="custom-icon" ></WalletIcon></button>
-            
           }
           
         </Navbar.Collapse>
