@@ -28,10 +28,14 @@
     padding-left: 8px;
     padding-right: 8px;
 }
-
+.formation-text:hover{
+  border: none !important;
+}
 .formation-text{
   font-size: 16px;
   font-weight: 400;
+  background-color: transparent;
+  border: none;
 }
 
 .custom-nav-link {
@@ -61,6 +65,10 @@
   transform: translate(-50%, 0) !important;
 }
 
+.formation-dropdown-menu {
+  position: absolute !important;
+  transform: translate(-100%, 25%) !important;
+}
 
 .footer-logo-text{
   letter-spacing: 2px;
@@ -423,4 +431,21 @@
   padding-right: 64px;
 }
 
+.sponsor1{
+  width: 186.5px !important;
+  height: 42px !important;
+  margin-left: 100px;
+  margin-top: -10px;
+};
 
+.sponsor2{
+  width: 186.5px !important;
+  height: 42px !important;
+  margin-left: 245px;
+  margin-top: -10px;
+};
+
+.shirt{
+  width: 60.69px;
+  height: 80px;
+}

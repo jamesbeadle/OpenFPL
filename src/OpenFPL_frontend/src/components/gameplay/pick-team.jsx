@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
 import { StarIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
@@ -12,7 +12,8 @@ import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
 import { fetchFantasyTeam } from "../../AuthFunctions";
 import FixturesWidget from './fixtures-widget';
-import PitchImage from "../../../assets/pitch.png";
+import ExampleSponsor from "../../../assets/example-sponsor.png";
+import Shirt from "../../../assets/shirt.png";
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -30,6 +31,7 @@ const PickTeam = () => {
   const [showSelectFantasyPlayerModal, setShowSelectFantasyPlayerModal] = useState(false);
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
+  const [showFormationDropdown, setShowFormationDropdown] = useState(false);
 
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
@@ -57,6 +59,15 @@ const PickTeam = () => {
   const isTeamValid = invalidTeamMessage === null;
   const [removedPlayers, setRemovedPlayers] = useState([]);
   const [addedPlayers, setAddedPlayers] = useState([]);
+
+  const handleBlur = (e) => {
+    const currentTarget = e.currentTarget;
+    setTimeout(() => {
+      if (!currentTarget.contains(document.activeElement)) {
+        setShowFormationDropdown(false);
+      }
+    }, 0);
+  };
 
   useEffect(() => {
     if(players.length == 0 || teams.length == 0){
@@ -594,7 +605,19 @@ const PickTeam = () => {
                                     style={{ marginRight: '40px' }} >
                                       List View
                                   </Button>
-                                  <p className='formation-text' style={{ margin: '0' }}>Formation: <b>4-4-2</b></p>
+
+                                  <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>4-4-2</b></Button>
+                                      
+                                  <div onBlur={handleBlur} tabIndex="0">
+                                    <Dropdown show={showFormationDropdown}>
+                                      <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+                                       </Dropdown.Toggle>
+
+                                      <Dropdown.Menu className="w-100 formation-dropdown-menu">
+                                        <h1>4-4-1</h1>
+                                      </Dropdown.Menu>
+                                    </Dropdown>
+                                  </div>
                                 </div>
                               </Col>
 
@@ -603,8 +626,6 @@ const PickTeam = () => {
                               </Col>
                             </Row>
                           </div>
-                          <div className="d-none d-md-block vertical-divider-1"></div>
-                          <div className="d-none d-md-block vertical-divider-2"></div>
                       </div>
                   </Card>
               </Col>
@@ -614,61 +635,63 @@ const PickTeam = () => {
           <Row>
             <Col xs={12} md={6}>
               <Card className="pitch-bg">
-                <div className='gk-row'>
+              <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <img src={ExampleSponsor} alt="sponsor1" className='sponsor1 align-items-center justify-content-center' />
+                <img src={ExampleSponsor} alt="sponsor2" className='sponsor2 align-items-center justify-content-center' />
+              </div>
+      
+                  <div className='gk-row'>
 
                 </div>
                 <div className='df-row'>
-                  <div id='df-setup-3'>
-                    <div id='df-setup-3-p1'></div>
-                    <div id='df-setup-3-p2'></div>
-                    <div id='df-setup-3-p3'></div>
-                  </div>
-                  <div id='df-setup-4'>
-                    <div id='df-setup-4-p1'></div>
-                    <div id='df-setup-4-p2'></div>
-                    <div id='df-setup-4-p3'></div>
-                    <div id='df-setup-4-p4'></div>
-                  </div>
-                  <div id='df-setup-5'>
-                    <div id='df-setup-5-p1'></div>
-                    <div id='df-setup-5-p2'></div>
-                    <div id='df-setup-5-p3'></div>
-                    <div id='df-setup-5-p4'></div>
-                    <div id='df-setup-5-p5'></div>
+                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <div id='df-p1' className='align-items-center justify-content-center'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='df-p2'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='df-p3'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='df-p4'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='df-p5'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
                   </div>
                 </div>
                 <div className='mf-row'>
-                  <div id='mf-setup-3'>
-                    <div id='mf-setup-3-p1'></div>
-                    <div id='mf-setup-3-p2'></div>
-                    <div id='mf-setup-3-p3'></div>
-                  </div>
-                  <div id='mf-setup-4'>
-                    <div id='mf-setup-4-p1'></div>
-                    <div id='mf-setup-4-p2'></div>
-                    <div id='mf-setup-4-p3'></div>
-                    <div id='mf-setup-4-p4'></div>
-                  </div>
-                  <div id='mf-setup-5'>
-                    <div id='mf-setup-5-p1'></div>
-                    <div id='mf-setup-5-p2'></div>
-                    <div id='mf-setup-5-p3'></div>
-                    <div id='mf-setup-5-p4'></div>
-                    <div id='mf-setup-5-p5'></div>
+                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <div id='mf-p1' className='align-items-center justify-content-center'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='mf-p2'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='mf-p3'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='mf-p4'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='mf-p5'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
                   </div>
                 </div>
                 <div className='fw-row'>
-                  <div id='fw-setup-1'>
-                    <div id='fw-setup-1-p1'></div>
-                  </div>
-                  <div id='fw-setup-2'>
-                    <div id='fw-setup-2-p1'></div>
-                    <div id='fw-setup-2-p2'></div>
-                  </div>
-                  <div id='fw-setup-3'>
-                    <div id='fw-setup-3-p1'></div>
-                    <div id='fw-setup-3-p2'></div>
-                    <div id='fw-setup-3-p3'></div>
+                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <div id='fw-p1' className='align-items-center justify-content-center'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='fw-p2'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
+                    <div id='fw-p3'>
+                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -715,5 +738,18 @@ const PickTeam = () => {
       )
   );
 };
+
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+  <a
+    href=""
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+  </a>
+));
 
 export default PickTeam;
