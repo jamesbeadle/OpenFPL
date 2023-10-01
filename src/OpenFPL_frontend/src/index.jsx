@@ -13,13 +13,9 @@ import Profile from "./components/profile/profile";
 import Whitepaper from "./components/whitepaper/whitepaper";
 import Gameplay from "./components/whitepaper/gameplay";
 import Terms from "./components/terms";
-import Definitions from "./components/whitepaper/definitions";
-import Architecture from "./components/whitepaper/architecture";
-import DAO from "./components/whitepaper/dao";
 import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
 import Homepage from "./components/homepage";
-import FundedWhitepaper from "./components/whitepaper/funded_whitepaper";
 import AddFixtureData from "./components/governanace/pre-sns-fixture-validation/add-fixture-data";
 import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
 import Leaderboard from "./components/leaderboards/season-leaderboard";
@@ -41,14 +37,10 @@ const App = () => {
                 <MyNavbar />
                   <Routes>
                     <Route path="/" element={<Homepage />} />
-                    <Route path="/funded-whitepaper" element={<FundedWhitepaper />} />
                     <Route path="/whitepaper" element={<Whitepaper   />} />
                     <Route path="/gameplay" element={<Gameplay   />} />
-                    <Route path="/definitions" element={<Definitions   />} />
                     <Route path="/terms" element={<Terms   />} />
-                    <Route path="/architecture" element={<Architecture />} />
                     <Route path="/profile" element={<Profile /> }/>
-                    <Route path="/dao" element={<DAO />} />
                     <Route path="/governance" element={<Governance /> }/>
                     <Route path="/fixture-validation-list" element={<FixtureValidationList /*Remove this post sns*/ /> }/>
                     <Route path="/old-add-fixture-data" element={<PreSNSAddFixtureData /> /*Remove this post sns*/ }/>

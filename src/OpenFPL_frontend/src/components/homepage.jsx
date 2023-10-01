@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { DataContext } from "../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { computeTimeLeft } from './helpers';
-import Fixtures from './gameplay/fixtures';
+import Fixtures from './fixtures';
 
 const Homepage = () => {
 
@@ -39,7 +39,6 @@ const Homepage = () => {
         
         fetchViewData();
     }, [filterSeason, filterGameweek, isAuthenticated]);
-
 
     useEffect(() => {
         const fetchManagerCount = async () => {
@@ -93,44 +92,44 @@ const Homepage = () => {
                 <p className='text-center mt-1'>Loading</p>
             </div>
         ) :
-        <Container fluid>
+        <Container fluid className='view-container mt-2'>
             <Row>
                 <Col md={7} xs={12}>
                     <Card className='mb-3'>
                         <div className="outer-container d-flex">
-                            <div className="home-stat-panel flex-grow-1">
+                            <div className="stat-panel flex-grow-1">
                                 
                                 <Row className="stat-row-1">
                                     <Col xs={4}>
-                                        <p style={{paddingLeft: '40px'}} className="home-stat-header w-100">Gameweek</p>
+                                        <p style={{paddingLeft: '40px'}} className="stat-header w-100">Gameweek</p>
                                     </Col>
                                     <Col xs={5}>
-                                        <p className="home-stat-header w-100">Managers</p>
+                                        <p className="stat-header w-100">Managers</p>
                                     </Col>
                                     <Col xs={3}>
-                                        <p className="home-stat-header w-100">Weekly Prize Pool</p>
+                                        <p className="stat-header w-100">Weekly Prize Pool</p>
                                     </Col>
                                 </Row>
                                 <Row className="stat-row-2">
                                     <Col xs={4}>
-                                        <p style={{paddingLeft: '40px'}} className="home-stat">{currentGameweek}</p>
+                                        <p style={{paddingLeft: '40px'}} className="stat">{currentGameweek}</p>
                                     </Col>
                                     <Col xs={5}>
-                                        <p className="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
+                                        <p className="stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
                                     </Col>
                                     <Col xs={3}>
-                                        <p className="home-stat">{totalPrizePool.toLocaleString()}</p>
+                                        <p className="stat">{totalPrizePool.toLocaleString()}</p>
                                     </Col>
                                 </Row>
                                 <Row className="stat-row-3">
                                     <Col xs={4}>
-                                        <p style={{paddingLeft: '40px'}} className="home-stat-header">{currentSeason.name}</p>   
+                                        <p style={{paddingLeft: '40px'}} className="stat-header">{currentSeason.name}</p>   
                                     </Col>
                                     <Col xs={5}>
-                                        <p className="home-stat-header">Total</p>    
+                                        <p className="stat-header">Total</p>    
                                     </Col>
                                     <Col xs={3}>
-                                        <p className="home-stat-header">$FPL Tokens</p>   
+                                        <p className="stat-header">$FPL Tokens</p>   
                                     </Col>
                                 </Row>
                             </div>
@@ -143,21 +142,21 @@ const Homepage = () => {
                 <Col md={5} xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
-                            <div className="home-stat-panel flex-grow-1">  
+                            <div className="stat-panel flex-grow-1">  
                                 <Row className="stat-row-2">
                                     <Col xs={12} md={6}>    
                                         <Row className="stat-row-1">
-                                            <p style={{paddingLeft: '32px'}} className="home-stat-header w-100">Upcoming Game</p>    
+                                            <p style={{paddingLeft: '32px'}} className="stat-header w-100">Upcoming Game</p>    
                                         </Row>
                                         <Row>
                                             <Col xs={4} className="add-colon">
-                                                <p className="home-stat w-100 text-center">{String(days).padStart(2, '0')}</p>
+                                                <p className="stat w-100 text-center">{String(days).padStart(2, '0')}</p>
                                             </Col>
                                             <Col xs={4} className="add-colon">
-                                                <p className="home-stat w-100 text-center">{String(hours).padStart(2, '0')}</p>
+                                                <p className="stat w-100 text-center">{String(hours).padStart(2, '0')}</p>
                                             </Col>
                                             <Col xs={4}>
-                                                <p className="home-stat w-100 text-center">{String(minutes).padStart(2, '0')}</p>
+                                                <p className="stat w-100 text-center">{String(minutes).padStart(2, '0')}</p>
                                             </Col>
                                         </Row>
                                         <Row className="stat-row-3">
@@ -165,13 +164,13 @@ const Homepage = () => {
                                         <Col xs={12}>
                                                 <Row>
                                                     <Col xs={4}>
-                                                        <p className="home-stat-header text-center w-100">Day</p> 
+                                                        <p className="stat-header text-center w-100">Day</p> 
                                                     </Col>
                                                     <Col xs={4}>
-                                                        <p className="home-stat-header text-center w-100">Hour</p>   
+                                                        <p className="stat-header text-center w-100">Hour</p>   
                                                     </Col>
                                                     <Col xs={4}>
-                                                        <p className="home-stat-header text-center w-100">Min</p>    
+                                                        <p className="stat-header text-center w-100">Min</p>    
                                                     </Col>
                                                 </Row>
                                             </Col>
@@ -209,12 +208,12 @@ const Homepage = () => {
                                             <Col xs={12}>
                                                 <Row>
                                                     <Col xs={5}>
-                                                    {nextFixtureHomeTeam && <p className="home-stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
+                                                    {nextFixtureHomeTeam && <p className="stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
                                                     </Col>
                                                     <Col xs={2}>
                                                 </Col>
                                                     <Col xs={5}>
-                                                    {nextFixtureAwayTeam && <p className="home-stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>  }
+                                                    {nextFixtureAwayTeam && <p className="stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>  }
                                                     </Col>
                                                 </Row>
                                             </Col>

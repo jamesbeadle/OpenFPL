@@ -67,8 +67,8 @@ const MyNavbar = () => {
                     <Image src={profilePicSrc} roundedCircle className="nav-profile-image" onClick={() => setShowDropdown(!showDropdown)} />
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu className="nav-dropdown-menu">
-                    <Dropdown.Item eventKey="1" onClick={logout}>Disconnect</Dropdown.Item>
+                  <Dropdown.Menu className="w-100 nav-dropdown-menu">
+                    <Dropdown.Item className="w-100 disconnect" eventKey="1" onClick={logout}>Disconnect</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </div>

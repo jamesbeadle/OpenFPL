@@ -82,8 +82,12 @@ body {
   }
 
   .pitch-bg {
-    background: url('pitch.png') no-repeat center center;
+    background: url('pitch.png');
     background-size: cover;
+    width: 100% !important;
+    margin: 0 !important;
+    height: 779px !important;
+    border: none !important;
   }
   
   .player-container {

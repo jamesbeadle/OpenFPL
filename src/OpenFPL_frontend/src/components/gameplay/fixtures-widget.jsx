@@ -4,7 +4,7 @@ import { DataContext } from "../../contexts/DataContext";
 import { getTeamById,groupFixturesByDate, computeTimeLeft } from '../helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
 
-const Fixtures = () => {
+const FixturesWidget = () => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
@@ -198,20 +198,6 @@ const Fixtures = () => {
                                       />
                                     {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
                                 </div>
-                                <div className="col-time">
-                                <p>
-                                  <ClockIcon
-                                                primaryColour={'#123432'}
-                                                secondaryColour={'#432123'}
-                                                thirdColour={'#432123'}
-                                                marginRight={10}
-                                                width={20}
-                                                height={20}
-                                            /> 05:30AM</p>
-                                </div>
-                                  <div className="col-badge">
-                                {renderStatusBadge(fixture)}
-                               </div>
                               </div>
                             );
                         })}
@@ -226,4 +212,4 @@ const Fixtures = () => {
   );
 };
 
-export default Fixtures;
+export default FixturesWidget;

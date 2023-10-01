@@ -1,8 +1,14 @@
 @import '~bootstrap/scss/bootstrap';
 
+@font-face {
+  font-family: 'Poppins SemiBold';
+  src: url('Poppins-SemiBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .navbar{
-    background-color: #242529;
-    opacity: 90%;  
+    background-color: rgba(36, 37, 41, 0.9);
     height: 80px;
     padding-left: 48px;
     padding-right: 48px;
@@ -23,6 +29,11 @@
     padding-right: 8px;
 }
 
+.formation-text{
+  font-size: 16px;
+  font-weight: 400;
+}
+
 .custom-nav-link {
     position: relative;
     width: fit-content;
@@ -38,6 +49,11 @@
     width: 100%;
     height: 4px;
     background-color: #2CE3A6;
+}
+
+.disconnect:hover{
+  background-color: #2CE3A6;
+  color: white;
 }
 
 .nav-dropdown-menu {
@@ -61,20 +77,19 @@
 }
 
 .card{
-    background-color: #242529;
-    opacity: 90%;
+    background-color: rgba(36, 37, 41, 0.9);
     color: white !important;
     border-radius: 8px !important;
     border: 1px solid #2E323A !important;
 }
 
-.home-stat-panel{
+.stat-panel{
     padding-top: 15px;
     padding-bottom: 15px;
     height: 158px;
 }
 
-.home-stat-header{
+.stat-header{
     width:100%;
     font-size: 16px;
     margin-bottom: 0;
@@ -82,11 +97,50 @@
     font-weight: 400;
 }   
 
-.home-stat{
+.stat{
     width:100%;
     font-size: 48px;
     margin-bottom: 0;
     font-weight: 500;
+}
+
+.sub-stat-panel{
+  padding-top: 15px;
+  padding-bottom: 15px;
+  height: 100px;
+}
+
+.sub-stat-wrapper{
+  width: 100% !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+.sub-stat-button{
+  height: 52px !important;
+  width: 132px !important;
+  color: white !important;
+  font-family: 'Poppins SemiBold';
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background-color: #161819 !important;
+}
+
+.sub-stat-button.active{
+  background-color: #2CE3A6 !important;
+  color: #161819 !important;
+}
+
+.sub-stat-button-left{
+  border-radius: 8px 0px 0px 8px;
+  border-color: #37393C !important;
+  border-width: 1px 0px 1px 1px;
+}
+
+.sub-stat-button-right{
+  border-radius: 0px 8px 8px 0px;
+  border-color: #37393C !important;
+  border-width: 1px 1px 1x 0px;
 }
 
 .time-colon {
@@ -363,3 +417,10 @@
   margin-left: 32px;
   height: 72px;
 }
+
+.view-container{
+  padding-left: 64px;
+  padding-right: 64px;
+}
+
+

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card, Accordion, Image, Table, Button } from 'react-bootstrap';
-import TokenImage from "../../../assets/tokens.png";
 import { ExitIcon } from '../icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -379,7 +378,7 @@ const Whitepaper = () => {
                       <Container fluid>
                         <Row className="justify-content-md-center mb-3">
                           <Col md="auto">
-                            <Image src={TokenImage} alt="openfpl" rounded fluid className="ml-4 mr-4 mt-4 mb-4" />
+                            
                           </Col>
                         </Row>
         
