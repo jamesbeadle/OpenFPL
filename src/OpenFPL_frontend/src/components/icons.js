@@ -55,7 +55,7 @@ const CombinedIcon = ({ onClick, width=1628, height=1628, marginRight=0 }) => (
     style={{ cursor: 'pointer', marginRight: marginRight }}
   >
     {/* Black Circle */}
-    <circle cx="814" cy="814" r="800" fill="#161819" stroke="#37393C" stroke-width="16" />
+    <circle cx="814" cy="814" r="800" fill="#161819" stroke="#37393C" strokeWidth="16" />
 
     {/* Badge */}
     <path transform="scale(1, 1) translate(407, 407)" d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z" fill="#D3121A"/>

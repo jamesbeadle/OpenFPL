@@ -104,35 +104,35 @@ const Homepage = () => {
                                 
                                 <Row className="stat-row-1">
                                     <Col xs={4}>
-                                        <p style={{paddingLeft: '40px'}} class="home-stat-header w-100">Gameweek</p>
+                                        <p style={{paddingLeft: '40px'}} className="home-stat-header w-100">Gameweek</p>
                                     </Col>
                                     <Col xs={5}>
-                                        <p class="home-stat-header w-100">Managers</p>
+                                        <p className="home-stat-header w-100">Managers</p>
                                     </Col>
                                     <Col xs={3}>
-                                        <p class="home-stat-header w-100">Weekly Prize Pool</p>
+                                        <p className="home-stat-header w-100">Weekly Prize Pool</p>
                                     </Col>
                                 </Row>
                                 <Row className="stat-row-2">
                                     <Col xs={4}>
-                                        <p style={{paddingLeft: '40px'}} class="home-stat">{currentGameweek}</p>
+                                        <p style={{paddingLeft: '40px'}} className="home-stat">{currentGameweek}</p>
                                     </Col>
                                     <Col xs={5}>
-                                        <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
+                                        <p className="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
                                     </Col>
                                     <Col xs={3}>
-                                        <p class="home-stat">{totalPrizePool.toLocaleString()}</p>
+                                        <p className="home-stat">{totalPrizePool.toLocaleString()}</p>
                                     </Col>
                                 </Row>
                                 <Row className="stat-row-3">
                                     <Col xs={4}>
-                                        <p style={{paddingLeft: '40px'}} class="home-stat-header">{currentSeason.name}</p>   
+                                        <p style={{paddingLeft: '40px'}} className="home-stat-header">{currentSeason.name}</p>   
                                     </Col>
                                     <Col xs={5}>
-                                        <p class="home-stat-header">Total</p>    
+                                        <p className="home-stat-header">Total</p>    
                                     </Col>
                                     <Col xs={3}>
-                                        <p class="home-stat-header">$FPL Tokens</p>   
+                                        <p className="home-stat-header">$FPL Tokens</p>   
                                     </Col>
                                 </Row>
                             </div>
@@ -145,11 +145,11 @@ const Homepage = () => {
                 <Col md={5} xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
-                            <div class="home-stat-panel flex-grow-1">  
+                            <div className="home-stat-panel flex-grow-1">  
                                 <Row className="stat-row-2">
                                     <Col xs={12} md={6}>    
                                         <Row className="stat-row-1">
-                                            <p style={{paddingLeft: '32px'}} class="home-stat-header w-100">Upcoming Game</p>    
+                                            <p style={{paddingLeft: '32px'}} className="home-stat-header w-100">Upcoming Game</p>    
                                         </Row>
                                         <Row>
                                             <Col xs={4} className="add-colon">

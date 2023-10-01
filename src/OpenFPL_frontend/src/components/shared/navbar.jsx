@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect  } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Nav from 'react-bootstrap/Nav';
 import Image from 'react-bootstrap/Image';
 import { Link, useNavigate } from "react-router-dom";
@@ -16,6 +17,16 @@ const MyNavbar = () => {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleBlur = (e) => {
+    const currentTarget = e.currentTarget;
+    setTimeout(() => {
+      if (!currentTarget.contains(document.activeElement)) {
+        setShowDropdown(false);
+      }
+    }, 0);
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -48,13 +59,23 @@ const MyNavbar = () => {
               </Nav.Link> 
               <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/profile') ? 'active-link' : ''}`}>
                 Profile
-                <Image src={profilePicSrc} roundedCircle className="nav-profile-image" />
                 { isActive('/profile') && <div className="nav-caret"></div>}
               </Nav.Link> 
+              <div onBlur={handleBlur} tabIndex="0">
+                <Dropdown show={showDropdown}>
+                  <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+                    <Image src={profilePicSrc} roundedCircle className="nav-profile-image" onClick={() => setShowDropdown(!showDropdown)} />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu className="nav-dropdown-menu">
+                    <Dropdown.Item eventKey="1" onClick={logout}>Disconnect</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
             </>
           }
           {!isAuthenticated && 
-            <button className="wallet-icon" onClick={() => { login(); setExpanded(false); }}>Connect <WalletIcon className="custom-icon" ></WalletIcon></button>
+            <button className="wallet-icon" onClick={() => { login(); setShowDropdown(false); setExpanded(false); }}>Connect <WalletIcon className="custom-icon" ></WalletIcon></button>
           }
           
         </Navbar.Collapse>
@@ -62,5 +83,19 @@ const MyNavbar = () => {
     </Navbar>
   );
 };
+
+
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+  <a
+    href=""
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+  </a>
+));
 
 export default MyNavbar;

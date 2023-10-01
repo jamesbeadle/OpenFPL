@@ -8,6 +8,7 @@
     padding-right: 48px;
     padding-top: 20px;
     padding-bottom: 20px;
+    z-index: 9999 !important;
   }
   
 
@@ -38,6 +39,12 @@
     height: 4px;
     background-color: #2CE3A6;
 }
+
+.nav-dropdown-menu {
+  position: absolute !important;
+  transform: translate(-50%, 0) !important;
+}
+
 
 .footer-logo-text{
   letter-spacing: 2px;

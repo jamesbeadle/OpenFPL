@@ -169,7 +169,7 @@ const Fixtures = () => {
                                 return null;
                             }
                             return (
-                              <div className="table-row">
+                              <div className="table-row" key={fixture.id}>
                                 <div className="col-home-team">
                                   <p className='fixture-team-name'>
                                             <BadgeIcon
