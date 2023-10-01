@@ -20,7 +20,6 @@ const Homepage = () => {
     const [activeKey, setActiveKey] = useState("fixtures");
     
     const [managerCount, setManagerCount] = useState(-1);
-    const [nextFixture, setNextFixture] = useState(null);
     const [nextFixtureHomeTeam, setNextFixtureHomeTeam] = useState(null);
     const [nextFixtureAwayTeam, setNextFixtureAwayTeam] = useState(null);
     const [days, setDays] = useState(0);
@@ -62,7 +61,6 @@ const Homepage = () => {
         
         const currentTime = Date.now();
         const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
-        setNextFixture(fixture);
         setNextFixtureHomeTeam(teams.find(x => x.id == fixture.homeTeamId));
         setNextFixtureAwayTeam(teams.find(x => x.id == fixture.awayTeamId));
 
@@ -183,13 +181,13 @@ const Homepage = () => {
                                         <Row>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
-                                                    <CombinedIcon
+                                                    {nextFixtureHomeTeam && <CombinedIcon
                                                         primaryColour={nextFixtureHomeTeam.primaryHexColour}
                                                         secondaryColour={nextFixtureHomeTeam.SecondaryHexColour}
                                                         thirdColour={nextFixtureHomeTeam.thirdHexColour}
                                                         width={80}
                                                         height={80}
-                                                    />
+                                                    />}
                                                 </div>
                                             </Col>
                                             <Col xs={2}>
@@ -197,13 +195,13 @@ const Homepage = () => {
                                             </Col>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
-                                                    <CombinedIcon
+                                                {nextFixtureAwayTeam && <CombinedIcon
                                                         primaryColour={nextFixtureAwayTeam.primaryHexColour}
                                                         secondaryColour={nextFixtureAwayTeam.SecondaryHexColour}
                                                         thirdColour={nextFixtureAwayTeam.thirdHexColour}
                                                         width={80}
                                                         height={80}
-                                                    />
+                                                    />}
                                                 </div>
                                             </Col>
                                         </Row>
@@ -211,12 +209,12 @@ const Homepage = () => {
                                             <Col xs={12}>
                                                 <Row>
                                                     <Col xs={5}>
-                                                    <p className="home-stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>
+                                                    {nextFixtureHomeTeam && <p className="home-stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
                                                     </Col>
                                                     <Col xs={2}>
                                                 </Col>
                                                     <Col xs={5}>
-                                                    <p className="home-stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>  
+                                                    {nextFixtureAwayTeam && <p className="home-stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>  }
                                                     </Col>
                                                 </Row>
                                             </Col>
