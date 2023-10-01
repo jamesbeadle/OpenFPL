@@ -5,11 +5,12 @@ import { getTeamById,groupFixturesByDate, computeTimeLeft } from '../helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
 
 const Fixtures = () => {
-  const { teams, fixtures, systemState } = useContext(DataContext);
+  const { teams, seasons, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
   const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [filteredFixtures, setFilteredFixtures] = useState([]);
+  const [fetchedFixtures, setFetchedFixtures] = useState(null); 
   
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +29,7 @@ const Fixtures = () => {
     const kickOffInMilliseconds = Number(currentGameweekFixtures[0].kickOff) / 1000000;
     const firstFixtureTime = new Date(kickOffInMilliseconds);
    
-    const oneHourBeforeFirstFixture = new Date(firstFixtureTime - 3600000); // Subtract 1 hour from the fixture's start time
+    const oneHourBeforeFirstFixture = new Date(firstFixtureTime - 3600000);
    
     if (currentDateTime >= oneHourBeforeFirstFixture) {
         setCurrentGameweek(systemState.activeGameweek + 1);
@@ -38,17 +39,39 @@ const Fixtures = () => {
     }
   };
 
-
   useEffect(() => {
-    const filteredFixturesData = fixtures.filter(fixture => fixture.gameweek === currentGameweek);
+    const source = fetchedFixtures || fixtures;
+    const filteredFixturesData = source.filter(fixture => fixture.gameweek === currentGameweek);
     setFilteredFixtures(groupFixturesByDate(filteredFixturesData));
-  }, [fixtures, currentGameweek]);
+  }, [fixtures, currentGameweek, fetchedFixtures]);
 
   const handleGameweekChange = (change) => {
     setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
-  }
-
+  };
   
+  const handleSeasonChange = async (change) => {
+    const newIndex = seasons.findIndex(season => season.id === currentSeason.id) + change;
+    if (newIndex >= 0 && newIndex < seasons.length) {
+      setCurrentSeason(seasons[newIndex]);
+      setCurrentGameweek(1);
+      
+      if (seasons[newIndex].id !== systemState.activeSeason.id) {
+        const newFixtures = await fetchFixturesForSeason(seasons[newIndex].id);
+        setFetchedFixtures(newFixtures);
+      } else {
+        setFetchedFixtures(null);
+      }
+    }
+  };
+  
+  const fetchFixturesForSeason = async (seasonId) => {
+    try{
+      return await open_fpl_backend.getFixturesForSeason(seasonId);
+    }
+    catch (error){
+      console.log(error);
+    }
+  };
     
   const renderStatusBadge = (fixture) => {
     const currentTime = new Date().getTime();
@@ -93,21 +116,6 @@ const Fixtures = () => {
               <Col md={12}>
                 <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1} 
-                      style={{ marginRight: '16px' }} >
-                      <ArrowLeft />
-                    </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <small>{currentSeason.name}</small>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38} 
-                      style={{ marginLeft: '16px' }} >
-                      <ArrowRight />
-                    </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
                       style={{ marginRight: '16px' }} >
                       <ArrowLeft />
@@ -118,6 +126,21 @@ const Fixtures = () => {
                   </div>
                   <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
+                      style={{ marginLeft: '16px' }} >
+                      <ArrowRight />
+                    </Button>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
+                      style={{ marginRight: '16px' }} >
+                      <ArrowLeft />
+                    </Button>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <small>{currentSeason.name}</small>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
+                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
                       style={{ marginLeft: '16px' }} >
                       <ArrowRight />
                     </Button>

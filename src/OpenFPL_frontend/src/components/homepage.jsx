@@ -88,18 +88,6 @@ const Homepage = () => {
         }
     };
 
-    const handlePrevGameweek = () => {
-        if (filterGameweek > 1) {
-            setFilterGameweek(prevGameweek => prevGameweek - 1);
-        }
-      };
-      
-    const handleNextGameweek = () => {
-        if (filterGameweek < 38) {
-            setFilterGameweek(nextGameweek => nextGameweek + 1);
-        }
-    };
-
     return (
         isLoading ? (
             <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
@@ -133,7 +121,7 @@ const Homepage = () => {
                                         <p class="home-stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
                                     </Col>
                                     <Col xs={3}>
-                                        <p class="home-stat">{totalPrizePool}</p>
+                                        <p class="home-stat">{totalPrizePool.toLocaleString()}</p>
                                     </Col>
                                 </Row>
                                 <Row className="stat-row-3">
