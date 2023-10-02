@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
-import { StarIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
+import { PlusIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
@@ -583,6 +583,25 @@ const PickTeam = () => {
       </div>
     );
   };
+
+  const renderListRows = (count) => {
+    return (
+      <>
+      {Array.from({ length: count }, (_, i) => (
+        <div className="list-view-player-row">
+          <div className="header-col position-col">GK</div>
+          <div className="header-col player-col">Player Name</div>
+          <div className="header-col team-col">Team</div>
+          <div className="header-col value-col">Value</div>
+          <div className="header-col pts-col">PTS</div>
+          <div className="header-col button-col">
+            <button className='add-player-button'><PlusIcon /></button>
+          </div>
+        </div>
+      ))}
+      </>
+    );
+  };
   
   const cardContainerRef = useRef(null);
 
@@ -787,45 +806,53 @@ const PickTeam = () => {
                   </div>
                 </Card>
               )}
-            {showListView && (
-  <Card>
-    <Card.Header className="card-header-row">
-      <div className="header-col goalkeeper-col">Goalkeeper</div>
-      <div className="header-col player-col">Player Name</div>
-      <div className="header-col team-col">Team</div>
-      <div className="header-col value-col">Value</div>
-      <div className="header-col pts-col">PTS</div>
-      <div className="header-col button-col"></div> {/* Empty space for buttons */}
-    </Card.Header>
+              {showListView && (
+                <Card>
+                  <Card.Header className="list-view-header-row">
+                    <div className="header-col position-col">Goalkeeper</div>
+                    <div className="header-col player-col">Player Name</div>
+                    <div className="header-col team-col">Team</div>
+                    <div className="header-col value-col">Value</div>
+                    <div className="header-col pts-col">PTS</div>
+                    <div className="header-col button-col"></div>
+                  </Card.Header>
 
-    <div className="card-header-row">
-      <div className="header-col goalkeeper-col">Defenders</div>
-      <div className="header-col player-col">Player Name</div>
-      <div className="header-col team-col">Team</div>
-      <div className="header-col value-col">Value</div>
-      <div className="header-col pts-col">PTS</div>
-      <div className="header-col button-col"></div> {/* Empty space for buttons */}
-    </div>
+                  {renderListRows(gk)}
 
-    <div className="card-header-row">
-      <div className="header-col goalkeeper-col">Midfielders</div>
-      <div className="header-col player-col">Player Name</div>
-      <div className="header-col team-col">Team</div>
-      <div className="header-col value-col">Value</div>
-      <div className="header-col pts-col">PTS</div>
-      <div className="header-col button-col"></div> {/* Empty space for buttons */}
-    </div>
+                  <div className="list-view-sub-header-row">
+                    <div className="header-col position-col">Defenders</div>
+                    <div className="header-col player-col">Player Name</div>
+                    <div className="header-col team-col">Team</div>
+                    <div className="header-col value-col">Value</div>
+                    <div className="header-col pts-col">PTS</div>
+                    <div className="header-col button-col"></div>
+                  </div>
 
-    <div className="card-header-row">
-      <div className="header-col goalkeeper-col">Forwards</div>
-      <div className="header-col player-col">Player Name</div>
-      <div className="header-col team-col">Team</div>
-      <div className="header-col value-col">Value</div>
-      <div className="header-col pts-col">PTS</div>
-      <div className="header-col button-col"></div> {/* Empty space for buttons */}
-    </div>
-  </Card>
-)}
+                  {renderListRows(df)}
+
+                  <div className="list-view-sub-header-row">
+                    <div className="header-col position-col">Midfielders</div>
+                    <div className="header-col player-col">Player Name</div>
+                    <div className="header-col team-col">Team</div>
+                    <div className="header-col value-col">Value</div>
+                    <div className="header-col pts-col">PTS</div>
+                    <div className="header-col button-col"></div>
+                  </div>
+
+                  {renderListRows(mf)}
+
+                  <div className="list-view-sub-header-row">
+                    <div className="header-col position-col">Forwards</div>
+                    <div className="header-col player-col">Player Name</div>
+                    <div className="header-col team-col">Team</div>
+                    <div className="header-col value-col">Value</div>
+                    <div className="header-col pts-col">PTS</div>
+                    <div className="header-col button-col"></div>
+                  </div>
+
+                  {renderListRows(fw)}
+                </Card>
+            )}
 
               <Card className='mt-3 bonus-panel'>
               <Card.Header className="header-container">

@@ -105,6 +105,22 @@ const ArrowRight = ({ width=12, height=12, marginRight=0 }) => (
 );
 
 
+const PlusIcon = ({ width=16, height=16, marginRight=0 }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    fill="currentColor"
+    viewBox="0 0 16 16"
+    style={{ cursor: 'pointer', marginRight: marginRight }}
+  >
+ 
+<path d="M16 6.66667H9.33333V0H6.66667V6.66667H0V9.33333H6.66667V16H9.33333V9.33333H16V6.66667Z" fill="#161819"/>
+</svg>
+);
+
+
+
 
 
 
@@ -517,5 +533,5 @@ const WalletIcon = ({ onClick, color = 'currentColor', margin = '0', width = '20
 
 
 
-export { LogoIcon, BadgeIcon, CombinedIcon, ClockIcon, ArrowLeft, ArrowRight, CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, TableIcon, FixtureIcon, TeamIcon, PlayerIcon, TransferIcon, StarOutlineIcon, 
+export { LogoIcon, BadgeIcon, CombinedIcon, ClockIcon, ArrowLeft, ArrowRight, PlusIcon, CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, TableIcon, FixtureIcon, TeamIcon, PlayerIcon, TransferIcon, StarOutlineIcon, 
   RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon, WalletIcon, SmallFixtureIcon, StopCircleIcon, PenaltyMissIcon };
