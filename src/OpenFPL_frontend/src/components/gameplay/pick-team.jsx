@@ -40,6 +40,7 @@ const PickTeam = () => {
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [showFormationDropdown, setShowFormationDropdown] = useState(false);
+  const [showListView, setShowListView] = useState(false);
   const [formation, setFormation] = useState('4-4-2');
   const gk = 1;
   const [df, mf, fw] = formation.split('-').map(Number);
@@ -86,8 +87,6 @@ const PickTeam = () => {
       return;
     };
     
-    
-
     window.addEventListener('resize', handleResize);
     handleResize();
 
@@ -98,6 +97,9 @@ const PickTeam = () => {
 
   const handleResize = () => {
     const panel = document.querySelector('#pitch-bg');
+    if(!panel){
+      return;
+    }
     const panelWidth = panel.offsetWidth;
   
     const aspectRatio = 3216 / 3116;
@@ -168,6 +170,15 @@ const PickTeam = () => {
   
     return null;
   };
+
+  useEffect(() => {
+    if(showListView){
+      window.removeEventListener('resize', handleResize);
+    }else{
+      window.addEventListener('resize', handleResize);
+      handleResize();
+    }
+  }, [showListView]);
 
   const fetchViewData = async () => {
     setLoadingText("Loading Team");
@@ -691,13 +702,20 @@ const PickTeam = () => {
                             <Row className="sub-stat-wrapper">
                               <Col xs={6} className='align-items-center justify-content-center'>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                  <Button className="sub-stat-button sub-stat-button-left active">
-                                      Pitch View
-                                  </Button>
-                                  <Button className="sub-stat-button sub-stat-button-right"
-                                    style={{ marginRight: '40px' }} >
-                                      List View
-                                  </Button>
+                                <Button 
+                                  onClick={() => setShowListView(false)} 
+                                  className={`sub-stat-button sub-stat-button-left ${!showListView ? 'active' : ''}`}
+                                >
+                                  Pitch View
+                                </Button>
+                                <Button 
+                                  onClick={() => setShowListView(true)} 
+                                  className={`sub-stat-button sub-stat-button-right ${showListView ? 'active' : ''}`}
+                                  style={{ marginRight: '40px' }}
+                                >
+                                  List View
+                                </Button>
+
 
                                       
                                   <div onBlur={handleFormationBlur}>
@@ -731,149 +749,189 @@ const PickTeam = () => {
           
           <Row>
             <Col xs={12} md={6}>
-              
-            <Card id="pitch-bg">
+              {!showListView && (
+                <Card id="pitch-bg">
 
-              <div className="row-wrapper">
-                <Row>
-                  <Col xs={6} className='d-flex align-items-center justify-content-center'>
-                    <img src={ExampleSponsor} alt="sponsor1" className='sponsor1' />
-                  </Col>
-                  <Col xs={6} className='d-flex align-items-center justify-content-center'>
-                    <img src={ExampleSponsor} alt="sponsor2" className='sponsor2' />
-                  </Col>
-                </Row>
-              </div>
-              
-              
-              <div className="row-wrapper" style={{ top: rowPositions.gk }}>
-                <div className='gk-row'>
-                  {renderRow(gk)}
+                  <div className="row-wrapper">
+                    <Row>
+                      <Col xs={6} className='d-flex align-items-center justify-content-center'>
+                        <img src={ExampleSponsor} alt="sponsor1" className='sponsor1' />
+                      </Col>
+                      <Col xs={6} className='d-flex align-items-center justify-content-center'>
+                        <img src={ExampleSponsor} alt="sponsor2" className='sponsor2' />
+                      </Col>
+                    </Row>
+                  </div>
+                  
+                  
+                  <div className="row-wrapper" style={{ top: rowPositions.gk }}>
+                    <div className='gk-row'>
+                      {renderRow(gk)}
+                    </div>
+                  </div>
+                  
+                  <div className="row-wrapper" style={{ top: rowPositions.df }}>
+                    <div className='df-row'>
+                      {renderRow(df)}
+                    </div>
+                  </div>
+                  <div className="row-wrapper" style={{ top: rowPositions.mf }}>
+                    <div className='mf-row'>
+                      {renderRow(mf)}
+                    </div>
+                  </div>
+                  <div className="row-wrapper" style={{ top: rowPositions.fw }}>
+                    <div className='fw-row'>
+                      {renderRow(fw)}
+                    </div>
+                  </div>
+                </Card>
+              )}
+            {showListView && (
+  <Card>
+    <Card.Header className="card-header-row">
+      <div className="header-col goalkeeper-col">Goalkeeper</div>
+      <div className="header-col player-col">Player Name</div>
+      <div className="header-col team-col">Team</div>
+      <div className="header-col value-col">Value</div>
+      <div className="header-col pts-col">PTS</div>
+      <div className="header-col button-col"></div> {/* Empty space for buttons */}
+    </Card.Header>
+
+    <div className="card-header-row">
+      <div className="header-col goalkeeper-col">Defenders</div>
+      <div className="header-col player-col">Player Name</div>
+      <div className="header-col team-col">Team</div>
+      <div className="header-col value-col">Value</div>
+      <div className="header-col pts-col">PTS</div>
+      <div className="header-col button-col"></div> {/* Empty space for buttons */}
+    </div>
+
+    <div className="card-header-row">
+      <div className="header-col goalkeeper-col">Midfielders</div>
+      <div className="header-col player-col">Player Name</div>
+      <div className="header-col team-col">Team</div>
+      <div className="header-col value-col">Value</div>
+      <div className="header-col pts-col">PTS</div>
+      <div className="header-col button-col"></div> {/* Empty space for buttons */}
+    </div>
+
+    <div className="card-header-row">
+      <div className="header-col goalkeeper-col">Forwards</div>
+      <div className="header-col player-col">Player Name</div>
+      <div className="header-col team-col">Team</div>
+      <div className="header-col value-col">Value</div>
+      <div className="header-col pts-col">PTS</div>
+      <div className="header-col button-col"></div> {/* Empty space for buttons */}
+    </div>
+  </Card>
+)}
+
+              <Card className='mt-3 bonus-panel'>
+              <Card.Header className="header-container">
+                <span style={{marginLeft: '32px'}}>Bonuses</span>
+                <div className="button-container">
+                  <button className='card-arrow' onClick={() => scroll('left')}>&lt;</button>
+                  <button className='card-arrow' onClick={() => scroll('right')}>&gt;</button>
+
+                </div>
+              </Card.Header>
+
+
+              <div>
+                <div ref={cardContainerRef} className="card-container">
+                  <Card className='bonus-card'>
+                    <div className="image-row">
+                      <img src={GoalGetter} className='bonus-image' alt="goal getter" />
+                    </div>
+                    <div className="text-row">
+                      <span className='bonus-label'>Goal Getter</span>
+                    </div>
+                    <div className="button-row">
+                      <button className='btn-use-bonus'>Use</button>
+                    </div>
+                  </Card>
+                  <Card className='bonus-card'>
+                    <div className="image-row">
+                      <img src={PassMaster} className='bonus-image' alt="pass master" />
+                    </div>
+                    <div className="text-row">
+                      <span className='bonus-label'>Pass Master</span>
+                    </div>
+                    <div className="button-row">
+                      <button className='btn-use-bonus'>Use</button>
+                    </div>
+                  </Card>
+                  <Card className='bonus-card'>
+                    <div className="image-row">
+                      <img src={NoEntry} className='bonus-image' alt="no entry" />
+                    </div>
+                    <div className="text-row">
+                      <span className='bonus-label'>No Entry</span>
+                    </div>
+                    <div className="button-row">
+                      <button className='btn-use-bonus'>Use</button>
+                    </div>
+                  </Card>
+                  <Card className='bonus-card'>
+                    <div className="image-row">
+                      <img src={TeamBoost} className='bonus-image' alt="team boost" />
+                    </div>
+                    <div className="text-row">
+                      <span className='bonus-label'>Team Boost</span>
+                    </div>
+                    <div className="button-row">
+                      <button className='btn-use-bonus'>Use</button>
+                    </div>
+                  </Card>
+                  <Card className='bonus-card'>
+                    <div className="image-row">
+                      <img src={SafeHands} className='bonus-image' alt="safe hands" />
+                    </div>
+                    <div className="text-row">
+                      <span className='bonus-label'>Safe Hands</span>
+                    </div>
+                    <div className="button-row">
+                      <button className='btn-use-bonus'>Use</button>
+                    </div>
+                  </Card>
+                  <Card className='bonus-card'>
+                    <div className="image-row">
+                      <img src={CaptainFantastic} style={{width: '70px', height: '70px'}} className='bonus-image' alt="captain fantastic" />
+                    </div>
+                    <div className="text-row">
+                      <span className='bonus-label' style={{marginTop: '10px'}}>Captain Fantastic</span>
+                    </div>
+                    <div className="button-row"  style={{marginTop: '-5px'}}>
+                      <button className='btn-use-bonus'>Use</button>
+                    </div>
+                  </Card>
+                  <Card className='bonus-card'>
+                    <div className="image-row">
+                      <img src={BraceBonus} className='bonus-image' alt="brace bonus" />
+                    </div>
+                    <div className="text-row">
+                      <span className='bonus-label'>Brace Bonus</span>
+                    </div>
+                    <div className="button-row">
+                      <button className='btn-use-bonus'>Use</button>
+                    </div>
+                  </Card>
+                  <Card className='bonus-card'>
+                    <div className="image-row">
+                      <img src={HatTrickHero} className='bonus-image' alt="hat trick hero" />
+                    </div>
+                    <div className="text-row">
+                      <span className='bonus-label'>Hat-trick Hero</span>
+                    </div>
+                    <div className="button-row">
+                      <button className='btn-use-bonus'>Use</button>
+                    </div>
+                  </Card>
                 </div>
               </div>
-              
-              <div className="row-wrapper" style={{ top: rowPositions.df }}>
-                <div className='df-row'>
-                  {renderRow(df)}
-                </div>
-              </div>
-              <div className="row-wrapper" style={{ top: rowPositions.mf }}>
-                <div className='mf-row'>
-                  {renderRow(mf)}
-                </div>
-              </div>
-              <div className="row-wrapper" style={{ top: rowPositions.fw }}>
-                <div className='fw-row'>
-                  {renderRow(fw)}
-                </div>
-              </div>
-            </Card>
-            <Card className='mt-3 bonus-panel'>
-            <Card.Header className="header-container">
-              <span style={{marginLeft: '32px'}}>Bonuses</span>
-              <div className="button-container">
-                <button className='card-arrow' onClick={() => scroll('left')}>&lt;</button>
-                <button className='card-arrow' onClick={() => scroll('right')}>&gt;</button>
 
-              </div>
-            </Card.Header>
-
-
-            <div>
-              <div ref={cardContainerRef} className="card-container">
-                <Card className='bonus-card'>
-                  <div className="image-row">
-                    <img src={GoalGetter} className='bonus-image' alt="goal getter" />
-                  </div>
-                  <div className="text-row">
-                    <span className='bonus-label'>Goal Getter</span>
-                  </div>
-                  <div className="button-row">
-                    <button className='btn-use-bonus'>Use</button>
-                  </div>
-                </Card>
-                <Card className='bonus-card'>
-                  <div className="image-row">
-                    <img src={PassMaster} className='bonus-image' alt="pass master" />
-                  </div>
-                  <div className="text-row">
-                    <span className='bonus-label'>Pass Master</span>
-                  </div>
-                  <div className="button-row">
-                    <button className='btn-use-bonus'>Use</button>
-                  </div>
-                </Card>
-                <Card className='bonus-card'>
-                  <div className="image-row">
-                    <img src={NoEntry} className='bonus-image' alt="no entry" />
-                  </div>
-                  <div className="text-row">
-                    <span className='bonus-label'>No Entry</span>
-                  </div>
-                  <div className="button-row">
-                    <button className='btn-use-bonus'>Use</button>
-                  </div>
-                </Card>
-                <Card className='bonus-card'>
-                  <div className="image-row">
-                    <img src={TeamBoost} className='bonus-image' alt="team boost" />
-                  </div>
-                  <div className="text-row">
-                    <span className='bonus-label'>Team Boost</span>
-                  </div>
-                  <div className="button-row">
-                    <button className='btn-use-bonus'>Use</button>
-                  </div>
-                </Card>
-                <Card className='bonus-card'>
-                  <div className="image-row">
-                    <img src={SafeHands} className='bonus-image' alt="safe hands" />
-                  </div>
-                  <div className="text-row">
-                    <span className='bonus-label'>Safe Hands</span>
-                  </div>
-                  <div className="button-row">
-                    <button className='btn-use-bonus'>Use</button>
-                  </div>
-                </Card>
-                <Card className='bonus-card'>
-                  <div className="image-row">
-                    <img src={CaptainFantastic} style={{width: '70px', height: '70px'}} className='bonus-image' alt="captain fantastic" />
-                  </div>
-                  <div className="text-row">
-                    <span className='bonus-label' style={{marginTop: '10px'}}>Captain Fantastic</span>
-                  </div>
-                  <div className="button-row"  style={{marginTop: '-5px'}}>
-                    <button className='btn-use-bonus'>Use</button>
-                  </div>
-                </Card>
-                <Card className='bonus-card'>
-                  <div className="image-row">
-                    <img src={BraceBonus} className='bonus-image' alt="brace bonus" />
-                  </div>
-                  <div className="text-row">
-                    <span className='bonus-label'>Brace Bonus</span>
-                  </div>
-                  <div className="button-row">
-                    <button className='btn-use-bonus'>Use</button>
-                  </div>
-                </Card>
-                <Card className='bonus-card'>
-                  <div className="image-row">
-                    <img src={HatTrickHero} className='bonus-image' alt="hat trick hero" />
-                  </div>
-                  <div className="text-row">
-                    <span className='bonus-label'>Hat-trick Hero</span>
-                  </div>
-                  <div className="button-row">
-                    <button className='btn-use-bonus'>Use</button>
-                  </div>
-                </Card>
-              </div>
-            </div>
-
-            </Card>
-      
+              </Card>
             </Col>
             <Col xs={12} md={6}>
               <FixturesWidget teams={teams} />

@@ -628,3 +628,30 @@
   font-size: 18px;
   font-weight: 400;
 }
+
+
+.card-header-row {
+  display: flex;
+}
+
+.header-col {
+  flex-grow: 1;
+}
+
+.goalkeeper-col {
+  flex-basis: 20%;
+}
+
+.player-col,
+.team-col,
+.value-col {
+  flex-basis: 20%;
+}
+
+.pts-col {
+  flex-basis: 10%;
+}
+
+.button-col {
+  flex-basis: 10%;
+}
