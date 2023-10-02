@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
 import { PlusIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend'; //Should be in auth functions or context
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
 import { fetchFantasyTeam } from "../../AuthFunctions";
 import FixturesWidget from './fixtures-widget';
 import SelectPlayerModal from './select-player-modal';
-import SelectFantasyPlayerModal from './select-fantasy-player-modal';
+import SelectBonusPlayerModal from './select-bonus-player-modal';
 import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
 import ExampleSponsor from "../../../assets/example-sponsor.png";
@@ -33,7 +33,7 @@ const PickTeam = () => {
   const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
   const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [showSelectPlayerModal, setShowSelectPlayerModal] = useState(false);
-  const [showSelectFantasyPlayerModal, setShowSelectFantasyPlayerModal] = useState(false); //Rename this to be clear you are selecting a player for the bonus
+  const [showSelectBonusPlayerModal, setShowSelectBonusPlayerModal] = useState(false);
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [showFormationDropdown, setShowFormationDropdown] = useState(false);
@@ -244,9 +244,6 @@ const PickTeam = () => {
     return null;
   };
 
-
-  
-
   //All event handlers - refactor
 
   const handleFormationChange = (newFormation) => {
@@ -294,14 +291,14 @@ const PickTeam = () => {
     setShowSelectPlayerModal(false);
   };
     
-  const handleBonusClick = (bonusId) => {
+  const handleBonus = (bonusId) => {
       if (bonuses.some(bonus => fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek)) {
           return;
       }
       
       setSelectedBonusId(bonusId);
       if ([1, 2, 3].includes(bonusId)) {
-          setShowSelectFantasyPlayerModal(true);
+          setShowSelectBonusPlayerModal(true);
       } else if (bonusId === 4) {
           setShowSelectBonusTeamModal(true);
       } else {
@@ -309,7 +306,7 @@ const PickTeam = () => {
       }
   };
 
-  const handleConfirmPlayerBonusClick = (data) => {
+  const handleConfirmPlayerBonus = (data) => {
       const bonusObject = bonuses.find((bonus) => bonus.id === data.bonusType);
 
       if (!bonusObject) {
@@ -328,11 +325,11 @@ const PickTeam = () => {
       setSelectedBonusId(bonusObject.id);
       setSelectedBonusPlayerId(data.playerId);
 
-      setShowSelectFantasyPlayerModal(false);
+      setShowSelectBonusPlayerModal(false);
       
   };
 
-  const handleConfirmTeamBonusClick = (data) => {
+  const handleConfirmTeamBonus = (data) => {
       const bonusObject = bonuses.find((bonus) => bonus.id === data.bonusType);
 
       if (!bonusObject) {
@@ -354,7 +351,7 @@ const PickTeam = () => {
       setShowSelectBonusTeamModal(false);
   };
 
-  const handleConfirmBonusClick = (bonusType) => {
+  const handleConfirmBonus = (bonusType) => {
       const bonusObject = bonuses.find((bonus) => bonus.id === bonusType);
 
       if (!bonusObject) {
@@ -596,7 +593,7 @@ const PickTeam = () => {
     return (
       <div className={`w-100 row-container pos-${count}`}>
         {Array.from({ length: count }, (_, i) => (
-          <div className={`player-container align-items-center justify-content-center pos-${count}`} key={i}>
+          <div onMouseDown={() => setShowSelectPlayerModal(true)} className={`player-container align-items-center justify-content-center pos-${count}`} key={i}>
             <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
           </div>
         ))}
@@ -615,7 +612,7 @@ const PickTeam = () => {
           <div className="header-col value-col">Value</div>
           <div className="header-col pts-col">PTS</div>
           <div className="header-col button-col">
-            <button className='add-player-button'><PlusIcon /></button>
+            <button onMouseDown={() => setShowSelectPlayerModal(true)} className='add-player-button'><PlusIcon /></button>
           </div>
         </div>
       ))}
@@ -629,6 +626,7 @@ const PickTeam = () => {
         <Spinner animation="border" />
         <p className='text-center mt-1'>{loadingText}</p>
       </div>) : (
+        <>
         <Container fluid className='view-container mt-2'>
            <Row>
               <Col md={6} xs={12}>
@@ -968,41 +966,42 @@ const PickTeam = () => {
               <FixturesWidget teams={teams} />
             </Col>
           </Row>
-
-          {fantasyTeam && fantasyTeam.players && (
-              <SelectPlayerModal 
-              show={showSelectPlayerModal} 
-              handleClose={() => setShowSelectPlayerModal(false)} 
-              handleConfirm={handlePlayerConfirm}
-              fantasyTeam={fantasyTeam}
-            />
-          )}
-          
-          /* Rename to be clear for bonus */
-          {showSelectFantasyPlayerModal && <SelectFantasyPlayerModal 
-            show={showSelectFantasyPlayerModal}
-            handleClose={() => setShowSelectFantasyPlayerModal(false)}
-            handleConfirm={handleConfirmPlayerBonusClick}
-            fantasyTeam={fantasyTeam}
-            positions={positionsForBonus[selectedBonusId]}
-            bonusType={selectedBonusId}
-          />}
-
-          {showSelectBonusTeamModal && <SelectBonusTeamModal
-            show={showSelectBonusTeamModal}
-            handleClose={() => setShowSelectBonusTeamModal(false)}
-            handleConfirm={handleConfirmTeamBonusClick}
-            bonusType={selectedBonusId}
-          />}
-
-          {showConfirmBonusModal && <ConfirmBonusModal
-            show={showConfirmBonusModal}
-            handleClose={() => setShowConfirmBonusModal(false)}
-            handleConfirm={handleConfirmBonusClick}
-            bonusType={selectedBonusId}
-          />}
           
         </Container>
+        
+
+        {fantasyTeam && fantasyTeam.players && (
+          <SelectPlayerModal 
+          show={showSelectPlayerModal} 
+          handleClose={() => setShowSelectPlayerModal(false)} 
+          handleConfirm={handlePlayerConfirm}
+          fantasyTeam={fantasyTeam}
+        />
+      )}
+      
+      {showSelectBonusPlayerModal && <SelectBonusPlayerModal 
+        show={showSelectBonusPlayerModal}
+        handleClose={() => setShowSelectBonusPlayerModal(false)}
+        handleConfirm={handleConfirmPlayerBonus}
+        fantasyTeam={fantasyTeam}
+        positions={positionsForBonus[selectedBonusId]}
+        bonusType={selectedBonusId}
+      />}
+
+      {showSelectBonusTeamModal && <SelectBonusTeamModal
+        show={showSelectBonusTeamModal}
+        handleClose={() => setShowSelectBonusTeamModal(false)}
+        handleConfirm={handleConfirmTeamBonus}
+        bonusType={selectedBonusId}
+      />}
+
+      {showConfirmBonusModal && <ConfirmBonusModal
+        show={showConfirmBonusModal}
+        handleClose={() => setShowConfirmBonusModal(false)}
+        handleConfirm={handleConfirmBonus}
+        bonusType={selectedBonusId}
+      />}
+      </>
       )
   );
 };

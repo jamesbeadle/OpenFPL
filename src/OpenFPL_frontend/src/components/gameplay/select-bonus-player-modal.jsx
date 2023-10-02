@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Modal, Button, Container, Row, Col } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
 
-const SelectFantasyPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, positions, bonusType }) => {
+const SelectBonusPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, positions, bonusType }) => {
   
   const { players, teams } = useContext(DataContext);
   
@@ -81,4 +81,4 @@ const description = (bonusType == 1) ? "Play your Goal Getter bonus to receive t
   );
 };
 
-export default SelectFantasyPlayerModal;
+export default SelectBonusPlayerModal;

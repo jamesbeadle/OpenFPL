@@ -83,11 +83,6 @@ body {
     border: none !important;
     position: relative;
   }
-  
-  .player-container {
-    display: flex;
-    align-items: stretch;
-  }
 
   .small-text {
     font-size: 0.8rem;
