@@ -6,13 +6,6 @@
   font-style: normal;
 }
 
-@font-face {
-  font-family: 'Poppins Medium';
-  src: url('Poppins-Medium.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 body {
   font-family: 'Poppins', sans-serif !important;
   color: white !important;

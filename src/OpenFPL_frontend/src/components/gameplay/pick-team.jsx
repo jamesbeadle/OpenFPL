@@ -4,14 +4,12 @@ import { PlusIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, Three
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
-import { Actor } from "@dfinity/agent";
-import PlayerSlot from './player-slot';
+import { fetchFantasyTeam } from "../../AuthFunctions";
+import FixturesWidget from './fixtures-widget';
 import SelectPlayerModal from './select-player-modal';
 import SelectFantasyPlayerModal from './select-fantasy-player-modal';
 import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
-import { fetchFantasyTeam } from "../../AuthFunctions";
-import FixturesWidget from './fixtures-widget';
 import ExampleSponsor from "../../../assets/example-sponsor.png";
 import Shirt from "../../../assets/shirt.png";
 import GoalGetter from "../../../assets/goal-getter.png";
@@ -23,6 +21,10 @@ import CaptainFantastic from "../../../assets/captain-fantastic.png";
 import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
 
+//Imports to delete
+import PlayerSlot from './player-slot'; //Will rename something better
+import { Actor } from "@dfinity/agent"; //Can refactor the function that uses this into auth functions
+
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
   const { teams, players, systemState, fixtures } = useContext(DataContext);
@@ -30,13 +32,8 @@ const PickTeam = () => {
   const [loadingText, setLoadingText] = useState("Loading Team");
   const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
   const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
-  const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  const [selectedBonusId, setSelectedBonusId] = useState(null);
-  const [selectedBonusPlayerId, setSelectedBonusPlayerId] = useState(null);
-  const [selectedBonusTeamId, setSelectedBonusTeamId] = useState(null);
   const [showSelectPlayerModal, setShowSelectPlayerModal] = useState(false);
-  const [showSelectFantasyPlayerModal, setShowSelectFantasyPlayerModal] = useState(false);
+  const [showSelectFantasyPlayerModal, setShowSelectFantasyPlayerModal] = useState(false); //Rename this to be clear you are selecting a player for the bonus
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [showFormationDropdown, setShowFormationDropdown] = useState(false);
@@ -45,13 +42,40 @@ const PickTeam = () => {
   const gk = 1;
   const [df, mf, fw] = formation.split('-').map(Number);
   const [rowPositions, setRowPositions] = useState({ gk: '10%', df: '30%', mf: '50%', fw: '70%' });
+  const positionsForBonus = {
+    1: null,  
+    2: null,
+    3: [1]
+  }; 
 
+  const cardContainerRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (cardContainerRef.current) {
+      cardContainerRef.current.scrollBy({
+        left: direction === 'left' ? -200 : 200,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  //Probably rename / delete
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  
+  const [selectedBonusId, setSelectedBonusId] = useState(null);
+  const [selectedBonusPlayerId, setSelectedBonusPlayerId] = useState(null);
+  const [selectedBonusTeamId, setSelectedBonusTeamId] = useState(null);
+  
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
     bankBalance: 300,
     transfersAvailable: 2
   });
-  
+  const [removedPlayers, setRemovedPlayers] = useState([]);
+  const [addedPlayers, setAddedPlayers] = useState([]);  
+  const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
+
+  //I DON'T USE THESE ICONS SO I HAVE A FEELING I WILL DELETE
   const [bonuses, setBonuses] = useState([
     {id: 1, name: 'Goal Getter', propertyName: 'goalGetter', icon: <RecordIcon />},
     {id: 2, name: 'Pass Master', propertyName: 'passMaster', icon: <PersonBoxIcon />},
@@ -62,26 +86,7 @@ const PickTeam = () => {
     {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus', icon: <TwoIcon />},
     {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero', icon: <ThreeIcon />}
   ]);
- 
-  const positionsForBonus = {
-    1: null,  
-    2: null,
-    3: [1]
-  };
-
-  const isTeamValid = invalidTeamMessage === null;
-  const [removedPlayers, setRemovedPlayers] = useState([]);
-  const [addedPlayers, setAddedPlayers] = useState([]);
-
-  const handleFormationBlur = (e) => {
-    const currentTarget = e.currentTarget;
-    setTimeout(() => {
-      if (!currentTarget.contains(document.activeElement)) {
-        setShowFormationDropdown(false);
-      }
-    }, 0);
-  };
-
+  
   useEffect(() => {
     if(isLoading){
       return;
@@ -115,60 +120,13 @@ const PickTeam = () => {
     });
   };
 
-  useEffect(() => {
-    if(players.length == 0 || teams.length == 0 || fixtures.length == 0){
-      return;
-    }
-    const fetchData = async () => {
-      await fetchViewData();
-    
-      await setGameweekPickingFor();
-    };
-    fetchData();
-    
-  }, [players, teams, fixtures]);
-  
-  useEffect(() => {
-    setInvalidTeamMessage(getInvalidTeamMessage());
-  }, [fantasyTeam]);
-
-  const getInvalidTeamMessage = () => {
-    if(fantasyTeam.players == undefined){
-      return "You must select 11 players";
-    }
-    if (fantasyTeam.players.length !== 11) {
-      return "You must select 11 players";
-    }
-    const positions = fantasyTeam.players.map(player => player.position);
-    const goalkeeperCount = positions.filter(position => position === 0).length;
-    const defenderCount = positions.filter(position => position === 1).length;
-    const midfielderCount = positions.filter(position => position === 2).length;
-    const forwardCount = positions.filter(position => position === 3).length;
-    
-    if (goalkeeperCount !== 1) {
-      return "You must have 1 goalkeeper";
-    }
-    if (defenderCount < 3 || defenderCount > 5) {
-      return "You must have between 3 and 5 defenders";
-    }
-    if (midfielderCount < 3 || midfielderCount > 5) {
-      return "You must have between 3 and 5 midfielders";
-    }
-    if (forwardCount < 1 || forwardCount > 3) {
-      return "You must have between 1 and 3 forwards";
-    }
-  
-    const teams = fantasyTeam.players.map(player => player.teamId);
-    const teamsCount = teams.reduce((acc, team) => {
-      acc[team] = (acc[team] || 0) + 1;
-      return acc;
-    }, {});
-    
-    if (Object.values(teamsCount).some(count => count > 3)) {
-      return "Max 3 players from any single club";
-    }
-  
-    return null;
+  const handleFormationBlur = (e) => {
+    const currentTarget = e.currentTarget;
+    setTimeout(() => {
+      if (!currentTarget.contains(document.activeElement)) {
+        setShowFormationDropdown(false);
+      }
+    }, 0);
   };
 
   useEffect(() => {
@@ -179,6 +137,18 @@ const PickTeam = () => {
       handleResize();
     }
   }, [showListView]);
+
+  useEffect(() => {
+    if(players.length == 0 || teams.length == 0 || fixtures.length == 0){
+      return;
+    }
+    const fetchData = async () => {
+      await fetchViewData();
+      await setGameweekPickingFor();
+    };
+    fetchData();
+    
+  }, [players, teams, fixtures]);
 
   const fetchViewData = async () => {
     setLoadingText("Loading Team");
@@ -230,6 +200,54 @@ const PickTeam = () => {
       setCurrentGameweek(systemState.activeGameweek);  
     }
   };
+  
+  useEffect(() => {
+    setInvalidTeamMessage(getInvalidTeamMessage());
+  }, [fantasyTeam]);
+
+  const getInvalidTeamMessage = () => {
+    if(fantasyTeam.players == undefined){
+      return "You must select 11 players";
+    }
+    if (fantasyTeam.players.length !== 11) {
+      return "You must select 11 players";
+    }
+    const positions = fantasyTeam.players.map(player => player.position);
+    const goalkeeperCount = positions.filter(position => position === 0).length;
+    const defenderCount = positions.filter(position => position === 1).length;
+    const midfielderCount = positions.filter(position => position === 2).length;
+    const forwardCount = positions.filter(position => position === 3).length;
+    
+    if (goalkeeperCount !== 1) {
+      return "You must have 1 goalkeeper";
+    }
+    if (defenderCount < 3 || defenderCount > 5) {
+      return "You must have between 3 and 5 defenders";
+    }
+    if (midfielderCount < 3 || midfielderCount > 5) {
+      return "You must have between 3 and 5 midfielders";
+    }
+    if (forwardCount < 1 || forwardCount > 3) {
+      return "You must have between 1 and 3 forwards";
+    }
+  
+    const teams = fantasyTeam.players.map(player => player.teamId);
+    const teamsCount = teams.reduce((acc, team) => {
+      acc[team] = (acc[team] || 0) + 1;
+      return acc;
+    }, {});
+    
+    if (Object.values(teamsCount).some(count => count > 3)) {
+      return "Max 3 players from any single club";
+    }
+  
+    return null;
+  };
+
+
+  
+
+  //All event handlers - refactor
 
   const handleFormationChange = (newFormation) => {
     setShowFormationDropdown(false);
@@ -545,6 +563,7 @@ const PickTeam = () => {
     }));
   };
   
+  //MOVE TO UTILITIES
   const calculateTeamValue = () => {
     if(fantasyTeam && fantasyTeam.players) {
       const totalValue = fantasyTeam.players.reduce((acc, player) => acc + Number(player.value), 0);
@@ -553,6 +572,7 @@ const PickTeam = () => {
     return null;
   }
   
+  //Sometimes a bug so rewrite
   function shuffle(array) {
     let currentIndex = array.length, temporaryValue, randomIndex;
   
@@ -602,18 +622,6 @@ const PickTeam = () => {
       </>
     );
   };
-  
-  const cardContainerRef = useRef(null);
-
-  const scroll = (direction) => {
-    if (cardContainerRef.current) {
-      cardContainerRef.current.scrollBy({
-        left: direction === 'left' ? -200 : 200,
-        behavior: 'smooth'
-      });
-    }
-  };
-  
 
   return (
     isLoading ? (
@@ -714,58 +722,54 @@ const PickTeam = () => {
               </Col>
           </Row>
           <Row>
-              <Col xs={12}>
-                  <Card className='mb-3'>
-                      <div className="outer-container d-flex">
-                          <div className="sub-stat-panel flex-grow-1" style={{ display: 'flex', alignItems: 'center' }}>
-                            <Row className="sub-stat-wrapper">
-                              <Col xs={6} className='align-items-center justify-content-center'>
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Button 
-                                  onClick={() => setShowListView(false)} 
-                                  className={`sub-stat-button sub-stat-button-left ${!showListView ? 'active' : ''}`}
-                                >
-                                  Pitch View
-                                </Button>
-                                <Button 
-                                  onClick={() => setShowListView(true)} 
-                                  className={`sub-stat-button sub-stat-button-right ${showListView ? 'active' : ''}`}
-                                  style={{ marginRight: '40px' }}
-                                >
-                                  List View
-                                </Button>
+            <Col xs={12}>
+              <Card className='mb-3'>
+                  <div className="outer-container d-flex">
+                    <div className="sub-stat-panel flex-grow-1" style={{ display: 'flex', alignItems: 'center' }}>
+                      <Row className="sub-stat-wrapper">
+                        <Col xs={6} className='align-items-center justify-content-center'>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Button 
+                              onClick={() => setShowListView(false)} 
+                              className={`sub-stat-button sub-stat-button-left ${!showListView ? 'active' : ''}`}
+                            >
+                              Pitch View
+                            </Button>
+                            <Button 
+                              onClick={() => setShowListView(true)} 
+                              className={`sub-stat-button sub-stat-button-right ${showListView ? 'active' : ''}`}
+                              style={{ marginRight: '40px' }}
+                            >
+                            List View
+                          </Button>                                      
+                          <div onBlur={handleFormationBlur}>
+                            <Dropdown show={showFormationDropdown}>
+                              <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+                                <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>{formation}</b></Button>
+                                </Dropdown.Toggle>
 
-
-                                      
-                                  <div onBlur={handleFormationBlur}>
-                                    <Dropdown show={showFormationDropdown}>
-                                      <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                        <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>{formation}</b></Button>
-                                       </Dropdown.Toggle>
-
-                                       <Dropdown.Menu>
-                                        {['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'].map(f => (
-                                          <Dropdown.Item className='dropdown-item' key={f} onClick={() => handleFormationChange(f)}>
-                                          {formation === f && <span>✔</span>} {` ${f}`} 
-                                         </Dropdown.Item>
-                                        ))}
-                                      </Dropdown.Menu>
-                                    </Dropdown>
-                                  </div>
-                                </div>
-                              </Col>
-
-                              <Col xs={6}>
-                                  
-                              </Col>
-                            </Row>
+                                <Dropdown.Menu>
+                                {['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'].map(f => (
+                                  <Dropdown.Item className='dropdown-item' key={f} onClick={() => handleFormationChange(f)}>
+                                  {formation === f && <span>✔</span>} {` ${f}`} 
+                                  </Dropdown.Item>
+                                ))}
+                              </Dropdown.Menu>
+                            </Dropdown>
                           </div>
-                      </div>
-                  </Card>
-              </Col>
+                        </div>
+                      </Col>
+
+                      <Col xs={6} className="float-right-buttons">
+                          <button className='autofill-button'>AutoFill</button>
+                          <button className='save-team-button' disabled>Save Team</button>
+                      </Col>
+                    </Row>
+                </div>
+              </div>
+            </Card>
+          </Col>
           </Row>
-          
-          
           <Row>
             <Col xs={12} md={6}>
               {!showListView && (
@@ -974,7 +978,7 @@ const PickTeam = () => {
             />
           )}
           
-          
+          /* Rename to be clear for bonus */
           {showSelectFantasyPlayerModal && <SelectFantasyPlayerModal 
             show={showSelectFantasyPlayerModal}
             handleClose={() => setShowSelectFantasyPlayerModal(false)}
@@ -1003,6 +1007,7 @@ const PickTeam = () => {
   );
 };
 
+//Refactor into own view and remove from fixtures widget and fixtures
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <a
     href=""

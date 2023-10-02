@@ -1,12 +1,5 @@
 @import '~bootstrap/scss/bootstrap';
 
-@font-face {
-  font-family: 'Poppins SemiBold';
-  src: url('Poppins-SemiBold.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 .navbar{
     background-color: rgba(36, 37, 41, 0.9);
     height: 80px;
@@ -213,7 +206,6 @@
   height: 52px !important;
   width: 132px !important;
   color: white !important;
-  font-family: 'Poppins SemiBold';
   font-size: 16px !important;
   font-weight: 600 !important;
   background-color: #161819 !important;
@@ -222,6 +214,7 @@
 .sub-stat-button.active{
   background-color: #2CE3A6 !important;
   color: #161819 !important;
+  border: none;
 }
 
 .sub-stat-button-left{
@@ -690,3 +683,37 @@
   border: none;
   border-radius: 4px;
 }
+
+.float-right-buttons {
+  text-align: right;
+}
+
+.autofill-button{
+  width: 161px;
+  height: 52px;
+  border: none;
+  border-radius: 8px;
+  margin-right: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #7F56F1;
+  color: white;
+}
+
+.save-team-button{
+  width: 191px;
+  height: 52px;
+  border: none;
+  border-radius: 8px;
+  margin-right: 32px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #7F56F1;
+  color: white;
+}
+
+.save-team-button:disabled {
+  background-color: #5A5A5A;
+}
+
+
