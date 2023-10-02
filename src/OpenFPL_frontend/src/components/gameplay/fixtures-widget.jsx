@@ -6,14 +6,15 @@ import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
 
 const FixturesWidget = () => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);
-  systemState.activeGameweek = 27;
   const [isLoading, setIsLoading] = useState(true);
   const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
   const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [filteredFixtures, setFilteredFixtures] = useState([]);
   const [fetchedFixtures, setFetchedFixtures] = useState(null); 
   const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
-  const dropdownRef = useRef(null);
+  const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
+  const gameweekDropdownRef = useRef(null);
+  const seasonDropdownRef = useRef(null);
 
   const handleGameweekBlur = (e) => {
     const currentTarget = e.currentTarget;
@@ -22,12 +23,11 @@ const FixturesWidget = () => {
     }
   };
   
-
   const handleSeasonBlur = (e) => {
     const currentTarget = e.currentTarget;
     setTimeout(() => {
       if (!currentTarget.contains(document.activeElement)) {
-        setShowGameweekDropdown(false);
+        setShowSeasonDropdown(false);
       }
     }, 0);
   };
@@ -63,7 +63,7 @@ const FixturesWidget = () => {
     const source = fetchedFixtures || fixtures;
     const filteredFixturesData = source.filter(fixture => fixture.gameweek === currentGameweek);
     setFilteredFixtures(groupFixturesByDate(filteredFixturesData));
-  }, [fixtures, currentGameweek, fetchedFixtures]);
+  }, [fixtures, currentGameweek, currentSeason, fetchedFixtures]);
 
   const handleGameweekChange = (change) => {
     setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
@@ -122,11 +122,23 @@ const FixturesWidget = () => {
     );
   };
 
-  const openDropdown = () => {
+  const openGameweekDropdown = () => {
     setShowGameweekDropdown(!showGameweekDropdown);
     setTimeout(() => {
-      if (dropdownRef.current) {
-        const item = dropdownRef.current.querySelector(`[data-key="${currentGameweek - 1}"]`);
+      if (gameweekDropdownRef.current) {
+        const item = gameweekDropdownRef.current.querySelector(`[data-key="${currentGameweek - 1}"]`);
+        if (item) {
+          item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+      }
+    }, 0);
+  };
+
+  const openSeasonDropdown = () => {
+    setShowSeasonDropdown(!showSeasonDropdown);
+    setTimeout(() => {
+      if (seasonDropdownRef.current) {
+        const item = seasonDropdownRef.current.querySelector(`[data-key="${currentSeason.id}"]`);
         if (item) {
           item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
         }
@@ -157,26 +169,25 @@ const FixturesWidget = () => {
                       </Button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      
-                    <div ref={dropdownRef} onBlur={handleGameweekBlur}>
-        <Dropdown show={showGameweekDropdown}>
-          <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
-            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openDropdown()}>Gameweek {currentGameweek}</Button>
-          </Dropdown.Toggle>
-          <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-            {Array.from({ length: 38 }, (_, index) => (
-              <Dropdown.Item
-                data-key={index} // Additional attribute to identify the item
-                className='formation-dropdown-item'
-                key={index}
-                onClick={() => handleFormationChange(index + 1)}
-              >
-                Gameweek {index + 1} {currentGameweek === (index + 1) ? '✔️' : ''}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-      </div>
+                      <div ref={gameweekDropdownRef} onBlur={handleGameweekBlur}>
+                        <Dropdown show={showGameweekDropdown}>
+                          <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openGameweekDropdown()}>Gameweek {currentGameweek}</Button>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                            {Array.from({ length: 38 }, (_, index) => (
+                              <Dropdown.Item
+                                data-key={index}
+                                className='formation-dropdown-item'
+                                key={index}
+                                onClick={() => handleGameweekChange(index + 1)}
+                              >
+                                Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
                     </div>
                     <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
                       <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
@@ -191,7 +202,26 @@ const FixturesWidget = () => {
                       </Button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <small>{currentSeason.name}</small>
+                      <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
+                        <Dropdown show={showSeasonDropdown}>
+                          <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                            
+                            {seasons.map(season => 
+                              <Dropdown.Item
+                                data-key={season.id}
+                                className='formation-dropdown-item'
+                                key={season.id}
+                                onClick={() => handleSeasonChange(season.id)}
+                              >
+                                {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
+                              </Dropdown.Item>
+                            )}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
                       <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
