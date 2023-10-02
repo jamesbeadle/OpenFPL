@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Modal, Button, Table, Container, Card } from 'react-bootstrap';
 import { getTeamById } from '../helpers';
 
