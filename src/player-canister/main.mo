@@ -558,7 +558,7 @@ actor Self {
                                             };
                                             return {
                                                 number = gw.number;
-                                                events = List.fromArray<T.PlayerEventData>(foundEvents);
+                                                events = List.append<T.PlayerEventData>(gw.events, List.fromArray(foundEvents));
                                                 points = score;
                                             };
                                         }
