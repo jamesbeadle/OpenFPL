@@ -32,6 +32,7 @@ const PickTeam = () => {
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [showFormationDropdown, setShowFormationDropdown] = useState(false);
+  const [formation, setFormation] = useState('4-4-2');
 
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
@@ -154,6 +155,10 @@ const PickTeam = () => {
     } finally {
         setIsLoading(false);
     }
+  };
+
+  const handleFormationChange = (newFormation) => {
+    setFormation(newFormation);
   };
 
   const handlePlayerSelection = (slotNumber) => {
@@ -492,6 +497,14 @@ const PickTeam = () => {
     return array;
   }
 
+  const renderRow = (count) => {
+    return Array.from({ length: count }, (_, i) => (
+      <img key={i} src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+    ));
+  };
+
+  const [gk, df, mf, fw] = formation.split('-').map(Number);
+
   return (
     isLoading ? (
       <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
@@ -613,14 +626,12 @@ const PickTeam = () => {
                                         <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>4-4-2</b></Button>
                                        </Dropdown.Toggle>
 
-                                      <Dropdown.Menu className="w-100 formation-dropdown-menu">
-                                        <Button className="formation-dropdown-item">3-4-3</Button>
-                                        <Button className="formation-dropdown-item">3-5-2</Button>
-                                        <Button className="formation-dropdown-item">4-3-3</Button>
-                                        <Button className="formation-dropdown-item">4-4-2</Button>
-                                        <Button className="formation-dropdown-item">4-5-1</Button>
-                                        <Button className="formation-dropdown-item">5-4-1</Button>
-                                        <Button className="formation-dropdown-item">5-3-2</Button>
+                                       <Dropdown.Menu>
+                                        {['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'].map(f => (
+                                          <Dropdown.Item key={f} onClick={() => handleFormationChange(f)}>
+                                            {f}
+                                          </Dropdown.Item>
+                                        ))}
                                       </Dropdown.Menu>
                                     </Dropdown>
                                   </div>
@@ -640,6 +651,21 @@ const PickTeam = () => {
           
           <Row>
             <Col xs={12} md={6}>
+              
+      <Card className="pitch-bg">
+        <div className='gk-row'>
+          {renderRow(gk)}
+        </div>
+        <div className='df-row'>
+          {renderRow(df)}
+        </div>
+        <div className='mf-row'>
+          {renderRow(mf)}
+        </div>
+        <div className='fw-row'>
+          {renderRow(fw)}
+        </div>
+      </Card>
               <Card className="pitch-bg">
               <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <img src={ExampleSponsor} alt="sponsor1" className='sponsor1 align-items-center justify-content-center' />
