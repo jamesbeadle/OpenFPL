@@ -25,7 +25,7 @@ const Homepage = () => {
     const [days, setDays] = useState(0);
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
-    const totalPrizePool = 0; //To be implemented
+    const totalPrizePool = 0;
     
     useEffect(() => {
         const fetchViewData = async () => {

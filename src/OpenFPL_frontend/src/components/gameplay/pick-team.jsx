@@ -708,7 +708,7 @@ const PickTeam = () => {
 
                                        <Dropdown.Menu>
                                         {['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'].map(f => (
-                                          <Dropdown.Item className='formation-dropdown-item' key={f} onClick={() => handleFormationChange(f)}>
+                                          <Dropdown.Item className='dropdown-item' key={f} onClick={() => handleFormationChange(f)}>
                                           {formation === f && <span>✔</span>} {` ${f}`} 
                                          </Dropdown.Item>
                                         ))}

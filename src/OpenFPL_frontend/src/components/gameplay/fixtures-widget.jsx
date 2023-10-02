@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext, useRef, useLayoutEffect  } from 'react';
+import React, { useState, useEffect, useContext, useRef  } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
 import { getTeamById,groupFixturesByDate, computeTimeLeft } from '../helpers';
-import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
+import { BadgeIcon, ArrowLeft, ArrowRight } from '../icons';
 
 const FixturesWidget = () => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);
@@ -178,9 +178,9 @@ const FixturesWidget = () => {
                             {Array.from({ length: 38 }, (_, index) => (
                               <Dropdown.Item
                                 data-key={index}
-                                className='formation-dropdown-item'
+                                className='dropdown-item'
                                 key={index}
-                                onClick={() => handleGameweekChange(index + 1)}
+                                onMouseDown={() => setCurrentGameweek(index + 1)}
                               >
                                 Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
                               </Dropdown.Item>
@@ -202,27 +202,27 @@ const FixturesWidget = () => {
                       </Button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
-                        <Dropdown show={showSeasonDropdown}>
-                          <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
-                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                            
-                            {seasons.map(season => 
-                              <Dropdown.Item
-                                data-key={season.id}
-                                className='formation-dropdown-item'
-                                key={season.id}
-                                onClick={() => handleSeasonChange(season.id)}
-                              >
-                                {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
-                              </Dropdown.Item>
-                            )}
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </div>
+                    <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
+                      <Dropdown show={showSeasonDropdown}>
+                        <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                          <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                          
+                          {seasons.map(season => 
+                            <Dropdown.Item
+                              data-key={season.id}
+                              className='dropdown-item'
+                              key={season.id}
+                              onMouseDown={() => setCurrentSeason(season)}
+                            >
+                              {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
+                            </Dropdown.Item>
+                          )}
+                        </Dropdown.Menu>
+                      </Dropdown>
                     </div>
+                  </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
                       <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
                         style={{ marginLeft: '16px' }} >

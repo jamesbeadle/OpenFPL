@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Container, Row, Col, Card, Button, Spinner } from 'react-bootstrap';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById,groupFixturesByDate, computeTimeLeft } from './helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from './icons';
@@ -11,6 +11,26 @@ const Fixtures = () => {
   const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [filteredFixtures, setFilteredFixtures] = useState([]);
   const [fetchedFixtures, setFetchedFixtures] = useState(null); 
+  const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
+  const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
+  const gameweekDropdownRef = useRef(null);
+  const seasonDropdownRef = useRef(null);
+
+  const handleGameweekBlur = (e) => {
+    const currentTarget = e.currentTarget;
+    if (!currentTarget.contains(document.activeElement)) {
+      setShowGameweekDropdown(false);
+    }
+  };
+  
+  const handleSeasonBlur = (e) => {
+    const currentTarget = e.currentTarget;
+    setTimeout(() => {
+      if (!currentTarget.contains(document.activeElement)) {
+        setShowSeasonDropdown(false);
+      }
+    }, 0);
+  };
   
   useEffect(() => {
     const fetchData = async () => {
@@ -101,6 +121,30 @@ const Fixtures = () => {
     return (<p className="status-text fixture-unplayed">Unplayed</p>
     );
   };
+
+  const openGameweekDropdown = () => {
+    setShowGameweekDropdown(!showGameweekDropdown);
+    setTimeout(() => {
+      if (gameweekDropdownRef.current) {
+        const item = gameweekDropdownRef.current.querySelector(`[data-key="${currentGameweek - 1}"]`);
+        if (item) {
+          item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+      }
+    }, 0);
+  };
+
+  const openSeasonDropdown = () => {
+    setShowSeasonDropdown(!showSeasonDropdown);
+    setTimeout(() => {
+      if (seasonDropdownRef.current) {
+        const item = seasonDropdownRef.current.querySelector(`[data-key="${currentSeason.id}"]`);
+        if (item) {
+          item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        }
+      }
+    }, 0);
+  };
   
   
   return (
@@ -122,7 +166,25 @@ const Fixtures = () => {
                     </Button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <small>Gameweek {currentGameweek}</small>
+                    <div ref={gameweekDropdownRef} onBlur={handleGameweekBlur}>
+                      <Dropdown show={showGameweekDropdown}>
+                        <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                          <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openGameweekDropdown()}>Gameweek {currentGameweek}</Button>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                          {Array.from({ length: 38 }, (_, index) => (
+                            <Dropdown.Item
+                              data-key={index}
+                              className='dropdown-item'
+                              key={index}
+                              onMouseDown={() => {setCurrentGameweek(index + 1)}}
+                            >
+                              Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
+                            </Dropdown.Item>
+                          ))}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
                   </div>
                   <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
                     <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
@@ -137,7 +199,26 @@ const Fixtures = () => {
                     </Button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <small>{currentSeason.name}</small>
+                    <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
+                      <Dropdown show={showSeasonDropdown}>
+                        <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                          <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                          
+                          {seasons.map(season => 
+                            <Dropdown.Item
+                              data-key={season.id}
+                              className='dropdown-item'
+                              key={season.id}
+                              onMouseDown={() => setCurrentSeason(season)}
+                            >
+                              {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
+                            </Dropdown.Item>
+                          )}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
                     <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
@@ -225,5 +306,18 @@ const Fixtures = () => {
       </>
   );
 };
+
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+  <a
+    href=""
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+  </a>
+));
 
 export default Fixtures;
