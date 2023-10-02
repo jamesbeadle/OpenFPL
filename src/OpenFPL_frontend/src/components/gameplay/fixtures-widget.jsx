@@ -111,102 +111,108 @@ const FixturesWidget = () => {
             <p className='text-center mt-1'>Loading Fixtures</p>
           </div>) 
           :
-          <div className="dark-tab-row w-100 mx-0">
-            <Row>
-              <Col md={12}>
-                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
-                      style={{ marginRight: '16px' }} >
-                      <ArrowLeft />
-                    </Button>
+          <Card>
+            <Card.Header>
+              <p className='card-header-underline'>Fixtures</p>
+            </Card.Header>
+            <div className="dark-tab-row w-100 mx-0">
+              <Row>
+                <Col md={12}>
+                  <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
+                        style={{ marginRight: '16px' }} >
+                        <ArrowLeft />
+                      </Button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <small>Gameweek {currentGameweek}</small>
+                    </div>
+                    <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
+                      <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
+                        style={{ marginLeft: '16px' }} >
+                        <ArrowRight />
+                      </Button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
+                        style={{ marginRight: '16px' }} >
+                        <ArrowLeft />
+                      </Button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <small>{currentSeason.name}</small>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
+                      <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
+                        style={{ marginLeft: '16px' }} >
+                        <ArrowRight />
+                      </Button>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <small>Gameweek {currentGameweek}</small>
-                  </div>
-                  <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
-                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
-                      style={{ marginLeft: '16px' }} >
-                      <ArrowRight />
-                    </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                      style={{ marginRight: '16px' }} >
-                      <ArrowLeft />
-                    </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <small>{currentSeason.name}</small>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
-                      style={{ marginLeft: '16px' }} >
-                      <ArrowRight />
-                    </Button>
-                  </div>
-                </div>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
 
-            <Row>
-              {Object.entries(filteredFixtures).map(([date, fixturesForDate], dateIdx) => {
-                return (
-                    <Container key={dateIdx}>
-                      <Row>
-                        <Col xs={12}>
-                          <div className='light-background date-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
-                            <p className="w-100 date-header">{date}</p>
-                          </div>
-                        </Col>  
-                      </Row>
-                        
-                        {fixturesForDate.map((fixture, idx) => {
-                            const homeTeam = getTeamById(teams, fixture.homeTeamId);
-                            const awayTeam = getTeamById(teams, fixture.awayTeamId);
-                            if (!homeTeam || !awayTeam) {
-                                console.error("One of the teams is missing for fixture: ", fixture);
-                                return null;
-                            }
-                            return (
-                              <div className="table-row" key={fixture.id}>
-                                <div className="col-home-team">
-                                  <p className='fixture-team-name'>
-                                            <BadgeIcon
-                                                primaryColour={'#123432'}
-                                                secondaryColour={'#432123'}
-                                                thirdColour={'#432123'}
-                                                width={48}
-                                                height={48}
-                                                marginRight={16}
-                                            />
-                                          {getTeamById(teams, fixture.homeTeamId).friendlyName}
-                                    </p>
+              <Row>
+                {Object.entries(filteredFixtures).map(([date, fixturesForDate], dateIdx) => {
+                  return (
+                      <Container key={dateIdx}>
+                        <Row>
+                          <Col xs={12}>
+                            <div className='light-background date-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
+                              <p className="w-100 date-header">{date}</p>
+                            </div>
+                          </Col>  
+                        </Row>
+                          
+                          {fixturesForDate.map((fixture, idx) => {
+                              const homeTeam = getTeamById(teams, fixture.homeTeamId);
+                              const awayTeam = getTeamById(teams, fixture.awayTeamId);
+                              if (!homeTeam || !awayTeam) {
+                                  console.error("One of the teams is missing for fixture: ", fixture);
+                                  return null;
+                              }
+                              return (
+                                <div className="table-row" key={fixture.id}>
+                                  <div className="col-home-team-widget">
+                                    <p className='fixture-team-name'>
+                                              <BadgeIcon
+                                                  primaryColour={'#123432'}
+                                                  secondaryColour={'#432123'}
+                                                  thirdColour={'#432123'}
+                                                  width={48}
+                                                  height={48}
+                                                  marginRight={16}
+                                              />
+                                            {getTeamById(teams, fixture.homeTeamId).friendlyName}
+                                      </p>
+                                  </div>
+                                  <div className="col-vs-widget">
+                                    <p className="w-100 text-center">vs</p>
+                                  </div>
+                                  <div className="col-away-team-widget">
+                                    <p className='fixture-team-name'>
+                                      <BadgeIcon
+                                            primaryColour={'#123432'}
+                                            secondaryColour={'#432123'}
+                                            thirdColour={'#432123'}
+                                            width={48}
+                                            height={48}
+                                            marginRight={16}
+                                        />
+                                      {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
+                                  </div>
                                 </div>
-                                <div className="col-vs">
-                                  <p className="w-100 text-center">vs</p>
-                                </div>
-                                <div className="col-away-team">
-                                  <p className='fixture-team-name'>
-                                    <BadgeIcon
-                                          primaryColour={'#123432'}
-                                          secondaryColour={'#432123'}
-                                          thirdColour={'#432123'}
-                                          width={48}
-                                          height={48}
-                                          marginRight={16}
-                                      />
-                                    {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
-                                </div>
-                              </div>
-                            );
-                        })}
-                    </Container>
-                );
-              })}
+                              );
+                          })}
+                      </Container>
+                  );
+                })}
 
-            </Row>
-          </div>
+              </Row>
+            </div>
+          </Card>
+          
       }
       </>
   );

@@ -118,6 +118,35 @@
     border: 1px solid #2E323A !important;
 }
 
+.card-header{
+  position: relative;
+    background-color: rgba(46, 50, 58, 0.6);
+    color: white !important;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    height: 46px;
+    line-height: 46px; 
+    padding: 0 !important;
+}
+
+.card-header-underline {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  margin-left: 32px;
+}
+
+.card-header-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #2CE3A6;
+}
+
 .stat-panel{
     padding-top: 15px;
     padding-bottom: 15px;
@@ -433,6 +462,26 @@
 }
 
 
+
+.col-home-team-widget,
+.col-away-team-widget,
+.col-vs-widget {
+  flex: 0 0 auto;
+}
+
+.col-home-team-widget {
+  width: 40%;
+}
+
+.col-vs-widget {
+  width: 5%;
+}
+
+.col-away-team-widget {
+  margin-left: 15%;
+  width: 40%;
+}
+
 .fixture-team-name{
   font-weight: 600;
   font-size: 18px;
@@ -505,4 +554,8 @@
 }
 .pos-5{
   width: 20%;
+}
+
+.bonus-panel{
+  height: 318px;
 }

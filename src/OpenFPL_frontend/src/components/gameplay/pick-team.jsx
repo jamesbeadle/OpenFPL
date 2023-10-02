@@ -731,6 +731,9 @@ const PickTeam = () => {
                 </div>
               </div>
             </Card>
+            <Card className='mt-3 bonus-panel'>
+              <h1>Bonuses</h1>
+            </Card>
       
             </Col>
             <Col xs={12} md={6}>
