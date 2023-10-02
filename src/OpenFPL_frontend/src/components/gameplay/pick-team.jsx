@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
 import { StarIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
@@ -545,7 +545,16 @@ const PickTeam = () => {
     );
   };
   
+  const cardContainerRef = useRef(null);
 
+  const scroll = (direction) => {
+    if (cardContainerRef.current) {
+      cardContainerRef.current.scrollBy({
+        left: direction === 'left' ? -200 : 200,
+        behavior: 'smooth'
+      });
+    }
+  };
   
 
   return (
@@ -732,7 +741,24 @@ const PickTeam = () => {
               </div>
             </Card>
             <Card className='mt-3 bonus-panel'>
-              <h1>Bonuses</h1>
+              <Card.Header><span style={{marginLeft: '32px'}}>Bonuses</span></Card.Header>
+
+
+            <div>
+              <button onClick={() => scroll('left')}>Left</button>
+              <div ref={cardContainerRef} className="card-container">
+                <Card className='bonus-card'><h1>1</h1></Card>
+                <Card className='bonus-card'><h1>2</h1></Card>
+                <Card className='bonus-card'><h1>3</h1></Card>
+                <Card className='bonus-card'><h1>4</h1></Card>
+                <Card className='bonus-card'><h1>5</h1></Card>
+                <Card className='bonus-card'><h1>6</h1></Card>
+                <Card className='bonus-card'><h1>7</h1></Card>
+                <Card className='bonus-card'><h1>8</h1></Card>
+              </div>
+              <button onClick={() => scroll('right')}>Right</button>
+            </div>
+
             </Card>
       
             </Col>
