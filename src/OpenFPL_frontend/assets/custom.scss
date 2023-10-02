@@ -67,7 +67,24 @@
 
 .formation-dropdown-menu {
   position: absolute !important;
-  transform: translate(-100%, 25%) !important;
+  transform: translate(0%, 20px) !important;
+  background-color: #161819 !important;
+  width: 185px !important;
+  padding: 16px !important;
+}
+
+.formation-dropdown-item{
+  color: white;
+  font-weight: 400;
+  font-size: 16px;
+  width: 100%;
+  background-color: transparent !important;
+  border: none;
+}
+
+.formation-dropdown-item:hover{
+  background-color: white !important;
+  color: #161819;
 }
 
 .footer-logo-text{

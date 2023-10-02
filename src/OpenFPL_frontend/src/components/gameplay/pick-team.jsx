@@ -606,15 +606,21 @@ const PickTeam = () => {
                                       List View
                                   </Button>
 
-                                  <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>4-4-2</b></Button>
                                       
-                                  <div onBlur={handleBlur} tabIndex="0">
+                                  <div onBlur={handleBlur}>
                                     <Dropdown show={showFormationDropdown}>
                                       <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+                                        <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>4-4-2</b></Button>
                                        </Dropdown.Toggle>
 
                                       <Dropdown.Menu className="w-100 formation-dropdown-menu">
-                                        <h1>4-4-1</h1>
+                                        <Button className="formation-dropdown-item">3-4-3</Button>
+                                        <Button className="formation-dropdown-item">3-5-2</Button>
+                                        <Button className="formation-dropdown-item">4-3-3</Button>
+                                        <Button className="formation-dropdown-item">4-4-2</Button>
+                                        <Button className="formation-dropdown-item">4-5-1</Button>
+                                        <Button className="formation-dropdown-item">5-4-1</Button>
+                                        <Button className="formation-dropdown-item">5-3-2</Button>
                                       </Dropdown.Menu>
                                     </Dropdown>
                                   </div>
