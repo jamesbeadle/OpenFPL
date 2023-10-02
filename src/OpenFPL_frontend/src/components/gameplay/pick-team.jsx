@@ -761,25 +761,94 @@ const PickTeam = () => {
 
             <div>
               <div ref={cardContainerRef} className="card-container">
-              <Card className='bonus-card'>
-                <div className="image-row">
-                  <img src={GoalGetter} className='bonus-image' alt="goal getter" />
-                </div>
-                <div className="text-row">
-                  <span className='bonus-label'>Goal Getter</span>
-                </div>
-                <div className="button-row">
-                  <button className='btn-use-bonus'>Use</button>
-                </div>
-              </Card>
-
-                <Card className='bonus-card'><h1>2</h1></Card>
-                <Card className='bonus-card'><h1>3</h1></Card>
-                <Card className='bonus-card'><h1>4</h1></Card>
-                <Card className='bonus-card'><h1>5</h1></Card>
-                <Card className='bonus-card'><h1>6</h1></Card>
-                <Card className='bonus-card'><h1>7</h1></Card>
-                <Card className='bonus-card'><h1>8</h1></Card>
+                <Card className='bonus-card'>
+                  <div className="image-row">
+                    <img src={GoalGetter} className='bonus-image' alt="goal getter" />
+                  </div>
+                  <div className="text-row">
+                    <span className='bonus-label'>Goal Getter</span>
+                  </div>
+                  <div className="button-row">
+                    <button className='btn-use-bonus'>Use</button>
+                  </div>
+                </Card>
+                <Card className='bonus-card'>
+                  <div className="image-row">
+                    <img src={PassMaster} className='bonus-image' alt="pass master" />
+                  </div>
+                  <div className="text-row">
+                    <span className='bonus-label'>Pass Master</span>
+                  </div>
+                  <div className="button-row">
+                    <button className='btn-use-bonus'>Use</button>
+                  </div>
+                </Card>
+                <Card className='bonus-card'>
+                  <div className="image-row">
+                    <img src={NoEntry} className='bonus-image' alt="no entry" />
+                  </div>
+                  <div className="text-row">
+                    <span className='bonus-label'>No Entry</span>
+                  </div>
+                  <div className="button-row">
+                    <button className='btn-use-bonus'>Use</button>
+                  </div>
+                </Card>
+                <Card className='bonus-card'>
+                  <div className="image-row">
+                    <img src={TeamBoost} className='bonus-image' alt="team boost" />
+                  </div>
+                  <div className="text-row">
+                    <span className='bonus-label'>Team Boost</span>
+                  </div>
+                  <div className="button-row">
+                    <button className='btn-use-bonus'>Use</button>
+                  </div>
+                </Card>
+                <Card className='bonus-card'>
+                  <div className="image-row">
+                    <img src={SafeHands} className='bonus-image' alt="safe hands" />
+                  </div>
+                  <div className="text-row">
+                    <span className='bonus-label'>Safe Hands</span>
+                  </div>
+                  <div className="button-row">
+                    <button className='btn-use-bonus'>Use</button>
+                  </div>
+                </Card>
+                <Card className='bonus-card'>
+                  <div className="image-row">
+                    <img src={CaptainFantastic} style={{width: '70px', height: '70px'}} className='bonus-image' alt="captain fantastic" />
+                  </div>
+                  <div className="text-row">
+                    <span className='bonus-label' style={{marginTop: '10px'}}>Captain Fantastic</span>
+                  </div>
+                  <div className="button-row"  style={{marginTop: '-5px'}}>
+                    <button className='btn-use-bonus'>Use</button>
+                  </div>
+                </Card>
+                <Card className='bonus-card'>
+                  <div className="image-row">
+                    <img src={BraceBonus} className='bonus-image' alt="brace bonus" />
+                  </div>
+                  <div className="text-row">
+                    <span className='bonus-label'>Brace Bonus</span>
+                  </div>
+                  <div className="button-row">
+                    <button className='btn-use-bonus'>Use</button>
+                  </div>
+                </Card>
+                <Card className='bonus-card'>
+                  <div className="image-row">
+                    <img src={HatTrickHero} className='bonus-image' alt="hat trick hero" />
+                  </div>
+                  <div className="text-row">
+                    <span className='bonus-label'>Hat-trick Hero</span>
+                  </div>
+                  <div className="button-row">
+                    <button className='btn-use-bonus'>Use</button>
+                  </div>
+                </Card>
               </div>
             </div>
 
