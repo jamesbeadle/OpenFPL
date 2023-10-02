@@ -151,6 +151,29 @@
   display: flex;
   overflow-x: auto;
   width: 100%;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  gap: 16px;
+  margin-right: 32px;
+}
+
+.card-arrow{
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: 24px;
+  color: white;
 }
 
 .stat-panel{
@@ -562,12 +585,47 @@
   width: 20%;
 }
 
-.bonus-panel{
-  height: 318px;
+.bonus-card:not(:last-child) {
+  margin-right: 16px;
 }
 
 .bonus-card{
   width: 150px;
-  height: 192px;
   flex-shrink: 0;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 16px !important;
+}
+
+.image-row,
+.text-row,
+.button-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bonus-image{
+  width: 80px;
+  height: 80px;
+}
+
+.bonus-label{
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.btn-use-bonus{
+  background-color: #7F56F1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
 }

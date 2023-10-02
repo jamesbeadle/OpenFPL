@@ -14,6 +14,14 @@ import { fetchFantasyTeam } from "../../AuthFunctions";
 import FixturesWidget from './fixtures-widget';
 import ExampleSponsor from "../../../assets/example-sponsor.png";
 import Shirt from "../../../assets/shirt.png";
+import GoalGetter from "../../../assets/goal-getter.png";
+import PassMaster from "../../../assets/pass-master.png";
+import NoEntry from "../../../assets/no-entry.png";
+import TeamBoost from "../../../assets/team-boost.png";
+import SafeHands from "../../../assets/safe-hands.png";
+import CaptainFantastic from "../../../assets/captain-fantastic.png";
+import BraceBonus from "../../../assets/brace-bonus.png";
+import HatTrickHero from "../../../assets/hat-trick-hero.png";
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -741,13 +749,30 @@ const PickTeam = () => {
               </div>
             </Card>
             <Card className='mt-3 bonus-panel'>
-              <Card.Header><span style={{marginLeft: '32px'}}>Bonuses</span></Card.Header>
+            <Card.Header className="header-container">
+              <span style={{marginLeft: '32px'}}>Bonuses</span>
+              <div className="button-container">
+                <button className='card-arrow' onClick={() => scroll('left')}>&lt;</button>
+                <button className='card-arrow' onClick={() => scroll('right')}>&gt;</button>
+
+              </div>
+            </Card.Header>
 
 
             <div>
-              <button onClick={() => scroll('left')}>Left</button>
               <div ref={cardContainerRef} className="card-container">
-                <Card className='bonus-card'><h1>1</h1></Card>
+              <Card className='bonus-card'>
+                <div className="image-row">
+                  <img src={GoalGetter} className='bonus-image' alt="goal getter" />
+                </div>
+                <div className="text-row">
+                  <span className='bonus-label'>Goal Getter</span>
+                </div>
+                <div className="button-row">
+                  <button className='btn-use-bonus'>Use</button>
+                </div>
+              </Card>
+
                 <Card className='bonus-card'><h1>2</h1></Card>
                 <Card className='bonus-card'><h1>3</h1></Card>
                 <Card className='bonus-card'><h1>4</h1></Card>
@@ -756,7 +781,6 @@ const PickTeam = () => {
                 <Card className='bonus-card'><h1>7</h1></Card>
                 <Card className='bonus-card'><h1>8</h1></Card>
               </div>
-              <button onClick={() => scroll('right')}>Right</button>
             </div>
 
             </Card>
