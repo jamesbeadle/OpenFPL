@@ -25,7 +25,7 @@ import HatTrickHero from "../../../assets/hat-trick-hero.png";
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
-  const { teams, players, systemState } = useContext(DataContext);
+  const { teams, players, systemState, fixtures } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState("Loading Team");
   const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
@@ -72,7 +72,7 @@ const PickTeam = () => {
   const [removedPlayers, setRemovedPlayers] = useState([]);
   const [addedPlayers, setAddedPlayers] = useState([]);
 
-  const handleBlur = (e) => {
+  const handleFormationBlur = (e) => {
     const currentTarget = e.currentTarget;
     setTimeout(() => {
       if (!currentTarget.contains(document.activeElement)) {
@@ -114,14 +114,17 @@ const PickTeam = () => {
   };
 
   useEffect(() => {
-    if(players.length == 0 || teams.length == 0){
+    if(players.length == 0 || teams.length == 0 || fixtures.length == 0){
       return;
     }
     const fetchData = async () => {
       await fetchViewData();
+    
+      await setGameweekPickingFor();
     };
     fetchData();
-  }, [players, teams]);
+    
+  }, [players, teams, fixtures]);
   
   useEffect(() => {
     setInvalidTeamMessage(getInvalidTeamMessage());
@@ -197,6 +200,23 @@ const PickTeam = () => {
         console.error(error);
     } finally {
         setIsLoading(false);
+    }
+  };
+
+  const setGameweekPickingFor = async () => {
+    const currentDateTime = new Date();
+    const currentGameweekFixtures = fixtures.filter(fixture => fixture.gameweek === systemState.activeGameweek);
+    currentGameweekFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
+
+    const kickOffInMilliseconds = Number(currentGameweekFixtures[0].kickOff) / 1000000;
+    const firstFixtureTime = new Date(kickOffInMilliseconds);
+   
+    const oneHourBeforeFirstFixture = new Date(firstFixtureTime - 3600000);
+    if (currentDateTime >= oneHourBeforeFirstFixture) {
+        setCurrentGameweek(systemState.activeGameweek + 1);
+    }
+    else{
+      setCurrentGameweek(systemState.activeGameweek);  
     }
   };
 
@@ -680,7 +700,7 @@ const PickTeam = () => {
                                   </Button>
 
                                       
-                                  <div onBlur={handleBlur}>
+                                  <div onBlur={handleFormationBlur}>
                                     <Dropdown show={showFormationDropdown}>
                                       <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                                         <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>{formation}</b></Button>

@@ -364,13 +364,6 @@
   background-color: #242529 !important; 
 }
 
-.social-icons {
-  background-color: #37393C;
-  opacity: 95%;
-  border-radius: 2px;
-  padding: 5px;
-}
-
 .logo-text{
   letter-spacing: 2px;
   font-size: 20px;
@@ -628,4 +621,10 @@
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 1px;
+}
+
+.filter-dropdown-btn{
+  border:none;
+  font-size: 18px;
+  font-weight: 400;
 }
