@@ -461,18 +461,48 @@
 .sponsor1{
   width: 186.5px !important;
   height: 42px !important;
-  margin-left: 100px;
-  margin-top: -10px;
 };
 
 .sponsor2{
   width: 186.5px !important;
   height: 42px !important;
-  margin-left: 245px;
-  margin-top: -10px;
 };
 
 .shirt{
   width: 60.69px;
   height: 80px;
+}
+
+.row-wrapper {
+  position: absolute;
+  width: 100%;
+}
+
+.row-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+.player-container {
+  flex: 1;
+  text-align: center;
+}
+
+.pos-1{
+  width: 100%;
+}
+.pos-2{
+  width: 50%;
+}
+.pos-3{
+  width: 33%;
+}
+.pos-4{
+  width: 25%;
+}
+.pos-5{
+  width: 20%;
 }

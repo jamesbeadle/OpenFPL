@@ -33,7 +33,9 @@ const PickTeam = () => {
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [showFormationDropdown, setShowFormationDropdown] = useState(false);
   const [formation, setFormation] = useState('4-4-2');
-  const [gk, df, mf, fw] = formation.split('-').map(Number);
+  const gk = 1;
+  const [df, mf, fw] = formation.split('-').map(Number);
+  const [rowPositions, setRowPositions] = useState({ gk: '10%', df: '30%', mf: '50%', fw: '70%' });
 
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
@@ -69,6 +71,38 @@ const PickTeam = () => {
         setShowFormationDropdown(false);
       }
     }, 0);
+  };
+
+  useEffect(() => {
+    if(isLoading){
+      return;
+    };
+    
+    
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isLoading]);
+
+  const handleResize = () => {
+    const panel = document.querySelector('.pitch-bg');
+    const panelWidth = panel.offsetWidth;
+  
+    const aspectRatio = 3216 / 3116;
+    const panelHeight = panelWidth / aspectRatio;
+  
+    panel.style.height = `${panelHeight}px`;
+  
+    setRowPositions({
+      gk: `${0.05 * panelHeight}px`,
+      df: `${0.25 * panelHeight}px`,
+      mf: `${0.5 * panelHeight}px`,
+      fw: `${0.75 * panelHeight}px`,
+    });
   };
 
   useEffect(() => {
@@ -159,6 +193,7 @@ const PickTeam = () => {
   };
 
   const handleFormationChange = (newFormation) => {
+    setShowFormationDropdown(false);
     setFormation(newFormation);
   };
 
@@ -499,10 +534,17 @@ const PickTeam = () => {
   }
 
   const renderRow = (count) => {
-    return Array.from({ length: count }, (_, i) => (
-      <img key={i} src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-    ));
+    return (
+      <div className={`w-100 row-container pos-${count}`}>
+        {Array.from({ length: count }, (_, i) => (
+          <div className={`player-container align-items-center justify-content-center pos-${count}`} key={i}>
+            <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+          </div>
+        ))}
+      </div>
+    );
   };
+  
 
   
 
@@ -630,8 +672,8 @@ const PickTeam = () => {
                                        <Dropdown.Menu>
                                         {['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'].map(f => (
                                           <Dropdown.Item className='formation-dropdown-item' key={f} onClick={() => handleFormationChange(f)}>
-                                            {f}
-                                          </Dropdown.Item>
+                                          {formation === f && <span>✔</span>} {` ${f}`} 
+                                         </Dropdown.Item>
                                         ))}
                                       </Dropdown.Menu>
                                     </Dropdown>
@@ -653,81 +695,43 @@ const PickTeam = () => {
           <Row>
             <Col xs={12} md={6}>
               
-      <Card className="pitch-bg">
-        <div className='gk-row'>
-          {renderRow(gk)}
-        </div>
-        <div className='df-row'>
-          {renderRow(df)}
-        </div>
-        <div className='mf-row'>
-          {renderRow(mf)}
-        </div>
-        <div className='fw-row'>
-          {renderRow(fw)}
-        </div>
-      </Card>
-              <Card className="pitch-bg">
-              <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <img src={ExampleSponsor} alt="sponsor1" className='sponsor1 align-items-center justify-content-center' />
-                <img src={ExampleSponsor} alt="sponsor2" className='sponsor2 align-items-center justify-content-center' />
-              </div>
-      
-                  <div className='gk-row'>
+            <Card className="pitch-bg">
 
+              <div className="row-wrapper">
+                <Row>
+                  <Col xs={6} className='d-flex align-items-center justify-content-center'>
+                    <img src={ExampleSponsor} alt="sponsor1" className='sponsor1' />
+                  </Col>
+                  <Col xs={6} className='d-flex align-items-center justify-content-center'>
+                    <img src={ExampleSponsor} alt="sponsor2" className='sponsor2' />
+                  </Col>
+                </Row>
+              </div>
+              
+              
+              <div className="row-wrapper" style={{ top: rowPositions.gk }}>
+                <div className='gk-row'>
+                  {renderRow(gk)}
                 </div>
+              </div>
+              
+              <div className="row-wrapper" style={{ top: rowPositions.df }}>
                 <div className='df-row'>
-                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                    <div id='df-p1' className='align-items-center justify-content-center'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='df-p2'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='df-p3'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='df-p4'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='df-p5'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                  </div>
+                  {renderRow(df)}
                 </div>
+              </div>
+              <div className="row-wrapper" style={{ top: rowPositions.mf }}>
                 <div className='mf-row'>
-                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                    <div id='mf-p1' className='align-items-center justify-content-center'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='mf-p2'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='mf-p3'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='mf-p4'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='mf-p5'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                  </div>
+                  {renderRow(mf)}
                 </div>
+              </div>
+              <div className="row-wrapper" style={{ top: rowPositions.fw }}>
                 <div className='fw-row'>
-                  <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                    <div id='fw-p1' className='align-items-center justify-content-center'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='fw-p2'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                    <div id='fw-p3'>
-                      <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-                    </div>
-                  </div>
+                  {renderRow(fw)}
                 </div>
-              </Card>
+              </div>
+            </Card>
+      
             </Col>
             <Col xs={12} md={6}>
               <FixturesWidget teams={teams} />

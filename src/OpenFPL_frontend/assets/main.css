@@ -86,8 +86,9 @@ body {
     background-size: cover;
     width: 100% !important;
     margin: 0 !important;
-    height: 779px !important;
+    height: auto;
     border: none !important;
+    position: relative;
   }
   
   .player-container {
