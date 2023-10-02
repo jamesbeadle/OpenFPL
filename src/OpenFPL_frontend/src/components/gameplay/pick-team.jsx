@@ -89,7 +89,7 @@ const PickTeam = () => {
   }, [isLoading]);
 
   const handleResize = () => {
-    const panel = document.querySelector('.pitch-bg');
+    const panel = document.querySelector('#pitch-bg');
     const panelWidth = panel.offsetWidth;
   
     const aspectRatio = 3216 / 3116;
@@ -695,7 +695,7 @@ const PickTeam = () => {
           <Row>
             <Col xs={12} md={6}>
               
-            <Card className="pitch-bg">
+            <Card id="pitch-bg">
 
               <div className="row-wrapper">
                 <Row>

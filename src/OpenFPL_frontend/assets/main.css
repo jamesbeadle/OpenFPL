@@ -81,7 +81,7 @@ body {
     width: 60%;
   }
 
-  .pitch-bg {
+  #pitch-bg {
     background: url('pitch.png');
     background-size: cover;
     width: 100% !important;
