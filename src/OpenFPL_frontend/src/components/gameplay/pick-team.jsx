@@ -33,6 +33,7 @@ const PickTeam = () => {
   const [showConfirmBonusModal, setShowConfirmBonusModal] = useState(false);
   const [showFormationDropdown, setShowFormationDropdown] = useState(false);
   const [formation, setFormation] = useState('4-4-2');
+  const [gk, df, mf, fw] = formation.split('-').map(Number);
 
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
@@ -503,7 +504,7 @@ const PickTeam = () => {
     ));
   };
 
-  const [gk, df, mf, fw] = formation.split('-').map(Number);
+  
 
   return (
     isLoading ? (
@@ -623,12 +624,12 @@ const PickTeam = () => {
                                   <div onBlur={handleBlur}>
                                     <Dropdown show={showFormationDropdown}>
                                       <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-                                        <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>4-4-2</b></Button>
+                                        <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>{formation}</b></Button>
                                        </Dropdown.Toggle>
 
                                        <Dropdown.Menu>
                                         {['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'].map(f => (
-                                          <Dropdown.Item key={f} onClick={() => handleFormationChange(f)}>
+                                          <Dropdown.Item className='formation-dropdown-item' key={f} onClick={() => handleFormationChange(f)}>
                                             {f}
                                           </Dropdown.Item>
                                         ))}
