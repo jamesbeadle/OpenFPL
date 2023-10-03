@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
-import { PlusIcon, BadgeIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
+import { PlusIcon, BadgeIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, RemovePlayerIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend'; //Should be in auth functions or context
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
@@ -618,10 +618,18 @@ const PickTeam = () => {
                         <>
                           <div className="player-name-row">
                             <div style={{marginRight: '4px'}}>{getFlag(player.nationality)}</div>
-                            {(player.firstName !== "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
+                            {
+                              (player.firstName !== "" ? player.firstName.charAt(0) + ". " : "") + 
+                              (player.lastName.length > 8 ? player.lastName.substring(0, 6) + ".." : player.lastName)
+                            }
+
+                            {" ("}
+                            {getPositionText(player.position)}
+                            {")"}
                           </div>
                           <div className="player-info-row">
-                            <span className="position-text">{getPositionText(player.position)} 
+                            <span className="position-text"> 
+                             {foundTeam.abbreviatedName}
                             <span className='pitch-team-badge'>
                               <BadgeIcon 
                                 primary={foundTeam.primaryColourHex}
@@ -631,7 +639,7 @@ const PickTeam = () => {
                                 height={16}
                               />
                             </span>
-                             {foundTeam.abbreviatedName}</span>
+                            £{(player.value/4).toFixed(2).toLocaleString()}m</span>
                           </div>
                         </>
                       );
@@ -697,7 +705,7 @@ const PickTeam = () => {
                           </div>
                           <div className="header-col value-col">£{(player.value/4).toFixed(2).toLocaleString()}m</div>
                           <div className="header-col button-col">
-                            <button onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }} className='add-player-button'><PlusIcon /></button>
+                            <button className="remove-player-button" onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }}><RemovePlayerIcon width={16} height={16} /></button>
                           </div>
                         </div>
                       );
