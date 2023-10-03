@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
-import { PlusIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
+import { PlusIcon, BadgeIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend'; //Should be in auth functions or context
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
@@ -21,6 +21,8 @@ import SafeHands from "../../../assets/safe-hands.png";
 import CaptainFantastic from "../../../assets/captain-fantastic.png";
 import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
+import { getTeamById, getPositionText } from '../helpers';
+import getFlag from '../country-flag';
 
 //Imports to delete
 import PlayerSlot from './player-slot'; //Will rename something better
@@ -80,14 +82,14 @@ const PickTeam = () => {
 
   //I DON'T USE THESE ICONS SO I HAVE A FEELING I WILL DELETE
   const [bonuses, setBonuses] = useState([
-    {id: 1, name: 'Goal Getter', propertyName: 'goalGetter', icon: <RecordIcon />},
-    {id: 2, name: 'Pass Master', propertyName: 'passMaster', icon: <PersonBoxIcon />},
-    {id: 3, name: 'No Entry', propertyName: 'noEntry', icon: <StopIcon />},
-    {id: 4, name: 'Team Boost', propertyName: 'teamBoost', icon: <PersonUpIcon />},
-    {id: 5, name: 'Safe Hands', propertyName: 'safeHands', icon: <PersonIcon />},
-    {id: 6, name: 'Captain Fantastic', propertyName: 'captainFantastic', icon: <CaptainIcon />},
-    {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus', icon: <TwoIcon />},
-    {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero', icon: <ThreeIcon />}
+    {id: 1, name: 'Goal Getter', propertyName: 'goalGetter'},
+    {id: 2, name: 'Pass Master', propertyName: 'passMaster'},
+    {id: 3, name: 'No Entry', propertyName: 'noEntry'},
+    {id: 4, name: 'Team Boost', propertyName: 'teamBoost'},
+    {id: 5, name: 'Safe Hands', propertyName: 'safeHands'},
+    {id: 6, name: 'Captain Fantastic', propertyName: 'captainFantastic'},
+    {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus'},
+    {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero'}
   ]);
   
   useEffect(() => {
@@ -609,13 +611,34 @@ const PickTeam = () => {
                 <>
                   <img src={FilledShirt} alt="shirt" className='shirt align-items-center justify-content-center' />
                   <div className="player-details">
-                    <div className="player-name-row">
-                      {(player.firstName !== "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
-                    </div>
-                    <div className="player-info-row">
-                      <span className="position-flag">{player.position}</span>
-                      <span className="team-name">{player.teamName}</span>
-                    </div>
+
+                    {(() => {
+                      const foundTeam = teams.find(team => team.id === player.teamId);
+                      return (
+                        <>
+                          <div className="player-name-row">
+                            <div style={{marginRight: '4px'}}>{getFlag(player.nationality)}</div>
+                            {(player.firstName !== "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
+                          </div>
+                          <div className="player-info-row">
+                            <span className="position-text">{getPositionText(player.position)} 
+                            <span className='pitch-team-badge'>
+                              <BadgeIcon 
+                                primary={foundTeam.primaryColourHex}
+                                secondary={foundTeam.secondaryColourHex}
+                                third={foundTeam.thirdColourHex}
+                                width={16}
+                                height={16}
+                              />
+                            </span>
+                             {foundTeam.abbreviatedName}</span>
+                          </div>
+                        </>
+                      );
+                    })()}
+
+
+
                   </div>
                 </>
               ) : (

@@ -73,4 +73,18 @@ export const dateToUnixNanoseconds = (dateString) => {
     return date.getTime() * 1000000;
 };
 
+export const getPositionText = (position) => {
+    switch(position){
+        case 0:
+            return 'GK';
+        case 1:
+            return 'DF';
+        case 2:
+            return 'MF';
+        case 3:
+            return 'FW';
+    }
+    return '';
+};
+
 

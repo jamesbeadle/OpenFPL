@@ -847,24 +847,34 @@
 }
 
 .player-name-row {
-  background-color: #4CAF50;  /* Change to your desired color */
-  color: white;  /* Change to your desired color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #242529;
+  color: white;
   text-align: center;
   padding: 8px;
   height: 32px;
   width: 116px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .player-info-row {
-  background-color: #f2f2f2;  /* Change to your desired color */
-  color: black;  /* Change to your desired color */
   display: flex;
-  justify-content: space-around;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #161819;
+  display: flex;
   padding: 8px;
   height: 22px;
   width: 116px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.position-flag, .team-name {
-  margin: 0 4px;
+.pitch-team-badge{
+  margin-left: 4px;
+  margin-right: 4px;
 }
