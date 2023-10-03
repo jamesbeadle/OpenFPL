@@ -832,6 +832,14 @@
   cursor: pointer;
 }
 
+.list-player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
 .player-details {
   border-radius: 12px;
   overflow: hidden;
@@ -889,4 +897,37 @@
   border: none;
   border-radius: 4px;
   background-color: #E32C2C;
+}
+
+.captain-player-button{
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: transparent;
+}
+
+.shirt-container {
+  position: relative;
+}
+
+.left-side-image,
+.right-side-image {
+  position: absolute;
+  bottom: 0;
+  width: 22px;
+  height: 22px;
+}
+
+.left-side-image {
+  left: -22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right-side-image {
+  right: -22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

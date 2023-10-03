@@ -115,7 +115,36 @@ const PlusIcon = ({ width=16, height=16, marginRight=0 }) => (
     style={{ cursor: 'pointer', marginRight: marginRight }}
   >
  
-<path d="M16 6.66667H9.33333V0H6.66667V6.66667H0V9.33333H6.66667V16H9.33333V9.33333H16V6.66667Z" fill="#161819"/>
+    <path d="M16 6.66667H9.33333V0H6.66667V6.66667H0V9.33333H6.66667V16H9.33333V9.33333H16V6.66667Z" fill="#161819"/>
+  </svg>
+);
+
+
+const CaptainIcon = ({ width=23, height=22, marginRight=0 }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    fill="currentColor"
+    viewBox="0 0 23 22"
+    style={{ cursor: 'pointer', marginRight: marginRight }}
+  >
+  <circle cx="11.5" cy="11" r="11" fill="#242529" fill-opacity="0.9"/>
+  <path transform="translate(3,3)" d="M8.39289 1.61501C8.47689 1.44234 8.65289 1.33301 8.84489 1.33301C9.03756 1.33301 9.21289 1.44234 9.29689 1.61501C9.94622 2.94701 11.0636 5.24167 11.0636 5.24167C11.0636 5.24167 13.6042 5.59101 15.0782 5.79434C15.3469 5.83101 15.5116 6.05834 15.5116 6.29234C15.5116 6.41901 15.4636 6.54767 15.3576 6.64967C14.2842 7.67501 12.4362 9.44368 12.4362 9.44368C12.4362 9.44368 12.8876 11.955 13.1489 13.4117C13.2042 13.7197 12.9656 13.9997 12.6542 13.9997C12.5729 13.9997 12.4916 13.9803 12.4176 13.9403C11.1056 13.2417 8.84489 12.0397 8.84489 12.0397C8.84489 12.0397 6.58422 13.2417 5.27222 13.9403C5.19822 13.9803 5.11622 13.9997 5.03489 13.9997C4.72489 13.9997 4.48489 13.719 4.54089 13.4117C4.80289 11.955 5.25422 9.44368 5.25422 9.44368C5.25422 9.44368 3.40556 7.67501 2.33289 6.64967C2.22622 6.54767 2.17822 6.41901 2.17822 6.29301C2.17822 6.05834 2.34422 5.83034 2.61222 5.79434C4.08622 5.59101 6.62622 5.24167 6.62622 5.24167C6.62622 5.24167 7.74422 2.94701 8.39289 1.61501ZM8.84489 2.97034L7.27089 6.16501L3.77356 6.64434L6.33889 9.07301L5.70689 12.5763L8.84489 10.9063L11.9829 12.5763L11.3489 9.08567L13.9162 6.64434L10.3736 6.14034L8.84489 2.97034Z" fill="#2CE3A6"/>
+</svg>
+);
+
+const CaptainIconActive = ({ width=23, height=22, marginRight=0 }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={width}
+    height={height}
+    fill="currentColor"
+    viewBox="0 0 23 22"
+    style={{ cursor: 'pointer', marginRight: marginRight }}
+  >
+  <circle cx="11.5" cy="11" r="11" fill="#242529" fill-opacity="0.9"/>
+  <path transform="translate(3,3)" d="M8.39289 1.61501C8.47689 1.44234 8.65289 1.33301 8.84489 1.33301C9.03756 1.33301 9.21289 1.44234 9.29689 1.61501C9.94622 2.94701 11.0636 5.24167 11.0636 5.24167C11.0636 5.24167 13.6042 5.59101 15.0782 5.79434C15.3469 5.83101 15.5116 6.05834 15.5116 6.29234C15.5116 6.41901 15.4636 6.54767 15.3576 6.64967C14.2842 7.67501 12.4362 9.44368 12.4362 9.44368C12.4362 9.44368 12.8876 11.955 13.1489 13.4117C13.2042 13.7197 12.9656 13.9997 12.6542 13.9997C12.5729 13.9997 12.4916 13.9803 12.4176 13.9403C11.1056 13.2417 8.84489 12.0397 8.84489 12.0397C8.84489 12.0397 6.58422 13.2417 5.27222 13.9403C5.19822 13.9803 5.11622 13.9997 5.03489 13.9997C4.72489 13.9997 4.48489 13.719 4.54089 13.4117C4.80289 11.955 5.25422 9.44368 5.25422 9.44368C5.25422 9.44368 3.40556 7.67501 2.33289 6.64967C2.22622 6.54767 2.17822 6.41901 2.17822 6.29301C2.17822 6.05834 2.34422 5.83034 2.61222 5.79434C4.08622 5.59101 6.62622 5.24167 6.62622 5.24167C6.62622 5.24167 7.74422 2.94701 8.39289 1.61501Z" fill="#2CE3A6"/>
 </svg>
 );
 
@@ -372,21 +401,6 @@ const StarOutlineIcon = ({ onClick, color = 'currentColor', margin = '0', width 
     </svg>
   );
 
-  const CaptainIcon = ({ onClick, color = 'currentColor', margin = '0', width = '20', height = '20', style }) => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width={width}
-        height={height}
-        fill={color}
-        viewBox="0 0 16 16"
-        onClick={onClick}
-        style={{ cursor: 'pointer', margin: margin, ...style }}
-    >  
-     <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512Z"/>
-
-    </svg>
-  );
-
   const StopIcon = ({ onClick, color = 'currentColor', margin = '0', width = '20', height = '20', style }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -534,4 +548,4 @@ const WalletIcon = ({ onClick, color = 'currentColor', margin = '0', width = '20
 
 
 export { LogoIcon, BadgeIcon, RemovePlayerIcon, CombinedIcon, ClockIcon, ArrowLeft, ArrowRight, PlusIcon, CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, TableIcon, FixtureIcon, TeamIcon, PlayerIcon, TransferIcon, StarOutlineIcon, 
-  RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon, WalletIcon, SmallFixtureIcon, StopCircleIcon, PenaltyMissIcon };
+  RecordIcon, PersonIcon, CaptainIcon, CaptainIconActive, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon, WalletIcon, SmallFixtureIcon, StopCircleIcon, PenaltyMissIcon };

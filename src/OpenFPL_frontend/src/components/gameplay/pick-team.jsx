@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
-import { PlusIcon, BadgeIcon, RecordIcon, PersonIcon, CaptainIcon, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, RemovePlayerIcon} from '../icons';
+import { PlusIcon, BadgeIcon, RemovePlayerIcon, CaptainIcon, CaptainIconActive} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend'; //Should be in auth functions or context
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
@@ -282,7 +282,9 @@ const PickTeam = () => {
       });
 
       const sortedPlayers = [...updatedFantasyTeam.players].sort((a, b) => Number(b.value) - Number(a.value));
-      updatedFantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
+      if (!updatedFantasyTeam.captainId) {
+        updatedFantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
+      }
 
       return updatedFantasyTeam;
     });
@@ -598,18 +600,22 @@ const PickTeam = () => {
           const player = fantasyTeam.players[slot];
           return (
             <div 
-              onMouseDown={() => {
-                setShowSelectPlayerModal(true);
-                setSelectedPosition(position);
-                setSelectedSlot(slot);
-                setActiveIndex(i);
-              }} 
               className={`player-container align-items-center justify-content-center pos-${count}`} 
               key={slot}
             >
               {player ? (
                 <>
-                  <img src={FilledShirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                  <div className="shirt-container">
+                    <img src={FilledShirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    <button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} /></button>
+                    <button className="captain-player-button right-side-image p-0" onMouseDown={() => { handleCaptainSelection(player.id); }}>
+                      {player.id === fantasyTeam.captainId ? (
+                        <CaptainIconActive width={23} height={22} />
+                      ) : (
+                        <CaptainIcon width={23} height={22} />
+                      )}
+                    </button>
+                  </div>
                   <div className="player-details">
 
                     {(() => {
@@ -650,7 +656,14 @@ const PickTeam = () => {
                   </div>
                 </>
               ) : (
-                <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                <img    
+                  onMouseDown={() => {
+                    setShowSelectPlayerModal(true);
+                    setSelectedPosition(position);
+                    setSelectedSlot(slot);
+                    setActiveIndex(i);
+                  }} 
+                  src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
               )}
             </div>
           );
@@ -658,6 +671,7 @@ const PickTeam = () => {
       </div>
     );
   };
+  
   const renderListRows = (count, position, positionText) => {
     return (
       <>
@@ -666,13 +680,7 @@ const PickTeam = () => {
           const player = fantasyTeam.players[slot];
           return (
             <div 
-              onMouseDown={() => {
-                setShowSelectPlayerModal(true);
-                setSelectedPosition(position);
-                setSelectedSlot(slot);
-                setActiveIndex(i);
-              }} 
-              className={`player-container align-items-center justify-content-center list-pos-${count}`} 
+              className={`list-player-container align-items-center justify-content-center list-pos-${count}`} 
               key={slot}
             >
               {player ? (
@@ -705,7 +713,7 @@ const PickTeam = () => {
                           </div>
                           <div className="header-col value-col">£{(player.value/4).toFixed(2).toLocaleString()}m</div>
                           <div className="header-col button-col">
-                            <button className="remove-player-button" onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }}><RemovePlayerIcon width={16} height={16} /></button>
+                            <button className="remove-player-button" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={16} height={16} /></button>
                           </div>
                         </div>
                       );
@@ -719,7 +727,11 @@ const PickTeam = () => {
                   <div className="header-col team-col"></div>
                   <div className="header-col value-col"></div>
                   <div className="header-col button-col">
-                    <button onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }} className='add-player-button'><PlusIcon /></button>
+                    <button onMouseDown={() => {
+                      setShowSelectPlayerModal(true);
+                      setSelectedPosition(position);
+                      setSelectedSlot(slot);
+                      setActiveIndex(i); }} className='add-player-button'><PlusIcon /></button>
                   </div>
                 </div>
               )}
