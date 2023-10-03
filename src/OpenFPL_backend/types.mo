@@ -55,6 +55,7 @@ module Types{
         secondaryColourHex: Text;
         thirdColourHex: Text;
         abbreviatedName: Text;
+        shirtType: Nat8; //0 = Filled, 1 = Striped, Can add more later.
     };
 
     public type Fixture = {

@@ -169,6 +169,7 @@ export const idlFactory = ({ IDL }) => {
     'friendlyName' : IDL.Text,
     'thirdColourHex' : IDL.Text,
     'abbreviatedName' : IDL.Text,
+    'shirtType' : IDL.Nat8,
     'primaryColourHex' : IDL.Text,
   });
   return IDL.Service({
@@ -195,7 +196,7 @@ export const idlFactory = ({ IDL }) => {
     'executeLoanPlayer' : IDL.Func([PlayerId, TeamId, IDL.Int], [Result], []),
     'executePromoteFormerTeam' : IDL.Func([TeamId], [Result], []),
     'executePromoteNewTeam' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Nat8],
         [Result],
         [],
       ),
@@ -230,7 +231,16 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'executeUpdateTeam' : IDL.Func(
-        [TeamId, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [
+          TeamId,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Nat8,
+        ],
         [Result],
         [],
       ),
@@ -292,6 +302,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'reuploadTeams' : IDL.Func([], [], []),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
         [Result],

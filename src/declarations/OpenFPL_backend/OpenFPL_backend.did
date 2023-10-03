@@ -7,6 +7,7 @@ type Team =
    name: text;
    primaryColourHex: text;
    secondaryColourHex: text;
+   shirtType: nat8;
    thirdColourHex: text;
  };
 type SystemState = 
@@ -210,7 +211,8 @@ service : {
    (Result);
   executeLoanPlayer: (PlayerId, TeamId, int) -> (Result);
   executePromoteFormerTeam: (TeamId) -> (Result);
-  executePromoteNewTeam: (text, text, text, text, text, text) -> (Result);
+  executePromoteNewTeam: (text, text, text, text, text, text, nat8) ->
+   (Result);
   executeRecallPlayer: (PlayerId) -> (Result);
   executeRescheduleFixture: (FixtureId, GameweekNumber, GameweekNumber,
    int) -> (Result);
@@ -223,7 +225,8 @@ service : {
   executeUnretirePlayer: (PlayerId) -> (Result);
   executeUpdatePlayer: (PlayerId, nat8, text, text, nat8, int, text) ->
    (Result);
-  executeUpdateTeam: (TeamId, text, text, text, text, text, text) -> (Result);
+  executeUpdateTeam: (TeamId, text, text, text, text, text, text, nat8) ->
+   (Result);
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
@@ -250,6 +253,7 @@ service : {
    (PaginatedLeaderboard) query;
   getWeeklyLeaderboardCache: (nat16, nat8) -> (PaginatedLeaderboard) query;
   isDisplayNameValid: (text) -> (bool) query;
+  reuploadTeams: () -> ();
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateDisplayName: (text) -> (Result);

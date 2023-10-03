@@ -11,8 +11,6 @@ import SelectBonusPlayerModal from './select-bonus-player-modal';
 import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
 import ExampleSponsor from "../../../assets/example-sponsor.png";
-import Shirt from "../../../assets/shirt.png";
-import FilledShirt from "../../../assets/filled-shirt.png";
 import GoalGetter from "../../../assets/goal-getter.png";
 import PassMaster from "../../../assets/pass-master.png";
 import NoEntry from "../../../assets/no-entry.png";
@@ -21,11 +19,10 @@ import SafeHands from "../../../assets/safe-hands.png";
 import CaptainFantastic from "../../../assets/captain-fantastic.png";
 import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
-import { getTeamById, getPositionText } from '../helpers';
+import { getPositionText } from '../helpers';
 import getFlag from '../country-flag';
 
 //Imports to delete
-import PlayerSlot from './player-slot'; //Will rename something better
 import { Actor } from "@dfinity/agent"; //Can refactor the function that uses this into auth functions
 
 const PickTeam = () => {
@@ -608,23 +605,23 @@ const PickTeam = () => {
             >
               {player ? (
                 <>
-                  <div className="shirt-container">
-                    <ShirtIcon className='shirt align-items-center justify-content-center' />
-                    <button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} /></button>
-                    <button className="captain-player-button right-side-image p-0" onMouseDown={() => { handleCaptainSelection(player.id); }}>
-                      {player.id === fantasyTeam.captainId ? (
-                        <CaptainIconActive width={23} height={22} />
-                      ) : (
-                        <CaptainIcon width={23} height={22} />
-                      )}
-                    </button>
-                  </div>
-                  <div className="player-details">
-
-                    {(() => {
-                      const foundTeam = teams.find(team => team.id === player.teamId);
-                      return (
-                        <>
+                  {(() => {
+                    const foundTeam = teams.find(team => team.id === player.teamId);
+                    return (
+                      <>
+                        <div className="shirt-container">
+                          {foundTeam.shirtType == 0 ? <ShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} className='shirt align-items-center justify-content-center' />
+                            : <StripedShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} className='shirt align-items-center justify-content-center' /> }
+                          <button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} /></button>
+                          <button className="captain-player-button right-side-image p-0" onMouseDown={() => { handleCaptainSelection(player.id); }}>
+                            {player.id === fantasyTeam.captainId ? (
+                              <CaptainIconActive width={23} height={22} />
+                            ) : (
+                              <CaptainIcon width={23} height={22} />
+                            )}
+                          </button>
+                        </div>
+                        <div className="player-details">
                           <div className="player-name-row">
                             <div style={{marginRight: '4px'}}>{getFlag(player.nationality)}</div>
                             {
@@ -638,7 +635,7 @@ const PickTeam = () => {
                           </div>
                           <div className="player-info-row">
                             <span className="position-text"> 
-                             {foundTeam.abbreviatedName}
+                              {foundTeam.abbreviatedName}
                             <span className='pitch-team-badge'>
                               <BadgeIcon 
                                 primary={foundTeam.primaryColourHex}
@@ -650,13 +647,10 @@ const PickTeam = () => {
                             </span>
                             £{(player.value/4).toFixed(2).toLocaleString()}m</span>
                           </div>
-                        </>
-                      );
-                    })()}
-
-
-
-                  </div>
+                        </div>
+                      </>
+                    );
+                  })()} 
                 </>
               ) : (
                     

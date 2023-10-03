@@ -162,6 +162,7 @@ export interface Team {
   'friendlyName' : string,
   'thirdColourHex' : string,
   'abbreviatedName' : string,
+  'shirtType' : number,
   'primaryColourHex' : string,
 }
 export type TeamId = number;
@@ -175,7 +176,7 @@ export interface _SERVICE {
   'executeLoanPlayer' : ActorMethod<[PlayerId, TeamId, bigint], Result>,
   'executePromoteFormerTeam' : ActorMethod<[TeamId], Result>,
   'executePromoteNewTeam' : ActorMethod<
-    [string, string, string, string, string, string],
+    [string, string, string, string, string, string, number],
     Result
   >,
   'executeRecallPlayer' : ActorMethod<[PlayerId], Result>,
@@ -201,7 +202,7 @@ export interface _SERVICE {
     Result
   >,
   'executeUpdateTeam' : ActorMethod<
-    [TeamId, string, string, string, string, string, string],
+    [TeamId, string, string, string, string, string, string, number],
     Result
   >,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
@@ -244,6 +245,7 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
+  'reuploadTeams' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

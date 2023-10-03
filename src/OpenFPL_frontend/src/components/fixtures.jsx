@@ -259,7 +259,7 @@ const Fixtures = () => {
                                       <div className="col-home-team">
                                         <p className='fixture-team-name'>
                                           <BadgeIcon
-                                            priamry={homeTeam.primaryColourHex}
+                                            primary={homeTeam.primaryColourHex}
                                             secondary={homeTeam.secondaryColourHex}
                                             third={homeTeam.thirdColourHex}
                                             width={48}
