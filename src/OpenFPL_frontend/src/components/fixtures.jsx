@@ -251,34 +251,44 @@ const Fixtures = () => {
                             }
                             return (
                               <div className="table-row" key={fixture.id}>
-                                <div className="col-home-team">
-                                  <p className='fixture-team-name'>
-                                            <BadgeIcon
-                                                primaryColour={'#123432'}
-                                                secondaryColour={'#432123'}
-                                                thirdColour={'#432123'}
-                                                width={48}
-                                                height={48}
-                                                marginRight={16}
-                                            />
-                                          {getTeamById(teams, fixture.homeTeamId).friendlyName}
-                                    </p>
-                                </div>
-                                <div className="col-vs">
-                                  <p className="w-100 text-center">vs</p>
-                                </div>
-                                <div className="col-away-team">
-                                  <p className='fixture-team-name'>
-                                    <BadgeIcon
-                                          primaryColour={'#123432'}
-                                          secondaryColour={'#432123'}
-                                          thirdColour={'#432123'}
-                                          width={48}
-                                          height={48}
-                                          marginRight={16}
-                                      />
-                                    {getTeamById(teams, fixture.awayTeamId).friendlyName}</p>
-                                </div>
+                                {(() => {
+                                  const homeTeam = getTeamById(teams, fixture.homeTeamId);
+                                  const awayTeam = getTeamById(teams, fixture.awayTeamId);
+                                  return (
+                                    <>
+                                      <div className="col-home-team">
+                                        <p className='fixture-team-name'>
+                                          <BadgeIcon
+                                            priamry={homeTeam.primaryColourHex}
+                                            secondary={homeTeam.secondaryColourHex}
+                                            third={homeTeam.thirdColourHex}
+                                            width={48}
+                                            height={48}
+                                            marginRight={16}
+                                          />
+                                          {homeTeam.friendlyName}
+                                        </p>
+                                      </div>
+                                      <div className="col-vs">
+                                        <p className="w-100 text-center">vs</p>
+                                      </div>
+                                      <div className="col-away-team">
+                                        <p className='fixture-team-name'>
+                                          <BadgeIcon
+                                            primary={awayTeam.primaryColourHex}
+                                            secondary={awayTeam.secondaryColourHex}
+                                            third={awayTeam.thirdColourHex}
+                                            width={48}
+                                            height={48}
+                                            marginRight={16}
+                                          />
+                                          {awayTeam.friendlyName}
+                                        </p>
+                                      </div>
+                                    </>
+                                  );
+                                })()}
+
                                 <div className="col-time">
                                 <p>
                                   <ClockIcon

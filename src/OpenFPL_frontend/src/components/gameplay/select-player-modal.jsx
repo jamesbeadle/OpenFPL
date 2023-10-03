@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Button, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
+import { PlusIcon, BadgeIcon } from '../icons';
 
 const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) => {
   
@@ -98,7 +99,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
         <Modal.Title>Select Player</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form className='mb-4'>
+        <Form>
           <Row>
             <Col xs={6}>
               <Form.Group controlId="teamFilter">
@@ -150,39 +151,39 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
             </Col>
         </Row>
         </Form>
-        <Row>
+        <Row className='mt-3'>
           <Col>
-            <p>Available Balance: £{(fantasyTeam.bankBalance).toFixed(1)}m</p>
+            <p><small>Available Balance: £{(fantasyTeam.bankBalance).toFixed(1)}m</small></p>
           </Col>
         </Row>
         {players?.isLoading ? (
           <p>Loading...</p>
         ) : (
-          <Container className="mt-4">
-            <Row className='mb-2'>
-              <Col xs={1} className='d-flex align-self-center'>
-                <p className='small-text m-0'>Pos</p>
-              </Col>
-              <Col xs={3} className='d-flex align-self-center'>
-                <p className='small-text m-0'>Player</p>
-              </Col>
-              <Col xs={1} className='d-flex align-self-center'>
-                <p className='small-text m-0'>Team</p>
-              </Col>
-              <Col xs={2} className='d-flex align-self-center'>
-                <p className='small-text m-0'>Value</p>
-              </Col>
-              <Col xs={1} className='d-flex align-self-center'>
-                <p className='small-text m-0'>Pts</p>
-              </Col>
-              <Col xs={4} className='d-flex align-self-center'>
-              </Col>
+          <Container>
+            <Row className='mb-2 modal-table-row'>
+
+              <div className="modal-table-header w-100 modal-position-col">
+                <p className='w-100 m-0'>Pos</p>
+              </div>
+              <div className="modal-table-header w-100 modal-player-col">
+                <p className='w-100 m-0'>Player Name</p>
+              </div>
+              <div className="modal-table-header w-100 modal-team-col">
+                <p className='w-100 m-0'>Team</p>
+              </div>
+              <div className="modal-table-header w-100 modal-value-col">
+                <p className='w-100 m-0'>Value</p>
+              </div>
+              <div className="modal-table-header w-100 modal-pts-col">
+                <p className='w-100 m-0'>PTS</p>
+              </div>
+              <div className="modal-table-header w-100 modal-button-col"></div>
 
             </Row>
           {viewData.players.map((player) => (
-            <Row key={player.id} className='mb-2'>
-              <Col xs={1} className='d-flex align-self-center'>
-                <p className='small-text m-0'>
+            <Row key={player.id} className='select-player-modal-row'>
+              <div className="modal-table-header w-100 modal-position-col">
+                <p className='small-text w-100 m-0'>
                   {(() => {
                     switch (player.position) {
                       case 0:
@@ -195,27 +196,43 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
                         return "FW";
                     }})()}
                 </p>
-              </Col>
-              <Col xs={3} className='d-flex align-self-center'>
-                <p className='small-text m-0'>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</p>
-              </Col>
-              <Col xs={1} className='d-flex align-self-center'>
-                <p className='small-text m-0'>{teams.find(team => team.id === player.teamId).abbreviatedName}</p>
-              </Col>
-              <Col xs={2} className='d-flex align-self-center'>
-                <p className='small-text m-0'>{`£${(Number(player.value) / 4).toFixed(2)}m`}</p>
-              </Col>
-              <Col xs={1} className='d-flex align-self-center'>
-                <p className='small-text m-0'>{player.totalPoints}</p>
-              </Col>
-              <Col xs={4} className='d-flex align-self-center'>
+              </div>
+              <div className="modal-table-header w-100 modal-player-col">
+                <p className='small-text w-100 m-0'><b>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</b></p>
+              </div>
+              <div className="modal-table-header w-100 modal-team-col">
+                <p className='small-text w-100 m-0'>
+                  {(() => {
+                    const foundTeam = teams.find(team => team.id === player.teamId);
+                    console.log(teams)
+                    return (
+                      <>
+                        <BadgeIcon
+                          primary={foundTeam.primaryColourHex}
+                          secondary={foundTeam.secondaryColourHex}
+                          third={foundTeam.thirdColourHex}
+                          width={32}
+                          height={32}
+                          marginRight={16}
+                        />
+                        {foundTeam.abbreviatedName}
+                      </>
+                    );
+                  })()}
+                </p>
+              </div>
+
+              <div className="modal-table-header w-100 modal-value-col">
+              <p className='small-text w-100 m-0'>{`£${(Number(player.value) / 4).toFixed(2)}m`}</p>
+              </div>
+              <div className="modal-table-header w-100 modal-pts-col"><p className='small-text w-100 m-0'>{player.totalPoints}</p></div>
+              <div className="modal-table-header w-100 modal-button-col">
                 {fantasyTeam.players.some(teamPlayer => teamPlayer.id === player.id) 
                   ? <p className='small-text m-0 text-center w-100'>Added</p> 
-                  : <Button className="w-100 small-text" variant="primary" onClick={() => {handleSubmit(player);}} disabled={(Number(player.value) / 4) > fantasyTeam.bankBalance}>
-                      <small>Select</small>
-                    </Button>
+                  : <button  onClick={() => {handleSubmit(player);}} disabled={(Number(player.value) / 4) > fantasyTeam.bankBalance} className='add-player-button'><PlusIcon /></button>
                 }
-              </Col>
+              </div>
+
 
             </Row>
           ))}
