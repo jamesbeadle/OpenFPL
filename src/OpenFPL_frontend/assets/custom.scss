@@ -557,12 +557,6 @@
   padding-right: 5%;
 }
 
-.player-container {
-  flex: 1;
-  text-align: center;
-  cursor: pointer;
-}
-
 .pos-1{
   width: 100%;
 }
@@ -653,6 +647,7 @@
   align-items: center;
   background-color: #161819;
   height: 72px;
+  width: 100%;
 }
 
 .header-col {
@@ -669,12 +664,8 @@
   flex-basis: 20%;
 }
 
-.pts-col {
-  flex-basis: 10%;
-}
-
 .button-col {
-  flex-basis: 10%;
+  flex-basis: 20%;
 }
 
 .modal-table-header {
@@ -832,12 +823,13 @@
   color: #161819;
 }
 
-
 .player-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  flex: 1;
+  cursor: pointer;
 }
 
 .player-details {
@@ -860,6 +852,10 @@
   font-weight: 600;
 }
 
+.list-player-name-row {
+  display: flex;
+}
+
 .player-info-row {
   display: flex;
   align-items: center;
@@ -874,7 +870,15 @@
   font-weight: 600;
 }
 
+.list-player-info-row {
+  display: flex;
+}
+
 .pitch-team-badge{
   margin-left: 4px;
+  margin-right: 4px;
+}
+
+.list-pitch-team-badge{
   margin-right: 4px;
 }

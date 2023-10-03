@@ -650,25 +650,78 @@ const PickTeam = () => {
       </div>
     );
   };
-
   const renderListRows = (count, position, positionText) => {
     return (
       <>
-      {Array.from({ length: count }, (_, i) => (
-        <div className={`list-view-player-row list-pos-${count}`}>
-          <div className="header-col position-col">{positionText}</div>
-          <div className="header-col player-col">Select</div>
-          <div className="header-col team-col"></div>
-          <div className="header-col value-col"></div>
-          <div className="header-col pts-col"></div>
-          <div className="header-col button-col">
-            <button onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }} className='add-player-button'><PlusIcon /></button>
-          </div>
-        </div>
-      ))}
+        {Array.from({ length: count }, (_, i) => {
+          const slot = `${position}-${i}`;
+          const player = fantasyTeam.players[slot];
+          return (
+            <div 
+              onMouseDown={() => {
+                setShowSelectPlayerModal(true);
+                setSelectedPosition(position);
+                setSelectedSlot(slot);
+                setActiveIndex(i);
+              }} 
+              className={`player-container align-items-center justify-content-center list-pos-${count}`} 
+              key={slot}
+            >
+              {player ? (
+                <>
+                  <div className="list-view-player-row">
+                    {(() => {
+                      const foundTeam = teams.find(team => team.id === player.teamId);
+                      return (
+                        <div className={`list-view-player-row list-pos-${count}`}>
+                          <div className="header-col position-col">{positionText}</div>
+                          <div className="header-col player-col">
+                            <div className="list-player-name-row">
+                              <div style={{marginRight: '4px'}}>{getFlag(player.nationality)}</div>
+                              {(player.firstName !== "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
+                            </div>
+                          </div>
+                          <div className="header-col team-col">
+                            <div className="list-player-info-row">
+                              <span className='list-pitch-team-badge'>
+                                <BadgeIcon 
+                                  primary={foundTeam.primaryColourHex}
+                                  secondary={foundTeam.secondaryColourHex}
+                                  third={foundTeam.thirdColourHex}
+                                  width={16}
+                                  height={16}
+                                />
+                              </span>
+                              {foundTeam.abbreviatedName}
+                            </div>
+                          </div>
+                          <div className="header-col value-col">£{(player.value/4).toFixed(2).toLocaleString()}m</div>
+                          <div className="header-col button-col">
+                            <button onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }} className='add-player-button'><PlusIcon /></button>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </>
+              ) : (
+                <div className={`list-view-player-row list-pos-${count}`}>
+                  <div className="header-col position-col">{positionText}</div>
+                  <div className="header-col player-col">Select</div>
+                  <div className="header-col team-col"></div>
+                  <div className="header-col value-col"></div>
+                  <div className="header-col button-col">
+                    <button onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }} className='add-player-button'><PlusIcon /></button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </>
     );
   };
+  
 
   return (
     isLoading ? (
@@ -862,7 +915,6 @@ const PickTeam = () => {
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
-                  <div className="header-col pts-col">PTS</div>
                   <div className="header-col button-col"></div>
                 </Card.Header>
 
@@ -873,7 +925,6 @@ const PickTeam = () => {
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
-                  <div className="header-col pts-col">PTS</div>
                   <div className="header-col button-col"></div>
                 </div>
 
@@ -884,7 +935,6 @@ const PickTeam = () => {
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
-                  <div className="header-col pts-col">PTS</div>
                   <div className="header-col button-col"></div>
                 </div>
 
@@ -895,7 +945,6 @@ const PickTeam = () => {
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
-                  <div className="header-col pts-col">PTS</div>
                   <div className="header-col button-col"></div>
                 </div>
 
