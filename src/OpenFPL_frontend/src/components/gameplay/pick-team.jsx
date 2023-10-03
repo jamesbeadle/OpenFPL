@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
-import { PlusIcon, BadgeIcon, RemovePlayerIcon, CaptainIcon, CaptainIconActive} from '../icons';
+import { PlusIcon, ShirtIcon, BadgeIcon, RemovePlayerIcon, CaptainIcon, CaptainIconActive, StripedShirtIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend'; //Should be in auth functions or context
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
@@ -606,7 +606,7 @@ const PickTeam = () => {
               {player ? (
                 <>
                   <div className="shirt-container">
-                    <img src={FilledShirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    <ShirtIcon className='shirt align-items-center justify-content-center' />
                     <button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} /></button>
                     <button className="captain-player-button right-side-image p-0" onMouseDown={() => { handleCaptainSelection(player.id); }}>
                       {player.id === fantasyTeam.captainId ? (
@@ -656,14 +656,14 @@ const PickTeam = () => {
                   </div>
                 </>
               ) : (
-                <img    
-                  onMouseDown={() => {
-                    setShowSelectPlayerModal(true);
-                    setSelectedPosition(position);
-                    setSelectedSlot(slot);
-                    setActiveIndex(i);
-                  }} 
-                  src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                    
+                <StripedShirtIcon    
+                onClick={() => {
+                  setShowSelectPlayerModal(true);
+                  setSelectedPosition(position);
+                  setSelectedSlot(slot);
+                  setActiveIndex(i);
+                }}  className='shirt align-items-center justify-content-center' />
               )}
             </div>
           );
