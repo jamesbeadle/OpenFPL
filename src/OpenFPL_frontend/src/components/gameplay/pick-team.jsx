@@ -58,9 +58,9 @@ const PickTeam = () => {
       });
     }
   };
+  const [selectedPosition, setSelectedPosition] = useState(null);
 
-  //Probably rename / delete
-  const [selectedSlot, setSelectedSlot] = useState(null);
+
   
   const [selectedBonusId, setSelectedBonusId] = useState(null);
   const [selectedBonusPlayerId, setSelectedBonusPlayerId] = useState(null);
@@ -589,11 +589,11 @@ const PickTeam = () => {
     return array;
   }
 
-  const renderRow = (count) => {
+  const renderRow = (count, position) => {
     return (
       <div className={`w-100 row-container pos-${count}`}>
         {Array.from({ length: count }, (_, i) => (
-          <div onMouseDown={() => setShowSelectPlayerModal(true)} className={`player-container align-items-center justify-content-center pos-${count}`} key={i}>
+          <div onMouseDown={() => {setShowSelectPlayerModal(true); setSelectedPosition(position)}} className={`player-container align-items-center justify-content-center pos-${count}`} key={i}>
             <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
           </div>
         ))}
@@ -601,7 +601,7 @@ const PickTeam = () => {
     );
   };
 
-  const renderListRows = (count) => {
+  const renderListRows = (count, position) => {
     return (
       <>
       {Array.from({ length: count }, (_, i) => (
@@ -612,7 +612,7 @@ const PickTeam = () => {
           <div className="header-col value-col">Value</div>
           <div className="header-col pts-col">PTS</div>
           <div className="header-col button-col">
-            <button onMouseDown={() => setShowSelectPlayerModal(true)} className='add-player-button'><PlusIcon /></button>
+            <button onMouseDown={() => {setShowSelectPlayerModal(true); setSelectedPosition(position);}} className='add-player-button'><PlusIcon /></button>
           </div>
         </div>
       ))}
@@ -787,23 +787,23 @@ const PickTeam = () => {
                   
                   <div className="row-wrapper" style={{ top: rowPositions.gk }}>
                     <div className='gk-row'>
-                      {renderRow(gk)}
+                      {renderRow(gk, 0)}
                     </div>
                   </div>
                   
                   <div className="row-wrapper" style={{ top: rowPositions.df }}>
                     <div className='df-row'>
-                      {renderRow(df)}
+                      {renderRow(df, 1)}
                     </div>
                   </div>
                   <div className="row-wrapper" style={{ top: rowPositions.mf }}>
                     <div className='mf-row'>
-                      {renderRow(mf)}
+                      {renderRow(mf, 2)}
                     </div>
                   </div>
                   <div className="row-wrapper" style={{ top: rowPositions.fw }}>
                     <div className='fw-row'>
-                      {renderRow(fw)}
+                      {renderRow(fw, 3)}
                     </div>
                   </div>
                 </Card>
@@ -972,6 +972,7 @@ const PickTeam = () => {
 
         {fantasyTeam && fantasyTeam.players && (
           <SelectPlayerModal 
+          startingPosition={selectedPosition}
           show={showSelectPlayerModal} 
           handleClose={() => setShowSelectPlayerModal(false)} 
           handleConfirm={handlePlayerConfirm}

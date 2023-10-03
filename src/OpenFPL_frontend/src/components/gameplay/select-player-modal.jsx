@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Modal, Button, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
+import { Modal, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
 import { PlusIcon, BadgeIcon } from '../icons';
 
-const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) => {
-  
+const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, startingPosition }) => {
   const { players, teams } = useContext(DataContext);
   const [filterTeamId, setFilterTeamId] = useState("");
   const [filterPosition, setFilterPosition] = useState("");
@@ -15,7 +14,6 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
   const [viewData, setViewData] = useState({ players: [], totalEntries: 0 }); 
   const [filterSurname, setFilterSurname] = useState("");
 
-
   const positionOptions = [
     { id: 0, name: "Goalkeeper" },
     { id: 1, name: "Defender" },
@@ -24,12 +22,15 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
   ];
 
   useEffect(() => {
-    if (!show) {
+    if (show) {
+      console.log(startingPosition)
+      setFilterPosition(startingPosition);
+    } else {
       setFilterTeamId("");
       setFilterPosition("");
       setPage(0);
     }
-  }, [show]);
+  }, [show, startingPosition]);
   
   useEffect(() => {
     if(!Array.isArray(players)){
@@ -123,7 +124,10 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
             <Col xs={6}>
               <Form.Group controlId="positionFilter">
                 <Form.Label>Filter Position:</Form.Label>
-                <Form.Control as="select" value={filterPosition || ''} onChange={handleChangeFilterPosition}>
+                <Form.Control 
+                  as="select" 
+                  value={filterPosition !== null && filterPosition !== undefined ? filterPosition : ''}
+                  onChange={handleChangeFilterPosition}>
                   <option value="">All</option>
                   {positionOptions.map((position) => (
                     <option key={position.id} value={position.id}>
@@ -210,7 +214,6 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
                 <p className='small-text w-100 m-0'>
                   {(() => {
                     const foundTeam = teams.find(team => team.id === player.teamId);
-                    console.log(teams)
                     return (
                       <>
                         <BadgeIcon
