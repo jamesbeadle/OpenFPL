@@ -805,3 +805,29 @@
   font-weight: 400;
   border-radius: 1px;
 }
+
+.custom-pagination-container{
+  overflow-x: auto;
+  height: 36px;
+  margin-top: 16px;
+}
+
+.page-link {
+  width: 25px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  font-size: 12px;
+  margin-right: 8px;
+  background-color: transparent;
+  color: white;
+  border: none;
+}
+
+.page-link.active, .active > .page-link{
+  background-color: #2CE3A6;
+  border: none;
+  color: #161819;
+}

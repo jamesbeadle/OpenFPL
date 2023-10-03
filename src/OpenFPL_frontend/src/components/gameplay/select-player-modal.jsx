@@ -85,13 +85,19 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
     let items = [];
     for (let number = 1; number <= Math.ceil(viewData.totalEntries / count); number++) {
       items.push(
-        <Pagination.Item key={number} active={number === page + 1} onClick={() => handlePageChange(number - 1)}>
+        <Pagination.Item 
+          key={number} 
+          active={number === page + 1} 
+          onClick={() => handlePageChange(number - 1)} 
+          className="custom-pagination-item"
+        >
           {number}
         </Pagination.Item>,
       );
     }
     return <Pagination>{items}</Pagination>;
   };
+  
 
   return (
     <Modal show={show} onHide={handleClose} centered>
@@ -236,7 +242,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam }) =>
 
             </Row>
           ))}
-          <div style={{ overflowX: 'auto' }}>
+          <div className='custom-pagination-container'>
             {renderPagination()}
           </div>
         </Container>
