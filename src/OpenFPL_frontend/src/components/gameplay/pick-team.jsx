@@ -12,6 +12,7 @@ import SelectBonusTeamModal from './select-bonus-team-modal';
 import ConfirmBonusModal from './confirm-bonus-modal';
 import ExampleSponsor from "../../../assets/example-sponsor.png";
 import Shirt from "../../../assets/shirt.png";
+import FilledShirt from "../../../assets/filled-shirt.png";
 import GoalGetter from "../../../assets/goal-getter.png";
 import PassMaster from "../../../assets/pass-master.png";
 import NoEntry from "../../../assets/no-entry.png";
@@ -59,6 +60,8 @@ const PickTeam = () => {
     }
   };
   const [selectedPosition, setSelectedPosition] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
 
 
   
@@ -251,15 +254,11 @@ const PickTeam = () => {
     setFormation(newFormation);
   };
 
-  const handlePlayerSelection = (slotNumber) => {
-    setSelectedSlot(slotNumber);
-    setShowSelectPlayerModal(true);
-  };
-
   const handlePlayerConfirm = (player) => {
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
-      updatedFantasyTeam.players[selectedSlot] = player;
+      const slot = `${selectedPosition}-${activeIndex}`;
+      updatedFantasyTeam.players[slot] = player;
       updatedFantasyTeam.bankBalance -= Number(player.value) / 4;
 
       if (!removedPlayers.includes(player.id)) {
@@ -592,11 +591,39 @@ const PickTeam = () => {
   const renderRow = (count, position) => {
     return (
       <div className={`w-100 row-container pos-${count}`}>
-        {Array.from({ length: count }, (_, i) => (
-          <div onMouseDown={() => {setShowSelectPlayerModal(true); setSelectedPosition(position)}} className={`player-container align-items-center justify-content-center pos-${count}`} key={i}>
-            <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
-          </div>
-        ))}
+        {Array.from({ length: count }, (_, i) => {
+          const slot = `${position}-${i}`;
+          const player = fantasyTeam.players[slot];
+          return (
+            <div 
+              onMouseDown={() => {
+                setShowSelectPlayerModal(true);
+                setSelectedPosition(position);
+                setSelectedSlot(slot);
+                setActiveIndex(i);
+              }} 
+              className={`player-container align-items-center justify-content-center pos-${count}`} 
+              key={slot}
+            >
+              {player ? (
+                <>
+                  <img src={FilledShirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+                  <div className="player-details">
+                    <div className="player-name-row">
+                      {(player.firstName !== "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
+                    </div>
+                    <div className="player-info-row">
+                      <span className="position-flag">{player.position}</span>
+                      <span className="team-name">{player.teamName}</span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <img src={Shirt} alt="shirt" className='shirt align-items-center justify-content-center' />
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -612,7 +639,7 @@ const PickTeam = () => {
           <div className="header-col value-col">Value</div>
           <div className="header-col pts-col">PTS</div>
           <div className="header-col button-col">
-            <button onMouseDown={() => {setShowSelectPlayerModal(true); setSelectedPosition(position);}} className='add-player-button'><PlusIcon /></button>
+            <button onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }} className='add-player-button'><PlusIcon /></button>
           </div>
         </div>
       ))}

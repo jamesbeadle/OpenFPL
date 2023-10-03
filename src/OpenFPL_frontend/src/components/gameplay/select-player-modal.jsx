@@ -10,7 +10,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
   const [minValue, setMinValue] = useState("");
   const [maxValue, setMaxValue] = useState("");
   const [page, setPage] = useState(0);
-  const count = 10;
+  const count = 8;
   const [viewData, setViewData] = useState({ players: [], totalEntries: 0 }); 
   const [filterSurname, setFilterSurname] = useState("");
 
