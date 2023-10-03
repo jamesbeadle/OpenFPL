@@ -651,16 +651,16 @@ const PickTeam = () => {
     );
   };
 
-  const renderListRows = (count, position) => {
+  const renderListRows = (count, position, positionText) => {
     return (
       <>
       {Array.from({ length: count }, (_, i) => (
-        <div className="list-view-player-row">
-          <div className="header-col position-col">GK</div>
-          <div className="header-col player-col">Player Name</div>
-          <div className="header-col team-col">Team</div>
-          <div className="header-col value-col">Value</div>
-          <div className="header-col pts-col">PTS</div>
+        <div className={`list-view-player-row list-pos-${count}`}>
+          <div className="header-col position-col">{positionText}</div>
+          <div className="header-col player-col">Select</div>
+          <div className="header-col team-col"></div>
+          <div className="header-col value-col"></div>
+          <div className="header-col pts-col"></div>
           <div className="header-col button-col">
             <button onMouseDown={() => {setSelectedPosition(position); setShowSelectPlayerModal(true); }} className='add-player-button'><PlusIcon /></button>
           </div>
@@ -820,10 +820,8 @@ const PickTeam = () => {
           </Row>
           <Row>
             <Col xs={12} md={6}>
-              {!showListView && (
-                <Card id="pitch-bg">
-
-                  <div className="row-wrapper">
+              <Card id="pitch-bg" className={showListView ? 'collapse' : ''}>
+                <div className="row-wrapper">
                     <Row>
                       <Col xs={6} className='d-flex align-items-center justify-content-center'>
                         <img src={ExampleSponsor} alt="sponsor1" className='sponsor1' />
@@ -856,55 +854,53 @@ const PickTeam = () => {
                       {renderRow(fw, 3)}
                     </div>
                   </div>
-                </Card>
-              )}
-              {showListView && (
-                <Card>
-                  <Card.Header className="list-view-header-row">
-                    <div className="header-col position-col">Goalkeeper</div>
-                    <div className="header-col player-col">Player Name</div>
-                    <div className="header-col team-col">Team</div>
-                    <div className="header-col value-col">Value</div>
-                    <div className="header-col pts-col">PTS</div>
-                    <div className="header-col button-col"></div>
-                  </Card.Header>
+              </Card>
+              
+              <Card className={!showListView ? 'collapse' : ''}>
+                <Card.Header className="list-view-header-row">
+                  <div className="header-col position-col">Goalkeeper</div>
+                  <div className="header-col player-col">Player Name</div>
+                  <div className="header-col team-col">Team</div>
+                  <div className="header-col value-col">Value</div>
+                  <div className="header-col pts-col">PTS</div>
+                  <div className="header-col button-col"></div>
+                </Card.Header>
 
-                  {renderListRows(gk)}
+                {renderListRows(gk, 0, 'GK')}
 
-                  <div className="list-view-sub-header-row">
-                    <div className="header-col position-col">Defenders</div>
-                    <div className="header-col player-col">Player Name</div>
-                    <div className="header-col team-col">Team</div>
-                    <div className="header-col value-col">Value</div>
-                    <div className="header-col pts-col">PTS</div>
-                    <div className="header-col button-col"></div>
-                  </div>
+                <div className="list-view-sub-header-row">
+                  <div className="header-col position-col">Defenders</div>
+                  <div className="header-col player-col">Player Name</div>
+                  <div className="header-col team-col">Team</div>
+                  <div className="header-col value-col">Value</div>
+                  <div className="header-col pts-col">PTS</div>
+                  <div className="header-col button-col"></div>
+                </div>
 
-                  {renderListRows(df)}
+                {renderListRows(df, 1, 'DF')}
 
-                  <div className="list-view-sub-header-row">
-                    <div className="header-col position-col">Midfielders</div>
-                    <div className="header-col player-col">Player Name</div>
-                    <div className="header-col team-col">Team</div>
-                    <div className="header-col value-col">Value</div>
-                    <div className="header-col pts-col">PTS</div>
-                    <div className="header-col button-col"></div>
-                  </div>
+                <div className="list-view-sub-header-row">
+                  <div className="header-col position-col">Midfielders</div>
+                  <div className="header-col player-col">Player Name</div>
+                  <div className="header-col team-col">Team</div>
+                  <div className="header-col value-col">Value</div>
+                  <div className="header-col pts-col">PTS</div>
+                  <div className="header-col button-col"></div>
+                </div>
 
-                  {renderListRows(mf)}
+                {renderListRows(mf, 2, 'MF')}
 
-                  <div className="list-view-sub-header-row">
-                    <div className="header-col position-col">Forwards</div>
-                    <div className="header-col player-col">Player Name</div>
-                    <div className="header-col team-col">Team</div>
-                    <div className="header-col value-col">Value</div>
-                    <div className="header-col pts-col">PTS</div>
-                    <div className="header-col button-col"></div>
-                  </div>
+                <div className="list-view-sub-header-row">
+                  <div className="header-col position-col">Forwards</div>
+                  <div className="header-col player-col">Player Name</div>
+                  <div className="header-col team-col">Team</div>
+                  <div className="header-col value-col">Value</div>
+                  <div className="header-col pts-col">PTS</div>
+                  <div className="header-col button-col"></div>
+                </div>
 
-                  {renderListRows(fw)}
-                </Card>
-            )}
+                {renderListRows(fw, 3, 'FW')}
+              </Card>
 
               <Card className='mt-3 bonus-panel'>
               <Card.Header className="header-container">
