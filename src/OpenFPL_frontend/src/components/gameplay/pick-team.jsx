@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
-import { PlusIcon, ShirtIcon, BadgeIcon, RemovePlayerIcon, CaptainIcon, CaptainIconActive, StripedShirtIcon} from '../icons';
+import { PlusIcon, ShirtIcon, BadgeIcon, RemovePlayerIcon, CaptainIcon, CaptainIconActive, DefaultShirtIcon, StripedShirtIcon} from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend'; //Should be in auth functions or context
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
@@ -657,7 +657,7 @@ const PickTeam = () => {
                 </>
               ) : (
                     
-                <StripedShirtIcon    
+                <DefaultShirtIcon    
                 onClick={() => {
                   setShowSelectPlayerModal(true);
                   setSelectedPosition(position);
