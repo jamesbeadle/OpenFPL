@@ -374,11 +374,14 @@ const PickTeam = () => {
   };
   
   const handleSellPlayer = (playerId) => {
+    console.log(playerId)
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       const soldPlayer = players.find(player => player.id === playerId);
   
-      updatedFantasyTeam.players = updatedFantasyTeam.players.filter(player => player.id !== playerId);
+      const slotToDelete = Object.keys(updatedFantasyTeam.players).find(slot => updatedFantasyTeam.players[slot].id === playerId);
+      delete updatedFantasyTeam.players[slotToDelete];
+
       updatedFantasyTeam.bankBalance += Number(soldPlayer.value) / 4;
 
       if(updatedFantasyTeam.positionsToFill == undefined){
