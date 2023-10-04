@@ -77,16 +77,15 @@ const PickTeam = () => {
   const [addedPlayers, setAddedPlayers] = useState([]);  
   const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
 
-  //I DON'T USE THESE ICONS SO I HAVE A FEELING I WILL DELETE
   const [bonuses, setBonuses] = useState([
-    {id: 1, name: 'Goal Getter', propertyName: 'goalGetter'},
-    {id: 2, name: 'Pass Master', propertyName: 'passMaster'},
-    {id: 3, name: 'No Entry', propertyName: 'noEntry'},
-    {id: 4, name: 'Team Boost', propertyName: 'teamBoost'},
-    {id: 5, name: 'Safe Hands', propertyName: 'safeHands'},
-    {id: 6, name: 'Captain Fantastic', propertyName: 'captainFantastic'},
-    {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus'},
-    {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero'}
+    {id: 1, name: 'Goal Getter', propertyName: 'goalGetter', icon: GoalGetter},
+    {id: 2, name: 'Pass Master', propertyName: 'passMaster', icon: PassMaster},
+    {id: 3, name: 'No Entry', propertyName: 'noEntry', icon: NoEntry},
+    {id: 4, name: 'Team Boost', propertyName: 'teamBoost', icon: TeamBoost},
+    {id: 5, name: 'Safe Hands', propertyName: 'safeHands', icon: SafeHands},
+    {id: 6, name: 'Captain Fantastic', propertyName: 'captainFantastic', icon: CaptainFantastic},
+    {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus', icon: BraceBonus},
+    {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero', icon: HatTrickHero}
   ]);
   
   useEffect(() => {
@@ -730,7 +729,7 @@ const PickTeam = () => {
               ) : (
                 <div className={`list-view-player-row list-pos-${count}`}>
                   <div className="header-col position-col">{positionText}</div>
-                  <div className="header-col captain-col">x</div>
+                  <div className="header-col captain-col"></div>
                   <div className="header-col player-col">Select</div>
                   <div className="header-col team-col"></div>
                   <div className="header-col value-col"></div>
@@ -992,99 +991,51 @@ const PickTeam = () => {
 
                 </div>
               </Card.Header>
+              <div ref={cardContainerRef} className="card-container">
+                {bonuses.map((bonus, index) => {
+                  const bonusPlayerId = fantasyTeam?.[`${bonus.propertyName}PlayerId`];
+                  const bonusTeamId = fantasyTeam?.[`${bonus.propertyName}TeamId`];
+                  const bonusGameweek = fantasyTeam?.[`${bonus.propertyName}Gameweek`];
+                  const bonusUsed = bonusGameweek !== null && bonusGameweek !== 0 && bonusGameweek !== undefined;
 
+                  let bonusTarget = "";
+                  let bonusDescription = "";
+                  if (bonusPlayerId) {
+                    bonusTarget = getPlayerNameFromId(bonusPlayerId);
+                    bonusDescription = "Player: ";
+                  } else if (bonusTeamId) {
+                    bonusTarget = getTeamNameFromId(bonusTeamId);
+                    bonusDescription = "Team: ";
+                  }
 
-              <div>
-                <div ref={cardContainerRef} className="card-container">
-                  <Card className='bonus-card'>
-                    <div className="image-row">
-                      <img src={GoalGetter} className='bonus-image' alt="goal getter" />
-                    </div>
-                    <div className="text-row">
-                      <span className='bonus-label'>Goal Getter</span>
-                    </div>
+                  let useButton = (
                     <div className="button-row">
                       <button className='btn-use-bonus'>Use</button>
                     </div>
-                  </Card>
-                  <Card className='bonus-card'>
-                    <div className="image-row">
-                      <img src={PassMaster} className='bonus-image' alt="pass master" />
-                    </div>
-                    <div className="text-row">
-                      <span className='bonus-label'>Pass Master</span>
-                    </div>
-                    <div className="button-row">
-                      <button className='btn-use-bonus'>Use</button>
-                    </div>
-                  </Card>
-                  <Card className='bonus-card'>
-                    <div className="image-row">
-                      <img src={NoEntry} className='bonus-image' alt="no entry" />
-                    </div>
-                    <div className="text-row">
-                      <span className='bonus-label'>No Entry</span>
-                    </div>
-                    <div className="button-row">
-                      <button className='btn-use-bonus'>Use</button>
-                    </div>
-                  </Card>
-                  <Card className='bonus-card'>
-                    <div className="image-row">
-                      <img src={TeamBoost} className='bonus-image' alt="team boost" />
-                    </div>
-                    <div className="text-row">
-                      <span className='bonus-label'>Team Boost</span>
-                    </div>
-                    <div className="button-row">
-                      <button className='btn-use-bonus'>Use</button>
-                    </div>
-                  </Card>
-                  <Card className='bonus-card'>
-                    <div className="image-row">
-                      <img src={SafeHands} className='bonus-image' alt="safe hands" />
-                    </div>
-                    <div className="text-row">
-                      <span className='bonus-label'>Safe Hands</span>
-                    </div>
-                    <div className="button-row">
-                      <button className='btn-use-bonus'>Use</button>
-                    </div>
-                  </Card>
-                  <Card className='bonus-card'>
-                    <div className="image-row">
-                      <img src={CaptainFantastic} style={{width: '70px', height: '70px'}} className='bonus-image' alt="captain fantastic" />
-                    </div>
-                    <div className="text-row">
-                      <span className='bonus-label' style={{marginTop: '10px'}}>Captain Fantastic</span>
-                    </div>
-                    <div className="button-row"  style={{marginTop: '-5px'}}>
-                      <button className='btn-use-bonus'>Use</button>
-                    </div>
-                  </Card>
-                  <Card className='bonus-card'>
-                    <div className="image-row">
-                      <img src={BraceBonus} className='bonus-image' alt="brace bonus" />
-                    </div>
-                    <div className="text-row">
-                      <span className='bonus-label'>Brace Bonus</span>
-                    </div>
-                    <div className="button-row">
-                      <button className='btn-use-bonus'>Use</button>
-                    </div>
-                  </Card>
-                  <Card className='bonus-card'>
-                    <div className="image-row">
-                      <img src={HatTrickHero} className='bonus-image' alt="hat trick hero" />
-                    </div>
-                    <div className="text-row">
-                      <span className='bonus-label'>Hat-trick Hero</span>
-                    </div>
-                    <div className="button-row">
-                      <button className='btn-use-bonus'>Use</button>
-                    </div>
-                  </Card>
-                </div>
+                  );
+
+                  if (bonusUsed) {
+                    useButton = (
+                      <div className="button-row">
+                        <small>{`Used in Gameweek ${bonusGameweek}`}</small>
+                        <br />
+                        <small>{`${bonusDescription}${bonusTarget}`}</small>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <Card className='bonus-card' key={index}>
+                      <div className="image-row">
+                        <img src={bonus.icon} alt={bonus.icon} className='bonus-image'/>
+                      </div>
+                      <div className="text-row">
+                        <span className='bonus-label'>{bonus.name}</span>
+                      </div>
+                      {useButton}
+                    </Card>
+                  );
+                })}
               </div>
 
               </Card>
