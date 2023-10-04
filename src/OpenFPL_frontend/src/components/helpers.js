@@ -43,7 +43,11 @@ export const getTeamById = (teams, teamId) => {
     const team = teams.find(team => team.id === teamId);
     return team;
 };
-
+  
+export const getPlayerById = (players, playerId) => {
+    const player = players.find(player => player.id === playerId);
+    return player;
+};
 
 export const groupFixturesByDate = (fixtures) => {
     return fixtures.reduce((acc, fixture) => {

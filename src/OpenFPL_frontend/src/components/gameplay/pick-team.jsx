@@ -21,6 +21,7 @@ import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
 import { getPositionText } from '../helpers';
 import getFlag from '../country-flag';
+import { getTeamById, getPlayerById } from '../helpers';
 
 //Imports to delete
 import { Actor } from "@dfinity/agent"; //Can refactor the function that uses this into auth functions
@@ -938,7 +939,7 @@ const PickTeam = () => {
               
               <Card className={!showListView ? 'collapse' : ''}>
                 <Card.Header className="list-view-header-row">
-                  <div className="header-col position-col">Goalkeeper</div>
+                  <div className="header-col position-col"></div>
                   <div className="header-col captain-col">Captain</div>
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
@@ -949,7 +950,7 @@ const PickTeam = () => {
                 {renderListRows(gk, 0, 'GK')}
 
                 <div className="list-view-sub-header-row">
-                  <div className="header-col position-col">Defenders</div>
+                  <div className="header-col position-col"></div>
                   <div className="header-col captain-col">Captain</div>
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
@@ -960,7 +961,7 @@ const PickTeam = () => {
                 {renderListRows(df, 1, 'DF')}
 
                 <div className="list-view-sub-header-row">
-                  <div className="header-col position-col">Midfielders</div>
+                  <div className="header-col position-col"></div>
                   <div className="header-col captain-col">Captain</div>
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
@@ -971,7 +972,7 @@ const PickTeam = () => {
                 {renderListRows(mf, 2, 'MF')}
 
                 <div className="list-view-sub-header-row">
-                  <div className="header-col position-col">Forwards</div>
+                  <div className="header-col position-col"></div>
                   <div className="header-col captain-col">Captain</div>
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
@@ -1001,16 +1002,16 @@ const PickTeam = () => {
                   let bonusTarget = "";
                   let bonusDescription = "";
                   if (bonusPlayerId) {
-                    bonusTarget = getPlayerNameFromId(bonusPlayerId);
+                    bonusTarget = getPlayerById(bonusPlayerId).lastName;
                     bonusDescription = "Player: ";
                   } else if (bonusTeamId) {
-                    bonusTarget = getTeamNameFromId(bonusTeamId);
+                    bonusTarget = getTeamById(teams, bonusTeamId).friendlyName;
                     bonusDescription = "Team: ";
                   }
 
                   let useButton = (
                     <div className="button-row">
-                      <button className='btn-use-bonus'>Use</button>
+                      <button onClick={() => handleBonus(bonus.id)} className='btn-use-bonus'>Use</button>
                     </div>
                   );
 
