@@ -686,8 +686,18 @@ const PickTeam = () => {
                     {(() => {
                       const foundTeam = teams.find(team => team.id === player.teamId);
                       return (
-                        <div className={`list-view-player-row list-pos-${count}`}>
+                        <div className={`list-view-player-row-sub list-pos-${count}`}>
                           <div className="header-col position-col">{positionText}</div>
+                          
+                          <div className="header-col captain-col">
+                            <button className="captain-player-button p-0" onMouseDown={() => { handleCaptainSelection(player.id); }}>
+                              {player.id === fantasyTeam.captainId ? (
+                                <CaptainIconActive width={23} height={22} />
+                              ) : (
+                                <CaptainIcon width={23} height={22} />
+                              )}
+                            </button>
+                          </div>
                           <div className="header-col player-col">
                             <div className="list-player-name-row">
                               <div style={{marginRight: '4px'}}>{getFlag(player.nationality)}</div>
@@ -720,6 +730,7 @@ const PickTeam = () => {
               ) : (
                 <div className={`list-view-player-row list-pos-${count}`}>
                   <div className="header-col position-col">{positionText}</div>
+                  <div className="header-col captain-col">x</div>
                   <div className="header-col player-col">Select</div>
                   <div className="header-col team-col"></div>
                   <div className="header-col value-col"></div>
@@ -929,6 +940,7 @@ const PickTeam = () => {
               <Card className={!showListView ? 'collapse' : ''}>
                 <Card.Header className="list-view-header-row">
                   <div className="header-col position-col">Goalkeeper</div>
+                  <div className="header-col captain-col">Captain</div>
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
@@ -939,6 +951,7 @@ const PickTeam = () => {
 
                 <div className="list-view-sub-header-row">
                   <div className="header-col position-col">Defenders</div>
+                  <div className="header-col captain-col">Captain</div>
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
@@ -949,6 +962,7 @@ const PickTeam = () => {
 
                 <div className="list-view-sub-header-row">
                   <div className="header-col position-col">Midfielders</div>
+                  <div className="header-col captain-col">Captain</div>
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
@@ -959,6 +973,7 @@ const PickTeam = () => {
 
                 <div className="list-view-sub-header-row">
                   <div className="header-col position-col">Forwards</div>
+                  <div className="header-col captain-col">Captain</div>
                   <div className="header-col player-col">Player Name</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>

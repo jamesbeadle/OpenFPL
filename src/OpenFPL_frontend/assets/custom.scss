@@ -631,6 +631,8 @@
   padding-left: 24px;
   background-color: rgba(69, 75, 86, 0.8);
   height: 46px;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
 }
 
 .list-view-sub-header-row {
@@ -639,6 +641,8 @@
   align-items: center;
   background-color: rgba(69, 75, 86, 0.8);
   height: 46px;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
 }
 
 .list-view-player-row{
@@ -648,24 +652,45 @@
   background-color: #161819;
   height: 72px;
   width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.list-view-player-row-sub{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 72px;
+  width: 100%;
 }
 
 .header-col {
   vertical-align: middle;
   font-size: 12px;
   font-weight: 600;
-  padding-left: 24px;
 }
 
-.position-col,
-.player-col,
+
+
+.position-col{
+  width: 10%;
+}
+
+.captain-col{
+  width: 10%;
+}
+
+.player-col{
+  width: 45%;
+}
+
 .team-col,
 .value-col {
-  flex-basis: 20%;
+  width: 15%;
 }
 
 .button-col {
-  flex-basis: 20%;
+  width: 5%;
 }
 
 .modal-table-header {
@@ -900,10 +925,9 @@
 }
 
 .captain-player-button{
-  width: 32px;
-  height: 32px;
   border: none;
   background-color: transparent;
+  padding: 0px;
 }
 
 .shirt-container {
