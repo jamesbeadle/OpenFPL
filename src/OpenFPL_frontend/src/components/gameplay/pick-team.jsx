@@ -999,14 +999,11 @@ const PickTeam = () => {
                   const bonusGameweek = fantasyTeam?.[`${bonus.propertyName}Gameweek`];
                   const bonusUsed = bonusGameweek !== null && bonusGameweek !== 0 && bonusGameweek !== undefined;
 
-                  let bonusTarget = "";
-                  let bonusDescription = "";
+                  let bonusTarget = "Used";
                   if (bonusPlayerId) {
                     bonusTarget = getPlayerById(bonusPlayerId).lastName;
-                    bonusDescription = "Player: ";
-                  } else if (bonusTeamId) {
+                    } else if (bonusTeamId) {
                     bonusTarget = getTeamById(teams, bonusTeamId).friendlyName;
-                    bonusDescription = "Team: ";
                   }
 
                   let useButton = (
@@ -1018,9 +1015,7 @@ const PickTeam = () => {
                   if (bonusUsed) {
                     useButton = (
                       <div className="button-row">
-                        <small>{`Used in Gameweek ${bonusGameweek}`}</small>
-                        <br />
-                        <small>{`${bonusDescription}${bonusTarget}`}</small>
+                        <div className='txt-used-bonus'>{`${bonusTarget} (GW ${bonusGameweek}`})</div>
                       </div>
                     );
                   }

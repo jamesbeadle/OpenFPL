@@ -37,7 +37,6 @@ export const msToTime = (duration) => {
 export const nanoSecondsToMillis = (nanos) => {
     return Number(BigInt(nanos) / BigInt(1000000));
 };
-
     
 export const getTeamById = (teams, teamId) => {
     const team = teams.find(team => team.id === teamId);
