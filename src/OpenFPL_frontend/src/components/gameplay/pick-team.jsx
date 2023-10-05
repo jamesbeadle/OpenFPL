@@ -87,6 +87,10 @@ const PickTeam = () => {
     {id: 7, name: 'Brace Bonus', propertyName: 'braceBonus', icon: BraceBonus},
     {id: 8, name: 'Hat Trick Hero', propertyName: 'hatTrickHero', icon: HatTrickHero}
   ]);
+
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
   
   useEffect(() => {
     if(isLoading){
@@ -249,6 +253,8 @@ const PickTeam = () => {
   };
 
   const handlePlayerConfirm = (player) => {
+    console.log("adding")
+    console.log(player)
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       const slot = `${selectedPosition}-${activeIndex}`;
@@ -286,6 +292,7 @@ const PickTeam = () => {
     setAddedPlayers(prevAddedPlayers => [...prevAddedPlayers, player.id]);
 
     setShowSelectPlayerModal(false);
+    console.log("done adding")
   };
   useEffect(() => {
   }, [fantasyTeam]);
@@ -462,7 +469,7 @@ const PickTeam = () => {
     };
   
     const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
-    const currentTeamPositions = fantasyTeam.players.map(player => teamPositions[player.position]);
+    const currentTeamPositions = Object.values(fantasyTeam.players).map(player => teamPositions[player.position]);
 
 
     let positionsToFill = fantasyTeam.positionsToFill ? [...fantasyTeam.positionsToFill] : [];
@@ -569,8 +576,9 @@ const PickTeam = () => {
   
   //MOVE TO UTILITIES
   const calculateTeamValue = () => {
+    console.log("calcute")
     if(fantasyTeam && fantasyTeam.players) {
-      const totalValue = fantasyTeam.players.reduce((acc, player) => acc + Number(player.value), 0);
+      const totalValue = Object.values(fantasyTeam.players).reduce((acc, player) => acc + Number(player.value), 0);
       return (totalValue / 4).toFixed(1);
     }
     return null;
@@ -595,6 +603,37 @@ const PickTeam = () => {
   
     return array;
   }
+
+  //Move to utilities with homepage countdown  
+  const updateCountdowns = async () => {
+    const sortedFixtures = fixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
+    
+    const currentTime = Date.now();
+    const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
+    setNextFixtureHomeTeam(teams.find(x => x.id == fixture.homeTeamId));
+    setNextFixtureAwayTeam(teams.find(x => x.id == fixture.awayTeamId));
+
+    if (fixture) {
+        const timeLeft = computeTimeLeft(Number(fixture.kickOff));
+        const timeLeftInMillis = 
+            timeLeft.days * 24 * 60 * 60 * 1000 + 
+            timeLeft.hours * 60 * 60 * 1000 + 
+            timeLeft.minutes * 60 * 1000 + 
+            timeLeft.seconds * 1000;
+        
+        const d = -Math.floor(timeLeftInMillis / (1000 * 60 * 60 * 24));
+        const h = -Math.floor((timeLeftInMillis % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = -Math.floor((timeLeftInMillis % (1000 * 60 * 60)) / (1000 * 60));
+
+        setDays(d);
+        setHours(h);
+        setMinutes(m);
+    } else {
+        setDays(0);
+        setHours(0);
+        setMinutes(0);
+    }
+};
 
   const renderRow = (count, position) => {
     const playersForPosition = Object.values(fantasyTeam.players)
@@ -793,10 +832,20 @@ const PickTeam = () => {
                                       <p style={{paddingLeft: '40px'}} className="stat">{currentGameweek}</p>
                                   </Col>
                                   <Col xs={5}>
-                                      <p className="stat">countdown</p>
+                                    <Row>
+                                      <Col xs={4} className="add-colon">
+                                          <p className="stat w-100 text-center">{String(days).padStart(2, '0')}</p>
+                                      </Col>
+                                      <Col xs={4} className="add-colon">
+                                          <p className="stat w-100 text-center">{String(hours).padStart(2, '0')}</p>
+                                      </Col>
+                                      <Col xs={4}>
+                                          <p className="stat w-100 text-center">{String(minutes).padStart(2, '0')}</p>
+                                      </Col>
+                                    </Row>
                                   </Col>
                                   <Col xs={3}>
-                                      <p className="stat">0/11</p>
+                                      <p className="stat">{Object.keys(fantasyTeam.players).length}/11</p>
                                   </Col>
                               </Row>
                               <Row className="stat-row-3">
@@ -804,7 +853,9 @@ const PickTeam = () => {
                                       <p style={{paddingLeft: '40px'}} className="stat-header">{currentSeason.name}</p>   
                                   </Col>
                                   <Col xs={5}>
-                                      <p className="stat-header">Date</p>    
+                                      <p className="stat-header">
+                                        {fixtures.find(x => x.gameweek == currentGameweek).kickOff}  
+                                      </p>    
                                   </Col>
                                   <Col xs={3}>
                                       <p className="stat-header">Total</p>   
@@ -835,13 +886,18 @@ const PickTeam = () => {
                               </Row>
                               <Row className="stat-row-2">
                                   <Col xs={4}>
-                                      <p style={{paddingLeft: '40px'}} className="stat">£0.0m</p>
+                                      <p style={{paddingLeft: '40px'}} className="stat">£{calculateTeamValue()}m</p>
                                   </Col>
                                   <Col xs={5}>
-                                      <p className="stat">£300m</p>
+                                      <p className="stat">£{(fantasyTeam.bankBalance).toFixed(2)}m</p>
                                   </Col>
                                   <Col xs={3}>
-                                      <p className="stat">2</p>
+                                      <p className="stat">
+                                        {
+                                          (fantasyTeam === null || currentGameweek === 1) ? 
+                                            'Unlimited' : 
+                                          (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
+                                        }</p>
                                   </Col>
                               </Row>
                               <Row className="stat-row-3">
@@ -902,7 +958,7 @@ const PickTeam = () => {
                       </Col>
 
                       <Col xs={6} className="float-right-buttons">
-                          <button className='autofill-button'>AutoFill</button>
+                          <button className='autofill-button' onClick={handleAutoFill}>AutoFill</button>
                           <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
                       </Col>
                     </Row>

@@ -8,8 +8,6 @@ export const fetchFantasyTeam = async (authClient) => {
     const identity = authClient.getIdentity();
     agent.replaceIdentity(identity);
     var team = await open_fpl_backend.getFantasyTeam();
-    console.log("team")
-    console.log(team)
     return team;
   } catch (error) {
     console.error(error);
