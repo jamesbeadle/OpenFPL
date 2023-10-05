@@ -205,7 +205,6 @@ const PickTeam = () => {
   const isTeamValid = () => {
     
     if (!fantasyTeam.players || Object.keys(fantasyTeam.players).length !== 11) {
-      console.log("not 11 players")
       return false;
     }
   
@@ -217,19 +216,15 @@ const PickTeam = () => {
     const forwardCount = positions.filter(position => position === 3).length;
     
     if (goalkeeperCount !== 1) {
-      console.log("not 1 goalkeeper")
       return false;
     }
     if (defenderCount < 3 || defenderCount > 5) {
-      console.log("not defender range")
       return false;
     }
     if (midfielderCount < 3 || midfielderCount > 5) {
-      console.log("not midfielder range")
       return false;
     }
     if (forwardCount < 1 || forwardCount > 3) {
-      console.log("not forward range")
       return false;
     }
   
@@ -240,7 +235,6 @@ const PickTeam = () => {
     }, {});
     
     if (Object.values(teamsCount).some(count => count > 2)) {
-      console.log("not team")
       return false;
     }
   
@@ -384,7 +378,7 @@ const PickTeam = () => {
   const handleSellPlayer = (playerId) => {
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
-      const soldPlayer = players.find(player => player.id === playerId);
+      const soldPlayer = Object.values(fantasyTeam.players).find(player => player.id === playerId);
   
       const slotToDelete = Object.keys(updatedFantasyTeam.players).find(slot => updatedFantasyTeam.players[slot].id === playerId);
       delete updatedFantasyTeam.players[slotToDelete];
@@ -434,7 +428,6 @@ const PickTeam = () => {
       const newPlayerIds = Object.values(fantasyTeam.players).map(player => Number(player.id));
       const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-      console.log(newPlayerIds);
       await open_fpl_backend.saveFantasyTeam(newPlayerIds, fantasyTeam.captainId ? Number(fantasyTeam.captainId) : 0, selectedBonusId ? Number(selectedBonusId) : 0, selectedBonusPlayerId ? Number(selectedBonusPlayerId) : 0, selectedBonusTeamId ? Number(selectedBonusTeamId) : 0);
       await fetchViewData();
       setIsLoading(false);
@@ -1023,7 +1016,7 @@ const PickTeam = () => {
 
                   let bonusTarget = "Used";
                   if (bonusPlayerId) {
-                    bonusTarget = getPlayerById(bonusPlayerId).lastName;
+                    bonusTarget = getPlayerById(players, bonusPlayerId).lastName;
                     } else if (bonusTeamId) {
                     bonusTarget = getTeamById(teams, bonusTeamId).friendlyName;
                   }
