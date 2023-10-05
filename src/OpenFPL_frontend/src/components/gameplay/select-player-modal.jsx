@@ -3,7 +3,7 @@ import { Modal, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
 import { PlusIcon, BadgeIcon } from '../icons';
 
-const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, startingPosition }) => {
+const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, startingPosition, currentFormation }) => {
   const { players, teams } = useContext(DataContext);
   const [filterTeamId, setFilterTeamId] = useState("");
   const [filterPosition, setFilterPosition] = useState("");
@@ -80,6 +80,43 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
 
   const handleSubmit = (player) => {
     handleConfirm(player);
+  };
+
+  const canAddPlayer = (currentFormation, player, fantasyTeam, bankBalance) => {
+    // Parse the current formation
+    const [defenders, midfielders, forwards] = currentFormation.split('-').map(Number);
+  
+    // Count existing players in each position
+    const counts = {
+      'G': 0,
+      'D': 0,
+      'M': 0,
+      'F': 0,
+    };
+    
+    Object.keys(fantasyTeam.players).forEach(p => {
+      counts[p.position] += 1;
+    });
+  
+    // Check bank balance
+    if ((Number(player.value) / 4) > bankBalance) {
+      return false;
+    }
+    
+    // Check based on the position to add
+    switch (player.position) {
+      case 0:
+        return (counts['G'] + 1) <= 1;
+      case 1:
+        return (counts['D'] + 1) <= defenders;
+      case 2:
+        return (counts['M'] + 1) <= midfielders;
+      case 3:
+        return (counts['F'] + 1) <= forwards;
+      default:
+        return false;
+    }
+    
   };
 
   const renderPagination = () => {
@@ -238,7 +275,10 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
               <div className="modal-table-header w-100 modal-button-col">
                 {fantasyTeam.players.some(teamPlayer => teamPlayer.id === player.id) 
                   ? <p className='small-text m-0 text-center w-100'>Added</p> 
-                  : <button  onClick={() => {handleSubmit(player);}} disabled={(Number(player.value) / 4) > fantasyTeam.bankBalance} className='add-player-button'><PlusIcon /></button>
+                  : <button  
+                      onClick={() => {handleSubmit(player);}} 
+                      disabled={!canAddPlayer(currentFormation, player, fantasyTeam, fantasyTeam.bankBalance)}
+                      className='add-player-button'><PlusIcon /></button>
                 }
               </div>
 

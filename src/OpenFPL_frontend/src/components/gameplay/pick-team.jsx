@@ -253,8 +253,7 @@ const PickTeam = () => {
   };
 
   const handlePlayerConfirm = (player) => {
-    console.log("adding")
-    console.log(player)
+    
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       const slot = `${selectedPosition}-${activeIndex}`;
@@ -467,7 +466,7 @@ const PickTeam = () => {
       'Midfielder': 5,
       'Forward': 3
     };
-  
+    
     const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
     const currentTeamPositions = Object.values(fantasyTeam.players).map(player => teamPositions[player.position]);
 
@@ -498,6 +497,8 @@ const PickTeam = () => {
       }
     });
 
+
+    //this is not adding a player when there are 10 correctly, look at how the new way of adding a player and ensure this is done in the same way
     while (positionsToFill.length < 11 - fantasyTeam.players.length) {
       // Get positions that haven't reached their maximum limit yet
       let openPositions = teamPositions.filter(position => 
@@ -526,6 +527,7 @@ const PickTeam = () => {
     sortedPlayers = shuffle(sortedPlayers);
   
     let newTeam = [...fantasyTeam.players];
+    console.log(newTeam)
     let remainingBudget = fantasyTeam.bankBalance;
     for (let i = 0; i < positionsToFill.length; i++) {
       if (newTeam.length >= 11) {
@@ -576,7 +578,6 @@ const PickTeam = () => {
   
   //MOVE TO UTILITIES
   const calculateTeamValue = () => {
-    console.log("calcute")
     if(fantasyTeam && fantasyTeam.players) {
       const totalValue = Object.values(fantasyTeam.players).reduce((acc, player) => acc + Number(player.value), 0);
       return (totalValue / 4).toFixed(1);
@@ -1122,6 +1123,7 @@ const PickTeam = () => {
           handleClose={() => setShowSelectPlayerModal(false)} 
           handleConfirm={handlePlayerConfirm}
           fantasyTeam={fantasyTeam}
+          currentFormation={formation}
         />
       )}
       
