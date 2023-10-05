@@ -257,7 +257,9 @@ const PickTeam = () => {
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       const slot = `${selectedPosition}-${activeIndex}`;
+      updatedFantasyTeam.players = updatedFantasyTeam.players || {};
       updatedFantasyTeam.players[slot] = player;
+
       updatedFantasyTeam.bankBalance -= Number(player.value) / 4;
 
       if (!removedPlayers.includes(player.id)) {
@@ -290,6 +292,16 @@ const PickTeam = () => {
 
     setShowSelectPlayerModal(false);
   };
+  useEffect(() => {
+    console.log(fantasyTeam);
+    console.log(Object.keys(fantasyTeam.players).length)
+  }, [fantasyTeam]);
+  
+  
+  
+  
+  
+  
     
   const handleBonus = (bonusId) => {
       if (bonuses.some(bonus => fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek)) {
@@ -984,6 +996,9 @@ const PickTeam = () => {
               </Card>
 
               <Card className='mt-3 bonus-panel'>
+                <div className={`overlay ${Object.keys(fantasyTeam.players).length === 11 ? 'hidden' : ''}`}>
+                  Please select 11 players before choosing a bonus.
+                </div>
               <Card.Header className="header-container">
                 <span style={{marginLeft: '32px'}}>Bonuses</span>
                 <div className="button-container">

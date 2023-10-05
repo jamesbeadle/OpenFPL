@@ -236,7 +236,7 @@ const StripedShirtIcon = ({ onClick, width=86, height=88, marginRight=0, primary
     <path d="M62.7721 6.22902V80H54.7109V3.59076C54.7564 3.5133 54.8018 3.43128 54.8426 3.35382C55.0561 3.44495 55.3513 3.56342 55.7055 3.70012C57.3178 4.32437 60.2107 5.34049 62.7721 6.22902Z" fill={secondary}/>
     </g>
     <defs>
-    <filter id="filter0_d_354_585" x="0" y="0" width="85.334" height="88" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <filter id="filter0_d_354_585" x="0" y="0" width="85.334" height="88" filterUnits="userSpaceOnUse">
     <feFlood floodOpacity="0" result="BackgroundImageFix"/>
     <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
     <feOffset dy="4"/>

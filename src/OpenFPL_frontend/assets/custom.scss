@@ -966,3 +966,18 @@
   align-items: center;
   justify-content: center;
 }
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+.hidden {
+  display: none;
+}
