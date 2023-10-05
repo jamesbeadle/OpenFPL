@@ -76,7 +76,6 @@ const PickTeam = () => {
   });
   const [removedPlayers, setRemovedPlayers] = useState([]);
   const [addedPlayers, setAddedPlayers] = useState([]);  
-  const [invalidTeamMessage, setInvalidTeamMessage] = useState('');
 
   const [bonuses, setBonuses] = useState([
     {id: 1, name: 'Goal Getter', propertyName: 'goalGetter', icon: GoalGetter},
@@ -165,7 +164,7 @@ const PickTeam = () => {
         }
 
         const playerIdArray = Object.values(fantasyTeamData.playerIds);
-
+        
         const teamPlayers = playerIdArray
           .map(id => players.filter(player => player.teamId > 0).find(player => player.id === id))
           .filter(Boolean); 
@@ -174,7 +173,7 @@ const PickTeam = () => {
 
         fantasyTeamData = {
           ...fantasyTeamData,
-            players: teamPlayers || [],
+            players: teamPlayers || {},
             bankBalance: Math.round(roundedValue * 4) / 4
         };
         setFantasyTeam(fantasyTeamData);
@@ -202,48 +201,50 @@ const PickTeam = () => {
       setCurrentGameweek(systemState.activeGameweek);  
     }
   };
-  
-  useEffect(() => {
-    setInvalidTeamMessage(getInvalidTeamMessage());
-  }, [fantasyTeam]);
 
-  const getInvalidTeamMessage = () => {
-    if(fantasyTeam.players == undefined){
-      return "You must select 11 players";
+  const isTeamValid = () => {
+    
+    if (!fantasyTeam.players || Object.keys(fantasyTeam.players).length !== 11) {
+      console.log("not 11 players")
+      return false;
     }
-    if (fantasyTeam.players.length !== 11) {
-      return "You must select 11 players";
-    }
-    const positions = fantasyTeam.players.map(player => player.position);
+  
+    const positions = Object.values(fantasyTeam.players).map(player => player.position);
+    
     const goalkeeperCount = positions.filter(position => position === 0).length;
     const defenderCount = positions.filter(position => position === 1).length;
     const midfielderCount = positions.filter(position => position === 2).length;
     const forwardCount = positions.filter(position => position === 3).length;
     
     if (goalkeeperCount !== 1) {
-      return "You must have 1 goalkeeper";
+      console.log("not 1 goalkeeper")
+      return false;
     }
     if (defenderCount < 3 || defenderCount > 5) {
-      return "You must have between 3 and 5 defenders";
+      console.log("not defender range")
+      return false;
     }
     if (midfielderCount < 3 || midfielderCount > 5) {
-      return "You must have between 3 and 5 midfielders";
+      console.log("not midfielder range")
+      return false;
     }
     if (forwardCount < 1 || forwardCount > 3) {
-      return "You must have between 1 and 3 forwards";
+      console.log("not forward range")
+      return false;
     }
   
-    const teams = fantasyTeam.players.map(player => player.teamId);
+    const teams = Object.values(fantasyTeam.players).map(player => player.teamId);
     const teamsCount = teams.reduce((acc, team) => {
       acc[team] = (acc[team] || 0) + 1;
       return acc;
     }, {});
     
-    if (Object.values(teamsCount).some(count => count > 3)) {
-      return "Max 3 players from any single club";
+    if (Object.values(teamsCount).some(count => count > 2)) {
+      console.log("not team")
+      return false;
     }
   
-    return null;
+    return true;
   };
 
   //All event handlers - refactor
@@ -293,8 +294,6 @@ const PickTeam = () => {
     setShowSelectPlayerModal(false);
   };
   useEffect(() => {
-    console.log(fantasyTeam);
-    console.log(Object.keys(fantasyTeam.players).length)
   }, [fantasyTeam]);
   
   
@@ -383,7 +382,6 @@ const PickTeam = () => {
   };
   
   const handleSellPlayer = (playerId) => {
-    console.log(playerId)
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       const soldPlayer = players.find(player => player.id === playerId);
@@ -433,9 +431,10 @@ const PickTeam = () => {
     setLoadingText("Saving Team");
     setIsLoading(true);
     try {
-      const newPlayerIds = fantasyTeam.players.map(player => Number(player.id));
+      const newPlayerIds = Object.values(fantasyTeam.players).map(player => Number(player.id));
       const identity = authClient.getIdentity();
       Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
+      console.log(newPlayerIds);
       await open_fpl_backend.saveFantasyTeam(newPlayerIds, fantasyTeam.captainId ? Number(fantasyTeam.captainId) : 0, selectedBonusId ? Number(selectedBonusId) : 0, selectedBonusPlayerId ? Number(selectedBonusPlayerId) : 0, selectedBonusTeamId ? Number(selectedBonusTeamId) : 0);
       await fetchViewData();
       setIsLoading(false);
@@ -605,11 +604,15 @@ const PickTeam = () => {
   }
 
   const renderRow = (count, position) => {
+    const playersForPosition = Object.values(fantasyTeam.players)
+            .filter(player => player.position === position);
+
     return (
       <div className={`w-100 row-container pos-${count}`}>
         {Array.from({ length: count }, (_, i) => {
           const slot = `${position}-${i}`;
-          const player = fantasyTeam.players[slot];
+          const player = playersForPosition[i];
+          
           return (
             <div 
               className={`player-container align-items-center justify-content-center pos-${count}`} 
@@ -682,11 +685,15 @@ const PickTeam = () => {
   };
   
   const renderListRows = (count, position, positionText) => {
+    const playersForPosition = Object.values(fantasyTeam.players)
+            .filter(player => player.position === position);
+
     return (
       <>
         {Array.from({ length: count }, (_, i) => {
           const slot = `${position}-${i}`;
-          const player = fantasyTeam.players[slot];
+          const player = playersForPosition[i];
+       
           return (
             <div 
               className={`list-player-container align-items-center justify-content-center list-pos-${count}`} 
@@ -903,7 +910,7 @@ const PickTeam = () => {
 
                       <Col xs={6} className="float-right-buttons">
                           <button className='autofill-button'>AutoFill</button>
-                          <button className='save-team-button' disabled>Save Team</button>
+                          <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
                       </Col>
                     </Row>
                 </div>
