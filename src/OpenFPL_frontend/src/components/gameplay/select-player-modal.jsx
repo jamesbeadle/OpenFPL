@@ -273,7 +273,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
               </div>
               <div className="modal-table-header w-100 modal-pts-col"><p className='small-text w-100 m-0'>{player.totalPoints}</p></div>
               <div className="modal-table-header w-100 modal-button-col">
-                {fantasyTeam.players.some(teamPlayer => teamPlayer.id === player.id) 
+                {Object.keys(fantasyTeam.players).some(teamPlayer => teamPlayer.id === player.id) 
                   ? <p className='small-text m-0 text-center w-100'>Added</p> 
                   : <button  
                       onClick={() => {handleSubmit(player);}} 

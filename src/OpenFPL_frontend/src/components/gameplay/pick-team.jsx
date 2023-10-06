@@ -468,9 +468,9 @@ const PickTeam = () => {
     };
     
     const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
+
     const currentTeamPositions = Object.values(fantasyTeam.players).map(player => teamPositions[player.position]);
-
-
+    
     let positionsToFill = fantasyTeam.positionsToFill ? [...fantasyTeam.positionsToFill] : [];
     
     teamPositions.forEach(position => {
@@ -498,7 +498,7 @@ const PickTeam = () => {
     });
 
 
-    //this is not adding a player when there are 10 correctly, look at how the new way of adding a player and ensure this is done in the same way
+    
     while (positionsToFill.length < 11 - fantasyTeam.players.length) {
       // Get positions that haven't reached their maximum limit yet
       let openPositions = teamPositions.filter(position => 
@@ -526,31 +526,38 @@ const PickTeam = () => {
     let sortedPlayers = [...players].sort((a, b) => Number(b.value) - Number(a.value));
     sortedPlayers = shuffle(sortedPlayers);
   
-    let newTeam = [...fantasyTeam.players];
-    console.log(newTeam)
+    let newTeam = [...fantasyTeam.players].filter(Boolean);
+    
+    console.log("Initial newTeam:", newTeam);
+
     let remainingBudget = fantasyTeam.bankBalance;
+    let filledPositions = [];
+
     for (let i = 0; i < positionsToFill.length; i++) {
-      if (newTeam.length >= 11) {
+      if (Object.values(newTeam).filter(x => x != undefined).length >= 11) {
         break;
       }
       let position = positionsToFill[i];
       const positionMapping = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
 
-     for (let j = 0; j < sortedPlayers.length; j++) {
-        if (positionMapping[sortedPlayers[j].position] === position && 
-            (Number(sortedPlayers[j].value) * 4) <= remainingBudget &&
-            !newTeam.some((teamPlayer) => teamPlayer.id === sortedPlayers[j].id)
+      for (let j = 0; j < sortedPlayers.length; j++) {
+        let player = sortedPlayers[j];
+        if (!player) continue;
+        if (positionMapping[player.position] === position &&
+            (Number(player.value) * 4) <= remainingBudget &&
+            !newTeam.some((teamPlayer) => teamPlayer && teamPlayer.id === player.id)
         ) {
-          newTeam.push(sortedPlayers[j]);
-          remainingBudget -= Number(sortedPlayers[j].value) / 4;
-          sortedPlayers.splice(j, 1);
-          positionsToFill.splice(i, 1);
-          i--;
+          newTeam.push(player);
+          console.log("newTeam after push:", newTeam);
+
+          remainingBudget -= Number(player.value) / 4;
+          filledPositions.push(position);
           break;
-    }
-  }
+        }
+      }
     }
 
+    positionsToFill = positionsToFill.filter(pos => !filledPositions.includes(pos));
 
     newTeam.sort((a, b) => {
       if (a.position < b.position) {
@@ -566,6 +573,7 @@ const PickTeam = () => {
       return 0;
     });
     
+    console.log(newTeam)
     
     fantasyTeam.positionsToFill = [];
     
