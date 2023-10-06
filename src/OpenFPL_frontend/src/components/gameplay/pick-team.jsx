@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
 import { PlusIcon, ShirtIcon, BadgeIcon, RemovePlayerIcon, CaptainIcon, CaptainIconActive, DefaultShirtIcon, StripedShirtIcon} from '../icons';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend'; //Should be in auth functions or context
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
 import { fetchFantasyTeam } from "../../AuthFunctions";
@@ -19,12 +18,9 @@ import SafeHands from "../../../assets/safe-hands.png";
 import CaptainFantastic from "../../../assets/captain-fantastic.png";
 import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
-import { getPositionText } from '../helpers';
+import { saveFantasyTeam } from '../../AuthFunctions';
 import getFlag from '../country-flag';
-import { getTeamById, getPlayerById } from '../helpers';
-
-//Imports to delete
-import { Actor } from "@dfinity/agent"; //Can refactor the function that uses this into auth functions
+import { getTeamById, getPlayerById, getPositionText } from '../helpers';
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -91,6 +87,7 @@ const PickTeam = () => {
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
+  const [newTeam, setNewTeam] = useState(false);
   
   useEffect(() => {
     if(isLoading){
@@ -164,6 +161,7 @@ const PickTeam = () => {
         
         let fantasyTeamData = await fetchFantasyTeam(authClient);
         if(fantasyTeamData.playerIds.length == 0){
+          setNewTeam(true);
           return;
         }
 
@@ -430,18 +428,10 @@ const PickTeam = () => {
   const handleSaveTeam = async () => {
     setLoadingText("Saving Team");
     setIsLoading(true);
-    try {
-      const newPlayerIds = Object.values(fantasyTeam.players).map(player => Number(player.id));
-      const identity = authClient.getIdentity();
-      Actor.agentOf(open_fpl_backend).replaceIdentity(identity);
-      await open_fpl_backend.saveFantasyTeam(newPlayerIds, fantasyTeam.captainId ? Number(fantasyTeam.captainId) : 0, selectedBonusId ? Number(selectedBonusId) : 0, selectedBonusPlayerId ? Number(selectedBonusPlayerId) : 0, selectedBonusTeamId ? Number(selectedBonusTeamId) : 0);
-      await fetchViewData();
-      setIsLoading(false);
-    } catch(error) {
-      await fetchViewData();
-      console.error("Failed to save team", error);
-      setIsLoading(false);
-    }
+    const newPlayerIds = Object.values(fantasyTeam.players).map(player => Number(player.id));
+    await saveFantasyTeam(authClient, newPlayerIds, fantasyTeam, selectedBonusId, selectedBonusPlayerId, Number(selectedBonusTeamId));    
+    await fetchViewData();
+    setIsLoading(false);
   };
 
   const handleCaptainSelection = (playerId) => {
@@ -500,17 +490,15 @@ const PickTeam = () => {
 
     
     while (positionsToFill.length < 11 - fantasyTeam.players.length) {
-      // Get positions that haven't reached their maximum limit yet
       let openPositions = teamPositions.filter(position => 
         (positionsToFill.filter(pos => pos === position).length + currentTeamPositions.filter(pos => pos === position).length)
         < maxPlayersPerPosition[position]
       );
     
       if (openPositions.length === 0) {
-        break; // No more positions are open, so we break the loop
+        break;
       }
     
-      // Pick a random position from openPositions
       let randomPosition = openPositions[Math.floor(Math.random() * openPositions.length)];
     
       positionsToFill.push(randomPosition);
@@ -528,8 +516,6 @@ const PickTeam = () => {
   
     let newTeam = [...fantasyTeam.players].filter(Boolean);
     
-    console.log("Initial newTeam:", newTeam);
-
     let remainingBudget = fantasyTeam.bankBalance;
     let filledPositions = [];
 
@@ -572,8 +558,6 @@ const PickTeam = () => {
     
       return 0;
     });
-    
-    console.log(newTeam)
     
     fantasyTeam.positionsToFill = [];
     
@@ -903,7 +887,7 @@ const PickTeam = () => {
                                   <Col xs={3}>
                                       <p className="stat">
                                         {
-                                          (fantasyTeam === null || currentGameweek === 1) ? 
+                                          (newTeam) ? 
                                             'Unlimited' : 
                                           (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
                                         }</p>
