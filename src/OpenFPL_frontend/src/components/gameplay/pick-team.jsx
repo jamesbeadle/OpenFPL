@@ -192,6 +192,15 @@ const PickTeam = () => {
     }
   };
 
+  useEffect(() => {
+    if (!fantasyTeam || !fantasyTeam.players) {
+      return false;
+    }
+    calculateAvailableFormations();
+  }, [fantasyTeam]);
+
+  
+
   const setFormations = async (teamPlayers) => {
     
     const countPlayersByPosition = teamPlayers.reduce((acc, player) => {
@@ -978,7 +987,7 @@ const PickTeam = () => {
 
                                 <Dropdown.Menu class='formation-dropdown'>
                                 {allFormations.map(f => (
-                                  <Dropdown.Item style={{color: "red"}}  className='dropdown-item' key={f} onClick={() => handleFormationChange(f)} disabled={!availableFormations.includes(f)}>
+                                  <Dropdown.Item className='dropdown-item' key={f} onClick={() => handleFormationChange(f)} disabled={!availableFormations.includes(f)}>
                                   {formation === f && <span>✔</span>} {` ${f}`} 
                                   </Dropdown.Item>
                                 ))}

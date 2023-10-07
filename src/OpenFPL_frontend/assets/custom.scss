@@ -84,7 +84,7 @@ $dropdown-link-color: #5A5A5A;
 
 /* Dropdown Item */
 .dropdown-item {
-  color: white !important;
+  color: white;
   font-weight: 400 !important;
   font-size: 16px !important;
   width: 100% !important;
@@ -99,11 +99,11 @@ $dropdown-link-color: #5A5A5A;
 }
 
 .dropdown-item:disabled{
-  color: #5A5A5A !important;
+  color: red !important;
 }
 
 .dropdown-item[disabled='disabled'] {
-  color: #5A5A5A !important;
+  color: red !important;
 }
 
 
