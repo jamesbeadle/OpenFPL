@@ -197,9 +197,8 @@ const PickTeam = () => {
       return false;
     }
     calculateAvailableFormations();
+    updateTeamFormation();
   }, [fantasyTeam]);
-
-  
 
   const setFormations = async (teamPlayers) => {
     
@@ -337,12 +336,21 @@ const PickTeam = () => {
     });
     setRemovedPlayers(prevRemovedPlayers => prevRemovedPlayers.filter(id => id !== player.id));
     setAddedPlayers(prevAddedPlayers => [...prevAddedPlayers, player.id]);
-
     calculateAvailableFormations();
     setShowSelectPlayerModal(false);
   };
-    
-    
+
+  const updateTeamFormation = () => {
+    const playerCounts = { 1: 0, 2: 0, 3: 0 }; 
+  
+    Object.values(fantasyTeam.players || {}).forEach(player => {
+      playerCounts[player.position]++;
+    });
+  
+    const inferredFormation = `${playerCounts[1]}-${playerCounts[2]}-${playerCounts[3]}`;
+    setFormation(inferredFormation);
+  };
+
   const handleBonus = (bonusId) => {
       if (bonuses.some(bonus => fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek)) {
           return;

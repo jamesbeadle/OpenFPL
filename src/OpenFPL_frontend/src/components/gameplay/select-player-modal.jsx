@@ -79,7 +79,9 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
   };
 
   const handleSubmit = (player) => {
-    handleConfirm(player);
+    if (canAddPlayer(currentFormation, player, fantasyTeam, fantasyTeam.bankBalance)) {
+      handleConfirm(player);
+    }
   };
 
   const canAddPlayer = (currentFormation, player, fantasyTeam, bankBalance) => {
@@ -102,6 +104,12 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
     if ((Number(player.value) / 4) > bankBalance) {
       return false;
     }
+
+    const teamPlayerCount = Object.values(fantasyTeam.players)
+      .filter(p => p.teamId === player.teamId)
+      .length;
+    
+    if (teamPlayerCount >= 2) return false;
     
     // Check based on the position to add
     switch (player.position) {
