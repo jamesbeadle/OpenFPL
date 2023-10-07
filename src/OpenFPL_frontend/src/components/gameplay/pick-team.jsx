@@ -36,6 +36,7 @@ const PickTeam = () => {
   const [showFormationDropdown, setShowFormationDropdown] = useState(false);
   const [showListView, setShowListView] = useState(false);
   const [formation, setFormation] = useState('4-4-2');
+  const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
   const gk = 1;
   const [df, mf, fw] = formation.split('-').map(Number);
   const [rowPositions, setRowPositions] = useState({ gk: '10%', df: '30%', mf: '50%', fw: '70%' });
@@ -158,6 +159,8 @@ const PickTeam = () => {
         if(players.length == 0){
           return;
         }
+
+        console.log(players)
         
         let fantasyTeamData = await fetchFantasyTeam(authClient);
         if(fantasyTeamData.playerIds.length == 0){
@@ -179,6 +182,16 @@ const PickTeam = () => {
             bankBalance: Math.round(roundedValue * 4) / 4
         };
         setFantasyTeam(fantasyTeamData);
+
+        
+        const countPlayersByPosition = teamPlayers.reduce((acc, player) => {
+          const pos = teamPositions[player.position];
+          acc[pos] = (acc[pos] || 0) + 1;
+          return acc;
+        }, {});
+        
+        const formationString = `${countPlayersByPosition['Defender']}-${countPlayersByPosition['Midfielder']}-${countPlayersByPosition['Forward']}`;
+        setFormation(formationString);
         
     } catch (error) {
         console.error(error);
@@ -431,6 +444,7 @@ const PickTeam = () => {
     const newPlayerIds = Object.values(fantasyTeam.players).map(player => Number(player.id));
     await saveFantasyTeam(authClient, newPlayerIds, fantasyTeam, selectedBonusId, selectedBonusPlayerId, Number(selectedBonusTeamId));    
     await fetchViewData();
+    setNewTeam(false);
     setIsLoading(false);
   };
 
@@ -457,8 +471,6 @@ const PickTeam = () => {
       'Forward': 3
     };
     
-    const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
-
     const currentTeamPositions = Object.values(fantasyTeam.players).map(player => teamPositions[player.position]);
     
     let positionsToFill = fantasyTeam.positionsToFill ? [...fantasyTeam.positionsToFill] : [];
@@ -566,6 +578,15 @@ const PickTeam = () => {
       players: newTeam,
       bankBalance: remainingBudget,
     }));
+
+    const countPlayersByPosition = newTeam.reduce((acc, player) => {
+      const pos = teamPositions[player.position];
+      acc[pos] = (acc[pos] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const formationString = `${countPlayersByPosition['Defender']}-${countPlayersByPosition['Midfielder']}-${countPlayersByPosition['Forward']}`;
+    setFormation(formationString);
   };
   
   //MOVE TO UTILITIES
@@ -652,7 +673,7 @@ const PickTeam = () => {
                         <div className="shirt-container">
                           {foundTeam.shirtType == 0 ? <ShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} className='shirt align-items-center justify-content-center' />
                             : <StripedShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} className='shirt align-items-center justify-content-center' /> }
-                          <button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} /></button>
+                          <button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} disabled={(fantasyTeam ? fantasyTeam.transfersAvailable > 0 : true)} /></button>
                           <button className="captain-player-button right-side-image p-0" onMouseDown={() => { handleCaptainSelection(player.id); }}>
                             {player.id === fantasyTeam.captainId ? (
                               <CaptainIconActive width={23} height={22} />

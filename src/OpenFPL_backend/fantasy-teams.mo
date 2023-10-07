@@ -180,7 +180,7 @@ module {
                         principalId = principalId;
                         bankBalance = bankBalance;
                         playerIds = allPlayerIds;
-                        transfersAvailable = 2;
+                        transfersAvailable = 3;
                         captainId = newCaptainId;
                         goalGetterGameweek = goalGetterGameweek;
                         goalGetterPlayerId = goalGetterPlayerId;
@@ -375,7 +375,7 @@ module {
 
                     let natBankBalance: Nat = Nat16.toNat(Int16.toNat16(Int16.fromInt(newBankBalance)));
 
-                    var newTransfersAvailable: Nat8 = 2;
+                    var newTransfersAvailable: Nat8 = 3;
 
                     if(gameweek != 1){
                         newTransfersAvailable := existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
@@ -500,7 +500,7 @@ module {
             };
             
             for ((key, value) in teamPlayerCounts.entries()) {
-                if(value > 3){
+                if(value > 2){
                     return false;
                 };
             };
