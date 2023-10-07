@@ -1,3 +1,6 @@
+$dropdown-link-color: #5A5A5A;
+
+
 @import '~bootstrap/scss/bootstrap';
 
 .navbar{
@@ -60,28 +63,26 @@
   color: white;
 }
 
-.nav-dropdown-menu {
+
+/* Common Dropdown Styles */
+.nav-dropdown-menu, .formation-dropdown-menu, .dropdown-menu {
   position: absolute !important;
+  background-color: #161819 !important;
+  width: 185px !important;
+  padding: 16px !important;
+}
+
+/* Positioning */
+.nav-dropdown-menu {
   transform: translate(-50%, 0) !important;
 }
 
-.formation-dropdown-menu {
-  position: absolute !important;
-  transform: translate(0%, 20px) !important;
-  background-color: #161819 !important;
-  width: 185px !important;
-  padding: 16px !important;
-}
-
+.formation-dropdown-menu,
 .dropdown-menu {
-  position: absolute !important;
   transform: translate(0%, 20px) !important;
-  background-color: #161819 !important;
-  color: white !important;
-  width: 185px !important;
-  padding: 16px !important;
 }
 
+/* Dropdown Item */
 .dropdown-item {
   color: white !important;
   font-weight: 400 !important;
@@ -91,9 +92,18 @@
   border: none !important;
 }
 
+/* Hover & Disabled State */
 .dropdown-item:hover {
   background-color: white !important;
   color: #161819 !important;
+}
+
+.dropdown-item:disabled{
+  color: #5A5A5A !important;
+}
+
+.dropdown-item[disabled='disabled'] {
+  color: #5A5A5A !important;
 }
 
 

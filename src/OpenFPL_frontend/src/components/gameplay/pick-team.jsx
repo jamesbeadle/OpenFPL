@@ -36,6 +36,8 @@ const PickTeam = () => {
   const [showFormationDropdown, setShowFormationDropdown] = useState(false);
   const [showListView, setShowListView] = useState(false);
   const [formation, setFormation] = useState('4-4-2');
+  const allFormations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
+  const [availableFormations, setAvailableFormations] = useState(allFormations);
   const teamPositions = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
   const gk = 1;
   const [df, mf, fw] = formation.split('-').map(Number);
@@ -181,23 +183,49 @@ const PickTeam = () => {
             players: teamPlayers || {},
             bankBalance: Math.round(roundedValue * 4) / 4
         };
-        setFantasyTeam(fantasyTeamData);
-
-        
-        const countPlayersByPosition = teamPlayers.reduce((acc, player) => {
-          const pos = teamPositions[player.position];
-          acc[pos] = (acc[pos] || 0) + 1;
-          return acc;
-        }, {});
-        
-        const formationString = `${countPlayersByPosition['Defender']}-${countPlayersByPosition['Midfielder']}-${countPlayersByPosition['Forward']}`;
-        setFormation(formationString);
-        
+        setFantasyTeam(fantasyTeamData);        
+        setFormations(teamPlayers);
     } catch (error) {
         console.error(error);
     } finally {
         setIsLoading(false);
     }
+  };
+
+  const setFormations = async (teamPlayers) => {
+    
+    const countPlayersByPosition = teamPlayers.reduce((acc, player) => {
+      const pos = teamPositions[player.position];
+      acc[pos] = (acc[pos] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const formationString = `${countPlayersByPosition['Defender']}-${countPlayersByPosition['Midfielder']}-${countPlayersByPosition['Forward']}`;
+    setFormation(formationString);
+  };
+
+  const calculateAvailableFormations = () => {
+    const playerCounts = {0: 0, 1: 0, 2: 0, 3: 0};
+    Object.values(fantasyTeam.players).forEach(player => {
+      playerCounts[player.position]++;
+    });
+
+    const formations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
+    const available = [];
+  
+    formations.forEach(formation => {
+      const [def, mid, fwd] = formation.split('-').map(Number);
+      
+      const minDef = Math.max(0, def - playerCounts[1]);
+      const minMid = Math.max(0, mid - playerCounts[2]);
+      const minFwd = Math.max(0, fwd - (playerCounts[3]-1));
+      
+      if (minDef + minMid + minFwd <= 1) {
+        available.push(formation);
+      }
+    });
+  
+    setAvailableFormations(available);
   };
 
   const setGameweekPickingFor = async () => {
@@ -301,17 +329,10 @@ const PickTeam = () => {
     setRemovedPlayers(prevRemovedPlayers => prevRemovedPlayers.filter(id => id !== player.id));
     setAddedPlayers(prevAddedPlayers => [...prevAddedPlayers, player.id]);
 
+    calculateAvailableFormations();
     setShowSelectPlayerModal(false);
-    console.log("done adding")
   };
-  useEffect(() => {
-  }, [fantasyTeam]);
-  
-  
-  
-  
-  
-  
+    
     
   const handleBonus = (bonusId) => {
       if (bonuses.some(bonus => fantasyTeam[`${bonus.propertyName}Gameweek`] === currentGameweek)) {
@@ -436,6 +457,7 @@ const PickTeam = () => {
 
     setRemovedPlayers(prevRemovedPlayers => [...prevRemovedPlayers, playerId]);
     setAddedPlayers(prevAddedPlayers => prevAddedPlayers.filter(id => id !== playerId));
+    calculateAvailableFormations();
   };
   
   const handleSaveTeam = async () => {
@@ -579,14 +601,7 @@ const PickTeam = () => {
       bankBalance: remainingBudget,
     }));
 
-    const countPlayersByPosition = newTeam.reduce((acc, player) => {
-      const pos = teamPositions[player.position];
-      acc[pos] = (acc[pos] || 0) + 1;
-      return acc;
-    }, {});
-    
-    const formationString = `${countPlayersByPosition['Defender']}-${countPlayersByPosition['Midfielder']}-${countPlayersByPosition['Forward']}`;
-    setFormation(formationString);
+    setFormations(newTeam);
   };
   
   //MOVE TO UTILITIES
@@ -961,9 +976,9 @@ const PickTeam = () => {
                                 <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>{formation}</b></Button>
                                 </Dropdown.Toggle>
 
-                                <Dropdown.Menu>
-                                {['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'].map(f => (
-                                  <Dropdown.Item className='dropdown-item' key={f} onClick={() => handleFormationChange(f)}>
+                                <Dropdown.Menu class='formation-dropdown'>
+                                {allFormations.map(f => (
+                                  <Dropdown.Item style={{color: "red"}}  className='dropdown-item' key={f} onClick={() => handleFormationChange(f)} disabled={!availableFormations.includes(f)}>
                                   {formation === f && <span>✔</span>} {` ${f}`} 
                                   </Dropdown.Item>
                                 ))}
