@@ -673,7 +673,9 @@ const PickTeam = () => {
                         <div className="shirt-container">
                           {foundTeam.shirtType == 0 ? <ShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} className='shirt align-items-center justify-content-center' />
                             : <StripedShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} className='shirt align-items-center justify-content-center' /> }
-                          <button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} disabled={(fantasyTeam ? fantasyTeam.transfersAvailable > 0 : true)} /></button>
+                          
+                          {(fantasyTeam && fantasyTeam.transfersAvailable > 0) && (<button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} /></button>)}
+                            
                           <button className="captain-player-button right-side-image p-0" onMouseDown={() => { handleCaptainSelection(player.id); }}>
                             {player.id === fantasyTeam.captainId ? (
                               <CaptainIconActive width={23} height={22} />
@@ -972,7 +974,7 @@ const PickTeam = () => {
                       </Col>
 
                       <Col xs={6} className="float-right-buttons">
-                          <button className='autofill-button' onClick={handleAutoFill}>AutoFill</button>
+                          <button className='autofill-button' onClick={handleAutoFill} disabled={fantasyTeam.players.filter(x => x).length >= 11}>AutoFill</button>
                           <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
                       </Col>
                     </Row>

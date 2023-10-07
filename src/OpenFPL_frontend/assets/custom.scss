@@ -793,7 +793,7 @@
   color: white;
 }
 
-.save-team-button:disabled {
+.save-team-button:disabled, .autofill-button:disabled {
   background-color: #5A5A5A;
 }
 
