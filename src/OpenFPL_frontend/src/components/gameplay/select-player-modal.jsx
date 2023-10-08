@@ -84,7 +84,6 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
       handleConfirm(player);
     }
   };
-
   const canAddPlayer = (player, fantasyTeam, bankBalance) => {
     if (fantasyTeam.players && Object.values(fantasyTeam.players).some(p => p.id === player.id)) {
       return "Already in Team";
@@ -93,27 +92,41 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
     if (Number(player.value) / 4 > bankBalance) {
       return "Over Budget";
     }
-
+  
     const teamPlayerCount = Object.values(fantasyTeam.players)
       .filter(p => p.teamId === player.teamId)
       .length;
   
     if (teamPlayerCount >= 2) return "Max 2 Per Team";
-
+  
     const counts = {0: 0, 1: 0, 2: 0, 3: 0};
     Object.values(fantasyTeam.players || {}).forEach(p => {
       counts[p.position]++;
     });
   
     const tempCounts = { ...counts, [player.position]: counts[player.position] + 1 };
-    const isFormationValid = availableFormations.some(formation => isValidFormation(formation, tempCounts));
-    
+    const totalPlayers = Object.values(tempCounts).reduce((a, b) => a + (b || 0), 0);
+    const maxTeamSize = 11;
+  
+    const isFormationValid = availableFormations.some(formation => {
+      const [def, mid, fwd] = formation.split('-').map(Number);
+      const minDef = Math.max(0, def - (tempCounts[1] || 0));
+      const minMid = Math.max(0, mid - (tempCounts[2] || 0));
+      const minFwd = Math.max(0, fwd - (tempCounts[3] || 0));
+      const minGK = Math.max(0, 1 - (tempCounts[0] || 0)); 
+  
+      const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
+  
+      return totalPlayers + additionalPlayersNeeded <= maxTeamSize;
+    });
+  
     if (!isFormationValid) {
       return "Invalid Formation";
     }
-    
+  
     return "Valid";
   };
+  
   
   
 

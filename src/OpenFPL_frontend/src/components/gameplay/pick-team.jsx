@@ -505,8 +505,10 @@ const PickTeam = () => {
     const currentTeamPositions = Object.values(fantasyTeam.players).map(player => teamPositions[player.position]);
     
     let positionsToFill = fantasyTeam.positionsToFill ? [...fantasyTeam.positionsToFill] : [];
+    console.log(teamPositions)
     
     teamPositions.forEach(position => {
+      console.log(position)
       let minPlayers;
       switch(position) {
         case 'Goalkeeper':
@@ -525,19 +527,21 @@ const PickTeam = () => {
           minPlayers = 0;
       }
       const currentCount = currentTeamPositions.filter(pos => pos === position).length;
+      
+      console.log("currentCount")
+      console.log(position)
+      console.log(currentCount)
       if (currentCount < minPlayers) {
         positionsToFill.push(...Array(minPlayers - currentCount).fill(position));
       }
     });
-
-
     
-    while (positionsToFill.length < 11 - fantasyTeam.players.length) {
+    while (positionsToFill.length < 11 - Object.keys(fantasyTeam.players).length) {
       let openPositions = teamPositions.filter(position => 
         (positionsToFill.filter(pos => pos === position).length + currentTeamPositions.filter(pos => pos === position).length)
         < maxPlayersPerPosition[position]
       );
-    
+        
       if (openPositions.length === 0) {
         break;
       }
@@ -556,9 +560,10 @@ const PickTeam = () => {
     
     let sortedPlayers = [...players].sort((a, b) => Number(b.value) - Number(a.value));
     sortedPlayers = shuffle(sortedPlayers);
-  
+    console.log(sortedPlayers)
     let newTeam = [...fantasyTeam.players].filter(Boolean);
-    
+    console.log(newTeam)
+   
     let remainingBudget = fantasyTeam.bankBalance;
     let filledPositions = [];
     let teamCount = {};

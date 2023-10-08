@@ -91,22 +91,31 @@ export const getPositionText = (position) => {
 };
 
 export const getAvailableFormations = (playerCounts) => {
+    console.log(playerCounts)
     const formations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
     const available = [];
+    const totalPlayers = Object.values(playerCounts).reduce((a, b) => a + (b || 0), 0);
+    const maxTeamSize = 11; // Assuming max team size is 11 players
   
     formations.forEach(formation => {
       const [def, mid, fwd] = formation.split('-').map(Number);
-      const minDef = Math.max(0, def - playerCounts[1]);
-      const minMid = Math.max(0, mid - playerCounts[2]);
-      const minFwd = Math.max(0, fwd - playerCounts[3]);
+      const minDef = Math.max(0, def - (playerCounts[1] || 0));
+      const minMid = Math.max(0, mid - (playerCounts[2] || 0));
+      const minFwd = Math.max(0, fwd - (playerCounts[3] || 0));
+      const minGK = Math.max(0, 1 - (playerCounts[0] || 0)); // Assuming 1 goalkeeper is needed
   
-      if (minDef + minMid + minFwd <= 1 && playerCounts[0] === 1) {
+      const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
+  
+      if (totalPlayers + additionalPlayersNeeded <= maxTeamSize) {
         available.push(formation);
       }
     });
   
     return available;
   };
+  
+  
+  
 
   export const isValidFormation = (formation, playerCounts) => {
     const [def, mid, fwd] = formation.split('-').map(Number);
