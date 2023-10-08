@@ -20,7 +20,7 @@ import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
 import { saveFantasyTeam } from '../../AuthFunctions';
 import getFlag from '../country-flag';
-import { getTeamById, getPlayerById, getPositionText } from '../helpers';
+import { getTeamById, getPlayerById, getPositionText, getAvailableFormations } from '../helpers';
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -211,31 +211,18 @@ const PickTeam = () => {
   };
 
   const calculateAvailableFormations = () => {
-    
     const playerCounts = {0: 0, 1: 0, 2: 0, 3: 0};
     Object.values(fantasyTeam.players).forEach(player => {
       playerCounts[player.position]++;
     });
-    
-    if(fantasyTeam.players.filter(x => x).length == 11){
+  
+    if (Object.values(fantasyTeam.players).length === 11) {
       const formationString = `${playerCounts[1]}-${playerCounts[2]}-${playerCounts[3]}`;
-      setAvailableFormations(formationString);
+      setAvailableFormations([formationString]);
       return;
     }
-    const formations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
-    const available = [];
   
-    formations.forEach(formation => {
-      const [def, mid, fwd] = formation.split('-').map(Number);
-      
-      const minDef = Math.max(0, def - playerCounts[1]);
-      const minMid = Math.max(0, mid - playerCounts[2]);
-      const minFwd = Math.max(0, fwd - playerCounts[3]);
-      
-      if (minDef + minMid + minFwd <= 1) {
-        available.push(formation);
-      }
-    });
+    const available = getAvailableFormations(playerCounts);
     setAvailableFormations(available);
   };
 
@@ -1174,7 +1161,7 @@ const PickTeam = () => {
           handleClose={() => setShowSelectPlayerModal(false)} 
           handleConfirm={handlePlayerConfirm}
           fantasyTeam={fantasyTeam}
-          currentFormation={formation}
+          availableFormations={availableFormations}
         />
       )}
       

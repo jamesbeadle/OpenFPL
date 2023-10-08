@@ -90,4 +90,33 @@ export const getPositionText = (position) => {
     return '';
 };
 
+export const getAvailableFormations = (playerCounts) => {
+    const formations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
+    const available = [];
+  
+    formations.forEach(formation => {
+      const [def, mid, fwd] = formation.split('-').map(Number);
+      const minDef = Math.max(0, def - playerCounts[1]);
+      const minMid = Math.max(0, mid - playerCounts[2]);
+      const minFwd = Math.max(0, fwd - playerCounts[3]);
+  
+      if (minDef + minMid + minFwd <= 1 && playerCounts[0] === 1) {
+        available.push(formation);
+      }
+    });
+  
+    return available;
+  };
 
+  export const isValidFormation = (formation, playerCounts) => {
+    const [def, mid, fwd] = formation.split('-').map(Number);
+    const gk = 1; // assuming 1 GK is always needed
+  
+    return (
+      playerCounts[0] === gk &&
+      playerCounts[1] >= def &&
+      playerCounts[2] >= mid &&
+      playerCounts[3] >= fwd
+    );
+  };
+  
