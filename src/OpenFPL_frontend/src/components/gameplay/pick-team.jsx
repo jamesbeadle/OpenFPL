@@ -162,8 +162,6 @@ const PickTeam = () => {
           return;
         }
 
-        console.log(players)
-        
         let fantasyTeamData = await fetchFantasyTeam(authClient);
         if(fantasyTeamData.playerIds.length == 0){
           setNewTeam(true);
@@ -213,11 +211,17 @@ const PickTeam = () => {
   };
 
   const calculateAvailableFormations = () => {
+    
     const playerCounts = {0: 0, 1: 0, 2: 0, 3: 0};
     Object.values(fantasyTeam.players).forEach(player => {
       playerCounts[player.position]++;
     });
-
+    
+    if(fantasyTeam.players.filter(x => x).length == 11){
+      const formationString = `${playerCounts[1]}-${playerCounts[2]}-${playerCounts[3]}`;
+      setAvailableFormations(formationString);
+      return;
+    }
     const formations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
     const available = [];
   
@@ -226,13 +230,12 @@ const PickTeam = () => {
       
       const minDef = Math.max(0, def - playerCounts[1]);
       const minMid = Math.max(0, mid - playerCounts[2]);
-      const minFwd = Math.max(0, fwd - (playerCounts[3]-1));
+      const minFwd = Math.max(0, fwd - playerCounts[3]);
       
       if (minDef + minMid + minFwd <= 1) {
         available.push(formation);
       }
     });
-  
     setAvailableFormations(available);
   };
 
@@ -342,13 +345,15 @@ const PickTeam = () => {
 
   const updateTeamFormation = () => {
     const playerCounts = { 1: 0, 2: 0, 3: 0 }; 
-  
+
     Object.values(fantasyTeam.players || {}).forEach(player => {
       playerCounts[player.position]++;
     });
   
     const inferredFormation = `${playerCounts[1]}-${playerCounts[2]}-${playerCounts[3]}`;
-    setFormation(inferredFormation);
+    if (availableFormations.includes(inferredFormation)) {
+      setFormation(inferredFormation);
+    }
   };
 
   const handleBonus = (bonusId) => {
@@ -585,8 +590,7 @@ const PickTeam = () => {
             !newTeam.some((teamPlayer) => teamPlayer && teamPlayer.id === player.id)
         ) {
           newTeam.push(player);
-          console.log("newTeam after push:", newTeam);
-
+          
           remainingBudget -= Number(player.value) / 4;
           filledPositions.push(position);
           break;
@@ -993,7 +997,7 @@ const PickTeam = () => {
                                 <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>{formation}</b></Button>
                                 </Dropdown.Toggle>
 
-                                <Dropdown.Menu class='formation-dropdown'>
+                                <Dropdown.Menu className='formation-dropdown'>
                                 {allFormations.map(f => (
                                   <Dropdown.Item className='dropdown-item' key={f} onClick={() => handleFormationChange(f)} disabled={!availableFormations.includes(f)}>
                                   {formation === f && <span>✔</span>} {` ${f}`} 

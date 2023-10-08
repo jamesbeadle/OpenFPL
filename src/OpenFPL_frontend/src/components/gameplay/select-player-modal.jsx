@@ -85,47 +85,51 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
   };
 
   const canAddPlayer = (currentFormation, player, fantasyTeam, bankBalance) => {
-    // Parse the current formation
-    const [defenders, midfielders, forwards] = currentFormation.split('-').map(Number);
-  
     // Count existing players in each position
     const counts = {
-      'G': 0,
-      'D': 0,
-      'M': 0,
-      'F': 0,
+      0: 0,
+      1: 0,
+      2: 0,
+      3: 0,
     };
-    
-    Object.keys(fantasyTeam.players).forEach(p => {
-      counts[p.position] += 1;
+  
+    Object.values(fantasyTeam.players || {}).forEach(p => {
+      counts[p.position]++;
     });
   
     // Check bank balance
-    if ((Number(player.value) / 4) > bankBalance) {
-      return false;
+    if (Number(player.value) / 4 > bankBalance) {
+      return "Over budget";
     }
-
+  
     const teamPlayerCount = Object.values(fantasyTeam.players)
       .filter(p => p.teamId === player.teamId)
       .length;
+  
+    if (teamPlayerCount >= 2) return "Max 2 players per team";
     
-    if (teamPlayerCount >= 2) return false;
-    
-    // Check based on the position to add
+    const [defenders, midfielders, forwards] = currentFormation.split('-').map(Number);
+  
     switch (player.position) {
       case 0:
-        return (counts['G'] + 1) <= 1;
+        if (counts[0] >= 1) return "Max 1 Goalkeeper";
+        break;
       case 1:
-        return (counts['D'] + 1) <= defenders;
+        if (counts[1] >= defenders) return "Would form invalid formation";
+        break;
       case 2:
-        return (counts['M'] + 1) <= midfielders;
+        if (counts[2] >= midfielders) return "Would form invalid formation";
+        break;
       case 3:
-        return (counts['F'] + 1) <= forwards;
+        if (counts[3] >= forwards) return "Would form invalid formation";
+        break;
       default:
-        return false;
+        return "Invalid position";
     }
-    
+  
+    return "Valid";
   };
+  
 
   const renderPagination = () => {
     let items = [];
@@ -281,14 +285,14 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
               </div>
               <div className="modal-table-header w-100 modal-pts-col"><p className='small-text w-100 m-0'>{player.totalPoints}</p></div>
               <div className="modal-table-header w-100 modal-button-col">
-                {Object.keys(fantasyTeam.players).some(teamPlayer => teamPlayer.id === player.id) 
-                  ? <p className='small-text m-0 text-center w-100'>Added</p> 
-                  : <button  
-                      onClick={() => {handleSubmit(player);}} 
-                      disabled={!canAddPlayer(currentFormation, player, fantasyTeam, fantasyTeam.bankBalance)}
-                      className='add-player-button'><PlusIcon /></button>
-                }
+                {(() => {
+                  const reasonOrValid = canAddPlayer(currentFormation, player, fantasyTeam, fantasyTeam.bankBalance);
+                  return reasonOrValid === "Valid"
+                    ? <button onClick={() => { handleSubmit(player); }} className='add-player-button'><PlusIcon /></button>
+                    : <p className='small-text m-0 text-center w-100'>{reasonOrValid}</p>;
+                })()}
               </div>
+
 
 
             </Row>
