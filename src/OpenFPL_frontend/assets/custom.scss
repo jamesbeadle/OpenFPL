@@ -723,6 +723,7 @@ $dropdown-link-color: #5A5A5A;
   justify-content: center; 
   font-size: 12px;
   font-weight: 600;
+  box-sizing: border-box;
 }
 
 .select-player-modal-row {
@@ -730,6 +731,7 @@ $dropdown-link-color: #5A5A5A;
   border-width: 0 0 1px 0;
   border-style: solid;
   border-color: rgba(69, 75, 86, 0.8);
+  width: 100% !important;
 }
 
 .select-player-modal-row p {
@@ -990,4 +992,10 @@ $dropdown-link-color: #5A5A5A;
 }
 .hidden {
   display: none;
+}
+
+.disabled-player-text{
+  font-size: 10px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

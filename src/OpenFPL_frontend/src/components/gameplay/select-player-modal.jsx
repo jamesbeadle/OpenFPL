@@ -86,27 +86,30 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
   };
 
   const canAddPlayer = (player, fantasyTeam, bankBalance) => {
+    if (fantasyTeam.players && Object.values(fantasyTeam.players).some(p => p.id === player.id)) {
+      return "Already in Team";
+    }
+  
+    if (Number(player.value) / 4 > bankBalance) {
+      return "Over Budget";
+    }
+
+    const teamPlayerCount = Object.values(fantasyTeam.players)
+      .filter(p => p.teamId === player.teamId)
+      .length;
+  
+    if (teamPlayerCount >= 2) return "Max 2 Per Team";
+
     const counts = {0: 0, 1: 0, 2: 0, 3: 0};
     Object.values(fantasyTeam.players || {}).forEach(p => {
       counts[p.position]++;
     });
   
-    if (Number(player.value) / 4 > bankBalance) {
-      return "Over budget";
-    }
-  
-    const teamPlayerCount = Object.values(fantasyTeam.players)
-      .filter(p => p.teamId === player.teamId)
-      .length;
-  
-    if (teamPlayerCount >= 2) return "Max 2 players per team";
-  
     const tempCounts = { ...counts, [player.position]: counts[player.position] + 1 };
     const isFormationValid = availableFormations.some(formation => isValidFormation(formation, tempCounts));
-
     
     if (!isFormationValid) {
-      return "Would form invalid formation";
+      return "Invalid Formation";
     }
     
     return "Valid";
@@ -204,27 +207,27 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
           <Container>
             <Row className='mb-2 modal-table-row'>
 
-              <div className="modal-table-header w-100 modal-position-col">
+              <div className="modal-table-header modal-position-col">
                 <p className='w-100 m-0'>Pos</p>
               </div>
-              <div className="modal-table-header w-100 modal-player-col">
+              <div className="modal-table-header modal-player-col">
                 <p className='w-100 m-0'>Player Name</p>
               </div>
-              <div className="modal-table-header w-100 modal-team-col">
+              <div className="modal-table-header modal-team-col">
                 <p className='w-100 m-0'>Team</p>
               </div>
-              <div className="modal-table-header w-100 modal-value-col">
+              <div className="modal-table-header modal-value-col">
                 <p className='w-100 m-0'>Value</p>
               </div>
-              <div className="modal-table-header w-100 modal-pts-col">
+              <div className="modal-table-header modal-pts-col">
                 <p className='w-100 m-0'>PTS</p>
               </div>
-              <div className="modal-table-header w-100 modal-button-col"></div>
+              <div className="modal-table-header modal-button-col"></div>
 
             </Row>
           {viewData.players.map((player) => (
             <Row key={player.id} className='select-player-modal-row'>
-              <div className="modal-table-header w-100 modal-position-col">
+              <div className="modal-table-header modal-position-col">
                 <p className='small-text w-100 m-0'>
                   {(() => {
                     switch (player.position) {
@@ -239,10 +242,10 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                     }})()}
                 </p>
               </div>
-              <div className="modal-table-header w-100 modal-player-col">
+              <div className="modal-table-header modal-player-col">
                 <p className='small-text w-100 m-0'><b>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</b></p>
               </div>
-              <div className="modal-table-header w-100 modal-team-col">
+              <div className="modal-table-header modal-team-col">
                 <p className='small-text w-100 m-0'>
                   {(() => {
                     const foundTeam = teams.find(team => team.id === player.teamId);
@@ -263,17 +266,18 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                 </p>
               </div>
 
-              <div className="modal-table-header w-100 modal-value-col">
+              <div className="modal-table-header modal-value-col">
               <p className='small-text w-100 m-0'>{`£${(Number(player.value) / 4).toFixed(2)}m`}</p>
               </div>
-              <div className="modal-table-header w-100 modal-pts-col"><p className='small-text w-100 m-0'>{player.totalPoints}</p></div>
-              <div className="modal-table-header w-100 modal-button-col">
-                {(() => {
-                  const reasonOrValid = canAddPlayer(player, fantasyTeam, fantasyTeam.bankBalance);
-                  return reasonOrValid === "Valid"
-                    ? <button onClick={() => { handleSubmit(player); }} className='add-player-button'><PlusIcon /></button>
-                    : <p className='small-text m-0 text-center w-100'>{reasonOrValid}</p>;
-                })()}
+              <div className="modal-table-header modal-pts-col"><p className='small-text w-100 m-0'>{player.totalPoints}</p></div>
+              <div className="modal-table-header modal-button-col">
+                  {(() => {
+                    const reasonOrValid = canAddPlayer(player, fantasyTeam, fantasyTeam.bankBalance);
+                    return reasonOrValid === "Valid"
+                      ? <button onClick={() => { handleSubmit(player); }} className='add-player-button'><PlusIcon /></button>
+                      : <p className='disabled-player-text m-0 text-center w-100'>{reasonOrValid}</p>;
+                  })()}
+                
               </div>
 
 
