@@ -561,6 +561,7 @@ const PickTeam = () => {
     
     let remainingBudget = fantasyTeam.bankBalance;
     let filledPositions = [];
+    let teamCount = {};
 
     for (let i = 0; i < positionsToFill.length; i++) {
       if (Object.values(newTeam).filter(x => x != undefined).length >= 11) {
@@ -572,11 +573,17 @@ const PickTeam = () => {
       for (let j = 0; j < sortedPlayers.length; j++) {
         let player = sortedPlayers[j];
         if (!player) continue;
+        
+        if (teamCount[player.teamId] && teamCount[player.teamId] >= 2) {
+          continue;
+        }
+
         if (positionMapping[player.position] === position &&
             (Number(player.value) * 4) <= remainingBudget &&
             !newTeam.some((teamPlayer) => teamPlayer && teamPlayer.id === player.id)
         ) {
           newTeam.push(player);
+          teamCount[player.teamId] = (teamCount[player.teamId] || 0) + 1; 
           
           remainingBudget -= Number(player.value) / 4;
           filledPositions.push(position);
