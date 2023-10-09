@@ -303,46 +303,7 @@ $dropdown-link-color: #5A5A5A;
   .outer-container {
     position: relative;
   }
-  .vertical-divider-1 {
-    position: absolute;
-    top: 15%;
-    bottom: 15%;
-    left: 30%;
-    width: 1px;
-    background-color: #37393C;
-  }
-  .vertical-divider-2 {
-    position: absolute;
-    top: 15%;
-    bottom: 15%;
-    left: 70.25%;
-    width: 1px;
-    background-color: #37393C;
-  }
-  .vertical-divider-3 {
-    position: absolute;
-    top: 15%;
-    bottom: 15%;
-    left: 50%;
-    width: 1px;
-    background-color: #37393C;
-  }
-  .vertical-divider-4 {
-    position: absolute;
-    top: 15%;
-    bottom: 15%;
-    left: 67%;
-    width: 1px;
-    background-color: #37393C;
-  }
-  .vertical-divider-5 {
-    position: absolute;
-    top: 15%;
-    bottom: 15%;
-    left: 25%;
-    width: 1px;
-    background-color: #37393C;
-  }
+  
 }
 
 .nav-tabs{
@@ -1042,6 +1003,33 @@ $dropdown-link-color: #5A5A5A;
   flex-basis: 30%;
 }
 
+.home-divider-1 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 24%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.home-divider-2 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 70%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.home-divider-3 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 32%;
+  width: 1px;
+  background-color: #37393C;
+}
+
 .pick-team-divider-1 {
   position: absolute;
   top: 15%;
@@ -1074,6 +1062,54 @@ $dropdown-link-color: #5A5A5A;
   top: 15%;
   bottom: 15%;
   left: 67%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.home-gameweek-col {
+  flex-basis: 33%;
+}
+
+.home-managers-col {
+  flex-basis: 33%;
+}
+
+.home-prize-col {
+  flex-basis: 33%;
+}
+
+.home-deadline-col {
+  flex-basis: 50%;
+}
+
+.home-fixture-col {
+  flex-basis: 50%;
+}
+
+
+.home-divider-1 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 28%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.home-divider-2 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 61%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.home-divider-3 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 50%;
   width: 1px;
   background-color: #37393C;
 }

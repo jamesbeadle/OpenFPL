@@ -98,43 +98,42 @@ const Homepage = () => {
                     <Card className='mb-3'>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">
-                                
                                 <Row className="stat-row-1">
-                                    <Col xs={4}>
+                                    <div className='home-gameweek-col'>
                                         <p style={{paddingLeft: '40px'}} className="stat-header w-100">Gameweek</p>
-                                    </Col>
-                                    <Col xs={5}>
+                                    </div>
+                                    <div className='home-managers-col'>
                                         <p className="stat-header w-100">Managers</p>
-                                    </Col>
-                                    <Col xs={3}>
+                                    </div>
+                                    <div className='home-prize-col'>
                                         <p className="stat-header w-100">Weekly Prize Pool</p>
-                                    </Col>
+                                    </div>
                                 </Row>
                                 <Row className="stat-row-2">
-                                    <Col xs={4}>
+                                    <div className='home-gameweek-col'>
                                         <p style={{paddingLeft: '40px'}} className="stat">{currentGameweek}</p>
-                                    </Col>
-                                    <Col xs={5}>
+                                    </div>
+                                    <div className='home-managers-col'>
                                         <p className="stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
-                                    </Col>
-                                    <Col xs={3}>
+                                    </div>
+                                    <div className='home-prize-col'>
                                         <p className="stat">{totalPrizePool.toLocaleString()}</p>
-                                    </Col>
+                                    </div>
                                 </Row>
                                 <Row className="stat-row-3">
-                                    <Col xs={4}>
+                                    <div className='home-gameweek-col'>
                                         <p style={{paddingLeft: '40px'}} className="stat-header">{currentSeason.name}</p>   
-                                    </Col>
-                                    <Col xs={5}>
+                                    </div>
+                                    <div className='home-managers-col'>
                                         <p className="stat-header">Total</p>    
-                                    </Col>
-                                    <Col xs={3}>
+                                    </div>
+                                    <div className='home-prize-col'>
                                         <p className="stat-header">$FPL Tokens</p>   
-                                    </Col>
+                                    </div>
                                 </Row>
                             </div>
-                            <div className="d-none d-md-block vertical-divider-1"></div>
-                            <div className="d-none d-md-block vertical-divider-2"></div>
+                            <div className="d-none d-md-block home-divider-1"></div>
+                            <div className="d-none d-md-block home-divider-2"></div>
                         </div>
                     </Card>
                 </Col>
@@ -143,39 +142,29 @@ const Homepage = () => {
                     <Card>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">  
+                                <Row className="stat-row-1">
+                                    <div className='home-deadline-col'>
+                                        <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Upcoming Game</p>    
+                                    </div>
+                                    <div className='home-fixture-col'>
+                                         
+                                    </div>
+                                </Row>
                                 <Row className="stat-row-2">
-                                    <Col xs={12} md={6}>    
-                                        <Row className="stat-row-1">
-                                            <p style={{paddingLeft: '32px'}} className="stat-header w-100">Upcoming Game</p>    
-                                        </Row>
-                                        <Row>
+                                    <div className='home-deadline-col'>
+                                        <Row  style={{paddingLeft: '32px'}}>
                                             <Col xs={4} className="add-colon">
-                                                <p className="stat w-100 text-center">{String(days).padStart(2, '0')}</p>
+                                                <p className="stat">{String(days).padStart(2, '0')}</p>
                                             </Col>
                                             <Col xs={4} className="add-colon">
-                                                <p className="stat w-100 text-center">{String(hours).padStart(2, '0')}</p>
+                                                <p className="stat">{String(hours).padStart(2, '0')}</p>
                                             </Col>
                                             <Col xs={4}>
-                                                <p className="stat w-100 text-center">{String(minutes).padStart(2, '0')}</p>
+                                                <p className="stat">{String(minutes).padStart(2, '0')}</p>
                                             </Col>
-                                        </Row>
-                                        <Row className="stat-row-3">
-                                            <Col xs={12}>
-                                                <Row>
-                                                    <Col xs={4}>
-                                                        <p className="stat-header text-center w-100">Day</p> 
-                                                    </Col>
-                                                    <Col xs={4}>
-                                                        <p className="stat-header text-center w-100">Hour</p>   
-                                                    </Col>
-                                                    <Col xs={4}>
-                                                        <p className="stat-header text-center w-100">Min</p>    
-                                                    </Col>
-                                                </Row>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                    <Col xs={12} md={6} className="mt-4 mt-md-0">
+                                        </Row>  
+                                    </div>
+                                    <div className='home-fixture-col'>
                                         <Row>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
@@ -183,8 +172,8 @@ const Homepage = () => {
                                                         primaryColour={nextFixtureHomeTeam.primaryHexColour}
                                                         secondaryColour={nextFixtureHomeTeam.SecondaryHexColour}
                                                         thirdColour={nextFixtureHomeTeam.thirdHexColour}
-                                                        width={80}
-                                                        height={80}
+                                                        width={60}
+                                                        height={60}
                                                     />}
                                                 </div>
                                             </Col>
@@ -197,30 +186,43 @@ const Homepage = () => {
                                                         primaryColour={nextFixtureAwayTeam.primaryHexColour}
                                                         secondaryColour={nextFixtureAwayTeam.SecondaryHexColour}
                                                         thirdColour={nextFixtureAwayTeam.thirdHexColour}
-                                                        width={80}
-                                                        height={80}
+                                                        width={60}
+                                                        height={60}
                                                     />}
                                                 </div>
                                             </Col>
                                         </Row>
-                                        <Row className="stat-row-3">
-                                            <Col xs={12}>
-                                                <Row>
-                                                    <Col xs={5}>
-                                                    {nextFixtureHomeTeam && <p className="stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
-                                                    </Col>
-                                                    <Col xs={2}>
-                                                </Col>
-                                                    <Col xs={5}>
-                                                    {nextFixtureAwayTeam && <p className="stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>  }
-                                                    </Col>
-                                                </Row>
+                                    </div>
+                                </Row>
+                                <Row className='stat-row-3'>
+                                    <div className='home-deadline-col'>
+                                        <Row style={{paddingLeft: '32px'}}>
+                                            <Col xs={4}>
+                                                <p className="stat-header w-100">Day</p> 
+                                            </Col>
+                                            <Col xs={4}>
+                                                <p className="stat-header w-100">Hour</p>   
+                                            </Col>
+                                            <Col xs={4}>
+                                                <p className="stat-header w-100">Min</p>    
                                             </Col>
                                         </Row>
-                                    </Col>
+                                    </div>
+                                    <div className='home-fixture-col'>
+                                        <Row>
+                                            <Col xs={5}>
+                                                {nextFixtureHomeTeam && <p className="stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
+                                                </Col>
+                                                <Col xs={2}>
+                                            </Col>
+                                            <Col xs={5}>
+                                                {nextFixtureAwayTeam && <p className="stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>  }
+                                            </Col>
+                                        </Row>
+                                    </div>
                                 </Row>
                             </div>
-                            <div className="d-none d-md-block vertical-divider-3"></div>
+                            <div className="d-none d-md-block home-divider-3"></div>
                         </div>
                     </Card>
                 </Col>
