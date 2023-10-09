@@ -488,28 +488,18 @@ const PickTeam = () => {
     });
   };
 
-  const shuffle = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
-
   function autofillTeam() {
     let updatedFantasyTeam = { ...fantasyTeam, players: fantasyTeam.players || {} };
     let remainingBudget = fantasyTeam.bankBalance;
-    let totalValue = 0;
   
     // Count existing players per team
     const teamCounts = {};
     Object.values(updatedFantasyTeam.players).forEach((player) => {
-        totalValue += Number(player.value);
         teamCounts[player.teamId] = (teamCounts[player.teamId] || 0) + 1;
     });
-  
+
     // Create a shuffled list of eligible team IDs
-    let eligibleTeams = Array.from(new Set(players.map((player) => player.teamId)));
+    let eligibleTeams = Array.from(new Set(players.filter(player => player.teamId > 0).map((player) => player.teamId)));
     eligibleTeams.sort(() => Math.random() - 0.5);
   
     const [defenders, midfielders, forwards] = formation.split("-").map(Number);
@@ -520,6 +510,7 @@ const PickTeam = () => {
         0,
     ];
 
+    let playerAdded = false;
     formationArray.forEach((position, index) => {
         if (remainingBudget <= 0 || eligibleTeams.length === 0) return;
   
@@ -531,24 +522,33 @@ const PickTeam = () => {
             !updatedFantasyTeam.players[`${position}-${index}`] &&
             !Object.values(updatedFantasyTeam.players).some(p => p.id === player.id)
         ));
+        
+        console.log(availablePlayers)
   
         availablePlayers.sort((a, b) => Number(a.value) - Number(b.value));
         const lowerHalf = availablePlayers.slice(0, Math.ceil(availablePlayers.length / 2));
         const selectedPlayer = lowerHalf[Math.floor(Math.random() * lowerHalf.length)];
   
         if (selectedPlayer) {
-            const slot = `${position}-${index}`;
-            updatedFantasyTeam.players[slot] = selectedPlayer;
-            remainingBudget -= Number(selectedPlayer.value) / 4;
-            totalValue += Number(selectedPlayer.value);
-        }
+          const potentialNewBudget = remainingBudget - Number(selectedPlayer.value) / 4;
+          if (potentialNewBudget < 0) {
+              return;  // Skip this iteration and continue to the next one
+          }
+          const slot = `${position}-${index}`;
+          updatedFantasyTeam.players[slot] = selectedPlayer;
+          remainingBudget = potentialNewBudget;  // You can safely update now
+          playerAdded = true;
+      }
+      
     });
-  
-    if (remainingBudget >= 0) {
+    console.log("remainingBudget")
+    console.log(remainingBudget)
+    if (remainingBudget >= 0 && playerAdded) {
         updatedFantasyTeam.bankBalance = remainingBudget;
+        console.log("setting fantasy team 1")
         setFantasyTeam(updatedFantasyTeam);
     }
-}
+  }
 
   
   
