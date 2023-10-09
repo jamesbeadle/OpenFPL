@@ -1113,3 +1113,51 @@ $dropdown-link-color: #5A5A5A;
   width: 1px;
   background-color: #37393C;
 }
+
+.profile-details-row{
+  height: 300px;
+  padding-left: 32px;
+  margin-top: 32px;
+  display:flex;
+}
+
+.profile-picture-col{
+  flex-basis: 300px;
+  margin-right: 80px;
+}
+
+.profile-details-col{
+  flex-grow: 1;
+}
+
+.profile-detail-row-1{
+  height: 168px;
+  padding-left: 32px;
+  display:flex;
+}
+
+.profile-detail-row-2{
+  height: 168px;
+  padding-left: 32px;
+}
+
+.profile-display-name-col{
+  flex-basis: 20%;
+}
+
+.profile-favourite-team-col{
+  flex-basis: 50%;
+}
+
+.coins-row{
+  height: 104px;
+  padding-left: 32px;
+  display:flex;
+}
+
+.profile-detail-image{
+  width: 300px;
+  height: 300px;
+  border-radius: 8px;
+}
+

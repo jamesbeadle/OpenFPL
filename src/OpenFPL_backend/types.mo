@@ -30,7 +30,7 @@ module Types{
         membershipType: Nat8;
         createDate: Int;
         subscriptionDate: Int;
-        reputation: Nat32;
+        reputation: Nat32; //CAN REMOVE
     };
 
     public type Season = {
