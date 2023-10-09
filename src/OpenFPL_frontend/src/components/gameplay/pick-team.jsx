@@ -20,7 +20,7 @@ import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
 import { saveFantasyTeam } from '../../AuthFunctions';
 import getFlag from '../country-flag';
-import { getTeamById, getPlayerById, getPositionText, getAvailableFormations } from '../helpers';
+import { getTeamById, getPlayerById, getPositionText, getAvailableFormations, computeTimeLeft } from '../helpers';
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -133,6 +133,12 @@ const PickTeam = () => {
       }
     }, 0);
   };
+
+  
+  useEffect(() => {
+    const timer = setInterval(updateCountdowns, 1000);
+    return () => clearInterval(timer);    
+}, []);
 
   useEffect(() => {
     if(showListView){
@@ -532,11 +538,11 @@ const PickTeam = () => {
         if (selectedPlayer) {
           const potentialNewBudget = remainingBudget - Number(selectedPlayer.value) / 4;
           if (potentialNewBudget < 0) {
-              return;  // Skip this iteration and continue to the next one
+              return;
           }
           const slot = `${position}-${index}`;
           updatedFantasyTeam.players[slot] = selectedPlayer;
-          remainingBudget = potentialNewBudget;  // You can safely update now
+          remainingBudget = potentialNewBudget;
           playerAdded = true;
       }
       
@@ -573,9 +579,7 @@ const PickTeam = () => {
     
     const currentTime = Date.now();
     const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
-    setNextFixtureHomeTeam(teams.find(x => x.id == fixture.homeTeamId));
-    setNextFixtureAwayTeam(teams.find(x => x.id == fixture.awayTeamId));
-
+    
     if (fixture) {
         const timeLeft = computeTimeLeft(Number(fixture.kickOff));
         const timeLeftInMillis = 
@@ -785,10 +789,10 @@ const PickTeam = () => {
                                   <Col xs={4}>
                                       <p style={{paddingLeft: '40px'}} className="stat-header w-100">Gameweek</p>
                                   </Col>
-                                  <Col xs={5}>
+                                  <Col xs={4}>
                                       <p className="stat-header w-100">Deadline</p>
                                   </Col>
-                                  <Col xs={3}>
+                                  <Col xs={4}>
                                       <p className="stat-header w-100">Players Selected</p>
                                   </Col>
                               </Row>
@@ -796,7 +800,7 @@ const PickTeam = () => {
                                   <Col xs={4}>
                                       <p style={{paddingLeft: '40px'}} className="stat">{currentGameweek}</p>
                                   </Col>
-                                  <Col xs={5}>
+                                  <Col xs={4}>
                                     <Row>
                                       <Col xs={4} className="add-colon">
                                           <p className="stat w-100 text-center">{String(days).padStart(2, '0')}</p>
@@ -809,7 +813,7 @@ const PickTeam = () => {
                                       </Col>
                                     </Row>
                                   </Col>
-                                  <Col xs={3}>
+                                  <Col xs={4}>
                                       <p className="stat">{Object.keys(fantasyTeam.players).length}/11</p>
                                   </Col>
                               </Row>
@@ -817,18 +821,18 @@ const PickTeam = () => {
                                   <Col xs={4}>
                                       <p style={{paddingLeft: '40px'}} className="stat-header">{currentSeason.name}</p>   
                                   </Col>
-                                  <Col xs={5}>
+                                  <Col xs={4}>
                                       <p className="stat-header">
                                         {fixtures.find(x => x.gameweek == currentGameweek).kickOff}  
                                       </p>    
                                   </Col>
-                                  <Col xs={3}>
+                                  <Col xs={4}>
                                       <p className="stat-header">Total</p>   
                                   </Col>
                               </Row>
                           </div>
-                          <div className="d-none d-md-block vertical-divider-1"></div>
-                          <div className="d-none d-md-block vertical-divider-2"></div>
+                          <div className="d-none d-md-block vertical-divider-4"></div>
+                          <div className="d-none d-md-block vertical-divider-5"></div>
                       </div>
                   </Card>
               </Col>
@@ -860,7 +864,7 @@ const PickTeam = () => {
                                       <p className="stat">
                                         {
                                           (newTeam) ? 
-                                            'Unlimited' : 
+                                            '-' : 
                                           (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
                                         }</p>
                                   </Col>
