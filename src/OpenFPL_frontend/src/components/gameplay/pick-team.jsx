@@ -487,142 +487,75 @@ const PickTeam = () => {
       return updatedFantasyTeam;
     });
   };
-  
-  const handleAutoFill = () => {
-    
-    if (players.length === 0) {
-      console.error("No player data available for autofill.");
-      return;
+
+  const shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
-  
-    const maxPlayersPerPosition = {
-      'Goalkeeper': 1,
-      'Defender': 5,
-      'Midfielder': 5,
-      'Forward': 3
-    };
-    
-    const currentTeamPositions = Object.values(fantasyTeam.players).map(player => teamPositions[player.position]);
-    
-    let positionsToFill = fantasyTeam.positionsToFill ? [...fantasyTeam.positionsToFill] : [];
-    console.log(teamPositions)
-    
-    teamPositions.forEach(position => {
-      console.log(position)
-      let minPlayers;
-      switch(position) {
-        case 'Goalkeeper':
-          minPlayers = 1;
-          break;
-        case 'Defender':
-          minPlayers = 3;
-          break;
-        case 'Midfielder':
-          minPlayers = 3;
-          break;
-        case 'Forward':
-          minPlayers = 1;
-          break;
-        default:
-          minPlayers = 0;
-      }
-      const currentCount = currentTeamPositions.filter(pos => pos === position).length;
-      
-      console.log("currentCount")
-      console.log(position)
-      console.log(currentCount)
-      if (currentCount < minPlayers) {
-        positionsToFill.push(...Array(minPlayers - currentCount).fill(position));
-      }
-    });
-    
-    while (positionsToFill.length < 11 - Object.keys(fantasyTeam.players).length) {
-      let openPositions = teamPositions.filter(position => 
-        (positionsToFill.filter(pos => pos === position).length + currentTeamPositions.filter(pos => pos === position).length)
-        < maxPlayersPerPosition[position]
-      );
-        
-      if (openPositions.length === 0) {
-        break;
-      }
-    
-      let randomPosition = openPositions[Math.floor(Math.random() * openPositions.length)];
-    
-      positionsToFill.push(randomPosition);
-
-      if (fantasyTeam.positionToFill === randomPosition) {
-        setFantasyTeam(prevState => ({
-          ...prevState,
-          positionToFill: null,
-        }));
-      }
-    }
-    
-    let sortedPlayers = [...players].sort((a, b) => Number(b.value) - Number(a.value));
-    sortedPlayers = shuffle(sortedPlayers);
-    console.log(sortedPlayers)
-    let newTeam = [...fantasyTeam.players].filter(Boolean);
-    console.log(newTeam)
-   
-    let remainingBudget = fantasyTeam.bankBalance;
-    let filledPositions = [];
-    let teamCount = {};
-
-    for (let i = 0; i < positionsToFill.length; i++) {
-      if (Object.values(newTeam).filter(x => x != undefined).length >= 11) {
-        break;
-      }
-      let position = positionsToFill[i];
-      const positionMapping = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
-
-      for (let j = 0; j < sortedPlayers.length; j++) {
-        let player = sortedPlayers[j];
-        if (!player) continue;
-        
-        if (teamCount[player.teamId] && teamCount[player.teamId] >= 2) {
-          continue;
-        }
-
-        if (positionMapping[player.position] === position &&
-            (Number(player.value) * 4) <= remainingBudget &&
-            !newTeam.some((teamPlayer) => teamPlayer && teamPlayer.id === player.id)
-        ) {
-          newTeam.push(player);
-          teamCount[player.teamId] = (teamCount[player.teamId] || 0) + 1; 
-          
-          remainingBudget -= Number(player.value) / 4;
-          filledPositions.push(position);
-          break;
-        }
-      }
-    }
-
-    positionsToFill = positionsToFill.filter(pos => !filledPositions.includes(pos));
-
-    newTeam.sort((a, b) => {
-      if (a.position < b.position) {
-        return -1;
-      } else if (a.position > b.position) {
-        return 1;
-      }
-      
-      if (a.position === b.position) {
-        return Number(b.value) - Number(a.value);
-      }
-    
-      return 0;
-    });
-    
-    fantasyTeam.positionsToFill = [];
-    
-    setFantasyTeam(prevState => ({
-      ...prevState,
-      players: newTeam,
-      bankBalance: remainingBudget,
-    }));
-
-    setFormations(newTeam);
+    return array;
   };
+
+  function autofillTeam() {
+    let updatedFantasyTeam = { ...fantasyTeam, players: fantasyTeam.players || {} };
+    let remainingBudget = fantasyTeam.bankBalance;
+    let totalValue = 0;
+  
+    // Count existing players per team
+    const teamCounts = {};
+    Object.values(updatedFantasyTeam.players).forEach((player) => {
+        totalValue += Number(player.value);
+        teamCounts[player.teamId] = (teamCounts[player.teamId] || 0) + 1;
+    });
+  
+    // Create a shuffled list of eligible team IDs
+    let eligibleTeams = Array.from(new Set(players.map((player) => player.teamId)));
+    eligibleTeams.sort(() => Math.random() - 0.5);
+  
+    const [defenders, midfielders, forwards] = formation.split("-").map(Number);
+    const formationArray = [
+        ...Array(defenders).fill(1),
+        ...Array(midfielders).fill(2),
+        ...Array(forwards).fill(3),
+        0,
+    ];
+
+    formationArray.forEach((position, index) => {
+        if (remainingBudget <= 0 || eligibleTeams.length === 0) return;
+  
+        const teamId = eligibleTeams.shift();
+  
+        const availablePlayers = players.filter((player) => (
+            player.position === position &&
+            player.teamId === teamId &&
+            !updatedFantasyTeam.players[`${position}-${index}`] &&
+            !Object.values(updatedFantasyTeam.players).some(p => p.id === player.id)
+        ));
+  
+        availablePlayers.sort((a, b) => Number(a.value) - Number(b.value));
+        const lowerHalf = availablePlayers.slice(0, Math.ceil(availablePlayers.length / 2));
+        const selectedPlayer = lowerHalf[Math.floor(Math.random() * lowerHalf.length)];
+  
+        if (selectedPlayer) {
+            const slot = `${position}-${index}`;
+            updatedFantasyTeam.players[slot] = selectedPlayer;
+            remainingBudget -= Number(selectedPlayer.value) / 4;
+            totalValue += Number(selectedPlayer.value);
+        }
+    });
+  
+    if (remainingBudget >= 0) {
+        updatedFantasyTeam.bankBalance = remainingBudget;
+        setFantasyTeam(updatedFantasyTeam);
+    }
+}
+
+  
+  
+  
+  
+
+
   
   //MOVE TO UTILITIES
   const calculateTeamValue = () => {
@@ -633,25 +566,6 @@ const PickTeam = () => {
     return null;
   }
   
-  //Sometimes a bug so rewrite
-  function shuffle(array) {
-    let currentIndex = array.length, temporaryValue, randomIndex;
-  
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-  
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-  
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-  
-    return array;
-  }
 
   //Move to utilities with homepage countdown  
   const updateCountdowns = async () => {
@@ -1009,7 +923,7 @@ const PickTeam = () => {
                       </Col>
 
                       <Col xs={6} className="float-right-buttons">
-                          <button className='autofill-button' onClick={handleAutoFill} disabled={fantasyTeam.players.filter(x => x).length >= 11}>AutoFill</button>
+                          <button className='autofill-button' onClick={autofillTeam} disabled={fantasyTeam.players.filter(x => x).length >= 11}>AutoFill</button>
                           <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
                       </Col>
                     </Row>
