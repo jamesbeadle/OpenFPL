@@ -284,14 +284,14 @@ $dropdown-link-color: #5A5A5A;
   .add-colon::after {
     content: ":";
     position: absolute;
-    right: -10px; /* adjust as needed */
+    right: 10px; /* adjust as needed */
     top: 50%;
     transform: translateY(-50%);
-}
+  }
 
-.add-colon {
-  position: relative;
-}
+  .add-colon {
+    position: relative;
+  }
 
 @media (max-width: 767.98px) {
   .outer-container {
@@ -1014,4 +1014,66 @@ $dropdown-link-color: #5A5A5A;
   font-size: 10px !important;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+
+
+.pick-team-gameweek-col {
+  flex-basis: 30%;
+}
+
+.pick-team-deadline-col {
+  flex-basis: 40%;
+}
+
+.pick-team-player-count-col {
+  flex-basis: 20%;
+}
+
+.pick-team-value-col {
+  flex-basis: 35%;
+}
+
+.pick-team-bank-col {
+  flex-basis: 35%;
+}
+
+.pick-team-transfers-col {
+  flex-basis: 30%;
+}
+
+.pick-team-divider-1 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 24%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.pick-team-divider-2 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 70%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.pick-team-divider-3 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 32%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.pick-team-divider-4 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 67%;
+  width: 1px;
+  background-color: #37393C;
 }

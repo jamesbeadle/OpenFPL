@@ -786,53 +786,61 @@ const PickTeam = () => {
                           <div className="stat-panel flex-grow-1">
                               
                               <Row className="stat-row-1">
-                                  <Col xs={4}>
-                                      <p style={{paddingLeft: '40px'}} className="stat-header w-100">Gameweek</p>
-                                  </Col>
-                                  <Col xs={4}>
-                                      <p className="stat-header w-100">Deadline</p>
-                                  </Col>
-                                  <Col xs={4}>
-                                      <p className="stat-header w-100">Players Selected</p>
-                                  </Col>
-                              </Row>
+                                <div className='pick-team-gameweek-col'>
+                                  <p style={{paddingLeft: '40px'}} className="stat-header w-100">Gameweek</p>
+                                </div>
+                                <div className='pick-team-deadline-col'>
+                                  <p className="stat-header w-100">Deadline</p>
+                                </div>
+                                <div className='pick-team-player-count-col'>
+                                  <p className="stat-header w-100">Players Selected</p>
+                                </div>
+                             </Row>
                               <Row className="stat-row-2">
-                                  <Col xs={4}>
-                                      <p style={{paddingLeft: '40px'}} className="stat">{currentGameweek}</p>
-                                  </Col>
-                                  <Col xs={4}>
-                                    <Row>
-                                      <Col xs={4} className="add-colon">
-                                          <p className="stat w-100 text-center">{String(days).padStart(2, '0')}</p>
-                                      </Col>
-                                      <Col xs={4} className="add-colon">
-                                          <p className="stat w-100 text-center">{String(hours).padStart(2, '0')}</p>
-                                      </Col>
-                                      <Col xs={4}>
-                                          <p className="stat w-100 text-center">{String(minutes).padStart(2, '0')}</p>
-                                      </Col>
-                                    </Row>
-                                  </Col>
-                                  <Col xs={4}>
-                                      <p className="stat">{Object.keys(fantasyTeam.players).length}/11</p>
-                                  </Col>
+                                <div className='pick-team-gameweek-col'>
+                                  <p style={{paddingLeft: '40px'}} className="stat">{currentGameweek}</p>
+                                </div>
+                                <div className='pick-team-deadline-col'>
+                                  <Row>
+                                    <Col xs={4} className="add-colon">
+                                        <p className="stat">{String(days).padStart(2, '0')}</p>
+                                    </Col>
+                                    <Col xs={4} className="add-colon">
+                                        <p className="stat">{String(hours).padStart(2, '0')}</p>
+                                    </Col>
+                                    <Col xs={4}>
+                                        <p className="stat">{String(minutes).padStart(2, '0')}</p>
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className='pick-team-player-count-col'>
+                                  <p className="stat">{Object.keys(fantasyTeam.players).length}/11</p>
+                                </div>
                               </Row>
                               <Row className="stat-row-3">
-                                  <Col xs={4}>
-                                      <p style={{paddingLeft: '40px'}} className="stat-header">{currentSeason.name}</p>   
-                                  </Col>
-                                  <Col xs={4}>
-                                      <p className="stat-header">
-                                        {fixtures.find(x => x.gameweek == currentGameweek).kickOff}  
-                                      </p>    
-                                  </Col>
-                                  <Col xs={4}>
-                                      <p className="stat-header">Total</p>   
-                                  </Col>
+                                <div className='pick-team-gameweek-col'>
+                                  <p style={{paddingLeft: '40px'}}  className="stat-header">Total</p> 
+                                </div>
+                                <div className='pick-team-deadline-col'>
+                                  <Row>
+                                    <Col xs={4}>
+                                        <p className="stat-header w-100">Day</p> 
+                                    </Col>
+                                    <Col xs={4}>
+                                        <p className="stat-header  w-100">Hour</p>   
+                                    </Col>
+                                    <Col xs={4}>
+                                        <p className="stat-header w-100">Min</p>    
+                                    </Col>
+                                  </Row>
+                                </div>
+                                <div className='pick-team-player-count-col'>
+                                  <p className="stat-header">Total</p> 
+                                </div>
                               </Row>
                           </div>
-                          <div className="d-none d-md-block vertical-divider-4"></div>
-                          <div className="d-none d-md-block vertical-divider-5"></div>
+                          <div className="d-none d-md-block pick-team-divider-1"></div>
+                          <div className="d-none d-md-block pick-team-divider-2"></div>
                       </div>
                   </Card>
               </Col>
@@ -841,48 +849,47 @@ const PickTeam = () => {
                   <Card className='mb-3'>
                       <div className="outer-container d-flex">
                           <div className="stat-panel flex-grow-1">
-                              
                               <Row className="stat-row-1">
-                                  <Col xs={4}>
-                                      <p style={{paddingLeft: '40px'}} className="stat-header w-100">Team Value</p>
-                                  </Col>
-                                  <Col xs={5}>
-                                      <p className="stat-header w-100">Bank Balance</p>
-                                  </Col>
-                                  <Col xs={3}>
-                                      <p className="stat-header w-100">Transfers</p>
-                                  </Col>
+                                <div className='pick-team-value-col'>
+                                  <p style={{paddingLeft: '40px'}} className="stat-header w-100">Team Value</p>
+                                </div>
+                                <div className='pick-team-bank-col'>
+                                  <p className="stat-header w-100">Bank Balance</p>
+                                </div>
+                                <div className='pick-team-transfers-col'>
+                                  <p className="stat-header w-100">Transfers</p>
+                                </div>
                               </Row>
                               <Row className="stat-row-2">
-                                  <Col xs={4}>
-                                      <p style={{paddingLeft: '40px'}} className="stat">£{calculateTeamValue()}m</p>
-                                  </Col>
-                                  <Col xs={5}>
-                                      <p className="stat">£{(fantasyTeam.bankBalance).toFixed(2)}m</p>
-                                  </Col>
-                                  <Col xs={3}>
-                                      <p className="stat">
-                                        {
-                                          (newTeam) ? 
-                                            '-' : 
-                                          (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
-                                        }</p>
-                                  </Col>
+                                <div className='pick-team-value-col'>
+                                  <p style={{paddingLeft: '40px'}} className="stat">£{calculateTeamValue()}m</p>
+                                </div>
+                                <div className='pick-team-bank-col'>
+                                  <p className="stat">£{(fantasyTeam.bankBalance).toFixed(2)}m</p>
+                                </div>
+                                <div className='pick-team-transfers-col'>
+                                  <p className="stat">
+                                    {
+                                      (newTeam) ? 
+                                        '-' : 
+                                      (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
+                                    }</p>
+                                </div>
                               </Row>
                               <Row className="stat-row-3">
-                                  <Col xs={4}>
-                                      <p style={{paddingLeft: '40px'}} className="stat-header">GBP</p>   
-                                  </Col>
-                                  <Col xs={5}>
-                                      <p className="stat-header">GBP</p>    
-                                  </Col>
-                                  <Col xs={3}>
-                                      <p className="stat-header">Available</p>   
-                                  </Col>
+                                <div className='pick-team-value-col'>
+                                  <p style={{paddingLeft: '40px'}} className="stat-header">GBP</p>   
+                                </div>
+                                <div className='pick-team-bank-col'>
+                                  <p className="stat-header">GBP</p>    
+                                </div>
+                                <div className='pick-team-transfers-col'>
+                                  <p className="stat-header">Available</p>   
+                                </div>
                               </Row>
                           </div>
-                          <div className="d-none d-md-block vertical-divider-1"></div>
-                          <div className="d-none d-md-block vertical-divider-2"></div>
+                          <div className="d-none d-md-block pick-team-divider-3"></div>
+                          <div className="d-none d-md-block pick-team-divider-4"></div>
                       </div>
                   </Card>
               </Col>

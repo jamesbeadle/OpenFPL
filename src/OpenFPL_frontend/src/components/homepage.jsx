@@ -160,8 +160,7 @@ const Homepage = () => {
                                             </Col>
                                         </Row>
                                         <Row className="stat-row-3">
-                                            
-                                        <Col xs={12}>
+                                            <Col xs={12}>
                                                 <Row>
                                                     <Col xs={4}>
                                                         <p className="stat-header text-center w-100">Day</p> 
