@@ -438,8 +438,7 @@ $dropdown-link-color: #5A5A5A;
   align-items: center;
   height: 80px;
   border-bottom: #454B56 1px solid !important;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding-left: 32px;
   margin-top: 16px;
 }
 
@@ -1228,18 +1227,63 @@ $dropdown-link-color: #5A5A5A;
   border-bottom: 1px solid #454B56;
 }
 
-.gw-points-position-col{}
-.gw-points-name-col{}
-.gw-points-club-col{}
-.gw-points-appearances-col{}
-.gw-points-highest-scoring-col{}
-.gw-points-goals-col{}
-.gw-points-assists-col{}
-.gw-points-pen-saves-col{}
-.gw-points-clean-sheets-col{}
-.gw-points-saves-col{}
-.gw-points-yellow-cards-col{}
-.gw-points-own-goals-col{}
-.gw-points-goals-conceded-col{}
-.gw-points-missed-pen-col{}
-.gw-points-red-card-col{}
+.gw-points-position-col{
+  flex-basis: 5%;
+}
+.gw-points-name-col{
+  flex-basis: 10%;
+}
+.gw-points-club-col{
+  flex-basis: 20%;
+}
+.gw-points-appearances-col{
+  flex-basis: 5%;
+}
+.gw-points-highest-scoring-col{
+  flex-basis: 5%;
+}
+.gw-points-goals-col{
+  flex-basis: 5%;
+}
+.gw-points-assists-col{
+  flex-basis: 5%;
+}
+.gw-points-pen-saves-col{
+  flex-basis: 5%;
+}
+.gw-points-clean-sheets-col{
+  flex-basis: 5%;
+}
+.gw-points-saves-col{
+  flex-basis: 5%;
+}
+.gw-points-yellow-cards-col{
+  flex-basis: 5%;
+}
+.gw-points-own-goals-col{
+  flex-basis: 5%;
+}
+.gw-points-goals-conceded-col{
+  flex-basis: 5%;
+}
+.gw-points-missed-pen-col{
+  flex-basis: 5%;
+}
+.gw-points-red-card-col{
+  flex-basis: 5%;
+}
+
+.gw-table-header{
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gw-table-col{
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.gw-bonus-image{
+  width: 28px;
+  height: 28px;
+}
