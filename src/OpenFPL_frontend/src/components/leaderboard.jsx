@@ -9,7 +9,7 @@ const Leaderboard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [managers, setManagers] = useState(weeklyLeaderboard);
     const [currentPage, setCurrentPage] = useState(1);
-    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason.id);
+    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
     const [currentLeaderboard, setCurrentLeaderboard] = useState('Weekly');
     const itemsPerPage = 25;
@@ -263,9 +263,11 @@ const Leaderboard = () => {
             {managers.entries && managers.entries.map(manager => (
                 <Row key={manager.principalId} style={{ overflowX: 'auto' }}>
                     <Col xs={12}>
-                        <div className="leaderboard-pos-col gw-table-col">{manager.positionText}</div>
-                        <div className="leaderboard-name-col gw-table-col">{manager.principalId == manager.username ? 'Unknown' : manager.username}</div>
-                        <div className="leaderboard-points-col gw-table-col">{manager.points}</div>
+                        <div className="table-row">  
+                            <div className="leaderboard-pos-col gw-table-col">{manager.positionText}</div>
+                            <div className="leaderboard-name-col gw-table-col">{manager.principalId == manager.username ? 'Unknown' : manager.username}</div>
+                            <div className="leaderboard-points-col gw-table-col">{manager.points}</div>
+                        </div>
                     </Col>
                 </Row>
             ))    
