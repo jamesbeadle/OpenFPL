@@ -8,6 +8,7 @@ import { computeTimeLeft } from './helpers';
 import Fixtures from './fixtures';
 import GameweekPoints from './gameweek-points';
 import LeagueTable from './league-table';
+import Leaderboard from './leaderboard';
 
 const Homepage = () => {
 
@@ -242,6 +243,7 @@ const Homepage = () => {
                                         {activeKey === 'gameweek-points' && <GameweekPoints />}
                                     </Tab>
                                     <Tab eventKey="leaderboards" title="Leaderboards">
+                                        {activeKey === 'leaderboards' && <Leaderboard />}
                                     </Tab>
                                     <Tab eventKey="league-table" title="League Table">
                                         {activeKey === 'league-table' && <LeagueTable />}

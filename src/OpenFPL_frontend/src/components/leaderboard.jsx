@@ -251,53 +251,24 @@ const Leaderboard = () => {
               <Row style={{ overflowX: 'auto' }}>
                   <Col xs={12}>
                       <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
-                          <div className="league-position-col gw-table-header">Pos</div>
-                          <div className="league-team-col gw-table-header">Team</div>
-                          <div className="league-played-col gw-table-header">P</div>
-                          <div className="league-won-col gw-table-header">W</div>
-                          <div className="league-drawn-col gw-table-header">D</div>
-                          <div className="league-lost-col gw-table-header">L</div>
-                          <div className="league-goals-col gw-table-header">GF</div>
-                          <div className="league-conceded-col gw-table-header">GA</div>
-                          <div className="league-goal-difference-col gw-table-header">GD</div>
-                          <div className="league-points-col gw-table-header">PTS</div>
+                          <div className="leaderboard-pos-col gw-table-header">Pos</div>
+                          <div className="leaderboard-name-col gw-table-header">Manager</div>
+                          <div className="leaderboard-points-col gw-table-header">PTS</div>
                       </div>
                   </Col>  
               </Row>
 
 
               
-            {tableData.map((team, idx) => {
-                const club = getTeamById(teams, team.teamId);
-
-                return (
-                <Row key={`id-${idx}`} style={{ overflowX: 'auto' }}>
+            {managers.entries && managers.entries.map(manager => (
+                <Row key={manager.principalId} style={{ overflowX: 'auto' }}>
                     <Col xs={12}>
-                        <div className="table-row">             
-                            <div className="league-position-col gw-table-col">{idx + 1}</div>
-                                <div className="league-team-col gw-table-col">
-                                    <BadgeIcon
-                                        primary={club.primaryColourHex}
-                                        secondary={club.secondaryColourHex}
-                                        third={club.thirdColourHex}
-                                        width={48}
-                                        height={48}
-                                        marginRight={16}
-                                        />
-                                        {club.friendlyName}
-                          </div>
-                          <div className="league-played-col gw-table-col">{team.played}</div>
-                          <div className="league-won-col gw-table-col">{team.wins}</div>
-                          <div className="league-drawn-col gw-table-col">{team.draws}</div>
-                          <div className="league-lost-col gw-table-col">{team.losses}</div>
-                          <div className="league-goals-col gw-table-col">{team.goalsFor}</div>
-                          <div className="league-conceded-col gw-table-col">{team.goalsAgainst}</div>
-                          <div className="league-goal-difference-col gw-table-col">{team.goalsFor - team.goalsAgainst}</div>
-                          <div className="league-points-col gw-table-col">{team.points}</div>
-           
-                        </div>
+                        <div className="leaderboard-pos-col gw-table-col">{manager.positionText}</div>
+                        <div className="leaderboard-name-col gw-table-col">{manager.principalId == manager.username ? 'Unknown' : manager.username}</div>
+                        <div className="leaderboard-points-col gw-table-col">{manager.points}</div>
                     </Col>
-                </Row>)})    
+                </Row>
+            ))    
             }
               
 
