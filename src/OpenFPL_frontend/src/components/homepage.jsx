@@ -6,6 +6,7 @@ import { DataContext } from "../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { computeTimeLeft } from './helpers';
 import Fixtures from './fixtures';
+import GameweekPoints from './gameweek-points';
 
 const Homepage = () => {
 
@@ -237,6 +238,7 @@ const Homepage = () => {
                                         {activeKey === 'fixtures' && <Fixtures />}
                                     </Tab>
                                     <Tab eventKey="gameweek-points" title="Gameweek Points">
+                                        {activeKey === 'gameweek-points' && <GameweekPoints />}
                                     </Tab>
                                     <Tab eventKey="leaderboards" title="Leaderboards">
                                     </Tab>

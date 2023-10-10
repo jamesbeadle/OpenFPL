@@ -254,6 +254,7 @@ export interface _SERVICE {
     [FixtureId, Array<PlayerEventData>],
     undefined
   >,
+  'setGameweekFixtures' : ActorMethod<[], undefined>,
   'setupDevData' : ActorMethod<[], undefined>,
   'triggerGameCompleted' : ActorMethod<[], undefined>,
   'updateDisplayName' : ActorMethod<[string], Result>,

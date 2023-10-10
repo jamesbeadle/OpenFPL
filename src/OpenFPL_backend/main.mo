@@ -1440,9 +1440,10 @@ actor Self {
 
   /* Remove these functions post-sns */
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, allPlayerEvents: [T.PlayerEventData]) : async (){
-    
+    Debug.print("Saving events");
     assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB LIVE
+    //assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB LIVE
+    assert Principal.toText(caller) == "5mizu-xuphz-aex5b-ovid6-oqt34-jdb5k-fn5hr-ip7iu-ghgz4-jilrl-bqe"; //JB Local 2
     //assert Principal.toText(caller) == "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"; JB LOCAL
 
     let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
@@ -1450,6 +1451,7 @@ actor Self {
     if(not validPlayerEvents){
       return;
     };
+    Debug.print("valid events");
 
     let activeSeasonId = seasonManager.getActiveSeasonId();
     let activeGameweek = seasonManager.getActiveGameweek();
@@ -1458,6 +1460,7 @@ actor Self {
     if(fixture.status != 2){
       return;
     };
+    Debug.print("Correct Status events");
 
     let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(allPlayerEvents);
 
@@ -1526,7 +1529,7 @@ actor Self {
 
     let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
     let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
-
+    Debug.print("Checking");
     if(totalHomeScored == 0){
       //add away team clean sheets
       for(playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))){
@@ -1614,7 +1617,8 @@ actor Self {
         };
       };
     };
-
+    Debug.print("Finalise");
+    Debug.print(debug_show Buffer.toArray(allPlayerEventsBuffer));
     await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
   };
 
@@ -2115,7 +2119,7 @@ actor Self {
                 { id = 10; seasonId = 1; gameweek = 1; kickOff = 1696016700000000000; homeTeamId = 14; awayTeamId = 20; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0; }
       ], 381, 2);
   
-
+    await seasonManager.setGameweekFixtures();
     await reuploadTeams();  
   };
 
@@ -2129,6 +2133,10 @@ actor Self {
 
   public func triggerGameCompleted() : async (){
     await seasonManager.gameCompleted();
+  };
+
+  public func setGameweekFixtures() : async (){
+    await seasonManager.setGameweekFixtures();
   };
   
 };

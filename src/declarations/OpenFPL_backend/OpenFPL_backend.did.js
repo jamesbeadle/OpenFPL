@@ -313,6 +313,7 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'setGameweekFixtures' : IDL.Func([], [], []),
     'setupDevData' : IDL.Func([], [], []),
     'triggerGameCompleted' : IDL.Func([], [], []),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
