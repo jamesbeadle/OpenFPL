@@ -588,9 +588,9 @@ const PickTeam = () => {
             timeLeft.minutes * 60 * 1000 + 
             timeLeft.seconds * 1000;
         
-        const d = -Math.floor(timeLeftInMillis / (1000 * 60 * 60 * 24));
-        const h = -Math.floor((timeLeftInMillis % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = -Math.floor((timeLeftInMillis % (1000 * 60 * 60)) / (1000 * 60));
+        const d = Math.floor(timeLeftInMillis / (1000 * 60 * 60 * 24));
+        const h = Math.floor((timeLeftInMillis % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((timeLeftInMillis % (1000 * 60 * 60)) / (1000 * 60));
 
         setDays(d);
         setHours(h);

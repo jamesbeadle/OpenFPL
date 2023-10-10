@@ -209,35 +209,39 @@ const Profile = () => {
                                 </div>
                                 <div className='profile-details-col'>
                                   <div className='profile-detail-row-1'>
-                                    <div className='profile-display-name-col'>
-                                      <Row className="stat-row-1">
-                                          <p className="stat-header w-100">Display Name</p>
-                                      </Row>
-                                      <Row className="stat-row-2">
+                                    <Row className="stat-row-1">
+                                      <div className='profile-display-name-col'>
+                                        <p className="stat-header w-100">Display Name</p>
+                                      </div>
+                                      <div className='profile-favourite-team-col'>
+                                        <p className="stat-header w-100">Favourite Team</p>
+                                      </div>
+                                    </Row>
+                                    <Row className="stat-row-2">
+                                      <div className='profile-display-name-col'>  
                                         <p className="stat">{viewData.displayName == viewData.principalName ? 'Not Set' : viewData.displayName}</p>
-                                        <Button className="btn btn-sm ml-3" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
-                                      </Row>   
-                                    </div>
-                                    <div className='profile-favourite-team-col'>
-                                      <Row className="stat-row-1">
-                                        <p>Favourite Team</p>
-                                      </Row>
-                                      <Row className="stat-row-2">
+                                      </div>
+                                      <div className='profile-favourite-team-col' style={{ display: 'flex', alignItems: 'center' }}>
                                         <Form.Group controlId="favouriteTeam">
-                                            <Form.Control className="stat-header" as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange} disabled={!viewData.canUpdateFavouriteTeam}>
-                                                <option value="">Select Favourite Team</option>
-                                                  {teams.map((team) => (
-                                                  <option key={team.id} value={team.id}>
-                                                      {team.name}
-                                                  </option>
-                                                  ))}
-                                            </Form.Control>
-                                          </Form.Group>
-                                      </Row> 
-                                      <Row className="stat-row-3">
-                                        <Button as={Link} to={`/club-leaderboard/${favouriteTeam}`}>View Club Leaderboard</Button>
-                                      </Row>
-                                    </div>
+                                          <Form.Control className="stat" as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange} disabled={!viewData.canUpdateFavouriteTeam}>
+                                            <option value="">Select Favourite Team</option>
+                                              {teams.map((team) => (
+                                              <option key={team.id} value={team.id}>
+                                                  {team.name}
+                                              </option>
+                                            ))}
+                                          </Form.Control>
+                                        </Form.Group>
+                                      </div>
+                                    </Row>
+                                    <Row className="stat-row-2">
+                                      <div className='profile-display-name-col'>  
+                                        <Button className="fpl-large-btn" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
+                                      </div>
+                                      <div className='profile-favourite-team-col'>
+                                        <Button className="fpl-large-btn" as={Link} to={`/club-leaderboard/${favouriteTeam}`}>View Club Leaderboard</Button>
+                                      </div>
+                                    </Row>
                                   </div>
                                   <div className='profile-detail-row-2'>
                                     <p className='w-100'><b>Joined </b>{joinedDate}</p>
@@ -246,7 +250,7 @@ const Profile = () => {
                                 </div>
                               </div>
                               <div className='coins-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                  <div className='coin-col-1'>
+                                  <div className='coin-col-1 coin-col'>
                                     <div className='coin-icon-col'>
                                       <img src={ICPCoin} alt="sponsor1" className='coin-icon' />
                                     </div>
@@ -255,7 +259,7 @@ const Profile = () => {
                                       <p>0.00 ICP</p>
                                     </div>
                                   </div>
-                                  <div className='coin-col-2'>
+                                  <div className='coin-col-2 coin-col'>
                                     <div className='coin-icon-col'>
                                       <img src={FPLCoin} alt="sponsor1" className='coin-icon' />
                                     </div>
@@ -264,7 +268,7 @@ const Profile = () => {
                                       <p>0.00 FPL</p>
                                     </div>
                                   </div>
-                                  <div className='coin-col-3'>
+                                  <div className='coin-col-3 coin-col'>
                                     <div className='coin-icon-col'>
                                       <img src={ckBTCCoin} alt="sponsor1" className='coin-icon' />
                                     </div>
@@ -273,7 +277,7 @@ const Profile = () => {
                                       <p>0.00 ckBTC</p>
                                     </div>
                                   </div>
-                                  <div className='coin-col-4'>
+                                  <div className='coin-col-4 coin-col'>
                                     <div className='coin-icon-col'>
                                       <img src={ckETHCoin} alt="sponsor1" className='coin-icon' />
                                     </div>

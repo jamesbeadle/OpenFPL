@@ -343,6 +343,13 @@ $dropdown-link-color: #5A5A5A;
   color: black !important;
 };
 
+.fpl-large-btn{
+  background-color: #2CE3A6 !important;
+  border: none !important;
+  border-radius: 2px !important;
+  color: black !important;
+};
+
 .light-background{
   background-color: #2E323A !important; 
 }
@@ -1133,7 +1140,6 @@ $dropdown-link-color: #5A5A5A;
 .profile-detail-row-1{
   height: 168px;
   padding-left: 32px;
-  display:flex;
 }
 
 .profile-detail-row-2{
@@ -1161,3 +1167,35 @@ $dropdown-link-color: #5A5A5A;
   border-radius: 8px;
 }
 
+.coin-icon{
+  width: 56px;
+  height: 56px;
+}
+
+.coin-icon-col{
+  width: 265.3px;
+  height: 104px;
+}
+
+.coin-name-col{
+  flex-basis: 1;
+}
+
+.coin-col{
+  display: flex;
+  border-radius: 8px;
+  border: 1px solid #454B56;
+  margin-right: 40px;
+}
+
+.coin-col > :first-child {
+  margin-left: 0;
+}
+.coin-col > :last-child {
+  margin-right: 0;
+}
+
+.coins-row{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
