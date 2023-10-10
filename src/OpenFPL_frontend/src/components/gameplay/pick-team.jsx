@@ -136,7 +136,7 @@ const PickTeam = () => {
 
   
   useEffect(() => {
-    const timer = setInterval(updateCountdowns, 1000);
+    const timer = setInterval(updateCountdowns, 1000 * 60);
     return () => clearInterval(timer);    
 }, []);
 

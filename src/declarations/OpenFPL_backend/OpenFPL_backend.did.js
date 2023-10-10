@@ -313,8 +313,11 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'setupDevData' : IDL.Func([], [], []),
+    'triggerGameCompleted' : IDL.Func([], [], []),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
+    'updateFixtureStatus' : IDL.Func([FixtureId, IDL.Nat8], [], ['oneway']),
     'updateProfilePicture' : IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
     'validateAddInitialFixtures' : IDL.Func(
         [SeasonId, IDL.Vec(Fixture)],

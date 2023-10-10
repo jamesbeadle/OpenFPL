@@ -51,7 +51,7 @@ const Homepage = () => {
         };
 
         fetchManagerCount();
-        const timer = setInterval(updateCountdowns, 1000);
+        const timer = setInterval(updateCountdowns, 1000 * 60);
         return () => clearInterval(timer);    
     }, []);
 
@@ -62,7 +62,6 @@ const Homepage = () => {
         const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
         setNextFixtureHomeTeam(teams.find(x => x.id == fixture.homeTeamId));
         setNextFixtureAwayTeam(teams.find(x => x.id == fixture.awayTeamId));
-
         if (fixture) {
             const timeLeft = computeTimeLeft(Number(fixture.kickOff));
             const timeLeftInMillis = 
