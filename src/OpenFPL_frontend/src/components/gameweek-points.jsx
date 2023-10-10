@@ -16,6 +16,7 @@ import SafeHands from "../../assets/safe-hands.png";
 import CaptainFantastic from "../../assets/captain-fantastic.png";
 import BraceBonus from "../../assets/brace-bonus.png";
 import HatTrickHero from "../../assets/hat-trick-hero.png";
+import PlayerPointsModal from './modals/player-points-modal';
 
 const GameweekPoints = () => {
     const { authClient, userPrincipal } = useContext(AuthContext);
@@ -35,6 +36,11 @@ const GameweekPoints = () => {
     const [sortedPlayers, setSortedPlayers] = useState([]);
     const positionCodes = ['GK', 'DF', 'MF', 'FW'];
     
+    const [selectedPlayer, setSelectedPlayer] = useState(null);
+    const [selectedPlayerDTO, setSelectedPlayerDTO] = useState(null);
+    const [selectedPlayerCaptain, setSelectedPlayerCaptain] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
     const handleGameweekBlur = (e) => {
         const currentTarget = e.currentTarget;
         if (!currentTarget.contains(document.activeElement)) {
@@ -50,6 +56,18 @@ const GameweekPoints = () => {
         }
         }, 0);
     };
+
+    const handleShowModal = (player, playerDTO, isCaptain) => {
+      setSelectedPlayer(player);
+      setSelectedPlayerDTO(playerDTO);
+      setSelectedPlayerCaptain(isCaptain);
+      setShowModal(true);
+    }
+    
+    const handleCloseModal = () => {
+        setSelectedPlayer(null);
+        setShowModal(false);
+    }
     
     useEffect(() => {
         const fetchData = async () => {
@@ -426,6 +444,42 @@ const GameweekPoints = () => {
     }, 0);
   };
   
+  const getBonusId = () => {
+    if(fantasyTeam.goalGetterGameweek === currentGameweek && 
+      fantasyTeam.goalGetterPlayerId === selectedPlayer.id){
+        return 1;
+      };
+    if(fantasyTeam.passMasterGameweek == currentGameweek && 
+      fantasyTeam.passMasterPlayerId == selectedPlayer.id){
+        return 2;
+      };
+    if(fantasyTeam.noEntryGameweek == currentGameweek && 
+      fantasyTeam.noEntryPlayerId == selectedPlayer.id){
+        return 3;
+      };
+    if(fantasyTeam.safeHandsGameweek == currentGameweek && 
+      selectedPlayer.position === 0 && 
+      selectedPlayerDTO.gameweekData.saves >= 5){
+        return 4;
+    };
+    if(fantasyTeam.captainFantasticGameweek == currentGameweek && 
+      fantasyTeam.captainId == selectedPlayer.id && 
+      selectedPlayerDTO.gameweekData.goals > 0){
+        return 5;
+    }
+    if(fantasyTeam.braceBonusGameweek == currentGameweek && 
+      selectedPlayerDTO.gameweekData.goals >= 2){
+        return 6;
+    };
+    if(fantasyTeam.hatTrickHeroGameweek == currentGameweek && 
+      selectedPlayerDTO.gameweekData.goals >= 3){
+        return 7;
+    } 
+    if(fantasyTeam.teamBoostGameweek == currentGameweek && 
+      fantasyTeam.teamBoostTeamId == selectedPlayer.teamId){
+        return 8;
+    }                         
+  }
   
   return (
       <>
@@ -551,7 +605,7 @@ const GameweekPoints = () => {
                     return null;
                 }
                     return (
-                      <Row style={{ overflowX: 'auto' }}>
+                      <Row onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)} style={{ overflowX: 'auto' }}>
                         <Col xs={12}>
                         <div className="table-row" key={player.id}>
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
@@ -600,7 +654,8 @@ const GameweekPoints = () => {
                 
 
                 </Container>
-
+                {selectedPlayer && selectedPlayerDTO && <PlayerPointsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} gameweek={currentGameweek} teams={teams} isCaptain={selectedPlayerCaptain} bonusId={getBonusId()} />}
+    
             </Row>
           </div>
       }
