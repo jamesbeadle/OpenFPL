@@ -3,16 +3,15 @@ import { Form, Spinner, Container, Card, Row, Col } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { DataContext } from "../contexts/DataContext";
 
-const LeagueTable = ({ columns }) => {
+const LeagueTable = () => {
     const { teams, seasons, fixtures, systemState } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
     const [selectedGameweek, setSelectedGameweek] = useState(systemState.activeGameweek);
     const [tableData, setTableData] = useState([]);
-    const defaultColumns = [
+    const activeColumns = [
         'Pos', 'Team', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'
     ];
-    const activeColumns = columns || defaultColumns;
     
     useEffect(() => {
         if(fixtures.length == 0){

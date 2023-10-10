@@ -7,6 +7,7 @@ import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenF
 import { computeTimeLeft } from './helpers';
 import Fixtures from './fixtures';
 import GameweekPoints from './gameweek-points';
+import LeagueTable from './league-table';
 
 const Homepage = () => {
 
@@ -243,6 +244,7 @@ const Homepage = () => {
                                     <Tab eventKey="leaderboards" title="Leaderboards">
                                     </Tab>
                                     <Tab eventKey="league-table" title="League Table">
+                                        {activeKey === 'league-table' && <LeagueTable />}
                                     </Tab>
                                 </Tabs>
                             </div>
