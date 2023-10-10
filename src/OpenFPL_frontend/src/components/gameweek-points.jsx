@@ -481,7 +481,7 @@ const GameweekPoints = () => {
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
                       <Dropdown show={showSeasonDropdown}>
-                        <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                        <Dropdown.Toggle as={CustomToggle} id="season-selector">
                           <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
                         </Dropdown.Toggle>
                         <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>

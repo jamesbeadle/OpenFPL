@@ -4,16 +4,22 @@ import { BadgeIcon, ArrowLeft, ArrowRight } from './icons';
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById } from './helpers';
 
-const LeagueTable = () => {
-    const { teams, seasons, fixtures, systemState } = useContext(DataContext);
+const Leaderboard = () => {
+    const { seasons, systemState, weeklyLeaderboard, seasonLeaderboard, monthlyLeaderboards } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
+    const [managers, setManagers] = useState(weeklyLeaderboard);
+    const [currentPage, setCurrentPage] = useState(1);
     const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason.id);
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
-    const [tableData, setTableData] = useState([]);
+    const [currentLeaderboard, setCurrentLeaderboard] = useState('Weekly');
+    const itemsPerPage = 25;
+    
     const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
     const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
+    const [showLeaderboardDropdown, setShowLeaderboardDropdown] = useState(false);
     const gameweekDropdownRef = useRef(null);
     const seasonDropdownRef = useRef(null);
+    const leaderboardDropdownRef = useRef(null);
     
     const handleGameweekBlur = (e) => {
         const currentTarget = e.currentTarget;
@@ -31,83 +37,99 @@ const LeagueTable = () => {
         }, 0);
     };
     
+    const handleLeaderboardTypeBlur = (e) => {
+        const currentTarget = e.currentTarget;
+        setTimeout(() => {
+        if (!currentTarget.contains(document.activeElement)) {
+            setShowLeaderboardDropdown(false);
+        }
+        }, 0);
+    };
+    
     useEffect(() => {
-        if(fixtures.length == 0){
-            return;
-        }
-        updateTableData();
-    }, [currentSeason, currentGameweek, fixtures]);
-
-    const updateTableData = () => {
-        setIsLoading(true);
-        const initTeamData = (teamId, table) => {
-            if (!table[teamId]) {
-                table[teamId] = {
-                    teamId,
-                    played: 0,
-                    wins: 0,
-                    draws: 0,
-                    losses: 0,
-                    goalsFor: 0,
-                    goalsAgainst: 0,
-                    points: 0
-                };
-            }
+        const fetchData = async () => {
+            setIsLoading(true);
+            await fetchViewData(currentSeason, currentGameweek, currentLeaderboard);
+            setIsLoading(false);
         };
-    
-        let tempTable = {};
         
-        const relevantFixtures = fixtures.filter(fixture => 
-            fixture.status === 3 && fixture.gameweek <= currentGameweek);
-    
-        for (let fixture of relevantFixtures) {
-            initTeamData(fixture.homeTeamId, tempTable);
-            initTeamData(fixture.awayTeamId, tempTable);
-            tempTable[fixture.homeTeamId].id = fixture.homeTeamId;
-            tempTable[fixture.awayTeamId].id = fixture.awayTeamId;
-    
-            tempTable[fixture.homeTeamId].played++;
-            tempTable[fixture.awayTeamId].played++;
-    
-            tempTable[fixture.homeTeamId].goalsFor += fixture.homeGoals;
-            tempTable[fixture.homeTeamId].goalsAgainst += fixture.awayGoals;
-            
-            tempTable[fixture.awayTeamId].goalsFor += fixture.awayGoals;
-            tempTable[fixture.awayTeamId].goalsAgainst += fixture.homeGoals;
-    
-            if (fixture.homeGoals > fixture.awayGoals) {
-                tempTable[fixture.homeTeamId].wins++;
-                tempTable[fixture.homeTeamId].points += 3;
-    
-                tempTable[fixture.awayTeamId].losses++;
-            } else if (fixture.homeGoals === fixture.awayGoals) {
-                tempTable[fixture.homeTeamId].draws++;
-                tempTable[fixture.homeTeamId].points += 1;
-    
-                tempTable[fixture.awayTeamId].draws++;
-                tempTable[fixture.awayTeamId].points += 1;
-            } else {
-                tempTable[fixture.awayTeamId].wins++;
-                tempTable[fixture.awayTeamId].points += 3;
-    
-                tempTable[fixture.homeTeamId].losses++;
-            }
+        fetchData();
+    }, [currentSeason, currentGameweek, currentPage]);
+
+    const fetchViewData = async (season, gameweek, leaderboard, month, club) => {
+
+        switch(leaderboard){
+            case 'Weekly':
+                await getWeeklyLeaderboard(season, gameweek);
+                break;
+            case 'Monthly':
+                await getMonthlyLeaderboard(month, club);
+                break;
+            case 'Season':
+                await getSeasonLeaderboard(season);
+                break;
         }
-    
-        const sortedTableData = Object.values(tempTable).sort((a, b) => {
-            if (b.points !== a.points) return b.points - a.points;
+    };
 
-            const goalDiffA = a.goalsFor - a.goalsAgainst;
-            const goalDiffB = b.goalsFor - b.goalsAgainst;
+    const getWeeklyLeaderboard = async (season, gameweek) => {
+        if(currentPage <= 4 && gameweek == weeklyLeaderboard.gameweek){
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const slicedData = {
+                ...weeklyLeaderboard,
+                entries: weeklyLeaderboard.entries.slice(start, end)
+            };
+            setManagers(slicedData);
+        }
+        else{
+            try{
+                const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
+                setManagers(leaderboardData);
+            } catch (error){
+                console.log(error);
+            };  
+        }
+    };  
 
-            if (goalDiffB !== goalDiffA) return goalDiffB - goalDiffA;
-            if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+    const getMonthlyLeaderboard = async (season, month, club) => {
+        if(currentPage <= 4 && month == systemState.activeMonth){
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const slicedData = {
+                ...monthlyLeaderboards.find(x => x.clubId == selectedClub),
+                entries: monthlyLeaderboards.find(x => x.clubId == selectedClub).entries.slice(start, end)
+            };
+            setManagers(slicedData);
+        }
+        else{
+            try{
+                const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
+                setManagers(leaderboardData);    
+            } catch (error){
+                console.log(error);
+            };  
+        }
+    };
 
-            return a.goalsAgainst - b.goalsAgainst;
-        });
-        
-        setTableData(sortedTableData);
-        setIsLoading(false);
+    const getSeasonLeaderboard = async (season) => {
+        if(currentPage <= 4 && season == systemState.activeSeason.id){
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const slicedData = {
+                ...seasonLeaderboard,
+                entries: seasonLeaderboard.entries.slice(start, end)
+            };
+            setManagers(slicedData);
+        }
+        else{
+            try{
+                const leaderboardData = await open_fpl_backend.getSeasonLeaderboard(Number(season), itemsPerPage, (currentPage - 1) * itemsPerPage);
+                setManagers(leaderboardData);  
+            } catch (error){
+                console.log(error);
+            };  
+            
+        }
     };
 
     return (
@@ -187,6 +209,37 @@ const LeagueTable = () => {
                     style={{ marginLeft: '16px' }} >
                     <ArrowRight />
                   </Button>
+                </div>
+
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div ref={leaderboardDropdownRef} onBlur={handleSeasonBlur}>
+                    <Dropdown show={showLeaderboardDropdown}>
+                      <Dropdown.Toggle as={CustomToggle} id="leaderboard-selector">
+                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openLeaderboardDropdown()}>{currentLeaderboard}</Button>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                          <Dropdown.Item
+                            data-key={0}
+                            className='dropdown-item'
+                            key={0}
+                            onMouseDown={() => {setCurrentLeaderboard('Weekly')}}
+                            >Weekly</Dropdown.Item>
+                        <Dropdown.Item
+                            data-key={0}
+                            className='dropdown-item'
+                            key={0}
+                            onMouseDown={() => {setCurrentLeaderboard('Monthly')}}
+                            >Monthly</Dropdown.Item>
+                        <Dropdown.Item
+                            data-key={0}
+                            className='dropdown-item'
+                            key={0}
+                            onMouseDown={() => {setCurrentLeaderboard('Season')}}
+                            >Season</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
                 </div>
               </div>
             </Col>
@@ -268,4 +321,4 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   </a>
 ));
 
-export default LeagueTable;
+export default Leaderboard;
