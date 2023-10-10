@@ -136,9 +136,10 @@ const PickTeam = () => {
 
   
   useEffect(() => {
+    updateCountdowns();
     const timer = setInterval(updateCountdowns, 1000 * 60);
-    return () => clearInterval(timer);    
-}, []);
+      return () => clearInterval(timer);    
+  }, []);
 
   useEffect(() => {
     if(showListView){
@@ -575,9 +576,10 @@ const PickTeam = () => {
 
   //Move to utilities with homepage countdown  
   const updateCountdowns = async () => {
+    console.log("sortedFixtures")
     const sortedFixtures = fixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
     
-    const currentTime = Date.now();
+    const currentTime = BigInt(Date.now() * 1000000);
     const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
     
     if (fixture) {
@@ -600,7 +602,7 @@ const PickTeam = () => {
         setHours(0);
         setMinutes(0);
     }
-};
+  };
 
   const renderRow = (count, position) => {
     const playersForPosition = Object.values(fantasyTeam.players)

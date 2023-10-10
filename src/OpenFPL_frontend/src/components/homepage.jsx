@@ -57,8 +57,8 @@ const Homepage = () => {
 
     const updateCountdowns = async () => {
         const sortedFixtures = fixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
-        
-        const currentTime = Date.now();
+        const currentTime = BigInt(Date.now() * 1000000);
+
         const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
         setNextFixtureHomeTeam(teams.find(x => x.id == fixture.homeTeamId));
         setNextFixtureAwayTeam(teams.find(x => x.id == fixture.awayTeamId));
