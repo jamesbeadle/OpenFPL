@@ -1287,3 +1287,43 @@ $dropdown-link-color: #5A5A5A;
   width: 28px;
   height: 28px;
 }
+
+.league-position-col{
+  flex-basis: 5%;
+}
+
+.league-team-col{
+  flex-basis: 25%;
+}
+
+.league-played-col{
+  flex-basis: 8.75%;
+}
+
+.league-won-col{
+  flex-basis: 8.75%;
+}
+
+.league-drawn-col{
+  flex-basis: 8.75%;
+}
+
+.league-lost-col{
+  flex-basis: 8.75%;
+}
+
+.league-goals-col{
+  flex-basis: 8.75%;
+}
+
+.league-conceded-col{
+  flex-basis: 8.75%;
+}
+
+.league-goal-difference-col{
+  flex-basis: 8.75%;
+}
+
+.league-points-col{
+  flex-basis: 8.75%;
+}

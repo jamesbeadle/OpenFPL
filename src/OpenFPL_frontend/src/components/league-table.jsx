@@ -1,28 +1,43 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Form, Spinner, Container, Card, Row, Col } from 'react-bootstrap';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Button, Spinner, Container, Row, Col, Dropdown } from 'react-bootstrap';
+import { BadgeIcon, ArrowLeft, ArrowRight } from './icons';
 import { LinkContainer } from 'react-router-bootstrap';
 import { DataContext } from "../contexts/DataContext";
+import { getTeamById } from './helpers';
 
 const LeagueTable = () => {
     const { teams, seasons, fixtures, systemState } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
-    const [selectedGameweek, setSelectedGameweek] = useState(systemState.activeGameweek);
+    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason.id);
+    const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
     const [tableData, setTableData] = useState([]);
-    const activeColumns = [
-        'Pos', 'Team', 'P', 'W', 'D', 'L', 'GF', 'GA', 'GD', 'Pts'
-    ];
+    const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
+    const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
+    const gameweekDropdownRef = useRef(null);
+    const seasonDropdownRef = useRef(null);
+    
+    const handleGameweekBlur = (e) => {
+        const currentTarget = e.currentTarget;
+        if (!currentTarget.contains(document.activeElement)) {
+        setShowGameweekDropdown(false);
+        }
+    };
+    
+    const handleSeasonBlur = (e) => {
+        const currentTarget = e.currentTarget;
+        setTimeout(() => {
+        if (!currentTarget.contains(document.activeElement)) {
+            setShowSeasonDropdown(false);
+        }
+        }, 0);
+    };
     
     useEffect(() => {
         if(fixtures.length == 0){
             return;
         }
         updateTableData();
-    }, [selectedSeason, selectedGameweek, fixtures]);
-
-    const shouldHideColumn = (column) => { 
-        return column === 'W' || column === 'D' || column === 'L' || column === 'GF' || column === 'GA';
-    };
+    }, [currentSeason, currentGameweek, fixtures]);
 
     const updateTableData = () => {
         setIsLoading(true);
@@ -44,7 +59,7 @@ const LeagueTable = () => {
         let tempTable = {};
         
         const relevantFixtures = fixtures.filter(fixture => 
-            fixture.status === 3 && fixture.gameweek <= selectedGameweek);
+            fixture.status === 3 && fixture.gameweek <= currentGameweek);
     
         for (let fixture of relevantFixtures) {
             initTeamData(fixture.homeTeamId, tempTable);
@@ -96,107 +111,162 @@ const LeagueTable = () => {
         setIsLoading(false);
     };
 
-    const getTeamNameFromId = (teamId) => {
-      const team = teams.find(team => team.id === teamId);
-      if(!team){
-        return;
-      }
-      return team.friendlyName;
-    }
-
-    const columnToBootstrapClasses = (column) => {
-        switch (column) {
-            case 'Pos':
-                return 'col-2 col-md-1';
-            case 'Team':
-                return 'col-4 col-md-3';
-            case 'P':
-                return 'col-2 col-md-1';
-            case 'W':
-                return 'col-0 col-md-1';
-            case 'D':
-                return 'col-0 col-md-1';
-            case 'L':
-                return 'col-0 col-md-1';
-            case 'GF':
-                return 'col-0 col-md-1';
-            case 'GA':
-                return 'col-0 col-md-1';
-            case 'GD':
-                return 'col-2 col-md-1';
-            case 'Pts':
-                return 'col-2 col-md-1';
-            default:
-                return 'col';
-        }
-    };
-    
-
     return (
         isLoading ? (
-        <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
+        <div className="d-flex flex-column align-items-center justify-content-center">
             <Spinner animation="border" />
-            <p className='text-center mt-1'>Loading</p>
-        </div>
-        ) 
+            <p className='text-center mt-1'>Loading League Table</p>
+        </div>) 
         :
-        <Container>
-            <Card className='mb-2 mt-4'>
-                <Card.Body>
-                    <Card.Title className='mb-2'>
-                        Premier League Table
-                    </Card.Title>
-                    <Row className='mb-2 mt-2'>
-                        <Col xs={12} md={6} className='mt-2'>
-                            <Form.Group controlId="seasonSelect">
-                                <Form.Label>Select Season</Form.Label>
-                                <Form.Control as="select" value={selectedSeason} onChange={e => {
-                                    setSelectedSeason(Number(e.target.value));
-                                    setSelectedGameweek(1);
-                                }}>
-                                    {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
-                                </Form.Control>
-                            </Form.Group>
-                        </Col>
-                        <Col xs={12} md={6} className='mt-2'>
-                            <Form.Group controlId="gameweekSelect">
-                                <Form.Label>Select Gameweek</Form.Label>
-                                <Form.Control as="select" value={selectedGameweek} onChange={e => setSelectedGameweek(Number(e.target.value))}>
-                                    {Array.from({ length: 38 }, (_, index) => (
-                                        <option key={index + 1} value={index + 1}>Gameweek {index + 1}</option>
-                                    ))}
-                                </Form.Control>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-
-                    <Container>
-                        <Row>
-                            {activeColumns.map(column => (
-                                <Col key={column} className={`${columnToBootstrapClasses(column)} ${shouldHideColumn(column) ? "d-none d-sm-block" : ""}`}>{column}</Col>
-                            ))}
-                        </Row>
-                        {tableData.map((team, idx) => (
-                            <Row key={`id-${idx}`}>
-                                <Col className={`${columnToBootstrapClasses('Pos')} ${shouldHideColumn('Pos') ? "d-none d-sm-block" : ""}`}>{idx + 1}</Col>
-                                <Col className={`${columnToBootstrapClasses('Team')} ${shouldHideColumn('Team') ? "d-none d-sm-block" : ""}`}><LinkContainer to={`/club/${team.id}`}><a className='nav-link-brand'>{getTeamNameFromId(team.teamId)}</a></LinkContainer></Col>
-                                <Col className={`${columnToBootstrapClasses('P')} ${shouldHideColumn('P') ? "d-none d-sm-block" : ""}`}>{team.played}</Col>
-                                <Col className={`${columnToBootstrapClasses('W')} ${shouldHideColumn('W') ? "d-none d-sm-block" : ""}`}>{team.wins}</Col>
-                                <Col className={`${columnToBootstrapClasses('D')} ${shouldHideColumn('D') ? "d-none d-sm-block" : ""}`}>{team.draws}</Col>
-                                <Col className={`${columnToBootstrapClasses('L')} ${shouldHideColumn('L') ? "d-none d-sm-block" : ""}`}>{team.losses}</Col>
-                                <Col className={`${columnToBootstrapClasses('GF')} ${shouldHideColumn('GF') ? "d-none d-sm-block" : ""}`}>{team.goalsFor}</Col>
-                                <Col className={`${columnToBootstrapClasses('GA')} ${shouldHideColumn('GA') ? "d-none d-sm-block" : ""}`}>{team.goalsAgainst}</Col>
-                                <Col className={`${columnToBootstrapClasses('GD')} ${shouldHideColumn('GD') ? "d-none d-sm-block" : ""}`}>{team.goalsFor - team.goalsAgainst}</Col>
-                                <Col className={`${columnToBootstrapClasses('Pts')} ${shouldHideColumn('Pts') ? "d-none d-sm-block" : ""}`}>{team.points}</Col>
-                            </Row>
+        <div className="dark-tab-row w-100 mx-0">
+          <Row>
+            <Col md={12}>
+              <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
+                    style={{ marginRight: '16px' }} >
+                    <ArrowLeft />
+                  </Button>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div ref={gameweekDropdownRef} onBlur={handleGameweekBlur}>
+                    <Dropdown show={showGameweekDropdown}>
+                      <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openGameweekDropdown()}>Gameweek {currentGameweek}</Button>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                        {Array.from({ length: 38 }, (_, index) => (
+                          <Dropdown.Item
+                            data-key={index}
+                            className='dropdown-item'
+                            key={index}
+                            onMouseDown={() => {setCurrentGameweek(index + 1)}}
+                          >
+                            Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
+                          </Dropdown.Item>
                         ))}
-                    </Container>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                </div>
+                <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
+                  <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
+                    style={{ marginLeft: '16px' }} >
+                    <ArrowRight />
+                  </Button>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
+                    style={{ marginRight: '16px' }} >
+                    <ArrowLeft />
+                  </Button>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
+                    <Dropdown show={showSeasonDropdown}>
+                      <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                        
+                        {seasons.map(season => 
+                          <Dropdown.Item
+                            data-key={season.id}
+                            className='dropdown-item'
+                            key={season.id}
+                            onMouseDown={() => setCurrentSeason(season)}
+                          >
+                            {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
+                  <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
+                    style={{ marginLeft: '16px' }} >
+                    <ArrowRight />
+                  </Button>
+                </div>
+              </div>
+            </Col>
+          </Row>
 
-                </Card.Body>
-            </Card>
-             
-        </Container>
+          <Row>
+
+          <Container>
+              <Row style={{ overflowX: 'auto' }}>
+                  <Col xs={12}>
+                      <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
+                          <div className="league-position-col gw-table-header">Pos</div>
+                          <div className="league-team-col gw-table-header">Team</div>
+                          <div className="league-played-col gw-table-header">P</div>
+                          <div className="league-won-col gw-table-header">W</div>
+                          <div className="league-drawn-col gw-table-header">D</div>
+                          <div className="league-lost-col gw-table-header">L</div>
+                          <div className="league-goals-col gw-table-header">GF</div>
+                          <div className="league-conceded-col gw-table-header">GA</div>
+                          <div className="league-goal-difference-col gw-table-header">GD</div>
+                          <div className="league-points-col gw-table-header">PTS</div>
+                      </div>
+                  </Col>  
+              </Row>
+
+
+              
+            {tableData.map((team, idx) => {
+                const club = getTeamById(teams, team.teamId);
+
+                return (
+                <Row key={`id-${idx}`} style={{ overflowX: 'auto' }}>
+                    <Col xs={12}>
+                        <div className="table-row">             
+                            <div className="league-position-col gw-table-col">{idx + 1}</div>
+                                <div className="league-team-col gw-table-col">
+                                    <BadgeIcon
+                                        primary={club.primaryColourHex}
+                                        secondary={club.secondaryColourHex}
+                                        third={club.thirdColourHex}
+                                        width={48}
+                                        height={48}
+                                        marginRight={16}
+                                        />
+                                        {club.friendlyName}
+                          </div>
+                          <div className="league-played-col gw-table-col">{team.played}</div>
+                          <div className="league-won-col gw-table-col">{team.wins}</div>
+                          <div className="league-drawn-col gw-table-col">{team.draws}</div>
+                          <div className="league-lost-col gw-table-col">{team.losses}</div>
+                          <div className="league-goals-col gw-table-col">{team.goalsFor}</div>
+                          <div className="league-conceded-col gw-table-col">{team.goalsAgainst}</div>
+                          <div className="league-goal-difference-col gw-table-col">{team.goalsFor - team.goalsAgainst}</div>
+                          <div className="league-points-col gw-table-col">{team.points}</div>
+           
+                        </div>
+                    </Col>
+                </Row>)})    
+            }
+              
+
+              </Container>
+
+          </Row>
+        </div>
     );
 };
+
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+  <a
+    href=""
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+  </a>
+));
 
 export default LeagueTable;
