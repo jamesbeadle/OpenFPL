@@ -244,7 +244,9 @@ export const idlFactory = ({ IDL }) => {
         [Result],
         [],
       ),
+    'gameweekBegin' : IDL.Func([], [], []),
     'getAccountBalanceDTO' : IDL.Func([], [AccountBalanceDTO], []),
+    'getAddTeamsFunction' : IDL.Func([], [IDL.Text], []),
     'getClubLeaderboard' : IDL.Func(
         [IDL.Nat16, IDL.Nat8, TeamId, IDL.Nat, IDL.Nat],
         [PaginatedClubLeaderboard],

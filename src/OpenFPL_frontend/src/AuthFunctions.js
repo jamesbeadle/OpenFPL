@@ -14,6 +14,17 @@ export const fetchFantasyTeam = async (authClient) => {
   }
 }
 
+export const getFantasyTeamForGameweek = async (authClient, manager, seasonId, gameweek) => {
+  try {
+    const identity = authClient.getIdentity();
+    agent.replaceIdentity(identity);
+    var team = await open_fpl_backend.getFantasyTeamForGameweek(manager, seasonId, gameweek);
+    return team;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const fetchValidatableFixtures = async (authClient) => {
   try {
     const identity = authClient.getIdentity();

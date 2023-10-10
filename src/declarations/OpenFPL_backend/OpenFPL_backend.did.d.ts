@@ -205,7 +205,9 @@ export interface _SERVICE {
     [TeamId, string, string, string, string, string, string, number],
     Result
   >,
+  'gameweekBegin' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
+  'getAddTeamsFunction' : ActorMethod<[], string>,
   'getClubLeaderboard' : ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard

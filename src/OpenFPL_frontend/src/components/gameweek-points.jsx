@@ -1,45 +1,384 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
+import { AuthContext } from "../contexts/AuthContext";
 import { DataContext } from "../contexts/DataContext";
 import { ArrowLeft, ArrowRight } from './icons';
+import { getFantasyTeamForGameweek } from '../AuthFunctions';
+import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
+import { player_canister as player_canister } from '../../../declarations/player_canister';
+import ProfileImage from '../../assets/profile_placeholder.png';
+import { getTeamById } from './helpers';
 
 const GameweekPoints = () => {
-  const { seasons, systemState } = useContext(DataContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentGameweek, setCurrentGameweek] = useState(systemState.focusGameweek);
-  
-  const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
-  const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
-  const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
-  const gameweekDropdownRef = useRef(null);
-  const seasonDropdownRef = useRef(null);
-
-  const handleGameweekBlur = (e) => {
-    const currentTarget = e.currentTarget;
-    if (!currentTarget.contains(document.activeElement)) {
-      setShowGameweekDropdown(false);
-    }
-  };
-  
-  const handleSeasonBlur = (e) => {
-    const currentTarget = e.currentTarget;
-    setTimeout(() => {
-      if (!currentTarget.contains(document.activeElement)) {
-        setShowSeasonDropdown(false);
-      }
-    }, 0);
-  };
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      await fetchViewData();
-      setIsLoading(false);
+    const { authClient, userPrincipal } = useContext(AuthContext);
+    const { seasons, fixtures, systemState, playerEvents, teams } = useContext(DataContext);
+    
+    const [isLoading, setIsLoading] = useState(true);
+    const [currentGameweek, setCurrentGameweek] = useState(systemState.focusGameweek);
+    
+    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
+    const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
+    const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
+    const gameweekDropdownRef = useRef(null);
+    const seasonDropdownRef = useRef(null);
+    const [fantasyTeam, setFantasyTeam] = useState({
+        players: [],
+    });
+    const [sortedPlayers, setSortedPlayers] = useState([]);
+    const [profile, setProfile] = useState(null);
+    const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
+    
+    const handleGameweekBlur = (e) => {
+        const currentTarget = e.currentTarget;
+        if (!currentTarget.contains(document.activeElement)) {
+        setShowGameweekDropdown(false);
+        }
     };
-    fetchData();
-  }, []);
+    
+    const handleSeasonBlur = (e) => {
+        const currentTarget = e.currentTarget;
+        setTimeout(() => {
+        if (!currentTarget.contains(document.activeElement)) {
+            setShowSeasonDropdown(false);
+        }
+        }, 0);
+    };
+    
+    useEffect(() => {
+        const fetchData = async () => {
+        await fetchViewData();
+        setIsLoading(false);
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        if (fantasyTeam && fantasyTeam.players) {
+            const playersWithUpdatedScores = fantasyTeam.players.map(player => {
+                const score = calculatePlayerScore(player, fantasyTeam, fixtures);
+                const bonusPoints = calculateBonusPoints(player, fantasyTeam, score);
+                const captainPoints = player.id == fantasyTeam.captainId ? (score + bonusPoints) : 0;
+                
+                return {
+                    ...player,
+                    points: score,
+                    bonusPoints: bonusPoints,
+                    totalPoints: score + bonusPoints + captainPoints
+                };
+            });
+    
+            const sortedPlayers = [...playersWithUpdatedScores].sort((a, b) => 
+                Number(b.totalPoints) - Number(a.totalPoints)
+            );
+            
+            console.log(sortedPlayers)
+            setSortedPlayers(sortedPlayers);
+            //getBonusDetails();
+        }
+    }, [fantasyTeam]);
   
-  const fetchViewData = async () => {
+    const fetchViewData = async () => {
+        try{
+            
+            const fetchedFantasyTeam = await getFantasyTeamForGameweek(authClient, userPrincipal, currentSeason.id, currentGameweek); 
+            console.log(currentSeason)
+            if(currentGameweek == systemState.focusGameweek){
+                const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
+                const playersInTeam = detailedPlayers.filter(player => fetchedFantasyTeam.playerIds.includes(player.id));
+            
+                setFantasyTeam({
+                    ...fetchedFantasyTeam,
+                    players: playersInTeam,
+                });
+            }
+            else
+            {
+                const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));    
+                const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
+                setFantasyTeam({
+                    ...fetchedFantasyTeam,
+                    players: detailedPlayers,
+                });
+            }
+
+            const profileData = await open_fpl_backend.getPublicProfileDTO(userPrincipal);
+            setProfile(profileData);
+            
+            if (profileData.profilePicture && profileData.profilePicture.length > 0) {
+                const blob = new Blob([profileData.profilePicture]);
+                const blobUrl = URL.createObjectURL(blob);
+                setProfilePicSrc(blobUrl);
+            } else {
+                setProfilePicSrc(ProfileImage);
+            }
+
+
+
+        } catch (error){
+            console.log(error);
+        };
+    };
+
+    const extractPlayerData = (playerDTO) => {
+        let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
+        let goalPoints = 0, assistPoints = 0, goalsConcededPoints = 0, cleanSheetPoints = 0;
+
+        playerDTO.events.forEach(event => {
+            switch(event.eventType) {
+                case 0:
+                    appearance += 1;
+                    break;
+                case 1:
+                    goals += 1;
+                    switch(playerDTO.position){
+                        case 0:
+                        case 1:
+                            goalPoints += 20;
+                            break;
+                        case 2:
+                            goalPoints += 15;
+                            break;
+                        case 3:
+                            goalPoints += 10;
+                            break;
+                    }
+                    break;
+                case 2:
+                    assists += 1;
+                    switch(playerDTO.position){
+                        case 0:
+                        case 1:
+                            assistPoints += 15;
+                            break;
+                        case 2:
+                            case 3:
+                            assistPoints += 10;
+                            break;
+                    };
+                    break;
+                case 3:
+                    goalsConceded += 1;
+                    if(playerDTO.position < 2 && goalsConceded % 2 == 0){
+                        goalsConcededPoints += -15;
+                    };
+                    break;
+                case 4:
+                    saves += 1;
+                    break;
+                case 5:
+                    cleanSheets += 1;
+                    if(playerDTO.position < 2 && goalsConceded == 0){
+                        cleanSheetPoints += 10;
+                    };
+                    break;
+                case 6:
+                    penaltySaves += 1;
+                    break;
+                case 7:
+                    missedPenalties += 1;
+                    break;
+                case 8:
+                    yellowCards += 1;
+                    break;
+                case 9:
+                    redCards += 1;
+                    break;
+                case 10:
+                    ownGoals += 1;
+                    break;
+                case 11:
+                    highestScoringPlayerId += 1;
+                    break;
+            }
+        });
+    
+        return {
+            ...playerDTO,
+            gameweekData: {
+                appearance,
+                goals,
+                assists,
+                goalsConceded,
+                saves,
+                cleanSheets,
+                penaltySaves,
+                missedPenalties,
+                yellowCards,
+                redCards,
+                ownGoals,
+                highestScoringPlayerId,
+                goalPoints,
+                assistPoints,
+                goalsConcededPoints,
+                cleanSheetPoints
+            }
+        };
+    };
+
+    
+    const calculatePlayerScore = (playerDTO, fantasyTeamDTO, fixtures) => {
+      if (!playerDTO) {
+          console.error("No gameweekData found for player:", playerDTO);
+          return 0;
+      }
+      
+      let score = 0; 
+
+      let pointsForAppearance = 5;
+      let pointsFor3Saves = 5;
+      let pointsForPenaltySave = 20;
+      let pointsForHighestScore = 25;
+      let pointsForRedCard = -20;
+      let pointsForPenaltyMiss = -10;
+      let pointsForEach2Conceded = -15;
+      let pointsForOwnGoal = -10;
+      let pointsForYellowCard = -5;
+      let pointsForCleanSheet = 10;
+
+      var pointsForGoal = 0;
+      var pointsForAssist = 0;
+
+      if(playerDTO.gameweekData.appearance > 0){
+          score += pointsForAppearance * playerDTO.gameweekData.appearance;
+      }
+
+      if (playerDTO.gameweekData.redCards > 0) {
+          score += pointsForRedCard;
+      }
+
+      if (playerDTO.gameweekData.missedPenalties > 0) {
+          score += pointsForPenaltyMiss * playerDTO.gameweekData.missedPenalties;
+      }
+
+      if (playerDTO.gameweekData.ownGoals > 0) {
+          score += pointsForOwnGoal * playerDTO.gameweekData.ownGoals;
+      }
+
+      if (playerDTO.gameweekData.yellowCards > 0) {
+          score += pointsForYellowCard * playerDTO.gameweekData.yellowCards;
+      }
   
+      switch(playerDTO.position){
+          case 0:
+              pointsForGoal = 20;
+              pointsForAssist = 15;     
+              
+              if (playerDTO.gameweekData.saves >= 3) {
+                  score += Math.floor(playerDTO.gameweekData.saves / 3) * pointsFor3Saves;
+              }
+              if (playerDTO.gameweekData.penaltySaves) {
+                  score += pointsForPenaltySave * playerDTO.gameweekData.penaltySaves;
+              }
+
+              if (playerDTO.gameweekData.cleanSheets > 0) {
+                  score += pointsForCleanSheet;
+              }
+              if (playerDTO.gameweekData.goalsConceded >= 2) {
+                  score += Math.floor(playerDTO.gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
+              }
+
+              break;
+          case 1:
+              pointsForGoal = 20;
+              pointsForAssist = 15; 
+
+              if (playerDTO.gameweekData.cleanSheets > 0) {
+                  score += pointsForCleanSheet;
+              }
+              if (playerDTO.gameweekData.goalsConceded >= 2) {
+                  score += Math.floor(playerDTO.gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
+              }
+
+              break;
+          case 2:
+              pointsForGoal = 15;
+              pointsForAssist = 10; 
+              break;
+          case 3:
+              pointsForGoal = 10;
+              pointsForAssist = 10; 
+              break;
+      };
+  
+      const gameweekFixtures = fixtures ? fixtures.filter(fixture => fixture.gameweek === playerDTO.gameweek) : [];
+      const playerFixture = gameweekFixtures.find(fixture => 
+          (fixture.homeTeamId === playerDTO.teamId || fixture.awayTeamId === playerDTO.teamId) && 
+          fixture.highestScoringPlayerId === playerDTO.id
+      );
+      if (playerFixture) {
+          score += pointsForHighestScore;
+      }
+
+      
+      score += playerDTO.gameweekData.goals * pointsForGoal;
+
+      score += playerDTO.gameweekData.assists * pointsForAssist;
+
+      return score;
+  };
+  
+  const calculateBonusPoints = (playerDTO, fantasyTeamDTO, points) => {
+      if (!playerDTO) {
+          console.error("No gameweekData found for player:", playerDTO);
+          return 0;
+      }
+      
+      let bonusPoints = 0; 
+      var pointsForGoal = 0;
+      var pointsForAssist = 0;
+      switch(playerDTO.position){
+          case 0:
+              pointsForGoal = 20;
+              pointsForAssist = 15;  
+              break;
+          case 1:
+              pointsForGoal = 20;
+              pointsForAssist = 15; 
+              break;
+          case 2:
+              pointsForGoal = 15;
+              pointsForAssist = 10; 
+              break;
+          case 3:
+              pointsForGoal = 10;
+              pointsForAssist = 10; 
+              break;
+      };
+
+      if(fantasyTeamDTO.goalGetterGameweek === playerDTO.gameweek && fantasyTeamDTO.goalGetterPlayerId === playerDTO.id){
+          bonusPoints = playerDTO.gameweekData.goals * pointsForGoal * 2;
+      }
+
+      if(fantasyTeamDTO.passMasterGameweek === playerDTO.gameweek && fantasyTeamDTO.passMasterPlayerId === playerDTO.id){
+          bonusPoints = playerDTO.gameweekData.assists * pointsForAssist * 2;
+      }
+      
+      if (fantasyTeamDTO.noEntryGameweek === playerDTO.gameweek && fantasyTeamDTO.noEntryPlayerId === playerDTO.id && 
+          (playerDTO.position === 0 || playerDTO.position === 1) && playerDTO.gameweekData.cleanSheets) {
+          bonusPoints = points * 2; 
+      }
+  
+      if (fantasyTeamDTO.safeHandsGameweek === playerDTO.gameweek && playerDTO.position === 0 && playerDTO.gameweekData.saves >= 5) {
+          bonusPoints = points * 2; 
+      }
+  
+      if (fantasyTeamDTO.captainFantasticGameweek === playerDTO.gameweek && fantasyTeamDTO.captainId === playerDTO.id && playerDTO.gameweekData.goals > 0) {
+          bonusPoints = points; 
+      }
+  
+      if (fantasyTeamDTO.braceBonusGameweek === playerDTO.gameweek && playerDTO.gameweekData.goals >= 2) {
+          bonusPoints = points; 
+      }
+  
+      if (fantasyTeamDTO.hatTrickHeroGameweek === playerDTO.gameweek && playerDTO.gameweekData.goals >= 3) {
+          bonusPoints = points * 2; 
+      }
+  
+      if (fantasyTeamDTO.teamBoostGameweek === playerDTO.gameweek && playerDTO.teamId === fantasyTeamDTO.teamBoostTeamId) {
+          bonusPoints = points;
+      }
+  
+      return bonusPoints;
   };
 
   const handleGameweekChange = (change) => {
@@ -180,100 +519,58 @@ const GameweekPoints = () => {
 
             <Row>
 
-            <Container key={player.id}>
-                <Row>
-                <Col xs={12}>
-                    <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
-                        <div>Pos</div>
-                        <div>Player Name</div>
-                        <div>Club</div>
-                        <div>A</div>
-                        <div>HSP</div>
-                        <div>GS</div>
-                        <div>GA</div>
-                        <div>PS</div>
-                        <div>CS</div>
-                        <div>S</div>
-                        <div>YC</div>
-                        <div>OG</div>
-                        <div>GC</div>
-                        <div>MP</div>
-                        <div>RC</div>
-                    </div>
-                </Col>  
+            <Container>
+                <Row style={{ overflowX: 'auto' }}>
+                    <Col xs={12}>
+                        <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
+                            <div className="gw-points-position-col">Pos</div>
+                            <div className="gw-points-name-col">Player Name</div>
+                            <div className="gw-points-club-col">Club</div>
+                            <div className="gw-points-appearances-col">A</div>
+                            <div className="gw-points-highest-scoring-col">HSP</div>
+                            <div className="gw-points-goals-col">GS</div>
+                            <div className="gw-points-assists-col">GA</div>
+                            <div className="gw-points-pen-saves-col">PS</div>
+                            <div className="gw-points-clean-sheets-col">CS</div>
+                            <div className="gw-points-saves-col">S</div>
+                            <div className="gw-points-yellow-cards-col">YC</div>
+                            <div className="gw-points-own-goals-col">OG</div>
+                            <div className="gw-points-goals-conceded-col">GC</div>
+                            <div className="gw-points-missed-pen-col">MP</div>
+                            <div className="gw-points-red-card-col">RC</div>
+                        </div>
+                    </Col>  
                 </Row>
 
 
                 
-              {teamEntries.map(player => {
-                return (
-                        
-                        {fixturesForDate.map((fixture, idx) => {
-                            const homeTeam = getTeamById(teams, fixture.homeTeamId);
-                            const awayTeam = getTeamById(teams, fixture.awayTeamId);
-                            if (!homeTeam || !awayTeam) {
-                                console.error("One of the teams is missing for fixture: ", fixture);
-                                return null;
-                            }
-                            return (
-                              <div className="table-row" key={fixture.id}>
-                                {(() => {
-                                  const homeTeam = getTeamById(teams, fixture.homeTeamId);
-                                  const awayTeam = getTeamById(teams, fixture.awayTeamId);
-                                  return (
-                                    <>
-                                      <div className="col-home-team">
-                                        <p className='fixture-team-name'>
-                                          <BadgeIcon
-                                            primary={homeTeam.primaryColourHex}
-                                            secondary={homeTeam.secondaryColourHex}
-                                            third={homeTeam.thirdColourHex}
-                                            width={48}
-                                            height={48}
-                                            marginRight={16}
-                                          />
-                                          {homeTeam.friendlyName}
-                                        </p>
-                                      </div>
-                                      <div className="col-vs">
-                                        <p className="w-100 text-center">vs</p>
-                                      </div>
-                                      <div className="col-away-team">
-                                        <p className='fixture-team-name'>
-                                          <BadgeIcon
-                                            primary={awayTeam.primaryColourHex}
-                                            secondary={awayTeam.secondaryColourHex}
-                                            third={awayTeam.thirdColourHex}
-                                            width={48}
-                                            height={48}
-                                            marginRight={16}
-                                          />
-                                          {awayTeam.friendlyName}
-                                        </p>
-                                      </div>
-                                    </>
-                                  );
-                                })()}
-
-                                <div className="col-time">
-                                <p>
-                                  <ClockIcon
-                                                primaryColour={'#123432'}
-                                                secondaryColour={'#432123'}
-                                                thirdColour={'#432123'}
-                                                marginRight={10}
-                                                width={20}
-                                                height={20}
-                                            /> 05:30AM</p>
-                                </div>
-                                  <div className="col-badge">
-                                {renderStatusBadge(fixture)}
-                               </div>
-                              </div>
-                            );
-                        })}
-                );
-              })}
+              {sortedPlayers.map(player => {
+                
+                const playerTeam = getTeamById(teams, player.teamId);
+                if (!playerTeam) {
+                    console.error("One of the teams is missing for player: ", player);
+                    return null;
+                }
+                    return (
+                        <div className="table-row" key={player.id}>
+                            <div className="gw-points-position-col">Pos</div>
+                            <div className="gw-points-name-col">Player Name</div>
+                            <div className="gw-points-club-col">Club</div>
+                            <div className="gw-points-appearances-col">A</div>
+                            <div className="gw-points-highest-scoring-col">HSP</div>
+                            <div className="gw-points-goals-col">GS</div>
+                            <div className="gw-points-assists-col">GA</div>
+                            <div className="gw-points-pen-saves-col">PS</div>
+                            <div className="gw-points-clean-sheets-col">CS</div>
+                            <div className="gw-points-saves-col">S</div>
+                            <div className="gw-points-yellow-cards-col">YC</div>
+                            <div className="gw-points-own-goals-col">OG</div>
+                            <div className="gw-points-goals-conceded-col">GC</div>
+                            <div className="gw-points-missed-pen-col">MP</div>
+                            <div className="gw-points-red-card-col">RC</div>
+                        </div>
+                    );
+                })}
                 
 
                 </Container>
