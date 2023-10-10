@@ -1,129 +1,168 @@
 import React from 'react';
-import { Modal, Button, Table, Container, Card } from 'react-bootstrap';
-import { getTeamById } from '../helpers';
+import { Modal, Button } from 'react-bootstrap';
+import getFlag from '../country-flag';
+import GoalGetter from "../../../assets/goal-getter.png";
+import PassMaster from "../../../assets/pass-master.png";
+import NoEntry from "../../../assets/no-entry.png";
+import TeamBoost from "../../../assets/team-boost.png";
+import SafeHands from "../../../assets/safe-hands.png";
+import CaptainFantastic from "../../../assets/captain-fantastic.png";
+import BraceBonus from "../../../assets/brace-bonus.png";
+import HatTrickHero from "../../../assets/hat-trick-hero.png";
+import { BadgeIcon } from '../icons';
 
-const PlayerPointsModal = ({ show, onClose, player, playerDTO, gameweek, teams, isCaptain, bonusName }) => {
+const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek, team, isCaptain, bonusId }) => {
     if (!player || !playerDTO || !playerDTO.gameweekData) return null;
 
     const { gameweekData } = playerDTO;
     return (
         <Modal show={show} onHide={onClose}>
             <Modal.Header closeButton>
-                <Modal.Title>
-                    {(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName} - Gameweek {gameweek}
-                    <br />
-                    <p className='small-text'>{getTeamById(teams, player.teamId).name}</p>
-                </Modal.Title>
+                <Modal.Title>Player Details</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Container className="flex-grow-1 my-2">
-                    <Card>
-                        <Card.Body>
-                            <Table responsive className="table-fixed">
-                                <thead>
-                                    <tr>
-                                        <th className='points-description-col'></th>
-                                        <th className='points-count-col'></th>
-                                        <th className='points-value-col text-center'><small>Points</small></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Appearance</td>
-                                        <td className='text-center'>{gameweekData.appearance > 0 ? gameweekData.appearance : "-"}</td>
-                                        <td className='text-center'>{gameweekData.appearance > 0 ? gameweekData.appearance * 5 : "-"}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Goals</td>
-                                        <td className='text-center'>{gameweekData.goals}</td>
-                                        <td className='text-center'>{gameweekData.goalPoints}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Assists</td>
-                                        <td className='text-center'>{gameweekData.assists}</td>
-                                        <td className='text-center'>{gameweekData.assistPoints}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Yellow Cards</td>
-                                        <td className='text-center'>{gameweekData.yellowCards}</td>
-                                        <td className='text-center'>{gameweekData.yellowCards * -5}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Red Card</td>
-                                        <td className='text-center'>{gameweekData.redCards > 0 ? 'Yes' : '-'}</td>
-                                        <td className='text-center'>{gameweekData.redCards > 0 ? 20 : 0}</td>
-                                    </tr>
-                                    {player.position < 2 && (
-                                    <>
-                                        <tr>
-                                            <td>Clean Sheet</td>
-                                            <td className='text-center'>{gameweekData.cleanSheets > 0 ? 'Yes' : '-'}</td>
-                                            <td className='text-center'>{gameweekData.cleanSheetPoints}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Conceded</td>
-                                            <td className='text-center'>{gameweekData.goalsConceded}</td>
-                                            <td className='text-center'>{gameweekData.goalsConcededPoints}</td>
-                                        </tr>
-                                    </>
-                                    )}
-                                    {player.position == 0 && (
-                                        <>
-                                            <tr>
-                                                <td>Saves</td>
-                                                <td className='text-center'>{gameweekData.saves}</td>
-                                                <td className='text-center'>{Math.floor(gameweekData.saves / 3) * 5}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Penalty Saves</td>
-                                                <td className='text-center'>{gameweekData.penaltySaves}</td>
-                                                <td className='text-center'>{gameweekData.penaltySaves * 20}</td>
-                                            </tr>
-                                        </>
-                                    )}
-                                    <tr>
-                                        <td>Own Goal</td>
-                                        <td className='text-center'>{gameweekData.ownGoals}</td>
-                                        <td className='text-center'>{gameweekData.ownGoals * -10}</td>
-                                    </tr>
+                <div className='player-modal-name-row'>
+                    <div className='player-modal-flag-col'>
+                        {getFlag(player.nationality)}
+                    </div>
+                    <div className='player-modal-name-col'>
+                        {(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
+                    </div>
+                </div>
+                <div className='player-modal-detail-row'>
+                    <div className='player-modal-fixture-col'>
+                        VS <BadgeIcon
+                                primary={team.primaryColourHex}
+                                secondary={team.secondaryColourHex}
+                                third={team.thirdColourHex}
+                                width={48}
+                                height={48}
+                                marginRight={16}
+                              /> {team.friendlyName}
+                    </div>
+                    <div className='player-modal-season-col'>
+                        {season.name}
+                    </div>
+                    <div className='player-modal-gameweek-col'>
+                        Gameweek {gameweek}
+                    </div>
+                </div>
+                <div className='player-modal-header-row'>
+                    <div className='player-modal-category-col'>
+                        Category
+                    </div>
+                    <div className='player-modal-quantity-col'>
+                        Quantity
+                    </div>
+                    <div className='player-modal-points-col'>
+                        Points
+                    </div>
+                </div>
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Appearance</div>
+                    <div className='player-modal-quantity-col'>{gameweekData.appearance > 0 ? gameweekData.appearance : "-"}</div>
+                    <div className='player-modal-points-col'>{gameweekData.appearance > 0 ? gameweekData.appearance * 5 : "-"}</div>
+                </div>
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Goals</div>
+                    <div className='player-modal-quantity-col'>{gameweekData.goals}</div>
+                    <div className='player-modal-points-col'>{gameweekData.goalPoints}</div>
+                </div>
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Assists</div>
+                    <div className='player-modal-quantity-col'>{gameweekData.assists}</div>
+                    <div className='player-modal-points-col'>{gameweekData.assistPoints}</div>
+                </div>
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Yellow Cards</div>
+                    <div className='player-modal-quantity-col'>{gameweekData.yellowCards}</div>
+                    <div className='player-modal-points-col'>{gameweekData.yellowCards * -5}</div>
+                </div>
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Red Card</div>
+                    <div className='player-modal-quantity-col'>{gameweekData.redCards > 0 ? 'Yes' : '-'}</div>
+                    <div className='player-modal-points-col'>{gameweekData.redCards > 0 ? 20 : 0}</div>
+                </div>
+                {player.position < 2 && (    
+                    <>
+                        <div className='player-modal-category-row'>
+                            <div className='player-modal-category-col'>Clean Sheet</div>
+                            <div className='player-modal-quantity-col'>{gameweekData.cleanSheets > 0 ? 'Yes' : '-'}</div>
+                            <div className='player-modal-points-col'>{gameweekData.cleanSheetPoints}</div>
+                        </div>
+                        <div className='player-modal-category-row'>
+                            <div className='player-modal-category-col'>Conceded</div>
+                            <div className='player-modal-quantity-col'>{gameweekData.goalsConceded}</div>
+                            <div className='player-modal-points-col'>{gameweekData.goalsConcededPoints}</div>
+                        </div>
+                    </>
+                )}
+                {player.position == 0 && (
+                    <>
+                        <div className='player-modal-category-row'>
+                            <div className='player-modal-category-col'>Saves</div>
+                            <div className='player-modal-quantity-col'>{gameweekData.saves}</div>
+                            <div className='player-modal-points-col'>{Math.floor(gameweekData.saves / 3) * 5}</div>
+                        </div>
+                        <div className='player-modal-category-row'>
+                            <div className='player-modal-category-col'>Penalty Saves</div>
+                            <div className='player-modal-quantity-col'>{gameweekData.penaltySaves}</div>
+                            <div className='player-modal-points-col'>{gameweekData.penaltySaves * 20}</div>
+                        </div>
+                    </>
+                )}
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Own Goal</div>
+                    <div className='player-modal-quantity-col'>{gameweekData.ownGoals}</div>
+                    <div className='player-modal-points-col'>{gameweekData.ownGoals * -10}</div>
+                </div>
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Penalty Misses</div>
+                    <div className='player-modal-quantity-col'>{gameweekData.missedPenalties}</div>
+                    <div className='player-modal-points-col'>{gameweekData.missedPenalties * -15}</div>
+                </div>
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Highest Scoring Player</div>
+                    <div className='player-modal-quantity-col'>{gameweekData.highestScoringPlayerId}</div>
+                    <div className='player-modal-points-col'>{gameweekData.highestScoringPlayerId * 25}</div>
+                </div>
+                <div className='player-modal-category-row'>
+                    <div className='player-modal-category-col'>Points</div>
+                    <div className='player-modal-quantity-col'>-</div>
+                    <div className='player-modal-points-col'>{playerDTO.points}</div>
+                </div>
+                {bonusId > 0 && (
+                    <div className='player-modal-category-row'>
+                        <div className='player-modal-category-col'>Bonus</div>
+                        <div className='player-modal-quantity-col'>
+                        {[
+                                (bonusId === 1 && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
+                                (bonusId === 2 && <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>),
+                                (bonusId === 3 && <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>),
+                                (bonusId === 4 && <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>),
+                                (bonusId === 5 && <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>),
+                                (bonusId === 6 && <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>),
+                                (bonusId === 7 && <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>),
+                                (bonusId === 8 && <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>)
+                                ].some(Boolean) || '-'}
+                        </div>
+                        <div className='player-modal-points-col'>{playerDTO.bonusPoints}</div>
+                    </div>
+                )}
                                     
-                                    <tr>
-                                        <td>Penalty Misses</td>
-                                        <td className='text-center'>{gameweekData.missedPenalties}</td>
-                                        <td className='text-center'>{gameweekData.missedPenalties * -15}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Highest Scoring Player</td>
-                                        <td className='text-center'>{gameweekData.highestScoringPlayerId > 0 ? 'YES' : '-'}</td>
-                                        <td className='text-center'>{gameweekData.highestScoringPlayerId > 0 ? 25 : 0}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Points</td>
-                                        <td className='text-center'>-</td>
-                                        <td className='text-center'>{playerDTO.points}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>{bonusName}</td>
-                                        <td className='text-center'>-</td>
-                                        <td className='text-center'>{playerDTO.bonusPoints}</td>
-                                    </tr>
-                                    {isCaptain && (
-                                        <tr>
-                                            <td>Captain Bonus</td>
-                                            <td className='text-center'>x2</td>
-                                            <td className='text-center'>{playerDTO.points + playerDTO.bonusPoints}</td>
-                                        </tr>
-                                    )}
-                                    <tr>
-                                        <td>Total</td>
-                                        <td className='text-center'>-</td>
-                                        <td className='text-center'>{playerDTO.totalPoints}</td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-                        </Card.Body>
-                    </Card>
-                </Container>
+                {isCaptain && (
+                    <div className='player-modal-category-row'>
+                        <div className='player-modal-category-col'>Captain Bonus</div>
+                        <div className='player-modal-quantity-col'>-</div>
+                        <div className='player-modal-points-col'>{playerDTO.points + playerDTO.bonusPoints}</div>
+                    </div>
+                )}
+                <div className='player-modal-total-row'>
+                    <div className='player-modal-total-col'>
+                        Total Points:
+                    </div>
+                    <div className='player-modal-total-points-col'>{playerDTO.totalPoints}</div>
+                </div>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onClose}>

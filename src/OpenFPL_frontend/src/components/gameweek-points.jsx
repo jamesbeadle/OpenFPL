@@ -654,7 +654,8 @@ const GameweekPoints = () => {
                 
 
                 </Container>
-                {selectedPlayer && selectedPlayerDTO && <PlayerPointsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} gameweek={currentGameweek} teams={teams} isCaptain={selectedPlayerCaptain} bonusId={getBonusId()} />}
+                
+                {selectedPlayer && selectedPlayerDTO && <PlayerPointsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} gameweek={currentGameweek} isCaptain={selectedPlayerCaptain} bonusId={getBonusId()} team={getTeamById(teams, selectedPlayer.teamId)} season={currentSeason} />}
     
             </Row>
           </div>
