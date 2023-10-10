@@ -1148,7 +1148,7 @@ $dropdown-link-color: #5A5A5A;
 }
 
 .profile-display-name-col{
-  flex-basis: 20%;
+  flex-basis: 30%;
 }
 
 .profile-favourite-team-col{
@@ -1170,15 +1170,20 @@ $dropdown-link-color: #5A5A5A;
 .coin-icon{
   width: 56px;
   height: 56px;
+  margin-left: 24px;
+  margin-right: 24px;
+  display: 'flex';
 }
 
 .coin-icon-col{
-  width: 265.3px;
-  height: 104px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
 }
 
 .coin-name-col{
-  flex-basis: 1;
+  align-items: center;
+  display: flex;
 }
 
 .coin-col{
@@ -1186,6 +1191,8 @@ $dropdown-link-color: #5A5A5A;
   border-radius: 8px;
   border: 1px solid #454B56;
   margin-right: 40px;
+  width: 265.3px;
+  height: 104px;
 }
 
 .coin-col > :first-child {
@@ -1198,4 +1205,18 @@ $dropdown-link-color: #5A5A5A;
 .coins-row{
   margin-top: 40px;
   margin-bottom: 40px;
+}
+
+.coin-name{
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.coin-balance{
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.coin-balance-suffix{
+  color: #B1B1B1;
 }

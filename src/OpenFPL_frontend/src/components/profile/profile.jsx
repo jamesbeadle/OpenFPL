@@ -252,11 +252,21 @@ const Profile = () => {
                               <div className='coins-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                   <div className='coin-col-1 coin-col'>
                                     <div className='coin-icon-col'>
-                                      <img src={ICPCoin} alt="sponsor1" className='coin-icon' />
+                                      <img src={ICPCoin} alt="sponsor1" className='coin-icon'/>
                                     </div>
                                     <div className='coin-name-col'>
-                                      <p>ICP</p>
-                                      <p>0.00 ICP</p>
+                                      <Container>
+                                        <Row>
+                                          <Col>
+                                              <div className='coin-name'>ICP</div>
+                                          </Col>
+                                        </Row>
+                                        <Row>
+                                          <Col>
+                                              <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ICP</span></div>
+                                          </Col>
+                                        </Row>
+                                      </Container>
                                     </div>
                                   </div>
                                   <div className='coin-col-2 coin-col'>
@@ -264,8 +274,18 @@ const Profile = () => {
                                       <img src={FPLCoin} alt="sponsor1" className='coin-icon' />
                                     </div>
                                     <div className='coin-name-col'>
-                                      <p>FPL</p>
-                                      <p>0.00 FPL</p>
+                                      <Container>
+                                        <Row>
+                                          <Col>
+                                              <div className='coin-name'>FPL</div>
+                                          </Col>
+                                        </Row>
+                                        <Row>
+                                          <Col>
+                                              <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>FPL</span></div>
+                                          </Col>
+                                        </Row>
+                                      </Container>
                                     </div>
                                   </div>
                                   <div className='coin-col-3 coin-col'>
@@ -273,8 +293,18 @@ const Profile = () => {
                                       <img src={ckBTCCoin} alt="sponsor1" className='coin-icon' />
                                     </div>
                                     <div className='coin-name-col'>
-                                      <p>ckBTC</p>
-                                      <p>0.00 ckBTC</p>
+                                      <Container>
+                                        <Row>
+                                          <Col>
+                                              <div className='coin-name'>ckBTC</div>
+                                          </Col>
+                                        </Row>
+                                        <Row>
+                                          <Col>
+                                              <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ckBTC</span></div>
+                                          </Col>
+                                        </Row>
+                                      </Container>
                                     </div>
                                   </div>
                                   <div className='coin-col-4 coin-col'>
@@ -282,8 +312,18 @@ const Profile = () => {
                                       <img src={ckETHCoin} alt="sponsor1" className='coin-icon' />
                                     </div>
                                     <div className='coin-name-col'>
-                                      <p>ETH</p>
-                                      <p>0.00 ETH</p>
+                                      <Container>
+                                        <Row>
+                                          <Col>
+                                              <div className='coin-name'>ckETH</div>
+                                          </Col>
+                                        </Row>
+                                        <Row>
+                                          <Col>
+                                              <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ETH</span></div>
+                                          </Col>
+                                        </Row>
+                                      </Container>
                                     </div>
                                   </div>
                               </div>
@@ -321,9 +361,6 @@ const Profile = () => {
                       </Tab>
                       <Tab eventKey="gameweeks" title="Gameweeks">
                         <h3 className='mt-4'>Gameweek History Coming Soon</h3>
-                      </Tab>
-                      <Tab eventKey="betting" title="Betting">
-                        <h3 className='mt-4'>Betting History Coming Soon</h3>
                       </Tab>
                       <Tab eventKey="governance" title="Governance">
                         <h3 className='mt-4'>Governance History Coming Soon</h3>
