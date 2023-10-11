@@ -136,7 +136,7 @@ const ClubDetails = ({  }) => {
             </div>
         ) :
         <Container fluid className='view-container mt-2'>
-              <Row>
+            <Row>
                 <Col md={7} xs={12}>
                     <Card className='mb-3'>
                         <div className="outer-container d-flex">
@@ -388,12 +388,12 @@ const ClubDetails = ({  }) => {
                                 </Tab>
 
                                 <Tab eventKey="fixtures" title="Fixtures">
-                                    <ClubFixtures teamId={teamId} />
+                                    {key === 'fixtures' && <ClubFixtures teamId={teamId} />}
                                 </Tab>
                                 <Tab eventKey="proposals" title="Proposals">
                                     <div className='px-4 mt-4 mb-4'>
-                                        <p>Proposal functionality will be live after our SNS decentralisation sale.</p>
-                                        <p>Please read our whitepaper <LinkContainer to="/whitepaper"><a>here</a></LinkContainer>.</p>
+                                        <p>After our SNS decentralisation sale, club proposal information will appear here.</p>
+                                        <p>More information can be found in our <LinkContainer to="/whitepaper"><a>whitepaper</a></LinkContainer>.</p>
                                     </div>
                                 </Tab>
                             </Tabs>

@@ -252,8 +252,6 @@ const Fixtures = () => {
                             return (
                               <div className="table-row" key={fixture.id}>
                                 {(() => {
-                                  const homeTeam = getTeamById(teams, fixture.homeTeamId);
-                                  const awayTeam = getTeamById(teams, fixture.awayTeamId);
                                   return (
                                     <>
                                       <div className="col-home-team">

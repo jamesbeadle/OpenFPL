@@ -36,7 +36,7 @@ const ClubFixtures = ({teamId}) => {
 
   useEffect(() => {
     const source = fetchedFixtures || fixtures;
-    const filteredFixturesData = source.filter(fixture => fixture.homeTeamId === teamId || fixture.awayTeamId === teamId);
+    const filteredFixturesData = source.filter(fixture => fixture.homeTeamId == teamId || fixture.awayTeamId == teamId);
     setFilteredFixtures(filteredFixturesData);
   }, [fixtures, fetchedFixtures]);
   
@@ -156,81 +156,66 @@ const ClubFixtures = ({teamId}) => {
             </Row>
 
             <Row>
-              {Object.entries(filteredFixtures).map(([date, fixturesForDate], dateIdx) => {
+              {filteredFixtures.map((fixture) => {
+                console.log(fixture)
+                console.log("Teams array:", teams);
+console.log("HomeTeamID:", fixture.homeTeamId);
+                const homeTeam = getTeamById(teams, fixture.homeTeamId);
+                const awayTeam = getTeamById(teams, fixture.awayTeamId);
                 return (
-                    <Container key={dateIdx}>
-                      <Row>
-                        <Col xs={12}>
-                          <div className='light-background date-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
-                            <p className="w-100 date-header">{date}</p>
-                          </div>
-                        </Col>  
-                      </Row>
-                        
-                        {fixturesForDate.map((fixture, idx) => {
-                            const homeTeam = getTeamById(teams, fixture.homeTeamId);
-                            const awayTeam = getTeamById(teams, fixture.awayTeamId);
-                            if (!homeTeam || !awayTeam) {
-                                console.error("One of the teams is missing for fixture: ", fixture);
-                                return null;
-                            }
-                            return (
-                              <div className="table-row" key={fixture.id}>
-                                {(() => {
-                                  const homeTeam = getTeamById(teams, fixture.homeTeamId);
-                                  const awayTeam = getTeamById(teams, fixture.awayTeamId);
-                                  return (
-                                    <>
-                                      <div className="col-home-team">
-                                        <p className='fixture-team-name'>
-                                          <BadgeIcon
-                                            primary={homeTeam.primaryColourHex}
-                                            secondary={homeTeam.secondaryColourHex}
-                                            third={homeTeam.thirdColourHex}
-                                            width={48}
-                                            height={48}
-                                            marginRight={16}
-                                          />
-                                          {homeTeam.friendlyName}
-                                        </p>
-                                      </div>
-                                      <div className="col-vs">
-                                        <p className="w-100 text-center">vs</p>
-                                      </div>
-                                      <div className="col-away-team">
-                                        <p className='fixture-team-name'>
-                                          <BadgeIcon
-                                            primary={awayTeam.primaryColourHex}
-                                            secondary={awayTeam.secondaryColourHex}
-                                            third={awayTeam.thirdColourHex}
-                                            width={48}
-                                            height={48}
-                                            marginRight={16}
-                                          />
-                                          {awayTeam.friendlyName}
-                                        </p>
-                                      </div>
-                                    </>
-                                  );
-                                })()}
-
-                                <div className="col-time">
-                                <p>
-                                  <ClockIcon
-                                                primaryColour={'#123432'}
-                                                secondaryColour={'#432123'}
-                                                thirdColour={'#432123'}
-                                                marginRight={10}
-                                                width={20}
-                                                height={20}
-                                            /> 05:30AM</p>
-                                </div>
-                                  <div className="col-badge">
-                                {renderStatusBadge(fixture)}
-                               </div>
+                    <Container key={fixture.id}>
+                      <div className="table-row">
+                        {(() => {
+                          return (
+                            <>
+                              <div className="col-home-team">
+                                <p className='fixture-team-name'>
+                                  <BadgeIcon
+                                    primary={homeTeam.primaryColourHex}
+                                    secondary={homeTeam.secondaryColourHex}
+                                    third={homeTeam.thirdColourHex}
+                                    width={48}
+                                    height={48}
+                                    marginRight={16}
+                                  />
+                                  {homeTeam.friendlyName}
+                                </p>
                               </div>
-                            );
-                        })}
+                              <div className="col-vs">
+                                <p className="w-100 text-center">vs</p>
+                              </div>
+                              <div className="col-away-team">
+                                <p className='fixture-team-name'>
+                                  <BadgeIcon
+                                    primary={awayTeam.primaryColourHex}
+                                    secondary={awayTeam.secondaryColourHex}
+                                    third={awayTeam.thirdColourHex}
+                                    width={48}
+                                    height={48}
+                                    marginRight={16}
+                                  />
+                                  {awayTeam.friendlyName}
+                                </p>
+                              </div>
+                            </>
+                          );
+                        })()}
+
+                        <div className="col-time">
+                        <p>
+                          <ClockIcon
+                                        primaryColour={'#123432'}
+                                        secondaryColour={'#432123'}
+                                        thirdColour={'#432123'}
+                                        marginRight={10}
+                                        width={20}
+                                        height={20}
+                                    /> 05:30AM</p>
+                        </div>
+                          <div className="col-badge">
+                        {renderStatusBadge(fixture)}
+                        </div>
+                      </div>
                     </Container>
                 );
               })}
