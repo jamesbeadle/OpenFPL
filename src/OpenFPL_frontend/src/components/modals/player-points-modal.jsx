@@ -10,11 +10,18 @@ import CaptainFantastic from "../../../assets/captain-fantastic.png";
 import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
 import { BadgeIcon } from '../icons';
+import { useNavigate } from 'react-router-dom';
 
 const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek, team, isCaptain, bonusId }) => {
     if (!player || !playerDTO || !playerDTO.gameweekData) return null;
-
+    const navigate = useNavigate();
+   
     const { gameweekData } = playerDTO;
+
+    const loadClub = async (clubId) => {
+      navigate(`/club/${clubId}`);
+    };
+
     return (
         <Modal show={show} onHide={onClose}>
             <Modal.Header closeButton>
@@ -31,7 +38,7 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                 </div>
                 <div className="outer-container d-flex">
                     <div className='player-modal-detail-row'>
-                        <div className='player-modal-fixture-col'>
+                        <div onClick={() => loadClub(team.id)} className='player-modal-fixture-col clickable-table-row'>
                             <BadgeIcon
                                     primary={team.primaryColourHex}
                                     secondary={team.secondaryColourHex}

@@ -96,7 +96,6 @@ const GameweekPoints = () => {
                 Number(b.totalPoints) - Number(a.totalPoints)
             );
             
-            console.log(sortedPlayers)
             setSortedPlayers(sortedPlayers);
         }
     }, [fantasyTeam]);
@@ -105,7 +104,6 @@ const GameweekPoints = () => {
         try{
             
             const fetchedFantasyTeam = await getFantasyTeamForGameweek(authClient, userPrincipal, currentSeason.id, currentGameweek); 
-            console.log(currentSeason)
             if(currentGameweek == systemState.focusGameweek){
                 const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
                 const playersInTeam = detailedPlayers.filter(player => fetchedFantasyTeam.playerIds.includes(player.id));
@@ -597,7 +595,6 @@ const GameweekPoints = () => {
 
                 
               {sortedPlayers.map(playerDTO => {
-                console.log(playerDTO)
                 const player = players.find(p => p.id === playerDTO.id);
                 const playerTeam = getTeamById(teams, player.teamId);
                 if (!playerTeam) {
@@ -605,9 +602,9 @@ const GameweekPoints = () => {
                     return null;
                 }
                     return (
-                      <Row onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)} style={{ overflowX: 'auto' }}>
+                      <Row key={player.id} onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)} style={{ overflowX: 'auto' }}>
                         <Col xs={12}>
-                        <div className="table-row clickable-table-row" key={player.id}>
+                        <div className="table-row clickable-table-row">
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
                             <div className="gw-points-name-col gw-table-col">{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
                             <div className="gw-points-club-col gw-table-col">
