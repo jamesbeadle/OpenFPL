@@ -3,6 +3,7 @@ import { Button, Spinner, Container, Row, Col, Dropdown } from 'react-bootstrap'
 import { BadgeIcon, ArrowLeft, ArrowRight } from './icons';
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById } from './helpers';
+import { useNavigate } from 'react-router-dom';
 
 const LeagueTable = () => {
     const { teams, seasons, fixtures, systemState } = useContext(DataContext);
@@ -14,6 +15,7 @@ const LeagueTable = () => {
     const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
     const gameweekDropdownRef = useRef(null);
     const seasonDropdownRef = useRef(null);
+    const navigate = useNavigate();
     
     const handleGameweekBlur = (e) => {
         const currentTarget = e.currentTarget;
@@ -108,6 +110,10 @@ const LeagueTable = () => {
         
         setTableData(sortedTableData);
         setIsLoading(false);
+    };
+
+    const loadClub = async (clubId) => {
+      navigate(`/club/${clubId}`);
     };
 
     return (
@@ -218,9 +224,9 @@ const LeagueTable = () => {
                 const club = getTeamById(teams, team.teamId);
 
                 return (
-                <Row key={`id-${idx}`} style={{ overflowX: 'auto' }}>
+                <Row onClick={() => loadClub(team.teamId)} key={`id-${idx}`} style={{ overflowX: 'auto' }}>
                     <Col xs={12}>
-                        <div className="table-row">             
+                        <div className="table-row clickable-table-row">             
                             <div className="league-position-col gw-table-col">{idx + 1}</div>
                                 <div className="league-team-col gw-table-col">
                                     <BadgeIcon
