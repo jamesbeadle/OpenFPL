@@ -618,31 +618,63 @@ const GameweekPoints = () => {
                               />
                               {playerTeam.friendlyName}
                             </div>
-                            <div className="gw-points-appearances-col gw-table-col">{playerDTO.gameweekData.appearance}</div>
-                            <div className="gw-points-highest-scoring-col gw-table-col">{playerDTO.gameweekData.highestScoringPlayerId}</div>
-                            <div className="gw-points-goals-col gw-table-col">{playerDTO.gameweekData.goals}</div>
-                            <div className="gw-points-assists-col gw-table-col">{playerDTO.gameweekData.assists}</div>
-                            <div className="gw-points-pen-saves-col gw-table-col">{playerDTO.gameweekData.penaltySaves}</div>
-                            <div className="gw-points-clean-sheets-col gw-table-col">{playerDTO.gameweekData.cleanSheets}</div>
-                            <div className="gw-points-saves-col gw-table-col">{playerDTO.gameweekData.saves}</div>
-                            <div className="gw-points-yellow-cards-col gw-table-col">{playerDTO.gameweekData.yellowCards}</div>
-                            <div className="gw-points-own-goals-col gw-table-col">{playerDTO.gameweekData.ownGoals}</div>
-                            <div className="gw-points-goals-conceded-col gw-table-col">{playerDTO.gameweekData.goalsConceded}</div>
-                            <div className="gw-points-missed-pen-col gw-table-col">{playerDTO.gameweekData.missedPenalties}</div>
-                            <div className="gw-points-red-card-col gw-table-col">{playerDTO.gameweekData.redCards}</div>
-                            <div className="gw-points-red-card-col gw-table-col">
-                            {[
-                              (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
-                              (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id && <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>),
-                              (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id && <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>),
-                              (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5 && <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>),
-                              (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0 && <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>),
-                              (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2 && <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>),
-                              (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3 && <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>),
-                              (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId && <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>)
-                              ].some(Boolean) || '-'}
+                            <div className={`gw-points-appearances-col gw-table-col ${playerDTO.gameweekData.appearance === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.appearance}
                             </div>
-                            <div className="gw-points-red-card-col gw-table-col">{playerDTO.totalPoints}</div>
+                            <div className={`gw-points-highest-scoring-col gw-table-col ${playerDTO.gameweekData.highestScoringPlayerId === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.highestScoringPlayerId}
+                            </div>
+                            <div className={`gw-points-goals-col gw-table-col ${playerDTO.gameweekData.goals === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.goals}
+                            </div>
+                            <div className={`gw-points-assists-col gw-table-col ${playerDTO.gameweekData.assists === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.assists}
+                            </div>
+                            <div className={`gw-points-pen-saves-col gw-table-col ${playerDTO.gameweekData.penaltySaves === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.penaltySaves}
+                            </div>
+                            <div className={`gw-points-clean-sheets-col gw-table-col ${playerDTO.gameweekData.cleanSheets === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.cleanSheets}
+                            </div>
+                            <div className={`gw-points-saves-col gw-table-col ${playerDTO.gameweekData.saves === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.saves}
+                            </div>
+                            <div className={`gw-points-yellow-cards-col gw-table-col ${playerDTO.gameweekData.yellowCards === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.yellowCards}
+                            </div>
+                            <div className={`gw-points-own-goals-col gw-table-col ${playerDTO.gameweekData.ownGoals === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.ownGoals}
+                            </div>
+                            <div className={`gw-points-goals-conceded-col gw-table-col ${playerDTO.gameweekData.goalsConceded === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.goalsConceded}  
+                            </div>
+                            <div className={`gw-points-missed-pen-col gw-table-col ${playerDTO.gameweekData.missedPenalties === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.missedPenalties}
+                            </div>
+                            <div className={`gw-points-red-card-col gw-table-col ${playerDTO.gameweekData.redCards === 0 ? 'zero-text' : ''}`}>
+                              {playerDTO.gameweekData.redCards}
+                            </div>
+                            <div className={`gw-points-bonus-col gw-table-col ${(
+                                (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id) || 
+                                (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id) ||
+                                (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id) || 
+                                (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5) ||
+                                (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0) ||
+                                (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2) ||
+                                (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3) ||
+                                (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId)) ? '' : 'zero-text'}`}>
+                              {[
+                                (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
+                                (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id && <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>),
+                                (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id && <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>),
+                                (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5 && <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>),
+                                (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0 && <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>),
+                                (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2 && <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>),
+                                (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3 && <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>),
+                                (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId && <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>)
+                                ].some(Boolean) || '-'}
+                            </div>
+                            <div className="gw-points-points-col gw-table-col">{playerDTO.totalPoints}</div>
                         </div>
                         </Col>
                         </Row>

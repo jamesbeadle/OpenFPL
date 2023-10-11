@@ -63,7 +63,6 @@ const Homepage = () => {
         const currentTime = BigInt(Date.now() * 1000000);
 
         const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
-        console.log(teams.find(x => x.id == fixture.awayTeamId))
         setNextFixtureHomeTeam(teams.find(x => x.id == fixture.homeTeamId));
         setNextFixtureAwayTeam(teams.find(x => x.id == fixture.awayTeamId));
         if (fixture) {

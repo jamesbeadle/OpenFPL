@@ -1271,6 +1271,12 @@ $dropdown-link-color: #5A5A5A;
 .gw-points-red-card-col{
   flex-basis: 5%;
 }
+.gw-points-bonus-col{
+  flex-basis: 5%;
+}
+.gw-points-points-col{
+  flex-basis: 5%;
+}
 
 .gw-table-header{
   font-size: 12px;
@@ -1544,4 +1550,8 @@ $dropdown-link-color: #5A5A5A;
 }
 .club-player-age-col{
   flex-basis: 20%;
+}
+
+.zero-text{
+  color: #5A5A5A;
 }
