@@ -23,7 +23,7 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
             <Modal.Body>
                 <div className='player-modal-name-row'>
                     <div className='player-modal-flag-col'>
-                        {getFlag(player.nationality)}
+                        {getFlag(player.nationality, '90px')}
                     </div>
                     <div className='player-modal-name-col'>
                         {(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
@@ -31,13 +31,13 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                 </div>
                 <div className='player-modal-detail-row'>
                     <div className='player-modal-fixture-col'>
-                        VS <BadgeIcon
+                        <BadgeIcon
                                 primary={team.primaryColourHex}
                                 secondary={team.secondaryColourHex}
                                 third={team.thirdColourHex}
-                                width={48}
-                                height={48}
-                                marginRight={16}
+                                width={32}
+                                height={32}
+                                marginRight={8}
                               /> {team.friendlyName}
                     </div>
                     <div className='player-modal-season-col'>
@@ -58,39 +58,39 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                         Points
                     </div>
                 </div>
-                <div className='player-modal-category-row'>
+                <div className='player-modal-category-row row-bottom-border'>
                     <div className='player-modal-category-col'>Appearance</div>
                     <div className='player-modal-quantity-col'>{gameweekData.appearance > 0 ? gameweekData.appearance : "-"}</div>
                     <div className='player-modal-points-col'>{gameweekData.appearance > 0 ? gameweekData.appearance * 5 : "-"}</div>
                 </div>
-                <div className='player-modal-category-row'>
+                <div className='player-modal-category-row row-bottom-border'>
                     <div className='player-modal-category-col'>Goals</div>
                     <div className='player-modal-quantity-col'>{gameweekData.goals}</div>
                     <div className='player-modal-points-col'>{gameweekData.goalPoints}</div>
                 </div>
-                <div className='player-modal-category-row'>
+                <div className='player-modal-category-row row-bottom-border'>
                     <div className='player-modal-category-col'>Assists</div>
                     <div className='player-modal-quantity-col'>{gameweekData.assists}</div>
                     <div className='player-modal-points-col'>{gameweekData.assistPoints}</div>
                 </div>
-                <div className='player-modal-category-row'>
+                <div className='player-modal-category-row row-bottom-border'>
                     <div className='player-modal-category-col'>Yellow Cards</div>
                     <div className='player-modal-quantity-col'>{gameweekData.yellowCards}</div>
                     <div className='player-modal-points-col'>{gameweekData.yellowCards * -5}</div>
                 </div>
-                <div className='player-modal-category-row'>
+                <div className='player-modal-category-row row-bottom-border'>
                     <div className='player-modal-category-col'>Red Card</div>
                     <div className='player-modal-quantity-col'>{gameweekData.redCards > 0 ? 'Yes' : '-'}</div>
                     <div className='player-modal-points-col'>{gameweekData.redCards > 0 ? 20 : 0}</div>
                 </div>
                 {player.position < 2 && (    
                     <>
-                        <div className='player-modal-category-row'>
+                        <div className='player-modal-category-row row-bottom-border'>
                             <div className='player-modal-category-col'>Clean Sheet</div>
                             <div className='player-modal-quantity-col'>{gameweekData.cleanSheets > 0 ? 'Yes' : '-'}</div>
                             <div className='player-modal-points-col'>{gameweekData.cleanSheetPoints}</div>
                         </div>
-                        <div className='player-modal-category-row'>
+                        <div className='player-modal-category-row row-bottom-border'>
                             <div className='player-modal-category-col'>Conceded</div>
                             <div className='player-modal-quantity-col'>{gameweekData.goalsConceded}</div>
                             <div className='player-modal-points-col'>{gameweekData.goalsConcededPoints}</div>
@@ -99,40 +99,40 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                 )}
                 {player.position == 0 && (
                     <>
-                        <div className='player-modal-category-row'>
+                        <div className='player-modal-category-row row-bottom-border'>
                             <div className='player-modal-category-col'>Saves</div>
                             <div className='player-modal-quantity-col'>{gameweekData.saves}</div>
                             <div className='player-modal-points-col'>{Math.floor(gameweekData.saves / 3) * 5}</div>
                         </div>
-                        <div className='player-modal-category-row'>
+                        <div className='player-modal-category-row row-bottom-border'>
                             <div className='player-modal-category-col'>Penalty Saves</div>
                             <div className='player-modal-quantity-col'>{gameweekData.penaltySaves}</div>
                             <div className='player-modal-points-col'>{gameweekData.penaltySaves * 20}</div>
                         </div>
                     </>
                 )}
-                <div className='player-modal-category-row'>
+                <div className='player-modal-category-row row-bottom-border'>
                     <div className='player-modal-category-col'>Own Goal</div>
                     <div className='player-modal-quantity-col'>{gameweekData.ownGoals}</div>
                     <div className='player-modal-points-col'>{gameweekData.ownGoals * -10}</div>
                 </div>
-                <div className='player-modal-category-row'>
+                <div className='player-modal-category-row row-bottom-border'>
                     <div className='player-modal-category-col'>Penalty Misses</div>
                     <div className='player-modal-quantity-col'>{gameweekData.missedPenalties}</div>
                     <div className='player-modal-points-col'>{gameweekData.missedPenalties * -15}</div>
                 </div>
-                <div className='player-modal-category-row'>
+                <div className='player-modal-category-row row-bottom-border'>
                     <div className='player-modal-category-col'>Highest Scoring Player</div>
                     <div className='player-modal-quantity-col'>{gameweekData.highestScoringPlayerId}</div>
                     <div className='player-modal-points-col'>{gameweekData.highestScoringPlayerId * 25}</div>
                 </div>
-                <div className='player-modal-category-row'>
-                    <div className='player-modal-category-col'>Points</div>
+                {playerDTO.points != playerDTO.totalPoints ?? <div className='player-modal-category-row row-bottom-border'>
+                    <div className='player-modal-category-col'>Sub Total</div>
                     <div className='player-modal-quantity-col'>-</div>
                     <div className='player-modal-points-col'>{playerDTO.points}</div>
-                </div>
+                </div>}
                 {bonusId > 0 && (
-                    <div className='player-modal-category-row'>
+                    <div className='player-modal-category-row row-bottom-border'>
                         <div className='player-modal-category-col'>Bonus</div>
                         <div className='player-modal-quantity-col'>
                         {[
@@ -151,7 +151,7 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                 )}
                                     
                 {isCaptain && (
-                    <div className='player-modal-category-row'>
+                    <div className='player-modal-category-row row-bottom-border row-bottom-border'>
                         <div className='player-modal-category-col'>Captain Bonus</div>
                         <div className='player-modal-quantity-col'>-</div>
                         <div className='player-modal-points-col'>{playerDTO.points + playerDTO.bonusPoints}</div>

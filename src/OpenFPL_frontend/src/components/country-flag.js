@@ -348,12 +348,14 @@ const flags = {
     'ZW': <ZW title='Zimbabwe' style={{width: "18px"}} />
   };
 
-  const getFlag = (countryName) => {
-    // Get the alpha-2 code
+  const getFlag = (countryName, width = '18px') => {
     const code = countryNameToCode[countryName];
-    // Return the flag component, or null if the country is not in our mapping
-    return flags[code] || null;
-  }
+    if (flags[code]) {
+      return React.cloneElement(flags[code], { style: { width } });
+    }
+    return null;
+  };
+  
 
 export default getFlag;
 
