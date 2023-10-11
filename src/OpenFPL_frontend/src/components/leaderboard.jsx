@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Button, Spinner, Container, Row, Col, Dropdown } from 'react-bootstrap';
-import { BadgeIcon, ArrowLeft, ArrowRight } from './icons';
+import { ArrowLeft, ArrowRight } from './icons';
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById } from './helpers';
 
