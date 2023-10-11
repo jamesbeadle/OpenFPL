@@ -29,22 +29,26 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                         {(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
                     </div>
                 </div>
-                <div className='player-modal-detail-row'>
-                    <div className='player-modal-fixture-col'>
-                        <BadgeIcon
-                                primary={team.primaryColourHex}
-                                secondary={team.secondaryColourHex}
-                                third={team.thirdColourHex}
-                                width={32}
-                                height={32}
-                                marginRight={8}
-                              /> {team.friendlyName}
-                    </div>
-                    <div className='player-modal-season-col'>
-                        {season.name}
-                    </div>
-                    <div className='player-modal-gameweek-col'>
-                        Gameweek {gameweek}
+                <div className="outer-container d-flex">
+                    <div className='player-modal-detail-row'>
+                        <div className='player-modal-fixture-col'>
+                            <BadgeIcon
+                                    primary={team.primaryColourHex}
+                                    secondary={team.secondaryColourHex}
+                                    third={team.thirdColourHex}
+                                    width={32}
+                                    height={32}
+                                    marginRight={8}
+                                /> {team.friendlyName}
+                        </div>
+                        <div className='player-modal-season-col'>
+                            {season.name}
+                        </div>
+                        <div className='player-modal-gameweek-col'>
+                            Gameweek {gameweek}
+                        </div>
+                        <div className="d-none d-md-block player-detail-divider-1"></div>
+                        <div className="d-none d-md-block player-detail-divider-2"></div>
                     </div>
                 </div>
                 <div className='player-modal-header-row'>
@@ -165,7 +169,7 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                 </div>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onClose}>
+                <Button className='fpl-btn-purple' variant="secondary" onClick={onClose}>
                     Close
                 </Button>
             </Modal.Footer>

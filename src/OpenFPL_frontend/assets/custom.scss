@@ -1367,21 +1367,23 @@ $dropdown-link-color: #5A5A5A;
 .player-modal-detail-row{
   display: flex;
   align-items: center;
-  margin-bottom: 32px;
+  padding-top: 10px;
+  padding-bottom: 16px;
+  width: 100%;
 }
 
 .player-modal-fixture-col{
-  flex-basis: 40%;
+  flex-basis: 33%;
   margin-top: 8px;
 }
 
 .player-modal-season-col{
-  flex-basis: 20%;
+  flex-basis: 33%;
   margin-top: 8px;
 }
 
 .player-modal-gameweek-col{
-  flex-basis: 20%;
+  flex-basis: 1;
   margin-top: 8px;
 }
 
@@ -1447,4 +1449,31 @@ $dropdown-link-color: #5A5A5A;
 
 .modal-footer{
   border-top: none !important;
+}
+
+.player-detail-divider-1{
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 31%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.player-detail-divider-2{
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 64%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.fpl-btn-purple{
+  background-color: #7F56F1;
+  color: white;
+  width: 146px;
+  height: 52px;
+  font-size: 16px;
+  font-weight: 600;
 }
