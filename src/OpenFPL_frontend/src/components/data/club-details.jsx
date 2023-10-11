@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Container, Card, Tab, Tabs, Spinner, Form, Row, Col, Badge, Table } from 'react-bootstrap';
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import { Container, Card, Tab, Tabs, Spinner, Dropdown, Row, Col, Badge, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import ClubProposals from './club-proposals';
 import { DataContext } from "../../contexts/DataContext";
@@ -34,7 +34,17 @@ const ClubDetails = ({  }) => {
     };
     const [dateRange, setDateRange] = useState({ start: null, end: null });
     const [fixtureFilter, setFixtureFilter] = useState('all');
-    
+    const positionDropdownRef = useRef(null);
+    const [showPositionDropdown, setShowPositionDropdown] = useState(false);
+    const [currentPosition, setCurrentPosition] = useState('All');
+ 
+    const handlePositionBlur = (e) => {
+      const currentTarget = e.currentTarget;
+      if (!currentTarget.contains(document.activeElement)) {
+        setShowPositionDropdown(false);
+      }
+    };
+  
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
@@ -112,56 +122,16 @@ const ClubDetails = ({  }) => {
         }, {});
     };
 
-    const sortedAndGroupedPlayers = Object.entries(groupPlayersByPosition(teamPlayers)).map(([position, playersList]) => {
-        return {
-            position: POSITION_MAP[position],  
-            players: playersList.sort((a, b) => {
-                if (a.shirtNumber === 0) return 1;
-                if (b.shirtNumber === 0) return -1;
-                return a.shirtNumber - b.shirtNumber;
-            })            
-        };
-    });
-
-    const renderStatusBadge = (fixture) => {
-        const currentTime = new Date().getTime();
-        const kickoffTime = computeTimeLeft(Number(fixture.kickOff));
-        const oneHourInMilliseconds = 3600000;
-    
-        if (fixture.status === 0 && kickoffTime - currentTime <= oneHourInMilliseconds) {
-            return (
-                <Badge className='bg-warning w-100' style={{ padding: '0.5rem' }}>
-                    Pre-Game
-                </Badge>
-            );
+    const openPositionDropdown = () => {
+      setShowPositionDropdown(!showPositionDropdown);
+      setTimeout(() => {
+        if (positionDropdownRef.current) {
+          const item = positionDropdownRef.current.querySelector(`[data-key="${currentPosition}"]`);
+          if (item) {
+            item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }
         }
-    
-        switch (fixture.status) {
-            case 1:
-                return (
-                    <Badge className='bg-info w-100' style={{ padding: '0.5rem' }}>
-                        Active
-                    </Badge>
-                );
-            case 2:
-                return (
-                    <Badge className='bg-success w-100' style={{ padding: '0.5rem' }}>
-                        In Consensus
-                    </Badge>
-                );
-            case 3:
-                return (
-                    <Badge className='bg-primary w-100' style={{ padding: '0.5rem' }}>
-                        Verified
-                    </Badge>
-                );
-            default:
-                return (
-                    <Badge className='bg-secondary w-100' style={{ padding: '0.5rem' }}>
-                        Unplayed
-                    </Badge>
-                );
-        }
+      }, 0);
     };
 
     return (
@@ -172,296 +142,111 @@ const ClubDetails = ({  }) => {
             </div>
         ) :
         <Container fluid className='view-container mt-2'>
-            <Row>
-                <Col md={7} xs={12}>
-                    <Card className='mb-3'>
-                        <div className="outer-container d-flex">
-                            <div className="stat-panel flex-grow-1">
-                                <Row className="stat-row-1">
-                                    <div className='club-badge-col'>
-                                        <p className="stat-header w-100 text-center">{team.abbreviatedName}</p>
-                                    </div>
-                                    <div className='club-total-players-col'>
-                                        <p className="stat-header w-100">Players</p>
-                                    </div>
-                                    <div className='club-position-col'>
-                                        <p className="stat-header w-100">Season Position</p>
-                                    </div>
-                                    <div className='club-points-col'>
-                                        <p className="stat-header w-100">Points</p>
-                                    </div>
-                                </Row>
-                                <Row className="stat-row-2">
-                                    <div className='club-badge-col'>
-                                        <BadgeIcon
-                                            primary={team.primaryColourHex}
-                                            secondary={team.secondaryColourHex}
-                                            third={team.thirdColourHex}
-                                            width={40}
-                                            height={40}
-                                        />
-                                    </div>
-                                    <div className='club-total-players-col'>
-                                        <p className="stat">{players.filter(x => x.teamId == team.id).length}</p>
-                                    </div>
-                                    <div className='club-position-col'>
-                                        <p className="stat">{'0'}</p>
-                                    </div>
-                                    <div className='club-points-col'>
-                                        <p className="stat">{'0'}</p>
-                                    </div>
-                                </Row>
-                                <Row className="stat-row-3">
-                                    <div className='club-badge-col'>
-                                        <p className="stat-header text-center">{team.friendlyName}</p>   
-                                    </div>
-                                    <div className='club-total-players-col'>
-                                        <p className="stat-header">Total</p>    
-                                    </div>
-                                    <div className='club-position-col'>
-                                        <p className="stat-header">{systemState.activeSeason.name}</p>    
-                                    </div>
-                                    <div className='club-points-col'>
-                                        <p className="stat-header">Total</p>    
-                                    </div>
-                                </Row>
-                            </div>
-                            <div className="d-none d-md-block club-divider-1"></div>
-                            <div className="d-none d-md-block club-divider-2"></div>
-                            <div className="d-none d-md-block club-divider-3"></div>
-                        </div>
-                    </Card>
-                </Col>
-
-                <Col md={5} xs={12}>
-                    <Card>
-                        <div className="outer-container d-flex">
-                            <div className="stat-panel flex-grow-1">  
-                                <Row className="stat-row-1">
-                                    <div className='home-deadline-col'>
-                                        <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Upcoming Game</p>    
-                                    </div>
-                                    <div className='home-fixture-col'>
-                                         
-                                    </div>
-                                </Row>
-                                <Row className="stat-row-2">
-                                    <div className='home-deadline-col'>
-                                        <Row  style={{paddingLeft: '32px'}}>
-                                            <Col xs={4} className="add-colon">
-                                                <p className="stat">{String(days).padStart(2, '0')}</p>
-                                            </Col>
-                                            <Col xs={4} className="add-colon">
-                                                <p className="stat">{String(hours).padStart(2, '0')}</p>
-                                            </Col>
-                                            <Col xs={4}>
-                                                <p className="stat">{String(minutes).padStart(2, '0')}</p>
-                                            </Col>
-                                        </Row>  
-                                    </div>
-                                    <div className='home-fixture-col'>
-                                        <Row>
-                                            <Col xs={5}>
-                                                <div className='text-center badge w-100'>
-                                                    {team && <CombinedIcon
-                                                        primaryColour={team.primaryHexColour}
-                                                        secondaryColour={team.SecondaryHexColour}
-                                                        thirdColour={team.thirdHexColour}
-                                                        width={60}
-                                                        height={60}
-                                                    />}
-                                                </div>
-                                            </Col>
-                                            <Col xs={2}>
-                                                <p className="w-100 time-colon">vs</p>
-                                            </Col>
-                                            <Col xs={5}>
-                                                <div className='text-center badge w-100'>
-                                                {nextOpponent && <CombinedIcon
-                                                        primaryColour={nextOpponent.primaryHexColour}
-                                                        secondaryColour={nextOpponent.SecondaryHexColour}
-                                                        thirdColour={nextOpponent.thirdHexColour}
-                                                        width={60}
-                                                        height={60}
-                                                    />}
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                </Row>
-                                <Row className='stat-row-3'>
-                                    <div className='home-deadline-col'>
-                                        <Row style={{paddingLeft: '32px'}}>
-                                            <Col xs={4}>
-                                                <p className="stat-header w-100">Day</p> 
-                                            </Col>
-                                            <Col xs={4}>
-                                                <p className="stat-header w-100">Hour</p>   
-                                            </Col>
-                                            <Col xs={4}>
-                                                <p className="stat-header w-100">Min</p>    
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                    <div className='home-fixture-col'>
-                                        <Row>
-                                            <Col xs={5}>
-                                                {team && <p className="stat-header text-center w-100">{team.abbreviatedName}</p>}
-                                                </Col>
-                                                <Col xs={2}>
-                                            </Col>
-                                            <Col xs={5}>
-                                                {nextOpponent && <p className="stat-header text-center w-100">{nextOpponent.abbreviatedName}</p>  }
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                </Row>
-                            </div>
-                            <div className="d-none d-md-block home-divider-3"></div>
-                        </div>
-                    </Card>
-                </Col>
-            </Row>
-            
             <Row className="mt-2">
                 <Col xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
                             <div className="flex-grow-1 light-background">
-                            <Tabs id="controlled-tab" className='mt-4' activeKey={key} onSelect={(k) => setKey(k)}>
+                            <Tabs className="home-tab-header" id="controlled-tab" activeKey={key} onSelect={(k) => setKey(k)}>
                                 <Tab eventKey="players" title="Players">
-                                    <div className="players-container">
-                                        {sortedAndGroupedPlayers.map((group, index) => (
-                                            <div key={index} className="player-group">
-                                                <h5>{group.position}s</h5>
-                                                <Container>
-                                                    <Row className='mb-2' key={`header-${index}`}>
-                                                            <Col className='text-center' xs={1}></Col>
-                                                            <Col xs={5}></Col> 
-                                                            <Col xs={3}>Value</Col> 
-                                                            <Col xs={2}>Age</Col> 
+                                    <div className="dark-tab-row w-100 mx-0">
+                                        <Row>
+                                            <Col md={12}>
+                                                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                        <div ref={positionDropdownRef} onBlur={handlePositionBlur}>
+                                                        <Dropdown show={showPositionDropdown}>
+                                                            <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                                                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openPositionDropdown()}>{currentPosition}</Button>
+                                                            </Dropdown.Toggle>
+                                                            <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                                                <Dropdown.Item
+                                                                    data-key={0}
+                                                                    className='dropdown-item'
+                                                                    key={0}
+                                                                    onMouseDown={() => {setCurrentPosition('ALL')}}
+                                                                    >
+                                                                    ALL
+                                                                </Dropdown.Item>
+                                                                <Dropdown.Item
+                                                                    data-key={0}
+                                                                    className='dropdown-item'
+                                                                    key={0}
+                                                                    onMouseDown={() => {setCurrentPosition('Defenders')}}
+                                                                    >
+                                                                    Defenders
+                                                                </Dropdown.Item>
+                                                                <Dropdown.Item
+                                                                    data-key={0}
+                                                                    className='dropdown-item'
+                                                                    key={0}
+                                                                    onMouseDown={() => {setCurrentPosition('Midfielders')}}
+                                                                    >
+                                                                    Midfielders
+                                                                </Dropdown.Item>
+                                                                <Dropdown.Item
+                                                                    data-key={0}
+                                                                    className='dropdown-item'
+                                                                    key={0}
+                                                                    onMouseDown={() => {setCurrentPosition('Forwards')}}
+                                                                    >
+                                                                    Forwards
+                                                                </Dropdown.Item>
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Col>
+                                        </Row>
+
+                                        <Row>
+
+                                        <Container>
+                                            <Row style={{ overflowX: 'auto' }}>
+                                                <Col xs={12}>
+                                                    <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
+                                                        <div className="club-player-number-col gw-table-header">Shirt</div>
+                                                        <div className="club-player-name-col gw-table-header">Player Name</div>
+                                                        <div className="club-player-position-col gw-table-header">Position</div>
+                                                        <div className="club-player-value-col gw-table-header">Value</div>
+                                                        <div className="club-player-age-col gw-table-header">Age</div>
+                                                    </div>
+                                                </Col>  
+                                            </Row>
+
+                                            {teamPlayers.map(player => {
+                                                return (
+                                                    <Row onClick={() => loadPlayer(player)} style={{ overflowX: 'auto' }}>
+                                                    <Col xs={12}>
+                                                    <div className="table-row clickable-table-row" key={player.id}>
+                                                        <div className="club-player-number-col gw-table-col">{player.shirtNumber}</div>
+                                                        {player.firstName.length > 0 ? 
+                                                            <div className="club-player-name-col gw-table-col">{`${player.firstName} ${player.lastName}`}</div> 
+                                                        :
+                                                            <div className="club-player-name-col gw-table-col">{player.lastName}</div>
+                                                        }
+                                                        {player.position == 0 && <div className="club-player-position-col gw-table-col">GK</div>}
+                                                        {player.position == 1 && <div className="club-player-position-col gw-table-col">DF</div>}
+                                                        {player.position == 2 && <div className="club-player-position-col gw-table-col">MF</div>}
+                                                        {player.position == 3 && <div className="club-player-position-col gw-table-col">FW</div>}
+                                                        <div className="club-player-value-col gw-table-col">{player.value}</div>
+                                                        <div className="club-player-age-col gw-table-col">{player.dateOfBirth}</div>
+                                                     </div>
+                                                    </Col>
                                                     </Row>
-                                                    {group.players.map(player => (
-                                                        <Row key={`detail-${player.id}`}>
-                                                            <Col className='text-center' xs={1}>{player.shirtNumber == 0 ? '-' : player.shirtNumber}</Col>
-                                                            <Col xs={5}>{getFlag(player.nationality)} <LinkContainer style={{marginLeft: '0.25rem'}} to={`/player/${player.id}`}><a className='nav-link-brand'>{player.firstName} {player.lastName}</a></LinkContainer></Col> 
-                                                            <Col xs={3}>{`£${(Number(player.value) / 4).toFixed(1)}m`}</Col> 
-                                                            <Col xs={2}>{getAgeFromDOB(Number(player.dateOfBirth))}</Col> 
-                                                        </Row>
-                                                    ))}
-                                                </Container>
-                                            </div>
-                                        ))}
+                                                );
+                                            })}
+                                        </Container>
+                                        </Row>
                                     </div>
                                 </Tab>
 
                                 <Tab eventKey="fixtures" title="Fixtures">
-                                    <Card className="mt-4 mb-4">
-                                        <Card.Header>
-                                            {team.friendlyName} Fixtures
-                                        </Card.Header>
-
-                                        <Card.Body>
-                                            
-                                            <Row className='mt-4 mb-4'>
-                                                <Col>
-                                                    <Form.Group controlId="seasonSelect">
-                                                        <Form.Label>Select Season</Form.Label>
-                                                        <Form.Control as="select" value={selectedSeason} onChange={e => {
-                                                            setSelectedSeason(Number(e.target.value));
-                                                        }}>
-                                                            {seasons.map(season => <option key={season.id} value={season.id}>{`${season.name}`}</option>)}
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col>
-                                                    <Form.Group className="mb-2">
-                                                        <label>
-                                                            <Form.Check 
-                                                                type="radio" 
-                                                                inline
-                                                                checked={fixtureFilter === 'all'} 
-                                                                onChange={() => setFixtureFilter('all')} 
-                                                            />
-                                                            All
-                                                        </label>
-                                                    </Form.Group>
-
-                                                    <Form.Group className="mb-2">
-                                                        <label>
-                                                            <Form.Check 
-                                                                type="radio" 
-                                                                inline
-                                                                checked={fixtureFilter === 'home'} 
-                                                                onChange={() => setFixtureFilter('home')} 
-                                                            />
-                                                            Home
-                                                        </label>
-                                                    </Form.Group>
-
-                                                    <Form.Group className="mb-2">
-                                                        <label>
-                                                            <Form.Check 
-                                                                type="radio" 
-                                                                inline
-                                                                checked={fixtureFilter === 'away'} 
-                                                                onChange={() => setFixtureFilter('away')} 
-                                                            />
-                                                            Away
-                                                        </label>
-                                                    </Form.Group>
-                                                </Col>
-
-                                                <Col>
-                                                    <Form.Group controlId="dateRangeStart">
-                                                        <Form.Label>Start Date</Form.Label>
-                                                        <Form.Control type="date" onChange={e => setDateRange(prev => ({ ...prev, start: new Date(e.target.value).getTime() * 1000000 }))} />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col>
-                                                    <Form.Group controlId="dateRangeEnd">
-                                                        <Form.Label>End Date</Form.Label>
-                                                        <Form.Control type="date" onChange={e => setDateRange(prev => ({ ...prev, end: new Date(e.target.value).getTime() * 1000000 }))} />
-                                                    </Form.Group>
-                                                </Col>                        
-                                            </Row>
-                                            
-                                            <Table responsive>
-                                                <tbody>
-                                                    {fixtures.map(fixture => {
-                                                        const homeTeam = getTeamById(teams, fixture.homeTeamId);
-                                                        const awayTeam = getTeamById(teams, fixture.awayTeamId);
-                                                        return (
-                                                            <tr key={`fixture-${fixture.id}`} className="align-middle">
-                                                                <td className="home-team-name" style={{ textAlign: 'right' }}>{homeTeam.friendlyName}</td>
-                                                                <td className="home-team-icon text-center">
-                                                                    <SmallFixtureIcon
-                                                                        primaryColour={homeTeam.primaryColourHex}
-                                                                        secondaryColour={homeTeam.secondaryColourHex}
-                                                                    />
-                                                                </td>
-                                                                <td className="text-center align-self-center v-symbol">v</td>
-                                                                <td className="text-center away-team-icon">
-                                                                    <SmallFixtureIcon
-                                                                        primaryColour={awayTeam.primaryColourHex}
-                                                                        secondaryColour={awayTeam.secondaryColourHex}
-                                                                    />
-                                                                </td>
-                                                                <td className="away-team-name">{awayTeam.friendlyName}</td>
-                                                                <td className="text-muted text-center score">{fixture.status === 3 ? `${fixture.homeGoals}-${fixture.awayGoals}` : '-'}</td>
-                                                                <td className='text-center status'>
-                                                                    {renderStatusBadge(fixture)}
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    })}
-                                                </tbody>
-                                            </Table>
-                                        </Card.Body>
-                                    </Card>
+                                    
                                 </Tab>
                                 <Tab eventKey="proposals" title="Proposals">
-                                    {key === 'proposals' && <ClubProposals teamId={team.id} />}
+                                    <h1>Proposals coming soon</h1>
                                 </Tab>
                             </Tabs>
                             </div>
@@ -472,5 +257,18 @@ const ClubDetails = ({  }) => {
         </Container>
     );
 };
+
+const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+  <a
+    href=""
+    ref={ref}
+    onClick={(e) => {
+      e.preventDefault();
+      onClick(e);
+    }}
+  >
+    {children}
+  </a>
+));
 
 export default ClubDetails;
