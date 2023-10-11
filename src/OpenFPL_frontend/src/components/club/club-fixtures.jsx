@@ -157,9 +157,6 @@ const ClubFixtures = ({teamId}) => {
 
             <Row>
               {filteredFixtures.map((fixture) => {
-                console.log(fixture)
-                console.log("Teams array:", teams);
-console.log("HomeTeamID:", fixture.homeTeamId);
                 const homeTeam = getTeamById(teams, fixture.homeTeamId);
                 const awayTeam = getTeamById(teams, fixture.awayTeamId);
                 return (

@@ -63,6 +63,7 @@ const Homepage = () => {
         const currentTime = BigInt(Date.now() * 1000000);
 
         const fixture = sortedFixtures.find(fixture => Number(fixture.kickOff) > currentTime);
+        console.log(teams.find(x => x.id == fixture.awayTeamId))
         setNextFixtureHomeTeam(teams.find(x => x.id == fixture.homeTeamId));
         setNextFixtureAwayTeam(teams.find(x => x.id == fixture.awayTeamId));
         if (fixture) {
@@ -171,9 +172,9 @@ const Homepage = () => {
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
                                                     {nextFixtureHomeTeam && <CombinedIcon
-                                                        primaryColour={nextFixtureHomeTeam.primaryHexColour}
-                                                        secondaryColour={nextFixtureHomeTeam.SecondaryHexColour}
-                                                        thirdColour={nextFixtureHomeTeam.thirdHexColour}
+                                                        primary={nextFixtureHomeTeam.primaryColourHex}
+                                                        secondary={nextFixtureHomeTeam.SecondaryColourHex}
+                                                        third={nextFixtureHomeTeam.thirdColourHex}
                                                         width={60}
                                                         height={60}
                                                     />}
@@ -185,9 +186,9 @@ const Homepage = () => {
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
                                                 {nextFixtureAwayTeam && <CombinedIcon
-                                                        primaryColour={nextFixtureAwayTeam.primaryHexColour}
-                                                        secondaryColour={nextFixtureAwayTeam.SecondaryHexColour}
-                                                        thirdColour={nextFixtureAwayTeam.thirdHexColour}
+                                                        primary={nextFixtureAwayTeam.primaryColourHex}
+                                                        secondary={nextFixtureAwayTeam.SecondaryColourHex}
+                                                        third={nextFixtureAwayTeam.thirdColourHex}
                                                         width={60}
                                                         height={60}
                                                     />}

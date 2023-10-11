@@ -21,7 +21,8 @@ const ClubDetails = ({  }) => {
     const [days, setDays] = useState(0);
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
-    const [nextOpponent, setNextOpponent] = useState(null);
+    const [nextFixtureHomeTeam, setNextFixtureHomeTeam] = useState(null);
+    const [nextFixtureAwayTeam, setNextFixtureAwayTeam] = useState(null);
     
     const [team, setTeam] = useState(null);
     const [fixtures, setFixtures] = useState([]);
@@ -55,7 +56,12 @@ const ClubDetails = ({  }) => {
                 let teamFixtures = fixturesData
                 .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
                 .sort((a, b) => a.gameweek - b.gameweek);
-                setAllTeamFixtures(teamFixtures)
+                setAllTeamFixtures(teamFixtures);
+                
+                const currentTime = BigInt(Date.now() * 1000000);
+                const nextFixtureData = teamFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff)).find(fixture => Number(fixture.kickOff) > currentTime);
+                setNextFixtureHomeTeam(getTeamById(teams, nextFixtureData.homeTeamId));
+                setNextFixtureAwayTeam(getTeamById(teams, nextFixtureData.awayTeamId));
             } catch (error) {
                 console.error(error);
             } finally {
@@ -228,9 +234,9 @@ const ClubDetails = ({  }) => {
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
                                                     {team && <CombinedIcon
-                                                        primaryColour={team.primaryHexColour}
-                                                        secondaryColour={team.SecondaryHexColour}
-                                                        thirdColour={team.thirdHexColour}
+                                                        primary={nextFixtureHomeTeam.primaryColourHex}
+                                                        secondary={nextFixtureHomeTeam.SecondaryColourHex}
+                                                        third={nextFixtureHomeTeam.thirdColourHex}
                                                         width={60}
                                                         height={60}
                                                     />}
@@ -241,10 +247,10 @@ const ClubDetails = ({  }) => {
                                             </Col>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
-                                                {nextOpponent && <CombinedIcon
-                                                        primaryColour={nextOpponent.primaryHexColour}
-                                                        secondaryColour={nextOpponent.SecondaryHexColour}
-                                                        thirdColour={nextOpponent.thirdHexColour}
+                                                {nextFixtureHomeTeam && nextFixtureAwayTeam && <CombinedIcon
+                                                        primary={nextFixtureAwayTeam.primaryColourHex}
+                                                        secondary={nextFixtureAwayTeam.SecondaryColourHex}
+                                                        third={nextFixtureAwayTeam.thirdColourHex}
                                                         width={60}
                                                         height={60}
                                                     />}
@@ -275,7 +281,8 @@ const ClubDetails = ({  }) => {
                                                 <Col xs={2}>
                                             </Col>
                                             <Col xs={5}>
-                                                {nextOpponent && <p className="stat-header text-center w-100">{nextOpponent.abbreviatedName}</p>  }
+                                                {nextFixtureHomeTeam.id != team.id && <p className="stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
+                                                {nextFixtureAwayTeam.id != team.id && <p className="stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>}
                                             </Col>
                                         </Row>
                                     </div>
