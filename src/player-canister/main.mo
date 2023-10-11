@@ -147,8 +147,6 @@ actor Self {
     };
 
     public shared query ({caller}) func getPlayersDetailsForGameweek(playerIds: [T.PlayerId], seasonId: Nat16, gameweek: Nat8) : async [DTOs.PlayerPointsDTO] {
-        assert not Principal.isAnonymous(caller);
-        
         var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
 
         label playerDetailsLoop for (player in Iter.fromList(players)) {

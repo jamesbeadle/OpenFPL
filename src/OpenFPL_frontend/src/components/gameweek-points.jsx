@@ -75,7 +75,7 @@ const GameweekPoints = () => {
         setIsLoading(false);
         };
         fetchData();
-    }, []);
+    }, [currentSeason, currentGameweek]);
 
     useEffect(() => {
         if (fantasyTeam && fantasyTeam.players) {
@@ -115,7 +115,7 @@ const GameweekPoints = () => {
             }
             else
             {
-                const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, Number(season), Number(gameweek));    
+                const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, currentSeason.id, currentGameweek);    
                 const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
                 setFantasyTeam({
                     ...fetchedFantasyTeam,
