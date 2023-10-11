@@ -373,11 +373,12 @@ const ClubDetails = ({  }) => {
                                                     <Col xs={12}>
                                                     <div className="table-row clickable-table-row">
                                                         <div className="club-player-number-col gw-table-col">{player.shirtNumber}</div>
-                                                        {player.firstName.length > 0 ? 
-                                                            <div className="club-player-name-col gw-table-col">{`${player.firstName} ${player.lastName}`}</div> 
-                                                        :
-                                                            <div className="club-player-name-col gw-table-col">{player.lastName}</div>
-                                                        }
+                                                        <div className="club-player-name-col gw-table-col">
+                                                            <div style={{marginRight: '16px'}}>{getFlag(player.nationality, '40px')}</div>
+                                                            {
+                                                                player.firstName.length > 0 ? `${player.firstName} ${player.lastName}` : player.lastName
+                                                            }
+                                                        </div> 
                                                         {player.position == 0 && <div className="club-player-position-col gw-table-col">GK</div>}
                                                         {player.position == 1 && <div className="club-player-position-col gw-table-col">DF</div>}
                                                         {player.position == 2 && <div className="club-player-position-col gw-table-col">MF</div>}

@@ -580,7 +580,7 @@ const GameweekPoints = () => {
                             <div className="gw-points-assists-col gw-table-header">GA</div>
                             <div className="gw-points-pen-saves-col gw-table-header">PS</div>
                             <div className="gw-points-clean-sheets-col gw-table-header">CS</div>
-                            <div className="gw-points-saves-col gw-table-header">S</div>
+                            <div className="gw-points-saves-col gw-table-header">KS</div>
                             <div className="gw-points-yellow-cards-col gw-table-header">YC</div>
                             <div className="gw-points-own-goals-col gw-table-header">OG</div>
                             <div className="gw-points-goals-conceded-col gw-table-header">GC</div>

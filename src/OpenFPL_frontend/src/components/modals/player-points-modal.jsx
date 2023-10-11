@@ -144,7 +144,16 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                 </div>}
                 {bonusId > 0 && (
                     <div className='player-modal-category-row row-bottom-border'>
-                        <div className='player-modal-category-col'>Bonus</div>
+                        <div className='player-modal-category-col'>{[
+                                (bonusId === 1 && "Goal Getter Bonus"),
+                                (bonusId === 2 && "Pass Master Bonus"),
+                                (bonusId === 3 && "No Entry Bonus"),
+                                (bonusId === 4 && "Safe Hands Bonus"),
+                                (bonusId === 5 && "Captain Fantastic Bonus"),
+                                (bonusId === 6 && "Brace Bonus"),
+                                (bonusId === 7 && "Hat-trick Hero Bonus"),
+                                (bonusId === 8 && "Team Boost Bonus")
+                                ].some(Boolean) || '-'}</div>
                         <div className='player-modal-quantity-col'>
                         {[
                                 (bonusId === 1 && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
