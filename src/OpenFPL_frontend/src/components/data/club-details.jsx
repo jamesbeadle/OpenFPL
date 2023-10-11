@@ -33,7 +33,7 @@ const ClubDetails = ({  }) => {
         3: 'Forward'
     };
     const [dateRange, setDateRange] = useState({ start: null, end: null });
-    const [fixtureFilter, setFixtureFilter] = useState('all');
+    const [fixtureFilter, setFixtureFilter] = useState('All');
     const positionDropdownRef = useRef(null);
     const [showPositionDropdown, setShowPositionDropdown] = useState(false);
     const [currentPosition, setCurrentPosition] = useState('All');
@@ -115,13 +115,6 @@ const ClubDetails = ({  }) => {
     
     const teamPlayers = players.filter(player => player.teamId === Number(teamId));
 
-    const groupPlayersByPosition = (players) => {
-        return players.reduce((acc, player) => {
-            (acc[player.position] = acc[player.position] || []).push(player);
-            return acc;
-        }, {});
-    };
-
     const openPositionDropdown = () => {
       setShowPositionDropdown(!showPositionDropdown);
       setTimeout(() => {
@@ -142,6 +135,157 @@ const ClubDetails = ({  }) => {
             </div>
         ) :
         <Container fluid className='view-container mt-2'>
+              <Row>
+                <Col md={7} xs={12}>
+                    <Card className='mb-3'>
+                        <div className="outer-container d-flex">
+                            <div className="stat-panel flex-grow-1">
+                                <Row className="stat-row-1">
+                                    <div className='club-badge-col'>
+                                        <p className="stat-header w-100 text-center">{team.abbreviatedName}</p>
+                                    </div>
+                                    <div className='club-total-players-col'>
+                                        <p className="stat-header w-100">Players</p>
+                                    </div>
+                                    <div className='club-position-col'>
+                                        <p className="stat-header w-100">Season Position</p>
+                                    </div>
+                                    <div className='club-points-col'>
+                                        <p className="stat-header w-100">Points</p>
+                                    </div>
+                                </Row>
+                                <Row className="stat-row-2">
+                                    <div className='club-badge-col'>
+                                        <BadgeIcon
+                                            primary={team.primaryColourHex}
+                                            secondary={team.secondaryColourHex}
+                                            third={team.thirdColourHex}
+                                            width={40}
+                                            height={40}
+                                        />
+                                    </div>
+                                    <div className='club-total-players-col'>
+                                        <p className="stat">{players.filter(x => x.teamId == team.id).length}</p>
+                                    </div>
+                                    <div className='club-position-col'>
+                                        <p className="stat">{'0'}</p>
+                                    </div>
+                                    <div className='club-points-col'>
+                                        <p className="stat">{'0'}</p>
+                                    </div>
+                                </Row>
+                                <Row className="stat-row-3">
+                                    <div className='club-badge-col'>
+                                        <p className="stat-header text-center">{team.friendlyName}</p>   
+                                    </div>
+                                    <div className='club-total-players-col'>
+                                        <p className="stat-header">Total</p>    
+                                    </div>
+                                    <div className='club-position-col'>
+                                        <p className="stat-header">{systemState.activeSeason.name}</p>    
+                                    </div>
+                                    <div className='club-points-col'>
+                                        <p className="stat-header">Total</p>    
+                                    </div>
+                                </Row>
+                            </div>
+                            <div className="d-none d-md-block club-divider-1"></div>
+                            <div className="d-none d-md-block club-divider-2"></div>
+                            <div className="d-none d-md-block club-divider-3"></div>
+                        </div>
+                    </Card>
+                </Col>
+
+                <Col md={5} xs={12}>
+                    <Card>
+                        <div className="outer-container d-flex">
+                            <div className="stat-panel flex-grow-1">  
+                                <Row className="stat-row-1">
+                                    <div className='home-deadline-col'>
+                                        <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Upcoming Game</p>    
+                                    </div>
+                                    <div className='home-fixture-col'>
+                                         
+                                    </div>
+                                </Row>
+                                <Row className="stat-row-2">
+                                    <div className='home-deadline-col'>
+                                        <Row  style={{paddingLeft: '32px'}}>
+                                            <Col xs={4} className="add-colon">
+                                                <p className="stat">{String(days).padStart(2, '0')}</p>
+                                            </Col>
+                                            <Col xs={4} className="add-colon">
+                                                <p className="stat">{String(hours).padStart(2, '0')}</p>
+                                            </Col>
+                                            <Col xs={4}>
+                                                <p className="stat">{String(minutes).padStart(2, '0')}</p>
+                                            </Col>
+                                        </Row>  
+                                    </div>
+                                    <div className='home-fixture-col'>
+                                        <Row>
+                                            <Col xs={5}>
+                                                <div className='text-center badge w-100'>
+                                                    {team && <CombinedIcon
+                                                        primaryColour={team.primaryHexColour}
+                                                        secondaryColour={team.SecondaryHexColour}
+                                                        thirdColour={team.thirdHexColour}
+                                                        width={60}
+                                                        height={60}
+                                                    />}
+                                                </div>
+                                            </Col>
+                                            <Col xs={2}>
+                                                <p className="w-100 time-colon">vs</p>
+                                            </Col>
+                                            <Col xs={5}>
+                                                <div className='text-center badge w-100'>
+                                                {nextOpponent && <CombinedIcon
+                                                        primaryColour={nextOpponent.primaryHexColour}
+                                                        secondaryColour={nextOpponent.SecondaryHexColour}
+                                                        thirdColour={nextOpponent.thirdHexColour}
+                                                        width={60}
+                                                        height={60}
+                                                    />}
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </Row>
+                                <Row className='stat-row-3'>
+                                    <div className='home-deadline-col'>
+                                        <Row style={{paddingLeft: '32px'}}>
+                                            <Col xs={4}>
+                                                <p className="stat-header w-100">Day</p> 
+                                            </Col>
+                                            <Col xs={4}>
+                                                <p className="stat-header w-100">Hour</p>   
+                                            </Col>
+                                            <Col xs={4}>
+                                                <p className="stat-header w-100">Min</p>    
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                    <div className='home-fixture-col'>
+                                        <Row>
+                                            <Col xs={5}>
+                                                {team && <p className="stat-header text-center w-100">{team.abbreviatedName}</p>}
+                                                </Col>
+                                                <Col xs={2}>
+                                            </Col>
+                                            <Col xs={5}>
+                                                {nextOpponent && <p className="stat-header text-center w-100">{nextOpponent.abbreviatedName}</p>  }
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </Row>
+                            </div>
+                            <div className="d-none d-md-block home-divider-3"></div>
+                        </div>
+                    </Card>
+                </Col>
+            </Row>
+            
             <Row className="mt-2">
                 <Col xs={12}>
                     <Card>
@@ -157,16 +301,16 @@ const ClubDetails = ({  }) => {
                                                         <div ref={positionDropdownRef} onBlur={handlePositionBlur}>
                                                         <Dropdown show={showPositionDropdown}>
                                                             <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
-                                                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openPositionDropdown()}>{currentPosition}</Button>
+                                                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openPositionDropdown()}>Position: {currentPosition}</Button>
                                                             </Dropdown.Toggle>
                                                             <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                                                 <Dropdown.Item
                                                                     data-key={0}
                                                                     className='dropdown-item'
                                                                     key={0}
-                                                                    onMouseDown={() => {setCurrentPosition('ALL')}}
+                                                                    onMouseDown={() => {setCurrentPosition('All')}}
                                                                     >
-                                                                    ALL
+                                                                    All
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item
                                                                     data-key={0}
@@ -230,8 +374,8 @@ const ClubDetails = ({  }) => {
                                                         {player.position == 1 && <div className="club-player-position-col gw-table-col">DF</div>}
                                                         {player.position == 2 && <div className="club-player-position-col gw-table-col">MF</div>}
                                                         {player.position == 3 && <div className="club-player-position-col gw-table-col">FW</div>}
-                                                        <div className="club-player-value-col gw-table-col">{player.value}</div>
-                                                        <div className="club-player-age-col gw-table-col">{player.dateOfBirth}</div>
+                                                        <div className="club-player-value-col gw-table-col">{`£${(Number(player.value) / 4).toFixed(2)}m`}</div>
+                                                        <div className="club-player-age-col gw-table-col">{getAgeFromDOB(player.dateOfBirth)}</div>
                                                      </div>
                                                     </Col>
                                                     </Row>

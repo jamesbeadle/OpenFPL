@@ -1531,6 +1531,17 @@ $dropdown-link-color: #5A5A5A;
 }
 
 .club-player-number-col{
-  flex-basis: 33%;
-  margin-top: 8px;
+  flex-basis: 10%;
+}
+.club-player-name-col{
+  flex-basis: 30%;
+}
+.club-player-position-col{
+  flex-basis: 20%;
+}
+.club-player-value-col{
+  flex-basis: 20%;
+}
+.club-player-age-col{
+  flex-basis: 20%;
 }
