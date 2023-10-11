@@ -607,7 +607,7 @@ const GameweekPoints = () => {
                     return (
                       <Row onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)} style={{ overflowX: 'auto' }}>
                         <Col xs={12}>
-                        <div className="table-row" key={player.id}>
+                        <div className="table-row clickable-table-row" key={player.id}>
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
                             <div className="gw-points-name-col gw-table-col">{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
                             <div className="gw-points-club-col gw-table-col">
