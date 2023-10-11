@@ -10,6 +10,7 @@ import { getAgeFromDOB } from '../helpers';
 import getFlag from '../country-flag';
 import { getTeamById, computeTimeLeft } from '../helpers';
 import { BadgeIcon } from '../icons';
+import ClubFixtures from './club-fixtures';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -285,7 +286,7 @@ const ClubDetails = ({  }) => {
                     </Card>
                 </Col>
             </Row>
-            
+
             <Row className="mt-2">
                 <Col xs={12}>
                     <Card>
@@ -361,9 +362,9 @@ const ClubDetails = ({  }) => {
 
                                             {teamPlayers.map(player => {
                                                 return (
-                                                    <Row onClick={() => loadPlayer(player)} style={{ overflowX: 'auto' }}>
+                                                    <Row key={player.id} onClick={() => loadPlayer(player)} style={{ overflowX: 'auto' }}>
                                                     <Col xs={12}>
-                                                    <div className="table-row clickable-table-row" key={player.id}>
+                                                    <div className="table-row clickable-table-row">
                                                         <div className="club-player-number-col gw-table-col">{player.shirtNumber}</div>
                                                         {player.firstName.length > 0 ? 
                                                             <div className="club-player-name-col gw-table-col">{`${player.firstName} ${player.lastName}`}</div> 
@@ -387,10 +388,13 @@ const ClubDetails = ({  }) => {
                                 </Tab>
 
                                 <Tab eventKey="fixtures" title="Fixtures">
-                                    
+                                    <ClubFixtures teamId={teamId} />
                                 </Tab>
                                 <Tab eventKey="proposals" title="Proposals">
-                                    <h1>Proposals coming soon</h1>
+                                    <div className='px-4 mt-4 mb-4'>
+                                        <p>Proposal functionality will be live after our SNS decentralisation sale.</p>
+                                        <p>Please read our whitepaper <LinkContainer to="/whitepaper"><a>here</a></LinkContainer>.</p>
+                                    </div>
                                 </Tab>
                             </Tabs>
                             </div>
