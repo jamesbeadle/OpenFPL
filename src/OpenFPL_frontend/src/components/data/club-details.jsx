@@ -179,13 +179,13 @@ const ClubDetails = ({  }) => {
                             <div className="stat-panel flex-grow-1">
                                 <Row className="stat-row-1">
                                     <div className='club-badge-col'>
-                                        
+                                        <p className="stat-header w-100 text-center">{team.abbreviatedName}</p>
                                     </div>
                                     <div className='club-total-players-col'>
                                         <p className="stat-header w-100">Players</p>
                                     </div>
                                     <div className='club-position-col'>
-                                        <p className="club-position-col w-100">Season Position</p>
+                                        <p className="stat-header w-100">Season Position</p>
                                     </div>
                                     <div className='club-points-col'>
                                         <p className="stat-header w-100">Points</p>
@@ -197,8 +197,8 @@ const ClubDetails = ({  }) => {
                                             primary={team.primaryColourHex}
                                             secondary={team.secondaryColourHex}
                                             third={team.thirdColourHex}
-                                            width={90}
-                                            height={90}
+                                            width={40}
+                                            height={40}
                                         />
                                     </div>
                                     <div className='club-total-players-col'>
@@ -213,7 +213,7 @@ const ClubDetails = ({  }) => {
                                 </Row>
                                 <Row className="stat-row-3">
                                     <div className='club-badge-col'>
-                                        <p style={{paddingLeft: '40px'}} className="stat-header">{team.friendlyName}</p>   
+                                        <p className="stat-header text-center">{team.friendlyName}</p>   
                                     </div>
                                     <div className='club-total-players-col'>
                                         <p className="stat-header">Total</p>    
@@ -226,8 +226,9 @@ const ClubDetails = ({  }) => {
                                     </div>
                                 </Row>
                             </div>
-                            <div className="d-none d-md-block home-divider-1"></div>
-                            <div className="d-none d-md-block home-divider-2"></div>
+                            <div className="d-none d-md-block club-divider-1"></div>
+                            <div className="d-none d-md-block club-divider-2"></div>
+                            <div className="d-none d-md-block club-divider-3"></div>
                         </div>
                     </Card>
                 </Col>

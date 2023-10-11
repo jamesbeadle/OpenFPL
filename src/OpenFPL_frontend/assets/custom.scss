@@ -1481,3 +1481,51 @@ $dropdown-link-color: #5A5A5A;
 .clickable-table-row{
   cursor: pointer;
 }
+
+.club-badge-col{
+  flex-basis: 25%;
+  align-items: center;
+  justify-content: center;  
+  display: flex;
+}
+
+.club-total-players-col{
+  flex-basis: 25%;
+}
+
+.club-position-col{
+  flex-basis: 25%;
+}
+
+.club-points-col{
+  flex-basis: 25%;
+}
+
+
+
+.club-divider-1 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 22%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.club-divider-2 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 48%;
+  width: 1px;
+  background-color: #37393C;
+}
+
+.club-divider-3 {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 74%;
+  width: 1px;
+  background-color: #37393C;
+}
