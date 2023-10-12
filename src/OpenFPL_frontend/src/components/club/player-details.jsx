@@ -12,7 +12,7 @@ const PlayerDetails = ({  }) => {
     const { playerId } = useParams();
     const { teams, seasons, fixtures, systemState } = useContext(DataContext);
     const [player, setPlayer] = useState(null);
-    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
+    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason);
     const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [selectedPlayerGameweek, setSelectedPlayerGameweek] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -58,7 +58,7 @@ const PlayerDetails = ({  }) => {
     }, []);
 
     useEffect(() => {
-        
+        console.log(selectedSeason)
     }, [selectedSeason]);
 
 
