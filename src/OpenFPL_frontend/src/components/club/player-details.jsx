@@ -6,7 +6,7 @@ import { player_canister as player_canister } from '../../../../declarations/pla
 import { getAgeFromDOB, formatDOB } from '../helpers';
 import getFlag from '../country-flag';
 import PlayerDetailModal from './player-detail-modal';
-import { CombinedIcon, BadgeIcon, ShirtIcon, ArrowLeft, ArrowRight, ViewIcon } from '../icons';
+import { CombinedIcon, BadgeIcon, ShirtIcon, StripedShirtIcon, ArrowLeft, ArrowRight, ViewIcon } from '../icons';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { getTeamById, computeTimeLeft } from '../helpers';
 
@@ -226,7 +226,7 @@ const PlayerDetails = ({  }) => {
                                         <p className="stat-header text-center">Number: {player.shirtNumber}</p>   
                                     </div>
                                     <div className='player-details-position-col'>
-                                        <p className="stat-header">{player.firstName}</p>    
+                                        <p className="stat-header" style={{ display: 'flex', alignItems: 'center' }}><div style={{marginRight: '8px'}}>{getFlag(player.nationality, '16px')}</div>{player.firstName}</p>    
                                     </div>
                                     <div className='player-details-value-col'>
                                         <p className="stat-header">{systemState.activeSeason.name}</p>    
@@ -432,7 +432,7 @@ const PlayerDetails = ({  }) => {
                 </Col>
             </Row>                                                  
 
-           {selectedPlayer && selectedPlayerGameweek && <PlayerDetailModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerGameweek={selectedPlayerGameweek} teams={teams} />}
+           {selectedPlayer && selectedPlayerGameweek && <PlayerDetailModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerGameweek={selectedPlayerGameweek} teams={teams} season={selectedSeason} />}
         </Container>
     );
 };
