@@ -31,7 +31,7 @@ const ClubFixtures = ({teamId}) => {
   }, []);
   
   const fetchViewData = async () => {
-    console.log(teamId)
+    
   };
 
   useEffect(() => {
