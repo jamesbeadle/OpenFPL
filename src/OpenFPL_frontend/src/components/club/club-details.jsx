@@ -58,8 +58,28 @@ const ClubDetails = ({  }) => {
             const currentTime = BigInt(Date.now() * 1000000);
             const nextFixtureData = teamFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff)).find(fixture => Number(fixture.kickOff) > currentTime);
             setNextFixtureHomeTeam(getTeamById(teams, nextFixtureData.homeTeamId));
-            console.log(getTeamById(teams, nextFixtureData.homeTeamId))
             setNextFixtureAwayTeam(getTeamById(teams, nextFixtureData.awayTeamId));
+            if (nextFixtureData) {
+                const timeLeft = computeTimeLeft(Number(nextFixtureData.kickOff));
+                const timeLeftInMillis = 
+                    timeLeft.days * 24 * 60 * 60 * 1000 + 
+                    timeLeft.hours * 60 * 60 * 1000 + 
+                    timeLeft.minutes * 60 * 1000 + 
+                    timeLeft.seconds * 1000;
+                
+                const d = Math.floor(timeLeftInMillis / (1000 * 60 * 60 * 24));
+                const h = Math.floor((timeLeftInMillis % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((timeLeftInMillis % (1000 * 60 * 60)) / (1000 * 60));
+        
+                setDays(d);
+                setHours(h);
+                setMinutes(m);
+            } else {
+                setDays(0);
+                setHours(0);
+                setMinutes(0);
+            }
+
         } catch (error) {
             console.error(error);
         } finally {
