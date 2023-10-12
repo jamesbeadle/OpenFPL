@@ -168,7 +168,9 @@ const PlayerDetails = ({  }) => {
                             <div className="stat-panel flex-grow-1">
                                 <Row className="stat-row-1">
                                     <div className='player-details-name-col'>
-                                    <p className="stat-header w-100 text-center">{player.firstName}</p>
+                                    <p className="stat-header w-100 text-center">
+                                    {POSITION_MAP[player.position]}
+                                    </p>
                                          </div>
                                     <div className='player-details-position-col'>
                                         <p className="stat-header w-100">
@@ -210,7 +212,7 @@ const PlayerDetails = ({  }) => {
                           
                                     </div>
                                     <div className='player-details-position-col'>
-                                        <p className="stat">{POSITION_MAP[player.position]}</p>
+                                        <p className="stat">{player.lastName}</p>
                                     </div>
                                     <div className='player-details-value-col'>
                                         <p className="stat">{`£${(Number(player.value) / 4).toFixed(2)}m`}</p>
@@ -221,10 +223,10 @@ const PlayerDetails = ({  }) => {
                                 </Row>
                                 <Row className="stat-row-3">
                                     <div className='player-details-name-col'>
-                                        <p className="stat-header text-center">{player.lastName}</p>   
+                                        <p className="stat-header text-center">Number: {player.shirtNumber}</p>   
                                     </div>
                                     <div className='player-details-position-col'>
-                                        <p className="stat-header">Shirt Number: {player.shirtNumber}</p>    
+                                        <p className="stat-header">{player.firstName}</p>    
                                     </div>
                                     <div className='player-details-value-col'>
                                         <p className="stat-header">{systemState.activeSeason.name}</p>    
