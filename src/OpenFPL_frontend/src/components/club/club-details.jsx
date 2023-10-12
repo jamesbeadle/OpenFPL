@@ -11,6 +11,7 @@ import getFlag from '../country-flag';
 import { getTeamById, computeTimeLeft } from '../helpers';
 import { BadgeIcon } from '../icons';
 import ClubFixtures from './club-fixtures';
+import { useNavigate } from 'react-router-dom';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +32,7 @@ const ClubDetails = ({  }) => {
     const [teamPlayers, setTeamPlayers] = useState(players.filter(player => player.teamId === Number(teamId)));
     const [currentPosition, setCurrentPosition] = useState(-1);
     const [tableData, setTableData] = useState([]);
+    const navigate = useNavigate();
   
     const handlePositionBlur = (e) => {
       const currentTarget = e.currentTarget;
@@ -182,6 +184,10 @@ const ClubDetails = ({  }) => {
           }
         }
       }, 0);
+    };
+
+    const loadPlayer = async (player) => {
+      navigate(`/player/${player.id}`);
     };
 
     return (
