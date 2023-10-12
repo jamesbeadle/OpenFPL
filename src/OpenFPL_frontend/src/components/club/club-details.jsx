@@ -17,7 +17,7 @@ const ClubDetails = ({  }) => {
     const [key, setKey] = useState('players');
     
     const { teamId } = useParams();
-    const { teams, players, seasons, systemState } = useContext(DataContext);
+    const { teams, players, systemState } = useContext(DataContext);
     const [days, setDays] = useState(0);
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
@@ -25,20 +25,10 @@ const ClubDetails = ({  }) => {
     const [nextFixtureAwayTeam, setNextFixtureAwayTeam] = useState(null);
     
     const [team, setTeam] = useState(null);
-    const [fixtures, setFixtures] = useState([]);
-    const [allTeamFixtures, setAllTeamFixtures] = useState([]);
-    const [selectedSeason, setSelectedSeason] = useState(systemState.activeSeason.id);
-    const POSITION_MAP = {
-        0: 'Goalkeeper',
-        1: 'Defender',
-        2: 'Midfielder',
-        3: 'Forward'
-    };
-    const [dateRange, setDateRange] = useState({ start: null, end: null });
-    const [fixtureFilter, setFixtureFilter] = useState('All');
     const positionDropdownRef = useRef(null);
     const [showPositionDropdown, setShowPositionDropdown] = useState(false);
-    const [currentPosition, setCurrentPosition] = useState('All');
+    const [teamPlayers, setTeamPlayers] = useState(players.filter(player => player.teamId === Number(teamId)));
+    const [currentPosition, setCurrentPosition] = useState(-1);
  
     const handlePositionBlur = (e) => {
       const currentTarget = e.currentTarget;
@@ -46,81 +36,38 @@ const ClubDetails = ({  }) => {
         setShowPositionDropdown(false);
       }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setTeamPlayers(players.filter(player => player.teamId === Number(teamId) && (currentPosition === -1 || player.position === currentPosition)));
+        };
+        fetchData();
+    }, [currentPosition]);
+
+    const fetchInitialData = async () => {
+        try {
+            const teamDetails = teams.find(t => t.id === Number(teamId));
+            setTeam(teamDetails);
+            const fixturesData = await open_fpl_backend.getFixturesForSeason(systemState.activeSeason.id);
+            let teamFixtures = fixturesData
+            .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
+            .sort((a, b) => a.gameweek - b.gameweek);
+            
+            const currentTime = BigInt(Date.now() * 1000000);
+            const nextFixtureData = teamFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff)).find(fixture => Number(fixture.kickOff) > currentTime);
+            setNextFixtureHomeTeam(getTeamById(teams, nextFixtureData.homeTeamId));
+            setNextFixtureAwayTeam(getTeamById(teams, nextFixtureData.awayTeamId));
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
   
     useEffect(() => {
-        const fetchInitialData = async () => {
-            try {
-                const teamDetails = teams.find(t => t.id === Number(teamId));
-                setTeam(teamDetails);
-                const fixturesData = await open_fpl_backend.getFixturesForSeason(systemState.activeSeason.id);
-                let teamFixtures = fixturesData
-                .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
-                .sort((a, b) => a.gameweek - b.gameweek);
-                setAllTeamFixtures(teamFixtures);
-                
-                const currentTime = BigInt(Date.now() * 1000000);
-                const nextFixtureData = teamFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff)).find(fixture => Number(fixture.kickOff) > currentTime);
-                setNextFixtureHomeTeam(getTeamById(teams, nextFixtureData.homeTeamId));
-                setNextFixtureAwayTeam(getTeamById(teams, nextFixtureData.awayTeamId));
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchInitialData();
     }, []);
-
     
-    useEffect(() => {
-        if (!teams || !teamId || allTeamFixtures.length == 0) {
-            return;
-        };
-        const fetchData = async () => {
-            const teamDetails = teams.find(t => t.id == teamId);
-            setTeam(teamDetails);
-
-            let filteredTeamFixtures = allTeamFixtures
-            .filter(f => {
-                if (fixtureFilter === 'home' && f.homeTeamId !== Number(teamId)) return false;
-                if (fixtureFilter === 'away' && f.awayTeamId !== Number(teamId)) return false;
-
-                if (dateRange.start && f.kickOff < dateRange.start) return false;
-                if (dateRange.end && f.kickOff > dateRange.end) return false;
-
-                return true;
-            })
-            .sort((a, b) => a.gameweek - b.gameweek);
-
-
-            setFixtures(filteredTeamFixtures);    
-        };
-
-        fetchData();
-    }, [teamId, teams, fixtureFilter, dateRange, allTeamFixtures]);
-
-    useEffect(() => {
-        
-        const fetchFixturesForSeason = async (seasonId) => {
-            try {
-                setIsLoading(true);
-                const fixturesData = await open_fpl_backend.getFixturesForSeason(seasonId);
-                let teamFixtures = fixturesData
-                    .filter(f => f.homeTeamId == teamId || f.awayTeamId == teamId)
-                    .sort((a, b) => a.gameweek - b.gameweek);
-                setAllTeamFixtures(teamFixtures);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-    
-        fetchFixturesForSeason(selectedSeason);
-    }, [selectedSeason]);
-    
-    const teamPlayers = players.filter(player => player.teamId === Number(teamId));
 
     const openPositionDropdown = () => {
       setShowPositionDropdown(!showPositionDropdown);
@@ -309,14 +256,21 @@ const ClubDetails = ({  }) => {
                                                         <div ref={positionDropdownRef} onBlur={handlePositionBlur}>
                                                         <Dropdown show={showPositionDropdown}>
                                                             <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
-                                                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openPositionDropdown()}>Position: {currentPosition}</Button>
+                                                                <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openPositionDropdown()}>
+                                                                    Position: 
+                                                                    {currentPosition == -1 && ' All'}
+                                                                    {currentPosition == 0 && ' Goalkeepers'}
+                                                                    {currentPosition == 1 && ' Defenders'}
+                                                                    {currentPosition == 2 && ' Midfielders'}
+                                                                    {currentPosition == 3 && ' Forwards'}
+                                                                </Button>
                                                             </Dropdown.Toggle>
                                                             <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                                                 <Dropdown.Item
-                                                                    data-key={0}
+                                                                    data-key={-1}
                                                                     className='dropdown-item'
-                                                                    key={0}
-                                                                    onMouseDown={() => {setCurrentPosition('All')}}
+                                                                    key={-1}
+                                                                    onMouseDown={() => {setCurrentPosition(-1)}}
                                                                     >
                                                                     All
                                                                 </Dropdown.Item>
@@ -324,23 +278,31 @@ const ClubDetails = ({  }) => {
                                                                     data-key={0}
                                                                     className='dropdown-item'
                                                                     key={0}
-                                                                    onMouseDown={() => {setCurrentPosition('Defenders')}}
+                                                                    onMouseDown={() => {setCurrentPosition(0)}}
+                                                                    >
+                                                                    Goalkeepers
+                                                                </Dropdown.Item>
+                                                                <Dropdown.Item
+                                                                    data-key={1}
+                                                                    className='dropdown-item'
+                                                                    key={1}
+                                                                    onMouseDown={() => {setCurrentPosition(1)}}
                                                                     >
                                                                     Defenders
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item
-                                                                    data-key={0}
+                                                                    data-key={2}
                                                                     className='dropdown-item'
-                                                                    key={0}
-                                                                    onMouseDown={() => {setCurrentPosition('Midfielders')}}
+                                                                    key={2}
+                                                                    onMouseDown={() => {setCurrentPosition(2)}}
                                                                     >
                                                                     Midfielders
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item
-                                                                    data-key={0}
+                                                                    data-key={3}
                                                                     className='dropdown-item'
-                                                                    key={0}
-                                                                    onMouseDown={() => {setCurrentPosition('Forwards')}}
+                                                                    key={3}
+                                                                    onMouseDown={() => {setCurrentPosition(3)}}
                                                                     >
                                                                     Forwards
                                                                 </Dropdown.Item>
