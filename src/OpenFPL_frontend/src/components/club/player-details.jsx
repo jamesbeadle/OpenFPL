@@ -172,6 +172,14 @@ const PlayerDetails = ({  }) => {
                                          </div>
                                     <div className='player-details-position-col'>
                                         <p className="stat-header w-100">
+                                            <BadgeIcon
+                                                primary={playerTeam.primaryColourHex}
+                                                secondary={playerTeam.secondaryColourHex}
+                                                third={playerTeam.thirdColourHex}
+                                                width={20}
+                                                height={20}
+                                                marginRight={8}
+                                            /> 
                                          {playerTeam.name}</p>
                                     </div>
                                     <div className='player-details-value-col'>
