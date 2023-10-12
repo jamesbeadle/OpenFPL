@@ -6,7 +6,7 @@ import { player_canister as player_canister } from '../../../../declarations/pla
 import { getAgeFromDOB, formatDOB } from '../helpers';
 import getFlag from '../country-flag';
 import PlayerDetailModal from './player-detail-modal';
-import { ShirtIcon, ArrowLeft, ArrowRight, ViewIcon } from '../icons';
+import { BadgeIcon, ShirtIcon, ArrowLeft, ArrowRight, ViewIcon } from '../icons';
 
 const PlayerDetails = ({  }) => {
     const { playerId } = useParams();
@@ -100,21 +100,21 @@ const PlayerDetails = ({  }) => {
         setShowModal(false);
     }
     
-    const getGameweekTeamName = (fixtureId, playerTeamId) => {
+    const getGameweekTeam = (fixtureId, playerTeamId) => {
         const fixture = fixtures.find(fixture => fixture.id === fixtureId); 
         if(!fixture){
             return;
         }
 
         if(playerTeamId == fixture.homeTeamId){
-            return teams.find(team => team.id == fixture.awayTeamId).friendlyName;
+            return teams.find(team => team.id == fixture.awayTeamId);
         }
 
         if(playerTeamId == fixture.awayTeamId){
-            return teams.find(team => team.id == fixture.homeTeamId).friendlyName;
+            return teams.find(team => team.id == fixture.homeTeamId);
         }
 
-      return "";
+      return null;
     }
 
     return (
@@ -135,7 +135,8 @@ const PlayerDetails = ({  }) => {
                                     <p className="stat-header w-100 text-center">{player.firstName}</p>
                                          </div>
                                     <div className='player-details-position-col'>
-                                        <p className="stat-header w-100">{playerTeam.name}</p>
+                                        <p className="stat-header w-100">
+                                         {playerTeam.name}</p>
                                     </div>
                                     <div className='player-details-value-col'>
                                         <p className="stat-header w-100">Value</p>
@@ -347,18 +348,32 @@ const PlayerDetails = ({  }) => {
                                                         </Col>  
                                                     </Row>
                                                     {selectedSeason && (
-                                                        player.gameweeks.map(gw => (
+                                                        player.gameweeks.map(gw => {
+                                                            const opponentTeam = getGameweekTeam(gw.fixtureId, player.teamId);
+                                                            return (
                                                             <Row className='mt-2 mt-2' key={`gw-${gw.number}`}>
                                                                 <Col xs={12}>
                                                                     <div className='table-row'>
                                                                         <div className="gw-history-gw-col gw-table-col">{gw.number}</div>
-                                                                        <div className="gw-history-opponent-col gw-table-col">{getGameweekTeamName(gw.fixtureId, player.teamId)}</div>
+                                                                        <div className="gw-history-opponent-col gw-table-col">{
+                                                                        <p>
+                                                                            <BadgeIcon
+                                                                                primary={opponentTeam.primaryColourHex}
+                                                                                secondary={opponentTeam.secondaryColourHex}
+                                                                                third={opponentTeam.thirdColourHex}
+                                                                                width={48}
+                                                                                height={48}
+                                                                                marginRight={16}
+                                                                            /> 
+                                                                            {opponentTeam.name}
+                                                                        </p>
+                                                                    }</div>
                                                                         <div className="gw-history-points-col gw-table-col">{gw.points}</div>
                                                                         <div className="gw-history-details-col gw-table-col"><Button className='w-100 h-100 view-details-button' onClick={() => handleShowModal(player, gw)}><ViewIcon marginRight={'8px'} />View Details</Button></div>
                                                                     </div>
                                                                 </Col>
                                                             </Row>
-                                                        ))                  
+                                                        )})                  
                                                     )}
                                                 </Container>
                                             </Row>
