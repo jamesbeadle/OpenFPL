@@ -237,7 +237,12 @@ const PlayerDetailModal = ({ show, onClose, player, playerGameweek, teams, seaso
                     )}
                     {otherEvents.map(renderEvent)}
                 </>
-
+                <div className='player-modal-total-row'>
+                    <div className='player-detail-modal-total-col'>
+                        Total Points:
+                    </div>
+                    <div className='player-detail-modal-total-points-col'>{playerGameweek.points}</div>
+                </div>
 
 
             </Modal.Body>

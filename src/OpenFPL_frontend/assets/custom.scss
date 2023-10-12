@@ -1466,6 +1466,13 @@ $dropdown-link-color: #5A5A5A;
   flex-basis: 25%;
 }
 
+.player-detail-modal-total-col{
+  flex-basis: 66%;
+}
+
+.player-detail-modal-total-points-col{
+  flex-basis: 33%;
+}
 
 .modal-footer{
   border-top: none !important;
