@@ -17,7 +17,8 @@ const ClubDetails = ({  }) => {
     const [key, setKey] = useState('players');
     
     const { teamId } = useParams();
-    const { teams, players, systemState } = useContext(DataContext);
+    const { fixtures, teams, players, systemState } = useContext(DataContext);
+    const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
     const [days, setDays] = useState(0);
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
@@ -29,7 +30,8 @@ const ClubDetails = ({  }) => {
     const [showPositionDropdown, setShowPositionDropdown] = useState(false);
     const [teamPlayers, setTeamPlayers] = useState(players.filter(player => player.teamId === Number(teamId)));
     const [currentPosition, setCurrentPosition] = useState(-1);
- 
+    const [tableData, setTableData] = useState([]);
+  
     const handlePositionBlur = (e) => {
       const currentTarget = e.currentTarget;
       if (!currentTarget.contains(document.activeElement)) {
@@ -56,6 +58,7 @@ const ClubDetails = ({  }) => {
             const currentTime = BigInt(Date.now() * 1000000);
             const nextFixtureData = teamFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff)).find(fixture => Number(fixture.kickOff) > currentTime);
             setNextFixtureHomeTeam(getTeamById(teams, nextFixtureData.homeTeamId));
+            console.log(getTeamById(teams, nextFixtureData.homeTeamId))
             setNextFixtureAwayTeam(getTeamById(teams, nextFixtureData.awayTeamId));
         } catch (error) {
             console.error(error);
@@ -65,9 +68,89 @@ const ClubDetails = ({  }) => {
     };
   
     useEffect(() => {
+        updateTableData();
         fetchInitialData();
     }, []);
+
+    const updateTableData = () => {
+        const initTeamData = (teamId, table) => {
+            if (!table[teamId]) {
+                table[teamId] = {
+                    teamId,
+                    played: 0,
+                    wins: 0,
+                    draws: 0,
+                    losses: 0,
+                    goalsFor: 0,
+                    goalsAgainst: 0,
+                    points: 0
+                };
+            }
+        };
     
+        let tempTable = {};
+        
+        const relevantFixtures = fixtures.filter(fixture => 
+            fixture.status === 3 && fixture.gameweek <= currentGameweek);
+    
+        for (let fixture of relevantFixtures) {
+            initTeamData(fixture.homeTeamId, tempTable);
+            initTeamData(fixture.awayTeamId, tempTable);
+            tempTable[fixture.homeTeamId].id = fixture.homeTeamId;
+            tempTable[fixture.awayTeamId].id = fixture.awayTeamId;
+    
+            tempTable[fixture.homeTeamId].played++;
+            tempTable[fixture.awayTeamId].played++;
+    
+            tempTable[fixture.homeTeamId].goalsFor += fixture.homeGoals;
+            tempTable[fixture.homeTeamId].goalsAgainst += fixture.awayGoals;
+            
+            tempTable[fixture.awayTeamId].goalsFor += fixture.awayGoals;
+            tempTable[fixture.awayTeamId].goalsAgainst += fixture.homeGoals;
+    
+            if (fixture.homeGoals > fixture.awayGoals) {
+                tempTable[fixture.homeTeamId].wins++;
+                tempTable[fixture.homeTeamId].points += 3;
+    
+                tempTable[fixture.awayTeamId].losses++;
+            } else if (fixture.homeGoals === fixture.awayGoals) {
+                tempTable[fixture.homeTeamId].draws++;
+                tempTable[fixture.homeTeamId].points += 1;
+    
+                tempTable[fixture.awayTeamId].draws++;
+                tempTable[fixture.awayTeamId].points += 1;
+            } else {
+                tempTable[fixture.awayTeamId].wins++;
+                tempTable[fixture.awayTeamId].points += 3;
+    
+                tempTable[fixture.homeTeamId].losses++;
+            }
+        }
+    
+        const sortedTableData = Object.values(tempTable).sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+
+            const goalDiffA = a.goalsFor - a.goalsAgainst;
+            const goalDiffB = b.goalsFor - b.goalsAgainst;
+
+            if (goalDiffB !== goalDiffA) return goalDiffB - goalDiffA;
+            if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+
+            return a.goalsAgainst - b.goalsAgainst;
+        });
+
+        setTableData(sortedTableData);
+      };
+
+      const getClubInfo = (teamId) => {
+        const club = tableData.find(team => team.teamId == teamId);
+        console.log(club)
+        const position = tableData.indexOf(club) + 1;
+        const points = club?.points || 0;
+        
+        return { position, points };
+      };
+      const { position, points } = getClubInfo(teamId);
 
     const openPositionDropdown = () => {
       setShowPositionDropdown(!showPositionDropdown);
@@ -122,10 +205,10 @@ const ClubDetails = ({  }) => {
                                         <p className="stat">{players.filter(x => x.teamId == team.id).length}</p>
                                     </div>
                                     <div className='club-position-col'>
-                                        <p className="stat">{'0'}</p>
+                                        <p className="stat">{position}</p>
                                     </div>
                                     <div className='club-points-col'>
-                                        <p className="stat">{'0'}</p>
+                                        <p className="stat">{points}</p>
                                     </div>
                                 </Row>
                                 <Row className="stat-row-3">
@@ -180,9 +263,9 @@ const ClubDetails = ({  }) => {
                                         <Row>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
-                                                    {team && <CombinedIcon
+                                                    {nextFixtureHomeTeam && <CombinedIcon
                                                         primary={nextFixtureHomeTeam.primaryColourHex}
-                                                        secondary={nextFixtureHomeTeam.SecondaryColourHex}
+                                                        secondary={nextFixtureHomeTeam.secondaryColourHex}
                                                         third={nextFixtureHomeTeam.thirdColourHex}
                                                         width={60}
                                                         height={60}
@@ -194,9 +277,9 @@ const ClubDetails = ({  }) => {
                                             </Col>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
-                                                {nextFixtureHomeTeam && nextFixtureAwayTeam && <CombinedIcon
+                                                {nextFixtureAwayTeam && <CombinedIcon
                                                         primary={nextFixtureAwayTeam.primaryColourHex}
-                                                        secondary={nextFixtureAwayTeam.SecondaryColourHex}
+                                                        secondary={nextFixtureAwayTeam.secondaryColourHex}
                                                         third={nextFixtureAwayTeam.thirdColourHex}
                                                         width={60}
                                                         height={60}
@@ -223,13 +306,12 @@ const ClubDetails = ({  }) => {
                                     <div className='home-fixture-col'>
                                         <Row>
                                             <Col xs={5}>
-                                                {team && <p className="stat-header text-center w-100">{team.abbreviatedName}</p>}
+                                                {nextFixtureHomeTeam && <p className="stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
                                                 </Col>
                                                 <Col xs={2}>
                                             </Col>
                                             <Col xs={5}>
-                                                {nextFixtureHomeTeam.id != team.id && <p className="stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
-                                                {nextFixtureAwayTeam.id != team.id && <p className="stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>}
+                                                {nextFixtureAwayTeam && <p className="stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>}
                                             </Col>
                                         </Row>
                                     </div>
