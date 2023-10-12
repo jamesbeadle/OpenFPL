@@ -6,7 +6,9 @@ import { player_canister as player_canister } from '../../../../declarations/pla
 import { getAgeFromDOB, formatDOB } from '../helpers';
 import getFlag from '../country-flag';
 import PlayerDetailModal from './player-detail-modal';
-import { BadgeIcon, ShirtIcon, ArrowLeft, ArrowRight, ViewIcon } from '../icons';
+import { CombinedIcon, BadgeIcon, ShirtIcon, ArrowLeft, ArrowRight, ViewIcon } from '../icons';
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { getTeamById, computeTimeLeft } from '../helpers';
 
 const PlayerDetails = ({  }) => {
     const { playerId } = useParams();
@@ -48,6 +50,40 @@ const PlayerDetails = ({  }) => {
                 const playerDetails = await player_canister.getPlayerDetails(Number(playerId), Number(systemState.activeSeason.id));
                 setPlayer(playerDetails);        
                 setPlayerTeam(teams.find(x => x.id == playerDetails.teamId));
+            
+                const fixturesData = await open_fpl_backend.getFixturesForSeason(systemState.activeSeason.id);
+                let teamFixtures = fixturesData
+                .filter(f => f.homeTeamId == playerDetails.teamId || f.awayTeamId == playerDetails.teamId)
+                .sort((a, b) => a.gameweek - b.gameweek);
+                
+                const currentTime = BigInt(Date.now() * 1000000);
+                const nextFixtureData = teamFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff)).find(fixture => Number(fixture.kickOff) > currentTime);
+                setNextFixtureHomeTeam(getTeamById(teams, nextFixtureData.homeTeamId));
+                setNextFixtureAwayTeam(getTeamById(teams, nextFixtureData.awayTeamId));
+                if (nextFixtureData) {
+                    const timeLeft = computeTimeLeft(Number(nextFixtureData.kickOff));
+                    const timeLeftInMillis = 
+                        timeLeft.days * 24 * 60 * 60 * 1000 + 
+                        timeLeft.hours * 60 * 60 * 1000 + 
+                        timeLeft.minutes * 60 * 1000 + 
+                        timeLeft.seconds * 1000;
+                    
+                    const d = Math.floor(timeLeftInMillis / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((timeLeftInMillis % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((timeLeftInMillis % (1000 * 60 * 60)) / (1000 * 60));
+            
+                    setDays(d);
+                    setHours(h);
+                    setMinutes(m);
+                } else {
+                    setDays(0);
+                    setHours(0);
+                    setMinutes(0);
+                }
+            
+            
+            
+            
             } catch (error){
                 console.log(error);
             } finally {
