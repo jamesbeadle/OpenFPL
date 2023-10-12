@@ -1599,3 +1599,24 @@ $dropdown-link-color: #5A5A5A;
   width: 1px;
   background-color: #37393C;
 }
+
+.gw-history-gw-col{
+  flex-basis: 10%;
+}
+
+.gw-history-opponent-col{
+  flex-basis: 30%;
+}
+
+.gw-history-points-col{
+  flex-basis: 40%;
+}
+
+.gw-history-details-col{
+  flex-basis: 20%;
+}
+
+.view-details-button{
+  background-color: transparent !important;
+  border: none !important;
+}
