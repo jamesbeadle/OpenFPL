@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { Container, Row, Col, Button, Spinner, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Button, Spinner, Dropdown, Card } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { DataContext } from "../../contexts/DataContext";
@@ -32,7 +32,8 @@ const Manager = () => {
     const [selectedPlayerDTO, setSelectedPlayerDTO] = useState(null);
     const [selectedPlayerCaptain, setSelectedPlayerCaptain] = useState(false);
     const [showModal, setShowModal] = useState(false);
-
+    const [showListView, setShowListView] = useState(true);
+    
     const handleGameweekBlur = (e) => {
       const currentTarget = e.currentTarget;
       if (!currentTarget.contains(document.activeElement)) {
@@ -60,6 +61,8 @@ const Manager = () => {
     const fetchViewData = async () => {
         try {
             const data = await open_fpl_backend.getManager(managerId, currentSeason.id);
+            console.log("data")
+            console.log(data.gameweeks)
             setViewData(data);
             
             const activeGameweek = data.gameweeks.find(x => x.gameweek == currentGameweek);
@@ -434,206 +437,346 @@ const Manager = () => {
             </div>
         ) : (
         <Container fluid className='view-container mt-2'>
-          
-        <Row>
-          <Col md={12}>
-            <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
-                  style={{ marginRight: '16px' }} >
-                  <ArrowLeft />
-                </Button>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div ref={gameweekDropdownRef} onBlur={handleGameweekBlur}>
-                  <Dropdown show={showGameweekDropdown}>
-                    <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
-                      <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openGameweekDropdown()}>Gameweek {currentGameweek}</Button>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                      {Array.from({ length: 38 }, (_, index) => (
-                        <Dropdown.Item
-                          data-key={index}
-                          className='dropdown-item'
-                          key={index}
-                          onMouseDown={() => {setCurrentGameweek(index + 1)}}
-                        >
-                          Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
-                        </Dropdown.Item>
-                      ))}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-              </div>
-              <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
-                <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
-                  style={{ marginLeft: '16px' }} >
-                  <ArrowRight />
-                </Button>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                  style={{ marginRight: '16px' }} >
-                  <ArrowLeft />
-                </Button>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
-                  <Dropdown show={showSeasonDropdown}>
-                    <Dropdown.Toggle as={CustomToggle} id="season-selector">
-                      <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                      
-                      {seasons.map(season => 
-                        <Dropdown.Item
-                          data-key={season.id}
-                          className='dropdown-item'
-                          key={season.id}
-                          onMouseDown={() => setCurrentSeason(season)}
-                        >
-                          {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
-                        </Dropdown.Item>
-                      )}
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
-                  style={{ marginLeft: '16px' }} >
-                  <ArrowRight />
-                </Button>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: '90px' }}>
-                <label className='gameweek-total-points'>Total Points: {fantasyTeam.points}</label>
-              </div>
-            </div>
-          </Col>
-        </Row>
-        
-        <Container>
-          <Row style={{ overflowX: 'auto' }}>
-              <Col xs={12}>
-                  <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
-                      <div className="gw-points-position-col gw-table-header">Pos</div>
-                      <div className="gw-points-name-col gw-table-header">Player Name</div>
-                      <div className="gw-points-club-col gw-table-header">Club</div>
-                      <div className="gw-points-appearances-col gw-table-header">A</div>
-                      <div className="gw-points-highest-scoring-col gw-table-header">HSP</div>
-                      <div className="gw-points-goals-col gw-table-header">GS</div>
-                      <div className="gw-points-assists-col gw-table-header">GA</div>
-                      <div className="gw-points-pen-saves-col gw-table-header">PS</div>
-                      <div className="gw-points-clean-sheets-col gw-table-header">CS</div>
-                      <div className="gw-points-saves-col gw-table-header">KS</div>
-                      <div className="gw-points-yellow-cards-col gw-table-header">YC</div>
-                      <div className="gw-points-own-goals-col gw-table-header">OG</div>
-                      <div className="gw-points-goals-conceded-col gw-table-header">GC</div>
-                      <div className="gw-points-missed-pen-col gw-table-header">MP</div>
-                      <div className="gw-points-red-card-col gw-table-header">RC</div>
-                      <div className="gw-points-red-card-col gw-table-header">B</div>
-                      <div className="gw-points-red-card-col gw-table-header">PTS</div>
-                  </div>
-              </Col>  
-          </Row>
-
-
-                
-              {sortedPlayers.map(playerDTO => {
-                const player = players.find(p => p.id === playerDTO.id);
-                const playerTeam = getTeamById(teams, player.teamId);
-                if (!playerTeam) {
-                    console.error("One of the teams is missing for player: ", player);
-                    return null;
-                }
-                return (
-                  <Row key={player.id} onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)} style={{ overflowX: 'auto' }}>
-                    <Col xs={12}>
-                    <div className="table-row clickable-table-row">
-                      <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
-                      <div className="gw-points-name-col gw-table-col">{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
-                      <div className="gw-points-club-col gw-table-col">
-                      <BadgeIcon
-                          primary={playerTeam.primaryColourHex}
-                          secondary={playerTeam.secondaryColourHex}
-                          third={playerTeam.thirdColourHex}
-                          width={48}
-                          height={48}
-                          marginRight={16}
-                        />
-                        {playerTeam.friendlyName}
-                      </div>
-                      <div className={`gw-points-appearances-col gw-table-col ${playerDTO.gameweekData.appearance === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.appearance}
-                      </div>
-                      <div className={`gw-points-highest-scoring-col gw-table-col ${playerDTO.gameweekData.highestScoringPlayerId === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.highestScoringPlayerId}
-                      </div>
-                      <div className={`gw-points-goals-col gw-table-col ${playerDTO.gameweekData.goals === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.goals}
-                      </div>
-                      <div className={`gw-points-assists-col gw-table-col ${playerDTO.gameweekData.assists === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.assists}
-                      </div>
-                      <div className={`gw-points-pen-saves-col gw-table-col ${playerDTO.gameweekData.penaltySaves === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.penaltySaves}
-                      </div>
-                      <div className={`gw-points-clean-sheets-col gw-table-col ${playerDTO.gameweekData.cleanSheets === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.cleanSheets}
-                      </div>
-                      <div className={`gw-points-saves-col gw-table-col ${playerDTO.gameweekData.saves === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.saves}
-                      </div>
-                      <div className={`gw-points-yellow-cards-col gw-table-col ${playerDTO.gameweekData.yellowCards === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.yellowCards}
-                      </div>
-                      <div className={`gw-points-own-goals-col gw-table-col ${playerDTO.gameweekData.ownGoals === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.ownGoals}
-                      </div>
-                      <div className={`gw-points-goals-conceded-col gw-table-col ${playerDTO.gameweekData.goalsConceded === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.goalsConceded}  
-                      </div>
-                      <div className={`gw-points-missed-pen-col gw-table-col ${playerDTO.gameweekData.missedPenalties === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.missedPenalties}
-                      </div>
-                      <div className={`gw-points-red-card-col gw-table-col ${playerDTO.gameweekData.redCards === 0 ? 'zero-text' : ''}`}>
-                        {playerDTO.gameweekData.redCards}
-                      </div>
-                      <div className={`gw-points-bonus-col gw-table-col ${(
-                          (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id) || 
-                          (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id) ||
-                          (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id) || 
-                          (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5) ||
-                          (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0) ||
-                          (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2) ||
-                          (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3) ||
-                          (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId)) ? '' : 'zero-text'}`}>
-                        {[
-                          (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
-                          (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id && <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>),
-                          (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id && <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>),
-                          (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5 && <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>),
-                          (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0 && <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>),
-                          (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2 && <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>),
-                          (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3 && <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>),
-                          (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId && <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>)
-                          ].some(Boolean) || '-'}
-                      </div>
-                      <div className="gw-points-points-col gw-table-col">{playerDTO.totalPoints}</div>
+          <Row>
+            <Col md={7} xs={12}>
+                <Card className='mb-3'>
+                    <div className="outer-container d-flex">
+                        <div className="stat-panel flex-grow-1">
+                            <Row className="stat-row-1">
+                                <div className='club-badge-col'>
+                                </div>
+                                <div className='club-total-players-col'>
+                                    <p className="stat-header w-100">Players</p>
+                                </div>
+                                <div className='club-position-col'>
+                                    <p className="stat-header w-100">Season Position</p>
+                                </div>
+                                <div className='club-points-col'>
+                                    <p className="stat-header w-100">Points</p>
+                                </div>
+                            </Row>
+                            <Row className="stat-row-2">
+                                <div className='club-badge-col'>
+                                    
+                                </div>
+                                <div className='club-total-players-col'>
+                                </div>
+                                <div className='club-position-col'>
+                                </div>
+                                <div className='club-points-col'>
+                                </div>
+                            </Row>
+                            <Row className="stat-row-3">
+                                <div className='club-badge-col'>
+                                </div>
+                                <div className='club-total-players-col'>
+                                    <p className="stat-header">Total</p>    
+                                </div>
+                                <div className='club-position-col'>
+                                </div>
+                                <div className='club-points-col'>
+                                    <p className="stat-header">Total</p>    
+                                </div>
+                            </Row>
+                        </div>
+                        <div className="d-none d-md-block club-divider-1"></div>
+                        <div className="d-none d-md-block club-divider-2"></div>
+                        <div className="d-none d-md-block club-divider-3"></div>
                     </div>
-                    </Col>
-                    </Row>
-                    );
-                })}
-                
-                </Container>
-                
-                {selectedPlayer && selectedPlayerDTO && <PlayerPointsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} gameweek={currentGameweek} isCaptain={selectedPlayerCaptain} bonusId={getBonusId()} team={getTeamById(teams, selectedPlayer.teamId)} season={currentSeason} />}
-    
+                </Card>
+            </Col>
 
-    </Container>
-    )
-  );
+            <Col md={5} xs={12}>
+                <Card>
+                    <div className="outer-container d-flex">
+                        <div className="stat-panel flex-grow-1">  
+                            <Row className="stat-row-1">
+                                <div className='home-deadline-col'>
+                                    <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Upcoming Game</p>    
+                                </div>
+                                <div className='home-fixture-col'>
+                                      
+                                </div>
+                            </Row>
+                            <Row className="stat-row-2">
+                                <div className='home-deadline-col'>
+                                    <Row  style={{paddingLeft: '32px'}}>
+                                        <Col xs={4} className="add-colon">
+                                        </Col>
+                                        <Col xs={4} className="add-colon">
+                                        </Col>
+                                        <Col xs={4}>
+                                        </Col>
+                                    </Row>  
+                                </div>
+                                <div className='home-fixture-col'>
+                                    <Row>
+                                        <Col xs={5}>
+                                            <div className='text-center badge w-100'>
+                                            </div>
+                                        </Col>
+                                        <Col xs={2}>
+                                            <p className="w-100 time-colon">vs</p>
+                                        </Col>
+                                        <Col xs={5}>
+                                            <div className='text-center badge w-100'>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Row>
+                            <Row className='stat-row-3'>
+                                <div className='home-deadline-col'>
+                                    <Row style={{paddingLeft: '32px'}}>
+                                        <Col xs={4}>
+                                            <p className="stat-header w-100">Day</p> 
+                                        </Col>
+                                        <Col xs={4}>
+                                            <p className="stat-header w-100">Hour</p>   
+                                        </Col>
+                                        <Col xs={4}>
+                                            <p className="stat-header w-100">Min</p>    
+                                        </Col>
+                                    </Row>
+                                </div>
+                                <div className='home-fixture-col'>
+                                    <Row>
+                                        <Col xs={5}>
+                                        </Col>
+                                        <Col xs={2}>
+                                        </Col>
+                                        <Col xs={5}>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Row>
+                        </div>
+                        <div className="d-none d-md-block home-divider-3"></div>
+                    </div>
+                </Card>
+            </Col>
+          </Row>
+          
+          <Card>
+            <Row>
+              <Col md={12}>
+                <div className='filter-row mb-2 mt-2' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Button 
+                      onClick={() => setShowListView(true)} 
+                      className={`sub-stat-button sub-stat-button-left ${showListView ? 'active' : ''}`}
+                    >
+                      Gameweeks
+                    </Button>
+                    <Button 
+                        onClick={() => setShowListView(false)} 
+                        className={`sub-stat-button sub-stat-button-right ${!showListView ? 'active' : ''}`}
+                        style={{ marginRight: '40px' }}
+                      >
+                      Details
+                    </Button>                                      
+                  </div>
+                  {!showListView && <>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
+                        style={{ marginRight: '16px' }} >
+                        <ArrowLeft />
+                      </Button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div ref={gameweekDropdownRef} onBlur={handleGameweekBlur}>
+                        <Dropdown show={showGameweekDropdown}>
+                          <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openGameweekDropdown()}>Gameweek {currentGameweek}</Button>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                            {Array.from({ length: 38 }, (_, index) => (
+                              <Dropdown.Item
+                                data-key={index}
+                                className='dropdown-item'
+                                key={index}
+                                onMouseDown={() => {setCurrentGameweek(index + 1)}}
+                              >
+                                Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </div>
+                    <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
+                      <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
+                        style={{ marginLeft: '16px' }} >
+                        <ArrowRight />
+                      </Button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
+                        style={{ marginRight: '16px' }} >
+                        <ArrowLeft />
+                      </Button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
+                        <Dropdown show={showSeasonDropdown}>
+                          <Dropdown.Toggle as={CustomToggle} id="season-selector">
+                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                            
+                            {seasons.map(season => 
+                              <Dropdown.Item
+                                data-key={season.id}
+                                className='dropdown-item'
+                                key={season.id}
+                                onMouseDown={() => setCurrentSeason(season)}
+                              >
+                                {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
+                              </Dropdown.Item>
+                            )}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
+                      <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
+                        style={{ marginLeft: '16px' }} >
+                        <ArrowRight />
+                      </Button>
+                    </div>
+                  </>}
+                  <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: '90px' }}>
+                    <label className='gameweek-total-points'>Total Points: {fantasyTeam.points}</label>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+            
+            {!showListView && 
+              <Container fluid>
+                <Row style={{ overflowX: 'auto' }}>
+                    <Col xs={12}>
+                        <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
+                            <div className="gw-points-position-col gw-table-header">Pos</div>
+                            <div className="gw-points-name-col gw-table-header">Player Name</div>
+                            <div className="gw-points-club-col gw-table-header">Club</div>
+                            <div className="gw-points-appearances-col gw-table-header">A</div>
+                            <div className="gw-points-highest-scoring-col gw-table-header">HSP</div>
+                            <div className="gw-points-goals-col gw-table-header">GS</div>
+                            <div className="gw-points-assists-col gw-table-header">GA</div>
+                            <div className="gw-points-pen-saves-col gw-table-header">PS</div>
+                            <div className="gw-points-clean-sheets-col gw-table-header">CS</div>
+                            <div className="gw-points-saves-col gw-table-header">KS</div>
+                            <div className="gw-points-yellow-cards-col gw-table-header">YC</div>
+                            <div className="gw-points-own-goals-col gw-table-header">OG</div>
+                            <div className="gw-points-goals-conceded-col gw-table-header">GC</div>
+                            <div className="gw-points-missed-pen-col gw-table-header">MP</div>
+                            <div className="gw-points-red-card-col gw-table-header">RC</div>
+                            <div className="gw-points-red-card-col gw-table-header">B</div>
+                            <div className="gw-points-red-card-col gw-table-header">PTS</div>
+                        </div>
+                    </Col>  
+                </Row>
+                {sortedPlayers.map(playerDTO => {
+                  const player = players.find(p => p.id === playerDTO.id);
+                  const playerTeam = getTeamById(teams, player.teamId);
+                  if (!playerTeam) {
+                      console.error("One of the teams is missing for player: ", player);
+                      return null;
+                  }
+                  return (
+                    <Row key={player.id} onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)} style={{ overflowX: 'auto' }}>
+                      <Col xs={12}>
+                      <div className="table-row clickable-table-row">
+                        <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
+                        <div className="gw-points-name-col gw-table-col">{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
+                        <div className="gw-points-club-col gw-table-col">
+                        <BadgeIcon
+                            primary={playerTeam.primaryColourHex}
+                            secondary={playerTeam.secondaryColourHex}
+                            third={playerTeam.thirdColourHex}
+                            width={48}
+                            height={48}
+                            marginRight={16}
+                          />
+                          {playerTeam.friendlyName}
+                        </div>
+                        <div className={`gw-points-appearances-col gw-table-col ${playerDTO.gameweekData.appearance === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.appearance}
+                        </div>
+                        <div className={`gw-points-highest-scoring-col gw-table-col ${playerDTO.gameweekData.highestScoringPlayerId === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.highestScoringPlayerId}
+                        </div>
+                        <div className={`gw-points-goals-col gw-table-col ${playerDTO.gameweekData.goals === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.goals}
+                        </div>
+                        <div className={`gw-points-assists-col gw-table-col ${playerDTO.gameweekData.assists === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.assists}
+                        </div>
+                        <div className={`gw-points-pen-saves-col gw-table-col ${playerDTO.gameweekData.penaltySaves === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.penaltySaves}
+                        </div>
+                        <div className={`gw-points-clean-sheets-col gw-table-col ${playerDTO.gameweekData.cleanSheets === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.cleanSheets}
+                        </div>
+                        <div className={`gw-points-saves-col gw-table-col ${playerDTO.gameweekData.saves === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.saves}
+                        </div>
+                        <div className={`gw-points-yellow-cards-col gw-table-col ${playerDTO.gameweekData.yellowCards === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.yellowCards}
+                        </div>
+                        <div className={`gw-points-own-goals-col gw-table-col ${playerDTO.gameweekData.ownGoals === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.ownGoals}
+                        </div>
+                        <div className={`gw-points-goals-conceded-col gw-table-col ${playerDTO.gameweekData.goalsConceded === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.goalsConceded}  
+                        </div>
+                        <div className={`gw-points-missed-pen-col gw-table-col ${playerDTO.gameweekData.missedPenalties === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.missedPenalties}
+                        </div>
+                        <div className={`gw-points-red-card-col gw-table-col ${playerDTO.gameweekData.redCards === 0 ? 'zero-text' : ''}`}>
+                          {playerDTO.gameweekData.redCards}
+                        </div>
+                        <div className={`gw-points-bonus-col gw-table-col ${(
+                            (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id) || 
+                            (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id) ||
+                            (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id) || 
+                            (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5) ||
+                            (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0) ||
+                            (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2) ||
+                            (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3) ||
+                            (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId)) ? '' : 'zero-text'}`}>
+                          {[
+                            (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
+                            (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id && <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>),
+                            (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id && <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>),
+                            (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5 && <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>),
+                            (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0 && <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>),
+                            (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2 && <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>),
+                            (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3 && <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>),
+                            (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId && <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>)
+                            ].some(Boolean) || '-'}
+                        </div>
+                        <div className="gw-points-points-col gw-table-col">{playerDTO.totalPoints}</div>
+                      </div>
+                      </Col>
+                      </Row>
+                      );
+                })}
+              </Container>
+            }
+
+            {showListView && 
+              <Container fluid>
+                
+              </Container>
+            }
+
+          </Card>
+          {selectedPlayer && selectedPlayerDTO && <PlayerPointsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} gameweek={currentGameweek} isCaptain={selectedPlayerCaptain} bonusId={getBonusId()} team={getTeamById(teams, selectedPlayer.teamId)} season={currentSeason} />}
+        </Container>
+      )
+    );
 };
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
