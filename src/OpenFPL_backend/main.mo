@@ -1339,6 +1339,58 @@ actor Self {
       return fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
   };
 
+  public shared query func getManager(managerId: Text, seasonId: T.SeasonId) : async DTOs.ManagerDTO {
+
+    var displayName = "";
+    var profilePicture = Blob.fromArray([]);
+    var favouriteTeamId: T.TeamId = 0;
+    var createDate = Time.now();
+    var gameweeks: [T.FantasyTeamSnapshot] = [];
+
+    let userProfile = profilesInstance.getProfile(managerId);
+    switch(userProfile){
+      case (null){};
+      case (?foundProfile){
+        displayName := foundProfile.displayName;
+        profilePicture := foundProfile.profilePicture;
+        favouriteTeamId := foundProfile.favouriteTeamId;
+        createDate := foundProfile.createDate;
+      };
+    };
+
+    //get gameweek snapshots
+    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(managerId);
+
+    switch (fantasyTeam) {
+        case (null) { };
+        case (?foundTeam){
+          
+          let season = List.find(foundTeam.history, func(season: T.FantasyTeamSeason): Bool {
+              return season.seasonId == seasonId;
+          });
+
+          switch(season){
+            case (null){};
+            case (?foundSeason){
+              gameweeks := List.toArray(foundSeason.gameweeks);
+            };
+          };
+        };
+    };
+
+
+    let managerDTO: DTOs.ManagerDTO = {
+      principalId = managerId;
+      displayName = displayName;
+      profilePicture = profilePicture;
+      favouriteTeamId = favouriteTeamId;
+      createDate = createDate;
+      gameweeks = gameweeks;
+    };  
+
+    return managerDTO;
+  };
+
   public shared query func getDataHashes() : async [T.DataCache] {
     return List.toArray(dataCacheHashes);
   };

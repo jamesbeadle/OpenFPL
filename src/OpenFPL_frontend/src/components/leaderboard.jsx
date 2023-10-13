@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Button, Spinner, Container, Row, Col, Dropdown } from 'react-bootstrap';
+import { Button, Spinner, Container, Row, Col, Dropdown, Pagination } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight } from './icons';
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById } from './helpers';
+import { useNavigate } from 'react-router-dom';
 
 const Leaderboard = () => {
     const { seasons, systemState, weeklyLeaderboard, seasonLeaderboard, monthlyLeaderboards, teams } = useContext(DataContext);
@@ -23,6 +24,7 @@ const Leaderboard = () => {
     const seasonDropdownRef = useRef(null);
     const leaderboardDropdownRef = useRef(null);
     const clubDropdownRef = useRef(null);
+    const navigate = useNavigate();
     
     const handleGameweekBlur = (e) => {
         const currentTarget = e.currentTarget;
@@ -199,6 +201,21 @@ const Leaderboard = () => {
       }, 0);
     };
 
+    const renderedPaginationItems = Array.from({ length: Math.ceil(Number(managers.totalEntries) / itemsPerPage) }, (_, index) => (
+      <Pagination.Item 
+          key={index + 1} 
+          active={index + 1 === currentPage} 
+          onClick={() => setCurrentPage(index + 1)}
+          className="custom-pagination-item"
+      >
+          {index + 1}
+      </Pagination.Item>
+    ));
+
+    const loadManager = (managerId) => {
+      navigate(`/manager/${managerId}`);
+    };
+
     return (
         isLoading ? (
         <div className="d-flex flex-column align-items-center justify-content-center">
@@ -228,7 +245,7 @@ const Leaderboard = () => {
                             data-key={index}
                             className='dropdown-item'
                             key={index}
-                            onMouseDown={() => {setCurrentGameweek(index + 1)}}
+                            onMouseDown={() => {setCurrentGameweek(index + 1); setCurrentPage(1);}}
                           >
                             Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
                           </Dropdown.Item>
@@ -262,7 +279,7 @@ const Leaderboard = () => {
                             data-key={season.id}
                             className='dropdown-item'
                             key={season.id}
-                            onMouseDown={() => setCurrentSeason(season)}
+                            onMouseDown={() => {setCurrentSeason(season); setCurrentPage(1);}}
                           >
                             {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
                           </Dropdown.Item>
@@ -290,30 +307,30 @@ const Leaderboard = () => {
                             data-key={0}
                             className='dropdown-item'
                             key={0}
-                            onMouseDown={() => {setCurrentLeaderboard('Weekly')}}
+                            onMouseDown={() => {{setCurrentLeaderboard('Weekly'); setCurrentPage(1);}}}
                             >Weekly {currentLeaderboard === 'Weekly' ? ' ✔️' : ''}</Dropdown.Item>
                         <Dropdown.Item
                             data-key={1}
                             className='dropdown-item'
                             key={1}
-                            onMouseDown={() => {setCurrentLeaderboard('Monthly')}}
+                            onMouseDown={() => {{setCurrentLeaderboard('Monthly'); setCurrentPage(1);}}}
                             >Monthly {currentLeaderboard === 'Monthly' ? ' ✔️' : ''}</Dropdown.Item>
                         <Dropdown.Item
                             data-key={2}
                             className='dropdown-item'
                             key={2}
-                            onMouseDown={() => {setCurrentLeaderboard('Season')}}
+                            onMouseDown={() => {{setCurrentLeaderboard('Season'); setCurrentPage(1);}}}
                             >Season {currentLeaderboard === 'Season' ? ' ✔️' : ''}</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
                 </div>
 
-                {currentLeaderboard == 'Monthly' && <div style={{ display: 'flex', alignItems: 'center' }}>
+                {currentLeaderboard == 'Monthly' && <div style={{ display: 'flex', alignItems: 'center', marginLeft: '16px' }}>
                   <div ref={clubDropdownRef} onBlur={handleClubBlur}>
                     <Dropdown show={showClubDropdown}>
                       <Dropdown.Toggle as={CustomToggle} id="club-selector">
-                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openClubDropdown()}>{currentClub.friendlyName}</Button>
+                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openClubDropdown()}><b>Team: </b>{currentClub.friendlyName}</Button>
                       </Dropdown.Toggle>
                       <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
                           {teams.map(team => 
@@ -321,7 +338,7 @@ const Leaderboard = () => {
                             data-key={team.id}
                             className='dropdown-item'
                             key={team.id}
-                            onMouseDown={() => setCurrentClub(team)}
+                            onMouseDown={() => {setCurrentClub(team); setCurrentPage(1);}}
                           >
                             {team.friendlyName} {currentClub.id === team.id ? ' ✔️' : ''}
                           </Dropdown.Item>
@@ -350,7 +367,7 @@ const Leaderboard = () => {
 
               
             {managers && managers.entries && managers.entries.map(manager => (
-                <Row key={manager.principalId} style={{ overflowX: 'auto' }}>
+                <Row className="clickable-table-row" onClick={() => {loadManager(manager.principalId)}} key={manager.principalId} style={{ overflowX: 'auto' }}>
                     <Col xs={12}>
                         <div className="table-row">  
                             <div className="leaderboard-pos-col gw-table-col">{manager.positionText}</div>
@@ -360,6 +377,15 @@ const Leaderboard = () => {
                     </Col>
                 </Row>
             ))    
+            }
+
+            {managers && managers.entries && 
+            <Container fluid>
+              <div className='custom-pagination-container'>
+                <Pagination>{renderedPaginationItems}</Pagination>
+              </div>
+            </Container>
+              
             }
 
             {!managers && 

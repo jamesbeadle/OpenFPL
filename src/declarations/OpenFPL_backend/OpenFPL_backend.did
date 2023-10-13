@@ -75,6 +75,15 @@ type PaginatedClubLeaderboard =
    seasonId: SeasonId;
    totalEntries: nat;
  };
+type ManagerDTO = 
+ record {
+   createDate: int;
+   displayName: text;
+   favouriteTeamId: TeamId;
+   gameweeks: vec FantasyTeamSnapshot;
+   principalId: text;
+   profilePicture: blob;
+ };
 type List_2 = 
  opt record {
        Fixture;
@@ -242,6 +251,7 @@ service : {
   getFixtureDTOs: () -> (vec FixtureDTO) query;
   getFixtures: () -> (vec Fixture) query;
   getFixturesForSeason: (SeasonId) -> (vec Fixture) query;
+  getManager: (text, SeasonId) -> (ManagerDTO) query;
   getProfileDTO: () -> (ProfileDTO);
   getPublicProfileDTO: (text) -> (ProfileDTO) query;
   getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;

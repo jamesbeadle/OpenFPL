@@ -104,6 +104,14 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
+export interface ManagerDTO {
+  'favouriteTeamId' : TeamId,
+  'displayName' : string,
+  'createDate' : bigint,
+  'gameweeks' : Array<FantasyTeamSnapshot>,
+  'profilePicture' : Uint8Array | number[],
+  'principalId' : string,
+}
 export interface PaginatedClubLeaderboard {
   'month' : number,
   'clubId' : TeamId,
@@ -226,6 +234,7 @@ export interface _SERVICE {
   'getFixtureDTOs' : ActorMethod<[], Array<FixtureDTO>>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
   'getFixturesForSeason' : ActorMethod<[SeasonId], Array<Fixture>>,
+  'getManager' : ActorMethod<[string, SeasonId], ManagerDTO>,
   'getProfileDTO' : ActorMethod<[], ProfileDTO>,
   'getPublicProfileDTO' : ActorMethod<[string], ProfileDTO>,
   'getSeasonLeaderboard' : ActorMethod<

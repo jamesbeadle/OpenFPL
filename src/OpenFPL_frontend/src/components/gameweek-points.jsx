@@ -324,7 +324,7 @@ const GameweekPoints = () => {
       score += playerDTO.gameweekData.assists * pointsForAssist;
 
       return score;
-  };
+    };
   
   const calculateBonusPoints = (playerDTO, fantasyTeamDTO, points) => {
       if (!playerDTO) {

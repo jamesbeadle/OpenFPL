@@ -122,5 +122,13 @@ module DTOs {
         events: [T.PlayerEventData];
     };
 
+    public type ManagerDTO = {
+        principalId: Text;
+        displayName: Text;
+        profilePicture: Blob;
+        favouriteTeamId: T.TeamId;
+        createDate: Int;
+        gameweeks: [T.FantasyTeamSnapshot];
+    };
     
 }
