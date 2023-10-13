@@ -20,30 +20,9 @@ const ManagerGameweekPoints = ({ gameweeks }) => {
     const { seasons, fixtures, systemState, playerEvents, teams, players } = useContext(DataContext);
     
     const [isLoading, setIsLoading] = useState(true);
-    const [currentGameweek, setCurrentGameweek] = useState(systemState.focusGameweek);
-    
     const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
-    const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
     const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
-    const gameweekDropdownRef = useRef(null);
     const seasonDropdownRef = useRef(null);
-    const [fantasyTeam, setFantasyTeam] = useState({
-        players: [],
-    });
-    const [sortedPlayers, setSortedPlayers] = useState([]);
-    const positionCodes = ['GK', 'DF', 'MF', 'FW'];
-    
-    const [selectedPlayer, setSelectedPlayer] = useState(null);
-    const [selectedPlayerDTO, setSelectedPlayerDTO] = useState(null);
-    const [selectedPlayerCaptain, setSelectedPlayerCaptain] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-
-    const handleGameweekBlur = (e) => {
-        const currentTarget = e.currentTarget;
-        if (!currentTarget.contains(document.activeElement)) {
-        setShowGameweekDropdown(false);
-        }
-    };
     
     const handleSeasonBlur = (e) => {
         const currentTarget = e.currentTarget;
@@ -54,528 +33,136 @@ const ManagerGameweekPoints = ({ gameweeks }) => {
         }, 0);
     };
 
-    const handleShowModal = (player, playerDTO, isCaptain) => {
-      setSelectedPlayer(player);
-      setSelectedPlayerDTO(playerDTO);
-      setSelectedPlayerCaptain(isCaptain);
-      setShowModal(true);
-    }
-    
-    const handleCloseModal = () => {
-        setSelectedPlayer(null);
-        setShowModal(false);
-    }
-    
     useEffect(() => {
         const fetchData = async () => {
         await fetchViewData();
         setIsLoading(false);
         };
         fetchData();
-    }, [currentSeason, currentGameweek]);
-
-    useEffect(() => {
-        if (fantasyTeam && fantasyTeam.players) {
-            const playersWithUpdatedScores = fantasyTeam.players.map(player => {
-                const score = calculatePlayerScore(player, fixtures);
-                const bonusPoints = calculateBonusPoints(player, fantasyTeam, score);
-                const captainPoints = player.id == fantasyTeam.captainId ? (score + bonusPoints) : 0;
-                
-                return {
-                    ...player,
-                    points: score,
-                    bonusPoints: bonusPoints,
-                    totalPoints: score + bonusPoints + captainPoints
-                };
-            });
-    
-            const sortedPlayers = [...playersWithUpdatedScores].sort((a, b) => 
-                Number(b.totalPoints) - Number(a.totalPoints)
-            );
-            
-            setSortedPlayers(sortedPlayers);
-        }
-    }, [fantasyTeam]);
+    }, [currentSeason]);
   
     const fetchViewData = async () => {
-        try{
-            
-            const fetchedFantasyTeam = await getFantasyTeamForGameweek(authClient, userPrincipal, currentSeason.id, currentGameweek); 
-            if(currentGameweek == systemState.focusGameweek){
-                const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
-                const playersInTeam = detailedPlayers.filter(player => fetchedFantasyTeam.playerIds.includes(player.id));
-            
-                setFantasyTeam({
-                    ...fetchedFantasyTeam,
-                    players: playersInTeam,
-                });
-            }
-            else
-            {
-                const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(fetchedFantasyTeam.playerIds, currentSeason.id, currentGameweek);    
-                const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
-                setFantasyTeam({
-                    ...fetchedFantasyTeam,
-                    players: detailedPlayers,
-                });
-            }
-
-        } catch (error){
-            console.log(error);
-        };
+        
     };
 
-    const extractPlayerData = (playerDTO) => {
-        let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
-        let goalPoints = 0, assistPoints = 0, goalsConcededPoints = 0, cleanSheetPoints = 0;
-
-        playerDTO.events.forEach(event => {
-            switch(event.eventType) {
-                case 0:
-                    appearance += 1;
-                    break;
-                case 1:
-                    goals += 1;
-                    switch(playerDTO.position){
-                        case 0:
-                        case 1:
-                            goalPoints += 20;
-                            break;
-                        case 2:
-                            goalPoints += 15;
-                            break;
-                        case 3:
-                            goalPoints += 10;
-                            break;
-                    }
-                    break;
-                case 2:
-                    assists += 1;
-                    switch(playerDTO.position){
-                        case 0:
-                        case 1:
-                            assistPoints += 15;
-                            break;
-                        case 2:
-                            case 3:
-                            assistPoints += 10;
-                            break;
-                    };
-                    break;
-                case 3:
-                    goalsConceded += 1;
-                    if(playerDTO.position < 2 && goalsConceded % 2 == 0){
-                        goalsConcededPoints += -15;
-                    };
-                    break;
-                case 4:
-                    saves += 1;
-                    break;
-                case 5:
-                    cleanSheets += 1;
-                    if(playerDTO.position < 2 && goalsConceded == 0){
-                        cleanSheetPoints += 10;
-                    };
-                    break;
-                case 6:
-                    penaltySaves += 1;
-                    break;
-                case 7:
-                    missedPenalties += 1;
-                    break;
-                case 8:
-                    yellowCards += 1;
-                    break;
-                case 9:
-                    redCards += 1;
-                    break;
-                case 10:
-                    ownGoals += 1;
-                    break;
-                case 11:
-                    highestScoringPlayerId += 1;
-                    break;
-            }
-        });
-    
-        return {
-            ...playerDTO,
-            gameweekData: {
-                appearance,
-                goals,
-                assists,
-                goalsConceded,
-                saves,
-                cleanSheets,
-                penaltySaves,
-                missedPenalties,
-                yellowCards,
-                redCards,
-                ownGoals,
-                highestScoringPlayerId,
-                goalPoints,
-                assistPoints,
-                goalsConcededPoints,
-                cleanSheetPoints
-            }
-        };
-    };
-
-    
-    const calculatePlayerScore = (playerDTO, fixtures) => {
-      if (!playerDTO) {
-          console.error("No gameweekData found for player:", playerDTO);
-          return 0;
-      }
-      
-      let score = 0; 
-
-      let pointsForAppearance = 5;
-      let pointsFor3Saves = 5;
-      let pointsForPenaltySave = 20;
-      let pointsForHighestScore = 25;
-      let pointsForRedCard = -20;
-      let pointsForPenaltyMiss = -10;
-      let pointsForEach2Conceded = -15;
-      let pointsForOwnGoal = -10;
-      let pointsForYellowCard = -5;
-      let pointsForCleanSheet = 10;
-
-      var pointsForGoal = 0;
-      var pointsForAssist = 0;
-
-      if(playerDTO.gameweekData.appearance > 0){
-          score += pointsForAppearance * playerDTO.gameweekData.appearance;
-      }
-
-      if (playerDTO.gameweekData.redCards > 0) {
-          score += pointsForRedCard;
-      }
-
-      if (playerDTO.gameweekData.missedPenalties > 0) {
-          score += pointsForPenaltyMiss * playerDTO.gameweekData.missedPenalties;
-      }
-
-      if (playerDTO.gameweekData.ownGoals > 0) {
-          score += pointsForOwnGoal * playerDTO.gameweekData.ownGoals;
-      }
-
-      if (playerDTO.gameweekData.yellowCards > 0) {
-          score += pointsForYellowCard * playerDTO.gameweekData.yellowCards;
-      }
-  
-      switch(playerDTO.position){
-          case 0:
-              pointsForGoal = 20;
-              pointsForAssist = 15;     
-              
-              if (playerDTO.gameweekData.saves >= 3) {
-                  score += Math.floor(playerDTO.gameweekData.saves / 3) * pointsFor3Saves;
-              }
-              if (playerDTO.gameweekData.penaltySaves) {
-                  score += pointsForPenaltySave * playerDTO.gameweekData.penaltySaves;
-              }
-
-              if (playerDTO.gameweekData.cleanSheets > 0) {
-                  score += pointsForCleanSheet;
-              }
-              if (playerDTO.gameweekData.goalsConceded >= 2) {
-                  score += Math.floor(playerDTO.gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
-              }
-
-              break;
-          case 1:
-              pointsForGoal = 20;
-              pointsForAssist = 15; 
-
-              if (playerDTO.gameweekData.cleanSheets > 0) {
-                  score += pointsForCleanSheet;
-              }
-              if (playerDTO.gameweekData.goalsConceded >= 2) {
-                  score += Math.floor(playerDTO.gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
-              }
-
-              break;
-          case 2:
-              pointsForGoal = 15;
-              pointsForAssist = 10; 
-              break;
-          case 3:
-              pointsForGoal = 10;
-              pointsForAssist = 10; 
-              break;
-      };
-  
-      const gameweekFixtures = fixtures ? fixtures.filter(fixture => fixture.gameweek === playerDTO.gameweek) : [];
-      const playerFixture = gameweekFixtures.find(fixture => 
-          (fixture.homeTeamId === playerDTO.teamId || fixture.awayTeamId === playerDTO.teamId) && 
-          fixture.highestScoringPlayerId === playerDTO.id
-      );
-      if (playerFixture) {
-          score += pointsForHighestScore;
-      }
-
-      
-      score += playerDTO.gameweekData.goals * pointsForGoal;
-
-      score += playerDTO.gameweekData.assists * pointsForAssist;
-
-      return score;
-    };
-  
-  const calculateBonusPoints = (playerDTO, fantasyTeamDTO, points) => {
-      if (!playerDTO) {
-          console.error("No gameweekData found for player:", playerDTO);
-          return 0;
-      }
-      
-      let bonusPoints = 0; 
-      var pointsForGoal = 0;
-      var pointsForAssist = 0;
-      switch(playerDTO.position){
-          case 0:
-              pointsForGoal = 20;
-              pointsForAssist = 15;  
-              break;
-          case 1:
-              pointsForGoal = 20;
-              pointsForAssist = 15; 
-              break;
-          case 2:
-              pointsForGoal = 15;
-              pointsForAssist = 10; 
-              break;
-          case 3:
-              pointsForGoal = 10;
-              pointsForAssist = 10; 
-              break;
-      };
-
-      if(fantasyTeamDTO.goalGetterGameweek === playerDTO.gameweek && fantasyTeamDTO.goalGetterPlayerId === playerDTO.id){
-          bonusPoints = playerDTO.gameweekData.goals * pointsForGoal * 2;
-      }
-
-      if(fantasyTeamDTO.passMasterGameweek === playerDTO.gameweek && fantasyTeamDTO.passMasterPlayerId === playerDTO.id){
-          bonusPoints = playerDTO.gameweekData.assists * pointsForAssist * 2;
-      }
-      
-      if (fantasyTeamDTO.noEntryGameweek === playerDTO.gameweek && fantasyTeamDTO.noEntryPlayerId === playerDTO.id && 
-          (playerDTO.position === 0 || playerDTO.position === 1) && playerDTO.gameweekData.cleanSheets) {
-          bonusPoints = points * 2; 
-      }
-  
-      if (fantasyTeamDTO.safeHandsGameweek === playerDTO.gameweek && playerDTO.position === 0 && playerDTO.gameweekData.saves >= 5) {
-          bonusPoints = points * 2; 
-      }
-  
-      if (fantasyTeamDTO.captainFantasticGameweek === playerDTO.gameweek && fantasyTeamDTO.captainId === playerDTO.id && playerDTO.gameweekData.goals > 0) {
-          bonusPoints = points; 
-      }
-  
-      if (fantasyTeamDTO.braceBonusGameweek === playerDTO.gameweek && playerDTO.gameweekData.goals >= 2) {
-          bonusPoints = points; 
-      }
-  
-      if (fantasyTeamDTO.hatTrickHeroGameweek === playerDTO.gameweek && playerDTO.gameweekData.goals >= 3) {
-          bonusPoints = points * 2; 
-      }
-  
-      if (fantasyTeamDTO.teamBoostGameweek === playerDTO.gameweek && playerDTO.teamId === fantasyTeamDTO.teamBoostTeamId) {
-          bonusPoints = points;
-      }
-  
-      return bonusPoints;
-  };
-
-  const handleGameweekChange = (change) => {
-    setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
-  };
-  
-  const handleSeasonChange = async (change) => {
-    const newIndex = seasons.findIndex(season => season.id === currentSeason.id) + change;
-    if (newIndex >= 0 && newIndex < seasons.length) {
-      setCurrentSeason(seasons[newIndex]);
-      setCurrentGameweek(1);
-      
-      if (seasons[newIndex].id !== systemState.activeSeason.id) {
-        const newFixtures = await fetchFixturesForSeason(seasons[newIndex].id);
-        fetchGameweekPoints(newFixtures);
-      } else {
-        fetchGameweekPoints(null, null);
-      }
-    }
-  };
-  
-  const fetchGameweekPoints = async (seasonId, gameweek) => {
-    try{
-      return await open_fpl_backend.getGameweekPoints(seasonId, gameweek);
-    }
-    catch (error){
-      console.log(error);
-    }
-  };
-  
-  const openGameweekDropdown = () => {
-    setShowGameweekDropdown(!showGameweekDropdown);
-    setTimeout(() => {
-      if (gameweekDropdownRef.current) {
-        const item = gameweekDropdownRef.current.querySelector(`[data-key="${currentGameweek - 1}"]`);
-        if (item) {
-          item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    const handleSeasonChange = async (change) => {
+        const newIndex = seasons.findIndex(season => season.id === currentSeason.id) + change;
+        if (newIndex >= 0 && newIndex < seasons.length) {
+        setCurrentSeason(seasons[newIndex]);
+        
+        if (seasons[newIndex].id !== systemState.activeSeason.id) {
+            const newFixtures = await fetchFixturesForSeason(seasons[newIndex].id);
+            fetchGameweekPoints(newFixtures);
+        } else {
+            fetchGameweekPoints(null, null);
         }
-      }
-    }, 0);
-  };
-
-  const openSeasonDropdown = () => {
-    setShowSeasonDropdown(!showSeasonDropdown);
-    setTimeout(() => {
-      if (seasonDropdownRef.current) {
-        const item = seasonDropdownRef.current.querySelector(`[data-key="${currentSeason.id}"]`);
-        if (item) {
-          item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
         }
-      }
-    }, 0);
-  };
-  
-  const getBonusId = () => {
-    if(fantasyTeam.goalGetterGameweek === currentGameweek && 
-      fantasyTeam.goalGetterPlayerId === selectedPlayer.id){
-        return 1;
-      };
-    if(fantasyTeam.passMasterGameweek == currentGameweek && 
-      fantasyTeam.passMasterPlayerId == selectedPlayer.id){
-        return 2;
-      };
-    if(fantasyTeam.noEntryGameweek == currentGameweek && 
-      fantasyTeam.noEntryPlayerId == selectedPlayer.id){
-        return 3;
-      };
-    if(fantasyTeam.safeHandsGameweek == currentGameweek && 
-      selectedPlayer.position === 0 && 
-      selectedPlayerDTO.gameweekData.saves >= 5){
-        return 4;
     };
-    if(fantasyTeam.captainFantasticGameweek == currentGameweek && 
-      fantasyTeam.captainId == selectedPlayer.id && 
-      selectedPlayerDTO.gameweekData.goals > 0){
-        return 5;
-    }
-    if(fantasyTeam.braceBonusGameweek == currentGameweek && 
-      selectedPlayerDTO.gameweekData.goals >= 2){
-        return 6;
+
+    const openSeasonDropdown = () => {
+        setShowSeasonDropdown(!showSeasonDropdown);
+        setTimeout(() => {
+        if (seasonDropdownRef.current) {
+            const item = seasonDropdownRef.current.querySelector(`[data-key="${currentSeason.id}"]`);
+            if (item) {
+            item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            }
+        }
+        }, 0);
     };
-    if(fantasyTeam.hatTrickHeroGameweek == currentGameweek && 
-      selectedPlayerDTO.gameweekData.goals >= 3){
-        return 7;
-    } 
-    if(fantasyTeam.teamBoostGameweek == currentGameweek && 
-      fantasyTeam.teamBoostTeamId == selectedPlayer.teamId){
-        return 8;
-    }                         
-  }
   
-  return (
-      <>
-        {isLoading ? (
-          <div className="d-flex flex-column align-items-center justify-content-center">
-            <Spinner animation="border" />
-            <p className='text-center mt-1'>Loading Gameweek Points</p>
-          </div>) 
-          :
-          <div className="dark-tab-row w-100 mx-0">
-            <Row>
-              <Col md={12}>
-                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                      style={{ marginRight: '16px' }} >
-                      <ArrowLeft />
-                    </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
-                      <Dropdown show={showSeasonDropdown}>
-                        <Dropdown.Toggle as={CustomToggle} id="season-selector">
-                          <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                          
-                          {seasons.map(season => 
-                            <Dropdown.Item
-                              data-key={season.id}
-                              className='dropdown-item'
-                              key={season.id}
-                              onMouseDown={() => setCurrentSeason(season)}
-                            >
-                              {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
-                            </Dropdown.Item>
-                          )}
-                        </Dropdown.Menu>
-                      </Dropdown>
+    return (
+        <>
+            {isLoading ? (
+            <div className="d-flex flex-column align-items-center justify-content-center">
+                <Spinner animation="border" />
+                <p className='text-center mt-1'>Loading Gameweek Points</p>
+            </div>) 
+            :
+            <div className="dark-tab-row w-100 mx-0">
+                <Row>
+                <Col md={12}>
+                    <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
+                        style={{ marginRight: '16px' }} >
+                        <ArrowLeft />
+                        </Button>
                     </div>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
-                      style={{ marginLeft: '16px' }} >
-                      <ArrowRight />
-                    </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: '90px' }}>
-                    <label className='gameweek-total-points'>Total Points: {fantasyTeam.points}</label>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-
-            <Row>
-
-            <Container>
-                <Row style={{ overflowX: 'auto' }}>
-                    <Col xs={12}>
-                        <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
-                            <div className="mgw-number-col gw-table-header">Gameweek</div>
-                            <div className="mgw-name-col gw-table-header">Team Name</div>
-                            <div className="mgw-transfers-col gw-table-header">Transfers Made</div>
-                            <div className="mgw-bank-col gw-table-header">Bank Balance</div>
-                            <div className="mgw-captain-col gw-table-header">Captain</div>
-                            <div className="mgw-bonus-col gw-table-header">Bonus Used</div>
-                            <div className="mgw-points-col gw-table-header">Points</div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
+                        <Dropdown show={showSeasonDropdown}>
+                            <Dropdown.Toggle as={CustomToggle} id="season-selector">
+                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                            
+                            {seasons.map(season => 
+                                <Dropdown.Item
+                                data-key={season.id}
+                                className='dropdown-item'
+                                key={season.id}
+                                onMouseDown={() => setCurrentSeason(season)}
+                                >
+                                {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
+                                </Dropdown.Item>
+                            )}
+                            </Dropdown.Menu>
+                        </Dropdown>
                         </div>
-                    </Col>  
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
+                        <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
+                        style={{ marginLeft: '16px' }} >
+                        <ArrowRight />
+                        </Button>
+                    </div>
+                    </div>
+                </Col>
                 </Row>
 
+                <Row>
 
-                
-              {gameweeks.map(gameweek => {
-                    return (
-                      <Row key={gameweek.number} onClick={() => handleShowGameweek(gameweek.number)} style={{ overflowX: 'auto' }}>
+                <Container>
+                    <Row style={{ overflowX: 'auto' }}>
                         <Col xs={12}>
-                        <div className="table-row clickable-table-row">
-                            <div className="mgw-number-col gw-table-col">{gameweek.number}</div>
-                            <div className="mgw-name-col gw-table-col">{gameweek.number}</div>
-                            <div className="mgw-transfers-col gw-table-col">{gameweek.number}</div>
-                            <div className="mgw-bank-col gw-table-col">{gameweek.number}</div>
-                            <div className="mgw-captain-col gw-table-col">{gameweek.number}</div>
-                            <div className="mgw-bonus-col gw-table-col">{gameweek.number}</div>
-                            <div className="mgw-points-col gw-table-col">{gameweek.number}</div>
-                        </div>
-                        </Col>
-                        </Row>
-                    );
-                })}
-                
+                            <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
+                                <div className="mgw-number-col gw-table-header">Gameweek</div>
+                                <div className="mgw-transfers-col gw-table-header">Transfers Made</div>
+                                <div className="mgw-bank-col gw-table-header">Bank Balance</div>
+                                <div className="mgw-captain-col gw-table-header">Captain</div>
+                                <div className="mgw-bonus-col gw-table-header">Bonus Used</div>
+                                <div className="mgw-points-col gw-table-header">Points</div>
+                            </div>
+                        </Col>  
+                    </Row>
 
-                </Container>
-                
-                {selectedPlayer && selectedPlayerDTO && <PlayerPointsModal show={showModal} onClose={handleCloseModal} player={selectedPlayer} playerDTO={selectedPlayerDTO} gameweek={currentGameweek} isCaptain={selectedPlayerCaptain} bonusId={getBonusId()} team={getTeamById(teams, selectedPlayer.teamId)} season={currentSeason} />}
-    
-            </Row>
-          </div>
-      }
-      </>
-  );
+
+                    
+                {gameweeks.map(gameweek => {
+                        return (
+                        <Row key={gameweek.number} onClick={() => handleShowGameweek(gameweek.number)} style={{ overflowX: 'auto' }}>
+                            <Col xs={12}>
+                            <div className="table-row clickable-table-row">
+                                <div className="mgw-number-col gw-table-col">{gameweek.number}</div>
+                                <div className="mgw-transfers-col gw-table-col">{gameweek.number}</div>
+                                <div className="mgw-bank-col gw-table-col">{gameweek.number}</div>
+                                <div className="mgw-captain-col gw-table-col">{gameweek.number}</div>
+                                <div className="mgw-bonus-col gw-table-col">{gameweek.number}</div>
+                                <div className="mgw-points-col gw-table-col">{gameweek.number}</div>
+                            </div>
+                            </Col>
+                            </Row>
+                        );
+                    })}
+                    
+
+                    </Container>
+                </Row>
+            </div>
+        }
+        </>
+    );
 };
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
