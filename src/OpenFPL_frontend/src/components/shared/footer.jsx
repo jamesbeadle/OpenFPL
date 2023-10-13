@@ -6,7 +6,7 @@ import DiscordIcon from '../../../assets/discord.png';
 import OpenChatIcon from '../../../assets/openchat.png';
 import TelegramLogo from '../../../assets/telegram.png';
 import GitHubLogo from '../../../assets/github.png';
-import LogoImage from '../../../assets/logo.png';
+import FooterSponsor from '../../../assets/footer_sponsor.png';
 import { LogoIcon } from '../icons';
 
 const MyFooter = () => {
@@ -15,10 +15,10 @@ const MyFooter = () => {
       <Container fluid className='view-container mt-2'>
         <Card>
           <Row style={{padding: '20px'}}>
-            <Col xs={12}>
+            <Col xs={6}>
                   <ul className="footer-links">
                     <li><LogoIcon width={16} height={16} fill={'#FFFFFF'} /> <b className="footer-logo-text">OPENFPL</b></li>
-                    <li><LinkContainer to="/funded-whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer></li>
+                    <li><LinkContainer to="/whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer></li>
                     <li><LinkContainer to="/gameplay"><a className='footer-link'>Gameplay Rules</a></LinkContainer></li>
                       <li><LinkContainer to="/terms"><a className='footer-link'>Terms and Conditions</a></LinkContainer></li>
                       <li><LinkContainer to="/fixture-validation-list" /*Remove this post sns*/><a className='footer-link'>Fixture Validation (To be removed post SNS)</a></LinkContainer></li>
@@ -40,6 +40,19 @@ const MyFooter = () => {
                     <img src={GitHubLogo} alt="GitHub" className="social-icon" />
                   </a>
               </div>
+            </Col>
+            <Col xs={6} className="text-right footer-sponsor"><a href="https://juno.build" target='_blank'>
+              <div>
+              <Row>
+                <Col className='mb-2'>Sponsored By</Col>
+              </Row>
+              <Row>
+                <Col className='mb-2'><img src={FooterSponsor} width={80} /></Col>
+              </Row>
+              <Row>
+                <Col>juno.build</Col>
+              </Row>
+              </div></a>
             </Col>
           </Row>
         </Card>
