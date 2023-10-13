@@ -1,24 +1,22 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
-import { AuthContext } from "../contexts/AuthContext";
-import { DataContext } from "../contexts/DataContext";
-import { ArrowLeft, ArrowRight } from './icons';
-import { getFantasyTeamForGameweek } from '../AuthFunctions';
-import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
-import { player_canister as player_canister } from '../../../declarations/player_canister';
-import { getTeamById } from './helpers';
-import { BadgeIcon } from './icons';
-import GoalGetter from "../../assets/goal-getter.png";
-import PassMaster from "../../assets/pass-master.png";
-import NoEntry from "../../assets/no-entry.png";
-import TeamBoost from "../../assets/team-boost.png";
-import SafeHands from "../../assets/safe-hands.png";
-import CaptainFantastic from "../../assets/captain-fantastic.png";
-import BraceBonus from "../../assets/brace-bonus.png";
-import HatTrickHero from "../../assets/hat-trick-hero.png";
-import PlayerPointsModal from './modals/player-points-modal';
+import { DataContext } from "../../contexts/DataContext";
+import { ArrowLeft, ArrowRight, BadgeIcon } from '../icons';
+import { getFantasyTeamForGameweek } from '../../AuthFunctions';
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
+import { player_canister as player_canister } from '../../../../declarations/player_canister';
+import { getTeamById } from '../helpers';
+import GoalGetter from "../../../assets/goal-getter.png";
+import PassMaster from "../../../assets/pass-master.png";
+import NoEntry from "../../../assets/no-entry.png";
+import TeamBoost from "../../../assets/team-boost.png";
+import SafeHands from "../../../assets/safe-hands.png";
+import CaptainFantastic from "../../../assets/captain-fantastic.png";
+import BraceBonus from "../../../assets/brace-bonus.png";
+import HatTrickHero from "../../../assets/hat-trick-hero.png";
+import PlayerPointsModal from '../modals/player-points-modal';
 
-const ManagerGameweekPoints = () => {
+const ManagerGameweekPoints = ({ gameweeks }) => {
     const { seasons, fixtures, systemState, playerEvents, teams, players } = useContext(DataContext);
     
     const [isLoading, setIsLoading] = useState(true);
@@ -491,39 +489,6 @@ const ManagerGameweekPoints = () => {
               <Col md={12}>
                 <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
-                      style={{ marginRight: '16px' }} >
-                      <ArrowLeft />
-                    </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <div ref={gameweekDropdownRef} onBlur={handleGameweekBlur}>
-                      <Dropdown show={showGameweekDropdown}>
-                        <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
-                          <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openGameweekDropdown()}>Gameweek {currentGameweek}</Button>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                          {Array.from({ length: 38 }, (_, index) => (
-                            <Dropdown.Item
-                              data-key={index}
-                              className='dropdown-item'
-                              key={index}
-                              onMouseDown={() => {setCurrentGameweek(index + 1)}}
-                            >
-                              Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
-                            </Dropdown.Item>
-                          ))}
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </div>
-                  </div>
-                  <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
-                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
-                      style={{ marginLeft: '16px' }} >
-                      <ArrowRight />
-                    </Button>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
                       style={{ marginRight: '16px' }} >
                       <ArrowLeft />
@@ -570,110 +535,31 @@ const ManagerGameweekPoints = () => {
                 <Row style={{ overflowX: 'auto' }}>
                     <Col xs={12}>
                         <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
-                            <div className="gw-points-position-col gw-table-header">Pos</div>
-                            <div className="gw-points-name-col gw-table-header">Player Name</div>
-                            <div className="gw-points-club-col gw-table-header">Club</div>
-                            <div className="gw-points-appearances-col gw-table-header">A</div>
-                            <div className="gw-points-highest-scoring-col gw-table-header">HSP</div>
-                            <div className="gw-points-goals-col gw-table-header">GS</div>
-                            <div className="gw-points-assists-col gw-table-header">GA</div>
-                            <div className="gw-points-pen-saves-col gw-table-header">PS</div>
-                            <div className="gw-points-clean-sheets-col gw-table-header">CS</div>
-                            <div className="gw-points-saves-col gw-table-header">KS</div>
-                            <div className="gw-points-yellow-cards-col gw-table-header">YC</div>
-                            <div className="gw-points-own-goals-col gw-table-header">OG</div>
-                            <div className="gw-points-goals-conceded-col gw-table-header">GC</div>
-                            <div className="gw-points-missed-pen-col gw-table-header">MP</div>
-                            <div className="gw-points-red-card-col gw-table-header">RC</div>
-                            <div className="gw-points-red-card-col gw-table-header">B</div>
-                            <div className="gw-points-red-card-col gw-table-header">PTS</div>
+                            <div className="mgw-number-col gw-table-header">Gameweek</div>
+                            <div className="mgw-name-col gw-table-header">Team Name</div>
+                            <div className="mgw-transfers-col gw-table-header">Transfers Made</div>
+                            <div className="mgw-bank-col gw-table-header">Bank Balance</div>
+                            <div className="mgw-captain-col gw-table-header">Captain</div>
+                            <div className="mgw-bonus-col gw-table-header">Bonus Used</div>
+                            <div className="mgw-points-col gw-table-header">Points</div>
                         </div>
                     </Col>  
                 </Row>
 
 
                 
-              {sortedPlayers.map(playerDTO => {
-                const player = players.find(p => p.id === playerDTO.id);
-                const playerTeam = getTeamById(teams, player.teamId);
-                if (!playerTeam) {
-                    console.error("One of the teams is missing for player: ", player);
-                    return null;
-                }
+              {gameweeks.map(gameweek => {
                     return (
-                      <Row key={player.id} onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)} style={{ overflowX: 'auto' }}>
+                      <Row key={gameweek.number} onClick={() => handleShowGameweek(gameweek.number)} style={{ overflowX: 'auto' }}>
                         <Col xs={12}>
                         <div className="table-row clickable-table-row">
-                            <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
-                            <div className="gw-points-name-col gw-table-col">{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
-                            <div className="gw-points-club-col gw-table-col">
-                            <BadgeIcon
-                                primary={playerTeam.primaryColourHex}
-                                secondary={playerTeam.secondaryColourHex}
-                                third={playerTeam.thirdColourHex}
-                                width={48}
-                                height={48}
-                                marginRight={16}
-                              />
-                              {playerTeam.friendlyName}
-                            </div>
-                            <div className={`gw-points-appearances-col gw-table-col ${playerDTO.gameweekData.appearance === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.appearance}
-                            </div>
-                            <div className={`gw-points-highest-scoring-col gw-table-col ${playerDTO.gameweekData.highestScoringPlayerId === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.highestScoringPlayerId}
-                            </div>
-                            <div className={`gw-points-goals-col gw-table-col ${playerDTO.gameweekData.goals === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.goals}
-                            </div>
-                            <div className={`gw-points-assists-col gw-table-col ${playerDTO.gameweekData.assists === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.assists}
-                            </div>
-                            <div className={`gw-points-pen-saves-col gw-table-col ${playerDTO.gameweekData.penaltySaves === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.penaltySaves}
-                            </div>
-                            <div className={`gw-points-clean-sheets-col gw-table-col ${playerDTO.gameweekData.cleanSheets === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.cleanSheets}
-                            </div>
-                            <div className={`gw-points-saves-col gw-table-col ${playerDTO.gameweekData.saves === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.saves}
-                            </div>
-                            <div className={`gw-points-yellow-cards-col gw-table-col ${playerDTO.gameweekData.yellowCards === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.yellowCards}
-                            </div>
-                            <div className={`gw-points-own-goals-col gw-table-col ${playerDTO.gameweekData.ownGoals === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.ownGoals}
-                            </div>
-                            <div className={`gw-points-goals-conceded-col gw-table-col ${playerDTO.gameweekData.goalsConceded === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.goalsConceded}  
-                            </div>
-                            <div className={`gw-points-missed-pen-col gw-table-col ${playerDTO.gameweekData.missedPenalties === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.missedPenalties}
-                            </div>
-                            <div className={`gw-points-red-card-col gw-table-col ${playerDTO.gameweekData.redCards === 0 ? 'zero-text' : ''}`}>
-                              {playerDTO.gameweekData.redCards}
-                            </div>
-                            <div className={`gw-points-bonus-col gw-table-col ${(
-                                (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id) || 
-                                (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id) ||
-                                (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id) || 
-                                (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5) ||
-                                (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0) ||
-                                (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2) ||
-                                (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3) ||
-                                (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId)) ? '' : 'zero-text'}`}>
-                              {[
-                                (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
-                                (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id && <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>),
-                                (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id && <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>),
-                                (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5 && <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>),
-                                (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0 && <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>),
-                                (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2 && <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>),
-                                (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3 && <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>),
-                                (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId && <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>)
-                                ].some(Boolean) || '-'}
-                            </div>
-                            <div className="gw-points-points-col gw-table-col">{playerDTO.totalPoints}</div>
+                            <div className="mgw-number-col gw-table-col">{gameweek.number}</div>
+                            <div className="mgw-name-col gw-table-col">{gameweek.number}</div>
+                            <div className="mgw-transfers-col gw-table-col">{gameweek.number}</div>
+                            <div className="mgw-bank-col gw-table-col">{gameweek.number}</div>
+                            <div className="mgw-captain-col gw-table-col">{gameweek.number}</div>
+                            <div className="mgw-bonus-col gw-table-col">{gameweek.number}</div>
+                            <div className="mgw-points-col gw-table-col">{gameweek.number}</div>
                         </div>
                         </Col>
                         </Row>

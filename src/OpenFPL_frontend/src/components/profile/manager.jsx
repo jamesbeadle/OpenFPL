@@ -7,6 +7,7 @@ import ProfileImage from '../../../assets/profile_placeholder.png';
 import { useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, BadgeIcon } from '../icons';
 import { getTeamById } from '../helpers';
+import ManagerGameweekPoints from './manager-gameweek-points';
 
 const Manager = () => {
     const { managerId } = useParams();
@@ -644,10 +645,10 @@ const Manager = () => {
                         <ArrowRight />
                       </Button>
                     </div>
+                    <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: '90px' }}>
+                      <label className='gameweek-total-points'>Total Points: {fantasyTeam.points}</label>
+                    </div>
                   </>}
-                  <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: '90px' }}>
-                    <label className='gameweek-total-points'>Total Points: {fantasyTeam.points}</label>
-                  </div>
                 </div>
               </Col>
             </Row>
@@ -767,8 +768,9 @@ const Manager = () => {
             }
 
             {showListView && 
+            
               <Container fluid>
-                
+                <ManagerGameweekPoints gameweeks={viewData.gameweeks} />
               </Container>
             }
 
