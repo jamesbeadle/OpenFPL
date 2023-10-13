@@ -1,0 +1,16 @@
+{
+    "name": "OpenFPL",
+    "short_name": "OpenFPL",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#2CE3A6",
+    "description": "Decentralised Fantasy Football",
+    "icons": [
+      {
+        "src": "assets/icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  
