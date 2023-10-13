@@ -3,6 +3,7 @@ import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap'
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById,groupFixturesByDate, computeTimeLeft } from './helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from './icons';
+import { useNavigate } from 'react-router-dom';
 
 const Fixtures = () => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);
@@ -15,6 +16,7 @@ const Fixtures = () => {
   const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
   const gameweekDropdownRef = useRef(null);
   const seasonDropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleGameweekBlur = (e) => {
     const currentTarget = e.currentTarget;
@@ -255,7 +257,7 @@ const Fixtures = () => {
                                   return (
                                     <>
                                       <div className="col-home-team">
-                                        <p className='fixture-team-name'>
+                                        <p onClick={() => navigate(`/club/${homeTeam.id}`)} className='fixture-team-name clickable-table-row'>
                                           <BadgeIcon
                                             primary={homeTeam.primaryColourHex}
                                             secondary={homeTeam.secondaryColourHex}
@@ -263,6 +265,7 @@ const Fixtures = () => {
                                             width={48}
                                             height={48}
                                             marginRight={16}
+                                            
                                           />
                                           {homeTeam.friendlyName}
                                         </p>
@@ -271,7 +274,7 @@ const Fixtures = () => {
                                         <p className="w-100 text-center">vs</p>
                                       </div>
                                       <div className="col-away-team">
-                                        <p className='fixture-team-name'>
+                                        <p onClick={() => navigate(`/club/${awayTeam.id}`)} className='fixture-team-name clickable-table-row'>
                                           <BadgeIcon
                                             primary={awayTeam.primaryColourHex}
                                             secondary={awayTeam.secondaryColourHex}
@@ -279,6 +282,7 @@ const Fixtures = () => {
                                             width={48}
                                             height={48}
                                             marginRight={16}
+                                            
                                           />
                                           {awayTeam.friendlyName}
                                         </p>

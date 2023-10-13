@@ -5,21 +5,24 @@ import { DataContext } from "../contexts/DataContext";
 import { getTeamById } from './helpers';
 
 const Leaderboard = () => {
-    const { seasons, systemState, weeklyLeaderboard, seasonLeaderboard, monthlyLeaderboards } = useContext(DataContext);
+    const { seasons, systemState, weeklyLeaderboard, seasonLeaderboard, monthlyLeaderboards, teams } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
     const [managers, setManagers] = useState(weeklyLeaderboard);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
     const [currentLeaderboard, setCurrentLeaderboard] = useState('Weekly');
+    const [currentClub, setCurrentClub] = useState(teams.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))[0]);
     const itemsPerPage = 25;
     
     const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
     const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
     const [showLeaderboardDropdown, setShowLeaderboardDropdown] = useState(false);
+    const [showClubDropdown, setShowClubDropdown] = useState(false);
     const gameweekDropdownRef = useRef(null);
     const seasonDropdownRef = useRef(null);
     const leaderboardDropdownRef = useRef(null);
+    const clubDropdownRef = useRef(null);
     
     const handleGameweekBlur = (e) => {
         const currentTarget = e.currentTarget;
@@ -46,15 +49,24 @@ const Leaderboard = () => {
         }, 0);
     };
     
+    const handleClubBlur = (e) => {
+        const currentTarget = e.currentTarget;
+        setTimeout(() => {
+        if (!currentTarget.contains(document.activeElement)) {
+            setShowClubDropdown(false);
+        }
+        }, 0);
+    };
+    
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            await fetchViewData(currentSeason, currentGameweek, currentLeaderboard);
+            await fetchViewData(currentSeason, currentGameweek, currentLeaderboard, currentClub.id);
             setIsLoading(false);
         };
         
         fetchData();
-    }, [currentSeason, currentGameweek, currentPage]);
+    }, [currentSeason, currentGameweek, currentPage, currentLeaderboard]);
 
     const fetchViewData = async (season, gameweek, leaderboard, month, club) => {
 
@@ -63,6 +75,7 @@ const Leaderboard = () => {
                 await getWeeklyLeaderboard(season, gameweek);
                 break;
             case 'Monthly':
+                console.log("here")
                 await getMonthlyLeaderboard(month, club);
                 break;
             case 'Season':
@@ -130,6 +143,54 @@ const Leaderboard = () => {
             };  
             
         }
+    };
+
+    const openGameweekDropdown = () => {
+      setShowGameweekDropdown(!showGameweekDropdown);
+      setTimeout(() => {
+        if (gameweekDropdownRef.current) {
+          const item = gameweekDropdownRef.current.querySelector(`[data-key="${currentGameweek - 1}"]`);
+          if (item) {
+            item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }
+        }
+      }, 0);
+    };
+  
+    const openSeasonDropdown = () => {
+      setShowSeasonDropdown(!showSeasonDropdown);
+      setTimeout(() => {
+        if (seasonDropdownRef.current) {
+          const item = seasonDropdownRef.current.querySelector(`[data-key="${currentSeason.id}"]`);
+          if (item) {
+            item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }
+        }
+      }, 0);
+    };
+  
+    const openLeaderboardDropdown = () => {
+      setShowLeaderboardDropdown(!showLeaderboardDropdown);
+      setTimeout(() => {
+        if (leaderboardDropdownRef.current) {
+          const item = leaderboardDropdownRef.current.querySelector(`[data-key="${currentLeaderboard}"]`);
+          if (item) {
+            item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }
+        }
+      }, 0);
+    };
+  
+    const openClubDropdown = () => {
+      setShowClubDropdown(!showClubDropdown);
+      setTimeout(() => {
+        if (clubDropdownRef.current) {
+          const item = clubDropdownRef.current.querySelector(`[data-key="${currentClub.id}"]`);
+          if (item) {
+            item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }
+        }
+      }, 0);
     };
 
     return (
@@ -213,7 +274,7 @@ const Leaderboard = () => {
 
                 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div ref={leaderboardDropdownRef} onBlur={handleSeasonBlur}>
+                  <div ref={leaderboardDropdownRef} onBlur={handleLeaderboardTypeBlur}>
                     <Dropdown show={showLeaderboardDropdown}>
                       <Dropdown.Toggle as={CustomToggle} id="leaderboard-selector">
                         <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openLeaderboardDropdown()}>{currentLeaderboard}</Button>
@@ -224,23 +285,45 @@ const Leaderboard = () => {
                             className='dropdown-item'
                             key={0}
                             onMouseDown={() => {setCurrentLeaderboard('Weekly')}}
-                            >Weekly</Dropdown.Item>
+                            >Weekly {currentLeaderboard === 'Weekly' ? ' ✔️' : ''}</Dropdown.Item>
                         <Dropdown.Item
                             data-key={0}
                             className='dropdown-item'
                             key={0}
                             onMouseDown={() => {setCurrentLeaderboard('Monthly')}}
-                            >Monthly</Dropdown.Item>
+                            >Monthly {currentLeaderboard === 'Monthly' ? ' ✔️' : ''}</Dropdown.Item>
                         <Dropdown.Item
                             data-key={0}
                             className='dropdown-item'
                             key={0}
                             onMouseDown={() => {setCurrentLeaderboard('Season')}}
-                            >Season</Dropdown.Item>
+                            >Season {currentLeaderboard === 'Season' ? ' ✔️' : ''}</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
                 </div>
+
+                {currentLeaderboard == 'Monthly' && <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div ref={clubDropdownRef} onBlur={handleClubBlur}>
+                    <Dropdown show={showClubDropdown}>
+                      <Dropdown.Toggle as={CustomToggle} id="club-selector">
+                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openClubDropdown()}>{currentClub.friendlyName}</Button>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                          {teams.map(team => 
+                          <Dropdown.Item
+                            data-key={team.id}
+                            className='dropdown-item'
+                            key={team.id}
+                            onMouseDown={() => setCurrentClub(team)}
+                          >
+                            {team.friendlyName} {currentClub.id === team.id ? ' ✔️' : ''}
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                </div>}
               </div>
             </Col>
           </Row>

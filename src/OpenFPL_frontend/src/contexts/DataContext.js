@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { player_canister as player_canister } from '../../../declarations/player_canister';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
-import { computeTimeLeft } from '../components/helpers';
 
 export const DataContext = React.createContext();
 

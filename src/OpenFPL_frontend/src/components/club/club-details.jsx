@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);
+    
     const [key, setKey] = useState('players');
     
     const { teamId } = useParams();
@@ -47,6 +48,16 @@ const ClubDetails = ({  }) => {
         };
         fetchData();
     }, [currentPosition]);
+
+    useEffect(() => {
+        const init = async () => {
+          const teamDetails = teams.find(t => t.id === Number(teamId));
+          setTeam(teamDetails);
+          setTeamPlayers(players.filter(player => player.teamId === Number(teamId)));
+          setIsLoading(false);
+        };
+        init();
+      }, [teamId, teams]);
 
     const fetchInitialData = async () => {
         try {
@@ -466,7 +477,7 @@ const ClubDetails = ({  }) => {
                                 </Tab>
 
                                 <Tab eventKey="fixtures" title="Fixtures">
-                                    {key === 'fixtures' && <ClubFixtures teamId={teamId} />}
+                                    {key === 'fixtures' && <ClubFixtures key={teamId} teamId={teamId} />}
                                 </Tab>
                                 <Tab eventKey="proposals" title="Proposals">
                                     <div className='px-4 mt-4 mb-4'>

@@ -3,6 +3,7 @@ import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap'
 import { DataContext } from "../../contexts/DataContext";
 import { getTeamById, computeTimeLeft } from '../helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
+import { useNavigate } from 'react-router-dom';
 
 const ClubFixtures = ({teamId}) => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);
@@ -12,6 +13,7 @@ const ClubFixtures = ({teamId}) => {
   const [fetchedFixtures, setFetchedFixtures] = useState(null); 
   const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
   const seasonDropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleSeasonBlur = (e) => {
     const currentTarget = e.currentTarget;
@@ -166,8 +168,8 @@ const ClubFixtures = ({teamId}) => {
                           return (
                             <>
                               <div className="col-home-team">
-                                <p className='fixture-team-name'>
-                                  <BadgeIcon
+                              <p onClick={() => navigate(`/club/${homeTeam.id}`)} className='fixture-team-name clickable-table-row'>
+                                                <BadgeIcon
                                     primary={homeTeam.primaryColourHex}
                                     secondary={homeTeam.secondaryColourHex}
                                     third={homeTeam.thirdColourHex}
@@ -182,8 +184,8 @@ const ClubFixtures = ({teamId}) => {
                                 <p className="w-100 text-center">vs</p>
                               </div>
                               <div className="col-away-team">
-                                <p className='fixture-team-name'>
-                                  <BadgeIcon
+                              <p onClick={() => navigate(`/club/${awayTeam.id}`)} className='fixture-team-name clickable-table-row'>
+                              <BadgeIcon
                                     primary={awayTeam.primaryColourHex}
                                     secondary={awayTeam.secondaryColourHex}
                                     third={awayTeam.thirdColourHex}

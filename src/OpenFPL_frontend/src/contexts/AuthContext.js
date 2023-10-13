@@ -6,7 +6,7 @@ export const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
   const [authClient, setAuthClient] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userPrincipal, setUserPrincipal] = useState("");
+  const [userPrincipal, setUserPrincipal] = useState(""); //SET AS USER PROFILE AND IMPLEMENT EVERYWHERE, MAYBE THIS IS THE TIME TO REFACTOR THE PROFILE SO CAN GET THIS QUICKLY
   const [loading, setLoading] = useState(true);
 
   const OLD_MAINNET_IDENTITY_SERVICE_URL = "https://identity.ic0.app";
