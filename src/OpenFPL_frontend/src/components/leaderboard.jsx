@@ -61,7 +61,7 @@ const Leaderboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            await fetchViewData(currentSeason, currentGameweek, currentLeaderboard, currentClub.id);
+            await fetchViewData(currentSeason, currentGameweek, currentLeaderboard, systemState.activeMonth, currentClub.id);
             setIsLoading(false);
         };
         
@@ -76,7 +76,7 @@ const Leaderboard = () => {
                 break;
             case 'Monthly':
                 console.log("here")
-                await getMonthlyLeaderboard(month, club);
+                await getMonthlyLeaderboard(season, month, club);
                 break;
             case 'Season':
                 await getSeasonLeaderboard(season);
@@ -105,12 +105,17 @@ const Leaderboard = () => {
     };  
 
     const getMonthlyLeaderboard = async (season, month, club) => {
+      console.log(monthlyLeaderboards)
+      if(Number(monthlyLeaderboards[0].totalEntries) === 0){
+        setManagers(null);    
+        return;
+      }
         if(currentPage <= 4 && month == systemState.activeMonth){
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const slicedData = {
-                ...monthlyLeaderboards.find(x => x.clubId == selectedClub),
-                entries: monthlyLeaderboards.find(x => x.clubId == selectedClub).entries.slice(start, end)
+                ...monthlyLeaderboards.find(x => x.clubId == club),
+                entries: monthlyLeaderboards.find(x => x.clubId == club).entries.slice(start, end)
             };
             setManagers(slicedData);
         }
@@ -125,7 +130,8 @@ const Leaderboard = () => {
     };
 
     const getSeasonLeaderboard = async (season) => {
-        if(currentPage <= 4 && season == systemState.activeSeason.id){
+      console.log(season)
+        if(currentPage <= 4 && season.id == systemState.activeSeason.id){
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const slicedData = {
@@ -287,15 +293,15 @@ const Leaderboard = () => {
                             onMouseDown={() => {setCurrentLeaderboard('Weekly')}}
                             >Weekly {currentLeaderboard === 'Weekly' ? ' ✔️' : ''}</Dropdown.Item>
                         <Dropdown.Item
-                            data-key={0}
+                            data-key={1}
                             className='dropdown-item'
-                            key={0}
+                            key={1}
                             onMouseDown={() => {setCurrentLeaderboard('Monthly')}}
                             >Monthly {currentLeaderboard === 'Monthly' ? ' ✔️' : ''}</Dropdown.Item>
                         <Dropdown.Item
-                            data-key={0}
+                            data-key={2}
                             className='dropdown-item'
-                            key={0}
+                            key={2}
                             onMouseDown={() => {setCurrentLeaderboard('Season')}}
                             >Season {currentLeaderboard === 'Season' ? ' ✔️' : ''}</Dropdown.Item>
                       </Dropdown.Menu>
@@ -343,7 +349,7 @@ const Leaderboard = () => {
 
 
               
-            {managers.entries && managers.entries.map(manager => (
+            {managers && managers.entries && managers.entries.map(manager => (
                 <Row key={manager.principalId} style={{ overflowX: 'auto' }}>
                     <Col xs={12}>
                         <div className="table-row">  
@@ -354,6 +360,14 @@ const Leaderboard = () => {
                     </Col>
                 </Row>
             ))    
+            }
+
+            {!managers && 
+            <Row className='mt-4'>
+              <Col xs={12}>
+                  <p className='px-4'>No Entries</p>
+              </Col>
+            </Row>
             }
               
 

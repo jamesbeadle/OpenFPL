@@ -1153,6 +1153,13 @@ module {
                 entries = [];
                 totalEntries = 0;
             };
+
+            Debug.print(debug_show "getting monthly leaderboards");
+            Debug.print(debug_show seasonId);
+            Debug.print(debug_show month);
+            Debug.print(debug_show clubId);
+            Debug.print(debug_show limit);
+            Debug.print(debug_show offset);
             
             switch (monthlyLeaderboards.get(seasonId)) {
                 case (null) { return defaultLeaderboard; };
