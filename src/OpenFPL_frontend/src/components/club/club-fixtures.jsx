@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
-import { getTeamById, computeTimeLeft } from '../helpers';
+import { getTeamById, computeTimeLeft, nanoSecondsToMillis } from '../helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -209,7 +209,7 @@ const ClubFixtures = ({teamId}) => {
                                         marginRight={10}
                                         width={20}
                                         height={20}
-                                    /> 05:30AM</p>
+                                        /> {new Date(nanoSecondsToMillis(Number(fixture.kickOff))).toLocaleTimeString()}</p>
                         </div>
                           <div className="col-badge">
                         {renderStatusBadge(fixture)}
