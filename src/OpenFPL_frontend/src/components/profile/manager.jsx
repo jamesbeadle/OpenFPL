@@ -469,13 +469,13 @@ const Manager = () => {
                                   Profilepict
                                 </div>
                                 <div className='club-total-players-col'>
-                                    <p className="stat-header w-100">Players</p>
+                                    <p className="stat-header w-100">Profile</p>
                                 </div>
                                 <div className='club-position-col'>
-                                    <p className="stat-header w-100">lAST gw pOINTS</p>
+                                    <p className="stat-header w-100">Manager</p>
                                 </div>
                                 <div className='club-points-col'>
-                                    <p className="stat-header w-100">Total Season points</p>
+                                    <p className="stat-header w-100">Favourite Team</p>
                                 </div>
                             </Row>
                             <Row className="stat-row-2">
@@ -512,73 +512,46 @@ const Manager = () => {
             </Col>
 
             <Col md={5} xs={12}>
-                <Card>
-                    <div className="outer-container d-flex">
-                        <div className="stat-panel flex-grow-1">  
-                            <Row className="stat-row-1">
-                                <div className='home-deadline-col'>
-                                    <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Upcoming Game</p>    
-                                </div>
-                                <div className='home-fixture-col'>
-                                      
-                                </div>
-                            </Row>
-                            <Row className="stat-row-2">
-                                <div className='home-deadline-col'>
-                                    <Row  style={{paddingLeft: '32px'}}>
-                                        <Col xs={4} className="add-colon">
-                                        </Col>
-                                        <Col xs={4} className="add-colon">
-                                        </Col>
-                                        <Col xs={4}>
-                                        </Col>
-                                    </Row>  
-                                </div>
-                                <div className='home-fixture-col'>
-                                    <Row>
-                                        <Col xs={5}>
-                                            <div className='text-center badge w-100'>
-                                            </div>
-                                        </Col>
-                                        <Col xs={2}>
-                                            <p className="w-100 time-colon">vs</p>
-                                        </Col>
-                                        <Col xs={5}>
-                                            <div className='text-center badge w-100'>
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </Row>
-                            <Row className='stat-row-3'>
-                                <div className='home-deadline-col'>
-                                    <Row style={{paddingLeft: '32px'}}>
-                                        <Col xs={4}>
-                                            <p className="stat-header w-100">Day</p> 
-                                        </Col>
-                                        <Col xs={4}>
-                                            <p className="stat-header w-100">Hour</p>   
-                                        </Col>
-                                        <Col xs={4}>
-                                            <p className="stat-header w-100">Min</p>    
-                                        </Col>
-                                    </Row>
-                                </div>
-                                <div className='home-fixture-col'>
-                                    <Row>
-                                        <Col xs={5}>
-                                        </Col>
-                                        <Col xs={2}>
-                                        </Col>
-                                        <Col xs={5}>
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </Row>
-                        </div>
-                        <div className="d-none d-md-block home-divider-3"></div>
-                    </div>
-                </Card>
+              <Card className='mb-3'>
+                <div className="outer-container d-flex">
+                  <div className="stat-panel flex-grow-1">
+                      <Row className="stat-row-1">
+                          <div className='leaderboard-pos-col'>
+                              <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Leaderboard Positions</p>    
+                          </div>
+                          <div className='leaderboard-pos-col'>
+                                
+                          </div>
+                          <div className='leaderboard-pos-col'>
+                                
+                          </div>
+                      </Row>
+                      <Row className="stat-row-2">
+                          <div className='leaderboard-pos-col'>
+                            TEAM NAME
+                          </div>
+                          <div className='leaderboard-pos-col'>
+                            favourite team id
+                          </div>
+                          <div className='leaderboard-pos-col'>
+                          </div>
+                      </Row>
+                      <Row className="stat-row-3">
+                          <div className='leaderboard-pos-col'>
+                          </div>
+                          <div className='leaderboard-pos-col'>
+                              <p className="stat-header">Gameweek {systemState.activeGameweek}</p>    
+                          </div>
+                          <div className='leaderboard-pos-col'>
+                              <p className="stat-header">{currentSeason.name}</p>    
+                          </div>
+                      </Row>
+                  </div>
+                  <div className="d-none d-md-block club-divider-1"></div>
+                  <div className="d-none d-md-block club-divider-2"></div>
+                  <div className="d-none d-md-block club-divider-3"></div>
+                </div>
+              </Card>
             </Col>
           </Row>
           
@@ -788,7 +761,7 @@ const Manager = () => {
                     </Row>
                     );
                 })}
-                {sortedPlayers.length == 0 && <p className='px-4 mt-4 mb-4'>No Fantasy Team Found</p> }
+                {sortedPlayers.length == 0 && <p className='px-4 mt-4 mb-4'>No team found for gameweek.</p> }
               </Container>
             }
 

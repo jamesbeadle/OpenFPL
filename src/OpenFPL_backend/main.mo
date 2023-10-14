@@ -1339,13 +1339,16 @@ actor Self {
       return fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
   };
 
-  public shared query func getManager(managerId: Text, seasonId: T.SeasonId) : async DTOs.ManagerDTO {
+  public shared query func getManager(managerId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async DTOs.ManagerDTO {
 
     var displayName = "";
     var profilePicture = Blob.fromArray([]);
     var favouriteTeamId: T.TeamId = 0;
     var createDate = Time.now();
     var gameweeks: [T.FantasyTeamSnapshot] = [];
+    var weeklyPosition = fantasyTeamsInstance.getWeeklyManagerPosition(managerId, seasonId, gameweek);
+    var monthlyPosition = "N/A";
+    var seasonPosition = fantasyTeamsInstance.getSeasonManagerPosition(managerId, seasonId);
 
     let userProfile = profilesInstance.getProfile(managerId);
     switch(userProfile){
@@ -1355,6 +1358,11 @@ actor Self {
         profilePicture := foundProfile.profilePicture;
         favouriteTeamId := foundProfile.favouriteTeamId;
         createDate := foundProfile.createDate;
+
+        if(foundProfile.favouriteTeamId > 0){
+          monthlyPosition := fantasyTeamsInstance.getMonthlyManagerPosition(managerId, seasonId, foundProfile.favouriteTeamId);
+        }
+
       };
     };
 
@@ -1378,7 +1386,6 @@ actor Self {
         };
     };
 
-
     let managerDTO: DTOs.ManagerDTO = {
       principalId = managerId;
       displayName = displayName;
@@ -1386,6 +1393,9 @@ actor Self {
       favouriteTeamId = favouriteTeamId;
       createDate = createDate;
       gameweeks = gameweeks;
+      weeklyPosition = weeklyPosition;
+      monthlyPosition = monthlyPosition;
+      seasonPosition = seasonPosition;
     };  
 
     return managerDTO;

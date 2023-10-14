@@ -1419,6 +1419,84 @@ module {
                 return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
             };
         };
+
+        public func getWeeklyManagerPosition(managerId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : Text {
+            
+            for((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()){
+                if(seasonId == seasonId){
+                    let weeklyLeaderboard = List.find<T.Leaderboard>(seasonLeaderboards.gameweekLeaderboards, func (gameweekLeaderboard: T.Leaderboard): Bool {
+                        return gameweekLeaderboard.gameweek == gameweek;
+                    });
+                    switch(weeklyLeaderboard){
+                        case (null) {};
+                        case (?foundWeeklyLeaderboard){
+
+                            let foundEntry = List.find<T.LeaderboardEntry>(foundWeeklyLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                                return entry.principalId == managerId;
+                            });
+
+                            switch(foundEntry){
+                                case (null) {};
+                                case (?positionRow){
+                                    return positionRow.positionText;
+                                }
+                            };
+                        }
+                    };
+                };
+            };
+            
+            return "N/A";
+        };
+
+        public func getMonthlyManagerPosition(managerId: Text, seasonId: T.SeasonId, clubId: T.TeamId) : Text {
+            
+            for((seasonId, clubLeaderboards) in monthlyLeaderboards.entries()){
+                if(seasonId == seasonId){
+
+                    let clubLeaderboard = List.find<T.ClubLeaderboard>(clubLeaderboards, func (leaderboard: T.ClubLeaderboard): Bool {
+                        return leaderboard.clubId == clubId;
+                    });
+
+                    switch(clubLeaderboard){
+                        case (null) {};
+                        case (?foundClubLeaderboard){
+                            let foundEntry = List.find<T.LeaderboardEntry>(foundClubLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                                return entry.principalId == managerId;
+                            });
+
+                            switch(foundEntry){
+                                case (null) {};
+                                case (?positionRow){
+                                    return positionRow.positionText;
+                                }
+                            };
+                        };
+                    }
+                };
+            };
+            
+            return "N/A";
+        };
+
+        public func getSeasonManagerPosition(managerId: Text, seasonId: T.SeasonId) : Text {
+            
+            for((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()){
+                if(seasonId == seasonId){
+                    let foundEntry = List.find<T.LeaderboardEntry>(seasonLeaderboards.seasonLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                        return entry.principalId == managerId;
+                    });
+                    switch(foundEntry){
+                        case (null) {};
+                        case (?positionRow){
+                            return positionRow.positionText;
+                        }
+                    };
+                };
+            };
+            
+            return "N/A";
+        };
     };
     
 }
