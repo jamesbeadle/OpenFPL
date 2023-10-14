@@ -81,8 +81,11 @@ type ManagerDTO =
    displayName: text;
    favouriteTeamId: TeamId;
    gameweeks: vec FantasyTeamSnapshot;
+   monthlyPosition: text;
    principalId: text;
    profilePicture: blob;
+   seasonPosition: text;
+   weeklyPosition: text;
  };
 type List_2 = 
  opt record {
@@ -251,7 +254,7 @@ service : {
   getFixtureDTOs: () -> (vec FixtureDTO) query;
   getFixtures: () -> (vec Fixture) query;
   getFixturesForSeason: (SeasonId) -> (vec Fixture) query;
-  getManager: (text, SeasonId) -> (ManagerDTO) query;
+  getManager: (text, SeasonId, GameweekNumber) -> (ManagerDTO) query;
   getProfileDTO: () -> (ProfileDTO);
   getPublicProfileDTO: (text) -> (ProfileDTO) query;
   getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;

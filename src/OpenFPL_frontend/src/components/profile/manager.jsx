@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { Container, Row, Col, Button, Spinner, Dropdown, Card } from 'react-bootstrap';
+import { Image, Container, Row, Col, Button, Spinner, Dropdown, Card } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { DataContext } from "../../contexts/DataContext";
@@ -61,10 +61,9 @@ const Manager = () => {
 
     const fetchViewData = async () => {
         try {
-          console.log("gw")
-          console.log(currentGameweek)
-            const data = await open_fpl_backend.getManager(managerId, currentSeason.id);
+            const data = await open_fpl_backend.getManager(managerId, currentSeason.id, currentGameweek);
             setViewData(data);
+            console.log(data);
             loadFantasyTeam(data);
             setProfileData(data);
         } catch (error){
@@ -106,7 +105,7 @@ const Manager = () => {
 
       const dateInMilliseconds = Number(data.createDate / 1000000n);
       const date = new Date(dateInMilliseconds);
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const joinDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
       setJoinedDate(joinDate);
 
@@ -463,51 +462,41 @@ const Manager = () => {
             <Col md={7} xs={12}>
                 <Card className='mb-3'>
                     <div className="outer-container d-flex">
-                        <div className="stat-panel flex-grow-1">
-                            <Row className="stat-row-1">
-                                <div className='club-badge-col'>
-                                  Profilepict
+                      
+                    <div className='manager-details-row w-100' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                <div className='manager-picture-col'>
+                                  <div className="position-relative d-inline-block">
+                                    <Image src={profilePicSrc} className="w-100 manager-profile-image" />
+                                    </div>
                                 </div>
-                                <div className='club-total-players-col'>
-                                    <p className="stat-header w-100">Profile</p>
+                                <div className='manager-details-col'>
+                                  <div className='manager-detail-row-1'>
+                                    <Row className="stat-row-1">
+                                      <div className='manager-display-name-col'>
+                                        <p className="stat-header w-100">Manager</p>
+                                      </div>
+                                      <div className='manager-favourite-team-col'>
+                                        <p className="stat-header w-100">Favourite Team</p>
+                                      </div>
+                                      <div className='manager-joined-col'>
+                                        <p className="stat-header w-100">Joined</p>
+                                      </div>
+                                    </Row>
+                                    <Row className="stat-row-2">
+                                    <div className='manager-display-name-col'>
+                                        <p className="stat">{viewData.displayName == viewData.principalId ? '-' : viewData.displayName}</p>
+                                      </div>
+                                      <div className='manager-favourite-team-col'>
+                                        <p className="stat">{viewData.favouriteTeamId == 0 ? '-' : getTeamById(teams, viewData.favouriteTeamId).friendlyName}</p>
+                                      </div>
+                                      <div className='manager-joined-col'>
+                                        <p className="stat">{joinedDate}</p>
+                                      </div>
+                                    </Row>
+                                  </div>
                                 </div>
-                                <div className='club-position-col'>
-                                    <p className="stat-header w-100">Manager</p>
-                                </div>
-                                <div className='club-points-col'>
-                                    <p className="stat-header w-100">Favourite Team</p>
-                                </div>
-                            </Row>
-                            <Row className="stat-row-2">
-                                <div className='club-badge-col'>
-                                    
-                                </div>
-                                <div className='club-total-players-col'>
-                                  TEAM NAME
-                                </div>
-                                <div className='club-position-col'>
-                                  favourite team id
-                                </div>
-                                <div className='club-points-col'>
-                                </div>
-                            </Row>
-                            <Row className="stat-row-3">
-                                <div className='club-badge-col'>
-                                </div>
-                                <div className='club-total-players-col'>
-                                    <p className="stat-header">Total</p>    
-                                </div>
-                                <div className='club-position-col'>
-                                </div>
-                                <div className='club-points-col'>
-                                    <p className="stat-header">Total</p>    
-                                </div>
-                            </Row>
-                        </div>
-                        <div className="d-none d-md-block club-divider-1"></div>
-                        <div className="d-none d-md-block club-divider-2"></div>
-                        <div className="d-none d-md-block club-divider-3"></div>
-                    </div>
+                              </div>
+                          </div>
                 </Card>
             </Col>
 

@@ -122,8 +122,11 @@ export const idlFactory = ({ IDL }) => {
   const ManagerDTO = IDL.Record({
     'favouriteTeamId' : TeamId,
     'displayName' : IDL.Text,
+    'weeklyPosition' : IDL.Text,
     'createDate' : IDL.Int,
     'gameweeks' : IDL.Vec(FantasyTeamSnapshot),
+    'monthlyPosition' : IDL.Text,
+    'seasonPosition' : IDL.Text,
     'profilePicture' : IDL.Vec(IDL.Nat8),
     'principalId' : IDL.Text,
   });
@@ -284,7 +287,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(Fixture)],
         ['query'],
       ),
-    'getManager' : IDL.Func([IDL.Text, SeasonId], [ManagerDTO], ['query']),
+    'getManager' : IDL.Func(
+        [IDL.Text, SeasonId, GameweekNumber],
+        [ManagerDTO],
+        ['query'],
+      ),
     'getProfileDTO' : IDL.Func([], [ProfileDTO], []),
     'getPublicProfileDTO' : IDL.Func([IDL.Text], [ProfileDTO], ['query']),
     'getSeasonLeaderboard' : IDL.Func(

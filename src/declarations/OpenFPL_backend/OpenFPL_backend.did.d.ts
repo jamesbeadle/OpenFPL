@@ -107,8 +107,11 @@ export type List_2 = [] | [[Fixture, List_2]];
 export interface ManagerDTO {
   'favouriteTeamId' : TeamId,
   'displayName' : string,
+  'weeklyPosition' : string,
   'createDate' : bigint,
   'gameweeks' : Array<FantasyTeamSnapshot>,
+  'monthlyPosition' : string,
+  'seasonPosition' : string,
   'profilePicture' : Uint8Array | number[],
   'principalId' : string,
 }
@@ -234,7 +237,7 @@ export interface _SERVICE {
   'getFixtureDTOs' : ActorMethod<[], Array<FixtureDTO>>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
   'getFixturesForSeason' : ActorMethod<[SeasonId], Array<Fixture>>,
-  'getManager' : ActorMethod<[string, SeasonId], ManagerDTO>,
+  'getManager' : ActorMethod<[string, SeasonId, GameweekNumber], ManagerDTO>,
   'getProfileDTO' : ActorMethod<[], ProfileDTO>,
   'getPublicProfileDTO' : ActorMethod<[string], ProfileDTO>,
   'getSeasonLeaderboard' : ActorMethod<
