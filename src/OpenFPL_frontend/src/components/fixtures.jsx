@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
+import { Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById,groupFixturesByDate, computeTimeLeft, nanoSecondsToMillis } from './helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from './icons';
@@ -152,9 +152,8 @@ const Fixtures = () => {
   return (
       <>
         {isLoading ? (
-          <div className="d-flex flex-column align-items-center justify-content-center">
+          <div className="flex-column align-items-center justify-content-center">
             <Spinner animation="border" />
-            <p className='text-center mt-1'>Loading Fixtures</p>
           </div>) 
           :
           <div className="dark-tab-row w-100 mx-0">
@@ -235,8 +234,8 @@ const Fixtures = () => {
             <Row>
               {Object.entries(filteredFixtures).map(([date, fixturesForDate], dateIdx) => {
                 return (
-                    <Container key={dateIdx}>
-                      <Row>
+                    <>
+                      <Row key={dateIdx}>
                         <Col xs={12}>
                           <div className='light-background date-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
                             <p className="w-100 date-header">{date}</p>
@@ -292,23 +291,29 @@ const Fixtures = () => {
                                 })()}
 
                                 <div className="col-time">
-                                <p>
-                                  <ClockIcon
-                                                primaryColour={'#123432'}
-                                                secondaryColour={'#432123'}
-                                                thirdColour={'#432123'}
-                                                marginRight={10}
-                                                width={20}
-                                                height={20}
-                                            /> {new Date(nanoSecondsToMillis(Number(fixture.kickOff))).toLocaleTimeString()}</p>
+                                  {fixture.status < 3 &&
+                                    <p>
+                                      <ClockIcon
+                                          primaryColour={'#123432'}
+                                          secondaryColour={'#432123'}
+                                          thirdColour={'#432123'}
+                                          marginRight={10}
+                                          width={20}
+                                          height={20}
+                                      /> {new Date(nanoSecondsToMillis(Number(fixture.kickOff))).toLocaleTimeString()}
+                                    </p>
+                                  }
+                                  {fixture.status > 2 && 
+                                    <p>{fixture.homeGoals} - {fixture.awayGoals}</p>
+                                  }
                                 </div>
-                                  <div className="col-badge">
-                                {renderStatusBadge(fixture)}
-                               </div>
+                                <div className="col-badge">
+                                  {renderStatusBadge(fixture)}
+                                </div>
                               </div>
                             );
                         })}
-                    </Container>
+                    </>
                 );
               })}
 
