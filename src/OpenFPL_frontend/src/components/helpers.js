@@ -129,3 +129,11 @@ export const getAvailableFormations = (playerCounts) => {
     );
   };
   
+  
+  export const calculateTeamValue = (players) => {
+    if(players) {
+      const totalValue = Object.values(players).reduce((acc, player) => acc + Number(player.value), 0);
+      return (totalValue / 4).toFixed(1);
+    }
+    return null;
+  }

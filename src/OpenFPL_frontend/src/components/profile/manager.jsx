@@ -52,61 +52,73 @@ const Manager = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
+    const fetchData = async () => {
           await fetchViewData();
           setIsLoading(false);
         };
         fetchData();
-    }, []);
+    }, [currentGameweek]);
 
     const fetchViewData = async () => {
         try {
+          console.log("gw")
+          console.log(currentGameweek)
             const data = await open_fpl_backend.getManager(managerId, currentSeason.id);
-            console.log("data")
-            console.log(data)
             setViewData(data);
-            console.log(currentGameweek)
-            const activeGameweek = data.gameweeks.find(x => x.gameweek == currentGameweek);
-            if(!activeGameweek){
-              return;
-            }
-            if(currentGameweek == systemState.focusGameweek){
-              const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
-              const playersInTeam = detailedPlayers.filter(player => activeGameweek.playerIds.includes(player.id));
-          
-              setFantasyTeam({
-                  ...activeGameweek,
-                  players: playersInTeam,
-              });
-            }
-            else
-            {
-                const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(activeGameweek.playerIds, currentSeason.id, currentGameweek);    
-                const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
-                setFantasyTeam({
-                    ...activeGameweek,
-                    players: detailedPlayers,
-                });
-            }
-
-            const dateInMilliseconds = Number(data.createDate / 1000000n);
-            const date = new Date(dateInMilliseconds);
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const joinDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
-            setJoinedDate(joinDate);
-
-            if (data.profilePicture && data.profilePicture.length > 0) {
-            
-            const blob = new Blob([data.profilePicture]);
-            const blobUrl = URL.createObjectURL(blob);
-              setProfilePicSrc(blobUrl);
-            } else {
-              setProfilePicSrc(ProfileImage);
-            }
-            setFavouriteTeam(data.favouriteTeamId);
+            loadFantasyTeam(data);
+            setProfileData(data);
         } catch (error){
             console.log(error);
         };
+    };
+
+    const loadFantasyTeam = async (data) => {
+      const activeGameweek = data.gameweeks.find(x => x.gameweek == currentGameweek);
+      if(!activeGameweek){
+        setFantasyTeam({
+          ...activeGameweek,
+          players: [],
+        });
+        return;
+      }
+      if(currentGameweek == systemState.focusGameweek && currentSeason.id == systemState.activeSeason.id){
+        const detailedPlayers = playerEvents.map(player => extractPlayerData(player));
+        const playersInTeam = detailedPlayers.filter(player => activeGameweek.playerIds.includes(player.id));
+    
+        setFantasyTeam({
+            ...activeGameweek,
+            players: playersInTeam,
+        });
+      }
+      else
+      {
+        console.log("HERE")
+          const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(activeGameweek.playerIds, currentSeason.id, currentGameweek);    
+          const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
+          setFantasyTeam({
+              ...activeGameweek,
+              players: detailedPlayers,
+          });
+      }
+    };
+
+    const setProfileData = async (data) => {
+
+      const dateInMilliseconds = Number(data.createDate / 1000000n);
+      const date = new Date(dateInMilliseconds);
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const joinDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+      setJoinedDate(joinDate);
+
+      if (data.profilePicture && data.profilePicture.length > 0) {
+      
+      const blob = new Blob([data.profilePicture]);
+      const blobUrl = URL.createObjectURL(blob);
+        setProfilePicSrc(blobUrl);
+      } else {
+        setProfilePicSrc(ProfileImage);
+      }
+      setFavouriteTeam(data.favouriteTeamId);
     };
 
     
@@ -137,6 +149,7 @@ const Manager = () => {
     }, [fantasyTeam]);
     
     const handleGameweekChange = (change) => {
+      console.log(change)
       setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
     };
     
@@ -433,6 +446,11 @@ const Manager = () => {
         return bonusPoints;
     };
 
+    const loadToGameweek = async (number) => {
+      setShowListView(false);
+      setCurrentGameweek(number);
+    };
+
     return (
         isLoading ? (
             <div className="customOverlay d-flex flex-column align-items-center justify-content-center">
@@ -448,15 +466,16 @@ const Manager = () => {
                         <div className="stat-panel flex-grow-1">
                             <Row className="stat-row-1">
                                 <div className='club-badge-col'>
+                                  Profilepict
                                 </div>
                                 <div className='club-total-players-col'>
                                     <p className="stat-header w-100">Players</p>
                                 </div>
                                 <div className='club-position-col'>
-                                    <p className="stat-header w-100">Season Position</p>
+                                    <p className="stat-header w-100">lAST gw pOINTS</p>
                                 </div>
                                 <div className='club-points-col'>
-                                    <p className="stat-header w-100">Points</p>
+                                    <p className="stat-header w-100">Total Season points</p>
                                 </div>
                             </Row>
                             <Row className="stat-row-2">
@@ -464,8 +483,10 @@ const Manager = () => {
                                     
                                 </div>
                                 <div className='club-total-players-col'>
+                                  TEAM NAME
                                 </div>
                                 <div className='club-position-col'>
+                                  favourite team id
                                 </div>
                                 <div className='club-points-col'>
                                 </div>
@@ -767,14 +788,14 @@ const Manager = () => {
                     </Row>
                     );
                 })}
-                {sortedPlayers.length == 0 && <p>No Players</p> }
+                {sortedPlayers.length == 0 && <p className='px-4 mt-4 mb-4'>No Fantasy Team Found</p> }
               </Container>
             }
 
             {showListView && 
             
               <Container fluid>
-                <ManagerGameweekPoints gameweeks={viewData.gameweeks} />
+                <ManagerGameweekPoints setCurrentGameweek={loadToGameweek} gameweeks={viewData.gameweeks} />
               </Container>
             }
 

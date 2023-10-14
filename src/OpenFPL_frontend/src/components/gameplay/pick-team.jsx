@@ -20,7 +20,7 @@ import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
 import { saveFantasyTeam } from '../../AuthFunctions';
 import getFlag from '../country-flag';
-import { getTeamById, getPlayerById, getPositionText, getAvailableFormations, computeTimeLeft } from '../helpers';
+import { getTeamById, getPlayerById, getPositionText, getAvailableFormations, computeTimeLeft, calculateTeamValue } from '../helpers';
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -557,23 +557,6 @@ const PickTeam = () => {
     }
   }
 
-  
-  
-  
-  
-
-
-  
-  //MOVE TO UTILITIES
-  const calculateTeamValue = () => {
-    if(fantasyTeam && fantasyTeam.players) {
-      const totalValue = Object.values(fantasyTeam.players).reduce((acc, player) => acc + Number(player.value), 0);
-      return (totalValue / 4).toFixed(1);
-    }
-    return null;
-  }
-  
-
   //Move to utilities with homepage countdown  
   const updateCountdowns = async () => {
     console.log("sortedFixtures")
@@ -864,7 +847,7 @@ const PickTeam = () => {
                               </Row>
                               <Row className="stat-row-2">
                                 <div className='pick-team-value-col'>
-                                  <p style={{paddingLeft: '40px'}} className="stat">£{calculateTeamValue()}m</p>
+                                  <p style={{paddingLeft: '40px'}} className="stat">£{calculateTeamValue(fantasyTeam.players)}m</p>
                                 </div>
                                 <div className='pick-team-bank-col'>
                                   <p className="stat">£{(fantasyTeam.bankBalance).toFixed(2)}m</p>

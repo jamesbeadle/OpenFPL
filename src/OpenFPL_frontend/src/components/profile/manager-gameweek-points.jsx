@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, BadgeIcon } from '../icons';
 import { getFantasyTeamForGameweek } from '../../AuthFunctions';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
-import { getTeamById } from '../helpers';
+import { calculateTeamValue, getPlayerById } from '../helpers';
 import GoalGetter from "../../../assets/goal-getter.png";
 import PassMaster from "../../../assets/pass-master.png";
 import NoEntry from "../../../assets/no-entry.png";
@@ -16,7 +16,7 @@ import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
 import PlayerPointsModal from '../modals/player-points-modal';
 
-const ManagerGameweekPoints = ({ gameweeks }) => {
+const ManagerGameweekPoints = ({ gameweeks, setCurrentGameweek }) => {
     const { seasons, fixtures, systemState, playerEvents, teams, players } = useContext(DataContext);
     
     const [isLoading, setIsLoading] = useState(true);
@@ -42,8 +42,6 @@ const ManagerGameweekPoints = ({ gameweeks }) => {
     }, [currentSeason]);
   
     const fetchViewData = async () => {
-        console.log("gameweeks")
-        console.log(gameweeks)
     };
 
     const handleSeasonChange = async (change) => {
@@ -71,7 +69,11 @@ const ManagerGameweekPoints = ({ gameweeks }) => {
         }
         }, 0);
     };
-  
+
+    const handleShowGameweek = async (number) => {
+        setCurrentGameweek(number);
+    };
+
     return (
         <>
             {isLoading ? (
@@ -129,8 +131,9 @@ const ManagerGameweekPoints = ({ gameweeks }) => {
                         <Col xs={12}>
                             <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
                                 <div className="mgw-number-col gw-table-header">Gameweek</div>
-                                <div className="mgw-transfers-col gw-table-header">Transfers Made</div>
+                                <div className="mgw-team-value-col gw-table-header">Team Value</div>
                                 <div className="mgw-bank-col gw-table-header">Bank Balance</div>
+                                <div className="mgw-transfers-col gw-table-header">Transfers Made</div>
                                 <div className="mgw-captain-col gw-table-header">Captain</div>
                                 <div className="mgw-bonus-col gw-table-header">Bonus Used</div>
                                 <div className="mgw-points-col gw-table-header">Points</div>
@@ -141,14 +144,20 @@ const ManagerGameweekPoints = ({ gameweeks }) => {
 
                     
                 {gameweeks.map(gameweek => {
-                        return (
-                        <Row key={`gw-${gameweek.number}`} onClick={() => handleShowGameweek(gameweek.number)} style={{ overflowX: 'auto' }}>
+                        const captain = getPlayerById(players, gameweek.captainId);
+                        const teamPlayers = Object.values(gameweek.playerIds).map(id => players.filter(player => player.teamId > 0).find(player => player.id === id))
+                        .filter(Boolean); 
+                        console.log("teamPlayers")
+                        console.log(teamPlayers)
+                    return (
+                        <Row key={`gw-${gameweek.gameweek}`} onClick={() => handleShowGameweek(gameweek.gameweek)} style={{ overflowX: 'auto' }}>
                             <Col xs={12}>
                             <div className="table-row clickable-table-row">
                                 <div className="mgw-number-col gw-table-col">{gameweek.gameweek}</div>
-                                <div className="mgw-transfers-col gw-table-col">{(3-gameweek.transfersAvailable)}</div>
+                                <div className="mgw-team-value-col gw-table-col">£{Number(calculateTeamValue(teamPlayers)).toFixed(2)}m</div>
                                 <div className="mgw-bank-col gw-table-col">£{(Number(gameweek.bankBalance) / 4).toFixed(2)}m</div>
-                                <div className="mgw-captain-col gw-table-col">{gameweek.captainId}</div>
+                                <div className="mgw-transfers-col gw-table-col">{(3-gameweek.transfersAvailable)}</div>
+                                <div className="mgw-captain-col gw-table-col">{captain.firstName.length > 0 ? captain.firstName.charAt(0) + "." : ""} {captain.lastName}</div>
                                 <div className="mgw-bonus-col gw-table-col">{gameweek.gameweek}</div>
                                 <div className="mgw-points-col gw-table-col">{gameweek.points}</div>
                             </div>
