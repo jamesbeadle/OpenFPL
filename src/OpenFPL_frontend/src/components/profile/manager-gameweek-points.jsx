@@ -42,7 +42,8 @@ const ManagerGameweekPoints = ({ gameweeks }) => {
     }, [currentSeason]);
   
     const fetchViewData = async () => {
-        
+        console.log("gameweeks")
+        console.log(gameweeks)
     };
 
     const handleSeasonChange = async (change) => {
@@ -141,15 +142,15 @@ const ManagerGameweekPoints = ({ gameweeks }) => {
                     
                 {gameweeks.map(gameweek => {
                         return (
-                        <Row key={gameweek.number} onClick={() => handleShowGameweek(gameweek.number)} style={{ overflowX: 'auto' }}>
+                        <Row key={`gw-${gameweek.number}`} onClick={() => handleShowGameweek(gameweek.number)} style={{ overflowX: 'auto' }}>
                             <Col xs={12}>
                             <div className="table-row clickable-table-row">
-                                <div className="mgw-number-col gw-table-col">{gameweek.number}</div>
-                                <div className="mgw-transfers-col gw-table-col">{gameweek.number}</div>
-                                <div className="mgw-bank-col gw-table-col">{gameweek.number}</div>
-                                <div className="mgw-captain-col gw-table-col">{gameweek.number}</div>
-                                <div className="mgw-bonus-col gw-table-col">{gameweek.number}</div>
-                                <div className="mgw-points-col gw-table-col">{gameweek.number}</div>
+                                <div className="mgw-number-col gw-table-col">{gameweek.gameweek}</div>
+                                <div className="mgw-transfers-col gw-table-col">{(3-gameweek.transfersAvailable)}</div>
+                                <div className="mgw-bank-col gw-table-col">£{(Number(gameweek.bankBalance) / 4).toFixed(2)}m</div>
+                                <div className="mgw-captain-col gw-table-col">{gameweek.captainId}</div>
+                                <div className="mgw-bonus-col gw-table-col">{gameweek.gameweek}</div>
+                                <div className="mgw-points-col gw-table-col">{gameweek.points}</div>
                             </div>
                             </Col>
                             </Row>

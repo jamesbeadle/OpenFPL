@@ -211,7 +211,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
         </Form>
         <Row className='mt-3'>
           <Col>
-            <p><small>Available Balance: £{(fantasyTeam.bankBalance).toFixed(1)}m</small></p>
+            <p><small>Available Balance: £{(fantasyTeam.bankBalance).toFixed(2)}m</small></p>
           </Col>
         </Row>
         {players?.isLoading ? (
