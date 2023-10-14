@@ -158,7 +158,7 @@ const ManagerGameweekPoints = ({ gameweeks, setCurrentGameweek }) => {
                                 <div className="mgw-bank-col gw-table-col">£{(Number(gameweek.bankBalance) / 4).toFixed(2)}m</div>
                                 <div className="mgw-transfers-col gw-table-col">{(3-gameweek.transfersAvailable)}</div>
                                 <div className="mgw-captain-col gw-table-col">{captain.firstName.length > 0 ? captain.firstName.charAt(0) + "." : ""} {captain.lastName}</div>
-                                <div className="mgw-bonus-col gw-table-col">{gameweek.gameweek}</div>
+                                <div className="mgw-bonus-col gw-table-col">-</div>
                                 <div className="mgw-points-col gw-table-col">{gameweek.points}</div>
                             </div>
                             </Col>
