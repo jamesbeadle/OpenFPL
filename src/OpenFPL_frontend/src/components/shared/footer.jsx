@@ -18,7 +18,7 @@ const MyFooter = () => {
             <Col xs={7}>
               <Row className="footer-links">
                 <Col xs={12} className='footer-logo-container'>
-                  <LogoIcon width={16} height={16} fill={'#FFFFFF'} /> <b className="footer-logo-text">OPENFPL</b>
+                  <LogoIcon fill={'#FFFFFF'} /> <b className="logo-text">OPENFPL</b>
                 </Col>
                 <Col className='mb-1' xs={12}>
                   <LinkContainer to="/whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer>
@@ -55,7 +55,7 @@ const MyFooter = () => {
             <Col xs={5} className="text-right footer-sponsor"><a href="https://juno.build" target='_blank'>
               <div>
               <Row>
-                <Col className='mb-2'>Sponsored By</Col>
+                <Col className='mt-4 mb-2'>Sponsored By</Col>
               </Row>
               <Row>
                 <Col className='mb-2'><img src={FooterSponsor} className='footer-sponsor-image' /></Col>

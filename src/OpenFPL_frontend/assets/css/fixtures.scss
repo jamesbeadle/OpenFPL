@@ -32,6 +32,9 @@
 .fixture-team-name{
     font-weight: 600;
     font-size: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .badge-icon{
@@ -109,7 +112,7 @@
     }
  
     .col-home-team {
-        width: 45%;
+        width: 43.5%;
     }
 
     .col-vs {
@@ -119,6 +122,7 @@
     }
 
     .col-away-team {
+        margin-left: 7.5%;
         width: 45%;
     }
 

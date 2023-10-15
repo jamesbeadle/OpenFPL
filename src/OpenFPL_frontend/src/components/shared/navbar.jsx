@@ -57,13 +57,14 @@ const MyNavbar = () => {
                 Governance
                 { isActive('/governance') && <div className="nav-caret"></div>}
               </Nav.Link> 
-              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 ${isActive('/profile') ? 'active-link' : ''}`}>
+              <Nav.Link as={Link} to="/profile" onClick={() => setExpanded(false)} className={`custom-nav-link mt-2 mt-md-0 vertical-flex ${isActive('/profile') ? 'active-link' : ''}`}>
                 Profile
+                <Image src={profilePicSrc} roundedCircle className="nav-profile-image d-lg-none" onClick={() => setShowDropdown(!showDropdown)} />
                 { isActive('/profile') && <div className="nav-caret"></div>}
               </Nav.Link> 
-              <div onBlur={handleBlur} tabIndex="0">
+              <div onBlur={handleBlur} className="d-none d-lg-block">
                 <Dropdown show={showDropdown}>
-                  <Dropdown.Toggle as={CustomToggle}>
+                  <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                     <Image src={profilePicSrc} roundedCircle className="nav-profile-image" onClick={() => setShowDropdown(!showDropdown)} />
                   </Dropdown.Toggle>
 
@@ -72,7 +73,12 @@ const MyNavbar = () => {
                   </Dropdown.Menu>
                 </Dropdown>
               </div>
-            </>
+              <Nav.Link onClick={() => logout()} className={`custom-nav-link mt-2 d-lg-none mt-md-0 ${isActive('/profile') ? 'active-link' : ''}`} style={{display: 'flex'}}>
+                Disconnect
+                { isActive('/profile') && <div className="nav-caret"></div>}
+              </Nav.Link> 
+              <Image src={profilePicSrc} roundedCircle className="nav-profile-image d-none" onClick={() => setShowDropdown(!showDropdown)} />
+             </>
           }
           {!isAuthenticated && 
             <button className="wallet-icon" onClick={() => { login(); setShowDropdown(false); setExpanded(false); }}>Connect <WalletIcon className="custom-icon" ></WalletIcon></button>

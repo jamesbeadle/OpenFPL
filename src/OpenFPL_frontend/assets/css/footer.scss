@@ -19,12 +19,11 @@
     margin: 0 10px;
 }
 
-.footer-logo-text{
-  letter-spacing: 2px;
-}
-
 .footer-logo-container{
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
 }
 
 .footer-sponsor a{
