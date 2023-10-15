@@ -38,7 +38,7 @@ const MyNavbar = () => {
     <Navbar className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
           <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)} className="d-flex align-items-center" style={{color: "white", fontSize: "small"}}>
-            <LogoIcon width={30} height={30} marginRight={16} /> <b className="logo-text">OPENFPL</b>
+            <LogoIcon /> <b className="logo-text">OPENFPL</b>
           </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -63,7 +63,7 @@ const MyNavbar = () => {
               </Nav.Link> 
               <div onBlur={handleBlur} tabIndex="0">
                 <Dropdown show={showDropdown}>
-                  <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+                  <Dropdown.Toggle as={CustomToggle}>
                     <Image src={profilePicSrc} roundedCircle className="nav-profile-image" onClick={() => setShowDropdown(!showDropdown)} />
                   </Dropdown.Toggle>
 

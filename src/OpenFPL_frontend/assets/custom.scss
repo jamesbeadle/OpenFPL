@@ -3,46 +3,10 @@
 @import './css/homepage.scss';
 @import './css/fixtures.scss';
 @import './css/footer.scss';
+@import './css/header.scss';
 
 //Navbar
 
-.navbar{
-  background-color: rgba(36, 37, 41, 0.9);
-  height: 80px;
-  padding-left: 48px;
-  padding-right: 48px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  z-index: 9998 !important;
-}
-  
-.nav-link {
-  margin-right: 8px;
-  vertical-align: middle;
-  font-size: 14px;
-  line-height: 22px;
-  font-weight: 400;
-  color: #C2C3C4 !important;
-  padding-left: 8px;
-  padding-right: 8px;
-}
-
-.custom-nav-link {
-  position: relative;
-  width: fit-content;
-  line-height: 80px;
-  font-size: 18px;
-  font-weight: 400;
-}
-
-.nav-caret {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background-color: #2CE3A6;
-}
 
 //Footer
 
