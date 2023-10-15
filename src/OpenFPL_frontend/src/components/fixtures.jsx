@@ -186,7 +186,7 @@ const Fixtures = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
                     <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>
                       <ArrowRight />
                     </Button>
@@ -218,7 +218,7 @@ const Fixtures = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id}>
                       <ArrowRight />
                     </Button>
@@ -286,9 +286,6 @@ const Fixtures = () => {
                                           primaryColour={'#123432'}
                                           secondaryColour={'#432123'}
                                           thirdColour={'#432123'}
-                                          marginRight={10}
-                                          width={20}
-                                          height={20}
                                       /> {new Date(nanoSecondsToMillis(Number(fixture.kickOff))).toLocaleTimeString()}
                                     </p>
                                   }

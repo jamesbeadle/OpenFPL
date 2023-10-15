@@ -60,15 +60,14 @@ const CombinedIcon = ({ onClick, marginRight=0, primary='#000000', secondary='#F
   </svg>
 );
 
-const ClockIcon = ({ onClick, width=20, height=20, marginRight=0 }) => (
+const ClockIcon = ({ onClick }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
+    className='clock-icon'
     fill="currentColor"
     viewBox="0 0 20 20"
     onClick={onClick}
-    style={{ cursor: 'pointer', marginRight: marginRight }}
+    style={{ cursor: 'pointer'}}
   >
   <path d="M10 1.66667C14.595 1.66667 18.3333 5.405 18.3333 10C18.3333 14.595 14.595 18.3333 10 18.3333C5.405 18.3333 1.66667 14.595 1.66667 10C1.66667 5.405 5.405 1.66667 10 1.66667ZM10 0C4.4775 0 0 4.4775 0 10C0 15.5225 4.4775 20 10 20C15.5225 20 20 15.5225 20 10C20 4.4775 15.5225 0 10 0ZM10.8333 10V5H9.16667V11.6667H15V10H10.8333Z" fill="#C2C3C4"/>
   </svg>

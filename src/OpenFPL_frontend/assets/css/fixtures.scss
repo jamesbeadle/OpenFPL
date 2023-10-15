@@ -76,8 +76,67 @@
   padding-left: 16px; 
 }
 
+.clock-icon{
+    margin-right: 10px;
+    height: 20px;
+    height: 20px;
+}
+
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+    .fixture-team-name{
+        font-weight: 600;
+        font-size: 10px;
+    }
+    .badge-icon{
+      width: 24px;
+      height: 24px;
+      margin-right: 4px;
+    }
+ 
+    .col-home-team {
+        width: 45%;
+    }
+
+    .col-vs {
+        width: 5%;
+        font-size: 8px;
+        padding: 0;
+    }
+
+    .col-away-team {
+        width: 45%;
+    }
+
+    .col-time {
+        width: 0%;
+        display: none;
+    }
+
+    .col-badge {
+        width: 0%;
+        display: none;
+    }
+    .badge-icon{
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
+    }
+
+    .clock-icon{
+        margin-right: 2px;
+        height: 8px;
+        height: 8px;
+    }
+
+    .status-text {
+      position: relative;
+      padding-left: 8px; 
+    }
+}
+
 /* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width: 600px) {
+@media only screen and (min-width: 601px) {
     .fixture-team-name{
         font-weight: 600;
         font-size: 12px;

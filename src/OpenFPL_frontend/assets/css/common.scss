@@ -63,6 +63,16 @@
 }
 
 
+.table-row {
+  display: flex;
+  align-items: center;
+  height: 80px;
+  border-bottom: #454B56 1px solid !important;
+  padding-left: 32px;
+  margin-top: 16px;
+}
+
+
 
 
 .sub-stat-panel{
@@ -125,6 +135,11 @@
     color: black !important;
 };
 
+.filter-row{
+  margin-left: 32px;
+  height: 72px;
+}
+
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
     .view-container{
@@ -168,6 +183,18 @@
     }
     .right-arrow{
         margin-left: 8px;
+        margin-right: 8px;
+    }
+
+    .filter-row{
+      margin-left: 4px;
+      height: 36px;
+    }
+
+
+    .table-row {
+      height: 30px;
+      padding-left: 16px;
     }
 }
 
