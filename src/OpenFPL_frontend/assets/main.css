@@ -28,28 +28,9 @@ body {
     table-layout: fixed;
   }
 
-  .social-icon {
-    width: 16px;
-    height: 16px;
-    margin: 0 10px;
-  }
-
   
 
 
-  .footer-links {
-    list-style-type: none;
-    padding: 0;
-    font-size: 0.8rem;
-  }
-  
-  .footer-links li {
-    line-height: 1.6;
-  }
-
-  .footer a{
-    color:white !important;
-  }
     
   .customOverlay {
     position: fixed;
