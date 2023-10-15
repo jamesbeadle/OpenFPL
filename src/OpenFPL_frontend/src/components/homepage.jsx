@@ -96,13 +96,13 @@ const Homepage = () => {
         ) :
         <Container fluid className='view-container mt-2'>
             <Row>
-                <Col md={7} xs={12}>
+                <Col lg={7} xs={12}>
                     <Card className='mb-3'>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">
                                 <Row className="stat-row-1">
                                     <div className='home-gameweek-col'>
-                                        <p style={{paddingLeft: '40px'}} className="stat-header w-100">Gameweek</p>
+                                        <p className="stat-header w-100">Gameweek</p>
                                     </div>
                                     <div className='home-managers-col'>
                                         <p className="stat-header w-100">Managers</p>
@@ -113,7 +113,7 @@ const Homepage = () => {
                                 </Row>
                                 <Row className="stat-row-2">
                                     <div className='home-gameweek-col'>
-                                        <p style={{paddingLeft: '40px'}} className="stat">{currentGameweek}</p>
+                                        <p className="stat">{currentGameweek}</p>
                                     </div>
                                     <div className='home-managers-col'>
                                         <p className="stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
@@ -124,7 +124,7 @@ const Homepage = () => {
                                 </Row>
                                 <Row className="stat-row-3">
                                     <div className='home-gameweek-col'>
-                                        <p style={{paddingLeft: '40px'}} className="stat-header">{currentSeason.name}</p>   
+                                        <p className="stat-header">{currentSeason.name}</p>   
                                     </div>
                                     <div className='home-managers-col'>
                                         <p className="stat-header">Total</p>    
@@ -140,21 +140,21 @@ const Homepage = () => {
                     </Card>
                 </Col>
 
-                <Col md={5} xs={12}>
+                <Col lg={5} xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">  
                                 <Row className="stat-row-1">
-                                    <div className='home-deadline-col'>
-                                        <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Upcoming Game</p>    
+                                    <div className='home-deadline-col pad-right'>
+                                        <p className="stat-header w-100">Upcoming Game</p>    
                                     </div>
                                     <div className='home-fixture-col'>
                                          
                                     </div>
                                 </Row>
                                 <Row className="stat-row-2">
-                                    <div className='home-deadline-col'>
-                                        <Row  style={{paddingLeft: '32px'}}>
+                                    <div className='home-deadline-col pad-right'>
+                                        <Row className='countdown'>
                                             <Col xs={4} className="add-colon">
                                                 <p className="stat">{String(days).padStart(2, '0')}</p>
                                             </Col>
@@ -174,8 +174,6 @@ const Homepage = () => {
                                                         primary={nextFixtureHomeTeam.primaryColourHex}
                                                         secondary={nextFixtureHomeTeam.SecondaryColourHex}
                                                         third={nextFixtureHomeTeam.thirdColourHex}
-                                                        width={60}
-                                                        height={60}
                                                     />}
                                                 </div>
                                             </Col>
@@ -188,8 +186,6 @@ const Homepage = () => {
                                                         primary={nextFixtureAwayTeam.primaryColourHex}
                                                         secondary={nextFixtureAwayTeam.SecondaryColourHex}
                                                         third={nextFixtureAwayTeam.thirdColourHex}
-                                                        width={60}
-                                                        height={60}
                                                     />}
                                                 </div>
                                             </Col>
@@ -197,8 +193,8 @@ const Homepage = () => {
                                     </div>
                                 </Row>
                                 <Row className='stat-row-3'>
-                                    <div className='home-deadline-col'>
-                                        <Row style={{paddingLeft: '32px'}}>
+                                    <div className='home-deadline-col pad-right'>
+                                        <Row>
                                             <Col xs={4}>
                                                 <p className="stat-header w-100">Day</p> 
                                             </Col>

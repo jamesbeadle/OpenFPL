@@ -1,18 +1,50 @@
-$dropdown-link-color: #5A5A5A;
-
-
 @import '~bootstrap/scss/bootstrap';
+@import './css/common.scss';
+@import './css/homepage.scss';
+
+//Navbar
 
 .navbar{
-    background-color: rgba(36, 37, 41, 0.9);
-    height: 80px;
-    padding-left: 48px;
-    padding-right: 48px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    z-index: 9998 !important;
-  }
+  background-color: rgba(36, 37, 41, 0.9);
+  height: 80px;
+  padding-left: 48px;
+  padding-right: 48px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  z-index: 9998 !important;
+}
   
+.nav-link {
+  margin-right: 8px;
+  vertical-align: middle;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #C2C3C4 !important;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.custom-nav-link {
+  position: relative;
+  width: fit-content;
+  line-height: 80px;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.nav-caret {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #2CE3A6;
+}
+
+//Footer
+
+
   .modal{
     z-index: 9999 !important;
   }
@@ -21,16 +53,6 @@ $dropdown-link-color: #5A5A5A;
     max-width: 690px;
   }
 
-.nav-link {
-    margin-right: 8px;
-    vertical-align: middle;
-    font-size: 14px;
-    line-height: 22px;
-    font-weight: 400;
-    color: #C2C3C4 !important;
-    padding-left: 8px;
-    padding-right: 8px;
-}
 .formation-text:hover{
   border: none !important;
 }
@@ -40,30 +62,6 @@ $dropdown-link-color: #5A5A5A;
   background-color: transparent;
   border: none;
 }
-
-.custom-nav-link {
-    position: relative;
-    width: fit-content;
-    line-height: 80px;
-    font-size: 18px;
-    font-weight: 400;
-}
-
-.nav-caret {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background-color: #2CE3A6;
-}
-
-.disconnect:hover{
-  background-color: #2CE3A6;
-  color: white;
-}
-
-
 /* Common Dropdown Styles */
 .nav-dropdown-menu, .formation-dropdown-menu, .dropdown-menu {
   position: absolute !important;
@@ -98,13 +96,13 @@ $dropdown-link-color: #5A5A5A;
   color: #161819 !important;
 }
 
-.dropdown-item:disabled{
-  color: red !important;
+.disconnect:hover{
+  background-color: #2CE3A6;
+  color: white;
 }
 
-.dropdown-item[disabled='disabled'] {
-  color: red !important;
-}
+
+
 
 
 .footer-logo-text{
@@ -186,72 +184,6 @@ $dropdown-link-color: #5A5A5A;
   color: white;
 }
 
-.stat-panel{
-    padding-top: 15px;
-    padding-bottom: 15px;
-    height: 158px;
-}
-
-.stat-header{
-    width:100%;
-    font-size: 16px;
-    margin-bottom: 0;
-    color: #B1B1B1;
-    font-weight: 400;
-}   
-
-.stat{
-    width:100%;
-    font-size: 48px;
-    margin-bottom: 0;
-    font-weight: 500;
-}
-
-.sub-stat-panel{
-  padding-top: 15px;
-  padding-bottom: 15px;
-  height: 100px;
-}
-
-.sub-stat-wrapper{
-  width: 100% !important;
-  padding-left: 32px !important;
-  padding-right: 32px !important;
-}
-
-.sub-stat-button{
-  height: 52px !important;
-  width: 132px !important;
-  color: white !important;
-  font-size: 16px !important;
-  font-weight: 600 !important;
-  background-color: #161819 !important;
-}
-
-.sub-stat-button.active{
-  background-color: #2CE3A6 !important;
-  color: #161819 !important;
-  border: none;
-}
-
-.sub-stat-button-left{
-  border-radius: 8px 0px 0px 8px;
-  border-color: #37393C !important;
-  border-width: 1px 0px 1px 1px;
-}
-
-.sub-stat-button-right{
-  border-radius: 0px 8px 8px 0px;
-  border-color: #37393C !important;
-  border-width: 1px 1px 1x 0px;
-}
-
-.time-colon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
 .d-flex.text-center.align-items-center.h-100 {
     position: relative;
   }
@@ -270,41 +202,8 @@ $dropdown-link-color: #5A5A5A;
     background-color: #37393C;
   }
 
-  .stat-row-1{
-    min-height: 20px;
-  }
-  .stat-row-2{
-    min-height: 40px;
-  }
-  .stat-row-3{
-    min-height: 20px;
-  }
 
 
-  .add-colon::after {
-    content: ":";
-    position: absolute;
-    right: 10px; /* adjust as needed */
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .add-colon {
-    position: relative;
-  }
-
-@media (max-width: 767.98px) {
-  .outer-container {
-    position: relative; /* or static based on your design */
-  }
-}
-
-@media (min-width: 768px) {
-  .outer-container {
-    position: relative;
-  }
-  
-}
 
 .nav-tabs{
   border-bottom: none !important;
@@ -327,11 +226,6 @@ $dropdown-link-color: #5A5A5A;
   border-bottom: none;
 }
 
-.home-tab-header{
-  padding-left: 30px;
-  padding-right: 30px;
-  height: 55px;
-}
 
 .fpl-btn{
   background-color: #2CE3A6 !important;
@@ -506,21 +400,11 @@ $dropdown-link-color: #5A5A5A;
   padding-bottom: 12px;
 }
 
-.home-tab-header .nav-link {
-  height: 55px;
-  font-size: 18px;
-  margin-right: 20px;
-}
-
 .filter-row{
   margin-left: 32px;
   height: 72px;
 }
 
-.view-container{
-  padding-left: 64px;
-  padding-right: 64px;
-}
 
 .sponsor1{
   width: 186.5px !important;
@@ -1012,32 +896,6 @@ $dropdown-link-color: #5A5A5A;
   flex-basis: 30%;
 }
 
-.home-divider-1 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 24%;
-  width: 1px;
-  background-color: #37393C;
-}
-
-.home-divider-2 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 70%;
-  width: 1px;
-  background-color: #37393C;
-}
-
-.home-divider-3 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 32%;
-  width: 1px;
-  background-color: #37393C;
-}
 
 .pick-team-divider-1 {
   position: absolute;
@@ -1071,54 +929,6 @@ $dropdown-link-color: #5A5A5A;
   top: 15%;
   bottom: 15%;
   left: 67%;
-  width: 1px;
-  background-color: #37393C;
-}
-
-.home-gameweek-col {
-  flex-basis: 33%;
-}
-
-.home-managers-col {
-  flex-basis: 33%;
-}
-
-.home-prize-col {
-  flex-basis: 33%;
-}
-
-.home-deadline-col {
-  flex-basis: 50%;
-}
-
-.home-fixture-col {
-  flex-basis: 50%;
-}
-
-
-.home-divider-1 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 28%;
-  width: 1px;
-  background-color: #37393C;
-}
-
-.home-divider-2 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 61%;
-  width: 1px;
-  background-color: #37393C;
-}
-
-.home-divider-3 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 50%;
   width: 1px;
   background-color: #37393C;
 }

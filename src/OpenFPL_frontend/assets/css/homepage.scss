@@ -1,0 +1,104 @@
+/* Default */
+.home-tab-header {
+    padding-left: 30px;
+    padding-right: 30px;
+    height: 55px;
+}
+
+  
+.home-gameweek-col {
+    flex-basis: 33%;
+}
+  
+.home-managers-col {
+    flex-basis: 33%;
+}
+  
+.home-prize-col {
+    flex-basis: 33%;
+}
+  
+.home-deadline-col {
+    flex-basis: 50%;
+}
+  
+.home-fixture-col {
+    flex-basis: 50%;
+}
+
+.home-divider-1 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 28%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .home-divider-2 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 61%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .home-divider-3 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 50%;
+    width: 1px;
+    background-color: #37393C;
+  }
+
+  .home-tab-header .nav-link {
+    height: 55px;
+    font-size: 18px;
+    margin-right: 20px;
+  }
+
+  /* Extra small devices (phones, 600px and down) */
+  @media only screen and (max-width: 600px) {
+    .home-gameweek-col {
+        padding-left: 20px;
+    }
+    
+  }
+  
+  /* Small devices (portrait tablets and large phones, 601px and up) */
+  @media only screen and (min-width: 601px) {
+        .home-gameweek-col {
+            padding-left: 40px;
+        }
+  }
+  
+  /* Medium devices (landscape tablets, 768px and up) */
+  @media only screen and (min-width: 768px) {
+    .home-tab-header {
+        
+    }
+  }
+  
+  /* Large devices (laptops/desktops, 992px and up) */
+  @media only screen and (min-width: 992px) {
+    .home-tab-header {
+        
+    }
+  }
+  
+  /* Extra large devices (large laptops and desktops, 1200px and up) */
+  @media only screen and (min-width: 1200px) {
+    .home-tab-header {
+        
+    }
+  }
+  
+  /* 4K and large screens */
+  @media only screen and (min-width: 1920px) {
+    .home-tab-header {
+        
+    }
+  }
+  

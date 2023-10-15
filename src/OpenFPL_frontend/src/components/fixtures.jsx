@@ -234,8 +234,8 @@ const Fixtures = () => {
             <Row>
               {Object.entries(filteredFixtures).map(([date, fixturesForDate], dateIdx) => {
                 return (
-                    <>
-                      <Row key={dateIdx}>
+                    <div key={`header-${dateIdx}`}>
+                      <Row>
                         <Col xs={12}>
                           <div className='light-background date-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
                             <p className="w-100 date-header">{date}</p>
@@ -251,7 +251,7 @@ const Fixtures = () => {
                                 return null;
                             }
                             return (
-                              <div className="table-row" key={fixture.id}>
+                              <div className="table-row" key={`fixture-${fixture.id}`}>
                                 {(() => {
                                   return (
                                     <>
@@ -313,7 +313,7 @@ const Fixtures = () => {
                               </div>
                             );
                         })}
-                    </>
+                    </div>
                 );
               })}
 

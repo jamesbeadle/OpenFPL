@@ -1,0 +1,264 @@
+
+
+
+.stat-row-1{
+    min-height: 20px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.stat-row-2{
+    min-height: 40px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.stat-row-3{
+    min-height: 20px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.stat-header{
+    width:100%;
+    font-size: 16px;
+    margin-bottom: 0;
+    color: #B1B1B1;
+    font-weight: 400;
+}   
+
+.stat{
+    width:100%;
+    font-size: 48px;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.time-colon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.countdown{
+    height: 100%;
+    align-items: center;
+}
+
+
+
+
+.sub-stat-panel{
+  padding-top: 15px;
+  padding-bottom: 15px;
+  height: 100px;
+}
+
+.sub-stat-wrapper{
+  width: 100% !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+.sub-stat-button{
+  height: 52px !important;
+  width: 132px !important;
+  color: white !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background-color: #161819 !important;
+}
+
+.sub-stat-button.active{
+  background-color: #2CE3A6 !important;
+  color: #161819 !important;
+  border: none;
+}
+
+.sub-stat-button-left{
+  border-radius: 8px 0px 0px 8px;
+  border-color: #37393C !important;
+  border-width: 1px 0px 1px 1px;
+}
+
+.sub-stat-button-right{
+  border-radius: 0px 8px 8px 0px;
+  border-color: #37393C !important;
+  border-width: 1px 1px 1x 0px;
+}
+.add-colon::after {
+  content: ":";
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.add-colon {
+  position: relative;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .view-container{
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .stat-header{
+        font-size: 8px;
+    }   
+    .stat{
+        font-size: 12px;
+    }
+    .pad-right{
+        padding-left: 6px;
+    }
+    .combined-icon{
+        width: 32px;
+        height: 32px;
+    }
+    .stat-panel{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 136px;
+    }
+}
+  
+/* Small devices (portrait tablets and large phones, 601px and up) */
+@media only screen and (min-width: 601px) {
+    .view-container{
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .stat{
+        font-size: 18px;
+    }
+    .pad-right{
+        padding-left: 12px;
+    }
+    .combined-icon{
+        width: 32px;
+        height: 32px;
+    }
+    .stat-panel{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 136px;
+    }
+  
+}
+  
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .view-container{
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+    .stat{
+        font-size: 24px;
+    }
+    .pad-right{
+        padding-left: 24px;
+    }
+    .combined-icon{
+        width: 32px;
+        height: 32px;
+    }
+    .stat-panel{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 124px;
+    }
+}
+  
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .view-container{
+        padding-left: 64px;
+        padding-right: 64px;
+    }
+    .stat{
+        font-size: 21px;
+    }
+    .stat-header{
+        font-size: 11px;
+    }
+    .pad-right{
+        padding-left: 32px;
+    }
+    .combined-icon{
+        width: 32px;
+        height: 32px;
+    }
+    .stat-panel{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 112px;
+    }
+}
+  
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    
+    .view-container{
+        padding-left: 64px;
+        padding-right: 64px;
+    }
+    .stat{
+        font-size: 32px;
+    }
+    .stat-header{
+        font-size: 16px;
+    }
+    .combined-icon{
+        width: 36px;
+        height: 36px;
+    }
+    .stat-panel{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 136px;
+    }
+}
+  
+/* added */
+@media only screen and (min-width: 1500px) {
+    
+    .view-container{
+        padding-left: 64px;
+        padding-right: 64px;
+    }
+    .stat{
+        font-size: 48px;
+    }
+    .stat-header{
+        font-size: 16px;
+    }
+    .combined-icon{
+        width: 60px;
+        height: 60px;
+    }
+    .stat-panel{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 158px;
+    }
+}
+  
+/* 4K and large screens */
+@media only screen and (min-width: 1920px) {
+    .view-container{
+        padding-left: 128px;
+        padding-right: 128px;
+    }
+    .stat{
+        font-size: 48px;
+    }
+    .stat-panel{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        height: 158px;
+    }
+}
+  
