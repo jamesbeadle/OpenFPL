@@ -15,15 +15,14 @@ const LogoIcon = ({ onClick, width=137, height=188, marginRight=0, fill="#FFFFFF
   </svg>
 );
 
-const BadgeIcon = ({ onClick, width=814, height=814, marginRight=0, primary='#000000', secondary='#FFFFFF', third='#777777' }) => (
+const BadgeIcon = ({ onClick, marginRight=0, primary='#000000', secondary='#FFFFFF', third='#777777' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
+    className='badge-icon'
     fill="currentColor"
     viewBox="0 0 814 814"
     onClick={onClick}
-    style={{ cursor: 'pointer', marginRight: marginRight }}
+    style={{ cursor: 'pointer' }}
   >
     <path d="M407 33.9165C295.984 33.9165 135.667 118.708 135.667 118.708V508.75C135.667 508.75 141.044 561.82 152.625 593.541C194.871 709.259 407 780.083 407 780.083C407 780.083 619.129 709.259 661.375 593.541C672.956 561.82 678.333 508.75 678.333 508.75V118.708C678.333 118.708 518.016 33.9165 407 33.9165Z" fill={primary}/>
     <path d="M712.25 101.75V493.013C712.25 649.097 603.581 689.831 407 814C210.419 689.831 101.75 649.063 101.75 493.013V101.75C167.718 45.2448 282.729 0 407 0C531.271 0 646.282 45.2448 712.25 101.75ZM644.417 135.361C585.775 96.052 496.506 67.8333 407.237 67.8333C317.223 67.8333 228.124 96.1198 169.583 135.361V492.979C169.583 595.712 225.817 622.235 407 734.025C587.979 622.337 644.417 595.814 644.417 492.979V135.361Z" fill={third}/>

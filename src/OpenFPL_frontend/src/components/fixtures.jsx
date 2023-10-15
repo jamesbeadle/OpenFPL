@@ -109,18 +109,18 @@ const Fixtures = () => {
     switch (fixture.status) {
         case 1:
             return (
-              <p className="status-text fixture-active">Active</p>
+              <p className="status-text fixture-active fixture-caret">Active</p>
             );
         case 2:
             return (
-              <p className="status-text fixture-consensus">In Consensus</p>
+              <p className="status-text fixture-consensus fixture-caret">In Consensus</p>
             );
         case 3:
             return (
-              <p className="status-text fixture-verified">Verified</p>
+              <p className="status-text fixture-verified fixture-caret">Verified</p>
             );
     }
-    return (<p className="status-text fixture-unplayed">Unplayed</p>
+    return (<p className="status-text fixture-unplayed fixture-caret">Unplayed</p>
     );
   };
 
@@ -260,11 +260,7 @@ const Fixtures = () => {
                                           <BadgeIcon
                                             primary={homeTeam.primaryColourHex}
                                             secondary={homeTeam.secondaryColourHex}
-                                            third={homeTeam.thirdColourHex}
-                                            width={48}
-                                            height={48}
-                                            marginRight={16}
-                                            
+                                            third={homeTeam.thirdColourHex}     
                                           />
                                           {homeTeam.friendlyName}
                                         </p>
@@ -278,9 +274,6 @@ const Fixtures = () => {
                                             primary={awayTeam.primaryColourHex}
                                             secondary={awayTeam.secondaryColourHex}
                                             third={awayTeam.thirdColourHex}
-                                            width={48}
-                                            height={48}
-                                            marginRight={16}
                                             
                                           />
                                           {awayTeam.friendlyName}

@@ -1,6 +1,7 @@
 @import '~bootstrap/scss/bootstrap';
 @import './css/common.scss';
 @import './css/homepage.scss';
+@import './css/fixtures.scss';
 
 //Navbar
 
@@ -258,61 +259,6 @@
   font-weight: 700;
 }
 
-.fixture-unplayed::before {
-  content: "";
-  height: 100%;
-  width: 5px;
-  background-color: #C2C3C4;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.fixture-active::before {
-  content: "";
-  height: 100%;
-  width: 5px;
-  background-color: #2C8BE3;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.fixture-consensus::before {
-  content: "";
-  height: 100%;
-  width: 5px;
-  background-color: #2CE3A6;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.fixture-verified::before {
-  content: "";
-  height: 100%;
-  width: 5px;
-  background-color: #7F56F1;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.fixture-pregame::before {
-  content: "";
-  height: 100%;
-  width: 5px;
-  background-color: #EF857F;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-.status-text {
-  position: relative;
-  padding-left: 16px; /* adjust as needed */
-}
-
 .date-row {
   height: 46px;
   padding-left: 32px;
@@ -340,35 +286,6 @@
   width: 100%;
 }
 
-.col-home-team,
-.col-away-team,
-.col-vs,
-.col-time,
-.col-badge {
-  flex: 0 0 auto;
-}
-
-.col-home-team {
-  width: 17.5%;
-}
-
-.col-vs {
-  width: 5%;
-}
-
-.col-away-team {
-  margin-left: 10%;
-  width: 17.5%;
-}
-
-.col-time {
-  width: 40%;
-  text-align: center;
-}
-
-.col-badge {
-  width: 10%;
-}
 
 
 
@@ -389,11 +306,6 @@
 .col-away-team-widget {
   margin-left: 15%;
   width: 40%;
-}
-
-.fixture-team-name{
-  font-weight: 600;
-  font-size: 18px;
 }
 
 .filter-row{
