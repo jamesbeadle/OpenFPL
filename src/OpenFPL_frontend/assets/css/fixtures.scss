@@ -78,15 +78,113 @@
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-    
+    .fixture-team-name{
+        font-weight: 600;
+        font-size: 12px;
+    }
+    .badge-icon{
+      width: 24px;
+      height: 24px;
+      margin-right: 4px;
+    }
+ 
+    .col-home-team {
+        width: 27.5%;
+    }
+
+    .col-vs {
+        width: 5%;
+    }
+
+    .col-away-team {
+        margin-left: 10%;
+        width: 22.5%;
+    }
+
+    .col-time {
+        width: 20%;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .col-badge {
+        width: 20%;
+        font-size: 12px;
+    }
   }
   
   /* Small devices (portrait tablets and large phones, 601px and up) */
   @media only screen and (min-width: 601px) {
+    .fixture-team-name{
+        font-weight: 600;
+        font-size: 12px;
+    }
+    .badge-icon{
+      width: 24px;
+      height: 24px;
+      margin-right: 4px;
+    }
+ 
+    .col-home-team {
+        width: 27.5%;
+    }
+
+    .col-vs {
+        width: 5%;
+    }
+
+    .col-away-team {
+        margin-left: 10%;
+        width: 22.5%;
+    }
+
+    .col-time {
+        width: 20%;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .col-badge {
+        width: 20%;
+        font-size: 12px;
+    }
   }
   
   /* Medium devices (landscape tablets, 768px and up) */
   @media only screen and (min-width: 768px) {
+    .fixture-team-name{
+        font-weight: 600;
+        font-size: 12px;
+    }
+    .badge-icon{
+      width: 24px;
+      height: 24px;
+      margin-right: 4px;
+    }
+ 
+    .col-home-team {
+        width: 27.5%;
+    }
+
+    .col-vs {
+        width: 5%;
+    }
+
+    .col-away-team {
+        margin-left: 10%;
+        width: 22.5%;
+    }
+
+    .col-time {
+        width: 20%;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .col-badge {
+        width: 20%;
+        font-size: 12px;
+    }
   }
   
   /* Large devices (laptops/desktops, 992px and up) */

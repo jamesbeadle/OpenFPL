@@ -1,3 +1,15 @@
+.left-arrow{
+    margin-right: 16px;
+}
+.right-arrow{
+    margin-left: 16px;
+}
+
+.filter-dropdown-btn{
+    border:none;
+    font-size: 18px;
+    font-weight: 400;
+  }
 
 .vertical-flex{
     align-items: center;
@@ -103,35 +115,15 @@
   position: relative;
 }
 
-
-/* Old Devices with Tiny Displays */
-@media only screen and (max-width: 320px) {
-    .view-container{
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-    .stat{
-        font-size: 12px;
-    }
-    .pad-right{
-        padding-left: 20px;
-    }
-    .combined-icon{
-        width: 10px;
-        height: 10px;
-    }
-    .stat-panel{
-        padding-top: 10px;
-        padding-bottom: 10px;
-        height: 100px;
-    }
-    .stat-header{
-        font-size: 8px;
-    }
-    .vs{
-        font-size: 10px;
-    }
-}
+.fpl-btn{
+    background-color: #2CE3A6 !important;
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 2px !important;
+    color: black !important;
+};
 
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
@@ -159,6 +151,23 @@
     }
     .vs{
         font-size: 18px;
+    }
+    .filter-dropdown-btn{
+        font-size: 8px;
+        padding: 0;
+    }
+    
+    .fpl-btn{
+        width: 24px !important;
+        height: 24px !important;
+        padding: 0 !important;
+        border-radius: 2px !important;
+    };
+    .left-arrow{
+        margin-right: 8px;
+    }
+    .right-arrow{
+        margin-left: 8px;
     }
 }
 
