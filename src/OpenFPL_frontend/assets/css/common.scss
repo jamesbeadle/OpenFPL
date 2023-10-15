@@ -173,8 +173,8 @@
     }
     
     .fpl-btn{
-        width: 24px !important;
-        height: 24px !important;
+        width: 22px !important;
+        height: 22px !important;
         padding: 0 !important;
         border-radius: 2px !important;
     };
@@ -195,6 +195,16 @@
     .table-row {
       height: 30px;
       padding-left: 16px;
+    }
+
+    .arrow-left-icon{
+        width: 8px;
+        height: 8px;
+    }
+
+    .arrow-right-icon{
+        width: 8px;
+        height: 8px;
     }
 }
 

@@ -58,6 +58,13 @@
     background-color: #37393C;
   }
 
+  /* Extra small devices (phones, 321px and up) */
+  @media only screen and (min-width: 321px) {
+    .vs{
+      font-size: 8px;
+    }
+  }
+
   /* Extra small devices (phones, 600px and down) */
   @media only screen and (max-width: 600px) {
     .home-gameweek-col {

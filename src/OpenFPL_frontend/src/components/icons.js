@@ -73,27 +73,25 @@ const ClockIcon = ({ onClick }) => (
   </svg>
 );
 
-const ArrowLeft = ({ width=12, height=12, marginRight=0 }) => (
+const ArrowLeft = ({  }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
+    className='arrow-left-icon'
     fill="currentColor"
     viewBox="0 0 12 12"
-    style={{ cursor: 'pointer', marginRight: marginRight }}
+    style={{ cursor: 'pointer'}}
   >
     <path d="M8.335 0L9.75 1.4145L5.0805 6.002L9.75 10.5855L8.335 12L2.25 6.002L8.335 0Z" fill="#161819"/>
   </svg>
 );
 
-const ArrowRight = ({ width=12, height=12, marginRight=0 }) => (
+const ArrowRight = ({ }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
+    className='arrow-right-icon'
     fill="currentColor"
     viewBox="0 0 12 12"
-    style={{ cursor: 'pointer', marginRight: marginRight }}
+    style={{ cursor: 'pointer' }}
   >
     <path d="M3.665 12L2.25 10.5855L6.9195 5.998L2.25 1.4145L3.665 0L9.75 5.998L3.665 12Z" fill="#161819"/>
   </svg>
