@@ -175,7 +175,7 @@
 @media only screen and (min-width: 601px) {
     .fixture-team-name{
         font-weight: 600;
-        font-size: 12px;
+        font-size: 10px;
     }
     .badge-icon{
       width: 24px;
@@ -183,245 +183,103 @@
       margin-right: 4px;
     }
  
+    
     .col-home-team {
-        width: 27.5%;
+        width: 22.5%;
     }
 
     .col-vs {
         width: 5%;
+        font-size: 12px;
     }
 
     .col-away-team {
-        margin-left: 10%;
+        margin-left: 5%;
         width: 22.5%;
     }
 
     .col-time {
-        width: 20%;
+        margin-left: 2.5%;
+        width: 22.5%;
         text-align: center;
-        font-size: 12px;
+        display: flex;
     }
 
     .col-badge {
-        width: 20%;
+        width: 10%;
+        display: flex;
         font-size: 12px;
     }
+
+    .badge-icon{
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
+    }
+
+    .clock-icon{
+        margin-right: 2px;
+        height: 8px;
+        height: 8px;
+    }
+
+    .status-text {
+      position: relative;
+      padding-left: 8px; 
+    }
+
+    .date-row {
+      height: 36px;
+      padding-left: 16px;
+      border-top: 1px solid #454B56;
+      border-bottom: 1px solid #454B56;
+    }
+
+    .date-header{
+      font-family: 600 !important;
+      font-size: 8px !important;
+      margin: 0 !important;
+      width: 100%;
+    }
+
+    .fixture-filter-container{
+        margin-right: 16px;
+    }
+
+    .status-text {
+        padding-left: 12px; 
+    }
+
+    .filter-row{
+      margin-top: 8px;
+      margin-bottom: 8px;
+      margin-left: 20px;
+    }
+    
   }
   
-  /* Small devices (portrait tablets and large phones, 601px and up) */
-  @media only screen and (min-width: 601px) {
-    .fixture-team-name{
-        font-weight: 600;
-        font-size: 12px;
-    }
-    .badge-icon{
-      width: 24px;
-      height: 24px;
-      margin-right: 4px;
-    }
- 
-    .col-home-team {
-        width: 27.5%;
-    }
-
-    .col-vs {
-        width: 5%;
-    }
-
-    .col-away-team {
-        margin-left: 10%;
-        width: 22.5%;
-    }
-
-    .col-time {
-        width: 20%;
-        text-align: center;
-        font-size: 12px;
-    }
-
-    .col-badge {
-        width: 20%;
-        font-size: 12px;
-    }
-  }
   
   /* Medium devices (landscape tablets, 768px and up) */
   @media only screen and (min-width: 768px) {
-    .fixture-team-name{
-        font-weight: 600;
-        font-size: 12px;
-    }
-    .badge-icon{
-      width: 24px;
-      height: 24px;
-      margin-right: 4px;
-    }
- 
-    .col-home-team {
-        width: 27.5%;
-    }
-
-    .col-vs {
-        width: 5%;
-    }
-
-    .col-away-team {
-        margin-left: 10%;
-        width: 22.5%;
-    }
-
-    .col-time {
-        width: 20%;
-        text-align: center;
-        font-size: 12px;
-    }
-
-    .col-badge {
-        width: 20%;
-        font-size: 12px;
-    }
+    
   }
   
   /* Large devices (laptops/desktops, 992px and up) */
   @media only screen and (min-width: 992px) {
-    .fixture-team-name{
-        font-weight: 600;
-        font-size: 14px;
-    }
-    .badge-icon{
-      width: 32px;
-      height: 32px;
-      margin-right: 8px;
-    }
     
-    .status-text {
-        padding-left: 8px; 
-        font-size: 14px;
-    }
-
-    .fixture-caret::before {
-        width: 2px;
-    }
-
-        
-    .col-home-team {
-        width: 22.5%;
-    }
-
-    .col-vs {
-        width: 5%;
-    }
-
-    .col-away-team {
-        margin-left: 10%;
-        width: 22.5%;
-    }
-
-    .col-time {
-        width: 25%;
-        text-align: center;
-    }
-
-    .col-badge {
-        width: 15%;
-    }
   
   }
   
   /* Extra large devices (large laptops and desktops, 1200px and up) */
   @media only screen and (min-width: 1200px) {
-    .fixture-team-name{
-        font-weight: 600;
-        font-size: 18px;
-    }
-    .fixture-caret::before {
-        width: 3px;
-    }
-    
-    .col-home-team {
-        width: 22.5%;
-    }
-
-    .col-vs {
-        width: 5%;
-    }
-
-    .col-away-team {
-        margin-left: 10%;
-        width: 22.5%;
-    }
-
-    .col-time {
-        width: 30%;
-        text-align: center;
-    }
-
-    .col-badge {
-        width: 10%;
-    }
-    .status-text {
-        padding-left: 10px; 
-        font-size: 16px;
-    }
+   
   }
   /* added */
   @media only screen and (min-width: 1500px) {
-    .fixture-team-name{
-      font-weight: 600;
-      font-size: 16px;
-    }
-    .fixture-caret::before {
-        width: 4px;
-    }
-    
-    .col-home-team {
-        width: 22.5%;
-    }
-
-    .col-vs {
-        width: 5%;
-    }
-
-    .col-away-team {
-        margin-left: 10%;
-        width: 22.5%;
-    }
-
-    .col-time {
-        width: 30%;
-        text-align: center;
-    }
-
-    .col-badge {
-        width: 10%;
-    }
+   
   }
   
   /* 4K and large screens */
   @media only screen and (min-width: 1920px) {
-    .fixture-caret::before {
-        width: 5px;
-    }
-
-    .col-home-team {
-        width: 22.5%;
-    }
-
-    .col-vs {
-        width: 5%;
-    }
-
-    .col-away-team {
-        margin-left: 10%;
-        width: 22.5%;
-    }
-
-    .col-time {
-        width: 30%;
-        text-align: center;
-    }
-
-    .col-badge {
-        width: 10%;
-    }
+    
   }

@@ -281,7 +281,7 @@ const Fixtures = () => {
 
                                 <div className="col-time">
                                   {fixture.status < 3 &&
-                                    <p>
+                                    <p className='vertical-flex'>
                                       <ClockIcon
                                           primaryColour={'#123432'}
                                           secondaryColour={'#432123'}
