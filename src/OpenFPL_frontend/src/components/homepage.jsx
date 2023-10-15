@@ -112,30 +112,30 @@ const Homepage = () => {
                                     </div>
                                 </Row>
                                 <Row className="stat-row-2">
-                                    <div className='home-gameweek-col'>
+                                    <div className='home-gameweek-col vertical-flex'>
                                         <p className="stat">{currentGameweek}</p>
                                     </div>
-                                    <div className='home-managers-col'>
+                                    <div className='home-managers-col vertical-flex'>
                                         <p className="stat">{managerCount === -1 ? '-' : managerCount.toLocaleString()}</p>
                                     </div>
-                                    <div className='home-prize-col'>
+                                    <div className='home-prize-col vertical-flex'>
                                         <p className="stat">{totalPrizePool.toLocaleString()}</p>
                                     </div>
                                 </Row>
                                 <Row className="stat-row-3">
-                                    <div className='home-gameweek-col'>
+                                    <div className='home-gameweek-col vertical-flex'>
                                         <p className="stat-header">{currentSeason.name}</p>   
                                     </div>
-                                    <div className='home-managers-col'>
+                                    <div className='home-managers-col vertical-flex'>
                                         <p className="stat-header">Total</p>    
                                     </div>
-                                    <div className='home-prize-col'>
+                                    <div className='home-prize-col vertical-flex'>
                                         <p className="stat-header">$FPL Tokens</p>   
                                     </div>
                                 </Row>
                             </div>
-                            <div className="d-none d-md-block home-divider-1"></div>
-                            <div className="d-none d-md-block home-divider-2"></div>
+                            <div className="home-divider-1"></div>
+                            <div className="home-divider-2"></div>
                         </div>
                     </Card>
                 </Col>
@@ -166,10 +166,10 @@ const Homepage = () => {
                                             </Col>
                                         </Row>  
                                     </div>
-                                    <div className='home-fixture-col'>
+                                    <div className='home-fixture-col p-0'>
                                         <Row>
                                             <Col xs={5}>
-                                                <div className='text-center badge w-100'>
+                                                <div className='text-center badge w-100 p-0'>
                                                     {nextFixtureHomeTeam && <CombinedIcon
                                                         primary={nextFixtureHomeTeam.primaryColourHex}
                                                         secondary={nextFixtureHomeTeam.SecondaryColourHex}
@@ -178,10 +178,10 @@ const Homepage = () => {
                                                 </div>
                                             </Col>
                                             <Col xs={2}>
-                                                <p className="w-100 time-colon">vs</p>
+                                                <p className="w-100 vs p-0">vs</p>
                                             </Col>
                                             <Col xs={5}>
-                                                <div className='text-center badge w-100'>
+                                                <div className='text-center badge w-100 p-0'>
                                                 {nextFixtureAwayTeam && <CombinedIcon
                                                         primary={nextFixtureAwayTeam.primaryColourHex}
                                                         secondary={nextFixtureAwayTeam.SecondaryColourHex}
@@ -206,7 +206,7 @@ const Homepage = () => {
                                             </Col>
                                         </Row>
                                     </div>
-                                    <div className='home-fixture-col'>
+                                    <div className='home-fixture-col p-0'>
                                         <Row>
                                             <Col xs={5}>
                                                 {nextFixtureHomeTeam && <p className="stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
@@ -220,7 +220,7 @@ const Homepage = () => {
                                     </div>
                                 </Row>
                             </div>
-                            <div className="d-none d-md-block home-divider-3"></div>
+                            <div className="home-divider-3"></div>
                         </div>
                     </Card>
                 </Col>

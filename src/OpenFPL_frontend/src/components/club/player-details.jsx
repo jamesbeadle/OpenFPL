@@ -283,7 +283,7 @@ const PlayerDetails = ({  }) => {
                                                 </div>
                                             </Col>
                                             <Col xs={2}>
-                                                <p className="w-100 time-colon">vs</p>
+                                                <p className="w-100 vs">vs</p>
                                             </Col>
                                             <Col xs={5}>
                                                 <div className='text-center badge w-100'>
