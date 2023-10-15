@@ -11,19 +11,30 @@ import { LogoIcon } from '../icons';
 
 const MyFooter = () => {
   return (
-    <footer className="footer mt-auto py-3 custom-footer">
+    <footer className="footer py-3 custom-footer">
       <Container fluid className='view-container mt-2'>
         <Card>
-          <Row style={{padding: '20px'}}>
-            <Col xs={6}>
-                  <ul className="footer-links">
-                    <li><LogoIcon width={16} height={16} fill={'#FFFFFF'} /> <b className="footer-logo-text">OPENFPL</b></li>
-                    <li><LinkContainer to="/whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer></li>
-                    <li><LinkContainer to="/gameplay"><a className='footer-link'>Gameplay Rules</a></LinkContainer></li>
-                      <li><LinkContainer to="/terms"><a className='footer-link'>Terms and Conditions</a></LinkContainer></li>
-                      <li><LinkContainer to="/fixture-validation-list" /*Remove this post sns*/><a className='footer-link'>Fixture Validation (To be removed post SNS)</a></LinkContainer></li>
-                  </ul>
-              <div className='social-icons' style={{display: 'inline-block'}}>
+          <Row className='footer-container'>
+            <Col xs={7}>
+              <Row className="footer-links">
+                <Col xs={12} className='footer-logo-container'>
+                  <LogoIcon width={16} height={16} fill={'#FFFFFF'} /> <b className="footer-logo-text">OPENFPL</b>
+                </Col>
+                <Col className='mb-1' xs={12}>
+                  <LinkContainer to="/whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer>
+                </Col>
+                <Col className='mb-1' xs={12}>
+                  <LinkContainer to="/gameplay"><a className='footer-link'>Gameplay Rules</a></LinkContainer>
+                </Col>
+                <Col className='mb-1' xs={12}>
+                  <LinkContainer to="/terms"><a className='footer-link'>Terms and Conditions</a></LinkContainer>
+                </Col>
+                <Col className='mb-1' xs={12}>
+                  <LinkContainer to="/fixture-validation-list" /*Remove this post sns*/><a className='footer-link'>Pre-SNS Fixture Validation</a></LinkContainer>
+                </Col>                
+              </Row>
+              
+              <div style={{display: 'inline-block'}}>
                   <a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer">
                     <img src={OpenChatIcon} alt="OpenChat" className="social-icon" />
                   </a>
@@ -41,13 +52,13 @@ const MyFooter = () => {
                   </a>
               </div>
             </Col>
-            <Col xs={6} className="text-right footer-sponsor"><a href="https://juno.build" target='_blank'>
+            <Col xs={5} className="text-right footer-sponsor"><a href="https://juno.build" target='_blank'>
               <div>
               <Row>
                 <Col className='mb-2'>Sponsored By</Col>
               </Row>
               <Row>
-                <Col className='mb-2'><img src={FooterSponsor} width={80} /></Col>
+                <Col className='mb-2'><img src={FooterSponsor} className='footer-sponsor-image' /></Col>
               </Row>
               <Row>
                 <Col>juno.build</Col>

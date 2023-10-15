@@ -19,15 +19,44 @@
     margin: 0 10px;
 }
 
+.footer-logo-text{
+  letter-spacing: 2px;
+}
+
+.footer-logo-container{
+  margin-bottom: 8px;
+}
+
+.footer-sponsor a{
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.footer-sponsor-image{
+    width: 80px;
+}
+
+.footer-container{
+    padding: 10px;
+}
+
+
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
     .footer-links {
-        font-size: 8px;
+        font-size: 10px;
+    }
+    .footer-link {
+        font-size: 10px;
     }
     .social-icon {
         width: 12px;
         height: 12px;
         margin: 0 4px;
+    }
+    
+    .footer-sponsor-image{
+        width: 36px;
     }
 }
 
