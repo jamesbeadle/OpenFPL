@@ -97,7 +97,7 @@ const Homepage = () => {
         <Container fluid className='view-container mt-2'>
             <Row>
                 <Col lg={7} xs={12}>
-                    <Card className='mb-3'>
+                    <Card className='mb-3 mb-lg-0'>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">
                                 <Row className="stat-row-1">
@@ -130,7 +130,7 @@ const Homepage = () => {
                                         <p className="stat-header">Total</p>    
                                     </div>
                                     <div className='home-prize-col vertical-flex'>
-                                        <p className="stat-header">$FPL Tokens</p>   
+                                        <p className="stat-header">$FPL</p>   
                                     </div>
                                 </Row>
                             </div>
@@ -226,7 +226,7 @@ const Homepage = () => {
                 </Col>
             </Row>
             
-            <Row className="mt-2">
+            <Row className="mt-3 mt-lg-4">
                 <Col xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
