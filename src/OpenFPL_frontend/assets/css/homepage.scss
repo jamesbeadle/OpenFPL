@@ -70,35 +70,42 @@
   /* Small devices (portrait tablets and large phones, 601px and up) */
   @media only screen and (min-width: 601px) {
         .home-gameweek-col {
-            padding-left: 40px;
+            padding-left: 20px;
         }
   }
   
   /* Medium devices (landscape tablets, 768px and up) */
   @media only screen and (min-width: 768px) {
-    .home-tab-header {
-        
+    .home-gameweek-col {
+        padding-left: 20px;
     }
   }
   
   /* Large devices (laptops/desktops, 992px and up) */
   @media only screen and (min-width: 992px) {
-    .home-tab-header {
-        
+    .home-gameweek-col {
+        padding-left: 20px;
     }
   }
   
   /* Extra large devices (large laptops and desktops, 1200px and up) */
   @media only screen and (min-width: 1200px) {
-    .home-tab-header {
-        
+    .home-gameweek-col {
+        padding-left: 20px;
+    }
+  }
+  /* added */
+  @media only screen and (min-width: 1500px) {
+      
+    .home-gameweek-col {
+        padding-left: 40px;
     }
   }
   
   /* 4K and large screens */
   @media only screen and (min-width: 1920px) {
-    .home-tab-header {
-        
+    .home-gameweek-col {
+        padding-left: 40px;
     }
   }
   
