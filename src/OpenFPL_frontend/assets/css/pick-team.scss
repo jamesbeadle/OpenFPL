@@ -119,6 +119,142 @@
         justify-content: right;
       }
 
+      
+
+.autofill-button{
+    width: 161px;
+    height: 52px;
+    border: none;
+    border-radius: 8px;
+    margin-right: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #7F56F1;
+    color: white;
+  }
+  
+  .save-team-button{
+    width: 191px;
+    height: 52px;
+    border: none;
+    border-radius: 8px;
+    margin-right: 32px;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #7F56F1;
+    color: white;
+  }
+  
+  .save-team-button:disabled, .autofill-button:disabled {
+    background-color: #5A5A5A;
+  }
+  
+.sponsor1{
+    width: 186.5px !important;
+    height: 42px !important;
+};
+
+.sponsor2{
+    width: 186.5px !important;
+    height: 42px !important;
+};
+
+.shirt-icon{
+    width: 86px;
+    height: 88px;
+}
+
+.shirt{
+  width: 60.69px;
+  height: 80px;
+}
+
+
+
+.player-name-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #242529;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    height: 32px;
+    width: 146px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .list-player-name-row {
+    display: flex;
+  }
+  
+  .player-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #161819;
+    display: flex;
+    padding: 8px;
+    height: 22px;
+    width: 146px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .list-player-info-row {
+    display: flex;
+  }
+  
+  .pitch-team-badge{
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+  
+  .list-pitch-team-badge{
+    margin-right: 4px;
+  }
+  
+  .remove-player-button{
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    background-color: #E32C2C;
+  }
+  
+  .captain-player-button{
+    border: none;
+    background-color: transparent;
+    padding: 0px;
+  }
+  
+  .shirt-container {
+    position: relative;
+  }
+  
+  .left-side-image,
+  .right-side-image {
+    position: absolute;
+    bottom: 0;
+    width: 22px;
+    height: 22px;
+  }
+  
+  .left-side-image {
+    left: -22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .right-side-image {
+    right: -22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
@@ -173,7 +309,7 @@
     .sub-stat-panel{
         padding-top: 2px;
         padding-bottom: 2px;
-        height: 150px;
+        height: 120px;
     }
     
     .sub-stat-wrapper{
@@ -182,9 +318,9 @@
     }
     
     .sub-stat-button{
-        height: 52px !important;
-        width: 80px !important;
-        font-size: 8px !important;
+        height: 40px !important;
+        width: 100px !important;
+        font-size: 10px !important;
         padding: 0;
     }
 
@@ -198,18 +334,97 @@
         display: flex;
         justify-content: left;
     }
+ 
+        
+    .autofill-button{
+        width: 100px;
+        height: 40px;
+        border-radius: 8px;
+        margin-right: 16px;
+        font-size: 8px;
+    }
+    
+    .save-team-button{
+        width: 100px;
+        height: 40px;
+        border-radius: 8px;
+        margin-right: 32px;
+        font-size: 8px;
+    }
+
+    .sponsor1{
+        width: 93.25px !important;
+        height: 21px !important;
+    };
+    
+    .sponsor2{
+        width: 93.25px !important;
+        height: 21px !important;
+    }
+
+    .shirt-icon{
+        width: 40.85px;
+        height: 41.8px;
+    }
+
+
+        
+    .player-name-row {
+        padding: 8px;
+        height: 12px;
+        width: 146px;
+        font-size: 8px;
+    }
+    
+    .player-info-row {
+        padding: 8px;
+        height: 12px;
+        width: 146px;
+        font-size: 8px;
+    }
+    
+    .pitch-team-badge{
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+    
+    .list-pitch-team-badge{
+        margin-right: 4px;
+    }
+    
+    .remove-player-button{
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+    }
+    
+    .captain-player-button{
+        padding: 0px;
+    }
+    
+    .left-side-image,
+    .right-side-image {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .left-side-image {
+        left: -16px;
+    }
+    
+    .right-side-image {
+        right: -16px;
+    }
 }
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 601px) {
-    
-
-.float-right-buttons {
-    text-align: right;
-    display: flex;
-    justify-content: right;
-  }
-  }
+    .float-right-buttons {
+        text-align: right;
+        display: flex;
+        justify-content: right;
+    }
+}
   
   
   /* Medium devices (landscape tablets, 768px and up) */
@@ -298,6 +513,86 @@
     .formation-text{
         font-size: 16px;
     }
+
+        
+    .autofill-button{
+        width: 161px;
+        height: 52px;
+        border-radius: 8px;
+        margin-right: 16px;
+        font-size: 16px;
+    }
+    
+    .save-team-button{
+        width: 191px;
+        height: 52px;
+        border-radius: 8px;
+        margin-right: 32px;
+        font-size: 16px;
+    }
+
+    .sponsor1{
+        width: 186.5px !important;
+        height: 42px !important;
+    };
+    
+    .sponsor2{
+        width: 186.5px !important;
+        height: 42px !important;
+    }  
+
+    .shirt{
+      width: 60.69px;
+      height: 80px;
+    }  
+
+    
+.player-name-row {
+    padding: 8px;
+    height: 32px;
+    width: 146px;
+    font-size: 12px;
+  }
+  
+  .player-info-row {
+    padding: 8px;
+    height: 22px;
+    width: 146px;
+    font-size: 12px;
+  }
+  
+  .pitch-team-badge{
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+  
+  .list-pitch-team-badge{
+    margin-right: 4px;
+  }
+  
+  .remove-player-button{
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+  }
+  
+  .captain-player-button{
+    padding: 0px;
+  }
+  
+  .left-side-image,
+  .right-side-image {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .left-side-image {
+    left: -22px;
+  }
+  
+  .right-side-image {
+    right: -22px;
+  }
   }
   
   /* 4K and large screens */

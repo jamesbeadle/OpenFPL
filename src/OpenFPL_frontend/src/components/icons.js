@@ -140,15 +140,14 @@ const CaptainIconActive = ({ width=23, height=22, marginRight=0 }) => (
 </svg>
 );
 
-const DefaultShirtIcon = ({ onClick, width=86, height=88, marginRight=0, primary='#2CE3A6', secondary='#777777', third='#FFFFFF' }) => (
+const DefaultShirtIcon = ({ onClick, primary='#2CE3A6', secondary='#777777', third='#FFFFFF' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
+    className='shirt-icon'
     onClick={onClick}
     fill="currentColor"
     viewBox="0 0 86 88"
-    style={{ cursor: 'pointer', marginRight: marginRight }}
+    style={{ cursor: 'pointer' }}
   >
   
   <g filter="url(#filter0_d_354_581)">
@@ -174,15 +173,13 @@ const DefaultShirtIcon = ({ onClick, width=86, height=88, marginRight=0, primary
 </svg>
 );
 
-const ShirtIcon = ({ onClick, width=86, height=88, marginRight=0, primary='#2CE3A6', secondary='#777777', third='#FFFFFF' }) => (
+const ShirtIcon = ({ onClick, primary='#2CE3A6', secondary='#777777', third='#FFFFFF' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
-    onClick={onClick}
+    className='shirt-icon'
     fill="currentColor"
     viewBox="0 0 86 88"
-    style={{ cursor: 'pointer', marginRight: marginRight }}
+    style={{ cursor: 'pointer' }}
   >
   
   <g filter="url(#filter0_d_354_581)">
@@ -205,15 +202,14 @@ const ShirtIcon = ({ onClick, width=86, height=88, marginRight=0, primary='#2CE3
 </svg>
 );
 
-const StripedShirtIcon = ({ onClick, width=86, height=88, marginRight=0, primary='#000000', secondary='#FFFFFF', third='#777777' }) => (
+const StripedShirtIcon = ({ onClick, primary='#000000', secondary='#FFFFFF', third='#777777' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width={width}
-    height={height}
+    className='shirt-icon'
     onClick={onClick}
     fill="currentColor"
     viewBox="0 0 86 88"
-    style={{ cursor: 'pointer', marginRight: marginRight }}
+    style={{ cursor: 'pointer' }}
   >
   
   <g filter="url(#filter0_d_354_585)">

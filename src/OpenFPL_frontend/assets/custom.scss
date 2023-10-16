@@ -223,22 +223,6 @@
   width: 40%;
 }
 
-
-.sponsor1{
-  width: 186.5px !important;
-  height: 42px !important;
-};
-
-.sponsor2{
-  width: 186.5px !important;
-  height: 42px !important;
-};
-
-.shirt{
-  width: 60.69px;
-  height: 80px;
-}
-
 .row-wrapper {
   position: absolute;
   width: 100%;
@@ -455,34 +439,6 @@
   border-radius: 4px;
 }
 
-.autofill-button{
-  width: 161px;
-  height: 52px;
-  border: none;
-  border-radius: 8px;
-  margin-right: 16px;
-  font-size: 16px;
-  font-weight: 600;
-  background-color: #7F56F1;
-  color: white;
-}
-
-.save-team-button{
-  width: 191px;
-  height: 52px;
-  border: none;
-  border-radius: 8px;
-  margin-right: 32px;
-  font-size: 16px;
-  font-weight: 600;
-  background-color: #7F56F1;
-  color: white;
-}
-
-.save-team-button:disabled, .autofill-button:disabled {
-  background-color: #5A5A5A;
-}
-
 
 .modal-content {
   background-color: #161819;
@@ -570,91 +526,6 @@
   border-radius: 12px;
   overflow: hidden;
   margin-top: 5px; 
-}
-
-.player-name-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #242529;
-  color: white;
-  text-align: center;
-  padding: 8px;
-  height: 32px;
-  width: 146px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.list-player-name-row {
-  display: flex;
-}
-
-.player-info-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(255, 255, 255, 0.3);
-  color: #161819;
-  display: flex;
-  padding: 8px;
-  height: 22px;
-  width: 146px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.list-player-info-row {
-  display: flex;
-}
-
-.pitch-team-badge{
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
-.list-pitch-team-badge{
-  margin-right: 4px;
-}
-
-.remove-player-button{
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 4px;
-  background-color: #E32C2C;
-}
-
-.captain-player-button{
-  border: none;
-  background-color: transparent;
-  padding: 0px;
-}
-
-.shirt-container {
-  position: relative;
-}
-
-.left-side-image,
-.right-side-image {
-  position: absolute;
-  bottom: 0;
-  width: 22px;
-  height: 22px;
-}
-
-.left-side-image {
-  left: -22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.right-side-image {
-  right: -22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .overlay {

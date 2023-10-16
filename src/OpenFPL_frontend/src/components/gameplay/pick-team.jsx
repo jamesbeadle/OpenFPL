@@ -622,7 +622,7 @@ const PickTeam = () => {
                             )}
                           </button>
                         </div>
-                        <div className="player-details">
+                        <div className="player-details d-none d-lg-block">
                           <div className="player-name-row">
                             <div style={{marginRight: '4px'}}>{getFlag(player.nationality)}</div>
                             {
@@ -690,7 +690,7 @@ const PickTeam = () => {
                     {(() => {
                       const foundTeam = teams.find(team => team.id === player.teamId);
                       return (
-                        <div className={`list-view-player-row-sub list-pos-${count}`}>
+                        <div className={`list-view-player-row-sub list-pos-${count} `}>
                           <div className="header-col position-col">{positionText}</div>
                           
                           <div className="header-col captain-col">
