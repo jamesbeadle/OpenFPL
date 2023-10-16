@@ -648,7 +648,7 @@ const Manager = () => {
                       </Button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: '90px' }}>
-                      <label className='gameweek-total-points'>Total Points: {fantasyTeam.points}</label>
+                      <label className='gw-total-points'>Total Points: {fantasyTeam.points}</label>
                     </div>
                   </>}
                 </div>

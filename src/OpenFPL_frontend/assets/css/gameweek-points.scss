@@ -1,0 +1,271 @@
+
+.gw-points-position-col{
+    flex-basis: 5%;
+  }
+  .gw-points-name-col{
+    flex-basis: 10%;
+  }
+  .gw-points-club-col{
+    flex-basis: 20%;
+  }
+  .gw-points-appearances-col{
+    flex-basis: 5%;
+  }
+  .gw-points-highest-scoring-col{
+    flex-basis: 5%;
+  }
+  .gw-points-goals-col{
+    flex-basis: 5%;
+  }
+  .gw-points-assists-col{
+    flex-basis: 5%;
+  }
+  .gw-points-pen-saves-col{
+    flex-basis: 5%;
+  }
+  .gw-points-clean-sheets-col{
+    flex-basis: 5%;
+  }
+  .gw-points-saves-col{
+    flex-basis: 5%;
+  }
+  .gw-points-yellow-cards-col{
+    flex-basis: 5%;
+  }
+  .gw-points-own-goals-col{
+    flex-basis: 5%;
+  }
+  .gw-points-goals-conceded-col{
+    flex-basis: 5%;
+  }
+  .gw-points-missed-pen-col{
+    flex-basis: 5%;
+  }
+  .gw-points-red-card-col{
+    flex-basis: 5%;
+  }
+  .gw-points-bonus-col{
+    flex-basis: 5%;
+  }
+  .gw-points-points-col{
+    flex-basis: 5%;
+  }
+  
+  .gw-table-header{
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .gw-table-col{
+    font-size: 18px;
+    font-weight: 400;
+  }
+  
+  .gw-bonus-image{
+    width: 28px;
+    height: 28px;
+  }
+
+
+
+  .gw-total-points-wrapper{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+  .gw-total-points{
+    font-size: 18px;
+    font-weight: 500;
+    margin-right: 16px;
+  }
+  
+    /* Extra small devices (phones, 321px and up) */
+    @media only screen and (min-width: 321px) {
+                
+        .gw-points-position-col{
+            flex-basis: 20%;
+        }
+        .gw-points-name-col{
+            flex-basis: 60%;
+        }
+        .gw-points-points-col{
+            flex-basis: 20%;
+        }
+
+        .gw-points-club-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-appearances-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-highest-scoring-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-goals-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-assists-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-pen-saves-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-clean-sheets-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-saves-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-yellow-cards-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-own-goals-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-goals-conceded-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-missed-pen-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-red-card-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        .gw-points-bonus-col{
+            flex-basis: 0%;
+            display: none;
+        }
+        
+        .gw-table-header{
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .gw-table-col{
+            font-size: 18px;
+            font-weight: 400;
+        }
+        
+        .gw-bonus-image{
+            width: 28px;
+            height: 28px;
+        }
+
+        
+
+        .gw-total-points{
+            font-size: 8px;
+            font-weight: 500;
+        }
+
+    }
+    
+    /* Small devices (portrait tablets and large phones, 601px and up) */
+    @media only screen and (min-width: 601px) {
+ 
+    }
+    
+    /* Medium devices (landscape tablets, 768px and up) */
+    @media only screen and (min-width: 768px) {
+      
+
+    }
+    
+    /* Large devices (laptops/desktops, 992px and up) */
+    @media only screen and (min-width: 992px) {
+   
+    }
+    
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (min-width: 1200px) {
+      
+    }
+    /* added */
+    @media only screen and (min-width: 1500px) {
+                
+        .gw-points-position-col{
+            flex-basis: 5%;
+        }
+        .gw-points-name-col{
+            flex-basis: 10%;
+        }
+        .gw-points-club-col{
+            flex-basis: 20%;
+        }
+        .gw-points-appearances-col{
+            flex-basis: 5%;
+        }
+        .gw-points-highest-scoring-col{
+            flex-basis: 5%;
+        }
+        .gw-points-goals-col{
+            flex-basis: 5%;
+        }
+        .gw-points-assists-col{
+            flex-basis: 5%;
+        }
+        .gw-points-pen-saves-col{
+            flex-basis: 5%;
+        }
+        .gw-points-clean-sheets-col{
+            flex-basis: 5%;
+        }
+        .gw-points-saves-col{
+            flex-basis: 5%;
+        }
+        .gw-points-yellow-cards-col{
+            flex-basis: 5%;
+        }
+        .gw-points-own-goals-col{
+            flex-basis: 5%;
+        }
+        .gw-points-goals-conceded-col{
+            flex-basis: 5%;
+        }
+        .gw-points-missed-pen-col{
+            flex-basis: 5%;
+        }
+        .gw-points-red-card-col{
+            flex-basis: 5%;
+        }
+        .gw-points-bonus-col{
+            flex-basis: 5%;
+        }
+        .gw-points-points-col{
+            flex-basis: 5%;
+        }
+        
+        .gw-table-header{
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .gw-table-col{
+            font-size: 18px;
+            font-weight: 400;
+        }
+        
+        .gw-bonus-image{
+            width: 28px;
+            height: 28px;
+        }
+
+    }
+    
+    /* 4K and large screens */
+    @media only screen and (min-width: 1920px) {
+    }
+    

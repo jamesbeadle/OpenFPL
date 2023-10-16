@@ -492,8 +492,7 @@ const GameweekPoints = () => {
               <Col md={12}>
                 <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
-                      style={{ marginRight: '16px' }} >
+                    <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>
                       <ArrowLeft />
                     </Button>
                   </div>
@@ -518,15 +517,13 @@ const GameweekPoints = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
-                    <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
-                      style={{ marginLeft: '16px' }} >
+                  <div className='fixture-filter-container'  style={{display: 'flex', alignItems: 'center'}}>
+                    <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>
                       <ArrowRight />
                     </Button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                      style={{ marginRight: '16px' }} >
+                    <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
                       <ArrowLeft />
                     </Button>
                   </div>
@@ -552,14 +549,13 @@ const GameweekPoints = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
-                      style={{ marginLeft: '16px' }} >
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id}>
                       <ArrowRight />
                     </Button>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: '90px' }}>
-                    <label className='gameweek-total-points'>Total Points: {fantasyTeam.points}</label>
+                  <div className='gw-total-points-wrapper'>
+                    <label className='gw-total-points'>Total Points: {fantasyTeam.points}</label>
                   </div>
                 </div>
               </Col>
@@ -568,7 +564,7 @@ const GameweekPoints = () => {
             <Row>
 
             <Container>
-                <Row style={{ overflowX: 'auto' }}>
+                <Row>
                     <Col xs={12}>
                         <div className='light-background table-header-row w-100'  style={{ display: 'flex', alignItems: 'center' }}>
                             <div className="gw-points-position-col gw-table-header">Pos</div>
@@ -587,7 +583,7 @@ const GameweekPoints = () => {
                             <div className="gw-points-missed-pen-col gw-table-header">MP</div>
                             <div className="gw-points-red-card-col gw-table-header">RC</div>
                             <div className="gw-points-red-card-col gw-table-header">B</div>
-                            <div className="gw-points-red-card-col gw-table-header">PTS</div>
+                            <div className="gw-points-points-col gw-table-header">PTS</div>
                         </div>
                     </Col>  
                 </Row>
@@ -602,7 +598,7 @@ const GameweekPoints = () => {
                     return null;
                 }
                     return (
-                      <Row key={player.id} onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)} style={{ overflowX: 'auto' }}>
+                      <Row key={player.id} onClick={() => handleShowModal(player, playerDTO, player.id == fantasyTeam.captainId)}>
                         <Col xs={12}>
                         <div className="table-row clickable-table-row">
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>

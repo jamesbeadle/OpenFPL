@@ -28,6 +28,11 @@ const MyNavbar = () => {
     }, 0);
   };
 
+  const handleLogout = async () => {
+    setShowDropdown(false);
+    logout();
+  };
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/");
@@ -69,11 +74,11 @@ const MyNavbar = () => {
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu className="w-100 nav-dropdown-menu">
-                    <Dropdown.Item className="w-100 disconnect" eventKey="1" onClick={logout}>Disconnect</Dropdown.Item>
+                    <Dropdown.Item className="w-100 disconnect" eventKey="1" onClick={handleLogout}>Disconnect</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </div>
-              <Nav.Link onClick={() => logout()} className={`custom-nav-link mt-2 d-lg-none mt-md-0 ${isActive('/profile') ? 'active-link' : ''}`} style={{display: 'flex'}}>
+              <Nav.Link onClick={() => handleLogout()} className={`custom-nav-link mt-2 d-lg-none mt-md-0 ${isActive('/profile') ? 'active-link' : ''}`} style={{display: 'flex'}}>
                 Disconnect
                 { isActive('/profile') && <div className="nav-caret"></div>}
               </Nav.Link> 

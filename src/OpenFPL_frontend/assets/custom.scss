@@ -4,6 +4,7 @@
 @import './css/fixtures.scss';
 @import './css/footer.scss';
 @import './css/header.scss';
+@import './css/gameweek-points.scss';
 
 //Navbar
 
@@ -199,6 +200,7 @@
 
 .dark-tab-row{
   background-color: #242529 !important; 
+  overflow-x: hidden;
 }
 
 .logo-text{
@@ -859,73 +861,6 @@
   border-bottom: 1px solid #454B56;
 }
 
-.gw-points-position-col{
-  flex-basis: 5%;
-}
-.gw-points-name-col{
-  flex-basis: 10%;
-}
-.gw-points-club-col{
-  flex-basis: 20%;
-}
-.gw-points-appearances-col{
-  flex-basis: 5%;
-}
-.gw-points-highest-scoring-col{
-  flex-basis: 5%;
-}
-.gw-points-goals-col{
-  flex-basis: 5%;
-}
-.gw-points-assists-col{
-  flex-basis: 5%;
-}
-.gw-points-pen-saves-col{
-  flex-basis: 5%;
-}
-.gw-points-clean-sheets-col{
-  flex-basis: 5%;
-}
-.gw-points-saves-col{
-  flex-basis: 5%;
-}
-.gw-points-yellow-cards-col{
-  flex-basis: 5%;
-}
-.gw-points-own-goals-col{
-  flex-basis: 5%;
-}
-.gw-points-goals-conceded-col{
-  flex-basis: 5%;
-}
-.gw-points-missed-pen-col{
-  flex-basis: 5%;
-}
-.gw-points-red-card-col{
-  flex-basis: 5%;
-}
-.gw-points-bonus-col{
-  flex-basis: 5%;
-}
-.gw-points-points-col{
-  flex-basis: 5%;
-}
-
-.gw-table-header{
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.gw-table-col{
-  font-size: 18px;
-  font-weight: 400;
-}
-
-.gw-bonus-image{
-  width: 28px;
-  height: 28px;
-}
-
 .league-position-col{
   flex-basis: 5%;
 }
@@ -977,11 +912,6 @@
 
 .leaderboard-points-col{
   flex-basis: 20%;
-}
-
-.gameweek-total-points{
-  font-size: 18px;
-  font-weight: 500;
 }
 
 .player-modal-name-row{
