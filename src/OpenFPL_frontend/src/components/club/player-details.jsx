@@ -191,7 +191,7 @@ const PlayerDetails = ({  }) => {
                                         <p className="stat-header w-100">Age</p>
                                     </div>
                                 </Row>
-                                <Row className="stat-row-2">
+                                <Row className="stat-row-2 vertical-flex">
                                     <div className='player-details-name-col'>
                                         {playerTeam.shirtType == 0 ? 
                                             <ShirtIcon
@@ -255,7 +255,7 @@ const PlayerDetails = ({  }) => {
                                          
                                     </div>
                                 </Row>
-                                <Row className="stat-row-2">
+                                <Row className="stat-row-2 vertical-flex">
                                     <div className='home-deadline-col'>
                                         <Row  style={{paddingLeft: '32px'}}>
                                             <Col xs={4} className="add-colon">

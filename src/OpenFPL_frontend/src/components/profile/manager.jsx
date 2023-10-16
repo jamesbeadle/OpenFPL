@@ -478,7 +478,7 @@ const Manager = () => {
                                         <p className="stat-header w-100"></p>
                                       </div>
                                     </Row>
-                                    <Row className="stat-row-2">
+                                    <Row className="stat-row-2 vertical-flex">
                                     <div className='manager-display-name-col'>
                                         <p className="stat">{viewData.displayName == viewData.principalId ? '-' : viewData.displayName}</p>
                                       </div>
@@ -531,7 +531,7 @@ const Manager = () => {
                               <p className="stat-header w-100">Leaderboard Positions</p>    
                           </div>
                       </Row>
-                      <Row className="stat-row-2">
+                      <Row className="stat-row-2 vertical-flex">
                           <div className='manager-pos-col'>
                             <p className="stat">{viewData.weeklyPosition}</p>
                           </div>

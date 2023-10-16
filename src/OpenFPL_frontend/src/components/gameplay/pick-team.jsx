@@ -681,8 +681,7 @@ const PickTeam = () => {
           const player = playersForPosition[i];
        
           return (
-            <div 
-              className={`list-player-container align-items-center justify-content-center list-pos-${count}`} 
+            <div className={`list-player-container align-items-center justify-content-center list-pos-${count}`} 
               key={slot}
             >
               {player ? (
@@ -765,25 +764,25 @@ const PickTeam = () => {
         <>
         <Container fluid className='view-container mt-2'>
            <Row>
-              <Col md={6} xs={12}>
-                  <Card className='mb-3'>
+              <Col lg={6} xs={12}>
+                  <Card className='mb-3 mb-lg-0'>
                       <div className="outer-container d-flex">
                           <div className="stat-panel flex-grow-1">
                               
                               <Row className="stat-row-1">
                                 <div className='pick-team-gameweek-col'>
-                                  <p style={{paddingLeft: '40px'}} className="stat-header w-100">Gameweek</p>
+                                  <p className="stat-header w-100">Gameweek</p>
                                 </div>
                                 <div className='pick-team-deadline-col'>
                                   <p className="stat-header w-100">Deadline</p>
                                 </div>
                                 <div className='pick-team-player-count-col'>
-                                  <p className="stat-header w-100">Players Selected</p>
+                                  <p className="stat-header w-100">Players</p>
                                 </div>
                              </Row>
-                              <Row className="stat-row-2">
+                              <Row className="stat-row-2 vertical-flex">
                                 <div className='pick-team-gameweek-col'>
-                                  <p style={{paddingLeft: '40px'}} className="stat">{currentGameweek}</p>
+                                  <p className="stat">{currentGameweek}</p>
                                 </div>
                                 <div className='pick-team-deadline-col'>
                                   <Row>
@@ -804,7 +803,7 @@ const PickTeam = () => {
                               </Row>
                               <Row className="stat-row-3">
                                 <div className='pick-team-gameweek-col'>
-                                  <p style={{paddingLeft: '40px'}}  className="stat-header">Total</p> 
+                                  <p className="stat-header">Total</p> 
                                 </div>
                                 <div className='pick-team-deadline-col'>
                                   <Row>
@@ -820,23 +819,23 @@ const PickTeam = () => {
                                   </Row>
                                 </div>
                                 <div className='pick-team-player-count-col'>
-                                  <p className="stat-header">Total</p> 
+                                  <p className="stat-header">Selected</p> 
                                 </div>
                               </Row>
                           </div>
-                          <div className="d-none d-md-block pick-team-divider-1"></div>
-                          <div className="d-none d-md-block pick-team-divider-2"></div>
+                          <div className="pick-team-divider-1"></div>
+                          <div className="pick-team-divider-2"></div>
                       </div>
                   </Card>
               </Col>
 
-              <Col md={6} xs={12}>
+              <Col lg={6} xs={12}>
                   <Card className='mb-3'>
                       <div className="outer-container d-flex">
                           <div className="stat-panel flex-grow-1">
                               <Row className="stat-row-1">
                                 <div className='pick-team-value-col'>
-                                  <p style={{paddingLeft: '40px'}} className="stat-header w-100">Team Value</p>
+                                  <p className="stat-header w-100">Team Value</p>
                                 </div>
                                 <div className='pick-team-bank-col'>
                                   <p className="stat-header w-100">Bank Balance</p>
@@ -845,9 +844,9 @@ const PickTeam = () => {
                                   <p className="stat-header w-100">Transfers</p>
                                 </div>
                               </Row>
-                              <Row className="stat-row-2">
+                              <Row className="stat-row-2 vertical-flex">
                                 <div className='pick-team-value-col'>
-                                  <p style={{paddingLeft: '40px'}} className="stat">£{calculateTeamValue(fantasyTeam.players)}m</p>
+                                  <p className="stat">£{calculateTeamValue(fantasyTeam.players)}m</p>
                                 </div>
                                 <div className='pick-team-bank-col'>
                                   <p className="stat">£{(fantasyTeam.bankBalance).toFixed(2)}m</p>
@@ -863,7 +862,7 @@ const PickTeam = () => {
                               </Row>
                               <Row className="stat-row-3">
                                 <div className='pick-team-value-col'>
-                                  <p style={{paddingLeft: '40px'}} className="stat-header">GBP</p>   
+                                  <p className="stat-header">GBP</p>   
                                 </div>
                                 <div className='pick-team-bank-col'>
                                   <p className="stat-header">GBP</p>    
@@ -873,8 +872,8 @@ const PickTeam = () => {
                                 </div>
                               </Row>
                           </div>
-                          <div className="d-none d-md-block pick-team-divider-3"></div>
-                          <div className="d-none d-md-block pick-team-divider-4"></div>
+                          <div className="pick-team-divider-3"></div>
+                          <div className="pick-team-divider-4"></div>
                       </div>
                   </Card>
               </Col>
@@ -885,7 +884,7 @@ const PickTeam = () => {
                   <div className="outer-container d-flex">
                     <div className="sub-stat-panel flex-grow-1" style={{ display: 'flex', alignItems: 'center' }}>
                       <Row className="sub-stat-wrapper">
-                        <Col xs={6} className='align-items-center justify-content-center'>
+                        <Col xs={12} lg={7} className='align-items-center justify-content-center'>
                           <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Button 
                               onClick={() => setShowListView(false)} 
@@ -896,11 +895,10 @@ const PickTeam = () => {
                             <Button 
                               onClick={() => setShowListView(true)} 
                               className={`sub-stat-button sub-stat-button-right ${showListView ? 'active' : ''}`}
-                              style={{ marginRight: '40px' }}
                             >
                             List View
                           </Button>                                      
-                          <div onBlur={handleFormationBlur}>
+                          <div className='formation-wrapper' onBlur={handleFormationBlur}>
                             <Dropdown show={showFormationDropdown}>
                               <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                                 <Button style={{backgroundColor: 'transparent'}} onClick={() => setShowFormationDropdown(!showFormationDropdown)} className="formation-text">Formation: <b>{formation}</b></Button>
@@ -914,14 +912,14 @@ const PickTeam = () => {
                                 ))}
                               </Dropdown.Menu>
                             </Dropdown>
-                          </div>
-                        </div>
-                      </Col>
+                            </div>
+                            </div>
+                          </Col>
 
-                      <Col xs={6} className="float-right-buttons">
+                        <Col xs={12} lg={5} className='float-right-buttons'>
                           <button className='autofill-button' onClick={autofillTeam} disabled={fantasyTeam.players.filter(x => x).length >= 11}>AutoFill</button>
                           <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
-                      </Col>
+                        </Col>
                     </Row>
                 </div>
               </div>

@@ -228,7 +228,7 @@ const ClubDetails = ({  }) => {
                                         <p className="stat-header w-100">Points</p>
                                     </div>
                                 </Row>
-                                <Row className="stat-row-2">
+                                <Row className="stat-row-2 vertical-flex">
                                     <div className='club-badge-col'>
                                         <BadgeIcon
                                             primary={team.primaryColourHex}
@@ -282,7 +282,7 @@ const ClubDetails = ({  }) => {
                                          
                                     </div>
                                 </Row>
-                                <Row className="stat-row-2">
+                                <Row className="stat-row-2 vertical-flex">
                                     <div className='home-deadline-col'>
                                         <Row  style={{paddingLeft: '32px'}}>
                                             <Col xs={4} className="add-colon">

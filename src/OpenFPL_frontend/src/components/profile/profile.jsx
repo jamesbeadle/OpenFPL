@@ -217,7 +217,7 @@ const Profile = () => {
                                         <p className="stat-header w-100">Favourite Team</p>
                                       </div>
                                     </Row>
-                                    <Row className="stat-row-2">
+                                    <Row className="stat-row-2 vertical-flex">
                                       <div className='profile-display-name-col'>  
                                         <p className="stat">{viewData.displayName == viewData.principalName ? 'Not Set' : viewData.displayName}</p>
                                       </div>
@@ -234,7 +234,7 @@ const Profile = () => {
                                         </Form.Group>
                                       </div>
                                     </Row>
-                                    <Row className="stat-row-2">
+                                    <Row className="stat-row-2 vertical-flex">
                                       <div className='profile-display-name-col'>  
                                         <Button className="fpl-large-btn" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
                                       </div>
