@@ -150,12 +150,12 @@
         }
         
         .gw-table-header{
-            font-size: 12px;
+            font-size: 8px;
             font-weight: 600;
         }
         
         .gw-table-col{
-            font-size: 18px;
+            font-size: 8px;
             font-weight: 400;
         }
         
@@ -163,8 +163,6 @@
             width: 28px;
             height: 28px;
         }
-
-        
 
         .gw-total-points{
             font-size: 8px;
@@ -176,22 +174,96 @@
     /* Small devices (portrait tablets and large phones, 601px and up) */
     @media only screen and (min-width: 601px) {
  
+        
+      .gw-table-header{
+          font-size: 10px;
+          font-weight: 600;
+      }
+      
+      .gw-table-col{
+          font-size: 10px;
+          font-weight: 400;
+      }
+      
+      .gw-bonus-image{
+          width: 28px;
+          height: 28px;
+      }
+
+      .gw-total-points{
+          font-size: 10px;
+          font-weight: 500;
+      }
     }
     
     /* Medium devices (landscape tablets, 768px and up) */
     @media only screen and (min-width: 768px) {
+      .gw-table-header{
+          font-size: 12px;
+          font-weight: 600;
+      }
       
+      .gw-table-col{
+          font-size: 12px;
+          font-weight: 400;
+      }
+      
+      .gw-bonus-image{
+          width: 28px;
+          height: 28px;
+      }
+
+      .gw-total-points{
+          font-size: 12px;
+          font-weight: 500;
+      }
 
     }
     
     /* Large devices (laptops/desktops, 992px and up) */
     @media only screen and (min-width: 992px) {
-   
+      .gw-table-header{
+          font-size: 12px;
+          font-weight: 600;
+      }
+      
+      .gw-table-col{
+          font-size: 12px;
+          font-weight: 400;
+      }
+      
+      .gw-bonus-image{
+          width: 28px;
+          height: 28px;
+      }
+
+      .gw-total-points{
+          font-size: 12px;
+          font-weight: 500;
+      }
     }
     
     /* Extra large devices (large laptops and desktops, 1200px and up) */
     @media only screen and (min-width: 1200px) {
+      .gw-table-header{
+          font-size: 12px;
+          font-weight: 600;
+      }
       
+      .gw-table-col{
+          font-size: 12px;
+          font-weight: 400;
+      }
+      
+      .gw-bonus-image{
+          width: 28px;
+          height: 28px;
+      }
+
+      .gw-total-points{
+          font-size: 12px;
+          font-weight: 500;
+      }
     }
     /* added */
     @media only screen and (min-width: 1500px) {
@@ -200,52 +272,67 @@
             flex-basis: 5%;
         }
         .gw-points-name-col{
-            flex-basis: 10%;
+            flex-basis: 12.5%;
         }
         .gw-points-club-col{
-            flex-basis: 20%;
+            flex-basis: 22.5%;
+            display: flex;
         }
         .gw-points-appearances-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-highest-scoring-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-goals-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-assists-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-pen-saves-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-clean-sheets-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-saves-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-yellow-cards-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: block;
         }
         .gw-points-own-goals-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-goals-conceded-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-missed-pen-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-red-card-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-bonus-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         .gw-points-points-col{
-            flex-basis: 5%;
+            flex-basis: 4%;
+            display: flex;
         }
         
         .gw-table-header{

@@ -58,6 +58,10 @@
     width: 5%;
 }
 
+.col-vs p, .col-time p, .col-badge p{
+  margin: 0 !important;
+}
+
 .col-away-team {
     margin-left: 10%;
     width: 22.5%;
@@ -163,7 +167,7 @@
     }
 
     .fixture-filter-container{
-        margin-right: 16px;
+        margin-right: 8px;
     }
 }
 
