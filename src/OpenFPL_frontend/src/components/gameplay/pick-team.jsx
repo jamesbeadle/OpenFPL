@@ -884,7 +884,7 @@ const PickTeam = () => {
                   <div className="outer-container d-flex">
                     <div className="sub-stat-panel flex-grow-1" style={{ display: 'flex', alignItems: 'center' }}>
                       <Row className="sub-stat-wrapper">
-                        <Col xs={12} lg={7} className='align-items-center justify-content-center'>
+                        <Col xs={12} sm={7} className='align-items-center justify-content-center'>
                           <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Button 
                               onClick={() => setShowListView(false)} 
@@ -916,7 +916,7 @@ const PickTeam = () => {
                             </div>
                           </Col>
 
-                        <Col xs={12} lg={5} className='float-right-buttons'>
+                        <Col xs={12} sm={5} className='float-right-buttons mt-2 mb-lg-0'>
                           <button className='autofill-button' onClick={autofillTeam} disabled={fantasyTeam.players.filter(x => x).length >= 11}>AutoFill</button>
                           <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
                         </Col>

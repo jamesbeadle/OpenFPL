@@ -113,6 +113,12 @@
     }
 
 
+    .float-right-buttons {
+        text-align: right;
+        display: flex;
+        justify-content: right;
+      }
+
 
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
@@ -185,11 +191,24 @@
     .formation-text{
         font-size: 10px;
     }
+    
+
+    .float-right-buttons {
+        text-align: left;
+        display: flex;
+        justify-content: left;
+    }
 }
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 601px) {
     
+
+.float-right-buttons {
+    text-align: right;
+    display: flex;
+    justify-content: right;
+  }
   }
   
   
