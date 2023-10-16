@@ -34,7 +34,7 @@ const MyFooter = () => {
                 </Col>                
               </Row>
               
-              <div style={{display: 'inline-block'}}>
+              <div className='mt-1' style={{display: 'inline-block'}}>
                   <a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer">
                     <img src={OpenChatIcon} alt="OpenChat" className="social-icon" />
                   </a>

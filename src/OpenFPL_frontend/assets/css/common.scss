@@ -1,15 +1,9 @@
-.left-arrow{
-    margin-right: 16px;
-}
-.right-arrow{
-    margin-left: 16px;
-}
 
 .filter-dropdown-btn{
     border:none;
     font-size: 18px;
     font-weight: 400;
-  }
+}
 
 .vertical-flex{
     align-items: center;
@@ -62,7 +56,6 @@
     align-items: center;
 }
 
-
 .table-row {
   display: flex;
   align-items: center;
@@ -71,9 +64,6 @@
   padding-left: 32px;
   margin-top: 16px;
 }
-
-
-
 
 .sub-stat-panel{
   padding-top: 15px;
@@ -314,6 +304,12 @@
     }
     .vs{
         font-size: 24px;
+    }
+    
+    .table-row {
+        height: 80px;
+        padding-left: 32px;
+        margin-top: 16px;
     }
 }
   
