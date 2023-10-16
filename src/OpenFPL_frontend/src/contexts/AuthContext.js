@@ -79,30 +79,13 @@ export const AuthProvider = ({ children }) => {
     if (!client) return;
 
     const isLoggedIn = await client.isAuthenticated();
-    if (isLoggedIn && isTokenValid(client)) {
+    if (isLoggedIn) {
       const principal = await client.getIdentity().getPrincipal(); 
       setUserPrincipal(principal.toText());
       setIsAuthenticated(true);
     } else {
       setUserPrincipal("");
       setIsAuthenticated(false);
-    }
-  };
-
-  const isTokenValid = (client) => {
-    try {
-      const identity = client.getIdentity();
-      if (!identity) return false;
-
-      const delegation = identity._delegation?.delegations?.[0];
-      if (!delegation) return false;
-
-      const expiration = BigInt(delegation.delegation.expiration);
-      const currentTime = BigInt(Date.now() * 1000000);
-      return currentTime < expiration;
-    } catch (error) {
-      console.error('Token validation error:', error);
-      return false;
     }
   };
 
