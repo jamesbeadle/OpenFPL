@@ -214,9 +214,8 @@
     }
 
     .clock-icon{
-        margin-right: 2px;
-        height: 8px;
-        height: 8px;
+        margin-right: 4px;
+        height: 10px;
     }
 
     .status-text {
@@ -361,7 +360,7 @@
     }
         
     .fixture-team-name{
-      font-size: 18px;
+      font-size: 17px;
     }
 
     .badge-icon{
@@ -373,6 +372,10 @@
   /* added */
   @media only screen and (min-width: 1500px) {
    
+        
+    .fixture-team-name{
+      font-size: 18px;
+    }
   }
   
   /* 4K and large screens */

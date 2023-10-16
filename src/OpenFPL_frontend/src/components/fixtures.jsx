@@ -279,7 +279,7 @@ const Fixtures = () => {
                                   );
                                 })()}
 
-                                <div className="col-time">
+                                <div className="col-time ">
                                   {fixture.status < 3 &&
                                     <p className='vertical-flex'>
                                       <ClockIcon
