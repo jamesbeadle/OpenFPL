@@ -173,7 +173,7 @@
 
 
     .table-row {
-      height: 30px;
+      height: 40px;
       padding-left: 16px;
     }
 
@@ -256,8 +256,10 @@
         font-size: 12px;
         padding: 0;
     }
-    .col-time{
-        font-size: 12px;
+
+    .table-row {
+      height: 50px;
+      padding-left: 16px;
     }
 }
   
@@ -287,6 +289,11 @@
     }
     .stat-header{
         font-size: 12px;
+    }
+
+    .table-row {
+      height: 60px;
+      padding-left: 16px;
     }
 }
   
