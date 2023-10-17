@@ -77,19 +77,64 @@
   .coin-balance-suffix{
     color: #B1B1B1;
   }
+
+  
+
+
+.profile-details-row{
+  height: 300px;
+  padding-left: 32px;
+  margin-top: 32px;
+  display:flex;
+}
+
+.profile-details-col{
+  flex-grow: 1;
+}
+
+.profile-detail-row-1{
+  height: 168px;
+  padding-left: 32px;
+}
+
+.profile-detail-row-2{
+  height: 168px;
+  padding-left: 32px;
+}
+
+.profile-display-name-col{
+  flex-basis: 30%;
+}
+
+.profile-favourite-team-col{
+  flex-basis: 50%;
+}
   
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
-    .edit-profile-icon{
-        top: -20px;
-        right: -20px;
-    }
-    
-    .profile-detail-image{
-        width: 200px;
-        height: auto;
-        border-radius: 8px;
-      }
+  edit-profile-icon {
+    top: 10px !important;
+  }
+
+.profile-detail-image{
+    width: 200px;
+    border-radius: 8px;
+    margin-left: 0px;
+    margin-top: 32px;
+}
+
+
+
+.profile-detail-row-1{
+  height: 168px;
+  padding-left: 0px;
+}
+
+.profile-detail-row-2{
+  height: 168px;
+  padding-left: 0px;
+}
+
 }
 
 /* Extra small devices (phones, 600px and down) */
@@ -118,16 +163,27 @@
 }
 /* added */
 @media only screen and (min-width: 1500px) {
-    .edit-profile-icon{
-        top: -20px;
-        right: -20px;
-    }
+  .edit-profile-icon {
+    top: 10px !important;
+}
 
-    .profile-detail-image{
-        width: 300px;
-        height: 300px;
-        border-radius: 8px;
-    }
+.profile-detail-image{
+    width: 300px;
+    border-radius: 8px;
+    margin-left: 80px;
+    margin-top: 32px;
+} 
+
+.profile-detail-row-1{
+  height: 168px;
+  padding-left: 32px;
+}
+
+.profile-detail-row-2{
+  height: 168px;
+  padding-left: 32px;
+}
+
 }
 
 /* 4K and large screens */

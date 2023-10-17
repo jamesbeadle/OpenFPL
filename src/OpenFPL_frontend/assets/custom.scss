@@ -392,36 +392,6 @@
   text-overflow: ellipsis;
 }
 
-
-.profile-details-row{
-  height: 300px;
-  padding-left: 32px;
-  margin-top: 32px;
-  display:flex;
-}
-
-.profile-details-col{
-  flex-grow: 1;
-}
-
-.profile-detail-row-1{
-  height: 168px;
-  padding-left: 32px;
-}
-
-.profile-detail-row-2{
-  height: 168px;
-  padding-left: 32px;
-}
-
-.profile-display-name-col{
-  flex-basis: 30%;
-}
-
-.profile-favourite-team-col{
-  flex-basis: 50%;
-}
-
 .table-header-row {
   height: 46px;
   padding-left: 32px;
