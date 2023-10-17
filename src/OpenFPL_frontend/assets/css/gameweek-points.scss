@@ -191,7 +191,7 @@
       }
 
       .gw-total-points{
-          font-size: 10px;
+          font-size: 12px;
           font-weight: 500;
       }
     }
@@ -214,7 +214,7 @@
       }
 
       .gw-total-points{
-          font-size: 12px;
+          font-size: 14px;
           font-weight: 500;
       }
 
@@ -238,7 +238,7 @@
       }
 
       .gw-total-points{
-          font-size: 12px;
+          font-size: 14px;
           font-weight: 500;
       }
     }
@@ -261,7 +261,7 @@
       }
 
       .gw-total-points{
-          font-size: 12px;
+          font-size: 16px;
           font-weight: 500;
       }
     }
@@ -350,9 +350,16 @@
             height: 28px;
         }
 
+        .gw-total-points{
+            font-size: 18px;
+        }
+
     }
     
     /* 4K and large screens */
     @media only screen and (min-width: 1920px) {
+        .gw-total-points{
+            font-size: 20px;
+        }
     }
     

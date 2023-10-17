@@ -47,6 +47,32 @@
     color: white !important;
   }
 
+  
+.nav-tabs{
+    border-bottom: none !important;
+  }
+  
+  .nav-tabs .nav-link.active {
+    color: white !important;
+    border-bottom-color: #2CE3A6 !important;
+    border-bottom-width: 4px;
+    background-color: transparent;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+  }
+  .nav-tabs .nav-link:not(.active) {
+    color: #C2C3C4 !important;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+  }
+  
+.custom-navbar{
+    width: 100% !important;
+  }
+
 
   
 /* Extra small devices (phones, 321px and up) */
@@ -168,7 +194,9 @@
 }
 /* added */
 @media only screen and (min-width: 1500px) {
-
+    .navbar{
+        height: 50px;
+    }
 }
 
 /* 4K and large screens */

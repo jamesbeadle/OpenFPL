@@ -603,7 +603,7 @@ const GameweekPoints = () => {
                         <div className="table-row clickable-table-row">
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
                             <div className="gw-points-name-col gw-table-col">{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
-                            <div className="gw-points-club-col gw-table-col">
+                            <div className="gw-points-club-col gw-table-col vertical-flex">
                             <BadgeIcon
                                 primary={playerTeam.primaryColourHex}
                                 secondary={playerTeam.secondaryColourHex}
