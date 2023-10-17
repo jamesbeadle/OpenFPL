@@ -230,9 +230,9 @@ const Homepage = () => {
                 <Col xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
-                            <div className="flex-grow-1 light-background">
+                            <div className="flex-grow-1 light-background top-border-radius">
                                 <Tabs className="home-tab-header" defaultActiveKey="fixtures" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)}>
-                                    <Tab eventKey="fixtures" title="Fixtures">
+                                    <Tab className="bottom-border-radius" eventKey="fixtures" title="Fixtures">
                                         {activeKey === 'fixtures' && <Fixtures />}
                                     </Tab>
                                     <Tab eventKey="gameweek-points" title="Gameweek Points">
