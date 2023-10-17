@@ -8,6 +8,7 @@
 @import './css/pick-team.scss';
 @import './css/fixtures-widget.scss';
 @import './css/profile.scss';
+@import './css/league-table.scss';
 
 //Navbar
 
@@ -370,46 +371,6 @@
   font-size: 10px !important;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.league-position-col{
-  flex-basis: 5%;
-}
-
-.league-team-col{
-  flex-basis: 25%;
-}
-
-.league-played-col{
-  flex-basis: 8.75%;
-}
-
-.league-won-col{
-  flex-basis: 8.75%;
-}
-
-.league-drawn-col{
-  flex-basis: 8.75%;
-}
-
-.league-lost-col{
-  flex-basis: 8.75%;
-}
-
-.league-goals-col{
-  flex-basis: 8.75%;
-}
-
-.league-conceded-col{
-  flex-basis: 8.75%;
-}
-
-.league-goal-difference-col{
-  flex-basis: 8.75%;
-}
-
-.league-points-col{
-  flex-basis: 8.75%;
 }
 
 

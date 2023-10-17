@@ -1,0 +1,177 @@
+
+
+.league-position-col{
+    flex-basis: 5%;
+  }
+  
+  .league-team-col{
+    flex-basis: 25%;
+  }
+  
+  .league-played-col{
+    flex-basis: 8.75%;
+  }
+  
+  .league-won-col{
+    flex-basis: 8.75%;
+  }
+  
+  .league-drawn-col{
+    flex-basis: 8.75%;
+  }
+  
+  .league-lost-col{
+    flex-basis: 8.75%;
+  }
+  
+  .league-goals-col{
+    flex-basis: 8.75%;
+  }
+  
+  .league-conceded-col{
+    flex-basis: 8.75%;
+  }
+  
+  .league-goal-difference-col{
+    flex-basis: 8.75%;
+  }
+  
+  .league-points-col{
+    flex-basis: 8.75%;
+  }
+
+
+  
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+            
+.league-position-col{
+    flex-basis: 10%;
+  }
+  
+  .league-team-col{
+    flex-basis: 40%;
+  }
+  
+  .league-played-col{
+    flex-basis: 10%;
+  }
+  
+  .league-won-col{
+    flex-basis: 0%;
+    display: none;
+  }
+  
+  .league-drawn-col{
+    flex-basis: 0%;
+    display: none;
+  }
+  
+  .league-lost-col{
+    flex-basis: 0%;
+    display: none;
+  }
+  
+  .league-goals-col{
+    flex-basis: 0%;
+    display: none;
+  }
+  
+  .league-conceded-col{
+    flex-basis: 0%;
+    display: none;
+  }
+  
+  .league-goal-difference-col{
+    flex-basis: 10%;
+  }
+  
+  .league-points-col{
+    flex-basis: 10%;
+  }
+
+}
+
+@media only screen and (min-width: 450px) {
+
+    .league-position-col{
+        flex-basis: 5%;
+        display: flex;
+      }
+      
+      .league-team-col{
+        flex-basis: 25%;
+        display: flex;
+      }
+      
+      .league-played-col{
+        flex-basis: 8.75%;
+        display: flex;
+      }
+      
+      .league-won-col{
+        flex-basis: 8.75%;
+        display: flex;
+      }
+      
+      .league-drawn-col{
+        flex-basis: 8.75%;
+        display: flex;
+      }
+      
+      .league-lost-col{
+        flex-basis: 8.75%;
+        display: flex;
+      }
+      
+      .league-goals-col{
+        flex-basis: 8.75%;
+        display: flex;
+      }
+      
+      .league-conceded-col{
+        flex-basis: 8.75%;
+        display: flex;
+      }
+      
+      .league-goal-difference-col{
+        flex-basis: 8.75%;
+        display: flex;
+      }
+      
+      .league-points-col{
+        flex-basis: 8.75%;
+        display: flex;
+      }
+
+}
+
+/* Small devices (portrait tablets and large phones, 601px and up) */
+@media only screen and (min-width: 601px) {
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    
+    
+}
+/* added */
+@media only screen and (min-width: 1500px) {
+            
+
+}
+
+/* 4K and large screens */
+@media only screen and (min-width: 1920px) {
+}
+
