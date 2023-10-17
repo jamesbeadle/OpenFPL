@@ -31,6 +31,9 @@ const Homepage = () => {
     const totalPrizePool = 0;
     
     useEffect(() => {
+        if(!isAuthenticated && activeKey == 'gameweek-points'){
+            setActiveKey('fixtures');
+        }
         const fetchViewData = async () => {
             if (filterSeason == 0 || filterGameweek === 0){
                 setIsLoading(false);    
@@ -235,9 +238,11 @@ const Homepage = () => {
                                     <Tab className="bottom-border-radius" eventKey="fixtures" title="Fixtures">
                                         {activeKey === 'fixtures' && <Fixtures />}
                                     </Tab>
-                                    <Tab eventKey="gameweek-points" title="Gameweek Points">
-                                        {activeKey === 'gameweek-points' && <GameweekPoints />}
-                                    </Tab>
+                                    {isAuthenticated && 
+                                        <Tab eventKey="gameweek-points" title="Gameweek Points">
+                                            {activeKey === 'gameweek-points' && <GameweekPoints />}
+                                        </Tab>
+                                    }
                                     <Tab eventKey="leaderboards" title="Leaderboards">
                                         {activeKey === 'leaderboards' && <Leaderboard />}
                                     </Tab>
