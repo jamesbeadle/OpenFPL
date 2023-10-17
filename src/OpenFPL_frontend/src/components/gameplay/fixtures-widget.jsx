@@ -165,8 +165,7 @@ const FixturesWidget = () => {
                 <Col md={12}>
                   <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
-                        style={{ marginRight: '16px' }} >
+                      <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>
                         <ArrowLeft />
                       </Button>
                     </div>
@@ -192,14 +191,12 @@ const FixturesWidget = () => {
                       </div>
                     </div>
                     <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
-                      <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
-                        style={{ marginLeft: '16px' }} >
+                      <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>
                         <ArrowRight />
                       </Button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                        style={{ marginRight: '16px' }} >
+                      <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
                         <ArrowLeft />
                       </Button>
                     </div>
@@ -226,8 +223,7 @@ const FixturesWidget = () => {
                     </div>
                   </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                      <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
-                        style={{ marginLeft: '16px' }} >
+                      <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id}>
                         <ArrowRight />
                       </Button>
                     </div>
@@ -261,7 +257,7 @@ const FixturesWidget = () => {
                                     const awayTeam = getTeamById(teams, fixture.awayTeamId);
                                     return (
                                       <>
-                                        <div className="col-home-team-widget">
+                                        <div className="col-home-team-widget vertical-flex">
                                         <p onClick={() => navigate(`/club/${homeTeam.id}`)} className='fixture-team-name clickable-table-row'>
                                           <BadgeIcon
                                               primary={homeTeam.primaryColourHex}
@@ -272,10 +268,10 @@ const FixturesWidget = () => {
                                             {homeTeam.friendlyName}
                                           </p>
                                         </div>
-                                        <div className="col-vs-widget">
-                                          <p className="w-100 text-center">vs</p>
+                                        <div className="col-vs-widget vertical-flex">
+                                          <p className="w-100 text-center m-0">vs</p>
                                         </div>
-                                        <div className="col-away-team-widget">
+                                        <div className="col-away-team-widget vertical-flex">
                                         <p onClick={() => navigate(`/club/${awayTeam.id}`)} className='fixture-team-name clickable-table-row'>
                                                 <BadgeIcon
                                               primary={awayTeam.primaryColourHex}

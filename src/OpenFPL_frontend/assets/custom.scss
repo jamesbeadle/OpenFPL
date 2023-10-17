@@ -6,6 +6,7 @@
 @import './css/header.scss';
 @import './css/gameweek-points.scss';
 @import './css/pick-team.scss';
+@import './css/fixtures-widget.scss';
 
 //Navbar
 
@@ -75,23 +76,6 @@
     border: 1px solid #2E323A !important;
 }
 
-.card-header-underline {
-  position: relative;
-  display: inline-block;
-  height: 100%;
-  margin-left: 32px;
-}
-
-.card-header-underline::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background-color: #2CE3A6;
-}
-
 .d-flex.text-center.align-items-center.h-100 {
     position: relative;
   }
@@ -159,48 +143,9 @@
   font-weight: 700;
 }
 
-
-
-
-
-.col-home-team-widget,
-.col-away-team-widget,
-.col-vs-widget {
-  flex: 0 0 auto;
-}
-
-.col-home-team-widget {
-  width: 40%;
-}
-
-.col-vs-widget {
-  width: 5%;
-}
-
-.col-away-team-widget {
-  margin-left: 15%;
-  width: 40%;
-}
-
 .row-wrapper {
   position: absolute;
   width: 100%;
-}
-
-.pos-1{
-  width: 100%;
-}
-.pos-2{
-  width: 50%;
-}
-.pos-3{
-  width: 33%;
-}
-.pos-4{
-  width: 25%;
-}
-.pos-5{
-  width: 20%;
 }
 
 .image-row,
