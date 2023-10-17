@@ -608,8 +608,8 @@ const Manager = () => {
           
           <Card>
             <Row>
-              <Col md={12}>
-                <div className='filter-row mb-2 mt-2' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+              <Col xs={12} className='mt-2 mb-2'>
+                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button 
                       onClick={() => setShowListView(true)} 
@@ -625,9 +625,14 @@ const Manager = () => {
                       Details
                     </Button>                                      
                   </div>
-                  {!showListView && <>
+                </div>
+              </Col>
+              <Col xs={12} className='mt-2 mb-2'>
+                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                   {!showListView && 
+                   <>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
+                      <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
                         style={{ marginRight: '16px' }} >
                         <ArrowLeft />
                       </Button>
@@ -653,15 +658,15 @@ const Manager = () => {
                         </Dropdown>
                       </div>
                     </div>
-                    <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
-                      <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
-                        style={{ marginLeft: '16px' }} >
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                      <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>
                         <ArrowRight />
                       </Button>
                     </div>
+                  </>}
+
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                        style={{ marginRight: '16px' }} >
+                      <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
                         <ArrowLeft />
                       </Button>
                     </div>
@@ -687,13 +692,14 @@ const Manager = () => {
                         </Dropdown>
                       </div>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                      <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
-                        style={{ marginLeft: '16px' }} >
+                    <div style={{ display: 'flex', alignItems: 'center'}}>
+                      <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id}>
                         <ArrowRight />
                       </Button>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+                     {!showListView && 
+                   <>
+                  <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
                       <label className='gw-total-points'>Total Points: {fantasyTeam.points}</label>
                     </div>
                   </>}

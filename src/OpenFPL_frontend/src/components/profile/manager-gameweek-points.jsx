@@ -84,47 +84,6 @@ const ManagerGameweekPoints = ({ gameweeks, setCurrentGameweek }) => {
             :
             <div className="dark-tab-row w-100 mx-0">
                 <Row>
-                <Col md={12}>
-                    <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                        style={{ marginRight: '16px' }} >
-                        <ArrowLeft />
-                        </Button>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
-                        <Dropdown show={showSeasonDropdown}>
-                            <Dropdown.Toggle as={CustomToggle} id="season-selector">
-                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                            
-                            {seasons.map(season => 
-                                <Dropdown.Item
-                                data-key={season.id}
-                                className='dropdown-item'
-                                key={season.id}
-                                onMouseDown={() => setCurrentSeason(season)}
-                                >
-                                {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
-                                </Dropdown.Item>
-                            )}
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        </div>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                        <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
-                        style={{ marginLeft: '16px' }} >
-                        <ArrowRight />
-                        </Button>
-                    </div>
-                    </div>
-                </Col>
-                </Row>
-
-                <Row>
 
                 <Container>
                     <Row style={{ overflowX: 'auto' }}>
