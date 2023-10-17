@@ -92,6 +92,34 @@
   height: 72px;
 }
 
+.card-header{
+    position: relative;
+      background-color: rgba(46, 50, 58, 0.6);
+      color: white !important;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      height: 46px;
+      line-height: 46px; 
+      padding: 0 !important;
+  }
+
+  
+.button-container {
+    display: flex;
+    gap: 16px;
+    margin-right: 32px;
+  }
+  
+  .card-arrow{
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 24px;
+    color: white;
+  }
+
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
     .view-container{
@@ -158,6 +186,22 @@
         width: 8px;
         height: 8px;
     }
+
+    
+.card-header{
+    font-size: 10px;
+    height: 30px;
+    line-height: 30px; 
+}
+
+.button-container {
+    gap: 16px;
+    margin-right: 16px;
+  }
+  
+  .card-arrow{
+    font-size: 16px;
+  }
 }
 
 @media only screen and (min-width: 450px) {
@@ -341,6 +385,24 @@
         padding-bottom: 15px;
         height: 158px;
     }
+    
+
+.card-header{
+    font-size: 18px;
+      letter-spacing: 0.5px;
+      height: 46px;
+      line-height: 46px; 
+  }
+
+  
+.button-container {
+    gap: 16px;
+    margin-right: 32px;
+  }
+  
+  .card-arrow{
+    font-size: 24px;
+  }
 }
   
 /* 4K and large screens */

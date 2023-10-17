@@ -1022,12 +1022,12 @@ const PickTeam = () => {
                 {renderListRows(fw, 3, 'FW')}
               </Card>
 
-              <Card className='mt-3 bonus-panel'>
+              <Card className='mt-3 mb-3 mb-lg-0 bonus-panel'>
                 <div className={`overlay ${Object.keys(fantasyTeam.players).length === 11 ? 'hidden' : ''}`}>
                   Please select 11 players before choosing a bonus.
                 </div>
               <Card.Header className="header-container">
-                <span style={{marginLeft: '32px'}}>Bonuses</span>
+                <span className='bonus-header-text'>Bonuses</span>
                 <div className="button-container">
                   <button className='card-arrow' onClick={() => scroll('left')}>&lt;</button>
                   <button className='card-arrow' onClick={() => scroll('right')}>&gt;</button>

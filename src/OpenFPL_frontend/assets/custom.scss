@@ -75,18 +75,6 @@
     border: 1px solid #2E323A !important;
 }
 
-.card-header{
-  position: relative;
-    background-color: rgba(46, 50, 58, 0.6);
-    color: white !important;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    height: 46px;
-    line-height: 46px; 
-    padding: 0 !important;
-}
-
 .card-header-underline {
   position: relative;
   display: inline-block;
@@ -102,35 +90,6 @@
   width: 100%;
   height: 4px;
   background-color: #2CE3A6;
-}
-
-.card-container {
-  display: flex;
-  overflow-x: auto;
-  width: 100%;
-  padding-left: 32px;
-  padding-right: 32px;
-}
-
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.button-container {
-  display: flex;
-  gap: 16px;
-  margin-right: 32px;
-}
-
-.card-arrow{
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  border: none;
-  font-size: 24px;
-  color: white;
 }
 
 .d-flex.text-center.align-items-center.h-100 {
@@ -244,60 +203,12 @@
   width: 20%;
 }
 
-.bonus-card:not(:last-child) {
-  margin-right: 16px;
-}
-
-.bonus-card{
-  width: 150px;
-  flex-shrink: 0;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  padding: 16px !important;
-}
-
 .image-row,
 .text-row,
 .button-row {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.bonus-image{
-  width: 80px;
-  height: 80px;
-}
-
-.bonus-label{
-  font-weight: 600;
-  font-size: 12px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.btn-use-bonus{
-  background-color: #7F56F1;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 8px;
-  width: 100%;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.txt-used-bonus{
-  background-color: #242529;
-  color: white;
-  border: solid 1px #37393C;
-  border-radius: 8px;
-  padding: 8px;
-  width: 100%;
-  font-size: 8px;
-  font-weight: 600;
-  text-align: center;
 }
 
 .list-view-header-row {

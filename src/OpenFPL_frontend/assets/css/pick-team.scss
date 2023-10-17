@@ -288,6 +288,74 @@
   
 }
 
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bonus-header-text{
+  margin-left: 32px;
+}
+
+
+
+.bonus-image{
+  width: 80px;
+  height: 80px;
+}
+
+.bonus-label{
+  font-weight: 600;
+  font-size: 12px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.btn-use-bonus{
+  background-color: #7F56F1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.txt-used-bonus{
+  background-color: #242529;
+  color: white;
+  border: solid 1px #37393C;
+  border-radius: 8px;
+  padding: 8px;
+  width: 100%;
+  font-size: 8px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.bonus-card:not(:last-child) {
+  margin-right: 16px;
+}
+
+.bonus-card{
+  width: 150px;
+  flex-shrink: 0;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 16px;
+}
+
+.card-container {
+  display: flex;
+  overflow-x: auto;
+  width: 100%;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
         
@@ -463,6 +531,54 @@
       width: 12px;
       height: 12px;
       margin-right: 4px;
+    }
+
+    .bonus-header-text{
+      margin-left: 8px;
+    }
+
+        
+    .bonus-image{
+      width: 40px;
+      height: 40px;
+    }
+
+    .bonus-label{
+      font-size: 8px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    .btn-use-bonus{
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 10px;
+    }
+
+    .txt-used-bonus{
+      border-radius: 8px;
+      padding: 8px;
+      width: 100%;
+      font-size: 8px;
+    }
+
+    .bonus-card:not(:last-child) {
+      margin-right: 8px;
+    }
+    
+    .bonus-card{
+      width: 100px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      padding-left: 8px;
+      padding-right: 8px;
+      padding-top: 16px;
+      padding-bottom: 8px;
+    }
+
+    .card-container {
+      padding-left: 8px;
+      padding-right: 8px;
     }
 }
 
@@ -676,6 +792,48 @@
     height: 16px;
   }
 
+  
+
+.bonus-image{
+  width: 80px;
+  height: 80px;
+}
+
+.bonus-label{
+  font-size: 12px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.btn-use-bonus{
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.txt-used-bonus{
+  border-radius: 8px;
+  padding: 8px;
+  width: 100%;
+  font-size: 8px;
+}
+
+
+.bonus-card:not(:last-child) {
+  margin-right: 16px;
+}
+
+.bonus-card{
+  width: 150px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 16px;
+}
+
+.card-container {
+  padding-left: 32px;
+  padding-right: 32px;
+}
 
 
   }
