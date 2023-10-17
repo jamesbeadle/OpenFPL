@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, BadgeIcon } from '../icons';
 import { getTeamById } from '../helpers';
 import ManagerGameweekPoints from './manager-gameweek-points';
+import PlayerPointsModal from '../modals/player-points-modal';
 
 const Manager = () => {
     const { managerId } = useParams();
@@ -449,6 +450,56 @@ const Manager = () => {
       setShowListView(false);
       setCurrentGameweek(number);
     };
+    
+    const handleShowModal = (player, playerDTO, isCaptain) => {
+      setSelectedPlayer(player);
+      setSelectedPlayerDTO(playerDTO);
+      setSelectedPlayerCaptain(isCaptain);
+      setShowModal(true);
+    }
+    
+    const handleCloseModal = () => {
+        setSelectedPlayer(null);
+        setShowModal(false);
+    }
+
+    const getBonusId = () => {
+      if(fantasyTeam.goalGetterGameweek === currentGameweek && 
+        fantasyTeam.goalGetterPlayerId === selectedPlayer.id){
+          return 1;
+        };
+      if(fantasyTeam.passMasterGameweek == currentGameweek && 
+        fantasyTeam.passMasterPlayerId == selectedPlayer.id){
+          return 2;
+        };
+      if(fantasyTeam.noEntryGameweek == currentGameweek && 
+        fantasyTeam.noEntryPlayerId == selectedPlayer.id){
+          return 3;
+        };
+      if(fantasyTeam.safeHandsGameweek == currentGameweek && 
+        selectedPlayer.position === 0 && 
+        selectedPlayerDTO.gameweekData.saves >= 5){
+          return 4;
+      };
+      if(fantasyTeam.captainFantasticGameweek == currentGameweek && 
+        fantasyTeam.captainId == selectedPlayer.id && 
+        selectedPlayerDTO.gameweekData.goals > 0){
+          return 5;
+      }
+      if(fantasyTeam.braceBonusGameweek == currentGameweek && 
+        selectedPlayerDTO.gameweekData.goals >= 2){
+          return 6;
+      };
+      if(fantasyTeam.hatTrickHeroGameweek == currentGameweek && 
+        selectedPlayerDTO.gameweekData.goals >= 3){
+          return 7;
+      } 
+      if(fantasyTeam.teamBoostGameweek == currentGameweek && 
+        fantasyTeam.teamBoostTeamId == selectedPlayer.teamId){
+          return 8;
+      }                         
+    }
+    
 
     return (
         isLoading ? (
@@ -463,7 +514,7 @@ const Manager = () => {
                 <Card className='mb-3'>
                     <div className="outer-container d-flex">
                       
-                    <div className='stat-panel w-100' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                    <div className='stat-panel manager-stat-panel w-100' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                 <div className='manager-picture-col'>
                                     <img src={profilePicSrc} className="manager-profile-image" />
                                   
@@ -473,9 +524,6 @@ const Manager = () => {
                                     <Row className="stat-row-1">
                                       <div className='manager-display-name-col'>
                                         <p className="stat-header w-100">Manager</p>
-                                      </div>
-                                      <div className='manager-favourite-team-col'>
-                                        <p className="stat-header w-100"></p>
                                       </div>
                                     </Row>
                                     <Row className="stat-row-2 vertical-flex">
@@ -510,7 +558,7 @@ const Manager = () => {
                                                   
                                         </div>
                                         <div className='manager-favourite-team-col'>
-                                          <p className='stat-header w-100'>Favourite Team</p>   
+                                          <p className='stat-header w-100 d-none d-lg-block'>Favourite Team</p>   
                                         </div>
                                     </Row>
                                   </div>
@@ -523,7 +571,7 @@ const Manager = () => {
             <Col md={5} xs={12}>
               <Card className='mb-3'>
                 <div className="outer-container d-flex">
-                  <div className="stat-panel flex-grow-1" style={{paddingLeft: '32px'}}>
+                  <div className="stat-panel manager-stat-panel flex-grow-1" style={{paddingLeft: '32px'}}>
                       <Row className="stat-row-1">
                           <div>
                               <p className="stat-header w-100">Leaderboard Positions</p>    
@@ -691,7 +739,7 @@ const Manager = () => {
                           <div className="table-row clickable-table-row">
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
                             <div className="gw-points-name-col gw-table-col">{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
-                            <div className="gw-points-club-col gw-table-col">
+                            <div className="gw-points-club-col gw-table-col vertical-flex">
                             <BadgeIcon
                                 primary={playerTeam.primaryColourHex}
                                 secondary={playerTeam.secondaryColourHex}

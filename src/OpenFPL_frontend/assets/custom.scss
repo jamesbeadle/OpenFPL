@@ -10,6 +10,8 @@
 @import './css/profile.scss';
 @import './css/league-table.scss';
 @import './css/player-modal.scss';
+@import './css/manager.scss';
+@import './css/manager-gameweek-points.scss';
 
 //Navbar
 
@@ -512,73 +514,5 @@
 
 .text-right {
   text-align: right;
-}
-
-.mgw-number-col{
-  flex-basis: 14%;
-}
-.mgw-transfers-col {
-  flex-basis: 14%;
-}
-.mgw-team-value-col {
-  flex-basis: 14%;
-}
-.mgw-bank-col {
-  flex-basis: 14%;
-}
-.mgw-captain-col {
-  flex-basis: 16%;
-}
-.mgw-bonus-col {
-  flex-basis: 14%;
-}
-.mgw-points-col {
-  flex-basis: 14%;
-}
-
-
-
-.manager-pos-col{
-  flex-basis: 33%;
-  align-items: center;
-  justify-content: center;  
-  display: flex;
-}
-
-.manager-picture-col{
-  flex-basis: 100px;
-  margin-right: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.manager-details-col{
-  flex-grow: 1;
-}
-
-.manager-detail-row-1{
-  height: 100px;
-  padding-left: 32px;
-}
-
-.manager-detail-row-2{
-  height: 168px;
-  padding-left: 32px;
-}
-
-.manager-display-name-col{
-  flex-basis: 30%;
-}
-
-.manager-favourite-team-col{
-  flex-basis: 70%;
-}
-
-.manager-profile-image{
-  width: 100px !important;
-  height: 100px !important;
-  margin-left: 32px;
-  border-radius: 8px;
 }
 

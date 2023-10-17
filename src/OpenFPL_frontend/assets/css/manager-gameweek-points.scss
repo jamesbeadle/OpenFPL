@@ -1,0 +1,116 @@
+
+
+.mgw-number-col{
+    flex-basis: 14%;
+  }
+  .mgw-transfers-col {
+    flex-basis: 14%;
+  }
+  .mgw-team-value-col {
+    flex-basis: 14%;
+  }
+  .mgw-bank-col {
+    flex-basis: 14%;
+  }
+  .mgw-captain-col {
+    flex-basis: 16%;
+  }
+  .mgw-bonus-col {
+    flex-basis: 14%;
+  }
+  .mgw-points-col {
+    flex-basis: 14%;
+  }
+  
+
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+    
+.mgw-number-col{
+    flex-basis: 25%;
+  }
+  .mgw-transfers-col {
+    flex-basis: 0%;
+    display: none;
+  }
+  .mgw-team-value-col {
+    flex-basis: 0%;
+    display: none;
+  }
+  .mgw-bank-col {
+    flex-basis: 0%;
+    display: none;
+  }
+  .mgw-captain-col {
+    flex-basis: 25%;
+  }
+  .mgw-bonus-col {
+    flex-basis: 25%;
+  }
+  .mgw-points-col {
+    flex-basis: 25%;
+  }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 601px) {
+  
+}
+  
+/* Small devices (portrait tablets and large phones, 601px and up) */
+@media only screen and (min-width: 601px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}
+/* added */
+@media only screen and (min-width: 1500px) {
+    
+.mgw-number-col{
+    flex-basis: 14%;
+    display: flex;
+  }
+  .mgw-transfers-col {
+    flex-basis: 14%;
+    display: flex;
+  }
+  .mgw-team-value-col {
+    flex-basis: 14%;
+    display: flex;
+  }
+  .mgw-bank-col {
+    flex-basis: 14%;
+    display: flex;
+  }
+  .mgw-captain-col {
+    flex-basis: 16%;
+    display: flex;
+  }
+  .mgw-bonus-col {
+    flex-basis: 14%;
+    display: flex;
+  }
+  .mgw-points-col {
+    flex-basis: 14%;
+    display: flex;
+  }
+}
+
+/* 4K and large screens */
+@media only screen and (min-width: 1920px) {
+
+}
+  

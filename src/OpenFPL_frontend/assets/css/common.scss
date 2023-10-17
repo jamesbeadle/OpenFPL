@@ -230,6 +230,10 @@
   .card-arrow{
     font-size: 16px;
   }
+    
+    .stat-row-1{
+        min-height: 12px;
+    }
 }
 
 @media only screen and (min-width: 450px) {
@@ -450,6 +454,13 @@
   .card-arrow{
     font-size: 24px;
   }
+
+    
+    .stat-row-1{
+        min-height: 20px;
+        margin-left: 0;
+        margin-right: 0;
+    }
 }
   
 /* 4K and large screens */
