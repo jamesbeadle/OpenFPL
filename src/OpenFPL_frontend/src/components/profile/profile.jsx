@@ -212,20 +212,20 @@ const Profile = () => {
                                 <div className='profile-details-col'>
                                   <div className='profile-detail-row-1'>
                                     <Row className="stat-row-1">
-                                      <div className='profile-display-name-col'>
+                                      <div className='profile-display-name-col px-0'>
                                         <p className="stat-header w-100">Display Name</p>
                                       </div>
-                                      <div className='profile-favourite-team-col'>
+                                      <div className='profile-favourite-team-col px-0'>
                                         <p className="stat-header w-100">Favourite Team</p>
                                       </div>
                                     </Row>
                                     <Row className="stat-row-2 vertical-flex">
-                                      <div className='profile-display-name-col'>  
+                                      <div className='profile-display-name-col px-0'>  
                                         <p className="stat">{viewData.displayName == viewData.principalName ? 'Not Set' : viewData.displayName}</p>
                                       </div>
-                                      <div className='profile-favourite-team-col' style={{ display: 'flex', alignItems: 'center' }}>
+                                      <div className='profile-favourite-team-col px-0' style={{ display: 'flex', alignItems: 'center' }}>
                                         <Form.Group controlId="favouriteTeam">
-                                          <Form.Control className="stat" as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange} disabled={!viewData.canUpdateFavouriteTeam}>
+                                          <Form.Control className="stat-dropdown" as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange} disabled={!viewData.canUpdateFavouriteTeam}>
                                             <option value="">Select Favourite Team</option>
                                               {teams.map((team) => (
                                               <option key={team.id} value={team.id}>
@@ -237,17 +237,17 @@ const Profile = () => {
                                       </div>
                                     </Row>
                                     <Row className="stat-row-2 vertical-flex">
-                                      <div className='profile-display-name-col'>  
+                                      <div className='profile-display-name-col px-0'>  
                                         <Button className="fpl-large-btn" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
                                       </div>
-                                      <div className='profile-favourite-team-col'>
-                                        <Button className="fpl-large-btn" as={Link} to={`/club-leaderboard/${favouriteTeam}`}>View Club Leaderboard</Button>
+                                      <div className='profile-favourite-team-col px-0'>
+                                        <Button className="fpl-large-btn" as={Link} to={`/club-leaderboard/${favouriteTeam}`}>Leaderboard</Button>
                                       </div>
                                     </Row>
                                   </div>
                                   <div className='profile-detail-row-2'>
                                     <p className='w-100'><b>Joined </b>{joinedDate}</p>
-                                    <p className='w-100'><b>Principal ID </b>{viewData.principalName}</p>
+                                    <p className='w-100'><small><b>Principal ID </b>{viewData.principalName}</small></p>
                                   </div>
                                 </div>
                               </div>

@@ -78,9 +78,6 @@
     color: #B1B1B1;
   }
 
-  
-
-
 .profile-details-row{
   height: 300px;
   padding-left: 32px;
@@ -95,11 +92,13 @@
 .profile-detail-row-1{
   height: 168px;
   padding-left: 32px;
+  padding-right: 32px;
 }
 
 .profile-detail-row-2{
   height: 168px;
   padding-left: 32px;
+  padding-right: 32px;
 }
 
 .profile-display-name-col{
@@ -110,9 +109,17 @@
   flex-basis: 50%;
 }
   
+
+.fpl-large-btn{
+  background-color: #2CE3A6 !important;
+  border: none !important;
+  border-radius: 2px !important;
+  color: black !important;
+};
+
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
-  edit-profile-icon {
+  .edit-profile-icon {
     top: 10px !important;
   }
 
@@ -124,15 +131,41 @@
 }
 
 
+.profile-details-row{
+  height: 240px;
+  padding-left: 16px;
+  margin-top: 16px;
+  display:flex;
+}
+
+
 
 .profile-detail-row-1{
-  height: 168px;
+  height: 120px;
   padding-left: 0px;
 }
 
 .profile-detail-row-2{
-  height: 168px;
+  height: 120px;
   padding-left: 0px;
+}
+
+
+.profile-display-name-col{
+  flex-basis: 50%;
+}
+
+.profile-favourite-team-col{
+  flex-basis: 50%;
+}
+
+.fpl-large-btn{
+  font-size: 12px;
+};
+
+.stat-dropdown{
+  font-size: 12px !important;
+  background-color: #454B56 !important;
 }
 
 }
@@ -182,6 +215,24 @@
 .profile-detail-row-2{
   height: 168px;
   padding-left: 32px;
+}
+
+
+.profile-display-name-col{
+  flex-basis: 30%;
+}
+
+.profile-favourite-team-col{
+  flex-basis: 50%;
+}
+
+.fpl-large-btn{
+  font-size: unset;
+};
+
+
+.stat-dropdown{
+  font-size: unset !important;
 }
 
 }
