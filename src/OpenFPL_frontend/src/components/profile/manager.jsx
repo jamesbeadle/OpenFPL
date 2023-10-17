@@ -645,7 +645,7 @@ const Manager = () => {
                         <ArrowRight />
                       </Button>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', marginRight: '90px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
                       <label className='gw-total-points'>Total Points: {fantasyTeam.points}</label>
                     </div>
                   </>}

@@ -178,7 +178,7 @@ const PlayerDetailModal = ({ show, onClose, player, playerGameweek, teams, seaso
             <Modal.Body>
             <div className='player-modal-name-row'>
                     <div className='player-modal-flag-col'>
-                        {getFlag(player.nationality, '90px')}
+                        {getFlag(player.nationality)}
                     </div>
                     <div className='player-modal-name-col'>
                         {(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
