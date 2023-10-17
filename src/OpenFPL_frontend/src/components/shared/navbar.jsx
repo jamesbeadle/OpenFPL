@@ -30,7 +30,16 @@ const MyNavbar = () => {
 
   const handleLogout = async () => {
     setShowDropdown(false);
+    setExpanded(false)
     logout();
+  };
+  
+  const handleDropdownBlur = (e) => {
+    const currentTarget = e.currentTarget;
+    if (!currentTarget.contains(document.activeElement)) {
+      setShowDropdown(false);
+      setExpanded(false)
+    }
   };
 
   useEffect(() => {
@@ -40,7 +49,7 @@ const MyNavbar = () => {
   }, [isAuthenticated]);
 
   return (
-    <Navbar className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
+    <Navbar onBlur={handleDropdownBlur} className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
           <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)} className="d-flex align-items-center" style={{color: "white", fontSize: "small"}}>
             <LogoIcon /> <b className="logo-text">OPENFPL</b>
