@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const LeagueTable = () => {
     const { teams, seasons, fixtures, systemState } = useContext(DataContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason.id);
+    const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
     const [tableData, setTableData] = useState([]);
     const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
@@ -114,6 +114,19 @@ const LeagueTable = () => {
 
     const loadClub = async (clubId) => {
       navigate(`/club/${clubId}`);
+    };
+
+      
+    const handleGameweekChange = (change) => {
+      setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
+    };
+    
+    const handleSeasonChange = async (change) => {
+      const newIndex = seasons.findIndex(season => season.id === currentSeason.id) + change;
+      if (newIndex >= 0 && newIndex < seasons.length) {
+        setCurrentSeason(seasons[newIndex]);
+        setCurrentGameweek(1);
+      }
     };
 
     return (

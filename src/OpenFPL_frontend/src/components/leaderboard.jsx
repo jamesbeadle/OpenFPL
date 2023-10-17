@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Button, Spinner, Container, Row, Col, Dropdown, Pagination } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight } from './icons';
 import { DataContext } from "../contexts/DataContext";
-import { getTeamById } from './helpers';
 import { useNavigate } from 'react-router-dom';
+import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 
 const Leaderboard = () => {
     const { seasons, systemState, weeklyLeaderboard, seasonLeaderboard, monthlyLeaderboards, teams } = useContext(DataContext);
@@ -98,7 +98,7 @@ const Leaderboard = () => {
         }
         else{
             try{
-                const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
+                const leaderboardData = await open_fpl_backend.getWeeklyLeaderboard(Number(season.id), Number(gameweek), itemsPerPage, (currentPage - 1) * itemsPerPage);
                 setManagers(leaderboardData);
             } catch (error){
                 console.log(error);
@@ -214,6 +214,19 @@ const Leaderboard = () => {
 
     const loadManager = (managerId) => {
       navigate(`/manager/${managerId}`);
+    };
+
+      
+    const handleGameweekChange = (change) => {
+      setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
+    };
+    
+    const handleSeasonChange = async (change) => {
+      const newIndex = seasons.findIndex(season => season.id === currentSeason.id) + change;
+      if (newIndex >= 0 && newIndex < seasons.length) {
+        setCurrentSeason(seasons[newIndex]);
+        setCurrentGameweek(1);
+      }
     };
 
     return (
