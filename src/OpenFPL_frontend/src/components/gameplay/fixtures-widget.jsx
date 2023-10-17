@@ -190,7 +190,7 @@ const FixturesWidget = () => {
                         </Dropdown>
                       </div>
                     </div>
-                    <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
                       <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>
                         <ArrowRight />
                       </Button>
