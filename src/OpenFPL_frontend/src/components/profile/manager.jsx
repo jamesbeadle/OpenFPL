@@ -494,9 +494,7 @@ const Manager = () => {
                                                   primary={favoriteTeam.primaryColourHex}
                                                   secondary={favoriteTeam.secondaryColourHex}
                                                   third={favoriteTeam.thirdColourHex}
-                                                  width={40}
-                                                  height={40}
-                                                  marginRight={16}
+                                                  className='badge-icon'
                                                 />
                                                 {favoriteTeam.friendlyName}
                                               </>
@@ -698,9 +696,7 @@ const Manager = () => {
                                 primary={playerTeam.primaryColourHex}
                                 secondary={playerTeam.secondaryColourHex}
                                 third={playerTeam.thirdColourHex}
-                                width={48}
-                                height={48}
-                                marginRight={16}
+                                className='badge-icon'
                               />
                               {playerTeam.friendlyName}
                             </div>

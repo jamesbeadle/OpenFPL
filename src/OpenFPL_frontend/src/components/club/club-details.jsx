@@ -234,8 +234,7 @@ const ClubDetails = ({  }) => {
                                             primary={team.primaryColourHex}
                                             secondary={team.secondaryColourHex}
                                             third={team.thirdColourHex}
-                                            width={40}
-                                            height={40}
+                                            className='badge-icon'
                                         />
                                     </div>
                                     <div className='club-total-players-col'>

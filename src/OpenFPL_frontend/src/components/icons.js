@@ -14,10 +14,10 @@ const LogoIcon = ({ onClick, fill="#FFFFFF" }) => (
   </svg>
 );
 
-const BadgeIcon = ({ onClick, primary='#000000', secondary='#FFFFFF', third='#777777' }) => (
+const BadgeIcon = ({ onClick, primary='#000000', secondary='#FFFFFF', third='#777777', className='badge-icon' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className='badge-icon'
+    className={className}
     fill="currentColor"
     viewBox="0 0 814 814"
     onClick={onClick}

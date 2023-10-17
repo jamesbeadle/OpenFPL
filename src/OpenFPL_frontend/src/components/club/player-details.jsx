@@ -178,9 +178,7 @@ const PlayerDetails = ({  }) => {
                                                 primary={playerTeam.primaryColourHex}
                                                 secondary={playerTeam.secondaryColourHex}
                                                 third={playerTeam.thirdColourHex}
-                                                width={20}
-                                                height={20}
-                                                marginRight={8}
+                                                className='badge-icon'
                                             /> 
                                          {playerTeam.name}</p>
                                     </div>
@@ -407,9 +405,7 @@ const PlayerDetails = ({  }) => {
                                                                                 primary={opponentTeam.primaryColourHex}
                                                                                 secondary={opponentTeam.secondaryColourHex}
                                                                                 third={opponentTeam.thirdColourHex}
-                                                                                width={48}
-                                                                                height={48}
-                                                                                marginRight={16}
+                                                                                className='badge-icon'
                                                                             /> 
                                                                             {opponentTeam.name}
                                                                         </p>

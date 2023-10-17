@@ -268,9 +268,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                           primary={foundTeam.primaryColourHex}
                           secondary={foundTeam.secondaryColourHex}
                           third={foundTeam.thirdColourHex}
-                          width={32}
-                          height={32}
-                          marginRight={16}
+                          className='badge-icon'
                         />
                         {foundTeam.abbreviatedName}
                       </>

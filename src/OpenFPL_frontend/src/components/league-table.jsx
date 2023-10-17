@@ -233,9 +233,7 @@ const LeagueTable = () => {
                                         primary={club.primaryColourHex}
                                         secondary={club.secondaryColourHex}
                                         third={club.thirdColourHex}
-                                        width={48}
-                                        height={48}
-                                        marginRight={16}
+                                        className='badge-icon'
                                         />
                                         {club.friendlyName}
                           </div>

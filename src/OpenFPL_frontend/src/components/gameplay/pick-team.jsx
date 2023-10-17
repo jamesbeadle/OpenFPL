@@ -642,8 +642,7 @@ const PickTeam = () => {
                                 primary={foundTeam.primaryColourHex}
                                 secondary={foundTeam.secondaryColourHex}
                                 third={foundTeam.thirdColourHex}
-                                width={16}
-                                height={16}
+                                className='pick-team-badge-icon'
                               />
                             </span>
                             £{(player.value/4).toFixed(2).toLocaleString()}m</span>
@@ -715,8 +714,7 @@ const PickTeam = () => {
                                   primary={foundTeam.primaryColourHex}
                                   secondary={foundTeam.secondaryColourHex}
                                   third={foundTeam.thirdColourHex}
-                                  width={16}
-                                  height={16}
+                                  className='badge-icon'
                                 />
                               </span>
                               {foundTeam.abbreviatedName}

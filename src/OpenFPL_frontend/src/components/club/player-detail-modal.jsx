@@ -191,9 +191,7 @@ const PlayerDetailModal = ({ show, onClose, player, playerGameweek, teams, seaso
                                     primary={playerTeam.primaryColourHex}
                                     secondary={playerTeam.secondaryColourHex}
                                     third={playerTeam.thirdColourHex}
-                                    width={32}
-                                    height={32}
-                                    marginRight={8}
+                                    className='badge-icon'
                                 /> {playerTeam.friendlyName}
                         </div>
                         <div className='player-modal-season-col'>

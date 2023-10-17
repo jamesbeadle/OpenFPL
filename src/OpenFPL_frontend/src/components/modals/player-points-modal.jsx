@@ -43,9 +43,7 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                                     primary={team.primaryColourHex}
                                     secondary={team.secondaryColourHex}
                                     third={team.thirdColourHex}
-                                    width={32}
-                                    height={32}
-                                    marginRight={8}
+                                    className='badge-icon'
                                 /> {team.friendlyName}
                         </div>
                         <div className='player-modal-season-col'>

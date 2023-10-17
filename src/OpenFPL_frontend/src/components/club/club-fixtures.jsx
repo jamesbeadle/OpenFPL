@@ -173,9 +173,7 @@ const ClubFixtures = ({teamId}) => {
                                     primary={homeTeam.primaryColourHex}
                                     secondary={homeTeam.secondaryColourHex}
                                     third={homeTeam.thirdColourHex}
-                                    width={48}
-                                    height={48}
-                                    marginRight={16}
+                                    className='badge-icon'
                                   />
                                   {homeTeam.friendlyName}
                                 </p>
@@ -189,9 +187,7 @@ const ClubFixtures = ({teamId}) => {
                                     primary={awayTeam.primaryColourHex}
                                     secondary={awayTeam.secondaryColourHex}
                                     third={awayTeam.thirdColourHex}
-                                    width={48}
-                                    height={48}
-                                    marginRight={16}
+                                    className='badge-icon'
                                   />
                                   {awayTeam.friendlyName}
                                 </p>

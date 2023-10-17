@@ -608,9 +608,7 @@ const GameweekPoints = () => {
                                 primary={playerTeam.primaryColourHex}
                                 secondary={playerTeam.secondaryColourHex}
                                 third={playerTeam.thirdColourHex}
-                                width={48}
-                                height={48}
-                                marginRight={16}
+                                className='badge-icon'
                               />
                               {playerTeam.friendlyName}
                             </div>
