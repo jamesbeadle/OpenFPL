@@ -238,8 +238,6 @@
   .right-side-image {
     position: absolute;
     bottom: 0;
-    width: 22px;
-    height: 22px;
   }
   
   .left-side-image {
@@ -260,6 +258,35 @@
     width: 16px;
     height: 16px;
   }
+
+  .captain-icon{
+    width: 23px;
+    height: 22px;
+  }
+
+    
+  .row-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  
+
+.player-details {
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 5px; 
+}
+
+
+
+.player-details-mobile {
+  border-radius: 4px;
+  overflow: hidden;
+  
+}
 
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
@@ -372,13 +399,12 @@
         height: 41.8px;
     }
 
-
-        
     .player-name-row {
-        padding: 8px;
-        height: 12px;
-        width: 146px;
+        height: 16px;
+        width: 60px;
         font-size: 8px;
+        margin-top: 2px;
+        padding: 2px;
     }
     
     .player-info-row {
@@ -398,27 +424,45 @@
     }
     
     .remove-player-button{
-        width: 32px;
-        height: 32px;
-        border-radius: 4px;
+        width: 16px;
+        height: 16px;
+        border-radius: 2px;
+    }
+
+    .remove-player-icon{
+      width: 8px;
+      height: 8px;
     }
     
     .captain-player-button{
         padding: 0px;
     }
     
-    .left-side-image,
-    .right-side-image {
-        width: 16px;
-        height: 16px;
-    }
-    
     .left-side-image {
-        left: -16px;
+        left: -8px;
     }
     
     .right-side-image {
-        right: -16px;
+        right: -8px;
+    }
+    
+
+    .captain-icon{
+      width: 16px;
+      height: 16px;
+    }
+
+    
+  
+    .row-container {
+      padding-left: 1%;
+      padding-right: 1%;
+    }
+
+    .pick-team-badge-icon{
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
     }
 }
 
@@ -557,6 +601,7 @@
     height: 32px;
     width: 146px;
     font-size: 12px;
+    margin-top: unset;
   }
   
   .player-info-row {
@@ -598,6 +643,41 @@
   .right-side-image {
     right: -22px;
   }
+  
+  
+  .left-side-image {
+    left: -22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .right-side-image {
+    right: -22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+
+  .captain-icon{
+    width: 23px;
+    height: 22px;
+  }
+
+  
+  .row-container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .pick-team-badge-icon{
+    width: 16px;
+    height: 16px;
+  }
+
+
+
   }
   
   /* 4K and large screens */

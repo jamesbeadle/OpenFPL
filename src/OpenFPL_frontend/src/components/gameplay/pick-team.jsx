@@ -119,9 +119,9 @@ const PickTeam = () => {
   
     setRowPositions({
       gk: `${0.05 * panelHeight}px`,
-      df: `${0.25 * panelHeight}px`,
-      mf: `${0.5 * panelHeight}px`,
-      fw: `${0.75 * panelHeight}px`,
+      df: `${0.28 * panelHeight}px`,
+      mf: `${0.53 * panelHeight}px`,
+      fw: `${0.78 * panelHeight}px`,
     });
   };
 
@@ -616,9 +616,9 @@ const PickTeam = () => {
                             
                           <button className="captain-player-button right-side-image p-0" onMouseDown={() => { handleCaptainSelection(player.id); }}>
                             {player.id === fantasyTeam.captainId ? (
-                              <CaptainIconActive width={23} height={22} />
+                              <CaptainIconActive />
                             ) : (
-                              <CaptainIcon width={23} height={22} />
+                              <CaptainIcon />
                             )}
                           </button>
                         </div>
@@ -646,6 +646,20 @@ const PickTeam = () => {
                               />
                             </span>
                             £{(player.value/4).toFixed(2).toLocaleString()}m</span>
+                          </div>
+                        </div>
+                        <div className="player-details-mobile d-block d-lg-none">
+                          <div className="player-name-row">
+                            {
+                              <>
+                              <BadgeIcon 
+                              primary={foundTeam.primaryColourHex}
+                              secondary={foundTeam.secondaryColourHex}
+                              third={foundTeam.thirdColourHex}
+                              className='pick-team-badge-icon'
+                            />
+                              {(player.lastName.length > 8 ? player.lastName.substring(0, 6) + ".." : player.lastName)}</>
+                            }
                           </div>
                         </div>
                       </>
