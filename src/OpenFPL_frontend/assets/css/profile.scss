@@ -1,0 +1,137 @@
+.edit-profile-icon {
+    position: absolute;
+    top: 10px !important;
+    right: 0px !important;
+    z-index: 1;
+}
+
+.profile-picture-col{
+    position: relative;
+}
+
+.profile-detail-image{
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    margin-left: 80px;
+    margin-top: 32px;
+}
+
+
+
+.coins-row{
+    height: 104px;
+    padding-left: 32px;
+    padding-right: 32px;
+    display:flex;
+  }
+  
+  .coin-icon{
+    width: 56px;
+    height: 56px;
+    margin-left: 24px;
+    margin-right: 24px;
+    display: 'flex';
+  }
+  
+  .coin-icon-col{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+  }
+  
+  .coin-name-col{
+    align-items: center;
+    display: flex;
+  }
+  
+  .coin-col{
+    display: flex;
+    border-radius: 8px;
+    border: 1px solid #454B56;
+    height: 104px;
+  }
+  
+  .coin-col > :first-child {
+    margin-left: 0;
+  }
+  .coin-col > :last-child {
+    margin-right: 0;
+  }
+  
+  .coins-row{
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+  
+  .coin-name{
+    font-weight: 700;
+    font-size: 24px;
+  }
+  
+  .coin-balance{
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .coin-balance-suffix{
+    color: #B1B1B1;
+  }
+  
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+    .edit-profile-icon{
+        top: -20px;
+        right: -20px;
+    }
+    
+    .profile-detail-image{
+        width: 200px;
+        height: auto;
+        border-radius: 8px;
+      }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 601px) {
+  
+}
+  
+/* Small devices (portrait tablets and large phones, 601px and up) */
+@media only screen and (min-width: 601px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}
+/* added */
+@media only screen and (min-width: 1500px) {
+    .edit-profile-icon{
+        top: -20px;
+        right: -20px;
+    }
+
+    .profile-detail-image{
+        width: 300px;
+        height: 300px;
+        border-radius: 8px;
+    }
+}
+
+/* 4K and large screens */
+@media only screen and (min-width: 1920px) {
+
+}
+

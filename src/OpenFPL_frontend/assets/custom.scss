@@ -7,6 +7,7 @@
 @import './css/gameweek-points.scss';
 @import './css/pick-team.scss';
 @import './css/fixtures-widget.scss';
+@import './css/profile.scss';
 
 //Navbar
 
@@ -399,11 +400,6 @@
   display:flex;
 }
 
-.profile-picture-col{
-  flex-basis: 300px;
-  margin-right: 80px;
-}
-
 .profile-details-col{
   flex-grow: 1;
 }
@@ -424,72 +420,6 @@
 
 .profile-favourite-team-col{
   flex-basis: 50%;
-}
-
-.coins-row{
-  height: 104px;
-  padding-left: 32px;
-  display:flex;
-}
-
-.profile-detail-image{
-  width: 300px;
-  height: 300px;
-  border-radius: 8px;
-}
-
-.coin-icon{
-  width: 56px;
-  height: 56px;
-  margin-left: 24px;
-  margin-right: 24px;
-  display: 'flex';
-}
-
-.coin-icon-col{
-  display: flex;
-  align-items: center;
-  justify-content: left;
-}
-
-.coin-name-col{
-  align-items: center;
-  display: flex;
-}
-
-.coin-col{
-  display: flex;
-  border-radius: 8px;
-  border: 1px solid #454B56;
-  margin-right: 40px;
-  width: 265.3px;
-  height: 104px;
-}
-
-.coin-col > :first-child {
-  margin-left: 0;
-}
-.coin-col > :last-child {
-  margin-right: 0;
-}
-
-.coins-row{
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.coin-name{
-  font-weight: 700;
-  font-size: 24px;
-}
-
-.coin-balance{
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.coin-balance-suffix{
-  color: #B1B1B1;
 }
 
 .table-header-row {

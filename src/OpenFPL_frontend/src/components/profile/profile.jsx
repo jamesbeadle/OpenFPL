@@ -197,16 +197,18 @@ const Profile = () => {
                       <Tab eventKey="details" title="Details">
                         <div className="dark-tab-row w-100 mx-0">
                           <Row>
-                            <Col xs={12}>
-                              <div className='profile-details-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                <div className='profile-picture-col'>
-                                  <div className="position-relative d-inline-block">
-                                    <Image src={profilePicSrc} className="w-100 profile-detail-image" />
-                                    <div className="position-absolute" style={{ top: "-20px", right: "-20px" }}>
-                                      <EditIcon onClick={() => setShowUpdateProfilePictureModal(true)} />
-                                    </div>
-                                  </div>
+                            <Col xs={12} md={'auto'}>
+                              <div className='profile-picture-col'>
+                                <div className="vertical-flex">
+                                  <Image src={profilePicSrc} className="w-100 profile-detail-image" />
+                                  <div className="edit-profile-icon position-absolute top-0 right-0">
+                                    <EditIcon onClick={() => setShowUpdateProfilePictureModal(true)} />
                                 </div>
+                                </div>
+                              </div>
+                            </Col>
+                            <Col xs={12} md={6}>
+                              <div className='profile-details-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                 <div className='profile-details-col'>
                                   <div className='profile-detail-row-1'>
                                     <Row className="stat-row-1">
@@ -249,83 +251,91 @@ const Profile = () => {
                                   </div>
                                 </div>
                               </div>
-                              <div className='coins-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                                  <div className='coin-col-1 coin-col'>
-                                    <div className='coin-icon-col'>
-                                      <img src={ICPCoin} alt="sponsor1" className='coin-icon'/>
-                                    </div>
-                                    <div className='coin-name-col'>
-                                      <Container>
-                                        <Row>
-                                          <Col>
-                                              <div className='coin-name'>ICP</div>
-                                          </Col>
-                                        </Row>
-                                        <Row>
-                                          <Col>
-                                              <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ICP</span></div>
-                                          </Col>
-                                        </Row>
-                                      </Container>
-                                    </div>
-                                  </div>
-                                  <div className='coin-col-2 coin-col'>
-                                    <div className='coin-icon-col'>
-                                      <img src={FPLCoin} alt="sponsor1" className='coin-icon' />
-                                    </div>
-                                    <div className='coin-name-col'>
-                                      <Container>
-                                        <Row>
-                                          <Col>
-                                              <div className='coin-name'>FPL</div>
-                                          </Col>
-                                        </Row>
-                                        <Row>
-                                          <Col>
-                                              <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>FPL</span></div>
-                                          </Col>
-                                        </Row>
-                                      </Container>
-                                    </div>
-                                  </div>
-                                  <div className='coin-col-3 coin-col'>
-                                    <div className='coin-icon-col'>
-                                      <img src={ckBTCCoin} alt="sponsor1" className='coin-icon' />
-                                    </div>
-                                    <div className='coin-name-col'>
-                                      <Container>
-                                        <Row>
-                                          <Col>
-                                              <div className='coin-name'>ckBTC</div>
-                                          </Col>
-                                        </Row>
-                                        <Row>
-                                          <Col>
-                                              <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ckBTC</span></div>
-                                          </Col>
-                                        </Row>
-                                      </Container>
-                                    </div>
-                                  </div>
-                                  <div className='coin-col-4 coin-col'>
-                                    <div className='coin-icon-col'>
-                                      <img src={ckETHCoin} alt="sponsor1" className='coin-icon' />
-                                    </div>
-                                    <div className='coin-name-col'>
-                                      <Container>
-                                        <Row>
-                                          <Col>
-                                              <div className='coin-name'>ckETH</div>
-                                          </Col>
-                                        </Row>
-                                        <Row>
-                                          <Col>
-                                              <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ETH</span></div>
-                                          </Col>
-                                        </Row>
-                                      </Container>
-                                    </div>
-                                  </div>
+                            </Col>
+                          </Row>
+                          <Row className='coins-row' >
+                            <Col xs={12} md={3}>
+                              <div className='coin-col-1 coin-col'>
+                                <div className='coin-icon-col'>
+                                  <img src={ICPCoin} alt="sponsor1" className='coin-icon'/>
+                                </div>
+                                <div className='coin-name-col'>
+                                  <Container>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-name'>ICP</div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ICP</span></div>
+                                      </Col>
+                                    </Row>
+                                  </Container>
+                                </div>
+                              </div>
+                            </Col>
+                            <Col xs={12} md={3}>
+                            <div className='coin-col-2 coin-col'>
+                                <div className='coin-icon-col'>
+                                  <img src={FPLCoin} alt="sponsor1" className='coin-icon' />
+                                </div>
+                                <div className='coin-name-col'>
+                                  <Container>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-name'>FPL</div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>FPL</span></div>
+                                      </Col>
+                                    </Row>
+                                  </Container>
+                                </div>
+                              </div>
+                            </Col>
+                            <Col xs={12} md={3}>
+                              <div className='coin-col-3 coin-col'>
+                                <div className='coin-icon-col'>
+                                  <img src={ckBTCCoin} alt="sponsor1" className='coin-icon' />
+                                </div>
+                                <div className='coin-name-col'>
+                                  <Container>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-name'>ckBTC</div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ckBTC</span></div>
+                                      </Col>
+                                    </Row>
+                                  </Container>
+                                </div>
+                              </div>
+                            </Col>
+                            <Col xs={12} md={3}>
+                              <div className='coin-col-4 coin-col'>
+                                <div className='coin-icon-col'>
+                                  <img src={ckETHCoin} alt="sponsor1" className='coin-icon' />
+                                </div>
+                                <div className='coin-name-col'>
+                                  <Container>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-name'>ckETH</div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ETH</span></div>
+                                      </Col>
+                                    </Row>
+                                  </Container>
+                                </div>
                               </div>
                             </Col>
                           </Row>
