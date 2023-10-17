@@ -57,6 +57,14 @@
     align-items: center;
 }
 
+
+.table-header-row {
+    height: 46px;
+    padding-left: 32px;
+    border-top: 1px solid #454B56;
+    border-bottom: 1px solid #454B56;
+  }
+
 .table-row {
   display: flex;
   align-items: center;
@@ -177,6 +185,12 @@
       padding-left: 16px;
     }
 
+        
+    .table-header-row {
+        height: 40px;
+        padding-left: 16px;
+    }
+
     .arrow-left-icon{
         width: 8px;
         height: 8px;
@@ -261,6 +275,10 @@
       height: 50px;
       padding-left: 16px;
     }
+    .table-header-row {
+        height: 50px;
+        padding-left: 16px;
+    }
 }
   
 /* Medium devices (landscape tablets, 768px and up) */
@@ -295,6 +313,10 @@
       height: 60px;
       padding-left: 16px;
     }
+    .table-header-row {
+        height: 60px;
+        padding-left: 16px;
+    }
 }
   
 /* Large devices (laptops/desktops, 992px and up) */
@@ -326,6 +348,10 @@
     }
     
     .table-row {
+        height: 80px;
+        padding-left: 32px;
+    }
+    .table-header-row {
         height: 80px;
         padding-left: 32px;
     }
