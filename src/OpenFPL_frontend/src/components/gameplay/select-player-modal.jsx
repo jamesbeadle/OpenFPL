@@ -36,6 +36,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
       return;
     }
     const filteredPlayers = players
+    .filter(player => player.teamId > 0)
     .filter(player => filterTeamId === "" || player.teamId === Number(filterTeamId))
     .filter(player => filterPosition === "" || player.position === Number(filterPosition))
     .filter(player => minValue === "" || player.value >= (Number(minValue) * 4))
@@ -254,10 +255,10 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                 </p>
               </div>
               <div className="modal-table-header modal-player-col">
-                <p className='small-text w-100 m-0'><b>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</b></p>
+                <p className='w-100 m-0 dot-truncate'><b>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</b></p>
               </div>
               <div className="modal-table-header modal-team-col">
-                <p className='small-text w-100 m-0'>
+                <p className='w-100 m-0'>
                   {(() => {
                     const foundTeam = teams.find(team => team.id === player.teamId);
                     return (
@@ -266,7 +267,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                           primary={foundTeam.primaryColourHex}
                           secondary={foundTeam.secondaryColourHex}
                           third={foundTeam.thirdColourHex}
-                          className='badge-icon'
+                          className='select-player-badge-icon'
                         />
                         {foundTeam.abbreviatedName}
                       </>

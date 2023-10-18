@@ -241,6 +241,20 @@
   font-weight: 400;
 }
 
+.select-player-modal-row {
+  display: flex;
+  flex-wrap: nowrap; /* This ensures the children stay in a single line */
+  align-items: center; /* Optional: To vertically align items in the middle */
+}
+
+.dot-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%; /* Explicitly set width */
+}
+
+
 .modal-table-row{
   border-color: rgba(69, 75, 86, 0.8);
   border-style: solid;
@@ -252,10 +266,17 @@
 .modal-position-col{
   flex-basis: 15%;
 }
-
-.modal-player-col{
+.modal-player-col {
   flex-basis: 25%;
+  flex-grow: 0; /* This ensures that the container doesn't grow beyond its flex-basis */
+  flex-shrink: 1; /* This allows the container to shrink if necessary */
+  overflow: hidden; /* This ensures content does not spill outside */
 }
+.modal-button-col {
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+
 
 .modal-team-col,
 .modal-value-col {

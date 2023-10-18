@@ -116,6 +116,8 @@ body {
     background-color: #400042 !important;  /* Change this to the color you want */
     color: whitesmoke !important;
   }
+  
+  
   .text-truncate {
     overflow: hidden;
     text-overflow: ellipsis;
