@@ -349,7 +349,6 @@ const flags = {
   };
 
 const getFlag = (countryName, className='player-modal-flag') => {
-  console.log(className)
   const code = countryNameToCode[countryName];
   if (flags[code]) {
     return React.cloneElement(flags[code], { className });

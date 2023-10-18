@@ -177,7 +177,6 @@ const ClubDetails = ({  }) => {
 
       const getClubInfo = (teamId) => {
         const club = tableData.find(team => team.teamId == teamId);
-        console.log(club)
         const position = tableData.indexOf(club) + 1;
         const points = club?.points || 0;
         

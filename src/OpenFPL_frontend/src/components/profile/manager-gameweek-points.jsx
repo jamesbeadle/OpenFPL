@@ -102,8 +102,6 @@ const ManagerGameweekPoints = ({ gameweeks, setCurrentGameweek }) => {
                         const captain = getPlayerById(players, gameweek.captainId);
                         const teamPlayers = Object.values(gameweek.playerIds).map(id => players.filter(player => player.teamId > 0).find(player => player.id === id))
                         .filter(Boolean); 
-                        console.log("teamPlayers")
-                        console.log(teamPlayers)
                     return (
                         <Row key={`gw-${gameweek.gameweek}`} onClick={() => handleShowGameweek(gameweek.gameweek)} style={{ overflowX: 'auto' }}>
                             <Col xs={12}>

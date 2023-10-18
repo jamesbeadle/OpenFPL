@@ -64,7 +64,6 @@ const Manager = () => {
         try {
             const data = await open_fpl_backend.getManager(managerId, currentSeason.id, currentGameweek);
             setViewData(data);
-            console.log(data);
             loadFantasyTeam(data);
             setProfileData(data);
         } catch (error){
@@ -92,7 +91,6 @@ const Manager = () => {
       }
       else
       {
-        console.log("HERE")
           const detailedPlayersRaw = await player_canister.getPlayersDetailsForGameweek(activeGameweek.playerIds, currentSeason.id, currentGameweek);    
           const detailedPlayers = detailedPlayersRaw.map(player => extractPlayerData(player));
           setFantasyTeam({
@@ -123,8 +121,6 @@ const Manager = () => {
 
     
     useEffect(() => {
-      console.log("fantasyTeam.players")
-      console.log(fantasyTeam.players)
       if (fantasyTeam && fantasyTeam.players) {
         
           const playersWithUpdatedScores = fantasyTeam.players.map(player => {
@@ -149,8 +145,7 @@ const Manager = () => {
     }, [fantasyTeam]);
     
     const handleGameweekChange = (change) => {
-      console.log(change)
-      setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
+       setCurrentGameweek(prev => Math.min(38, Math.max(1, prev + change)));
     };
     
     const handleSeasonChange = async (change) => {

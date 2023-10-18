@@ -91,7 +91,6 @@ export const getPositionText = (position) => {
 };
 
 export const getAvailableFormations = (playerCounts) => {
-    console.log(playerCounts)
     const formations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
     const available = [];
     const totalPlayers = Object.values(playerCounts).reduce((a, b) => a + (b || 0), 0);

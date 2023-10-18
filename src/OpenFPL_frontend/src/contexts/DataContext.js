@@ -289,7 +289,6 @@ export const DataProvider = ({ children }) => {
         const cachedHash = localStorage.getItem('monthly_leaderboard_hash');
         const cachedData = localStorage.getItem('monthly_leaderboard_data');
         const parsedData = JSON.parse(cachedData || '[]');
-        console.log(parsedData)
              
         if (!hashObj || hashObj.hash !== cachedHash || Object.keys(parsedData).length === 0) {
             fetchMonthlyLeaderboards(hashObj);

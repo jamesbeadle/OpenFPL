@@ -77,7 +77,6 @@ const Leaderboard = () => {
                 await getWeeklyLeaderboard(season, gameweek);
                 break;
             case 'Monthly':
-                console.log("here")
                 await getMonthlyLeaderboard(season, month, club);
                 break;
             case 'Season':
@@ -107,7 +106,6 @@ const Leaderboard = () => {
     };  
 
     const getMonthlyLeaderboard = async (season, month, club) => {
-      console.log(monthlyLeaderboards)
       if(Number(monthlyLeaderboards[0].totalEntries) === 0){
         setManagers(null);    
         return;
@@ -132,7 +130,6 @@ const Leaderboard = () => {
     };
 
     const getSeasonLeaderboard = async (season) => {
-      console.log(season)
         if(currentPage <= 4 && season.id == systemState.activeSeason.id){
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;

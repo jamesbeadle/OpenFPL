@@ -94,7 +94,6 @@ const PlayerDetails = ({  }) => {
     }, []);
 
     useEffect(() => {
-        console.log(selectedSeason)
     }, [selectedSeason]);
 
 

@@ -529,8 +529,6 @@ const PickTeam = () => {
             !updatedFantasyTeam.players[`${position}-${index}`] &&
             !Object.values(updatedFantasyTeam.players).some(p => p.id === player.id)
         ));
-        
-        console.log(availablePlayers)
   
         availablePlayers.sort((a, b) => Number(a.value) - Number(b.value));
         const lowerHalf = availablePlayers.slice(0, Math.ceil(availablePlayers.length / 2));
@@ -548,18 +546,15 @@ const PickTeam = () => {
       }
       
     });
-    console.log("remainingBudget")
-    console.log(remainingBudget)
+    
     if (remainingBudget >= 0 && playerAdded) {
         updatedFantasyTeam.bankBalance = remainingBudget;
-        console.log("setting fantasy team 1")
         setFantasyTeam(updatedFantasyTeam);
     }
   }
 
   //Move to utilities with homepage countdown  
   const updateCountdowns = async () => {
-    console.log("sortedFixtures")
     const sortedFixtures = fixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
     
     const currentTime = BigInt(Date.now() * 1000000);
