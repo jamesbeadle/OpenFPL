@@ -18,9 +18,11 @@ import BraceBonus from "../../assets/brace-bonus.png";
 import HatTrickHero from "../../assets/hat-trick-hero.png";
 import PlayerPointsModal from './modals/player-points-modal';
 import getFlag from './country-flag';
+import { useNavigate } from 'react-router-dom';
 
 const GameweekPoints = () => {
     const { authClient, userPrincipal } = useContext(AuthContext);
+    const navigate = useNavigate();
     const { seasons, fixtures, systemState, playerEvents, teams, players } = useContext(DataContext);
     
     const [isLoading, setIsLoading] = useState(true);
@@ -604,7 +606,7 @@ const GameweekPoints = () => {
                         <div className="table-row clickable-table-row">
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
                             <div className="gw-points-name-col gw-table-col">{getFlag(player.nationality, 'gameweek-points-flag')}{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
-                            <div className="gw-points-club-col gw-table-col vertical-flex">
+                            <div className="gw-points-club-col gw-table-col vertical-flex" onClick={() => navigate(`/club/${player.teamId}`)}>
                             <BadgeIcon
                                 primary={playerTeam.primaryColourHex}
                                 secondary={playerTeam.secondaryColourHex}
