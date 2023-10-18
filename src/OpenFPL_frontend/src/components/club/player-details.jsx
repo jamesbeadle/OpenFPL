@@ -396,7 +396,7 @@ const PlayerDetails = ({  }) => {
                                                                     <div className='table-row'>
                                                                         <div className="gw-history-gw-col gw-table-col">{gw.number}</div>
                                                                         <div className="gw-history-opponent-col gw-table-col">{
-                                                                        <p>
+                                                                        <p className='m-0'>
                                                                             <BadgeIcon
                                                                                 primary={opponentTeam.primaryColourHex}
                                                                                 secondary={opponentTeam.secondaryColourHex}
@@ -407,7 +407,12 @@ const PlayerDetails = ({  }) => {
                                                                         </p>
                                                                     }</div>
                                                                         <div className="gw-history-points-col gw-table-col">{gw.points}</div>
-                                                                        <div className="gw-history-details-col gw-table-col"><Button className='w-100 h-100 view-details-button' onClick={() => handleShowModal(player, gw)}><ViewIcon marginRight={'8px'} />View Details</Button></div>
+                                                                        <div className="gw-history-details-col gw-table-col">
+                                                                            <Button className='w-100 h-100 view-details-button' onClick={() => handleShowModal(player, gw)}>
+                                                                            <ViewIcon className='view-details-icon' />
+                                                                                View Details
+                                                                            </Button>
+                                                                        </div>
                                                                     </div>
                                                                 </Col>
                                                             </Row>
