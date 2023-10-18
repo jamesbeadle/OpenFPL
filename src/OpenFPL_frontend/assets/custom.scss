@@ -77,10 +77,11 @@
 }
 
 .card{
-    background-color: rgba(36, 37, 41, 0.9);
+    background-color: rgba(46, 50, 58, 0.9);
     color: white !important;
     border-radius: 8px !important;
     border: 1px solid #2E323A !important;
+    overflow: hidden;
 }
 
 .d-flex.text-center.align-items-center.h-100 {
@@ -114,10 +115,6 @@
 }
 
 
-
-.light-background{
-  background-color: #2E323A !important; 
-}
 
 .dark-tab-row{
   background-color: #242529 !important; 
