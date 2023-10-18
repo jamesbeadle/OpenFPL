@@ -5,10 +5,7 @@ import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
 import UpdateNameModal from './update-name-modal';
-import WithdrawICPModal from './withdraw-icp-modal';
-import WithdrawFPLModal from './withdraw-fpl-modal';
 import UpdateProfilePictureModal from './update-profile-picture-modal';
-import UpgradeMembershipModal from './upgrade-membership-modal';
 import { EditIcon } from '../icons';
 import ProfileImage from '../../../assets/profile_placeholder.png';
 import ICPCoin from '../../../assets/ICPCoin.png';
@@ -25,14 +22,9 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showUpdateNameModal, setShowUpdateNameModal] = useState(false);
   const [showUpdateProfilePictureModal, setShowUpdateProfilePictureModal] = useState(false);
-  const [showWithdrawICPModal, setShowWithdrawICPModal] = useState(false);
-  const [showWithdrawFPLModal, setShowWithdrawFPLModal] = useState(false);
   const [favouriteTeam, setFavouriteTeam] = useState(null);
   const [loadingAccountBalance, setLoadingAccountBalance] = useState(true);
   const [balanceData, setBalanceData] = useState(null);
-
-  const [showUpgradeAccountModal, setShowUpgradeAccountModal] = useState(false);
-  const [showGetMoreLeaguesModal, setShowGetMoreLeaguesModal] = useState(false);
 
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
   const [joinedDate, setJoinedDate] = useState('');
@@ -114,28 +106,6 @@ const Profile = () => {
     setIsLoading(false);
   };
 
-  const hideWithdrawICPModal = async (changed) => {
-    if(!changed){
-      setShowWithdrawICPModal(false); 
-      return;
-    }
-    setIsLoading(true);
-    setShowWithdrawICPModal(false); 
-    await fetchViewData();
-    setIsLoading(false);
-  };
-
-  const hideWithdrawFPLModal = async (changed) => {
-    if(!changed){
-      setShowWithdrawFPLModal(false); 
-      return;
-    }
-    setIsLoading(true);
-    setShowWithdrawFPLModal(false); 
-    await fetchViewData();
-    setIsLoading(false);
-  };
-
   const hideProfilePictureModal = async (changed) => {
     if(!changed){
       setShowUpdateProfilePictureModal(false); 
@@ -143,17 +113,6 @@ const Profile = () => {
     }
     setIsLoading(true);
     setShowUpdateProfilePictureModal(false); 
-    await fetchViewData();
-    setIsLoading(false);
-  };
-
-  const hideUpgradeAccountModal = async (changed) => {
-    if(!changed){
-      setShowUpgradeAccountModal(false); 
-      return;
-    }
-    setIsLoading(true);
-    setShowUpgradeAccountModal(false); 
     await fetchViewData();
     setIsLoading(false);
   };
@@ -349,24 +308,6 @@ const Profile = () => {
                             show={showUpdateProfilePictureModal}
                             onHide={hideProfilePictureModal}
                           />
-                          <UpgradeMembershipModal
-                            show={showUpgradeAccountModal}
-                            onHide={hideUpgradeAccountModal}
-                          />
-                          {!loadingAccountBalance && (
-                              <WithdrawICPModal
-                                show={showWithdrawICPModal}
-                                onHide={hideWithdrawICPModal}
-                                balance={balanceData.icpBalance}
-                              />
-                          )}
-                          {!loadingAccountBalance && (
-                            <WithdrawFPLModal
-                              show={showWithdrawFPLModal}
-                              onHide={hideWithdrawFPLModal}
-                              balance={balanceData.fplBalance}
-                            />
-                          )}
                         </div>
                       </Tab>
                       <Tab eventKey="gameweeks" title="Gameweeks">

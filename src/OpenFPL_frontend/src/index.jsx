@@ -17,12 +17,9 @@ import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
 import Homepage from "./components/homepage";
 import AddFixtureData from "./components/governanace/pre-sns-fixture-validation/add-fixture-data";
-import WeeklyLeaderboard from "./components/leaderboards/weekly-leaderboard";
-import Leaderboard from "./components/leaderboards/season-leaderboard";
 import LeagueTable from "./components/league-table";
 import ClubDetails from "./components/club/club-details";
 import PlayerDetails from "./components/club/player-details";
-import ClubLeaderboard from "./components/leaderboards/club-leaderboard";
 import FixtureValidationList from "./components/governanace/pre-sns-fixture-validation/fixture-validation-list";
 import PreSNSAddFixtureData from "./components/governanace/pre-sns-fixture-validation/add-fixture-data";
 import Manager from "./components/profile/manager";
@@ -45,14 +42,11 @@ const App = () => {
                     <Route path="/fixture-validation-list" element={<FixtureValidationList /*Remove this post sns*/ /> }/>
                     <Route path="/old-add-fixture-data" element={<PreSNSAddFixtureData /> /*Remove this post sns*/ }/>
                     <Route path="/add-fixture-data" element={<AddFixtureData /> }/>
-                    <Route path="/weekly-leaderboard" element={<WeeklyLeaderboard />} />
-                    <Route path="/leaderboard" element={<Leaderboard />} />
                     <Route path="/manager/:managerId" element={<Manager />} />
                     <Route path="/pick-team" element={ <PickTeam   /> } />
                     <Route path="/league-table" element={ <LeagueTable   /> } />
                     <Route path="/club/:teamId" element={ <ClubDetails   /> } />
                     <Route path="/player/:playerId" element={ <PlayerDetails   /> } />
-                    <Route path="/club-leaderboard/:teamId" element={ <ClubLeaderboard   /> } />
                   </Routes>
                 <MyFooter />
               </div>
