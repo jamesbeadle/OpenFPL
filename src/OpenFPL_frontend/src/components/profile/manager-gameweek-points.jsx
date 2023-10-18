@@ -20,7 +20,7 @@ const ManagerGameweekPoints = ({ gameweeks, setCurrentGameweek }) => {
 
     return (
         
-        <div className="dark-tab-row w-100 mx-0">
+        <div className="dark-tab-row w-100 mx-0 mb-4">
                 <Row>
 
                 <Container>
@@ -41,7 +41,7 @@ const ManagerGameweekPoints = ({ gameweeks, setCurrentGameweek }) => {
                         </Col>  
                     </Row>
 
-
+                {gameweeks.length == 0 && <p className='px-4 mt-4'>No Gameweeks</p>}
                     
                 {gameweeks.map(gameweek => {
                         const captain = getPlayerById(players, gameweek.captainId);

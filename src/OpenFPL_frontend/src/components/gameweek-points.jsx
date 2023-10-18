@@ -555,7 +555,7 @@ const GameweekPoints = () => {
                     </Col>  
                 </Row>
 
-
+              {sortedPlayers.length == 0 && <p className='px-4 mt-4'>No Gameweek Points</p>}
                 
               {sortedPlayers.map(playerDTO => {
                 const player = players.find(p => p.id === playerDTO.id);
