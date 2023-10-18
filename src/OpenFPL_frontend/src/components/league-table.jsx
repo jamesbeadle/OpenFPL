@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Button, Spinner, Container, Row, Col, Dropdown } from 'react-bootstrap';
 import { BadgeIcon, ArrowLeft, ArrowRight } from './icons';
 import { DataContext } from "../contexts/DataContext";
-import { getTeamById } from './helpers';
+import { getTeamById, CustomToggle } from './helpers';
 import { useNavigate } from 'react-router-dom';
 
 const LeagueTable = () => {
@@ -267,18 +267,5 @@ const LeagueTable = () => {
         </div>
     );
 };
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default LeagueTable;

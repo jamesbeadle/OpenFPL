@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { DataContext } from "../../contexts/DataContext";
 import { getTeamById, computeTimeLeft } from '../helpers';
-import { getAgeFromDOB } from '../helpers';
+import { getAgeFromDOB, CustomToggle } from '../helpers';
 import getFlag from '../country-flag';
 import ClubFixtures from './club-fixtures';
 
@@ -489,18 +489,5 @@ const ClubDetails = ({  }) => {
         </Container>
     );
 };
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default ClubDetails;

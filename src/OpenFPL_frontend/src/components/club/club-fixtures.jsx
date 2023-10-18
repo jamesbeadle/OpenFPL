@@ -3,7 +3,7 @@ import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap'
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
 import { useNavigate } from 'react-router-dom';
 import { DataContext } from "../../contexts/DataContext";
-import { getTeamById, computeTimeLeft, nanoSecondsToMillis } from '../helpers';
+import { getTeamById, computeTimeLeft, nanoSecondsToMillis, CustomToggle } from '../helpers';
 
 const ClubFixtures = ({teamId}) => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);
@@ -217,18 +217,5 @@ const ClubFixtures = ({teamId}) => {
       </>
   );
 };
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default ClubFixtures;

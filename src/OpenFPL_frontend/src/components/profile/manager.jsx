@@ -6,7 +6,7 @@ import { DataContext } from "../../contexts/DataContext";
 import ProfileImage from '../../../assets/profile_placeholder.png';
 import { useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, BadgeIcon } from '../icons';
-import { getTeamById } from '../helpers';
+import { getTeamById, CustomToggle } from '../helpers';
 import ManagerGameweekPoints from './manager-gameweek-points';
 import PlayerPointsModal from '../modals/player-points-modal';
 
@@ -826,18 +826,5 @@ const Manager = () => {
       )
     );
 };
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default Manager;

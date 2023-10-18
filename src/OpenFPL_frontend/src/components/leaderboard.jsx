@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Spinner, Container, Row, Col, Dropdown, Pagination } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight } from './icons';
-import { monthNames } from './helpers';
+import { monthNames, CustomToggle } from './helpers';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { DataContext } from "../contexts/DataContext";
 
@@ -505,18 +505,5 @@ const Leaderboard = () => {
         </div>
     );
 };
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default Leaderboard;

@@ -175,3 +175,10 @@ export const getAvailableFormations = (playerCounts) => {
   }
 
   export const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  
+  export const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    <a href="" ref={ref} onClick={(e) => { e.preventDefault(); onClick(e); }}>
+      {children}
+    </a>
+  ));

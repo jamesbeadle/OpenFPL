@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { DataContext } from "../../contexts/DataContext";
-import { getTeamById, computeTimeLeft, getAgeFromDOB, formatDOB } from '../helpers';
+import { getTeamById, computeTimeLeft, getAgeFromDOB, formatDOB, CustomToggle } from '../helpers';
 import getFlag from '../country-flag';
 import PlayerDetailModal from './player-detail-modal';
 
@@ -429,18 +429,5 @@ const PlayerDetails = ({  }) => {
         </Container>
     );
 };
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default PlayerDetails;

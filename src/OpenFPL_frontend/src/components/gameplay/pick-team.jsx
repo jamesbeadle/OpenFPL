@@ -5,7 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
 import { fetchFantasyTeam, saveFantasyTeam } from "../../AuthFunctions";
 import getFlag from '../country-flag';
-import { getTeamById, getPlayerById, getPositionText, getAvailableFormations, computeTimeLeft, calculateTeamValue } from '../helpers';
+import { getTeamById, getPlayerById, getPositionText, getAvailableFormations, computeTimeLeft, calculateTeamValue, CustomToggle } from '../helpers';
 import FixturesWidget from './fixtures-widget';
 import SelectPlayerModal from './select-player-modal';
 import SelectBonusPlayerModal from './select-bonus-player-modal';
@@ -1116,19 +1116,5 @@ const PickTeam = () => {
       )
   );
 };
-
-//Refactor into own view and remove from fixtures widget and fixtures
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default PickTeam;

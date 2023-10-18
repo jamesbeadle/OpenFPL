@@ -7,6 +7,7 @@ import Nav from 'react-bootstrap/Nav';
 import Image from 'react-bootstrap/Image';
 import { Link, useNavigate } from "react-router-dom";
 import { LogoIcon, WalletIcon } from '../icons';
+import { CustomToggle } from '../helpers';
 import { useLocation } from 'react-router-dom';
 import ProfileImage from '../../../assets/profile_placeholder.png';
 
@@ -119,19 +120,5 @@ const MyNavbar = () => {
     </Navbar>
   );
 };
-
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default MyNavbar;

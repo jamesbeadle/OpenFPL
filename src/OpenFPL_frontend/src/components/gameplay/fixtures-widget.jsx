@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-boot
 import { BadgeIcon, ArrowLeft, ArrowRight } from '../icons';
 import { useNavigate } from 'react-router-dom';
 import { DataContext } from "../../contexts/DataContext";
-import { getTeamById,groupFixturesByDate, computeTimeLeft } from '../helpers';
+import { getTeamById,groupFixturesByDate, computeTimeLeft, CustomToggle } from '../helpers';
 
 const FixturesWidget = () => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);
@@ -300,18 +300,5 @@ const FixturesWidget = () => {
       </>
   );
 };
-
-const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <a
-    href=""
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-  </a>
-));
 
 export default FixturesWidget;
