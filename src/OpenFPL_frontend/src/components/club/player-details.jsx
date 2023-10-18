@@ -193,20 +193,16 @@ const PlayerDetails = ({  }) => {
                                     <div className='player-details-name-col'>
                                         {playerTeam.shirtType == 0 ? 
                                             <ShirtIcon
-                                                width={'60px'}
-                                                height={'61px'}
                                                 primary={playerTeam.primaryColourHex} 
                                                 secondary={playerTeam.secondaryColourHex} 
                                                 third={playerTeam.thirdColourHex} 
-                                                className='shirt align-items-center justify-content-center' />
+                                                className='player-details-shirt-icon align-items-center justify-content-center' />
                                         : 
                                             <StripedShirtIcon 
-                                                width={'60px'}
-                                                height={'61px'}
                                                 primary={playerTeam.primaryColourHex} 
                                                 secondary={playerTeam.secondaryColourHex} 
                                                 third={playerTeam.thirdColourHex} 
-                                                className='shirt align-items-center justify-content-center' /> }
+                                                className='player-details-shirt-icon align-items-center justify-content-center' /> }
                           
                                     </div>
                                     <div className='player-details-position-col'>
@@ -247,7 +243,7 @@ const PlayerDetails = ({  }) => {
                             <div className="stat-panel flex-grow-1">  
                                 <Row className="stat-row-1">
                                     <div className='home-deadline-col'>
-                                        <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Upcoming Game</p>    
+                                        <p className="stat-header w-100">Upcoming Game</p>    
                                     </div>
                                     <div className='home-fixture-col'>
                                          
@@ -255,7 +251,7 @@ const PlayerDetails = ({  }) => {
                                 </Row>
                                 <Row className="stat-row-2 vertical-flex">
                                     <div className='home-deadline-col'>
-                                        <Row  style={{paddingLeft: '32px'}}>
+                                        <Row>
                                             <Col xs={4} className="add-colon">
                                                 <p className="stat">{String(days).padStart(2, '0')}</p>
                                             </Col>
@@ -299,7 +295,7 @@ const PlayerDetails = ({  }) => {
                                 </Row>
                                 <Row className='stat-row-3'>
                                     <div className='home-deadline-col'>
-                                        <Row style={{paddingLeft: '32px'}}>
+                                        <Row>
                                             <Col xs={4}>
                                                 <p className="stat-header w-100">Day</p> 
                                             </Col>

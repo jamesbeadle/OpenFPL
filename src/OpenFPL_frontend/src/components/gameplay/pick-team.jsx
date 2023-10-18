@@ -609,8 +609,8 @@ const PickTeam = () => {
                     return (
                       <>
                         <div className="shirt-container">
-                          {foundTeam.shirtType == 0 ? <ShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} className='shirt align-items-center justify-content-center' />
-                            : <StripedShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} className='shirt align-items-center justify-content-center' /> }
+                          {foundTeam.shirtType == 0 ? <ShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} />
+                            : <StripedShirtIcon primary={foundTeam.primaryColourHex} secondary={foundTeam.secondaryColourHex} third={foundTeam.thirdColourHex} /> }
                           
                           {(fantasyTeam && fantasyTeam.transfersAvailable > 0) && (<button className="remove-player-button left-side-image p-0" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={14} height={14} /></button>)}
                             
@@ -674,7 +674,7 @@ const PickTeam = () => {
                   setSelectedPosition(position);
                   setSelectedSlot(slot);
                   setActiveIndex(i);
-                }}  className='shirt align-items-center justify-content-center' />
+                }}  />
               )}
             </div>
           );

@@ -137,10 +137,10 @@ const CaptainIconActive = ({ }) => (
 </svg>
 );
 
-const DefaultShirtIcon = ({ onClick, primary='#2CE3A6', secondary='#777777', third='#FFFFFF' }) => (
+const DefaultShirtIcon = ({ onClick, primary='#2CE3A6', secondary='#777777', third='#FFFFFF', className='shirt-icon' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className='shirt-icon'
+    className={className}
     onClick={onClick}
     fill="currentColor"
     viewBox="0 0 86 88"
@@ -170,10 +170,10 @@ const DefaultShirtIcon = ({ onClick, primary='#2CE3A6', secondary='#777777', thi
 </svg>
 );
 
-const ShirtIcon = ({ onClick, primary='#2CE3A6', secondary='#777777', third='#FFFFFF' }) => (
+const ShirtIcon = ({ onClick, primary='#2CE3A6', secondary='#777777', third='#FFFFFF', className='shirt-icon' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className='shirt-icon'
+    className={className}
     fill="currentColor"
     viewBox="0 0 86 88"
     style={{ cursor: 'pointer' }}
@@ -199,10 +199,10 @@ const ShirtIcon = ({ onClick, primary='#2CE3A6', secondary='#777777', third='#FF
 </svg>
 );
 
-const StripedShirtIcon = ({ onClick, primary='#000000', secondary='#FFFFFF', third='#777777' }) => (
+const StripedShirtIcon = ({ onClick, primary='#000000', secondary='#FFFFFF', third='#777777', className='shirt-icon' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className='shirt-icon'
+    className={className}
     onClick={onClick}
     fill="currentColor"
     viewBox="0 0 86 88"
