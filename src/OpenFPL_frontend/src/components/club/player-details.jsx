@@ -20,10 +20,10 @@ const PlayerDetails = ({  }) => {
     const [showModal, setShowModal] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const POSITION_MAP = {
-        0: 'Goalkeeper',
-        1: 'Defender',
-        2: 'Midfielder',
-        3: 'Forward'
+        0: 'GK',
+        1: 'DF',
+        2: 'MF',
+        3: 'FW'
     };
     const [days, setDays] = useState(0);
     const [hours, setHours] = useState(0);
@@ -166,7 +166,7 @@ const PlayerDetails = ({  }) => {
                     <Card className='mb-3'>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">
-                                <Row className="stat-row-1">
+                                <Row className="stat-row-1 vertical-flex">
                                     <div className='player-details-name-col'>
                                     <p className="stat-header w-100 text-center">
                                     {POSITION_MAP[player.position]}
@@ -178,7 +178,7 @@ const PlayerDetails = ({  }) => {
                                                 primary={playerTeam.primaryColourHex}
                                                 secondary={playerTeam.secondaryColourHex}
                                                 third={playerTeam.thirdColourHex}
-                                                className='badge-icon'
+                                                className='player-detail-badge-icon'
                                             /> 
                                          {playerTeam.name}</p>
                                     </div>
@@ -215,9 +215,9 @@ const PlayerDetails = ({  }) => {
                                         <p className="stat">{getAgeFromDOB(Number(player.dateOfBirth))}</p>
                                     </div>
                                 </Row>
-                                <Row className="stat-row-3">
+                                <Row className="stat-row-3 vertical-flex">
                                     <div className='player-details-name-col'>
-                                        <p className="stat-header text-center">Number: {player.shirtNumber}</p>   
+                                        <p className="stat-header text-center">Shirt: {player.shirtNumber}</p>   
                                     </div>
                                     <div className='player-details-position-col'>
                                         <p className="stat-header" style={{ display: 'flex', alignItems: 'center' }}><div style={{marginRight: '8px'}}>{getFlag(player.nationality, '16px')}</div>{player.firstName}</p>    

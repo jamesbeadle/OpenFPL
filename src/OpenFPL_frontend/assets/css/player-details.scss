@@ -1,8 +1,8 @@
 
 
 .player-details-shirt-icon{
-    width: 24px;
-    height: 23px;
+    width: 20px;
+    height: 19px;
 }
 
 
@@ -10,7 +10,6 @@
 .player-details-name-col{
     flex-basis: 20%;
     display: flex;
-    align-items: center;
     justify-content: center;
   }
   .player-details-position-col{
@@ -73,6 +72,12 @@
     border: none !important;
   }
 
+  .player-detail-badge-icon{
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
   
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
@@ -114,6 +119,11 @@
     .view-details-button{
         font-size: 8px;
     }
+    .player-detail-badge-icon{
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
+  }
 }
 
 /* Extra small devices (phones, 600px and down) */
@@ -181,6 +191,10 @@
     .view-details-button{
         font-size: 16px;
     }
+    .player-details-shirt-icon{
+      width: 50px;
+      height: 51px;
+  }
 }
 
 /* 4K and large screens */
