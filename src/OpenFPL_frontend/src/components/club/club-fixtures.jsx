@@ -120,8 +120,7 @@ const ClubFixtures = ({teamId}) => {
               <Col md={12}>
                 <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                      style={{ marginRight: '16px' }} >
+                    <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
                       <ArrowLeft />
                     </Button>
                   </div>
@@ -147,8 +146,8 @@ const ClubFixtures = ({teamId}) => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                    <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
                       style={{ marginLeft: '16px' }} >
                       <ArrowRight />
                     </Button>
@@ -202,9 +201,7 @@ const ClubFixtures = ({teamId}) => {
                                         primaryColour={'#123432'}
                                         secondaryColour={'#432123'}
                                         thirdColour={'#432123'}
-                                        marginRight={10}
-                                        width={20}
-                                        height={20}
+                                        className='clock-icon'
                                         /> {new Date(nanoSecondsToMillis(Number(fixture.kickOff))).toLocaleTimeString()}</p>
                         </div>
                           <div className="col-badge">

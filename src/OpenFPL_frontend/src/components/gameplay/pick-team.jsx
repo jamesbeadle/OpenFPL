@@ -624,7 +624,7 @@ const PickTeam = () => {
                         </div>
                         <div className="player-details d-none d-lg-block">
                           <div className="player-name-row">
-                            <div style={{marginRight: '4px'}}>{getFlag(player.nationality)}</div>
+                            <div style={{marginRight: '4px'}}>{getFlag(player.nationality, 'pick-team-flag')}</div>
                             {
                               (player.firstName !== "" ? player.firstName.charAt(0) + ". " : "") + 
                               (player.lastName.length > 8 ? player.lastName.substring(0, 6) + ".." : player.lastName)
@@ -717,7 +717,7 @@ const PickTeam = () => {
                           </div>
                           <div className="header-col player-col">
                             <div className="list-player-name-row">
-                              <div style={{marginRight: '4px'}}>{getFlag(player.nationality)}</div>
+                              <div>{getFlag(player.nationality, 'pick-team-flag-row')}</div>
                               {(player.firstName !== "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
                             </div>
                           </div>
@@ -728,7 +728,7 @@ const PickTeam = () => {
                                   primary={foundTeam.primaryColourHex}
                                   secondary={foundTeam.secondaryColourHex}
                                   third={foundTeam.thirdColourHex}
-                                  className='badge-icon'
+                                  className='pick-team-badge-icon'
                                 />
                               </span>
                               {foundTeam.abbreviatedName}

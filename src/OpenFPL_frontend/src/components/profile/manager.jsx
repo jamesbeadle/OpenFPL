@@ -620,7 +620,6 @@ const Manager = () => {
                     <Button 
                         onClick={() => setShowListView(false)} 
                         className={`sub-stat-button sub-stat-button-right ${!showListView ? 'active' : ''}`}
-                        style={{ marginRight: '40px' }}
                       >
                       Details
                     </Button>                                      
@@ -632,8 +631,7 @@ const Manager = () => {
                    {!showListView && 
                    <>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
-                        style={{ marginRight: '16px' }} >
+                      <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>
                         <ArrowLeft />
                       </Button>
                     </div>

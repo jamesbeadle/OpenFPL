@@ -141,8 +141,7 @@ const LeagueTable = () => {
             <Col md={12}>
               <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}
-                    style={{ marginRight: '16px' }} >
+                  <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>
                     <ArrowLeft />
                   </Button>
                 </div>
@@ -167,15 +166,14 @@ const LeagueTable = () => {
                     </Dropdown>
                   </div>
                 </div>
-                <div style={{display: 'flex', alignItems: 'center', marginRight: 50}}>
-                  <Button className="w-100 justify-content-center fpl-btn" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                  <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}
                     style={{ marginLeft: '16px' }} >
                     <ArrowRight />
                   </Button>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id} 
-                    style={{ marginRight: '16px' }} >
+                  <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
                     <ArrowLeft />
                   </Button>
                 </div>
@@ -201,9 +199,8 @@ const LeagueTable = () => {
                     </Dropdown>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                  <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id} 
-                    style={{ marginLeft: '16px' }} >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id}>
                     <ArrowRight />
                   </Button>
                 </div>

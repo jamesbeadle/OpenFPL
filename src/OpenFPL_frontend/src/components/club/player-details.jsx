@@ -339,8 +339,7 @@ const PlayerDetails = ({  }) => {
                                                 <Col md={12}>
                                                     <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(-1)} disabled={selectedSeason.id === seasons[0].id} 
-                                                            style={{ marginRight: '16px' }} >
+                                                        <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={selectedSeason.id === seasons[0].id}>
                                                             <ArrowLeft />
                                                         </Button>
                                                         </div>
@@ -366,8 +365,8 @@ const PlayerDetails = ({  }) => {
                                                             </Dropdown>
                                                         </div>
                                                         </div>
-                                                        <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
-                                                        <Button className="w-100 justify-content-center fpl-btn"  onClick={() => handleSeasonChange(1)} disabled={selectedSeason.id === seasons[seasons.length - 1].id} 
+                                                        <div style={{ display: 'flex', alignItems: 'center'}}>
+                                                        <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={selectedSeason.id === seasons[seasons.length - 1].id} 
                                                             style={{ marginLeft: '16px' }} >
                                                             <ArrowRight />
                                                         </Button>
