@@ -241,7 +241,7 @@ const LeagueTable = () => {
                     <Col xs={12}>
                         <div className="table-row clickable-table-row">             
                             <div className="league-position-col gw-table-col">{idx + 1}</div>
-                                <div className="league-team-col gw-table-col">
+                                <div className="league-team-col gw-table-col vertical-flex">
                                     <BadgeIcon
                                         primary={club.primaryColourHex}
                                         secondary={club.secondaryColourHex}

@@ -78,6 +78,17 @@
     font-weight: 500;
     margin-right: 16px;
   }
+
+  .gameweek-points-flag{
+    width: 16px;
+    margin-right: 4px;
+  }
+
+  .gw-points-badge-icon{
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+  }
   
     /* Extra small devices (phones, 321px and up) */
     @media only screen and (min-width: 321px) {
@@ -169,6 +180,10 @@
             font-weight: 500;
         }
 
+        .gameweek-points-flag{
+            width: 16px;
+            margin-right: 4px;
+        }
     }
     
     /* Small devices (portrait tablets and large phones, 601px and up) */
@@ -343,6 +358,12 @@
         .gw-total-points{
             font-size: 18px;
         }
+        
+
+  .gameweek-points-flag{
+    width: 20px;
+    margin-right: 8px;
+  }
 
     }
     

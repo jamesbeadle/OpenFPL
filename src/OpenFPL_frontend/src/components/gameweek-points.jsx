@@ -17,6 +17,7 @@ import CaptainFantastic from "../../assets/captain-fantastic.png";
 import BraceBonus from "../../assets/brace-bonus.png";
 import HatTrickHero from "../../assets/hat-trick-hero.png";
 import PlayerPointsModal from './modals/player-points-modal';
+import getFlag from './country-flag';
 
 const GameweekPoints = () => {
     const { authClient, userPrincipal } = useContext(AuthContext);
@@ -602,13 +603,13 @@ const GameweekPoints = () => {
                         <Col xs={12}>
                         <div className="table-row clickable-table-row">
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
-                            <div className="gw-points-name-col gw-table-col">{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
+                            <div className="gw-points-name-col gw-table-col">{getFlag(player.nationality, 'gameweek-points-flag')}{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
                             <div className="gw-points-club-col gw-table-col vertical-flex">
                             <BadgeIcon
                                 primary={playerTeam.primaryColourHex}
                                 secondary={playerTeam.secondaryColourHex}
                                 third={playerTeam.thirdColourHex}
-                                className='badge-icon'
+                                className='gw-points-badge-icon'
                               />
                               {playerTeam.friendlyName}
                             </div>
