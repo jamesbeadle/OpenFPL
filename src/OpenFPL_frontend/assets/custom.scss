@@ -12,6 +12,7 @@
 @import './css/player-modal.scss';
 @import './css/manager.scss';
 @import './css/manager-gameweek-points.scss';
+@import './css/club-details.scss';
 
 //Navbar
 
@@ -376,72 +377,6 @@
 .clickable-table-row{
   cursor: pointer;
   margin-bottom: 0 !important;
-}
-
-
-.club-badge-col{
-  flex-basis: 25%;
-  align-items: center;
-  justify-content: center;  
-  display: flex;
-}
-
-.club-total-players-col{
-  flex-basis: 25%;
-}
-
-.club-position-col{
-  flex-basis: 25%;
-}
-
-.club-points-col{
-  flex-basis: 25%;
-}
-
-
-
-.club-divider-1 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 22%;
-  width: 1px;
-  background-color: #37393C;
-}
-
-.club-divider-2 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 48%;
-  width: 1px;
-  background-color: #37393C;
-}
-
-.club-divider-3 {
-  position: absolute;
-  top: 15%;
-  bottom: 15%;
-  left: 74%;
-  width: 1px;
-  background-color: #37393C;
-}
-
-.club-player-number-col{
-  flex-basis: 10%;
-}
-.club-player-name-col{
-  flex-basis: 30%;
-  display: flex;
-}
-.club-player-position-col{
-  flex-basis: 20%;
-}
-.club-player-value-col{
-  flex-basis: 20%;
-}
-.club-player-age-col{
-  flex-basis: 20%;
 }
 
 .zero-text{

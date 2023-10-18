@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
-import { ArrowLeft, ArrowRight, BadgeIcon } from '../icons';
-import { getFantasyTeamForGameweek } from '../../AuthFunctions';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
-import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { calculateTeamValue, getPlayerById } from '../helpers';
 import GoalGetter from "../../../assets/goal-getter.png";
 import PassMaster from "../../../assets/pass-master.png";

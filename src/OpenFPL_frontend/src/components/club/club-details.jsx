@@ -216,7 +216,7 @@ const ClubDetails = ({  }) => {
                             <div className="stat-panel flex-grow-1">
                                 <Row className="stat-row-1">
                                     <div className='club-badge-col'>
-                                        <p className="stat-header w-100 text-center">{team.abbreviatedName}</p>
+                                        <p className="stat-header w-100">{team.abbreviatedName}</p>
                                     </div>
                                     <div className='club-total-players-col'>
                                         <p className="stat-header w-100">Players</p>
@@ -249,7 +249,7 @@ const ClubDetails = ({  }) => {
                                 </Row>
                                 <Row className="stat-row-3">
                                     <div className='club-badge-col'>
-                                        <p className="stat-header text-center">{team.friendlyName}</p>   
+                                        <p className="stat-header">{team.friendlyName}</p>   
                                     </div>
                                     <div className='club-total-players-col'>
                                         <p className="stat-header">Total</p>    
@@ -275,7 +275,7 @@ const ClubDetails = ({  }) => {
                             <div className="stat-panel flex-grow-1">  
                                 <Row className="stat-row-1">
                                     <div className='home-deadline-col'>
-                                        <p className="stat-header w-100" style={{paddingLeft: '32px'}}>Upcoming Game</p>    
+                                        <p className="stat-header w-100">Upcoming Game</p>    
                                     </div>
                                     <div className='home-fixture-col'>
                                          
@@ -283,7 +283,7 @@ const ClubDetails = ({  }) => {
                                 </Row>
                                 <Row className="stat-row-2 vertical-flex">
                                     <div className='home-deadline-col'>
-                                        <Row  style={{paddingLeft: '32px'}}>
+                                        <Row>
                                             <Col xs={4} className="add-colon">
                                                 <p className="stat">{String(days).padStart(2, '0')}</p>
                                             </Col>
@@ -327,7 +327,7 @@ const ClubDetails = ({  }) => {
                                 </Row>
                                 <Row className='stat-row-3'>
                                     <div className='home-deadline-col'>
-                                        <Row style={{paddingLeft: '32px'}}>
+                                        <Row>
                                             <Col xs={4}>
                                                 <p className="stat-header w-100">Day</p> 
                                             </Col>
@@ -454,7 +454,7 @@ const ClubDetails = ({  }) => {
                                                     <div className="table-row clickable-table-row">
                                                         <div className="club-player-number-col gw-table-col">{player.shirtNumber}</div>
                                                         <div className="club-player-name-col gw-table-col">
-                                                            <div style={{marginRight: '16px'}}>{getFlag(player.nationality, '40px')}</div>
+                                                            <div>{getFlag(player.nationality, 'player-list-flag')}</div>
                                                             {
                                                                 player.firstName.length > 0 ? `${player.firstName} ${player.lastName}` : player.lastName
                                                             }
@@ -479,7 +479,7 @@ const ClubDetails = ({  }) => {
                                     {key === 'fixtures' && <ClubFixtures key={teamId} teamId={teamId} />}
                                 </Tab>
                                 <Tab eventKey="proposals" title="Proposals">
-                                    <div className='px-4 mt-4 mb-4'>
+                                    <div className='px-2 mt-2 mb-2'>
                                         <p>After our SNS decentralisation sale, club proposal information will appear here.</p>
                                         <p>More information can be found in our <LinkContainer to="/whitepaper"><a>whitepaper</a></LinkContainer>.</p>
                                     </div>

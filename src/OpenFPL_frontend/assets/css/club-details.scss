@@ -1,0 +1,147 @@
+
+.club-badge-col{
+    flex-basis: 25%;
+    display: flex;
+    padding-left: 32px;
+  }
+  
+  .club-total-players-col{
+    flex-basis: 25%;
+  }
+  
+  .club-position-col{
+    flex-basis: 25%;
+  }
+  
+  .club-points-col{
+    flex-basis: 25%;
+  }
+  
+  
+  
+  .club-divider-1 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 22%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .club-divider-2 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 48%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .club-divider-3 {
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 74%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .club-player-number-col{
+    flex-basis: 10%;
+  }
+  .club-player-name-col{
+    flex-basis: 30%;
+    display: flex;
+  }
+  .club-player-position-col{
+    flex-basis: 20%;
+  }
+  .club-player-value-col{
+    flex-basis: 20%;
+  }
+  .club-player-age-col{
+    flex-basis: 20%;
+  }
+
+  .player-list-flag{
+    width: 16px;
+    margin-right: 4px;
+  }
+
+  
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+    
+.club-badge-col{
+    padding-left: 16px;
+  }
+  
+  .club-player-number-col{
+      flex-basis: 10%;
+    }
+    .club-player-name-col{
+      flex-basis: 45%;
+    }
+    .club-player-position-col{
+      flex-basis: 15%;
+    }
+    .club-player-value-col{
+      flex-basis: 15%;
+    }
+    .club-player-age-col{
+      flex-basis: 15%;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 601px) {
+}
+  
+/* Small devices (portrait tablets and large phones, 601px and up) */
+@media only screen and (min-width: 601px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}
+/* added */
+@media only screen and (min-width: 1500px) {
+
+    .club-badge-col{
+        padding-left: 32px;
+      }
+        
+  .club-player-number-col{
+    flex-basis: 10%;
+  }
+  .club-player-name-col{
+    flex-basis: 30%;
+    display: flex;
+  }
+  .club-player-position-col{
+    flex-basis: 20%;
+  }
+  .club-player-value-col{
+    flex-basis: 20%;
+  }
+  .club-player-age-col{
+    flex-basis: 20%;
+  }
+}
+
+/* 4K and large screens */
+@media only screen and (min-width: 1920px) {
+
+}
