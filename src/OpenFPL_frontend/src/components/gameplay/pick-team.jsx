@@ -624,7 +624,7 @@ const PickTeam = () => {
                         </div>
                         <div className="player-details d-none d-lg-block">
                           <div className="player-name-row">
-                            <div style={{marginRight: '4px'}}>{getFlag(player.nationality, 'pick-team-flag')}</div>
+                            <div>{getFlag(player.nationality, 'pick-team-flag')}</div>
                             {
                               (player.firstName !== "" ? player.firstName.charAt(0) + ". " : "") + 
                               (player.lastName.length > 8 ? player.lastName.substring(0, 6) + ".." : player.lastName)

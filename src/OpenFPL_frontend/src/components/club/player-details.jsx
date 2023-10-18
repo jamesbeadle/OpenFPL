@@ -220,7 +220,7 @@ const PlayerDetails = ({  }) => {
                                         <p className="stat-header text-center">Shirt: {player.shirtNumber}</p>   
                                     </div>
                                     <div className='player-details-position-col'>
-                                        <p className="stat-header" style={{ display: 'flex', alignItems: 'center' }}><div style={{marginRight: '8px'}}>{getFlag(player.nationality, '16px')}</div>{player.firstName}</p>    
+                                        <p className="stat-header" style={{ display: 'flex', alignItems: 'center' }}><div>{getFlag(player.nationality, 'player-details-flag')}</div>{player.firstName}</p>    
                                     </div>
                                     <div className='player-details-value-col'>
                                         <p className="stat-header">{systemState.activeSeason.name}</p>    
