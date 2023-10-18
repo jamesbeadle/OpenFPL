@@ -194,7 +194,16 @@
 /* added */
 @media only screen and (min-width: 1500px) {
     .navbar{
-        height: 50px;
+        height: 80px;
+        padding-left: 48px;
+        padding-right: 48px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+  
+    .custom-nav-link {
+      line-height: 80px;
+      font-size: 18px;
     }
 }
 
