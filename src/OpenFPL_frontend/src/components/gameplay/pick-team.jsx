@@ -69,7 +69,7 @@ const PickTeam = () => {
   const [fantasyTeam, setFantasyTeam] = useState({
     players: [],
     bankBalance: 300,
-    transfersAvailable: 2
+    transfersAvailable: 3
   });
   const [removedPlayers, setRemovedPlayers] = useState([]);
   const [addedPlayers, setAddedPlayers] = useState([]);  

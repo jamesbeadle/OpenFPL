@@ -61,6 +61,14 @@
   background-color: white !important;
   color: #161819 !important;
 }
+.dropdown-item:hover{
+  background-color: white !important;
+  color: #161819 !important;
+}
+
+.dropdown-item:focus{
+  color: white;
+}
 
 .disconnect:hover{
   background-color: #2CE3A6;

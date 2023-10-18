@@ -236,38 +236,50 @@ const Leaderboard = () => {
         <div className="dark-tab-row w-100 mx-0">
           <Row>
             <Col md={12}>
+
+
               <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>
-                    <ArrowLeft />
-                  </Button>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div ref={gameweekDropdownRef} onBlur={handleGameweekBlur}>
-                    <Dropdown show={showGameweekDropdown}>
-                      <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
-                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openGameweekDropdown()}>Gameweek {currentGameweek}</Button>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                        {Array.from({ length: 38 }, (_, index) => (
-                          <Dropdown.Item
-                            data-key={index}
-                            className='dropdown-item'
-                            key={index}
-                            onMouseDown={() => {setCurrentGameweek(index + 1); setCurrentPage(1);}}
-                          >
-                            Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
-                          </Dropdown.Item>
-                        ))}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
-                <div style={{display: 'flex', alignItems: 'center'}}>
-                  <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>
-                    <ArrowRight />
-                  </Button>
-                </div>
+              
+                {currentLeaderboard == 'Weekly' && 
+                
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleGameweekChange(-1)} disabled={currentGameweek === 1}>
+                        <ArrowLeft />
+                      </Button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div ref={gameweekDropdownRef} onBlur={handleGameweekBlur}>
+                        <Dropdown show={showGameweekDropdown}>
+                          <Dropdown.Toggle as={CustomToggle} id="gameweek-selector">
+                            <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openGameweekDropdown()}>Gameweek {currentGameweek}</Button>
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                            {Array.from({ length: 38 }, (_, index) => (
+                              <Dropdown.Item
+                                data-key={index}
+                                className='dropdown-item'
+                                key={index}
+                                onMouseDown={() => {setCurrentGameweek(index + 1); setCurrentPage(1);}}
+                              >
+                                Gameweek {index + 1} {currentGameweek === (index + 1) ? ' ✔️' : ''}
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </div>
+                    </div>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                      <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>
+                        <ArrowRight />
+                      </Button>
+                    </div>
+                  </>
+
+                }
+
+                
+                
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
                     <ArrowLeft />
@@ -300,7 +312,6 @@ const Leaderboard = () => {
                     <ArrowRight />
                   </Button>
                 </div>
-
                 
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div ref={leaderboardDropdownRef} onBlur={handleLeaderboardTypeBlur}>

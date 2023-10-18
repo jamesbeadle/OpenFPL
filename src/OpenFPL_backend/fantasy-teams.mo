@@ -1382,7 +1382,7 @@ module {
         private func clearFantasyTeam(principalId: Text) : T.FantasyTeam {
             return {
                 principalId = principalId;
-                transfersAvailable = 2;
+                transfersAvailable = 3;
                 bankBalance = 1200;
                 playerIds = [];
                 captainId = 0;
