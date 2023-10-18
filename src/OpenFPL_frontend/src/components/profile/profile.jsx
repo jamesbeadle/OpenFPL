@@ -13,7 +13,6 @@ import ICPCoin from '../../../assets/ICPCoin.png';
 import FPLCoin from '../../../assets/FPLCoin.png';
 import ckBTCCoin from '../../../assets/ckBTCCoin.png';
 import ckETHCoin from '../../../assets/ckETHCoin.png';
-import { Link } from "react-router-dom";
 import ConfirmFavouriteTeamModal from './confirm-favourite-team-modal';
 
 const Profile = () => {
@@ -199,9 +198,6 @@ const Profile = () => {
                                       <div className='profile-display-name-col px-0'>  
                                         <Button className="fpl-large-btn" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
                                       </div>
-                                      <div className='profile-favourite-team-col px-0'>
-                                        <Button className="fpl-large-btn" as={Link} to={`/club-leaderboard/${favouriteTeam}`}>Leaderboard</Button>
-                                      </div>
                                     </Row>
                                   </div>
                                   <div className='profile-detail-row-2'>
@@ -311,10 +307,10 @@ const Profile = () => {
                         </div>
                       </Tab>
                       <Tab eventKey="gameweeks" title="Gameweeks">
-                        <h3 className='mt-4'>Gameweek History Coming Soon</h3>
+                        <p className='px-4 mt-4 mb-4'>Gameweek History Coming Soon</p>
                       </Tab>
                       <Tab eventKey="governance" title="Governance">
-                        <h3 className='mt-4'>Governance History Coming Soon</h3>
+                        <p className='px-4 mt-4 mb-4'>Governance History Coming Soon</p>
                       </Tab>
                     </Tabs>
                   </div>

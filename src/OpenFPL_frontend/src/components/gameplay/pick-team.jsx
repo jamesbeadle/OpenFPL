@@ -885,7 +885,7 @@ const PickTeam = () => {
           </Row>
           <Row>
             <Col xs={12}>
-              <Card className='mb-3'>
+              <Card className='mb-3' style={{overflow: 'unset'}}>
                   <div className="outer-container d-flex">
                     <div className="sub-stat-panel flex-grow-1" style={{ display: 'flex', alignItems: 'center' }}>
                       <Row className="sub-stat-wrapper">
