@@ -1,3 +1,4 @@
+import React from 'react';
 
 export const toHexString = (byteArray) => {
     return Array.from(byteArray, function(byte) {

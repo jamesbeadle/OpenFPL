@@ -79,18 +79,18 @@ const ClubFixtures = ({teamId}) => {
     switch (fixture.status) {
         case 1:
             return (
-              <p className="status-text fixture-active">Active</p>
+              <p className="status-text fixture-active fixture-caret">Active</p>
             );
         case 2:
             return (
-              <p className="status-text fixture-consensus">In Consensus</p>
+              <p className="status-text fixture-consensus fixture-caret">In Consensus</p>
             );
         case 3:
             return (
-              <p className="status-text fixture-verified">Verified</p>
+              <p className="status-text fixture-verified fixture-caret">Verified</p>
             );
     }
-    return (<p className="status-text fixture-unplayed">Unplayed</p>
+    return (<p className="status-text fixture-unplayed fixture-caret">Unplayed</p>
     );
   };
 

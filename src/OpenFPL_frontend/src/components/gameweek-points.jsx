@@ -484,7 +484,7 @@ const GameweekPoints = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div className='fixture-filter-container'  style={{display: 'flex', alignItems: 'center'}}>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
                     <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleGameweekChange(1)} disabled={currentGameweek === 38}>
                       <ArrowRight />
                     </Button>

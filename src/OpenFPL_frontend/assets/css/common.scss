@@ -459,6 +459,37 @@
         margin-left: 0;
         margin-right: 0;
     }
+
+    .fpl-btn{
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 4px !important;
+    };
+    
+    .filter-dropdown-btn{
+        font-size: 18px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+    .filter-row{
+        margin-left: 32px;
+        height: 72px;
+      }
+      .left-arrow{
+          margin-right: 16px;
+      }
+      .right-arrow{
+          margin-left: 16px;
+          margin-right: 16px;
+      }
+      .arrow-left-icon{
+          width: 12px;
+          height: 12px;
+      }
+      .arrow-right-icon{
+          width: 12px;
+          height: 12px;
+      }
 }
   
 /* 4K and large screens */
