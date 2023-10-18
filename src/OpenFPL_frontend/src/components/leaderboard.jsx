@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Spinner, Container, Row, Col, Dropdown, Pagination } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight } from './icons';
+import { monthNames } from './helpers';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { DataContext } from "../contexts/DataContext";
 
@@ -12,6 +13,7 @@ const Leaderboard = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
+    const [currentMonth, setCurrentMonth] = useState(systemState.activeMonth);
     const [currentLeaderboard, setCurrentLeaderboard] = useState('Weekly');
     const [currentClub, setCurrentClub] = useState(teams.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))[0]);
     const itemsPerPage = 25;
@@ -19,8 +21,10 @@ const Leaderboard = () => {
     const [showGameweekDropdown, setShowGameweekDropdown] = useState(false);
     const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
     const [showLeaderboardDropdown, setShowLeaderboardDropdown] = useState(false);
+    const [showMonthDropdown, setShowMonthDropdown] = useState(false);
     const [showClubDropdown, setShowClubDropdown] = useState(false);
     const gameweekDropdownRef = useRef(null);
+    const monthDropdownRef = useRef(null);
     const seasonDropdownRef = useRef(null);
     const leaderboardDropdownRef = useRef(null);
     const clubDropdownRef = useRef(null);
@@ -40,6 +44,13 @@ const Leaderboard = () => {
             setShowSeasonDropdown(false);
         }
         }, 0);
+    };
+
+    const handleMonthBlur = (e) => {
+        const currentTarget = e.currentTarget;
+        if (!currentTarget.contains(document.activeElement)) {
+        setShowMonthDropdown(false);
+        }
     };
     
     const handleLeaderboardTypeBlur = (e) => {
@@ -63,14 +74,14 @@ const Leaderboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            await fetchViewData(currentSeason, currentGameweek, currentLeaderboard, systemState.activeMonth, currentClub.id);
+            await fetchViewData(currentSeason, currentGameweek, currentMonth, currentLeaderboard, currentClub.id);
             setIsLoading(false);
         };
         
         fetchData();
-    }, [currentSeason, currentGameweek, currentPage, currentLeaderboard]);
+    }, [currentSeason, currentGameweek, currentMonth, currentPage, currentLeaderboard]);
 
-    const fetchViewData = async (season, gameweek, leaderboard, month, club) => {
+    const fetchViewData = async (season, gameweek, month, leaderboard, club) => {
 
         switch(leaderboard){
             case 'Weekly':
@@ -174,6 +185,18 @@ const Leaderboard = () => {
       }, 0);
     };
   
+    const openMonthDropdown = () => {
+      setShowMonthDropdown(!showMonthDropdown);
+      setTimeout(() => {
+        if (monthDropdownRef.current) {
+          const item = monthDropdownRef.current.querySelector(`[data-key="${currentMonth}"]`);
+          if (item) {
+            item.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }
+        }
+      }, 0);
+    };
+  
     const openLeaderboardDropdown = () => {
       setShowLeaderboardDropdown(!showLeaderboardDropdown);
       setTimeout(() => {
@@ -224,6 +247,20 @@ const Leaderboard = () => {
         setCurrentSeason(seasons[newIndex]);
         setCurrentGameweek(1);
       }
+    };
+    
+    const handleMonthChange = (change) => {
+      if(currentMonth + change < 1){
+        setCurrentMonth(12);
+        return;
+      }
+
+      if(currentMonth + change > 12){
+        setCurrentMonth(1);
+        return;
+      }
+
+      setCurrentMonth(prev => Math.min(12, Math.max(1, prev + change)));
     };
 
     return (
@@ -324,19 +361,22 @@ const Leaderboard = () => {
                             data-key={0}
                             className='dropdown-item'
                             key={0}
-                            onMouseDown={() => {{setCurrentLeaderboard('Weekly'); setCurrentPage(1);}}}
+                            onMouseDown={() => {{setCurrentLeaderboard('Weekly'); setCurrentPage(1);
+                            setShowLeaderboardDropdown(false);}}}
                             >Weekly {currentLeaderboard === 'Weekly' ? ' ✔️' : ''}</Dropdown.Item>
                         <Dropdown.Item
                             data-key={1}
                             className='dropdown-item'
                             key={1}
-                            onMouseDown={() => {{setCurrentLeaderboard('Monthly'); setCurrentPage(1);}}}
+                            onMouseDown={() => {{setCurrentLeaderboard('Monthly'); setCurrentPage(1);
+                            setShowLeaderboardDropdown(false);}}}
                             >Monthly {currentLeaderboard === 'Monthly' ? ' ✔️' : ''}</Dropdown.Item>
                         <Dropdown.Item
                             data-key={2}
                             className='dropdown-item'
                             key={2}
-                            onMouseDown={() => {{setCurrentLeaderboard('Season'); setCurrentPage(1);}}}
+                            onMouseDown={() => {{setCurrentLeaderboard('Season'); setCurrentPage(1);
+                            setShowLeaderboardDropdown(false);}}}
                             >Season {currentLeaderboard === 'Season' ? ' ✔️' : ''}</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
@@ -344,6 +384,38 @@ const Leaderboard = () => {
                 </div>
 
                 {currentLeaderboard == 'Monthly' && <div style={{ display: 'flex', alignItems: 'center' }}>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Button className="w-100 justify-content-center fpl-btn left-arrow" onClick={() => handleMonthChange(-1)}>
+                          <ArrowLeft />
+                        </Button>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div ref={monthDropdownRef} onBlur={handleMonthBlur}>
+                      <Dropdown show={showMonthDropdown}>
+                        <Dropdown.Toggle as={CustomToggle} id="month-selector">
+                          <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openMonthDropdown()}>{monthNames[currentMonth-1]}</Button>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                          {Array.from({ length: 12 }, (_, index) => (
+                            <Dropdown.Item
+                              data-key={index}
+                              className='dropdown-item'
+                              key={index}
+                              onMouseDown={() => {setCurrentMonth(index + 1); setCurrentPage(1);}}
+                            >
+                              {monthNames[index]} {currentMonth === (index + 1) ? ' ✔️' : ''}
+                            </Dropdown.Item>
+                          ))}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </div>
+                  </div>
+                  <div style={{display: 'flex', alignItems: 'center'}}>
+                    <Button className="w-100 justify-content-center fpl-btn right-arrow" onClick={() => handleMonthChange(1)}>
+                      <ArrowRight />
+                    </Button>
+                  </div>
                   <div ref={clubDropdownRef} onBlur={handleClubBlur}>
                     <Dropdown show={showClubDropdown}>
                       <Dropdown.Toggle as={CustomToggle} id="club-selector">
@@ -355,7 +427,8 @@ const Leaderboard = () => {
                             data-key={team.id}
                             className='dropdown-item'
                             key={team.id}
-                            onMouseDown={() => {setCurrentClub(team); setCurrentPage(1);}}
+                            onMouseDown={() => {setCurrentClub(team); setCurrentPage(1);
+                            setShowClubDropdown(false);}}
                           >
                             {team.friendlyName} {currentClub.id === team.id ? ' ✔️' : ''}
                           </Dropdown.Item>

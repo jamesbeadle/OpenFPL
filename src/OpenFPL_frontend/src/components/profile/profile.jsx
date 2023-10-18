@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Spinner, ListGroup, Tabs, Tab, Form, Image } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Spinner, Tabs, Tab, Form, Image } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
+import { monthNames } from '../helpers';
 import UpdateNameModal from './update-name-modal';
 import UpdateProfilePictureModal from './update-profile-picture-modal';
 import { EditIcon } from '../icons';
@@ -65,7 +66,6 @@ const Profile = () => {
 
         const dateInMilliseconds = Number(data.createDate / 1000000n);
         const date = new Date(dateInMilliseconds);
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const joinDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
         setJoinedDate(joinDate);
 
