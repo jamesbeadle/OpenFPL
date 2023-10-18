@@ -95,6 +95,12 @@
   .league-points-col{
     flex-basis: 10%;
   }
+  
+  .league-table-badge-icon{
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
 
 }
 
@@ -174,6 +180,12 @@
 /* added */
 @media only screen and (min-width: 1500px) {
             
+  
+  .league-table-badge-icon{
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
+  }
 
 }
 

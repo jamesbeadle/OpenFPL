@@ -20,16 +20,16 @@ const MyFooter = () => {
                 <Col xs={12} className='footer-logo-container'>
                   <LogoIcon fill={'#FFFFFF'} /> <b className="logo-text">OPENFPL</b>
                 </Col>
-                <Col className='mb-1' xs={12}>
+                <Col className='mb-2' xs={12}>
                   <LinkContainer to="/whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer>
                 </Col>
-                <Col className='mb-1' xs={12}>
+                <Col className='mb-2' xs={12}>
                   <LinkContainer to="/gameplay"><a className='footer-link'>Gameplay Rules</a></LinkContainer>
                 </Col>
-                <Col className='mb-1' xs={12}>
+                <Col className='mb-2' xs={12}>
                   <LinkContainer to="/terms"><a className='footer-link'>Terms and Conditions</a></LinkContainer>
                 </Col>
-                <Col className='mb-1' xs={12}>
+                <Col className='mb-2' xs={12}>
                   <LinkContainer to="/fixture-validation-list" /*Remove this post sns*/><a className='footer-link'>Pre-SNS Fixture Validation</a></LinkContainer>
                 </Col>                
               </Row>
