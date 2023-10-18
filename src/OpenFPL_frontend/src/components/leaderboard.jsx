@@ -288,7 +288,40 @@ const Leaderboard = () => {
 
 
               <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
-              
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div ref={leaderboardDropdownRef} onBlur={handleLeaderboardTypeBlur}>
+                    <Dropdown show={showLeaderboardDropdown}>
+                      <Dropdown.Toggle as={CustomToggle} id="leaderboard-selector">
+                        <Button className='filter-dropdown-btn leaderboard-type-dropdown' style={{ backgroundColor: 'transparent' }} onClick={() => openLeaderboardDropdown()}>{currentLeaderboard}</Button>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                          <Dropdown.Item
+                            data-key={0}
+                            className='dropdown-item'
+                            key={0}
+                            onMouseDown={() => {{setCurrentLeaderboard('Weekly'); setCurrentPage(1);
+                            setShowLeaderboardDropdown(false);}}}
+                            >Weekly {currentLeaderboard === 'Weekly' ? ' ✔️' : ''}</Dropdown.Item>
+                        <Dropdown.Item
+                            data-key={1}
+                            className='dropdown-item'
+                            key={1}
+                            onMouseDown={() => {{setCurrentLeaderboard('Monthly'); setCurrentPage(1);
+                            setShowLeaderboardDropdown(false);}}}
+                            >Monthly {currentLeaderboard === 'Monthly' ? ' ✔️' : ''}</Dropdown.Item>
+                        <Dropdown.Item
+                            data-key={2}
+                            className='dropdown-item'
+                            key={2}
+                            onMouseDown={() => {{setCurrentLeaderboard('Season'); setCurrentPage(1);
+                            setShowLeaderboardDropdown(false);}}}
+                            >Season {currentLeaderboard === 'Season' ? ' ✔️' : ''}</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                </div>
+
+                
                 {currentLeaderboard == 'Weekly' && 
                 
                   <>
@@ -327,74 +360,6 @@ const Leaderboard = () => {
 
                 }
 
-                
-                
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
-                    <ArrowLeft />
-                  </Button>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
-                    <Dropdown show={showSeasonDropdown}>
-                      <Dropdown.Toggle as={CustomToggle} id="season-selector">
-                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                        
-                        {seasons.map(season => 
-                          <Dropdown.Item
-                            data-key={season.id}
-                            className='dropdown-item'
-                            key={season.id}
-                            onMouseDown={() => {setCurrentSeason(season); setCurrentPage(1);}}
-                          >
-                            {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
-                          </Dropdown.Item>
-                        )}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id}>
-                    <ArrowRight />
-                  </Button>
-                </div>
-                
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <div ref={leaderboardDropdownRef} onBlur={handleLeaderboardTypeBlur}>
-                    <Dropdown show={showLeaderboardDropdown}>
-                      <Dropdown.Toggle as={CustomToggle} id="leaderboard-selector">
-                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openLeaderboardDropdown()}>{currentLeaderboard}</Button>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                          <Dropdown.Item
-                            data-key={0}
-                            className='dropdown-item'
-                            key={0}
-                            onMouseDown={() => {{setCurrentLeaderboard('Weekly'); setCurrentPage(1);
-                            setShowLeaderboardDropdown(false);}}}
-                            >Weekly {currentLeaderboard === 'Weekly' ? ' ✔️' : ''}</Dropdown.Item>
-                        <Dropdown.Item
-                            data-key={1}
-                            className='dropdown-item'
-                            key={1}
-                            onMouseDown={() => {{setCurrentLeaderboard('Monthly'); setCurrentPage(1);
-                            setShowLeaderboardDropdown(false);}}}
-                            >Monthly {currentLeaderboard === 'Monthly' ? ' ✔️' : ''}</Dropdown.Item>
-                        <Dropdown.Item
-                            data-key={2}
-                            className='dropdown-item'
-                            key={2}
-                            onMouseDown={() => {{setCurrentLeaderboard('Season'); setCurrentPage(1);
-                            setShowLeaderboardDropdown(false);}}}
-                            >Season {currentLeaderboard === 'Season' ? ' ✔️' : ''}</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                </div>
-
                 {currentLeaderboard == 'Monthly' && <div style={{ display: 'flex', alignItems: 'center' }}>
                   
                   <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -431,7 +396,7 @@ const Leaderboard = () => {
                   <div ref={clubDropdownRef} onBlur={handleClubBlur}>
                     <Dropdown show={showClubDropdown}>
                       <Dropdown.Toggle as={CustomToggle} id="club-selector">
-                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openClubDropdown()}><b>Team: </b>{currentClub.friendlyName}</Button>
+                        <Button className='filter-dropdown-btn club-dropdown' style={{ backgroundColor: 'transparent' }} onClick={() => openClubDropdown()}><b>Team: </b>{currentClub.friendlyName}</Button>
                       </Dropdown.Toggle>
                       <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
                           {teams.map(team => 
@@ -449,6 +414,41 @@ const Leaderboard = () => {
                     </Dropdown>
                   </div>
                 </div>}
+                
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
+                    <ArrowLeft />
+                  </Button>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div ref={seasonDropdownRef} onBlur={handleSeasonBlur}>
+                    <Dropdown show={showSeasonDropdown}>
+                      <Dropdown.Toggle as={CustomToggle} id="season-selector">
+                        <Button className='filter-dropdown-btn' style={{ backgroundColor: 'transparent' }} onClick={() => openSeasonDropdown()}>{currentSeason.name}</Button>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                        
+                        {seasons.map(season => 
+                          <Dropdown.Item
+                            data-key={season.id}
+                            className='dropdown-item'
+                            key={season.id}
+                            onMouseDown={() => {setCurrentSeason(season); setCurrentPage(1);}}
+                          >
+                            {season.name} {currentSeason.id === season.id ? ' ✔️' : ''}
+                          </Dropdown.Item>
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={currentSeason.id === seasons[seasons.length - 1].id}>
+                    <ArrowRight />
+                  </Button>
+                </div>
+                
+
               </div>
             </Col>
           </Row>
