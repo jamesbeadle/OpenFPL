@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Spinner, Container, Row, Col, Dropdown, Pagination } from 'react-bootstrap';
 import { ArrowLeft, ArrowRight } from './icons';
-import { DataContext } from "../contexts/DataContext";
-import { useNavigate } from 'react-router-dom';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
+import { DataContext } from "../contexts/DataContext";
 
 const Leaderboard = () => {
     const { seasons, systemState, weeklyLeaderboard, seasonLeaderboard, monthlyLeaderboards, teams } = useContext(DataContext);

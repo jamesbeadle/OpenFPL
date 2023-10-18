@@ -2,8 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
 import { PlusIcon, BadgeIcon } from '../icons';
-import { isValidFormation } from '../helpers';
-
 
 const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, startingPosition, availableFormations,  }) => {
   const { players, teams } = useContext(DataContext);

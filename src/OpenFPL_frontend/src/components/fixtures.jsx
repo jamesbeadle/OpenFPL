@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
+import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from './icons';
 import { DataContext } from "../contexts/DataContext";
 import { getTeamById,groupFixturesByDate, computeTimeLeft, nanoSecondsToMillis } from './helpers';
-import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from './icons';
-import { useNavigate } from 'react-router-dom';
 
 const Fixtures = () => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);

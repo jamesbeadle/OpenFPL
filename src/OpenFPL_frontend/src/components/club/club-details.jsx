@@ -1,17 +1,14 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { Container, Card, Tab, Tabs, Spinner, Dropdown, Row, Col, Badge, Button } from 'react-bootstrap';
+import { Container, Card, Tab, Tabs, Spinner, Dropdown, Row, Col, Button } from 'react-bootstrap';
+import { CombinedIcon, BadgeIcon } from '../icons';
 import { LinkContainer } from 'react-router-bootstrap';
-import ClubProposals from './club-proposals';
-import { DataContext } from "../../contexts/DataContext";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
-import { SmallFixtureIcon, CombinedIcon } from '../icons';
+import { DataContext } from "../../contexts/DataContext";
+import { getTeamById, computeTimeLeft } from '../helpers';
 import { getAgeFromDOB } from '../helpers';
 import getFlag from '../country-flag';
-import { getTeamById, computeTimeLeft } from '../helpers';
-import { BadgeIcon } from '../icons';
 import ClubFixtures from './club-fixtures';
-import { useNavigate } from 'react-router-dom';
 
 const ClubDetails = ({  }) => {
     const [isLoading, setIsLoading] = useState(true);

@@ -1,14 +1,13 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Container, Card, Spinner, Row, Col, Tabs, Tab, Button, Dropdown } from 'react-bootstrap';
-import { DataContext } from "../../contexts/DataContext";
+import { CombinedIcon, BadgeIcon, ShirtIcon, StripedShirtIcon, ArrowLeft, ArrowRight, ViewIcon } from '../icons';
 import { useParams } from 'react-router-dom';
+import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
-import { getAgeFromDOB, formatDOB } from '../helpers';
+import { DataContext } from "../../contexts/DataContext";
+import { getTeamById, computeTimeLeft, getAgeFromDOB, formatDOB } from '../helpers';
 import getFlag from '../country-flag';
 import PlayerDetailModal from './player-detail-modal';
-import { CombinedIcon, BadgeIcon, ShirtIcon, StripedShirtIcon, ArrowLeft, ArrowRight, ViewIcon } from '../icons';
-import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
-import { getTeamById, computeTimeLeft } from '../helpers';
 
 const PlayerDetails = ({  }) => {
     const { playerId } = useParams();

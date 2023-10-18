@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Table, Container, Card } from 'react-bootstrap';
-import { getTeamById } from '../helpers';
+import { Modal, Button } from 'react-bootstrap';
 import { BadgeIcon } from '../icons';
+import { getTeamById } from '../helpers';
 import getFlag from '../country-flag';
 
 const PlayerDetailModal = ({ show, onClose, player, playerGameweek, teams, season }) => {

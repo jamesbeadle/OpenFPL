@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext, useRef  } from 'react';
 import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-bootstrap';
-import { DataContext } from "../../contexts/DataContext";
-import { getTeamById,groupFixturesByDate, computeTimeLeft } from '../helpers';
 import { BadgeIcon, ArrowLeft, ArrowRight } from '../icons';
 import { useNavigate } from 'react-router-dom';
+import { DataContext } from "../../contexts/DataContext";
+import { getTeamById,groupFixturesByDate, computeTimeLeft } from '../helpers';
 
 const FixturesWidget = () => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import '../assets/custom.scss';
 import { AuthProvider } from "./contexts/AuthContext";
 import { DataProvider } from "./contexts/DataContext";
-import { SnsGovernanceContext } from "./contexts/SNSGovernanceContext";
+//import { SnsGovernanceContext } from "./contexts/SNSGovernanceContext"; ADD
 
 import MyNavbar from './components/shared/navbar';
 import MyFooter from './components/shared/footer';

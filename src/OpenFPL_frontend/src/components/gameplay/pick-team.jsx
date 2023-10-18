@@ -3,7 +3,9 @@ import { Container, Row, Col, Card, Button, Spinner, Dropdown } from 'react-boot
 import { PlusIcon, ShirtIcon, BadgeIcon, RemovePlayerIcon, CaptainIcon, CaptainIconActive, DefaultShirtIcon, StripedShirtIcon} from '../icons';
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
-import { fetchFantasyTeam } from "../../AuthFunctions";
+import { fetchFantasyTeam, saveFantasyTeam } from "../../AuthFunctions";
+import getFlag from '../country-flag';
+import { getTeamById, getPlayerById, getPositionText, getAvailableFormations, computeTimeLeft, calculateTeamValue } from '../helpers';
 import FixturesWidget from './fixtures-widget';
 import SelectPlayerModal from './select-player-modal';
 import SelectBonusPlayerModal from './select-bonus-player-modal';
@@ -18,9 +20,6 @@ import SafeHands from "../../../assets/safe-hands.png";
 import CaptainFantastic from "../../../assets/captain-fantastic.png";
 import BraceBonus from "../../../assets/brace-bonus.png";
 import HatTrickHero from "../../../assets/hat-trick-hero.png";
-import { saveFantasyTeam } from '../../AuthFunctions';
-import getFlag from '../country-flag';
-import { getTeamById, getPlayerById, getPositionText, getAvailableFormations, computeTimeLeft, calculateTeamValue } from '../helpers';
 
 const PickTeam = () => {
   const { authClient } = useContext(AuthContext);
@@ -28,7 +27,6 @@ const PickTeam = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingText, setLoadingText] = useState("Loading Team");
   const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
-  const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [showSelectPlayerModal, setShowSelectPlayerModal] = useState(false);
   const [showSelectBonusPlayerModal, setShowSelectBonusPlayerModal] = useState(false);
   const [showSelectBonusTeamModal, setShowSelectBonusTeamModal] = useState(false);

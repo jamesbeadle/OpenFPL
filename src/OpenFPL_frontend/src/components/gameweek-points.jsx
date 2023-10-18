@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
+import { BadgeIcon, ArrowLeft, ArrowRight } from './icons';
 import { AuthContext } from "../contexts/AuthContext";
 import { DataContext } from "../contexts/DataContext";
-import { ArrowLeft, ArrowRight } from './icons';
 import { getFantasyTeamForGameweek } from '../AuthFunctions';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../declarations/player_canister';
 import { getTeamById } from './helpers';
-import { BadgeIcon } from './icons';
+import getFlag from './country-flag';
 import GoalGetter from "../../assets/goal-getter.png";
 import PassMaster from "../../assets/pass-master.png";
 import NoEntry from "../../assets/no-entry.png";
@@ -17,8 +18,6 @@ import CaptainFantastic from "../../assets/captain-fantastic.png";
 import BraceBonus from "../../assets/brace-bonus.png";
 import HatTrickHero from "../../assets/hat-trick-hero.png";
 import PlayerPointsModal from './modals/player-points-modal';
-import getFlag from './country-flag';
-import { useNavigate } from 'react-router-dom';
 
 const GameweekPoints = () => {
     const { authClient, userPrincipal } = useContext(AuthContext);

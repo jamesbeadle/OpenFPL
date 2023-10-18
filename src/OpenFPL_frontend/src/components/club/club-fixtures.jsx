@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Container, Row, Col, Dropdown, Button, Spinner } from 'react-bootstrap';
-import { DataContext } from "../../contexts/DataContext";
-import { getTeamById, computeTimeLeft, nanoSecondsToMillis } from '../helpers';
 import { BadgeIcon, ClockIcon, ArrowLeft, ArrowRight } from '../icons';
 import { useNavigate } from 'react-router-dom';
+import { DataContext } from "../../contexts/DataContext";
+import { getTeamById, computeTimeLeft, nanoSecondsToMillis } from '../helpers';
 
 const ClubFixtures = ({teamId}) => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useStateS, useContext } from 'react';
 import { Container, Spinner, Card, Button, Modal, Pagination, Tabs, Tab } from 'react-bootstrap';
 import { initSnsWrapper, SnsVote, SnsGovernanceCanister } from '@dfinity/sns';
 import { AuthContext } from "../../contexts/AuthContext";

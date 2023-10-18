@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
-import { Image, Container, Row, Col, Button, Spinner, Dropdown, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button, Spinner, Dropdown, Card } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../../declarations/player_canister';
 import { DataContext } from "../../contexts/DataContext";
