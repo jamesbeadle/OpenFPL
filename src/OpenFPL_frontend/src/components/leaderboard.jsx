@@ -79,10 +79,9 @@ const Leaderboard = () => {
         };
         
         fetchData();
-    }, [currentSeason, currentGameweek, currentMonth, currentPage, currentLeaderboard]);
+    }, [currentSeason, currentGameweek, currentMonth, currentPage, currentLeaderboard, currentClub]);
 
     const fetchViewData = async (season, gameweek, month, leaderboard, club) => {
-
         switch(leaderboard){
             case 'Weekly':
                 await getWeeklyLeaderboard(season, gameweek);
@@ -117,12 +116,17 @@ const Leaderboard = () => {
     };  
 
     const getMonthlyLeaderboard = async (season, month, club) => {
-      if(Number(monthlyLeaderboards[0].totalEntries) === 0){
-        setManagers(null);    
-        return;
-      }
+        if(Number(monthlyLeaderboards[0].totalEntries) === 0){
+          setManagers({});    
+          return;
+        }
         if(currentPage <= 4 && month == systemState.activeMonth){
-            const start = (currentPage - 1) * itemsPerPage;
+          if(!monthlyLeaderboards.find(x => x.clubId == club)){
+            setManagers({});
+            return;
+          }
+        
+          const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const slicedData = {
                 ...monthlyLeaderboards.find(x => x.clubId == club),
@@ -132,7 +136,7 @@ const Leaderboard = () => {
         }
         else{
             try{
-                const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
+                const leaderboardData = await open_fpl_backend.getClubLeaderboard(Number(season.id), Number(month), Number(club), itemsPerPage, (currentPage - 1) * itemsPerPage);
                 setManagers(leaderboardData);    
             } catch (error){
                 console.log(error);
@@ -267,7 +271,7 @@ const Leaderboard = () => {
         isLoading ? (
         <div className="d-flex flex-column align-items-center justify-content-center">
             <Spinner animation="border" />
-            <p className='text-center mt-1'>Loading League Table</p>
+            <p className='text-center mt-1'>Loading Leaderboard</p>
         </div>) 
         :
         <div className="dark-tab-row w-100 mx-0">

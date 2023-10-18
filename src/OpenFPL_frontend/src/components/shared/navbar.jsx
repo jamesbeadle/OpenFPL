@@ -19,14 +19,29 @@ const MyNavbar = () => {
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const handleBlur = (e) => {
-    const currentTarget = e.currentTarget;
-    setTimeout(() => {
-      if (!currentTarget.contains(document.activeElement)) {
-        setShowDropdown(false);
-      }
-    }, 0);
+  useEffect(() => {
+    if (showDropdown) {
+      document.addEventListener('click', handleClickOutside);
+    } else {
+      document.removeEventListener('click', handleClickOutside);
+    }
+  
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showDropdown]);
+  
+  const handleClickOutside = (e) => {
+    const navbar = document.querySelector('.custom-navbar');
+    // Assuming your disconnect panel has a class 'disconnect-panel'
+    const disconnectPanel = document.querySelector('.disconnect-panel');
+  
+    if (!navbar.contains(e.target) && !disconnectPanel.contains(e.target)) {
+      setShowDropdown(false);
+      setExpanded(false);
+    }
   };
+  
 
   const handleLogout = async () => {
     setShowDropdown(false);
@@ -36,6 +51,7 @@ const MyNavbar = () => {
   
   const handleDropdownBlur = (e) => {
     const currentTarget = e.currentTarget;
+    console.log(currentTarget)
     if (!currentTarget.contains(document.activeElement)) {
       setShowDropdown(false);
       setExpanded(false)
@@ -49,7 +65,7 @@ const MyNavbar = () => {
   }, [isAuthenticated]);
 
   return (
-    <Navbar onBlur={handleDropdownBlur} className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
+    <Navbar className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
           <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)} className="d-flex align-items-center" style={{color: "white", fontSize: "small"}}>
             <LogoIcon /> <b className="logo-text">OPENFPL</b>
@@ -76,7 +92,7 @@ const MyNavbar = () => {
                 <Image src={profilePicSrc} roundedCircle className="nav-profile-image d-lg-none" onClick={() => setShowDropdown(!showDropdown)} />
                 { isActive('/profile') && <div className="nav-caret"></div>}
               </Nav.Link> 
-              <div onBlur={handleBlur} className="d-none d-lg-block">
+              <div className="d-none d-lg-block">
                 <Dropdown show={showDropdown}>
                   <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                     <Image src={profilePicSrc} roundedCircle className="nav-profile-image" onClick={() => setShowDropdown(!showDropdown)} />
