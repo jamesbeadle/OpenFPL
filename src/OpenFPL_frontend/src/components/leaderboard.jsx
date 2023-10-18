@@ -96,6 +96,10 @@ const Leaderboard = () => {
     };
 
     const getWeeklyLeaderboard = async (season, gameweek) => {
+      if(Number(weeklyLeaderboard.totalEntries) === 0){
+        setManagers({});    
+        return;
+      }
         if(currentPage <= 4 && gameweek == weeklyLeaderboard.gameweek){
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
@@ -145,6 +149,10 @@ const Leaderboard = () => {
     };
 
     const getSeasonLeaderboard = async (season) => {
+      if(Number(seasonLeaderboard.totalEntries) === 0){
+        setManagers({});    
+        return;
+      }
         if(currentPage <= 4 && season.id == systemState.activeSeason.id){
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
