@@ -366,8 +366,7 @@ const PlayerDetails = ({  }) => {
                                                         </div>
                                                         </div>
                                                         <div style={{ display: 'flex', alignItems: 'center'}}>
-                                                        <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={selectedSeason.id === seasons[seasons.length - 1].id} 
-                                                            style={{ marginLeft: '16px' }} >
+                                                        <Button className="w-100 justify-content-center fpl-btn right-arrow"  onClick={() => handleSeasonChange(1)} disabled={selectedSeason.id === seasons[seasons.length - 1].id}>
                                                             <ArrowRight />
                                                         </Button>
                                                         </div>

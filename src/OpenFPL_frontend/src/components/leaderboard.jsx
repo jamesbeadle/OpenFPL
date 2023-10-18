@@ -335,7 +335,7 @@ const Leaderboard = () => {
                   </div>
                 </div>
 
-                {currentLeaderboard == 'Monthly' && <div style={{ display: 'flex', alignItems: 'center', marginLeft: '16px' }}>
+                {currentLeaderboard == 'Monthly' && <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div ref={clubDropdownRef} onBlur={handleClubBlur}>
                     <Dropdown show={showClubDropdown}>
                       <Dropdown.Toggle as={CustomToggle} id="club-selector">

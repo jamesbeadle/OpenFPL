@@ -571,7 +571,7 @@ const Manager = () => {
             <Col md={5} xs={12}>
               <Card className='mb-3'>
                 <div className="outer-container d-flex">
-                  <div className="stat-panel manager-stat-panel flex-grow-1" style={{paddingLeft: '32px'}}>
+                  <div className="stat-panel manager-stat-panel flex-grow-1">
                       <Row className="stat-row-1">
                           <div>
                               <p className="stat-header w-100">Leaderboard Positions</p>    
