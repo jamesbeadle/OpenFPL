@@ -4,3 +4,111 @@
     width: 24px;
     height: 23px;
 }
+
+
+
+.player-details-name-col{
+    flex-basis: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .player-details-position-col{
+    flex-basis: 35%;
+  }
+  .player-details-value-col{
+    flex-basis: 27.5%;
+  }
+  .player-details-age-col{
+    flex-basis: 17.5%;
+  }
+  
+  .player-divider-1{
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 18%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .player-divider-2{
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 54%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .player-divider-3{
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 82%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+
+    .player-details-name-col{
+        flex-basis: 19%;
+      }
+      .player-details-position-col{
+        flex-basis: 29.5%;
+      }
+      .player-details-value-col{
+        flex-basis: 27.5%;
+      }
+      .player-details-age-col{
+        flex-basis: 17.5%;
+      }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 601px) {
+}
+    
+/* Small devices (portrait tablets and large phones, 601px and up) */
+@media only screen and (min-width: 601px) {
+
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+}
+/* added */
+@media only screen and (min-width: 1500px) {
+
+    .player-details-name-col{
+        flex-basis: 20%;
+      }
+      .player-details-position-col{
+        flex-basis: 35%;
+      }
+      .player-details-value-col{
+        flex-basis: 27.5%;
+      }
+      .player-details-age-col{
+        flex-basis: 17.5%;
+      }
+}
+
+/* 4K and large screens */
+@media only screen and (min-width: 1920px) {
+
+}
+    
