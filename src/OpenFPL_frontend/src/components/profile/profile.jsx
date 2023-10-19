@@ -209,7 +209,7 @@ const Profile = () => {
                             </Col>
                           </Row>
                           <Row className='coins-row' >
-                            <Col xs={12} md={3}>
+                            <Col xs={12} md={6} xxl={3} className='mb-0 mb-md-3'>
                               <div className='coin-col-1 coin-col mb-3 mb-md-0'>
                                 <div className='coin-icon-col'>
                                   <img src={ICPCoin} alt="sponsor1" className='coin-icon'/>
@@ -230,7 +230,7 @@ const Profile = () => {
                                 </div>
                               </div>
                             </Col>
-                            <Col xs={12} md={3}>
+                            <Col xs={12} md={6} xxl={3} className='mb-0 mb-md-3'>
                             <div className='coin-col-2 coin-col mb-3 mb-md-0'>
                                 <div className='coin-icon-col'>
                                   <img src={FPLCoin} alt="sponsor1" className='coin-icon' />
@@ -251,7 +251,7 @@ const Profile = () => {
                                 </div>
                               </div>
                             </Col>
-                            <Col xs={12} md={3}>
+                            <Col xs={12} md={6} xxl={3} className='mb-0 mb-md-3'>
                               <div className='coin-col-3 coin-col mb-3 mb-md-0'>
                                 <div className='coin-icon-col'>
                                   <img src={ckBTCCoin} alt="sponsor1" className='coin-icon' />
@@ -272,7 +272,7 @@ const Profile = () => {
                                 </div>
                               </div>
                             </Col>
-                            <Col xs={12} md={3}>
+                            <Col xs={12} md={6} xxl={3} className='mb-0 mb-md-3'>
                               <div className='coin-col-4 coin-col mb-3 mb-md-0'>
                                 <div className='coin-icon-col'>
                                   <img src={ckETHCoin} alt="sponsor1" className='coin-icon' />

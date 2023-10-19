@@ -59,11 +59,6 @@
     margin-right: 0;
   }
   
-  .coins-row{
-    margin-top: 40px;
-    margin-bottom: 40px;
-  }
-  
   .coin-name{
     font-weight: 700;
     font-size: 24px;
@@ -90,7 +85,7 @@
 }
 
 .profile-detail-row-1{
-  height: 168px;
+  height: 200px;
   padding-left: 32px;
   padding-right: 32px;
 }
@@ -171,109 +166,121 @@
 }
 /* Small devices (601px and up) */
 @media only screen and (min-width: 601px) {
-  .edit-profile-icon {
-      top: 10px !important;
-  }
-  .profile-detail-image{
-      width: 220px;
-      border-radius: 8px;
-      margin-left: 20px;
-      margin-top: 32px;
-  }
-  .profile-details-row{
-      height: 264px;
-      padding-left: 18px;
-      margin-top: 16px;
-  }
-  .profile-detail-row-1{
-      height: 132px;
-      padding-left: 8px;
-  }
-  .profile-detail-row-2{
-      height: 132px;
-      padding-left: 8px;
-  }
-  .profile-display-name-col{
-      flex-basis: 45%;
-  }
-  .profile-favourite-team-col{
-      flex-basis: 55%;
-  }
-  .fpl-large-btn{
-      font-size: 12.5px;
-  }
-  .stat-dropdown{
-      font-size: 12.5px !important;
-      background-color: #454B56 !important;
-  }
+    .edit-profile-icon {
+        top: 10px !important;
+    }
+    .profile-detail-image{
+        width: 220px;
+        border-radius: 8px;
+        margin-left: 20px;
+        margin-top: 32px;
+    }
+    .profile-details-row{
+        height: 264px;
+        padding-left: 18px;
+        margin-top: 16px;
+    }
+    .profile-detail-row-1{
+        height: 140px;
+        padding-left: 8px;
+    }
+    .profile-detail-row-2{
+        height: 132px;
+        padding-left: 8px;
+    }
+    .profile-display-name-col{
+        flex-basis: 45%;
+    }
+    .profile-favourite-team-col{
+        flex-basis: 55%;
+    }
+    .fpl-large-btn{
+        font-size: 12.5px;
+    }
+    .stat-dropdown{
+        font-size: 12.5px !important;
+        background-color: #454B56 !important;
+    }
 }
 
 /* Medium devices (768px and up) */
 @media only screen and (min-width: 768px) {
-  .profile-detail-image{
-      width: 240px;
-  }
-  .profile-details-row{
-      height: 288px;
-      padding-left: 20px;
-  }
-  .profile-detail-row-1, .profile-detail-row-2{
-      height: 144px;
-      padding-left: 16px;
-  }
-  .profile-display-name-col{
-      flex-basis: 40%;
-  }
+    .profile-detail-image{
+        width: 240px;
+    }
+    .profile-details-row{
+        height: 288px;
+        padding-left: 20px;
+    }
+    .profile-detail-row-1{
+        height: 200px;
+        padding-left: 16px;
+    }
+    .profile-detail-row-2{
+        height: 70px;
+        padding-left: 16px;
+    }
+    .profile-display-name-col{
+        flex-basis: 40%;
+    }
 }
 
 /* Large devices (992px and up) */
 @media only screen and (min-width: 992px) {
-  .profile-detail-image{
-      width: 260px;
-      margin-left: 40px;
-  }
-  .profile-details-row{
-      height: 312px;
-      padding-left: 24px;
-  }
-  .profile-detail-row-1, .profile-detail-row-2{
-      height: 156px;
-      padding-left: 24px;
-  }
-  .fpl-large-btn{
-      font-size: 13px;
-  }
-  .stat-dropdown{
-      font-size: 13px !important;
-  }
+    .profile-detail-image{
+        width: 260px;
+        margin-left: 40px;
+    }
+    .profile-details-row{
+        height: 312px;
+        padding-left: 24px;
+    }
+    .profile-detail-row-1{
+        height: 170px;
+        padding-left: 24px;
+    }
+    .profile-detail-row-2{
+        height: 80px;
+        padding-left: 24px;
+    }
+    .fpl-large-btn{
+        font-size: 13px;
+    }
+    .stat-dropdown{
+        font-size: 13px !important;
+    }
 }
 
 /* Extra large devices (1200px and up) */
 @media only screen and (min-width: 1200px) {
-  .profile-detail-image{
-      width: 280px;
-      margin-left: 60px;
-  }
-  .profile-details-row{
-      height: 336px;
-      padding-left: 28px;
-  }
-  .profile-detail-row-1, .profile-detail-row-2{
-      height: 168px;
-      padding-left: 28px;
-  }
-  .profile-display-name-col{
-      flex-basis: 35%;
-  }
-  .profile-favourite-team-col{
-      flex-basis: 53%;
-  }
-  .fpl-large-btn{
-      font-size: 14px;
-  }
-  .stat-dropdown{
-      font-size: 14px !important;
-  }
+    .profile-detail-image{
+        width: 280px;
+        margin-left: 60px;
+    }
+    .profile-details-row{
+        height: 336px;
+        padding-left: 28px;
+    }
+    .profile-detail-row-1{
+        height: 190px;
+        padding-left: 28px;
+    }
+    .profile-detail-row-2{
+        height: 90px;
+        padding-left: 28px;
+    }
+    .profile-display-name-col{
+        flex-basis: 35%;
+    }
+    .profile-favourite-team-col{
+        flex-basis: 53%;
+    }
+    .fpl-large-btn{
+        font-size: 14px;
+    }
+    .stat-dropdown{
+        font-size: 14px !important;
+    }
 }
 
 
@@ -291,12 +298,12 @@
 } 
 
 .profile-detail-row-1{
-  height: 168px;
+  height: 200px;
   padding-left: 32px;
 }
 
 .profile-detail-row-2{
-  height: 168px;
+  height: 100px;
   padding-left: 32px;
 }
 
