@@ -99,7 +99,7 @@ const Homepage = () => {
         ) :
         <Container fluid className='view-container mt-2'>
             <Row>
-                <Col lg={7} xs={12}>
+                <Col xxl={7} xs={12}>
                     <Card className='mb-3 mb-lg-0'>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">
@@ -143,7 +143,7 @@ const Homepage = () => {
                     </Card>
                 </Col>
 
-                <Col lg={5} xs={12}>
+                <Col xxl={5} xs={12} className='mt-lg-4 mt-xxl-0'>
                     <Card>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">  
@@ -229,7 +229,7 @@ const Homepage = () => {
                 </Col>
             </Row>
             
-            <Row className="mt-3 mt-lg-4">
+            <Row className="mt-3">
                 <Col xs={12}>
                     <Card>
                         <div className="outer-container d-flex">
