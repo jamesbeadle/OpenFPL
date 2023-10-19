@@ -505,7 +505,7 @@ const Manager = () => {
         ) : (
         <Container fluid className='view-container mt-2'>
           <Row>
-            <Col md={7} xs={12}>
+            <Col xxl={7} xs={12}>
                 <Card className='mb-3'>
                     <div className="outer-container d-flex">
                       
@@ -563,7 +563,7 @@ const Manager = () => {
                 </Card>
             </Col>
 
-            <Col md={5} xs={12}>
+            <Col xxl={5} xs={12}>
               <Card className='mb-3'>
                 <div className="outer-container d-flex">
                   <div className="stat-panel manager-stat-panel flex-grow-1">

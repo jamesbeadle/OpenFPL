@@ -39,6 +39,7 @@
 /* Positioning */
 .nav-dropdown-menu {
   transform: translate(-50%, 0) !important;
+  z-index: 30;
 }
 
 .formation-dropdown-menu {

@@ -143,6 +143,11 @@
     padding-bottom: 0 !important;
   }
 
+  .view-container {
+    z-index: 10; /* or any value lower than your navbar's z-index */
+}
+
+
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
     .view-container{

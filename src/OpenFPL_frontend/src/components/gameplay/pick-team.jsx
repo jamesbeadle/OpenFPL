@@ -769,8 +769,8 @@ const PickTeam = () => {
         <>
         <Container fluid className='view-container mt-2'>
            <Row>
-              <Col lg={6} xs={12}>
-                  <Card className='mb-3 mb-lg-0'>
+              <Col xxl={6} xs={12}>
+                  <Card className='mb-3 mb-xxl-0'>
                       <div className="outer-container d-flex">
                           <div className="stat-panel flex-grow-1">
                               
@@ -834,7 +834,7 @@ const PickTeam = () => {
                   </Card>
               </Col>
 
-              <Col lg={6} xs={12}>
+              <Col xxl={6} xs={12}>
                   <Card className='mb-3'>
                       <div className="outer-container d-flex">
                           <div className="stat-panel flex-grow-1">

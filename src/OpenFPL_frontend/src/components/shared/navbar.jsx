@@ -21,6 +21,15 @@ const MyNavbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
+    document.body.addEventListener('click', handleClickOutside);
+
+    return () => {
+        document.body.removeEventListener('click', handleClickOutside);
+    };
+}, []);
+
+
+  useEffect(() => {
     if (showDropdown) {
       document.addEventListener('click', handleClickOutside);
     } else {
@@ -93,7 +102,7 @@ const MyNavbar = () => {
                 <Image src={profilePicSrc} roundedCircle className="nav-profile-image d-lg-none" onClick={() => setShowDropdown(!showDropdown)} />
                 { isActive('/profile') && <div className="nav-caret"></div>}
               </Nav.Link> 
-              <div className="d-none d-lg-block">
+              <div className="d-none d-lg-block disconnect-panel">
                 <Dropdown show={showDropdown}>
                   <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
                     <Image src={profilePicSrc} roundedCircle className="nav-profile-image" onClick={() => setShowDropdown(!showDropdown)} />

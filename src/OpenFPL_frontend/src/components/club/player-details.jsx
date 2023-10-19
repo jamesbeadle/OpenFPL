@@ -160,7 +160,7 @@ const PlayerDetails = ({  }) => {
         ) :
         <Container fluid className='view-container mt-2'>
             <Row>
-                <Col md={7} xs={12}>
+                <Col xxl={7} xs={12}>
                     <Card className='mb-3'>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">
@@ -218,7 +218,7 @@ const PlayerDetails = ({  }) => {
                                         <p className="stat-header text-center">Shirt: {player.shirtNumber}</p>   
                                     </div>
                                     <div className='player-details-position-col'>
-                                        <p className="stat-header" style={{ display: 'flex', alignItems: 'center' }}><div>{getFlag(player.nationality, 'player-details-flag')}</div>{player.firstName}</p>    
+                                        <p className="stat-header" style={{ display: 'flex', alignItems: 'center' }}><>{getFlag(player.nationality, 'player-details-flag')}</>{player.firstName}</p>    
                                     </div>
                                     <div className='player-details-value-col'>
                                         <p className="stat-header">{systemState.activeSeason.name}</p>    
@@ -235,8 +235,8 @@ const PlayerDetails = ({  }) => {
                     </Card>
                 </Col>
 
-                <Col md={5} xs={12}>
-                    <Card>
+                <Col xxl={5} xs={12}>
+                    <Card className='mb-3'>
                         <div className="outer-container d-flex">
                             <div className="stat-panel flex-grow-1">  
                                 <Row className="stat-row-1">
