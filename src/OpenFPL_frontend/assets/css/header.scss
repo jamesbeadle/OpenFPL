@@ -241,6 +241,11 @@
         width: 28px;
         margin-left: 12px;
     }
+
+    .navbar-collapse{
+        border: none !important;
+        background-color: transparent;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
