@@ -175,6 +175,14 @@
     .manager-stat-panel {
         height: 97px;
     }
+    
+    .manager-display-name-col{
+        flex-basis: 30%;
+    }
+    
+    .manager-favourite-team-col{
+        flex-basis: 70%;
+    }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
@@ -311,14 +319,6 @@
     .manager-detail-row-2{
         height: 168px;
         padding-left: 32px;
-    }
-    
-    .manager-display-name-col{
-        flex-basis: 30%;
-    }
-    
-    .manager-favourite-team-col{
-        flex-basis: 70%;
     }
     
     .manager-profile-image{

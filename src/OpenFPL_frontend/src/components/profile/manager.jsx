@@ -509,7 +509,7 @@ const Manager = () => {
                 <Card className='mb-3'>
                     <div className="outer-container d-flex">
                       
-                    <div className='stat-panel manager-stat-panel w-100' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                    <div className='stat-panel w-100' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                 <div className='manager-picture-col'>
                                     <img src={profilePicSrc} className="manager-profile-image" />
                                   
