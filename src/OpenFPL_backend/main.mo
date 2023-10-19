@@ -1697,6 +1697,10 @@ actor Self {
 
   public func updateCache(category: Text) : async (){
     await updateCacheHash(category);
+  };
+
+  public func reuploadTeams() : async (){
+    await teamsInstance.reuploadTeams();
   }
   
 };

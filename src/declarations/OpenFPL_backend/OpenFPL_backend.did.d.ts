@@ -178,7 +178,6 @@ export interface Team {
 }
 export type TeamId = number;
 export interface _SERVICE {
-  'addInitialData' : ActorMethod<[], undefined>,
   'executeAddInitialFixtures' : ActorMethod<[SeasonId, Array<Fixture>], Result>,
   'executeCreatePlayer' : ActorMethod<
     [TeamId, number, string, string, number, bigint, bigint, string],
@@ -216,9 +215,7 @@ export interface _SERVICE {
     [TeamId, string, string, string, string, string, string, number],
     Result
   >,
-  'gameweekBegin' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
-  'getAddTeamsFunction' : ActorMethod<[], string>,
   'getClubLeaderboard' : ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard
@@ -271,7 +268,6 @@ export interface _SERVICE {
   'updateCache' : ActorMethod<[string], undefined>,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
-  'updateFixtureStatus' : ActorMethod<[FixtureId, number], undefined>,
   'updateProfilePicture' : ActorMethod<[Uint8Array | number[]], Result>,
   'validateAddInitialFixtures' : ActorMethod<
     [SeasonId, Array<Fixture>],

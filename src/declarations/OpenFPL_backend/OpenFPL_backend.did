@@ -217,7 +217,6 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
-  addInitialData: () -> ();
   executeAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);
   executeCreatePlayer: (TeamId, nat8, text, text, nat8, nat, int, text) ->
    (Result);
@@ -239,9 +238,7 @@ service : {
    (Result);
   executeUpdateTeam: (TeamId, text, text, text, text, text, text, nat8) ->
    (Result);
-  gameweekBegin: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
-  getAddTeamsFunction: () -> (text);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
   getClubLeaderboardsCache: (nat16, nat8) ->
@@ -274,7 +271,6 @@ service : {
   updateCache: (text) -> ();
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
-  updateFixtureStatus: (FixtureId, nat8) -> () oneway;
   updateProfilePicture: (blob) -> (Result);
   validateAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);
   validateCreatePlayer: (TeamId, nat8, text, text, nat8, nat, int, text) ->

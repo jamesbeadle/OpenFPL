@@ -184,7 +184,6 @@ export const idlFactory = ({ IDL }) => {
     'primaryColourHex' : IDL.Text,
   });
   return IDL.Service({
-    'addInitialData' : IDL.Func([], [], []),
     'executeAddInitialFixtures' : IDL.Func(
         [SeasonId, IDL.Vec(Fixture)],
         [Result],
@@ -255,9 +254,7 @@ export const idlFactory = ({ IDL }) => {
         [Result],
         [],
       ),
-    'gameweekBegin' : IDL.Func([], [], []),
     'getAccountBalanceDTO' : IDL.Func([], [AccountBalanceDTO], []),
-    'getAddTeamsFunction' : IDL.Func([], [IDL.Text], []),
     'getClubLeaderboard' : IDL.Func(
         [IDL.Nat16, IDL.Nat8, TeamId, IDL.Nat, IDL.Nat],
         [PaginatedClubLeaderboard],
@@ -334,7 +331,6 @@ export const idlFactory = ({ IDL }) => {
     'updateCache' : IDL.Func([IDL.Text], [], []),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
-    'updateFixtureStatus' : IDL.Func([FixtureId, IDL.Nat8], [], ['oneway']),
     'updateProfilePicture' : IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
     'validateAddInitialFixtures' : IDL.Func(
         [SeasonId, IDL.Vec(Fixture)],
