@@ -846,6 +846,24 @@
       width: 11px;
       height: 11px;
   }
+
+  .remove-player-button {
+      width: 18px;
+      height: 18px;
+      border-radius: 2.25px;
+  }
+
+  .captain-icon {
+    width: 17px;
+    height: 16.5px;
+  }
+
+  .left-side-image {
+      left: -10px;
+  }
+  .right-side-image {
+      right: -10px;
+  }
 }
   
   
@@ -928,6 +946,24 @@
       width: 12.5px;
       height: 12.5px;
   }
+
+  .remove-player-button {
+      width: 20px;
+      height: 20px;
+      border-radius: 2.5px;
+  }
+
+  .captain-icon {
+    width: 18px;
+    height: 17px;
+}
+
+.left-side-image {
+  left: -12px;
+}
+.right-side-image {
+  right: -12px;
+}
   
 }
 
@@ -1010,7 +1046,27 @@
       width: 13.5px;
       height: 13.5px;
   }
-  
+  .remove-player-button {
+      width: 26px;
+      height: 26px;
+      border-radius: 3.25px;
+  }
+
+  .captain-icon {
+    width: 20px;
+    height: 19px;
+}
+
+.left-side-image {
+  left: -16px;
+}
+.right-side-image {
+  right: -16px;
+}
+.remove-player-icon{
+  width: 10px;
+  height: 10px;
+}
 }
 
   /* Extra large devices (large laptops and desktops, 1200px and up) */
@@ -1092,6 +1148,28 @@
       width: 14px;
       height: 14px;
   }
+
+  .remove-player-button {
+      width: 29px;
+      height: 29px;
+      border-radius: 3.75px;
+  }
+
+  .captain-icon {
+    width: 21.5px;
+    height: 20.5px;
+}
+
+.left-side-image {
+  left: -19px;
+}
+.right-side-image {
+  right: -19px;
+}
+.remove-player-icon{
+  width: 11px;
+  height: 11px;
+}
   
 }
 
@@ -1235,6 +1313,10 @@
     width: 32px;
     height: 32px;
     border-radius: 4px;
+  }
+  .remove-player-icon{
+    width: 12px;
+    height: 12px;
   }
   
   .captain-player-button{

@@ -932,7 +932,7 @@ const PickTeam = () => {
           </Col>
           </Row>
           <Row>
-            <Col xs={12} md={6}>
+            <Col xs={12} xxl={6}>
               <Card id="pitch-bg" className={showListView ? 'collapse' : ''}>
                 <div className="row-wrapper">
                     <Row>
@@ -1076,7 +1076,7 @@ const PickTeam = () => {
 
               </Card>
             </Col>
-            <Col xs={12} md={6}>
+            <Col xs={12} xxl={6}>
               <FixturesWidget teams={teams} />
             </Col>
           </Row>
