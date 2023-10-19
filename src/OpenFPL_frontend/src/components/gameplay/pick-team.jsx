@@ -615,7 +615,7 @@ const PickTeam = () => {
                             )}
                           </button>
                         </div>
-                        <div className="player-details d-none d-lg-block">
+                        <div className="player-details d-none d-md-block">
                           <div className="player-name-row">
                             <div>{getFlag(player.nationality, 'pick-team-flag')}</div>
                             {
@@ -641,7 +641,7 @@ const PickTeam = () => {
                             £{(player.value/4).toFixed(2).toLocaleString()}m</span>
                           </div>
                         </div>
-                        <div className="player-details-mobile d-block d-lg-none">
+                        <div className="player-details-mobile d-block d-md-none">
                           <div className="player-name-row">
                             {
                               <>
@@ -976,9 +976,9 @@ const PickTeam = () => {
               
               <Card className={!showListView ? 'collapse' : ''}>
                 <Card.Header className="list-view-header-row">
-                  <div className="header-col position-col"></div>
-                  <div className="header-col captain-col">Captain</div>
-                  <div className="header-col player-col">Player Name</div>
+                  <div className="header-col position-col">Pos</div>
+                  <div className="header-col captain-col">(c)</div>
+                  <div className="header-col player-col">Player</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
                   <div className="header-col button-col"></div>
@@ -987,9 +987,9 @@ const PickTeam = () => {
                 {renderListRows(gk, 0, 'GK')}
 
                 <div className="list-view-sub-header-row">
-                  <div className="header-col position-col"></div>
-                  <div className="header-col captain-col">Captain</div>
-                  <div className="header-col player-col">Player Name</div>
+                  <div className="header-col position-col">Pos</div>
+                  <div className="header-col captain-col">(c)</div>
+                  <div className="header-col player-col">Player</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
                   <div className="header-col button-col"></div>
@@ -998,9 +998,9 @@ const PickTeam = () => {
                 {renderListRows(df, 1, 'DF')}
 
                 <div className="list-view-sub-header-row">
-                  <div className="header-col position-col"></div>
-                  <div className="header-col captain-col">Captain</div>
-                  <div className="header-col player-col">Player Name</div>
+                  <div className="header-col position-col">Pos</div>
+                  <div className="header-col captain-col">(c)</div>
+                  <div className="header-col player-col">Player</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
                   <div className="header-col button-col"></div>
@@ -1009,9 +1009,9 @@ const PickTeam = () => {
                 {renderListRows(mf, 2, 'MF')}
 
                 <div className="list-view-sub-header-row">
-                  <div className="header-col position-col"></div>
-                  <div className="header-col captain-col">Captain</div>
-                  <div className="header-col player-col">Player Name</div>
+                  <div className="header-col position-col">Pos</div>
+                  <div className="header-col captain-col">(c)</div>
+                  <div className="header-col player-col">Player</div>
                   <div className="header-col team-col">Team</div>
                   <div className="header-col value-col">Value</div>
                   <div className="header-col button-col"></div>

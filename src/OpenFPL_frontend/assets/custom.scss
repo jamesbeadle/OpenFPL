@@ -148,46 +148,6 @@
   align-items: center;
 }
 
-.list-view-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 24px;
-  background-color: rgba(69, 75, 86, 0.8);
-  height: 46px;
-  padding-left: 24px !important;
-  padding-right: 24px !important;
-}
-
-.list-view-sub-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: rgba(69, 75, 86, 0.8);
-  height: 46px;
-  padding-left: 24px !important;
-  padding-right: 24px !important;
-}
-
-.list-view-player-row{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #161819;
-  height: 72px;
-  width: 100%;
-  padding-left: 24px;
-  padding-right: 24px;
-}
-
-.list-view-player-row-sub{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 72px;
-  width: 100%;
-}
-
 .header-col {
   vertical-align: middle;
   font-size: 12px;

@@ -1,8 +1,8 @@
 
 
 .player-details-shirt-icon{
-    width: 20px;
-    height: 19px;
+    width: 19px;
+    height: 20px;
 }
 
 
@@ -128,6 +128,10 @@
       height: 12px;
       margin-right: 4px;
   }
+  .player-details-shirt-icon{
+      width: 23px;
+      height: 24px;
+  }
 }
 /* Small devices (601px and up) */
 @media only screen and (min-width: 601px) {
@@ -139,6 +143,10 @@
       width: 14px;
       height: 14px;
       margin-right: 5px;
+  }
+  .player-details-shirt-icon{
+      width: 30px;
+      height: 31px;
   }
 }
 
@@ -153,6 +161,10 @@
       height: 16px;
       margin-right: 6px;
   }
+  .player-details-shirt-icon{
+      width: 36px;
+      height: 37px;
+  }
 }
 
 /* Large devices (992px and up) */
@@ -166,6 +178,10 @@
       height: 18px;
       margin-right: 7px;
   }
+  .player-details-shirt-icon{
+      width: 40px;
+      height: 41px;
+  }
 }
 
 /* Extra large devices (1200px and up) */
@@ -178,6 +194,10 @@
       width: 20px;
       height: 20px;
       margin-right: 7.5px;
+  }
+  .player-details-shirt-icon{
+      width: 46px;
+      height: 47px;
   }
 }
 
