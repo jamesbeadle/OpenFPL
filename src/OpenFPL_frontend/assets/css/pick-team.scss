@@ -224,6 +224,14 @@
     background-color: #E32C2C;
   }
   
+  .list-remove-player-button{
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    background-color: #E32C2C;
+  }
+  
   .captain-player-button{
     border: none;
     background-color: transparent;
@@ -443,6 +451,7 @@
   background-color: #2CE3A6;
   border: none;
   border-radius: 4px;
+  margin-left: 8px;
 }
 
 
@@ -453,6 +462,30 @@
   border: none;
   border-radius: 4px;
 }
+
+
+
+.position-col{
+  width: 10%;
+}
+
+.captain-col{
+  width: 10%;
+}
+
+.player-col{
+  width: 45%;
+}
+
+.team-col,
+.value-col {
+  width: 15%;
+}
+
+.button-col {
+  width: 5%;
+}
+
 
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
@@ -737,6 +770,44 @@
     .small-plus-icon{
       width: 8px;
       height: 8px;
+    }
+
+    
+
+    .position-col{
+      width: 15%;
+    }
+
+    .captain-col{
+      width: 15%;
+    }
+
+    .player-col{
+      width: 35%;
+    }
+    
+    .team-col{
+      width: 20%;
+    }
+
+    .value-col {
+      width: 15%;
+    }
+
+    .button-col {
+      width: 15%;
+    }
+    
+    .list-remove-player-button{
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+        margin-left: 8px;
+    }
+
+    .list-remove-player-icon{
+      width: 12px;
+      height: 12px;
     }
 
 }
@@ -1069,6 +1140,28 @@
 .remove-player-icon{
   width: 10px;
   height: 10px;
+}
+
+
+.position-col{
+  width: 10%;
+}
+
+.captain-col{
+  width: 10%;
+}
+
+.player-col{
+  width: 45%;
+}
+
+.team-col,
+.value-col {
+  width: 15%;
+}
+
+.button-col {
+  width: 5%;
 }
 }
 
@@ -1472,5 +1565,6 @@
   width: 16px;
   height: 16px;
 }
+
   }
   

@@ -29,10 +29,10 @@ const BadgeIcon = ({ onClick, primary='#000000', secondary='#FFFFFF', third='#77
   </svg>
 );
 
-const RemovePlayerIcon = ({ onClick}) => (
+const RemovePlayerIcon = ({ onClick, className='remove-player-icon' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    className='remove-player-icon'
+    className={className}
     fill="currentColor"
     viewBox="0 0 16 16"
     onClick={onClick}

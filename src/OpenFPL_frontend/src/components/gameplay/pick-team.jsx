@@ -729,7 +729,7 @@ const PickTeam = () => {
                           </div>
                           <div className="header-col value-col">£{(player.value/4).toFixed(2).toLocaleString()}m</div>
                           <div className="header-col button-col">
-                            <button className="remove-player-button" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon width={16} height={16} /></button>
+                            <button className="list-remove-player-button" onMouseDown={() => { handleSellPlayer(player.id); }}><RemovePlayerIcon className='list-remove-player-icon' /></button>
                           </div>
                         </div>
                       );
