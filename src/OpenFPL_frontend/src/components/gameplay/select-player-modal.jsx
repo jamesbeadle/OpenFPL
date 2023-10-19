@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Container, Form, Pagination, Row, Col } from 'react-bootstrap';
 import { DataContext } from "../../contexts/DataContext";
-import { PlusIcon, BadgeIcon } from '../icons';
+import { PlusIcon, BadgeIcon, SmallPlusIcon } from '../icons';
 
 const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, startingPosition, availableFormations,  }) => {
   const { players, teams } = useContext(DataContext);
@@ -223,7 +223,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                 <p className='w-100 m-0'>Pos</p>
               </div>
               <div className="modal-table-header modal-player-col">
-                <p className='w-100 m-0'>Player Name</p>
+                <p className='w-100 m-0'>Name</p>
               </div>
               <div className="modal-table-header modal-team-col">
                 <p className='w-100 m-0'>Team</p>
@@ -284,7 +284,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                   {(() => {
                     const reasonOrValid = canAddPlayer(player, fantasyTeam, fantasyTeam.bankBalance);
                     return reasonOrValid === "Valid"
-                      ? <button onClick={() => { handleSubmit(player); }} className='add-player-button'><PlusIcon /></button>
+                      ? <button onClick={() => { handleSubmit(player); }} className='small-add-player-button'><SmallPlusIcon /></button>
                       : <p className='disabled-player-text m-0 text-center w-100'>{reasonOrValid}</p>;
                   })()}
                 

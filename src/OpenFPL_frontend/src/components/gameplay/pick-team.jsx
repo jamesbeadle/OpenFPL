@@ -937,10 +937,15 @@ const PickTeam = () => {
                 <div className="row-wrapper">
                     <Row>
                       <Col xs={6} className='d-flex align-items-center justify-content-center'>
-                        <img src={ExampleSponsor} alt="sponsor1" className='sponsor1' />
+                        <a href="https://vault-bet.com" target='_blank'>
+                          <img src={ExampleSponsor} alt="sponsor1" className='sponsor1' />
+                        </a>
                       </Col>
                       <Col xs={6} className='d-flex align-items-center justify-content-center'>
-                        <img src={ExampleSponsor} alt="sponsor2" className='sponsor2' />
+                        <a href="https://vault-bet.com" target='_blank'>
+                          <img src={ExampleSponsor} alt="sponsor2" className='sponsor2' />
+                        </a>
+                        
                       </Col>
                     </Row>
                   </div>

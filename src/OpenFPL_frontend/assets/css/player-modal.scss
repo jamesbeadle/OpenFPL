@@ -297,6 +297,15 @@
         height: 40px;
         font-size: 12px;
     }
+
+    
+
+  .select-player-badge-icon{
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+  }
+    
 }
 
 /* Extra small devices (phones, 600px and down) */
@@ -409,7 +418,6 @@
   
   .player-modal-header-row{
     font-size: 12px;
-    padding-left: 24px;
   }
   
   .player-modal-total-col{
@@ -451,6 +459,12 @@
     width: 146px;
     height: 52px;
     font-size: 16px;
+  }
+
+  .select-player-badge-icon{
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
   }
 }
 

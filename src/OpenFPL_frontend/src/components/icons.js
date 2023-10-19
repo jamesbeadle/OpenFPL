@@ -110,6 +110,19 @@ const PlusIcon = ({ width=16, height=16, marginRight=0, fill='#161819' }) => (
   </svg>
 );
 
+const SmallPlusIcon = ({ fill='#161819' }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    className='small-plus-icon'
+    viewBox="0 0 16 16"
+    style={{ cursor: 'pointer' }}
+  >
+ 
+    <path d="M16 6.66667H9.33333V0H6.66667V6.66667H0V9.33333H6.66667V16H9.33333V9.33333H16V6.66667Z" fill={fill}/>
+  </svg>
+);
+
 
 const CaptainIcon = ({ }) => (
   <svg
@@ -629,5 +642,5 @@ const WalletIcon = ({ onClick, color = 'currentColor', margin = '0', width = '20
 
 
 
-export { ViewIcon, LogoIcon, BadgeIcon, RemovePlayerIcon, CombinedIcon, ClockIcon, ArrowLeft, ArrowRight, PlusIcon, DefaultShirtIcon, ShirtIcon, StripedShirtIcon, CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, TableIcon, FixtureIcon, TeamIcon, PlayerIcon, TransferIcon, StarOutlineIcon, 
+export { ViewIcon, LogoIcon, BadgeIcon, RemovePlayerIcon, CombinedIcon, ClockIcon, ArrowLeft, ArrowRight, PlusIcon, SmallPlusIcon, DefaultShirtIcon, ShirtIcon, StripedShirtIcon, CopyIcon, ExitIcon, LogoutIcon, ProfileIcon, EditIcon, StarIcon, GovernanceIcon, TableIcon, FixtureIcon, TeamIcon, PlayerIcon, TransferIcon, StarOutlineIcon, 
   RecordIcon, PersonIcon, CaptainIcon, CaptainIconActive, StopIcon, TwoIcon, ThreeIcon, PersonUpIcon, PersonBoxIcon, CancelBonusIcon, WalletIcon, StopCircleIcon, PenaltyMissIcon };

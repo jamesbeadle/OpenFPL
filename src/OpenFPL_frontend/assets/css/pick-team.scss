@@ -371,6 +371,7 @@
   border-style: solid;
   border-color: rgba(69, 75, 86, 0.8);
   width: 100% !important;
+  margin: 0;
 }
 
 .select-player-modal-row p {
@@ -392,7 +393,7 @@
   font-size: 12px;
   font-weight: 600;
   box-sizing: border-box;
-  padding-left: 24px;
+  margin: 0;
 }
 
 
@@ -404,6 +405,7 @@
   border-width: 1px 0 1px 0;
   background-color: rgba(46, 50, 58, 0.6);
   height: 46px;
+  margin: 0;
 }
 
 .modal-position-col{
@@ -436,6 +438,15 @@
 }
 
 .add-player-button{
+  width: 32px;
+  height: 32px;
+  background-color: #2CE3A6;
+  border: none;
+  border-radius: 4px;
+}
+
+
+.small-add-player-button{
   width: 32px;
   height: 32px;
   background-color: #2CE3A6;
@@ -697,12 +708,12 @@
 
     .modal-team-col,
     .modal-value-col {
-      flex-basis: 20%;
+      flex-basis: 17.5%;
       padding: 0;
     }
 
     .modal-pts-col {
-      flex-basis: 10%;
+      flex-basis: 15%;
       padding: 0;
     }
 
@@ -717,7 +728,16 @@
       border-radius: 4px;
     }
 
-    
+    .small-add-player-button{
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    .small-plus-icon{
+      width: 8px;
+      height: 8px;
+    }
 
 }
 
@@ -1025,6 +1045,17 @@
 }
 
 
+.small-add-player-button{
+  width: 32px;
+  height: 32px;
+  background-color: #2CE3A6;
+  border: none;
+  border-radius: 4px;
+}
+.small-plus-icon{
+  width: 16px;
+  height: 16px;
+}
   }
   
   /* 4K and large screens */
