@@ -1,0 +1,224 @@
+
+.footer-links {
+    list-style-type: none;
+    padding: 0;
+    font-size: 24px;
+}
+
+.footer-links li {
+    line-height: 1.6;
+}
+
+.footer a{
+    color:white !important;
+}
+
+.social-icon {
+    width: 16px;
+    height: 16px;
+    margin: 0 10px;
+}
+
+.footer-logo-container{
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+
+.footer-sponsor a{
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.footer-sponsor-image{
+    width: 100px;
+}
+
+.footer-container{
+    padding: 32px;
+}
+
+
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+    .footer-links {
+        font-size: 10px;
+    }
+    .footer-link {
+        font-size: 10px;
+    }
+    .social-icon {
+        width: 12px;
+        height: 12px;
+        margin: 0 4px;
+    }
+    
+    .footer-sponsor-image{
+        width: 36px;
+    }
+    .footer-sponsor a{
+      text-decoration: none;
+      font-size: 10px;
+    }
+    
+    .footer-container{
+        padding-left: 8px;
+        padding-right: 8px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 601px) {
+    .footer-links,
+    .footer-link,
+    .footer-sponsor a {
+        font-size: 10px;
+    }
+
+    .social-icon {
+        width: 14px;
+        height: 14px;
+        margin: 0 5px;
+    }
+
+    .footer-sponsor-image{
+        width: 44px;
+    }
+
+    .footer-container{
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 601px and up) */
+@media only screen and (min-width: 601px) {
+    .footer-links,
+    .footer-link,
+    .footer-sponsor a {
+        font-size: 10px;
+    }
+
+    .social-icon {
+        width: 16px;
+        height: 16px;
+        margin: 0 6px;
+    }
+
+    .footer-sponsor-image{
+        width: 52px;
+    }
+
+    .footer-container{
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .footer-links,
+    .footer-link,
+    .footer-sponsor a {
+        font-size: 11px;
+    }
+
+    .social-icon {
+        width: 18px;
+        height: 18px;
+        margin: 0 7px;
+    }
+
+    .footer-sponsor-image{
+        width: 60px;
+    }
+
+    .footer-container{
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .footer-links,
+    .footer-link,
+    .footer-sponsor a {
+        font-size: 11px;
+    }
+
+    .social-icon {
+        width: 20px;
+        height: 20px;
+        margin: 0 8px;
+    }
+
+    .footer-sponsor-image{
+        width: 68px;
+    }
+
+    .footer-container{
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .footer-links,
+    .footer-link,
+    .footer-sponsor a {
+        font-size: 12px;
+    }
+
+    .social-icon {
+        width: 22px;
+        height: 22px;
+        margin: 0 9px;
+    }
+
+    .footer-sponsor-image{
+        width: 74px;
+    }
+
+    .footer-container{
+        padding-left: 28px;
+        padding-right: 28px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+}
+
+
+/* added */
+@media only screen and (min-width: 1500px) {
+
+
+    .footer-container{
+        padding-left: 32px;
+        padding-right: 32px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+    .footer-sponsor-image{
+        width: 80px;
+    }
+
+.footer-sponsor a{
+  text-decoration: none;
+  font-size: 12px;
+}
+    
+}

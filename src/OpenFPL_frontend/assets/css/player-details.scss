@@ -1,0 +1,250 @@
+
+
+.player-details-shirt-icon{
+    width: 19px;
+    height: 20px;
+}
+
+
+
+.player-details-name-col{
+    flex-basis: 20%;
+    display: flex;
+    justify-content: center;
+  }
+  .player-details-position-col{
+    flex-basis: 35%;
+  }
+  .player-details-value-col{
+    flex-basis: 27.5%;
+  }
+  .player-details-age-col{
+    flex-basis: 17.5%;
+  }
+  
+  .player-divider-1{
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 18%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .player-divider-2{
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 48%;
+    width: 1px;
+    background-color: #37393C;
+  }
+  
+  .player-divider-3{
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 75%;
+    width: 1px;
+    background-color: #37393C;
+  }
+
+  .player-details-flag{
+    width: 16px;
+    margin-right: 4px;
+  }
+  
+
+.gw-history-gw-col{
+    flex-basis: 10%;
+  }
+  
+  .gw-history-opponent-col{
+    flex-basis: 30%;
+  }
+  
+  .gw-history-points-col{
+    flex-basis: 40%;
+  }
+  
+  .gw-history-details-col{
+    flex-basis: 20%;
+  }
+  
+  .view-details-button{
+    background-color: transparent !important;
+    border: none !important;
+  }
+
+  .player-detail-badge-icon{
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+  
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+
+    .player-details-name-col{
+        flex-basis: 19%;
+      }
+      .player-details-position-col{
+        flex-basis: 29.5%;
+      }
+      .player-details-value-col{
+        flex-basis: 27.5%;
+      }
+      .player-details-age-col{
+        flex-basis: 17.5%;
+      }
+
+      .gw-history-gw-col{
+          flex-basis: 10%;
+      }
+      
+      .gw-history-opponent-col{
+          flex-basis: 40%;
+      }
+      
+      .gw-history-points-col{
+          flex-basis: 10%;
+      }
+      
+      .gw-history-details-col{
+          flex-basis: 40%;
+      }
+
+      .view-details-icon{
+        width: 16px;
+        margin-right: 4px;
+      }
+
+    .view-details-button{
+        font-size: 8px;
+    }
+    .player-detail-badge-icon{
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
+  }
+  .player-details-shirt-icon{
+      width: 23px;
+      height: 24px;
+  }
+}
+/* Small devices (601px and up) */
+@media only screen and (min-width: 601px) {
+  .view-details-icon {
+      width: 20px;
+      margin-right: 5px;
+  }
+  .player-detail-badge-icon {
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+  }
+  .player-details-shirt-icon{
+      width: 30px;
+      height: 31px;
+  }
+}
+
+/* Medium devices (768px and up) */
+@media only screen and (min-width: 768px) {
+  .view-details-icon {
+      width: 24px;
+      margin-right: 6px;
+  }
+  .player-detail-badge-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+  }
+  .player-details-shirt-icon{
+      width: 36px;
+      height: 37px;
+  }
+}
+
+/* Large devices (992px and up) */
+@media only screen and (min-width: 992px) {
+  .view-details-icon {
+      width: 28px;
+      margin-right: 7px;
+  }
+  .player-detail-badge-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 7px;
+  }
+  .player-details-shirt-icon{
+      width: 40px;
+      height: 41px;
+  }
+}
+
+/* Extra large devices (1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .view-details-icon {
+      width: 30px;
+      margin-right: 7.5px;
+  }
+  .player-detail-badge-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 7.5px;
+  }
+  .player-details-shirt-icon{
+      width: 46px;
+      height: 47px;
+  }
+}
+
+/* added */
+@media only screen and (min-width: 1500px) {
+
+    .player-details-name-col{
+        flex-basis: 20%;
+      }
+      .player-details-position-col{
+        flex-basis: 35%;
+      }
+      .player-details-value-col{
+        flex-basis: 27.5%;
+      }
+      .player-details-age-col{
+        flex-basis: 17.5%;
+      }
+
+        
+
+    .gw-history-gw-col{
+        flex-basis: 10%;
+    }
+    
+    .gw-history-opponent-col{
+        flex-basis: 30%;
+    }
+    
+    .gw-history-points-col{
+        flex-basis: 40%;
+    }
+    
+    .gw-history-details-col{
+        flex-basis: 20%;
+    }
+
+    .view-details-icon{
+      width: 32px;
+      margin-right: 8px;
+    }
+
+    .view-details-button{
+        font-size: 16px;
+    }
+    .player-details-shirt-icon{
+      width: 50px;
+      height: 51px;
+  }
+}

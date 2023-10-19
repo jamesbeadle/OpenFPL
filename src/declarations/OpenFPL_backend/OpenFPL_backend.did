@@ -7,6 +7,7 @@ type Team =
    name: text;
    primaryColourHex: text;
    secondaryColourHex: text;
+   shirtType: nat8;
    thirdColourHex: text;
  };
 type SystemState = 
@@ -73,6 +74,18 @@ type PaginatedClubLeaderboard =
    month: nat8;
    seasonId: SeasonId;
    totalEntries: nat;
+ };
+type ManagerDTO = 
+ record {
+   createDate: int;
+   displayName: text;
+   favouriteTeamId: TeamId;
+   gameweeks: vec FantasyTeamSnapshot;
+   monthlyPosition: text;
+   principalId: text;
+   profilePicture: blob;
+   seasonPosition: text;
+   weeklyPosition: text;
  };
 type List_2 = 
  opt record {
@@ -204,12 +217,14 @@ type AccountBalanceDTO =
    icpBalance: nat64;
  };
 service : {
+  addInitialData: () -> ();
   executeAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);
   executeCreatePlayer: (TeamId, nat8, text, text, nat8, nat, int, text) ->
    (Result);
   executeLoanPlayer: (PlayerId, TeamId, int) -> (Result);
   executePromoteFormerTeam: (TeamId) -> (Result);
-  executePromoteNewTeam: (text, text, text, text, text, text) -> (Result);
+  executePromoteNewTeam: (text, text, text, text, text, text, nat8) ->
+   (Result);
   executeRecallPlayer: (PlayerId) -> (Result);
   executeRescheduleFixture: (FixtureId, GameweekNumber, GameweekNumber,
    int) -> (Result);
@@ -222,8 +237,11 @@ service : {
   executeUnretirePlayer: (PlayerId) -> (Result);
   executeUpdatePlayer: (PlayerId, nat8, text, text, nat8, int, text) ->
    (Result);
-  executeUpdateTeam: (TeamId, text, text, text, text, text, text) -> (Result);
+  executeUpdateTeam: (TeamId, text, text, text, text, text, text, nat8) ->
+   (Result);
+  gameweekBegin: () -> ();
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
+  getAddTeamsFunction: () -> (text);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
   getClubLeaderboardsCache: (nat16, nat8) ->
@@ -236,6 +254,7 @@ service : {
   getFixtureDTOs: () -> (vec FixtureDTO) query;
   getFixtures: () -> (vec Fixture) query;
   getFixturesForSeason: (SeasonId) -> (vec Fixture) query;
+  getManager: (text, SeasonId, GameweekNumber) -> (ManagerDTO) query;
   getProfileDTO: () -> (ProfileDTO);
   getPublicProfileDTO: (text) -> (ProfileDTO) query;
   getSeasonLeaderboard: (nat16, nat, nat) -> (PaginatedLeaderboard) query;
@@ -249,11 +268,13 @@ service : {
    (PaginatedLeaderboard) query;
   getWeeklyLeaderboardCache: (nat16, nat8) -> (PaginatedLeaderboard) query;
   isDisplayNameValid: (text) -> (bool) query;
+  reuploadTeams: () -> ();
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateCache: (text) -> ();
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
+  updateFixtureStatus: (FixtureId, nat8) -> () oneway;
   updateProfilePicture: (blob) -> (Result);
   validateAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);
   validateCreatePlayer: (TeamId, nat8, text, text, nat8, nat, int, text) ->

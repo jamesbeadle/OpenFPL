@@ -6,7 +6,7 @@ export const AuthContext = React.createContext();
 export const AuthProvider = ({ children }) => {
   const [authClient, setAuthClient] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userPrincipal, setUserPrincipal] = useState("");
+  const [userPrincipal, setUserPrincipal] = useState(""); //SET AS USER PROFILE AND IMPLEMENT EVERYWHERE, MAYBE THIS IS THE TIME TO REFACTOR THE PROFILE SO CAN GET THIS QUICKLY
   const [loading, setLoading] = useState(true);
 
   const OLD_MAINNET_IDENTITY_SERVICE_URL = "https://identity.ic0.app";
@@ -79,30 +79,13 @@ export const AuthProvider = ({ children }) => {
     if (!client) return;
 
     const isLoggedIn = await client.isAuthenticated();
-    if (isLoggedIn && isTokenValid(client)) {
+    if (isLoggedIn) {
       const principal = await client.getIdentity().getPrincipal(); 
       setUserPrincipal(principal.toText());
       setIsAuthenticated(true);
     } else {
       setUserPrincipal("");
       setIsAuthenticated(false);
-    }
-  };
-
-  const isTokenValid = (client) => {
-    try {
-      const identity = client.getIdentity();
-      if (!identity) return false;
-
-      const delegation = identity._delegation?.delegations?.[0];
-      if (!delegation) return false;
-
-      const expiration = BigInt(delegation.delegation.expiration);
-      const currentTime = BigInt(Date.now() * 1000000);
-      return currentTime < expiration;
-    } catch (error) {
-      console.error('Token validation error:', error);
-      return false;
     }
   };
 

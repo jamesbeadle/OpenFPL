@@ -190,12 +190,14 @@ export const idlFactory = ({ IDL }) => {
       ),
     'recallPlayer' : IDL.Func([PlayerId], [], []),
     'retirePlayer' : IDL.Func([PlayerId, IDL.Int], [], []),
+    'reuploadPlayers' : IDL.Func([], [], []),
     'revaluePlayerDown' : IDL.Func(
         [PlayerId, SeasonId, GameweekNumber],
         [],
         ['oneway'],
       ),
     'revaluePlayerUp' : IDL.Func([PlayerId, SeasonId, GameweekNumber], [], []),
+    'setDefaultHashes' : IDL.Func([], [], []),
     'setPlayerInjury' : IDL.Func([PlayerId, IDL.Text, IDL.Int], [], []),
     'transferPlayer' : IDL.Func(
         [PlayerId, TeamId, SeasonId, GameweekNumber],

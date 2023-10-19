@@ -1,73 +1,31 @@
 
-/*
-//purple #895BF5 (137,91,245,96)
-//peach #F5A28C (245,162,140,96)
-//light purple #9A73F6 (154,115,246,96)
-//brown #F5EA5B (245,234,91,96)
-//seafoam #67F5C9 (103,246,201,96)
-#3EA3C2
-#75898F
-#67F5C9
-#F6AAA5
-#C23E65
-*/
-
-
 @font-face {
-    font-family: 'Chakra Petch';
-    src: url('Chakra.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-  }
+  font-family: 'Poppins';
+  src: url('Poppins-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-  body {
-    font-family: 'Chakra Petch', sans-serif !important;
-    background: linear-gradient(to bottom, #67F5C9, #895BF5);
-    transition: background ease-in-out 300ms, color ease-in-out 150ms, padding ease-in-out 150ms;
-  }
+body {
+  font-family: 'Poppins', sans-serif !important;
+  color: white !important;
+  background-image: url('background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
+  margin: 0;
+}
+
+.custom-icon {
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
   
   .table-fixed {
     table-layout: fixed;
-  }
-
-  .social-icon {
-    width: 32px;
-    height: 32px;
-    margin: 0 10px;
-  }
-
-  .nav-link-brand {
-    color: whitesmoke !important;
-  }
-
-
-  .custom-nav-link {
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-
-
-  .custom-icon {
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
-  .footer-links {
-    list-style-type: none;
-    padding: 0;
-    font-size: 0.8rem;
-  }
-
-  footer{
-    color: whitesmoke !important;
-  }
-  
-  .footer-links li {
-    line-height: 1.6;
-  }
-
-  .footer a{
-    color:whitesmoke !important;
   }
     
   .customOverlay {
@@ -94,32 +52,18 @@
     width: 60%;
   }
 
-  .pitch-bg {
-    background: url('pitch.png') no-repeat center center;
+  #pitch-bg {
+    background: url('pitch.png');
     background-size: cover;
-  }
-  
-  .player-container {
-    display: flex;
-    align-items: stretch;
+    width: 100% !important;
+    margin: 0 !important;
+    height: auto;
+    border: none !important;
+    position: relative;
   }
 
   .small-text {
     font-size: 0.8rem;
-  }
-
-  .card{
-    border: none !important;
-  }
-  
-  .card-header{
-    background: linear-gradient(to bottom, #251942, #251942) !important;
-    color: whitesmoke !important;
-  }
-
-  .card-body{
-    background: linear-gradient(to bottom, #1E1436, #1E1436) !important;
-    color: whitesmoke !important;
   }
 
   .custom-card-title {
@@ -172,6 +116,8 @@
     background-color: #400042 !important;  /* Change this to the color you want */
     color: whitesmoke !important;
   }
+  
+  
   .text-truncate {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -195,13 +141,10 @@ Table{
   color: black !important;
 }
 
-.nav-tabs .nav-link:not(.active) {
-  color: whitesmoke !important;
-}
-
 .wallet-icon{
   background-color: transparent !important;
   border: none !important;
+  color: white !important;
 }
 
 .home-team-name {
@@ -389,4 +332,8 @@ Table{
   margin: 10px 0;
   padding: 10px;
   border-radius: 4px;
+}
+
+.footer-link{
+  font-size: 10px;
 }

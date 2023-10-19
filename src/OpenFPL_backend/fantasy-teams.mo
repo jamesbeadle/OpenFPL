@@ -180,7 +180,7 @@ module {
                         principalId = principalId;
                         bankBalance = bankBalance;
                         playerIds = allPlayerIds;
-                        transfersAvailable = 2;
+                        transfersAvailable = 3;
                         captainId = newCaptainId;
                         goalGetterGameweek = goalGetterGameweek;
                         goalGetterPlayerId = goalGetterPlayerId;
@@ -375,7 +375,7 @@ module {
 
                     let natBankBalance: Nat = Nat16.toNat(Int16.toNat16(Int16.fromInt(newBankBalance)));
 
-                    var newTransfersAvailable: Nat8 = 2;
+                    var newTransfersAvailable: Nat8 = 3;
 
                     if(gameweek != 1){
                         newTransfersAvailable := existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
@@ -500,7 +500,7 @@ module {
             };
             
             for ((key, value) in teamPlayerCounts.entries()) {
-                if(value > 3){
+                if(value > 2){
                     return false;
                 };
             };
@@ -1153,6 +1153,13 @@ module {
                 entries = [];
                 totalEntries = 0;
             };
+
+            Debug.print(debug_show "getting monthly leaderboards");
+            Debug.print(debug_show seasonId);
+            Debug.print(debug_show month);
+            Debug.print(debug_show clubId);
+            Debug.print(debug_show limit);
+            Debug.print(debug_show offset);
             
             switch (monthlyLeaderboards.get(seasonId)) {
                 case (null) { return defaultLeaderboard; };
@@ -1375,7 +1382,7 @@ module {
         private func clearFantasyTeam(principalId: Text) : T.FantasyTeam {
             return {
                 principalId = principalId;
-                transfersAvailable = 2;
+                transfersAvailable = 3;
                 bankBalance = 1200;
                 playerIds = [];
                 captainId = 0;
@@ -1411,6 +1418,84 @@ module {
                 let (firstHalf, secondHalf) = List.split(len / 2, entries);
                 return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
             };
+        };
+
+        public func getWeeklyManagerPosition(managerId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : Text {
+            
+            for((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()){
+                if(seasonId == seasonId){
+                    let weeklyLeaderboard = List.find<T.Leaderboard>(seasonLeaderboards.gameweekLeaderboards, func (gameweekLeaderboard: T.Leaderboard): Bool {
+                        return gameweekLeaderboard.gameweek == gameweek;
+                    });
+                    switch(weeklyLeaderboard){
+                        case (null) {};
+                        case (?foundWeeklyLeaderboard){
+
+                            let foundEntry = List.find<T.LeaderboardEntry>(foundWeeklyLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                                return entry.principalId == managerId;
+                            });
+
+                            switch(foundEntry){
+                                case (null) {};
+                                case (?positionRow){
+                                    return positionRow.positionText;
+                                }
+                            };
+                        }
+                    };
+                };
+            };
+            
+            return "N/A";
+        };
+
+        public func getMonthlyManagerPosition(managerId: Text, seasonId: T.SeasonId, clubId: T.TeamId) : Text {
+            
+            for((seasonId, clubLeaderboards) in monthlyLeaderboards.entries()){
+                if(seasonId == seasonId){
+
+                    let clubLeaderboard = List.find<T.ClubLeaderboard>(clubLeaderboards, func (leaderboard: T.ClubLeaderboard): Bool {
+                        return leaderboard.clubId == clubId;
+                    });
+
+                    switch(clubLeaderboard){
+                        case (null) {};
+                        case (?foundClubLeaderboard){
+                            let foundEntry = List.find<T.LeaderboardEntry>(foundClubLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                                return entry.principalId == managerId;
+                            });
+
+                            switch(foundEntry){
+                                case (null) {};
+                                case (?positionRow){
+                                    return positionRow.positionText;
+                                }
+                            };
+                        };
+                    }
+                };
+            };
+            
+            return "N/A";
+        };
+
+        public func getSeasonManagerPosition(managerId: Text, seasonId: T.SeasonId) : Text {
+            
+            for((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()){
+                if(seasonId == seasonId){
+                    let foundEntry = List.find<T.LeaderboardEntry>(seasonLeaderboards.seasonLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                        return entry.principalId == managerId;
+                    });
+                    switch(foundEntry){
+                        case (null) {};
+                        case (?positionRow){
+                            return positionRow.positionText;
+                        }
+                    };
+                };
+            };
+            
+            return "N/A";
         };
     };
     

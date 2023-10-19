@@ -1,11 +1,11 @@
 import React from 'react';
 import { Modal, Button} from 'react-bootstrap';
 
-const ConfirmFixtureDataModal = ({ show, onHide, onConfirm  }) => {
+const ConfirmClearDraftModal = ({ show, onHide, onConfirm  }) => {
     
     return (
         <Modal show={show} onHide={onHide} centered>
-            <Modal.Header closeButton>Confirm Fixture Data</Modal.Header>
+            <Modal.Header closeButton>Confirm Clear Draft</Modal.Header>
             <Modal.Body>
                 <h1>Please confirm you want to clear the draft from your cache.</h1>
             </Modal.Body>
@@ -22,5 +22,4 @@ const ConfirmFixtureDataModal = ({ show, onHide, onConfirm  }) => {
    
 };
 
-
-export default ConfirmFixtureDataModal;
+export default ConfirmClearDraftModal;

@@ -1274,13 +1274,13 @@ actor Self {
     return #ok();
   };
 
-  public shared func executePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
-   await teamsInstance.promoteNewTeam(name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour);
+  public shared func executePromoteNewTeam(name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text, shirtType: Nat8) : async Result.Result<(), T.Error>{
+   await teamsInstance.promoteNewTeam(name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
    return #ok();
   };
 
-  public shared func executeUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text) : async Result.Result<(), T.Error>{
-    await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour);
+  public shared func executeUpdateTeam(teamId: T.TeamId, name: Text, friendlyName: Text, abbreviatedName: Text, primaryHexColour: Text, secondaryHexColour: Text, thirdHexColour: Text, shirtType: Nat8) : async Result.Result<(), T.Error>{
+    await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
     return #ok();
   };
 
@@ -1337,6 +1337,68 @@ actor Self {
 
   public shared query ({caller}) func getFantasyTeamForGameweek(managerId: Text, seasonId: Nat16, gameweek: Nat8) : async T.FantasyTeamSnapshot {
       return fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
+  };
+
+  public shared query func getManager(managerId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async DTOs.ManagerDTO {
+
+    var displayName = "";
+    var profilePicture = Blob.fromArray([]);
+    var favouriteTeamId: T.TeamId = 0;
+    var createDate = Time.now();
+    var gameweeks: [T.FantasyTeamSnapshot] = [];
+    var weeklyPosition = fantasyTeamsInstance.getWeeklyManagerPosition(managerId, seasonId, gameweek);
+    var monthlyPosition = "N/A";
+    var seasonPosition = fantasyTeamsInstance.getSeasonManagerPosition(managerId, seasonId);
+
+    let userProfile = profilesInstance.getProfile(managerId);
+    switch(userProfile){
+      case (null){};
+      case (?foundProfile){
+        displayName := foundProfile.displayName;
+        profilePicture := foundProfile.profilePicture;
+        favouriteTeamId := foundProfile.favouriteTeamId;
+        createDate := foundProfile.createDate;
+
+        if(foundProfile.favouriteTeamId > 0){
+          monthlyPosition := fantasyTeamsInstance.getMonthlyManagerPosition(managerId, seasonId, foundProfile.favouriteTeamId);
+        }
+
+      };
+    };
+
+    //get gameweek snapshots
+    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(managerId);
+
+    switch (fantasyTeam) {
+        case (null) { };
+        case (?foundTeam){
+          
+          let season = List.find(foundTeam.history, func(season: T.FantasyTeamSeason): Bool {
+              return season.seasonId == seasonId;
+          });
+
+          switch(season){
+            case (null){};
+            case (?foundSeason){
+              gameweeks := List.toArray(foundSeason.gameweeks);
+            };
+          };
+        };
+    };
+
+    let managerDTO: DTOs.ManagerDTO = {
+      principalId = managerId;
+      displayName = displayName;
+      profilePicture = profilePicture;
+      favouriteTeamId = favouriteTeamId;
+      createDate = createDate;
+      gameweeks = gameweeks;
+      weeklyPosition = weeklyPosition;
+      monthlyPosition = monthlyPosition;
+      seasonPosition = seasonPosition;
+    };  
+
+    return managerDTO;
   };
 
   public shared query func getDataHashes() : async [T.DataCache] {
@@ -1442,9 +1504,10 @@ actor Self {
 
   /* Remove these functions post-sns */
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, allPlayerEvents: [T.PlayerEventData]) : async (){
-    
+    Debug.print("Saving events");
     assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB LIVE
+    //assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB LIVE
+    assert Principal.toText(caller) == "5mizu-xuphz-aex5b-ovid6-oqt34-jdb5k-fn5hr-ip7iu-ghgz4-jilrl-bqe"; //JB Local 2
     //assert Principal.toText(caller) == "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"; JB LOCAL
 
     let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
@@ -1452,6 +1515,7 @@ actor Self {
     if(not validPlayerEvents){
       return;
     };
+    Debug.print("valid events");
 
     let activeSeasonId = seasonManager.getActiveSeasonId();
     let activeGameweek = seasonManager.getActiveGameweek();
@@ -1460,6 +1524,7 @@ actor Self {
     if(fixture.status != 2){
       return;
     };
+    Debug.print("Correct Status events");
 
     let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(allPlayerEvents);
 
@@ -1528,7 +1593,7 @@ actor Self {
 
     let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
     let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
-
+    Debug.print("Checking");
     if(totalHomeScored == 0){
       //add away team clean sheets
       for(playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))){
@@ -1616,7 +1681,8 @@ actor Self {
         };
       };
     };
-
+    Debug.print("Finalise");
+    Debug.print(debug_show Buffer.toArray(allPlayerEventsBuffer));
     await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
   };
 

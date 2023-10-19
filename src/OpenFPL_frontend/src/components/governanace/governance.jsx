@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Container, Spinner, Card, Button, Modal, Pagination, Tabs, Tab } from 'react-bootstrap';
+import React, { useState, useContext } from 'react';
+import { Container, Spinner, Card, Button, Modal, Pagination, Tabs, Tab, Row, Col } from 'react-bootstrap';
 import { initSnsWrapper, SnsVote, SnsGovernanceCanister } from '@dfinity/sns';
 import { AuthContext } from "../../contexts/AuthContext";
 import AddProposalModal from './add-proposal-modal';
@@ -114,9 +114,19 @@ const Governance = () => {
   };
 
   return (
-    <Container className="flex-grow-1 my-5">
-      <h3 className='mt-5'>SNS Coming Soon</h3>
-    </Container>);
+    <Container fluid className='view-container mt-2'>
+        <Row>
+          <Col md={12}>
+            <Card className="mb-4">
+              <Card.Header>
+                <div style={{marginLeft: '16px'}}>OpenFPL Governance</div></Card.Header>
+              <Card.Body>
+                <Card.Text>Coming Soon.</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>);
 
   return (
     isLoading ? (

@@ -104,6 +104,17 @@ export interface LeaderboardEntry {
 export type List = [] | [[PlayerEventData, List]];
 export type List_1 = [] | [[Gameweek, List_1]];
 export type List_2 = [] | [[Fixture, List_2]];
+export interface ManagerDTO {
+  'favouriteTeamId' : TeamId,
+  'displayName' : string,
+  'weeklyPosition' : string,
+  'createDate' : bigint,
+  'gameweeks' : Array<FantasyTeamSnapshot>,
+  'monthlyPosition' : string,
+  'seasonPosition' : string,
+  'profilePicture' : Uint8Array | number[],
+  'principalId' : string,
+}
 export interface PaginatedClubLeaderboard {
   'month' : number,
   'clubId' : TeamId,
@@ -162,10 +173,12 @@ export interface Team {
   'friendlyName' : string,
   'thirdColourHex' : string,
   'abbreviatedName' : string,
+  'shirtType' : number,
   'primaryColourHex' : string,
 }
 export type TeamId = number;
 export interface _SERVICE {
+  'addInitialData' : ActorMethod<[], undefined>,
   'executeAddInitialFixtures' : ActorMethod<[SeasonId, Array<Fixture>], Result>,
   'executeCreatePlayer' : ActorMethod<
     [TeamId, number, string, string, number, bigint, bigint, string],
@@ -174,7 +187,7 @@ export interface _SERVICE {
   'executeLoanPlayer' : ActorMethod<[PlayerId, TeamId, bigint], Result>,
   'executePromoteFormerTeam' : ActorMethod<[TeamId], Result>,
   'executePromoteNewTeam' : ActorMethod<
-    [string, string, string, string, string, string],
+    [string, string, string, string, string, string, number],
     Result
   >,
   'executeRecallPlayer' : ActorMethod<[PlayerId], Result>,
@@ -200,10 +213,12 @@ export interface _SERVICE {
     Result
   >,
   'executeUpdateTeam' : ActorMethod<
-    [TeamId, string, string, string, string, string, string],
+    [TeamId, string, string, string, string, string, string, number],
     Result
   >,
+  'gameweekBegin' : ActorMethod<[], undefined>,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
+  'getAddTeamsFunction' : ActorMethod<[], string>,
   'getClubLeaderboard' : ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard
@@ -222,6 +237,7 @@ export interface _SERVICE {
   'getFixtureDTOs' : ActorMethod<[], Array<FixtureDTO>>,
   'getFixtures' : ActorMethod<[], Array<Fixture>>,
   'getFixturesForSeason' : ActorMethod<[SeasonId], Array<Fixture>>,
+  'getManager' : ActorMethod<[string, SeasonId, GameweekNumber], ManagerDTO>,
   'getProfileDTO' : ActorMethod<[], ProfileDTO>,
   'getPublicProfileDTO' : ActorMethod<[string], ProfileDTO>,
   'getSeasonLeaderboard' : ActorMethod<
@@ -243,6 +259,7 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
+  'reuploadTeams' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result
@@ -254,6 +271,7 @@ export interface _SERVICE {
   'updateCache' : ActorMethod<[string], undefined>,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
+  'updateFixtureStatus' : ActorMethod<[FixtureId, number], undefined>,
   'updateProfilePicture' : ActorMethod<[Uint8Array | number[]], Result>,
   'validateAddInitialFixtures' : ActorMethod<
     [SeasonId, Array<Fixture>],

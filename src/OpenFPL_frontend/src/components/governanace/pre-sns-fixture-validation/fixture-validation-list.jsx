@@ -43,7 +43,9 @@ const FixtureValidationList = () => {
 
   return (
     <Container className="flex-grow-1 my-5">
-      <Card className="custom-card mt-1">
+      <Card>
+        <p className='px-4 mt-3'>This view will be removed after the SNS decentralisation sale</p></Card>
+      <Card className="custom-card mt-3 px-4">
         <Card.Header>{`Season ${currentSeason.name}`} - {`Gameweek ${currentGameweek}`}</Card.Header>
         <Card.Body>
           <Table responsive bordered className="table-fixed">

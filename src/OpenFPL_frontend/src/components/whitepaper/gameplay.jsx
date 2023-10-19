@@ -27,15 +27,15 @@ const Gameplay = () => {
       <Container className="flex-grow-1 my-5">
         <Row>
           <Col md={12}>
-            <Card className="mb-4">
-              <Card.Header><h2 className="mt-4 mb-4">OpenFPL Gameplay Rules</h2></Card.Header>
+            <Card className="mb-4 vertical-flex">
               <Card.Body>
-                <Card.Text>Please see the below OpenFPL fantasy football gameplay rules.</Card.Text>
+                <h4 className='mt-2 mb-3'>OpenFPL Gameplay Rules</h4>
+                <p>Please see the below OpenFPL fantasy football gameplay rules.</p>
                 
                 <p>Each user begins with £300m to purchase players for their team. The value of a player can go up or down depending on how the player is rated in the DAO. 
                   Provided a certain voting threshold is reached for either a £0.25m increase or decrease, the player's value will change in that gameweek.</p>
                 
-                <p>Each team has 11 players, with no more than 3 selected from any single team. 
+                <p>Each team has 11 players, with no more than 2 selected from any single team. 
                   The team must be in a valid formation, with 1 goalkeeper, 3-5 defenders, 3-5 midfielders and 1-3 strikers. </p>
 
                 <p>Users will setup their team before the gameweek deadline each week. When playing OpenFPL, users have the chance to win FPL tokens depending on how well 
@@ -43,7 +43,7 @@ const Gameplay = () => {
 
                 <p>In January, a user can change their entire team once. </p>
 
-                <p>A user is allowed to make 2 transfers per week which are never carried over.</p>
+                <p>A user is allowed to make 3 transfers per week which are never carried over.</p>
 
                 <p>Each week a user can select a star player. This player will receive double points for the gameweek. If one is not set by the start of the gameweek it will automatically be set to the
                   most valuable player in your team.

@@ -2,12 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Card, Row, Col, Spinner, Button, Container, Tabs, Tab } from 'react-bootstrap';
 import { DataContext } from "../../../contexts/DataContext";
 import { OpenFPL_backend as open_fpl_backend } from '../../../../../declarations/OpenFPL_backend';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PlayerEventsModal from './player-events-modal';
 import PlayerSelectionModal from './select-players-modal';
 import ConfirmFixtureDataModal from './confirm-fixture-data-modal';
 import ConfirmClearDraftModal from './confirm-clear-draft-modal';
-import { useNavigate } from 'react-router-dom';
 
 const PreSNSAddFixtureData = () => {
   const location = useLocation();

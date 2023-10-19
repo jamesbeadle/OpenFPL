@@ -1,18 +1,18 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Spinner, ListGroup, Tabs, Tab, Form, Image } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Spinner, Tabs, Tab, Form, Image } from 'react-bootstrap';
 import { OpenFPL_backend as open_fpl_backend } from '../../../../declarations/OpenFPL_backend';
 import { Actor } from "@dfinity/agent";
 import { AuthContext } from "../../contexts/AuthContext";
 import { DataContext } from "../../contexts/DataContext";
-import { toHexString } from '../helpers';
+import { monthNames } from '../helpers';
 import UpdateNameModal from './update-name-modal';
-import WithdrawICPModal from './withdraw-icp-modal';
-import WithdrawFPLModal from './withdraw-fpl-modal';
 import UpdateProfilePictureModal from './update-profile-picture-modal';
-import UpgradeMembershipModal from './upgrade-membership-modal';
-import { EditIcon, CopyIcon, StarIcon } from '../icons';
+import { EditIcon } from '../icons';
 import ProfileImage from '../../../assets/profile_placeholder.png';
-import { Link } from "react-router-dom";
+import ICPCoin from '../../../assets/ICPCoin.png';
+import FPLCoin from '../../../assets/FPLCoin.png';
+import ckBTCCoin from '../../../assets/ckBTCCoin.png';
+import ckETHCoin from '../../../assets/ckETHCoin.png';
 import ConfirmFavouriteTeamModal from './confirm-favourite-team-modal';
 
 const Profile = () => {
@@ -22,14 +22,9 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showUpdateNameModal, setShowUpdateNameModal] = useState(false);
   const [showUpdateProfilePictureModal, setShowUpdateProfilePictureModal] = useState(false);
-  const [showWithdrawICPModal, setShowWithdrawICPModal] = useState(false);
-  const [showWithdrawFPLModal, setShowWithdrawFPLModal] = useState(false);
   const [favouriteTeam, setFavouriteTeam] = useState(null);
   const [loadingAccountBalance, setLoadingAccountBalance] = useState(true);
   const [balanceData, setBalanceData] = useState(null);
-
-  const [showUpgradeAccountModal, setShowUpgradeAccountModal] = useState(false);
-  const [showGetMoreLeaguesModal, setShowGetMoreLeaguesModal] = useState(false);
 
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
   const [joinedDate, setJoinedDate] = useState('');
@@ -70,7 +65,6 @@ const Profile = () => {
 
         const dateInMilliseconds = Number(data.createDate / 1000000n);
         const date = new Date(dateInMilliseconds);
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const joinDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
         setJoinedDate(joinDate);
 
@@ -111,28 +105,6 @@ const Profile = () => {
     setIsLoading(false);
   };
 
-  const hideWithdrawICPModal = async (changed) => {
-    if(!changed){
-      setShowWithdrawICPModal(false); 
-      return;
-    }
-    setIsLoading(true);
-    setShowWithdrawICPModal(false); 
-    await fetchViewData();
-    setIsLoading(false);
-  };
-
-  const hideWithdrawFPLModal = async (changed) => {
-    if(!changed){
-      setShowWithdrawFPLModal(false); 
-      return;
-    }
-    setIsLoading(true);
-    setShowWithdrawFPLModal(false); 
-    await fetchViewData();
-    setIsLoading(false);
-  };
-
   const hideProfilePictureModal = async (changed) => {
     if(!changed){
       setShowUpdateProfilePictureModal(false); 
@@ -140,17 +112,6 @@ const Profile = () => {
     }
     setIsLoading(true);
     setShowUpdateProfilePictureModal(false); 
-    await fetchViewData();
-    setIsLoading(false);
-  };
-
-  const hideUpgradeAccountModal = async (changed) => {
-    if(!changed){
-      setShowUpgradeAccountModal(false); 
-      return;
-    }
-    setIsLoading(true);
-    setShowUpgradeAccountModal(false); 
     await fetchViewData();
     setIsLoading(false);
   };
@@ -184,192 +145,179 @@ const Profile = () => {
           <p className='text-center mt-1'>Loading Profile</p>
         </div>
       ) : (
-        <Container className="flex-grow-1 my-5">
-            <br />
-            <Tabs defaultActiveKey="details" id="profile-tabs" className="mt- 4">
-            <Tab eventKey="details" title="Details">
-              <Row className="justify-content-md-center">
-                <Col md={8}>
-                  <Card className="mt-4 custom-card mb-4">
-                    <Card.Body>
-                      <h2 className="text-center">Profile</h2>
-                      <ListGroup>
-                        <Row>
-                          <Col md={4}>
-                            <ListGroup.Item className="mt-1 mb-1">
-                              <div className="text-center">
-                                <div className="position-relative d-inline-block">
-                                  <Image src={profilePicSrc} roundedCircle className="w-100" />
-                                  <div className="position-absolute" style={{ top: "-10px", right: "-10px" }}>
+        <Container fluid className='view-container mt-2'>
+          <Row>
+            <Col xs={12}>
+              <Card>
+                <div className="outer-container d-flex">
+                  <div className="flex-grow-1 light-background">
+                    <Tabs defaultActiveKey="details" id="profile-tabs" className="home-tab-header">
+                      <Tab eventKey="details" title="Details">
+                        <div className="dark-tab-row w-100 mx-0">
+                          <Row>
+                            <Col xs={12} md={'auto'} className="d-flex justify-content-center">
+                              <div className='profile-picture-col'>
+                                <div className="vertical-flex">
+                                  <Image src={profilePicSrc} className="profile-detail-image" />
+                                  <div className="edit-profile-icon position-absolute top-0 right-0">
                                     <EditIcon onClick={() => setShowUpdateProfilePictureModal(true)} />
+                                </div>
+                                </div>
+                              </div>
+                            </Col>
+                            <Col xs={12} md={6}>
+                              <div className='profile-details-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                <div className='profile-details-col'>
+                                  <div className='profile-detail-row-1'>
+                                    <Row className="stat-row-1">
+                                      <div className='profile-display-name-col px-0'>
+                                        <p className="stat-header w-100">Display Name</p>
+                                      </div>
+                                      <div className='profile-favourite-team-col px-0'>
+                                        <p className="stat-header w-100">Favourite Team</p>
+                                      </div>
+                                    </Row>
+                                    <Row className="stat-row-2 vertical-flex">
+                                      <div className='profile-display-name-col px-0'>  
+                                        <p className="stat">{viewData.displayName == viewData.principalName ? 'Not Set' : viewData.displayName}</p>
+                                      </div>
+                                      <div className='profile-favourite-team-col px-0' style={{ display: 'flex', alignItems: 'center' }}>
+                                        <Form.Group controlId="favouriteTeam">
+                                          <Form.Control className="stat-dropdown" as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange} disabled={!viewData.canUpdateFavouriteTeam}>
+                                            <option value="">Select Favourite Team</option>
+                                              {teams.map((team) => (
+                                              <option key={team.id} value={team.id}>
+                                                  {team.name}
+                                              </option>
+                                            ))}
+                                          </Form.Control>
+                                        </Form.Group>
+                                      </div>
+                                    </Row>
+                                    <Row className="stat-row-2 vertical-flex">
+                                      <div className='profile-display-name-col px-0'>  
+                                        <Button className="fpl-large-btn" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
+                                      </div>
+                                    </Row>
+                                  </div>
+                                  <div className='profile-detail-row-2'>
+                                    <p className='w-100'><b>Joined </b>{joinedDate}</p>
+                                    <p className='w-100'><small><b>Principal ID </b>{viewData.principalName}</small></p>
                                   </div>
                                 </div>
                               </div>
-                            </ListGroup.Item>
-                            <ListGroup.Item className="mt-1 mb-1">
-                              <h6>Joined: {joinedDate}</h6>
-                              <h6>Reputation: {viewData.reputation}</h6>
-                              <div>
-                                {viewData.reputation === 0 && (
-                                  <>
-                                    <StarIcon color="#807A00" margin="0 10px 0 0" />
-                                    <StarIcon color="#807A00" margin="0 10px 0 0" />
-                                    <StarIcon color="#807A00" margin="0 10px 0 0" />
-                                  </>
-                                )}
+                            </Col>
+                          </Row>
+                          <Row className='coins-row' >
+                            <Col xs={12} md={6} xxl={3} className='mb-0 mb-md-3'>
+                              <div className='coin-col-1 coin-col mb-3 mb-md-0'>
+                                <div className='coin-icon-col'>
+                                  <img src={ICPCoin} alt="sponsor1" className='coin-icon'/>
+                                </div>
+                                <div className='coin-name-col'>
+                                  <Container>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-name'>ICP</div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ICP</span></div>
+                                      </Col>
+                                    </Row>
+                                  </Container>
+                                </div>
                               </div>
-                            </ListGroup.Item>
-                          </Col>
-                          <Col md={8}>
-                            <ListGroup.Item className="mt-1 mb-1">
-                              <h6>Principal Id:</h6>
-                              <p><small>{viewData.principalName}</small></p>
-                            </ListGroup.Item>
-
-                            <ListGroup.Item className="mt-1 mb-1">
-                              <h6>Display Name:</h6>
-                              <p>
-                                <small>{viewData.displayName}</small>&nbsp;&nbsp;
-                                <Button className="btn btn-sm ml-3" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
-                              </p>
-                            </ListGroup.Item>
-                            <ListGroup.Item className="mt-1 mb-1">
-                              <Form.Group controlId="favouriteTeam">
-                                <Form.Label>Favorite Team</Form.Label>
-                                <Form.Control as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange} disabled={!viewData.canUpdateFavouriteTeam}>
-                                    <option value="">Select Favourite Team</option>
-                                      {teams.map((team) => (
-                                      <option key={team.id} value={team.id}>
-                                          {team.name}
-                                      </option>
-                                      ))}
-                                </Form.Control>
-                              </Form.Group>
-                            </ListGroup.Item>
-                            <ListGroup.Item className="mt-1 mb-1">
-                              <Button as={Link} to={`/club-leaderboard/${favouriteTeam}`}>View Club Leaderboard</Button>
-                            </ListGroup.Item>
-                            
-
-                          </Col>
-                        </Row>
-
-                        
-                        
-                        
-                        <ListGroup.Item className="mt-1 mb-1">
-                          <h6>Membership Type:</h6>
-                          <p>
-                            <small>{viewData.membershipType === 0 ? 'Free' : 'Diamond'}</small>&nbsp;&nbsp;
-                            
-                          </p>
-                        </ListGroup.Item>
-                        {viewData.membershipType === 'diamond' && (
-                          <ListGroup.Item className="mt-1 mb-1">
-                            <h6>Private Leagues:</h6>
-                            <p>
-                              <small>{viewData.privateLeaguesUsed} / 3</small>&nbsp;&nbsp;
-                              <Button className="btn btn-sm ml-3" onClick={() => setShowGetMoreLeaguesModal(true)}>Get more leagues</Button>
-                            </p>
-                          </ListGroup.Item>
-                        )}
-                        <ListGroup.Item className="mt-1 mb-1">
-                        <h6>ICP</h6>
-                        {loadingAccountBalance ? (
-                          <div className="d-flex flex-column align-items-center justify-content-center mt-3">
-                            <Spinner animation="border" />
-                            <p className='text-center mt-1'><small>Loading ICP Balance</small></p>
-                          </div>
-                        ) :  (
-                          <div>
-                            <p>
-                              <small>{(Number(balanceData.icpBalance) / 1e8).toFixed(4)} ICP</small>&nbsp;&nbsp;
-                            </p>
-                          </div>
-                          )}
-                        <p><small>ICP Deposit Address: <br />{toHexString(viewData.icpDepositAddress)}{' '}
-                        <CopyIcon onClick={async () => {
-                          try {
-                            await navigator.clipboard.writeText(toHexString(viewData.icpDepositAddress));
-                            setICPAddressCopied(true);
-                          } catch (error) {
-                            console.error('Clipboard API error:', error);
-                            setICPAddressCopied(false);
-                          }
-                        }} />
-                        </small></p>
-                        {icpAddressCopied && <p className="text-primary"><small>Copied to clipboard.</small></p>}
-                      </ListGroup.Item>
-
-                      <ListGroup.Item className="mt-1 mb-1">
-                        <h6>FPL</h6>
-                        {loadingAccountBalance ? (
-                          <div className="d-flex flex-column align-items-center justify-content-center mt-3">
-                            <Spinner animation="border" />
-                            <p className='text-center mt-1'><small>Loading FPL Balance</small></p>
-                          </div>
-                        ) :  (
-                          <div>
-                            <p>
-                              <small>{(Number(balanceData.fplBalance) / 1e8).toFixed(4)} FPL</small>&nbsp;&nbsp;
-                            </p>
-                          </div>
-                          )}
-                        <p><small>FPL Deposit Address:<br /> {toHexString(viewData.fplDepositAddress)}{' '}
-                        <CopyIcon onClick={async () => {
-                          try {
-                            await navigator.clipboard.writeText(toHexString(viewData.fplDepositAddress));
-                            setFPLAddressCopied(true);
-                          } catch (error) {
-                            console.error('Clipboard API error:', error);
-                            setFPLAddressCopied(false);
-                          }
-                        }} />
-                        </small></p>
-                        {fplAddressCopied && <p className="text-primary"><small>Copied to clipboard.</small></p>}
-                      </ListGroup.Item>
-                      </ListGroup>
-                    </Card.Body>
-                  </Card>    </Col>
-              </Row>
-              <UpdateNameModal
-                show={showUpdateNameModal}
-                onHide={hideUpdateNameModal}
-                displayName={viewData.displayName}
-              />
-              <UpdateProfilePictureModal
-                show={showUpdateProfilePictureModal}
-                onHide={hideProfilePictureModal}
-              />
-              <UpgradeMembershipModal
-                show={showUpgradeAccountModal}
-                onHide={hideUpgradeAccountModal}
-              />
-              {!loadingAccountBalance && (
-                  <WithdrawICPModal
-                    show={showWithdrawICPModal}
-                    onHide={hideWithdrawICPModal}
-                    balance={balanceData.icpBalance}
-                  />
-              )}
-              {!loadingAccountBalance && (
-                <WithdrawFPLModal
-                  show={showWithdrawFPLModal}
-                  onHide={hideWithdrawFPLModal}
-                  balance={balanceData.fplBalance}
-                />
-              )}
-            </Tab>
-            <Tab eventKey="gameweeks" title="Gameweeks">
-              <h3 className='mt-4'>Gameweek History Coming Soon</h3>
-            </Tab>
-            <Tab eventKey="betting" title="Betting">
-              <h3 className='mt-4'>Betting History Coming Soon</h3>
-            </Tab>
-            <Tab eventKey="governance" title="Governance">
-              <h3 className='mt-4'>Governance History Coming Soon</h3>
-            </Tab>
-          </Tabs>
+                            </Col>
+                            <Col xs={12} md={6} xxl={3} className='mb-0 mb-md-3'>
+                            <div className='coin-col-2 coin-col mb-3 mb-md-0'>
+                                <div className='coin-icon-col'>
+                                  <img src={FPLCoin} alt="sponsor1" className='coin-icon' />
+                                </div>
+                                <div className='coin-name-col'>
+                                  <Container>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-name'>FPL</div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>FPL</span></div>
+                                      </Col>
+                                    </Row>
+                                  </Container>
+                                </div>
+                              </div>
+                            </Col>
+                            <Col xs={12} md={6} xxl={3} className='mb-0 mb-md-3'>
+                              <div className='coin-col-3 coin-col mb-3 mb-md-0'>
+                                <div className='coin-icon-col'>
+                                  <img src={ckBTCCoin} alt="sponsor1" className='coin-icon' />
+                                </div>
+                                <div className='coin-name-col'>
+                                  <Container>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-name'>ckBTC</div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ckBTC</span></div>
+                                      </Col>
+                                    </Row>
+                                  </Container>
+                                </div>
+                              </div>
+                            </Col>
+                            <Col xs={12} md={6} xxl={3} className='mb-0 mb-md-3'>
+                              <div className='coin-col-4 coin-col mb-3 mb-md-0'>
+                                <div className='coin-icon-col'>
+                                  <img src={ckETHCoin} alt="sponsor1" className='coin-icon' />
+                                </div>
+                                <div className='coin-name-col'>
+                                  <Container>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-name'>ckETH</div>
+                                      </Col>
+                                    </Row>
+                                    <Row>
+                                      <Col>
+                                          <div className='coin-balance'>0.00 <span className='coin-balance-suffix'>ETH</span></div>
+                                      </Col>
+                                    </Row>
+                                  </Container>
+                                </div>
+                              </div>
+                            </Col>
+                          </Row>
+                                  
+                          <UpdateNameModal
+                            show={showUpdateNameModal}
+                            onHide={hideUpdateNameModal}
+                            displayName={viewData.displayName}
+                          />
+                          <UpdateProfilePictureModal
+                            show={showUpdateProfilePictureModal}
+                            onHide={hideProfilePictureModal}
+                          />
+                        </div>
+                      </Tab>
+                      <Tab eventKey="gameweeks" title="Gameweeks">
+                        <p className='px-4 mt-4 mb-4'>Gameweek History Coming Soon</p>
+                      </Tab>
+                      <Tab eventKey="governance" title="Governance">
+                        <p className='px-4 mt-4 mb-4'>Governance History Coming Soon</p>
+                      </Tab>
+                    </Tabs>
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          </Row>
 
           {showConfirmFavouriteTeamModal && <ConfirmFavouriteTeamModal
             show={showConfirmFavouriteTeamModal}

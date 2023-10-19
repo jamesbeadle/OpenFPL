@@ -31,7 +31,7 @@ module {
 
     private var activeSeasonId: T.SeasonId = 1;
     private var activeGameweek: T.GameweekNumber = 1;
-    private var interestingGameweek: T.GameweekNumber = 6;
+    private var interestingGameweek: T.GameweekNumber = 1;
     
     //timer data
     private var activeFixtures: [T.Fixture] = [];
@@ -163,20 +163,32 @@ module {
             getSeasonId := activeSeasonId;
         };
 
+        Debug.print(debug_show "getSeasonId");
+        Debug.print(debug_show getSeasonId);
+
         var getGameweekNumber = gameweekNumber;
         if(getGameweekNumber == 0){
             getGameweekNumber := activeGameweek;
         };
+        
+        Debug.print(debug_show "getGameweekNumber");
+        Debug.print(debug_show getGameweekNumber);
 
         if(interestingGameweek < activeGameweek){
             interestingGameweek := activeGameweek;
         };
+        
+        Debug.print(debug_show "interestingGameweek");
+        Debug.print(debug_show interestingGameweek);
 
         let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
         for (i in Iter.range(0, Array.size(activeFixtures)-1)) {
             let fixture = activeFixtures[i];
             if(fixture.id == fixtureId and fixture.status == 2){
+                
+                Debug.print(debug_show "found fixture");
+                Debug.print(debug_show fixture);
                 let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
                 activeFixturesBuffer.add(updatedFixture);
                 await finaliseFixture(updatedFixture);
@@ -380,6 +392,15 @@ module {
     /*Remove these functions post sns*/
     public func getValidatableFixtures(): [T.Fixture] {
         return seasonsInstance.getValidatableFixtures(activeSeasonId, activeGameweek);
+    };
+
+    public func updateFixtureStatus(fixtureId: T.FixtureId, status: Nat8) : async (){
+        let updatedFixture = await seasonsInstance.updateStatus(activeSeasonId, activeGameweek, fixtureId, status);
+    };
+    
+    public func setGameweekFixtures() : async () {
+        let gameweekFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+        activeFixtures := gameweekFixtures;
     };
     
   };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Modal, Button, Table, Container, Card } from 'react-bootstrap';
 import { getTeamById } from '../helpers';
 
@@ -30,8 +30,8 @@ const PlayerDetailsModal = ({ show, onClose, player, playerDTO, gameweek, teams,
                                 <tbody>
                                     <tr>
                                         <td>Appearance</td>
-                                        <td className='text-center'>{gameweekData.appearance > 0 ? "1" : "-"}</td>
-                                        <td className='text-center'>{gameweekData.appearance > 0 ? "5" : "-"}</td>
+                                        <td className='text-center'>{gameweekData.appearance > 0 ? gameweekData.appearance : "-"}</td>
+                                        <td className='text-center'>{gameweekData.appearance > 0 ? gameweekData.appearance * 5 : "-"}</td>
                                     </tr>
                                     <tr>
                                         <td>Goals</td>

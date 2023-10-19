@@ -1,0 +1,298 @@
+.logo-icon{
+    width: 30px;
+    height: 30px;
+    margin-right: 4px;
+}
+
+
+.navbar{
+    background-color: rgba(36, 37, 41, 0.9);
+    height: 80px;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    z-index: 20;
+  }
+  
+    
+  .nav-link {
+    margin-right: 8px;
+    vertical-align: middle;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    color: #C2C3C4 !important;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  
+  .custom-nav-link {
+    position: relative;
+    width: fit-content;
+    line-height: 80px;
+    font-size: 18px;
+    font-weight: 400;
+  }
+  
+  .nav-caret {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: #2CE3A6;
+  }
+
+  .navbar-toggler{
+    border: none !important;
+  }
+  
+.nav-tabs{
+    border-bottom: none !important;
+  }
+  
+  .nav-tabs .nav-link.active {
+    color: white !important;
+    border-bottom-color: #2CE3A6 !important;
+    border-bottom-width: 4px;
+    background-color: transparent;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+  }
+  .nav-tabs .nav-link:not(.active) {
+    color: #C2C3C4 !important;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+  }
+  
+.custom-navbar{
+    width: 100% !important;
+  }
+
+
+  
+/* Extra small devices (phones, 321px and up) */
+@media only screen and (min-width: 321px) {
+    .footer-links {
+        font-size: 10px;
+    }
+    .footer-link {
+        font-size: 10px;
+    }
+    .social-icon {
+        width: 12px;
+        height: 12px;
+        margin: 0 4px;
+    }
+    
+    .navbar{
+        height: 60px;
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+    
+    .navbar-collapse{
+        background-color: rgba(36, 37, 41, 1);
+        border-radius: 8px;
+        border: 2px solid #454B56;
+        padding: 4px;
+    }
+
+    .nav-profile-image{
+        width: 20px;
+        margin-left: 8px;
+    }
+
+    
+    .custom-nav-link {
+        line-height: 40px;
+        font-size: 12px;
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 601px) {
+    .footer-links,
+    .footer-link {
+        font-size: 10px;
+    }
+
+    .social-icon {
+        width: 13px;
+        height: 13px;
+        margin: 0 5px;
+    }
+
+    .navbar {
+        height: 64px;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
+    .custom-nav-link {
+        line-height: 48px;
+        font-size: 13px;
+    }
+
+    .nav-profile-image {
+        width: 22px;
+        margin-left: 9px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 601px and up) */
+@media only screen and (min-width: 601px) {
+    .footer-links,
+    .footer-link {
+        font-size: 10px;
+    }
+
+    .social-icon {
+        width: 14px;
+        height: 14px;
+        margin: 0 6px;
+    }
+
+    .navbar {
+        height: 68px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+    .custom-nav-link {
+        line-height: 56px;
+        font-size: 14px;
+    }
+
+    .nav-profile-image {
+        width: 24px;
+        margin-left: 10px;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .footer-links,
+    .footer-link {
+        font-size: 11px;
+    }
+
+    .social-icon {
+        width: 15px;
+        height: 15px;
+        margin: 0 7px;
+    }
+
+    .navbar {
+        height: 72px;
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
+    .custom-nav-link {
+        line-height: 64px;
+        font-size: 15px;
+    }
+
+    .nav-profile-image {
+        width: 26px;
+        margin-left: 11px;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .footer-links,
+    .footer-link {
+        font-size: 12px;
+    }
+
+    .social-icon {
+        width: 16px;
+        height: 16px;
+        margin: 0 8px;
+    }
+
+    .navbar {
+        height: 76px;
+        padding-left: 28px;
+        padding-right: 28px;
+        padding-top: 19px;
+        padding-bottom: 19px;
+    }
+
+    .custom-nav-link {
+        line-height: 72px;
+        font-size: 16px;
+    }
+
+    .nav-profile-image {
+        width: 28px;
+        margin-left: 12px;
+    }
+
+    .navbar-collapse{
+        border: none !important;
+        background-color: transparent;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .footer-links,
+    .footer-link {
+        font-size: 13px;
+    }
+
+    .social-icon {
+        width: 17px;
+        height: 17px;
+        margin: 0 9px;
+    }
+
+    .navbar {
+        height: 78px;
+        padding-left: 36px;
+        padding-right: 36px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .custom-nav-link {
+        line-height: 78px;
+        font-size: 17px;
+    }
+
+    .nav-profile-image {
+        width: 29px;
+        margin-left: 13px;
+    }
+}
+
+/* added */
+@media only screen and (min-width: 1500px) {
+    .navbar{
+        height: 80px;
+        padding-left: 48px;
+        padding-right: 48px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+  
+    .custom-nav-link {
+      line-height: 80px;
+      font-size: 18px;
+    }
+}

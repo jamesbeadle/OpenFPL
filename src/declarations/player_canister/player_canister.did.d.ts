@@ -164,6 +164,7 @@ export interface _SERVICE {
   >,
   'recallPlayer' : ActorMethod<[PlayerId], undefined>,
   'retirePlayer' : ActorMethod<[PlayerId, bigint], undefined>,
+  'reuploadPlayers' : ActorMethod<[], undefined>,
   'revaluePlayerDown' : ActorMethod<
     [PlayerId, SeasonId, GameweekNumber],
     undefined
@@ -172,6 +173,7 @@ export interface _SERVICE {
     [PlayerId, SeasonId, GameweekNumber],
     undefined
   >,
+  'setDefaultHashes' : ActorMethod<[], undefined>,
   'setPlayerInjury' : ActorMethod<[PlayerId, string, bigint], undefined>,
   'transferPlayer' : ActorMethod<
     [PlayerId, TeamId, SeasonId, GameweekNumber],

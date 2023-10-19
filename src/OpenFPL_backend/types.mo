@@ -30,7 +30,7 @@ module Types{
         membershipType: Nat8;
         createDate: Int;
         subscriptionDate: Int;
-        reputation: Nat32;
+        reputation: Nat32; //CAN REMOVE
     };
 
     public type Season = {
@@ -55,6 +55,7 @@ module Types{
         secondaryColourHex: Text;
         thirdColourHex: Text;
         abbreviatedName: Text;
+        shirtType: Nat8; //0 = Filled, 1 = Striped, Can add more later.
     };
 
     public type Fixture = {
