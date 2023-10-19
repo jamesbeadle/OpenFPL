@@ -129,30 +129,58 @@
       margin-right: 4px;
   }
 }
-
-/* Extra small devices (phones, 600px and down) */
+/* Small devices (601px and up) */
 @media only screen and (min-width: 601px) {
+  .view-details-icon {
+      width: 20px;
+      margin-right: 5px;
+  }
+  .player-detail-badge-icon {
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+  }
 }
-    
-/* Small devices (portrait tablets and large phones, 601px and up) */
-@media only screen and (min-width: 601px) {
 
-}
-
-/* Medium devices (landscape tablets, 768px and up) */
+/* Medium devices (768px and up) */
 @media only screen and (min-width: 768px) {
-
+  .view-details-icon {
+      width: 24px;
+      margin-right: 6px;
+  }
+  .player-detail-badge-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+  }
 }
 
-/* Large devices (laptops/desktops, 992px and up) */
+/* Large devices (992px and up) */
 @media only screen and (min-width: 992px) {
-
+  .view-details-icon {
+      width: 28px;
+      margin-right: 7px;
+  }
+  .player-detail-badge-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 7px;
+  }
 }
 
-/* Extra large devices (large laptops and desktops, 1200px and up) */
+/* Extra large devices (1200px and up) */
 @media only screen and (min-width: 1200px) {
-
+  .view-details-icon {
+      width: 30px;
+      margin-right: 7.5px;
+  }
+  .player-detail-badge-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 7.5px;
+  }
 }
+
 /* added */
 @media only screen and (min-width: 1500px) {
 
@@ -200,9 +228,3 @@
       height: 51px;
   }
 }
-
-/* 4K and large screens */
-@media only screen and (min-width: 1920px) {
-
-}
-    

@@ -741,29 +741,360 @@
 
 }
 
-/* Extra small devices (phones, 600px and down) */
+
+/* Small devices (601px and up) */
 @media only screen and (min-width: 601px) {
-    .float-right-buttons {
-        text-align: right;
-        display: flex;
-        justify-content: right;
-    }
+    
+  .formation-wrapper{
+      margin-left: 16px;
+  }
+  
+  .sub-stat-panel{
+      height: 112px;
+  }
+  
+  .sub-stat-wrapper{
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+  }
+  
+  .sub-stat-button{
+      height: 48px !important;
+      width: 122px !important;
+      font-size: 13px !important;
+  }
+  
+  .formation-text{
+      font-size: 13px;
+  }
+      
+  .autofill-button{
+      width: 122px;
+      height: 48px;
+      border-radius: 8px;
+      margin-right: 24px;
+      font-size: 11px;
+  }
+  
+  .save-team-button{
+      width: 122px;
+      height: 48px;
+      border-radius: 8px;
+      margin-right: 42px;
+      font-size: 11px;
+  }
+
+  .sponsor1, .sponsor2{
+      width: 124.25px !important;
+      height: 28px !important;
+  }
+  
+  .shirt-icon{
+      width: 55.05px;
+      height: 56.2px;
+  }
+  
+  .player-name-row {
+      height: 20px;
+      width: 80px;
+      font-size: 10px;
+  }
+  
+  .player-info-row {
+      padding: 10px;
+      height: 16px;
+      width: 158px;
+      font-size: 10px;
+  }
+  
+  .bonus-image{
+      width: 52px;
+      height: 52px;
+  }
+
+  .bonus-label{
+      font-size: 10px;
+  }
+
+  .btn-use-bonus{
+      font-size: 12px;
+  }
+  
+  .bonus-card{
+      width: 132px;
+  }
+
+  .select-player-modal-row {
+      height: 48px;
+  }
+
+  .select-player-modal-row p {
+      font-size: 10px;
+  }
+      
+  .modal-table-row{
+      height: 30px;
+      font-size: 15px;
+  }
+
+  .add-player-button, .small-add-player-button{
+      width: 28px;
+      height: 28px;
+  }
+
+  .small-plus-icon{
+      width: 11px;
+      height: 11px;
+  }
 }
   
   
   /* Medium devices (landscape tablets, 768px and up) */
-  @media only screen and (min-width: 768px) {
+@media only screen and (min-width: 768px) {
+    
+  .formation-wrapper {
+      margin-left: 28px;
+  }
 
+  .sub-stat-panel {
+      height: 116px;
+  }
+
+  .sub-stat-button {
+      height: 50px !important;
+      width: 127px !important;
+  }
+
+  .autofill-button,
+  .save-team-button {
+      width: 137px;
+      height: 50px;
+  }
+
+  .autofill-button {
+      margin-right: 20px;
+  }
+
+  .save-team-button {
+      margin-right: 37px;
+  }
+
+  .sponsor1,
+  .sponsor2 {
+      width: 155.75px !important;
+      height: 34.5px !important;
+  }
+
+  .shirt-icon {
+      width: 70.45px;
+      height: 72px;
+  }
+
+  .player-name-row {
+      height: 24px;
+      width: 100px;
+  }
+
+  .player-info-row {
+      padding: 9px;
+      height: 19px;
+      width: 152px;
+  }
+
+  .bonus-image {
+      width: 66px;
+      height: 66px;
+  }
+
+  .bonus-card {
+      width: 141px;
+  }
+
+  .select-player-modal-row {
+      height: 60px;
+  }
+
+  .modal-table-row {
+      height: 38px;
+  }
+
+  .add-player-button,
+  .small-add-player-button {
+      width: 30px;
+      height: 30px;
+  }
+
+  .small-plus-icon {
+      width: 12.5px;
+      height: 12.5px;
   }
   
-  /* Large devices (laptops/desktops, 992px and up) */
-  @media only screen and (min-width: 992px) {
-  
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    
+  .formation-wrapper {
+      margin-left: 34px;
+  }
+
+  .sub-stat-panel {
+      height: 109px;
+  }
+
+  .sub-stat-button {
+      height: 51px !important;
+      width: 129.5px !important;
+  }
+
+  .autofill-button,
+  .save-team-button {
+      width: 149px;
+      height: 51px;
+  }
+
+  .autofill-button {
+      margin-right: 22px;
+  }
+
+  .save-team-button {
+      margin-right: 40px;
+  }
+
+  .sponsor1,
+  .sponsor2 {
+      width: 170.5px !important;
+      height: 36.5px !important;
+  }
+
+  .shirt-icon {
+      width: 77.5px;
+      height: 78.5px;
+  }
+
+  .player-name-row {
+      height: 26px;
+      width: 108px;
+  }
+
+  .player-info-row {
+      padding: 9.5px;
+      height: 20.5px;
+      width: 155px;
+  }
+
+  .bonus-image {
+      width: 74px;
+      height: 74px;
+  }
+
+  .bonus-card {
+      width: 146px;
+  }
+
+  .select-player-modal-row {
+      height: 66px;
+  }
+
+  .modal-table-row {
+      height: 41px;
+  }
+
+  .add-player-button,
+  .small-add-player-button {
+      width: 30.5px;
+      height: 30.5px;
+  }
+
+  .small-plus-icon {
+      width: 13.5px;
+      height: 13.5px;
   }
   
+}
+
   /* Extra large devices (large laptops and desktops, 1200px and up) */
-  @media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1200px) {
+    
+  .formation-wrapper {
+      margin-left: 38px;
   }
+
+  .sub-stat-panel {
+      height: 106px;
+  }
+
+  .sub-stat-button {
+      height: 52px !important;
+      width: 131px !important;
+  }
+
+  .autofill-button,
+  .save-team-button {
+      width: 153.5px;
+      height: 52px;
+  }
+
+  .autofill-button {
+      margin-right: 21px;
+  }
+
+  .save-team-button {
+      margin-right: 39px;
+  }
+
+  .sponsor1,
+  .sponsor2 {
+      width: 176.25px !important;
+      height: 39.5px !important;
+  }
+
+  .shirt-icon {
+      width: 82.5px;
+      height: 83.5px;
+  }
+
+  .player-name-row {
+      height: 28px;
+      width: 112px;
+  }
+
+  .player-info-row {
+      padding: 9px;
+      height: 20px;
+      width: 156px;
+  }
+
+  .bonus-image {
+      width: 76px;
+      height: 76px;
+  }
+
+  .bonus-card {
+      width: 148px;
+  }
+
+  .select-player-modal-row {
+      height: 68px;
+  }
+
+  .modal-table-row {
+      height: 42.5px;
+  }
+
+  .add-player-button,
+  .small-add-player-button {
+      width: 31px;
+      height: 31px;
+  }
+
+  .small-plus-icon {
+      width: 14px;
+      height: 14px;
+  }
+  
+}
+
   /* added */
   @media only screen and (min-width: 1500px) {
     
@@ -1058,7 +1389,3 @@
 }
   }
   
-  /* 4K and large screens */
-  @media only screen and (min-width: 1920px) {
-    
-  }

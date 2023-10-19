@@ -109,28 +109,179 @@
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 601px) {
-  
+    .manager-badge-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 16px;
+    }
+
+    .manager-picture-col {
+        flex-basis: 58px;
+        margin-right: 16px;
+    }
+
+    .manager-detail-row-1 {
+        height: 100px;
+        padding-left: 4px;
+    }
+
+    .manager-detail-row-2 {
+        height: 168px;
+        padding-left: 4px;
+    }
+
+    .manager-profile-image {
+        width: 58px !important;
+        height: 58px !important;
+        margin-left: 12px;
+        border-radius: 8px;
+    }
+
+    .manager-stat-panel {
+        height: 95px;
+    }
 }
-  
+
 /* Small devices (portrait tablets and large phones, 601px and up) */
 @media only screen and (min-width: 601px) {
+    .manager-badge-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 16px;
+    }
 
+    .manager-picture-col {
+        flex-basis: 65px;
+        margin-right: 16px;
+    }
+
+    .manager-detail-row-1 {
+        height: 100px;
+        padding-left: 8px;
+    }
+
+    .manager-detail-row-2 {
+        height: 168px;
+        padding-left: 8px;
+    }
+
+    .manager-profile-image {
+        width: 66px !important;
+        height: 66px !important;
+        margin-left: 16px;
+        border-radius: 8px;
+    }
+
+    .manager-stat-panel {
+        height: 97px;
+    }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
+    .manager-badge-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 16px;
+    }
 
+    .manager-picture-col {
+        flex-basis: 73px;
+        margin-right: 16px;
+    }
+
+    .manager-detail-row-1 {
+        height: 100px;
+        padding-left: 12px;
+    }
+
+    .manager-detail-row-2 {
+        height: 168px;
+        padding-left: 12px;
+    }
+
+    .manager-profile-image {
+        width: 73px !important;
+        height: 73px !important;
+        margin-left: 20px;
+        border-radius: 8px;
+    }
+
+    .manager-stat-panel {
+        height: 99px;
+    }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
+    .manager-badge-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 16px;
+    }
 
+    .manager-picture-col {
+        flex-basis: 82px;
+        margin-right: 16px;
+    }
+
+    .manager-detail-row-1 {
+        height: 100px;
+        padding-left: 18px;
+    }
+
+    .manager-detail-row-2 {
+        height: 168px;
+        padding-left: 18px;
+    }
+
+    .manager-profile-image {
+        width: 82px !important;
+        height: 82px !important;
+        margin-left: 24px;
+        border-radius: 8px;
+    }
+
+    .manager-stat-panel {
+        height: 101px;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
+    .manager-badge-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 16px;
+    }
 
+    .manager-picture-col {
+        flex-basis: 91px;
+        margin-right: 16px;
+    }
+
+    .manager-detail-row-1 {
+        height: 100px;
+        padding-left: 24px;
+    }
+
+    .manager-detail-row-2 {
+        height: 168px;
+        padding-left: 24px;
+    }
+
+    .manager-profile-image {
+        width: 91px !important;
+        height: 91px !important;
+        margin-left: 28px;
+        border-radius: 8px;
+    }
+
+    .manager-stat-panel {
+        height: 102px;
+    }
 }
+
 /* added */
 @media only screen and (min-width: 1500px) {
     .manager-badge-icon{
@@ -183,9 +334,4 @@
         padding-bottom: 15px;
         height: 158px;
     }
-}
-
-/* 4K and large screens */
-@media only screen and (min-width: 1920px) {
-
 }

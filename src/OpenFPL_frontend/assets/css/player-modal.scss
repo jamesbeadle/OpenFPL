@@ -307,31 +307,106 @@
   }
     
 }
-
-/* Extra small devices (phones, 600px and down) */
+/* Small devices (601px and up) */
 @media only screen and (min-width: 601px) {
-  
+  .player-modal-name-row{
+      margin-top: 8px;
+      padding-bottom: 16px;
+  }
+  .player-modal-flag{
+      width: 60px !important;
+  }
+  .player-modal-name-col{
+      margin-left: 14px;
+      font-size: 24px;
+  }
+  .fpl-btn-purple{
+      width: 110px;
+      height: 42px;
+      font-size: 13px;
+  }
+  .select-player-badge-icon{
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+  }
 }
-  
-/* Small devices (portrait tablets and large phones, 601px and up) */
-@media only screen and (min-width: 601px) {
 
-}
-
-/* Medium devices (landscape tablets, 768px and up) */
+/* Medium devices (768px and up) */
 @media only screen and (min-width: 768px) {
-
+  .player-modal-name-row{
+      margin-top: 16px;
+      padding-bottom: 16px;
+  }
+  .player-modal-flag{
+      width: 70px !important;
+  }
+  .player-modal-name-col{
+      margin-left: 14px;
+      font-size: 28px;
+  }
+  .fpl-btn-purple{
+      width: 120px;
+      height: 44px;
+      font-size: 14px;
+  }
+  .select-player-badge-icon{
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+  }
 }
 
-/* Large devices (laptops/desktops, 992px and up) */
+/* Large devices (992px and up) */
 @media only screen and (min-width: 992px) {
-
+  .player-modal-name-row{
+      margin-top: 24px;
+      padding-bottom: 16px;
+  }
+  .player-modal-flag{
+      width: 80px !important;
+  }
+  .player-modal-name-col{
+      margin-left: 14px;
+      font-size: 32px;
+  }
+  .fpl-btn-purple{
+      width: 130px;
+      height: 46px;
+      font-size: 15px;
+  }
+  .select-player-badge-icon{
+      width: 18px;
+      height: 18px;
+      margin-right: 7px;
+  }
 }
 
-/* Extra large devices (large laptops and desktops, 1200px and up) */
+/* Extra large devices (1200px and up) */
 @media only screen and (min-width: 1200px) {
-
+  .player-modal-name-row{
+      margin-top: 28px;
+      padding-bottom: 16px;
+  }
+  .player-modal-flag{
+      width: 90px !important;
+  }
+  .player-modal-name-col{
+      margin-left: 14px;
+      font-size: 36px;
+  }
+  .fpl-btn-purple{
+      width: 140px;
+      height: 48px;
+      font-size: 15.5px;
+  }
+  .select-player-badge-icon{
+      width: 20px;
+      height: 20px;
+      margin-right: 7.5px;
+  }
 }
+
 /* added */
 @media only screen and (min-width: 1500px) {
     
@@ -466,9 +541,4 @@
     height: 24px;
     margin-right: 8px;
   }
-}
-
-/* 4K and large screens */
-@media only screen and (min-width: 1920px) {
-
 }

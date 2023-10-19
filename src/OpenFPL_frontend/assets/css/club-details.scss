@@ -92,30 +92,41 @@
       flex-basis: 15%;
     }
 }
-
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 601px) {
+  .club-badge-col{
+      padding-left: 18px;
+  }
 }
-  
+
 /* Small devices (portrait tablets and large phones, 601px and up) */
 @media only screen and (min-width: 601px) {
-
+  .club-badge-col{
+      padding-left: 20px;
+  }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-
+  .club-badge-col{
+      padding-left: 23px;
+  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-
+  .club-badge-col{
+      padding-left: 28px;
+  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-
+  .club-badge-col{
+      padding-left: 30px;
+  }
 }
+
 /* added */
 @media only screen and (min-width: 1500px) {
 
@@ -139,9 +150,4 @@
   .club-player-age-col{
     flex-basis: 20%;
   }
-}
-
-/* 4K and large screens */
-@media only screen and (min-width: 1920px) {
-
 }

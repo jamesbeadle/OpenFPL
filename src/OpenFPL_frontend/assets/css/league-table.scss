@@ -157,26 +157,56 @@
       }
 
 }
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (min-width: 601px) {
+    
+  .league-table-badge-icon {
+      width: 18px;
+      height: 18px;
+      margin-right: 5px;
+  }
+}
 
 /* Small devices (portrait tablets and large phones, 601px and up) */
 @media only screen and (min-width: 601px) {
+  
+  .league-table-badge-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+  }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-    
+  
+  .league-table-badge-icon {
+      width: 22px;
+      height: 22px;
+      margin-right: 6px;
+  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-    
+  
+  .league-table-badge-icon {
+      width: 26px;
+      height: 26px;
+      margin-right: 7px;
+  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-    
-    
+  
+  .league-table-badge-icon {
+      width: 30px;
+      height: 30px;
+      margin-right: 8px;
+  }
 }
+
 /* added */
 @media only screen and (min-width: 1500px) {
             
@@ -188,8 +218,3 @@
   }
 
 }
-
-/* 4K and large screens */
-@media only screen and (min-width: 1920px) {
-}
-

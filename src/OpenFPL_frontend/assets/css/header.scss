@@ -117,72 +117,164 @@
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 601px) {
-    .footer-links {
-        font-size: 12px;
-    }
+    .footer-links,
     .footer-link {
-        font-size: 12px;
-    }
-    .social-icon {
-        width: 16px;
-        height: 16px;
-        margin: 0 6px;
-    }
-    
-    .navbar{
-        height: 60px;
-        padding-left: 12px;
-        padding-right: 12px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
-    
-    .navbar-collapse{
-        background-color: rgba(36, 37, 41, 1);
-        border-radius: 8px;
-        border: 2px solid #454B56;
-        padding: 4px;
+        font-size: 10px;
     }
 
-    .nav-profile-image{
-        width: 30px;
-        margin-left: 16px;
+    .social-icon {
+        width: 13px;
+        height: 13px;
+        margin: 0 5px;
     }
-    
+
+    .navbar {
+        height: 64px;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
     .custom-nav-link {
-        line-height: 50px;
-        font-size: 16px;
+        line-height: 48px;
+        font-size: 13px;
+    }
+
+    .nav-profile-image {
+        width: 22px;
+        margin-left: 9px;
     }
 }
-  
+
 /* Small devices (portrait tablets and large phones, 601px and up) */
 @media only screen and (min-width: 601px) {
+    .footer-links,
+    .footer-link {
+        font-size: 10px;
+    }
 
+    .social-icon {
+        width: 14px;
+        height: 14px;
+        margin: 0 6px;
+    }
+
+    .navbar {
+        height: 68px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+    .custom-nav-link {
+        line-height: 56px;
+        font-size: 14px;
+    }
+
+    .nav-profile-image {
+        width: 24px;
+        margin-left: 10px;
+    }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
+    .footer-links,
+    .footer-link {
+        font-size: 11px;
+    }
 
+    .social-icon {
+        width: 15px;
+        height: 15px;
+        margin: 0 7px;
+    }
+
+    .navbar {
+        height: 72px;
+        padding-left: 24px;
+        padding-right: 24px;
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
+    .custom-nav-link {
+        line-height: 64px;
+        font-size: 15px;
+    }
+
+    .nav-profile-image {
+        width: 26px;
+        margin-left: 11px;
+    }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-
-    .navbar-collapse{
-        background-color: unset;
-        border-radius: unset;
-        border: unset;
-        padding: unset;
+    .footer-links,
+    .footer-link {
+        font-size: 12px;
     }
-    .nav-profile-image{
-      width: 40px;
+
+    .social-icon {
+        width: 16px;
+        height: 16px;
+        margin: 0 8px;
+    }
+
+    .navbar {
+        height: 76px;
+        padding-left: 28px;
+        padding-right: 28px;
+        padding-top: 19px;
+        padding-bottom: 19px;
+    }
+
+    .custom-nav-link {
+        line-height: 72px;
+        font-size: 16px;
+    }
+
+    .nav-profile-image {
+        width: 28px;
+        margin-left: 12px;
     }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
+    .footer-links,
+    .footer-link {
+        font-size: 13px;
+    }
 
+    .social-icon {
+        width: 17px;
+        height: 17px;
+        margin: 0 9px;
+    }
+
+    .navbar {
+        height: 78px;
+        padding-left: 36px;
+        padding-right: 36px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .custom-nav-link {
+        line-height: 78px;
+        font-size: 17px;
+    }
+
+    .nav-profile-image {
+        width: 29px;
+        margin-left: 13px;
+    }
 }
+
 /* added */
 @media only screen and (min-width: 1500px) {
     .navbar{
@@ -197,9 +289,4 @@
       line-height: 80px;
       font-size: 18px;
     }
-}
-
-/* 4K and large screens */
-@media only screen and (min-width: 1920px) {
-
 }
