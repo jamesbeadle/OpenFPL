@@ -795,15 +795,16 @@
   }
   
   .player-name-row {
-      height: 20px;
-      width: 80px;
-      font-size: 10px;
+    padding: 10px;
+    height: 16px;
+    width: 100px;
+    font-size: 10px;
   }
   
   .player-info-row {
       padding: 10px;
       height: 16px;
-      width: 158px;
+      width: 80px;
       font-size: 10px;
   }
   
@@ -909,8 +910,9 @@
   }
 
   .player-name-row {
-      height: 24px;
-      width: 100px;
+    padding: 9px;
+    height: 19px;
+    width: 152px;
   }
 
   .player-info-row {
@@ -1009,8 +1011,9 @@
   }
 
   .player-name-row {
-      height: 26px;
-      width: 108px;
+    padding: 9.5px;
+    height: 20.5px;
+    width: 155px;
   }
 
   .player-info-row {
@@ -1111,8 +1114,9 @@
   }
 
   .player-name-row {
-      height: 28px;
-      width: 112px;
+    padding: 9px;
+    height: 20px;
+    width: 156px;
   }
 
   .player-info-row {
@@ -1287,10 +1291,9 @@
     
 .player-name-row {
     padding: 8px;
-    height: 32px;
+    height: 22px;
     width: 146px;
     font-size: 12px;
-    margin-top: unset;
   }
   
   .player-info-row {
