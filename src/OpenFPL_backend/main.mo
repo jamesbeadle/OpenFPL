@@ -1429,6 +1429,7 @@ actor Self {
   private stable var stable_fantasy_teams: [(Text, T.UserFantasyTeam)] = [];
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
+  private stable var stable_interesting_gameweek : Nat8 = 0;
   private stable var stable_active_fixtures : [T.Fixture] = [];
   private stable var stable_next_fixture_id : Nat32 = 0;
   private stable var stable_next_season_id : Nat16 = 0;
@@ -1447,6 +1448,7 @@ actor Self {
     stable_profiles := profilesInstance.getProfiles();
     stable_active_season_id := seasonManager.getActiveSeasonId();
     stable_active_gameweek := seasonManager.getActiveGameweek();
+    stable_interesting_gameweek := seasonManager.getInterestingGameweek();
     stable_active_fixtures := seasonManager.getActiveFixtures();
     stable_next_fixture_id := seasonManager.getNextFixtureId();
     stable_next_season_id := seasonManager.getNextSeasonId();
@@ -1462,7 +1464,7 @@ actor Self {
   system func postupgrade() {
     profilesInstance.setData(stable_profiles);
     fantasyTeamsInstance.setData(stable_fantasy_teams);
-    seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id);
+    seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id, stable_interesting_gameweek);
     teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
     fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
@@ -1692,5 +1694,9 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     return seasonManager.getValidatableFixtures();
   };
+
+  public func updateCache(category: Text) : async (){
+    await updateCacheHash(category);
+  }
   
 };

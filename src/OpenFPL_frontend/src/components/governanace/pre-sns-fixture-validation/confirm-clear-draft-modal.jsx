@@ -22,5 +22,4 @@ const ConfirmClearDraftModal = ({ show, onHide, onConfirm  }) => {
    
 };
 
-
 export default ConfirmClearDraftModal;
