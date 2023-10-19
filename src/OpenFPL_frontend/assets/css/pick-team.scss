@@ -487,6 +487,12 @@
 }
 
 
+.disabled-player-text{
+  font-size: 8px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
         
@@ -810,6 +816,10 @@
       height: 12px;
     }
 
+    .disabled-player-text{
+      font-size: 8px !important;
+    }
+
 }
 
 
@@ -936,6 +946,10 @@
   .right-side-image {
       right: -10px;
   }
+
+  .disabled-player-text{
+    font-size: 8px !important;
+  }
 }
   
   
@@ -1036,6 +1050,10 @@
 }
 .right-side-image {
   right: -12px;
+}
+
+.disabled-player-text{
+  font-size: 9px !important;
 }
   
 }
@@ -1163,6 +1181,9 @@
 .button-col {
   width: 5%;
 }
+.disabled-player-text{
+  font-size: 10px !important;
+}
 }
 
   /* Extra large devices (large laptops and desktops, 1200px and up) */
@@ -1266,6 +1287,9 @@
 .remove-player-icon{
   width: 11px;
   height: 11px;
+}
+.disabled-player-text{
+  font-size: 11px !important;
 }
   
 }
@@ -1564,6 +1588,12 @@
 .small-plus-icon{
   width: 16px;
   height: 16px;
+}
+
+
+
+.disabled-player-text{
+  font-size: 12px !important;
 }
 
   }

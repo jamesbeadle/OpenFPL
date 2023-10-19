@@ -285,7 +285,7 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                     const reasonOrValid = canAddPlayer(player, fantasyTeam, fantasyTeam.bankBalance);
                     return reasonOrValid === "Valid"
                       ? <button onClick={() => { handleSubmit(player); }} className='small-add-player-button'><SmallPlusIcon /></button>
-                      : <p className='disabled-player-text m-0 text-center w-100'>{reasonOrValid}</p>;
+                      : <p className='disabled-player-text m-0 text-center w-100 d-none d-sm-flex'>{reasonOrValid}</p>;
                   })()}
                 
               </div>
