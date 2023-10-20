@@ -23,6 +23,12 @@
         "Content-Type": "application/json"
       },
       "ignore": false
+    }, 
+    {
+      "match": "{*.gif,*.jpg,*.png,*.svg,*.webp,*.mp3}",
+      "headers": {
+          "Cache-Control": "public, max-age=2592000"
+      }
     }
 
 ]
