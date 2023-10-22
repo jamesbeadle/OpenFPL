@@ -107,13 +107,16 @@ export type List_2 = [] | [[Fixture, List_2]];
 export interface ManagerDTO {
   'favouriteTeamId' : TeamId,
   'displayName' : string,
-  'weeklyPosition' : string,
+  'weeklyPosition' : bigint,
   'createDate' : bigint,
+  'weeklyPositionText' : string,
   'gameweeks' : Array<FantasyTeamSnapshot>,
-  'monthlyPosition' : string,
-  'seasonPosition' : string,
+  'monthlyPosition' : bigint,
+  'seasonPosition' : bigint,
+  'monthlyPositionText' : string,
   'profilePicture' : Uint8Array | number[],
   'principalId' : string,
+  'seasonPositionText' : string,
 }
 export interface PaginatedClubLeaderboard {
   'month' : number,
@@ -256,6 +259,7 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
+  'recalculateLeaderboards' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

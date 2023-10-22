@@ -122,13 +122,16 @@ export const idlFactory = ({ IDL }) => {
   const ManagerDTO = IDL.Record({
     'favouriteTeamId' : TeamId,
     'displayName' : IDL.Text,
-    'weeklyPosition' : IDL.Text,
+    'weeklyPosition' : IDL.Int,
     'createDate' : IDL.Int,
+    'weeklyPositionText' : IDL.Text,
     'gameweeks' : IDL.Vec(FantasyTeamSnapshot),
-    'monthlyPosition' : IDL.Text,
-    'seasonPosition' : IDL.Text,
+    'monthlyPosition' : IDL.Int,
+    'seasonPosition' : IDL.Int,
+    'monthlyPositionText' : IDL.Text,
     'profilePicture' : IDL.Vec(IDL.Nat8),
     'principalId' : IDL.Text,
+    'seasonPositionText' : IDL.Text,
   });
   const ProfileDTO = IDL.Record({
     'icpDepositAddress' : IDL.Vec(IDL.Nat8),
@@ -317,6 +320,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'recalculateLeaderboards' : IDL.Func([], [], []),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
         [Result],

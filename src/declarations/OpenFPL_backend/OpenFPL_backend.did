@@ -81,11 +81,14 @@ type ManagerDTO =
    displayName: text;
    favouriteTeamId: TeamId;
    gameweeks: vec FantasyTeamSnapshot;
-   monthlyPosition: text;
+   monthlyPosition: int;
+   monthlyPositionText: text;
    principalId: text;
    profilePicture: blob;
-   seasonPosition: text;
-   weeklyPosition: text;
+   seasonPosition: int;
+   seasonPositionText: text;
+   weeklyPosition: int;
+   weeklyPositionText: text;
  };
 type List_2 = 
  opt record {
@@ -265,6 +268,7 @@ service : {
    (PaginatedLeaderboard) query;
   getWeeklyLeaderboardCache: (nat16, nat8) -> (PaginatedLeaderboard) query;
   isDisplayNameValid: (text) -> (bool) query;
+  recalculateLeaderboards: () -> ();
   saveFantasyTeam: (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateCache: (text) -> ();

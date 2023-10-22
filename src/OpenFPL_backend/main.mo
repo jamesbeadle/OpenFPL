@@ -1346,9 +1346,10 @@ actor Self {
     var favouriteTeamId: T.TeamId = 0;
     var createDate = Time.now();
     var gameweeks: [T.FantasyTeamSnapshot] = [];
-    var weeklyPosition = fantasyTeamsInstance.getWeeklyManagerPosition(managerId, seasonId, gameweek);
-    var monthlyPosition = "N/A";
-    var seasonPosition = fantasyTeamsInstance.getSeasonManagerPosition(managerId, seasonId);
+    
+    var weeklyLeaderboardEntry = fantasyTeamsInstance.getWeeklyLeaderboardEntry(managerId, seasonId, gameweek);
+    var seasonLeaderboardEntry = fantasyTeamsInstance.getSeasonLeaderboardEntry(managerId, seasonId);
+    var monthlyLeaderboardEntry: ?T.LeaderboardEntry = null;
 
     let userProfile = profilesInstance.getProfile(managerId);
     switch(userProfile){
@@ -1360,7 +1361,7 @@ actor Self {
         createDate := foundProfile.createDate;
 
         if(foundProfile.favouriteTeamId > 0){
-          monthlyPosition := fantasyTeamsInstance.getMonthlyManagerPosition(managerId, seasonId, foundProfile.favouriteTeamId);
+          monthlyLeaderboardEntry := fantasyTeamsInstance.getMonthlyLeaderboardEntry(managerId, seasonId, foundProfile.favouriteTeamId);
         }
 
       };
@@ -1386,6 +1387,40 @@ actor Self {
         };
     };
 
+    var weeklyPosition: Int = 0;
+    var monthlyPosition: Int = 0;
+    var seasonPosition: Int = 0;
+
+    var weeklyPositionText = "N/A";
+    var monthlyPositionText = "N/A";
+    var seasonPositionText = "N/A";
+
+    switch(weeklyLeaderboardEntry){
+      case (null) {};
+      case (?foundEntry){
+        weeklyPosition := foundEntry.position;
+        weeklyPositionText := foundEntry.positionText;
+      }
+    };
+
+    
+    switch(monthlyLeaderboardEntry){
+      case (null) {};
+      case (?foundEntry){
+        monthlyPosition := foundEntry.position;
+        monthlyPositionText := foundEntry.positionText;
+      }
+    };
+
+    
+    switch(seasonLeaderboardEntry){
+      case (null) {};
+      case (?foundEntry){
+        seasonPosition := foundEntry.position;
+        seasonPositionText := foundEntry.positionText;
+      }
+    };
+
     let managerDTO: DTOs.ManagerDTO = {
       principalId = managerId;
       displayName = displayName;
@@ -1396,6 +1431,9 @@ actor Self {
       weeklyPosition = weeklyPosition;
       monthlyPosition = monthlyPosition;
       seasonPosition = seasonPosition;
+      weeklyPositionText = weeklyPositionText;
+      monthlyPositionText = monthlyPositionText;
+      seasonPositionText = seasonPositionText;
     };  
 
     return managerDTO;
@@ -1698,6 +1736,10 @@ actor Self {
 
   public func updateIncorrectFixtureTime() : async (){
     await seasonManager.updateIncorrectFixtureTime();
+  };
+
+  public func recalculateLeaderboards() : async (){
+    await fantasyTeamsInstance.recalculateLeaderboards();
   };
 
 

@@ -129,9 +129,12 @@ module DTOs {
         favouriteTeamId: T.TeamId;
         createDate: Int;
         gameweeks: [T.FantasyTeamSnapshot];
-        weeklyPosition: Text;
-        monthlyPosition: Text;
-        seasonPosition: Text;
+        weeklyPosition: Int;
+        monthlyPosition: Int;
+        seasonPosition: Int;
+        weeklyPositionText: Text;
+        monthlyPositionText: Text;
+        seasonPositionText: Text;
     };
     
 }

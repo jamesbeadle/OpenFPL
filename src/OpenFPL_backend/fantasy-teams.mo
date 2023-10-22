@@ -902,16 +902,16 @@ module {
             func updatePosition(entry: T.LeaderboardEntry) : T.LeaderboardEntry {
                 if (previousScore == null) {
                     previousScore := ?entry.points;
-                    let updatedEntry = {entry with positionText = Int.toText(position)};
+                    let updatedEntry = {entry with position = position; positionText = Int.toText(position)};
                     currentPosition += 1;
                     return updatedEntry;
                 } else if (previousScore == ?entry.points) {
                     currentPosition += 1;
-                    return {entry with positionText = "-"};
+                    return {entry with  position = position; positionText = "-"};
                 } else {
                     position := currentPosition;
                     previousScore := ?entry.points;
-                    let updatedEntry = {entry with positionText = Int.toText(position)};
+                    let updatedEntry = {entry with position = position; positionText = Int.toText(position)};
                     currentPosition += 1;
                     return updatedEntry;
                 }
@@ -1420,7 +1420,7 @@ module {
             };
         };
 
-        public func getWeeklyManagerPosition(managerId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : Text {
+        public func getWeeklyLeaderboardEntry(managerId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : ?T.LeaderboardEntry {
             
             for((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()){
                 if(seasonId == seasonId){
@@ -1431,25 +1431,18 @@ module {
                         case (null) {};
                         case (?foundWeeklyLeaderboard){
 
-                            let foundEntry = List.find<T.LeaderboardEntry>(foundWeeklyLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                            return List.find<T.LeaderboardEntry>(foundWeeklyLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
                                 return entry.principalId == managerId;
                             });
-
-                            switch(foundEntry){
-                                case (null) {};
-                                case (?positionRow){
-                                    return positionRow.positionText;
-                                }
-                            };
                         }
                     };
                 };
             };
             
-            return "N/A";
+            return null;
         };
 
-        public func getMonthlyManagerPosition(managerId: Text, seasonId: T.SeasonId, clubId: T.TeamId) : Text {
+        public func getMonthlyLeaderboardEntry(managerId: Text, seasonId: T.SeasonId, clubId: T.TeamId) : ?T.LeaderboardEntry {
             
             for((seasonId, clubLeaderboards) in monthlyLeaderboards.entries()){
                 if(seasonId == seasonId){
@@ -1461,41 +1454,49 @@ module {
                     switch(clubLeaderboard){
                         case (null) {};
                         case (?foundClubLeaderboard){
-                            let foundEntry = List.find<T.LeaderboardEntry>(foundClubLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                            return List.find<T.LeaderboardEntry>(foundClubLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
                                 return entry.principalId == managerId;
                             });
-
-                            switch(foundEntry){
-                                case (null) {};
-                                case (?positionRow){
-                                    return positionRow.positionText;
-                                }
-                            };
                         };
                     }
                 };
             };
             
-            return "N/A";
+            return null;
         };
 
-        public func getSeasonManagerPosition(managerId: Text, seasonId: T.SeasonId) : Text {
+        public func getSeasonLeaderboardEntry(managerId: Text, seasonId: T.SeasonId) : ?T.LeaderboardEntry {
             
             for((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()){
                 if(seasonId == seasonId){
-                    let foundEntry = List.find<T.LeaderboardEntry>(seasonLeaderboards.seasonLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
+                    return List.find<T.LeaderboardEntry>(seasonLeaderboards.seasonLeaderboard.entries, func (entry: T.LeaderboardEntry): Bool {
                         return entry.principalId == managerId;
                     });
-                    switch(foundEntry){
-                        case (null) {};
-                        case (?positionRow){
-                            return positionRow.positionText;
-                        }
-                    };
                 };
             };
             
-            return "N/A";
+            return null;
+        };
+
+        public func recalculateLeaderboards() : async (){
+            calculateLeaderboards(1, 1);
+            calculateMonthlyLeaderboards(1, 1);
+            calculateLeaderboards(1, 2);
+            calculateMonthlyLeaderboards(1, 2);
+            calculateLeaderboards(1, 3);
+            calculateMonthlyLeaderboards(1, 3);
+            calculateLeaderboards(1, 4);
+            calculateMonthlyLeaderboards(1, 4);
+            calculateLeaderboards(1, 5);
+            calculateMonthlyLeaderboards(1, 5);
+            calculateLeaderboards(1, 6);
+            calculateMonthlyLeaderboards(1, 6);
+            calculateLeaderboards(1, 7);
+            calculateMonthlyLeaderboards(1, 7);
+            calculateLeaderboards(1, 8);
+            calculateMonthlyLeaderboards(1, 8);
+            calculateLeaderboards(1, 9);
+            calculateMonthlyLeaderboards(1, 9);
         };
     };
     

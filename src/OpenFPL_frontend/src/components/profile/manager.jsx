@@ -582,13 +582,13 @@ const Manager = () => {
                       </Row>
                       <Row className="stat-row-2 vertical-flex">
                           <div className='manager-pos-col'>
-                            <p className="stat">{viewData.weeklyPosition}</p>
+                            <p className="stat">{viewData.weeklyPositionText == "-" ? `T${viewData.weeklyPosition}` : viewData.weeklyPositionText}</p>
                           </div>
                           <div className='manager-pos-col'>
-                            <p className="stat">{viewData.monthlyPosition}</p>
+                            <p className="stat">{viewData.monthlyPositionText == "-" ? `T${viewData.monthlyPosition}` : viewData.monthlyPositionText}</p>
                           </div>
                           <div className='manager-pos-col'>
-                            <p className="stat">{viewData.seasonPosition}</p>
+                            <p className="stat">{viewData.seasonPositionText == "-" ? `T${viewData.seasonPosition}` : viewData.seasonPositionText}</p>
                           </div>
                       </Row>
                       <Row className="stat-row-3">
