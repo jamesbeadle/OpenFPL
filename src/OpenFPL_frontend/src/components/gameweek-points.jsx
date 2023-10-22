@@ -7,7 +7,7 @@ import { DataContext } from "../contexts/DataContext";
 import { getFantasyTeamForGameweek } from '../AuthFunctions';
 import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
 import { player_canister as player_canister } from '../../../declarations/player_canister';
-import { getTeamById, getBonusId, CustomToggle } from './helpers';
+import { getTeamById, CustomToggle } from './helpers';
 import getFlag from './country-flag';
 import GoalGetter from "../../assets/goal-getter.png";
 import PassMaster from "../../assets/pass-master.png";
@@ -443,6 +443,44 @@ const GameweekPoints = () => {
       }
     }, 0);
   };
+  
+  const getBonusId = () => {
+    if(fantasyTeam.goalGetterGameweek === currentGameweek && 
+      fantasyTeam.goalGetterPlayerId === selectedPlayer.id){
+        return 1;
+      };
+    if(fantasyTeam.passMasterGameweek == currentGameweek && 
+      fantasyTeam.passMasterPlayerId == selectedPlayer.id){
+        return 2;
+      };
+    if(fantasyTeam.noEntryGameweek == currentGameweek && 
+      fantasyTeam.noEntryPlayerId == selectedPlayer.id){
+        return 3;
+      };
+    if(fantasyTeam.safeHandsGameweek == currentGameweek && 
+      selectedPlayer.position === 0 && 
+      selectedPlayerDTO.gameweekData.saves >= 5){
+        return 4;
+    };
+    if(fantasyTeam.captainFantasticGameweek == currentGameweek && 
+      fantasyTeam.captainId == selectedPlayer.id && 
+      selectedPlayerDTO.gameweekData.goals > 0){
+        return 5;
+    }
+    if(fantasyTeam.braceBonusGameweek == currentGameweek && 
+      selectedPlayerDTO.gameweekData.goals >= 2){
+        return 6;
+    };
+    if(fantasyTeam.hatTrickHeroGameweek == currentGameweek && 
+      selectedPlayerDTO.gameweekData.goals >= 3){
+        return 7;
+    } 
+    if(fantasyTeam.teamBoostGameweek == currentGameweek && 
+      fantasyTeam.teamBoostTeamId == selectedPlayer.teamId){
+        return 8;
+    }                         
+  }
+  
   
   
   

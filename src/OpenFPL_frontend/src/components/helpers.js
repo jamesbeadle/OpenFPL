@@ -138,43 +138,6 @@ export const getAvailableFormations = (playerCounts) => {
     return null;
   }
 
-  export const getBonusId = (fantasyTeam) => {
-    if(fantasyTeam.goalGetterGameweek === currentGameweek && 
-      fantasyTeam.goalGetterPlayerId === selectedPlayer.id){
-        return 1;
-      };
-    if(fantasyTeam.passMasterGameweek == currentGameweek && 
-      fantasyTeam.passMasterPlayerId == selectedPlayer.id){
-        return 2;
-      };
-    if(fantasyTeam.noEntryGameweek == currentGameweek && 
-      fantasyTeam.noEntryPlayerId == selectedPlayer.id){
-        return 3;
-      };
-    if(fantasyTeam.safeHandsGameweek == currentGameweek && 
-      selectedPlayer.position === 0 && 
-      selectedPlayerDTO.gameweekData.saves >= 5){
-        return 4;
-    };
-    if(fantasyTeam.captainFantasticGameweek == currentGameweek && 
-      fantasyTeam.captainId == selectedPlayer.id && 
-      selectedPlayerDTO.gameweekData.goals > 0){
-        return 5;
-    }
-    if(fantasyTeam.braceBonusGameweek == currentGameweek && 
-      selectedPlayerDTO.gameweekData.goals >= 2){
-        return 6;
-    };
-    if(fantasyTeam.hatTrickHeroGameweek == currentGameweek && 
-      selectedPlayerDTO.gameweekData.goals >= 3){
-        return 7;
-    } 
-    if(fantasyTeam.teamBoostGameweek == currentGameweek && 
-      fantasyTeam.teamBoostTeamId == selectedPlayer.teamId){
-        return 8;
-    }                         
-  }
-
   export const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   
