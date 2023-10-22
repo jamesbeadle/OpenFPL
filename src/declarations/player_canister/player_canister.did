@@ -195,7 +195,6 @@ service : {
   loanPlayer: (PlayerId, TeamId, int, SeasonId, GameweekNumber) -> ();
   recallPlayer: (PlayerId) -> ();
   retirePlayer: (PlayerId, int) -> ();
-  reuploadPlayers: () -> ();
   revaluePlayerDown: (PlayerId, SeasonId, GameweekNumber) -> () oneway;
   revaluePlayerUp: (PlayerId, SeasonId, GameweekNumber) -> ();
   setDefaultHashes: () -> ();

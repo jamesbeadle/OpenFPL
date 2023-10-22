@@ -190,7 +190,6 @@ export const idlFactory = ({ IDL }) => {
       ),
     'recallPlayer' : IDL.Func([PlayerId], [], []),
     'retirePlayer' : IDL.Func([PlayerId, IDL.Int], [], []),
-    'reuploadPlayers' : IDL.Func([], [], []),
     'revaluePlayerDown' : IDL.Func(
         [PlayerId, SeasonId, GameweekNumber],
         [],
