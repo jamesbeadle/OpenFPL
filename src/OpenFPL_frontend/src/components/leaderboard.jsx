@@ -120,7 +120,7 @@ const Leaderboard = () => {
     };  
 
     const getMonthlyLeaderboard = async (season, month, club) => {
-        if(Number(monthlyLeaderboards[0].totalEntries) === 0){
+        if(Object.entries(monthlyLeaderboards).length === 0){
           setManagers({});    
           return;
         }
