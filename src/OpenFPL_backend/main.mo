@@ -1506,8 +1506,8 @@ actor Self {
   public shared ({caller}) func savePlayerEvents(fixtureId: T.FixtureId, allPlayerEvents: [T.PlayerEventData]) : async (){
     Debug.print("Saving events");
     assert not Principal.isAnonymous(caller);
-    //assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB LIVE
-    assert Principal.toText(caller) == "5mizu-xuphz-aex5b-ovid6-oqt34-jdb5k-fn5hr-ip7iu-ghgz4-jilrl-bqe"; //JB Local 2
+    assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB LIVE
+    //assert Principal.toText(caller) == "5mizu-xuphz-aex5b-ovid6-oqt34-jdb5k-fn5hr-ip7iu-ghgz4-jilrl-bqe"; //JB Local 2
     //assert Principal.toText(caller) == "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"; JB LOCAL
 
     let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
@@ -1699,8 +1699,14 @@ actor Self {
     await updateCacheHash(category);
   };
 
+  public func updateIncorrectFixtureTime() : async (){
+    await seasonManager.updateIncorrectFixtureTime();
+  };
+
+
+/*
   public func reuploadTeams() : async (){
     await teamsInstance.reuploadTeams();
   }
-  
+*/
 };

@@ -704,7 +704,8 @@ actor Self {
             } else {return p};
         });
         
-        
+        await updateHashForCategory("players");
+        await updateHashForCategory("playerEventData");
         return updatedFixture;
     };
 

@@ -9,6 +9,14 @@ import { ArrowLeft, ArrowRight, BadgeIcon } from '../icons';
 import { getTeamById, CustomToggle } from '../helpers';
 import ManagerGameweekPoints from './manager-gameweek-points';
 import PlayerPointsModal from '../modals/player-points-modal';
+import GoalGetter from "../../../assets/goal-getter.png";
+import PassMaster from "../../../assets/pass-master.png";
+import NoEntry from "../../../assets/no-entry.png";
+import TeamBoost from "../../../assets/team-boost.png";
+import SafeHands from "../../../assets/safe-hands.png";
+import CaptainFantastic from "../../../assets/captain-fantastic.png";
+import BraceBonus from "../../../assets/brace-bonus.png";
+import HatTrickHero from "../../../assets/hat-trick-hero.png";
 
 const Manager = () => {
     const { managerId } = useParams();
@@ -792,17 +800,52 @@ const Manager = () => {
                                 (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2) ||
                                 (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3) ||
                                 (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId)) ? '' : 'zero-text'}`}>
+
                               {[
-                                (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
-                                (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id && <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>),
-                                (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id && <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>),
-                                (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5 && <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>),
-                                (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0 && <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>),
-                                (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2 && <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>),
-                                (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3 && <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>),
-                                (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId && <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>)
+                                (fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id),
+                                (fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id),
+                                (fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id),
+                                (fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5),
+                                (fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0),
+                                (fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2),
+                                (fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3),
+                                (fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId)
                                 ].some(Boolean) || '-'}
+
+                                {(fantasyTeam.goalGetterGameweek === currentGameweek && fantasyTeam.goalGetterPlayerId === player.id) && 
+                                  <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>
+                                }
+
+                                {(fantasyTeam.passMasterGameweek == currentGameweek && fantasyTeam.passMasterPlayerId == player.id) && 
+                                  <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>
+                                }
+
+                                {(fantasyTeam.noEntryGameweek == currentGameweek && fantasyTeam.noEntryPlayerId == player.id) && 
+                                  <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>
+                                }
+
+                                {(fantasyTeam.safeHandsGameweek == currentGameweek && player.position === 0 && playerDTO.gameweekData.saves >= 5) && 
+                                  <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>
+                                }
+
+                                {(fantasyTeam.captainFantasticGameweek == currentGameweek && fantasyTeam.captainId == player.id && playerDTO.gameweekData.goals > 0) && 
+                                  <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>
+                                }
+
+                                {(fantasyTeam.braceBonusGameweek == currentGameweek && playerDTO.gameweekData.goals >= 2) && 
+                                  <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>
+                                }
+
+                                {(fantasyTeam.hatTrickHeroGameweek == currentGameweek && playerDTO.gameweekData.goals >= 3) && 
+                                  <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>
+                                }
+
+                                {(fantasyTeam.teamBoostGameweek == currentGameweek && fantasyTeam.teamBoostTeamId == player.teamId) && 
+                                  <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>
+                                }
+
                             </div>
+                            
                             <div className="gw-points-points-col gw-table-col">{playerDTO.totalPoints}</div>
                           </div>
                         </Col>

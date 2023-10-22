@@ -61,7 +61,6 @@ const MyNavbar = () => {
   
   const handleDropdownBlur = (e) => {
     const currentTarget = e.currentTarget;
-    console.log(currentTarget)
     if (!currentTarget.contains(document.activeElement)) {
       setShowDropdown(false);
       setExpanded(false)

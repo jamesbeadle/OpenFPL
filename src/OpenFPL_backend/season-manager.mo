@@ -402,6 +402,10 @@ module {
         let gameweekFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         activeFixtures := gameweekFixtures;
     };
+
+    public func updateIncorrectFixtureTime() : async (){
+        await seasonsInstance.updateIncorrectFixtureTime();
+    };
     
   };
 }

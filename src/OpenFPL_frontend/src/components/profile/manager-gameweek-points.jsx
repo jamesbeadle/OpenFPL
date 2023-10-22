@@ -66,15 +66,47 @@ const ManagerGameweekPoints = ({ gameweeks, setCurrentGameweek }) => {
                                     (gameweek.hatTrickHeroGameweek === gameweek.gameweek) ||
                                     (gameweek.teamBoostGameweek === gameweek.gameweek)) ? '' : 'zero-text'}`}>
                                 {[
-                                    (gameweek.goalGetterGameweek === gameweek.gameweek && <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>),
-                                    (gameweek.passMasterGameweek === gameweek.gameweek && <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>),
-                                    (gameweek.noEntryGameweek === gameweek.gameweek && <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>),
-                                    (gameweek.safeHandsGameweek === gameweek.gameweek && <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>),
-                                    (gameweek.captainFantasticGameweek === gameweek.gameweek && <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>),
-                                    (gameweek.braceBonusGameweek === gameweek.gameweek && <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>),
-                                    (gameweek.hatTrickHeroGameweek === gameweek.gameweek && <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>),
-                                    (gameweek.teamBoostGameweek === gameweek.gameweek && <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>)
+                                    (gameweek.goalGetterGameweek === gameweek.gameweek),
+                                    (gameweek.passMasterGameweek === gameweek.gameweek),
+                                    (gameweek.noEntryGameweek === gameweek.gameweek),
+                                    (gameweek.safeHandsGameweek === gameweek.gameweek),
+                                    (gameweek.captainFantasticGameweek === gameweek.gameweek),
+                                    (gameweek.braceBonusGameweek === gameweek.gameweek),
+                                    (gameweek.hatTrickHeroGameweek === gameweek.gameweek),
+                                    (gameweek.teamBoostGameweek === gameweek.gameweek)
                                     ].some(Boolean) || '-'}
+
+                                    {(gameweek.goalGetterGameweek === gameweek.gameweek) && 
+                                      <img src={GoalGetter} alt='goal-getter' className='gw-bonus-image'/>
+                                    }
+    
+                                    {(gameweek.passMasterGameweek == gameweek.gameweek) && 
+                                      <img src={PassMaster} alt='pass-master' className='gw-bonus-image'/>
+                                    }
+    
+                                    {(gameweek.noEntryGameweek == gameweek.gameweek) && 
+                                      <img src={NoEntry} alt='no-entry' className='gw-bonus-image'/>
+                                    }
+    
+                                    {(gameweek.safeHandsGameweek == gameweek.gameweek) && 
+                                      <img src={SafeHands} alt='safe-hands' className='gw-bonus-image'/>
+                                    }
+    
+                                    {(gameweek.captainFantasticGameweek == gameweek.gameweek) && 
+                                      <img src={CaptainFantastic} alt='captain-fantastic' className='gw-bonus-image'/>
+                                    }
+    
+                                    {(gameweek.braceBonusGameweek == gameweek.gameweek) && 
+                                      <img src={BraceBonus} alt='brace-bonus' className='gw-bonus-image'/>
+                                    }
+    
+                                    {(gameweek.hatTrickHeroGameweek == gameweek.gameweek) && 
+                                      <img src={HatTrickHero} alt='hat-trick-hero' className='gw-bonus-image'/>
+                                    }
+    
+                                    {(gameweek.teamBoostGameweek == gameweek.gameweek) && 
+                                      <img src={TeamBoost} alt='team-boost' className='gw-bonus-image'/>
+                                    }
                                 </div>
                                 <div className="mgw-points-col gw-table-col">{gameweek.points}</div>
                             </div>

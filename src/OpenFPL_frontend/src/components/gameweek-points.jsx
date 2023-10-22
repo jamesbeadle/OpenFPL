@@ -570,7 +570,7 @@ const GameweekPoints = () => {
                         <div className="table-row clickable-table-row">
                             <div className="gw-points-position-col gw-table-col">{positionCodes[player.position]}</div>
                             <div className="gw-points-name-col gw-table-col">{getFlag(player.nationality, 'gameweek-points-flag')}{(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}</div>
-                            <div className="gw-points-club-col gw-table-col vertical-flex" onClick={() => navigate(`/club/${player.teamId}`)}>
+                            <div className="gw-points-club-col gw-table-col vertical-flex" >
                             <BadgeIcon
                                 primary={playerTeam.primaryColourHex}
                                 secondary={playerTeam.secondaryColourHex}
