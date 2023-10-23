@@ -71,24 +71,15 @@
   }
 
 .profile-details-row{
-  height: 300px;
-  padding-left: 32px;
-  margin-top: 32px;
   display:flex;
 }
 
-.profile-details-col{
-  flex-grow: 1;
-}
-
 .profile-detail-row-1{
-  height: 200px;
   padding-left: 32px;
   padding-right: 32px;
 }
 
 .profile-detail-row-2{
-  height: 168px;
   padding-left: 32px;
   padding-right: 32px;
 }
@@ -124,22 +115,20 @@
 
 
 .profile-details-row{
-  height: 240px;
   padding-left: 16px;
+  padding-right: 16px;
   margin-top: 16px;
   display:flex;
 }
 
-
-
 .profile-detail-row-1{
-  height: 120px;
   padding-left: 0px;
+  padding-right: 0px;
 }
 
 .profile-detail-row-2{
-  height: 120px;
   padding-left: 0px;
+  padding-right: 0px;
 }
 
 
@@ -168,16 +157,14 @@
         margin-top: 32px;
     }
     .profile-details-row{
-        height: 264px;
         padding-left: 18px;
+        padding-right: 18px;
         margin-top: 16px;
     }
     .profile-detail-row-1{
-        height: 140px;
         padding-left: 8px;
     }
     .profile-detail-row-2{
-        height: 132px;
         padding-left: 8px;
     }
     .profile-display-name-col{
@@ -197,15 +184,13 @@
         width: 240px;
     }
     .profile-details-row{
-        height: 288px;
         padding-left: 20px;
+        padding-right: 20px;
     }
     .profile-detail-row-1{
-        height: 200px;
         padding-left: 16px;
     }
     .profile-detail-row-2{
-        height: 70px;
         padding-left: 16px;
     }
     .profile-display-name-col{
@@ -220,15 +205,13 @@
         margin-left: 40px;
     }
     .profile-details-row{
-        height: 312px;
         padding-left: 24px;
+        padding-right: 24px;
     }
     .profile-detail-row-1{
-        height: 170px;
         padding-left: 24px;
     }
     .profile-detail-row-2{
-        height: 80px;
         padding-left: 24px;
     }
 }
@@ -240,15 +223,13 @@
         margin-left: 60px;
     }
     .profile-details-row{
-        height: 336px;
         padding-left: 28px;
+        padding-right: 28px;
     }
     .profile-detail-row-1{
-        height: 190px;
         padding-left: 28px;
     }
     .profile-detail-row-2{
-        height: 90px;
         padding-left: 28px;
     }
     .profile-display-name-col{
@@ -272,14 +253,16 @@
     margin-left: 80px;
     margin-top: 32px;
 } 
+.profile-details-row{
+    padding-left: 32px;
+    padding-right: 32px;
+}
 
 .profile-detail-row-1{
-  height: 200px;
   padding-left: 32px;
 }
 
 .profile-detail-row-2{
-  height: 100px;
   padding-left: 32px;
 }
 

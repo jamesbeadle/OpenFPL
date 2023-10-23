@@ -119,7 +119,7 @@ const Profile = () => {
   const handleFavoriteTeamChange = async (event) => {
     setSelectedTeamId(Number(event.target.value));
     let team = teams.find(t => t.id === Number(event.target.value));
-    setSelectedTeamName(team.name);
+    setSelectedTeamName(team.friendlyName);
     setShowConfirmFavouriteTeamModal(true);
   };
   
@@ -155,7 +155,7 @@ const Profile = () => {
                       <Tab eventKey="details" title="Details">
                         <div className="dark-tab-row w-100 mx-0">
                           <Row>
-                            <Col xs={12} md={'auto'} className="d-flex justify-content-center">
+                            <Col xs={12} md={'auto'} className="d-flex justify-content-center mb-2">
                               <div className='profile-picture-col'>
                                 <div className="vertical-flex">
                                   <Image src={profilePicSrc} className="profile-detail-image" />
@@ -166,28 +166,28 @@ const Profile = () => {
                               </div>
                             </Col>
                             <Col xs={12} md={6}>
-                              <div className='profile-details-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                              <div className='profile-details-row'>
                                 <div className='profile-details-col'>
                                   <div className='profile-detail-row-1'>
                                     <Row>
-                                      <div className='profile-display-name-col px-0'>
+                                      <div className='profile-display-name-col'>
                                         <p className="stat-header w-100">Display Name</p>
                                       </div>
-                                      <div className='profile-favourite-team-col px-0'>
+                                      <div className='profile-favourite-team-col'>
                                         <p className="stat-header w-100">Favourite Team</p>
                                       </div>
                                     </Row>
                                     <Row>
-                                      <div className='profile-display-name-col px-0'>  
+                                      <div className='profile-display-name-col'>  
                                         <p className="header-stat">{viewData.displayName == viewData.principalName ? 'Not Set' : viewData.displayName}</p>
                                       </div>
-                                      <div className='profile-favourite-team-col px-0' style={{ display: 'flex', alignItems: 'center' }}>
+                                      <div className='profile-favourite-team-col' style={{ display: 'flex', alignItems: 'center' }}>
                                         <Form.Group controlId="favouriteTeam">
                                           <Form.Control className="stat-dropdown" as="select" value={favouriteTeam || 0} onChange={handleFavoriteTeamChange} disabled={!viewData.canUpdateFavouriteTeam}>
                                             <option value="">Select Favourite Team</option>
                                               {teams.map((team) => (
                                               <option key={team.id} value={team.id}>
-                                                  {team.name}
+                                                  {team.friendlyName}
                                               </option>
                                             ))}
                                           </Form.Control>
@@ -195,12 +195,12 @@ const Profile = () => {
                                       </div>
                                     </Row>
                                     <Row>
-                                      <div className='profile-display-name-col px-0'>  
+                                      <div className='profile-display-name-col'>  
                                         <Button className="fpl-large-btn" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
                                       </div>
                                     </Row>
                                   </div>
-                                  <div className='profile-detail-row-2'>
+                                  <div className='profile-detail-row-2 mt-2'>
                                     <p className='w-100'><b>Joined </b>{joinedDate}</p>
                                     <p className='w-100'><small><b>Principal ID </b>{viewData.principalName}</small></p>
                                   </div>

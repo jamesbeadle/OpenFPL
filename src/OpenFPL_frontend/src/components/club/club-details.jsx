@@ -293,7 +293,7 @@ const ClubDetails = ({  }) => {
                                     </div>
                                     <div className='home-fixture-col'>
                                         <Row>
-                                            <Col xs={5}>
+                                            <Col xs={5} className='p-0'>
                                                 <div className='text-center badge w-100'>
                                                     {nextFixtureHomeTeam && <CombinedIcon
                                                         primary={nextFixtureHomeTeam.primaryColourHex}
@@ -304,11 +304,11 @@ const ClubDetails = ({  }) => {
                                                     />}
                                                 </div>
                                             </Col>
-                                            <Col xs={2}>
+                                            <Col xs={2} className='p-0'>
                                                 <p className="w-100 vs">vs</p>
                                             </Col>
-                                            <Col xs={5}>
-                                                <div className='text-center badge w-100'>
+                                            <Col xs={5} className='p-0'>
+                                                <div className='text-center badge w-100 p-0'>
                                                 {nextFixtureAwayTeam && <CombinedIcon
                                                         primary={nextFixtureAwayTeam.primaryColourHex}
                                                         secondary={nextFixtureAwayTeam.secondaryColourHex}
@@ -337,12 +337,12 @@ const ClubDetails = ({  }) => {
                                     </div>
                                     <div className='home-fixture-col'>
                                         <Row>
-                                            <Col xs={5}>
+                                            <Col xs={5} className='p-0'>
                                                 {nextFixtureHomeTeam && <p className="small-header-stat text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
-                                                </Col>
-                                                <Col xs={2}>
                                             </Col>
-                                            <Col xs={5}>
+                                            <Col xs={2} className='p-0'>
+                                            </Col>
+                                            <Col xs={5} className='p-0'>
                                                 {nextFixtureAwayTeam && <p className="small-header-stat text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>}
                                             </Col>
                                         </Row>
