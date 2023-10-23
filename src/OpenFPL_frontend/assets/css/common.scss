@@ -18,6 +18,13 @@
   margin-right: 0px;
 }
 
+.filter-dropdown-btn{
+    border:none;
+    font-weight: 400;
+    font-size: inherit !important;
+    padding: 0;
+}
+
 @media only screen and (min-width: 321px) {
     body{
         font-size: 8px;
@@ -244,11 +251,6 @@
 
 
 
-.filter-dropdown-btn{
-    border:none;
-    font-weight: 400;
-}
-
 .vertical-flex{
     align-items: center;
     display: flex;
@@ -395,9 +397,6 @@
 
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
-    .filter-dropdown-btn{
-        padding: 0;
-    }
     
     .fpl-btn{
         width: 22px !important;
@@ -577,8 +576,8 @@
         padding-left: 22px;
     }
     .filter-dropdown-btn{
-        padding-left: 2px;
-        padding-right: 2px;
+        padding-left: 4px;
+        padding-right: 4px;
     }
     
     .fpl-btn{
@@ -667,8 +666,8 @@
         border-radius: 3px !important;
     };
     .filter-dropdown-btn{
-        padding-left: 5px;
-        padding-right: 5px;
+        padding-left: 6px;
+        padding-right: 6px;
     }
     .left-arrow{
         margin-right: 11px;
@@ -739,8 +738,8 @@
     
     
     .filter-dropdown-btn{
-        padding-left: 6px;
-        padding-right: 6px;
+        padding-left: 8px;
+        padding-right: 8px;
     }
     
     .fpl-btn{
@@ -849,8 +848,8 @@
     };
     
     .filter-dropdown-btn{
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
     .leaderboard-type-dropdown{
         margin-left: 16px;
