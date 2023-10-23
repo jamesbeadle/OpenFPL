@@ -887,10 +887,10 @@ const PickTeam = () => {
             <Col xs={12}>
               <Card className='mb-3' style={{overflow: 'unset'}}>
                   <div className="d-flex">
-                    <div className="sub-stat-panel flex-grow-1" style={{ display: 'flex', alignItems: 'center' }}>
-                      <Row className="sub-stat-wrapper">
-                        <Col xs={12} sm={7} className='align-items-center justify-content-center'>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className="sub-stat-panel flex-grow-1">
+                      <Row className="sub-stat-wrapper vertical-flex mb-2 mt-2">
+                        <Col xs={12} sm={7}>
+                          <div className='vertical-flex mb-2 mb-sm-0'>
                             <Button 
                               onClick={() => setShowListView(false)} 
                               className={`sub-stat-button sub-stat-button-left ${!showListView ? 'active' : ''}`}
@@ -921,8 +921,8 @@ const PickTeam = () => {
                             </div>
                           </Col>
 
-                        <Col xs={12} sm={5} className='float-right-buttons mt-0 mb-0'>
-                          <button className='autofill-button' onClick={autofillTeam} disabled={fantasyTeam.players.filter(x => x).length >= 11}>AutoFill</button>
+                        <Col xs={12} sm={5} className='vertical-flex'>
+                          <button className='autofill-button' onClick={autofillTeam} disabled={fantasyTeam.players.filter(x => x).length >= 11}>Auto Fill</button>
                           <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
                         </Col>
                     </Row>

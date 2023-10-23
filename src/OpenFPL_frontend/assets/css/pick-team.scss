@@ -64,7 +64,6 @@
 .sub-stat-panel{
     padding-top: 15px;
     padding-bottom: 15px;
-    height: 100px;
   }
   
   .sub-stat-wrapper{
@@ -111,11 +110,6 @@
     }
 
 
-    .float-right-buttons {
-        text-align: right;
-        display: flex;
-        justify-content: right;
-      }
 
       
 
@@ -534,7 +528,6 @@
     .sub-stat-panel{
         padding-top: 2px;
         padding-bottom: 2px;
-        height: 120px;
     }
     
     .sub-stat-wrapper{
@@ -546,15 +539,12 @@
         height: 40px !important;
         width: 100px !important;
         padding: 0;
+        font-size: 10px;
     }
-    
 
-    .float-right-buttons {
-        text-align: left;
-        display: flex;
-        justify-content: left;
+    .formation-text{
+      font-size: 11px;
     }
- 
         
     .autofill-button{
         width: 100px;
@@ -754,8 +744,6 @@
       height: 8px;
     }
 
-    
-
     .position-col{
       width: 15%;
     }
@@ -802,10 +790,6 @@
       margin-left: 16px;
   }
   
-  .sub-stat-panel{
-      height: 112px;
-  }
-  
   .sub-stat-wrapper{
       padding-left: 16px !important;
       padding-right: 16px !important;
@@ -814,20 +798,27 @@
   .sub-stat-button{
       height: 48px !important;
       width: 122px !important;
+      font-size: 11px;
+  }
+
+  .formation-text{
+    font-size: 12px;
   }
       
   .autofill-button{
-      width: 122px;
+      width: 250px;
       height: 48px;
       border-radius: 8px;
-      margin-right: 24px;
+      margin-right: 8px;
+      font-size: 11px;
   }
   
   .save-team-button{
-      width: 122px;
+      width: 275px;
       height: 48px;
       border-radius: 8px;
       margin-right: 42px;
+      font-size: 11px;
   }
 
   .sponsor1, .sponsor2{
@@ -916,13 +907,14 @@
       margin-left: 28px;
   }
 
-  .sub-stat-panel {
-      height: 116px;
-  }
-
   .sub-stat-button {
       height: 50px !important;
       width: 127px !important;
+      font-size: 12px;
+  }
+
+  .formation-text{
+    font-size: 13px;
   }
 
   .autofill-button,
@@ -1009,6 +1001,10 @@
 .right-side-image {
   right: -12px;
 }
+
+.formation-text{
+  font-size: 14px;
+}
   
 }
 
@@ -1019,13 +1015,14 @@
       margin-left: 34px;
   }
 
-  .sub-stat-panel {
-      height: 109px;
-  }
-
   .sub-stat-button {
       height: 51px !important;
       width: 129.5px !important;
+      font-size: 13px;
+  }
+
+  .formation-text{
+    font-size: 14px;
   }
 
   .autofill-button,
@@ -1146,13 +1143,14 @@
       margin-left: 38px;
   }
 
-  .sub-stat-panel {
-      height: 106px;
-  }
-
   .sub-stat-button {
       height: 52px !important;
       width: 131px !important;
+      font-size: 14px;
+  }
+
+  .formation-text{
+    font-size: 15px;
   }
 
   .autofill-button,
@@ -1300,7 +1298,6 @@
     .sub-stat-panel{
         padding-top: 15px;
         padding-bottom: 15px;
-        height: 100px;
     }
     
     .sub-stat-wrapper{
@@ -1311,7 +1308,11 @@
     .sub-stat-button{
         height: 52px !important;
         width: 132px !important;
-        padding: unset;
+        font-size: 14px;
+    }
+
+    .formation-text{
+      font-size: 16px;
     }
 
 
