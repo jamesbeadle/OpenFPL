@@ -60,12 +60,10 @@
   
   .coin-name{
     font-weight: 700;
-    font-size: 24px;
   }
   
   .coin-balance{
     font-weight: 500;
-    font-size: 14px;
   }
   
   .coin-balance-suffix{
@@ -153,12 +151,7 @@
   flex-basis: 50%;
 }
 
-.fpl-large-btn{
-  font-size: 12px;
-};
-
 .stat-dropdown{
-  font-size: 12px !important;
   background-color: #454B56 !important;
 }
 
@@ -193,11 +186,7 @@
     .profile-favourite-team-col{
         flex-basis: 55%;
     }
-    .fpl-large-btn{
-        font-size: 12.5px;
-    }
     .stat-dropdown{
-        font-size: 12.5px !important;
         background-color: #454B56 !important;
     }
 }
@@ -242,12 +231,6 @@
         height: 80px;
         padding-left: 24px;
     }
-    .fpl-large-btn{
-        font-size: 13px;
-    }
-    .stat-dropdown{
-        font-size: 13px !important;
-    }
 }
 
 /* Extra large devices (1200px and up) */
@@ -273,12 +256,6 @@
     }
     .profile-favourite-team-col{
         flex-basis: 53%;
-    }
-    .fpl-large-btn{
-        font-size: 14px;
-    }
-    .stat-dropdown{
-        font-size: 14px !important;
     }
 }
 
@@ -313,15 +290,6 @@
 
 .profile-favourite-team-col{
   flex-basis: 50%;
-}
-
-.fpl-large-btn{
-  font-size: unset;
-};
-
-
-.stat-dropdown{
-  font-size: unset !important;
 }
 
 }

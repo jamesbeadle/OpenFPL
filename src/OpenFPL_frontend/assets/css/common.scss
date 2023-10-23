@@ -1,7 +1,251 @@
+.header-stat{
+    width:100%;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+.small-header-stat{
+    width:100%;
+    margin-bottom: 0;
+    color: #B1B1B1;
+    font-weight: 400;
+}
+
+.view-container {
+    z-index: 10;
+}
+.tab-header .nav-link {
+  margin-right: 0px;
+}
+
+@media only screen and (min-width: 321px) {
+    body{
+        font-size: 8px;
+    }
+    .small-header-stat{
+        font-size: 7px !important;
+    }
+
+    .header-stat{
+        font-size: 16px !important;
+    }
+
+    .small-text{
+        font-size: 8px !important;
+    }
+    .view-container{
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .stat-panel{
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }   
+    .tab-header {
+      padding-left: 2px;
+      padding-right: 2px;
+      height: 40px;
+    }
+    .tab-header .nav-link {
+      height: 40px;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    body{
+        font-size: 11px;
+    }
+    .small-header-stat{
+        font-size: 11px !important;
+    }
+
+    .header-stat{
+        font-size: 27px !important;
+    }
+
+    .small-text{
+        font-size: 11px !important;
+    }
+    .view-container{
+        padding-left: 26px;
+        padding-right: 26px;
+    }
+    .stat-panel{
+        padding-top: 11px;
+        padding-bottom: 11px;
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+    .tab-header {
+        padding-left: 4px;
+        padding-right: 4px;
+        height: 44px;
+    }
+    .tab-header .nav-link {
+        height: 44px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    body{
+        font-size: 12px;
+    }
+    .small-header-stat{
+        font-size: 11px !important;
+    }
+
+    .header-stat{
+        font-size: 27px !important;
+    }
+
+    .small-text{
+        font-size: 11px !important;
+    }
+    .view-container{
+        padding-left: 36px;
+        padding-right: 36px;
+    }
+    .stat-panel{
+        padding-top: 12px;
+        padding-bottom: 12px;
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    .tab-header {
+        padding-left: 5px;
+        padding-right: 5px;
+        height: 46px;
+    }
+    .tab-header .nav-link {
+        height: 46px;
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    body{
+        font-size: 13px;
+    }
+    .small-header-stat{
+        font-size: 14px !important;
+    }
+
+    .header-stat{
+        font-size: 33px !important;
+    }
+
+    .small-text{
+        font-size: 14px !important;
+    }
+    .view-container{
+        padding-left: 52px;
+        padding-right: 52px;
+    }
+    .stat-panel{
+        padding-top: 13px;
+        padding-bottom: 13px;
+        padding-left: 26px;
+        padding-right: 26px;
+    }
+    .tab-header {
+        padding-left: 6px;
+        padding-right: 6px;
+        height: 48px;
+    }
+    .tab-header .nav-link {
+        height: 48px;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    body{
+        font-size: 14px;
+    }
+    .small-header-stat{
+        font-size: 14px !important;
+    }
+
+    .header-stat{
+        font-size: 33px !important;
+    }
+
+    .small-text{
+        font-size: 14px !important;
+    }
+    .view-container{
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+    .stat-panel{
+        padding-top: 14px;
+        padding-bottom: 14px;
+        padding-left: 28px;
+        padding-right: 28px;
+    }
+    .tab-header {
+        padding-left: 7px;
+        padding-right: 7px;
+        height: 50px;
+    }
+    .tab-header .nav-link {
+        height: 50px;
+    }
+}
+
+@media only screen and (min-width: 1500px) {
+    body{
+        font-size: 16px;
+    }
+    .small-header-stat{
+        font-size: 16px !important;
+    }
+
+    .header-stat{
+        font-size: 40px !important;
+    }
+
+    .small-text{
+        font-size: 16px !important;
+    }
+    .view-container{
+        padding-left: 64px;
+        padding-right: 64px;
+    }
+    .stat-panel{
+        padding-top: 15px;
+        padding-bottom: 15px;
+        padding-left: 34px;
+        padding-right: 34px;
+    }
+    .tab-header {
+        padding-left: 8px;
+        padding-right: 8px;
+        height: 52px;
+    }
+    .tab-header .nav-link {
+        height: 52px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//old styles:
+
+
+
 
 .filter-dropdown-btn{
     border:none;
-    font-size: 18px;
     font-weight: 400;
 }
 
@@ -11,45 +255,11 @@
     vertical-align: middle;
 }
 
-.stat-row-1{
-    min-height: 20px;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.stat-row-2{
-    min-height: 40px;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.stat-row-3{
-    min-height: 20px;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.stat-header{
-    width:100%;
-    font-size: 16px;
-    margin-bottom: 0;
-    color: #B1B1B1;
-    font-weight: 400;
-}   
-
-.stat{
-    width:100%;
-    font-size: 48px;
-    margin-bottom: 0;
-    font-weight: 500;
-}
-
 .vs {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
-    font-size: 32px;
 }
 
 .countdown{
@@ -105,7 +315,6 @@
     position: relative;
       background-color: rgba(46, 50, 58, 0.6);
       color: white !important;
-      font-size: 18px;
       font-weight: 700;
       letter-spacing: 0.5px;
       height: 46px;
@@ -125,7 +334,6 @@
     margin: 0;
     padding: 0;
     border: none;
-    font-size: 24px;
     color: white;
   }
 
@@ -142,10 +350,6 @@
     border-bottom: none;
     padding-bottom: 0 !important;
   }
-
-  .view-container {
-    z-index: 10; /* or any value lower than your navbar's z-index */
-}
 
 
 .list-view-header-row {
@@ -191,33 +395,7 @@
 
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
-    .view-container{
-        padding-left: 16px;
-        padding-right: 16px;
-    }
-    .stat{
-        font-size: 13px;
-    }
-    .pad-right{
-        padding-left: 20px;
-    }
-    .combined-icon{
-        width: 30px;
-        height: 30px;
-    }
-    .stat-panel{
-        padding-top: 10px;
-        padding-bottom: 10px;
-        height: 96px;
-    }
-    .stat-header{
-        font-size: 8px;
-    }
-    .vs{
-        font-size: 18px;
-    }
     .filter-dropdown-btn{
-        font-size: 8px;
         padding: 0;
     }
     
@@ -264,7 +442,6 @@
 
         
     .card-header{
-        font-size: 10px;
         height: 30px;
         line-height: 30px; 
     }
@@ -274,10 +451,6 @@
         margin-right: 16px;
     }
     
-    .card-arrow{
-        font-size: 16px;
-    }
-
   
   .leaderboard-type-dropdown{
         margin-left: 4px;
@@ -309,33 +482,7 @@
   
 /* Small devices (portrait tablets and large phones, 601px and up) */
 @media only screen and (min-width: 601px) {
-    .view-container{
-        padding-left: 26px;
-        padding-right: 26px;
-    }
-    .stat{
-        font-size: 21px;
-    }
-    .pad-right{
-        padding-left: 21px;
-    }
-    .combined-icon{
-        width: 34px;
-        height: 34px;
-    }
-    .stat-panel{
-        padding-top: 11px;
-        padding-bottom: 11px;
-        height: 104px;
-    }
-    .vs{
-        font-size: 20px;
-    }
-    .stat-header{
-        font-size: 10px;
-    }
     .filter-dropdown-btn{
-        font-size: 10px;
         padding-left: 2px;
         padding-right: 2px;
     }
@@ -379,7 +526,6 @@
     }
     
     .card-header{
-        font-size: 11px;
         height: 33px;
         line-height: 33px; 
     }
@@ -387,10 +533,6 @@
     .button-container {
         gap: 18px;
         margin-right: 18px;
-    }
-    
-    .card-arrow{
-        font-size: 18px;
     }
 
     .leaderboard-type-dropdown{
@@ -425,32 +567,7 @@
   
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-    .view-container{
-        padding-left: 36px;
-        padding-right: 36px;
-    }
-    .stat{
-        font-size: 27px;
-    }
-    .pad-right{
-        padding-left: 23px;
-    }
-    .combined-icon{
-        width: 40px;
-        height: 40px;
-    }
-    .stat-panel{
-        padding-top: 12px;
-        padding-bottom: 12px;
-        height: 117px;
-    }
-    .vs{
-        font-size: 21px;
-    }
-    .stat-header{
-        font-size: 11px;
-    }
-
+    
     .table-row {
       height: 50px;
       padding-left: 22px;
@@ -460,7 +577,6 @@
         padding-left: 22px;
     }
     .filter-dropdown-btn{
-        font-size: 11px;
         padding-left: 2px;
         padding-right: 2px;
     }
@@ -495,7 +611,6 @@
     }
     
     .card-header{
-        font-size: 13px;
         height: 36px;
         line-height: 36px; 
     }
@@ -503,10 +618,6 @@
     .button-container {
         gap: 22px;
         margin-right: 22px;
-    }
-    
-    .card-arrow{
-        font-size: 22px;
     }
 
     .leaderboard-type-dropdown{
@@ -541,33 +652,7 @@
   
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-    .view-container{
-        padding-left: 52px;
-        padding-right: 52px;
-    }
-    .stat{
-        font-size: 33px;
-    }
-    .stat-header{
-        font-size: 14px;
-    }
-    .pad-right{
-        padding-left: 26px;
-    }
-    .combined-icon{
-        width: 50px;
-        height: 50px;
-    }
-    .stat-panel{
-        padding-top: 13px;
-        padding-bottom: 13px;
-        height: 136px;
-    }
-    .vs{
-        font-size: 25px;
-    }
-    
-    .table-row {
+     .table-row {
         height: 64px;
         padding-left: 26px;
     }
@@ -582,7 +667,6 @@
         border-radius: 3px !important;
     };
     .filter-dropdown-btn{
-        font-size: 14px;
         padding-left: 5px;
         padding-right: 5px;
     }
@@ -610,7 +694,6 @@
     }
     
     .card-header{
-        font-size: 15px;
         height: 30px;
         line-height: 30px; 
     }
@@ -620,10 +703,6 @@
         margin-right: 26px;
     }
     
-    .card-arrow{
-        font-size: 26px;
-    }
-
     
   .leaderboard-type-dropdown{
         margin-left: 12px;
@@ -658,33 +737,8 @@
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
     
-    .view-container{
-        padding-left: 60px;
-        padding-right: 60px;
-    }
-    .stat{
-        font-size: 37px;
-    }
-    .stat-header{
-        font-size: 15px;
-    }
-    .pad-right{
-        padding-left: 28px;
-    }
-    .combined-icon{
-        width: 55px;
-        height: 55px;
-    }
-    .stat-panel{
-        padding-top: 14px;
-        padding-bottom: 14px;
-        height: 150px;
-    }
-    .vs{
-        font-size: 26px;
-    }
+    
     .filter-dropdown-btn{
-        font-size: 16px;
         padding-left: 6px;
         padding-right: 6px;
     }
@@ -729,7 +783,6 @@
     }
     
     .card-header{
-        font-size: 17px;
         height: 41px;
         line-height: 41px; 
     }
@@ -739,10 +792,6 @@
         margin-right: 30px;
     }
     
-    .card-arrow{
-        font-size: 30px;
-    }
-
     .leaderboard-type-dropdown{
         margin-left: 14px;
         margin-right: 14px;
@@ -778,32 +827,10 @@
 /* added */
 @media only screen and (min-width: 1500px) {
     
-    .view-container{
-        padding-left: 64px;
-        padding-right: 64px;
-    }
-    .stat{
-        font-size: 40px;
-    }
-    .stat-header{
-        font-size: 16px;
-    }
-    .pad-right{
-        padding-left: 30px;
-    }
-    .combined-icon{
-        width: 60px;
-        height: 60px;
-    }
-    .stat-panel{
-        padding-top: 15px;
-        padding-bottom: 15px;
-        height: 158px;
-    }
+    
     
 
 .card-header{
-    font-size: 18px;
       height: 43px;
       line-height: 43px; 
   }
@@ -814,16 +841,6 @@
     margin-right: 32px;
   }
   
-  .card-arrow{
-    font-size: 24px;
-  }
-
-    
-    .stat-row-1{
-        min-height: 20px;
-        margin-left: 0;
-        margin-right: 0;
-    }
 
     .fpl-btn{
         width: 36px !important;
@@ -832,7 +849,6 @@
     };
     
     .filter-dropdown-btn{
-        font-size: 18px;
         padding-left: 8px;
         padding-right: 8px;
     }
@@ -863,10 +879,7 @@
           width: 12px;
           height: 12px;
       }
-      .vs{
-          font-size: 28px;
-      }
-    
+      
       .table-row {
           height: 80px;
           padding-left: 32px;

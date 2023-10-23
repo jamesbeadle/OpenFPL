@@ -149,9 +149,9 @@ const Profile = () => {
           <Row>
             <Col xs={12}>
               <Card>
-                <div className="outer-container d-flex">
+                <div className="d-flex">
                   <div className="flex-grow-1 light-background">
-                    <Tabs defaultActiveKey="details" id="profile-tabs" className="home-tab-header">
+                    <Tabs defaultActiveKey="details" id="profile-tabs" className="tab-header">
                       <Tab eventKey="details" title="Details">
                         <div className="dark-tab-row w-100 mx-0">
                           <Row>
@@ -169,7 +169,7 @@ const Profile = () => {
                               <div className='profile-details-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                 <div className='profile-details-col'>
                                   <div className='profile-detail-row-1'>
-                                    <Row className="stat-row-1">
+                                    <Row>
                                       <div className='profile-display-name-col px-0'>
                                         <p className="stat-header w-100">Display Name</p>
                                       </div>
@@ -177,9 +177,9 @@ const Profile = () => {
                                         <p className="stat-header w-100">Favourite Team</p>
                                       </div>
                                     </Row>
-                                    <Row className="stat-row-2 vertical-flex">
+                                    <Row>
                                       <div className='profile-display-name-col px-0'>  
-                                        <p className="stat">{viewData.displayName == viewData.principalName ? 'Not Set' : viewData.displayName}</p>
+                                        <p className="header-stat">{viewData.displayName == viewData.principalName ? 'Not Set' : viewData.displayName}</p>
                                       </div>
                                       <div className='profile-favourite-team-col px-0' style={{ display: 'flex', alignItems: 'center' }}>
                                         <Form.Group controlId="favouriteTeam">
@@ -194,7 +194,7 @@ const Profile = () => {
                                         </Form.Group>
                                       </div>
                                     </Row>
-                                    <Row className="stat-row-2 vertical-flex">
+                                    <Row>
                                       <div className='profile-display-name-col px-0'>  
                                         <Button className="fpl-large-btn" onClick={() => setShowUpdateNameModal(true)}>Update</Button>
                                       </div>

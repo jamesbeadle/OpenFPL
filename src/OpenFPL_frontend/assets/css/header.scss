@@ -19,7 +19,6 @@
   .nav-link {
     margin-right: 8px;
     vertical-align: middle;
-    font-size: 14px;
     line-height: 22px;
     font-weight: 400;
     color: #C2C3C4 !important;
@@ -31,7 +30,6 @@
     position: relative;
     width: fit-content;
     line-height: 80px;
-    font-size: 18px;
     font-weight: 400;
   }
   
@@ -77,12 +75,6 @@
   
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
-    .footer-links {
-        font-size: 10px;
-    }
-    .footer-link {
-        font-size: 10px;
-    }
     .social-icon {
         width: 12px;
         height: 12px;
@@ -112,17 +104,12 @@
     
     .custom-nav-link {
         line-height: 40px;
-        font-size: 12px;
     }
 }
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 601px) {
-    .footer-links,
-    .footer-link {
-        font-size: 10px;
-    }
-
+    
     .social-icon {
         width: 13px;
         height: 13px;
@@ -139,22 +126,16 @@
 
     .custom-nav-link {
         line-height: 48px;
-        font-size: 13px;
     }
 
     .nav-profile-image {
         width: 22px;
-        margin-left: 9px;
     }
 }
 
 /* Small devices (portrait tablets and large phones, 601px and up) */
 @media only screen and (min-width: 601px) {
-    .footer-links,
-    .footer-link {
-        font-size: 10px;
-    }
-
+    
     .social-icon {
         width: 14px;
         height: 14px;
@@ -171,7 +152,6 @@
 
     .custom-nav-link {
         line-height: 56px;
-        font-size: 14px;
     }
 
     .nav-profile-image {
@@ -182,11 +162,7 @@
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-    .footer-links,
-    .footer-link {
-        font-size: 11px;
-    }
-
+   
     .social-icon {
         width: 15px;
         height: 15px;
@@ -203,7 +179,6 @@
 
     .custom-nav-link {
         line-height: 64px;
-        font-size: 15px;
     }
 
     .nav-profile-image {
@@ -214,11 +189,7 @@
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-    .footer-links,
-    .footer-link {
-        font-size: 12px;
-    }
-
+    
     .social-icon {
         width: 16px;
         height: 16px;
@@ -235,7 +206,6 @@
 
     .custom-nav-link {
         line-height: 72px;
-        font-size: 16px;
     }
 
     .nav-profile-image {
@@ -251,11 +221,7 @@
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-    .footer-links,
-    .footer-link {
-        font-size: 13px;
-    }
-
+    
     .social-icon {
         width: 17px;
         height: 17px;
@@ -272,7 +238,6 @@
 
     .custom-nav-link {
         line-height: 78px;
-        font-size: 17px;
     }
 
     .nav-profile-image {
@@ -293,6 +258,5 @@
   
     .custom-nav-link {
       line-height: 80px;
-      font-size: 18px;
     }
 }

@@ -77,7 +77,6 @@
     height: 52px !important;
     width: 132px !important;
     color: white !important;
-    font-size: 16px !important;
     font-weight: 600 !important;
     background-color: #161819 !important;
   }
@@ -106,7 +105,6 @@
         border: none !important;
     }
     .formation-text{
-        font-size: 16px;
         font-weight: 400;
         background-color: transparent;
         border: none;
@@ -127,7 +125,6 @@
     border: none;
     border-radius: 8px;
     margin-right: 16px;
-    font-size: 16px;
     font-weight: 600;
     background-color: #7F56F1;
     color: white;
@@ -139,7 +136,6 @@
     border: none;
     border-radius: 8px;
     margin-right: 32px;
-    font-size: 16px;
     font-weight: 600;
     background-color: #7F56F1;
     color: white;
@@ -181,7 +177,6 @@
     padding: 8px;
     height: 32px;
     width: 146px;
-    font-size: 12px;
     font-weight: 600;
   }
   
@@ -199,7 +194,6 @@
     padding: 8px;
     height: 22px;
     width: 146px;
-    font-size: 12px;
     font-weight: 600;
   }
   
@@ -315,7 +309,6 @@
 
 .bonus-label{
   font-weight: 600;
-  font-size: 12px;
   margin-top: 16px;
   margin-bottom: 16px;
   text-align: center;
@@ -328,7 +321,6 @@
   border-radius: 8px;
   padding: 8px;
   width: 100%;
-  font-size: 14px;
   font-weight: 600;
 }
 
@@ -339,7 +331,6 @@
   border-radius: 8px;
   padding: 8px;
   width: 100%;
-  font-size: 8px;
   font-weight: 600;
   text-align: center;
 }
@@ -383,7 +374,6 @@
 }
 
 .select-player-modal-row p {
-  font-size: 18px;
   font-weight: 400;
 }
 
@@ -398,7 +388,6 @@
   display: flex;
   align-items: center;
   justify-content: center; 
-  font-size: 12px;
   font-weight: 600;
   box-sizing: border-box;
   margin: 0;
@@ -488,7 +477,6 @@
 
 
 .disabled-player-text{
-  font-size: 8px !important;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -557,12 +545,7 @@
     .sub-stat-button{
         height: 40px !important;
         width: 100px !important;
-        font-size: 10px !important;
         padding: 0;
-    }
-
-    .formation-text{
-        font-size: 10px;
     }
     
 
@@ -578,7 +561,6 @@
         height: 40px;
         border-radius: 8px;
         margin-right: 16px;
-        font-size: 8px;
     }
     
     .save-team-button{
@@ -586,7 +568,6 @@
         height: 40px;
         border-radius: 8px;
         margin-right: 32px;
-        font-size: 8px;
     }
 
     .sponsor1{
@@ -727,14 +708,9 @@
     .select-player-modal-row {
       height: 36px;
     }
-
-    .select-player-modal-row p {
-      font-size: 8px;
-    }
         
     .modal-table-row{
       height: 24px;
-      font-size: 12px;
     }
 
     .modal-position-col{
@@ -816,10 +792,6 @@
       height: 12px;
     }
 
-    .disabled-player-text{
-      font-size: 8px !important;
-    }
-
 }
 
 
@@ -842,11 +814,6 @@
   .sub-stat-button{
       height: 48px !important;
       width: 122px !important;
-      font-size: 13px !important;
-  }
-  
-  .formation-text{
-      font-size: 13px;
   }
       
   .autofill-button{
@@ -854,7 +821,6 @@
       height: 48px;
       border-radius: 8px;
       margin-right: 24px;
-      font-size: 11px;
   }
   
   .save-team-button{
@@ -862,7 +828,6 @@
       height: 48px;
       border-radius: 8px;
       margin-right: 42px;
-      font-size: 11px;
   }
 
   .sponsor1, .sponsor2{
@@ -909,14 +874,9 @@
   .select-player-modal-row {
       height: 48px;
   }
-
-  .select-player-modal-row p {
-      font-size: 10px;
-  }
       
   .modal-table-row{
       height: 30px;
-      font-size: 15px;
   }
 
   .add-player-button, .small-add-player-button{
@@ -945,10 +905,6 @@
   }
   .right-side-image {
       right: -10px;
-  }
-
-  .disabled-player-text{
-    font-size: 8px !important;
   }
 }
   
@@ -998,12 +954,14 @@
     padding: 9px;
     height: 19px;
     width: 152px;
+    font-size: 9px;
   }
 
   .player-info-row {
       padding: 9px;
       height: 19px;
       width: 152px;
+      font-size: 9px;
   }
 
   .bonus-image {
@@ -1050,10 +1008,6 @@
 }
 .right-side-image {
   right: -12px;
-}
-
-.disabled-player-text{
-  font-size: 9px !important;
 }
   
 }
@@ -1103,12 +1057,14 @@
     padding: 9.5px;
     height: 20.5px;
     width: 155px;
+    font-size: 10px;
   }
 
   .player-info-row {
       padding: 9.5px;
       height: 20.5px;
       width: 155px;
+      font-size: 10px;
   }
 
   .bonus-image {
@@ -1181,9 +1137,6 @@
 .button-col {
   width: 5%;
 }
-.disabled-player-text{
-  font-size: 10px !important;
-}
 }
 
   /* Extra large devices (large laptops and desktops, 1200px and up) */
@@ -1231,12 +1184,14 @@
     padding: 9px;
     height: 20px;
     width: 156px;
+    font-size: 11px;
   }
 
   .player-info-row {
       padding: 9px;
       height: 20px;
       width: 156px;
+      font-size: 11px;
   }
 
   .bonus-image {
@@ -1287,9 +1242,6 @@
 .remove-player-icon{
   width: 11px;
   height: 11px;
-}
-.disabled-player-text{
-  font-size: 11px !important;
 }
   
 }
@@ -1359,14 +1311,9 @@
     .sub-stat-button{
         height: 52px !important;
         width: 132px !important;
-        font-size: 16px !important;
         padding: unset;
     }
 
-
-    .formation-text{
-        font-size: 16px;
-    }
 
         
     .autofill-button{
@@ -1374,7 +1321,6 @@
         height: 52px;
         border-radius: 8px;
         margin-right: 16px;
-        font-size: 16px;
     }
     
     .save-team-button{
@@ -1382,7 +1328,6 @@
         height: 52px;
         border-radius: 8px;
         margin-right: 32px;
-        font-size: 16px;
     }
 
     .sponsor1{
@@ -1399,14 +1344,13 @@
       width: 86px;
       height: 88px;
     }  
-    
-.shirt-icon{
-  width: 86px;
-  height: 88px;
-}
-
-    
-.player-name-row {
+      
+  .shirt-icon{
+    width: 86px;
+    height: 88px;
+  }
+      
+  .player-name-row {
     padding: 8px;
     height: 22px;
     width: 146px;
@@ -1497,7 +1441,6 @@
 }
 
 .bonus-label{
-  font-size: 12px;
   margin-top: 16px;
   margin-bottom: 16px;
 }
@@ -1505,14 +1448,12 @@
 .btn-use-bonus{
   border-radius: 8px;
   padding: 8px;
-  font-size: 14px;
 }
 
 .txt-used-bonus{
   border-radius: 8px;
   padding: 8px;
   width: 100%;
-  font-size: 8px;
 }
 
 
@@ -1537,14 +1478,6 @@
 .select-player-modal-row {
   height: 72px;
 }
-
-.select-player-modal-row p {
-  font-size: 18px;
-}
-
-
-
-
 
 .modal-table-row{
   height: 46px;
@@ -1590,11 +1523,6 @@
   height: 16px;
 }
 
-
-
-.disabled-player-text{
-  font-size: 12px !important;
-}
 
   }
   

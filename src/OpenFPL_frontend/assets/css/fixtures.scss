@@ -29,7 +29,6 @@
 
 .fixture-team-name{
     font-weight: 600;
-    font-size: 18px;
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
@@ -97,16 +96,12 @@
 
 .date-header{
   font-family: 600 !important;
-  font-size: 12px !important;
   margin: 0 !important;
   width: 100%;
 }
 
 /* Extra small devices (phones, 321px and up) */
 @media only screen and (min-width: 321px) {
-    .fixture-team-name{
-        font-size: 10px;
-    }
     .badge-icon{
       width: 24px;
       height: 24px;
@@ -119,7 +114,6 @@
 
     .col-vs {
         width: 5%;
-        font-size: 8px;
         padding: 0;
     }
 
@@ -131,7 +125,6 @@
     .col-time {
         width: 0%;
         display: none;
-        font-size: 10px;
     }
 
     .col-badge {
@@ -151,8 +144,7 @@
 
     .status-text {
       position: relative;
-      padding-left: 8px; 
-      font-size: 10px;
+      padding-left: 8px;
     }
 
     .date-row {
@@ -164,7 +156,6 @@
 
     .date-header{
       font-family: 600 !important;
-      font-size: 8px !important;
       margin: 0 !important;
       width: 100%;
     }
@@ -172,10 +163,6 @@
 
   /* Extra small devices (phones, 600px and down) */
 @media only screen and (min-width: 601px) {
-  .fixture-team-name{
-      font-size: 11px;
-  }
-
   .badge-icon{
       width: 16px;
       height: 16px;
@@ -189,7 +176,6 @@
 
   .status-text {
       padding-left: 12px;
-      font-size: 11px;
   }
 
   .date-row {
@@ -197,16 +183,10 @@
       padding-left: 18px;
   }
 
-  .date-header{
-      font-size: 9px;
-  }
 }
 
 /* Small devices (portrait tablets and large phones, 601px and up) */
 @media only screen and (min-width: 601px) {
-  .fixture-team-name{
-      font-size: 12px;
-  }
 
   .badge-icon{
       width: 18px;
@@ -221,7 +201,6 @@
 
   .status-text {
       padding-left: 14px;
-      font-size: 12px;
   }
 
   .date-row {
@@ -229,16 +208,10 @@
       padding-left: 20px;
   }
 
-  .date-header{
-      font-size: 10px;
-  }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-  .fixture-team-name{
-      font-size: 14px;
-  }
 
   .badge-icon{
       width: 20px;
@@ -253,24 +226,16 @@
 
   .status-text {
       padding-left: 18px;
-      font-size: 13px;
   }
 
   .date-row {
       height: 42px;
       padding-left: 24px;
   }
-
-  .date-header{
-      font-size: 11px;
-  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-  .fixture-team-name{
-      font-size: 16px;
-  }
 
   .badge-icon{
       width: 22px;
@@ -285,7 +250,6 @@
 
   .status-text {
       padding-left: 22px;
-      font-size: 14px;
   }
 
   .date-row {
@@ -293,16 +257,10 @@
       padding-left: 28px;
   }
 
-  .date-header{
-      font-size: 12px;
-  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-  .fixture-team-name{
-      font-size: 17px;
-  }
 
   .badge-icon{
       width: 24px;
@@ -317,7 +275,6 @@
 
   .status-text {
       padding-left: 26px;
-      font-size: 15px;
   }
 
   .date-row {
@@ -325,26 +282,11 @@
       padding-left: 30px;
   }
 
-  .date-header{
-      font-size: 13px;
-  }
 }
 
   /* added */
   @media only screen and (min-width: 1500px) {
         
-    .fixture-team-name{
-      font-size: 18px;
-    }
-
-    .col-time{
-      font-size: 16px;
-    } 
-    
-    .status-text{
-      font-size: 16px;
-    }
-
     .date-row {
       height: 46px;
       padding-left: 32px;

@@ -62,24 +62,14 @@ body {
     position: relative;
   }
 
-  .small-text {
-    font-size: 0.8rem;
-  }
-
   .custom-card-title {
       border-bottom: 1px solid #ddd;
       padding-bottom: 0.5rem;
       margin-bottom: 1rem;
-      font-size: 1.2rem;
   }
 
   .custom-display-sm {
-      font-size: 2rem; 
       font-weight: 300;
-  }
-
-  .custom-card-text {
-      font-size: 0.9rem;
   }
 
   .white-text{
@@ -332,8 +322,4 @@ Table{
   margin: 10px 0;
   padding: 10px;
   border-radius: 4px;
-}
-
-.footer-link{
-  font-size: 10px;
 }

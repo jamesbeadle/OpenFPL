@@ -258,7 +258,8 @@ const Fixtures = () => {
                                             secondary={homeTeam.secondaryColourHex}
                                             third={homeTeam.thirdColourHex}     
                                           />
-                                          {homeTeam.friendlyName}
+                                          <span className="d-inline d-md-none">{homeTeam.abbreviatedName}</span>
+                                          <span className="d-none d-md-inline">{homeTeam.friendlyName}</span>
                                         </p>
                                       </div>
                                       <div className="col-vs">
@@ -272,7 +273,8 @@ const Fixtures = () => {
                                             third={awayTeam.thirdColourHex}
                                             
                                           />
-                                          {awayTeam.friendlyName}
+                                          <span className="d-inline d-md-none">{awayTeam.abbreviatedName}</span>
+                                          <span className="d-none d-md-inline">{awayTeam.friendlyName}</span>
                                         </p>
                                       </div>
                                     </>

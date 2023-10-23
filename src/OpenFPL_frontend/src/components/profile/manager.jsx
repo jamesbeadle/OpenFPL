@@ -70,6 +70,10 @@ const Manager = () => {
 
     const fetchViewData = async () => {
         try {
+          console.log("fetchViewData")
+          console.log(managerId)
+          console.log(currentSeason.id)
+          console.log(currentGameweek)
             const data = await open_fpl_backend.getManager(managerId, currentSeason.id, currentGameweek);
             setViewData(data);
             loadFantasyTeam(data);
@@ -515,7 +519,7 @@ const Manager = () => {
           <Row>
             <Col xxl={7} xs={12}>
                 <Card className='mb-3'>
-                    <div className="outer-container d-flex">
+                    <div className="d-flex">
                       
                     <div className='stat-panel w-100' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
                                 <div className='manager-picture-col'>
@@ -524,17 +528,17 @@ const Manager = () => {
                                 </div>
                                 <div className='manager-details-col'>
                                   <div className='manager-detail-row-1'>
-                                    <Row className="stat-row-1">
+                                    <Row>
                                       <div className='manager-display-name-col'>
-                                        <p className="stat-header w-100">Manager</p>
+                                        <p className="small-header-stat w-100">Manager</p>
                                       </div>
                                     </Row>
-                                    <Row className="stat-row-2 vertical-flex">
+                                    <Row>
                                     <div className='manager-display-name-col'>
-                                        <p className="stat">{viewData.displayName == viewData.principalId ? '-' : viewData.displayName}</p>
+                                        <p className="header-stat">{viewData.displayName == viewData.principalId ? '-' : viewData.displayName}</p>
                                       </div>
                                       <div className='manager-favourite-team-col'>
-                                      <p className="stat">
+                                      <p className="header-stat">
                                         {viewData.favouriteTeamId === 0
                                           ? '-'
                                           : (() => {
@@ -555,13 +559,13 @@ const Manager = () => {
 
                                       </div>
                                     </Row>
-                                    <Row className="stat-row-3">
+                                    <Row>
                                         <div className='manager-display-name-col'>
-                                          <p className='stat-header w-100'>Joined: {joinedDate}</p>
+                                          <p className='small-header-stat w-100'>Joined: {joinedDate}</p>
                                                   
                                         </div>
                                         <div className='manager-favourite-team-col'>
-                                          <p className='stat-header w-100 d-none d-lg-block'>Favourite Team</p>   
+                                          <p className='small-header-stat w-100 d-none d-lg-block'>Favourite Team</p>   
                                         </div>
                                     </Row>
                                   </div>
@@ -573,34 +577,34 @@ const Manager = () => {
 
             <Col xxl={5} xs={12}>
               <Card className='mb-3'>
-                <div className="outer-container d-flex">
-                  <div className="stat-panel manager-stat-panel flex-grow-1">
-                      <Row className="stat-row-1">
+                <div className="d-flex">
+                  <div className="stat-panel flex-grow-1">
+                      <Row>
                           <div>
-                              <p className="stat-header w-100">Leaderboard Positions</p>    
+                              <p className="small-header-stat w-100">Leaderboard Positions</p>    
                           </div>
                       </Row>
-                      <Row className="stat-row-2 vertical-flex">
+                      <Row>
                           <div className='manager-pos-col'>
-                            <p className="stat">{viewData.weeklyPositionText == "-" ? `T${viewData.weeklyPosition}` : viewData.weeklyPositionText}</p>
+                            <p className="header-stat">{viewData.weeklyPositionText == "-" ? `T${viewData.weeklyPosition}` : viewData.weeklyPositionText}</p>
                           </div>
                           <div className='manager-pos-col'>
-                            <p className="stat">{viewData.monthlyPositionText == "-" ? `T${viewData.monthlyPosition}` : viewData.monthlyPositionText}</p>
+                            <p className="header-stat">{viewData.monthlyPositionText == "-" ? `T${viewData.monthlyPosition}` : viewData.monthlyPositionText}</p>
                           </div>
                           <div className='manager-pos-col'>
-                            <p className="stat">{viewData.seasonPositionText == "-" ? `T${viewData.seasonPosition}` : viewData.seasonPositionText}</p>
+                            <p className="header-stat">{viewData.seasonPositionText == "-" ? `T${viewData.seasonPosition}` : viewData.seasonPositionText}</p>
                           </div>
                       </Row>
-                      <Row className="stat-row-3">
+                      <Row>
                           <div className='manager-pos-col'>
-                            <p className='stat-header w-100'>Weekly</p>
+                            <p className='small-header-stat w-100'>Weekly</p>
                                     
                           </div>
                           <div className='manager-pos-col'>
-                            <p className='stat-header w-100'>Club</p>   
+                            <p className='small-header-stat w-100'>Club</p>   
                           </div>
                           <div className='manager-pos-col'>
-                            <p className='stat-header w-100'>Season</p>  
+                            <p className='small-header-stat w-100'>Season</p>  
                           </div>
                       </Row>
                   </div>

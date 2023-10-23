@@ -208,23 +208,23 @@ const ClubDetails = ({  }) => {
             <Row>
                 <Col xxl={7} xs={12}>
                     <Card className='mb-3'>
-                        <div className="outer-container d-flex">
+                        <div className="d-flex">
                             <div className="stat-panel flex-grow-1">
-                                <Row className="stat-row-1">
+                                <Row>
                                     <div className='club-badge-col'>
-                                        <p className="stat-header w-100">{team.abbreviatedName}</p>
+                                        <p className="small-header-stat w-100">{team.abbreviatedName}</p>
                                     </div>
                                     <div className='club-total-players-col'>
-                                        <p className="stat-header w-100">Players</p>
+                                        <p className="small-header-stat w-100">Players</p>
                                     </div>
                                     <div className='club-position-col'>
-                                        <p className="stat-header w-100">Season Position</p>
+                                        <p className="small-header-stat w-100">Season Position</p>
                                     </div>
                                     <div className='club-points-col'>
-                                        <p className="stat-header w-100">Points</p>
+                                        <p className="small-header-stat w-100">Points</p>
                                     </div>
                                 </Row>
-                                <Row className="stat-row-2 vertical-flex">
+                                <Row>
                                     <div className='club-badge-col'>
                                         <BadgeIcon
                                             primary={team.primaryColourHex}
@@ -234,27 +234,27 @@ const ClubDetails = ({  }) => {
                                         />
                                     </div>
                                     <div className='club-total-players-col'>
-                                        <p className="stat">{players.filter(x => x.teamId == team.id).length}</p>
+                                        <p className="header-stat">{players.filter(x => x.teamId == team.id).length}</p>
                                     </div>
                                     <div className='club-position-col'>
-                                        <p className="stat">{position}</p>
+                                        <p className="header-stat">{position}</p>
                                     </div>
                                     <div className='club-points-col'>
-                                        <p className="stat">{points}</p>
+                                        <p className="header-stat">{points}</p>
                                     </div>
                                 </Row>
-                                <Row className="stat-row-3">
+                                <Row>
                                     <div className='club-badge-col'>
-                                        <p className="stat-header">{team.friendlyName}</p>   
+                                        <p className="small-header-stat">{team.friendlyName}</p>   
                                     </div>
                                     <div className='club-total-players-col'>
-                                        <p className="stat-header">Total</p>    
+                                        <p className="small-header-stat">Total</p>    
                                     </div>
                                     <div className='club-position-col'>
-                                        <p className="stat-header">{systemState.activeSeason.name}</p>    
+                                        <p className="small-header-stat">{systemState.activeSeason.name}</p>    
                                     </div>
                                     <div className='club-points-col'>
-                                        <p className="stat-header">Total</p>    
+                                        <p className="small-header-stat">Total</p>    
                                     </div>
                                 </Row>
                             </div>
@@ -267,27 +267,27 @@ const ClubDetails = ({  }) => {
 
                 <Col xxl={5} xs={12}>
                     <Card>
-                        <div className="outer-container d-flex">
+                        <div className="d-flex">
                             <div className="stat-panel flex-grow-1">  
-                                <Row className="stat-row-1">
+                                <Row>
                                     <div className='home-deadline-col'>
-                                        <p className="stat-header w-100">Upcoming Game</p>    
+                                        <p className="small-header-stat w-100">Upcoming Game</p>    
                                     </div>
                                     <div className='home-fixture-col'>
                                          
                                     </div>
                                 </Row>
-                                <Row className="stat-row-2 vertical-flex">
+                                <Row>
                                     <div className='home-deadline-col'>
                                         <Row>
                                             <Col xs={4} className="add-colon">
-                                                <p className="stat">{String(days).padStart(2, '0')}</p>
+                                                <p className="header-stat">{String(days).padStart(2, '0')}</p>
                                             </Col>
                                             <Col xs={4} className="add-colon">
-                                                <p className="stat">{String(hours).padStart(2, '0')}</p>
+                                                <p className="header-stat">{String(hours).padStart(2, '0')}</p>
                                             </Col>
                                             <Col xs={4}>
-                                                <p className="stat">{String(minutes).padStart(2, '0')}</p>
+                                                <p className="header-stat">{String(minutes).padStart(2, '0')}</p>
                                             </Col>
                                         </Row>  
                                     </div>
@@ -321,29 +321,29 @@ const ClubDetails = ({  }) => {
                                         </Row>
                                     </div>
                                 </Row>
-                                <Row className='stat-row-3'>
+                                <Row>
                                     <div className='home-deadline-col'>
                                         <Row>
                                             <Col xs={4}>
-                                                <p className="stat-header w-100">Day</p> 
+                                                <p className="small-header-stat w-100">Day</p> 
                                             </Col>
                                             <Col xs={4}>
-                                                <p className="stat-header w-100">Hour</p>   
+                                                <p className="small-header-stat w-100">Hour</p>   
                                             </Col>
                                             <Col xs={4}>
-                                                <p className="stat-header w-100">Min</p>    
+                                                <p className="small-header-stat w-100">Min</p>    
                                             </Col>
                                         </Row>
                                     </div>
                                     <div className='home-fixture-col'>
                                         <Row>
                                             <Col xs={5}>
-                                                {nextFixtureHomeTeam && <p className="stat-header text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
+                                                {nextFixtureHomeTeam && <p className="small-header-stat text-center w-100">{nextFixtureHomeTeam.abbreviatedName}</p>}
                                                 </Col>
                                                 <Col xs={2}>
                                             </Col>
                                             <Col xs={5}>
-                                                {nextFixtureAwayTeam && <p className="stat-header text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>}
+                                                {nextFixtureAwayTeam && <p className="small-header-stat text-center w-100">{nextFixtureAwayTeam.abbreviatedName}</p>}
                                             </Col>
                                         </Row>
                                     </div>
@@ -358,9 +358,9 @@ const ClubDetails = ({  }) => {
             <Row className="mt-2">
                 <Col xs={12}>
                     <Card>
-                        <div className="outer-container d-flex">
+                        <div className="d-flex">
                             <div className="flex-grow-1 light-background">
-                            <Tabs className="home-tab-header" id="controlled-tab" activeKey={key} onSelect={(k) => setKey(k)}>
+                            <Tabs className="tab-header" id="controlled-tab" activeKey={key} onSelect={(k) => setKey(k)}>
                                 <Tab eventKey="players" title="Players">
                                     <div className="dark-tab-row w-100 mx-0">
                                         <Row>

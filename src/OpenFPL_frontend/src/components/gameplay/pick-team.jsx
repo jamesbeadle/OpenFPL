@@ -771,60 +771,60 @@ const PickTeam = () => {
            <Row>
               <Col xxl={6} xs={12}>
                   <Card className='mb-3 mb-xxl-0'>
-                      <div className="outer-container d-flex">
+                      <div className="d-flex">
                           <div className="stat-panel flex-grow-1">
                               
-                              <Row className="stat-row-1">
+                              <Row>
                                 <div className='pick-team-gameweek-col'>
-                                  <p className="stat-header w-100">Gameweek</p>
+                                  <p className="small-header-stat w-100">Gameweek</p>
                                 </div>
                                 <div className='pick-team-deadline-col'>
-                                  <p className="stat-header w-100">Deadline</p>
+                                  <p className="small-header-stat w-100">Deadline</p>
                                 </div>
                                 <div className='pick-team-player-count-col'>
-                                  <p className="stat-header w-100">Players</p>
+                                  <p className="small-header-stat w-100">Players</p>
                                 </div>
                              </Row>
-                              <Row className="stat-row-2 vertical-flex">
+                              <Row>
                                 <div className='pick-team-gameweek-col'>
-                                  <p className="stat">{currentGameweek}</p>
+                                  <p className="header-stat">{currentGameweek}</p>
                                 </div>
                                 <div className='pick-team-deadline-col'>
                                   <Row>
                                     <Col xs={4} className="add-colon">
-                                        <p className="stat">{String(days).padStart(2, '0')}</p>
+                                        <p className="header-stat">{String(days).padStart(2, '0')}</p>
                                     </Col>
                                     <Col xs={4} className="add-colon">
-                                        <p className="stat">{String(hours).padStart(2, '0')}</p>
+                                        <p className="header-stat">{String(hours).padStart(2, '0')}</p>
                                     </Col>
                                     <Col xs={4}>
-                                        <p className="stat">{String(minutes).padStart(2, '0')}</p>
+                                        <p className="header-stat">{String(minutes).padStart(2, '0')}</p>
                                     </Col>
                                   </Row>
                                 </div>
                                 <div className='pick-team-player-count-col'>
-                                  <p className="stat">{Object.keys(fantasyTeam.players).length}/11</p>
+                                  <p className="header-stat">{Object.keys(fantasyTeam.players).length}/11</p>
                                 </div>
                               </Row>
-                              <Row className="stat-row-3">
+                              <Row>
                                 <div className='pick-team-gameweek-col'>
-                                  <p className="stat-header">Total</p> 
+                                  <p className="small-header-stat">Total</p> 
                                 </div>
                                 <div className='pick-team-deadline-col'>
                                   <Row>
                                     <Col xs={4}>
-                                        <p className="stat-header w-100">Day</p> 
+                                        <p className="small-header-stat w-100">Day</p> 
                                     </Col>
                                     <Col xs={4}>
-                                        <p className="stat-header  w-100">Hour</p>   
+                                        <p className="small-header-stat  w-100">Hour</p>   
                                     </Col>
                                     <Col xs={4}>
-                                        <p className="stat-header w-100">Min</p>    
+                                        <p className="small-header-stat w-100">Min</p>    
                                     </Col>
                                   </Row>
                                 </div>
                                 <div className='pick-team-player-count-col'>
-                                  <p className="stat-header">Selected</p> 
+                                  <p className="small-header-stat">Selected</p> 
                                 </div>
                               </Row>
                           </div>
@@ -836,28 +836,28 @@ const PickTeam = () => {
 
               <Col xxl={6} xs={12}>
                   <Card className='mb-3'>
-                      <div className="outer-container d-flex">
+                      <div className="d-flex">
                           <div className="stat-panel flex-grow-1">
-                              <Row className="stat-row-1">
+                              <Row>
                                 <div className='pick-team-value-col'>
-                                  <p className="stat-header w-100">Team Value</p>
+                                  <p className="small-header-stat w-100">Team Value</p>
                                 </div>
                                 <div className='pick-team-bank-col'>
-                                  <p className="stat-header w-100">Bank Balance</p>
+                                  <p className="small-header-stat w-100">Bank Balance</p>
                                 </div>
                                 <div className='pick-team-transfers-col'>
-                                  <p className="stat-header w-100">Transfers</p>
+                                  <p className="small-header-stat w-100">Transfers</p>
                                 </div>
                               </Row>
-                              <Row className="stat-row-2 vertical-flex">
+                              <Row>
                                 <div className='pick-team-value-col'>
-                                  <p className="stat">£{calculateTeamValue(fantasyTeam.players)}m</p>
+                                  <p className="header-stat">£{calculateTeamValue(fantasyTeam.players)}m</p>
                                 </div>
                                 <div className='pick-team-bank-col'>
-                                  <p className="stat">£{(fantasyTeam.bankBalance).toFixed(2)}m</p>
+                                  <p className="header-stat">£{(fantasyTeam.bankBalance).toFixed(2)}m</p>
                                 </div>
                                 <div className='pick-team-transfers-col'>
-                                  <p className="stat">
+                                  <p className="header-stat">
                                     {
                                       (newTeam) ? 
                                         '-' : 
@@ -865,15 +865,15 @@ const PickTeam = () => {
                                     }</p>
                                 </div>
                               </Row>
-                              <Row className="stat-row-3">
+                              <Row>
                                 <div className='pick-team-value-col'>
-                                  <p className="stat-header">GBP</p>   
+                                  <p className="small-header-stat">GBP</p>   
                                 </div>
                                 <div className='pick-team-bank-col'>
-                                  <p className="stat-header">GBP</p>    
+                                  <p className="small-header-stat">GBP</p>    
                                 </div>
                                 <div className='pick-team-transfers-col'>
-                                  <p className="stat-header">Available</p>   
+                                  <p className="small-header-stat">Available</p>   
                                 </div>
                               </Row>
                           </div>
@@ -886,7 +886,7 @@ const PickTeam = () => {
           <Row>
             <Col xs={12}>
               <Card className='mb-3' style={{overflow: 'unset'}}>
-                  <div className="outer-container d-flex">
+                  <div className="d-flex">
                     <div className="sub-stat-panel flex-grow-1" style={{ display: 'flex', alignItems: 'center' }}>
                       <Row className="sub-stat-wrapper">
                         <Col xs={12} sm={7} className='align-items-center justify-content-center'>
@@ -921,7 +921,7 @@ const PickTeam = () => {
                             </div>
                           </Col>
 
-                        <Col xs={12} sm={5} className='float-right-buttons mt-2 mb-lg-0'>
+                        <Col xs={12} sm={5} className='float-right-buttons mt-0 mb-0'>
                           <button className='autofill-button' onClick={autofillTeam} disabled={fantasyTeam.players.filter(x => x).length >= 11}>AutoFill</button>
                           <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
                         </Col>

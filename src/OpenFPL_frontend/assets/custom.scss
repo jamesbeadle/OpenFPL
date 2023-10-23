@@ -50,7 +50,6 @@
 .dropdown-item {
   color: white;
   font-weight: 400 !important;
-  font-size: 16px !important;
   width: 100% !important;
   background-color: transparent !important;
   border: none !important;
@@ -131,7 +130,6 @@
 
 .logo-text{
   letter-spacing: 2px;
-  font-size: 20px;
   font-weight: 700;
 }
 
@@ -154,7 +152,6 @@
 
 .header-col {
   vertical-align: middle;
-  font-size: 12px;
   font-weight: 600;
 }
 
@@ -171,7 +168,6 @@
 
 
 .form-label{
-  font-size: 14px;
   font-weight: 600;
 }
 
@@ -180,7 +176,6 @@
   color: white;
   border: none;
   box-shadow: inset 0 0 1px #000;
-  font-size: 16px;
   font-weight: 400;
   border-radius: 1px;
 }
@@ -193,26 +188,6 @@
 
 .leaderboard-pagination-container{
   overflow-x: auto;
-}
-
-.page-link {
-  width: 25px;
-  height: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 2px;
-  font-size: 12px;
-  margin-right: 8px;
-  background-color: transparent;
-  color: white;
-  border: none;
-}
-
-.page-link.active, .active > .page-link{
-  background-color: #2CE3A6;
-  border: none;
-  color: #161819;
 }
 
 .player-container {
@@ -277,3 +252,23 @@
   background-image: url("data:image/svg+xml;charset=UTF8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
 }
 
+
+.page-link {
+  width: 25px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  font-size: 12px;
+  margin-right: 8px;
+  background-color: transparent;
+  color: white;
+  border: none;
+}
+
+.page-link.active, .active > .page-link{
+  background-color: #2CE3A6;
+  border: none;
+  color: #161819;
+}

@@ -36,7 +36,7 @@ const PlayerPointsModal = ({ show, onClose, player, playerDTO, season, gameweek,
                         {(player.firstName != "" ? player.firstName.charAt(0) + "." : "") + player.lastName}
                     </div>
                 </div>
-                <div className="outer-container d-flex">
+                <div className="d-flex">
                     <div className='player-modal-detail-row'>
                         <div onClick={() => loadClub(team.id)} className='player-modal-fixture-col clickable-table-row'>
                             <BadgeIcon
