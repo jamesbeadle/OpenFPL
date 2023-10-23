@@ -18,7 +18,7 @@ const MyFooter = () => {
             <Col xs={7}>
               <Row className="footer-links">
                 <Col xs={12} className='footer-logo-container'>
-                  <LogoIcon fill={'#FFFFFF'} /> <b className="logo-text">OPENFPL</b>
+                  <LogoIcon fill={'#FFFFFF'} /> <b className="logo-text">OpenFPL</b>
                 </Col>
                 <Col className='mb-2' xs={12}>
                   <LinkContainer to="/whitepaper"><a className='footer-link'>Whitepaper</a></LinkContainer>

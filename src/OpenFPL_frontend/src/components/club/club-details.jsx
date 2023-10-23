@@ -218,19 +218,20 @@ const ClubDetails = ({  }) => {
                                         <p className="small-header-stat w-100">Players</p>
                                     </div>
                                     <div className='club-position-col'>
-                                        <p className="small-header-stat w-100">Season Position</p>
+                                        <p className="d-inline d-sm-none small-header-stat w-100">Season Pos.</p>
+                                        <p className="d-none d-sm-inline small-header-stat w-100">Season Position</p>
                                     </div>
                                     <div className='club-points-col'>
                                         <p className="small-header-stat w-100">Points</p>
                                     </div>
                                 </Row>
                                 <Row>
-                                    <div className='club-badge-col'>
+                                    <div className='club-badge-col vertical-flex'>
                                         <BadgeIcon
                                             primary={team.primaryColourHex}
                                             secondary={team.secondaryColourHex}
                                             third={team.thirdColourHex}
-                                            className='badge-icon'
+                                            className='club-detail-badge'
                                         />
                                     </div>
                                     <div className='club-total-players-col'>
