@@ -77,7 +77,7 @@ const MyNavbar = () => {
     <Navbar className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
       <Container fluid>
           <Navbar.Brand as={Link} to="/" onClick={() => setExpanded(false)} className="d-flex align-items-center" style={{color: "white", fontSize: "small"}}>
-            <LogoIcon /> <b className="logo-text">OPENFPL</b>
+            <LogoIcon /> <b className="logo-text">OpenFPL</b>
           </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
