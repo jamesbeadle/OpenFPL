@@ -58,9 +58,12 @@ const LeagueTable = () => {
         };
     
         let tempTable = {};
-        
-        const relevantFixtures = fixtures.filter(fixture => 
-            fixture.status === 3 && fixture.gameweek <= currentGameweek);
+
+        const allTeamIds = [...new Set(fixtures.map(fixture => fixture.homeTeamId).concat(fixtures.map(fixture => fixture.awayTeamId)))];
+
+        allTeamIds.forEach(teamId => initTeamData(teamId, tempTable));
+
+        const relevantFixtures = fixtures.filter(fixture => fixture.status === 3 && fixture.gameweek <= currentGameweek);
     
         for (let fixture of relevantFixtures) {
             initTeamData(fixture.homeTeamId, tempTable);
