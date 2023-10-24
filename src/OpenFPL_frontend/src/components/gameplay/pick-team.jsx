@@ -89,6 +89,16 @@ const PickTeam = () => {
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [newTeam, setNewTeam] = useState(false);
+
+  useEffect(() => {
+    const viewPreference = localStorage.getItem('viewPreference');
+    
+    if (viewPreference === 'pitch') {
+      setShowListView(false);
+    } else if (viewPreference === 'list') {
+      setShowListView(true);
+    }
+  }, []);
   
   useEffect(() => {
     if(isLoading){
@@ -891,18 +901,25 @@ const PickTeam = () => {
                       <Row className="sub-stat-wrapper vertical-flex mb-2 mt-2">
                         <Col xs={12} sm={7}>
                           <div className='vertical-flex mb-2 mb-sm-0'>
-                            <Button 
-                              onClick={() => setShowListView(false)} 
-                              className={`sub-stat-button sub-stat-button-left ${!showListView ? 'active' : ''}`}
-                            >
-                              Pitch View
-                            </Button>
-                            <Button 
-                              onClick={() => setShowListView(true)} 
-                              className={`sub-stat-button sub-stat-button-right ${showListView ? 'active' : ''}`}
-                            >
+                          <Button 
+                            onClick={() => {
+                              setShowListView(false);
+                              localStorage.setItem('viewPreference', 'pitch');
+                            }} 
+                            className={`sub-stat-button sub-stat-button-left ${!showListView ? 'active' : ''}`}
+                          >
+                            Pitch View
+                          </Button>
+                            
+                          <Button 
+                            onClick={() => {
+                              setShowListView(true);
+                              localStorage.setItem('viewPreference', 'list');
+                            }} 
+                            className={`sub-stat-button sub-stat-button-right ${showListView ? 'active' : ''}`}
+                          >
                             List View
-                          </Button>                                      
+                          </Button>                                     
                           <div className='formation-wrapper' onBlur={handleFormationBlur}>
                             <Dropdown show={showFormationDropdown}>
                               <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
