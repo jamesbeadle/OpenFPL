@@ -520,6 +520,15 @@ actor Self {
         return Option.isSome(isPlayerIdInNewTeam);
     });
 
+      
+    let captainExists = Array.find(newPlayerIds, func (id: Nat16): Bool {
+        return id == captainId;
+    });
+    
+    if (not Option.isSome(captainExists)) {
+      return #err(#InvalidTeamError);
+    };
+
     var teamName = principalId;
     var favouriteTeamId: T.TeamId = 0;
 
@@ -1730,6 +1739,9 @@ actor Self {
     return seasonManager.getValidatableFixtures();
   };
 
+  //Local dev functions
+  /*
+
   public func updateCache(category: Text) : async (){
     await updateCacheHash(category);
   };
@@ -1741,10 +1753,7 @@ actor Self {
   public func recalculateLeaderboards() : async (){
     await fantasyTeamsInstance.recalculateLeaderboards();
   };
-
-
-  //Local dev functions
-  /*
+  
   public func setupDevData() : async (){
     await addInitialData();
     await reuploadTeams();

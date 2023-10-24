@@ -532,6 +532,9 @@ const Manager = () => {
                                       <div className='manager-display-name-col'>
                                         <p className="small-header-stat w-100">Manager</p>
                                       </div>
+                                      <div className='manager-favourite-team-col'>
+                                        <p className='small-header-stat w-100 d-none d-lg-block'>Favourite Team</p>   
+                                      </div>
                                     </Row>
                                     <Row>
                                     <div className='manager-display-name-col'>
@@ -563,9 +566,6 @@ const Manager = () => {
                                         <div className='manager-display-name-col'>
                                           <p className='small-header-stat w-100'>Joined: {joinedDate}</p>
                                                   
-                                        </div>
-                                        <div className='manager-favourite-team-col'>
-                                          <p className='small-header-stat w-100 d-none d-lg-block'>Favourite Team</p>   
                                         </div>
                                     </Row>
                                   </div>

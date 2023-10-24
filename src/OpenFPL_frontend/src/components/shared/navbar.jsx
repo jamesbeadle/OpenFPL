@@ -58,14 +58,6 @@ const MyNavbar = () => {
     setExpanded(false)
     logout();
   };
-  
-  const handleDropdownBlur = (e) => {
-    const currentTarget = e.currentTarget;
-    if (!currentTarget.contains(document.activeElement)) {
-      setShowDropdown(false);
-      setExpanded(false)
-    }
-  };
 
   useEffect(() => {
     if (!isAuthenticated) {

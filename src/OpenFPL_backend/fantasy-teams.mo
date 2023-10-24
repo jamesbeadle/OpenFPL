@@ -531,7 +531,7 @@ module {
                 let userFantasyTeam = value.fantasyTeam;
                 let updatedTeam = { 
                     principalId = userFantasyTeam.principalId;
-                    transfersAvailable = Nat8.fromNat(2);
+                    transfersAvailable = Nat8.fromNat(3);
                     bankBalance = userFantasyTeam.bankBalance;
                     playerIds = userFantasyTeam.playerIds;
                     captainId = userFantasyTeam.captainId;

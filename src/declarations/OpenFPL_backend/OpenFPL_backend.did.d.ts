@@ -259,7 +259,6 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >,
   'isDisplayNameValid' : ActorMethod<[string], boolean>,
-  'recalculateLeaderboards' : ActorMethod<[], undefined>,
   'saveFantasyTeam' : ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result
@@ -268,10 +267,8 @@ export interface _SERVICE {
     [FixtureId, Array<PlayerEventData>],
     undefined
   >,
-  'updateCache' : ActorMethod<[string], undefined>,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
-  'updateIncorrectFixtureTime' : ActorMethod<[], undefined>,
   'updateProfilePicture' : ActorMethod<[Uint8Array | number[]], Result>,
   'validateAddInitialFixtures' : ActorMethod<
     [SeasonId, Array<Fixture>],

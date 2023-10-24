@@ -320,7 +320,6 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isDisplayNameValid' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
-    'recalculateLeaderboards' : IDL.Func([], [], []),
     'saveFantasyTeam' : IDL.Func(
         [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
         [Result],
@@ -331,10 +330,8 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
-    'updateCache' : IDL.Func([IDL.Text], [], []),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
-    'updateIncorrectFixtureTime' : IDL.Func([], [], []),
     'updateProfilePicture' : IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
     'validateAddInitialFixtures' : IDL.Func(
         [SeasonId, IDL.Vec(Fixture)],

@@ -438,6 +438,13 @@ const PickTeam = () => {
   };
   
   const handleSellPlayer = (playerId) => {
+    
+    const playerIds = Object.values(fantasyTeam.players).map(player => Number(player.id));
+    if (!playerIds.includes(Number(fantasyTeam.captainId))) {
+      const sortedPlayers = Object.values(fantasyTeam.players).sort((a, b) => Number(b.value) - Number(a.value));
+      fantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
+    }
+
     setFantasyTeam(prevFantasyTeam => {
       const updatedFantasyTeam = {...prevFantasyTeam};
       const soldPlayer = Object.values(fantasyTeam.players).find(player => player.id === playerId);
@@ -487,6 +494,14 @@ const PickTeam = () => {
   const handleSaveTeam = async () => {
     setLoadingText("Saving Team");
     setIsLoading(true);
+  
+    const playerIds = Object.values(fantasyTeam.players).map(player => Number(player.id));
+    if (!playerIds.includes(Number(fantasyTeam.captainId))) {
+      // Set captain to the highest value player
+      const sortedPlayers = Object.values(fantasyTeam.players).sort((a, b) => Number(b.value) - Number(a.value));
+      fantasyTeam.captainId = sortedPlayers[0] ? sortedPlayers[0].id : null;
+    }
+
     const newPlayerIds = Object.values(fantasyTeam.players).map(player => Number(player.id));
     await saveFantasyTeam(authClient, newPlayerIds, fantasyTeam, selectedBonusId, selectedBonusPlayerId, Number(selectedBonusTeamId));    
     await fetchViewData();

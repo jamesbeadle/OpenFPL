@@ -226,13 +226,11 @@ module {
 
     private func gameweekVerified() : async (){  
         //await distributeRewards(); //IMPLEMENT POST SNS
-        //await settleUserBets(); //IMPLEMENT POST SNS
     };
 
     public func setNextGameweek() : async (){
         if(activeGameweek == 38) {
             await seasonsInstance.createNewSeason(activeSeasonId);
-            //await mintAnnualRewardsPool(); //IMPLEMENT POST SNS
             await resetFantasyTeams();
             await updateCacheHash("system_state");
             await updateCacheHash("weekly_leaderboard");
