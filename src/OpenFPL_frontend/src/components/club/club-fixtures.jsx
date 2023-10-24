@@ -118,7 +118,7 @@ const ClubFixtures = ({teamId}) => {
           <div className="dark-tab-row w-100 mx-0">
             <Row>
               <Col md={12}>
-                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                <div className='filter-row'>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button className="w-100 justify-content-center fpl-btn left-arrow"  onClick={() => handleSeasonChange(-1)} disabled={currentSeason.id === seasons[0].id}>
                       <ArrowLeft />

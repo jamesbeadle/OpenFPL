@@ -311,6 +311,9 @@
 .filter-row{
   margin-left: 32px;
   height: 72px;
+  display: flex;
+  justify-content: left;
+  align-items: left;
 }
 
 .card-header{

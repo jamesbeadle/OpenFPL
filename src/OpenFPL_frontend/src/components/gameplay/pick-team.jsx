@@ -921,7 +921,7 @@ const PickTeam = () => {
                             </div>
                           </Col>
 
-                        <Col xs={12} sm={5} className='vertical-flex'>
+                        <Col xs={12} sm={5} className='d-sm-flex justify-content-sm-end'>
                           <button className='autofill-button' onClick={autofillTeam} disabled={fantasyTeam.players.filter(x => x).length >= 11}>Auto Fill</button>
                           <button className='save-team-button' onClick={handleSaveTeam} disabled={!isTeamValid()}>Save Team</button>
                         </Col>

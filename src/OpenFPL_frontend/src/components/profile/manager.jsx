@@ -616,7 +616,7 @@ const Manager = () => {
           <Card>
             <Row>
               <Col xs={12} className='mt-2 mb-2'>
-                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                <div className='filter-row'>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Button 
                       onClick={() => setShowListView(true)} 
@@ -634,7 +634,7 @@ const Manager = () => {
                 </div>
               </Col>
               <Col xs={12} className='mt-2 mb-2'>
-                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                <div className='filter-row'>
                    {!showListView && 
                    <>
                     <div style={{ display: 'flex', alignItems: 'center' }}>

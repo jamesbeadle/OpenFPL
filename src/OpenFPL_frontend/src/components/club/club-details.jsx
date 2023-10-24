@@ -366,7 +366,7 @@ const ClubDetails = ({  }) => {
                                     <div className="dark-tab-row w-100 mx-0">
                                         <Row>
                                             <Col md={12}>
-                                                <div className='filter-row' style={{ display: 'flex', justifyContent: 'left', alignItems: 'left' }}>
+                                                <div className='filter-row'>
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                                         <div ref={positionDropdownRef} onBlur={handlePositionBlur}>
                                                         <Dropdown show={showPositionDropdown}>
