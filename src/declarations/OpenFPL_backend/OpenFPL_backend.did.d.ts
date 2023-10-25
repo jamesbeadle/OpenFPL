@@ -219,7 +219,6 @@ export interface _SERVICE {
     Result
   >,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
-  'getAddTeamsFunction' : ActorMethod<[], string>,
   'getClubLeaderboard' : ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard

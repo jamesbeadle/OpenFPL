@@ -884,7 +884,7 @@ const PickTeam = () => {
                                 <div className='pick-team-transfers-col'>
                                   <p className="header-stat">
                                     {
-                                      (newTeam) ? 
+                                      (newTeam || systemState.activeGameweek == 1) ? 
                                         '-' : 
                                       (fantasyTeam ? fantasyTeam.transfersAvailable : 0)
                                     }</p>

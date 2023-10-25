@@ -24,17 +24,16 @@
 }
 
 .manager-detail-row-1{
-    height: 100px;
     padding-left: 32px;
 }
 
 .manager-detail-row-2{
-    height: 168px;
     padding-left: 32px;
 }
 
 .manager-display-name-col{
     flex-basis: 30%;
+    min-width: 0;
 }
 
 .manager-favourite-team-col{
@@ -43,7 +42,6 @@
 
 .manager-profile-image{
     width: 100px !important;
-    height: 100px !important;
     margin-left: 32px;
     border-radius: 8px;
 }
@@ -70,12 +68,10 @@
     }
     
     .manager-detail-row-1{
-        height: 100px;
         padding-left: 0px;
     }
     
     .manager-detail-row-2{
-        height: 168px;
         padding-left: 0px;
     }
     
@@ -89,7 +85,6 @@
     
     .manager-profile-image{
         width: 50px !important;
-        height: 50px !important;
         margin-left: 8px;
         border-radius: 8px;
     }
@@ -109,12 +104,10 @@
     }
 
     .manager-detail-row-1 {
-        height: 100px;
         padding-left: 4px;
     }
 
     .manager-detail-row-2 {
-        height: 168px;
         padding-left: 4px;
     }
 
@@ -140,18 +133,15 @@
     }
 
     .manager-detail-row-1 {
-        height: 100px;
         padding-left: 8px;
     }
 
     .manager-detail-row-2 {
-        height: 168px;
         padding-left: 8px;
     }
 
     .manager-profile-image {
         width: 66px !important;
-        height: 66px !important;
         margin-left: 16px;
         border-radius: 8px;
     }
@@ -179,12 +169,10 @@
     }
 
     .manager-detail-row-1 {
-        height: 100px;
         padding-left: 12px;
     }
 
     .manager-detail-row-2 {
-        height: 168px;
         padding-left: 12px;
     }
 
@@ -200,7 +188,6 @@
 @media only screen and (min-width: 992px) {
     .manager-badge-icon {
         width: 24px;
-        height: 24px;
         margin-right: 16px;
     }
 
@@ -210,18 +197,15 @@
     }
 
     .manager-detail-row-1 {
-        height: 100px;
         padding-left: 18px;
     }
 
     .manager-detail-row-2 {
-        height: 168px;
         padding-left: 18px;
     }
 
     .manager-profile-image {
         width: 82px !important;
-        height: 82px !important;
         margin-left: 24px;
         border-radius: 8px;
     }
@@ -241,18 +225,15 @@
     }
 
     .manager-detail-row-1 {
-        height: 100px;
         padding-left: 24px;
     }
 
     .manager-detail-row-2 {
-        height: 168px;
         padding-left: 24px;
     }
 
     .manager-profile-image {
         width: 91px !important;
-        height: 91px !important;
         margin-left: 28px;
         border-radius: 8px;
     }
@@ -280,18 +261,15 @@
     }
     
     .manager-detail-row-1{
-        height: 100px;
         padding-left: 32px;
     }
     
     .manager-detail-row-2{
-        height: 168px;
         padding-left: 32px;
     }
     
     .manager-profile-image{
         width: 100px !important;
-        height: 100px !important;
         margin-left: 32px;
         border-radius: 8px;
     }

@@ -538,7 +538,7 @@ const Manager = () => {
                                     </Row>
                                     <Row>
                                     <div className='manager-display-name-col'>
-                                        <p className="header-stat">{viewData.displayName == viewData.principalId ? '-' : viewData.displayName}</p>
+                                        <p className="header-stat ellipsis">{viewData.displayName == viewData.principalId ? '-' : viewData.displayName}</p>
                                       </div>
                                       <div className='manager-favourite-team-col'>
                                       <p className="header-stat">

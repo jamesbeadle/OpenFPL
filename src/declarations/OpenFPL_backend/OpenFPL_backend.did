@@ -242,7 +242,6 @@ service : {
   executeUpdateTeam: (TeamId, text, text, text, text, text, text, nat8) ->
    (Result);
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
-  getAddTeamsFunction: () -> (text);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
   getClubLeaderboardsCache: (nat16, nat8) ->
