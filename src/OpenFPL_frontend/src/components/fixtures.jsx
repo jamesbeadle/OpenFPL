@@ -8,7 +8,7 @@ import { getTeamById,groupFixturesByDate, computeTimeLeft, nanoSecondsToMillis, 
 const Fixtures = () => {
   const { teams, seasons, fixtures, systemState } = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
+  const [currentGameweek, setCurrentGameweek] = useState(systemState.focusGameweek);
   const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
   const [filteredFixtures, setFilteredFixtures] = useState([]);
   const [fetchedFixtures, setFetchedFixtures] = useState(null); 
@@ -44,21 +44,6 @@ const Fixtures = () => {
   
   const fetchViewData = async () => {
   
-    const currentDateTime = new Date();
-    const currentGameweekFixtures = fixtures.filter(fixture => fixture.gameweek === systemState.activeGameweek);
-    currentGameweekFixtures.sort((a, b) => Number(a.kickOff) - Number(b.kickOff));
-
-    const kickOffInMilliseconds = Number(currentGameweekFixtures[0].kickOff) / 1000000;
-    const firstFixtureTime = new Date(kickOffInMilliseconds);
-   
-    const oneHourBeforeFirstFixture = new Date(firstFixtureTime - 3600000);
-   
-    if (currentDateTime >= oneHourBeforeFirstFixture) {
-        setCurrentGameweek(systemState.activeGameweek + 1);
-    }
-    else{
-      setCurrentGameweek(systemState.activeGameweek);  
-    }
   };
 
   useEffect(() => {

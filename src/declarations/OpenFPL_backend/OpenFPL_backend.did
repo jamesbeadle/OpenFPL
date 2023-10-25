@@ -242,6 +242,7 @@ service : {
   executeUpdateTeam: (TeamId, text, text, text, text, text, text, nat8) ->
    (Result);
   getAccountBalanceDTO: () -> (AccountBalanceDTO);
+  getAddTeamsFunction: () -> (text);
   getClubLeaderboard: (nat16, nat8, TeamId, nat, nat) ->
    (PaginatedClubLeaderboard) query;
   getClubLeaderboardsCache: (nat16, nat8) ->
@@ -261,6 +262,7 @@ service : {
   getSeasonLeaderboardCache: (nat16) -> (PaginatedLeaderboard) query;
   getSeasons: () -> (vec SeasonDTO) query;
   getSystemState: () -> (SystemState) query;
+  getTeamValueInfo: () -> (vec text);
   getTeams: () -> (vec Team) query;
   getTotalManagers: () -> (nat) query;
   getValidatableFixtures: () -> (vec Fixture) query;
@@ -273,6 +275,7 @@ service : {
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
   updateProfilePicture: (blob) -> (Result);
+  updateTeamValueInfo: () -> ();
   validateAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);
   validateCreatePlayer: (TeamId, nat8, text, text, nat8, nat, int, text) ->
    (Result);

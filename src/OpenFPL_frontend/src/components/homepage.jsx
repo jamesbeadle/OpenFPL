@@ -18,8 +18,6 @@ const Homepage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [currentSeason, setCurrentSeason] = useState(systemState.activeSeason);
     const [currentGameweek, setCurrentGameweek] = useState(systemState.activeGameweek);
-    const [filterSeason, setFilterSeason] = useState(systemState.activeSeason.id);
-    const [filterGameweek, setFilterGameweek] = useState(systemState.activeGameweek);
     const [activeKey, setActiveKey] = useState("fixtures");
     
     const [managerCount, setManagerCount] = useState(-1);
@@ -35,16 +33,12 @@ const Homepage = () => {
             setActiveKey('fixtures');
         }
         const fetchViewData = async () => {
-            if (filterSeason == 0 || filterGameweek === 0){
-                setIsLoading(false);    
-                return;
-            } 
             await updateCountdowns();
             setIsLoading(false);
         };
         
         fetchViewData();
-    }, [filterSeason, filterGameweek, isAuthenticated]);
+    }, [isAuthenticated]);
 
     useEffect(() => {
         const fetchManagerCount = async () => {

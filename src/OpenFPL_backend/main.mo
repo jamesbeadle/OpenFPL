@@ -1739,6 +1739,14 @@ actor Self {
     return seasonManager.getValidatableFixtures();
   };
 
+  public func updateTeamValueInfo() : async () {
+    await fantasyTeamsInstance.updateTeamValueInfo();
+  };
+
+  public func getTeamValueInfo() : async [Text] {
+    await fantasyTeamsInstance.getTeamValueInfo();
+  };
+
   //Local dev functions
   /*
 
@@ -2273,8 +2281,8 @@ actor Self {
           // Convert FantasyTeam
           var fantasyTeamText = "{playerIds = [" # joinPlayers(fantasyTeam.playerIds, ", ") # "]; " # 
             "captainId=" # Nat16.toText(fantasyTeam.captainId) # "; " #
-            "bankBalance=0;" #
-            "braceBonusGameweek=" # Nat8.toText(fantasyTeam.braceBonusGameweek) #  "; " #
+                 "bankBalance=" # Nat.toText(fantasyTeam.bankBalance) # ";" #
+          "braceBonusGameweek=" # Nat8.toText(fantasyTeam.braceBonusGameweek) #  "; " #
             "captainFantasticGameweek=" # Nat8.toText(fantasyTeam.captainFantasticGameweek) #  "; " #
             "captainFantasticPlayerId=" # Nat16.toText(fantasyTeam.captainFantasticPlayerId) #  "; " #
             "goalGetterGameweek=" # Nat8.toText(fantasyTeam.goalGetterGameweek) #  "; " #
@@ -2304,8 +2312,8 @@ actor Self {
 
                 var gameweekText = "{playerIds = [" # joinPlayers(gameweek.playerIds, ", ") # "]; " # 
                 "captainId=" # Nat16.toText(gameweek.captainId) # "; " #
-                "bankBalance=0;" #
-                "braceBonusGameweek=" # Nat8.toText(gameweek.braceBonusGameweek) #  "; " #
+                   "bankBalance=" # Nat.toText(gameweek.bankBalance) # ";" #
+          "braceBonusGameweek=" # Nat8.toText(gameweek.braceBonusGameweek) #  "; " #
                 "captainFantasticGameweek=" # Nat8.toText(gameweek.captainFantasticGameweek) #  "; " #
                 "captainFantasticPlayerId=" # Nat16.toText(gameweek.captainFantasticPlayerId) #  "; " #
                 "goalGetterGameweek=" # Nat8.toText(gameweek.goalGetterGameweek) #  "; " #

@@ -1498,6 +1498,98 @@ module {
             calculateLeaderboards(1, 9);
             calculateMonthlyLeaderboards(1, 9);
         };
+
+        public func getTeamValueInfo() : async [Text] {
+            let allPlayers = await getAllPlayers();
+            let teamDetailsBuffer = Buffer.fromArray<Text>([]);
+            for(fantasyTeam in fantasyTeams.entries()){
+                
+                let currentTeam: T.UserFantasyTeam = fantasyTeam.1;
+                var allTeamPlayers: [DTOs.PlayerDTO] = [];
+                let allTeamPlayersBuffer = Buffer.fromArray<DTOs.PlayerDTO>([]);
+                for(playerId in Iter.fromArray(currentTeam.fantasyTeam.playerIds)){
+                    //get the player and add to the buffer
+                    let player = Array.find<DTOs.PlayerDTO>(allPlayers, func (player: DTOs.PlayerDTO): Bool {
+                        return player.id == playerId;
+                    });
+                    switch(player){
+                        case (null) {};
+                        case (?foundPlayer){
+                            allTeamPlayersBuffer.add(foundPlayer);
+                        }
+                    };
+                };
+
+                allTeamPlayers := Buffer.toArray(allTeamPlayersBuffer);
+                let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(allTeamPlayers, func (player: DTOs.PlayerDTO) : Nat { return player.value; });
+                let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+
+                teamDetailsBuffer.add(currentTeam.fantasyTeam.principalId # " - " # Nat.toText(totalTeamValue));
+            };
+            return Buffer.toArray(teamDetailsBuffer);
+        };
+
+        public func updateTeamValueInfo() : async () {
+            Debug.print("Update Team Value");
+            let updatedFantasyTeams: HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
+            let allPlayers = await getAllPlayers();
+            for(fantasyTeam in fantasyTeams.entries()){
+                
+                let currentTeam: T.UserFantasyTeam = fantasyTeam.1;
+                var allTeamPlayers: [DTOs.PlayerDTO] = [];
+                let allTeamPlayersBuffer = Buffer.fromArray<DTOs.PlayerDTO>([]);
+                for(playerId in Iter.fromArray(currentTeam.fantasyTeam.playerIds)){
+                    //get the player and add to the buffer
+                    let player = Array.find<DTOs.PlayerDTO>(allPlayers, func (player: DTOs.PlayerDTO): Bool {
+                        return player.id == playerId;
+                    });
+                    switch(player){
+                        case (null) {};
+                        case (?foundPlayer){
+                            allTeamPlayersBuffer.add(foundPlayer);
+                        }
+                    };
+                };
+
+                allTeamPlayers := Buffer.toArray(allTeamPlayersBuffer);
+                let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(allTeamPlayers, func (player: DTOs.PlayerDTO) : Nat { return player.value; });
+                let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+
+                let ut: T.FantasyTeam = {
+                    principalId = currentTeam.fantasyTeam.principalId;
+                    favouriteTeamId = currentTeam.fantasyTeam.favouriteTeamId;
+                    teamName = currentTeam.fantasyTeam.teamName;
+                    transfersAvailable = currentTeam.fantasyTeam.transfersAvailable;
+                    bankBalance = Nat.sub(1200, totalTeamValue);
+                    playerIds = currentTeam.fantasyTeam.playerIds;
+                    captainId = currentTeam.fantasyTeam.captainId;
+                    goalGetterGameweek = currentTeam.fantasyTeam.goalGetterGameweek;
+                    goalGetterPlayerId = currentTeam.fantasyTeam.goalGetterPlayerId;
+                    passMasterGameweek = currentTeam.fantasyTeam.passMasterGameweek;
+                    passMasterPlayerId = currentTeam.fantasyTeam.passMasterPlayerId;
+                    noEntryGameweek = currentTeam.fantasyTeam.noEntryGameweek;
+                    noEntryPlayerId = currentTeam.fantasyTeam.noEntryPlayerId;
+                    teamBoostGameweek = currentTeam.fantasyTeam.teamBoostGameweek;
+                    teamBoostTeamId = currentTeam.fantasyTeam.teamBoostTeamId;
+                    safeHandsGameweek = currentTeam.fantasyTeam.safeHandsGameweek;
+                    safeHandsPlayerId = currentTeam.fantasyTeam.safeHandsPlayerId;
+                    captainFantasticGameweek = currentTeam.fantasyTeam.captainFantasticGameweek;
+                    captainFantasticPlayerId = currentTeam.fantasyTeam.captainFantasticPlayerId;
+                    braceBonusGameweek = currentTeam.fantasyTeam.braceBonusGameweek;
+                    hatTrickHeroGameweek = currentTeam.fantasyTeam.hatTrickHeroGameweek;
+                };
+
+                let updatedFantasyteam: T.UserFantasyTeam = {
+                    fantasyTeam = ut;
+                    history = currentTeam.history;
+                };
+                updatedFantasyTeams.put(fantasyTeam.0, updatedFantasyteam);
+                
+            };
+            Debug.print("setting teams");
+            Debug.print(debug_show Iter.toArray(updatedFantasyTeams.entries()));
+            fantasyTeams := updatedFantasyTeams;
+        };
     };
     
 }

@@ -258,6 +258,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'getAccountBalanceDTO' : IDL.Func([], [AccountBalanceDTO], []),
+    'getAddTeamsFunction' : IDL.Func([], [IDL.Text], []),
     'getClubLeaderboard' : IDL.Func(
         [IDL.Nat16, IDL.Nat8, TeamId, IDL.Nat, IDL.Nat],
         [PaginatedClubLeaderboard],
@@ -306,6 +307,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getSeasons' : IDL.Func([], [IDL.Vec(SeasonDTO)], ['query']),
     'getSystemState' : IDL.Func([], [SystemState], ['query']),
+    'getTeamValueInfo' : IDL.Func([], [IDL.Vec(IDL.Text)], []),
     'getTeams' : IDL.Func([], [IDL.Vec(Team)], ['query']),
     'getTotalManagers' : IDL.Func([], [IDL.Nat], ['query']),
     'getValidatableFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
@@ -333,6 +335,7 @@ export const idlFactory = ({ IDL }) => {
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
     'updateProfilePicture' : IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
+    'updateTeamValueInfo' : IDL.Func([], [], []),
     'validateAddInitialFixtures' : IDL.Func(
         [SeasonId, IDL.Vec(Fixture)],
         [Result],

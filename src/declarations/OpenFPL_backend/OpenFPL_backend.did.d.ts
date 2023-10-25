@@ -219,6 +219,7 @@ export interface _SERVICE {
     Result
   >,
   'getAccountBalanceDTO' : ActorMethod<[], AccountBalanceDTO>,
+  'getAddTeamsFunction' : ActorMethod<[], string>,
   'getClubLeaderboard' : ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard
@@ -247,6 +248,7 @@ export interface _SERVICE {
   'getSeasonLeaderboardCache' : ActorMethod<[number], PaginatedLeaderboard>,
   'getSeasons' : ActorMethod<[], Array<SeasonDTO>>,
   'getSystemState' : ActorMethod<[], SystemState>,
+  'getTeamValueInfo' : ActorMethod<[], Array<string>>,
   'getTeams' : ActorMethod<[], Array<Team>>,
   'getTotalManagers' : ActorMethod<[], bigint>,
   'getValidatableFixtures' : ActorMethod<[], Array<Fixture>>,
@@ -270,6 +272,7 @@ export interface _SERVICE {
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
   'updateProfilePicture' : ActorMethod<[Uint8Array | number[]], Result>,
+  'updateTeamValueInfo' : ActorMethod<[], undefined>,
   'validateAddInitialFixtures' : ActorMethod<
     [SeasonId, Array<Fixture>],
     Result
