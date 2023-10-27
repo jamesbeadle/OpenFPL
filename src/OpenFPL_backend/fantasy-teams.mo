@@ -1041,7 +1041,13 @@ module {
                 var updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(userFantasyTeam.history, func(season: T.FantasyTeamSeason): T.FantasyTeamSeason {
                     if (season.seasonId == seasonId) {
                         seasonFound := true; 
-                        let updatedGameweeks = List.push(newSnapshot, season.gameweeks);
+
+                        let otherSeasonGameweeks = List.filter<T.FantasyTeamSnapshot>(season.gameweeks, func(snapshot: T.FantasyTeamSnapshot): Bool {
+                            return snapshot.gameweek != gameweek;
+                        });
+
+                        let updatedGameweeks = List.push(newSnapshot, otherSeasonGameweeks);
+                        
                         return {
                             seasonId = season.seasonId;
                             totalPoints = season.totalPoints;

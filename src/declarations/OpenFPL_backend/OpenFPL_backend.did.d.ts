@@ -180,6 +180,13 @@ export interface Team {
   'primaryColourHex' : string,
 }
 export type TeamId = number;
+export interface TimerInfo {
+  'id' : bigint,
+  'fixtureId' : FixtureId,
+  'playerId' : PlayerId,
+  'callbackName' : string,
+  'triggerTime' : bigint,
+}
 export interface _SERVICE {
   'executeAddInitialFixtures' : ActorMethod<[SeasonId, Array<Fixture>], Result>,
   'executeCreatePlayer' : ActorMethod<
@@ -249,6 +256,7 @@ export interface _SERVICE {
   'getSystemState' : ActorMethod<[], SystemState>,
   'getTeamValueInfo' : ActorMethod<[], Array<string>>,
   'getTeams' : ActorMethod<[], Array<Team>>,
+  'getTimers' : ActorMethod<[], Array<TimerInfo>>,
   'getTotalManagers' : ActorMethod<[], bigint>,
   'getValidatableFixtures' : ActorMethod<[], Array<Fixture>>,
   'getWeeklyLeaderboard' : ActorMethod<
@@ -270,6 +278,7 @@ export interface _SERVICE {
   >,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
+  'updateIncorrectFixtureTime' : ActorMethod<[], undefined>,
   'updateProfilePicture' : ActorMethod<[Uint8Array | number[]], Result>,
   'updateTeamValueInfo' : ActorMethod<[], undefined>,
   'validateAddInitialFixtures' : ActorMethod<

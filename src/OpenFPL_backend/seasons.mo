@@ -432,18 +432,18 @@ module {
                     name = season.name;
                     year = season.year;
                     gameweeks = List.map<T.Gameweek, T.Gameweek>(season.gameweeks, func(gameweek: T.Gameweek) : T.Gameweek {
-                        if(gameweek.number == 9){
+                        if(gameweek.number == 10){
                             return {
                                 number = gameweek.number;
                                 canisterId = gameweek.canisterId;
                                 fixtures = List.map<T.Fixture, T.Fixture>(gameweek.fixtures, func(fixture: T.Fixture) : T.Fixture {
                                     switch(fixture.id){
-                                        case 82{
+                                        case 93{
                                             return {
                                                 id = fixture.id;
                                                 seasonId = fixture.seasonId;
                                                 gameweek = fixture.gameweek;
-                                                kickOff = 1_697_988_600_000_000_000;
+                                                kickOff = 1_698_584_400_000_000_000;
                                                 homeTeamId = fixture.homeTeamId;
                                                 awayTeamId = fixture.awayTeamId;
                                                 homeGoals = fixture.homeGoals;
@@ -453,12 +453,12 @@ module {
                                                 highestScoringPlayerId = fixture.highestScoringPlayerId;
                                             };
                                         };
-                                        case 84{
+                                        case 94{
                                             return {
                                                 id = fixture.id;
                                                 seasonId = fixture.seasonId;
                                                 gameweek = fixture.gameweek;
-                                                kickOff = 1_697_905_800_000_000_000;
+                                                kickOff = 1_698_584_400_000_000_000;
                                                 homeTeamId = fixture.homeTeamId;
                                                 awayTeamId = fixture.awayTeamId;
                                                 homeGoals = fixture.homeGoals;
@@ -468,12 +468,12 @@ module {
                                                 highestScoringPlayerId = fixture.highestScoringPlayerId;
                                             };
                                         };
-                                        case 85{
+                                        case 95{
                                             return {
                                                 id = fixture.id;
                                                 seasonId = fixture.seasonId;
                                                 gameweek = fixture.gameweek;
-                                                kickOff = 1_697_887_800_000_000_000;
+                                                kickOff = 1_698_492_600_000_000_000;
                                                 homeTeamId = fixture.homeTeamId;
                                                 awayTeamId = fixture.awayTeamId;
                                                 homeGoals = fixture.homeGoals;
@@ -483,12 +483,12 @@ module {
                                                 highestScoringPlayerId = fixture.highestScoringPlayerId;
                                             };
                                         };
-                                        case 89{
+                                        case 96{
                                             return {
                                                 id = fixture.id;
                                                 seasonId = fixture.seasonId;
                                                 gameweek = fixture.gameweek;
-                                                kickOff = 1_697_914_800_000_000_000;
+                                                kickOff = 1_698_433_200_000_000_000;
                                                 homeTeamId = fixture.homeTeamId;
                                                 awayTeamId = fixture.awayTeamId;
                                                 homeGoals = fixture.homeGoals;
@@ -498,12 +498,57 @@ module {
                                                 highestScoringPlayerId = fixture.highestScoringPlayerId;
                                             };
                                         };
-                                        case 90{
+                                        case 97{
                                             return {
                                                 id = fixture.id;
                                                 seasonId = fixture.seasonId;
                                                 gameweek = fixture.gameweek;
-                                                kickOff = 1_698_087_600_000_000_000;
+                                                kickOff = 1_698_584_400_000_000_000;
+                                                homeTeamId = fixture.homeTeamId;
+                                                awayTeamId = fixture.awayTeamId;
+                                                homeGoals = fixture.homeGoals;
+                                                awayGoals = fixture.awayGoals;
+                                                status = fixture.status;
+                                                events = fixture.events;
+                                                highestScoringPlayerId = fixture.highestScoringPlayerId;
+                                            };
+                                        };
+                                        case 98{
+                                            return {
+                                                id = fixture.id;
+                                                seasonId = fixture.seasonId;
+                                                gameweek = fixture.gameweek;
+                                                kickOff = 1_698_589_800_000_000_000;
+                                                homeTeamId = fixture.homeTeamId;
+                                                awayTeamId = fixture.awayTeamId;
+                                                homeGoals = fixture.homeGoals;
+                                                awayGoals = fixture.awayGoals;
+                                                status = fixture.status;
+                                                events = fixture.events;
+                                                highestScoringPlayerId = fixture.highestScoringPlayerId;
+                                            };
+                                        };
+                                        case 99{
+                                            return {
+                                                id = fixture.id;
+                                                seasonId = fixture.seasonId;
+                                                gameweek = fixture.gameweek;
+                                                kickOff = 1_698_580_800_000_000_000;
+                                                homeTeamId = fixture.homeTeamId;
+                                                awayTeamId = fixture.awayTeamId;
+                                                homeGoals = fixture.homeGoals;
+                                                awayGoals = fixture.awayGoals;
+                                                status = fixture.status;
+                                                events = fixture.events;
+                                                highestScoringPlayerId = fixture.highestScoringPlayerId;
+                                            };
+                                        };
+                                        case 100{
+                                            return {
+                                                id = fixture.id;
+                                                seasonId = fixture.seasonId;
+                                                gameweek = fixture.gameweek;
+                                                kickOff = 1_698_510_600_000_000_000;
                                                 homeTeamId = fixture.homeTeamId;
                                                 awayTeamId = fixture.awayTeamId;
                                                 homeGoals = fixture.homeGoals;

@@ -1,3 +1,11 @@
+type TimerInfo = 
+ record {
+   callbackName: text;
+   fixtureId: FixtureId;
+   id: int;
+   playerId: PlayerId;
+   triggerTime: int;
+ };
 type TeamId = nat16;
 type Team = 
  record {
@@ -263,6 +271,7 @@ service : {
   getSystemState: () -> (SystemState) query;
   getTeamValueInfo: () -> (vec text);
   getTeams: () -> (vec Team) query;
+  getTimers: () -> (vec TimerInfo);
   getTotalManagers: () -> (nat) query;
   getValidatableFixtures: () -> (vec Fixture) query;
   getWeeklyLeaderboard: (nat16, nat8, nat, nat) ->
@@ -273,6 +282,7 @@ service : {
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
+  updateIncorrectFixtureTime: () -> ();
   updateProfilePicture: (blob) -> (Result);
   updateTeamValueInfo: () -> ();
   validateAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);

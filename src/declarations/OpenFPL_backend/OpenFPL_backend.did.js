@@ -186,6 +186,13 @@ export const idlFactory = ({ IDL }) => {
     'shirtType' : IDL.Nat8,
     'primaryColourHex' : IDL.Text,
   });
+  const TimerInfo = IDL.Record({
+    'id' : IDL.Int,
+    'fixtureId' : FixtureId,
+    'playerId' : PlayerId,
+    'callbackName' : IDL.Text,
+    'triggerTime' : IDL.Int,
+  });
   return IDL.Service({
     'executeAddInitialFixtures' : IDL.Func(
         [SeasonId, IDL.Vec(Fixture)],
@@ -308,6 +315,7 @@ export const idlFactory = ({ IDL }) => {
     'getSystemState' : IDL.Func([], [SystemState], ['query']),
     'getTeamValueInfo' : IDL.Func([], [IDL.Vec(IDL.Text)], []),
     'getTeams' : IDL.Func([], [IDL.Vec(Team)], ['query']),
+    'getTimers' : IDL.Func([], [IDL.Vec(TimerInfo)], []),
     'getTotalManagers' : IDL.Func([], [IDL.Nat], ['query']),
     'getValidatableFixtures' : IDL.Func([], [IDL.Vec(Fixture)], ['query']),
     'getWeeklyLeaderboard' : IDL.Func(
@@ -333,6 +341,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
+    'updateIncorrectFixtureTime' : IDL.Func([], [], []),
     'updateProfilePicture' : IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
     'updateTeamValueInfo' : IDL.Func([], [], []),
     'validateAddInitialFixtures' : IDL.Func(
