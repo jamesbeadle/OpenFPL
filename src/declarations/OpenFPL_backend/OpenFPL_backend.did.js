@@ -341,7 +341,6 @@ export const idlFactory = ({ IDL }) => {
       ),
     'updateDisplayName' : IDL.Func([IDL.Text], [Result], []),
     'updateFavouriteTeam' : IDL.Func([IDL.Nat16], [Result], []),
-    'updateIncorrectFixtureTime' : IDL.Func([], [], []),
     'updateProfilePicture' : IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
     'updateTeamValueInfo' : IDL.Func([], [], []),
     'validateAddInitialFixtures' : IDL.Func(

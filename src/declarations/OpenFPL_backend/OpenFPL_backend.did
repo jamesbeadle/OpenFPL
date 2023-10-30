@@ -282,7 +282,6 @@ service : {
   savePlayerEvents: (FixtureId, vec PlayerEventData) -> ();
   updateDisplayName: (text) -> (Result);
   updateFavouriteTeam: (nat16) -> (Result);
-  updateIncorrectFixtureTime: () -> ();
   updateProfilePicture: (blob) -> (Result);
   updateTeamValueInfo: () -> ();
   validateAddInitialFixtures: (SeasonId, vec Fixture) -> (Result);

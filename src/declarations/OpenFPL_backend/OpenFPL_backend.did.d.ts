@@ -278,7 +278,6 @@ export interface _SERVICE {
   >,
   'updateDisplayName' : ActorMethod<[string], Result>,
   'updateFavouriteTeam' : ActorMethod<[number], Result>,
-  'updateIncorrectFixtureTime' : ActorMethod<[], undefined>,
   'updateProfilePicture' : ActorMethod<[Uint8Array | number[]], Result>,
   'updateTeamValueInfo' : ActorMethod<[], undefined>,
   'validateAddInitialFixtures' : ActorMethod<

@@ -1748,37 +1748,6 @@ actor Self {
     await fantasyTeamsInstance.getTeamValueInfo();
   };
 
-  public func updateIncorrectFixtureTime() : async (){
-    await seasonManager.updateIncorrectFixtureTime();
-
-    //cancel the existing gameweek begin timer
-     let maybeTimerInfo = Array.find<T.TimerInfo>(stable_timers, func(timerInfo) {
-      timerInfo.callbackName == "gameweekBeginExpired"
-    });
-    switch (maybeTimerInfo) {
-      case (null) {
-        // Timer not found, you can decide what to do here
-      };
-      case (?timerInfo) {
-        // Cancel existing timer
-        Timer.cancelTimer(Nat64.toNat(Int64.toNat64(Int64.fromInt(timerInfo.id))));
-
-        // Remove from stable_timers
-        stable_timers := Array.filter<T.TimerInfo>(stable_timers, func(ti) {
-          ti.id != timerInfo.id
-        });
-
-        let gameweekBeginDuration: Timer.Duration = #nanoseconds (Int.abs(Nat64.toNat(Int64.toNat64(Int64.fromInt(1_698_433_200_000_000_000))) - Time.now() - oneHour));
-        //set a new gameweek begin timer
-        await setAndBackupTimer(gameweekBeginDuration, "gameweekBeginExpired", 0);
-      };
-    };
-
-
-
-    await updateCacheHash("fixtures");
-    await updateCacheHash("system_state");
-  };
 
   public func getTimers() : async [T.TimerInfo] {
     return stable_timers;
@@ -1789,10 +1758,6 @@ actor Self {
 
   public func updateCache(category: Text) : async (){
     await updateCacheHash(category);
-  };
-
-  public func updateIncorrectFixtureTime() : async (){
-    await seasonManager.updateIncorrectFixtureTime();
   };
 
   public func recalculateLeaderboards() : async (){

@@ -135,6 +135,7 @@ export interface ValueHistory {
   'gameweek' : number,
 }
 export interface _SERVICE {
+  'adjustPlayerData' : ActorMethod<[], undefined>,
   'calculatePlayerScores' : ActorMethod<[number, number, Fixture], Fixture>,
   'createPlayer' : ActorMethod<
     [TeamId, number, string, string, number, bigint, bigint, string],

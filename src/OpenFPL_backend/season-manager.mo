@@ -406,18 +406,6 @@ module {
         let gameweekFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
         activeFixtures := gameweekFixtures;
     };
-
-    public func updateIncorrectFixtureTime() : async (){
-        await seasonsInstance.updateIncorrectFixtureTime();
-        let firstFixtureKickoff: Int = 1_698_433_200_000_000_000;
-        let gameweekBeginDuration: Timer.Duration = #nanoseconds (Int.abs(firstFixtureKickoff - Time.now() - oneHour));
-        switch(setAndBackupTimer) {
-            case (null) { };
-            case (?actualFunction) {
-                await actualFunction(gameweekBeginDuration, "gameweekBeginExpired", 0);
-            };
-        };
-    };
     
   };
 }
