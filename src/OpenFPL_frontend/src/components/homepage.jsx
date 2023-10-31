@@ -169,7 +169,7 @@ const Homepage = () => {
                                                 <div className='text-center badge w-100 p-0'>
                                                     {nextFixtureHomeTeam && <CombinedIcon
                                                         primary={nextFixtureHomeTeam.primaryColourHex}
-                                                        secondary={nextFixtureHomeTeam.SecondaryColourHex}
+                                                        secondary={nextFixtureHomeTeam.secondaryColourHex}
                                                         third={nextFixtureHomeTeam.thirdColourHex}
                                                     />}
                                                 </div>
@@ -181,7 +181,7 @@ const Homepage = () => {
                                                 <div className='text-center badge w-100 p-0'>
                                                 {nextFixtureAwayTeam && <CombinedIcon
                                                         primary={nextFixtureAwayTeam.primaryColourHex}
-                                                        secondary={nextFixtureAwayTeam.SecondaryColourHex}
+                                                        secondary={nextFixtureAwayTeam.secondaryColourHex}
                                                         third={nextFixtureAwayTeam.thirdColourHex}
                                                     />}
                                                 </div>

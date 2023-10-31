@@ -449,7 +449,7 @@ const ClubDetails = ({  }) => {
                                                     <Row key={player.id} onClick={() => loadPlayer(player)} style={{ overflowX: 'auto' }}>
                                                     <Col xs={12}>
                                                     <div className="table-row clickable-table-row">
-                                                        <div className="club-player-number-col gw-table-col">{player.shirtNumber}</div>
+                                                        <div className="club-player-number-col gw-table-col">{player.shirtNumber == 0 ? '-' : player.shirtNumber}</div>
                                                         <div className="club-player-name-col gw-table-col">
                                                             <div>{getFlag(player.nationality, 'player-list-flag')}</div>
                                                             {

@@ -255,10 +255,10 @@ const SelectPlayerModal = ({ show, handleClose, handleConfirm, fantasyTeam, star
                 </p>
               </div>
               <div className="modal-table-header modal-player-col">
-                <p className='w-100 m-0 dot-truncate'><b>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</b></p>
+                <p className='small-text w-100 m-0 dot-truncate'><b>{player.firstName != "" ? player.firstName.charAt(0) + "." : ""} {player.lastName}</b></p>
               </div>
               <div className="modal-table-header modal-team-col">
-                <p className='w-100 m-0'>
+                <p className='small-text w-100 m-0'>
                   {(() => {
                     const foundTeam = teams.find(team => team.id === player.teamId);
                     return (

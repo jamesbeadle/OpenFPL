@@ -1355,17 +1355,17 @@
   }
       
   .player-name-row {
-    padding: 8px;
+    padding: 6px;
     height: 22px;
-    width: 146px;
-    font-size: 12px;
+    width: 120px;
+    font-size: 10px;
   }
   
   .player-info-row {
-    padding: 8px;
+    padding: 6px;
     height: 22px;
-    width: 146px;
-    font-size: 12px;
+    width: 120px;
+    font-size: 10px;
   }
   
   .pitch-team-badge{
@@ -1397,24 +1397,16 @@
     height: 22px;
   }
   
-  .left-side-image {
-    left: -22px;
-  }
-  
-  .right-side-image {
-    right: -22px;
-  }
-  
   
   .left-side-image {
-    left: -22px;
+    left: -10px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
   .right-side-image {
-    right: -22px;
+    right: -10px;
     display: flex;
     align-items: center;
     justify-content: center;

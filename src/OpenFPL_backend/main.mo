@@ -55,8 +55,8 @@ actor Self {
 
   private let oneHour = 1_000_000_000 * 60 * 60;
   
-  //USE FOR LOCAL DEV
   /*
+  //USE FOR LOCAL DEV
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
