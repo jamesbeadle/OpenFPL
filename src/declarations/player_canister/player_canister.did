@@ -176,7 +176,6 @@ type DataCache =
    hash: text;
  };
 service : {
-  adjustPlayerData: () -> ();
   calculatePlayerScores: (nat16, nat8, Fixture) -> (Fixture);
   createPlayer: (TeamId, nat8, text, text, nat8, nat, int, text) -> ();
   getActivePlayers: () -> (vec PlayerDTO) query;

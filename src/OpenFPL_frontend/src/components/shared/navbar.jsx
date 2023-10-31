@@ -46,7 +46,7 @@ const MyNavbar = () => {
     // Assuming your disconnect panel has a class 'disconnect-panel'
     const disconnectPanel = document.querySelector('.disconnect-panel');
   
-    if (!navbar.contains(e.target) && !disconnectPanel.contains(e.target)) {
+    if (navbar && !navbar.contains(e.target) && disconnectPanel && !disconnectPanel.contains(e.target)) {
       setShowDropdown(false);
       setExpanded(false);
     }

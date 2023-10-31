@@ -315,48 +315,36 @@ module {
     };
     
     public func rescheduleFixture(fixtureId: T.FixtureId, currentFixtureGameweek: T.GameweekNumber, updatedFixtureGameweek: T.GameweekNumber, updatedFixtureDate: Int) : async () {
+        
         var allSeasons = List.fromArray(seasonsInstance.getSeasons());
         allSeasons := List.map<T.Season, T.Season>(allSeasons, func(currentSeason: T.Season) : T.Season {
             if (currentSeason.id == activeSeasonId) {
                 var updatedGameweeks: List.List<T.Gameweek> = List.nil();
                 var postponedFixtures: List.List<T.Fixture> = List.nil();
                 
-                updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(currentSeason.gameweeks, func(currentGameweek: T.Gameweek) : T.Gameweek {
-                    if(currentGameweek.number == currentFixtureGameweek){
-
-                        let updatedFixtures = List.mapFilter<T.Fixture, T.Fixture>(currentGameweek.fixtures, func(currentFixture: T.Fixture) : ?T.Fixture {
-                        if(currentFixture.id == fixtureId){
-                            let updatedFixture: T.Fixture = {
-                                id = currentFixture.id;
-                                seasonId = currentFixture.seasonId;
-                                gameweek = updatedFixtureGameweek;
-                                kickOff = updatedFixtureDate;
-                                homeTeamId = currentFixture.homeTeamId;
-                                awayTeamId = currentFixture.awayTeamId;
-                                homeGoals = currentFixture.homeGoals;
-                                awayGoals = currentFixture.awayGoals;
-                                status = currentFixture.status;
-                                events = currentFixture.events;
-                                highestScoringPlayerId = currentFixture.highestScoringPlayerId;
-                            };
-                            if (updatedFixtureGameweek == 0) {
-                                postponedFixtures := List.push(updatedFixture, currentSeason.postponedFixtures);
-                                return null;
-                            } else {
-                                return ?updatedFixture;
-                            }
-                        };
-                        return ?currentFixture;
+                for(gameweek in Iter.fromList(currentSeason.gameweeks)){
+                    let postponedFixture = List.find<T.Fixture>(gameweek.fixtures, func (fixture: T.Fixture): Bool {
+                        return fixture.id == fixtureId;
                     });
-                    
-                    return {
-                        number = currentGameweek.number;
-                        canisterId = currentGameweek.canisterId;
-                        fixtures = updatedFixtures; 
-                    };
 
-                    } else { return currentGameweek };
-                    
+                    switch(postponedFixture){
+                        case (null) {};
+                        case (?foundPostponedFixture){ 
+                            postponedFixtures := List.push(foundPostponedFixture, currentSeason.postponedFixtures);
+                        }
+                    };
+                };
+                
+                updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(currentSeason.gameweeks, func(gw: T.Gameweek) : T.Gameweek {
+                    if(gw.number == currentFixtureGameweek){
+                        return {
+                            canisterId = gw.canisterId;
+                            number = gw.number;
+                            fixtures = List.filter<T.Fixture>(gw.fixtures, func(fixture: T.Fixture) : Bool {
+                                return fixture.id != fixtureId;
+                            });
+                        };
+                    } else { return gw };
                 });
                 
                 let updatedSeason: T.Season = {
@@ -372,6 +360,7 @@ module {
                 return currentSeason;
             }
         });
+        seasonsInstance.setSeasons(List.toArray(allSeasons));
     };
     
     public func setTimerBackupFunction(_setAndBackupTimer: (duration: Timer.Duration, callbackName: Text, fixtureId: T.FixtureId) -> async ()) {

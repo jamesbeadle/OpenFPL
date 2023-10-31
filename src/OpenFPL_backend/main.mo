@@ -55,8 +55,8 @@ actor Self {
 
   private let oneHour = 1_000_000_000 * 60 * 60;
   
-  /*
   //USE FOR LOCAL DEV
+  /*
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
@@ -1751,6 +1751,12 @@ actor Self {
 
   public func getTimers() : async [T.TimerInfo] {
     return stable_timers;
+  };
+
+  public func rescheduleFixture() : async () {
+    return await seasonManager.rescheduleFixture(176, 18, 0, 1_703_343_600_000_000_000);
+    await updateCacheHash("fixtures");
+    await updateCacheHash("system_state");
   }
 
   //Local dev functions

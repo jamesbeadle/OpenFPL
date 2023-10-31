@@ -139,7 +139,6 @@ export const idlFactory = ({ IDL }) => {
     'points' : IDL.Int16,
   });
   return IDL.Service({
-    'adjustPlayerData' : IDL.Func([], [], []),
     'calculatePlayerScores' : IDL.Func(
         [IDL.Nat16, IDL.Nat8, Fixture],
         [Fixture],
