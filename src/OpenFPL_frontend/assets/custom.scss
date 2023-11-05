@@ -268,14 +268,45 @@
 }
 /* Updated CSS */
 .scrollable-tab-list {
-  display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch; /* for momentum scrolling on mobile */
+  align-items: stretch;
 }
 
 .tab-item {
   display: block;
   flex: 0 0 auto; /* Prevent flex items from growing or shrinking */
+  max-height: 100vh; /* Set a max-height to the viewport height */
+  overflow-y: auto;
 }
+
+.nav-item{
+  min-width: 75px;
+}
+
+/* This styles the scrollbar track */
+.scrollable-tab-list::-webkit-scrollbar-track {
+  background-color: #f5f5f5; /* change to match your design */
+  border-radius: 4px;
+}
+
+/* This styles the scrollbar handle */
+.scrollable-tab-list::-webkit-scrollbar-thumb {
+  background-color: #888; /* change to match your design */
+  border-radius: 4px;
+  border: 1px solid #f5f5f5; /* Optional: Add a border around the thumb */
+}
+
+/* This styles the scrollbar itself */
+.scrollable-tab-list::-webkit-scrollbar {
+  width: 12px; /* You can change the width of the scrollbar */
+}
+
+/* For Windows High Contrast Mode and Firefox */
+.scrollable-tab-list {
+  scrollbar-color: #888 #f5f5f5; /* thumb and track color */
+  scrollbar-width: thin; /* 'auto' or 'thin' */
+}
+

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Spinner, Row, Col, Card, Tabs, Tab } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Vision from './vision';
+import Gameplay from './gameplay';
 
 const Whitepaper = () => {
   
@@ -29,7 +30,7 @@ const Whitepaper = () => {
       </div>
       ) :
       <Container fluid className='view-container mt-2'>
-       <Row className="mt-3">
+        <Row className="mt-3">
                 <Col xs={12}>
                 <Card>
   <h1 className='m-4'>OpenFPL Whitepaper</h1>
@@ -39,7 +40,7 @@ const Whitepaper = () => {
                                  {activeKey === 'vision' && <Vision />}
                                     </Tab>
                                     <Tab className="bottom-border-radius tab-item" eventKey="gameplay" title="Gameplay">
-                                        {activeKey === 'gameplay' && <Vision />}
+                                        {activeKey === 'gameplay' && <Gameplay />}
                                     </Tab>
                                     <Tab className="bottom-border-radius tab-item" eventKey="roadmap" title="Roadmap">
                                         {activeKey === 'roadmap' && <Vision />}

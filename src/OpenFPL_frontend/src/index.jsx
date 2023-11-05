@@ -11,7 +11,7 @@ import MyFooter from './components/shared/footer';
 import Profile from "./components/profile/profile";
 
 import Whitepaper from "./components/whitepaper/whitepaper";
-import Gameplay from "./components/whitepaper/gameplay";
+import GameplayRules from "./components/whitepaper/gameplay-rules";
 import Terms from "./components/terms";
 import Governance from "./components/governanace/governance";
 import PickTeam from "./components/gameplay/pick-team";
@@ -35,7 +35,7 @@ const App = () => {
                   <Routes>
                     <Route path="/" element={<Homepage />} />
                     <Route path="/whitepaper" element={<Whitepaper   />} />
-                    <Route path="/gameplay" element={<Gameplay   />} />
+                    <Route path="/gameplay" element={<GameplayRules   />} />
                     <Route path="/terms" element={<Terms   />} />
                     <Route path="/profile" element={<Profile /> }/>
                     <Route path="/governance" element={<Governance /> }/>
