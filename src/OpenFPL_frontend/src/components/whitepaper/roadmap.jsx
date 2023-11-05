@@ -52,7 +52,7 @@ const Roadmap = () => {
 
         <h5><b>April 2024: </b>OpenFPL Events</h5>
         <p>
-            OpenFPL is set to create a series of interactive experiences at event locations in Premier League club cities, drawing inspiration from major UK brands like Ford and Coca-Cola. 
+            OpenFPL is set to create a series of interactive experiences at event locations in Premier League club cities, drawing inspiration from major UK brands like IBM, Ford and Coca-Cola. 
             Planned from Q2 2024 onwards, these events will leverage the expertise of OpenFPL founder James Beadle. With his experience in creating successful and engaging interactive experiences, 
             James aims to play a key role in educating attendees about OpenFPL, Internet Identity and the range of other IC dApps available.
         </p>

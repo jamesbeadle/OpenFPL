@@ -5,6 +5,8 @@ import Vision from './vision';
 import Gameplay from './gameplay';
 import Roadmap from './roadmap';
 import Marketing from './marketing';
+import Revenue from './revenue';
+import DAO from './dao';
 
 const Whitepaper = () => {
   
@@ -51,10 +53,10 @@ const Whitepaper = () => {
                                         {activeKey === 'marketing' && <Marketing />}
                                     </Tab>
                                     <Tab className="bottom-border-radius tab-item" eventKey="revenue" title="Revenue">
-                                        {activeKey === 'revenue' && <Vision />}
+                                        {activeKey === 'revenue' && <Revenue />}
                                     </Tab>
                                     <Tab className="bottom-border-radius tab-item" eventKey="dao" title="DAO">
-                                        {activeKey === 'dao' && <Vision />}
+                                        {activeKey === 'dao' && <DAO />}
                                     </Tab>
                                     <Tab className="bottom-border-radius tab-item" eventKey="token" title="$FPL Token">
                                         {activeKey === 'token' && <Vision />}

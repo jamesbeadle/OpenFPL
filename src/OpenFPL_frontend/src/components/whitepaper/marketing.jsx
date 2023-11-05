@@ -7,7 +7,6 @@ const Marketing = () => {
 
         <h1>Online Marketing Strategy</h1>
 
-
         <h5>Collaboration with Digitial Marketing Agency</h5>
         <p>We are engaging with a digital marketing agency known for their experience working with startups in the digital space.
             This agency is in the process of finalising plans for a comprehensive online marketing campaign. 
@@ -31,7 +30,7 @@ const Marketing = () => {
         <h5>In-Person Event Marketing Strategy</h5>
       
         <p>As part of our comprehensive marketing plan, OpenFPL is preparing to launch a series of in-person, interactive events in cities home to Premier League clubs. 
-            These events, expected to start from Q2 2024, are inspired by the successful engagement strategies of major UK brands like Ford and Coca-Cola.</p>
+            These events, expected to start from Q2 2024, are inspired by the successful engagement strategies of major UK brands like IBM, Ford and Coca-Cola.</p>
 
         <h5>Event Planning and Execution</h5>
         
