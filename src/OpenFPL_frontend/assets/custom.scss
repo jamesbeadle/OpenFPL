@@ -88,7 +88,6 @@
     color: white !important;
     border-radius: 8px !important;
     border: 1px solid #2E323A !important;
-    overflow: hidden;
 }
 
 .d-flex.text-center.align-items-center.h-100 {
@@ -266,4 +265,17 @@
   background-color: #2CE3A6;
   border: none;
   color: #161819;
+}
+/* Updated CSS */
+.scrollable-tab-list {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; /* for momentum scrolling on mobile */
+}
+
+.tab-item {
+  display: block;
+  flex: 0 0 auto; /* Prevent flex items from growing or shrinking */
 }

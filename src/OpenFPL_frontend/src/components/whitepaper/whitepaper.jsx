@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Spinner, Row, Col, Card, Accordion, Image, Table, Button } from 'react-bootstrap';
-import { ExitIcon } from '../icons';
+import { Container, Spinner, Row, Col, Card, Tabs, Tab } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import Vision from './vision';
 
 const Whitepaper = () => {
   
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [activeKey, setActiveKey] = useState("vision");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,17 +29,41 @@ const Whitepaper = () => {
       </div>
       ) :
       <Container fluid className='view-container mt-2'>
-        <Row>
-          <Col md={12}>
-            <Card className="mb-4">
-              <Card.Header>
-                <div style={{marginLeft: '16px'}}>OpenFPL SNS Whitepaper</div></Card.Header>
-              <Card.Body>
-                <Card.Text>Coming Soon.</Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+       <Row className="mt-3">
+                <Col xs={12}>
+                <Card>
+  <h1 className='m-4'>OpenFPL Whitepaper</h1>
+  <div className="scrollable-tab-list">
+  <Tabs defaultActiveKey="vision" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)} className="scrollable-tab-list">
+    <Tab eventKey="vision" title="Vision" className="tab-item">
+                                 {activeKey === 'vision' && <Vision />}
+                                    </Tab>
+                                    <Tab className="bottom-border-radius tab-item" eventKey="gameplay" title="Gameplay">
+                                        {activeKey === 'gameplay' && <Vision />}
+                                    </Tab>
+                                    <Tab className="bottom-border-radius tab-item" eventKey="roadmap" title="Roadmap">
+                                        {activeKey === 'roadmap' && <Vision />}
+                                    </Tab>
+                                    <Tab className="bottom-border-radius tab-item" eventKey="marketing" title="Marketing">
+                                        {activeKey === 'marketing' && <Vision />}
+                                    </Tab>
+                                    <Tab className="bottom-border-radius tab-item" eventKey="revenue" title="Revenue">
+                                        {activeKey === 'revenue' && <Vision />}
+                                    </Tab>
+                                    <Tab className="bottom-border-radius tab-item" eventKey="dao" title="DAO">
+                                        {activeKey === 'dao' && <Vision />}
+                                    </Tab>
+                                    <Tab className="bottom-border-radius tab-item" eventKey="token" title="$FPL Token">
+                                        {activeKey === 'token' && <Vision />}
+                                    </Tab>
+                                    <Tab className="bottom-border-radius tab-item" eventKey="architecture" title="Architecture">
+                                        {activeKey === 'architecture' && <Vision />}
+                                    </Tab>
+                                </Tabs>
+                            </div>
+                    </Card>
+                </Col>
+            </Row>
       </Container>
     );
 };
