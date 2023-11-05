@@ -3,6 +3,8 @@ import { Container, Spinner, Row, Col, Card, Tabs, Tab } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Vision from './vision';
 import Gameplay from './gameplay';
+import Roadmap from './roadmap';
+import Marketing from './marketing';
 
 const Whitepaper = () => {
   
@@ -43,10 +45,10 @@ const Whitepaper = () => {
                                         {activeKey === 'gameplay' && <Gameplay />}
                                     </Tab>
                                     <Tab className="bottom-border-radius tab-item" eventKey="roadmap" title="Roadmap">
-                                        {activeKey === 'roadmap' && <Vision />}
+                                        {activeKey === 'roadmap' && <Roadmap />}
                                     </Tab>
                                     <Tab className="bottom-border-radius tab-item" eventKey="marketing" title="Marketing">
-                                        {activeKey === 'marketing' && <Vision />}
+                                        {activeKey === 'marketing' && <Marketing />}
                                     </Tab>
                                     <Tab className="bottom-border-radius tab-item" eventKey="revenue" title="Revenue">
                                         {activeKey === 'revenue' && <Vision />}
