@@ -19,7 +19,7 @@ const MyNavbar = () => {
   const isActive = (path) => location.pathname === path;
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
   const [showDropdown, setShowDropdown] = useState(false);
-  const publicPaths = ['/whitepaper'];
+  const publicPaths = ['/whitepaper', '/gameplay', '/terms', ];
 
   useEffect(() => {
     document.body.addEventListener('click', handleClickOutside);
