@@ -1,4 +1,5 @@
 import React from 'react';
+import { Table } from 'react-bootstrap';
 
 const DAO = () => {
   
@@ -35,7 +36,7 @@ const DAO = () => {
 
         <p>A user is rewarded for their leaderboard position across the top 100 positions. The following is a breakdown of the reward share for each position:</p>
 
-        <table>
+        <Table responsive="sm" className="mb-4">
             <tr>
                 <th>Pos</th>
                 <th>Share</th>
@@ -322,7 +323,7 @@ const DAO = () => {
                 <td>0.0021%</td>
             </tr>
 
-        </table>
+        </Table>
 
         <p>To ensure rewards are paid for active participation, a user would need to do the following to qualify for the following OpenFPL gameplay rewards:</p>
 

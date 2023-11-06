@@ -1,4 +1,5 @@
 import React from 'react';
+import { Table } from 'react-bootstrap';
 
 const Token = () => {
   
@@ -79,7 +80,7 @@ const Token = () => {
             <li>Estimated 5% user subscription rate at 5 ICP/month with 5% of this revenue going to the DAO.</li>
         </ul>
         
-        <table className='mb-4'>
+        <Table responsive="sm" className="mb-4">
             <tr>
                 <th>Year</th>
                 <th>1</th>
@@ -171,12 +172,12 @@ const Token = () => {
                 <th></th>
                 <th>1,795,010</th>
             </tr>
-        </table>
+        </Table>
 
 
         <h5>SNS Decentralisation Sale Configuration</h5>
 
-        <table className='mb-4'>
+        <Table responsive="sm" className="mb-4">
             <tr>
                 <th>Configuration</th>
                 <th>Value</th>
@@ -217,7 +218,7 @@ const Token = () => {
                 <th>Maximum ICP per buyer.</th>
                 <th>150,000</th>
             </tr>
-        </table>
+        </Table>
 
 
         <h5>Mitigation against a 51% Attack</h5>
