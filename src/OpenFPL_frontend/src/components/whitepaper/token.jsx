@@ -135,6 +135,42 @@ const Token = () => {
                 <th>1,200,000</th>
                 <th>1,600,000</th>
             </tr>
+
+            <tr>
+                <th>Total</th>
+                <th>5,200</th>
+                <th>26,000</th>
+                <th>130,000</th>
+                <th>520,000</th>
+                <th>1,300,000</th>
+                <th>2,600,000</th>
+                <th>3,900,000</th>
+                <th>5,200,000</th>
+            </tr>
+
+            <tr>
+                <th>Discounted Cash Flow (10%)</th>
+                <th>4,727</th>
+                <th>21,488</th>
+                <th>97,671</th>
+                <th>355,167</th>
+                <th>807,198</th>
+                <th>1,467,632</th>
+                <th>2,001,317</th>
+                <th>7,180,038</th>
+            </tr>
+
+            <tr>
+                <th>SNS Value (25%)</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>1,795,010</th>
+            </tr>
         </table>
 
 
@@ -152,10 +188,6 @@ const Token = () => {
             <tr>
                 <th>The maximum ICP to be raised.</th>
                 <th>2,000,000</th>
-            </tr>
-            <tr>
-                <th>The minimum ICP to be raised.</th>
-                <th>1,000,000</th>
             </tr>
             <tr>
                 <th>The minimum ICP to be raised (otherwise sale fails and ICP returned).</th>
@@ -239,7 +271,7 @@ const Token = () => {
             <li>MadMaxIC - Gameplay Designer</li>
         </ul>
 
-        <p className='mb-4'>More details about the ICP FA and its members can be found at icpfa.org/team.</p>
+        <p className='mb-4'>More details about the ICP FA and its members can be found at <a target='_blank' href="https://icpfa.org/team">icpfa.org/team</a>.</p>
         
     </div>
   );

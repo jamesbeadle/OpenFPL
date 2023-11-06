@@ -25,11 +25,15 @@ const Marketing = () => {
         </p>
                 
         <h5>OpenFPL's Initiatives</h5>
-        <p className='mb-4'>Our approach is to seamlessly integrate OpenFPL's online marketing campaigns with our broader initiatives. 
+        <p>Our approach is to seamlessly integrate OpenFPL's online marketing campaigns with our broader initiatives. 
             A key focus will be on targeted local advertising, aiming to highlight the distribution of 200 junior football club kits to grassroots football causes across the UK.
             Additionally, we've created a return on investment (ROI) leaderboard for each of our NFT collections. 
             This leaderboard will highlight and market the clubs that are the most active and supportive in our network. 
             The aim is to boost purchases through the ICPFA shop.</p>
+        <p className='mb-4'>In November 2023, a proposal was passed in the OpenChat DAO for them to become the official sponsor of OpenFPL. They will appear on our pick team advertising boards along 
+            with the football apparel given to grassroots football causes and sold through the ICPFA shop. We feel this partnership is important as promoting the wide arrange 
+            of apps available on the IC ecosytem will increase the pace at which the world adopts Internet Computer services.
+        </p>
 
         <h5>Future Considerations</h5>
         <p className='mb-4'>Outside of traditional digital marketing we plan to explore additional areas, such as influencer marketing.</p>

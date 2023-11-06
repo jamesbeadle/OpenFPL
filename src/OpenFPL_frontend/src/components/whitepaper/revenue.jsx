@@ -24,7 +24,7 @@ const Revenue = () => {
             This approach aligns the revenue directly with the number of managers, ensuring it scales with user engagement.</p>
 
         <h5>Merchandise</h5>
-        <p className='mb-4'>We have setup a shop at icpfa.org/shop where you will be able to purchase OpenFPL merchandise in FPL or ICP. 
+        <p className='mb-4'>We have setup a shop at <a target='_blank' href="https://icpfa.org/shop">icpfa.org/shop</a> where you will be able to purchase OpenFPL merchandise in FPL or ICP. 
             All profits after the promotion, marketing and production of this merchandise will be deposited into the DAO's treasury.</p>
 
         <h5>Podcasts</h5>
