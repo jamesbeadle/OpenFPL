@@ -6,7 +6,9 @@ const Architecture = () => {
     <div className="w-100 px-3">
 
         <h3 className='mb-4'>Architecture</h3>
-        <p className='mb-4'>OpenFPL's architecture is designed for scalability and efficiency, ensuring robust performance even as user numbers grow. Here's how the system is structured:</p>
+        <p className='mb-4'>OpenFPL is being built as a progressive web application, it's curernt frontend is React but will be moved over to Svelte for the start of 2024. The OpenFPL backend is developed in Motoko.
+            The Github is publicly available at github.com/jamesbeadle/openfpl.
+            OpenFPL's architecture is designed for scalability and efficiency, ensuring robust performance even as user numbers grow. Here's how the system is structured:</p>
         
         <h5>Profile Data</h5>
         
