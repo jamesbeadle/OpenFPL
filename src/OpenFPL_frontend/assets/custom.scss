@@ -273,6 +273,7 @@
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch; /* for momentum scrolling on mobile */
   align-items: stretch;
+  padding-left: 10px !important;
 }
 
 .tab-item {
@@ -280,6 +281,8 @@
   flex: 0 0 auto; /* Prevent flex items from growing or shrinking */
   max-height: 100vh; /* Set a max-height to the viewport height */
   overflow-y: auto;
+  padding-top: 20px;
+  padding-bottom: 10px;
 }
 
 .nav-item{

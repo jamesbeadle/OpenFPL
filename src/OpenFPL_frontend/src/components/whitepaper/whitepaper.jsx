@@ -7,6 +7,8 @@ import Roadmap from './roadmap';
 import Marketing from './marketing';
 import Revenue from './revenue';
 import DAO from './dao';
+import Token from './token';
+import Architecture from './architecture';
 
 const Whitepaper = () => {
   
@@ -36,36 +38,36 @@ const Whitepaper = () => {
       <Container fluid className='view-container mt-2'>
         <Row className="mt-3">
                 <Col xs={12}>
-                <Card>
-  <h1 className='m-4'>OpenFPL Whitepaper</h1>
-  <div className="scrollable-tab-list">
-  <Tabs defaultActiveKey="vision" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)} className="scrollable-tab-list">
-    <Tab eventKey="vision" title="Vision" className="tab-item">
-                                 {activeKey === 'vision' && <Vision />}
-                                    </Tab>
-                                    <Tab className="bottom-border-radius tab-item" eventKey="gameplay" title="Gameplay">
-                                        {activeKey === 'gameplay' && <Gameplay />}
-                                    </Tab>
-                                    <Tab className="bottom-border-radius tab-item" eventKey="roadmap" title="Roadmap">
-                                        {activeKey === 'roadmap' && <Roadmap />}
-                                    </Tab>
-                                    <Tab className="bottom-border-radius tab-item" eventKey="marketing" title="Marketing">
-                                        {activeKey === 'marketing' && <Marketing />}
-                                    </Tab>
-                                    <Tab className="bottom-border-radius tab-item" eventKey="revenue" title="Revenue">
-                                        {activeKey === 'revenue' && <Revenue />}
-                                    </Tab>
-                                    <Tab className="bottom-border-radius tab-item" eventKey="dao" title="DAO">
-                                        {activeKey === 'dao' && <DAO />}
-                                    </Tab>
-                                    <Tab className="bottom-border-radius tab-item" eventKey="token" title="$FPL Token">
-                                        {activeKey === 'token' && <Vision />}
-                                    </Tab>
-                                    <Tab className="bottom-border-radius tab-item" eventKey="architecture" title="Architecture">
-                                        {activeKey === 'architecture' && <Vision />}
-                                    </Tab>
-                                </Tabs>
-                            </div>
+                    <Card>
+                        <h1 className='m-4'>OpenFPL Whitepaper</h1>
+                        <div className="scrollable-tab-list">
+                            <Tabs defaultActiveKey="vision" id="homepage-tabs" activeKey={activeKey} onSelect={k => setActiveKey(k)} className="scrollable-tab-list">
+                                <Tab eventKey="vision" title="Vision" className="tab-item">
+                                    {activeKey === 'vision' && <Vision />}
+                                </Tab>
+                                <Tab className="bottom-border-radius tab-item" eventKey="gameplay" title="Gameplay">
+                                    {activeKey === 'gameplay' && <Gameplay />}
+                                </Tab>
+                                <Tab className="bottom-border-radius tab-item" eventKey="roadmap" title="Roadmap">
+                                    {activeKey === 'roadmap' && <Roadmap />}
+                                </Tab>
+                                <Tab className="bottom-border-radius tab-item" eventKey="marketing" title="Marketing">
+                                    {activeKey === 'marketing' && <Marketing />}
+                                </Tab>
+                                <Tab className="bottom-border-radius tab-item" eventKey="revenue" title="Revenue">
+                                    {activeKey === 'revenue' && <Revenue />}
+                                </Tab>
+                                <Tab className="bottom-border-radius tab-item" eventKey="dao" title="DAO">
+                                    {activeKey === 'dao' && <DAO />}
+                                </Tab>
+                                <Tab className="bottom-border-radius tab-item" eventKey="token" title="Tokenomics">
+                                    {activeKey === 'token' && <Token />}
+                                </Tab>
+                                <Tab className="bottom-border-radius tab-item" eventKey="architecture" title="Architecture">
+                                    {activeKey === 'architecture' && <Architecture />}
+                                </Tab>
+                            </Tabs>
+                        </div>
                     </Card>
                 </Col>
             </Row>

@@ -3,7 +3,7 @@ import React from 'react';
 const Roadmap = () => {
   
   return (
-    <div className="w-100 p-4">
+    <div className="w-100">
 
         <h5><b>November 2023: </b>Investment NFTs Launch</h5>
         <p>

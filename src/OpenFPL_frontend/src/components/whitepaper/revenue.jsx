@@ -3,7 +3,7 @@ import React from 'react';
 const Revenue = () => {
   
   return (
-    <div className="w-100 p-4">
+    <div className="w-100">
 
         <h1>OpenFPL Revenue Streams and Strategy</h1>
 

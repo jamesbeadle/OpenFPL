@@ -3,10 +3,10 @@ import React from 'react';
 const Gameplay = () => {
   
   return (
-    <div className="w-100 mx-4">
+    <div className="w-100 px-3">
 
-        <h5>OpenFPL Gameplay: A Unique and Engaging Fantasy Football Experience</h5>
-
+        <h3 className='mb-4'>OpenFPL Gameplay</h3>
+        
         <p>At OpenFPL, our gameplay rules are designed to create an immersive, engaging, and unique fantasy football experience. 
             We understand the passion and strategy that goes into fantasy football, and our gameplay rules are crafted to reflect this, 
             enhancing the fun and competitiveness of each gameweek.</p>
@@ -17,7 +17,8 @@ const Gameplay = () => {
             The value of players fluctuates based on community ratings within the DAO. 
             If a player's performance garners enough votes, their value can either increase or decrease by £0.25m each gameweek.</p>
 
-        <p>In terms of team structure, each user's team consists of 11 players. Picking from a range of clubs is key, so a maximum of two players from any single club can be selected. 
+        <p>In terms of team structure, each user's team consists of 11 players. 
+            Picking from a range of clubs is key, so a maximum of two players from any single club can be selected. 
             Teams must adhere to a valid formation: 1 goalkeeper, 3-5 defenders, 3-5 midfielders, and 1-3 strikers.</p>
 
         <h5>Transfers and Team Management</h5>
@@ -28,9 +29,9 @@ const Gameplay = () => {
         
         <p>Each January, users can overhaul their team completely once, adding another strategic layer to the game reflecting the January transfer window.</p>
 
-        <h1>Scoring System</h1>
+        <h5>Scoring System</h5>
 
-        <p>Our scoring system is intuitive and rewards players for key contributions on the field:</p>
+        <p>Our scoring system rewards players for key contributions on the field:</p>
 
         <ul>
             <li>Appearing in the game: +5 points</li>
@@ -43,6 +44,11 @@ const Gameplay = () => {
             <li>Goalkeeper or defender scores a goal: +20 points</li>
             <li>Goalkeeper saves a penalty: +20 points</li>
             <li>Player is highest scoring player in match: +25 points</li>
+        </ul>
+
+        <p>Points are also deducted for the following on field events:</p>
+
+        <ul>
             <li>Player receives a red card: -20 points</li>
             <li>Player misses a penalty: -15 points</li>
             <li>Each time a goalkeeper or defender concedes 2 goals: -15 points</li>
@@ -50,7 +56,7 @@ const Gameplay = () => {
             <li>A player receives a yellow card: -5 points</li>
         </ul>
 
-        <h5>Unique Bonuses</h5>
+        <h5>Bonuses</h5>
 
         <p>OpenFPL elevates the gameplay with a diverse set of bonuses. These bonuses play a pivotal role in keeping OpenFPL's gameplay both fresh and exhilarating. 
             Their strategic implementation allows for significant shifts in the leaderboard, ensuring that the competition remains open and dynamic. 
