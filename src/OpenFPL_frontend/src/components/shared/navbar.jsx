@@ -19,6 +19,7 @@ const MyNavbar = () => {
   const isActive = (path) => location.pathname === path;
   const [profilePicSrc, setProfilePicSrc] = useState(ProfileImage);
   const [showDropdown, setShowDropdown] = useState(false);
+  const publicPaths = ['/whitepaper'];
 
   useEffect(() => {
     document.body.addEventListener('click', handleClickOutside);
@@ -60,10 +61,10 @@ const MyNavbar = () => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !publicPaths.includes(location.pathname)) {
       navigate("/");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, location.pathname]);
 
   return (
     <Navbar className='mb-3 custom-navbar' expand="lg" expanded={expanded} onToggle={() => setExpanded(!expanded)}>
