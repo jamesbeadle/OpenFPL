@@ -61,11 +61,11 @@ const Token = () => {
         <p>Each SNS decentralisation swap participant will receive their $FPL within 5 baskets of equal neurons. The neurons will contain the following configuration:
         </p>
         <ul className='mb-4'>
-            <li>Basket 1: Unlocked with a dissolve delay of 30 days.</li>
-            <li>Basket 2: Locked for 6 months with a 1 month dissolve delay.</li>
-            <li>Basket 3: Locked for 12 months with a 1 month dissolve delay.</li>
-            <li>Basket 4: Locked for 18 months with a 1 month dissolve delay.</li>
-            <li>Basket 5: Locked for 24 months with a 1 month dissolve delay.</li>
+            <li>Basket 1: Unlocked with zero dissolve delay.</li>
+            <li>Basket 2: Unlocked with 3 months dissolve delay.</li>
+            <li>Basket 3: Unlocked with 6 months dissolve delay.</li>
+            <li>Basket 4: Unlocked with 9 months dissolve delay.</li>
+            <li>Basket 5: Unlocked with 12 months dissolve delay.</li>
         </ul>
 
 
