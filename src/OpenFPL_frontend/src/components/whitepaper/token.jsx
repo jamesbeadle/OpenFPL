@@ -3,11 +3,11 @@ import React from 'react';
 const Token = () => {
   
   return (
-    <div className="w-100">
+    <div className="w-100 px-3">
 
-        <h1>$FPL Utility Token</h1>
+        <h3 className='mb-4'>$FPL Utility Token</h3>
         
-        <h1>Utility and Functionality</h1>
+        <h5>Utility and Functionality</h5>
         
         <p>OpenFPL will be revenue generating, the most important role of the Utility token is to manage the OpenFPL treasury. 
             The token is also used throughout the OpenFPL ecosystem:</p>
@@ -15,7 +15,7 @@ const Token = () => {
             The $FPL utility token is integral to the OpenFPL ecosystem, serving multiple purposes:
         </p>
         
-        <ul>
+        <ul className='mb-4'>
             <li>Rewarding users for gameplay achievements on weekly, monthly, and annual bases.</li>
             <li>Facilitating participation in DAO governance, like raising proposals for player revaluation and team detail updates.</li>
             <li>Rewarding neuron holders upon maturity.</li>
@@ -59,7 +59,7 @@ const Token = () => {
 
         <p>Each SNS decentralisation swap participant will receive their $FPL within 5 baskets of equal neurons. The neurons will contain the following configuration:
         </p>
-        <ul>
+        <ul className='mb-4'>
             <li>Basket 1: Unlocked with a dissolve delay of 30 days.</li>
             <li>Basket 2: Locked for 6 months with a 1 month dissolve delay.</li>
             <li>Basket 3: Locked for 12 months with a 1 month dissolve delay.</li>
@@ -79,7 +79,7 @@ const Token = () => {
             <li>Estimated 5% user subscription rate at 5 ICP/month with 5% of this revenue going to the DAO.</li>
         </ul>
         
-        <table>
+        <table className='mb-4'>
             <tr>
                 <th>Year</th>
                 <th>1</th>
@@ -140,7 +140,7 @@ const Token = () => {
 
         <h5>SNS Decentralisation Sale Configuration</h5>
 
-        <table>
+        <table className='mb-4'>
             <tr>
                 <th>Configuration</th>
                 <th>Value</th>
@@ -204,11 +204,11 @@ const Token = () => {
             <li>5% will be held in reserve for cycles to run OpenFPL, likely to be unused as OpenFPL begins generating revenue.</li>
         </ul>
 
-        <p>This treasury balance will be topped up with the DAO's revenue, with 50% being paid to neuron holders. Any excess balance can be utilised where the DAO sees fit.</p>
+        <p className='mb-4'>This treasury balance will be topped up with the DAO's revenue, with 50% being paid to neuron holders. Any excess balance can be utilised where the DAO sees fit.</p>
         
         <h5>Tokenomics</h5>
 
-        <p>Each season, 2.5% of the total $FPL supply will be minted for DAO rewards. 
+        <p className='mb-4'>Each season, 2.5% of the total $FPL supply will be minted for DAO rewards. 
         There is no mechanism to automatically burn $FPL as we anticipate the user growth to be faster than the supply increase, 
         thus increasing the price of $FPL. However a proposal can always be made to burn $FPL if required. 
         If the DAO’s treasury is ever 60% or more of the total supply of $FPL, 
@@ -239,7 +239,7 @@ const Token = () => {
             <li>MadMaxIC - Gameplay Designer</li>
         </ul>
 
-        <p>More details about the ICP FA and its members can be found at icpfa.org/team.</p>
+        <p className='mb-4'>More details about the ICP FA and its members can be found at icpfa.org/team.</p>
         
     </div>
   );

@@ -3,18 +3,18 @@ import React from 'react';
 const DAO = () => {
   
   return (
-    <div className="w-100">
+    <div className="w-100 px-3">
 
-        <h1>OpenFPL DAO</h1>
-
+        <h3 className='mb-4'>OpenFPL DAO</h3>
+        
         <h5>Operating Framework</h5>
-        <p>OpenFPL functions entirely on-chain as a DAO, aspiring to operate under the Internet Computer’s Service Nervous System. 
+        <p className='mb-4'>OpenFPL functions entirely on-chain as a DAO, aspiring to operate under the Internet Computer’s Service Nervous System. 
             The DAO is structured to run in parallel with the Premier League season, relying on input from its neuron holders who are rewarded for maintaining independence from third-party services.</p>
         
         <h5>DAO Reward Structure</h5>
 
         <p>The DAO incentivizes participation through monthly minting of new FPL tokens, calculated annually as 2.5% of the total $FPL supply as of August 1st. These tokens are allocated to:</p>
-        <ul>
+        <ul className='mb-4'>
             <li>Gameplay Rewards (75%)</li>
             <li>Governance Rewards (25%)</li>
         </ul>
@@ -35,7 +35,7 @@ const DAO = () => {
 
         <p>To ensure rewards are paid for active participation, a user would need to do the following to qualify for the following OpenFPL gameplay rewards:</p>
 
-        <ul>
+        <ul className='mb-4'>
             <li>A user must have made at least 2 changes in a month to qualify for that month's club leaderboard rewards and monthly ATH record rewards.</li>
             <li>A user must have made at least 1 change in a gameweek to qualify for that week's leaderboard rewards, highest-scoring match player rewards and weekly ATH record rewards.</li>
             <li>Rewards for the season total, most valuable team have and annual ATH have no entry restrictions as it is based on the cumulative action of managers transfers throughout the season.</li>
@@ -49,7 +49,7 @@ const DAO = () => {
                 Failed proposals incur a 10 $FPL cost, contributing to the DAO’s treasury.</li>
         </ul>
 
-        <p>The OpenFPL DAO is an innovative approach to fantasy football, combining real-time data accuracy with rewarding community involvement. 
+        <p className='mb-4'>The OpenFPL DAO is an innovative approach to fantasy football, combining real-time data accuracy with rewarding community involvement. 
             By aligning rewards with active participation, OpenFPL ensures a vibrant, informed, and engaged user base.</p>
 
 

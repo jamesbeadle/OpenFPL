@@ -7,7 +7,7 @@ const Gameplay = () => {
 
         <h3 className='mb-4'>OpenFPL Gameplay</h3>
         
-        <p>At OpenFPL, our gameplay rules are designed to create an immersive, engaging, and unique fantasy football experience. 
+        <p className='mb-4'>At OpenFPL, our gameplay rules are designed to create an immersive, engaging, and unique fantasy football experience. 
             We understand the passion and strategy that goes into fantasy football, and our gameplay rules are crafted to reflect this, 
             enhancing the fun and competitiveness of each gameweek.</p>
 
@@ -17,7 +17,7 @@ const Gameplay = () => {
             The value of players fluctuates based on community ratings within the DAO. 
             If a player's performance garners enough votes, their value can either increase or decrease by £0.25m each gameweek.</p>
 
-        <p>In terms of team structure, each user's team consists of 11 players. 
+        <p className='mb-4'>In terms of team structure, each user's team consists of 11 players. 
             Picking from a range of clubs is key, so a maximum of two players from any single club can be selected. 
             Teams must adhere to a valid formation: 1 goalkeeper, 3-5 defenders, 3-5 midfielders, and 1-3 strikers.</p>
 
@@ -27,7 +27,7 @@ const Gameplay = () => {
             and adaptation to the ever-changing football landscape. These transfers don't roll over, encouraging active participation each week. 
             There are no substitutes in our game, eliminating the frustration of unused bench points.</p>
         
-        <p>Each January, users can overhaul their team completely once, adding another strategic layer to the game reflecting the January transfer window.</p>
+        <p className='mb-4'>Each January, users can overhaul their team completely once, adding another strategic layer to the game reflecting the January transfer window.</p>
 
         <h5>Scoring System</h5>
 
@@ -48,7 +48,7 @@ const Gameplay = () => {
 
         <p>Points are also deducted for the following on field events:</p>
 
-        <ul>
+        <ul className='mb-4'>
             <li>Player receives a red card: -20 points</li>
             <li>Player misses a penalty: -15 points</li>
             <li>Each time a goalkeeper or defender concedes 2 goals: -15 points</li>
@@ -64,7 +64,7 @@ const Gameplay = () => {
             This unpredictability means that victory is within reach for every participant, fostering a thrilling environment 
             where every gameweek holds the promise of a shake-up at the top of the leaderboard.</p>
 
-            <ul>
+            <ul className='mb-4'>
                 <li>Goal Getter: X3 multiplier for each goal scored by a selected player.</li>
                 <li>Pass Master: X3 multiplier for each assist by a selected player.</li>
                 <li>No Entry: X3 multiplier for a selected goalkeeper/defender for a clean sheet.</li>
@@ -77,10 +77,10 @@ const Gameplay = () => {
                 <li>Youth Prospects: Double points for players under 21.</li>
             </ul>
 
-            <p>Each week a user can select a star player. This player will receive double points for the gameweek. 
+            <p className='mb-4'>Each week a user can select a star player. This player will receive double points for the gameweek. 
                 If one is not set by the start of the gameweek it will automatically be set to the most valuable player in your team.</p>
 
-            <p>OpenFPL's gameplay combines strategic team management, a dynamic scoring system, and diverse bonuses, offering a unique and competitive fantasy football experience. 
+            <p className='mb-4'>OpenFPL's gameplay combines strategic team management, a dynamic scoring system, and diverse bonuses, offering a unique and competitive fantasy football experience. 
                 Each decision impacts your journey through the Premier League season, where football knowledge and strategy lead to rewarding outcomes.</p>
 
 
