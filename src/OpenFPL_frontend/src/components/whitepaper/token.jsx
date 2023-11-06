@@ -237,9 +237,9 @@ const Token = () => {
         <p>The amount raised in the decentralisation will be used as follows</p>
 
         <ul>
-            <li>85% will be staked in an 8 year neuron with the maturity interest paid to the ICPFA.</li>
+            <li>80% will be staked in an 8 year neuron with the maturity interest paid to the ICPFA.</li>
+            <li>10% will be available for exchange liquidity to enable trading of the FPL token.</li>
             <li>5% will be paid directly to the ICPFA after the decentralisation sale.</li>
-            <li>5% will be available for exchange liquidity to enable trading of the FPL token.</li>
             <li>5% will be held in reserve for cycles to run OpenFPL, likely to be unused as OpenFPL begins generating revenue.</li>
         </ul>
 
