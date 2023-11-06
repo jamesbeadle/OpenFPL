@@ -80,7 +80,7 @@ const Token = () => {
             <li>Estimated 5% user subscription rate at 5 ICP/month with 5% of this revenue going to the DAO.</li>
         </ul>
         
-        <Table responsive="sm" className="mb-4">
+        <Table striped bordered hover size="sm" className="my-4 text-left">
             <tr>
                 <th>Year</th>
                 <th>1</th>
@@ -148,7 +148,10 @@ const Token = () => {
                 <th>3,900,000</th>
                 <th>5,200,000</th>
             </tr>
-
+      
+            <tr style={{ height: '20px' }}> 
+    <td colSpan="8"></td>
+</tr>
             <tr>
                 <th>Discounted Cash Flow (10%)</th>
                 <th>4,727</th>
@@ -160,7 +163,10 @@ const Token = () => {
                 <th>2,001,317</th>
                 <th>7,180,038</th>
             </tr>
-
+            
+<tr style={{ height: '20px' }}> 
+    <td colSpan="8"></td>
+</tr>
             <tr>
                 <th>SNS Value (25%)</th>
                 <th></th>
@@ -177,7 +183,7 @@ const Token = () => {
 
         <h5>SNS Decentralisation Sale Configuration</h5>
 
-        <Table responsive="sm" className="mb-4">
+        <Table striped bordered hover size="sm" className="my-4 text-left">
             <tr>
                 <th>Configuration</th>
                 <th>Value</th>

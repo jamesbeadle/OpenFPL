@@ -36,8 +36,8 @@ const DAO = () => {
 
         <p>A user is rewarded for their leaderboard position across the top 100 positions. The following is a breakdown of the reward share for each position:</p>
 
-        <Table responsive="sm" className="mb-4">
-            <tr>
+        <Table striped bordered hover size="sm" className="my-4 text-center">
+           <tr>
                 <th>Pos</th>
                 <th>Share</th>
                 <th>Pos</th>
