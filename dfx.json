@@ -15,7 +15,7 @@
         "player_canister"
       ],
       "type": "assets",
-      "source": ["build"]
+      "source": [".svelte-kit"]
     },
     "internet_identity": {
       "build": "",
