@@ -286,8 +286,8 @@ service : {
   change_subnet_membership : (ChangeSubnetMembershipPayload) -> ();
   clear_provisional_whitelist : () -> ();
   complete_canister_migration : (CompleteCanisterMigrationPayload) -> (
-      Result_1,
-    );
+    Result_1,
+  );
   create_subnet : (CreateSubnetPayload) -> ();
   delete_subnet : (DeleteSubnetPayload) -> ();
   get_build_metadata : () -> (text) query;
@@ -308,11 +308,11 @@ service : {
   update_node_directly : (UpdateNodeDirectlyPayload) -> (Result_1);
   update_node_operator_config : (UpdateNodeOperatorConfigPayload) -> ();
   update_node_operator_config_directly : (
-      UpdateNodeOperatorConfigDirectlyPayload,
-    ) -> ();
+    UpdateNodeOperatorConfigDirectlyPayload,
+  ) -> ();
   update_node_rewards_table : (UpdateNodeRewardsTableProposalPayload) -> ();
   update_nodes_hostos_version : (UpdateNodesHostOsVersionPayload) -> ();
   update_subnet : (UpdateSubnetPayload) -> ();
   update_subnet_replica_version : (UpdateSubnetReplicaVersionPayload) -> ();
   update_unassigned_nodes_config : (UpdateUnassignedNodesConfigPayload) -> ();
-}
+};

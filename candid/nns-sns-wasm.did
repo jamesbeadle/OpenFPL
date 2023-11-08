@@ -177,21 +177,21 @@ service : (SnsWasmCanisterInitPayload) -> {
   get_allowed_principals : (record {}) -> (GetAllowedPrincipalsResponse) query;
   get_latest_sns_version_pretty : (null) -> (vec record { text; text }) query;
   get_next_sns_version : (GetNextSnsVersionRequest) -> (
-      GetNextSnsVersionResponse,
-    ) query;
+    GetNextSnsVersionResponse,
+  ) query;
   get_sns_subnet_ids : (record {}) -> (GetSnsSubnetIdsResponse) query;
   get_wasm : (GetWasmRequest) -> (GetWasmResponse) query;
   insert_upgrade_path_entries : (InsertUpgradePathEntriesRequest) -> (
-      InsertUpgradePathEntriesResponse,
-    );
+    InsertUpgradePathEntriesResponse,
+  );
   list_deployed_snses : (record {}) -> (ListDeployedSnsesResponse) query;
   list_upgrade_steps : (ListUpgradeStepsRequest) -> (
-      ListUpgradeStepsResponse,
-    ) query;
+    ListUpgradeStepsResponse,
+  ) query;
   update_allowed_principals : (UpdateAllowedPrincipalsRequest) -> (
-      UpdateAllowedPrincipalsResponse,
-    );
+    UpdateAllowedPrincipalsResponse,
+  );
   update_sns_subnet_list : (UpdateSnsSubnetListRequest) -> (
-      UpdateSnsSubnetListResponse,
-    );
-}
+    UpdateSnsSubnetListResponse,
+  );
+};

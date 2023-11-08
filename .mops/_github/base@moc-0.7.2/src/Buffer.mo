@@ -9,7 +9,7 @@
 /// and `capacity`. `size` is the length of the list that the buffer represents.
 /// `capacity` is the length of the underyling array that backs this list.
 /// `capacity` >= `size` is an invariant for this class.
-/// 
+///
 /// Like arrays, elements in the buffer are ordered by indices from 0 to `size`-1.
 ///
 /// WARNING: Certain operations are amortized O(1) time, such as `add`, but run
@@ -53,7 +53,7 @@ module {
       1;
     } else {
       // calculates ceil(oldCapacity * INCREASE_FACTOR) without floats
-      ((oldCapacity * INCREASE_FACTOR_NUME) + INCREASE_FACTOR_DENOM - 1) / INCREASE_FACTOR_DENOM
+      ((oldCapacity * INCREASE_FACTOR_NUME) + INCREASE_FACTOR_DENOM - 1) / INCREASE_FACTOR_DENOM;
     };
   };
 
@@ -194,12 +194,12 @@ module {
 
       switch (element) {
         case (?element) {
-          element
+          element;
         };
         case null {
-          Prim.trap "Malformed buffer in remove"
-        }
-      }
+          Prim.trap "Malformed buffer in remove";
+        };
+      };
     };
 
     /// Resets the buffer. Capacity is set to 8.
@@ -990,7 +990,7 @@ module {
     if (buffer.size() <= prefix.size()) {
       return false;
     };
-    isPrefixOf(prefix, buffer, equal)
+    isPrefixOf(prefix, buffer, equal);
   };
 
   /// Returns the suffix of `buffer` of length `length`.
@@ -1058,7 +1058,7 @@ module {
     if (buffer.size() <= suffix.size()) {
       return false;
     };
-    isSuffixOf(suffix, buffer, equal)
+    isSuffixOf(suffix, buffer, equal);
   };
 
   /// Returns true iff every element in `buffer` satisfies `predicate`.

@@ -1,8 +1,8 @@
 on:
   push:
     paths:
-      - 'src/**'
-      - 'test/**'
+      - "src/**"
+      - "test/**"
 jobs:
   test:
     runs-on: ubuntu-latest

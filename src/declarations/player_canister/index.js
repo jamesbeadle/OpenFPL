@@ -39,5 +39,3 @@ export const createActor = (canisterId, options = {}) => {
     ...options.actorOptions,
   });
 };
-
-export const player_canister = createActor(canisterId);

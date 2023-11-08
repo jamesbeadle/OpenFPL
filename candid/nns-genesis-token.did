@@ -27,4 +27,4 @@ service : {
   get_build_metadata : () -> (text) query;
   len : () -> (nat16) query;
   total : () -> (nat32) query;
-}
+};

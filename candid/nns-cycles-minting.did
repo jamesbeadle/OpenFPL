@@ -20,7 +20,7 @@ type NotifyCreateCanisterArg = record {
 
   // An optional subnet type that, if set, determines what type of subnet
   // the new canister will be created on.
-  subnet_type: opt text;
+  subnet_type : opt text;
 };
 
 type NotifyError = variant {
@@ -73,7 +73,6 @@ type IcpXdrConversionRate = record {
   xdr_permyriad_per_icp : nat64;
 };
 
-
 type IcpXdrConversionRateResponse = record {
   // The latest ICP/XDR conversion rate.
   data : IcpXdrConversionRate;
@@ -96,26 +95,26 @@ type IcpXdrConversionRateResponse = record {
 };
 
 type SubnetTypesToSubnetsResponse = record {
-  data: vec record { text; vec principal };
+  data : vec record { text; vec principal };
 };
 
 type AccountIdentifier = record {
-  bytes: blob;
+  bytes : blob;
 };
 
 type ExchangeRateCanister = variant {
-    /// Enables the exchange rate canister with the given canister ID.
-    Set: principal;
-    /// Disable the exchange rate canister.
-    Unset;
+  /// Enables the exchange rate canister with the given canister ID.
+  Set : principal;
+  /// Disable the exchange rate canister.
+  Unset;
 };
 
 type CyclesCanisterInitPayload = record {
-    ledger_canister_id: opt principal;
-    governance_canister_id: opt principal;
-    minting_account_id: opt AccountIdentifier;
-    last_purged_notification: opt nat64;
-    exchange_rate_canister: opt ExchangeRateCanister;
+  ledger_canister_id : opt principal;
+  governance_canister_id : opt principal;
+  minting_account_id : opt AccountIdentifier;
+  last_purged_notification : opt nat64;
+  exchange_rate_canister : opt ExchangeRateCanister;
 };
 
 service : (opt CyclesCanisterInitPayload) -> {
@@ -131,4 +130,4 @@ service : (opt CyclesCanisterInitPayload) -> {
 
   // Returns the current mapping of subnet types to subnets.
   get_subnet_types_to_subnets : () -> (SubnetTypesToSubnetsResponse) query;
-}
+};

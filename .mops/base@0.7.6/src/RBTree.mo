@@ -47,7 +47,7 @@ module {
   /// Leaves are considered implicitly black.
   public type Tree<K, V> = {
     #node : (Color, Tree<K, V>, (K, ?V), Tree<K, V>);
-    #leaf
+    #leaf;
   };
 
   /// A map from keys of type `K` to values of type `V` implemented as a red-black tree.
@@ -93,7 +93,7 @@ module {
     /// Runtime: `O(1)`.
     /// Space: `O(1)`.
     public func share() : Tree<K, V> {
-      tree
+      tree;
     };
 
     /// Retrieve the value associated with a given key, if present. Returns `null`, if the key is absent.
@@ -115,7 +115,7 @@ module {
     ///
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func get(key : K) : ?V {
-      getRec(key, compare, tree)
+      getRec(key, compare, tree);
     };
 
     /// Replace the value associated with a given key, if the key is present.
@@ -144,7 +144,7 @@ module {
     public func replace(key : K, value : V) : ?V {
       let (res, t) = insertRoot(key, compare, value, tree);
       tree := t;
-      res
+      res;
     };
 
     /// Insert a key-value entry in the tree. If the key already exists, it overwrites the associated value.
@@ -167,7 +167,7 @@ module {
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func put(key : K, value : V) {
       let (res, t) = insertRoot(key, compare, value, tree);
-      tree := t
+      tree := t;
     };
 
     /// Delete the entry associated with a given key, if the key exists.
@@ -193,7 +193,7 @@ module {
     /// Note: Creates `O(log(n))` temporary objects that will be collected as garbage.
     public func delete(key : K) {
       let (res, t) = removeRec(key, compare, tree);
-      tree := t
+      tree := t;
     };
 
     /// Remove the entry associated with a given key, if the key exists, and return the associated value.
@@ -219,7 +219,7 @@ module {
     public func remove(key : K) : ?V {
       let (res, t) = removeRec(key, compare, tree);
       tree := t;
-      res
+      res;
     };
 
     /// An iterator for the key-value entries of the map, in ascending key order.
@@ -320,26 +320,26 @@ module {
           case (_, null) { null };
           case (_, ?(#tr(#leaf), ts)) {
             trees := ts;
-            next()
+            next();
           };
           case (_, ?(#xy(xy), ts)) {
             trees := ts;
             switch (xy.1) {
               case null { next() };
-              case (?y) { ?(xy.0, y) }
-            }
+              case (?y) { ?(xy.0, y) };
+            };
           };
           case (#fwd, ?(#tr(#node(_, l, xy, r)), ts)) {
             trees := ?(#tr(l), ?(#xy(xy), ?(#tr(r), ts)));
-            next()
+            next();
           };
           case (#bwd, ?(#tr(#node(_, l, xy, r)), ts)) {
             trees := ?(#tr(r), ?(#xy(xy), ?(#tr(l), ts)));
-            next()
-          }
-        }
-      }
-    }
+            next();
+          };
+        };
+      };
+    };
   };
 
   /// Remove the value associated with a given key.
@@ -350,16 +350,16 @@ module {
         switch (compare(x, xy.0)) {
           case (#less) {
             let (yo, l2) = removeRec(x, compare, l);
-            (yo, #node(c, l2, xy, r))
+            (yo, #node(c, l2, xy, r));
           };
           case (#equal) { (xy.1, #node(c, l, (x, null), r)) };
           case (#greater) {
             let (yo, r2) = removeRec(x, compare, r);
-            (yo, #node(c, l, xy, r2))
-          }
-        }
-      }
-    }
+            (yo, #node(c, l, xy, r2));
+          };
+        };
+      };
+    };
   };
 
   func bal<X, Y>(color : Color, lt : Tree<X, Y>, kv : (X, ?Y), rt : Tree<X, Y>) : Tree<X, Y> {
@@ -367,26 +367,26 @@ module {
     // following notes from [Ravi Chugh](https://www.classes.cs.uchicago.edu/archive/2019/spring/22300-1/lectures/RedBlackTrees/index.html)
     switch (color, lt, kv, rt) {
       case (#B, #node(#R, #node(#R, a, x, b), y, c), z, d) {
-        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d))
+        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d));
       };
       case (#B, #node(#R, a, x, #node(#R, b, y, c)), z, d) {
-        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d))
+        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d));
       };
       case (#B, a, x, #node(#R, #node(#R, b, y, c), z, d)) {
-        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d))
+        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d));
       };
       case (#B, a, x, #node(#R, b, y, #node(#R, c, z, d))) {
-        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d))
+        #node(#R, #node(#B, a, x, b), y, #node(#B, c, z, d));
       };
-      case _ { #node(color, lt, kv, rt) }
-    }
+      case _ { #node(color, lt, kv, rt) };
+    };
   };
 
   func insertRoot<X, Y>(x : X, compare : (X, X) -> O.Order, y : Y, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
     switch (insertRec(x, compare, y, t)) {
       case (_, #leaf) { assert false; loop {} };
-      case (yo, #node(_, l, xy, r)) { (yo, #node(#B, l, xy, r)) }
-    }
+      case (yo, #node(_, l, xy, r)) { (yo, #node(#B, l, xy, r)) };
+    };
   };
 
   func insertRec<X, Y>(x : X, compare : (X, X) -> O.Order, y : Y, t : Tree<X, Y>) : (?Y, Tree<X, Y>) {
@@ -396,16 +396,16 @@ module {
         switch (compare(x, xy.0)) {
           case (#less) {
             let (yo, l2) = insertRec(x, compare, y, l);
-            (yo, bal(c, l2, xy, r))
+            (yo, bal(c, l2, xy, r));
           };
           case (#equal) { (xy.1, #node(c, l, (x, ?y), r)) };
           case (#greater) {
             let (yo, r2) = insertRec(x, compare, y, r);
-            (yo, bal(c, l, xy, r2))
-          }
-        }
-      }
-    }
+            (yo, bal(c, l, xy, r2));
+          };
+        };
+      };
+    };
   };
 
   func getRec<X, Y>(x : X, compare : (X, X) -> O.Order, t : Tree<X, Y>) : ?Y {
@@ -415,10 +415,10 @@ module {
         switch (compare(x, xy.0)) {
           case (#less) { getRec(x, compare, l) };
           case (#equal) { xy.1 };
-          case (#greater) { getRec(x, compare, r) }
-        }
-      }
-    }
+          case (#greater) { getRec(x, compare, r) };
+        };
+      };
+    };
   };
 
   /// Determine the size of the tree as the number of key-value entries.
@@ -445,9 +445,9 @@ module {
     switch t {
       case (#leaf) { 0 };
       case (#node(_, l, xy, r)) {
-        size(l) + size(r) + (switch (xy.1) { case null 0; case _ 1 })
-      }
-    }
+        size(l) + size(r) + (switch (xy.1) { case null 0; case _ 1 });
+      };
+    };
   };
 
-}
+};

@@ -26,7 +26,7 @@ type DefiniteCanisterSettings = record { controllers : vec principal };
 service : {
   canister_status : (CanisterIdRecord) -> (CanisterStatusResult);
   change_canister_controllers : (ChangeCanisterControllersRequest) -> (
-      ChangeCanisterControllersResponse,
-    );
+    ChangeCanisterControllersResponse,
+  );
   get_build_metadata : () -> (text) query;
-}
+};
