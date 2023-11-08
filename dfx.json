@@ -10,12 +10,10 @@
       "type": "motoko"
     },
     "OpenFPL_frontend": {
-      "dependencies": [
-        "OpenFPL_backend",
-        "player_canister"
-      ],
-      "type": "assets",
-      "source": [".svelte-kit"]
+      "dependencies": ["OpenFPL_backend", "player_canister"],
+			"frontend": {
+				"entrypoint": "build/index.html"
+			}
     },
     "internet_identity": {
       "build": "",
@@ -139,7 +137,8 @@
   },
   "defaults": {
     "build": {
-      "packtool": "npm run build"
+			"args": "",
+			"packtool": ""
     }
   },
   "output_env_file": ".env",
