@@ -14,14 +14,8 @@
         "OpenFPL_backend",
         "player_canister"
       ],
-      "frontend": {
-        "entrypoint": "src/OpenFPL_frontend/src/index.html"
-      },
-      "source": [
-        "src/OpenFPL_frontend/assets",
-        "dist/OpenFPL_frontend/"
-      ],
-      "type": "assets"
+      "type": "assets",
+      "source": ["build"]
     },
     "internet_identity": {
       "build": "",
@@ -145,13 +139,9 @@
   },
   "defaults": {
     "build": {
-      "args": "",
-      "packtool": "mops sources"
-    },
-    "replica": {
-      "subnet_type": "system"
+      "packtool": "npm run build"
     }
   },
   "output_env_file": ".env",
-  "version": 1
+  "version": 2
 }
