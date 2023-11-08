@@ -1,7 +1,7 @@
 import adapter from '@sveltejs/adapter-auto';
 import preprocess from 'svelte-preprocess';
 import autoprefixer from 'autoprefixer';
-const filesPath = (path) => `${path}`;
+const filesPath = (path: string) => `${path}`;
 
 const config = {
     preprocess: preprocess({
