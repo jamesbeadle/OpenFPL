@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-display: swap;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/poppins-v20-latin-regular.woff2') format('woff2');
+  }
+    
+  
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+    
+  body {
+    font-family: 'Poppins', sans-serif !important;
+    color: white !important;
+    background-color: #1A1A1D;
+    height: 100vh;
+    margin: 0;
+  }
