@@ -5,8 +5,8 @@
 
     let menuOpen = false;
 
-    const isAuthenticated = derived(authStore, $authStore => $authStore.isAuthenticated);
-    
+    const isAuthenticated = derived(authStore, $authStore => $authStore.identity !== null);
+
     $: currentClass = (route: string) => $page.url.pathname === route ? 'text-blue-500' : '';
     
     function toggleMenu() {
