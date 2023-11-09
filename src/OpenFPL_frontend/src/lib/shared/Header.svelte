@@ -1,19 +1,25 @@
   <script lang="ts">
     import { page } from '$app/stores';
+    import { authStore } from '$lib/stores/auth';
+    import { derived } from 'svelte/store';
 
     let menuOpen = false;
-    const routes = ["/", "/pick-team", "/governance", "/profile"];
+
+    const isAuthenticated = derived(authStore, $authStore => $authStore.isAuthenticated);
     
     $: currentClass = (route: string) => $page.url.pathname === route ? 'text-blue-500' : '';
     
     function toggleMenu() {
       menuOpen = !menuOpen;
     }
+    function handleLogin() {
+      authStore.login();
+    }
   </script>
 
   <header>
     <nav class="text-white">
-      <div class="px-4 flex justify-between items-center w-full">
+      <div class="px-4 h-16 flex justify-between items-center w-full">
         <a href="/" class="hover:text-gray-400">
           <img src="logo.png" alt="Logo" class="h-8 w-auto">
         </a>
@@ -24,22 +30,41 @@
             <rect y="16" width="24" height="2" rx="1" fill="currentColor"/>
           </svg> 
         </button>
-        <ul class="hidden md:flex">
-          <li class="mx-2"><a href="/" class={`hover:text-gray-400 ${currentClass('/')}`}>Home</a></li>
-          <li class="mx-2"><a href="/pick-team" class={`hover:text-gray-400 ${currentClass('/pick-team')}`}>Squad Selection</a></li>
-          <li class="mx-2"><a href="/governance" class={`hover:text-gray-400 ${currentClass('/governance')}`}>Governance</a></li>
-          <li class="mx-2"><a href="/profile" class={`hover:text-gray-400 ${currentClass('/profile')}`}>Profile</a></li>
-        </ul>
+        {#if $isAuthenticated}
+          <ul class="hidden md:flex">
+            <li class="mx-2"><a href="/" class={`hover:text-gray-400 ${currentClass('/')}`}>Home</a></li>
+            <li class="mx-2"><a href="/pick-team" class={`hover:text-gray-400 ${currentClass('/pick-team')}`}>Squad Selection</a></li>
+            <li class="mx-2"><a href="/governance" class={`hover:text-gray-400 ${currentClass('/governance')}`}>Governance</a></li>
+            <li class="mx-2"><a href="/profile" class={`hover:text-gray-400 ${currentClass('/profile')}`}>Profile</a></li>
+          </ul>
+          <div class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${menuOpen ? 'block' : 'hidden'} md:hidden`}>
+            <ul class="flex flex-col">
+              <li class="p-2"><a href="/" class={currentClass('/')} on:click={toggleMenu}>Home</a></li>
+              <li class="p-2"><a href="/pick-team" class={currentClass('/pick-team')} on:click={toggleMenu}>Squad Selection</a></li>
+              <li class="p-2"><a href="/governance" class={currentClass('/governance')} on:click={toggleMenu}>Governance</a></li>
+              <li class="p-2"><a href="/profile" class={currentClass('/profile')} on:click={toggleMenu}>Profile</a></li>
+            </ul>
+          </div>
+        {:else}
+        <button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50" on:click={handleLogin}>
+          Connect
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="ml-2 h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >  
+            <path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"/>
+            <path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"/>
+            <path d="M12,8a.5,.5 0,1,1,.001,0Z"/>
+          </svg>
+        </button>
+        {/if}
       </div>
       
-      <div class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${menuOpen ? 'block' : 'hidden'} md:hidden`}>
-        <ul class="flex flex-col">
-          <li class="p-2"><a href="/" class={currentClass('/')} on:click={toggleMenu}>Home</a></li>
-          <li class="p-2"><a href="/pick-team" class={currentClass('/pick-team')} on:click={toggleMenu}>Squad Selection</a></li>
-          <li class="p-2"><a href="/governance" class={currentClass('/governance')} on:click={toggleMenu}>Governance</a></li>
-          <li class="p-2"><a href="/profile" class={currentClass('/profile')} on:click={toggleMenu}>Profile</a></li>
-        </ul>
-      </div>
+      
 
     </nav>
   </header>
