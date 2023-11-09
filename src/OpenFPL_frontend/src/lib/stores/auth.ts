@@ -6,18 +6,21 @@ interface AuthState {
 }
 
 const { subscribe, set } = writable<AuthState>({ identity: null });
-
+  
 const authStore = {
     subscribe,
     set,
     login: async () => {
-        const authClient = await AuthClient.create();
-        await authClient.login({
+      const authClient = await AuthClient.create();
+      const identityProviderUrl = import.meta.env.VITE_AUTH_PROVIDER_URL;
+
+      await authClient.login({
             maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
             onSuccess: async () => {
-            const identity = await authClient.getIdentity();
-            set({ identity  });
+                const identity = await authClient.getIdentity();
+                set({ identity  });
             },
+            identityProvider: identityProviderUrl, // Pass the URL here
         });
     },
     logout: async () => {

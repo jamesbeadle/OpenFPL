@@ -69,11 +69,14 @@ const config: UserConfig = {
   },
 };
 
+
 export default defineConfig(({ mode }: UserConfig): UserConfig => {
-  // Expand environment - .env files - with canister IDs
-  process.env = {
-    ...process.env,
-    ...loadEnv(mode ?? "development", process.cwd()),
+  // Load environment variables
+  const env = loadEnv(mode ?? "development", process.cwd(), "");
+
+  // Combine environment variables with canister IDs
+  const combinedEnv = {
+    ...env,
     ...readCanisterIds({ prefix: "VITE_" }),
     VITE_DFX_NETWORK: network,
     VITE_HOST: host,
@@ -81,11 +84,10 @@ export default defineConfig(({ mode }: UserConfig): UserConfig => {
 
   return {
     ...config,
-    // Backwards compatibility for auto generated types of dfx that are meant for webpack and process.env
     define: {
+      // Make sure to spread the combined environment variables here
       "process.env": {
-        ...readCanisterIds({}),
-        DFX_NETWORK: network,
+        ...combinedEnv,
       },
     },
   };
