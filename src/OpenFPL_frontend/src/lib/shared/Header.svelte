@@ -26,7 +26,7 @@
         </svg>      
       </button>
       <ul class="menu">
-        <li class="mx-2"><a href="/home" class="text-white hover:text-gray-400 {currentClass[0]}">Home</a></li>
+        <li class="mx-2"><a href="/" class="text-white hover:text-gray-400 {currentClass[0]}">Home</a></li>
         <li class="mx-2"><a href="/pick-team" class="text-white hover:text-gray-400 {currentClass[1]}">Squad Selection</a></li>
         <li class="mx-2"><a href="/governance" class="text-white hover:text-gray-400 {currentClass[2]}">Governance</a></li>
         <li class="mx-2"><a href="/profile" class="text-white hover:text-gray-400 {currentClass[3]}">Profile</a></li>
@@ -35,7 +35,7 @@
     
     <div class={menuOpen ? 'menu-open' : ''}>
       <ul class="mobile-menu">
-        <li><a href="/home" class="{currentClass[0]}" on:click={toggleMenu}>Home</a></li>
+        <li><a href="/" class="{currentClass[0]}" on:click={toggleMenu}>Home</a></li>
         <li><a href="/pick-team" class="{currentClass[1]}" on:click={toggleMenu}>Squad Selection</a></li>
         <li><a href="/governance" class="{currentClass[2]}" on:click={toggleMenu}>Governance</a></li>
         <li><a href="/profile" class="{currentClass[3]}" on:click={toggleMenu}>Profile</a></li>
