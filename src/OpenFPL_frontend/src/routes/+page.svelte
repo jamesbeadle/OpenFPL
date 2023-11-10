@@ -22,30 +22,28 @@
     <div class="flex">
       <div class="flex justify-start items-center text-white space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500">
         <div class="flex-grow">
-          <p>Game week</p>
-          <p class="text-xl font-bold">12</p>
-          <p>2023/24</p>
+          <p class="text-gray-300 text-xs">Gameweek</p>
+          <p class="text-4xl mt-2 mb-2 font-bold">12</p>
+          <p class="text-gray-300 text-xs">2023/24</p>
         </div>
         <div class="flex-grow">
-          <p>Managers</p>
-          <p class="text-xl font-bold">200</p>
-          <p>Total</p>
+          <p class="text-gray-300 text-xs">Managers</p>
+          <p class="text-4xl mt-2 mb-2 font-bold">200</p>
+          <p class="text-gray-300 text-xs">Total</p>
+        </div>
+        <div class="flex-grow">
+          <p class="text-gray-300 text-xs">Weekly Prize Pool</p>
+          <p class="text-4xl mt-2 mb-2 font-bold">0</p>
+          <p class="text-gray-300 text-xs">$FPL</p>
         </div>
       </div>
       <div class="flex justify-start items-center text-white space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500">
         <div class="flex-grow">
-          <p>Weekly Prize Pool</p>
-          <p class="text-xl font-bold">0</p>
-          <p>$FPL</p>
-        </div>
-        <div class="flex-grow">
-          <p>Upcoming Game</p>
-          <p class="text-xl font-bold">00 : 18 : 55</p>
-          <div class="flex items-center">
-            <p>WOL</p>
-            <p class="mx-2">vs</p>
-            <p>TOT</p>
-          </div>
+          
+          <p class="text-gray-300 text-xs">Next Game</p>
+          <p class="text-4xl mt-2 mb-2 font-bold">00<span class="text-gray-300 text-xs ml-1">d</span> : 18<span class="text-gray-300 text-xs ml-1">h</span> : 55<span class="text-gray-300 text-xs ml-1">m</span></p>
+          <p class="text-gray-300 text-xs">Sat 11th Nov, 12:30pm</p>
+          
         </div>
       </div>
     </div>
