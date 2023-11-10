@@ -1,8 +1,6 @@
 <script>
-
-    import JunoIcon from "$lib/icons/JunoIcon.svelte";
-import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
-
+  import JunoIcon from "$lib/icons/JunoIcon.svelte";
+  import OpenFplIcon from "$lib/icons/OpenFPLIcon.svelte";
 </script>
 
 <footer class="bg-gray-900 text-white py-3">
