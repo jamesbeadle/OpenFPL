@@ -7,8 +7,8 @@
 
     const isAuthenticated = derived(authStore, $authStore => $authStore.identity !== null && $authStore.identity !== undefined);
 
-    $: currentClass = (route: string) => $page.url.pathname === route ? 'text-blue-500' : '';
-    
+    $: currentClass = (route: string) => $page.url.pathname === route ? 'text-blue-500 nav-underline active' : 'nav-underline';
+ 
     function toggleMenu() {
       menuOpen = !menuOpen;
     }
@@ -16,6 +16,37 @@
       authStore.login();
     }
   </script>
+  <style>
+    .nav-underline {
+      position: relative;
+      display: inline-block;
+      color: white;
+    }
+    .nav-underline::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background-color: #2CE3A6;
+      bottom: 0;
+      left: 0;
+      transform: scaleX(0);
+      transition: transform 0.3s ease-in-out;
+      color: #2CE3A6 ;
+    }
+
+
+    .nav-underline:hover::after,
+    .nav-underline.active::after {
+      transform: scaleX(1);
+      color: #2CE3A6 ;
+    }
+
+    .nav-underline:hover::after {
+      transform: scaleX(1);
+      background-color: gray;
+    }
+  </style>
 
   <header>
     <nav class="text-white">
@@ -32,14 +63,31 @@
         </button>
         {#if $isAuthenticated}
           <ul class="hidden md:flex">
-            <li class="mx-2"><a href="/" class={`hover:text-gray-400 ${currentClass('/')}`}>Home</a></li>
-            <li class="mx-2"><a href="/pick-team" class={`hover:text-gray-400 ${currentClass('/pick-team')}`}>Squad Selection</a></li>
-            <li class="mx-2"><a href="/governance" class={`hover:text-gray-400 ${currentClass('/governance')}`}>Governance</a></li>
-            <li class="mx-2"><a href="/profile" class={`hover:text-gray-400 ${currentClass('/profile')}`}>Profile</a></li>
+            <li class="mx-2 flex items-center h-16">
+              <a href="/" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/')}">
+                <span class="flex items-center h-full">Home</span>
+              </a>
+            </li>
+            <li class="mx-2 flex items-center h-16">
+              <a href="/pick-team" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/pick-team')}">
+                <span class="flex items-center h-full">Squad Selection</span>
+              </a>
+            </li>
+            <li class="mx-2 flex items-center h-16">
+              <a href="/governance" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/governance')}">
+                <span class="flex items-center h-full">Governance</span>
+              </a>
+            </li>
+            <li class="mx-2 flex items-center h-16">
+              <a href="/profile" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/profile')}">
+                <span class="flex items-center h-full">Profile</span>
+              </a>
+            </li>
           </ul>
           <div class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${menuOpen ? 'block' : 'hidden'} md:hidden`}>
             <ul class="flex flex-col">
-              <li class="p-2"><a href="/" class={currentClass('/')} on:click={toggleMenu}>Home</a></li>
+              <li class="p-2">    <a href="/" class={`nav-underline hover:text-gray-400 ${currentClass('/')}`} >Home</a>
+              </li>
               <li class="p-2"><a href="/pick-team" class={currentClass('/pick-team')} on:click={toggleMenu}>Squad Selection</a></li>
               <li class="p-2"><a href="/governance" class={currentClass('/governance')} on:click={toggleMenu}>Governance</a></li>
               <li class="p-2"><a href="/profile" class={currentClass('/profile')} on:click={toggleMenu}>Profile</a></li>
