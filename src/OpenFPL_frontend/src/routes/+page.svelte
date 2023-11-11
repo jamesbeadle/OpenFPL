@@ -3,7 +3,7 @@
   import Layout from './Layout.svelte';
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
-    import CircleBadgeIcon from '$lib/icons/CircleBadgeIcon.svelte';
+    import BadgeIcon from '$lib/icons/BadgeIcon.svelte';
   let activeTab: string = 'fixtures';
 
   function setActiveTab(tab: string): void {
@@ -37,7 +37,7 @@
 <Layout>
 
   <div class="p-1">
-    <div class="flex">
+    <div class="flex flex-col md:flex-row">
       <div class="flex justify-start items-center text-white space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500">
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Gameweek</p>
@@ -60,22 +60,20 @@
           <p class="text-gray-300 text-xs">Next Game:</p>
           <div class="flex items-center mb-2 mt-2">
             <div class="w-10 ml-4 mr-4">
-              <CircleBadgeIcon primaryColour='#000000' secondaryColour='#f3f3f3' thirdColour='#211223' />
+              <BadgeIcon primaryColour='#000000' secondaryColour='#f3f3f3' thirdColour='#211223' />
             </div>
-            <!-- Reserve space for the 'v' with a wrapper div -->
-            <div class="w-v ml-1 mr-1 flex justify-center"> <!-- w-v is a custom width class you will define -->
+            <div class="w-v ml-1 mr-1 flex justify-center">
               <p class="text-xs mt-2 mb-2 font-bold">v</p>
             </div>
             <div class="w-10 ml-4">
-              <CircleBadgeIcon primaryColour='#000000' secondaryColour='#f3f3f3' thirdColour='#211223' />
+              <BadgeIcon primaryColour='#000000' secondaryColour='#f3f3f3' thirdColour='#211223' />
             </div>
           </div>
           <div class="flex items-center">
             <div class="w-10 ml-4 mr-4">
               <p class="text-gray-300 text-xs text-center">NEW</p>
             </div>
-            <!-- Use the same reserved space for alignment -->
-            <div class="w-v ml-1 mr-1"> <!-- Keep this empty to maintain the space -->
+            <div class="w-v ml-1 mr-1">
             </div>
             <div class="w-10 ml-4">
               <p class="text-gray-300 text-xs text-center">ARS</p>
