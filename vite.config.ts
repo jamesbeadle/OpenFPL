@@ -69,7 +69,6 @@ const config: UserConfig = {
   },
 };
 
-
 export default defineConfig(({ mode }: UserConfig): UserConfig => {
   // Load environment variables
   const env = loadEnv(mode ?? "development", process.cwd(), "");

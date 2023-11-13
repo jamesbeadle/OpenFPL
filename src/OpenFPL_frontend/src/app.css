@@ -3,28 +3,28 @@
 @tailwind utilities;
 
 @font-face {
-    font-display: swap;
-    font-family: 'Poppins';
-    font-style: normal;
-    font-weight: 400;
-    src: url('/poppins-regular-webfont.woff2') format('woff2');
-  }
-    
-  
-  html, body {
-    height: 100%;
-    margin: 0;
-  }
-    
-  body {
-    font-family: 'Poppins', sans-serif !important;
-    color: white !important;
-    background-color: #1A1A1D;
-    height: 100vh;
-    margin: 0;  
-    background-image: url('background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-  }
+  font-display: swap;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/poppins-regular-webfont.woff2") format("woff2");
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif !important;
+  color: white !important;
+  background-color: #1a1a1d;
+  height: 100vh;
+  margin: 0;
+  background-image: url("background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}

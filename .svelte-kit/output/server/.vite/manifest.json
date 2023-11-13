@@ -7,19 +7,47 @@
     "isEntry": true,
     "src": ".svelte-kit/generated/server/internal.js"
   },
+  "Layout.css": {
+    "file": "_app/immutable/assets/Layout.0f01ddc4.css",
+    "src": "Layout.css"
+  },
+  "_Layout.js": {
+    "css": [
+      "_app/immutable/assets/Layout.0f01ddc4.css"
+    ],
+    "file": "chunks/Layout.js",
+    "imports": [
+      "_index2.js",
+      "_stores.js",
+      "_index.js"
+    ]
+  },
   "_index.js": {
-    "file": "chunks/index.js"
+    "file": "chunks/index.js",
+    "imports": [
+      "_index2.js"
+    ]
+  },
+  "_index2.js": {
+    "file": "chunks/index2.js"
   },
   "_internal.js": {
     "file": "chunks/internal.js",
     "imports": [
-      "_index.js"
+      "_index2.js"
+    ]
+  },
+  "_stores.js": {
+    "file": "chunks/stores.js",
+    "imports": [
+      "_index2.js"
     ]
   },
   "node_modules/@sveltejs/kit/src/runtime/components/error.svelte": {
     "file": "entries/fallbacks/error.svelte.js",
     "imports": [
-      "_index.js"
+      "_index2.js",
+      "_stores.js"
     ],
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/components/error.svelte"
@@ -27,7 +55,7 @@
   "node_modules/@sveltejs/kit/src/runtime/components/layout.svelte": {
     "file": "entries/fallbacks/layout.svelte.js",
     "imports": [
-      "_index.js"
+      "_index2.js"
     ],
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/components/layout.svelte"
@@ -41,12 +69,48 @@
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js"
   },
+  "src/OpenFPL_frontend/src/routes/+page.css": {
+    "file": "_app/immutable/assets/_page.3b7c57dc.css",
+    "src": "src/OpenFPL_frontend/src/routes/+page.css"
+  },
   "src/OpenFPL_frontend/src/routes/+page.svelte": {
+    "css": [
+      "_app/immutable/assets/_page.3b7c57dc.css"
+    ],
     "file": "entries/pages/_page.svelte.js",
     "imports": [
-      "_index.js"
+      "_index2.js",
+      "_index.js",
+      "_Layout.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/governance/+page.svelte": {
+    "file": "entries/pages/governance/_page.svelte.js",
+    "imports": [
+      "_index2.js",
+      "_Layout.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/governance/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte": {
+    "file": "entries/pages/pick-team/_page.svelte.js",
+    "imports": [
+      "_index2.js",
+      "_Layout.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/profile/+page.svelte": {
+    "file": "entries/pages/profile/_page.svelte.js",
+    "imports": [
+      "_index2.js",
+      "_Layout.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/profile/+page.svelte"
   }
 }

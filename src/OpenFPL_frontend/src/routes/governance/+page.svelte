@@ -1,9 +1,7 @@
-
 <script>
-    import Layout from '../Layout.svelte';
+  import Layout from "../Layout.svelte";
 </script>
-  
+
 <Layout>
-    <h1>Governance</h1>
+  <h1>Governance</h1>
 </Layout>
-  
