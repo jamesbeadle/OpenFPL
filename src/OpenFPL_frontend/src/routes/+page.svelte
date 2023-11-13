@@ -44,11 +44,13 @@
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">12</p>
           <p class="text-gray-300 text-xs">2023/24</p>
         </div>
+        <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"></div>
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Managers</p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">200</p>
           <p class="text-gray-300 text-xs">Total</p>
         </div>
+        <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"></div>
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Weekly Prize Pool</p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">0</p>
@@ -56,7 +58,7 @@
         </div>
       </div>
       <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500">
-   
+
         <div class="flex-grow mb-4 md:mb-0">
           <p class="text-gray-300 text-xs">Next Game:</p>
           <div class="flex items-center mb-2 mt-2">
@@ -81,12 +83,10 @@
             </div>
           </div>
         </div>
-                
-        
-
-
+        <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"></div>
+  
         <div class="flex-grow mb-4 md:mb-0">
-          <p class="text-gray-300 text-xs">Kick Off:</p>
+          <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
           <div class="flex">
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               00<span class="text-gray-300 text-xs ml-1">d</span> : 18<span class="text-gray-300 text-xs ml-1">h</span> : 55<span class="text-gray-300 text-xs ml-1">m</span>
@@ -94,8 +94,9 @@
           </div>
           <p class="text-gray-300 text-xs">Saturday November 11th, 2024</p>
         </div>
+        <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"></div>
         <div class="flex-grow">
-          <p class="text-gray-300 text-xs">GW 11 High Score</p>
+          <p class="text-gray-300 text-xs mt-4 md:mt-0">GW 11 High Score</p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">Santi</p>
           <p class="text-gray-300 text-xs">250 points</p>
         </div>

@@ -103,7 +103,7 @@
               </a>
             </li>
             <li class="mx-2 flex items-center h-16">
-              <button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button" on:click={handleLogout}>
+              <button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button" on:click={handleLogout}>
                 Disconnect
                 <WalletIcon className='ml-2 h-6 w-6 mt-1' />
               </button>
@@ -118,7 +118,7 @@
               <li class="p-2"><a href="/governance" class={currentClass('/governance')} on:click={toggleMenu}>Governance</a></li>
               <li class="p-2"><a href="/profile" class={currentClass('/profile')} on:click={toggleMenu}>Profile</a></li>
               <li class="p-2">
-                <button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button" on:click={handleLogout}>
+                <button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button" on:click={handleLogout}>
                   Disconnect
                   <WalletIcon className='ml-2 h-6 w-6 mt-1' />
                 </button>  
@@ -126,10 +126,28 @@
             </ul>
           </div>
         {:else}
-        <button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button" on:click={handleLogin}>
-          Connect
-          <WalletIcon className='ml-2 h-6 w-6 mt-1' />
-        </button>
+          <ul class="hidden md:flex">
+            
+            <li class="mx-2 flex items-center h-16">
+              <button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button" on:click={handleLogin}>
+                Connect
+                <WalletIcon className='ml-2 h-6 w-6 mt-1' />
+              </button>
+            </li>
+            
+          </ul>
+          <div class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${menuOpen ? 'block' : 'hidden'} md:hidden`}>
+            <ul class="flex flex-col">
+               <li class="p-2">
+                <button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button" on:click={handleLogin}>
+                  Connect
+                  <WalletIcon className='ml-2 h-6 w-6 mt-1' />
+                </button> 
+              </li>
+            </ul>
+          </div>
+        
+        
         {/if}
       </div>
       
