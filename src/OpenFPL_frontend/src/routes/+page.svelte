@@ -41,22 +41,23 @@
       <div class="flex justify-start items-center text-white space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500">
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Gameweek</p>
-          <p class="text-4xl mt-2 mb-2 font-bold">12</p>
+          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">12</p>
           <p class="text-gray-300 text-xs">2023/24</p>
         </div>
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Managers</p>
-          <p class="text-4xl mt-2 mb-2 font-bold">200</p>
+          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">200</p>
           <p class="text-gray-300 text-xs">Total</p>
         </div>
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Weekly Prize Pool</p>
-          <p class="text-4xl mt-2 mb-2 font-bold">0</p>
+          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">0</p>
           <p class="text-gray-300 text-xs">$FPL</p>
         </div>
       </div>
-      <div class="flex justify-start items-center text-white space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500">
-        <div class="flex-grow">
+      <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500">
+   
+        <div class="flex-grow mb-4 md:mb-0">
           <p class="text-gray-300 text-xs">Next Game:</p>
           <div class="flex items-center mb-2 mt-2">
             <div class="w-10 ml-4 mr-4">
@@ -84,10 +85,10 @@
         
 
 
-        <div class="flex-grow">
+        <div class="flex-grow mb-4 md:mb-0">
           <p class="text-gray-300 text-xs">Kick Off:</p>
           <div class="flex">
-            <p class="text-4xl mt-2 mb-2 font-bold">
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               00<span class="text-gray-300 text-xs ml-1">d</span> : 18<span class="text-gray-300 text-xs ml-1">h</span> : 55<span class="text-gray-300 text-xs ml-1">m</span>
             </p>
           </div>
@@ -95,7 +96,7 @@
         </div>
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">GW 11 High Score</p>
-          <p class="text-4xl mt-2 mb-2 font-bold">Santi</p>
+          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">Santi</p>
           <p class="text-gray-300 text-xs">250 points</p>
         </div>
       </div>
