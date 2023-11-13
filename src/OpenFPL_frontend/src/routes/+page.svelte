@@ -1,14 +1,54 @@
 
 <script lang="ts">
+  import { onMount } from 'svelte';
   import Layout from './Layout.svelte';
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
-    import BadgeIcon from '$lib/icons/BadgeIcon.svelte';
+  import BadgeIcon from '$lib/icons/BadgeIcon.svelte';
+  import { OpenFPL_backend as open_fpl_backend } from '../../../declarations/OpenFPL_backend';
+  
   let activeTab: string = 'fixtures';
+  let managerCount = -1;
+  let nextFixtureHomeTeam = null;
+  let nextFixtureAwayTeam = null;
+  let days = 0;
+  let hours = 0;
+  let minutes = 0;
+  let isLoading = true;
+
+  
+  onMount(async () => {
+    // Perform initial data fetching here
+    await fetchData();
+    isLoading = false;
+    const timer = setInterval(() => {
+      updateCountdowns();
+    }, 60 * 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  });
+
+  const fetchData = async () => {
+    // Your data fetching logic here
+    try {
+      const managerCountData = await open_fpl_backend.getTotalManagers();
+      managerCount = Number(managerCountData);
+    } catch (error) {
+      console.log(error);
+    }
+    // ... other data fetching logic
+  };
+
+  const updateCountdowns = () => {
+    // Your countdown updating logic here
+  };
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
+
 </script>
 
 <style>
@@ -61,18 +101,20 @@
 
         <div class="flex-grow mb-4 md:mb-0">
           <p class="text-gray-300 text-xs">Next Game:</p>
-          <div class="flex items-center mb-2 mt-2">
-            <div class="w-10 ml-4 mr-4">
-              <BadgeIcon primaryColour='#000000' secondaryColour='#f3f3f3' thirdColour='#211223' />
-            </div>
-            <div class="w-v ml-1 mr-1 flex justify-center">
-              <p class="text-xs mt-2 mb-2 font-bold">v</p>
-            </div>
-            <div class="w-10 ml-4">
-              <BadgeIcon primaryColour='#000000' secondaryColour='#f3f3f3' thirdColour='#211223' />
+          <div class="flex justify-center mb-2 mt-2">
+            <div class="flex justify-center items-center">
+              <div class="w-10 ml-4 mr-4">
+                <BadgeIcon primaryColour='#000000' secondaryColour='#f3f3f3' thirdColour='#211223' />
+              </div>
+              <div class="w-v ml-1 mr-1 flex justify-center">
+                <p class="text-xs mt-2 mb-2 font-bold">v</p>
+              </div>
+              <div class="w-10 ml-4">
+                <BadgeIcon primaryColour='#000000' secondaryColour='#f3f3f3' thirdColour='#211223' />
+              </div>
             </div>
           </div>
-          <div class="flex items-center">
+          <div class="flex justify-center">
             <div class="w-10 ml-4 mr-4">
               <p class="text-gray-300 text-xs text-center">NEW</p>
             </div>
