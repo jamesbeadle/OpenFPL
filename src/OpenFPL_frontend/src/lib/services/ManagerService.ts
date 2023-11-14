@@ -5,7 +5,7 @@ export class ManagerService {
     private actor: any;
 
     constructor() {
-        this.actor = ActorFactory.createActor(idlFactory, process.env.BACKEND_CANISTER_ID);
+        this.actor = ActorFactory.createActor(idlFactory, process.env.OPENFPL_BACKEND_CANISTER_ID);
     }
 
     async getTotalManagers(): Promise<number> {

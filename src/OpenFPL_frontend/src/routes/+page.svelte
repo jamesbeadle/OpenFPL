@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
