@@ -16,10 +16,8 @@ export class FixtureService {
     
       let cachedFixtures: Fixture[];
       try {
-        // Attempt to parse the cached data, default to an empty array if parsing fails
         cachedFixtures = JSON.parse(cachedFixturesData || '[]');
       } catch (e) {
-        // If parsing fails, default to an empty array
         cachedFixtures = [];
       }
     
@@ -47,10 +45,8 @@ export class FixtureService {
       try {
           const fixturesHash = localStorage.getItem('fixtures_hash') ?? '';
           const allFixtures = await this.getFixturesData(fixturesHash);
-
           const now = new Date();
-          const nextFixture = allFixtures.find(fixture => new Date(Number(fixture.kickOff)) > now);
-
+          const nextFixture = allFixtures.find(fixture => new Date(Number(fixture.kickOff) / 1000000) > now);
           return nextFixture;
       } catch (error) {
           console.error("Error fetching next fixture:", error);
