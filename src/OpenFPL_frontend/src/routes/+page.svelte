@@ -1,12 +1,23 @@
 <script lang="ts">
+
   import { onMount } from "svelte";
+  import { SystemService } from "$lib/services/SystemService";
+  import { FixtureService } from "$lib/services/FixtureService";
+  import { TeamService } from "$lib/services/TeamService";
+  import { LeaderboardService } from "$lib/services/LeaderboardService";
+  import { ManagerService } from "$lib/services/ManagerService";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { ManagerService } from "$lib/services/ManagerService";
-  import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
+  const systemService = new SystemService();
+  const fixtureService = new FixtureService();
+  const teamService = new TeamService();
+  const leaderboardService = new LeaderboardService();
+  const managerService = new ManagerService();
+  
   let activeTab: string = "fixtures";
   let activeGameweek = -1;
   let activeSeason = '-';
@@ -18,34 +29,36 @@
   let focusGameweek = -1;
   let gwLeaderUsername = '-';
   let gwLeaderPoints = 0;
-  let nextFixtureHomeTeam: Team = {
-    id: 0,
-    name: '',
-    primaryColourHex: '#FFFFFF',
-    secondaryColourHex: '#FFFFFF',
-    thirdColourHex: '#FFFFFF',
-    friendlyName: '',
-    abbreviatedName: '-',
-    shirtType: 0
-  };
-  let nextFixtureAwayTeam: Team = {
-    id: 0,
-    name: '',
-    primaryColourHex: '#FFFFFF',
-    secondaryColourHex: '#FFFFFF',
-    thirdColourHex: '#FFFFFF',
-    friendlyName: '',
-    abbreviatedName: '-',
-    shirtType: 0
-  };
-
+  let nextFixtureHomeTeam: Team | undefined = undefined;
+  let nextFixtureAwayTeam: Team | undefined = undefined;
+  
   let isLoading = true;
-  const managerService = new ManagerService();
 
   onMount(async () => {
     isLoading = true;
     try {
+
       managerCount = await managerService.getTotalManagers();
+
+      let systemState = await systemService.getSystemState(localStorage.getItem('system_state_hash') ?? '');
+      activeGameweek = systemState.activeGameweek;
+      activeSeason = systemState.activeSeason.name;
+      focusGameweek = systemState.focusGameweek;
+      
+      let nextFixture = await fixtureService.getNextFixture();
+      nextFixtureHomeTeam = await teamService.getTeamById(nextFixture.homeTeamId);
+      nextFixtureAwayTeam = await teamService.getTeamById(nextFixture.awayTeamId);
+      nextFixtureDate = getProperDate(nextFixture.kickOff);
+
+      let countdownTime = getCountdownTime(nextFixture.kickOff);
+      countdownDays = countdownTime.days;
+      countdownHours = countdownTime.hours;
+      countdownMinutes = countdownTime.minutes;
+
+      let leadingWeeklyTeam = leaderboardService.getLeadingWeeklyTeam();
+      gwLeaderUsername = leadingWeeklyTeam.teamName;
+      gwLeaderPoints = leadingWeeklyTeam.points;
+
       isLoading = false;
     } catch (error) {
       console.error("Failed to fetch manager count:", error);
@@ -58,6 +71,26 @@
   }
   
 </script>
+
+<style>
+  .bg-panel {
+    background-color: rgba(46, 50, 58, 0.9);
+  }
+
+  .circle-badge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .circle-badge-icon {
+    align-self: center;
+  }
+
+  .w-v {
+    width: 20px;
+  }
+</style>
 
 <Layout>
   <div class="p-1">
@@ -190,23 +223,3 @@
     {/if}
   </div>
 </Layout>
-
-<style>
-  .bg-panel {
-    background-color: rgba(46, 50, 58, 0.9);
-  }
-
-  .circle-badge-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .circle-badge-icon {
-    align-self: center;
-  }
-
-  .w-v {
-    width: 20px;
-  }
-</style>
