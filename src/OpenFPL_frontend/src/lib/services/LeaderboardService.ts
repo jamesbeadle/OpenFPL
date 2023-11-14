@@ -1,6 +1,7 @@
 
 import { ActorFactory } from "../../utils/ActorFactory";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type { FantasyTeamSnapshot } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class LeaderboardService {
     private actor: any;
@@ -9,26 +10,31 @@ export class LeaderboardService {
         this.actor = ActorFactory.createActor(idlFactory, process.env.OPENFPL_BACKEND_CANISTER_ID);
     }
 
-    async getFixturesData(fixturesHash: string) {
-      const cachedHash = localStorage.getItem('fixtures_hash');
-      const cachedFixturesData = localStorage.getItem('fixtures_data');
-      const cachedFixtures = JSON.parse(cachedFixturesData || '[]');
+    async getWeeklyLeaderboardData(weeklyLeaderboardHash: string) {
+      const cachedHash = localStorage.getItem('weekly_leaderboard_hash');
+      const cachedLeaderboardData = localStorage.getItem('weekly_leaderboard_data');
+      const cachedLeaderboard = JSON.parse(cachedLeaderboardData || '[]');
   
-      if (!fixturesHash || fixturesHash.length === 0 || cachedHash !== fixturesHash) {
-        return this.fetchAllFixtures(fixturesHash);
+      if (!weeklyLeaderboardHash || weeklyLeaderboardHash.length === 0 || cachedHash !== weeklyLeaderboardHash) {
+        return this.fetchWeeklyLeaderboard(weeklyLeaderboardHash);
       } else {
-        return cachedFixtures;
+        return cachedLeaderboard;
       }
     }
+
+    async getLeadingWeeklyTeam() : Promise<FantasyTeamSnapshot> {
+      let weeklyLeaderboard = await this.getWeeklyLeaderboardData(localStorage.getItem('weekly_leaderboard_hash') ?? '');
+      return weeklyLeaderboard[0];
+    }
   
-    private async fetchAllFixtures(fixturesHash: string) {
+    private async fetchWeeklyLeaderboard(weeklyLeaderboardHash: string) {
       try {
-        const allFixturesData = await this.actor.getAllFixtures();
-        localStorage.setItem('fixtures_hash', fixturesHash);
-        localStorage.setItem('fixtures_data', JSON.stringify(allFixturesData));
-        return allFixturesData;
+        const weeklyLeaderboardData = await this.actor.getWeeklyLeaderboard();
+        localStorage.setItem('weekly_leaderboard_hash', weeklyLeaderboardHash);
+        localStorage.setItem('weekly_leaderboard_data', JSON.stringify(weeklyLeaderboardData));
+        return weeklyLeaderboardData;
       } catch (error) {
-        console.error("Error fetching all fixtures:", error);
+        console.error("Error fetching weekly leaderboard:", error);
         throw error;
       }
     }

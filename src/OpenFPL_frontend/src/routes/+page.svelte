@@ -10,7 +10,8 @@
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { formatUnixDateToReadable, getCountdownTime } from '../utils/Helpers';
 
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
@@ -48,14 +49,14 @@
       let nextFixture = await fixtureService.getNextFixture();
       nextFixtureHomeTeam = await teamService.getTeamById(nextFixture.homeTeamId);
       nextFixtureAwayTeam = await teamService.getTeamById(nextFixture.awayTeamId);
-      nextFixtureDate = getProperDate(nextFixture.kickOff);
+      nextFixtureDate = formatUnixDateToReadable(nextFixture.kickOff);
 
       let countdownTime = getCountdownTime(nextFixture.kickOff);
-      countdownDays = countdownTime.days;
-      countdownHours = countdownTime.hours;
-      countdownMinutes = countdownTime.minutes;
+      countdownDays = countdownTime.days.toString();
+      countdownHours = countdownTime.hours.toString();
+      countdownMinutes = countdownTime.minutes.toString();
 
-      let leadingWeeklyTeam = leaderboardService.getLeadingWeeklyTeam();
+      let leadingWeeklyTeam = await leaderboardService.getLeadingWeeklyTeam();
       gwLeaderUsername = leadingWeeklyTeam.teamName;
       gwLeaderPoints = leadingWeeklyTeam.points;
 
@@ -133,9 +134,9 @@
             <div class="flex justify-center items-center">
               <div class="w-10 ml-4 mr-4">
                 <BadgeIcon
-                  primaryColour="{nextFixtureHomeTeam.primaryColourHex}"
-                  secondaryColour="{nextFixtureHomeTeam.secondaryColourHex}"
-                  thirdColour="{nextFixtureHomeTeam.thirdColourHex}"
+                  primaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.primaryColourHex : ''}"
+                  secondaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.secondaryColourHex : ''}"
+                  thirdColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.thirdColourHex : ''}"
                 />
               </div>
               <div class="w-v ml-1 mr-1 flex justify-center">
@@ -143,20 +144,20 @@
               </div>
               <div class="w-10 ml-4">
                 <BadgeIcon
-                  primaryColour="{nextFixtureAwayTeam.primaryColourHex}"
-                  secondaryColour="{nextFixtureAwayTeam.secondaryColourHex}"
-                  thirdColour="{nextFixtureAwayTeam.thirdColourHex}"
+                  primaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.primaryColourHex : ''}"
+                  secondaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.secondaryColourHex : ''}"
+                  thirdColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.thirdColourHex : ''}"
                 />
               </div>
             </div>
           </div>
           <div class="flex justify-center">
             <div class="w-10 ml-4 mr-4">
-              <p class="text-gray-300 text-xs text-center">{nextFixtureHomeTeam.abbreviatedName}</p>
+              <p class="text-gray-300 text-xs text-center">{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ''}</p>
             </div>
             <div class="w-v ml-1 mr-1" />
             <div class="w-10 ml-4">
-              <p class="text-gray-300 text-xs text-center">{nextFixtureHomeTeam.abbreviatedName}</p>
+              <p class="text-gray-300 text-xs text-center">{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ''}</p>
             </div>
           </div>
         </div>
