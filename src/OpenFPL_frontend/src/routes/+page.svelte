@@ -5,9 +5,40 @@
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { ManagerService } from "$lib/services/ManagerService";
+  import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   let activeTab: string = "fixtures";
+  let activeGameweek = -1;
+  let activeSeason = '-';
   let managerCount = -1;
+  let countdownDays = '00';
+  let countdownHours = '00';
+  let countdownMinutes = '00';
+  let nextFixtureDate = '-';
+  let focusGameweek = -1;
+  let gwLeaderUsername = '-';
+  let gwLeaderPoints = 0;
+  let nextFixtureHomeTeam: Team = {
+    id: 0,
+    name: '',
+    primaryColourHex: '#FFFFFF',
+    secondaryColourHex: '#FFFFFF',
+    thirdColourHex: '#FFFFFF',
+    friendlyName: '',
+    abbreviatedName: '-',
+    shirtType: 0
+  };
+  let nextFixtureAwayTeam: Team = {
+    id: 0,
+    name: '',
+    primaryColourHex: '#FFFFFF',
+    secondaryColourHex: '#FFFFFF',
+    thirdColourHex: '#FFFFFF',
+    friendlyName: '',
+    abbreviatedName: '-',
+    shirtType: 0
+  };
+
   let isLoading = true;
   const managerService = new ManagerService();
 
@@ -36,8 +67,8 @@
       >
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Gameweek</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">12</p>
-          <p class="text-gray-300 text-xs">2023/24</p>
+          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">{activeGameweek}</p>
+          <p class="text-gray-300 text-xs">{activeSeason}</p>
         </div>
         <div
           class="flex-shrink-0 w-px bg-gray-400 self-stretch"
@@ -69,9 +100,9 @@
             <div class="flex justify-center items-center">
               <div class="w-10 ml-4 mr-4">
                 <BadgeIcon
-                  primaryColour="#000000"
-                  secondaryColour="#f3f3f3"
-                  thirdColour="#211223"
+                  primaryColour="{nextFixtureHomeTeam.primaryColourHex}"
+                  secondaryColour="{nextFixtureHomeTeam.secondaryColourHex}"
+                  thirdColour="{nextFixtureHomeTeam.thirdColourHex}"
                 />
               </div>
               <div class="w-v ml-1 mr-1 flex justify-center">
@@ -79,20 +110,20 @@
               </div>
               <div class="w-10 ml-4">
                 <BadgeIcon
-                  primaryColour="#000000"
-                  secondaryColour="#f3f3f3"
-                  thirdColour="#211223"
+                  primaryColour="{nextFixtureAwayTeam.primaryColourHex}"
+                  secondaryColour="{nextFixtureAwayTeam.secondaryColourHex}"
+                  thirdColour="{nextFixtureAwayTeam.thirdColourHex}"
                 />
               </div>
             </div>
           </div>
           <div class="flex justify-center">
             <div class="w-10 ml-4 mr-4">
-              <p class="text-gray-300 text-xs text-center">NEW</p>
+              <p class="text-gray-300 text-xs text-center">{nextFixtureHomeTeam.abbreviatedName}</p>
             </div>
             <div class="w-v ml-1 mr-1" />
             <div class="w-10 ml-4">
-              <p class="text-gray-300 text-xs text-center">ARS</p>
+              <p class="text-gray-300 text-xs text-center">{nextFixtureHomeTeam.abbreviatedName}</p>
             </div>
           </div>
         </div>
@@ -105,24 +136,24 @@
           <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
           <div class="flex">
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              00<span class="text-gray-300 text-xs ml-1">d</span> : 18<span
+              {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span> : {countdownHours}<span
                 class="text-gray-300 text-xs ml-1">h</span
               >
-              : 55<span class="text-gray-300 text-xs ml-1">m</span>
+              : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
             </p>
           </div>
-          <p class="text-gray-300 text-xs">Saturday November 11th, 2024</p>
+          <p class="text-gray-300 text-xs">{nextFixtureDate}</p>
         </div>
         <div
           class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
           style="min-height: 2px; min-width: 2px;"
         />
         <div class="flex-grow">
-          <p class="text-gray-300 text-xs mt-4 md:mt-0">GW 11 High Score</p>
+          <p class="text-gray-300 text-xs mt-4 md:mt-0">GW {focusGameweek} High Score</p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            Santi
+            {gwLeaderUsername}
           </p>
-          <p class="text-gray-300 text-xs">250 points</p>
+          <p class="text-gray-300 text-xs">{gwLeaderPoints} points</p>
         </div>
       </div>
     </div>

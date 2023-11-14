@@ -20,7 +20,7 @@ const authStore = {
         const identity = await authClient.getIdentity();
         set({ identity });
       },
-      identityProvider: identityProviderUrl, // Pass the URL here
+      identityProvider: identityProviderUrl,
     });
   },
   logout: async () => {
