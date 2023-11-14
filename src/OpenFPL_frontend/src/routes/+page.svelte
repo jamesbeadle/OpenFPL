@@ -5,91 +5,28 @@
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { idlFactory } from "../../../declarations/OpenFPL_backend";
-  import { Actor, HttpAgent } from "@dfinity/agent";
+  import { ManagerService } from "$lib/services/ManagerService";
 
   let activeTab: string = "fixtures";
   let managerCount = -1;
-  let nextFixtureHomeTeam = null;
-  let nextFixtureAwayTeam = null;
-  let days = 0;
-  let hours = 0;
-  let minutes = 0;
   let isLoading = true;
-
-  function createActor(options: any = null) {
-    const hostOptions = {
-      host:
-        process.env.DFX_NETWORK === "ic"
-          ? `https://${process.env.BACKEND_CANISTER_ID}.ic0.app`
-          : "http://127.0.0.1:8080/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai&id=bkyz2-fmaaa-aaaaa-qaaaq-cai",
-    };
-    if (!options) {
-      options = {
-        agentOptions: hostOptions,
-      };
-    } else if (!options.agentOptions) {
-      options.agentOptions = hostOptions;
-    } else {
-      options.agentOptions.host = hostOptions.host;
-    }
-
-    const agent = new HttpAgent({ ...options.agentOptions });
-
-    // Fetch root key for certificate validation during development
-    if (process.env.NODE_ENV !== "production") {
-      agent.fetchRootKey().catch((err) => {
-        console.warn(
-          "Unable to fetch root key. Check to ensure that your local replica is running"
-        );
-        console.error(err);
-      });
-    }
-
-    // Creates an actor with using the candid interface and the HttpAgent
-    return Actor.createActor(idlFactory, {
-      agent,
-      canisterId: process.env.OPENFPL_BACKEND_CANISTER_ID,
-      ...options?.actorOptions,
-    });
-  }
-
-  const store = writable({
-    loggedIn: false,
-    actor: createActor(),
-  });
+  const managerService = new ManagerService();
 
   onMount(async () => {
-    // Perform initial data fetching here
-    await fetchData();
-    isLoading = false;
-    const timer = setInterval(() => {
-      updateCountdowns();
-    }, 60 * 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  });
-
-  const fetchData = async () => {
-    // Your data fetching logic here
+    isLoading = true;
     try {
-      const managerCountData = await $store.actor.getTotalManagers();
-      managerCount = Number(managerCountData);
+      managerCount = await managerService.getTotalManagers(); // Use service to fetch data
+      isLoading = false;
     } catch (error) {
-      console.log(error);
+      console.error("Failed to fetch manager count:", error);
+      isLoading = false;
     }
-    // ... other data fetching logic
-  };
-
-  const updateCountdowns = () => {
-    // Your countdown updating logic here
-  };
+  });
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
+  
 </script>
 
 <Layout>
