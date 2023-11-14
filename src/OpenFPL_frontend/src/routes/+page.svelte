@@ -57,7 +57,7 @@
       countdownMinutes = countdownTime.minutes.toString();
 
       let leadingWeeklyTeam = await leaderboardService.getLeadingWeeklyTeam();
-      gwLeaderUsername = leadingWeeklyTeam.teamName;
+      gwLeaderUsername = leadingWeeklyTeam.username;
       gwLeaderPoints = leadingWeeklyTeam.points;
 
       isLoading = false;
