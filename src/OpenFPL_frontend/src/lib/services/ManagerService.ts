@@ -1,10 +1,11 @@
 import { ActorFactory } from "../../utils/ActorFactory";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 
 export class ManagerService {
     private actor: any;
 
     constructor() {
-        this.actor = ActorFactory.createActor();
+        this.actor = ActorFactory.createActor(idlFactory, process.env.BACKEND_CANISTER_ID);
     }
 
     async getTotalManagers(): Promise<number> {

@@ -1,14 +1,14 @@
+// src/utils/ActorFactory.ts
 import { Actor, HttpAgent } from "@dfinity/agent";
-import { idlFactory } from "../../../declarations/OpenFPL_backend";
 
 export class ActorFactory {
-  static createActor(options: any = null) {
+  static createActor(idlFactory: any, canisterId: string = '', options: any = null) {
     const hostOptions = {
-      host:
-        process.env.DFX_NETWORK === "ic"
-          ? `https://${process.env.BACKEND_CANISTER_ID}.ic0.app`
-          : "http://127.0.0.1:8080/?canisterId=bw4dl-smaaa-aaaaa-qaacq-cai&id=bkyz2-fmaaa-aaaaa-qaaaq-cai",
+      host: process.env.DFX_NETWORK === "ic"
+        ? `https://${canisterId}.ic0.app`
+        : "http://127.0.0.1:8080", // Adjust as necessary for your local development environment
     };
+    
     if (!options) {
       options = {
         agentOptions: hostOptions,
@@ -30,7 +30,7 @@ export class ActorFactory {
 
     return Actor.createActor(idlFactory, {
       agent,
-      canisterId: process.env.OPENFPL_BACKEND_CANISTER_ID,
+      canisterId: canisterId,
       ...options?.actorOptions,
     });
   }

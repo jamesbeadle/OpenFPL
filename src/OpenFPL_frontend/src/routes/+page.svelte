@@ -15,7 +15,7 @@
   onMount(async () => {
     isLoading = true;
     try {
-      managerCount = await managerService.getTotalManagers(); // Use service to fetch data
+      managerCount = await managerService.getTotalManagers();
       isLoading = false;
     } catch (error) {
       console.error("Failed to fetch manager count:", error);
