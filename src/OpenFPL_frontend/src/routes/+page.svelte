@@ -49,9 +49,9 @@
       let nextFixture = await fixtureService.getNextFixture();
       nextFixtureHomeTeam = await teamService.getTeamById(nextFixture.homeTeamId);
       nextFixtureAwayTeam = await teamService.getTeamById(nextFixture.awayTeamId);
-      nextFixtureDate = formatUnixDateToReadable(nextFixture.kickOff);
+      nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
 
-      let countdownTime = getCountdownTime(nextFixture.kickOff);
+      let countdownTime = getCountdownTime(Number(nextFixture.kickOff));
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
@@ -62,7 +62,7 @@
 
       isLoading = false;
     } catch (error) {
-      console.error("Failed to fetch manager count:", error);
+      console.error("Error fetching homepage data:", error);
       isLoading = false;
     }
   });

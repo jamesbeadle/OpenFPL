@@ -35,7 +35,7 @@ export class TeamService {
 
     private async fetchAllTeams(teamsHash: string): Promise<Team[]> {
         try {
-            const allTeamsData: Team[] = await this.actor.getAllTeams();
+            const allTeamsData: Team[] = await this.actor.getTeams();
             localStorage.setItem('teams_hash', teamsHash);
             localStorage.setItem('teams_data', JSON.stringify(allTeamsData));
             return allTeamsData;
