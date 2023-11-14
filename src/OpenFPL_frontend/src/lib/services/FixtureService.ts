@@ -2,7 +2,7 @@
 import { ActorFactory } from "../../utils/ActorFactory";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type { Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+import { replacer } from '../../utils/Helpers';
 export class FixtureService {
     private actor: any;
 
@@ -10,23 +10,32 @@ export class FixtureService {
         this.actor = ActorFactory.createActor(idlFactory, process.env.OPENFPL_BACKEND_CANISTER_ID);
     }
 
-    async getFixturesData(fixturesHash: string) : Promise<[Fixture]> {
+    async getFixturesData(fixturesHash: string): Promise<Fixture[]> {
       const cachedHash = localStorage.getItem('fixtures_hash');
       const cachedFixturesData = localStorage.getItem('fixtures_data');
-      const cachedFixtures = JSON.parse(cachedFixturesData || '[]');
-  
+    
+      let cachedFixtures: Fixture[];
+      try {
+        // Attempt to parse the cached data, default to an empty array if parsing fails
+        cachedFixtures = JSON.parse(cachedFixturesData || '[]');
+      } catch (e) {
+        // If parsing fails, default to an empty array
+        cachedFixtures = [];
+      }
+    
       if (!fixturesHash || fixturesHash.length === 0 || cachedHash !== fixturesHash) {
         return this.fetchAllFixtures(fixturesHash);
       } else {
         return cachedFixtures;
       }
     }
+    
   
     private async fetchAllFixtures(fixturesHash: string) {
       try {
-        const allFixturesData = await this.actor.getAllFixtures();
+        const allFixturesData = await this.actor.getFixtures();
         localStorage.setItem('fixtures_hash', fixturesHash);
-        localStorage.setItem('fixtures_data', JSON.stringify(allFixturesData));
+        localStorage.setItem('fixtures_data', JSON.stringify(allFixturesData, replacer));
         return allFixturesData;
       } catch (error) {
         console.error("Error fetching all fixtures:", error);
@@ -48,5 +57,6 @@ export class FixtureService {
           throw error;
       }
     }
+        
   }
   

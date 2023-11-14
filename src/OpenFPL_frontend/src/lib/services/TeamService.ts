@@ -26,7 +26,6 @@ export class TeamService {
         const cachedHash = localStorage.getItem('teams_hash');
         const cachedTeamsData = localStorage.getItem('teams_data');
         const cachedTeams = JSON.parse(cachedTeamsData || '[]') as Team[];
-
         if (!teamsHash || teamsHash.length === 0 || cachedHash !== teamsHash) {
             return this.fetchAllTeams(teamsHash);
         } else {

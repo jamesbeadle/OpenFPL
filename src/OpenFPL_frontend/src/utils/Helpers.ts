@@ -24,4 +24,12 @@ export function formatUnixDateToReadable(unixNano: number) {
 
     return { days, hours, minutes };
   }
+
+  export function replacer(key: string, value: bigint) {
+    if (typeof value === 'bigint') {
+      return value.toString();
+    } else {
+      return value;
+    }
+  }
   
