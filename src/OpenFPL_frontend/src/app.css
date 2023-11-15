@@ -28,3 +28,13 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
+.fpl-button{
+  background-color: #2CE3A6;
+  color: black;
+}
+
+.fpl-dropdown{
+  background-color: transparent;
+  border: none;
+}
