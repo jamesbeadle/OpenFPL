@@ -32,4 +32,18 @@ export function formatUnixDateToReadable(unixNano: number) {
       return value;
     }
   }
-  
+
+  export function formatUnixTimeToTime(unixTimeNano: number): string {
+    const unixTimeMillis = unixTimeNano / 1000000;
+    const date = new Date(unixTimeMillis);
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+
+    return `${hours}:${minutesStr} ${ampm}`;
+}
+
