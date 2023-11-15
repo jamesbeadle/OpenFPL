@@ -101,7 +101,7 @@
 </style>
 
 <Layout>
-  <div class="p-1">
+  <div class="m-4">
     <div class="flex flex-col md:flex-row">
       <div
         class="flex justify-start items-center text-white space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500"
@@ -200,59 +200,61 @@
     </div>
   </div>
 
-  <div class="bg-panel p-4 m-1 bg-panel p-4 rounded-md border border-gray-500">
-    <ul class="flex">
-      <li class={`mr-4 text-xs md:text-lg ${activeTab === "fixtures" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "fixtures" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("fixtures")}
-        >
-          Fixtures
-        </button>
-      </li>
-      <li class={`mr-4 text-xs md:text-lg ${activeTab === "points" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "points" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("points")}
-        >
-          Gameweek Points
-        </button>
-      </li>
-      <li class={`mr-4 text-xs md:text-lg ${activeTab === "leaderboards" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "leaderboards" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("leaderboards")}
-        >
-          Leaderboards
-        </button>
-      </li>
-      <li class={`mr-4 text-xs md:text-lg ${activeTab === "league-table" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "league-table" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("league-table")}
-        >
-          League Table
-        </button>
-      </li>
-    </ul>
-
-    {#if activeTab === "fixtures"}
-      <FixturesComponent />
-    {:else if activeTab === "points"}
-      <GamweekPointsComponents />
-    {:else if activeTab === "leaderboards"}
-      <LeaderboardsComponent />
-    {:else if activeTab === "league-table"}
-      <LeagueTableComponent />
-    {/if}
-
-  </div>
+  <div class="m-4">
+      <div class="bg-panel p-4 rounded-md border border-gray-500 m-1">
+        <ul class="flex">
+          <li class={`mr-4 text-xs md:text-lg ${activeTab === "fixtures" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "fixtures" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("fixtures")}
+            >
+              Fixtures
+            </button>
+          </li>
+          <li class={`mr-4 text-xs md:text-lg ${activeTab === "points" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "points" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("points")}
+            >
+              Gameweek Points
+            </button>
+          </li>
+          <li class={`mr-4 text-xs md:text-lg ${activeTab === "leaderboards" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "leaderboards" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("leaderboards")}
+            >
+              Leaderboards
+            </button>
+          </li>
+          <li class={`mr-4 text-xs md:text-lg ${activeTab === "league-table" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "league-table" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("league-table")}
+            >
+              League Table
+            </button>
+          </li>
+        </ul>
+    
+        {#if activeTab === "fixtures"}
+          <FixturesComponent />
+        {:else if activeTab === "points"}
+          <GamweekPointsComponents />
+        {:else if activeTab === "leaderboards"}
+          <LeaderboardsComponent />
+        {:else if activeTab === "league-table"}
+          <LeagueTableComponent />
+        {/if}
+    
+      </div>
+    </div>
 </Layout>
