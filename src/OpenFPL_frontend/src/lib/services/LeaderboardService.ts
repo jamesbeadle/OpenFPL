@@ -26,8 +26,7 @@ export class LeaderboardService {
 
     async getLeadingWeeklyTeam() : Promise<LeaderboardEntry> {
       let weeklyLeaderboard = await this.getWeeklyLeaderboardData(localStorage.getItem('weekly_leaderboard_hash') ?? '');
-      console.log(weeklyLeaderboard.entries[0])
-      return weeklyLeaderboard.entries[0];
+     return weeklyLeaderboard.entries[0];
     }
   
     private async fetchWeeklyLeaderboard(weeklyLeaderboardHash: string) {
@@ -36,7 +35,6 @@ export class LeaderboardService {
         const systemService = new SystemService();
         let systemState = await systemService.getSystemState(localStorage.getItem('system_state_hash') ?? '');
         const weeklyLeaderboardData = await this.actor.getWeeklyLeaderboardCache(systemState.activeSeason.id, systemState.focusGameweek);
-        console.log(weeklyLeaderboardData)
         localStorage.setItem('weekly_leaderboard_hash', weeklyLeaderboardHash);
         localStorage.setItem('weekly_leaderboard_data', JSON.stringify(weeklyLeaderboardData, replacer));
         return weeklyLeaderboardData;

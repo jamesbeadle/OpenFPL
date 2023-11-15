@@ -12,6 +12,8 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { formatUnixDateToReadable, getCountdownTime } from '../utils/Helpers';
+  import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
+  import LeagueTableComponent from "$lib/components/league-table.svelte";
 
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
@@ -215,12 +217,37 @@
           Gameweek Points
         </button>
       </li>
+      <li class="mr-4">
+        <button
+          class={`p-2 ${
+            activeTab === "leaderboards" ? "text-white" : "text-gray-400"
+          }`}
+          on:click={() => setActiveTab("leaderboards")}
+        >
+          Leaderboards
+        </button>
+      </li>
+      <li class="mr-4">
+        <button
+          class={`p-2 ${
+            activeTab === "league-table" ? "text-white" : "text-gray-400"
+          }`}
+          on:click={() => setActiveTab("league-table")}
+        >
+          League Table
+        </button>
+      </li>
     </ul>
 
     {#if activeTab === "fixtures"}
       <FixturesComponent />
     {:else if activeTab === "points"}
       <GamweekPointsComponents />
+    {:else if activeTab === "leaderboards"}
+      <LeaderboardsComponent />
+    {:else if activeTab === "league-table"}
+      <LeagueTableComponent />
     {/if}
+
   </div>
 </Layout>
