@@ -77,7 +77,7 @@
 
 <style>
   .bg-panel {
-    background-color: rgba(46, 50, 58, 0.9);
+    background-color: rgba(36, 37, 41, 0.90);
   }
 
   .circle-badge-container {
@@ -201,8 +201,8 @@
   </div>
 
   <div class="m-4">
-      <div class="bg-panel p-4 rounded-md border border-gray-500 m-1">
-        <ul class="flex">
+      <div class="bg-panel rounded-md border border-gray-500 m-1">
+        <ul class="flex bg-light-gray px-4 pt-2">
           <li class={`mr-4 text-xs md:text-lg ${activeTab === "fixtures" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${

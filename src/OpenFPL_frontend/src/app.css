@@ -38,3 +38,7 @@ body {
   background-color: transparent;
   border: none;
 }
+
+.bg-light-gray{
+  background-color: rgba(46, 50, 58, 0.6);
+}
