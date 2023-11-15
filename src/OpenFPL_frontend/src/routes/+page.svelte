@@ -202,7 +202,7 @@
 
   <div class="bg-panel p-4 m-1 bg-panel p-4 rounded-md border border-gray-500">
     <ul class="flex">
-      <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
+      <li class={`mr-4 text-xs md:text-lg ${activeTab === "fixtures" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "fixtures" ? "text-white" : "text-gray-400"
@@ -212,7 +212,7 @@
           Fixtures
         </button>
       </li>
-      <li class={`mr-4 ${activeTab === "points" ? "active-tab" : ""}`}>
+      <li class={`mr-4 text-xs md:text-lg ${activeTab === "points" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "points" ? "text-white" : "text-gray-400"
@@ -222,7 +222,7 @@
           Gameweek Points
         </button>
       </li>
-      <li class={`mr-4 ${activeTab === "leaderboards" ? "active-tab" : ""}`}>
+      <li class={`mr-4 text-xs md:text-lg ${activeTab === "leaderboards" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "leaderboards" ? "text-white" : "text-gray-400"
@@ -232,7 +232,7 @@
           Leaderboards
         </button>
       </li>
-      <li class={`mr-4 ${activeTab === "league-table" ? "active-tab" : ""}`}>
+      <li class={`mr-4 text-xs md:text-lg ${activeTab === "league-table" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "league-table" ? "text-white" : "text-gray-400"

@@ -287,8 +287,6 @@ module {
     };
 
     public func getFixtures() : [T.Fixture] {
-      Debug.print(debug_show "activeSeasonId");
-      Debug.print(debug_show activeSeasonId);
       return seasonsInstance.getSeasonFixtures(activeSeasonId);
     };
 
@@ -301,10 +299,6 @@ module {
     };
 
     public func getActiveGameweekFixtures() : [T.Fixture] {
-      Debug.print("getactivegameweek");
-      Debug.print(debug_show activeSeasonId);
-      Debug.print(debug_show activeGameweek);
-
       return seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
     };
 
