@@ -152,31 +152,39 @@
             <div class="flex justify-center mb-2 mt-2">
               <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
-                  <BadgeIcon
-                    primaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.primaryColourHex : ''}"
-                    secondaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.secondaryColourHex : ''}"
-                    thirdColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.thirdColourHex : ''}"
-                  />
+                  <a href={`/club/${nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1}`}>
+                    <BadgeIcon 
+                        primaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.primaryColourHex : ''}"
+                        secondaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.secondaryColourHex : ''}"
+                        thirdColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.thirdColourHex : ''}"
+                    />
+                  </a>
                 </div>
                 <div class="w-v ml-1 mr-1 flex justify-center">
                   <p class="text-xs mt-2 mb-2 font-bold">v</p>
                 </div>
                 <div class="w-10 ml-4">
-                  <BadgeIcon
-                    primaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.primaryColourHex : ''}"
-                    secondaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.secondaryColourHex : ''}"
-                    thirdColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.thirdColourHex : ''}"
-                  />
+                  <a href={`/club/${nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1}`}>
+                    <BadgeIcon
+                      primaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.primaryColourHex : ''}"
+                      secondaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.secondaryColourHex : ''}"
+                      thirdColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.thirdColourHex : ''}"
+                    />
+                  </a>
                 </div>
               </div>
             </div>
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
-                <p class="text-gray-300 text-xs text-center">{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ''}</p>
+                <p class="text-gray-300 text-xs text-center">
+                  <a class="text-gray-300 text-xs text-center" href={`/club/${nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1}`}>{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ''}</a>
+                </p>
               </div>
               <div class="w-v ml-1 mr-1" />
               <div class="w-10 ml-4">
-                <p class="text-gray-300 text-xs text-center">{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ''}</p>
+                <p class="text-gray-300 text-xs text-center">
+                  <a class="text-gray-300 text-xs text-center" href={`/club/${nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1}`}>{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ''}</a>
+                </p>
               </div>
             </div>
           </div>

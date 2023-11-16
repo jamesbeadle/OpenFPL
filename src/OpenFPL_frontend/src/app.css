@@ -39,6 +39,11 @@ body {
   border: none;
 }
 
+.fpl-dropdown option {
+  background-color: black;
+  border: none;
+}
+
 .bg-light-gray{
   background-color: rgba(46, 50, 58, 0.6);
 }

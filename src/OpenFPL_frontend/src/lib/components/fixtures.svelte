@@ -96,7 +96,7 @@
             {#each Object.entries(groupedFixtures) as [date, fixtures]}
                 <div>
                     <div class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray">
-                        <h2 class="date-header ml-4 text-xs md:text-md">{date}</h2>
+                        <h2 class="date-header ml-4 text-xs md:text-lg">{date}</h2>
                     </div>
                     {#each fixtures as { fixture, homeTeam, awayTeam }}
                         <div class="flex items-center justify-between py-2 border-b border-gray-700">
@@ -104,24 +104,27 @@
                                 <div class="flex w-1/2 space-x-4 justify-center">
                                 
                                     <div class="w-10 items-center justify-center">
-                                        <BadgeIcon 
-                                            primaryColour="{homeTeam ? homeTeam.primaryColourHex : ''}"
-                                            secondaryColour="{homeTeam ? homeTeam.secondaryColourHex : ''}"
-                                            thirdColour="{homeTeam ? homeTeam.thirdColourHex : ''}"
-                                        />
+                                        <a href={`/club/${fixture.homeTeamId}`}>
+                                            <BadgeIcon 
+                                                primaryColour="{homeTeam ? homeTeam.primaryColourHex : ''}"
+                                                secondaryColour="{homeTeam ? homeTeam.secondaryColourHex : ''}"
+                                                thirdColour="{homeTeam ? homeTeam.thirdColourHex : ''}"
+                                            />
+                                        </a>
                                     </div>
                                     <span class="font-bold text-lg">v</span>
                                     <div class="w-10 items-center justify-center">
-                                        <BadgeIcon 
-                                            primaryColour="{awayTeam ? awayTeam.primaryColourHex : ''}"
-                                            secondaryColour="{awayTeam ? awayTeam.secondaryColourHex : ''}"
-                                            thirdColour="{awayTeam ? awayTeam.thirdColourHex : ''}"
-                                        />
+                                        <a href={`/club/${fixture.awayTeamId}`}>
+                                            <BadgeIcon 
+                                                primaryColour="{awayTeam ? awayTeam.primaryColourHex : ''}"
+                                                secondaryColour="{awayTeam ? awayTeam.secondaryColourHex : ''}"
+                                                thirdColour="{awayTeam ? awayTeam.thirdColourHex : ''}"
+                                            />
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="flex w-1/2 md:justify-center">
-                                    <span class="text-sm md:text-lg ml-4 md:ml-0">{formatUnixTimeToTime(Number(fixture.kickOff))}</span>
-                                
+                                    <span class="text-sm md:text-lg ml-4 md:ml-0 text-left">{formatUnixTimeToTime(Number(fixture.kickOff))}</span>
                                 </div>
         
                             </div>
@@ -129,8 +132,8 @@
                                 <div class={`flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg  ${
                                     fixture.status === 0 ? "text-gray-400" : "text-white"
                                   }`}>
-                                    <span>{homeTeam ? homeTeam.friendlyName : ''}</span>
-                                    <span>{awayTeam ? awayTeam.friendlyName : ''}</span>
+                                    <a href={`/club/${fixture.homeTeamId}`}>{homeTeam ? homeTeam.friendlyName : ''}</a>
+                                    <a href={`/club/${fixture.awayTeamId}`}>{awayTeam ? awayTeam.friendlyName : ''}</a>
                                 </div>
                                 <div class={`flex flex-col items-center text-xs md:text-lg  ${
                                     fixture.status === 0 ? "text-gray-400" : "text-white"
