@@ -36,7 +36,6 @@
         return acc;
     }, {} as { [key: string]: FixtureWithTeams[] });
 
-
   
     onMount(async () => {
         try {
@@ -94,29 +93,15 @@
             </div>
         </div>
         <div>
-            <div class="flex items-center justify-between border-b border-gray-700 py-2">
-                <div class="flex items-center md:w-1/4 w-1/2 ml-4">
-                    <p class="text-xs md:text-lg">Match</p>
-                </div>
-                <div class="flex items-center hidden md:inline md:w-1/4">
-                    <p class="text-xs md:text-lg">Kick Off</p>
-                </div>
-                <div class="flex items-center space-x-10 w-1/2">
-                    <div class="flex flex-col">
-                        <p class="text-xs md:text-lg">Score</p>
-                    </div>
-                </div>
-            </div>
-
             {#each Object.entries(groupedFixtures) as [date, fixtures]}
                 <div>
-                    <div class="flex items-center justify-between border-b border-gray-700 py-4 bg-light-gray">
-                        <h2 class="date-header ml-4">{date}</h2>
+                    <div class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray">
+                        <h2 class="date-header ml-4 text-xs md:text-md">{date}</h2>
                     </div>
                     {#each fixtures as { fixture, homeTeam, awayTeam }}
                         <div class="flex items-center justify-between py-2 border-b border-gray-700">
                             <div class="flex items-center w-1/2 ml-4">
-                                <div class="flex w-1/2 space-x-4 items-center ">
+                                <div class="flex w-1/2 space-x-4 justify-center">
                                 
                                     <div class="w-10 items-center justify-center">
                                         <BadgeIcon 
@@ -134,21 +119,25 @@
                                         />
                                     </div>
                                 </div>
-                                <div class="flex w-1/2">
+                                <div class="flex w-1/2 md:justify-center">
                                     <span class="text-sm md:text-lg ml-4 md:ml-0">{formatUnixTimeToTime(Number(fixture.kickOff))}</span>
                                 
                                 </div>
         
                             </div>
-                            <div class="flex items-center space-x-10 w-1/2">
-                            <div class="flex flex-col min-w-[125px] md:min-w-[300px] text-xs md:text-lg">
-                                <span>{homeTeam ? homeTeam.friendlyName : ''}</span>
-                                <span>{awayTeam ? awayTeam.friendlyName : ''}</span>
-                            </div>
-                            <div class="flex flex-col items-center text-xs md:text-lg">
-                                <span>{fixture.homeGoals}</span>
-                                <span>{fixture.awayGoals}</span>
-                            </div>
+                            <div class="flex items-center space-x-10 w-1/2 md:justify-center">
+                                <div class={`flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg  ${
+                                    fixture.status === 0 ? "text-gray-400" : "text-white"
+                                  }`}>
+                                    <span>{homeTeam ? homeTeam.friendlyName : ''}</span>
+                                    <span>{awayTeam ? awayTeam.friendlyName : ''}</span>
+                                </div>
+                                <div class={`flex flex-col items-center text-xs md:text-lg  ${
+                                    fixture.status === 0 ? "text-gray-400" : "text-white"
+                                  }`}>
+                                    <span>{fixture.status === 0 ? '-' : fixture.homeGoals}</span>
+                                    <span>{fixture.status === 0 ? '-' : fixture.awayGoals}</span>
+                                </div>
                             </div>
                         </div>
                     {/each}

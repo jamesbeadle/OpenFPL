@@ -14,6 +14,7 @@
   import { formatUnixDateToReadable, getCountdownTime } from '../utils/Helpers';
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
@@ -39,6 +40,7 @@
 
   onMount(async () => {
     isLoading = true;
+    await simulateLoading();
     try {
 
       managerCount = await managerService.getTotalManagers();
@@ -67,6 +69,29 @@
       console.error("Error fetching homepage data:", error);
       isLoading = false;
     }
+  }); 
+  
+  let progress = 0;
+  const totalDuration = 2000;
+  const updateInterval = 20; 
+  
+  function simulateLoading() : Promise<void> {
+    return new Promise(resolve => {
+      function updateProgress() {
+        if (progress < 100) {
+          progress += (updateInterval / totalDuration) * 100;
+          setTimeout(updateProgress, updateInterval);
+        } else {
+          resolve(); // Resolve the promise once loading completes
+        }
+      }
+      updateProgress();
+    });
+  }
+
+
+  // Start loading simulation on component mount
+  onMount(() => {
   });
 
   function setActiveTab(tab: string): void {
@@ -101,107 +126,110 @@
 </style>
 
 <Layout>
-  <div class="m-4">
-    <div class="flex flex-col md:flex-row">
-      <div
-        class="flex justify-start items-center text-white space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500"
-      >
-        <div class="flex-grow">
-          <p class="text-gray-300 text-xs">Gameweek</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">{activeGameweek}</p>
-          <p class="text-gray-300 text-xs">{activeSeason}</p>
-        </div>
+  {#if isLoading}
+    <LoadingIcon {progress} />
+  {:else}
+    <div class="m-4">
+      <div class="flex flex-col md:flex-row">
         <div
-          class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-          style="min-width: 2px; min-height: 50px;"
-        />
-        <div class="flex-grow">
-          <p class="text-gray-300 text-xs">Managers</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            {managerCount}
-          </p>
-          <p class="text-gray-300 text-xs">Total</p>
-        </div>
-        <div
-          class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-          style="min-width: 2px; min-height: 50px;"
-        />
-        <div class="flex-grow">
-          <p class="text-gray-300 text-xs">Weekly Prize Pool</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">0</p>
-          <p class="text-gray-300 text-xs">$FPL</p>
-        </div>
-      </div>
-      <div
-        class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-1 bg-panel p-4 rounded-md border border-gray-500"
-      >
-        <div class="flex-grow mb-4 md:mb-0">
-          <p class="text-gray-300 text-xs">Next Game:</p>
-          <div class="flex justify-center mb-2 mt-2">
-            <div class="flex justify-center items-center">
-              <div class="w-10 ml-4 mr-4">
-                <BadgeIcon
-                  primaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.primaryColourHex : ''}"
-                  secondaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.secondaryColourHex : ''}"
-                  thirdColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.thirdColourHex : ''}"
-                />
-              </div>
-              <div class="w-v ml-1 mr-1 flex justify-center">
-                <p class="text-xs mt-2 mb-2 font-bold">v</p>
-              </div>
-              <div class="w-10 ml-4">
-                <BadgeIcon
-                  primaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.primaryColourHex : ''}"
-                  secondaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.secondaryColourHex : ''}"
-                  thirdColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.thirdColourHex : ''}"
-                />
-              </div>
-            </div>
+          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md border border-gray-400"
+        >
+          <div class="flex-grow">
+            <p class="text-gray-300 text-xs">Gameweek</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">{activeGameweek}</p>
+            <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
-          <div class="flex justify-center">
-            <div class="w-10 ml-4 mr-4">
-              <p class="text-gray-300 text-xs text-center">{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ''}</p>
-            </div>
-            <div class="w-v ml-1 mr-1" />
-            <div class="w-10 ml-4">
-              <p class="text-gray-300 text-xs text-center">{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ''}</p>
-            </div>
-          </div>
-        </div>
-        <div
-          class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-          style="min-height: 2px; min-width: 2px;"
-        />
-
-        <div class="flex-grow mb-4 md:mb-0">
-          <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
-          <div class="flex">
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
+          <div class="flex-grow">
+            <p class="text-gray-300 text-xs">Managers</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span> : {countdownHours}<span
-                class="text-gray-300 text-xs ml-1">h</span
-              >
-              : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+              {managerCount}
             </p>
+            <p class="text-gray-300 text-xs">Total</p>
           </div>
-          <p class="text-gray-300 text-xs">{nextFixtureDate}</p>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
+          <div class="flex-grow">
+            <p class="text-gray-300 text-xs">Weekly Prize Pool</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">0</p>
+            <p class="text-gray-300 text-xs">$FPL</p>
+          </div>
         </div>
         <div
-          class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-          style="min-height: 2px; min-width: 2px;"
-        />
-        <div class="flex-grow">
-          <p class="text-gray-300 text-xs mt-4 md:mt-0">GW {focusGameweek} High Score</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            {gwLeaderUsername}
-          </p>
-          <p class="text-gray-300 text-xs">{gwLeaderPoints} points</p>
+          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md border border-gray-400"
+        >
+          <div class="flex-grow mb-4 md:mb-0">
+            <p class="text-gray-300 text-xs">Next Game:</p>
+            <div class="flex justify-center mb-2 mt-2">
+              <div class="flex justify-center items-center">
+                <div class="w-10 ml-4 mr-4">
+                  <BadgeIcon
+                    primaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.primaryColourHex : ''}"
+                    secondaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.secondaryColourHex : ''}"
+                    thirdColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.thirdColourHex : ''}"
+                  />
+                </div>
+                <div class="w-v ml-1 mr-1 flex justify-center">
+                  <p class="text-xs mt-2 mb-2 font-bold">v</p>
+                </div>
+                <div class="w-10 ml-4">
+                  <BadgeIcon
+                    primaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.primaryColourHex : ''}"
+                    secondaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.secondaryColourHex : ''}"
+                    thirdColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.thirdColourHex : ''}"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-center">
+              <div class="w-10 ml-4 mr-4">
+                <p class="text-gray-300 text-xs text-center">{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ''}</p>
+              </div>
+              <div class="w-v ml-1 mr-1" />
+              <div class="w-10 ml-4">
+                <p class="text-gray-300 text-xs text-center">{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ''}</p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
+
+          <div class="flex-grow mb-4 md:mb-0">
+            <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
+            <div class="flex">
+              <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span> : {countdownHours}<span
+                  class="text-gray-300 text-xs ml-1">h</span
+                >
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+              </p>
+            </div>
+            <p class="text-gray-300 text-xs">{nextFixtureDate}</p>
+          </div>
+          <div
+            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
+          <div class="flex-grow">
+            <p class="text-gray-300 text-xs mt-4 md:mt-0">GW {focusGameweek} High Score</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              {gwLeaderUsername}
+            </p>
+            <p class="text-gray-300 text-xs">{gwLeaderPoints} points</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="m-4">
-      <div class="bg-panel rounded-md border border-gray-500 m-1">
+    <div class="m-4">
+      <div class="bg-panel rounded-md border border-gray-400 m-4">
         <ul class="flex bg-light-gray px-4 pt-2">
           <li class={`mr-4 text-xs md:text-lg ${activeTab === "fixtures" ? "active-tab" : ""}`}>
             <button
@@ -220,7 +248,7 @@
               }`}
               on:click={() => setActiveTab("points")}
             >
-              Gameweek Points
+              Points
             </button>
           </li>
           <li class={`mr-4 text-xs md:text-lg ${activeTab === "leaderboards" ? "active-tab" : ""}`}>
@@ -240,7 +268,7 @@
               }`}
               on:click={() => setActiveTab("league-table")}
             >
-              League Table
+              Table
             </button>
           </li>
         </ul>
@@ -257,4 +285,5 @@
     
       </div>
     </div>
+  {/if}
 </Layout>
