@@ -9,7 +9,6 @@
 <div class="flex justify-center items-center h-screen">
   <div class={`${className} flex justify-center items-center h-screen`}>
     <div class="relative">
-      <!-- Your logo goes here -->
       <OpenFplIcon className="h-12 w-12" />
 
       <svg class="absolute top-0 left-0 h-full w-full svg-scale" viewBox="0 0 100 100">
@@ -32,7 +31,7 @@
 
 <style>
   circle {
-    transition: stroke-dashoffset 0.5s;
+    transition: stroke-dashoffset 0.2s;
   }
   .svg-scale {
     transform: scale(2);

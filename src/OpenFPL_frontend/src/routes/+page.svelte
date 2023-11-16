@@ -11,7 +11,7 @@
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { formatUnixDateToReadable, getCountdownTime } from '../utils/Helpers';
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from '../utils/Helpers';
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
@@ -30,40 +30,47 @@
   let countdownHours = '00';
   let countdownMinutes = '00';
   let nextFixtureDate = '-';
+  let nextFixtureTime = '-';
   let focusGameweek = -1;
   let gwLeaderUsername = '-';
   let gwLeaderPoints = 0;
   let nextFixtureHomeTeam: Team | undefined = undefined;
   let nextFixtureAwayTeam: Team | undefined = undefined;
   
+  let progress = 0;
   let isLoading = true;
 
   onMount(async () => {
     isLoading = true;
-    await simulateLoading();
     try {
-
+      progress = 0;
       managerCount = await managerService.getTotalManagers();
 
+      progress = 20;
       let systemState = await systemService.getSystemState(localStorage.getItem('system_state_hash') ?? '');
       activeGameweek = systemState.activeGameweek;
       activeSeason = systemState.activeSeason.name;
       focusGameweek = systemState.focusGameweek;
       
+      progress = 40;
       let nextFixture = await fixtureService.getNextFixture();
       nextFixtureHomeTeam = await teamService.getTeamById(nextFixture.homeTeamId);
       nextFixtureAwayTeam = await teamService.getTeamById(nextFixture.awayTeamId);
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
+      nextFixtureTime = formatUnixTimeToTime(Number(nextFixture.kickOff));
 
+      progress = 60;
       let countdownTime = getCountdownTime(Number(nextFixture.kickOff));
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
+      progress = 80;
       let leadingWeeklyTeam = await leaderboardService.getLeadingWeeklyTeam();
       gwLeaderUsername = leadingWeeklyTeam.username;
       gwLeaderPoints = leadingWeeklyTeam.points;
 
+      progress = 100;
       isLoading = false;
     } catch (error) {
       console.error("Error fetching homepage data:", error);
@@ -71,29 +78,6 @@
     }
   }); 
   
-  let progress = 0;
-  const totalDuration = 2000;
-  const updateInterval = 20; 
-  
-  function simulateLoading() : Promise<void> {
-    return new Promise(resolve => {
-      function updateProgress() {
-        if (progress < 100) {
-          progress += (updateInterval / totalDuration) * 100;
-          setTimeout(updateProgress, updateInterval);
-        } else {
-          resolve(); // Resolve the promise once loading completes
-        }
-      }
-      updateProgress();
-    });
-  }
-
-
-  // Start loading simulation on component mount
-  onMount(() => {
-  });
-
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
@@ -211,7 +195,7 @@
                 : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
               </p>
             </div>
-            <p class="text-gray-300 text-xs">{nextFixtureDate}</p>
+            <p class="text-gray-300 text-xs">{nextFixtureDate} | {nextFixtureTime}</p>
           </div>
           <div
             class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
