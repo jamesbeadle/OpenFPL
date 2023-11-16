@@ -89,16 +89,6 @@
     background-color: rgba(36, 37, 41, 0.90);
   }
 
-  .circle-badge-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .circle-badge-icon {
-    align-self: center;
-  }
-
   .w-v {
     width: 20px;
   }
@@ -116,7 +106,7 @@
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
         <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md border border-gray-400"
+          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Gameweek</p>
@@ -145,7 +135,7 @@
           </div>
         </div>
         <div
-          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md border border-gray-400"
+          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">Next Game:</p>
@@ -221,7 +211,7 @@
     </div>
 
     <div class="m-4">
-      <div class="bg-panel rounded-md border border-gray-400 m-4">
+      <div class="bg-panel rounded-md m-4">
         <ul class="flex bg-light-gray px-4 pt-2">
           <li class={`mr-4 text-xs md:text-lg ${activeTab === "fixtures" ? "active-tab" : ""}`}>
             <button
