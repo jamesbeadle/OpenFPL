@@ -10,6 +10,8 @@
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from '../../utils/Helpers';
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+    import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
+    import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
 
   const systemService = new SystemService();
   const teamService = new TeamService();
@@ -188,14 +190,43 @@
         <div class="relative w-full md:w-1/2">
           <img src='pitch.png' alt="pitch" class="w-full" />
           <div class="absolute top-0 left-0 right-0 bottom-0">
-            {#each gridSetup as row, rowIndex}
-              <div class={`flex justify-around w-full h-1/4`}>
-                {#each row as _, colIndex (colIndex)}
-                  <div class={`bg-red-500/75 text-white p-1 text-center flex-1 m-4`}>
-                    Column {colIndex + 1}
-                  </div>
-                {/each}
+            <div class={`flex justify-around w-full h-auto`}>
+              <div class="relative inline-block">
+                <a target="_blank" href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
+                  <img class="h-6 md:h-12 m-0 md:m-1" src='board.png' alt='OpenChat'>
+                </a>
+                <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center px-2 md:px-4">
+                  
+                  <OpenChatIcon className="h-4 md:h-6 mr-2" />
+                  <span class="text-white text-xs md:text-xl mr-4 oc-logo">
+                    OpenChat
+                  </span>
+                </div>
               </div>
+              <div class="relative inline-block">
+                <a target="_blank" href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
+                  <img class="h-6 md:h-12 m-0 md:m-1" src='board.png' alt='OpenChat'>
+                </a>
+                <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center px-2 md:px-4">
+                  
+                  <OpenChatIcon className="h-4 md:h-6 mr-2" />
+                  <span class="text-white text-xs md:text-xl mr-4 oc-logo">
+                    OpenChat
+                  </span>
+                </div>
+              </div>
+            </div>
+            {#each gridSetup as row, rowIndex}
+            <div class={`flex justify-around items-center w-full h-1/4`}>
+              {#each row as _, colIndex (colIndex)}
+                <div class={`flex flex-col justify-center items-center flex-1 m-4`}>
+                  <ShirtIcon className='h-16' />
+                  <p class="text-center mt-2">Detail</p>
+                </div>
+              {/each}
+            </div>
+            
+            
             {/each}
           </div>
         </div>

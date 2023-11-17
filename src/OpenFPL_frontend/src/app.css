@@ -10,6 +10,14 @@
   src: url("/poppins-regular-webfont.woff2") format("woff2");
 }
 
+@font-face {
+  font-display: swap;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/Manrope-Regular.woff2") format("woff2");
+}
+
 html,
 body {
   height: 100%;
@@ -50,4 +58,9 @@ body {
 
 .fpl-purple-btn{
   background-color: #7F56F1;
+}
+
+.oc-logo{
+  font-family: 'Manrope';
+  font-weight: bold;
 }
