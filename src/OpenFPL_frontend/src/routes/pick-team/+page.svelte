@@ -27,7 +27,9 @@
   let nextFixtureTime = '-';
   let nextFixtureHomeTeam: Team | undefined = undefined;
   let nextFixtureAwayTeam: Team | undefined = undefined;
-  
+  const formations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
+  let selectedFormation = '4-4-2';
+
   let progress = 0;
   let isLoading = true;
 
@@ -145,20 +147,29 @@
 
       <div class="flex flex-col md:flex-row">
         <div class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md w-full">
-          <div class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0">
-            <button class="btn fpl-button px-4 py-2 rounded-l-md font-bold text-md min-w-[125px]">
+          <div class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4">
+            <button class="btn fpl-button px-4 py-2 rounded-l-md font-bold text-md min-w-[125px] my-4">
               Pitch View
             </button>
-            <button class="btn inactive-btn px-4 py-2 rounded-r-md font-bold text-md min-w-[125px]">
+            <button class="btn inactive-btn px-4 py-2 rounded-r-md font-bold text-md min-w-[125px] my-4">
               List View
             </button>
           </div>
         
           <div class="text-center md:text-left w-full mb-2 md:mb-0 md:ml-8">
-            <span class="text-sm md:text-lg">Formation: 3-5-2</span>
+            
+            <span class="text-sm md:text-lg">Formation: 
+              <select
+                class="p-2 fpl-dropdown text-sm md:text-lg text-center"
+                bind:value={selectedFormation}>
+                {#each formations as formation}
+                  <option value="{formation}">{formation}</option>
+                {/each}
+              </select>
+            </span>
           </div>
         
-          <div class="flex flex-row justify-between md:justify-end w-full gap-4">
+          <div class="flex flex-row justify-between md:justify-end w-full gap-4 mr-4">
             <button class="btn px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
               Auto Fill
             </button>
