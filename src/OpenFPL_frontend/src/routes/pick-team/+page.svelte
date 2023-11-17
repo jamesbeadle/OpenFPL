@@ -16,7 +16,6 @@
   const fixtureService = new FixtureService();
   const managerService = new ManagerService();
   
-  let activeTab: string = "fixtures";
   let activeGameweek = -1;
   let activeSeason = '-';
   
@@ -29,6 +28,7 @@
   let nextFixtureAwayTeam: Team | undefined = undefined;
   const formations = ['3-4-3', '3-5-2', '4-3-3', '4-4-2', '4-5-1', '5-4-1', '5-3-2'];
   let selectedFormation = '4-4-2';
+  $: gridSetup = getGridSetup(selectedFormation);
 
   let progress = 0;
   let isLoading = true;
@@ -63,9 +63,11 @@
       isLoading = false;
     }
   }); 
-  
-  function setActiveTab(tab: string): void {
-    activeTab = tab;
+
+  function getGridSetup(formation: string): number[][] {
+    const formationSplits = formation.split('-').map(Number);
+    const setups = [[1], ...formationSplits.map(s => Array(s).fill(0).map((_, i) => i + 1))];
+    return setups;
   }
   
 </script>
@@ -182,12 +184,23 @@
       
 
 
-      <div class="flex">
-        <div class="flex w-1/2">
-   a     
+      <div class="flex flex-col md:flex-row">
+        <div class="relative w-full md:w-1/2">
+          <img src='pitch.png' alt="pitch" class="w-full" />
+          <div class="absolute top-0 left-0 right-0 bottom-0">
+            {#each gridSetup as row, rowIndex}
+              <div class={`flex justify-around w-full h-1/4`}>
+                {#each row as _, colIndex (colIndex)}
+                  <div class={`bg-red-500/75 text-white p-1 text-center flex-1 m-4`}>
+                    Column {colIndex + 1}
+                  </div>
+                {/each}
+              </div>
+            {/each}
+          </div>
         </div>
-        <div class="flex w-1/2">
-    b    
+        <div class="flex w-100 md:w-1/2">
+       
         </div>
       </div>
 
