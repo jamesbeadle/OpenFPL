@@ -85,10 +85,6 @@
 </script>
 
 <style>
-  .bg-panel {
-    background-color: rgba(36, 37, 41, 0.90);
-  }
-
   .w-v {
     width: 20px;
   }

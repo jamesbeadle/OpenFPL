@@ -6,12 +6,12 @@
   import { ManagerService } from "$lib/services/ManagerService";
   import { FixtureService } from "$lib/services/FixtureService";
   import Layout from "../Layout.svelte";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from '../../utils/Helpers';
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-    import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-    import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
+  import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
+  import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
+  import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
 
   const systemService = new SystemService();
   const teamService = new TeamService();
@@ -75,9 +75,7 @@
 </script>
 
 <style>
-  .bg-panel {
-    background-color: rgba(36, 37, 41, 0.90);
-  }
+  
 
   .inactive-btn{  
     background-color: black;
@@ -150,8 +148,8 @@
 
 
       <div class="flex flex-col md:flex-row">
-        <div class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md w-full">
-          <div class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4">
+        <div class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md md:w-full">
+          <div class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4 order-3 md:order-1">
             <button class="btn fpl-button px-4 py-2 rounded-l-md font-bold text-md min-w-[125px] my-4">
               Pitch View
             </button>
@@ -160,11 +158,11 @@
             </button>
           </div>
         
-          <div class="text-center md:text-left w-full mb-2 md:mb-0 md:ml-8">
+          <div class="text-center md:text-left w-full mt-4 md:mt-0 md:ml-8 order-2">
             
-            <span class="text-sm md:text-lg">Formation: 
+            <span class="text-lg">Formation: 
               <select
-                class="p-2 fpl-dropdown text-sm md:text-lg text-center"
+                class="p-2 fpl-dropdown text-lg text-center"
                 bind:value={selectedFormation}>
                 {#each formations as formation}
                   <option value="{formation}">{formation}</option>
@@ -173,11 +171,11 @@
             </span>
           </div>
         
-          <div class="flex flex-row justify-between md:justify-end w-full gap-4 mr-4">
-            <button class="btn px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
+          <div class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3">
+            <button class="btn w-full md:w-auto px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
               Auto Fill
             </button>
-            <button class="btn px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
+            <button class="btn w-full md:w-auto px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
               Save Team
             </button>
           </div>
@@ -192,36 +190,34 @@
           <div class="absolute top-0 left-0 right-0 bottom-0">
             <div class={`flex justify-around w-full h-auto`}>
               <div class="relative inline-block">
-                <a target="_blank" href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
-                  <img class="h-6 md:h-12 m-0 md:m-1" src='board.png' alt='OpenChat'>
-                </a>
-                <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center px-2 md:px-4">
-                  
-                  <OpenChatIcon className="h-4 md:h-6 mr-2" />
-                  <span class="text-white text-xs md:text-xl mr-4 oc-logo">
-                    OpenChat
-                  </span>
+                <img class="h-6 md:h-12 m-0 md:m-1" src='board.png' alt='OpenChat'>
+                <div class="absolute top-0 left-0 w-full h-full">
+                  <a class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0" target="_blank" href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
+                    <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
+                    <span class="text-white text-xs md:text-xl mr-4 oc-logo">
+                      OpenChat
+                    </span>
+                  </a>
                 </div>
               </div>
               <div class="relative inline-block">
-                <a target="_blank" href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
-                  <img class="h-6 md:h-12 m-0 md:m-1" src='board.png' alt='OpenChat'>
-                </a>
-                <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center px-2 md:px-4">
-                  
-                  <OpenChatIcon className="h-4 md:h-6 mr-2" />
-                  <span class="text-white text-xs md:text-xl mr-4 oc-logo">
-                    OpenChat
-                  </span>
+                <img class="h-6 md:h-12 m-0 md:m-1" src='board.png' alt='OpenChat'>
+                <div class="absolute top-0 left-0 w-full h-full">
+                  <a class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0" target="_blank" href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
+                    <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
+                    <span class="text-white text-xs md:text-xl mr-4 oc-logo">
+                      OpenChat
+                    </span>
+                  </a>
                 </div>
               </div>
             </div>
             {#each gridSetup as row, rowIndex}
-            <div class={`flex justify-around items-center w-full h-1/4`}>
+            <div class={`flex justify-around items-center w-full`}>
               {#each row as _, colIndex (colIndex)}
-                <div class={`flex flex-col justify-center items-center flex-1 m-4`}>
-                  <ShirtIcon className='h-16' />
-                  <p class="text-center mt-2">Detail</p>
+                <div class={`flex flex-col justify-center items-center flex-1`}>
+                  <ShirtIcon className='h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16' />
+                  <!--<p class="text-center mb-16">Detail</p>-->
                 </div>
               {/each}
             </div>
@@ -231,7 +227,7 @@
           </div>
         </div>
         <div class="flex w-100 md:w-1/2">
-       
+          <SimpleFixtures />
         </div>
       </div>
 
