@@ -73,6 +73,11 @@
     background-color: rgba(36, 37, 41, 0.90);
   }
 
+  .inactive-btn{  
+    background-color: black;
+    color: white;
+  }
+
 </style>
 
 <Layout>
@@ -138,32 +143,32 @@
       </div>
 
 
-      <div class="flex">
-        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
-          <div class="flex flex-grow">
-            <div class="flex flex-col md:flex-row justify-between md:items-center text-white bg-panel p-4 rounded-md w-full">
-              <div class="flex gap-2 items-center">
-                <button class="btn bg-green-500 text-white px-4 py-2 rounded">
-                  Pitch View
-                </button>
-                <button class="btn bg-gray-400 text-white px-4 py-2 rounded">
-                  List View
-                </button>
-                <span class="text-sm md:text-lg md:ml-4">Formation: 3-5-2</span>
-              </div>
-              <div class="flex gap-2">
-                <button class="btn bg-blue-500 text-white px-4 py-2 rounded">
-                  Auto Fill
-                </button>
-                <button class="btn bg-purple-500 text-white px-4 py-2 rounded">
-                  Save Team
-                </button>
-              </div>
-            </div>
+      <div class="flex flex-col md:flex-row">
+        <div class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md w-full">
+          <div class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0">
+            <button class="btn fpl-button px-4 py-2 rounded-l-md font-bold text-md min-w-[125px]">
+              Pitch View
+            </button>
+            <button class="btn inactive-btn px-4 py-2 rounded-r-md font-bold text-md min-w-[125px]">
+              List View
+            </button>
           </div>
-          
+        
+          <div class="text-center md:text-left w-full mb-2 md:mb-0 md:ml-8">
+            <span class="text-sm md:text-lg">Formation: 3-5-2</span>
+          </div>
+        
+          <div class="flex flex-row justify-between md:justify-end w-full gap-4">
+            <button class="btn px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
+              Auto Fill
+            </button>
+            <button class="btn px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
+              Save Team
+            </button>
+          </div>
         </div>
       </div>
+      
 
 
       <div class="flex">
