@@ -76,7 +76,7 @@
     </div>
     <div class="flex-1">
       <div class="flex justify-end">
-        <div class="text-right px-4 sm:px-0 mt-1 sm:mt-0">
+        <div class="text-right px-4 sm:px-0 mt-1 sm:mt-0 md:mr-4">
           <a
             href="https://juno.build"
             target="_blank"

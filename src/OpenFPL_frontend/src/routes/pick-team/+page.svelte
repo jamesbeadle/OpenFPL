@@ -81,47 +81,45 @@
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
-          <div class="flex-grow">
+        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+          <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">{activeGameweek}</p>
             <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
-          <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Deadline</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              INSERT DEADLINE
-            </p>
-            <p class="text-gray-300 text-xs">DAY HOUR MIN</p>
+          
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
+
+          <div class="flex-grow mb-4 md:mb-0">
+            <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
+            <div class="flex">
+              <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span> : {countdownHours}<span
+                  class="text-gray-300 text-xs ml-1">h</span
+                >
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+              </p>
+            </div>
+            <p class="text-gray-300 text-xs">{nextFixtureDate} | {nextFixtureTime}</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
-          <div class="flex-grow">
+
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          
+          <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
             <p class="text-gray-300 text-xs">Players</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">11/11</p>
             <p class="text-gray-300 text-xs">Selected</p>
           </div>
+
         </div>
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+
+        <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Team Value</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">£299.5m</p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;" />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Bank Balance</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">£0.5m</p>
@@ -138,6 +136,45 @@
           </div>
         </div>
       </div>
+
+
+      <div class="flex">
+        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+          <div class="flex flex-grow">
+            <div class="flex flex-col md:flex-row justify-between md:items-center text-white bg-panel p-4 rounded-md w-full">
+              <div class="flex gap-2 items-center">
+                <button class="btn bg-green-500 text-white px-4 py-2 rounded">
+                  Pitch View
+                </button>
+                <button class="btn bg-gray-400 text-white px-4 py-2 rounded">
+                  List View
+                </button>
+                <span class="text-sm md:text-lg md:ml-4">Formation: 3-5-2</span>
+              </div>
+              <div class="flex gap-2">
+                <button class="btn bg-blue-500 text-white px-4 py-2 rounded">
+                  Auto Fill
+                </button>
+                <button class="btn bg-purple-500 text-white px-4 py-2 rounded">
+                  Save Team
+                </button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+
+      <div class="flex">
+        <div class="flex w-1/2">
+   a     
+        </div>
+        <div class="flex w-1/2">
+    b    
+        </div>
+      </div>
+
     </div>
   {/if}
 </Layout>
