@@ -76,3 +76,7 @@ body {
 .active-tab {
   border-bottom: 4px #2ce3a6 solid;
 }
+
+.toast-panel{
+  background-color: #2ce3a6;
+}

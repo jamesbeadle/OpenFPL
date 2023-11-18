@@ -2,11 +2,16 @@
   import { onMount } from "svelte";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
+  import CopyIcon from "$lib/icons/CopyIcon.svelte";
+  import { principalId } from "$lib/stores/auth";
 
   const teamService = new TeamService();
 
   let teams: Team[] = [];
   let selectedTeam = 1;
+  let userPrincipal = 'yxaeb-cknlu-ymf7s-hyhv4-ngpus-hurji-roqrb-hcf46-6ed5v-cp3qa-uqe';
+  let showToast = false;
+
 
   onMount(async () => {
     try {
@@ -19,8 +24,21 @@
       console.error("Error fetching data:", error);
     }
   });
+
+  function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast = true;
+      setTimeout(() => showToast = false, 3000);
+    });
+  }
+
 </script>
 
+{#if showToast}
+<div class="fixed inset-x-0 top-0 mt-16 toast-panel text-white text-center py-2">
+  Copied to clipboard!
+  </div>
+{/if}
 <div class="container mx-auto p-4">
   <div class="flex flex-wrap">
     <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
@@ -53,9 +71,10 @@
         <h2 class="text-2xl font-bold mb-2">August 2023</h2>
 
         <p class="text-xs mb-2 mt-4">Principal:</p>
-        <h2 class="text-xs font-bold mb-2">
-          yxaeb-cknlu-ymf7s-hyhv4-ngpus-hurji-roqrb-hcf46-6ed5v-cp3qa-uqe
-        </h2>
+        <div class="flex items-center">
+          <h2 class="text-xs font-bold">{userPrincipal}</h2>
+          <CopyIcon onClick={copyToClipboard} principalId={userPrincipal} className="ml-2 w-4 h-4" />
+        </div>
       </div>
     </div>
   </div>
