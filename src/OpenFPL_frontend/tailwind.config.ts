@@ -5,8 +5,8 @@ export default {
     extend: {
       colors: {
         "custom-blue": "#3C71FA",
-      }
-    }
+      },
+    },
   },
   plugins: [],
 };

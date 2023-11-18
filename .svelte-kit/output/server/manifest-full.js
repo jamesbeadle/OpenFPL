@@ -7,10 +7,10 @@ function __memo(fn) {
 return {
 	appDir: "_app",
 	appPath: "_app",
-	assets: new Set(["background.jpg","discord.png","discord.png:Zone.Identifier","favicon.png","github.png","github.png:Zone.Identifier","openchat.png","openchat.png:Zone.Identifier","poppins-regular-webfont.woff2","telegram.png","telegram.png:Zone.Identifier","twitter.png","twitter.png:Zone.Identifier"]),
-	mimeTypes: {".jpg":"image/jpeg",".png":"image/png",".woff2":"font/woff2"},
+	assets: new Set(["FPLCoin.png","ICPCoin.png","Manrope-Regular.woff2","background.jpg","board.png","brace-bonus.png","captain-fantastic.png","ckBTCCoin.png","ckETHCoin.png","countrymen.png","discord.png","favicon.png","github.png","goal-getter.png","hat-trick-hero.png","no-entry.png","openchat.png","pass-master.png","pitch.png","poppins-regular-webfont.woff2","profile_placeholder.png","prospects.png","safe-hands.png","team-boost.png","telegram.png","twitter.png"]),
+	mimeTypes: {".png":"image/png",".woff2":"font/woff2",".jpg":"image/jpeg"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.d27fa20a.js","app":"_app/immutable/entry/app.763ffcc0.js","imports":["_app/immutable/entry/start.d27fa20a.js","_app/immutable/chunks/index.e590a2b1.js","_app/immutable/chunks/singletons.2158a4f8.js","_app/immutable/entry/app.763ffcc0.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/index.e590a2b1.js"],"stylesheets":[],"fonts":[]},
+		client: {"start":"_app/immutable/entry/start.fc2b2ebd.js","app":"_app/immutable/entry/app.b3be0bed.js","imports":["_app/immutable/entry/start.fc2b2ebd.js","_app/immutable/chunks/index.aa733771.js","_app/immutable/chunks/singletons.1877a767.js","_app/immutable/entry/app.b3be0bed.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/index.aa733771.js"],"stylesheets":[],"fonts":[]},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),

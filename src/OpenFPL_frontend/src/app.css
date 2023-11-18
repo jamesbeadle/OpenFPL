@@ -37,12 +37,12 @@ body {
   background-attachment: fixed;
 }
 
-.fpl-button{
-  background-color: #2CE3A6;
+.fpl-button {
+  background-color: #2ce3a6;
   color: black;
 }
 
-.fpl-dropdown{
+.fpl-dropdown {
   background-color: transparent;
   border: none;
 }
@@ -52,23 +52,23 @@ body {
   border: none;
 }
 
-.bg-light-gray{
+.bg-light-gray {
   background-color: rgba(46, 50, 58, 0.6);
 }
 
-.fpl-purple-btn{
-  background-color: #7F56F1;
+.fpl-purple-btn {
+  background-color: #7f56f1;
 }
 
-.oc-logo{
-  font-family: 'Manrope';
+.oc-logo {
+  font-family: "Manrope";
   font-weight: bold;
 }
 
 .bg-panel {
-  background-color: rgba(36, 37, 41, 0.90);
+  background-color: rgba(36, 37, 41, 0.9);
 }
 
-.active-tab{
-  border-bottom: 4px #2CE3A6 solid;
+.active-tab {
+  border-bottom: 4px #2ce3a6 solid;
 }

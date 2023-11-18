@@ -61,7 +61,7 @@
           <span class="hidden sm:flex">|</span>
           <a href="/gameplay" class="hover:text-gray-300">Gameplay Rules</a>
           <span class="hidden sm:flex">|</span>
-          <a href="/terms" class="hover:text-gray-300">Terms and Conditions</a>
+          <a href="/terms" class="hover:text-gray-300">Terms & Conditions</a>
           <span class="hidden sm:flex">|</span>
           <a href="/fixture-validation-list" class="hover:text-gray-300"
             >Pre-SNS Fixture Validation</a

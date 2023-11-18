@@ -16,7 +16,6 @@ const authStore = {
         set({ identity });
       },
       identityProvider: identityProviderUrl
-      // Pass the URL here
     });
   },
   logout: async () => {
@@ -63,13 +62,11 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       <button class="md:hidden focus:outline-none"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button>
       ${$isAuthenticated ? `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4">Home</span></a></li>
           <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4">Squad Selection</span></a></li>
-          <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4">Governance</span></a></li>
           <li class="mx-2 flex items-center h-16"><a href="/profile" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/profile"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4">Profile</span></a></li>
           <li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Disconnect
               ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul>
         <div class="${escape(null_to_empty(`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-tlhn8x"}"><ul class="flex flex-col"><li class="p-2"><a href="/" class="${escape(null_to_empty(`nav-underline hover:text-gray-400 ${currentClass("/")}`), true) + " svelte-tlhn8x"}">Home</a></li>
             <li class="p-2"><a href="/pick-team" class="${escape(null_to_empty(currentClass("/pick-team")), true) + " svelte-tlhn8x"}">Squad Selection</a></li>
-            <li class="p-2"><a href="/governance" class="${escape(null_to_empty(currentClass("/governance")), true) + " svelte-tlhn8x"}">Governance</a></li>
             <li class="p-2"><a href="/profile" class="${escape(null_to_empty(currentClass("/profile")), true) + " svelte-tlhn8x"}">Profile</a></li>
             <li class="p-2"><button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Disconnect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>` : `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Connect
@@ -90,15 +87,15 @@ const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
           <a href="https://t.co/WmOhFA8JUR" target="_blank" rel="noopener noreferrer"><img src="discord.png" class="h-4 w-auto mb-2 mr-2" alt="Discord"></a>
           <a href="https://t.co/vVkquMrdOu" target="_blank" rel="noopener noreferrer"><img src="telegram.png" class="h-4 w-auto mb-2 mr-2" alt="Telegram"></a>
           <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div>
-      <div class="flex justify-start"><div class="flex flex-col sm:flex-row sm:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a>
+      <div class="flex justify-start"><div class="flex flex-col sm:flex-row sm:space-x-2 pl-4"><a href="/pick-team" class="hover:text-gray-300">Whitepaper</a>
           <span class="hidden sm:flex">|</span>
           <a href="/gameplay" class="hover:text-gray-300">Gameplay Rules</a>
           <span class="hidden sm:flex">|</span>
-          <a href="/terms" class="hover:text-gray-300">Terms and Conditions</a>
+          <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a>
           <span class="hidden sm:flex">|</span>
           <a href="/fixture-validation-list" class="hover:text-gray-300">Pre-SNS Fixture Validation</a></div></div></div>
     <div class="flex-0"><b class="px-4 mt-2 sm:mt-0 sm:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></div>
-    <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 sm:px-0 mt-1 sm:mt-0"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
+    <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 sm:px-0 mt-1 sm:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
 const app = "";
@@ -109,5 +106,6 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 </div>`;
 });
 export {
-  Layout as L
+  Layout as L,
+  OpenFPLIcon as O
 };

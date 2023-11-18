@@ -1,20 +1,23 @@
-import { ActorFactory } from "../../utils/ActorFactory";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { ActorFactory } from "../../utils/ActorFactory";
 
 export class ManagerService {
-    private actor: any;
+  private actor: any;
 
-    constructor() {
-        this.actor = ActorFactory.createActor(idlFactory, process.env.OPENFPL_BACKEND_CANISTER_ID);
-    }
+  constructor() {
+    this.actor = ActorFactory.createActor(
+      idlFactory,
+      process.env.OPENFPL_BACKEND_CANISTER_ID
+    );
+  }
 
-    async getTotalManagers(): Promise<number> {
-        try {
-        const managerCountData = await this.actor.getTotalManagers();
-        return Number(managerCountData);
-        } catch (error) {
-        console.error("Error fetching total managers:", error);
-        throw error;
-        }
+  async getTotalManagers(): Promise<number> {
+    try {
+      const managerCountData = await this.actor.getTotalManagers();
+      return Number(managerCountData);
+    } catch (error) {
+      console.error("Error fetching total managers:", error);
+      throw error;
     }
+  }
 }

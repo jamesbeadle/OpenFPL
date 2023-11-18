@@ -1,5 +1,4 @@
 <script lang="ts">
-
   import { onMount } from "svelte";
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
@@ -11,7 +10,11 @@
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from '../utils/Helpers';
+  import {
+    formatUnixDateToReadable,
+    formatUnixTimeToTime,
+    getCountdownTime,
+  } from "../utils/Helpers";
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
@@ -22,29 +25,29 @@
   const teamService = new TeamService();
   const leaderboardService = new LeaderboardService();
   const managerService = new ManagerService();
-  
+
   let activeTab: string = "fixtures";
   let activeGameweek = -1;
-  let activeSeason = '-';
+  let activeSeason = "-";
   let managerCount = -1;
-  let countdownDays = '00';
-  let countdownHours = '00';
-  let countdownMinutes = '00';
-  let nextFixtureDate = '-';
-  let nextFixtureTime = '-';
+  let countdownDays = "00";
+  let countdownHours = "00";
+  let countdownMinutes = "00";
+  let nextFixtureDate = "-";
+  let nextFixtureTime = "-";
   let focusGameweek = -1;
-  let gwLeaderUsername = '-';
+  let gwLeaderUsername = "-";
   let gwLeaderPoints = 0;
   let nextFixtureHomeTeam: Team | undefined = undefined;
   let nextFixtureAwayTeam: Team | undefined = undefined;
-  
+
   let progress = 0;
   let isLoading = true;
   let isLoggedIn = false;
-  
+
   onMount(async () => {
     isLoading = true;
-    isAuthenticated.subscribe(change => {
+    isAuthenticated.subscribe((change) => {
       isLoggedIn = change;
     });
     try {
@@ -52,15 +55,21 @@
       managerCount = await managerService.getTotalManagers();
 
       progress = 20;
-      let systemState = await systemService.getSystemState(localStorage.getItem('system_state_hash') ?? '');
+      let systemState = await systemService.getSystemState(
+        localStorage.getItem("system_state_hash") ?? ""
+      );
       activeGameweek = systemState.activeGameweek;
       activeSeason = systemState.activeSeason.name;
       focusGameweek = systemState.focusGameweek;
-      
+
       progress = 40;
       let nextFixture = await fixtureService.getNextFixture();
-      nextFixtureHomeTeam = await teamService.getTeamById(nextFixture.homeTeamId);
-      nextFixtureAwayTeam = await teamService.getTeamById(nextFixture.awayTeamId);
+      nextFixtureHomeTeam = await teamService.getTeamById(
+        nextFixture.homeTeamId
+      );
+      nextFixtureAwayTeam = await teamService.getTeamById(
+        nextFixture.awayTeamId
+      );
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture.kickOff));
 
@@ -81,20 +90,12 @@
       console.error("Error fetching homepage data:", error);
       isLoading = false;
     }
-  }); 
-  
+  });
+
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
-  
 </script>
-
-<style>
-  .w-v {
-    width: 20px;
-  }
-
-</style>
 
 <Layout>
   {#if isLoading}
@@ -107,7 +108,9 @@
         >
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Gameweek</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">{activeGameweek}</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              {activeGameweek}
+            </p>
             <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
           <div
@@ -127,7 +130,9 @@
           />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Weekly Prize Pool</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">0</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              0
+            </p>
             <p class="text-gray-300 text-xs">$FPL</p>
           </div>
         </div>
@@ -139,11 +144,21 @@
             <div class="flex justify-center mb-2 mt-2">
               <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
-                  <a href={`/club/${nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1}`}>
-                    <BadgeIcon 
-                        primaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.primaryColourHex : ''}"
-                        secondaryColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.secondaryColourHex : ''}"
-                        thirdColour="{nextFixtureHomeTeam ? nextFixtureHomeTeam.thirdColourHex : ''}"
+                  <a
+                    href={`/club/${
+                      nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                    }`}
+                  >
+                    <BadgeIcon
+                      primaryColour={nextFixtureHomeTeam
+                        ? nextFixtureHomeTeam.primaryColourHex
+                        : ""}
+                      secondaryColour={nextFixtureHomeTeam
+                        ? nextFixtureHomeTeam.secondaryColourHex
+                        : ""}
+                      thirdColour={nextFixtureHomeTeam
+                        ? nextFixtureHomeTeam.thirdColourHex
+                        : ""}
                     />
                   </a>
                 </div>
@@ -151,11 +166,21 @@
                   <p class="text-xs mt-2 mb-2 font-bold">v</p>
                 </div>
                 <div class="w-10 ml-4">
-                  <a href={`/club/${nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1}`}>
+                  <a
+                    href={`/club/${
+                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                    }`}
+                  >
                     <BadgeIcon
-                      primaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.primaryColourHex : ''}"
-                      secondaryColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.secondaryColourHex : ''}"
-                      thirdColour="{nextFixtureAwayTeam ? nextFixtureAwayTeam.thirdColourHex : ''}"
+                      primaryColour={nextFixtureAwayTeam
+                        ? nextFixtureAwayTeam.primaryColourHex
+                        : ""}
+                      secondaryColour={nextFixtureAwayTeam
+                        ? nextFixtureAwayTeam.secondaryColourHex
+                        : ""}
+                      thirdColour={nextFixtureAwayTeam
+                        ? nextFixtureAwayTeam.thirdColourHex
+                        : ""}
                     />
                   </a>
                 </div>
@@ -164,13 +189,29 @@
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a class="text-gray-300 text-xs text-center" href={`/club/${nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1}`}>{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ''}</a>
+                  <a
+                    class="text-gray-300 text-xs text-center"
+                    href={`/club/${
+                      nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                    }`}
+                    >{nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.abbreviatedName
+                      : ""}</a
+                  >
                 </p>
               </div>
               <div class="w-v ml-1 mr-1" />
               <div class="w-10 ml-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a class="text-gray-300 text-xs text-center" href={`/club/${nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1}`}>{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ''}</a>
+                  <a
+                    class="text-gray-300 text-xs text-center"
+                    href={`/club/${
+                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                    }`}
+                    >{nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.abbreviatedName
+                      : ""}</a
+                  >
                 </p>
               </div>
             </div>
@@ -184,20 +225,27 @@
             <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
             <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span> : {countdownHours}<span
-                  class="text-gray-300 text-xs ml-1">h</span
+                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
+                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
+                  >h</span
                 >
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
+                  >m</span
+                >
               </p>
             </div>
-            <p class="text-gray-300 text-xs">{nextFixtureDate} | {nextFixtureTime}</p>
+            <p class="text-gray-300 text-xs">
+              {nextFixtureDate} | {nextFixtureTime}
+            </p>
           </div>
           <div
             class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs mt-4 md:mt-0">GW {focusGameweek} High Score</p>
+            <p class="text-gray-300 text-xs mt-4 md:mt-0">
+              GW {focusGameweek} High Score
+            </p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {gwLeaderUsername}
             </p>
@@ -210,7 +258,11 @@
     <div class="m-4">
       <div class="bg-panel rounded-md m-4">
         <ul class="flex bg-light-gray px-4 pt-2">
-          <li class={`mr-4 text-xs md:text-lg ${activeTab === "fixtures" ? "active-tab" : ""}`}>
+          <li
+            class={`mr-4 text-xs md:text-lg ${
+              activeTab === "fixtures" ? "active-tab" : ""
+            }`}
+          >
             <button
               class={`p-2 ${
                 activeTab === "fixtures" ? "text-white" : "text-gray-400"
@@ -221,7 +273,11 @@
             </button>
           </li>
           {#if isLoggedIn}
-            <li class={`mr-4 text-xs md:text-lg ${activeTab === "points" ? "active-tab" : ""}`}>
+            <li
+              class={`mr-4 text-xs md:text-lg ${
+                activeTab === "points" ? "active-tab" : ""
+              }`}
+            >
               <button
                 class={`p-2 ${
                   activeTab === "points" ? "text-white" : "text-gray-400"
@@ -232,7 +288,11 @@
               </button>
             </li>
           {/if}
-          <li class={`mr-4 text-xs md:text-lg ${activeTab === "leaderboards" ? "active-tab" : ""}`}>
+          <li
+            class={`mr-4 text-xs md:text-lg ${
+              activeTab === "leaderboards" ? "active-tab" : ""
+            }`}
+          >
             <button
               class={`p-2 ${
                 activeTab === "leaderboards" ? "text-white" : "text-gray-400"
@@ -242,7 +302,11 @@
               Leaderboards
             </button>
           </li>
-          <li class={`mr-4 text-xs md:text-lg ${activeTab === "league-table" ? "active-tab" : ""}`}>
+          <li
+            class={`mr-4 text-xs md:text-lg ${
+              activeTab === "league-table" ? "active-tab" : ""
+            }`}
+          >
             <button
               class={`p-2 ${
                 activeTab === "league-table" ? "text-white" : "text-gray-400"
@@ -253,7 +317,7 @@
             </button>
           </li>
         </ul>
-    
+
         {#if activeTab === "fixtures"}
           <FixturesComponent />
         {:else if activeTab === "points"}
@@ -263,8 +327,13 @@
         {:else if activeTab === "league-table"}
           <LeagueTableComponent />
         {/if}
-    
       </div>
     </div>
   {/if}
 </Layout>
+
+<style>
+  .w-v {
+    width: 20px;
+  }
+</style>

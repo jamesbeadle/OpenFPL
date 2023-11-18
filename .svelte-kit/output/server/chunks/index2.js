@@ -57,6 +57,13 @@ function escape(value, is_attr = false) {
   }
   return escaped + str.substring(last);
 }
+function each(items, fn) {
+  let str = "";
+  for (let i = 0; i < items.length; i += 1) {
+    str += fn(items[i], i);
+  }
+  return str;
+}
 const missing_component = {
   $$render: () => ""
 };
@@ -115,10 +122,11 @@ export {
   subscribe as a,
   add_attribute as b,
   create_ssr_component as c,
-  noop as d,
+  each as d,
   escape as e,
-  safe_not_equal as f,
-  getContext as g,
+  noop as f,
+  safe_not_equal as g,
+  getContext as h,
   is_function as i,
   missing_component as m,
   null_to_empty as n,

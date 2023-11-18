@@ -31,48 +31,6 @@
   }
 </script>
 
-<style>
-  header {
-    background-color: rgba(36, 37, 41, 0.9);
-  }
-  .nav-underline {
-    position: relative;
-    display: inline-block;
-    color: white;
-  }
-  .nav-underline::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    background-color: #2ce3a6;
-    bottom: 0;
-    left: 0;
-    transform: scaleX(0);
-    transition: transform 0.3s ease-in-out;
-    color: #2ce3a6;
-  }
-
-  .nav-underline:hover::after,
-  .nav-underline.active::after {
-    transform: scaleX(1);
-    color: #2ce3a6;
-  }
-
-  .nav-underline:hover::after {
-    transform: scaleX(1);
-    background-color: gray;
-  }
-  .nav-button {
-    background-color: transparent;
-  }
-  .nav-button:hover {
-    background-color: transparent;
-    color: #2ce3a6;
-    border: none;
-  }
-</style>
-
 <header>
   <nav class="text-white">
     <div class="px-4 h-16 flex justify-between items-center w-full">
@@ -205,3 +163,45 @@
     </div>
   </nav>
 </header>
+
+<style>
+  header {
+    background-color: rgba(36, 37, 41, 0.9);
+  }
+  .nav-underline {
+    position: relative;
+    display: inline-block;
+    color: white;
+  }
+  .nav-underline::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #2ce3a6;
+    bottom: 0;
+    left: 0;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
+    color: #2ce3a6;
+  }
+
+  .nav-underline:hover::after,
+  .nav-underline.active::after {
+    transform: scaleX(1);
+    color: #2ce3a6;
+  }
+
+  .nav-underline:hover::after {
+    transform: scaleX(1);
+    background-color: gray;
+  }
+  .nav-button {
+    background-color: transparent;
+  }
+  .nav-button:hover {
+    background-color: transparent;
+    color: #2ce3a6;
+    border: none;
+  }
+</style>
