@@ -1,6 +1,6 @@
 <script lang="ts">
-    import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
-    import ProfileDetail from "$lib/components/profile-detail.svelte";
+  import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
+  import ProfileDetail from "$lib/components/profile-detail.svelte";
   import Layout from "../Layout.svelte";
   let activeTab: string = "details";
   
@@ -12,8 +12,8 @@
 
 <Layout>
   <div class="m-4">
-    <div class="bg-panel rounded-md m-4">
-      <ul class="flex bg-light-gray px-4 pt-2">
+    <div class="bg-panel rounded-lg m-4">
+      <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
         <li class={`mr-4 text-xs md:text-lg ${activeTab === "details" ? "active-tab" : ""}`}>
           <button
             class={`p-2 ${
@@ -44,11 +44,4 @@
   
     </div>
   </div>
-
-  <!-- Details Tab -->
-
-  <!-- Gameweeks Tab -->
-
-  <!-- Details Tab -->
-
 </Layout>
