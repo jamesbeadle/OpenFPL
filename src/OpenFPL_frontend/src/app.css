@@ -60,6 +60,10 @@ body {
   background-color: #7f56f1;
 }
 
+.fpl-cancel-btn {
+  background-color: #F27557;
+}
+
 .oc-logo {
   font-family: "Manrope";
   font-weight: bold;
