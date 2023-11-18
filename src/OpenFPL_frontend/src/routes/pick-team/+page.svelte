@@ -15,6 +15,7 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
+    import UseBonusModal from "$lib/components/use-bonus-modal.svelte";
 
   const systemService = new SystemService();
   const teamService = new TeamService();
@@ -45,7 +46,21 @@
 
   let progress = 0;
   let isLoading = true;
-
+  let showModal: boolean = false;
+  let selectedBonusId = 0;
+  let bonusNames = ['Goal Getter', 'Pass Master', 'No Entry', 'Team Boost', 'Safe Hands', 'Captain Fantastic', 'Prospects', 'Countrymen', 'Brace Bonus', 'Hat-Trick Hero'];
+  let bonusDescriptions = [
+    'Goal Getter', 
+    'Pass Master', 
+    'No Entry', 
+    'Team Boost', 
+    'Safe Hands', 
+    'Captain Fantastic', 
+    'Prospects', 
+    'Countrymen', 
+    'Brace Bonus', 
+    'Hat-Trick Hero'];
+  
   onMount(async () => {
     isLoading = true;
     try {
@@ -95,8 +110,19 @@
     ];
     return setups;
   }
+
+  
+  function showBonusModal(bonusId: number): void {
+      selectedBonusId = bonusId;
+      showModal = true;
+  }
+
+    function closeBonusModal(): void {
+        showModal = false;
+    }
 </script>
 
+<UseBonusModal {showModal} bonusName={bonusNames[selectedBonusId-1]} bonusDescription={bonusDescriptions[selectedBonusId-1]} {closeBonusModal} />
 <Layout>
   {#if isLoading}
     <LoadingIcon {progress} />
@@ -320,7 +346,7 @@
                 <p class="text-center text-xs mt-4 m-2 font-bold">
                   Goal Getter
                 </p>
-                <button
+                <button on:click={() => showBonusModal(1)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]"
                   >Use</button
                 >
@@ -338,7 +364,7 @@
                 <p class="text-center text-xs mt-4 m-2 font-bold">
                   Pass Master
                 </p>
-                <button
+                <button on:click={() => showBonusModal(2)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >
@@ -354,7 +380,7 @@
                   class="h-10 md:h-24 mt-2"
                 />
                 <p class="text-center text-xs mt-4 m-2 font-bold">No Entry</p>
-                <button
+                <button on:click={() => showBonusModal(3)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >
@@ -370,7 +396,7 @@
                   class="h-10 md:h-24 mt-2"
                 />
                 <p class="text-center text-xs mt-4 m-2 font-bold">Team Boost</p>
-                <button
+                <button on:click={() => showBonusModal(4)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >
@@ -386,7 +412,7 @@
                   class="h-10 md:h-24 mt-2"
                 />
                 <p class="text-center text-xs mt-4 m-2 font-bold">Safe Hands</p>
-                <button
+                <button on:click={() => showBonusModal(5)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >
@@ -406,7 +432,7 @@
                 <p class="text-center text-xs mt-4 m-2 font-bold">
                   Captain Fantastic
                 </p>
-                <button
+                <button on:click={() => showBonusModal(6)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >
@@ -422,7 +448,7 @@
                   class="h-10 md:h-24 mt-2"
                 />
                 <p class="text-center text-xs mt-4 m-2 font-bold">Prospects</p>
-                <button
+                <button on:click={() => showBonusModal(7)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >
@@ -438,7 +464,7 @@
                   class="h-10 md:h-24 mt-2"
                 />
                 <p class="text-center text-xs mt-4 m-2 font-bold">Countrymen</p>
-                <button
+                <button on:click={() => showBonusModal(8)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >
@@ -456,7 +482,7 @@
                 <p class="text-center text-xs mt-4 m-2 font-bold">
                   Brace Bonus
                 </p>
-                <button
+                <button on:click={() => showBonusModal(9)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >
@@ -472,9 +498,9 @@
                   class="h-10 md:h-24 mt-2"
                 />
                 <p class="text-center text-xs mt-4 m-2 font-bold">
-                  Hat Trick Hero
+                  Hat-Trick Hero
                 </p>
-                <button
+                <button on:click={() => showBonusModal(10)}
                   class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
                   >Use</button
                 >

@@ -47,7 +47,7 @@
             <li>Captain Fantastic: X2 multiplier on the captain’s score for scoring a goal.</li>
             <li>Team Boost: X2 multiplier for all players from a single club.</li>
             <li>Brace Bonus: X2 multiplier for any player scoring 2+ goals.</li>
-            <li>Hat Trick Hero: X3 multiplier for any player scoring 3+ goals.</li>
+            <li>Hat-Trick Hero: X3 multiplier for any player scoring 3+ goals.</li>
             <li>Countrymen: Double points for players of a selected nationality.</li>
             <li>Youth Prospects: Double points for players under 21.</li>
         </ul>
