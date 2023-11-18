@@ -68,3 +68,7 @@ body {
 .bg-panel {
   background-color: rgba(36, 37, 41, 0.90);
 }
+
+.active-tab{
+  border-bottom: 4px #2CE3A6 solid;
+}

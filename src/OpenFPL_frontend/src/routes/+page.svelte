@@ -15,6 +15,7 @@
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import { isAuthenticated } from "$lib/stores/auth";
 
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
@@ -39,9 +40,13 @@
   
   let progress = 0;
   let isLoading = true;
-
+  let isLoggedIn = false;
+  
   onMount(async () => {
     isLoading = true;
+    isAuthenticated.subscribe(change => {
+      isLoggedIn = change;
+    });
     try {
       progress = 0;
       managerCount = await managerService.getTotalManagers();
@@ -87,10 +92,6 @@
 <style>
   .w-v {
     width: 20px;
-  }
-
-  .active-tab{
-    border-bottom: 4px #2CE3A6 solid;
   }
 
 </style>
@@ -219,16 +220,18 @@
               Fixtures
             </button>
           </li>
-          <li class={`mr-4 text-xs md:text-lg ${activeTab === "points" ? "active-tab" : ""}`}>
-            <button
-              class={`p-2 ${
-                activeTab === "points" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("points")}
-            >
-              Points
-            </button>
-          </li>
+          {#if isLoggedIn}
+            <li class={`mr-4 text-xs md:text-lg ${activeTab === "points" ? "active-tab" : ""}`}>
+              <button
+                class={`p-2 ${
+                  activeTab === "points" ? "text-white" : "text-gray-400"
+                }`}
+                on:click={() => setActiveTab("points")}
+              >
+                Points
+              </button>
+            </li>
+          {/if}
           <li class={`mr-4 text-xs md:text-lg ${activeTab === "leaderboards" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${
