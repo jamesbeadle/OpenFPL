@@ -1,6 +1,10 @@
 {
 	"/": [],
+	"/fixture-validation": [],
+	"/gameplay-rules": [],
 	"/governance": [],
 	"/pick-team": [],
-	"/profile": []
+	"/profile": [],
+	"/terms": [],
+	"/whitepaper": []
 }

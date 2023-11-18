@@ -1,1 +1,1 @@
-export { default as component } from "../../../../src/OpenFPL_frontend/src/routes/pick-team/+page.svelte";
+export { default as component } from "../../../../src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte";

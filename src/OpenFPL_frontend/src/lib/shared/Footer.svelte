@@ -59,20 +59,21 @@
         <div class="flex flex-col sm:flex-row sm:space-x-2 pl-4">
           <a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a>
           <span class="hidden sm:flex">|</span>
-          <a href="/gameplay" class="hover:text-gray-300">Gameplay Rules</a>
+          <a href="/gameplay-rules" class="hover:text-gray-300">Gameplay Rules</a>
           <span class="hidden sm:flex">|</span>
           <a href="/terms" class="hover:text-gray-300">Terms & Conditions</a>
           <span class="hidden sm:flex">|</span>
-          <a href="/fixture-validation-list" class="hover:text-gray-300"
+          <a href="/fixture-validation" class="hover:text-gray-300"
             >Pre-SNS Fixture Validation</a
           >
         </div>
       </div>
     </div>
     <div class="flex-0">
+      <a href="/">
       <b class="px-4 mt-2 sm:mt-0 sm:px-10 flex items-center">
         <OpenFplIcon className="h-6 w-auto mr-2" />OpenFPL</b
-      >
+      ></a>
     </div>
     <div class="flex-1">
       <div class="flex justify-end">
