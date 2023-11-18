@@ -82,6 +82,14 @@
     color: white;
   }
 
+  .bonus-panel-inner{
+    background-color: rgba(46,50,58,0.9);
+  }
+
+  .bonus-panel{
+    background-color: rgba(46,50,58,0.8);
+  }
+
 </style>
 
 <Layout>
@@ -146,7 +154,6 @@
         </div>
       </div>
 
-
       <div class="flex flex-col md:flex-row">
         <div class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md md:w-full">
           <div class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4 order-3 md:order-1">
@@ -182,10 +189,8 @@
         </div>
       </div>
       
-
-
       <div class="flex flex-col md:flex-row">
-        <div class="relative w-full md:w-1/2">
+        <div class="relative w-full md:w-1/2 mt-4">
           <img src='pitch.png' alt="pitch" class="w-full" />
           <div class="absolute top-0 left-0 right-0 bottom-0">
             <div class={`flex justify-around w-full h-auto`}>
@@ -217,7 +222,6 @@
               {#each row as _, colIndex (colIndex)}
                 <div class={`flex flex-col justify-center items-center flex-1`}>
                   <ShirtIcon className='h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16' />
-                  <!--<p class="text-center mb-16">Detail</p>-->
                 </div>
               {/each}
             </div>
@@ -230,7 +234,88 @@
           <SimpleFixtures />
         </div>
       </div>
-
-    </div>
+      
+      <div class="bonus-panel rounded-md m-4 flex-1"> 
+        <div class="flex flex-col md:flex-row bonus-panel-inner">
+          <h1 class="m-4 font-bold">Bonuses</h1>
+        </div>  
+        <div class="flex flex-col md:flex-row">
+          <div class="flex items-center w-100 md:w-1/2">
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+                <img alt='goal-getter' src='goal-getter.png' class='h-10 md:h-24 mt-2' />
+                <p class="text-center text-xs mt-4 m-2 font-bold">Goal Getter</p>
+                <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]">Use</button>
+              </div>
+            </div>
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='pass-master.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">Pass Master</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='no-entry.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">No Entry</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='team-boost.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">Team Boost</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='safe-hands.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">Safe Hands</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+        </div>
+          <div class="flex items-center w-100 md:w-1/2">
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='captain-fantastic.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">Captain Fantastic</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='prospects.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">Prospects</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='countrymen.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">Countrymen</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='brace-bonus.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">Brace Bonus</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+            <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+              <div class={`flex flex-col justify-center items-center flex-1`}>
+              <img alt='goal-getter' src='hat-trick-hero.png' class='h-10 md:h-24 mt-2' />
+              <p class="text-center text-xs mt-4 m-2 font-bold">Hat Trick Hero</p>
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]">Use</button>
+            </div>
+          </div>
+          </div>  
+        </div>  
+      </div>
+    </div>  
   {/if}
 </Layout>
