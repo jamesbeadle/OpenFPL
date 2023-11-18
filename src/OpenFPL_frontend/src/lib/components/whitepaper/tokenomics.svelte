@@ -212,7 +212,45 @@
              </tr>
         </table>
         
-        
+        <h2 class="text-lg font-bold mt-4">Mitigation against a 51% Attack</h2>
+        <p class="my-2">There is a danger that the OpenFPL SNS treasury could be the target of an attack. One possible scenario is for an attacker to buy a large proportion of the FPL tokens in the decentralisation sale and immediately increase the dissolve delay of all of their neurons to the maximum 4 year in an attempt to gain more than 50% of the SNS voting power. If successful they could force through a proposal to transfer the entire ICP and FPL treasury to themselves. The Community Fund actually provides a great deal of mitigation against this scenario because it limits the proportion of voting power an attacker would be able to acquire.</p>
+        <p class="my-2">The amount raised in the decentralisation will be used as follows:</p>
+       
+        <ul class="list-disc ml-4">
+            <li>80% will be staked in an 8 year neuron with the maturity interest paid to the ICPFA.</li>
+            <li>10% will be available for exchange liquidity to enable trading of the FPL token.</li>
+            <li>5% will be paid directly to the ICPFA after the decentralisation sale.</li>
+            <li>5% will be held in reserve for cycles to run OpenFPL, likely to be unused as OpenFPL begins generating revenue.</li>
+        </ul>
+
+        <p class="my-2">This treasury balance will be topped up with the DAO's revenue, with 50% being paid to neuron holders. Any excess balance can be utilised where the DAO sees fit.</p>
+       
+        <h2 class="text-lg font-bold mt-4">Tokenomics</h2>
+        <p class="my-2">Each season, 2.5% of the total $FPL supply will be minted for DAO rewards. There is no mechanism to automatically burn $FPL as we anticipate the user growth to be faster than the supply increase, thus increasing the price of $FPL. However a proposal can always be made to burn $FPL if required. If the DAO’s treasury is ever 60% or more of the total supply of $FPL, it will be ICP FA policy to raise a proposal to burn 5% of the total supply from the DAO’s treasury.</p>
+       
+        <h2 class="text-lg font-bold mt-4">ICP FA Overview</h2>
+        <p class="my-2">Managed by founder James Beadle, the ICP FA oversees the development, marketing, and management of OpenFPL. The aim is to build a strong team to guide OpenFPL's growth and bring new users to the ICP blockchain. Additionally, 25% of James' staked maturity earnings will contribute to the ICP FA Community Fund, supporting grassroots football projects.</p>
+      
+        <p class="my-2">The ICPFA will receive 5% of the decentralisation sale along with the maturity interest from the staked neuron. These funds will be use for the following:</p>
+      
+        <ul class="list-disc ml-4">
+            <li>The ongoing promotion and marketing of OpenFPL both online and offline.</li>
+            <li>Hiring of a frontend and backend developer to assist the founder with the day to day development workload.</li>
+            <li>Hiring of a UAT Test Engineer to ensure all ICPFA products are of the highest quality.</li>
+            <li>Hiring of a Marketing Manager.</li>
+        </ul>
+
+        <p class="my-2">Along with paying the founding team members:</p>
+      
+        <ul class="list-disc ml-4">
+            <li>James Beadle - Founder, Lead Developer</li>
+            <li>DfinityDesigner - Designer</li>
+            <li>George - Community Manager</li>
+            <li>ICP_Insider - Blockchain Promoter</li>
+            <li>MadMaxIC - Gameplay Designer</li>
+        </ul>
+
+        <p class="my-2">More details about the ICP FA and its members can be found at <a class="text-blue-500" href="https://icpfa.org/team">icpfa.org/team</a>.</p>
     </div>
 </div>
   
