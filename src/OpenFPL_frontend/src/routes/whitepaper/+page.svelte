@@ -1,8 +1,8 @@
 <script lang="ts">
-    import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
     import Architecture from "$lib/components/whitepaper/architecture.svelte";
     import Dao from "$lib/components/whitepaper/dao.svelte";
     import Gameplay from "$lib/components/whitepaper/gameplay.svelte";
+    import Marketing from "$lib/components/whitepaper/marketing.svelte";
     import Revenue from "$lib/components/whitepaper/revenue.svelte";
     import Roadmap from "$lib/components/whitepaper/roadmap.svelte";
     import Tokenomics from "$lib/components/whitepaper/tokenomics.svelte";
@@ -65,7 +65,7 @@
                   </li>
                   <li
                     class={`mr-4 text-xs md:text-lg ${
-                      activeTab === "roadmap" ? "active-tab" : ""
+                      activeTab === "marketing" ? "active-tab" : ""
                     }`}
                   >
                     <button
@@ -142,7 +142,7 @@
                 {:else if activeTab === "roadmap"}
                     <Roadmap />
                 {:else if activeTab === "marketing"}
-                    <ManagerGameweeks />
+                    <Marketing />
                 {:else if activeTab === "revenue"}
                     <Revenue />
                 {:else if activeTab === "dao"}
