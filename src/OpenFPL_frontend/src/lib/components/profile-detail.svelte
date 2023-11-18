@@ -57,31 +57,31 @@
         <div class="mt-4 px-2">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div class="flex items-center p-4 rounded-lg shadow-md">
-                <img src="path-to-icp-icon.png" alt="ICP" class="h-8 w-8"/>
+                <img src="ICPCoin.png" alt="ICP" class="h-12 w-12"/>
                 <div class="ml-4">
                   <p class="font-bold">ICP</p>
                   <p>0.00 ICP</p>
                 </div>
               </div>
               <div class="flex items-center p-4 rounded-lg shadow-md">
-                <img src="path-to-icp-icon.png" alt="ICP" class="h-8 w-8"/>
+                <img src="FPLCoin.png" alt="FPL" class="h-12 w-12"/>
                 <div class="ml-4">
-                  <p class="font-bold">ICP</p>
-                  <p>0.00 ICP</p>
+                  <p class="font-bold">FPL</p>
+                  <p>0.00 FPL</p>
                 </div>
               </div>
               <div class="flex items-center p-4 rounded-lg shadow-md">
-                <img src="path-to-icp-icon.png" alt="ICP" class="h-8 w-8"/>
+                <img src="ckBTCCoin.png" alt="ICP" class="h-12 w-12"/>
                 <div class="ml-4">
-                  <p class="font-bold">ICP</p>
-                  <p>0.00 ICP</p>
+                  <p class="font-bold">ckBTC</p>
+                  <p>0.00 ckBTC</p>
                 </div>
               </div>
               <div class="flex items-center p-4 rounded-lg shadow-md">
-                <img src="path-to-icp-icon.png" alt="ICP" class="h-8 w-8"/>
+                <img src="ckETHCoin.png" alt="ICP" class="h-12 w-12"/>
                 <div class="ml-4">
-                  <p class="font-bold">ICP</p>
-                  <p>0.00 ICP</p>
+                  <p class="font-bold">ckETH</p>
+                  <p>0.00 ckETH</p>
                 </div>
               </div>
             </div>
