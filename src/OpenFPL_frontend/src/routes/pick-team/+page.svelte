@@ -62,6 +62,9 @@
     { id: 10, name: 'Hat-Trick Hero', image: 'hat-trick-hero.png', description: 'Receive a X3 multiplier on a player\'s score if they score 3 or more goals in a game. Applies to every player who scores a hat-trick.' }
   ];
 
+  let leftPanelBonuses = bonuses.slice(0, 5);
+  let rightPanelBonuses = bonuses.slice(5, 10);
+
   onMount(async () => {
     isLoading = true;
     try {
@@ -337,178 +340,38 @@
         </div>
         <div class="flex flex-col md:flex-row">
           <div class="flex items-center w-100 md:w-1/2">
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="goal-getter.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">
-                  Goal Getter
-                </p>
-                <button on:click={() => showBonusModal(1)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]"
-                  >Use</button
-                >
+            {#each leftPanelBonuses as bonus}
+              <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+                <div class={`flex flex-col justify-center items-center flex-1`}>
+                  <img
+                    alt={bonus.name}
+                    src={bonus.image}
+                    class="h-10 md:h-24 mt-2"
+                  />
+                  <p class="text-center text-xs mt-4 m-2 font-bold">
+                    {bonus.name}
+                  </p>
+                  <button on:click={() => showBonusModal(bonus.id)} class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]">Use</button>
+                </div>
               </div>
-            </div>
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="pass-master.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">
-                  Pass Master
-                </p>
-                <button on:click={() => showBonusModal(2)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
-              </div>
-            </div>
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="no-entry.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">No Entry</p>
-                <button on:click={() => showBonusModal(3)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
-              </div>
-            </div>
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="team-boost.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">Team Boost</p>
-                <button on:click={() => showBonusModal(4)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
-              </div>
-            </div>
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="safe-hands.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">Safe Hands</p>
-                <button on:click={() => showBonusModal(5)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
-              </div>
-            </div>
+            {/each}
           </div>
           <div class="flex items-center w-100 md:w-1/2">
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="captain-fantastic.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">
-                  Captain Fantastic
-                </p>
-                <button on:click={() => showBonusModal(6)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
+            {#each rightPanelBonuses as bonus}
+              <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+                <div class={`flex flex-col justify-center items-center flex-1`}>
+                  <img
+                    alt={bonus.name}
+                    src={bonus.image}
+                    class="h-10 md:h-24 mt-2"
+                  />
+                  <p class="text-center text-xs mt-4 m-2 font-bold">
+                    {bonus.name}
+                  </p>
+                  <button on:click={() => showBonusModal(bonus.id)} class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]">Use</button>
+                </div>
               </div>
-            </div>
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="prospects.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">Prospects</p>
-                <button on:click={() => showBonusModal(7)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
-              </div>
-            </div>
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="countrymen.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">Countrymen</p>
-                <button on:click={() => showBonusModal(8)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
-              </div>
-            </div>
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="brace-bonus.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">
-                  Brace Bonus
-                </p>
-                <button on:click={() => showBonusModal(9)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
-              </div>
-            </div>
-            <div
-              class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-            >
-              <div class={`flex flex-col justify-center items-center flex-1`}>
-                <img
-                  alt="goal-getter"
-                  src="hat-trick-hero.png"
-                  class="h-10 md:h-24 mt-2"
-                />
-                <p class="text-center text-xs mt-4 m-2 font-bold">
-                  Hat-Trick Hero
-                </p>
-                <button on:click={() => showBonusModal(10)}
-                  class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md mt-2 min-w-[100px]"
-                  >Use</button
-                >
-              </div>
-            </div>
+            {/each}
           </div>
         </div>
       </div>
