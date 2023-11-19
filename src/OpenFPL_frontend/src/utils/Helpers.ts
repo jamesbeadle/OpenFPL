@@ -63,3 +63,9 @@ export function getPositionText(position: Position): string {
             return "Unknown position";
     }
 }
+
+export function convertDateToReadable(nanoseconds: number): string {
+  const milliseconds = nanoseconds / 1e6;
+  const date = new Date(milliseconds);
+  return date.toLocaleDateString('en-GB');
+}
