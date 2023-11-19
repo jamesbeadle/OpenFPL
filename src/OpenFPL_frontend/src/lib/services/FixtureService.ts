@@ -44,13 +44,13 @@ export class FixtureService {
 
   private async fetchAllFixtures(fixturesHash: string) {
     try {
-      const allFixturesData = await this.actor.getFixtures();
+      const allFixturesData: Fixture[] = await this.actor.getFixtures();
       localStorage.setItem("fixtures_hash", fixturesHash);
       localStorage.setItem(
         "fixtures_data",
         JSON.stringify(allFixturesData, replacer)
       );
-      return allFixturesData;
+      return allFixturesData.sort((a, b) => a.gameweek - b.gameweek);
     } catch (error) {
       console.error("Error fetching all fixtures:", error);
       throw error;

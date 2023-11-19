@@ -1,5 +1,5 @@
 import { idlFactory } from "../../../../declarations/player_canister";
-import type { Player } from "../../../../declarations/player_canister/player_canister.did";
+import type { Player, PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
 
@@ -13,11 +13,11 @@ export class PlayerService {
     );
   }
 
-  async getPlayerData(playersHash: string): Promise<Player[]> {
+  async getPlayerData(playersHash: string): Promise<PlayerDTO[]> {
     const cachedHash = localStorage.getItem("players_hash");
     const cachedPlayersData = localStorage.getItem("players_data");
 
-    let cachedPlayers: Player[];
+    let cachedPlayers: PlayerDTO[];
     try {
       cachedPlayers = JSON.parse(cachedPlayersData || "[]");
     } catch (e) {

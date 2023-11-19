@@ -15,7 +15,7 @@
   import TeamFixtures from "$lib/components/team-fixtures.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { PlayerService } from "$lib/services/PlayerService";
-  import type { Player } from "../../../../declarations/player_canister/player_canister.did";
+  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
 
   type FixtureWithTeams = {
     fixture: Fixture;
@@ -32,13 +32,17 @@
   let fixtures: FixtureWithTeams[] = [];
   let teams: Team[] = [];
   let team: Team | null = null;
-  let players: Player[] = [];
+  let players: PlayerDTO[] = [];
+  let nextFixture: Fixture | null = null;
+  let nextFixtureHomeTeam: Team | null = null;
+  let nextFixtureAwayTeam: Team | null = null;
+  let highestScoringPlayer: PlayerDTO | null = null;
   
   let progress = 0;
   let isLoading = true;
   let activeTab: string = "players";
 
-  $: id = $page.url.searchParams.get('id');
+  $: id = Number($page.url.searchParams.get('id'));
   onMount(async () => {
     try {
       const fetchedFixtures = await fixtureService.getFixturesData(
@@ -51,19 +55,29 @@
         localStorage.getItem("players_hash") ?? "");
 
       teams = fetchedTeams;
-      team = fetchedTeams.find(x => x.id == Number(id)) ?? null;
-      fixtures = fetchedFixtures.map((fixture) => ({
+      team = fetchedTeams.find(x => x.id == id) ?? null;
+
+      let teamFixtures = fetchedFixtures.filter(x => x.homeTeamId == id || x.awayTeamId == id);
+
+      fixtures = teamFixtures.map((fixture) => ({
         fixture,
         homeTeam: getTeamFromId(fixture.homeTeamId),
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
-      players = fetchedPlayers.filter(player => player.teamId == Number(id));
-      
+      players = fetchedPlayers.filter(player => player.teamId == id);
+      highestScoringPlayer = players
+      .sort((a,b) => a.totalPoints - b.totalPoints)
+      .sort((a,b) => Number(b.value) - Number(a.value))[0];
+      console.log(highestScoringPlayer)
       let systemState = await systemService.getSystemState(
         localStorage.getItem("system_state_hash") ?? ""
       );
       selectedGameweek = systemState.activeGameweek;
       selectedSeason = systemState.activeSeason;
+      nextFixture = teamFixtures.find(x => x.gameweek == selectedGameweek) ?? null;
+      nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
+      nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
+
       isLoading = false;
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -142,7 +156,7 @@
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">League Position</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {getTeamPosition(Number(id))}
+              {getTeamPosition(id)}
             </p>
             <p class="text-gray-300 text-xs">{selectedSeason.name}</p>
           </div>
@@ -153,7 +167,7 @@
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">Points</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {getTeamPoints(Number(id))}
+              {getTeamPoints(id)}
             </p>
             <p class="text-gray-300 text-xs">Total</p>
           </div>
@@ -163,15 +177,51 @@
           />
 
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xs mt-4 md:mt-0">Next Game:</p>
-            <div class="flex">
-              <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-                a
-              </p>
+            <p class="text-gray-300 text-xs">Next Game:</p>
+            <div class="flex justify-center mb-2 mt-2">
+              <div class="flex justify-center items-center">
+                <div class="w-10 ml-4 mr-4">
+                  <a href={`/club/${nextFixtureHomeTeam?.id}`}>
+                    <BadgeIcon
+                      primaryColour={nextFixtureHomeTeam?.primaryColourHex}
+                      secondaryColour={nextFixtureHomeTeam?.secondaryColourHex}
+                      thirdColour={nextFixtureHomeTeam?.thirdColourHex}
+                    />
+                  </a>
+                </div>
+                <div class="w-v ml-1 mr-1 flex justify-center">
+                  <p class="text-xs mt-2 mb-2 font-bold">v</p>
+                </div>
+                <div class="w-10 ml-4">
+                  <a href={`/club/${nextFixtureAwayTeam?.id}`}>
+                    <BadgeIcon
+                      primaryColour={nextFixtureAwayTeam?.primaryColourHex}
+                      secondaryColour={nextFixtureAwayTeam?.secondaryColourHex}
+                      thirdColour={nextFixtureAwayTeam?.thirdColourHex}
+                    />
+                  </a>
+                </div>
+              </div>
             </div>
-            <p class="text-gray-300 text-xs">
-              b
-            </p>
+            <div class="flex justify-center">
+              <div class="w-10 ml-4 mr-4">
+                <p class="text-gray-300 text-xs text-center">
+                  <a class="text-gray-300 text-xs text-center"
+                    href={`/club/${nextFixtureHomeTeam?.id}`}
+                    >{nextFixtureHomeTeam?.abbreviatedName}</a>
+                </p>
+              </div>
+              <div class="w-v ml-1 mr-1" />
+              <div class="w-10 ml-4">
+                <p class="text-gray-300 text-xs text-center">
+                  <a
+                    class="text-gray-300 text-xs text-center"
+                    href={`/club/${nextFixtureAwayTeam?.id}`}
+                    >{nextFixtureAwayTeam?.abbreviatedName}</a
+                  >
+                </p>
+              </div>
+            </div>
           </div>
           <div
             class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
@@ -182,10 +232,13 @@
               Highest Scoring Player
             </p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              B. Fernandes
+              {highestScoringPlayer?.lastName}
             </p>
             <p class="text-gray-300 text-xs">
-              Midfielder
+              {#if highestScoringPlayer?.position == 0}Goalkeeper{/if}
+              {#if highestScoringPlayer?.position == 1}Defender{/if}
+              {#if highestScoringPlayer?.position == 2}Midfielder{/if}
+              {#if highestScoringPlayer?.position == 3}Forward{/if}
             </p>
           </div>
         </div>
@@ -228,7 +281,7 @@
         {#if activeTab === "players"}
           <TeamPlayers />
         {:else if activeTab === "fixtures"}
-          <TeamFixtures clubId={Number(id)} />
+          <TeamFixtures clubId={id} />
         {/if}
       </div>
     </div>
