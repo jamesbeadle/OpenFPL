@@ -1,5 +1,7 @@
 import { idlFactory } from "../../../../declarations/player_canister";
+import type { Player } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
+import { replacer } from "../../utils/Helpers";
 
 export class PlayerService {
   private actor: any;
@@ -11,17 +13,23 @@ export class PlayerService {
     );
   }
 
-  async getPlayerData(playerCanisterHash: string) {
+  async getPlayerData(playersHash: string): Promise<Player[]> {
     const cachedHash = localStorage.getItem("players_hash");
     const cachedPlayersData = localStorage.getItem("players_data");
-    const cachedPlayers = JSON.parse(cachedPlayersData || "[]");
+
+    let cachedPlayers: Player[];
+    try {
+      cachedPlayers = JSON.parse(cachedPlayersData || "[]");
+    } catch (e) {
+      cachedPlayers = [];
+    }
 
     if (
-      !playerCanisterHash ||
-      cachedPlayers.length === 0 ||
-      cachedHash !== playerCanisterHash
+      !playersHash ||
+      playersHash.length === 0 ||
+      cachedHash !== playersHash
     ) {
-      return this.fetchAllPlayers(playerCanisterHash);
+      return this.fetchAllPlayers(playersHash);
     } else {
       return cachedPlayers;
     }
@@ -31,7 +39,8 @@ export class PlayerService {
     try {
       const allPlayersData = await this.actor.getAllPlayers();
       localStorage.setItem("players_hash", playersHash);
-      localStorage.setItem("players_data", JSON.stringify(allPlayersData));
+      localStorage.setItem("players_data",
+        JSON.stringify(allPlayersData, replacer));
       return allPlayersData;
     } catch (error) {
       console.error("Error fetching all players:", error);

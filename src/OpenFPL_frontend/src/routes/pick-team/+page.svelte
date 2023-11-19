@@ -6,18 +6,14 @@
   import { FixtureService } from "$lib/services/FixtureService";
   import Layout from "../Layout.svelte";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import {
-    formatUnixDateToReadable,
-    formatUnixTimeToTime,
-    getCountdownTime,
-  } from "../../utils/Helpers";
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../../utils/Helpers";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-  import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
-    import UseBonusModal from "$lib/components/use-bonus-modal.svelte";
-    import type { Bonus } from "$lib/types/Bonus";
-    import { BonusType } from "$lib/enums/BonusType";
+  import UseBonusModal from "$lib/components/use-bonus-modal.svelte";
+  import type { Bonus } from "$lib/types/Bonus";
+  import { BonusType } from "$lib/enums/BonusType";
+  import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
 
   const systemService = new SystemService();
   const teamService = new TeamService();
@@ -339,7 +335,7 @@
                   <div
                     class={`flex flex-col justify-center items-center flex-1`}
                   >
-                    <ShirtIcon
+                    <AddPlayerIcon
                       className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16"
                     />
                   </div>

@@ -3,13 +3,18 @@
   import Layout from "../Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type {
-    Fixture,
+  import type { Fixture,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
+  import { page } from '$app/stores';
+  import TeamPlayers from "$lib/components/team-players.svelte";
+  import TeamFixtures from "$lib/components/team-fixtures.svelte";
+    import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
+    import { PlayerService } from "$lib/services/PlayerService";
+    import type { Player } from "../../../../declarations/player_canister/player_canister.did";
 
   type FixtureWithTeams = {
     fixture: Fixture;
@@ -19,19 +24,18 @@
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
   const systemService = new SystemService();
+  const playersService = new PlayerService();
 
   let selectedGameweek: number = 1;
   let fixtures: FixtureWithTeams[] = [];
   let teams: Team[] = [];
+  let team: Team | null = null;
+  let players: Player[] = [];
   
   let progress = 0;
   let isLoading = true;
   let activeTab: string = "players";
 
-  import { page } from '$app/stores';
-    import Fixtures from "$lib/components/fixtures.svelte";
-    import TeamPlayers from "$lib/components/team-players.svelte";
-    import TeamFixtures from "$lib/components/team-fixtures.svelte";
   $: id = $page.url.searchParams.get('id');
   onMount(async () => {
     try {
@@ -41,13 +45,18 @@
       const fetchedTeams = await teamService.getTeamsData(
         localStorage.getItem("teams_hash") ?? ""
       );
+      const fetchedPlayers = await playersService.getPlayerData(
+        localStorage.getItem("players_hash") ?? "");
 
       teams = fetchedTeams;
+      team = fetchedTeams.find(x => x.id == Number(id)) ?? null;
       fixtures = fetchedFixtures.map((fixture) => ({
         fixture,
         homeTeam: getTeamFromId(fixture.homeTeamId),
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
+      players = fetchedPlayers.filter(player => player.teamId == Number(id));
+      
       let systemState = await systemService.getSystemState(
         localStorage.getItem("system_state_hash") ?? ""
       );
@@ -77,13 +86,24 @@
         <div
           class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
-          <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Team Name</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              Badge
-            </p>
-            <p class="text-gray-300 text-xs">Team Name</p>
+        <div class="flex-grow flex flex-col items-center">
+          <p class="text-gray-300 text-xs">{team?.friendlyName}</p>
+          <div class="py-2 flex space-x-4">
+            <BadgeIcon
+              className="h-10"
+              primaryColour={team?.primaryColourHex}
+              secondaryColour={team?.secondaryColourHex}
+              thirdColour={team?.thirdColourHex}
+            />
+            <ShirtIcon
+              className="h-10"
+              primaryColour={team?.primaryColourHex}
+              secondaryColour={team?.secondaryColourHex}
+              thirdColour={team?.thirdColourHex}
+            />
           </div>
+          <p class="text-gray-300 text-xs">{team?.abbreviatedName}</p>
+        </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
             style="min-width: 2px; min-height: 50px;"
@@ -91,7 +111,7 @@
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Players</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              25
+              {players.length}
             </p>
             <p class="text-gray-300 text-xs">Total</p>
           </div>

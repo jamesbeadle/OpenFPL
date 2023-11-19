@@ -25,47 +25,4 @@
       fill={thirdColour}
     />
   </g>
-  <g transform="translate(36 30)">
-    <path
-      d="M16 6.66667H9.33333V0H6.66667V6.66667H0V9.33333H6.66667V16H9.33333V9.33333H16V6.66667Z"
-      fill="#FFFFF"
-    />
-  </g>
-
-  <defs>
-    <filter
-      id="filter0_d_354_581"
-      x="0.333008"
-      y="0"
-      width="85.333"
-      height="87.9999"
-      filterUnits="userSpaceOnUse"
-    >
-      <feFlood flood-opacity="0" result="BackgroundImageFix" />
-      <feColorMatrix
-        in="SourceAlpha"
-        type="matrix"
-        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-        result="hardAlpha"
-      />
-      <feOffset dy="4" />
-      <feGaussianBlur stdDeviation="2" />
-      <feComposite in2="hardAlpha" operator="out" />
-      <feColorMatrix
-        type="matrix"
-        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-      />
-      <feBlend
-        mode="normal"
-        in2="BackgroundImageFix"
-        result="effect1_dropShadow_354_581"
-      />
-      <feBlend
-        mode="normal"
-        in="SourceGraphic"
-        in2="effect1_dropShadow_354_581"
-        result="shape"
-      />
-    </filter>
-  </defs>
 </svg>
