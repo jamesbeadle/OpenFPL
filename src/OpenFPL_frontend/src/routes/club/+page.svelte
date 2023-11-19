@@ -165,7 +165,7 @@
           class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xs">Points</p>
+            <p class="text-gray-300 text-xs">League Points</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {getTeamPoints(id)}
             </p>
@@ -238,7 +238,7 @@
               {#if highestScoringPlayer?.position == 0}Goalkeeper{/if}
               {#if highestScoringPlayer?.position == 1}Defender{/if}
               {#if highestScoringPlayer?.position == 2}Midfielder{/if}
-              {#if highestScoringPlayer?.position == 3}Forward{/if}
+              {#if highestScoringPlayer?.position == 3}Forward{/if}({highestScoringPlayer?.totalPoints})
             </p>
           </div>
         </div>
@@ -279,7 +279,7 @@
         </ul>
 
         {#if activeTab === "players"}
-          <TeamPlayers />
+          <TeamPlayers players={players} />
         {:else if activeTab === "fixtures"}
           <TeamFixtures clubId={id} />
         {/if}
