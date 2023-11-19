@@ -70,6 +70,22 @@ export function convertDateToReadable(nanoseconds: number): string {
   return date.toLocaleDateString('en-GB');
 }
 
+export function calculateAgeFromNanoseconds(nanoseconds: number) {
+  const milliseconds = nanoseconds / 1e6;
+  const birthDate = new Date(milliseconds);
+  const today = new Date();
+  
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  return age;
+}
+
+
 import * as FlagIcons from 'svelte-flag-icons';
 export function getFlagComponent(countryCode: string) {
   switch (countryCode) {
