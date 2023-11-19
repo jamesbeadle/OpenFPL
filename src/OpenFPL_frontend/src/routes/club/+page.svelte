@@ -12,9 +12,9 @@
   import { page } from '$app/stores';
   import TeamPlayers from "$lib/components/team-players.svelte";
   import TeamFixtures from "$lib/components/team-fixtures.svelte";
-    import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-    import { PlayerService } from "$lib/services/PlayerService";
-    import type { Player } from "../../../../declarations/player_canister/player_canister.did";
+  import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
+  import { PlayerService } from "$lib/services/PlayerService";
+  import type { Player } from "../../../../declarations/player_canister/player_canister.did";
 
   type FixtureWithTeams = {
     fixture: Fixture;
@@ -67,6 +67,12 @@
     }
   });
 
+  
+  let tableData: any[] = [];
+  $: if (fixtures.length > 0 && teams.length > 0) {
+    tableData = fixtureService.updateTableData(fixtures, teams, selectedGameweek);
+  }
+
   function getTeamFromId(teamId: number): Team | undefined {
     return teams.find((team) => team.id === teamId);
   }
@@ -74,6 +80,12 @@
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
+
+  const getTeamPosition = (teamId: number) => {
+    const position = tableData.findIndex(team => team.id === teamId);
+    return position !== -1 ? position + 1 : 'Not found';
+  };
+
 
 </script>
 
@@ -122,7 +134,7 @@
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Season Position</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              0
+              {getTeamPosition(Number(id))}
             </p>
             <p class="text-gray-300 text-xs">Season</p>
           </div>
