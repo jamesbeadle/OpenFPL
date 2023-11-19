@@ -1,3 +1,5 @@
+import { Position } from "$lib/enums/Position";
+
 export function formatUnixDateToReadable(unixNano: number) {
   const date = new Date(unixNano / 1000000);
   const options: Intl.DateTimeFormatOptions = {
@@ -45,4 +47,19 @@ export function formatUnixTimeToTime(unixTimeNano: number): string {
   const minutesStr = minutes < 10 ? "0" + minutes : minutes;
 
   return `${hours}:${minutesStr} ${ampm}`;
+}
+
+export function getPositionText(position: Position): string {
+    switch (position) {
+        case Position.GOALKEEPER:
+            return "Goalkeeper";
+        case Position.DEFENDER:
+            return "Defender";
+        case Position.MIDFIELDER:
+            return "Midfielder";
+        case Position.FORWARD:
+            return "Forward";
+        default:
+            return "Unknown position";
+    }
 }

@@ -5,6 +5,7 @@
     import { SystemService } from "$lib/services/SystemService";
     import { TeamService } from "$lib/services/TeamService";
     import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+    import { getPositionText } from "../../utils/Helpers";
     const teamService = new TeamService();
     const systemService = new SystemService();
 
@@ -42,7 +43,7 @@
                     {player.lastName}
                 </div>
                 <div class="flex items-center w-1/2 ml-4">
-                    
+                    {getPositionText(player.position)}
                 </div>
             </a>
           </div>

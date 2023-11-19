@@ -16,6 +16,7 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { PlayerService } from "$lib/services/PlayerService";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+    import { getPositionText } from "../../utils/Helpers";
 
   type FixtureWithTeams = {
     fixture: Fixture;
@@ -235,10 +236,8 @@
               {highestScoringPlayer?.lastName}
             </p>
             <p class="text-gray-300 text-xs">
-              {#if highestScoringPlayer?.position == 0}Goalkeeper{/if}
-              {#if highestScoringPlayer?.position == 1}Defender{/if}
-              {#if highestScoringPlayer?.position == 2}Midfielder{/if}
-              {#if highestScoringPlayer?.position == 3}Forward{/if}({highestScoringPlayer?.totalPoints})
+              {getPositionText(highestScoringPlayer?.position ?? 0)}
+              ({highestScoringPlayer?.totalPoints})
             </p>
           </div>
         </div>
