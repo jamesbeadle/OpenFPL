@@ -21,9 +21,12 @@
   
     let fixtures: FixtureWithTeams[] = [];
     let teams: Team[] = [];
-    $: filteredFixtures = fixtures.filter(({ fixture }) =>
-        (clubId == null || fixture.homeTeamId === clubId || fixture.awayTeamId === clubId)
-    );
+    let selectedFixtureType = -1;
+    $: filteredFixtures = selectedFixtureType === -1
+    ? fixtures.filter(({ fixture }) => (clubId == null || fixture.homeTeamId === clubId || fixture.awayTeamId === clubId))
+    : selectedFixtureType === 0 
+      ? fixtures.filter(({ fixture }) => (clubId == null || fixture.homeTeamId === clubId))
+      : fixtures.filter(({ fixture }) => (clubId == null || fixture.awayTeamId === clubId));
   
     onMount(async () => {
       try {
@@ -54,19 +57,31 @@
   <div class="container-fluid">
     <div class="flex flex-col space-y-4">
       <div>
+        <div class="flex p-4">
+          <div class="flex items-center ml-4">
+            <p class="text-sm md:text-xl mr-4">Type:</p>
+            <select
+              class="p-2 fpl-dropdown text-sm md:text-xl"
+              bind:value={selectedFixtureType}
+            >
+              <option value={-1}>All</option>
+              <option value={0}>Home</option>
+              <option value={1}>Away</option>
+          </div>
+        </div>
         <div class='flex justify-between p-2 border border-gray-700 py-4 bg-light-gray px-4'>
-          <div class="flex-grow w-1/6">Gameweek</div>
+          <div class="flex-grow w-1/6 ml-4">Gameweek</div>
           <div class="flex-grow w-1/3 text-center">Game</div>
           <div class="flex-grow w-1/3">Date</div>
           <div class="flex-grow w-1/4 text-center">Time</div>
           <div class="flex-grow w-1/3">Teams</div>
-          <div class="flex-grow w-1/4">Result</div>
+          <div class="flex-grow w-1/4 mr-4">Result</div>
         </div>
       
         {#each filteredFixtures as { fixture, homeTeam, awayTeam }}
           <div class={`flex items-center justify-between border-b border-gray-700 p-2 px-4 ${
             fixture.status === 0 ? "text-gray-400" : "text-white"}`}>
-              <div class="w-1/6">{fixture.gameweek}</div>
+              <div class="w-1/6 ml-4">{fixture.gameweek}</div>
               <div class="w-1/3 flex justify-center">  
                 <div class="w-10 items-center justify-center mr-4">
                   <a href={`/club/${fixture.homeTeamId}`}>
@@ -105,7 +120,7 @@
                   <a href={`/club/${fixture.awayTeamId}`}>{awayTeam ? awayTeam.friendlyName : ""}</a>
                 </div>
               </div>
-              <div class="w-1/4">
+              <div class="w-1/4 mr-4">
                 <div class='flex flex-col text-xs md:text-lg'>
                   <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
                   <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>

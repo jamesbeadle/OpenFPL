@@ -15,11 +15,11 @@
 <div class="container-fluid">
   <div class="flex flex-col space-y-4">
     <div>
-      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
-        <div class="flex items-center space-x-2 ml-4">
-          
+      <div class="flex p-4">
+        <div class="flex items-center ml-4">
+          <p class="text-sm md:text-xl mr-4">Position:</p>
           <select
-            class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+            class="p-2 fpl-dropdown text-sm md:text-xl"
             bind:value={selectedPosition}
           >
           <option value={-1}>All</option>
