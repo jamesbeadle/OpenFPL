@@ -1,17 +1,20 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { authStore } from "$lib/stores/auth";
+  import { authStore, type AuthSignInParams } from "$lib/stores/auth";
   import { derived } from "svelte/store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
+  import { onMount } from "svelte";
 
   let menuOpen = false;
+  let isLoggedIn = false;
 
-  const isAuthenticated = derived(
-    authStore,
-    ($authStore) =>
-      $authStore.identity !== null && $authStore.identity !== undefined
-  );
+  onMount(async () => {
+    await authStore.sync();
+    authStore.subscribe(store => {
+      isLoggedIn = store.identity !== null && store.identity !== undefined
+    })
+  });
 
   $: currentClass = (route: string) =>
     $page.url.pathname === route
@@ -23,11 +26,14 @@
   }
 
   function handleLogin() {
-    //authStore.login();
+    let params: AuthSignInParams = {
+
+    };
+    authStore.signIn(params);
   }
 
   function handleLogout() {
-    //authStore.logout();
+    authStore.signOut();
   }
 </script>
 
@@ -50,7 +56,7 @@
           <rect y="16" width="24" height="2" rx="1" fill="currentColor" />
         </svg>
       </button>
-      {#if $isAuthenticated}
+      {#if isLoggedIn}
         <ul class="hidden md:flex">
           <li class="mx-2 flex items-center h-16">
             <a

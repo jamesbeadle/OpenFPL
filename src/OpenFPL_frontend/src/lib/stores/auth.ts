@@ -45,7 +45,6 @@ const initAuthStore = (): AuthStore => {
 		},
 
 		signIn: ({ domain }: AuthSignInParams) =>
-			// eslint-disable-next-line no-async-promise-executor
 			new Promise<void>(async (resolve, reject) => {
 				authClient = authClient ?? (await createAuthClient());
 
