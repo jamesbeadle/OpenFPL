@@ -48,7 +48,7 @@
     "@dfinity/auth-client": "^0.19.3",
     "@dfinity/candid": "^0.19.3",
     "@dfinity/principal": "^0.19.3",
-		"@dfinity/utils": "^1.0.0",
+    "@dfinity/utils": "^1.0.0",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5"
   }

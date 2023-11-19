@@ -48,10 +48,9 @@
     isLoading = true;
     
     try {
-      progress = 0;
       managerCount = await managerService.getTotalManagers();
 
-      progress = 20;
+      incrementProgress(20);
       let systemState = await systemService.getSystemState(
         localStorage.getItem("system_state_hash") ?? ""
       );
@@ -59,7 +58,7 @@
       activeSeason = systemState.activeSeason.name;
       focusGameweek = systemState.focusGameweek;
 
-      progress = 40;
+      incrementProgress(40);
       let nextFixture = await fixtureService.getNextFixture();
       nextFixtureHomeTeam = await teamService.getTeamById(
         nextFixture.homeTeamId
@@ -70,24 +69,38 @@
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture.kickOff));
 
-      progress = 60;
+      incrementProgress(60);
       let countdownTime = getCountdownTime(Number(nextFixture.kickOff));
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
-      progress = 80;
+      incrementProgress(80);
       let leadingWeeklyTeam = await leaderboardService.getLeadingWeeklyTeam();
       gwLeaderUsername = leadingWeeklyTeam.username;
       gwLeaderPoints = leadingWeeklyTeam.points;
 
-      progress = 100;
+      incrementProgress(100);
       isLoading = false;
     } catch (error) {
       console.error("Error fetching homepage data:", error);
       isLoading = false;
     }
   });
+
+  function incrementProgress(newProgress: number) {
+    const step = 1;
+    const delay = 100;
+
+    function stepProgress() {
+      if (progress < newProgress) {
+        progress += step;
+        setTimeout(stepProgress, delay);
+      }
+    }
+
+    stepProgress();
+  }
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
