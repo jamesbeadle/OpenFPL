@@ -1,12 +1,34 @@
 <script lang="ts">
+  import { Position } from "$lib/enums/Position";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { calculateAgeFromNanoseconds, getFlagComponent, getPositionText } from "../../utils/Helpers";  
   export let players: PlayerDTO[] = [];
+  let selectedPosition = -1;
+  $: filteredPlayers = selectedPosition === -1 
+    ? players 
+    : players.filter(p => p.position === selectedPosition);
+  let positionValues: number[] = Object.values(Position).filter(value => typeof value === 'number') as number[];
+
+
 </script>
   
 <div class="container-fluid">
   <div class="flex flex-col space-y-4">
     <div>
+      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
+        <div class="flex items-center space-x-2 ml-4">
+          
+          <select
+            class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+            bind:value={selectedPosition}
+          >
+          <option value={-1}>All</option>
+            {#each positionValues as position}
+              <option value={position}>{getPositionText(position)}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
       <div class='flex justify-between p-2 border border-gray-700 py-4 bg-light-gray'>
         <div class="flex-grow px-4 w-1/2">Number</div>
         <div class="flex-grow px-4 w-1/2">First Name</div>
@@ -17,7 +39,7 @@
         <div class="flex-grow px-4 w-1/2">Season Points</div>
         <div class="flex-grow px-4 w-1/2">Value</div>
       </div>
-      {#each players as player }
+      {#each filteredPlayers as player }
         <div class="flex items-center justify-between py-2 border-b border-gray-700 text-white cursor-pointer">
           <a class="flex-grow flex items-center justify-start space-x-2 px-4" href={`/player?id=${player.id}`}>
               <div class="flex items-center w-1/2 px-3">

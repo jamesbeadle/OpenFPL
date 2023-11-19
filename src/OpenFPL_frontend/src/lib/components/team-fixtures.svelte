@@ -5,7 +5,6 @@
       Fixture,
       Team,
     } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { SystemService } from "$lib/services/SystemService";
     import { FixtureService } from "$lib/services/FixtureService";
     import { TeamService } from "$lib/services/TeamService";
     import { formatUnixDateToReadable, formatUnixTimeToTime } from "../../utils/Helpers";
@@ -17,7 +16,6 @@
     };
     const fixtureService = new FixtureService();
     const teamService = new TeamService();
-    const systemService = new SystemService();
 
     export let clubId: number | null = null;
   
@@ -42,9 +40,6 @@
           homeTeam: getTeamFromId(fixture.homeTeamId),
           awayTeam: getTeamFromId(fixture.awayTeamId),
         }));
-        let systemState = await systemService.getSystemState(
-          localStorage.getItem("system_state_hash") ?? ""
-        );
         
       } catch (error) {
         console.error("Error fetching data:", error);
