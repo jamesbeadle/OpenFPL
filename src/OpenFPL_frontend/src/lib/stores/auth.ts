@@ -1,3 +1,4 @@
+import { onMount } from 'svelte';
 import { AuthClient } from "@dfinity/auth-client";
 import { derived, writable } from "svelte/store";
 
@@ -7,9 +8,19 @@ interface AuthState {
 
 const { subscribe, set } = writable<AuthState>({ identity: null });
 
+async function initializeAuth() {
+  const authClient = await AuthClient.create();
+  const identity = await authClient.getIdentity();
+
+  if (identity) {
+    set({ identity });
+  }
+}
+
 const authStore = {
   subscribe,
   set,
+  initialize: initializeAuth,
   login: async () => {
     const authClient = await AuthClient.create();
     const identityProviderUrl = import.meta.env.VITE_AUTH_PROVIDER_URL;
