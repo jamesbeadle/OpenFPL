@@ -3,6 +3,7 @@
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
+  import { toastStore } from "$lib/stores/toast";
   import { principalId } from "$lib/stores/auth";
 
   const teamService = new TeamService();
@@ -10,9 +11,7 @@
   let teams: Team[] = [];
   let selectedTeam = 1;
   let userPrincipal = 'yxaeb-cknlu-ymf7s-hyhv4-ngpus-hurji-roqrb-hcf46-6ed5v-cp3qa-uqe';
-  let showToast = false;
-
-
+  
   onMount(async () => {
     try {
       const fetchedTeams = await teamService.getTeamsData(
@@ -27,18 +26,13 @@
 
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(() => {
-      showToast = true;
-      setTimeout(() => showToast = false, 3000);
+      toastStore.show('Copied', 'success');
     });
   }
 
 </script>
 
-{#if showToast}
-<div class="fixed inset-x-0 top-0 mt-16 toast-panel text-white text-center py-2">
-  Copied to clipboard!
-  </div>
-{/if}
+
 <div class="container mx-auto p-4">
   <div class="flex flex-wrap">
     <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
