@@ -18,7 +18,6 @@
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-  import { isAuthenticated } from "$lib/stores/auth";
 
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
@@ -47,9 +46,7 @@
 
   onMount(async () => {
     isLoading = true;
-    isAuthenticated.subscribe((change) => {
-      isLoggedIn = change;
-    });
+    
     try {
       progress = 0;
       managerCount = await managerService.getTotalManagers();

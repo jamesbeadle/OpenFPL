@@ -4,7 +4,6 @@
   import { TeamService } from "$lib/services/TeamService";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { toastStore } from "$lib/stores/toast";
-  import { principalId } from "$lib/stores/auth";
 
   const teamService = new TeamService();
 
@@ -53,7 +52,7 @@
         </button>
         <p class="text-xs mb-2 mt-4">Favourite Team:</p>
         <select
-          class="p-2 fpl-dropdown text-sm md:text-xl"
+          class="p-2 fpl-dropdown text-sm md:text-xl "
           bind:value={selectedTeam}
         >
           {#each teams as team}

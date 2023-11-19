@@ -23,11 +23,11 @@
   }
 
   function handleLogin() {
-    authStore.login();
+    //authStore.login();
   }
 
   function handleLogout() {
-    authStore.logout();
+    //authStore.logout();
   }
 </script>
 

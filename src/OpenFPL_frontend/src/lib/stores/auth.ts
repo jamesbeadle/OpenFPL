@@ -1,51 +1,89 @@
-import { onMount } from 'svelte';
-import { AuthClient } from "@dfinity/auth-client";
-import { derived, writable } from "svelte/store";
+import {
+	AUTH_MAX_TIME_TO_LIVE,
+	AUTH_POPUP_HEIGHT,
+	AUTH_POPUP_WIDTH,
+	localIdentityCanisterId
+} from '$lib/constants/app.constants';
+import type { OptionIdentity } from '$lib/types/Identity';
+import { createAuthClient } from '$lib/utils/auth.utils';
+import { popupCenter } from '$lib/utils/window.utils';
+import type { AuthClient } from '@dfinity/auth-client';
+import { nonNullish } from '@dfinity/utils';
+import { writable, type Readable } from 'svelte/store';
 
-interface AuthState {
-  identity: any;
+export interface AuthStoreData {
+	identity: OptionIdentity;
 }
 
-const { subscribe, set } = writable<AuthState>({ identity: null });
+let authClient: AuthClient | undefined | null;
 
-async function initializeAuth() {
-  const authClient = await AuthClient.create();
-  const identity = await authClient.getIdentity();
-
-  if (identity) {
-    set({ identity });
-  }
+export interface AuthSignInParams {
+	domain?: 'ic0.app' | 'internetcomputer.org';
 }
 
-const authStore = {
-  subscribe,
-  set,
-  initialize: initializeAuth,
-  login: async () => {
-    const authClient = await AuthClient.create();
-    const identityProviderUrl = import.meta.env.VITE_AUTH_PROVIDER_URL;
+export interface AuthStore extends Readable<AuthStoreData> {
+	sync: () => Promise<void>;
+	signIn: (params: AuthSignInParams) => Promise<void>;
+	signOut: () => Promise<void>;
+}
 
-    await authClient.login({
-      maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
-      onSuccess: async () => {
-        const identity = await authClient.getIdentity();
-        set({ identity });
-      },
-      identityProvider: identityProviderUrl,
-    });
-  },
-  logout: async () => {
-    set({ identity: null });
-  },
+const initAuthStore = (): AuthStore => {
+	const { subscribe, set, update } = writable<AuthStoreData>({
+		identity: undefined
+	});
+
+	return {
+		subscribe,
+
+		sync: async () => {
+			authClient = authClient ?? (await createAuthClient());
+			const isAuthenticated: boolean = await authClient.isAuthenticated();
+
+			set({
+				identity: isAuthenticated ? authClient.getIdentity() : null
+			});
+		},
+
+		signIn: ({ domain }: AuthSignInParams) =>
+			// eslint-disable-next-line no-async-promise-executor
+			new Promise<void>(async (resolve, reject) => {
+				authClient = authClient ?? (await createAuthClient());
+
+				const identityProvider = nonNullish(localIdentityCanisterId)
+					? `http://localhost:4943?canisterId=${localIdentityCanisterId}`
+					: `https://identity.${domain ?? 'ic0.app'}`;
+
+				await authClient?.login({
+					maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
+					onSuccess: () => {
+						update((state: AuthStoreData) => ({
+							...state,
+							identity: authClient?.getIdentity()
+						}));
+
+						resolve();
+					},
+					onError: reject,
+					identityProvider,
+					windowOpenerFeatures: popupCenter({ width: AUTH_POPUP_WIDTH, height: AUTH_POPUP_HEIGHT })
+				});
+			}),
+
+		signOut: async () => {
+			const client: AuthClient = authClient ?? (await createAuthClient());
+
+			await client.logout();
+
+			authClient = null;
+
+			update((state: AuthStoreData) => ({
+				...state,
+				identity: null
+			}));
+		}
+	};
 };
 
-const isAuthenticated = derived(
-  authStore,
-  ($authStore) => $authStore.identity !== null
-);
+export const authStore = initAuthStore();
 
-const principalId = derived(authStore, ($authStore) =>
-  $authStore.identity?.getPrincipal().toString()
-);
-
-export { authStore, isAuthenticated, principalId };
+export const authRemainingTimeStore = writable<number | undefined>(undefined);
