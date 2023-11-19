@@ -73,10 +73,8 @@
   const updateTableData = () => {
   let tempTable: Record<number, TeamStats> = {};
 
-  // Initialize data for all teams
   teams.forEach(team => initTeamData(team.id, tempTable));
 
-  // Process each fixture and update team statistics
   const relevantFixtures = fixtures.filter(fixture => fixture.fixture.status === 3 && fixture.fixture.gameweek <= selectedGameweek);
 
   relevantFixtures.forEach(({ fixture, homeTeam, awayTeam }) => {
@@ -112,7 +110,6 @@
     }
   });
 
-  // Sort teams by points, goal difference, goals for, and goals against
   tableData = Object.values(tempTable).sort((a, b) => {
     const goalDiffA = a.goalsFor - a.goalsAgainst;
     const goalDiffB = b.goalsFor - b.goalsAgainst;
@@ -125,7 +122,6 @@
 };
 
 
-  // Reactive statement to update the league table
   $: if (fixtures.length > 0 && teams.length > 0) {
     updateTableData();
   }
@@ -141,7 +137,6 @@
 
 </script>
 <div class="container-fluid mt-4">
-  <!-- Gameweek Selector -->
   <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
     <div class="flex items-center space-x-2 ml-4">
       <button
@@ -173,7 +168,6 @@
 
   <div class="flex flex-col space-y-4 mt-4 text-lg">
       <div class="overflow-x-auto flex-1">
-        <!-- Table Header -->
         <div class='flex justify-between p-2 border border-gray-700 py-4 bg-light-gray'>
           <div class="w-1/12 text-center mx-4">Pos</div>
           <div class="flex-grow px-4">Team</div>
@@ -187,30 +181,28 @@
           <div class="w-1/12 text-center">PTS</div>
         </div>
   
-        <!-- Table Rows -->
         {#each tableData as team, idx}
-  <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
-      <div class="w-1/12 text-center mx-4">{idx + 1}</div> <!-- Adjusted width -->
-      <a class="flex-grow flex items-center justify-start space-x-2 px-4 min-w-[200px] max-w-[300px]" href={`/club?id=${team.id}`}>
-        
-        <BadgeIcon
-        primaryColour={team.primaryColourHex}
-        secondaryColour={team.secondaryColourHex}
-        thirdColour={team.thirdColourHex}
-        className='w-6 h-6 mr-2'
-      />
-      {team.friendlyName}
-      </a>
-      <div class="w-1/12 text-center">{team.played}</div>
-      <div class="w-1/12 text-center">{team.wins}</div>
-      <div class="w-1/12 text-center">{team.draws}</div>
-      <div class="w-1/12 text-center">{team.losses}</div>
-      <div class="w-1/12 text-center">{team.goalsFor}</div>
-      <div class="w-1/12 text-center">{team.goalsAgainst}</div>
-      <div class="w-1/12 text-center">{team.goalsFor - team.goalsAgainst}</div>
-      <div class="w-1/12 text-center">{team.points}</div>
-  </div>
-{/each}
+          <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+            <div class="w-1/12 text-center mx-4">{idx + 1}</div>
+              <a class="flex-grow flex items-center justify-start space-x-2 px-4 min-w-[200px] max-w-[300px]" href={`/club?id=${team.id}`}>
+                <BadgeIcon
+                  primaryColour={team.primaryColourHex}
+                  secondaryColour={team.secondaryColourHex}
+                  thirdColour={team.thirdColourHex}
+                  className='w-6 h-6 mr-2'
+                />
+                {team.friendlyName}
+              </a>
+              <div class="w-1/12 text-center">{team.played}</div>
+              <div class="w-1/12 text-center">{team.wins}</div>
+              <div class="w-1/12 text-center">{team.draws}</div>
+              <div class="w-1/12 text-center">{team.losses}</div>
+              <div class="w-1/12 text-center">{team.goalsFor}</div>
+              <div class="w-1/12 text-center">{team.goalsAgainst}</div>
+              <div class="w-1/12 text-center">{team.goalsFor - team.goalsAgainst}</div>
+              <div class="w-1/12 text-center">{team.points}</div>
+          </div>
+        {/each}
       </div>
   </div>
 </div>
