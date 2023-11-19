@@ -1,14 +1,9 @@
+import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
 import type { TeamStats } from "$lib/types/TeamStats";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
-
-type FixtureWithTeams = {
-  fixture: Fixture;
-  homeTeam: Team | undefined;
-  awayTeam: Team | undefined;
-};
 
 export class FixtureService {
   private actor: any;

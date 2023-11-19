@@ -3,10 +3,7 @@
   import Layout from "../Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Fixture,
-    Season,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Fixture, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
@@ -16,13 +13,9 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { PlayerService } from "$lib/services/PlayerService";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-    import { getPositionText } from "../../utils/Helpers";
+  import { getPositionText } from "../../utils/Helpers";
+    import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
 
-  type FixtureWithTeams = {
-    fixture: Fixture;
-    homeTeam: Team | undefined;
-    awayTeam: Team | undefined;
-  };
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
   const systemService = new SystemService();

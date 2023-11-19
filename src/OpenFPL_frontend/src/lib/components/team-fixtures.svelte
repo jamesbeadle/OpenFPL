@@ -1,19 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type {
-      Fixture,
-      Team,
-    } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { FixtureService } from "$lib/services/FixtureService";
     import { TeamService } from "$lib/services/TeamService";
     import { formatUnixDateToReadable, formatUnixTimeToTime } from "../../utils/Helpers";
+    import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   
-    type FixtureWithTeams = {
-      fixture: Fixture;
-      homeTeam: Team | undefined;
-      awayTeam: Team | undefined;
-    };
     const fixtureService = new FixtureService();
     const teamService = new TeamService();
 
