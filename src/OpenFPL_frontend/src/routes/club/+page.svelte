@@ -4,6 +4,7 @@
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Fixture,
+    Season,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
@@ -27,6 +28,7 @@
   const playersService = new PlayerService();
 
   let selectedGameweek: number = 1;
+  let selectedSeason: Season;
   let fixtures: FixtureWithTeams[] = [];
   let teams: Team[] = [];
   let team: Team | null = null;
@@ -61,6 +63,7 @@
         localStorage.getItem("system_state_hash") ?? ""
       );
       selectedGameweek = systemState.activeGameweek;
+      selectedSeason = systemState.activeSeason;
       isLoading = false;
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -84,6 +87,11 @@
   const getTeamPosition = (teamId: number) => {
     const position = tableData.findIndex(team => team.id === teamId);
     return position !== -1 ? position + 1 : 'Not found';
+  };
+
+  const getTeamPoints = (teamId: number) => {
+    const points = tableData.find(team => team.id === teamId).points;
+    return points;
   };
 
 
@@ -132,44 +140,22 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Season Position</p>
+            <p class="text-gray-300 text-xs">League Position</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {getTeamPosition(Number(id))}
             </p>
-            <p class="text-gray-300 text-xs">Season</p>
+            <p class="text-gray-300 text-xs">{selectedSeason.name}</p>
           </div>
         </div>
         <div
           class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xs">Total Points</p>
-            <div class="flex justify-center mb-2 mt-2">
-              <div class="flex justify-center items-center">
-                <div class="w-10 ml-4 mr-4">
-                  ds
-                </div>
-                <div class="w-v ml-1 mr-1 flex justify-center">
-                  <p class="text-xs mt-2 mb-2 font-bold">v</p>
-                </div>
-                <div class="w-10 ml-4">
-                  ds
-                </div>
-              </div>
-            </div>
-            <div class="flex justify-center">
-              <div class="w-10 ml-4 mr-4">
-                <p class="text-gray-300 text-xs text-center">
-                  ds
-                </p>
-              </div>
-              <div class="w-v ml-1 mr-1" />
-              <div class="w-10 ml-4">
-                <p class="text-gray-300 text-xs text-center">
-                  ds
-                </p>
-              </div>
-            </div>
+            <p class="text-gray-300 text-xs">Points</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              {getTeamPoints(Number(id))}
+            </p>
+            <p class="text-gray-300 text-xs">Total</p>
           </div>
           <div
             class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
@@ -177,7 +163,7 @@
           />
 
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
+            <p class="text-gray-300 text-xs mt-4 md:mt-0">Next Game:</p>
             <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
                 a
@@ -193,12 +179,14 @@
           />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs mt-4 md:mt-0">
-              xx
+              Highest Scoring Player
             </p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              y
+              B. Fernandes
             </p>
-            z
+            <p class="text-gray-300 text-xs">
+              Midfielder
+            </p>
           </div>
         </div>
       </div>
