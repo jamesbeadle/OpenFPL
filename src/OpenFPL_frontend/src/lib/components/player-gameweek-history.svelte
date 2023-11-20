@@ -20,6 +20,7 @@
     let fixtures: FixtureWithTeams[] = [];
     let teams: Team[] = [];
     let playerDetails: PlayerDetailDTO;
+    let opponentCache = new Map<number, Team>();
     
     let progress = 0;
     let isLoading = true;
@@ -46,7 +47,6 @@
         );
         const fetchedPlayerDetails = await playerService.getPlayerDetails(id, systemState.activeSeason.id);
         playerDetails = fetchedPlayerDetails;
-        console.log(playerDetails)
         selectedGameweek = systemState.activeGameweek;
         isLoading = false;
       } catch (error) {
@@ -58,15 +58,35 @@
       return teams.find((team) => team.id === teamId);
     }
     
-    function getOpponentFromFixtureId(fixtureId: number): Team | undefined {
-      let fixture = fixtures.find((fixture) => fixture.fixture.id == fixtureId);
-      let opponentId = fixture?.homeTeam && (fixture?.homeTeam.id === playerDetails.teamId)
-          ? fixture.awayTeam?.id 
-          : fixture?.awayTeam && (fixture?.awayTeam.id === playerDetails.teamId) 
-            ? fixture.homeTeam?.id : 0;
-      
-      return teams.find((team) => team.id === opponentId);
+    function getOpponentFromFixtureId(fixtureId: number): Team {
+      if (opponentCache.has(fixtureId)) {
+        return opponentCache.get(fixtureId)!;
+      }
+
+      let fixture = fixtures.find((f) => f.fixture.id === fixtureId);
+      let opponentId = fixture?.homeTeam?.id === playerDetails.teamId
+          ? fixture?.awayTeam?.id
+          : fixture?.homeTeam?.id;
+
+      let opponent = teams.find((team) => team.id === opponentId);
+
+      if (!opponent) {
+        return {
+          id: 0,
+          secondaryColourHex: '',
+          name: '',
+          friendlyName: '',
+          thirdColourHex: '',
+          abbreviatedName: '',
+          shirtType: 0,
+          primaryColourHex: ''
+        };
+      }
+
+      opponentCache.set(fixtureId, opponent);
+      return opponent;
     }
+
   
 </script>
 
@@ -83,9 +103,17 @@
         </div>
 
         {#each playerDetails.gameweeks as gameweek}
+          {@const opponent = getOpponentFromFixtureId(gameweek.fixtureId)}
           <div class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer">
               <div class="w-1/4 px-4">{gameweek.number}</div>
-              <div class="w-1/4 px-4">{getOpponentFromFixtureId(gameweek.fixtureId)?.friendlyName}</div>
+              <div class="w-1/4 px-4 flex items-center">
+                <BadgeIcon
+                  className="w-6 mr-2"
+                  primaryColour={opponent?.primaryColourHex}
+                  secondaryColour={opponent?.secondaryColourHex}
+                  thirdColour={opponent?.thirdColourHex}
+                />
+                {opponent?.friendlyName}</div>
               <div class="w-1/4 px-4">{gameweek.points}</div>
               <div class="w-1/4 px-4"><button>View Details</button></div>
           </div>
