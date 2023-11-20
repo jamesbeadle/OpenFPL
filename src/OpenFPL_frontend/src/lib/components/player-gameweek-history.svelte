@@ -113,7 +113,7 @@
 {:else}
 
   {#if playerDetails}
-    <PlayerGameweekModal opponentTeam={selectedOpponent} playerTeam={getTeamFromId(playerDetails.teamId) ?? null} closeDetailModal={closeDetailModal} {showModal} playerDetail={playerDetails} gameweek={selectedGameweek} seasonName={selectedSeason?.name} />
+    <PlayerGameweekModal gameweekDetail={playerDetails.gameweeks.find(x => x.number == selectedGameweek) ?? null} opponentTeam={selectedOpponent} playerTeam={getTeamFromId(playerDetails.teamId) ?? null} closeDetailModal={closeDetailModal} {showModal} playerDetail={playerDetails} gameweek={selectedGameweek} seasonName={selectedSeason?.name} />
   {/if}
   <div class="flex flex-col space-y-4 text-lg mt-4">
       <div class="overflow-x-auto flex-1">
