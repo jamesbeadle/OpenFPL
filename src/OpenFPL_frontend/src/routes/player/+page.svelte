@@ -9,7 +9,7 @@
     import { page } from '$app/stores';
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import { PlayerService } from "$lib/services/PlayerService";
-    import { calculateAgeFromNanoseconds, convertDateToReadable, getFlagComponent, getPositionText } from "../../utils/Helpers";
+    import { calculateAgeFromNanoseconds, convertDateToReadable, formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime, getFlagComponent, getPositionText } from "../../utils/Helpers";
     import type { Fixture, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
     import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
@@ -31,6 +31,11 @@
     let nextFixtureHomeTeam: Team | null = null;
     let nextFixtureAwayTeam: Team | null = null;
     let highestScoringPlayer: PlayerDTO | null = null;
+    let countdownDays = "00";
+    let countdownHours = "00";
+    let countdownMinutes = "00";
+    let nextFixtureDate = "-";
+    let nextFixtureTime = "-";
     
     let progress = 0;
     let isLoading = true;
@@ -69,7 +74,15 @@
         nextFixture = teamFixtures.find(x => x.gameweek == selectedGameweek) ?? null;
         nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
         nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
-  
+        
+        nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
+        nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
+        let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
+        
+        countdownDays = countdownTime.days.toString();
+        countdownHours = countdownTime.hours.toString();
+        countdownMinutes = countdownTime.minutes.toString();
+
         isLoading = false;
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -153,71 +166,106 @@
           <div
             class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
           >
-            
-  
-            <div class="flex-grow mb-4 md:mb-0">
-              <p class="text-gray-300 text-xs">Next Game:</p>
-              <div class="flex justify-center mb-2 mt-2">
-                <div class="flex justify-center items-center">
-                  <div class="w-10 ml-4 mr-4">
-                    <a href={`/club/${nextFixtureHomeTeam?.id}`}>
-                      <BadgeIcon
-                        primaryColour={nextFixtureHomeTeam?.primaryColourHex}
-                        secondaryColour={nextFixtureHomeTeam?.secondaryColourHex}
-                        thirdColour={nextFixtureHomeTeam?.thirdColourHex}
-                      />
-                    </a>
-                  </div>
-                  <div class="w-v ml-1 mr-1 flex justify-center">
-                    <p class="text-xs mt-2 mb-2 font-bold">v</p>
-                  </div>
-                  <div class="w-10 ml-4">
-                    <a href={`/club/${nextFixtureAwayTeam?.id}`}>
-                      <BadgeIcon
-                        primaryColour={nextFixtureAwayTeam?.primaryColourHex}
-                        secondaryColour={nextFixtureAwayTeam?.secondaryColourHex}
-                        thirdColour={nextFixtureAwayTeam?.thirdColourHex}
-                      />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div class="flex justify-center">
+          <div class="flex-grow mb-4 md:mb-0">
+            <p class="text-gray-300 text-xs">Next Game:</p>
+            <div class="flex justify-center mb-2 mt-2">
+              <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
-                  <p class="text-gray-300 text-xs text-center">
-                    <a class="text-gray-300 text-xs text-center"
-                      href={`/club/${nextFixtureHomeTeam?.id}`}
-                      >{nextFixtureHomeTeam?.abbreviatedName}</a>
-                  </p>
+                  <a
+                    href={`/club/${
+                      nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                    }`}
+                  >
+                    <BadgeIcon
+                      primaryColour={nextFixtureHomeTeam
+                        ? nextFixtureHomeTeam.primaryColourHex
+                        : ""}
+                      secondaryColour={nextFixtureHomeTeam
+                        ? nextFixtureHomeTeam.secondaryColourHex
+                        : ""}
+                      thirdColour={nextFixtureHomeTeam
+                        ? nextFixtureHomeTeam.thirdColourHex
+                        : ""}
+                    />
+                  </a>
                 </div>
-                <div class="w-v ml-1 mr-1" />
+                <div class="w-v ml-1 mr-1 flex justify-center">
+                  <p class="text-xs mt-2 mb-2 font-bold">v</p>
+                </div>
                 <div class="w-10 ml-4">
-                  <p class="text-gray-300 text-xs text-center">
-                    <a
-                      class="text-gray-300 text-xs text-center"
-                      href={`/club/${nextFixtureAwayTeam?.id}`}
-                      >{nextFixtureAwayTeam?.abbreviatedName}</a
-                    >
-                  </p>
+                  <a
+                    href={`/club/${
+                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                    }`}
+                  >
+                    <BadgeIcon
+                      primaryColour={nextFixtureAwayTeam
+                        ? nextFixtureAwayTeam.primaryColourHex
+                        : ""}
+                      secondaryColour={nextFixtureAwayTeam
+                        ? nextFixtureAwayTeam.secondaryColourHex
+                        : ""}
+                      thirdColour={nextFixtureAwayTeam
+                        ? nextFixtureAwayTeam.thirdColourHex
+                        : ""}
+                    />
+                  </a>
                 </div>
               </div>
             </div>
-            <div
-              class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-              style="min-height: 2px; min-width: 2px;"
-            />
-            <div class="flex-grow">
-              <p class="text-gray-300 text-xs mt-4 md:mt-0">
-                Highest Scoring Player
-              </p>
+            <div class="flex justify-center">
+              <div class="w-10 ml-4 mr-4">
+                <p class="text-gray-300 text-xs text-center">
+                  <a
+                    class="text-gray-300 text-xs text-center"
+                    href={`/club/${
+                      nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                    }`}
+                    >{nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.abbreviatedName
+                      : ""}</a
+                  >
+                </p>
+              </div>
+              <div class="w-v ml-1 mr-1" />
+              <div class="w-10 ml-4">
+                <p class="text-gray-300 text-xs text-center">
+                  <a
+                    class="text-gray-300 text-xs text-center"
+                    href={`/club/${
+                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                    }`}
+                    >{nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.abbreviatedName
+                      : ""}</a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
+          <div class="flex-grow mb-4 md:mb-0">
+            <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
+            <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-                {highestScoringPlayer?.lastName}
-              </p>
-              <p class="text-gray-300 text-xs">
-                {getPositionText(highestScoringPlayer?.position ?? 0)}
-                ({highestScoringPlayer?.totalPoints})
+                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
+                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
+                  >h</span
+                >
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
+                  >m</span
+                >
               </p>
             </div>
+            <p class="text-gray-300 text-xs">
+              {nextFixtureDate} | {nextFixtureTime}
+            </p>
+          </div>
+
+            
           </div>
         </div>
       </div> 
