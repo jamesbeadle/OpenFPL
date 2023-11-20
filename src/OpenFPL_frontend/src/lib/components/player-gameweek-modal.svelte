@@ -128,44 +128,22 @@
                 </div>
             {/each}
 
-            {#each concededEvents as event}
-                
-                <div class="mt-2">
-                    <div class="flex justify-between items-center p-2">
-                        <div class="text-sm font-medium w-3/6">Appearance</div>
-                        <div class="text-sm font-medium w-2/6">0-80'</div>
-                        <div class="text-sm font-medium w-1/6">5</div>
-                    </div>
-                </div>
-            {/each}
-
             {#if goalConcededCount >= 2}
                 <div class="mt-2">
                     <div class="flex justify-between items-center p-2">
-                        <div class="text-sm font-medium w-3/6">Appearance</div>
-                        <div class="text-sm font-medium w-2/6">0-80'</div>
-                        <div class="text-sm font-medium w-1/6">5</div>
+                        <div class="text-sm font-medium w-3/6">Goal x {goalConcededCount}</div>
+                        <div class="text-sm font-medium w-2/6">-</div>
+                        <div class="text-sm font-medium w-1/6">{-(-pointsForEach2Conceded * Math.floor(goalConcededCount / 2))}</div>
                     </div>
                 </div>
             {/if}
             
-            {#each keeperSaveEvents as event}
-                
+            {#if  Math.floor(keeperSaveCount / 3) > 0}
                 <div class="mt-2">
                     <div class="flex justify-between items-center p-2">
-                        <div class="text-sm font-medium w-3/6">Appearance</div>
-                        <div class="text-sm font-medium w-2/6">0-80'</div>
-                        <div class="text-sm font-medium w-1/6">5</div>
-                    </div>
-                </div>
-            {/each}
-
-            {#if Math.floor(keeperSaveCount / 3) > 0}
-                <div class="mt-2">
-                    <div class="flex justify-between items-center p-2">
-                        <div class="text-sm font-medium w-3/6">Appearance</div>
-                        <div class="text-sm font-medium w-2/6">0-80'</div>
-                        <div class="text-sm font-medium w-1/6">5</div>
+                        <div class="text-sm font-medium w-3/6">Keeper Save x 3</div>
+                        <div class="text-sm font-medium w-2/6">-</div>
+                        <div class="text-sm font-medium w-1/6">{pointsFor3Saves * Math.floor(keeperSaveCount / 3)}</div>
                     </div>
                 </div>
             {/if}
@@ -174,9 +152,39 @@
                 
                 <div class="mt-2">
                     <div class="flex justify-between items-center p-2">
-                        <div class="text-sm font-medium w-3/6">Appearance</div>
-                        <div class="text-sm font-medium w-2/6">0-80'</div>
-                        <div class="text-sm font-medium w-1/6">5</div>
+                        <div class="text-sm font-medium w-3/6">
+                            {#if event.eventType == 1}<div class="text-sm font-medium w-3/6">Goal Scored</div>{/if}
+                            {#if event.eventType == 2}<div class="text-sm font-medium w-3/6">Assist</div>{/if}
+                            {#if event.eventType == 5}<div class="text-sm font-medium w-3/6">Clean Sheet</div>{/if}
+                            {#if event.eventType == 6}<div class="text-sm font-medium w-3/6">Penalty Save</div>{/if}
+                            {#if event.eventType == 7}<div class="text-sm font-medium w-3/6">Penalty Missed</div>{/if}
+                            {#if event.eventType == 8}<div class="text-sm font-medium w-3/6">Yellow Card</div>{/if}
+                            {#if event.eventType == 9}<div class="text-sm font-medium w-3/6">Red Card</div>{/if}
+                            {#if event.eventType == 10}<div class="text-sm font-medium w-3/6">Own Goal</div>{/if}
+                            {#if event.eventType == 11}<div class="text-sm font-medium w-3/6">Highest Scoring Player</div>{/if}
+                        </div>
+                        <div class="text-sm font-medium w-2/6">
+                            {#if event.eventType == 1}<div class="text-sm font-medium w-3/6">{event.eventEndMinute}</div>{/if}
+                            {#if event.eventType == 2}<div class="text-sm font-medium w-3/6">{event.eventEndMinute}</div>{/if}
+                            {#if event.eventType == 5}<div class="text-sm font-medium w-3/6">-</div>{/if}
+                            {#if event.eventType == 6}<div class="text-sm font-medium w-3/6">-</div>{/if}
+                            {#if event.eventType == 7}<div class="text-sm font-medium w-3/6">-</div>{/if}
+                            {#if event.eventType == 8}<div class="text-sm font-medium w-3/6">-</div>{/if}
+                            {#if event.eventType == 9}<div class="text-sm font-medium w-3/6">-</div>{/if}
+                            {#if event.eventType == 10}<div class="text-sm font-medium w-3/6">{event.eventEndMinute}</div>{/if}
+                            {#if event.eventType == 11}<div class="text-sm font-medium w-3/6">-</div>{/if}
+                        </div>
+                        <div class="text-sm font-medium w-1/6">
+                            {#if event.eventType == 1}<div class="text-sm font-medium w-3/6">{pointsForGoal}</div>{/if}
+                            {#if event.eventType == 2}<div class="text-sm font-medium w-3/6">{pointsForAssist}</div>{/if}
+                            {#if event.eventType == 5}<div class="text-sm font-medium w-3/6">{pointsForCleanSheet}</div>{/if}
+                            {#if event.eventType == 6}<div class="text-sm font-medium w-3/6">{pointsForPenaltySave}</div>{/if}
+                            {#if event.eventType == 7}<div class="text-sm font-medium w-3/6">{pointsForPenaltyMiss}</div>{/if}
+                            {#if event.eventType == 8}<div class="text-sm font-medium w-3/6">{pointsForYellowCard}</div>{/if}
+                            {#if event.eventType == 9}<div class="text-sm font-medium w-3/6">{pointsForRedCard}</div>{/if}
+                            {#if event.eventType == 10}<div class="text-sm font-medium w-3/6">{pointsForOwnGoal}</div>{/if}
+                            {#if event.eventType == 11}<div class="text-sm font-medium w-3/6">{pointsForHighestScore}</div>{/if}
+                        </div>
                     </div>
                 </div>
             {/each}
