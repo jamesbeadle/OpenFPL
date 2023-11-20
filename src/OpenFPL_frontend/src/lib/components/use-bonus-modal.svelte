@@ -18,7 +18,7 @@
 </style>
 {#if showModal}
 <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop" on:click={closeBonusModal} on:keydown={closeBonusModal}>
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-panel text-white">
+    <div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white">
         <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
         <div class="mt-3 text-center">
             <h3 class="text-lg leading-6 font-medium">
