@@ -10,6 +10,7 @@
     import { PlayerService } from "$lib/services/PlayerService";
     import type { PlayerDetailDTO } from "../../../../declarations/player_canister/player_canister.did";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+    import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     
     const fixtureService = new FixtureService();
     const teamService = new TeamService();
@@ -99,7 +100,7 @@
           <div class="w-1/4 px-4">Gameweek</div>
           <div class="w-1/4 px-4">Opponent</div>
           <div class="w-1/4 px-4">Points</div>
-          <div class="w-1/4 px-4">-</div>
+          <div class="w-1/4 px-4">&nbsp;</div>
         </div>
 
         {#each playerDetails.gameweeks as gameweek}
@@ -115,7 +116,13 @@
                 />
                 {opponent?.friendlyName}</div>
               <div class="w-1/4 px-4">{gameweek.points}</div>
-              <div class="w-1/4 px-4"><button>View Details</button></div>
+              <div class="w-1/4 px-4 flex items-center">
+                <button>
+                  <span class="flex items-center">
+                    <ViewDetailsIcon className="w-6 mr-2" />View Details
+                  </span>
+                </button>
+              </div>
           </div>
         {/each}
       </div>
