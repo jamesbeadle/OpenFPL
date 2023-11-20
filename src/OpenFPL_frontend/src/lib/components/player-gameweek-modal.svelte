@@ -195,6 +195,10 @@
                     <span class="text-sm font-bold w-1/6">{gameweekDetail?.points}</span>
                 </div>
             </div>
+            
+            <div class="mt-2 flex justify-end">
+                <button on:click={closeDetailModal} on:keydown={closeDetailModal} class="fpl-purple-btn px-4 py-2 mt-2 rounded-md">Close</button>
+            </div>
         </div>
     </div>
 {/if}
