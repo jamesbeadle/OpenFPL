@@ -46,7 +46,7 @@
         );
         const fetchedPlayerDetails = await playerService.getPlayerDetails(id, systemState.activeSeason.id);
         playerDetails = fetchedPlayerDetails;
-        
+        console.log(playerDetails)
         selectedGameweek = systemState.activeGameweek;
         isLoading = false;
       } catch (error) {
@@ -57,13 +57,23 @@
     function getTeamFromId(teamId: number): Team | undefined {
       return teams.find((team) => team.id === teamId);
     }
+    
+    function getOpponentFromFixtureId(fixtureId: number): Team | undefined {
+      let fixture = fixtures.find((fixture) => fixture.fixture.id == fixtureId);
+      let opponentId = fixture?.homeTeam && (fixture?.homeTeam.id === playerDetails.teamId)
+          ? fixture.awayTeam?.id 
+          : fixture?.awayTeam && (fixture?.awayTeam.id === playerDetails.teamId) 
+            ? fixture.homeTeam?.id : 0;
+      
+      return teams.find((team) => team.id === opponentId);
+    }
   
 </script>
 
 {#if isLoading}
   <LoadingIcon {progress} />
 {:else}
-  <div class="flex flex-col space-y-4 text-lg">
+  <div class="flex flex-col space-y-4 text-lg mt-4">
       <div class="overflow-x-auto flex-1">
         <div class='flex justify-between p-2 border border-gray-700 py-4 bg-light-gray'>
           <div class="w-1/4 px-4">Gameweek</div>
@@ -73,9 +83,9 @@
         </div>
 
         {#each playerDetails.gameweeks as gameweek}
-          <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+          <div class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer">
               <div class="w-1/4 px-4">{gameweek.number}</div>
-              <div class="w-1/4 px-4">opponent</div>
+              <div class="w-1/4 px-4">{getOpponentFromFixtureId(gameweek.fixtureId)?.friendlyName}</div>
               <div class="w-1/4 px-4">{gameweek.points}</div>
               <div class="w-1/4 px-4"><button>View Details</button></div>
           </div>
