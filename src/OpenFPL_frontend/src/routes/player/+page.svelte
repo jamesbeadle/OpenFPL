@@ -9,7 +9,7 @@
     import { page } from '$app/stores';
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import { PlayerService } from "$lib/services/PlayerService";
-    import { getPositionText } from "../../utils/Helpers";
+    import { calculateAgeFromNanoseconds, convertDateToReadable, getFlagComponent, getPositionText } from "../../utils/Helpers";
     import type { Fixture, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
     import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
@@ -22,7 +22,7 @@
     const playersService = new PlayerService();
   
     let selectedGameweek: number = 1;
-    let selectedSeason: Season;
+    let selectedPlayer : PlayerDTO| null = null;
     let fixtures: FixtureWithTeams[] = [];
     let teams: Team[] = [];
     let team: Team | null = null;
@@ -48,26 +48,24 @@
         const fetchedPlayers = await playersService.getPlayerData(
           localStorage.getItem("players_hash") ?? "");
   
+        players = fetchedPlayers;
+        selectedPlayer = players.find(x => x.id == id) ?? null;
         teams = fetchedTeams;
-        team = fetchedTeams.find(x => x.id == id) ?? null;
+        team = fetchedTeams.find(x => x.id == selectedPlayer?.teamId) ?? null;
   
-        let teamFixtures = fetchedFixtures.filter(x => x.homeTeamId == id || x.awayTeamId == id);
-  
+        let teamFixtures = fetchedFixtures.filter(x => x.homeTeamId == team?.id || x.awayTeamId == team?.id);
         fixtures = teamFixtures.map((fixture) => ({
           fixture,
           homeTeam: getTeamFromId(fixture.homeTeamId),
           awayTeam: getTeamFromId(fixture.awayTeamId),
         }));
-        players = fetchedPlayers.filter(player => player.teamId == id);
-        highestScoringPlayer = players
-        .sort((a,b) => a.totalPoints - b.totalPoints)
-        .sort((a,b) => Number(b.value) - Number(a.value))[0];
-        console.log(highestScoringPlayer)
+
         let systemState = await systemService.getSystemState(
           localStorage.getItem("system_state_hash") ?? ""
         );
+
         selectedGameweek = systemState.activeGameweek;
-        selectedSeason = systemState.activeSeason;
+        
         nextFixture = teamFixtures.find(x => x.gameweek == selectedGameweek) ?? null;
         nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
         nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
@@ -105,7 +103,7 @@
             class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
           >
           <div class="flex-grow flex flex-col items-center">
-            <p class="text-gray-300 text-xs">position</p>
+            <p class="text-gray-300 text-xs">{getPositionText(selectedPlayer?.position ?? -1)}</p>
             <div class="py-2 flex">
               <ShirtIcon
                 className="h-10"
@@ -114,18 +112,19 @@
                 thirdColour={team?.thirdColourHex}
               />
             </div>
-            <p class="text-gray-300 text-xs">Shirt number</p>
+            <p class="text-gray-300 text-xs">Shirt: {selectedPlayer?.shirtNumber}</p>
           </div>
             <div
               class="flex-shrink-0 w-px bg-gray-400 self-stretch"
               style="min-width: 2px; min-height: 50px;"
             />
             <div class="flex-grow">
-              <p class="text-gray-300 text-xs">Club</p>
+              <p class="text-gray-300 text-xs">{team?.name}</p>
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-                Surname
+                {selectedPlayer?.lastName}
               </p>
-              <p class="text-gray-300 text-xs">Flag and firstname</p>
+              <p class="text-gray-300 text-xs flex items-center">                
+                <svelte:component class="w-4 h-4 mr-1" this={getFlagComponent(selectedPlayer?.nationality ?? '')} size="100" />{selectedPlayer?.firstName}</p>
             </div>
             <div
               class="flex-shrink-0 w-px bg-gray-400 self-stretch"
@@ -134,7 +133,7 @@
             <div class="flex-grow">
               <p class="text-gray-300 text-xs">Value</p>
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-                £200m
+                £{(Number(selectedPlayer?.value ?? 0) / 4).toFixed(2)}m
               </p>
               <p class="text-gray-300 text-xs">Weekly Change: 0%</p>
             </div>
@@ -145,9 +144,9 @@
             <div class="flex-grow mb-4 md:mb-0">
                 <p class="text-gray-300 text-xs">Age</p>
                 <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-                    24
+                    {calculateAgeFromNanoseconds(Number(selectedPlayer?.dateOfBirth ?? 0)) }
                 </p>
-                <p class="text-gray-300 text-xs">20/1/2999</p>
+                <p class="text-gray-300 text-xs">{convertDateToReadable(Number(selectedPlayer?.dateOfBirth ?? 0))}</p>
             </div>
               
           </div>
