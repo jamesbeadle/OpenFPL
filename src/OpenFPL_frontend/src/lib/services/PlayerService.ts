@@ -1,5 +1,5 @@
 import { idlFactory } from "../../../../declarations/player_canister";
-import type { Player, PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+import type { Player, PlayerDTO, PlayerDetailDTO } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
 
@@ -44,6 +44,16 @@ export class PlayerService {
       return allPlayersData;
     } catch (error) {
       console.error("Error fetching all players:", error);
+      throw error;
+    }
+  }
+
+  async getPlayerDetails(playerId: number, seasonId: number): Promise<PlayerDetailDTO> {
+    try {
+      const playerDetailData = await this.actor.getPlayerDetails(playerId, seasonId);
+      return playerDetailData;
+    } catch (error) {
+      console.error("Error fetching player data:", error);
       throw error;
     }
   }

@@ -14,7 +14,7 @@
   import { PlayerService } from "$lib/services/PlayerService";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { getPositionText } from "../../utils/Helpers";
-    import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
 
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
@@ -37,6 +37,7 @@
   let activeTab: string = "players";
 
   $: id = Number($page.url.searchParams.get('id'));
+  
   onMount(async () => {
     try {
       const fetchedFixtures = await fixtureService.getFixturesData(
