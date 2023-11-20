@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { page } from '$app/stores';
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { SystemService } from "$lib/services/SystemService";
     import { FixtureService } from "$lib/services/FixtureService";
     import { TeamService } from "$lib/services/TeamService";
@@ -19,10 +19,12 @@
     const playerService = new PlayerService();
   
     let selectedGameweek: number = 1;
+    let selectedSeason: Season | null = null;
     let fixtures: FixtureWithTeams[] = [];
     let teams: Team[] = [];
     let playerDetails: PlayerDetailDTO;
     let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
+    let selectedOpponent: Team | null = null;
     let opponentCache = new Map<number, Team>();
     
     let progress = 0;
@@ -52,6 +54,7 @@
         const fetchedPlayerDetails = await playerService.getPlayerDetails(id, systemState.activeSeason.id);
         playerDetails = fetchedPlayerDetails;
         selectedGameweek = systemState.activeGameweek;
+        selectedSeason = systemState.activeSeason;
         isLoading = false;
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -91,8 +94,9 @@
       return opponent;
     }
 
-    function showDetailModal(playerDetailsDTO: PlayerGameweekDTO): void {
+    function showDetailModal(playerDetailsDTO: PlayerGameweekDTO, opponent: Team): void {
       selectedPlayerGameweek = playerDetailsDTO;
+      selectedOpponent = opponent;
       showModal = true;
     }
 
@@ -109,7 +113,7 @@
 {:else}
 
   {#if playerDetails}
-    <PlayerGameweekModal playerTeam={getTeamFromId(playerDetails.teamId) ?? null} closeDetailModal={closeDetailModal} {showModal} playerDetail={playerDetails} />
+    <PlayerGameweekModal opponentTeam={selectedOpponent} playerTeam={getTeamFromId(playerDetails.teamId) ?? null} closeDetailModal={closeDetailModal} {showModal} playerDetail={playerDetails} gameweek={selectedGameweek} seasonName={selectedSeason?.name} />
   {/if}
   <div class="flex flex-col space-y-4 text-lg mt-4">
       <div class="overflow-x-auto flex-1">
@@ -134,7 +138,7 @@
                 {opponent?.friendlyName}</div>
               <div class="w-1/4 px-4">{gameweek.points}</div>
               <div class="w-1/4 px-4 flex items-center">
-                <button on:click={() => showDetailModal(gameweek)}>
+                <button on:click={() => showDetailModal(gameweek, opponent)}>
                   <span class="flex items-center">
                     <ViewDetailsIcon className="w-6 mr-2" />View Details
                   </span>

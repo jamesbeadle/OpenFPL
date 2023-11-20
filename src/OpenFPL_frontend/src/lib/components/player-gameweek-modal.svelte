@@ -1,14 +1,17 @@
 <script lang="ts">
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import type { PlayerDetailDTO } from "../../../../declarations/player_canister/player_canister.did";
     import { getFlagComponent } from "../../utils/Helpers";
-
 
     export let showModal: boolean;
     export let closeDetailModal: () => void;
     export let playerDetail: PlayerDetailDTO;
     export let playerTeam: Team | null;
+    export let opponentTeam: Team | null;
+    export let gameweek = 0;
+    export let seasonName = '';
+    
 </script>
 <style>
     .modal-backdrop {
@@ -38,22 +41,41 @@ import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_back
                         {playerTeam?.friendlyName}</p>
                 </div>
             </div>
-            
 
+            <div class="flex justify-start items-center w-full border-t border-gray-600 text-sm">
+                <p class="flex w-1/3 items-center border-r border-gray-600 justify-center pt-2">vs <BadgeIcon
+                    className="w-5 h-5 mx-1"
+                    primaryColour={opponentTeam?.primaryColourHex}
+                    secondaryColour={opponentTeam?.secondaryColourHex}
+                    thirdColour={opponentTeam?.thirdColourHex}
+                />
+                {opponentTeam?.friendlyName}</p>
+                <p class="flex w-1/3 justify-center items-center pt-2">{seasonName}</p>
+                <p class="flex w-1/3 items-center justify-center border-l border-gray-600 pt-2">Gameweek {gameweek}</p>
+            </div>
             
-            <div class="text-center">
-                <div class="mt-2">
-                    <div class="flex justify-between items-center mt-4">
-                        <div class="text-sm font-medium">Appearance</div>
-                        <div class="text-sm">1</div>
-                    </div>
+            
+            <div class="mt-2">
+                <div class="flex justify-between items-center mt-4 bg-light-gray p-2 border-t border-b border-gray-600">
+                    <div class="text-sm font-medium w-3/6">Category</div>
+                    <div class="text-sm font-medium w-2/6">Detail</div>
+                    <div class="text-sm font-medium w-1/6">Points</div>
                 </div>
             </div>
 
-            <div class="mt-4 pt-4 border-t border-gray-200">
-                <div class="flex justify-between">
-                    <span class="text-base font-medium text-gray-400">Total Points:</span>
-                    <span class="text-base font-medium">111</span>
+            
+            <div class="mt-2">
+                <div class="flex justify-between items-center p-2">
+                    <div class="text-sm font-medium w-3/6">Appearance</div>
+                    <div class="text-sm font-medium w-2/6">0-80'</div>
+                    <div class="text-sm font-medium w-1/6">5</div>
+                </div>
+            </div>
+        
+            <div class="mt-2">
+                <div class="flex justify-between items-center bg-light-gray p-2 border-t border-b border-gray-600">
+                    <span class="text-base font-medium text-gray-400 w-5/6">Total Points:</span>
+                    <span class="text-base font-medium w-1/6">111</span>
                 </div>
             </div>
         </div>
