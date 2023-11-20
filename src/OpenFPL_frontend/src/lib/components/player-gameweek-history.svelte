@@ -8,9 +8,10 @@
     import { TeamService } from "$lib/services/TeamService";
     import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
     import { PlayerService } from "$lib/services/PlayerService";
-    import type { PlayerDetailDTO } from "../../../../declarations/player_canister/player_canister.did";
+    import type { PlayerDetailDTO, PlayerGameweekDTO } from "../../../../declarations/player_canister/player_canister.did";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+    import PlayerGameweekModal from "./player-gameweek-modal.svelte";
     
     const fixtureService = new FixtureService();
     const teamService = new TeamService();
@@ -21,10 +22,12 @@
     let fixtures: FixtureWithTeams[] = [];
     let teams: Team[] = [];
     let playerDetails: PlayerDetailDTO;
+    let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
     let opponentCache = new Map<number, Team>();
     
     let progress = 0;
     let isLoading = true;
+    let showModal: boolean = false;
 
     $: id = Number($page.url.searchParams.get('id'));
   
@@ -88,12 +91,26 @@
       return opponent;
     }
 
+    function showDetailModal(playerDetailsDTO: PlayerGameweekDTO): void {
+      selectedPlayerGameweek = playerDetailsDTO;
+      showModal = true;
+    }
+
+    function closeDetailModal(): void {
+        selectedPlayerGameweek = null;
+        showModal = false;
+    }
+
   
 </script>
 
 {#if isLoading}
   <LoadingIcon {progress} />
 {:else}
+
+  {#if playerDetails}
+    <PlayerGameweekModal closeDetailModal={closeDetailModal} {showModal} playerDetail={playerDetails} />
+  {/if}
   <div class="flex flex-col space-y-4 text-lg mt-4">
       <div class="overflow-x-auto flex-1">
         <div class='flex justify-between p-2 border border-gray-700 py-4 bg-light-gray'>
@@ -117,7 +134,7 @@
                 {opponent?.friendlyName}</div>
               <div class="w-1/4 px-4">{gameweek.points}</div>
               <div class="w-1/4 px-4 flex items-center">
-                <button>
+                <button on:click={() => showDetailModal(gameweek)}>
                   <span class="flex items-center">
                     <ViewDetailsIcon className="w-6 mr-2" />View Details
                   </span>
