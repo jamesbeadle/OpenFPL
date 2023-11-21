@@ -22,10 +22,8 @@
             class={`p-2 ${
               activeTab === "details" ? "text-white" : "text-gray-400"
             }`}
-            on:click={() => setActiveTab("details")}
+            on:click={() => setActiveTab("details")}>Details</button
           >
-            Details
-          </button>
         </li>
         <li
           class={`mr-4 text-xs md:text-lg ${
@@ -36,10 +34,8 @@
             class={`p-2 ${
               activeTab === "gameweeks" ? "text-white" : "text-gray-400"
             }`}
-            on:click={() => setActiveTab("gameweeks")}
+            on:click={() => setActiveTab("gameweeks")}>Gameweeks</button
           >
-            Gameweeks
-          </button>
         </li>
       </ul>
 

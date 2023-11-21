@@ -1,5 +1,8 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { DataCache, SystemState } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  DataCache,
+  SystemState,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
 
@@ -16,13 +19,14 @@ export class SystemService {
   async updateSystemStateData() {
     let category = "system_state_hash";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find(x => x.category == category) ?? null;
-    const localHash = localStorage.getItem(category);    
-    if(liveHash != localHash){
-
+    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);
+    if (liveHash != localHash) {
       let updatedSystemStateData = await this.actor.getSystemState();
-      localStorage.setItem("system_state_data",
-        JSON.stringify(updatedSystemStateData, replacer));
+      localStorage.setItem(
+        "system_state_data",
+        JSON.stringify(updatedSystemStateData, replacer)
+      );
       localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }
@@ -36,8 +40,7 @@ export class SystemService {
     } catch (e) {
       cachedSystemState = null;
     }
-    
+
     return cachedSystemState;
   }
-  
 }

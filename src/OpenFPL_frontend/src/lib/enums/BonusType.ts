@@ -1,6 +1,6 @@
 export enum BonusType {
-    AUTOMATIC,
-    PLAYER,
-    TEAM,
-    COUNTRY
-};
+  AUTOMATIC,
+  PLAYER,
+  TEAM,
+  COUNTRY,
+}

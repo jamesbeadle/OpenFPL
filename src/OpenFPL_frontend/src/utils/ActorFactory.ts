@@ -14,7 +14,7 @@ export class ActorFactory {
         process.env.DFX_NETWORK === "ic"
           ? `https://${canisterId}.ic0.app`
           : "http://127.0.0.1:8080",
-      identity: identity
+      identity: identity,
     };
 
     if (!options) {

@@ -9,9 +9,6 @@ function blank_object() {
 function run_all(fns) {
   fns.forEach(run);
 }
-function is_function(thing) {
-  return typeof thing === "function";
-}
 function safe_not_equal(a, b) {
   return a != a ? b == b : a !== b || (a && typeof a === "object" || typeof a === "function");
 }
@@ -56,13 +53,6 @@ function escape(value, is_attr = false) {
     last = i + 1;
   }
   return escaped + str.substring(last);
-}
-function each(items, fn) {
-  let str = "";
-  for (let i = 0; i < items.length; i += 1) {
-    str += fn(items[i], i);
-  }
-  return str;
 }
 const missing_component = {
   $$render: () => ""
@@ -122,15 +112,12 @@ export {
   subscribe as a,
   add_attribute as b,
   create_ssr_component as c,
-  each as d,
+  noop as d,
   escape as e,
-  noop as f,
-  safe_not_equal as g,
-  getContext as h,
-  is_function as i,
+  safe_not_equal as f,
+  getContext as g,
   missing_component as m,
   null_to_empty as n,
-  run_all as r,
   setContext as s,
   validate_component as v
 };

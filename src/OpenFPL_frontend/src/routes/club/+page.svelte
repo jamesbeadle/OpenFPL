@@ -3,11 +3,15 @@
   import Layout from "../Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Fixture, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Fixture,
+    Season,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
-  import { page } from '$app/stores';
+  import { page } from "$app/stores";
   import TeamPlayers from "$lib/components/team-players.svelte";
   import TeamFixtures from "$lib/components/team-fixtures.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
@@ -15,7 +19,7 @@
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { getPositionText } from "../../utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import { updateTableData } from "../../utils/Helpers"
+  import { updateTableData } from "../../utils/Helpers";
 
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
@@ -32,13 +36,13 @@
   let nextFixtureHomeTeam: Team | null = null;
   let nextFixtureAwayTeam: Team | null = null;
   let highestScoringPlayer: PlayerDTO | null = null;
-  
+
   let progress = 0;
   let isLoading = true;
   let activeTab: string = "players";
 
-  $: id = Number($page.url.searchParams.get('id'));
-  
+  $: id = Number($page.url.searchParams.get("id"));
+
   onMount(async () => {
     try {
       const fetchedFixtures = await fixtureService.getFixtures();
@@ -46,24 +50,27 @@
       const fetchedPlayers = await playersService.getPlayers();
 
       teams = fetchedTeams;
-      team = fetchedTeams.find(x => x.id == id) ?? null;
+      team = fetchedTeams.find((x) => x.id == id) ?? null;
 
-      let teamFixtures = fetchedFixtures.filter(x => x.homeTeamId == id || x.awayTeamId == id);
+      let teamFixtures = fetchedFixtures.filter(
+        (x) => x.homeTeamId == id || x.awayTeamId == id
+      );
 
       fixtures = teamFixtures.map((fixture) => ({
         fixture,
         homeTeam: getTeamFromId(fixture.homeTeamId),
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
-      players = fetchedPlayers.filter(player => player.teamId == id);
+      players = fetchedPlayers.filter((player) => player.teamId == id);
       highestScoringPlayer = players
-      .sort((a,b) => a.totalPoints - b.totalPoints)
-      .sort((a,b) => Number(b.value) - Number(a.value))[0];
-      console.log(highestScoringPlayer)
+        .sort((a, b) => a.totalPoints - b.totalPoints)
+        .sort((a, b) => Number(b.value) - Number(a.value))[0];
+      console.log(highestScoringPlayer);
       let systemState = await systemService.getSystemState();
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
-      nextFixture = teamFixtures.find(x => x.gameweek == selectedGameweek) ?? null;
+      nextFixture =
+        teamFixtures.find((x) => x.gameweek == selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
 
@@ -73,7 +80,6 @@
     }
   });
 
-  
   let tableData: any[] = [];
   $: if (fixtures.length > 0 && teams.length > 0) {
     tableData = updateTableData(fixtures, teams, selectedGameweek);
@@ -82,22 +88,20 @@
   function getTeamFromId(teamId: number): Team | undefined {
     return teams.find((team) => team.id === teamId);
   }
-  
+
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
 
   const getTeamPosition = (teamId: number) => {
-    const position = tableData.findIndex(team => team.id === teamId);
-    return position !== -1 ? position + 1 : 'Not found';
+    const position = tableData.findIndex((team) => team.id === teamId);
+    return position !== -1 ? position + 1 : "Not found";
   };
 
   const getTeamPoints = (teamId: number) => {
-    const points = tableData.find(team => team.id === teamId).points;
+    const points = tableData.find((team) => team.id === teamId).points;
     return points;
   };
-
-
 </script>
 
 <Layout>
@@ -109,24 +113,24 @@
         <div
           class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
-        <div class="flex-grow flex flex-col items-center">
-          <p class="text-gray-300 text-xs">{team?.friendlyName}</p>
-          <div class="py-2 flex space-x-4">
-            <BadgeIcon
-              className="h-10"
-              primaryColour={team?.primaryColourHex}
-              secondaryColour={team?.secondaryColourHex}
-              thirdColour={team?.thirdColourHex}
-            />
-            <ShirtIcon
-              className="h-10"
-              primaryColour={team?.primaryColourHex}
-              secondaryColour={team?.secondaryColourHex}
-              thirdColour={team?.thirdColourHex}
-            />
+          <div class="flex-grow flex flex-col items-center">
+            <p class="text-gray-300 text-xs">{team?.friendlyName}</p>
+            <div class="py-2 flex space-x-4">
+              <BadgeIcon
+                className="h-10"
+                primaryColour={team?.primaryColourHex}
+                secondaryColour={team?.secondaryColourHex}
+                thirdColour={team?.thirdColourHex}
+              />
+              <ShirtIcon
+                className="h-10"
+                primaryColour={team?.primaryColourHex}
+                secondaryColour={team?.secondaryColourHex}
+                thirdColour={team?.thirdColourHex}
+              />
+            </div>
+            <p class="text-gray-300 text-xs">{team?.abbreviatedName}</p>
           </div>
-          <p class="text-gray-300 text-xs">{team?.abbreviatedName}</p>
-        </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
             style="min-width: 2px; min-height: 50px;"
@@ -195,9 +199,11 @@
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a class="text-gray-300 text-xs text-center"
+                  <a
+                    class="text-gray-300 text-xs text-center"
                     href={`/club/${nextFixtureHomeTeam?.id}`}
-                    >{nextFixtureHomeTeam?.abbreviatedName}</a>
+                    >{nextFixtureHomeTeam?.abbreviatedName}</a
+                  >
                 </p>
               </div>
               <div class="w-v ml-1 mr-1" />
@@ -230,7 +236,7 @@
           </div>
         </div>
       </div>
-    </div> 
+    </div>
 
     <div class="m-4">
       <div class="bg-panel rounded-md m-4">
@@ -266,7 +272,7 @@
         </ul>
 
         {#if activeTab === "players"}
-          <TeamPlayers players={players} />
+          <TeamPlayers {players} />
         {:else if activeTab === "fixtures"}
           <TeamFixtures clubId={id} />
         {/if}

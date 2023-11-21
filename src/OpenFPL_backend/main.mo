@@ -276,6 +276,7 @@ actor Self {
   };
 
   public shared ({ caller }) func updateDisplayName(displayName : Text) : async Result.Result<(), T.Error> {
+    Debug.print(debug_show caller);
     assert not Principal.isAnonymous(caller);
 
     let invalidName = not profilesInstance.isDisplayNameValid(displayName);

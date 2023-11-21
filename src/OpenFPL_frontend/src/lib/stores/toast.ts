@@ -1,22 +1,29 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
 interface ToastState {
   visible: boolean;
   message: string;
-  type: 'success' | 'error';
+  type: "success" | "error";
 }
 
 function createToastStore() {
-  const { subscribe, set, update } = writable<ToastState>({ visible: false, message: '', type: 'success' });
+  const { subscribe, set, update } = writable<ToastState>({
+    visible: false,
+    message: "",
+    type: "success",
+  });
 
-  function show(message: string, type: 'success' | 'error' = 'success') {
+  function show(message: string, type: "success" | "error" = "success") {
     update(() => ({ visible: true, message, type }));
-    setTimeout(() => set({ visible: false, message: '', type: 'success' }), 3000);
+    setTimeout(
+      () => set({ visible: false, message: "", type: "success" }),
+      3000
+    );
   }
 
   return {
     subscribe,
-    show
+    show,
   };
 }
 

@@ -7,17 +7,23 @@ function __memo(fn) {
 return {
 	appDir: "_app",
 	appPath: "_app",
-	assets: new Set(["FPLCoin.png","ICPCoin.png","Manrope-Regular.woff2","background.jpg","board.png","brace-bonus.png","captain-fantastic.png","ckBTCCoin.png","ckETHCoin.png","countrymen.png","discord.png","favicon.png","github.png","goal-getter.png","hat-trick-hero.png","no-entry.png","openchat.png","pass-master.png","pitch.png","poppins-regular-webfont.woff2","profile_placeholder.png","prospects.png","safe-hands.png","team-boost.png","telegram.png","twitter.png"]),
-	mimeTypes: {".png":"image/png",".woff2":"font/woff2",".jpg":"image/jpeg"},
+	assets: new Set(["FPLCoin.png","ICPCoin.png","Manrope-Regular.woff2","apple-touch-icon.png","background.jpg","board.png","brace-bonus.png","captain-fantastic.png","ckBTCCoin.png","ckETHCoin.png","countrymen.png","discord.png","favicon.png","github.png","goal-getter.png","hat-trick-hero.png","no-entry.png","openchat.png","openfpl.webmanifest","pass-master.png","pitch.png","poppins-regular-webfont.woff2","profile_placeholder.png","prospects.png","safe-hands.png","team-boost.png","telegram.png","twitter.png"]),
+	mimeTypes: {".png":"image/png",".woff2":"font/woff2",".jpg":"image/jpeg",".webmanifest":"application/manifest+json"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.fc2b2ebd.js","app":"_app/immutable/entry/app.b3be0bed.js","imports":["_app/immutable/entry/start.fc2b2ebd.js","_app/immutable/chunks/index.aa733771.js","_app/immutable/chunks/singletons.1877a767.js","_app/immutable/entry/app.b3be0bed.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/index.aa733771.js"],"stylesheets":[],"fonts":[]},
+		client: {"start":"_app/immutable/entry/start.20906c7a.js","app":"_app/immutable/entry/app.f7eec923.js","imports":["_app/immutable/entry/start.20906c7a.js","_app/immutable/chunks/index.b324a1dd.js","_app/immutable/chunks/singletons.ed5340ea.js","_app/immutable/entry/app.f7eec923.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/index.b324a1dd.js"],"stylesheets":[],"fonts":[]},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),
 			__memo(() => import('./nodes/2.js')),
 			__memo(() => import('./nodes/3.js')),
 			__memo(() => import('./nodes/4.js')),
-			__memo(() => import('./nodes/5.js'))
+			__memo(() => import('./nodes/5.js')),
+			__memo(() => import('./nodes/6.js')),
+			__memo(() => import('./nodes/7.js')),
+			__memo(() => import('./nodes/8.js')),
+			__memo(() => import('./nodes/9.js')),
+			__memo(() => import('./nodes/10.js')),
+			__memo(() => import('./nodes/11.js'))
 		],
 		routes: [
 			{
@@ -28,24 +34,66 @@ return {
 				endpoint: null
 			},
 			{
+				id: "/club",
+				pattern: /^\/club\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 3 },
+				endpoint: null
+			},
+			{
+				id: "/fixture-validation",
+				pattern: /^\/fixture-validation\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 4 },
+				endpoint: null
+			},
+			{
+				id: "/gameplay-rules",
+				pattern: /^\/gameplay-rules\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 5 },
+				endpoint: null
+			},
+			{
 				id: "/governance",
 				pattern: /^\/governance\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 3 },
+				page: { layouts: [0,], errors: [1,], leaf: 6 },
 				endpoint: null
 			},
 			{
 				id: "/pick-team",
 				pattern: /^\/pick-team\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 4 },
+				page: { layouts: [0,], errors: [1,], leaf: 7 },
+				endpoint: null
+			},
+			{
+				id: "/player",
+				pattern: /^\/player\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 8 },
 				endpoint: null
 			},
 			{
 				id: "/profile",
 				pattern: /^\/profile\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 5 },
+				page: { layouts: [0,], errors: [1,], leaf: 9 },
+				endpoint: null
+			},
+			{
+				id: "/terms",
+				pattern: /^\/terms\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 10 },
+				endpoint: null
+			},
+			{
+				id: "/whitepaper",
+				pattern: /^\/whitepaper\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 11 },
 				endpoint: null
 			}
 		],

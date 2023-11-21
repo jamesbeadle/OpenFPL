@@ -46,7 +46,7 @@
 
   onMount(async () => {
     isLoading = true;
-    
+
     try {
       managerCount = await managerService.getTotalManagers();
 

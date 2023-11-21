@@ -1,35 +1,14 @@
-import { c as create_ssr_component, b as add_attribute, a as subscribe$1, v as validate_component, e as escape, n as null_to_empty } from "./index2.js";
+import { c as create_ssr_component, b as add_attribute, a as subscribe, v as validate_component, e as escape, n as null_to_empty } from "./index2.js";
 import { p as page } from "./stores.js";
-import { AuthClient } from "@dfinity/auth-client";
-import { d as derived, w as writable } from "./index.js";
-const { subscribe, set } = writable({ identity: null });
-const authStore = {
-  subscribe,
-  set,
-  login: async () => {
-    const authClient = await AuthClient.create();
-    const identityProviderUrl = "https://identity.ic0.app";
-    await authClient.login({
-      maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1e3 * 1e3 * 1e3),
-      onSuccess: async () => {
-        const identity = await authClient.getIdentity();
-        set({ identity });
-      },
-      identityProvider: identityProviderUrl
-    });
-  },
-  logout: async () => {
-    set({ identity: null });
-  }
-};
-derived(
-  authStore,
-  ($authStore) => $authStore.identity !== null
+import "@dfinity/auth-client";
+import "@dfinity/utils";
+import { w as writable } from "./index.js";
+const localIdentityCanisterId = {}.VITE_INTERNET_IDENTITY_CANISTER_ID;
+const AUTH_MAX_TIME_TO_LIVE = BigInt(
+  60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14
 );
-derived(
-  authStore,
-  ($authStore) => $authStore.identity?.getPrincipal().toString()
-);
+const AUTH_POPUP_WIDTH = 576;
+const AUTH_POPUP_HEIGHT = 625;
 const OpenFPLIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { className = "" } = $$props;
   if ($$props.className === void 0 && $$bindings.className && className !== void 0)
@@ -43,33 +22,18 @@ const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =
   return `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 24 24"><path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"></path><path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"></path><path d="M12,8a.5,.5 0,1,1,.001,0Z"></path></svg>`;
 });
 const Header_svelte_svelte_type_style_lang = "";
-const css = {
+const css$1 = {
   code: 'header.svelte-tlhn8x{background-color:rgba(36, 37, 41, 0.9)}.nav-underline.svelte-tlhn8x{position:relative;display:inline-block;color:white}.nav-underline.svelte-tlhn8x::after{content:"";position:absolute;width:100%;height:2px;background-color:#2ce3a6;bottom:0;left:0;transform:scaleX(0);transition:transform 0.3s ease-in-out;color:#2ce3a6}.nav-underline.svelte-tlhn8x:hover::after,.nav-underline.active.svelte-tlhn8x::after{transform:scaleX(1);color:#2ce3a6}.nav-underline.svelte-tlhn8x:hover::after{transform:scaleX(1);background-color:gray}.nav-button.svelte-tlhn8x{background-color:transparent}.nav-button.svelte-tlhn8x:hover{background-color:transparent;color:#2ce3a6;border:none}',
   map: null
 };
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let currentClass;
-  let $page, $$unsubscribe_page;
-  let $isAuthenticated, $$unsubscribe_isAuthenticated;
-  $$unsubscribe_page = subscribe$1(page, (value) => $page = value);
-  const isAuthenticated = derived(authStore, ($authStore) => $authStore.identity !== null && $authStore.identity !== void 0);
-  $$unsubscribe_isAuthenticated = subscribe$1(isAuthenticated, (value) => $isAuthenticated = value);
-  $$result.css.add(css);
-  currentClass = (route) => $page.url.pathname === route ? "text-blue-500 nav-underline active" : "nav-underline";
+  let $$unsubscribe_page;
+  $$unsubscribe_page = subscribe(page, (value) => value);
+  $$result.css.add(css$1);
   $$unsubscribe_page();
-  $$unsubscribe_isAuthenticated();
   return `<header class="svelte-tlhn8x"><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2">OpenFPL</b></a>
       <button class="md:hidden focus:outline-none"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button>
-      ${$isAuthenticated ? `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4">Home</span></a></li>
-          <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4">Squad Selection</span></a></li>
-          <li class="mx-2 flex items-center h-16"><a href="/profile" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/profile"), true) + " svelte-tlhn8x"}"><span class="flex items-center h-full px-4">Profile</span></a></li>
-          <li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Disconnect
-              ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul>
-        <div class="${escape(null_to_empty(`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-tlhn8x"}"><ul class="flex flex-col"><li class="p-2"><a href="/" class="${escape(null_to_empty(`nav-underline hover:text-gray-400 ${currentClass("/")}`), true) + " svelte-tlhn8x"}">Home</a></li>
-            <li class="p-2"><a href="/pick-team" class="${escape(null_to_empty(currentClass("/pick-team")), true) + " svelte-tlhn8x"}">Squad Selection</a></li>
-            <li class="p-2"><a href="/profile" class="${escape(null_to_empty(currentClass("/profile")), true) + " svelte-tlhn8x"}">Profile</a></li>
-            <li class="p-2"><button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Disconnect
-                ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>` : `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Connect
+      ${`<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Connect
               ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul>
         <div class="${escape(null_to_empty(`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-tlhn8x"}"><ul class="flex flex-col"><li class="p-2"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-tlhn8x">Connect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>`}</div></nav>
@@ -87,25 +51,62 @@ const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
           <a href="https://t.co/WmOhFA8JUR" target="_blank" rel="noopener noreferrer"><img src="discord.png" class="h-4 w-auto mb-2 mr-2" alt="Discord"></a>
           <a href="https://t.co/vVkquMrdOu" target="_blank" rel="noopener noreferrer"><img src="telegram.png" class="h-4 w-auto mb-2 mr-2" alt="Telegram"></a>
           <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div>
-      <div class="flex justify-start"><div class="flex flex-col sm:flex-row sm:space-x-2 pl-4"><a href="/pick-team" class="hover:text-gray-300">Whitepaper</a>
+      <div class="flex justify-start"><div class="flex flex-col sm:flex-row sm:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a>
           <span class="hidden sm:flex">|</span>
-          <a href="/gameplay" class="hover:text-gray-300">Gameplay Rules</a>
+          <a href="/gameplay-rules" class="hover:text-gray-300">Gameplay Rules</a>
           <span class="hidden sm:flex">|</span>
           <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a>
           <span class="hidden sm:flex">|</span>
-          <a href="/fixture-validation-list" class="hover:text-gray-300">Pre-SNS Fixture Validation</a></div></div></div>
-    <div class="flex-0"><b class="px-4 mt-2 sm:mt-0 sm:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></div>
+          <a href="/fixture-validation" class="hover:text-gray-300">Pre-SNS Fixture Validation</a></div></div></div>
+    <div class="flex-0"><a href="/"><b class="px-4 mt-2 sm:mt-0 sm:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div>
     <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 sm:px-0 mt-1 sm:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
 });
 const app = "";
+function createToastStore() {
+  const { subscribe: subscribe2, set, update } = writable({
+    visible: false,
+    message: "",
+    type: "success"
+  });
+  function show(message, type = "success") {
+    update(() => ({ visible: true, message, type }));
+    setTimeout(
+      () => set({ visible: false, message: "", type: "success" }),
+      3e3
+    );
+  }
+  return {
+    subscribe: subscribe2,
+    show
+  };
+}
+const toastStore = createToastStore();
+const toast_svelte_svelte_type_style_lang = "";
+const css = {
+  code: "@keyframes svelte-3oms0v-fadeIn{from{opacity:0}to{opacity:1}}@keyframes svelte-3oms0v-fadeOut{from{opacity:1}to{opacity:0}}.toast-panel.svelte-3oms0v{animation-name:svelte-3oms0v-fadeIn, svelte-3oms0v-fadeOut;animation-duration:0.2s, 1s;animation-delay:0s, 2s;animation-fill-mode:forwards}",
+  map: null
+};
+const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $toastStore, $$unsubscribe_toastStore;
+  $$unsubscribe_toastStore = subscribe(toastStore, (value) => $toastStore = value);
+  $$result.css.add(css);
+  $$unsubscribe_toastStore();
+  return `${$toastStore.visible ? `<div class="${escape(null_to_empty(`fixed inset-x-0 bottom-0 toast-panel text-white text-center py-2 ${$toastStore.type}`), true) + " svelte-3oms0v"}">${escape($toastStore.message)}</div>` : ``}`;
+});
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<div class="flex flex-col h-screen justify-between">${validate_component(Header, "Header").$$render($$result, {}, {}, {})}
   <main class="mb-auto">${slots.default ? slots.default({}) : ``}</main>
+  ${validate_component(Toast, "Toast").$$render($$result, {}, {}, {})}
   ${validate_component(Footer, "Footer").$$render($$result, {}, {}, {})}
 </div>`;
 });
 export {
+  AUTH_MAX_TIME_TO_LIVE as A,
   Layout as L,
-  OpenFPLIcon as O
+  OpenFPLIcon as O,
+  AUTH_POPUP_WIDTH as a,
+  AUTH_POPUP_HEIGHT as b,
+  localIdentityCanisterId as l,
+  toastStore as t
 };

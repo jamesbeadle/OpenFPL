@@ -1,8 +1,12 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { DataCache, LeaderboardEntry, PaginatedClubLeaderboard, PaginatedLeaderboard } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  DataCache,
+  LeaderboardEntry,
+  PaginatedClubLeaderboard,
+  PaginatedLeaderboard,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
-import { SystemService } from "./SystemService";
 
 export class LeaderboardService {
   private actor: any;
@@ -17,12 +21,14 @@ export class LeaderboardService {
   async updateWeeklyLeaderboardData() {
     let category = "weekly_leaderboard_hash";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find(x => x.category == category) ?? null;
-    const localHash = localStorage.getItem(category);    
-    if(liveHash != localHash){
+    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);
+    if (liveHash != localHash) {
       let updatedLeaderboardData = await this.actor.getWeeklyLeaderboard();
-      localStorage.setItem("weekly_leaderboard_data",
-        JSON.stringify(updatedLeaderboardData, replacer));
+      localStorage.setItem(
+        "weekly_leaderboard_data",
+        JSON.stringify(updatedLeaderboardData, replacer)
+      );
       localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }
@@ -30,12 +36,14 @@ export class LeaderboardService {
   async updateMonthlyLeaderboardData() {
     let category = "monthly_leaderboard_hash";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find(x => x.category == category) ?? null;
-    const localHash = localStorage.getItem(category);    
-    if(liveHash != localHash){
+    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);
+    if (liveHash != localHash) {
       let updatedLeaderboardData = await this.actor.getMonthlyLeaderboard();
-      localStorage.setItem("monthly_leaderboard_data",
-        JSON.stringify(updatedLeaderboardData, replacer));
+      localStorage.setItem(
+        "monthly_leaderboard_data",
+        JSON.stringify(updatedLeaderboardData, replacer)
+      );
       localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }
@@ -43,52 +51,81 @@ export class LeaderboardService {
   async updateSeasonLeaderboardData() {
     let category = "season_leaderboard_hash";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find(x => x.category == category) ?? null;
-    const localHash = localStorage.getItem(category);    
-    if(liveHash != localHash){
+    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);
+    if (liveHash != localHash) {
       let updatedLeaderboardData = await this.actor.getSeasonLeaderboard();
-      localStorage.setItem("season_leaderboard_data",
-        JSON.stringify(updatedLeaderboardData, replacer));
+      localStorage.setItem(
+        "season_leaderboard_data",
+        JSON.stringify(updatedLeaderboardData, replacer)
+      );
       localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }
 
   async getWeeklyLeaderboard(): Promise<PaginatedLeaderboard> {
-    const cachedWeeklyLeaderboardData = localStorage.getItem("weekly_leaderboard_data");
+    const cachedWeeklyLeaderboardData = localStorage.getItem(
+      "weekly_leaderboard_data"
+    );
 
     let cachedWeeklyLeaderboard: PaginatedLeaderboard;
     try {
-      cachedWeeklyLeaderboard = JSON.parse(cachedWeeklyLeaderboardData || "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }");
+      cachedWeeklyLeaderboard = JSON.parse(
+        cachedWeeklyLeaderboardData ||
+          "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
+      );
     } catch (e) {
-      cachedWeeklyLeaderboard = {entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
+      cachedWeeklyLeaderboard = {
+        entries: [],
+        gameweek: 0,
+        seasonId: 0,
+        totalEntries: 0n,
+      };
     }
-    
+
     return cachedWeeklyLeaderboard;
   }
 
-  async getMonthlyLeaderboard(clubId: number): Promise<PaginatedClubLeaderboard | null> {
-    const cachedMonthlyLeaderboardData = localStorage.getItem("monthly_leaderboard_data");
+  async getMonthlyLeaderboard(
+    clubId: number
+  ): Promise<PaginatedClubLeaderboard | null> {
+    const cachedMonthlyLeaderboardData = localStorage.getItem(
+      "monthly_leaderboard_data"
+    );
     let cachedMonthlyLeaderboards: PaginatedClubLeaderboard[];
     try {
-      cachedMonthlyLeaderboards = JSON.parse(cachedMonthlyLeaderboardData || "[]");
+      cachedMonthlyLeaderboards = JSON.parse(
+        cachedMonthlyLeaderboardData || "[]"
+      );
     } catch (e) {
       cachedMonthlyLeaderboards = [];
     }
-    
-    let clubLeaderboard = cachedMonthlyLeaderboards.find(x => x.clubId === clubId) ?? null;
+
+    let clubLeaderboard =
+      cachedMonthlyLeaderboards.find((x) => x.clubId === clubId) ?? null;
     return clubLeaderboard;
   }
 
   async getSeasonLeaderboard(): Promise<PaginatedLeaderboard> {
-    const cachedSeasonLeaderboardData = localStorage.getItem("season_leaderboard_data");
+    const cachedSeasonLeaderboardData = localStorage.getItem(
+      "season_leaderboard_data"
+    );
 
     let cachedSeasonLeaderboard: PaginatedLeaderboard;
     try {
-      cachedSeasonLeaderboard = JSON.parse(cachedSeasonLeaderboardData || "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }");
+      cachedSeasonLeaderboard = JSON.parse(
+        cachedSeasonLeaderboardData ||
+          "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
+      );
     } catch (e) {
-      cachedSeasonLeaderboard = {entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
+      cachedSeasonLeaderboard = {
+        entries: [],
+        gameweek: 0,
+        seasonId: 0,
+        totalEntries: 0n,
+      };
     }
-    
+
     return cachedSeasonLeaderboard;
   }
 
@@ -96,5 +133,4 @@ export class LeaderboardService {
     let weeklyLeaderboard = await this.getWeeklyLeaderboard();
     return weeklyLeaderboard.entries[0];
   }
-
 }

@@ -1,12 +1,12 @@
-import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-import type { TeamStats } from "$lib/types/TeamStats";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { DataCache, Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../../utils/Helpers";
 import { authStore } from "$lib/stores/auth";
 import type { OptionIdentity } from "$lib/types/Identity";
-import type { Actor } from "@dfinity/agent";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type {
+  DataCache,
+  Fixture,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { ActorFactory } from "../../utils/ActorFactory";
+import { replacer } from "../../utils/Helpers";
 export class FixtureService {
   private actor: any;
 
@@ -19,32 +19,32 @@ export class FixtureService {
 
   async actorFromIdentity() {
     const identity = await new Promise<OptionIdentity>((resolve, reject) => {
-      const unsubscribe = authStore.subscribe(store => {
+      const unsubscribe = authStore.subscribe((store) => {
         if (store.identity) {
           unsubscribe();
           resolve(store.identity);
         }
       });
     });
-    
+
     return ActorFactory.createActor(
       idlFactory,
       process.env.OPENFPL_BACKEND_CANISTER_ID,
       identity
     );
   }
-  
 
   async updateFixturesData() {
     let category = "fixtures_hash";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find(x => x.category == category) ?? null;
-    const localHash = localStorage.getItem(category);    
-    if(liveHash != localHash){
-
+    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);
+    if (liveHash != localHash) {
       let updatedFixturesData = await this.actor.getFixtures();
-      localStorage.setItem("fixtures_data",
-        JSON.stringify(updatedFixturesData, replacer));
+      localStorage.setItem(
+        "fixtures_data",
+        JSON.stringify(updatedFixturesData, replacer)
+      );
       localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }
@@ -58,7 +58,7 @@ export class FixtureService {
     } catch (e) {
       cachedFixtures = [];
     }
-    
+
     return cachedFixtures;
   }
 

@@ -11,9 +11,9 @@
 
   onMount(async () => {
     await authStore.sync();
-    authStore.subscribe(store => {
-      isLoggedIn = store.identity !== null && store.identity !== undefined
-    })
+    authStore.subscribe((store) => {
+      isLoggedIn = store.identity !== null && store.identity !== undefined;
+    });
   });
 
   $: currentClass = (route: string) =>
@@ -26,9 +26,7 @@
   }
 
   function handleLogin() {
-    let params: AuthSignInParams = {
-
-    };
+    let params: AuthSignInParams = {};
     authStore.signIn(params);
   }
 

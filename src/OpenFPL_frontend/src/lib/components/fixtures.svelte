@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type {Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
@@ -106,9 +106,10 @@
             <h2 class="date-header ml-4 text-xs md:text-lg">{date}</h2>
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}
-            <div class={`flex items-center justify-between py-2 border-b border-gray-700  ${
-              fixture.status === 0 ? "text-gray-400" : "text-white"
-            }`}
+            <div
+              class={`flex items-center justify-between py-2 border-b border-gray-700  ${
+                fixture.status === 0 ? "text-gray-400" : "text-white"
+              }`}
             >
               <div class="flex items-center w-1/2 ml-4">
                 <div class="flex w-1/2 space-x-4 justify-center">
@@ -147,7 +148,9 @@
                 </div>
               </div>
               <div class="flex items-center space-x-10 w-1/2 md:justify-center">
-                <div class='flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg'>
+                <div
+                  class="flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg"
+                >
                   <a href={`/club/${fixture.homeTeamId}`}
                     >{homeTeam ? homeTeam.friendlyName : ""}</a
                   >
@@ -155,7 +158,9 @@
                     >{awayTeam ? awayTeam.friendlyName : ""}</a
                   >
                 </div>
-                <div class='flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg'>
+                <div
+                  class="flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg"
+                >
                   <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
                   <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>
                 </div>

@@ -1,5 +1,8 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { DataCache, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  DataCache,
+  Team,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
 
@@ -16,12 +19,15 @@ export class TeamService {
   async updateTeamsData() {
     let category = "teams_hash";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveTeamsHash = newHashValues.find(x => x.category == category) ?? null;
-    const localHash = localStorage.getItem(category);    
-    if(liveTeamsHash != localHash){
+    let liveTeamsHash =
+      newHashValues.find((x) => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);
+    if (liveTeamsHash != localHash) {
       let updatedTeamsData = await this.actor.getTeams();
-      localStorage.setItem("teams_data",
-        JSON.stringify(updatedTeamsData, replacer));
+      localStorage.setItem(
+        "teams_data",
+        JSON.stringify(updatedTeamsData, replacer)
+      );
       localStorage.setItem(category, liveTeamsHash?.hash ?? "");
     }
   }
@@ -35,7 +41,7 @@ export class TeamService {
     } catch (e) {
       cachedTeams = [];
     }
-    
+
     return cachedTeams;
   }
 

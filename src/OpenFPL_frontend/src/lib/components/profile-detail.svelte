@@ -4,13 +4,34 @@
   import { TeamService } from "$lib/services/TeamService";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { toastStore } from "$lib/stores/toast";
+  import UpdateUsernameModal from "$lib/components/update-username-modal.svelte";
+  import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
 
   const teamService = new TeamService();
 
   let teams: Team[] = [];
   let selectedTeam = 1;
-  let userPrincipal = 'yxaeb-cknlu-ymf7s-hyhv4-ngpus-hurji-roqrb-hcf46-6ed5v-cp3qa-uqe';
-  
+  let userPrincipal =
+    "yxaeb-cknlu-ymf7s-hyhv4-ngpus-hurji-roqrb-hcf46-6ed5v-cp3qa-uqe";
+  let showUsernameModal: boolean = false;
+  let showFavouriteTeamModal: boolean = false;
+
+  function displayUsernameModal(): void {
+    showUsernameModal = true;
+  }
+
+  function closeUsernameModal(): void {
+    showUsernameModal = false;
+  }
+
+  function displayFavouriteTeamModal(): void {
+    showFavouriteTeamModal = true;
+  }
+
+  function closeFavouriteTeamModal(): void {
+    showFavouriteTeamModal = false;
+  }
+
   onMount(async () => {
     try {
       const fetchedTeams = await teamService.getTeams();
@@ -23,13 +44,19 @@
 
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(() => {
-      toastStore.show('Copied', 'success');
+      toastStore.show("Copied", "success");
     });
   }
-
 </script>
 
-
+<UpdateUsernameModal
+  showModal={showUsernameModal}
+  closeModal={closeUsernameModal}
+/>
+<UpdateFavouriteTeamModal
+  showModal={showFavouriteTeamModal}
+  closeModal={closeFavouriteTeamModal}
+/>
 <div class="container mx-auto p-4">
   <div class="flex flex-wrap">
     <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
@@ -45,18 +72,18 @@
         <h2 class="text-2xl font-bold mb-2">Not Set</h2>
         <button
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded"
+          on:click={displayUsernameModal}
         >
           Update
         </button>
         <p class="text-xs mb-2 mt-4">Favourite Team:</p>
-        <select
-          class="p-2 fpl-dropdown text-sm md:text-xl "
-          bind:value={selectedTeam}
+        <h2 class="text-2xl font-bold mb-2">Not Set</h2>
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded"
+          on:click={displayFavouriteTeamModal}
         >
-          {#each teams as team}
-            <option value={team.id}>{team.friendlyName}</option>
-          {/each}
-        </select>
+          Update
+        </button>
 
         <p class="text-xs mb-2 mt-4">Joined:</p>
         <h2 class="text-2xl font-bold mb-2">August 2023</h2>
@@ -64,7 +91,11 @@
         <p class="text-xs mb-2 mt-4">Principal:</p>
         <div class="flex items-center">
           <h2 class="text-xs font-bold">{userPrincipal}</h2>
-          <CopyIcon onClick={copyToClipboard} principalId={userPrincipal} className="ml-2 w-4 h-4" />
+          <CopyIcon
+            onClick={copyToClipboard}
+            principalId={userPrincipal}
+            className="ml-2 w-4 h-4"
+          />
         </div>
       </div>
     </div>

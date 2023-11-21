@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type {LeaderboardEntry, PaginatedLeaderboard, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    LeaderboardEntry,
+    PaginatedLeaderboard,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import { LeaderboardService } from "$lib/services/LeaderboardService";
@@ -21,7 +25,6 @@
 
   onMount(async () => {
     try {
-
       const fetchedTeams = await teamService.getTeams();
       teams = fetchedTeams;
       selectedTeamId = fetchedTeams[0].id;
@@ -33,7 +36,6 @@
       let leaderboardData = await leaderboardService.getWeeklyLeaderboard();
 
       leaderboard = leaderboardData;
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -48,73 +50,82 @@
   };
 
   function changePage(leaderboardType: number, delta: number) {
-      currentPage = Math.max(1, currentPage + delta);
-      if (currentPage > 4){
-        
-      } 
-      else{
-
-      }
+    currentPage = Math.max(1, currentPage + delta);
+    if (currentPage > 4) {
+    } else {
+    }
   }
-
 </script>
 
 <div class="container-fluid mt-4">
   <div class="flex flex-col space-y-4">
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
       <div class="flex items-center space-x-2 ml-4">
-
         <div class="flex items-center md:mx-4">
           <p class="text-sm md:text-xl">Leadboard:</p>
-          <select class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-            bind:value={selectedLeaderboardType}>
-              <option value={1}>Weekly</option>
-              <option value={2}>Monthly</option>
-              <option value={3}>Season</option>
+          <select
+            class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+            bind:value={selectedLeaderboardType}
+          >
+            <option value={1}>Weekly</option>
+            <option value={2}>Monthly</option>
+            <option value={3}>Season</option>
           </select>
         </div>
 
         {#if selectedLeaderboardType == 1}
           <div>
-            <button class="text-2xl rounded fpl-button px-2 py-1" 
-              on:click={() => changeGameweek(-1)} disabled={selectedGameweek === 1}>
+            <button
+              class="text-2xl rounded fpl-button px-2 py-1"
+              on:click={() => changeGameweek(-1)}
+              disabled={selectedGameweek === 1}
+            >
               &lt;
             </button>
-  
-            <select class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-            bind:value={selectedGameweek}>
+
+            <select
+              class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+              bind:value={selectedGameweek}
+            >
               {#each gameweeks as gameweek}
                 <option value={gameweek}>Gameweek {gameweek}</option>
               {/each}
             </select>
-  
-            <button class="text-2xl rounded fpl-button px-2 py-1"
+
+            <button
+              class="text-2xl rounded fpl-button px-2 py-1"
               on:click={() => changeGameweek(1)}
-              disabled={selectedGameweek === 38}>
+              disabled={selectedGameweek === 38}
+            >
               &gt;
             </button>
           </div>
         {/if}
 
         {#if selectedLeaderboardType == 2}
-
-
           <div>
-            <select class="p-2 fpl-dropdown text-sm md:text-xl text-center" bind:value={selectedTeamId}>
+            <select
+              class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+              bind:value={selectedTeamId}
+            >
               {#each teams as team}
                 <option value={team.id}>{team.friendlyName}</option>
               {/each}
             </select>
           </div>
-          
+
           <div>
-            <button class="text-2xl rounded fpl-button px-2 py-1" 
-              on:click={() => changeMonth(-1)}>
+            <button
+              class="text-2xl rounded fpl-button px-2 py-1"
+              on:click={() => changeMonth(-1)}
+            >
               &lt;
             </button>
 
-            <select class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-            bind:value={selectedMonth}>
+            <select
+              class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+              bind:value={selectedMonth}
+            >
               <option value={1}>January</option>
               <option value={2}>February</option>
               <option value={3}>March</option>
@@ -129,18 +140,16 @@
               <option value={12}>December</option>
             </select>
 
-            <button class="text-2xl rounded fpl-button px-2 py-1"
-              on:click={() => changeMonth(1)}>
+            <button
+              class="text-2xl rounded fpl-button px-2 py-1"
+              on:click={() => changeMonth(1)}
+            >
               &gt;
             </button>
           </div>
-          
         {/if}
-
-
       </div>
     </div>
-    <div>
-    </div>
+    <div />
   </div>
 </div>
