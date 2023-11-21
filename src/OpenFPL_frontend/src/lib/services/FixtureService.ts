@@ -17,7 +17,6 @@ export class FixtureService {
     );
   }
 
-
   async actorFromIdentity() {
     const identity = await new Promise<OptionIdentity>((resolve, reject) => {
       const unsubscribe = authStore.subscribe(store => {
