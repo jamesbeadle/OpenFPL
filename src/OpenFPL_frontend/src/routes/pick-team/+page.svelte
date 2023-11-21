@@ -69,11 +69,9 @@
       progress = 0;
 
       progress = 20;
-      let systemState = await systemService.getSystemState(
-        localStorage.getItem("system_state_hash") ?? ""
-      );
-      activeGameweek = systemState.activeGameweek;
-      activeSeason = systemState.activeSeason.name;
+      let systemState = await systemService.getSystemState();
+      activeGameweek = systemState?.activeGameweek ?? activeGameweek;
+      activeSeason = systemState?.activeSeason.name ?? activeSeason;
 
       progress = 40;
       let nextFixture = await fixtureService.getNextFixture();

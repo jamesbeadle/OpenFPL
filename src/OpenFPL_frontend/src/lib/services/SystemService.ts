@@ -1,5 +1,7 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type { DataCache, SystemState } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
+import { replacer } from "../../utils/Helpers";
 
 export class SystemService {
   private actor: any;
@@ -11,26 +13,31 @@ export class SystemService {
     );
   }
 
-  async getSystemState(latestSystemStateHash: string) {
-    const cachedHash = localStorage.getItem("system_state_hash");
-    const cachedSystemStateData = localStorage.getItem("system_state_data");
+  async updateSystemStateData() {
+    let category = "system_state_hash";
+    const newHashValues: DataCache[] = await this.actor.getDataHashes();
+    let liveHash = newHashValues.find(x => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);    
+    if(liveHash != localHash){
 
-    if (!latestSystemStateHash || cachedHash !== latestSystemStateHash) {
-      return this.fetchSystemState(latestSystemStateHash);
-    } else {
-      return cachedSystemStateData;
+      let updatedSystemStateData = await this.actor.getSystemState();
+      localStorage.setItem("system_state_data",
+        JSON.stringify(updatedSystemStateData, replacer));
+      localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }
 
-  private async fetchSystemState(playersHash: string) {
+  async getSystemState(): Promise<SystemState | null> {
+    const cachedTeamsData = localStorage.getItem("system_state_data");
+
+    let cachedSystemState: SystemState | null;
     try {
-      const systemStateData = await this.actor.getSystemState();
-      localStorage.setItem("system_state_hash", playersHash);
-      localStorage.setItem("system_state_data", systemStateData);
-      return systemStateData;
-    } catch (error) {
-      console.error("Error fetching all players:", error);
-      throw error;
+      cachedSystemState = JSON.parse(cachedTeamsData || "{}");
+    } catch (e) {
+      cachedSystemState = null;
     }
+    
+    return cachedSystemState;
   }
+  
 }

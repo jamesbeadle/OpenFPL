@@ -23,12 +23,8 @@
   
     onMount(async () => {
       try {
-        const fetchedFixtures = await fixtureService.getFixturesData(
-          localStorage.getItem("fixtures_hash") ?? ""
-        );
-        const fetchedTeams = await teamService.getTeamsData(
-          localStorage.getItem("teams_hash") ?? ""
-        );
+        const fetchedFixtures = await fixtureService.getFixtures();
+        const fetchedTeams = await teamService.getTeams();
   
         teams = fetchedTeams;
         fixtures = fetchedFixtures.map((fixture) => ({

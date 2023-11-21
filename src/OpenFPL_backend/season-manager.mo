@@ -162,23 +162,14 @@ module {
         getSeasonId := activeSeasonId;
       };
 
-      Debug.print(debug_show "getSeasonId");
-      Debug.print(debug_show getSeasonId);
-
       var getGameweekNumber = gameweekNumber;
       if (getGameweekNumber == 0) {
         getGameweekNumber := activeGameweek;
       };
 
-      Debug.print(debug_show "getGameweekNumber");
-      Debug.print(debug_show getGameweekNumber);
-
       if (interestingGameweek < activeGameweek) {
         interestingGameweek := activeGameweek;
       };
-
-      Debug.print(debug_show "interestingGameweek");
-      Debug.print(debug_show interestingGameweek);
 
       let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 

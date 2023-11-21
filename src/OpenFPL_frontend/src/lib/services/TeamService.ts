@@ -1,6 +1,7 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { DataCache, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
+import { replacer } from "../../utils/Helpers";
 
 export class TeamService {
   private actor: any;
@@ -12,45 +13,34 @@ export class TeamService {
     );
   }
 
-  public getEmpty(): Team {
-    return {
-      id: 0,
-      name: "-",
-      primaryColourHex: "#FFFFFF",
-      secondaryColourHex: "#FFFFFF",
-      thirdColourHex: "#FFFFFF",
-      friendlyName: "",
-      abbreviatedName: "-",
-      shirtType: 0,
-    };
+  async updateTeamsData() {
+    let category = "teams_hash";
+    const newHashValues: DataCache[] = await this.actor.getDataHashes();
+    let liveTeamsHash = newHashValues.find(x => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);    
+    if(liveTeamsHash != localHash){
+      let updatedTeamsData = await this.actor.getTeams();
+      localStorage.setItem("teams_data",
+        JSON.stringify(updatedTeamsData, replacer));
+      localStorage.setItem(category, liveTeamsHash?.hash ?? "");
+    }
   }
 
-  async getTeamsData(teamsHash: string): Promise<Team[]> {
-    const cachedHash = localStorage.getItem("teams_hash");
+  async getTeams(): Promise<Team[]> {
     const cachedTeamsData = localStorage.getItem("teams_data");
-    const cachedTeams = JSON.parse(cachedTeamsData || "[]") as Team[];
-    if (!teamsHash || teamsHash.length === 0 || cachedHash !== teamsHash) {
-      return this.fetchAllTeams(teamsHash);
-    } else {
-      return cachedTeams;
-    }
-  }
 
-  private async fetchAllTeams(teamsHash: string): Promise<Team[]> {
+    let cachedTeams: Team[];
     try {
-      const allTeamsData: Team[] = await this.actor.getTeams();
-      localStorage.setItem("teams_hash", teamsHash);
-      localStorage.setItem("teams_data", JSON.stringify(allTeamsData));
-      return allTeamsData;
-    } catch (error) {
-      console.error("Error fetching all teams:", error);
-      throw error;
+      cachedTeams = JSON.parse(cachedTeamsData || "[]");
+    } catch (e) {
+      cachedTeams = [];
     }
+    
+    return cachedTeams;
   }
 
   async getTeamById(id: number): Promise<Team | undefined> {
-    const teamsHash = localStorage.getItem("teams_hash") ?? "";
-    const teams = await this.getTeamsData(teamsHash);
+    const teams = await this.getTeams();
     return teams.find((team) => team.id === id);
   }
 }

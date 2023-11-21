@@ -35,12 +35,8 @@
   
     onMount(async () => {
       try {
-        const fetchedFixtures = await fixtureService.getFixturesData(
-          localStorage.getItem("fixtures_hash") ?? ""
-        );
-        const fetchedTeams = await teamService.getTeamsData(
-          localStorage.getItem("teams_hash") ?? ""
-        );
+        const fetchedFixtures = await fixtureService.getFixtures();
+        const fetchedTeams = await teamService.getTeams();
         
         teams = fetchedTeams;
         fixtures = fetchedFixtures.map((fixture) => ({
@@ -48,13 +44,11 @@
           homeTeam: getTeamFromId(fixture.homeTeamId),
           awayTeam: getTeamFromId(fixture.awayTeamId),
         }));
-        let systemState = await systemService.getSystemState(
-          localStorage.getItem("system_state_hash") ?? ""
-        );
-        const fetchedPlayerDetails = await playerService.getPlayerDetails(id, systemState.activeSeason.id);
+        let systemState = await systemService.getSystemState();
+        const fetchedPlayerDetails = await playerService.getPlayerDetails(id, systemState?.activeSeason.id ?? 0);
         playerDetails = fetchedPlayerDetails;
-        selectedGameweek = systemState.activeGameweek;
-        selectedSeason = systemState.activeSeason;
+        selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
+        selectedSeason = systemState?.activeSeason ?? selectedSeason;
         isLoading = false;
       } catch (error) {
         console.error("Error fetching data:", error);

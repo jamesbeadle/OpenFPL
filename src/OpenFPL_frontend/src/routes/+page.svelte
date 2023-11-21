@@ -51,12 +51,10 @@
       managerCount = await managerService.getTotalManagers();
 
       incrementProgress(20);
-      let systemState = await systemService.getSystemState(
-        localStorage.getItem("system_state_hash") ?? ""
-      );
-      activeGameweek = systemState.activeGameweek;
-      activeSeason = systemState.activeSeason.name;
-      focusGameweek = systemState.focusGameweek;
+      let systemState = await systemService.getSystemState();
+      activeGameweek = systemState?.activeGameweek ?? activeGameweek;
+      activeSeason = systemState?.activeSeason.name ?? activeSeason;
+      focusGameweek = systemState?.focusGameweek ?? activeGameweek;
 
       incrementProgress(40);
       let nextFixture = await fixtureService.getNextFixture();

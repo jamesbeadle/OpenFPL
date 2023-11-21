@@ -796,7 +796,7 @@ module {
         entries = positionedGameweekEntries;
       };
 
-      var updatedGameweekLeaderboards = List.fromArray<T.Leaderboard>([]); //an list of all the leaderboards for a seasons gameweeks
+      var updatedGameweekLeaderboards = List.fromArray<T.Leaderboard>([]);
 
       switch (existingSeasonLeaderboard) {
         case (null) {
@@ -1228,13 +1228,6 @@ module {
         totalEntries = 0;
       };
 
-      Debug.print(debug_show "getting monthly leaderboards");
-      Debug.print(debug_show seasonId);
-      Debug.print(debug_show month);
-      Debug.print(debug_show clubId);
-      Debug.print(debug_show limit);
-      Debug.print(debug_show offset);
-
       switch (monthlyLeaderboards.get(seasonId)) {
         case (null) { return defaultLeaderboard };
         case (?foundMonthlyLeaderboards) {
@@ -1632,7 +1625,6 @@ module {
         var allTeamPlayers : [DTOs.PlayerDTO] = [];
         let allTeamPlayersBuffer = Buffer.fromArray<DTOs.PlayerDTO>([]);
         for (playerId in Iter.fromArray(currentTeam.fantasyTeam.playerIds)) {
-          //get the player and add to the buffer
           let player = Array.find<DTOs.PlayerDTO>(
             allPlayers,
             func(player : DTOs.PlayerDTO) : Bool {
@@ -1657,7 +1649,6 @@ module {
     };
 
     public func updateTeamValueInfo() : async () {
-      Debug.print("Update Team Value");
       let updatedFantasyTeams : HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
       let allPlayers = await getAllPlayers();
       for (fantasyTeam in fantasyTeams.entries()) {
@@ -1666,7 +1657,6 @@ module {
         var allTeamPlayers : [DTOs.PlayerDTO] = [];
         let allTeamPlayersBuffer = Buffer.fromArray<DTOs.PlayerDTO>([]);
         for (playerId in Iter.fromArray(currentTeam.fantasyTeam.playerIds)) {
-          //get the player and add to the buffer
           let player = Array.find<DTOs.PlayerDTO>(
             allPlayers,
             func(player : DTOs.PlayerDTO) : Bool {
@@ -1716,8 +1706,6 @@ module {
         updatedFantasyTeams.put(fantasyTeam.0, updatedFantasyteam);
 
       };
-      Debug.print("setting teams");
-      Debug.print(debug_show Iter.toArray(updatedFantasyTeams.entries()));
       fantasyTeams := updatedFantasyTeams;
     };
   };

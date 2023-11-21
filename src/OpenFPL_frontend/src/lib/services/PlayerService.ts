@@ -1,7 +1,9 @@
+import type { DataCache, PlayerEventData } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { idlFactory } from "../../../../declarations/player_canister";
-import type { Player, PlayerDTO, PlayerDetailDTO } from "../../../../declarations/player_canister/player_canister.did";
+import type { PlayerDTO, PlayerDetailDTO, PlayerPointsDTO } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
+import { SystemService } from "./SystemService";
 
 export class PlayerService {
   private actor: any;
@@ -13,8 +15,21 @@ export class PlayerService {
     );
   }
 
-  async getPlayerData(playersHash: string): Promise<PlayerDTO[]> {
-    const cachedHash = localStorage.getItem("players_hash");
+  async updatePlayersData() {
+    let category = "players_hash";
+    const newHashValues: DataCache[] = await this.actor.getDataHashes();
+    let livePlayersHash = newHashValues.find(x => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);    
+    if(livePlayersHash != localHash){
+
+      let updatedPlayersData = await this.actor.getAllPlayers();
+      localStorage.setItem("players_data",
+        JSON.stringify(updatedPlayersData, replacer));
+      localStorage.setItem(category, livePlayersHash?.hash ?? "");
+    }
+  }
+
+  async getPlayers(): Promise<PlayerDTO[]> {
     const cachedPlayersData = localStorage.getItem("players_data");
 
     let cachedPlayers: PlayerDTO[];
@@ -24,28 +39,36 @@ export class PlayerService {
       cachedPlayers = [];
     }
 
-    if (
-      !playersHash ||
-      playersHash.length === 0 ||
-      cachedHash !== playersHash
-    ) {
-      return this.fetchAllPlayers(playersHash);
-    } else {
-      return cachedPlayers;
+    return cachedPlayers;
+  }
+
+  async updatePlayerEventsData() {
+    let category = "player_events_hash";
+    const newHashValues: DataCache[] = await this.actor.getDataHashes();
+    let livePlayersHash = newHashValues.find(x => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);    
+    if(livePlayersHash != localHash){
+      let systemService = new SystemService();
+      let systemState = await systemService.getSystemState();
+
+      let updatedPlayersData = await this.actor.getAllPlayersMap(systemState?.activeSeason?.id, systemState?.activeGameweek);
+      localStorage.setItem("players_data",
+        JSON.stringify(updatedPlayersData, replacer));
+      localStorage.setItem(category, livePlayersHash?.hash ?? "");
     }
   }
 
-  private async fetchAllPlayers(playersHash: string) {
+  async getPlayerEvents(): Promise<PlayerPointsDTO[]> {
+    const cachedPlayerEventsData = localStorage.getItem("player_events_data");
+
+    let cachedPlayerEvents: PlayerPointsDTO[];
     try {
-      const allPlayersData = await this.actor.getAllPlayers();
-      localStorage.setItem("players_hash", playersHash);
-      localStorage.setItem("players_data",
-        JSON.stringify(allPlayersData, replacer));
-      return allPlayersData;
-    } catch (error) {
-      console.error("Error fetching all players:", error);
-      throw error;
+      cachedPlayerEvents = JSON.parse(cachedPlayerEventsData || "[]");
+    } catch (e) {
+      cachedPlayerEvents = [];
     }
+
+    return cachedPlayerEvents;
   }
 
   async getPlayerDetails(playerId: number, seasonId: number): Promise<PlayerDetailDTO> {

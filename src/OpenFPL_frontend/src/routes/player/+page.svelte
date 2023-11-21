@@ -44,14 +44,9 @@
     $: id = Number($page.url.searchParams.get('id'));
     onMount(async () => {
       try {
-        const fetchedFixtures = await fixtureService.getFixturesData(
-          localStorage.getItem("fixtures_hash") ?? ""
-        );
-        const fetchedTeams = await teamService.getTeamsData(
-          localStorage.getItem("teams_hash") ?? ""
-        );
-        const fetchedPlayers = await playersService.getPlayerData(
-          localStorage.getItem("players_hash") ?? "");
+        const fetchedFixtures = await fixtureService.getFixtures();
+        const fetchedTeams = await teamService.getTeams();
+        const fetchedPlayers = await playersService.getPlayers();
   
         players = fetchedPlayers;
         selectedPlayer = players.find(x => x.id == id) ?? null;
@@ -65,11 +60,9 @@
           awayTeam: getTeamFromId(fixture.awayTeamId),
         }));
 
-        let systemState = await systemService.getSystemState(
-          localStorage.getItem("system_state_hash") ?? ""
-        );
+        let systemState = await systemService.getSystemState();
 
-        selectedGameweek = systemState.activeGameweek;
+        selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
         
         nextFixture = teamFixtures.find(x => x.gameweek == selectedGameweek) ?? null;
         nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;

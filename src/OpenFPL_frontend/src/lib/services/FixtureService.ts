@@ -1,7 +1,7 @@
 import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
 import type { TeamStats } from "$lib/types/TeamStats";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { DataCache, Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
 
@@ -15,8 +15,21 @@ export class FixtureService {
     );
   }
 
-  async getFixturesData(fixturesHash: string): Promise<Fixture[]> {
-    const cachedHash = localStorage.getItem("fixtures_hash");
+  async updateFixturesData() {
+    let category = "fixtures_hash";
+    const newHashValues: DataCache[] = await this.actor.getDataHashes();
+    let liveHash = newHashValues.find(x => x.category == category) ?? null;
+    const localHash = localStorage.getItem(category);    
+    if(liveHash != localHash){
+
+      let updatedFixturesData = await this.actor.getFixtures();
+      localStorage.setItem("fixtures_data",
+        JSON.stringify(updatedFixturesData, replacer));
+      localStorage.setItem(category, liveHash?.hash ?? "");
+    }
+  }
+
+  async getFixtures(): Promise<Fixture[]> {
     const cachedFixturesData = localStorage.getItem("fixtures_data");
 
     let cachedFixtures: Fixture[];
@@ -25,37 +38,13 @@ export class FixtureService {
     } catch (e) {
       cachedFixtures = [];
     }
-
-    if (
-      !fixturesHash ||
-      fixturesHash.length === 0 ||
-      cachedHash !== fixturesHash
-    ) {
-      return this.fetchAllFixtures(fixturesHash);
-    } else {
-      return cachedFixtures;
-    }
-  }
-
-  private async fetchAllFixtures(fixturesHash: string) {
-    try {
-      const allFixturesData: Fixture[] = await this.actor.getFixtures();
-      localStorage.setItem("fixtures_hash", fixturesHash);
-      localStorage.setItem(
-        "fixtures_data",
-        JSON.stringify(allFixturesData, replacer)
-      );
-      return allFixturesData.sort((a, b) => a.gameweek - b.gameweek);
-    } catch (error) {
-      console.error("Error fetching all fixtures:", error);
-      throw error;
-    }
+    
+    return cachedFixtures;
   }
 
   async getNextFixture(): Promise<any> {
     try {
-      const fixturesHash = localStorage.getItem("fixtures_hash") ?? "";
-      const allFixtures = await this.getFixturesData(fixturesHash);
+      const allFixtures = await this.getFixtures();
       const now = new Date();
       const nextFixture = allFixtures.find(
         (fixture) => new Date(Number(fixture.kickOff) / 1000000) > now

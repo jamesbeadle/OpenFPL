@@ -13,9 +13,7 @@
   
   onMount(async () => {
     try {
-      const fetchedTeams = await teamService.getTeamsData(
-        localStorage.getItem("teams_hash") ?? ""
-      );
+      const fetchedTeams = await teamService.getTeams();
 
       teams = fetchedTeams;
     } catch (error) {
