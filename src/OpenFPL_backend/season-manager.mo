@@ -176,9 +176,6 @@ module {
       for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
         let fixture = activeFixtures[i];
         if (fixture.id == fixtureId and fixture.status == 2) {
-
-          Debug.print(debug_show "found fixture");
-          Debug.print(debug_show fixture);
           let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
           activeFixturesBuffer.add(updatedFixture);
           await finaliseFixture(updatedFixture);

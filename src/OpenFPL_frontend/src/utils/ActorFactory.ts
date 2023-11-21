@@ -17,9 +17,6 @@ export class ActorFactory {
       identity: identity,
     };
 
-    console.log("hostOptions");
-    console.log(hostOptions);
-
     if (!options) {
       options = {
         agentOptions: hostOptions,

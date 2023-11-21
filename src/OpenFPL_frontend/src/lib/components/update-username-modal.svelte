@@ -12,8 +12,6 @@
   }
 
   function handleKeydown(event: KeyboardEvent): void {
-    console.log(event);
-    // Check if the event target is not an input field and the pressed key is 'Escape'
     if (!(event.target instanceof HTMLInputElement) && event.key === "Escape") {
       closeModal();
     }

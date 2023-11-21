@@ -39,7 +39,6 @@
       incrementProgress(20);
       const profileData = await userService.getProfile();
       incrementProgress(60);
-      console.log(profileData)
       profile = profileData;
       isLoading = false;
     } catch (error) {

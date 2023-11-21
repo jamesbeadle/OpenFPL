@@ -1,24 +1,20 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import Layout from "./Layout.svelte";
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
   import { LeaderboardService } from "$lib/services/LeaderboardService";
   import { ManagerService } from "$lib/services/ManagerService";
-  import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import {
-    formatUnixDateToReadable,
-    formatUnixTimeToTime,
-    getCountdownTime,
-  } from "../utils/Helpers";
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../utils/Helpers";
+  import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
@@ -48,6 +44,7 @@
     isLoading = true;
 
     try {
+      await systemService.updateSystemStateData();
       managerCount = await managerService.getTotalManagers();
 
       incrementProgress(20);

@@ -65,7 +65,6 @@
       highestScoringPlayer = players
         .sort((a, b) => a.totalPoints - b.totalPoints)
         .sort((a, b) => Number(b.value) - Number(a.value))[0];
-      console.log(highestScoringPlayer);
       let systemState = await systemService.getSystemState();
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       selectedSeason = systemState?.activeSeason ?? selectedSeason;

@@ -46,8 +46,6 @@ const initAuthStore = (): AuthStore => {
     signIn: ({ domain }: AuthSignInParams) =>
       new Promise<void>(async (resolve, reject) => {
         authClient = authClient ?? (await createAuthClient());
-        console.log("localIdentityCanisterId");
-        console.log(localIdentityCanisterId);
         const identityProvider = import.meta.env.VITE_AUTH_PROVIDER_URL;
 
         await authClient?.login({

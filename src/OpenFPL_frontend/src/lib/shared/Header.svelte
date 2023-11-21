@@ -26,7 +26,6 @@
   }
 
   function handleLogin() {
-    console.log(import.meta.env.VITE_AUTH_PROVIDER_URL);
     let params: AuthSignInParams = {
       domain: import.meta.env.VITE_AUTH_PROVIDER_URL,
     };
