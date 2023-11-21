@@ -1,20 +1,22 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { TeamService } from "$lib/services/TeamService";
+  import type { ProfileDTO, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { toastStore } from "$lib/stores/toast";
   import UpdateUsernameModal from "$lib/components/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
+  import { UserService } from "$lib/services/UserService";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
-  const teamService = new TeamService();
+  const userService = new UserService();
 
-  let teams: Team[] = [];
-  let selectedTeam = 1;
+  let profile: ProfileDTO;
   let userPrincipal =
     "yxaeb-cknlu-ymf7s-hyhv4-ngpus-hurji-roqrb-hcf46-6ed5v-cp3qa-uqe";
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
+  let isLoading = true;
+  let progress = 0;
 
   function displayUsernameModal(): void {
     showUsernameModal = true;
@@ -34,9 +36,12 @@
 
   onMount(async () => {
     try {
-      const fetchedTeams = await teamService.getTeams();
-
-      teams = fetchedTeams;
+      incrementProgress(20);
+      const profileData = await userService.getProfile();
+      incrementProgress(60);
+      console.log(profileData)
+      profile = profileData;
+      isLoading = false;
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -47,8 +52,25 @@
       toastStore.show("Copied", "success");
     });
   }
-</script>
 
+  
+  function incrementProgress(newProgress: number) {
+    const step = 1;
+    const delay = 100;
+
+    function stepProgress() {
+      if (progress < newProgress) {
+        progress += step;
+        setTimeout(stepProgress, delay);
+      }
+    }
+
+    stepProgress();
+  }
+</script>
+{#if isLoading}
+    <LoadingIcon {progress} />
+{:else}
 <UpdateUsernameModal
   showModal={showUsernameModal}
   closeModal={closeUsernameModal}
@@ -69,19 +91,15 @@
     <div class="w-full md:w-3/4 px-2 mb-4">
       <div class="ml-4 p-4 rounded-lg">
         <p class="text-xs mb-2">Display Name:</p>
-        <h2 class="text-2xl font-bold mb-2">Not Set</h2>
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded"
-          on:click={displayUsernameModal}
-        >
+        <h2 class="text-2xl font-bold mb-2">{profile.displayName}</h2>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded"
+          on:click={displayUsernameModal}>
           Update
         </button>
         <p class="text-xs mb-2 mt-4">Favourite Team:</p>
         <h2 class="text-2xl font-bold mb-2">Not Set</h2>
-        <button
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded"
-          on:click={displayFavouriteTeamModal}
-        >
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded"
+          on:click={displayFavouriteTeamModal}>
           Update
         </button>
 
@@ -146,3 +164,6 @@
     </div>
   </div>
 </div>
+
+
+{/if}

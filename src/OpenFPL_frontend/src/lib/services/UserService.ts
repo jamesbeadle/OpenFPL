@@ -3,6 +3,7 @@ import type { OptionIdentity } from "$lib/types/Identity";
 import type { Unsubscriber } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
+import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export class UserService {
   private actor: any;
@@ -39,8 +40,17 @@ export class UserService {
     try {
       const identityActor = await this.actorFromIdentity();
       const result = await identityActor.updateDisplayName(username);
-      console.log("result");
-      console.log(result);
+      return result;
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
+
+  async getProfile(): Promise<any> {
+    try {
+      const identityActor = await this.actorFromIdentity();
+      const result = await identityActor.getProfileDTO();
       return result;
     } catch (error) {
       console.error("Error updating username:", error);
