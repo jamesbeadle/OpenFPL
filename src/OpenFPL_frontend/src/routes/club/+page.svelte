@@ -15,6 +15,7 @@
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { getPositionText } from "../../utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+  import { updateTableData } from "../../utils/Helpers"
 
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
@@ -40,14 +41,9 @@
   
   onMount(async () => {
     try {
-      const fetchedFixtures = await fixtureService.getFixturesData(
-        localStorage.getItem("fixtures_hash") ?? ""
-      );
-      const fetchedTeams = await teamService.getTeamsData(
-        localStorage.getItem("teams_hash") ?? ""
-      );
-      const fetchedPlayers = await playersService.getPlayerData(
-        localStorage.getItem("players_hash") ?? "");
+      const fetchedFixtures = await fixtureService.getFixtures();
+      const fetchedTeams = await teamService.getTeams();
+      const fetchedPlayers = await playersService.getPlayers();
 
       teams = fetchedTeams;
       team = fetchedTeams.find(x => x.id == id) ?? null;
@@ -64,11 +60,9 @@
       .sort((a,b) => a.totalPoints - b.totalPoints)
       .sort((a,b) => Number(b.value) - Number(a.value))[0];
       console.log(highestScoringPlayer)
-      let systemState = await systemService.getSystemState(
-        localStorage.getItem("system_state_hash") ?? ""
-      );
-      selectedGameweek = systemState.activeGameweek;
-      selectedSeason = systemState.activeSeason;
+      let systemState = await systemService.getSystemState();
+      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
+      selectedSeason = systemState?.activeSeason ?? selectedSeason;
       nextFixture = teamFixtures.find(x => x.gameweek == selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
@@ -82,7 +76,7 @@
   
   let tableData: any[] = [];
   $: if (fixtures.length > 0 && teams.length > 0) {
-    tableData = fixtureService.updateTableData(fixtures, teams, selectedGameweek);
+    tableData = updateTableData(fixtures, teams, selectedGameweek);
   }
 
   function getTeamFromId(teamId: number): Team | undefined {

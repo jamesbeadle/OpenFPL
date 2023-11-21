@@ -6,6 +6,7 @@
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+  import { updateTableData } from "../../utils/Helpers"
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
   const systemService = new SystemService();
@@ -37,7 +38,7 @@
   });
 
   $: if (fixtures.length > 0 && teams.length > 0) {
-    tableData = fixtureService.updateTableData(fixtures, teams, selectedGameweek);
+    tableData = updateTableData(fixtures, teams, selectedGameweek);
   }
 
 

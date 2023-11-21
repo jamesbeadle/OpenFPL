@@ -20,4 +20,7 @@ export class ManagerService {
       throw error;
     }
   }
+
+  //getFantasyTeamForGameweek 
+  //save fantasty team
 }

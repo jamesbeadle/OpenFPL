@@ -1,4 +1,5 @@
 import { Position } from "$lib/enums/Position";
+import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
 
 export function formatUnixDateToReadable(unixNano: number) {
   const date = new Date(unixNano / 1000000);
@@ -87,6 +88,8 @@ export function calculateAgeFromNanoseconds(nanoseconds: number) {
 
 
 import * as FlagIcons from 'svelte-flag-icons';
+import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { TeamStats } from "$lib/types/TeamStats";
 export function getFlagComponent(countryCode: string) {
   switch (countryCode) {
     case 'Albania':
@@ -221,5 +224,75 @@ export function getFlagComponent(countryCode: string) {
       return FlagIcons.Zw;
     default:
       return null;
+  }
+}
+
+export function updateTableData(fixtures: FixtureWithTeams[], teams: Team[], selectedGameweek: number): TeamStats[] {
+    let tempTable: Record<number, TeamStats> = {};
+
+    teams.forEach(team => initTeamData(team.id, tempTable, teams));
+
+    const relevantFixtures = fixtures.filter(fixture => fixture.fixture.status === 3 && fixture.fixture.gameweek <= selectedGameweek);
+
+    relevantFixtures.forEach(({ fixture, homeTeam, awayTeam }) => {
+      if (!homeTeam || !awayTeam) return;
+  
+      initTeamData(homeTeam.id, tempTable, teams);
+      initTeamData(awayTeam.id, tempTable, teams);
+          
+      const homeStats = tempTable[homeTeam.id];
+      const awayStats = tempTable[awayTeam.id];
+  
+      homeStats.played++;
+      awayStats.played++;
+  
+      homeStats.goalsFor += fixture.homeGoals;
+      homeStats.goalsAgainst += fixture.awayGoals;
+      awayStats.goalsFor += fixture.awayGoals;
+      awayStats.goalsAgainst += fixture.homeGoals;
+  
+      if (fixture.homeGoals > fixture.awayGoals) {
+        homeStats.wins++;
+        homeStats.points += 3;
+        awayStats.losses++;
+      } else if (fixture.homeGoals === fixture.awayGoals) {
+        homeStats.draws++;
+        awayStats.draws++;
+        homeStats.points += 1;
+        awayStats.points += 1;
+      } else {
+        awayStats.wins++;
+        awayStats.points += 3;
+        homeStats.losses++;
+      }
+    });
+
+    
+    return Object.values(tempTable).sort((a, b) => {
+    const goalDiffA = a.goalsFor - a.goalsAgainst;
+    const goalDiffB = b.goalsFor - b.goalsAgainst;
+
+    if (b.points !== a.points) return b.points - a.points;
+    if (goalDiffB !== goalDiffA) return goalDiffB - goalDiffA;
+    if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+    return a.goalsAgainst - b.goalsAgainst;
+  });
+};
+
+function initTeamData(teamId: number, table: Record<number, TeamStats>, teams: Team[]) {
+  if (!table[teamId]) {
+    const team = teams.find(t => t.id === teamId);
+    if (team) {
+      table[teamId] = {
+        ...team,
+        played: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        goalsFor: 0,
+        goalsAgainst: 0,
+        points: 0
+      };
+    }
   }
 }

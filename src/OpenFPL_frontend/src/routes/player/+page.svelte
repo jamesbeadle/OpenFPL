@@ -9,7 +9,7 @@
     import { page } from '$app/stores';
     import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
     import { PlayerService } from "$lib/services/PlayerService";
-    import { calculateAgeFromNanoseconds, convertDateToReadable, formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime, getFlagComponent, getPositionText } from "../../utils/Helpers";
+    import { calculateAgeFromNanoseconds, convertDateToReadable, formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime, getFlagComponent, getPositionText, updateTableData } from "../../utils/Helpers";
     import type { Fixture, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
     import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
@@ -85,7 +85,7 @@
     
     let tableData: any[] = [];
     $: if (fixtures.length > 0 && teams.length > 0) {
-      tableData = fixtureService.updateTableData(fixtures, teams, selectedGameweek);
+      tableData = updateTableData(fixtures, teams, selectedGameweek);
     }
   
     function getTeamFromId(teamId: number): Team | undefined {
