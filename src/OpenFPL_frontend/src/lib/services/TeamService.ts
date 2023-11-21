@@ -17,12 +17,12 @@ export class TeamService {
   }
 
   async updateTeamsData() {
-    let category = "teams_hash";
+    let category = "teams";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let liveTeamsHash =
-      newHashValues.find((x) => x.category == category) ?? null;
+    newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveTeamsHash != localHash) {
+    if (liveTeamsHash?.hash != localHash) {
       let updatedTeamsData = await this.actor.getTeams();
       localStorage.setItem(
         "teams_data",

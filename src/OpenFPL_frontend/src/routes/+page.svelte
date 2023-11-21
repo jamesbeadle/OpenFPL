@@ -45,6 +45,12 @@
 
     try {
       await systemService.updateSystemStateData();
+      await fixtureService.updateFixturesData();
+      await teamService.updateTeamsData();
+      await leaderboardService.updateWeeklyLeaderboardData();
+      await leaderboardService.updateMonthlyLeaderboardData();
+      await leaderboardService.updateSeasonLeaderboardData();
+      
       managerCount = await managerService.getTotalManagers();
 
       incrementProgress(20);

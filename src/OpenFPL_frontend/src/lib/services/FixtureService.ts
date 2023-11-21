@@ -35,11 +35,11 @@ export class FixtureService {
   }
 
   async updateFixturesData() {
-    let category = "fixtures_hash";
+    let category = "fixtures";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveHash != localHash) {
+    if (liveHash?.hash != localHash) {
       let updatedFixturesData = await this.actor.getFixtures();
       localStorage.setItem(
         "fixtures_data",

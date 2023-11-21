@@ -25,7 +25,7 @@ export class PlayerService {
     let livePlayersHash =
       newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (livePlayersHash != localHash) {
+    if (livePlayersHash?.hash != localHash) {
       let updatedPlayersData = await this.actor.getAllPlayers();
       localStorage.setItem(
         "players_data",
@@ -54,7 +54,7 @@ export class PlayerService {
     let livePlayersHash =
       newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (livePlayersHash != localHash) {
+    if (livePlayersHash?.hash != localHash) {
       let systemService = new SystemService();
       let systemState = await systemService.getSystemState();
 

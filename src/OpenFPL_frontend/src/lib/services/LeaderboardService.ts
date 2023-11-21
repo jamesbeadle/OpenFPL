@@ -7,6 +7,7 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
+import { SystemService } from "./SystemService";
 
 export class LeaderboardService {
   private actor: any;
@@ -19,12 +20,14 @@ export class LeaderboardService {
   }
 
   async updateWeeklyLeaderboardData() {
-    let category = "weekly_leaderboard_hash";
+    let category = "weekly_leaderboard";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveHash != localHash) {
-      let updatedLeaderboardData = await this.actor.getWeeklyLeaderboard();
+    if (liveHash?.hash != localHash) {
+      let systemService = new SystemService();
+      let systemState = await systemService.getSystemState();
+      let updatedLeaderboardData = await this.actor.getWeeklyLeaderboardCache(systemState?.activeSeason.id, systemState?.focusGameweek);
       localStorage.setItem(
         "weekly_leaderboard_data",
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -34,12 +37,14 @@ export class LeaderboardService {
   }
 
   async updateMonthlyLeaderboardData() {
-    let category = "monthly_leaderboard_hash";
+    let category = "monthly_leaderboards";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveHash != localHash) {
-      let updatedLeaderboardData = await this.actor.getMonthlyLeaderboard();
+    if (liveHash?.hash != localHash) {
+      let systemService = new SystemService();
+      let systemState = await systemService.getSystemState();
+      let updatedLeaderboardData = await this.actor.getClubLeaderboardsCache(systemState?.activeSeason.id, systemState?.activeMonth);
       localStorage.setItem(
         "monthly_leaderboard_data",
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -49,12 +54,14 @@ export class LeaderboardService {
   }
 
   async updateSeasonLeaderboardData() {
-    let category = "season_leaderboard_hash";
+    let category = "season_leaderboard";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveHash != localHash) {
-      let updatedLeaderboardData = await this.actor.getSeasonLeaderboard();
+    if (liveHash?.hash != localHash) {
+      let systemService = new SystemService();
+      let systemState = await systemService.getSystemState();
+      let updatedLeaderboardData = await this.actor.getSeasonLeaderboardCache(systemState?.activeSeason.id);
       localStorage.setItem(
         "season_leaderboard_data",
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -90,7 +97,7 @@ export class LeaderboardService {
     clubId: number
   ): Promise<PaginatedClubLeaderboard | null> {
     const cachedMonthlyLeaderboardData = localStorage.getItem(
-      "monthly_leaderboard_data"
+      "monthly_leaderboards_data"
     );
     let cachedMonthlyLeaderboards: PaginatedClubLeaderboard[];
     try {

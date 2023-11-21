@@ -17,11 +17,12 @@ export class SystemService {
   }
 
   async updateSystemStateData() {
-    let category = "system_state_hash";
+    let category = "system_state";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveHash != localHash) {
+    
+    if (liveHash?.hash != localHash) {
       let updatedSystemStateData = await this.actor.getSystemState();
       localStorage.setItem(
         "system_state_data",
