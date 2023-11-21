@@ -4,7 +4,9 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type { DataCache, Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../../utils/Helpers";
-
+import { authStore } from "$lib/stores/auth";
+import type { OptionIdentity } from "$lib/types/Identity";
+import type { Actor } from "@dfinity/agent";
 export class FixtureService {
   private actor: any;
 
@@ -14,6 +16,25 @@ export class FixtureService {
       process.env.OPENFPL_BACKEND_CANISTER_ID
     );
   }
+
+
+  async actorFromIdentity() {
+    const identity = await new Promise<OptionIdentity>((resolve, reject) => {
+      const unsubscribe = authStore.subscribe(store => {
+        if (store.identity) {
+          unsubscribe();
+          resolve(store.identity);
+        }
+      });
+    });
+    
+    return ActorFactory.createActor(
+      idlFactory,
+      process.env.OPENFPL_BACKEND_CANISTER_ID,
+      identity
+    );
+  }
+  
 
   async updateFixturesData() {
     let category = "fixtures_hash";
@@ -56,5 +77,14 @@ export class FixtureService {
     }
   }
 
-  //fetchValidatableFixtures 
+  async fetchValidatableFixtures(): Promise<any> {
+    try {
+      const identityActor = await this.actorFromIdentity();
+      const validatableFixtures = await identityActor.getValidatableFixtures();
+      return validatableFixtures;
+    } catch (error) {
+      console.error("Error fetching total managers:", error);
+      throw error;
+    }
+  }
 }

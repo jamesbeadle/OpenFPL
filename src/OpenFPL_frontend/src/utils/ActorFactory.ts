@@ -1,17 +1,20 @@
 // src/utils/ActorFactory.ts
+import type { OptionIdentity } from "$lib/types/Identity";
 import { Actor, HttpAgent } from "@dfinity/agent";
 
 export class ActorFactory {
   static createActor(
     idlFactory: any,
     canisterId: string = "",
-    options: any = null
+    options: any = null,
+    identity: OptionIdentity = null
   ) {
     const hostOptions = {
       host:
         process.env.DFX_NETWORK === "ic"
           ? `https://${canisterId}.ic0.app`
-          : "http://127.0.0.1:8080", // Adjust as necessary for your local development environment
+          : "http://127.0.0.1:8080",
+      identity: identity
     };
 
     if (!options) {
