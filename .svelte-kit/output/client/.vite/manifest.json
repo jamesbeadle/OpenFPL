@@ -14,7 +14,7 @@
       ".svelte-kit/generated/client-optimized/nodes/10.js",
       ".svelte-kit/generated/client-optimized/nodes/11.js"
     ],
-    "file": "_app/immutable/entry/app.f7eec923.js",
+    "file": "_app/immutable/entry/app.f3441c34.js",
     "imports": [
       "_preload-helper.a4192956.js",
       "_index.b324a1dd.js"
@@ -32,20 +32,20 @@
     "src": ".svelte-kit/generated/client-optimized/nodes/0.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/1.js": {
-    "file": "_app/immutable/nodes/1.03c2ed6d.js",
+    "file": "_app/immutable/nodes/1.f41e0fc0.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_stores.b64d190c.js"
+      "_stores.912634c5.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
     "src": ".svelte-kit/generated/client-optimized/nodes/1.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/10.js": {
-    "file": "_app/immutable/nodes/10.0c20da19.js",
+    "file": "_app/immutable/nodes/10.015b4d27.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_Layout.8d88a232.js"
+      "_Layout.019a660d.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -59,10 +59,10 @@
     "css": [
       "_app/immutable/assets/5.b3013d1d.css"
     ],
-    "file": "_app/immutable/nodes/11.0411a11a.js",
+    "file": "_app/immutable/nodes/11.efaa2cb6.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_Layout.8d88a232.js"
+      "_Layout.019a660d.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -76,27 +76,27 @@
     "css": [
       "_app/immutable/assets/2.4d84599f.css"
     ],
-    "file": "_app/immutable/nodes/2.25c5abe6.js",
+    "file": "_app/immutable/nodes/2.ddd93ca3.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_LoadingIcon.12f48f25.js",
-      "_TeamService.3585d717.js",
-      "_Layout.8d88a232.js",
-      "_ManagerService.90ae0efb.js"
+      "_LoadingIcon.16560e32.js",
+      "_TeamService.d8b3ee2a.js",
+      "_Layout.019a660d.js",
+      "_ManagerService.abf61ef7.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
     "src": ".svelte-kit/generated/client-optimized/nodes/2.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/3.js": {
-    "file": "_app/immutable/nodes/3.05b80bc5.js",
+    "file": "_app/immutable/nodes/3.1209071c.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_Layout.8d88a232.js",
-      "_LoadingIcon.12f48f25.js",
-      "_TeamService.3585d717.js",
-      "_stores.b64d190c.js",
-      "_PlayerService.26447090.js"
+      "_Layout.019a660d.js",
+      "_LoadingIcon.16560e32.js",
+      "_TeamService.d8b3ee2a.js",
+      "_stores.912634c5.js",
+      "_PlayerService.04d1c4fd.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -119,20 +119,20 @@
     "css": [
       "_app/immutable/assets/5.b3013d1d.css"
     ],
-    "file": "_app/immutable/nodes/5.f3e0dff5.js",
+    "file": "_app/immutable/nodes/5.a5d74d5e.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_Layout.8d88a232.js"
+      "_Layout.019a660d.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
     "src": ".svelte-kit/generated/client-optimized/nodes/5.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/6.js": {
-    "file": "_app/immutable/nodes/6.cf694582.js",
+    "file": "_app/immutable/nodes/6.24a98b51.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_Layout.8d88a232.js"
+      "_Layout.019a660d.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -146,13 +146,13 @@
     "css": [
       "_app/immutable/assets/7.0dcbb1e1.css"
     ],
-    "file": "_app/immutable/nodes/7.039ce165.js",
+    "file": "_app/immutable/nodes/7.50edd425.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_LoadingIcon.12f48f25.js",
-      "_TeamService.3585d717.js",
-      "_ManagerService.90ae0efb.js",
-      "_Layout.8d88a232.js"
+      "_LoadingIcon.16560e32.js",
+      "_TeamService.d8b3ee2a.js",
+      "_ManagerService.abf61ef7.js",
+      "_Layout.019a660d.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -166,14 +166,14 @@
     "css": [
       "_app/immutable/assets/8.7515d509.css"
     ],
-    "file": "_app/immutable/nodes/8.24b755bb.js",
+    "file": "_app/immutable/nodes/8.42dc8c27.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_Layout.8d88a232.js",
-      "_LoadingIcon.12f48f25.js",
-      "_TeamService.3585d717.js",
-      "_stores.b64d190c.js",
-      "_PlayerService.26447090.js"
+      "_Layout.019a660d.js",
+      "_LoadingIcon.16560e32.js",
+      "_TeamService.d8b3ee2a.js",
+      "_stores.912634c5.js",
+      "_PlayerService.04d1c4fd.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -187,11 +187,11 @@
     "css": [
       "_app/immutable/assets/9.f774a8e5.css"
     ],
-    "file": "_app/immutable/nodes/9.d2864c17.js",
+    "file": "_app/immutable/nodes/9.3f74fb56.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_TeamService.3585d717.js",
-      "_Layout.8d88a232.js"
+      "_TeamService.d8b3ee2a.js",
+      "_Layout.019a660d.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -205,53 +205,53 @@
     "file": "_app/immutable/assets/LoadingIcon.2aedc414.css",
     "src": "LoadingIcon.css"
   },
-  "_Layout.8d88a232.js": {
+  "_Layout.019a660d.js": {
     "css": [
       "_app/immutable/assets/Layout.48a06658.css"
     ],
     "dynamicImports": [
       "node_modules/@dfinity/agent/lib/esm/canisterStatus/index.js"
     ],
-    "file": "_app/immutable/chunks/Layout.8d88a232.js",
+    "file": "_app/immutable/chunks/Layout.019a660d.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_stores.b64d190c.js",
+      "_stores.912634c5.js",
       "_preload-helper.a4192956.js",
-      "_singletons.ed5340ea.js"
+      "_singletons.0bb6c3a5.js"
     ]
   },
-  "_LoadingIcon.12f48f25.js": {
+  "_LoadingIcon.16560e32.js": {
     "css": [
       "_app/immutable/assets/LoadingIcon.2aedc414.css"
     ],
-    "file": "_app/immutable/chunks/LoadingIcon.12f48f25.js",
+    "file": "_app/immutable/chunks/LoadingIcon.16560e32.js",
     "imports": [
-      "_Layout.8d88a232.js",
-      "_TeamService.3585d717.js",
+      "_Layout.019a660d.js",
+      "_TeamService.d8b3ee2a.js",
       "_index.b324a1dd.js"
     ]
   },
-  "_ManagerService.90ae0efb.js": {
-    "file": "_app/immutable/chunks/ManagerService.90ae0efb.js",
+  "_ManagerService.abf61ef7.js": {
+    "file": "_app/immutable/chunks/ManagerService.abf61ef7.js",
     "imports": [
-      "_Layout.8d88a232.js",
-      "_TeamService.3585d717.js",
-      "_LoadingIcon.12f48f25.js"
+      "_Layout.019a660d.js",
+      "_TeamService.d8b3ee2a.js",
+      "_LoadingIcon.16560e32.js"
     ]
   },
-  "_PlayerService.26447090.js": {
-    "file": "_app/immutable/chunks/PlayerService.26447090.js",
+  "_PlayerService.04d1c4fd.js": {
+    "file": "_app/immutable/chunks/PlayerService.04d1c4fd.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_Layout.8d88a232.js",
-      "_TeamService.3585d717.js",
-      "_LoadingIcon.12f48f25.js"
+      "_Layout.019a660d.js",
+      "_TeamService.d8b3ee2a.js",
+      "_LoadingIcon.16560e32.js"
     ]
   },
-  "_TeamService.3585d717.js": {
-    "file": "_app/immutable/chunks/TeamService.3585d717.js",
+  "_TeamService.d8b3ee2a.js": {
+    "file": "_app/immutable/chunks/TeamService.d8b3ee2a.js",
     "imports": [
-      "_Layout.8d88a232.js",
+      "_Layout.019a660d.js",
       "_index.b324a1dd.js"
     ]
   },
@@ -261,31 +261,31 @@
   "_preload-helper.a4192956.js": {
     "file": "_app/immutable/chunks/preload-helper.a4192956.js"
   },
-  "_singletons.ed5340ea.js": {
-    "file": "_app/immutable/chunks/singletons.ed5340ea.js",
+  "_singletons.0bb6c3a5.js": {
+    "file": "_app/immutable/chunks/singletons.0bb6c3a5.js",
     "imports": [
       "_index.b324a1dd.js"
     ]
   },
-  "_stores.b64d190c.js": {
-    "file": "_app/immutable/chunks/stores.b64d190c.js",
+  "_stores.912634c5.js": {
+    "file": "_app/immutable/chunks/stores.912634c5.js",
     "imports": [
-      "_singletons.ed5340ea.js"
+      "_singletons.0bb6c3a5.js"
     ]
   },
   "node_modules/@dfinity/agent/lib/esm/canisterStatus/index.js": {
-    "file": "_app/immutable/chunks/index.d6f9793e.js",
+    "file": "_app/immutable/chunks/index.3fbdbdb6.js",
     "imports": [
-      "_Layout.8d88a232.js"
+      "_Layout.019a660d.js"
     ],
     "isDynamicEntry": true,
     "src": "node_modules/@dfinity/agent/lib/esm/canisterStatus/index.js"
   },
   "node_modules/@sveltejs/kit/src/runtime/client/start.js": {
-    "file": "_app/immutable/entry/start.20906c7a.js",
+    "file": "_app/immutable/entry/start.0c58d89b.js",
     "imports": [
       "_index.b324a1dd.js",
-      "_singletons.ed5340ea.js"
+      "_singletons.0bb6c3a5.js"
     ],
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/client/start.js"

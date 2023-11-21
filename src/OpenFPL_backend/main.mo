@@ -276,12 +276,18 @@ actor Self {
   };
 
   public shared ({ caller }) func updateDisplayName(displayName : Text) : async Result.Result<(), T.Error> {
-    Debug.print(debug_show caller);
     assert not Principal.isAnonymous(caller);
-
     let invalidName = not profilesInstance.isDisplayNameValid(displayName);
-
     assert not invalidName;
+
+    var profile = profilesInstance.getProfile(Principal.toText(caller));
+    switch (profile) {
+      case (null) {
+        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
+        profile := profilesInstance.getProfile(Principal.toText(caller));
+      };
+      case (?foundProfile) {};
+    };
 
     fantasyTeamsInstance.updateDisplayName(Principal.toText(caller), displayName);
     return profilesInstance.updateDisplayName(Principal.toText(caller), displayName);
@@ -292,7 +298,10 @@ actor Self {
 
     var profile = profilesInstance.getProfile(Principal.toText(caller));
     switch (profile) {
-      case (null) { assert not false };
+      case (null) {
+        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
+        profile := profilesInstance.getProfile(Principal.toText(caller));
+      };
       case (?foundProfile) {
         if (foundProfile.favouriteTeamId > 0) {
           assert not seasonManager.seasonActive();

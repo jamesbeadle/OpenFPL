@@ -6,6 +6,7 @@ import Result "mo:base/Result";
 import { now } "mo:base/Time";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
+import Debug "mo:base/Debug";
 
 module {
   public class Profiles() {

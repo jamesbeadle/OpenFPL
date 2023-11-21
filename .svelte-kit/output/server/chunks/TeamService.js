@@ -1,6 +1,6 @@
 import { l as localIdentityCanisterId, A as AUTH_MAX_TIME_TO_LIVE, a as AUTH_POPUP_WIDTH, b as AUTH_POPUP_HEIGHT } from "./Layout.js";
 import { AuthClient } from "@dfinity/auth-client";
-import { nonNullish } from "@dfinity/utils";
+import "@dfinity/utils";
 import { w as writable } from "./index.js";
 import { HttpAgent, Actor } from "@dfinity/agent";
 const idlFactory = ({ IDL }) => {
@@ -398,11 +398,13 @@ const idlFactory = ({ IDL }) => {
   });
 };
 class ActorFactory {
-  static createActor(idlFactory2, canisterId = "", options = null, identity = null) {
+  static createActor(idlFactory2, canisterId = "", identity = null, options = null) {
     const hostOptions = {
       host: "http://127.0.0.1:8080",
       identity
     };
+    console.log("hostOptions");
+    console.log(hostOptions);
     if (!options) {
       options = {
         agentOptions: hostOptions
@@ -520,7 +522,9 @@ const initAuthStore = () => {
     },
     signIn: ({ domain }) => new Promise(async (resolve, reject) => {
       authClient = authClient ?? await createAuthClient();
-      const identityProvider = nonNullish(localIdentityCanisterId) ? `http://localhost:4943?canisterId=${localIdentityCanisterId}` : `https://identity.${domain ?? "ic0.app"}`;
+      console.log("localIdentityCanisterId");
+      console.log(localIdentityCanisterId);
+      const identityProvider = "https://identity.ic0.app";
       await authClient?.login({
         maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
         onSuccess: () => {

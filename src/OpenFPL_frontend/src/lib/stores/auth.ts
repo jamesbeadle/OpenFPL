@@ -8,7 +8,6 @@ import type { OptionIdentity } from "$lib/types/Identity";
 import { createAuthClient } from "$lib/utils/auth.utils";
 import { popupCenter } from "$lib/utils/window.utils";
 import type { AuthClient } from "@dfinity/auth-client";
-import { nonNullish } from "@dfinity/utils";
 import { writable, type Readable } from "svelte/store";
 
 export interface AuthStoreData {
@@ -47,10 +46,10 @@ const initAuthStore = (): AuthStore => {
     signIn: ({ domain }: AuthSignInParams) =>
       new Promise<void>(async (resolve, reject) => {
         authClient = authClient ?? (await createAuthClient());
-        console.log("localIdentityCanisterId")
-        console.log(localIdentityCanisterId)
+        console.log("localIdentityCanisterId");
+        console.log(localIdentityCanisterId);
         const identityProvider = import.meta.env.VITE_AUTH_PROVIDER_URL;
-        
+
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
           onSuccess: () => {
