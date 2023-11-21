@@ -17,6 +17,8 @@ export class UserService {
     let unsubscribe: Unsubscriber;
     return new Promise<OptionIdentity>((resolve, reject) => {
         unsubscribe  = authStore.subscribe(store => {
+            console.log("store")
+            console.log(store)
         if (store.identity) {
           resolve(store.identity);
         }

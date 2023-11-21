@@ -6,8 +6,8 @@ export class ActorFactory {
   static createActor(
     idlFactory: any,
     canisterId: string = "",
-    options: any = null,
-    identity: OptionIdentity = null
+    identity: OptionIdentity = null,
+    options: any = null
   ) {
     const hostOptions = {
       host:
@@ -16,6 +16,9 @@ export class ActorFactory {
           : "http://127.0.0.1:8080",
       identity: identity,
     };
+
+    console.log("hostOptions")
+    console.log(hostOptions)
 
     if (!options) {
       options = {
