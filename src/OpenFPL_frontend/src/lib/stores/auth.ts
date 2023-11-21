@@ -47,11 +47,10 @@ const initAuthStore = (): AuthStore => {
     signIn: ({ domain }: AuthSignInParams) =>
       new Promise<void>(async (resolve, reject) => {
         authClient = authClient ?? (await createAuthClient());
-
-        const identityProvider = nonNullish(localIdentityCanisterId)
-          ? `http://localhost:4943?canisterId=${localIdentityCanisterId}`
-          : `https://identity.${domain ?? "ic0.app"}`;
-
+        console.log("localIdentityCanisterId")
+        console.log(localIdentityCanisterId)
+        const identityProvider = import.meta.env.VITE_AUTH_PROVIDER_URL;
+        
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
           onSuccess: () => {
