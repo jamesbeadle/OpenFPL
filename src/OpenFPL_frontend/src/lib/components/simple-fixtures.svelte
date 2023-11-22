@@ -78,7 +78,7 @@
     </div>
     <div class="flex items-center space-x-2 m-3 mx-4">
       <button
-        class="rounded fpl-button px-2 py-1"
+        class="rounded fpl-button px-3 py-1"
         on:click={() => changeGameweek(-1)}
         disabled={selectedGameweek === 1}
       >
@@ -95,7 +95,7 @@
       </select>
 
       <button
-        class="rounded fpl-button px-2 py-1"
+        class="rounded fpl-button px-3 py-1 ml-1"
         on:click={() => changeGameweek(1)}
         disabled={selectedGameweek === 38}
       >

@@ -131,16 +131,16 @@
 <div class="container-fluid mt-4">
   <div class="flex flex-col space-y-4">
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
-      <div class="flex items-center space-x-2 ml-4">
-        <div class="flex items-center md:mx-4">
+      <div class="flex items-center ml-4">
+        <div class="flex items-center mr-8">
           <button
-          class="text-2xl rounded fpl-button px-2 py-1"
+          class="text-2xl rounded fpl-button px-3 py-1"
           on:click={() => changeLeaderboardType(-1)}>
           &lt;
         </button>
     
         <select
-          class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+          class="p-2 fpl-dropdown text-sm md:text-xl text-center mx-2"
           bind:value={selectedLeaderboardType}>
           <option value={1}>Weekly</option>
           <option value={2}>Monthly</option>
@@ -148,16 +148,16 @@
         </select>
     
         <button
-          class="text-2xl rounded fpl-button px-2 py-1"
+          class="text-2xl rounded fpl-button px-3 py-1 ml-1"
           on:click={() => changeLeaderboardType(1)}>
           &gt;
         </button>
-      </div>
+        </div>
 
         {#if selectedLeaderboardType == 1}
-          <div>
+          <div class="flex items-center mr-8">
             <button
-              class="text-2xl rounded fpl-button px-2 py-1"
+              class="text-2xl rounded fpl-button px-3 py-1"
               on:click={() => changeGameweek(-1)}
               disabled={selectedGameweek === 1}
             >
@@ -174,7 +174,7 @@
             </select>
 
             <button
-              class="text-2xl rounded fpl-button px-2 py-1"
+              class="text-2xl rounded fpl-button px-3 py-1 ml-1"
               on:click={() => changeGameweek(1)}
               disabled={selectedGameweek === 38}
             >
@@ -184,33 +184,32 @@
         {/if}
 
         {#if selectedLeaderboardType == 2}
-          <div>
-            <div>
-              <button
-                class="text-2xl rounded fpl-button px-2 py-1"
-                on:click={() => changeTeam(-1)}>
-                &lt;
-              </button>
-          
-              <select
-                class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-                bind:value={selectedTeamId}>
-                {#each teams as team}
-                  <option value={team.id}>{team.friendlyName}</option>
-                {/each}
-              </select>
-          
-              <button
-                class="text-2xl rounded fpl-button px-2 py-1"
-                on:click={() => changeTeam(1)}>
-                &gt;
-              </button>
-            </div>
+          <div class="flex items-center mr-8">
+            
+            <button
+            class="text-2xl rounded fpl-button px-3 py-1"
+            on:click={() => changeTeam(-1)}>
+            &lt;
+          </button>
+      
+          <select
+            class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+            bind:value={selectedTeamId}>
+            {#each teams as team}
+              <option value={team.id}>{team.friendlyName}</option>
+            {/each}
+          </select>
+      
+          <button
+            class="text-2xl rounded fpl-button px-3 py-1 ml-1"
+            on:click={() => changeTeam(1)}>
+            &gt;
+          </button>
           </div>
 
-          <div>
+          <div class="flex items-center">
             <button
-              class="text-2xl rounded fpl-button px-2 py-1"
+              class="text-2xl rounded fpl-button px-3 py-1"
               on:click={() => changeMonth(-1)}
             >
               &lt;
@@ -235,7 +234,7 @@
             </select>
 
             <button
-              class="text-2xl rounded fpl-button px-2 py-1"
+              class="text-2xl rounded fpl-button px-3 py-1 ml-1"
               on:click={() => changeMonth(1)}
             >
               &gt;

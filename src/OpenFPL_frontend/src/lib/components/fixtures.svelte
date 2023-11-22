@@ -75,7 +75,7 @@
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
       <div class="flex items-center space-x-2 ml-4">
         <button
-          class="text-2xl rounded fpl-button px-2 py-1"
+          class="text-2xl rounded fpl-button px-3 py-1"
           on:click={() => changeGameweek(-1)}
           disabled={selectedGameweek === 1}
         >
@@ -92,7 +92,7 @@
         </select>
 
         <button
-          class="text-2xl rounded fpl-button px-2 py-1"
+          class="text-2xl rounded fpl-button px-3 py-1 ml-1"
           on:click={() => changeGameweek(1)}
           disabled={selectedGameweek === 38}
         >
