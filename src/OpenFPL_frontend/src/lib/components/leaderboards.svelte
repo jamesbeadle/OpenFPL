@@ -28,6 +28,9 @@
   let currentGameweek: number;
   let focusGameweek: number;
   let totalPages: number = 0;
+  let selectedTeamIndex: number = 0;
+  $: selectedTeamIndex = teams.findIndex(team => team.id === selectedTeamId);
+
   
   $: if (leaderboard && leaderboard.totalEntries) {
     totalPages = Math.ceil(Number(leaderboard.totalEntries) / itemsPerPage);
@@ -41,7 +44,7 @@
       await leaderboardService.updateSeasonLeaderboardData();
       await teamService.updateTeamsData();
       const fetchedTeams = await teamService.getTeams();
-      teams = fetchedTeams;
+      teams = fetchedTeams.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
       selectedTeamId = fetchedTeams[0].id;
 
       let systemState = await systemService.getSystemState();
@@ -88,15 +91,38 @@
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
   };
 
-  const changeMonth = (delta: number) => {
-    selectedMonth = Math.max(1, Math.min(12, selectedMonth + delta));
-  };
-
+  function changeMonth(delta: number) {
+    selectedMonth += delta;
+    if (selectedMonth > 12) {
+      selectedMonth = 1;
+    } else if (selectedMonth < 1) {
+      selectedMonth = 12;
+    }
+    loadLeaderboardData();
+  }
   
   function changePage(delta: number) {
     currentPage = Math.max(1, Math.min(totalPages, currentPage + delta));
     loadLeaderboardData();
   }
+
+  function changeLeaderboardType(delta: number) {
+    selectedLeaderboardType += delta;
+    if (selectedLeaderboardType > 3) {
+      selectedLeaderboardType = 1;
+    } else if (selectedLeaderboardType < 1) {
+      selectedLeaderboardType = 3;
+    }
+    loadLeaderboardData();
+  }
+
+  function changeTeam(delta: number) {
+    selectedTeamIndex = (selectedTeamIndex + delta + teams.length) % teams.length;
+    selectedTeamId = teams[selectedTeamIndex].id;
+    loadLeaderboardData();
+  }
+
+
 
 </script>
 {#if isLoading}
@@ -107,16 +133,26 @@
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
       <div class="flex items-center space-x-2 ml-4">
         <div class="flex items-center md:mx-4">
-          <p class="text-sm md:text-xl">Leadboard:</p>
-          <select
-            class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-            bind:value={selectedLeaderboardType}
-          >
-            <option value={1}>Weekly</option>
-            <option value={2}>Monthly</option>
-            <option value={3}>Season</option>
-          </select>
-        </div>
+          <button
+          class="text-2xl rounded fpl-button px-2 py-1"
+          on:click={() => changeLeaderboardType(-1)}>
+          &lt;
+        </button>
+    
+        <select
+          class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+          bind:value={selectedLeaderboardType}>
+          <option value={1}>Weekly</option>
+          <option value={2}>Monthly</option>
+          <option value={3}>Season</option>
+        </select>
+    
+        <button
+          class="text-2xl rounded fpl-button px-2 py-1"
+          on:click={() => changeLeaderboardType(1)}>
+          &gt;
+        </button>
+      </div>
 
         {#if selectedLeaderboardType == 1}
           <div>
@@ -149,14 +185,27 @@
 
         {#if selectedLeaderboardType == 2}
           <div>
-            <select
-              class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-              bind:value={selectedTeamId}
-            >
-              {#each teams as team}
-                <option value={team.id}>{team.friendlyName}</option>
-              {/each}
-            </select>
+            <div>
+              <button
+                class="text-2xl rounded fpl-button px-2 py-1"
+                on:click={() => changeTeam(-1)}>
+                &lt;
+              </button>
+          
+              <select
+                class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+                bind:value={selectedTeamId}>
+                {#each teams as team}
+                  <option value={team.id}>{team.friendlyName}</option>
+                {/each}
+              </select>
+          
+              <button
+                class="text-2xl rounded fpl-button px-2 py-1"
+                on:click={() => changeTeam(1)}>
+                &gt;
+              </button>
+            </div>
           </div>
 
           <div>
