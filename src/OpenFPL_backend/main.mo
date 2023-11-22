@@ -493,8 +493,8 @@ actor Self {
       case (null) {
         return {
           principalId = "";
-          transfersAvailable = 0;
-          bankBalance = 0;
+          transfersAvailable = 3;
+          bankBalance = 1200;
           playerIds = [];
           captainId = 0;
           goalGetterGameweek = 0;

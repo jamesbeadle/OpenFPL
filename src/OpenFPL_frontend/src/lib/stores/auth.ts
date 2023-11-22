@@ -2,7 +2,6 @@ import {
   AUTH_MAX_TIME_TO_LIVE,
   AUTH_POPUP_HEIGHT,
   AUTH_POPUP_WIDTH,
-  localIdentityCanisterId,
 } from "$lib/constants/app.constants";
 import type { OptionIdentity } from "$lib/types/Identity";
 import { createAuthClient } from "$lib/utils/auth.utils";

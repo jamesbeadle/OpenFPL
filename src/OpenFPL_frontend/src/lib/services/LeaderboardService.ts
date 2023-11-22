@@ -28,7 +28,10 @@ export class LeaderboardService {
       let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
-      let updatedLeaderboardData = await this.actor.getWeeklyLeaderboardCache(systemState?.activeSeason.id, systemState?.focusGameweek);
+      let updatedLeaderboardData = await this.actor.getWeeklyLeaderboardCache(
+        systemState?.activeSeason.id,
+        systemState?.focusGameweek
+      );
       localStorage.setItem(
         "weekly_leaderboard_data",
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -46,7 +49,10 @@ export class LeaderboardService {
       let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
-      let updatedLeaderboardData = await this.actor.getClubLeaderboardsCache(systemState?.activeSeason.id, systemState?.activeMonth);
+      let updatedLeaderboardData = await this.actor.getClubLeaderboardsCache(
+        systemState?.activeSeason.id,
+        systemState?.activeMonth
+      );
       localStorage.setItem(
         "monthly_leaderboard_data",
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -64,7 +70,9 @@ export class LeaderboardService {
       let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
-      let updatedLeaderboardData = await this.actor.getSeasonLeaderboardCache(systemState?.activeSeason.id);
+      let updatedLeaderboardData = await this.actor.getSeasonLeaderboardCache(
+        systemState?.activeSeason.id
+      );
       localStorage.setItem(
         "season_leaderboard_data",
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -74,11 +82,16 @@ export class LeaderboardService {
   }
 
   async getWeeklyLeaderboard(): Promise<PaginatedLeaderboard> {
-    const cachedWeeklyLeaderboardData = localStorage.getItem("weekly_leaderboard_data");
+    const cachedWeeklyLeaderboardData = localStorage.getItem(
+      "weekly_leaderboard_data"
+    );
 
     let cachedWeeklyLeaderboard: PaginatedLeaderboard;
     try {
-      cachedWeeklyLeaderboard = JSON.parse(cachedWeeklyLeaderboardData ||"{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }");
+      cachedWeeklyLeaderboard = JSON.parse(
+        cachedWeeklyLeaderboardData ||
+          "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
+      );
     } catch (e) {
       cachedWeeklyLeaderboard = {
         entries: [],
@@ -91,18 +104,30 @@ export class LeaderboardService {
     return cachedWeeklyLeaderboard;
   }
 
-  async getWeeklyLeaderboardPage(gameweek: number, currentPage: number): Promise<PaginatedLeaderboard> {
+  async getWeeklyLeaderboardPage(
+    gameweek: number,
+    currentPage: number
+  ): Promise<PaginatedLeaderboard> {
     const limit = this.itemsPerPage;
-    const offset = (currentPage - 1) * limit;    
+    const offset = (currentPage - 1) * limit;
     let systemService = new SystemService();
     await systemService.updateSystemStateData();
     let systemState = await systemService.getSystemState();
-    let weeklyLeaderboardData = await this.actor.getWeeklyLeaderboard(systemState?.activeSeason.id, gameweek, limit, offset);
+    let weeklyLeaderboardData = await this.actor.getWeeklyLeaderboard(
+      systemState?.activeSeason.id,
+      gameweek,
+      limit,
+      offset
+    );
     return weeklyLeaderboardData;
   }
 
-  async getMonthlyLeaderboard(clubId: number): Promise<PaginatedClubLeaderboard | null> {
-    const cachedMonthlyLeaderboardData = localStorage.getItem("monthly_leaderboards_data");
+  async getMonthlyLeaderboard(
+    clubId: number
+  ): Promise<PaginatedClubLeaderboard | null> {
+    const cachedMonthlyLeaderboardData = localStorage.getItem(
+      "monthly_leaderboards_data"
+    );
     let cachedMonthlyLeaderboards: PaginatedClubLeaderboard[];
     try {
       cachedMonthlyLeaderboards = JSON.parse(
@@ -112,7 +137,8 @@ export class LeaderboardService {
       cachedMonthlyLeaderboards = [];
     }
 
-    let clubLeaderboard = cachedMonthlyLeaderboards.find((x) => x.clubId === clubId) ?? null;
+    let clubLeaderboard =
+      cachedMonthlyLeaderboards.find((x) => x.clubId === clubId) ?? null;
     return clubLeaderboard;
   }
 
@@ -123,7 +149,10 @@ export class LeaderboardService {
 
     let cachedSeasonLeaderboard: PaginatedLeaderboard;
     try {
-      cachedSeasonLeaderboard = JSON.parse(cachedSeasonLeaderboardData || "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }");
+      cachedSeasonLeaderboard = JSON.parse(
+        cachedSeasonLeaderboardData ||
+          "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
+      );
     } catch (e) {
       cachedSeasonLeaderboard = {
         entries: [],

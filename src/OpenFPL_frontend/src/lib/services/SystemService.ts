@@ -21,7 +21,7 @@ export class SystemService {
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category == category) ?? null;
     const localHash = localStorage.getItem(category);
-    
+
     if (liveHash?.hash != localHash) {
       let updatedSystemStateData = await this.actor.getSystemState();
       localStorage.setItem(

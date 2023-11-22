@@ -1,7 +1,7 @@
 import { c as create_ssr_component, a as subscribe, v as validate_component } from "../../../chunks/index2.js";
 import { L as Layout } from "../../../chunks/Layout.js";
-import { F as FixtureService, S as SystemService, L as LoadingIcon } from "../../../chunks/LoadingIcon.js";
-import { T as TeamService, u as updateTableData } from "../../../chunks/TeamService.js";
+import { L as LoadingIcon } from "../../../chunks/LoadingIcon.js";
+import { F as FixtureService, T as TeamService, S as SystemService, u as updateTableData } from "../../../chunks/TeamService.js";
 import { p as page } from "../../../chunks/stores.js";
 import { P as PlayerService } from "../../../chunks/PlayerService.js";
 const playerGameweekModal_svelte_svelte_type_style_lang = "";

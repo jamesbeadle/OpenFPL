@@ -3,7 +3,6 @@ import { p as page } from "./stores.js";
 import "@dfinity/auth-client";
 import "@dfinity/utils";
 import { w as writable } from "./index.js";
-const localIdentityCanisterId = {}.VITE_INTERNET_IDENTITY_CANISTER_ID;
 const AUTH_MAX_TIME_TO_LIVE = BigInt(
   60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14
 );
@@ -106,7 +105,5 @@ export {
   Layout as L,
   OpenFPLIcon as O,
   AUTH_POPUP_WIDTH as a,
-  AUTH_POPUP_HEIGHT as b,
-  localIdentityCanisterId as l,
-  toastStore as t
+  AUTH_POPUP_HEIGHT as b
 };

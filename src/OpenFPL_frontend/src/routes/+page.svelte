@@ -12,9 +12,13 @@
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../utils/Helpers";
+  import {
+    formatUnixDateToReadable,
+    formatUnixTimeToTime,
+    getCountdownTime,
+  } from "../utils/Helpers";
   import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
@@ -50,7 +54,7 @@
       await leaderboardService.updateWeeklyLeaderboardData();
       await leaderboardService.updateMonthlyLeaderboardData();
       await leaderboardService.updateSeasonLeaderboardData();
-      
+
       managerCount = await managerService.getTotalManagers();
 
       let systemState = await systemService.getSystemState();
@@ -59,7 +63,7 @@
       focusGameweek = systemState?.focusGameweek ?? activeGameweek;
 
       incrementProgress(40);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       let nextFixture = await fixtureService.getNextFixture();
       nextFixtureHomeTeam = await teamService.getTeamById(
         nextFixture.homeTeamId
@@ -76,13 +80,13 @@
       countdownMinutes = countdownTime.minutes.toString();
 
       incrementProgress(80);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       let leadingWeeklyTeam = await leaderboardService.getLeadingWeeklyTeam();
       gwLeaderUsername = leadingWeeklyTeam.username;
       gwLeaderPoints = leadingWeeklyTeam.points;
 
       incrementProgress(100);
-      await new Promise(resolve => setTimeout(resolve, 1000));  
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       isLoading = false;
     } catch (error) {
       console.error("Error fetching homepage data:", error);

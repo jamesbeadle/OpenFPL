@@ -1,5 +1,6 @@
 import { authStore } from "$lib/stores/auth";
 import type { OptionIdentity } from "$lib/types/Identity";
+import type { Unsubscriber } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   FantasyTeam,
@@ -19,20 +20,21 @@ export class ManagerService {
   }
 
   async actorFromIdentity() {
-    const identity = await new Promise<OptionIdentity>((resolve, reject) => {
-      const unsubscribe = authStore.subscribe((store) => {
+    let unsubscribe: Unsubscriber;
+    return new Promise<OptionIdentity>((resolve, reject) => {
+      unsubscribe = authStore.subscribe((store) => {
         if (store.identity) {
-          unsubscribe();
           resolve(store.identity);
         }
       });
+    }).then((identity) => {
+      unsubscribe();
+      return ActorFactory.createActor(
+        idlFactory,
+        process.env.OPENFPL_BACKEND_CANISTER_ID,
+        identity
+      );
     });
-
-    return ActorFactory.createActor(
-      idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID,
-      identity
-    );
   }
 
   async getTotalManagers(): Promise<number> {
@@ -60,7 +62,7 @@ export class ManagerService {
       );
       return fantasyTeamData;
     } catch (error) {
-      console.error("Error fetching total managers:", error);
+      console.error("Error fetching fantasy team for gameweek:", error);
       throw error;
     }
   }
@@ -69,9 +71,10 @@ export class ManagerService {
     try {
       const identityActor = await this.actorFromIdentity();
       const fantasyTeam = await identityActor.getFantasyTeam();
+      console.log(fantasyTeam);
       return fantasyTeam;
     } catch (error) {
-      console.error("Error fetching total managers:", error);
+      console.error("Error fetching fantasy team:", error);
       throw error;
     }
   }
@@ -82,7 +85,7 @@ export class ManagerService {
       const fantasyTeam = await identityActor.saveFantasyTeam(userFantasyTeam);
       return fantasyTeam;
     } catch (error) {
-      console.error("Error fetching total managers:", error);
+      console.error("Error saving fantasy team:", error);
       throw error;
     }
   }
