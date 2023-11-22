@@ -14,6 +14,7 @@
   import type { Bonus } from "$lib/types/Bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
+  import AddIcon from "$lib/icons/AddIcon.svelte";
 
   const systemService = new SystemService();
   const teamService = new TeamService();
@@ -397,18 +398,57 @@
             </div>
           </div>
         {:else}
-          <div class="relative w-full md:w-1/2 mt-4">
-            <h2>List View</h2>
-            
-            {#each gridSetup as row, rowIndex}
-              <div class={`flex justify-around items-center w-full`}>
+          <div class="bg-panel rounded-md m-4 flex-1">
+            <div class="container-fluid">
+              {#each gridSetup as row, idx}
+
+                {#if idx == 0}
+                  <div class="flex items-center justify-between py-2 bg-light-gray px-4">
+                    <div class="w-1/3">Goalkeeper</div>
+                    <div class="w-1/6">(c)</div>
+                    <div class="w-1/3">Team</div>
+                    <div class="w-1/6">Value</div>
+                    <div class="w-1/6">&nbsp;</div>
+                  </div>
+                {/if}
+                {#if idx == 1}
+                  <div class="flex items-center justify-between py-2 bg-light-gray px-4">
+                    <div class="w-1/3">Defenders</div>
+                    <div class="w-1/6">(c)</div>
+                    <div class="w-1/3">Team</div>
+                    <div class="w-1/6">Value</div>
+                    <div class="w-1/6">&nbsp;</div>
+                  </div>
+                {/if}
+                {#if idx == 2}
+                  <div class="flex items-center justify-between py-2 bg-light-gray px-4">
+                    <div class="w-1/3">Midfielders</div>
+                    <div class="w-1/6">(c)</div>
+                    <div class="w-1/3">Team</div>
+                    <div class="w-1/6">Value</div>
+                    <div class="w-1/6">&nbsp;</div>
+                  </div>
+                {/if}
+                {#if idx == 3}
+                  <div class="flex items-center justify-between py-2 bg-light-gray px-4">
+                    <div class="w-1/3">Forwards</div>
+                    <div class="w-1/6">(c)</div>
+                    <div class="w-1/3">Team</div>
+                    <div class="w-1/6">Value</div>
+                    <div class="w-1/6">&nbsp;</div>
+                  </div>
+                {/if}
                 {#each row as _, colIndex (colIndex)}
-                  <div class={`flex flex-col justify-center items-center flex-1`}>
-                      <AddPlayerIcon className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16"/>
+                  <div class="flex items-center justify-between py-2 px-4">
+                    <div class="w-1/3">Select</div>
+                    <div class="w-1/6">-</div>
+                    <div class="w-1/3">-</div>
+                    <div class="w-1/6">-</div>
+                    <div class="w-1/6 flex items-center"><button class="text-xl rounded fpl-button flex items-center"><AddIcon className="w-6 h-6 p-2" /></button></div>
                   </div>
                 {/each}
-              </div>
-            {/each}
+              {/each}
+            </div>
           </div>
         {/if}
         <div class="flex w-100 md:w-1/2">
@@ -469,6 +509,7 @@
           </div>
         </div>
       </div>
+
     </div>
   {/if}
 </Layout>
