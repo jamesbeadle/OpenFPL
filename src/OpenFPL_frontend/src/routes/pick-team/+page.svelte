@@ -51,6 +51,7 @@
   let pitchView = true;
   let showAddPlayer = false;
   let fantasyTeam: FantasyTeam;
+  let selectedPosition = -1;
   $: gridSetup = getGridSetup(selectedFormation);
 
   onMount(async () => {
@@ -118,7 +119,8 @@
     pitchView = false;
   }
 
-  function loadAddPlayer() {
+  function loadAddPlayer(row: number) {
+    selectedPosition = row;
     showAddPlayer = true;
   }
 
@@ -131,7 +133,7 @@
   {#if isLoading}
     <LoadingIcon {progress} />
   {:else}
-    <AddPlayerModal {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} />
+    <AddPlayerModal filterPosition={selectedPosition} {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} />
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
         <div
@@ -326,7 +328,7 @@
                     <div
                       class={`flex flex-col justify-center items-center flex-1`}
                     >
-                      <button on:click={loadAddPlayer}>
+                      <button on:click={() => loadAddPlayer(rowIndex)}>
                         <AddPlayerIcon
                           className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16"
                         />
@@ -340,8 +342,8 @@
         {:else}
           <div class="bg-panel rounded-md m-4 flex-1">
             <div class="container-fluid">
-              {#each gridSetup as row, idx}
-                {#if idx == 0}
+              {#each gridSetup as row, rowIndex}
+                {#if rowIndex == 0}
                   <div
                     class="flex items-center justify-between py-2 bg-light-gray px-4"
                   >
@@ -352,7 +354,7 @@
                     <div class="w-1/6">&nbsp;</div>
                   </div>
                 {/if}
-                {#if idx == 1}
+                {#if rowIndex == 1}
                   <div
                     class="flex items-center justify-between py-2 bg-light-gray px-4"
                   >
@@ -363,7 +365,7 @@
                     <div class="w-1/6">&nbsp;</div>
                   </div>
                 {/if}
-                {#if idx == 2}
+                {#if rowIndex == 2}
                   <div
                     class="flex items-center justify-between py-2 bg-light-gray px-4"
                   >
@@ -374,7 +376,7 @@
                     <div class="w-1/6">&nbsp;</div>
                   </div>
                 {/if}
-                {#if idx == 3}
+                {#if rowIndex == 3}
                   <div
                     class="flex items-center justify-between py-2 bg-light-gray px-4"
                   >
@@ -393,8 +395,8 @@
                     <div class="w-1/6">-</div>
                     <div class="w-1/6 flex items-center">
                       <button
-                        on:click={loadAddPlayer}
-                        class="text-xl rounded fpl-button flex items-center"
+                        on:click={() => loadAddPlayer(rowIndex)}
+                        class="text-xl rounded fpl-button console.log(row);tton flex items-center"
                         ><AddIcon className="w-6 h-6 p-2" /></button
                       >
                     </div>

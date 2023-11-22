@@ -19,7 +19,7 @@
   let teams: Team[] = [];
 
   let filterTeam = -1;
-  let filterPosition = -1;
+  export let filterPosition = -1;
   let minValue = 0;
   let maxValue = 0;
   let filterSurname = "";
