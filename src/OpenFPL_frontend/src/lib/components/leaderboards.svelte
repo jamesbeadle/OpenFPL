@@ -25,6 +25,8 @@
   let leaderboard: any;
   let isLoading = true;
   let progress = 0;
+  let currentGameweek: number;
+  let focusGameweek: number;
 
   onMount(async () => {
     try {
@@ -38,13 +40,14 @@
       selectedTeamId = fetchedTeams[0].id;
 
       let systemState = await systemService.getSystemState();
-      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
+      currentGameweek = systemState?.activeGameweek ?? 1;
+      focusGameweek = systemState?.focusGameweek ?? 1;
+      selectedGameweek = systemState?.focusGameweek ?? selectedGameweek;
       selectedMonth = systemState?.activeMonth ?? selectedMonth;
 
       let leaderboardData = await leaderboardService.getWeeklyLeaderboard();
 
       leaderboard = leaderboardData;
-      console.log(leaderboard)
       isLoading = false;
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -54,25 +57,25 @@
   $: selectedLeaderboardType, selectedGameweek, selectedMonth, selectedTeamId, loadLeaderboardData();
 
   async function loadLeaderboardData() {
-    console.log("here")
     try {
-      switch (selectedLeaderboardType) {
-        case 1:
+      isLoading = true;
+      if (selectedLeaderboardType === 1) {
+        if (selectedGameweek === focusGameweek && currentPage <= 4) {
           leaderboard = await leaderboardService.getWeeklyLeaderboard();
-          break;
-        case 2:
-          console.log("selectedTeamId")
-          leaderboard = await leaderboardService.getMonthlyLeaderboard(selectedTeamId);
-          break;
-        case 3:
-          leaderboard = await leaderboardService.getSeasonLeaderboard();
-          break;
-        default:
-          break;
+        } else if (selectedGameweek < focusGameweek || (selectedGameweek === focusGameweek && currentPage > 4)) {
+          leaderboard = await leaderboardService.getWeeklyLeaderboardPage(selectedGameweek, currentPage);
+        } else if (selectedGameweek > currentGameweek) {
+          leaderboard = null;
+        }
+      } else if (selectedLeaderboardType === 2) {
+        leaderboard = await leaderboardService.getMonthlyLeaderboard(selectedTeamId);
+      } else if (selectedLeaderboardType === 3) {
+        leaderboard = await leaderboardService.getSeasonLeaderboard();
       }
-      console.log(leaderboard)
     } catch (error) {
       console.error("Error fetching leaderboard data:", error);
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -84,13 +87,11 @@
     selectedMonth = Math.max(1, Math.min(12, selectedMonth + delta));
   };
 
-
-  function changePage(leaderboardType: number, delta: number) {
+  function changePage(delta: number) {
     currentPage = Math.max(1, currentPage + delta);
-    if (currentPage > 4) {
-    } else {
-    }
+    loadLeaderboardData();
   }
+
 </script>
 {#if isLoading}
     <LoadingIcon {progress} />

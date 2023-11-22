@@ -11,7 +11,7 @@ import { SystemService } from "./SystemService";
 
 export class LeaderboardService {
   private actor: any;
-
+  private itemsPerPage = 25;
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
@@ -74,16 +74,11 @@ export class LeaderboardService {
   }
 
   async getWeeklyLeaderboard(): Promise<PaginatedLeaderboard> {
-    const cachedWeeklyLeaderboardData = localStorage.getItem(
-      "weekly_leaderboard_data"
-    );
+    const cachedWeeklyLeaderboardData = localStorage.getItem("weekly_leaderboard_data");
 
     let cachedWeeklyLeaderboard: PaginatedLeaderboard;
     try {
-      cachedWeeklyLeaderboard = JSON.parse(
-        cachedWeeklyLeaderboardData ||
-          "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
-      );
+      cachedWeeklyLeaderboard = JSON.parse(cachedWeeklyLeaderboardData ||"{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }");
     } catch (e) {
       cachedWeeklyLeaderboard = {
         entries: [],
@@ -96,12 +91,18 @@ export class LeaderboardService {
     return cachedWeeklyLeaderboard;
   }
 
-  async getMonthlyLeaderboard(
-    clubId: number
-  ): Promise<PaginatedClubLeaderboard | null> {
-    const cachedMonthlyLeaderboardData = localStorage.getItem(
-      "monthly_leaderboards_data"
-    );
+  async getWeeklyLeaderboardPage(gameweek: number, currentPage: number): Promise<PaginatedLeaderboard> {
+    const limit = this.itemsPerPage;
+    const offset = (currentPage - 1) * limit;    
+    let systemService = new SystemService();
+    await systemService.updateSystemStateData();
+    let systemState = await systemService.getSystemState();
+    let weeklyLeaderboardData = await this.actor.getWeeklyLeaderboard(systemState?.activeSeason.id, gameweek, limit, offset);
+    return weeklyLeaderboardData;
+  }
+
+  async getMonthlyLeaderboard(clubId: number): Promise<PaginatedClubLeaderboard | null> {
+    const cachedMonthlyLeaderboardData = localStorage.getItem("monthly_leaderboards_data");
     let cachedMonthlyLeaderboards: PaginatedClubLeaderboard[];
     try {
       cachedMonthlyLeaderboards = JSON.parse(
@@ -111,8 +112,7 @@ export class LeaderboardService {
       cachedMonthlyLeaderboards = [];
     }
 
-    let clubLeaderboard =
-      cachedMonthlyLeaderboards.find((x) => x.clubId === clubId) ?? null;
+    let clubLeaderboard = cachedMonthlyLeaderboards.find((x) => x.clubId === clubId) ?? null;
     return clubLeaderboard;
   }
 
@@ -123,10 +123,7 @@ export class LeaderboardService {
 
     let cachedSeasonLeaderboard: PaginatedLeaderboard;
     try {
-      cachedSeasonLeaderboard = JSON.parse(
-        cachedSeasonLeaderboardData ||
-          "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
-      );
+      cachedSeasonLeaderboard = JSON.parse(cachedSeasonLeaderboardData || "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }");
     } catch (e) {
       cachedSeasonLeaderboard = {
         entries: [],
