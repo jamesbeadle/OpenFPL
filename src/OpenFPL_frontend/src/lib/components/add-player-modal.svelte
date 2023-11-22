@@ -51,6 +51,12 @@
 
   $: paginatedPlayers = filteredPlayers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+  $: {
+    if (filterTeam || filterPosition || minValue || maxValue || filterSurname) {
+      currentPage = 1;
+    }
+  }
+
   function goToPage(page: number) {
     currentPage = page;
   }
@@ -69,6 +75,11 @@
 <style>
   .modal-backdrop {
     z-index: 1000;
+  }
+
+  .active {
+    background-color: #2ce3a6; /* Example color */
+    color: white;
   }
 </style>
 
@@ -158,19 +169,19 @@
         <div class="justify-center mt-4 pb-4 overflow-x-auto">
           <div class="flex space-x-1 min-w-max">
             {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
-            <button
-              class:active={index + 1 === currentPage}
-              class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600"
-              on:click={() => goToPage(index + 1)}
-            >
-              {index + 1}
-            </button>
+              <button
+                class:active={index + 1 === currentPage}
+                class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600"
+                on:click={() => goToPage(index + 1)}
+              >
+                {index + 1}
+              </button>
             {/each}
           </div>
         </div>
         
         <div class="flex justify-end mt-4">
-          <button on:click={closeAddPlayerModal} class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">Close</button>
+          <button on:click={closeAddPlayerModal} class="px-4 py-2 fpl-purple-btn rounded-md text-white">Close</button>
         </div>
     
       </div>
