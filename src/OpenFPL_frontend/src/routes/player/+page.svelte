@@ -56,6 +56,13 @@
   $: id = Number($page.url.searchParams.get("id"));
   onMount(async () => {
     try {
+      
+      await systemService.updateSystemStateData();
+      await fixtureService.updateFixturesData();
+      await teamService.updateTeamsData();
+      await playersService.updatePlayersData();
+      await playersService.updatePlayerEventsData();
+      
       const fetchedFixtures = await fixtureService.getFixtures();
       const fetchedTeams = await teamService.getTeams();
       const fetchedPlayers = await playersService.getPlayers();

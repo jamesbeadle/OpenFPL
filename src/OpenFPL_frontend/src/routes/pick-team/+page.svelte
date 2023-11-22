@@ -137,6 +137,11 @@
   let rightPanelBonuses = bonuses.slice(5, 10);
 
   onMount(async () => {
+    
+    await systemService.updateSystemStateData();
+    await fixtureService.updateFixturesData();
+    await teamService.updateTeamsData();
+      
     isLoading = true;
     try {
       progress = 0;

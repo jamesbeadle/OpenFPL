@@ -36,6 +36,10 @@
 
   onMount(async () => {
     try {
+      await fixtureService.updateFixturesData();
+      await teamService.updateTeamsData();
+      
+      
       const fetchedFixtures = await fixtureService.getFixtures();
       const fetchedTeams = await teamService.getTeams();
 

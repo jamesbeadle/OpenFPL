@@ -41,6 +41,12 @@
 
   onMount(async () => {
     try {
+      await systemService.updateSystemStateData();
+      await fixtureService.updateFixturesData();
+      await teamService.updateTeamsData();
+      await playerService.updatePlayersData();
+      await playerService.updatePlayerEventsData();
+
       const fetchedFixtures = await fixtureService.getFixtures();
       const fetchedTeams = await teamService.getTeams();
 

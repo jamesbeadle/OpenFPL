@@ -25,6 +25,11 @@
 
   onMount(async () => {
     try {
+      await systemService.updateSystemStateData();
+      await leaderboardService.updateWeeklyLeaderboardData();
+      await leaderboardService.updateMonthlyLeaderboardData();
+      await leaderboardService.updateSeasonLeaderboardData();
+      await teamService.updateTeamsData();
       const fetchedTeams = await teamService.getTeams();
       teams = fetchedTeams;
       selectedTeamId = fetchedTeams[0].id;

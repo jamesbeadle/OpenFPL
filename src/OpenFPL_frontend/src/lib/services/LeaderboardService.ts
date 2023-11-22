@@ -26,6 +26,7 @@ export class LeaderboardService {
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
       let systemService = new SystemService();
+      await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getWeeklyLeaderboardCache(systemState?.activeSeason.id, systemState?.focusGameweek);
       localStorage.setItem(
@@ -43,6 +44,7 @@ export class LeaderboardService {
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
       let systemService = new SystemService();
+      await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getClubLeaderboardsCache(systemState?.activeSeason.id, systemState?.activeMonth);
       localStorage.setItem(
@@ -60,6 +62,7 @@ export class LeaderboardService {
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
       let systemService = new SystemService();
+      await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getSeasonLeaderboardCache(systemState?.activeSeason.id);
       localStorage.setItem(

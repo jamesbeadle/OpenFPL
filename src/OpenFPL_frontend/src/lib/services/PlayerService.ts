@@ -56,6 +56,7 @@ export class PlayerService {
     const localHash = localStorage.getItem(category);
     if (livePlayersHash?.hash != localHash) {
       let systemService = new SystemService();
+      await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
 
       let updatedPlayersData = await this.actor.getAllPlayersMap(
