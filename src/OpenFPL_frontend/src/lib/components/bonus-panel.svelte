@@ -101,11 +101,6 @@
 
 
 <style>
-    .inactive-btn {
-      background-color: black;
-      color: white;
-    }
-  
     .bonus-panel-inner {
       background-color: rgba(46, 50, 58, 0.9);
     }

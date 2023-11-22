@@ -20,7 +20,7 @@ export class PlayerService {
   }
 
   async updatePlayersData() {
-    let category = "players_hash";
+    let category = "players";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let livePlayersHash =
       newHashValues.find((x) => x.category == category) ?? null;
@@ -49,7 +49,7 @@ export class PlayerService {
   }
 
   async updatePlayerEventsData() {
-    let category = "player_events_hash";
+    let category = "player_events";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let livePlayersHash =
       newHashValues.find((x) => x.category == category) ?? null;
