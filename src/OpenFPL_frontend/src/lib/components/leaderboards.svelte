@@ -8,6 +8,7 @@
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import { LeaderboardService } from "$lib/services/LeaderboardService";
+    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   const teamService = new TeamService();
   const systemService = new SystemService();
@@ -21,7 +22,9 @@
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let currentPage = 1;
   const itemsPerPage = 25;
-  let leaderboard: PaginatedLeaderboard;
+  let leaderboard: any;
+  let isLoading = true;
+  let progress = 0;
 
   onMount(async () => {
     try {
@@ -41,18 +44,46 @@
       let leaderboardData = await leaderboardService.getWeeklyLeaderboard();
 
       leaderboard = leaderboardData;
+      console.log(leaderboard)
+      isLoading = false;
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   });
+
+  $: selectedLeaderboardType, selectedGameweek, selectedMonth, selectedTeamId, loadLeaderboardData();
+
+  async function loadLeaderboardData() {
+    console.log("here")
+    try {
+      switch (selectedLeaderboardType) {
+        case 1:
+          leaderboard = await leaderboardService.getWeeklyLeaderboard();
+          break;
+        case 2:
+          console.log("selectedTeamId")
+          leaderboard = await leaderboardService.getMonthlyLeaderboard(selectedTeamId);
+          break;
+        case 3:
+          leaderboard = await leaderboardService.getSeasonLeaderboard();
+          break;
+        default:
+          break;
+      }
+      console.log(leaderboard)
+    } catch (error) {
+      console.error("Error fetching leaderboard data:", error);
+    }
+  }
 
   const changeGameweek = (delta: number) => {
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
   };
 
   const changeMonth = (delta: number) => {
-    selectedGameweek = Math.max(1, Math.min(12, selectedMonth + delta));
+    selectedMonth = Math.max(1, Math.min(12, selectedMonth + delta));
   };
+
 
   function changePage(leaderboardType: number, delta: number) {
     currentPage = Math.max(1, currentPage + delta);
@@ -61,7 +92,9 @@
     }
   }
 </script>
-
+{#if isLoading}
+    <LoadingIcon {progress} />
+{:else}
 <div class="container-fluid mt-4">
   <div class="flex flex-col space-y-4">
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
@@ -155,6 +188,29 @@
         {/if}
       </div>
     </div>
-    <div />
+    <div class="flex flex-col space-y-4 mt-4 text-lg">
+      <div class="overflow-x-auto flex-1">
+        <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
+          <div class="w-1/6 text-center mx-4">Pos</div>
+          <div class="w-1/3 px-4">Manager</div>
+          <div class="w-1/2 text-center">Points</div>
+        </div>
+  
+        {#if leaderboard && leaderboard.entries.length > 0}
+          {#each leaderboard.entries as entry}
+            <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+              <div class="w-1/12 text-center">{entry.positionText}</div>
+              <div class="w-1/12 text-center">{entry.username}</div>
+              <div class="w-1/12 text-center">{entry.points}</div>
+            </div>
+          {/each}
+        {:else}
+            <p class="w-100 p-4">No leaderboard data.</p>
+        {/if}
+        
+      </div>
+    </div>
   </div>
 </div>
+
+{/if}

@@ -53,13 +53,13 @@
       
       managerCount = await managerService.getTotalManagers();
 
-      incrementProgress(20);
       let systemState = await systemService.getSystemState();
       activeGameweek = systemState?.activeGameweek ?? activeGameweek;
       activeSeason = systemState?.activeSeason.name ?? activeSeason;
       focusGameweek = systemState?.focusGameweek ?? activeGameweek;
 
       incrementProgress(40);
+      await new Promise(resolve => setTimeout(resolve, 1000));
       let nextFixture = await fixtureService.getNextFixture();
       nextFixtureHomeTeam = await teamService.getTeamById(
         nextFixture.homeTeamId
@@ -70,18 +70,19 @@
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture.kickOff));
 
-      incrementProgress(60);
       let countdownTime = getCountdownTime(Number(nextFixture.kickOff));
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
       incrementProgress(80);
+      await new Promise(resolve => setTimeout(resolve, 1000));
       let leadingWeeklyTeam = await leaderboardService.getLeadingWeeklyTeam();
       gwLeaderUsername = leadingWeeklyTeam.username;
       gwLeaderPoints = leadingWeeklyTeam.points;
 
       incrementProgress(100);
+      await new Promise(resolve => setTimeout(resolve, 1000));  
       isLoading = false;
     } catch (error) {
       console.error("Error fetching homepage data:", error);
@@ -91,7 +92,7 @@
 
   function incrementProgress(newProgress: number) {
     const step = 1;
-    const delay = 100;
+    const delay = 25;
 
     function stepProgress() {
       if (progress < newProgress) {
