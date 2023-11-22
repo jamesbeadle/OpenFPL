@@ -215,8 +215,7 @@
               &lt;
             </button>
 
-            <select
-              class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+            <select class="p-2 fpl-dropdown text-sm md:text-xl text-center"
               bind:value={selectedMonth}
             >
               <option value={1}>January</option>

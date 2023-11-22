@@ -78,7 +78,7 @@
     </div>
     <div class="flex items-center space-x-2 m-3 mx-4">
       <button
-        class="rounded fpl-button px-3 py-1"
+        class="text-2xl rounded fpl-button px-3 py-1"
         on:click={() => changeGameweek(-1)}
         disabled={selectedGameweek === 1}
       >
@@ -86,7 +86,7 @@
       </button>
 
       <select
-        class="p-2 fpl-dropdown text-center"
+        class="p-2 fpl-dropdown text-sm md:text-xl text-center"
         bind:value={selectedGameweek}
       >
         {#each gameweeks as gameweek}
@@ -95,7 +95,7 @@
       </select>
 
       <button
-        class="rounded fpl-button px-3 py-1 ml-1"
+        class="text-2xl rounded fpl-button px-3 py-1"
         on:click={() => changeGameweek(1)}
         disabled={selectedGameweek === 38}
       >

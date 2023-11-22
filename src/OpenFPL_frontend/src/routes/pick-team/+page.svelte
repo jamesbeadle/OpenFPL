@@ -307,10 +307,10 @@
           <div
             class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4 order-3 md:order-1"
           >
-            <button class="btn fpl-button px-4 py-2 rounded-l-md font-bold text-md min-w-[125px] my-4" on:click={showPitchView}>
+            <button class={`btn ${ pitchView ? `fpl-button` : `inactive-btn`} px-4 py-2 rounded-l-md font-bold text-md min-w-[125px] my-4`} on:click={showPitchView}>
               Pitch View
             </button>
-            <button class="btn inactive-btn px-4 py-2 rounded-r-md font-bold text-md min-w-[125px] my-4" on:click={showListView}>
+            <button class={`btn ${ !pitchView ? `fpl-button` : `inactive-btn`} px-4 py-2 rounded-r-md font-bold text-md min-w-[125px] my-4`} on:click={showListView}>
               List View
             </button>
           </div>
@@ -399,6 +399,16 @@
         {:else}
           <div class="relative w-full md:w-1/2 mt-4">
             <h2>List View</h2>
+            
+            {#each gridSetup as row, rowIndex}
+              <div class={`flex justify-around items-center w-full`}>
+                {#each row as _, colIndex (colIndex)}
+                  <div class={`flex flex-col justify-center items-center flex-1`}>
+                      <AddPlayerIcon className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16"/>
+                  </div>
+                {/each}
+              </div>
+            {/each}
           </div>
         {/if}
         <div class="flex w-100 md:w-1/2">
