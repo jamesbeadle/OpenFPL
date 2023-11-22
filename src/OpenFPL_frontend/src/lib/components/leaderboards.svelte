@@ -21,12 +21,17 @@
   let teams: Team[] = [];
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let currentPage = 1;
-  const itemsPerPage = 25;
+  let itemsPerPage = 25;
   let leaderboard: any;
   let isLoading = true;
   let progress = 0;
   let currentGameweek: number;
   let focusGameweek: number;
+  let totalPages: number = 0;
+  
+  $: if (leaderboard && leaderboard.totalEntries) {
+    totalPages = Math.ceil(Number(leaderboard.totalEntries) / itemsPerPage);
+  }
 
   onMount(async () => {
     try {
@@ -87,8 +92,9 @@
     selectedMonth = Math.max(1, Math.min(12, selectedMonth + delta));
   };
 
+  
   function changePage(delta: number) {
-    currentPage = Math.max(1, currentPage + delta);
+    currentPage = Math.max(1, Math.min(totalPages, currentPage + delta));
     loadLeaderboardData();
   }
 
@@ -205,12 +211,27 @@
               <div class="w-1/12 text-center">{entry.points}</div>
             </div>
           {/each}
+          <div class="flex justify-center items-center mt-4 mb-4">
+            <button 
+              on:click={() => changePage(-1)} 
+              disabled={currentPage === 1}
+              class="px-4 py-2 mx-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
+              Previous
+            </button>
+          
+            <span class="px-4">Page {currentPage}</span>
+          
+            <button on:click={() => changePage(1)} disabled={currentPage >= totalPages} 
+              class="px-4 py-2 mx-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed">Next</button>
+
+            </div>
         {:else}
             <p class="w-100 p-4">No leaderboard data.</p>
         {/if}
         
       </div>
     </div>
+    
   </div>
 </div>
 
