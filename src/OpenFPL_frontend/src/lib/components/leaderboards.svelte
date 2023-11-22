@@ -255,7 +255,7 @@
           {#each leaderboard.entries as entry}
             <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
               <div class="w-1/12 text-center">{entry.positionText}</div>
-              <div class="w-1/12 text-center">{entry.username}</div>
+              <div class="w-1/12 text-center"><a href={`/manager/${entry.principalId}`}>{entry.username}</a></div>
               <div class="w-1/12 text-center">{entry.points}</div>
             </div>
           {/each}
