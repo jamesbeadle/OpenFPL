@@ -21,6 +21,7 @@
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BonusPanel from "$lib/components/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/add-player-modal.svelte";
+    import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
 
   const systemService = new SystemService();
   const teamService = new TeamService();
@@ -127,13 +128,40 @@
   function closeAddPlayerModal() {
     showAddPlayer = false;
   }
+
+  
+  function handlePlayerSelection(player: PlayerDTO) {
+    console.log("adding player")
+    console.log(player)
+    // Add player to fantasyTeam
+    // Update formation based on player's position
+    // Validate and adjust available formations
+    // Update shirt icon
+    // Update header values
+    // Adjust transfersAvailable based on the change
+    // Adjust bank baolance based on the change
+  }
+
+  function updateFormation(newFormation: string) {
+    if (isValidFormation(newFormation, fantasyTeam)) {
+      selectedFormation = newFormation;
+      // Further logic to update the view
+    }
+  }
+
+  
+  function isValidFormation(formation: string, team: FantasyTeam): boolean {
+    // Implement validation logic based on team composition
+    return false;
+  }
+
 </script>
 
 <Layout>
   {#if isLoading}
     <LoadingIcon {progress} />
   {:else}
-    <AddPlayerModal filterPosition={selectedPosition} {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} />
+    <AddPlayerModal {handlePlayerSelection} filterPosition={selectedPosition} {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} />
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
         <div

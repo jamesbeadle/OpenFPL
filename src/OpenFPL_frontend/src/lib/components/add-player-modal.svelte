@@ -2,10 +2,7 @@
   import { onMount } from "svelte";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { PlayerService } from "$lib/services/PlayerService";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
@@ -13,13 +10,14 @@
 
   export let showAddPlayer: boolean;
   export let closeAddPlayerModal: () => void;
+  export let handlePlayerSelection: (player: PlayerDTO) => void;
   export let fantasyTeam: FantasyTeam;
+  export let filterPosition = -1;
 
   let players: any[] = [];
   let teams: Team[] = [];
 
   let filterTeam = -1;
-  export let filterPosition = -1;
   let minValue = 0;
   let maxValue = 0;
   let filterSurname = "";
@@ -28,18 +26,7 @@
   let progress = 0;
   const pageSize = 10;
   let teamPlayerCounts: Record<number, number> = {};
-
-  onMount(async () => {
-    let playerService = new PlayerService();
-    let teamsService = new TeamService();
-    playerService.updatePlayersData();
-    players = await playerService.getPlayers();
-    teams = await teamsService.getTeams();
-    players = addTeamDataToPlayers(players, teams);
-    isLoading = false;
-    teamPlayerCounts = countPlayersByTeam(fantasyTeam.playerIds);
-    fantasyTeam.bankBalance = 200n;
-  });
+  let disableReasons: (string | null)[];
 
   function countPlayersByTeam(playerIds: Uint16Array | number[]) {
     const counts: Record<number, number> = {};
@@ -94,6 +81,21 @@
     return null;
   }
 
+  function addTeamDataToPlayers(players: PlayerDTO[], teams: Team[]): PlayerDTO[] {
+    return players.map((player) => {
+      const team = teams.find((t) => t.id === player.teamId);
+      return { ...player, team };
+    });
+  }
+
+  function goToPage(page: number) {
+    currentPage = page;
+  }
+
+  function selectPlayer(player: PlayerDTO) {
+    handlePlayerSelection(player);
+    closeAddPlayerModal();
+  }
 
   $: filteredPlayers = players.filter((player) => {
     return (
@@ -106,25 +108,12 @@
     );
   });
 
-  function addTeamDataToPlayers(
-    players: PlayerDTO[],
-    teams: Team[]
-  ): PlayerDTO[] {
-    return players.map((player) => {
-      const team = teams.find((t) => t.id === player.teamId);
-      return { ...player, team };
-    });
-  }
-
   $: paginatedPlayers = filteredPlayers.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
 
-  let disableReasons: (string | null)[];
-
   $: disableReasons = paginatedPlayers.map(player => reasonToDisablePlayer(player));
-
 
   $: {
     if (filterTeam || filterPosition || minValue || maxValue || filterSurname) {
@@ -132,42 +121,36 @@
     }
   }
 
-  function goToPage(page: number) {
-    currentPage = page;
-  }
-
-  function selectPlayer() {}
+  onMount(async () => {
+    let playerService = new PlayerService();
+    let teamsService = new TeamService();
+    playerService.updatePlayersData();
+    players = await playerService.getPlayers();
+    teams = await teamsService.getTeams();
+    players = addTeamDataToPlayers(players, teams);
+    isLoading = false;
+    teamPlayerCounts = countPlayersByTeam(fantasyTeam.playerIds);
+  });
+  
 </script>
 
 {#if showAddPlayer}
   {#if isLoading}
     <LoadingIcon {progress} />
   {:else}
-    <div
-      class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-      on:click={closeAddPlayerModal}
-      on:keydown={closeAddPlayerModal}
-    >
-      <div
-        class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white"
-        on:click|stopPropagation
-        on:keydown|stopPropagation
-      >
+    <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
+      on:click={closeAddPlayerModal} on:keydown={closeAddPlayerModal}>
+      <div class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white"
+        on:click|stopPropagation on:keydown|stopPropagation>
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-semibold">Select Player</h3>
-          <button class="text-3xl leading-none" on:click={closeAddPlayerModal}
-            >&times;</button
-          >
+          <button class="text-3xl leading-none" on:click={closeAddPlayerModal}>&times;</button>
         </div>
         <div class="mb-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label for="filterTeam" class="text-sm">Filter by Team:</label>
-              <select
-                id="filterTeam"
-                class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-                bind:value={filterTeam}
-              >
+              <select id="filterTeam" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" bind:value={filterTeam}>
                 <option value={-1}>All</option>
                 {#each teams as team}
                   <option value={team.id}>{team.friendlyName}</option>
@@ -175,14 +158,8 @@
               </select>
             </div>
             <div>
-              <label for="filterPosition" class="text-sm"
-                >Filter by Position:</label
-              >
-              <select
-                id="filterPosition"
-                class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-                bind:value={filterPosition}
-              >
+              <label for="filterPosition" class="text-sm">Filter by Position:</label>
+              <select id="filterPosition" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" bind:value={filterPosition}>
                 <option value={-1}>All</option>
                 <option value={0}>Goalkeepers</option>
                 <option value={1}>Defenders</option>
@@ -195,41 +172,21 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label for="minValue" class="text-sm">Min Value:</label>
-              <input
-                id="minValue"
-                type="number"
-                class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-                bind:value={minValue}
-              />
+              <input id="minValue" type="number" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" bind:value={minValue} />
             </div>
             <div>
               <label for="maxValue" class="text-sm">Max Value:</label>
-              <input
-                id="maxValue"
-                type="number"
-                class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-                bind:value={maxValue}
-              />
+              <input id="maxValue" type="number" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" bind:value={maxValue} />
             </div>
           </div>
 
           <div class="mb-4">
             <label for="filterSurname" class="text-sm">Search by Name:</label>
-            <input
-              id="filterSurname"
-              type="text"
-              class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-              placeholder="Enter"
-              bind:value={filterSurname}
-            />
+            <input id="filterSurname" type="text" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" placeholder="Enter" bind:value={filterSurname} />
           </div>
 
           <div class="mb-4">
-            <label for="filterSurname" class="font-bold"
-              >Available Balance: £{(
-                Number(fantasyTeam.bankBalance) / 4
-              ).toFixed(2)}m</label
-            >
+            <label for="filterSurname" class="font-bold">Available Balance: £{(Number(fantasyTeam.bankBalance) / 4).toFixed(2)}m</label>
           </div>
         </div>
 
@@ -253,15 +210,13 @@
                   {#if player.position === 2}<td class="p-2">MF</td>{/if}
                   {#if player.position === 3}<td class="p-2">FW</td>{/if}
                   <td class="p-2">{player.firstName} {player.lastName}</td>
-                  <td class="p-2 flex items-center"
-                    ><BadgeIcon
-                      className="w-6 h-6 mr-2"
+                  <td class="p-2 flex items-center">
+                    <BadgeIcon className="w-6 h-6 mr-2"
                       primaryColour={player.team?.primaryColourHex}
                       secondaryColour={player.team?.secondaryColourHex}
                       thirdColour={player.team?.thirdColourHex}
                     />
-                    {player.team?.abbreviatedName}</td
-                  >
+                    {player.team?.abbreviatedName}</td>
                   <td class="p-2">£{(Number(player.value) / 4).toFixed(2)}m</td>
                   <td class="p-2">{player.totalPoints}</td>
                   <td class="p-2">
@@ -269,7 +224,7 @@
                       {#if disableReasons[index]}
                         <span>{disableReasons[index]}</span>
                       {:else}
-                        <button on:click={selectPlayer}
+                        <button on:click={() => selectPlayer(player)}
                           class="text-xl rounded fpl-button flex items-center">
                           <AddIcon className="w-6 h-6 p-2" />
                         </button>
@@ -285,11 +240,8 @@
         <div class="justify-center mt-4 pb-4 overflow-x-auto">
           <div class="flex space-x-1 min-w-max">
             {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
-              <button
-                class:active={index + 1 === currentPage}
-                class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600"
-                on:click={() => goToPage(index + 1)}
-              >
+              <button class:active={index + 1 === currentPage} class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600" 
+              on:click={() => goToPage(index + 1)}>
                 {index + 1}
               </button>
             {/each}
@@ -297,10 +249,7 @@
         </div>
 
         <div class="flex justify-end mt-4">
-          <button
-            on:click={closeAddPlayerModal}
-            class="px-4 py-2 fpl-purple-btn rounded-md text-white">Close</button
-          >
+          <button on:click={closeAddPlayerModal} class="px-4 py-2 fpl-purple-btn rounded-md text-white">Close</button>
         </div>
       </div>
     </div>
