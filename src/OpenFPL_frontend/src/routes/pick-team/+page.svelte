@@ -314,8 +314,7 @@
   {#if isLoading}
     <LoadingIcon {progress} />
   {:else}
-    <AddPlayerModal {handlePlayerSelection} filterPosition={selectedPosition} {showAddPlayer} {closeAddPlayerModal}   fantasyTeam={get(fantasyTeam)}
-    />
+      <AddPlayerModal {handlePlayerSelection} filterPosition={selectedPosition} {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} />
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
         <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">

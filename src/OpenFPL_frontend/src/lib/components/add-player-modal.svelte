@@ -7,11 +7,13 @@
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import { writable, get } from 'svelte/store';
 
   export let showAddPlayer: boolean;
   export let closeAddPlayerModal: () => void;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
-  export let fantasyTeam: FantasyTeam | null;
+  export let fantasyTeam = writable<FantasyTeam | null>(null);
+
   export let filterPosition = -1;
 
   let players: any[] = [];
@@ -25,6 +27,7 @@
   let isLoading = true;
   let progress = 0;
   const pageSize = 10;
+  
   let teamPlayerCounts: Record<number, number> = {};
   let disableReasons: (string | null)[];
 
@@ -46,14 +49,16 @@
     const teamCount = teamPlayerCounts[player.teamId] || 0;
     if (teamCount >= 2) return "Max 2 Per Team";
 
-    const canAfford = fantasyTeam!.bankBalance >= player.value;
+    let team = get(fantasyTeam);
+
+    const canAfford = team && team.bankBalance >= player.value;
     if (!canAfford) return "Over Budget";
     
-    if (fantasyTeam!.playerIds.includes(player.id)) return "Already in Team";
+    if (team && team.playerIds.includes(player.id)) return "Already in Team";
 
     const positionCounts: { [key: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
-    fantasyTeam!.playerIds.forEach(id => {
+    team && team.playerIds.forEach(id => {
       const teamPlayer = players.find(p => p.id === id);
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
@@ -129,7 +134,8 @@
     teams = await teamsService.getTeams();
     players = addTeamDataToPlayers(players, teams);
     isLoading = false;
-    teamPlayerCounts = countPlayersByTeam(fantasyTeam!.playerIds);
+    let team = get(fantasyTeam);
+    teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
   });
   
 </script>
@@ -186,7 +192,7 @@
           </div>
 
           <div class="mb-4">
-            <label for="filterSurname" class="font-bold">Available Balance: £{(Number(fantasyTeam?.bankBalance) / 4).toFixed(2)}m</label>
+            <label for="filterSurname" class="font-bold">Available Balance: £{(Number(get(fantasyTeam)?.bankBalance) / 4).toFixed(2)}m</label>
           </div>
         </div>
 
