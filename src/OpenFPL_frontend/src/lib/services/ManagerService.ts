@@ -71,7 +71,6 @@ export class ManagerService {
     try {
       const identityActor = await this.actorFromIdentity();
       const fantasyTeam = await identityActor.getFantasyTeam();
-      console.log(fantasyTeam);
       return fantasyTeam;
     } catch (error) {
       console.error("Error fetching fantasy team:", error);

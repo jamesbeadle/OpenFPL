@@ -11,7 +11,7 @@
   export let showAddPlayer: boolean;
   export let closeAddPlayerModal: () => void;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
-  export let fantasyTeam: FantasyTeam;
+  export let fantasyTeam: FantasyTeam | null;
   export let filterPosition = -1;
 
   let players: any[] = [];
@@ -46,14 +46,14 @@
     const teamCount = teamPlayerCounts[player.teamId] || 0;
     if (teamCount >= 2) return "Max 2 Per Team";
 
-    const canAfford = fantasyTeam.bankBalance >= player.value;
+    const canAfford = fantasyTeam!.bankBalance >= player.value;
     if (!canAfford) return "Over Budget";
     
-    if (fantasyTeam.playerIds.includes(player.id)) return "Already in Team";
+    if (fantasyTeam!.playerIds.includes(player.id)) return "Already in Team";
 
     const positionCounts: { [key: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
-    fantasyTeam.playerIds.forEach(id => {
+    fantasyTeam!.playerIds.forEach(id => {
       const teamPlayer = players.find(p => p.id === id);
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
@@ -129,7 +129,7 @@
     teams = await teamsService.getTeams();
     players = addTeamDataToPlayers(players, teams);
     isLoading = false;
-    teamPlayerCounts = countPlayersByTeam(fantasyTeam.playerIds);
+    teamPlayerCounts = countPlayersByTeam(fantasyTeam!.playerIds);
   });
   
 </script>
@@ -186,7 +186,7 @@
           </div>
 
           <div class="mb-4">
-            <label for="filterSurname" class="font-bold">Available Balance: £{(Number(fantasyTeam.bankBalance) / 4).toFixed(2)}m</label>
+            <label for="filterSurname" class="font-bold">Available Balance: £{(Number(fantasyTeam?.bankBalance) / 4).toFixed(2)}m</label>
           </div>
         </div>
 
