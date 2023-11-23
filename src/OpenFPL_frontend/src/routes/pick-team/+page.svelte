@@ -21,12 +21,14 @@
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BonusPanel from "$lib/components/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/add-player-modal.svelte";
-    import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+  import { PlayerService } from "$lib/services/PlayerService";
 
   const systemService = new SystemService();
   const teamService = new TeamService();
   const fixtureService = new FixtureService();
   const managerService = new ManagerService();
+  const playerService = new PlayerService();
 
   let activeGameweek = -1;
   let activeSeason = "-";
@@ -53,12 +55,14 @@
   let showAddPlayer = false;
   let fantasyTeam: FantasyTeam;
   let selectedPosition = -1;
+  let players: PlayerDTO[];
   $: gridSetup = getGridSetup(selectedFormation);
 
   onMount(async () => {
     await systemService.updateSystemStateData();
     await fixtureService.updateFixturesData();
     await teamService.updateTeamsData();
+    await playerService.updatePlayersData();
 
     isLoading = true;
     try {
@@ -90,6 +94,9 @@
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
+
+      progress = 80;
+      players = await playerService.getPlayers();
 
       progress = 100;
       isLoading = false;
@@ -129,18 +136,67 @@
     showAddPlayer = false;
   }
 
-  
   function handlePlayerSelection(player: PlayerDTO) {
-    console.log("adding player")
-    console.log(player)
     // Add player to fantasyTeam
     // Update formation based on player's position
-    // Validate and adjust available formations
+    if (canAddPlayerToCurrentFormation(player, fantasyTeam, selectedFormation)) {
+      addPlayerToTeam(player, fantasyTeam, selectedFormation);
+    } else {
+      const newFormation = findValidFormationWithPlayer(fantasyTeam, player);
+      repositionPlayersForNewFormation(fantasyTeam, newFormation);
+      selectedFormation = newFormation;
+      addPlayerToTeam(player, fantasyTeam, newFormation);
+    }
+
+    // Validate and adjust available formations based on the current team
     // Update shirt icon
     // Update header values
     // Adjust transfersAvailable based on the change
     // Adjust bank baolance based on the change
   }
+
+  function canAddPlayerToCurrentFormation(player: PlayerDTO, team: FantasyTeam, formation: string): boolean {
+    const positionCounts: { [key: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
+    team.playerIds.forEach(id => {
+      const teamPlayer = players.find(p => p.id === id);
+      if (teamPlayer) {
+        positionCounts[teamPlayer.position]++;
+      }
+    });
+
+    positionCounts[player.position]++;
+
+    const [def, mid, fwd] = formation.split('-').map(Number);
+    const minDef = Math.max(0, def - (positionCounts[1] || 0));
+    const minMid = Math.max(0, mid - (positionCounts[2] || 0));
+    const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
+    const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
+
+    const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
+    const totalPlayers = Object.values(positionCounts).reduce((a, b) => a + b, 0);
+
+    return totalPlayers + additionalPlayersNeeded <= 11;
+  }
+
+
+  function addPlayerToTeam(player: PlayerDTO, team: FantasyTeam, formation: string) {
+    // Logic to add player to the correct position in fantasyTeam.playerIds
+    // This involves finding the next available position for the player's role
+  }
+
+  function findValidFormationWithPlayer(team: FantasyTeam, player: PlayerDTO): string {
+    // Logic to find a new formation that can accommodate the new player
+    // This might involve checking other players' positions and available formations
+    return "3-5-2"; // Example, return a new valid formation
+  }
+
+  function repositionPlayersForNewFormation(team: FantasyTeam, newFormation: string) {
+    // Logic to reposition players in the fantasyTeam.playerIds array
+    // This might involve moving players around to fit the new formation
+    // Ensure that the integrity of player positions is maintained
+  }
+
+  
 
   function updateFormation(newFormation: string) {
     if (isValidFormation(newFormation, fantasyTeam)) {
