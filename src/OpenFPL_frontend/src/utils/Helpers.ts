@@ -91,7 +91,9 @@ export function calculateAgeFromNanoseconds(nanoseconds: number) {
 
 import type { TeamStats } from "$lib/types/TeamStats";
 import * as FlagIcons from "svelte-flag-icons";
-import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { FantasyTeam, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { PlayerService } from "$lib/services/PlayerService";
+import type { PlayerDTO } from "../../../declarations/player_canister/player_canister.did";
 export function getFlagComponent(countryCode: string) {
   switch (countryCode) {
     case "Albania":
@@ -308,4 +310,42 @@ function initTeamData(
       };
     }
   }
+}
+
+export async function isFormationValid(availableFormations: string[], fantasyTeam: FantasyTeam) : boolean{
+
+  const counts = {0: 0, 1: 0, 2: 0, 3: 0};
+  let playerService = new PlayerService();
+  await playerService.updatePlayersData();
+  let players = await playerService.getPlayers();
+    let playersWithPlayer = fantasyTeam.playerIds.map((playerId) => {
+      const player: PlayerDTO = players.find((t) => t.id === player.teamId);
+      return { ...player, team };
+    });
+
+    Object.values(fantasyTeam.players || {}).forEach(p => {
+      counts[p.position]++;
+    });
+
+  const tempCounts = { ...counts, [player.position]: counts[player.position] + 1 };
+    const totalPlayers = Object.values(tempCounts).reduce((a, b) => a + (b || 0), 0);
+    const maxTeamSize = 11;
+
+  return availableFormations.some(formation => {
+    const [def, mid, fwd] = formation.split('-').map(Number);
+    const minDef = Math.max(0, def - (tempCounts[1] || 0));
+    const minMid = Math.max(0, mid - (tempCounts[2] || 0));
+    const minFwd = Math.max(0, fwd - (tempCounts[3] || 0));
+    const minGK = Math.max(0, 1 - (tempCounts[0] || 0)); 
+
+    const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
+
+    return totalPlayers + additionalPlayersNeeded <= maxTeamSize;
+  });
+
+  if (!isFormationValid) {
+    return "Invalid Formation";
+  }
+
+  return "Valid";
 }

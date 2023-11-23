@@ -38,6 +38,7 @@
     players = addTeamDataToPlayers(players, teams);
     isLoading = false;
     teamPlayerCounts = countPlayersByTeam(fantasyTeam.playerIds);
+    fantasyTeam.bankBalance = 200n;
   });
 
   function countPlayersByTeam(playerIds: Uint16Array | number[]) {
@@ -54,11 +55,45 @@
     return counts;
   }
 
-  function shouldDisableButton(player: PlayerDTO) {
+  function reasonToDisablePlayer(player: PlayerDTO): string | null {
     const teamCount = teamPlayerCounts[player.teamId] || 0;
+    if (teamCount >= 2) return "Max 2 Per Team";
+
     const canAfford = fantasyTeam.bankBalance >= player.value;
-    return teamCount >= 2 || !canAfford;
+    if (!canAfford) return "Over Budget";
+    
+    if (fantasyTeam.playerIds.includes(player.id)) return "Already in Team";
+
+    const positionCounts: { [key: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
+
+    fantasyTeam.playerIds.forEach(id => {
+      const teamPlayer = players.find(p => p.id === id);
+      if (teamPlayer) {
+        positionCounts[teamPlayer.position]++;
+      }
+    });
+
+    positionCounts[player.position]++;
+
+    const formations = ["3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-4-1", "5-3-2"];
+    const isFormationValid = formations.some(formation => {
+      const [def, mid, fwd] = formation.split('-').map(Number);
+      const minDef = Math.max(0, def - (positionCounts[1] || 0));
+      const minMid = Math.max(0, mid - (positionCounts[2] || 0));
+      const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
+      const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
+
+      const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
+      const totalPlayers = Object.values(positionCounts).reduce((a, b) => a + b, 0);
+
+      return totalPlayers + additionalPlayersNeeded <= 11;
+    });
+
+    if (!isFormationValid) return "Invalid Formation";
+
+    return null;
   }
+
 
   $: filteredPlayers = players.filter((player) => {
     return (
@@ -85,6 +120,11 @@
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
+
+  let disableReasons: (string | null)[];
+
+  $: disableReasons = paginatedPlayers.map(player => reasonToDisablePlayer(player));
+
 
   $: {
     if (filterTeam || filterPosition || minValue || maxValue || filterSurname) {
@@ -206,7 +246,7 @@
               </tr>
             </thead>
             <tbody>
-              {#each paginatedPlayers as player}
+              {#each paginatedPlayers as player, index}
                 <tr>
                   {#if player.position === 0}<td class="p-2">GK</td>{/if}
                   {#if player.position === 1}<td class="p-2">DF</td>{/if}
@@ -226,8 +266,8 @@
                   <td class="p-2">{player.totalPoints}</td>
                   <td class="p-2">
                     <div class="w-1/6 flex items-center">
-                      {#if shouldDisableButton(player)}
-                        <span>Not Eligible</span>
+                      {#if disableReasons[index]}
+                        <span>{disableReasons[index]}</span>
                       {:else}
                         <button on:click={selectPlayer}
                           class="text-xl rounded fpl-button flex items-center">
