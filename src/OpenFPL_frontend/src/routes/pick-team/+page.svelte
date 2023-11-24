@@ -304,6 +304,26 @@
     return startIndex + colIndex;
   }
 
+  function removePlayer(playerId: number) {
+    selectedPosition = -1;
+    selectedColumn = -1;
+    fantasyTeam.update(currentTeam => {
+      if (!currentTeam) return null;
+
+      const playerIndex = currentTeam.playerIds.indexOf(playerId);
+      if (playerIndex === -1) {
+        console.error('Player not found in the team.');
+        return currentTeam;
+      }
+
+      const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
+      newPlayerIds[playerIndex] = 0;
+
+      return { ...currentTeam, playerIds: newPlayerIds };
+    });
+  }
+
+
 
 </script>
 
@@ -451,7 +471,7 @@
                                 
                                 <div class="flex justify-center items-center">
                                   <div class="flex justify-between items-end w-full">
-                                    <button class="bg-red-600 mb-1 rounded-sm">
+                                    <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
                                       <RemovePlayerIcon className="w-5 h-5 p-1" />
                                     </button>
                                     <div class="flex justify-center items-center flex-grow">
