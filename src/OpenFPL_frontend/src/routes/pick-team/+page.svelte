@@ -444,33 +444,41 @@
                         <div class="flex flex-col justify-center items-center flex-1">
                             {#if playerId > 0 && player}
                               {@const team = teams.find(x => x.id == player.teamId)}
-                              <div class="mt-5 md:mt-12 mb-5 md:mb-12 flex flex-col items-center">
-                                <ShirtIcon className="h-12"
+                              <div class="mt-5 md:mt-12 mb-5 md:mb-12 flex flex-col items-center text-center">
+                                <ShirtIcon className="h-16"
                                   primaryColour={team?.primaryColourHex}
                                   secondaryColour={team?.secondaryColourHex}
                                   thirdColour={team?.thirdColourHex}
                                 />
                                 <div class="flex flex-col justify-center items-center">
-                                  <p class="flex justify-center items-center">
-                                    <svelte:component this={getFlagComponent(player.nationality)} class="h-4 w-4 mr-2"/> 
-                                    {player.firstName.length > 2 ? player.firstName.substring(0,1) + '.' : ''} {player.lastName}
-                                    <span class="text-xs ml-2">({getPositionAbbreviation(player.position)})</span>
-                                  </p>
-                                  <p class="flex justify-center items-center">
-                                    {team?.abbreviatedName}
-                                    <BadgeIcon className="h-4 w-4 mr-2 ml-2"
+                                  <div class="flex justify-center items-center bg-gray-700 px-2 py-1 rounded-t-md min-w-[170px]">
+                                    <p class="min-w-[40px] text-sm">
+                                      {getPositionAbbreviation(player.position)}
+                                    </p>
+                                    <svelte:component this={getFlagComponent(player.nationality)} class="h-4 w-4 ml-2 mr-2 min-w-[30px]"/> 
+                                    <p class="truncate min-w-[100px] max-w-[100px] text-sm">
+                                      {player.firstName.length > 2 ? player.firstName.substring(0,1) + '.' : ''} {player.lastName}
+                                    </p>
+                                   
+                                  </div>
+                                  <div class="flex justify-center items-center bg-white text-black px-2 py-1 rounded-b-md min-w-[170px]">
+                                    <p class="min-w-[40px] text-sm">
+                                      {team?.abbreviatedName}
+                                    </p>
+                                    <BadgeIcon className="h-4 w-4 mr-2 ml-2 min-w-[30px]"
                                       primaryColour={team?.primaryColourHex}
                                       secondaryColour={team?.secondaryColourHex}
                                       thirdColour={team?.thirdColourHex}  />
-                                    £{(Number(player.value) / 2).toFixed(2)}m
-                                  </p>
+                                    <p class="truncate min-w-[100px] max-w-[100px] text-sm">
+                                      £{(Number(player.value) / 2).toFixed(2)}m
+                                    </p>
+                                  </div>
                                 </div>
-                                
                               </div>
                             {:else}
-                                <button on:click={() => loadAddPlayer(rowIndex, colIndex)}>
-                                    <AddPlayerIcon className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16" />
-                                </button>
+                              <button on:click={() => loadAddPlayer(rowIndex, colIndex)}>
+                                  <AddPlayerIcon className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-24" />
+                              </button>
                             {/if}
                         </div>
                     {/each}
