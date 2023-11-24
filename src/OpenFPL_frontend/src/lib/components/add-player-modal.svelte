@@ -31,7 +31,6 @@
   const pageSize = 10;
   
   $: filteredPlayers = players.filter((player) => {
-    console.log(filterColumn)
     return (
       (filterTeam === -1 || player.teamId === filterTeam) &&
       (filterPosition === -1 || player.position === filterPosition) &&
@@ -74,8 +73,6 @@
 
   function reasonToDisablePlayer(player: PlayerDTO): string | null {
     const teamCount = teamPlayerCounts[player.teamId] || 0;
-    console.log("teamCount" + player.teamId)
-    console.log(teamCount)
     if (teamCount >= 2) return "Max 2 Per Team";
 
     let team = get(fantasyTeam);

@@ -10,13 +10,16 @@
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
+  import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import { ManagerService } from "$lib/services/ManagerService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { PlayerService } from "$lib/services/PlayerService";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../../utils/Helpers";
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime, getPositionAbbreviation } from "../../utils/Helpers";
+  import { getFlagComponent } from "../../utils/Helpers";
+    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   
   const systemService = new SystemService();
   const teamService = new TeamService();
@@ -58,6 +61,7 @@
   let showAddPlayer = false;
   const fantasyTeam = writable<FantasyTeam | null>(null);
 
+  let teams: Team[];
   let players: PlayerDTO[];
   $: gridSetup = getGridSetup(selectedFormation);
 
@@ -78,6 +82,8 @@
       progress = 40;
 
       let nextFixture = await fixtureService.getNextFixture();
+
+      teams = await teamService.getTeams();
 
       nextFixtureHomeTeam = await teamService.getTeamById(
         nextFixture.homeTeamId
@@ -290,10 +296,6 @@
 
     team.playerIds = newPlayerIds;
   }
-  
-  function isValidFormation(formation: string, team: FantasyTeam): boolean {
-    return false;
-  }
 
   function getActualIndex(rowIndex: number, colIndex: number): number {
     let startIndex = gridSetup.slice(0, rowIndex).reduce((sum, currentRow) => sum + currentRow.length, 0);
@@ -441,7 +443,30 @@
                         {@const player = players.find(p => p.id === playerId)}
                         <div class="flex flex-col justify-center items-center flex-1">
                             {#if playerId > 0 && player}
-                                <h1>{player.lastName}</h1>
+                              {@const team = teams.find(x => x.id == player.teamId)}
+                              <div class="mt-5 md:mt-12 mb-5 md:mb-12 flex flex-col items-center">
+                                <ShirtIcon className="h-12"
+                                  primaryColour={team?.primaryColourHex}
+                                  secondaryColour={team?.secondaryColourHex}
+                                  thirdColour={team?.thirdColourHex}
+                                />
+                                <div class="flex flex-col justify-center items-center">
+                                  <p class="flex justify-center items-center">
+                                    <svelte:component this={getFlagComponent(player.nationality)} class="h-4 w-4 mr-2"/> 
+                                    {player.firstName.length > 2 ? player.firstName.substring(0,1) + '.' : ''} {player.lastName}
+                                    <span class="text-xs ml-2">({getPositionAbbreviation(player.position)})</span>
+                                  </p>
+                                  <p class="flex justify-center items-center">
+                                    {team?.abbreviatedName}
+                                    <BadgeIcon className="h-4 w-4 mr-2 ml-2"
+                                      primaryColour={team?.primaryColourHex}
+                                      secondaryColour={team?.secondaryColourHex}
+                                      thirdColour={team?.thirdColourHex}  />
+                                    £{(Number(player.value) / 2).toFixed(2)}m
+                                  </p>
+                                </div>
+                                
+                              </div>
                             {:else}
                                 <button on:click={() => loadAddPlayer(rowIndex, colIndex)}>
                                     <AddPlayerIcon className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16" />
