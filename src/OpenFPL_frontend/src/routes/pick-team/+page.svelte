@@ -20,6 +20,8 @@
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime, getPositionAbbreviation } from "../../utils/Helpers";
   import { getFlagComponent } from "../../utils/Helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+    import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
+    import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   
   const systemService = new SystemService();
   const teamService = new TeamService();
@@ -444,32 +446,47 @@
                         <div class="flex flex-col justify-center items-center flex-1">
                             {#if playerId > 0 && player}
                               {@const team = teams.find(x => x.id == player.teamId)}
-                              <div class="mt-5 md:mt-12 mb-5 md:mb-12 flex flex-col items-center text-center">
-                                <ShirtIcon className="h-16"
-                                  primaryColour={team?.primaryColourHex}
-                                  secondaryColour={team?.secondaryColourHex}
-                                  thirdColour={team?.thirdColourHex}
-                                />
-                                <div class="flex flex-col justify-center items-center">
-                                  <div class="flex justify-center items-center bg-gray-700 px-2 py-1 rounded-t-md min-w-[170px]">
-                                    <p class="min-w-[40px] text-sm">
+                              <div class="mt-2 mb-2 md:mb-12 flex flex-col items-center text-center">
+                                
+                                
+                                <div class="flex justify-center items-center">
+                                  <div class="flex justify-between items-end w-full">
+                                    <button class="bg-red-600 mb-1 rounded-sm">
+                                      <RemovePlayerIcon className="w-5 h-5 p-1" />
+                                    </button>
+                                    <div class="flex justify-center items-center flex-grow">
+                                        <ShirtIcon className="h-16"
+                                        primaryColour={team?.primaryColourHex}
+                                        secondaryColour={team?.secondaryColourHex}
+                                        thirdColour={team?.thirdColourHex}
+                                        />
+                                    </div>
+                                    <button class="mb-1 rounded-sm">
+                                      <PlayerCaptainIcon className="w-6 h-6" />
+                                    </button>
+                                </div>
+                                
+                                </div>
+                                <div class="flex flex-col justify-center items-center text-xs">
+                                  <div class="flex justify-center items-center bg-gray-700 px-2 py-1 rounded-t-md min-w-[100px]">
+                                    <p class="min-w-[20px]">
                                       {getPositionAbbreviation(player.position)}
                                     </p>
-                                    <svelte:component this={getFlagComponent(player.nationality)} class="h-4 w-4 ml-2 mr-2 min-w-[30px]"/> 
-                                    <p class="truncate min-w-[100px] max-w-[100px] text-sm">
+                                    <svelte:component this={getFlagComponent(player.nationality)} class="h-4 w-4 ml-2 mr-2 min-w-[15px]"/> 
+                                    <p class="truncate min-w-[60px] max-w-[60px]">
                                       {player.firstName.length > 2 ? player.firstName.substring(0,1) + '.' : ''} {player.lastName}
                                     </p>
                                    
                                   </div>
-                                  <div class="flex justify-center items-center bg-white text-black px-2 py-1 rounded-b-md min-w-[170px]">
-                                    <p class="min-w-[40px] text-sm">
+                                  <div class="flex justify-center items-center bg-white text-black px-2 py-1 rounded-b-md min-w-[100px]">
+                                    <p class="min-w-[20px]">
                                       {team?.abbreviatedName}
                                     </p>
-                                    <BadgeIcon className="h-4 w-4 mr-2 ml-2 min-w-[30px]"
+                                    <BadgeIcon className="h-4 w-4 mr-2 ml-2 min-w-[15px]"
                                       primaryColour={team?.primaryColourHex}
                                       secondaryColour={team?.secondaryColourHex}
                                       thirdColour={team?.thirdColourHex}  />
-                                    <p class="truncate min-w-[100px] max-w-[100px] text-sm">
+                                    <p class="truncate min-w-[60px] max-w-[60px]">
                                       £{(Number(player.value) / 2).toFixed(2)}m
                                     </p>
                                   </div>
@@ -477,7 +494,7 @@
                               </div>
                             {:else}
                               <button on:click={() => loadAddPlayer(rowIndex, colIndex)}>
-                                  <AddPlayerIcon className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-24" />
+                                  <AddPlayerIcon className="h-12 md:h-16 mt-2 mb-2 md:mb-24" />
                               </button>
                             {/if}
                         </div>
