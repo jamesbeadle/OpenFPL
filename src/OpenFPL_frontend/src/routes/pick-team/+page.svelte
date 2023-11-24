@@ -51,6 +51,7 @@
   let nextFixtureAwayTeam: Team | undefined = undefined;
   let selectedFormation: Formation = "4-4-2";
   let selectedPosition = -1;
+  let selectedColumn = -1;
   let progress = 0;
   let isLoading = true;
   let pitchView = true;
@@ -139,8 +140,9 @@
     pitchView = false;
   }
 
-  function loadAddPlayer(row: number) {
+  function loadAddPlayer(row: number, col: number) {
     selectedPosition = row;
+    selectedColumn = col;
     showAddPlayer = true;
   }
 
@@ -179,7 +181,7 @@
     });
 
     positionCounts[player.position]++;
-
+    
     const [def, mid, fwd] = formation.split('-').map(Number);
     const minDef = Math.max(0, def - (positionCounts[1] || 0));
     const minMid = Math.max(0, mid - (positionCounts[2] || 0));
@@ -203,12 +205,10 @@
     fantasyTeam.update(currentTeam => {
         if (!currentTeam) return null;
 
-        // Creating a new Uint16Array to trigger reactivity
         const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
         if (indexToAdd < newPlayerIds.length) {
             newPlayerIds[indexToAdd] = player.id;
 
-            // Return a new object to trigger reactivity
             return { ...currentTeam, playerIds: newPlayerIds };
         } else {
             console.error('Index out of bounds when attempting to add player to team.');
@@ -314,7 +314,7 @@
   {#if isLoading}
     <LoadingIcon {progress} />
   {:else}
-      <AddPlayerModal {handlePlayerSelection} filterPosition={selectedPosition} {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} />
+    <AddPlayerModal {handlePlayerSelection} filterPosition={selectedPosition} filterColumn={selectedColumn} {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} />
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
         <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
@@ -443,7 +443,7 @@
                             {#if playerId > 0 && player}
                                 <h1>{player.lastName}</h1>
                             {:else}
-                                <button on:click={() => loadAddPlayer(rowIndex)}>
+                                <button on:click={() => loadAddPlayer(rowIndex, colIndex)}>
                                     <AddPlayerIcon className="h-12 md:h-16 mt-5 md:mt-12 mb-5 md:mb-16" />
                                 </button>
                             {/if}
@@ -500,7 +500,7 @@
                     <div class="w-1/3">-</div>
                     <div class="w-1/6">-</div>
                     <div class="w-1/6 flex items-center">
-                      <button on:click={() => loadAddPlayer(rowIndex)} class="text-xl rounded fpl-button flex items-center">
+                      <button on:click={() => loadAddPlayer(rowIndex, colIndex)} class="text-xl rounded fpl-button flex items-center">
                         <AddIcon className="w-6 h-6 p-2" />
                       </button>
                     </div>

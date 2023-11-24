@@ -1,35 +1,62 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { writable, get } from 'svelte/store';
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import { PlayerService } from "$lib/services/PlayerService";
   import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
+  import { PlayerService } from "$lib/services/PlayerService";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { writable, get } from 'svelte/store';
-
+  
   export let showAddPlayer: boolean;
   export let closeAddPlayerModal: () => void;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
   export let fantasyTeam = writable<FantasyTeam | null>(null);
 
   export let filterPosition = -1;
+  export let filterColumn = -1;
 
   let players: any[] = [];
   let teams: Team[] = [];
 
   let filterTeam = -1;
+  let filterSurname = "";
   let minValue = 0;
   let maxValue = 0;
-  let filterSurname = "";
+  
   let currentPage = 1;
   let isLoading = true;
   let progress = 0;
   const pageSize = 10;
   
-  let teamPlayerCounts: Record<number, number> = {};
-  let disableReasons: (string | null)[];
+  $: filteredPlayers = players.filter((player) => {
+    console.log(filterColumn)
+    return (
+      (filterTeam === -1 || player.teamId === filterTeam) &&
+      (filterPosition === -1 || player.position === filterPosition) &&
+      (filterColumn > -2) &&
+      (minValue === 0 || player.value >= minValue) &&
+      (maxValue === 0 || player.value <= maxValue) &&
+      (filterSurname === "" ||
+        player.lastName.toLowerCase().includes(filterSurname.toLowerCase()))
+    );
+  });
+
+  $: paginatedPlayers = filteredPlayers.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  $: teamPlayerCounts = countPlayersByTeam(get(fantasyTeam)?.playerIds ?? []);
+  $: disableReasons = paginatedPlayers.map(player => reasonToDisablePlayer(player));
+
+  $: {
+    if (filterTeam || filterPosition|| filterColumn || minValue || maxValue || filterSurname) {
+      teamPlayerCounts = countPlayersByTeam(get(fantasyTeam)?.playerIds ?? []);
+      currentPage = 1;
+    }
+  }
 
   function countPlayersByTeam(playerIds: Uint16Array | number[]) {
     const counts: Record<number, number> = {};
@@ -47,6 +74,8 @@
 
   function reasonToDisablePlayer(player: PlayerDTO): string | null {
     const teamCount = teamPlayerCounts[player.teamId] || 0;
+    console.log("teamCount" + player.teamId)
+    console.log(teamCount)
     if (teamCount >= 2) return "Max 2 Per Team";
 
     let team = get(fantasyTeam);
@@ -100,30 +129,7 @@
   function selectPlayer(player: PlayerDTO) {
     handlePlayerSelection(player);
     closeAddPlayerModal();
-  }
-
-  $: filteredPlayers = players.filter((player) => {
-    return (
-      (filterTeam === -1 || player.teamId === filterTeam) &&
-      (filterPosition === -1 || player.position === filterPosition) &&
-      (minValue === 0 || player.value >= minValue) &&
-      (maxValue === 0 || player.value <= maxValue) &&
-      (filterSurname === "" ||
-        player.lastName.toLowerCase().includes(filterSurname.toLowerCase()))
-    );
-  });
-
-  $: paginatedPlayers = filteredPlayers.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  $: disableReasons = paginatedPlayers.map(player => reasonToDisablePlayer(player));
-
-  $: {
-    if (filterTeam || filterPosition || minValue || maxValue || filterSurname) {
-      currentPage = 1;
-    }
+    filteredPlayers = []; //test
   }
 
   onMount(async () => {
