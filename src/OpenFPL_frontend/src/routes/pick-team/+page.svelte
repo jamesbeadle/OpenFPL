@@ -125,7 +125,7 @@
         }
         return currentTeam;
       });
-
+      
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture.kickOff));
 
@@ -231,10 +231,9 @@
         console.error('No available position to add the player.');
         return;
     }
-
+    
     fantasyTeam.update(currentTeam => {
         if (!currentTeam) return null;
-
         const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
         if (indexToAdd < newPlayerIds.length) {
             newPlayerIds[indexToAdd] = player.id;
@@ -244,8 +243,9 @@
             return currentTeam;
         }
     });
-  }
 
+    updateCaptainIfNeeded(get(fantasyTeam)!);
+  }
 
   function getAvailablePositionIndex(position: number, team: FantasyTeam, formation: string): number {
     const formationArray = formations[formation].positions;
@@ -357,6 +357,8 @@
 
       return { ...currentTeam, playerIds: newPlayerIds };
     });
+    
+    updateCaptainIfNeeded(get(fantasyTeam)!);
   }
 
   function setCaptain(playerId: number) {
@@ -366,6 +368,28 @@
       if (!currentTeam) return null;
       return { ...currentTeam, captainId: playerId };
     });
+  }
+
+  function updateCaptainIfNeeded(currentTeam: FantasyTeam) {
+    if (!currentTeam.captainId || currentTeam.captainId == 0 || !currentTeam.playerIds.includes(currentTeam.captainId)) {
+      const newCaptainId = getHighestValuedPlayerId(currentTeam);
+      setCaptain(newCaptainId);
+    }
+  }
+
+  function getHighestValuedPlayerId(team: FantasyTeam): number {
+    let highestValue = 0;
+    let highestValuedPlayerId = 0;
+
+    team.playerIds.forEach(playerId => {
+      const player = players.find(p => p.id === playerId);
+      if (player && Number(player.value) > highestValue) {
+        highestValue = Number(player.value);
+        highestValuedPlayerId = playerId;
+      }
+    });
+
+    return highestValuedPlayerId;
   }
 
   function disableInvalidFormations() {
