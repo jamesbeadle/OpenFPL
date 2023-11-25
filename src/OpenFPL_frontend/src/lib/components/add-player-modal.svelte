@@ -16,6 +16,7 @@
 
   export let filterPosition = -1;
   export let filterColumn = -1;
+  export let bankBalance = writable<number>(0);
 
   let players: any[] = [];
   let teams: Team[] = [];
@@ -77,7 +78,7 @@
 
     let team = get(fantasyTeam);
 
-    const canAfford = team && team.bankBalance >= player.value;
+    const canAfford = get(bankBalance) >= Number(player.value);
     if (!canAfford) return "Over Budget";
     
     if (team && team.playerIds.includes(player.id)) return "Selected";
@@ -195,7 +196,7 @@
           </div>
 
           <div class="mb-4">
-            <label for="filterSurname" class="font-bold">Available Balance: £{(Number(get(fantasyTeam)?.bankBalance) / 4).toFixed(2)}m</label>
+            <label for="bankBalance" class="font-bold">Available Balance: £{($bankBalance/4).toFixed(2)}m</label>
           </div>
         </div>
 

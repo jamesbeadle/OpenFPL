@@ -60,6 +60,7 @@
   let sessionAddedPlayers: number[] = [];
   const fantasyTeam = writable<FantasyTeam | null>(null);
   const transfersAvailable = writable(newTeam ? Infinity : 3);
+  const bankBalance = writable(1200);
 
 
   $: gridSetup = getGridSetup(selectedFormation);
@@ -111,6 +112,7 @@
       if(activeGameweek > 1 && principalId.length > 0){
         newTeam = false;
         transfersAvailable.set(userFantasyTeam.transfersAvailable);
+        bankBalance.set(userFantasyTeam.bankBalance);
       }
 
       fantasyTeam.update(currentTeam => {
@@ -188,6 +190,8 @@
       if (!newTeam && activeGameweek > 1) {
         transfersAvailable.update(n => n > 0 ? n - 1 : 0);
       }
+      bankBalance.update(n => n - Number(player.value) > 0 ? n - Number(player.value) : n);
+      
       if (!currentFantasyTeam.playerIds.includes(player.id)) {
         sessionAddedPlayers.push(player.id);
       }
@@ -348,6 +352,7 @@
         }
         sessionAddedPlayers = sessionAddedPlayers.filter(id => id !== playerId);
       }
+      bankBalance.update(n => n + Number(players.find(x => x.id == playerId)?.value) ?? 0);
 
       return { ...currentTeam, playerIds: newPlayerIds };
     });
@@ -390,7 +395,7 @@
   {#if isLoading}
     <LoadingIcon {progress} />
   {:else}
-    <AddPlayerModal {handlePlayerSelection} filterPosition={selectedPosition} filterColumn={selectedColumn} {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} />
+    <AddPlayerModal {handlePlayerSelection} filterPosition={selectedPosition} filterColumn={selectedColumn} {showAddPlayer} {closeAddPlayerModal} {fantasyTeam} {bankBalance} />
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
         <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
@@ -436,7 +441,7 @@
           <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Bank Balance</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">£{(Number($fantasyTeam?.bankBalance) / 4).toFixed(2)}m</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">£{($bankBalance / 4).toFixed(2)}m</p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
           <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
