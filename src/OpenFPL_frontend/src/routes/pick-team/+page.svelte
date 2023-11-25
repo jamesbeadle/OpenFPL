@@ -12,30 +12,20 @@
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import AddIcon from "$lib/icons/AddIcon.svelte";
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
+  import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import { ManagerService } from "$lib/services/ManagerService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { PlayerService } from "$lib/services/PlayerService";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime, getPositionAbbreviation } from "../../utils/Helpers";
-  import { getFlagComponent } from "../../utils/Helpers";
-    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
-    import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
+  import { getFlagComponent } from "../../utils/Helpers";  
   
-  const systemService = new SystemService();
-  const teamService = new TeamService();
-  const fixtureService = new FixtureService();
-  const managerService = new ManagerService();
-  const playerService = new PlayerService();
+  interface FormationDetails { positions: number[]; }
 
-  type Formation = "3-4-3" | "3-5-2" | "4-3-3" | "4-4-2" | "4-5-1" | "5-4-1" | "5-3-2";
-
-  interface FormationDetails {
-    positions: number[];
-  }
-
-  const formations: Record<Formation, FormationDetails> = {
+  const formations: Record<string, FormationDetails> = {
     "3-4-3": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3]},
     "3-5-2": { positions: [0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3]},
     "4-3-3": { positions: [0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]},
@@ -45,29 +35,38 @@
     "5-3-2": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3]}
   };
 
-  let activeGameweek = -1;
   let activeSeason = "-";
-  let countdownDays = "00";
-  let countdownHours = "00";
-  let countdownMinutes = "00";
+  let activeGameweek = -1;
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
   let nextFixtureHomeTeam: Team | undefined = undefined;
   let nextFixtureAwayTeam: Team | undefined = undefined;
-  let selectedFormation: Formation = "4-4-2";
+  let countdownDays = "00";
+  let countdownHours = "00";
+  let countdownMinutes = "00";
+  let selectedFormation: string = "4-4-2";
   let selectedPosition = -1;
   let selectedColumn = -1;
-  let progress = 0;
-  let isLoading = true;
   let pitchView = true;
   let showAddPlayer = false;
-  const fantasyTeam = writable<FantasyTeam | null>(null);
-
+  let progress = 0;
+  let isLoading = true;
+  
   let teams: Team[];
   let players: PlayerDTO[];
+  const fantasyTeam = writable<FantasyTeam | null>(null);
+
   $: gridSetup = getGridSetup(selectedFormation);
 
+  $: if ($fantasyTeam) { disableInvalidFormations(); }
+
   onMount(async () => {
+    const systemService = new SystemService();
+    const teamService = new TeamService();
+    const fixtureService = new FixtureService();
+    const managerService = new ManagerService();
+    const playerService = new PlayerService();
+
     await systemService.updateSystemStateData();
     await fixtureService.updateFixturesData();
     await teamService.updateTeamsData();
@@ -205,7 +204,7 @@
     return totalPlayers + additionalPlayersNeeded <= 11;
   }
 
-  function addPlayerToTeam(player: PlayerDTO, team: FantasyTeam, formation: Formation) {
+  function addPlayerToTeam(player: PlayerDTO, team: FantasyTeam, formation: string) {
     console.log("adding player to team")
     console.log(player)
     console.log(team)
@@ -234,7 +233,7 @@
   }
 
 
-  function getAvailablePositionIndex(position: number, team: FantasyTeam, formation: Formation): number {
+  function getAvailablePositionIndex(position: number, team: FantasyTeam, formation: string): number {
     const formationArray = formations[formation].positions;
     console.log(`Looking for position ${position} in formation ${formation}`);
     
@@ -251,7 +250,7 @@
     return -1;
   }
 
-  function findValidFormationWithPlayer(team: FantasyTeam, player: PlayerDTO): Formation {
+  function findValidFormationWithPlayer(team: FantasyTeam, player: PlayerDTO): string {
     const positionCounts: Record<number, number> = { 0: 1, 1: 0, 2: 0, 3: 0 };
 
     // Count current players in each position
@@ -265,10 +264,10 @@
     // Include the new player
     positionCounts[player.position]++;
 
-    let bestFitFormation: Formation | null = null;
+    let bestFitFormation: string | null = null;
     let minimumAdditionalPlayersNeeded = Number.MAX_SAFE_INTEGER;
 
-    for (const formation of Object.keys(formations) as Formation[]) {
+    for (const formation of Object.keys(formations) as string[]) {
       if (formation === selectedFormation) {
         continue;
       }
@@ -299,7 +298,7 @@
     return selectedFormation;
   }
 
-  function repositionPlayersForNewFormation(team: FantasyTeam, newFormation: Formation) {
+  function repositionPlayersForNewFormation(team: FantasyTeam, newFormation: string) {
     const newFormationArray = formations[newFormation].positions;
     
     let newPlayerIds: number[] = new Array(11).fill(0);
@@ -345,6 +344,10 @@
 
       return { ...currentTeam, playerIds: newPlayerIds };
     });
+  }
+
+  function disableInvalidFormations(){
+    
   }
 
 </script>

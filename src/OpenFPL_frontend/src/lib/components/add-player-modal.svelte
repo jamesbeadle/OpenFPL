@@ -80,7 +80,7 @@
     const canAfford = team && team.bankBalance >= player.value;
     if (!canAfford) return "Over Budget";
     
-    if (team && team.playerIds.includes(player.id)) return "Already in Team";
+    if (team && team.playerIds.includes(player.id)) return "Selected";
 
     const positionCounts: { [key: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
@@ -219,19 +219,22 @@
                   {#if player.position === 2}<td class="p-2">MF</td>{/if}
                   {#if player.position === 3}<td class="p-2">FW</td>{/if}
                   <td class="p-2">{player.firstName} {player.lastName}</td>
-                  <td class="p-2 flex items-center">
-                    <BadgeIcon className="w-6 h-6 mr-2"
+                  <td class="p-2">
+                    <p class="flex items-center">
+                      <BadgeIcon className="w-6 h-6 mr-2"
                       primaryColour={player.team?.primaryColourHex}
                       secondaryColour={player.team?.secondaryColourHex}
                       thirdColour={player.team?.thirdColourHex}
                     />
-                    {player.team?.abbreviatedName}</td>
+                    {player.team?.abbreviatedName}
+                    </p>
+                    </td>
                   <td class="p-2">£{(Number(player.value) / 4).toFixed(2)}m</td>
                   <td class="p-2">{player.totalPoints}</td>
                   <td class="p-2">
                     <div class="w-1/6 flex items-center">
                       {#if disableReasons[index]}
-                        <span>{disableReasons[index]}</span>
+                        <span class="text-xs">{disableReasons[index]}</span>
                       {:else}
                         <button on:click={() => selectPlayer(player)}
                           class="text-xl rounded fpl-button flex items-center">
