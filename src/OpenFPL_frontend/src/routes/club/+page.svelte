@@ -17,9 +17,9 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { PlayerService } from "$lib/services/PlayerService";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import { getPositionText } from "../../utils/Helpers";
+  import { getPositionText } from "../../lib/utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import { updateTableData } from "../../utils/Helpers";
+  import { updateTableData } from "../../lib/utils/Helpers";
 
   const fixtureService = new FixtureService();
   const teamService = new TeamService();

@@ -4,7 +4,7 @@ import type {
   SystemState,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../../utils/Helpers";
+import { replacer } from "../utils/Helpers";
 
 export class SystemService {
   private actor: any;

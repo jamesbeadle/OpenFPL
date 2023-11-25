@@ -5,7 +5,7 @@
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
-  import { formatUnixTimeToTime } from "../../utils/Helpers";
+  import { formatUnixTimeToTime } from "../utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   const fixtureService = new FixtureService();
   const teamService = new TeamService();

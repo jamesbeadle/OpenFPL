@@ -16,7 +16,7 @@
     formatUnixDateToReadable,
     formatUnixTimeToTime,
     getCountdownTime,
-  } from "../utils/Helpers";
+  } from "../lib/utils/Helpers";
   import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   const systemService = new SystemService();

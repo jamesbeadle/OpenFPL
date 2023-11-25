@@ -20,8 +20,8 @@
   import { ManagerService } from "$lib/services/ManagerService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { PlayerService } from "$lib/services/PlayerService";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime, getPositionAbbreviation } from "../../utils/Helpers";
-  import { getFlagComponent } from "../../utils/Helpers";  
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime, getPositionAbbreviation, getAvailableFormations } from "../../lib/utils/Helpers";
+  import { getFlagComponent } from "../../lib/utils/Helpers";  
   
   interface FormationDetails { positions: number[]; }
 
@@ -34,6 +34,7 @@
     "5-4-1": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3]},
     "5-3-2": { positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3]}
   };
+  const availableFormations = writable<string[]>(["3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-4-1", "5-3-2"]);
 
   let activeSeason = "-";
   let activeGameweek = -1;
@@ -58,7 +59,7 @@
 
   $: gridSetup = getGridSetup(selectedFormation);
 
-  $: if ($fantasyTeam) { disableInvalidFormations(); }
+  $: if (players && $fantasyTeam) { disableInvalidFormations(); }
 
   onMount(async () => {
     const systemService = new SystemService();
@@ -158,24 +159,20 @@
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
-    console.log(`adding player ${player}`)
     const currentFantasyTeam = get(fantasyTeam);
-    console.log(`current team ${currentFantasyTeam}`)
     if (currentFantasyTeam) {
       if (canAddPlayerToCurrentFormation(player, currentFantasyTeam, selectedFormation)) {
-        console.log(`adding player to existing formation ${selectedFormation}`)
         addPlayerToTeam(player, currentFantasyTeam, selectedFormation);
       } else {
         const newFormation = findValidFormationWithPlayer(currentFantasyTeam, player);
         repositionPlayersForNewFormation(currentFantasyTeam, newFormation);
         selectedFormation = newFormation;
-        console.log(`updating formation to ${selectedFormation}`)
         addPlayerToTeam(player, currentFantasyTeam, newFormation);
       }
     }
 
     // Validate and adjust available formations based on the current team
-    // Update shirt icon
+    
     // Update header values
     // Adjust transfersAvailable based on the change
     // Adjust bank baolance based on the change
@@ -205,13 +202,7 @@
   }
 
   function addPlayerToTeam(player: PlayerDTO, team: FantasyTeam, formation: string) {
-    console.log("adding player to team")
-    console.log(player)
-    console.log(team)
-    console.log(formation)
-    
-    const indexToAdd = getAvailablePositionIndex(player.position, team, formation);
-    console.log(indexToAdd)
+   const indexToAdd = getAvailablePositionIndex(player.position, team, formation);
     if (indexToAdd === -1) {
         console.error('No available position to add the player.');
         return;
@@ -235,18 +226,11 @@
 
   function getAvailablePositionIndex(position: number, team: FantasyTeam, formation: string): number {
     const formationArray = formations[formation].positions;
-    console.log(`Looking for position ${position} in formation ${formation}`);
-    
     for (let i = 0; i < formationArray.length; i++) {
-      console.log(`Checking position ${i}, which should be ${formationArray[i]}, current player ID: ${team.playerIds[i]}`);
-      
       if (formationArray[i] === position && team.playerIds[i] === 0) {
-        console.log(`Available position found at index ${i}`);
         return i;
       }
     }
-    
-    console.log('No available position found');
     return -1;
   }
 
@@ -346,9 +330,29 @@
     });
   }
 
-  function disableInvalidFormations(){
-    
+  function countPlayerPositions(players: PlayerDTO[], playerIds: number[] | Uint16Array): Record<number, number> {
+    const playerCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
+    playerIds.forEach(playerId => {
+      const player = players.find(p => p.id === playerId);
+      if (player) {
+        playerCounts[player.position]++;
+      }
+    });
+    return playerCounts;
   }
+
+  function disableInvalidFormations() {
+    const currentTeam = get(fantasyTeam);
+    if (!currentTeam || !currentTeam.playerIds) {
+      return;
+    }
+
+    const formations = getAvailableFormations(players, currentTeam);
+    availableFormations.set(formations);
+    console.log(get(availableFormations))
+  }
+
+
 
 </script>
 
@@ -434,9 +438,8 @@
 
           <div class="text-center md:text-left w-full mt-4 md:mt-0 md:ml-8 order-2">
             <span class="text-lg">Formation:
-              <select class="p-2 fpl-dropdown text-lg text-center"
-                bind:value={selectedFormation}>
-                {#each Object.keys(formations) as formation}
+              <select class="p-2 fpl-dropdown text-lg text-center" bind:value={selectedFormation}>
+                {#each $availableFormations as formation}
                   <option value={formation}>{formation}</option>
                 {/each}
               </select>

@@ -18,7 +18,7 @@
     getFlagComponent,
     getPositionText,
     updateTableData,
-  } from "../../utils/Helpers";
+  } from "../../lib/utils/Helpers";
   import type {
     Fixture,
     Season,

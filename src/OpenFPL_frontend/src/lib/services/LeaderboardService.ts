@@ -6,7 +6,7 @@ import type {
   PaginatedLeaderboard,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../../utils/Helpers";
+import { replacer } from "../utils/Helpers";
 import { SystemService } from "./SystemService";
 
 export class LeaderboardService {

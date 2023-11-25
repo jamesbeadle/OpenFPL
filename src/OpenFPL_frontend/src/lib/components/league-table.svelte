@@ -6,7 +6,7 @@
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import { updateTableData } from "../../utils/Helpers";
+  import { updateTableData } from "../utils/Helpers";
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
   const systemService = new SystemService();

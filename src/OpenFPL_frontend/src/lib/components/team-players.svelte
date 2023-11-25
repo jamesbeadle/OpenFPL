@@ -5,7 +5,7 @@
     calculateAgeFromNanoseconds,
     getFlagComponent,
     getPositionText,
-  } from "../../utils/Helpers";
+  } from "../utils/Helpers";
   export let players: PlayerDTO[] = [];
   let selectedPosition = -1;
   $: filteredPlayers =

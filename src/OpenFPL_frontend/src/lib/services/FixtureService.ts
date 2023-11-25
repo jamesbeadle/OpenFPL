@@ -6,7 +6,7 @@ import type {
   Fixture,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../../utils/Helpers";
+import { replacer } from "../utils/Helpers";
 export class FixtureService {
   private actor: any;
 

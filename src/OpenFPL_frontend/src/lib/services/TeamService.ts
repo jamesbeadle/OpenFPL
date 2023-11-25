@@ -4,7 +4,7 @@ import type {
   Team,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../../utils/Helpers";
+import { replacer } from "../utils/Helpers";
 
 export class TeamService {
   private actor: any;

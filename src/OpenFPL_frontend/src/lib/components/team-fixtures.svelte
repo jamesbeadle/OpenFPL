@@ -7,7 +7,7 @@
   import {
     formatUnixDateToReadable,
     formatUnixTimeToTime,
-  } from "../../utils/Helpers";
+  } from "../utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
 
   const fixtureService = new FixtureService();

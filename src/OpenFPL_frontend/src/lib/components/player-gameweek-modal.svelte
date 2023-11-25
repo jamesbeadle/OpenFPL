@@ -2,7 +2,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { PlayerEventData, Team  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDetailDTO, PlayerGameweekDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import { getFlagComponent } from "../../utils/Helpers";
+  import { getFlagComponent } from "../utils/Helpers";
 
   export let showModal: boolean;
   export let closeDetailModal: () => void;

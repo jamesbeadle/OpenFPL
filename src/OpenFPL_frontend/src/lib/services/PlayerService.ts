@@ -6,7 +6,7 @@ import type {
   PlayerPointsDTO,
 } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../../utils/Helpers";
+import { replacer } from "../utils/Helpers";
 import { SystemService } from "./SystemService";
 
 export class PlayerService {
