@@ -52,6 +52,7 @@
   let showAddPlayer = false;
   let progress = 0;
   let isLoading = true;
+  let teamValue = 0;
   
   let teams: Team[];
   let players: PlayerDTO[];
@@ -59,7 +60,10 @@
 
   $: gridSetup = getGridSetup(selectedFormation);
 
-  $: if (players && $fantasyTeam) { disableInvalidFormations(); }
+  $: if (players && $fantasyTeam) { 
+    disableInvalidFormations(); 
+    updateTeamValue();
+  }
 
   onMount(async () => {
     const systemService = new SystemService();
@@ -352,7 +356,19 @@
     console.log(get(availableFormations))
   }
 
-
+  function updateTeamValue() {
+    const team = get(fantasyTeam);
+    if (team) {
+      let totalValue = 0;
+      team.playerIds.forEach(id => {
+        const player = players.find(p => p.id === id);
+        if (player) {
+          totalValue += Number(player.value);
+        }
+      });
+      teamValue = (totalValue / 4);
+    }
+  }
 
 </script>
 
@@ -399,7 +415,7 @@
 
           <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
             <p class="text-gray-300 text-xs">Players</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">11/11</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">{$fantasyTeam?.playerIds.filter(x => x > 0).length}/11</p>
             <p class="text-gray-300 text-xs">Selected</p>
           </div>
         </div>
@@ -407,19 +423,19 @@
         <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Team Value</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">£299.5m</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">£{teamValue.toFixed(2)}m</p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
           <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Bank Balance</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">£0.5m</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">£{(Number($fantasyTeam?.bankBalance) / 4).toFixed(2)}m</p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
           <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Transfers</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">3</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">{$fantasyTeam?.transfersAvailable}</p>
             <p class="text-gray-300 text-xs">Available</p>
           </div>
         </div>
@@ -535,7 +551,7 @@
                                       secondaryColour={team?.secondaryColourHex}
                                       thirdColour={team?.thirdColourHex}  />
                                     <p class="truncate min-w-[60px] max-w-[60px]">
-                                      £{(Number(player.value) / 2).toFixed(2)}m
+                                      £{(Number(player.value) / 4).toFixed(2)}m
                                     </p>
                                   </div>
                                 </div>
