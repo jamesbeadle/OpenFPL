@@ -15,6 +15,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
+  import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import { ManagerService } from "$lib/services/ManagerService";
@@ -191,7 +192,7 @@
         transfersAvailable.update(n => n > 0 ? n - 1 : 0);
       }
       bankBalance.update(n => n - Number(player.value) > 0 ? n - Number(player.value) : n);
-      
+
       if (!currentFantasyTeam.playerIds.includes(player.id)) {
         sessionAddedPlayers.push(player.id);
       }
@@ -355,6 +356,15 @@
       bankBalance.update(n => n + Number(players.find(x => x.id == playerId)?.value) ?? 0);
 
       return { ...currentTeam, playerIds: newPlayerIds };
+    });
+  }
+
+  function setCaptain(playerId: number) {
+    selectedPosition = -1;
+    selectedColumn = -1;
+    fantasyTeam.update(currentTeam => {
+      if (!currentTeam) return null;
+      return { ...currentTeam, captainId: playerId };
     });
   }
 
@@ -539,9 +549,15 @@
                                         thirdColour={team?.thirdColourHex}
                                         />
                                     </div>
-                                    <button class="mb-1 rounded-sm">
-                                      <PlayerCaptainIcon className="w-6 h-6" />
-                                    </button>
+                                    {#if $fantasyTeam?.captainId === playerId}
+                                      <span class="mb-1">
+                                        <ActiveCaptainIcon className="w-6 h-6" />
+                                      </span>
+                                    {:else}
+                                      <button on:click={() => setCaptain(player.id)} class="mb-1">
+                                        <PlayerCaptainIcon className="w-6 h-6" />
+                                      </button>
+                                    {/if}
                                 </div>
                                 
                                 </div>
