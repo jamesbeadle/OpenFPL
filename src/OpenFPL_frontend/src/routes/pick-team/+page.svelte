@@ -159,15 +159,18 @@
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
+    console.log(`adding player ${player}`)
     const currentFantasyTeam = get(fantasyTeam);
-
+    console.log(`current team ${currentFantasyTeam}`)
     if (currentFantasyTeam) {
       if (canAddPlayerToCurrentFormation(player, currentFantasyTeam, selectedFormation)) {
+        console.log(`adding player to existing formation ${selectedFormation}`)
         addPlayerToTeam(player, currentFantasyTeam, selectedFormation);
       } else {
         const newFormation = findValidFormationWithPlayer(currentFantasyTeam, player);
         repositionPlayersForNewFormation(currentFantasyTeam, newFormation);
         selectedFormation = newFormation;
+        console.log(`updating formation to ${selectedFormation}`)
         addPlayerToTeam(player, currentFantasyTeam, newFormation);
       }
     }
@@ -203,8 +206,13 @@
   }
 
   function addPlayerToTeam(player: PlayerDTO, team: FantasyTeam, formation: Formation) {
+    console.log("adding player to team")
+    console.log(player)
+    console.log(team)
+    console.log(formation)
+    
     const indexToAdd = getAvailablePositionIndex(player.position, team, formation);
-
+    console.log(indexToAdd)
     if (indexToAdd === -1) {
         console.error('No available position to add the player.');
         return;
@@ -243,10 +251,10 @@
     return -1;
   }
 
-
   function findValidFormationWithPlayer(team: FantasyTeam, player: PlayerDTO): Formation {
-    const positionCounts: { [key: number]: number } = { 0: 0, 1: 0, 2: 0, 3: 0 };
+    const positionCounts: Record<number, number> = { 0: 1, 1: 0, 2: 0, 3: 0 };
 
+    // Count current players in each position
     team.playerIds.forEach(id => {
       const teamPlayer = players.find(p => p.id === id);
       if (teamPlayer) {
@@ -254,21 +262,37 @@
       }
     });
 
+    // Include the new player
     positionCounts[player.position]++;
 
+    let bestFitFormation: Formation | null = null;
+    let minimumAdditionalPlayersNeeded = Number.MAX_SAFE_INTEGER;
+
     for (const formation of Object.keys(formations) as Formation[]) {
-      const [def, mid, fwd] = formations[formation].positions;
-      const minDef = Math.max(0, def - (positionCounts[1] || 0));
-      const minMid = Math.max(0, mid - (positionCounts[2] || 0));
-      const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
-      const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
-
-      const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
-      const totalPlayers = Object.values(positionCounts).reduce((a, b) => a + b, 0);
-
-      if (totalPlayers + additionalPlayersNeeded <= 11) {
-        return formation;
+      if (formation === selectedFormation) {
+        continue;
       }
+
+      const formationPositions = formations[formation].positions;
+      let formationDetails: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
+
+      formationPositions.forEach(pos => {
+        formationDetails[pos]++;
+      });
+
+      const additionalPlayersNeeded = Object.keys(formationDetails).reduce((total, key) => {
+        const position = parseInt(key);
+        return total + Math.max(0, formationDetails[position] - positionCounts[position]);
+      }, 0);
+
+      if (additionalPlayersNeeded < minimumAdditionalPlayersNeeded && formationDetails[player.position] > positionCounts[player.position] - 1) {
+        bestFitFormation = formation;
+        minimumAdditionalPlayersNeeded = additionalPlayersNeeded;
+      }
+    }
+
+    if (bestFitFormation) {
+      return bestFitFormation;
     }
 
     console.error("No valid formation found for the player");
@@ -277,27 +301,27 @@
 
   function repositionPlayersForNewFormation(team: FantasyTeam, newFormation: Formation) {
     const newFormationArray = formations[newFormation].positions;
-    let newPositionCounts = newFormationArray.reduce((acc, pos) => {
-      acc[pos] = (acc[pos] || 0) + 1;
-      return acc;
-    }, {} as { [key: number]: number });
-
-    let newPlayerIds: number[] = new Array(11).fill(-1);
-    let extraPlayers: number[] = [];
+    
+    let newPlayerIds: number[] = new Array(11).fill(0);
 
     team.playerIds.forEach(playerId => {
       const player = players.find(p => p.id === playerId);
-      if (player && newPositionCounts[player.position] > 0) {
-        const positionIndex = newFormationArray.indexOf(player.position);
-        newPlayerIds[positionIndex] = playerId;
-        newPositionCounts[player.position]--;
-      } else {
-        extraPlayers.push(playerId);
+      if (player) {
+        // Find the first available position for this player
+        for (let i = 0; i < newFormationArray.length; i++) {
+          if (newFormationArray[i] === player.position && newPlayerIds[i] === 0) {
+            newPlayerIds[i] = playerId;
+            break;
+          }
+        }
       }
     });
 
+    
+    // Update the team with new player positions
     team.playerIds = newPlayerIds;
   }
+
 
   function getActualIndex(rowIndex: number, colIndex: number): number {
     let startIndex = gridSetup.slice(0, rowIndex).reduce((sum, currentRow) => sum + currentRow.length, 0);
@@ -322,8 +346,6 @@
       return { ...currentTeam, playerIds: newPlayerIds };
     });
   }
-
-
 
 </script>
 
