@@ -53,10 +53,14 @@
   let progress = 0;
   let isLoading = true;
   let teamValue = 0;
+  let newTeam = true;
   
   let teams: Team[];
   let players: PlayerDTO[];
+  let sessionAddedPlayers: number[] = [];
   const fantasyTeam = writable<FantasyTeam | null>(null);
+  const transfersAvailable = writable(newTeam ? Infinity : 3);
+
 
   $: gridSetup = getGridSetup(selectedFormation);
 
@@ -99,8 +103,16 @@
         nextFixture.awayTeamId
       );
 
-      fantasyTeam.set(await managerService.getFantasyTeam());
-      
+      let userFantasyTeam = await managerService.getFantasyTeam();
+      fantasyTeam.set(userFantasyTeam);
+
+      let principalId = get(fantasyTeam)?.principalId ?? "";
+
+      if(activeGameweek > 1 && principalId.length > 0){
+        newTeam = false;
+        transfersAvailable.set(userFantasyTeam.transfersAvailable);
+      }
+
       fantasyTeam.update(currentTeam => {
         if (currentTeam && (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)) {
           return {
@@ -173,12 +185,15 @@
         selectedFormation = newFormation;
         addPlayerToTeam(player, currentFantasyTeam, newFormation);
       }
+      if (!newTeam && activeGameweek > 1) {
+        transfersAvailable.update(n => n > 0 ? n - 1 : 0);
+      }
+      if (!currentFantasyTeam.playerIds.includes(player.id)) {
+        sessionAddedPlayers.push(player.id);
+      }
     }
-
-    // Validate and adjust available formations based on the current team
     
     // Update header values
-    // Adjust transfersAvailable based on the change
     // Adjust bank baolance based on the change
   }
 
@@ -218,7 +233,6 @@
         const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
         if (indexToAdd < newPlayerIds.length) {
             newPlayerIds[indexToAdd] = player.id;
-
             return { ...currentTeam, playerIds: newPlayerIds };
         } else {
             console.error('Index out of bounds when attempting to add player to team.');
@@ -241,7 +255,6 @@
   function findValidFormationWithPlayer(team: FantasyTeam, player: PlayerDTO): string {
     const positionCounts: Record<number, number> = { 0: 1, 1: 0, 2: 0, 3: 0 };
 
-    // Count current players in each position
     team.playerIds.forEach(id => {
       const teamPlayer = players.find(p => p.id === id);
       if (teamPlayer) {
@@ -249,7 +262,6 @@
       }
     });
 
-    // Include the new player
     positionCounts[player.position]++;
 
     let bestFitFormation: string | null = null;
@@ -330,19 +342,15 @@
       const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
       newPlayerIds[playerIndex] = 0;
 
+      if (sessionAddedPlayers.includes(playerId)) {
+        if (!newTeam && activeGameweek > 1) {
+          transfersAvailable.update(n => n + 1);
+        }
+        sessionAddedPlayers = sessionAddedPlayers.filter(id => id !== playerId);
+      }
+
       return { ...currentTeam, playerIds: newPlayerIds };
     });
-  }
-
-  function countPlayerPositions(players: PlayerDTO[], playerIds: number[] | Uint16Array): Record<number, number> {
-    const playerCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
-    playerIds.forEach(playerId => {
-      const player = players.find(p => p.id === playerId);
-      if (player) {
-        playerCounts[player.position]++;
-      }
-    });
-    return playerCounts;
   }
 
   function disableInvalidFormations() {
@@ -353,7 +361,6 @@
 
     const formations = getAvailableFormations(players, currentTeam);
     availableFormations.set(formations);
-    console.log(get(availableFormations))
   }
 
   function updateTeamValue() {
@@ -435,7 +442,9 @@
           <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Transfers</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">{$fantasyTeam?.transfersAvailable}</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              {$transfersAvailable === Infinity ? "Unlimited" : $transfersAvailable}
+            </p>
             <p class="text-gray-300 text-xs">Available</p>
           </div>
         </div>
