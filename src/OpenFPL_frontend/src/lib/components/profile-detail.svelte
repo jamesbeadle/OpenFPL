@@ -84,18 +84,27 @@
   <div class="container mx-auto p-4">
     <div class="flex flex-wrap">
       <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
-        <img
-          src="profile_placeholder.png"
-          alt="Profile"
-          class="w-48 md:w-80 p-4"
-        />
+        <div class="group">
+          <img
+            src="profile_placeholder.png"
+            alt="Profile"
+            class="w-48 md:w-80 mb-1"
+          />
+          <button
+            class="py-4 rounded w-full mt-4 fpl-purple-btn"
+            on:click={displayFavouriteTeamModal}
+          >
+            Update
+          </button>
+        </div>
       </div>
+      
       <div class="w-full md:w-3/4 px-2 mb-4">
         <div class="ml-4 p-4 rounded-lg">
           <p class="text-xs mb-2">Display Name:</p>
           <h2 class="text-2xl font-bold mb-2">{profile.displayName}</h2>
           <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded"
+            class="p-2 px-4 rounded fpl-purple-btn"
             on:click={displayUsernameModal}
           >
             Update
@@ -103,7 +112,7 @@
           <p class="text-xs mb-2 mt-4">Favourite Team:</p>
           <h2 class="text-2xl font-bold mb-2">Not Set</h2>
           <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded"
+          class="p-2 px-4 rounded fpl-purple-btn"
             on:click={displayFavouriteTeamModal}
           >
             Update
