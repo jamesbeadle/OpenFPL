@@ -216,11 +216,7 @@
                   <p class="text-xs mt-2 mb-2 font-bold">v</p>
                 </div>
                 <div class="w-10 ml-4">
-                  <a
-                    href={`/club?id=${
-                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
-                    }`}
-                  >
+                  <a href={`/club?id=${ nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1 }`}>
                     <BadgeIcon
                       primaryColour={nextFixtureAwayTeam
                         ? nextFixtureAwayTeam.primaryColourHex
@@ -239,48 +235,27 @@
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a
-                    class="text-gray-300 text-xs text-center"
-                    href={`/club?id=${
-                      nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
-                    }`}
-                    >{nextFixtureHomeTeam
-                      ? nextFixtureHomeTeam.abbreviatedName
-                      : ""}</a
-                  >
+                  <a class="text-gray-300 text-xs text-center" href={`/club?id=${ nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1 }`}
+                    >{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ""}</a>
                 </p>
               </div>
               <div class="w-v ml-2 mr-2" />
               <div class="w-10 ml-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a
-                    class="text-gray-300 text-xs text-center"
-                    href={`/club?id=${
-                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
-                    }`}
-                    >{nextFixtureAwayTeam
-                      ? nextFixtureAwayTeam.abbreviatedName
-                      : ""}</a
-                  >
+                  <a class="text-gray-300 text-xs text-center" href={`/club?id=${ nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1 }`}
+                    >{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ""}</a>
                 </p>
               </div>
             </div>
           </div>
-          <div
-            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"/>
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
             <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
-                  >h</span
-                >
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
-                  >m</span
-                >
+                : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
               </p>
             </div>
             <p class="text-gray-300 text-xs">
@@ -294,22 +269,12 @@
     <div class="m-4">
       <div class="bg-panel rounded-md m-4">
         <ul class="flex bg-light-gray px-4 pt-2">
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "history" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "history" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("history")}
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "history" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "history" ? "text-white" : "text-gray-400" }`} on:click={() => setActiveTab("history")}>
               Gameweek History
             </button>
           </li>
         </ul>
-
         {#if activeTab === "history"}
           <PlayerGameweekHistory />
         {/if}

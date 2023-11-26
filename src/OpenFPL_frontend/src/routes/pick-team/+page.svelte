@@ -822,8 +822,45 @@ function handleBonusSelection(bonusId: number){
                   </div>
                 {/if}
                 {#each row as _, colIndex (colIndex)}
-                  <div class="flex items-center justify-between py-2 px-4">
-                    <div class="w-1/3">Select</div>
+                {@const actualIndex = getActualIndex(rowIndex, colIndex)}
+                {@const playerIds = $fantasyTeam?.playerIds ?? []}
+                {@const playerId = playerIds[actualIndex]}
+                {@const player = players.find(p => p.id === playerId)}
+                {@const team = teams.find(x => x.id == player?.teamId)}
+                
+                <div class="flex items-center justify-between py-2 px-4">
+                  {#if playerId > 0 && player}
+                    <div class="w-1/3">
+                      {player.firstName} {player.lastName}
+                    </div>
+                    <div class="w-1/6 flex items-center">
+                      {#if $fantasyTeam?.captainId === playerId}
+                        <span>
+                          <ActiveCaptainIcon className="w-6 h-6" />
+                        </span>
+                      {:else}
+                        <button on:click={() => setCaptain(player.id)}>
+                          <PlayerCaptainIcon className="w-6 h-6" />
+                        </button>
+                      {/if}
+                    </div>
+                    <div class="flex w-1/3 items-center">
+                      <BadgeIcon className="h-5 w-5 mr-2"
+                        primaryColour={team?.primaryColourHex}
+                        secondaryColour={team?.secondaryColourHex}
+                        thirdColour={team?.thirdColourHex}  />
+                        <p>
+                          {team?.name}
+                        </p>
+                    </div>
+                    <div class="w-1/6">£{(Number(player.value) / 4).toFixed(2)}m</div>
+                    <div class="w-1/6 flex items-center">
+                      <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
+                        <RemovePlayerIcon className="w-6 h-6 p-2" />
+                      </button>
+                    </div>
+                  {:else}
+                    <div class="w-1/3">-</div>
                     <div class="w-1/6">-</div>
                     <div class="w-1/3">-</div>
                     <div class="w-1/6">-</div>
@@ -832,7 +869,8 @@ function handleBonusSelection(bonusId: number){
                         <AddIcon className="w-6 h-6 p-2" />
                       </button>
                     </div>
-                  </div>
+                  {/if}
+                </div>
                 {/each}
               {/each}
             </div>

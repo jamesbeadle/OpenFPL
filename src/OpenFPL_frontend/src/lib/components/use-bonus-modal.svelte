@@ -172,6 +172,12 @@
     closeBonusModal();
   }
 
+  function handleKeydown(event: KeyboardEvent): void {
+    if (!(event.target instanceof HTMLInputElement) && event.key === "Escape") {
+      closeBonusModal();
+    }
+  }
+
   $: countries = getUniqueCountries();
   $: playerOptions = getPlayerNames();
   $: teamOptions = getTeamNames();
@@ -187,10 +193,12 @@
   <div
     class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
     on:click={closeBonusModal}
-    on:keydown={closeBonusModal}
+    on:keydown={handleKeydown}
   >
     <div
       class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
+      on:click|stopPropagation
+      on:keydown={handleKeydown}
     >
       <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
       <div class="mt-3 text-center">
