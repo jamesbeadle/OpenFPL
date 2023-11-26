@@ -1,0 +1,1 @@
+import{S as i,i as l,s as m,k as c,q as h,l as _,m as d,r as p,h as r,b as f,G as u,H as n}from"./index.dab0e011.js";function g(o){let e,s;return{c(){e=c("h1"),s=h("gameweeks")},l(a){e=_(a,"H1",{});var t=d(e);s=p(t,"gameweeks"),t.forEach(r)},m(a,t){f(a,e,t),u(e,s)},p:n,i:n,o:n,d(a){a&&r(e)}}}class k extends i{constructor(e){super(),l(this,e,null,g,m,{})}}export{k as M};

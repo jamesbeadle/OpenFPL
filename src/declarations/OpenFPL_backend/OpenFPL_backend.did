@@ -78,12 +78,15 @@ type ManagerDTO = record {
   displayName : text;
   favouriteTeamId : TeamId;
   gameweeks : vec FantasyTeamSnapshot;
+  monthlyPoints : int16;
   monthlyPosition : int;
   monthlyPositionText : text;
   principalId : text;
   profilePicture : blob;
+  seasonPoints : int16;
   seasonPosition : int;
   seasonPositionText : text;
+  weeklyPoints : int16;
   weeklyPosition : int;
   weeklyPositionText : text;
 };

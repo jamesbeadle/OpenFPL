@@ -106,8 +106,10 @@ export function calculateAgeFromNanoseconds(nanoseconds: number) {
 
 import type { TeamStats } from "$lib/types/TeamStats";
 import * as FlagIcons from "svelte-flag-icons";
-import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { PlayerService } from "$lib/services/PlayerService";
+import type {
+  FantasyTeam,
+  Team,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
 
 export function getFlagComponent(countryCode: string) {
@@ -306,7 +308,11 @@ export function updateTableData(
   });
 }
 
-function initTeamData(teamId: number,table: Record<number, TeamStats>,teams: Team[]) {
+function initTeamData(
+  teamId: number,
+  table: Record<number, TeamStats>,
+  teams: Team[]
+) {
   if (!table[teamId]) {
     const team = teams.find((t) => t.id === teamId);
     if (team) {
@@ -324,27 +330,40 @@ function initTeamData(teamId: number,table: Record<number, TeamStats>,teams: Tea
   }
 }
 
-export function getAvailableFormations(players: PlayerDTO[], team: FantasyTeam): string[] {
+export function getAvailableFormations(
+  players: PlayerDTO[],
+  team: FantasyTeam
+): string[] {
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
-  team.playerIds.forEach(id => {
-    const teamPlayer = players.find(p => p.id === id);
+  team.playerIds.forEach((id) => {
+    const teamPlayer = players.find((p) => p.id === id);
     if (teamPlayer) {
       positionCounts[teamPlayer.position]++;
     }
   });
 
-  const formations = ["3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-4-1", "5-3-2"];
-  return formations.filter(formation => {
-    const [def, mid, fwd] = formation.split('-').map(Number);
-      const minDef = Math.max(0, def - (positionCounts[1] || 0));
-      const minMid = Math.max(0, mid - (positionCounts[2] || 0));
-      const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
-      const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
+  const formations = [
+    "3-4-3",
+    "3-5-2",
+    "4-3-3",
+    "4-4-2",
+    "4-5-1",
+    "5-4-1",
+    "5-3-2",
+  ];
+  return formations.filter((formation) => {
+    const [def, mid, fwd] = formation.split("-").map(Number);
+    const minDef = Math.max(0, def - (positionCounts[1] || 0));
+    const minMid = Math.max(0, mid - (positionCounts[2] || 0));
+    const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
+    const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
 
-      const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
-      const totalPlayers = Object.values(positionCounts).reduce((a, b) => a + b, 0);
+    const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
+    const totalPlayers = Object.values(positionCounts).reduce(
+      (a, b) => a + b,
+      0
+    );
 
-      return totalPlayers + additionalPlayersNeeded <= 11;
+    return totalPlayers + additionalPlayersNeeded <= 11;
   });
 }
-

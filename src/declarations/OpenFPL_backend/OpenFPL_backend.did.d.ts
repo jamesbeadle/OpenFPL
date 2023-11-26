@@ -112,12 +112,15 @@ export interface ManagerDTO {
   displayName: string;
   weeklyPosition: bigint;
   createDate: bigint;
+  monthlyPoints: number;
+  weeklyPoints: number;
   weeklyPositionText: string;
   gameweeks: Array<FantasyTeamSnapshot>;
   monthlyPosition: bigint;
   seasonPosition: bigint;
   monthlyPositionText: string;
   profilePicture: Uint8Array | number[];
+  seasonPoints: number;
   principalId: string;
   seasonPositionText: string;
 }

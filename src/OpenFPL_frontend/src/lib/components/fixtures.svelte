@@ -117,7 +117,6 @@
               <div class="flex items-center w-1/2 ml-4">
                 <div class="flex w-1/2 space-x-4 justify-center">
                   <div class="w-10 items-center justify-center">
-                    
                     <a href={`/club?id=${fixture.homeTeamId}`}>
                       <BadgeIcon
                         primaryColour={homeTeam

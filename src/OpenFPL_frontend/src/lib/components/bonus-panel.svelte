@@ -1,16 +1,19 @@
 <script lang="ts">
-  import { writable, get } from 'svelte/store';
-  import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { writable, get } from "svelte/store";
+  import type {
+    FantasyTeam,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/Bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/use-bonus-modal.svelte";
-  import type { PlayerDTO } from '../../../../declarations/player_canister/player_canister.did';
-  
+  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+
   export let fantasyTeam = writable<FantasyTeam | null>(null);
   export let players: PlayerDTO[];
   export let teams: Team[];
   export let activeGameweek: number;
-  
+
   let showModal: boolean = false;
   let selectedBonusId = 0;
 
@@ -113,17 +116,30 @@
 
     switch (bonusId) {
       case 1:
-        return team.goalGetterGameweek && team.goalGetterGameweek > 0 ? team.goalGetterGameweek : false;
+        return team.goalGetterGameweek && team.goalGetterGameweek > 0
+          ? team.goalGetterGameweek
+          : false;
       case 2:
-        return team.passMasterGameweek && team.passMasterGameweek > 0 ? team.passMasterGameweek : false;
+        return team.passMasterGameweek && team.passMasterGameweek > 0
+          ? team.passMasterGameweek
+          : false;
       case 3:
-        return team.noEntryGameweek && team.noEntryGameweek > 0 ? team.noEntryGameweek : false;
+        return team.noEntryGameweek && team.noEntryGameweek > 0
+          ? team.noEntryGameweek
+          : false;
       case 4:
-        return team.teamBoostGameweek && team.teamBoostGameweek > 0 ? team.teamBoostGameweek : false;
+        return team.teamBoostGameweek && team.teamBoostGameweek > 0
+          ? team.teamBoostGameweek
+          : false;
       case 5:
-        return team.safeHandsGameweek && team.safeHandsGameweek > 0 ? team.safeHandsGameweek : false;
+        return team.safeHandsGameweek && team.safeHandsGameweek > 0
+          ? team.safeHandsGameweek
+          : false;
       case 6:
-        return team.captainFantasticGameweek && team.captainFantasticGameweek > 0 ? team.captainFantasticGameweek : false;
+        return team.captainFantasticGameweek &&
+          team.captainFantasticGameweek > 0
+          ? team.captainFantasticGameweek
+          : false;
       case 7:
         /* Coming soon: return team.prospectsGameweek && team.prospectsGameweek > 0 ? team.prospectsGameweek : false; */
         return false;
@@ -131,14 +147,17 @@
         /* Coming soon: team.countrymenGameweek && team.countrymenGameweek > 0 ? team.countrymenGameweek : false */
         return false;
       case 9:
-        return team.braceBonusGameweek && team.braceBonusGameweek > 0 ? team.braceBonusGameweek : false;
+        return team.braceBonusGameweek && team.braceBonusGameweek > 0
+          ? team.braceBonusGameweek
+          : false;
       case 10:
-        return team.hatTrickHeroGameweek && team.hatTrickHeroGameweek > 0 ? team.hatTrickHeroGameweek : false;
+        return team.hatTrickHeroGameweek && team.hatTrickHeroGameweek > 0
+          ? team.hatTrickHeroGameweek
+          : false;
       default:
         return false;
     }
   }
-
 </script>
 
 <div class="bonus-panel rounded-md m-4 flex-1">
@@ -187,10 +206,14 @@
               {bonus.name}
             </p>
             {#if isBonusUsed(bonus.id)}
-              <p class="text-center text-xs mt-4 m-2">Used in GW {isBonusUsed(bonus.id)}</p>
+              <p class="text-center text-xs mt-4 m-2">
+                Used in GW {isBonusUsed(bonus.id)}
+              </p>
             {:else}
-              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]"
-                on:click={() => showBonusModal(bonus.id)}>Use</button>
+              <button
+                class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]"
+                on:click={() => showBonusModal(bonus.id)}>Use</button
+              >
             {/if}
           </div>
         </div>

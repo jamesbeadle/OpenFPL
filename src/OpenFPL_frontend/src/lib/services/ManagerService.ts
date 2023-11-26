@@ -43,12 +43,16 @@ export class ManagerService {
       let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
-      return await this.actor.getManager(managerId, systemState?.activeSeason.id, systemState?.activeGameweek);
+      return await this.actor.getManager(
+        managerId,
+        systemState?.activeSeason.id,
+        systemState?.activeGameweek
+      );
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
       throw error;
     }
-  };  
+  }
 
   async getTotalManagers(): Promise<number> {
     try {
@@ -91,13 +95,25 @@ export class ManagerService {
     }
   }
 
-  async saveFantasyTeam(userFantasyTeam: FantasyTeam, activeGameweek: number): Promise<any> {
+  async saveFantasyTeam(
+    userFantasyTeam: FantasyTeam,
+    activeGameweek: number
+  ): Promise<any> {
     try {
       let bonusPlayed = this.getBonusPlayed(userFantasyTeam, activeGameweek);
-      let bonusPlayerId = this.getBonusPlayerId(userFantasyTeam, activeGameweek);
+      let bonusPlayerId = this.getBonusPlayerId(
+        userFantasyTeam,
+        activeGameweek
+      );
       let bonusTeamId = this.getBonusTeamId(userFantasyTeam, activeGameweek);
       const identityActor = await this.actorFromIdentity();
-      const fantasyTeam = await identityActor.saveFantasyTeam(userFantasyTeam.playerIds, userFantasyTeam.captainId, bonusPlayed, bonusPlayerId, bonusTeamId);
+      const fantasyTeam = await identityActor.saveFantasyTeam(
+        userFantasyTeam.playerIds,
+        userFantasyTeam.captainId,
+        bonusPlayed,
+        bonusPlayerId,
+        bonusTeamId
+      );
       return fantasyTeam;
     } catch (error) {
       console.error("Error saving fantasy team:", error);
@@ -105,30 +121,30 @@ export class ManagerService {
     }
   }
 
-  getBonusPlayed(userFantasyTeam: FantasyTeam, activeGameweek: number) : number {
+  getBonusPlayed(userFantasyTeam: FantasyTeam, activeGameweek: number): number {
     let bonusPlayed = 0;
 
-    if(userFantasyTeam.goalGetterGameweek == activeGameweek){
+    if (userFantasyTeam.goalGetterGameweek == activeGameweek) {
       bonusPlayed = 1;
     }
 
-    if(userFantasyTeam.passMasterGameweek == activeGameweek){
+    if (userFantasyTeam.passMasterGameweek == activeGameweek) {
       bonusPlayed = 2;
     }
 
-    if(userFantasyTeam.noEntryGameweek == activeGameweek){
+    if (userFantasyTeam.noEntryGameweek == activeGameweek) {
       bonusPlayed = 3;
     }
 
-    if(userFantasyTeam.teamBoostGameweek == activeGameweek){
+    if (userFantasyTeam.teamBoostGameweek == activeGameweek) {
       bonusPlayed = 4;
     }
 
-    if(userFantasyTeam.safeHandsGameweek == activeGameweek){
+    if (userFantasyTeam.safeHandsGameweek == activeGameweek) {
       bonusPlayed = 5;
     }
 
-    if(userFantasyTeam.captainFantasticGameweek == activeGameweek){
+    if (userFantasyTeam.captainFantasticGameweek == activeGameweek) {
       bonusPlayed = 6;
     }
 
@@ -142,50 +158,53 @@ export class ManagerService {
     }
     */
 
-    if(userFantasyTeam.hatTrickHeroGameweek == activeGameweek){
+    if (userFantasyTeam.hatTrickHeroGameweek == activeGameweek) {
       bonusPlayed = 7;
     }
 
-    if(userFantasyTeam.hatTrickHeroGameweek == activeGameweek){
+    if (userFantasyTeam.hatTrickHeroGameweek == activeGameweek) {
       bonusPlayed = 8;
     }
-    
+
     return bonusPlayed;
   }
 
-  getBonusPlayerId(userFantasyTeam: FantasyTeam, activeGameweek: number) : number {
+  getBonusPlayerId(
+    userFantasyTeam: FantasyTeam,
+    activeGameweek: number
+  ): number {
     let bonusPlayerId = 0;
 
-    if(userFantasyTeam.goalGetterGameweek == activeGameweek){
+    if (userFantasyTeam.goalGetterGameweek == activeGameweek) {
       bonusPlayerId = userFantasyTeam.goalGetterPlayerId;
     }
 
-    if(userFantasyTeam.passMasterGameweek == activeGameweek){
+    if (userFantasyTeam.passMasterGameweek == activeGameweek) {
       bonusPlayerId = userFantasyTeam.passMasterPlayerId;
     }
 
-    if(userFantasyTeam.noEntryGameweek == activeGameweek){
+    if (userFantasyTeam.noEntryGameweek == activeGameweek) {
       bonusPlayerId = userFantasyTeam.noEntryPlayerId;
     }
 
-    if(userFantasyTeam.safeHandsGameweek == activeGameweek){
+    if (userFantasyTeam.safeHandsGameweek == activeGameweek) {
       bonusPlayerId = userFantasyTeam.safeHandsPlayerId;
     }
 
-    if(userFantasyTeam.captainFantasticGameweek == activeGameweek){
+    if (userFantasyTeam.captainFantasticGameweek == activeGameweek) {
       bonusPlayerId = userFantasyTeam.captainId;
     }
-    
+
     return bonusPlayerId;
   }
 
-  getBonusTeamId(userFantasyTeam: FantasyTeam, activeGameweek: number) : number {
+  getBonusTeamId(userFantasyTeam: FantasyTeam, activeGameweek: number): number {
     let bonusTeamId = 0;
 
-    if(userFantasyTeam.teamBoostGameweek == activeGameweek){
+    if (userFantasyTeam.teamBoostGameweek == activeGameweek) {
       bonusTeamId = userFantasyTeam.teamBoostTeamId;
     }
-    
+
     return bonusTeamId;
   }
 }

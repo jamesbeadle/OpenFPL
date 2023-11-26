@@ -13,7 +13,7 @@ export class UserService {
       process.env.OPENFPL_BACKEND_CANISTER_ID
     );
   }
-  
+
   async actorFromIdentity() {
     let unsubscribe: Unsubscriber;
     return new Promise<OptionIdentity>((resolve, reject) => {

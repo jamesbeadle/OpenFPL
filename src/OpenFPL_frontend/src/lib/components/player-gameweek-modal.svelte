@@ -1,7 +1,13 @@
 <script lang="ts">
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { PlayerEventData, Team  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { PlayerDetailDTO, PlayerGameweekDTO } from "../../../../declarations/player_canister/player_canister.did";
+  import type {
+    PlayerEventData,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    PlayerDetailDTO,
+    PlayerGameweekDTO,
+  } from "../../../../declarations/player_canister/player_canister.did";
   import { getFlagComponent } from "../utils/Helpers";
 
   export let showModal: boolean;
@@ -88,7 +94,10 @@
       </div>
 
       <div class="flex justify-start items-center w-full">
-        <svelte:component this={getFlagComponent(playerDetail.nationality)} class="h-20 w-20"/>
+        <svelte:component
+          this={getFlagComponent(playerDetail.nationality)}
+          class="h-20 w-20"
+        />
         <div class="ml-4">
           <h3 class="text-2xl mb-2">
             {playerDetail.firstName}

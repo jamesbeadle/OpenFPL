@@ -1472,11 +1472,16 @@ actor Self {
     var monthlyPositionText = "N/A";
     var seasonPositionText = "N/A";
 
+    var weeklyPoints : Int16 = 0;
+    var monthlyPoints : Int16 = 0;
+    var seasonPoints : Int16 = 0;
+
     switch (weeklyLeaderboardEntry) {
       case (null) {};
       case (?foundEntry) {
         weeklyPosition := foundEntry.position;
         weeklyPositionText := foundEntry.positionText;
+        weeklyPoints := foundEntry.points;
       };
     };
 
@@ -1485,6 +1490,7 @@ actor Self {
       case (?foundEntry) {
         monthlyPosition := foundEntry.position;
         monthlyPositionText := foundEntry.positionText;
+        monthlyPoints := foundEntry.points;
       };
     };
 
@@ -1493,6 +1499,7 @@ actor Self {
       case (?foundEntry) {
         seasonPosition := foundEntry.position;
         seasonPositionText := foundEntry.positionText;
+        seasonPoints := foundEntry.points;
       };
     };
 
@@ -1509,6 +1516,9 @@ actor Self {
       weeklyPositionText = weeklyPositionText;
       monthlyPositionText = monthlyPositionText;
       seasonPositionText = seasonPositionText;
+      weeklyPoints = weeklyPoints;
+      monthlyPoints = monthlyPoints;
+      seasonPoints = seasonPoints;
     };
 
     return managerDTO;

@@ -135,6 +135,9 @@ module DTOs {
     weeklyPositionText : Text;
     monthlyPositionText : Text;
     seasonPositionText : Text;
+    weeklyPoints : Int16;
+    monthlyPoints : Int16;
+    seasonPoints : Int16;
   };
 
 };
