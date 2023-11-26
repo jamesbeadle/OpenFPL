@@ -566,6 +566,10 @@
     }
 }
 
+function handleBonusSelection(bonusId: number){
+
+}
+
 
 
 
@@ -838,7 +842,7 @@
           <SimpleFixtures />
         </div>
       </div>
-      <BonusPanel />
+      <BonusPanel {fantasyTeam} {teams} {players} {handleBonusSelection} {activeGameweek} />
     </div>
   {/if}
 </Layout>

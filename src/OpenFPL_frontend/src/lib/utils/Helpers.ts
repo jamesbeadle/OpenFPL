@@ -109,6 +109,7 @@ import * as FlagIcons from "svelte-flag-icons";
 import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { PlayerService } from "$lib/services/PlayerService";
 import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+
 export function getFlagComponent(countryCode: string) {
   switch (countryCode) {
     case "Albania":

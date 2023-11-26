@@ -1,7 +1,17 @@
 <script lang="ts">
+  import { writable } from 'svelte/store';
+  import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/Bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/use-bonus-modal.svelte";
+  import type { PlayerDTO } from '../../../../declarations/player_canister/player_canister.did';
+  
+  export let fantasyTeam = writable<FantasyTeam | null>(null);
+  export let handleBonusSelection: (bonus: BonusType) => void;
+  export let players: PlayerDTO[];
+  export let teams: Team[];
+  export let activeGameweek: number;
+  
   let showModal: boolean = false;
   let selectedBonusId = 0;
 
@@ -95,6 +105,7 @@
   }
 
   function closeBonusModal(): void {
+    handleBonusSelection(selectedBonusId)
     showModal = false;
   }
 </script>
@@ -105,6 +116,10 @@
       {showModal}
       bonus={bonuses[selectedBonusId - 1]}
       {closeBonusModal}
+      {players}
+      {teams}
+      {fantasyTeam}
+      {activeGameweek}
     />
   {/if}
   <div class="flex flex-col md:flex-row bonus-panel-inner">
