@@ -198,7 +198,7 @@
                   >
                 </p>
               </div>
-              <div class="w-v ml-1 mr-1" />
+              <div class="w-v ml-2 mr-2" />
               <div class="w-10 ml-4">
                 <p class="text-gray-300 text-xs text-center">
                   <a
