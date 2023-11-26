@@ -7,7 +7,6 @@
   import type { PlayerDTO } from '../../../../declarations/player_canister/player_canister.did';
   
   export let fantasyTeam = writable<FantasyTeam | null>(null);
-  export let handleBonusSelection: (bonus: BonusType) => void;
   export let players: PlayerDTO[];
   export let teams: Team[];
   export let activeGameweek: number;
@@ -105,7 +104,6 @@
   }
 
   function closeBonusModal(): void {
-    handleBonusSelection(selectedBonusId)
     showModal = false;
   }
 

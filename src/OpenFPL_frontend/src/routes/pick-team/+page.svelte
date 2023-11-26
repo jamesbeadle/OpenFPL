@@ -566,12 +566,18 @@
     }
 }
 
-function handleBonusSelection(bonusId: number){
-
+async function saveFantasyTeam(){
+  isLoading = true;
+  let team = get(fantasyTeam);
+  let managerService = new ManagerService();
+  try{
+    await managerService.saveFantasyTeam(team!, activeGameweek);
+    isLoading = false;
+  }
+  catch (error) {
+    console.error("Error fetching homepage data:", error);
+  }
 }
-
-
-
 
 </script>
 
@@ -674,6 +680,7 @@ function handleBonusSelection(bonusId: number){
               Auto Fill
             </button>
             <button disabled={$fantasyTeam?.playerIds ? $fantasyTeam?.playerIds.filter(x => x == 0).length > 0 : true} 
+              on:click={saveFantasyTeam}
               class={`btn w-full md:w-auto px-4 py-2 rounded ${$fantasyTeam?.playerIds && $fantasyTeam?.playerIds.filter(x => x == 0).length == 0 ? 'fpl-purple-btn' : 'bg-gray-500'} text-white min-w-[125px]`}>
               Save Team
             </button>
@@ -880,7 +887,7 @@ function handleBonusSelection(bonusId: number){
           <SimpleFixtures />
         </div>
       </div>
-      <BonusPanel {fantasyTeam} {teams} {players} {handleBonusSelection} {activeGameweek} />
+      <BonusPanel {fantasyTeam} {teams} {players} {activeGameweek} />
     </div>
   {/if}
 </Layout>
