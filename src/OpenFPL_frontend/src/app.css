@@ -80,3 +80,8 @@ body {
 .toast-panel {
   background-color: #2ce3a6;
 }
+
+.inactive-btn {
+  background-color: black;
+  color: white;
+}

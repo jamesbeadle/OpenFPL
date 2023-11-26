@@ -5,6 +5,7 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   FantasyTeam,
   FantasyTeamSnapshot,
+  ManagerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { SystemService } from "./SystemService";
@@ -36,6 +37,18 @@ export class ManagerService {
       );
     });
   }
+
+  async getManager(managerId: string): Promise<ManagerDTO> {
+    try {
+      let systemService = new SystemService();
+      await systemService.updateSystemStateData();
+      let systemState = await systemService.getSystemState();
+      return await this.actor.getManager(managerId, systemState?.activeSeason.id, systemState?.activeGameweek);
+    } catch (error) {
+      console.error("Error fetching fantasy team for gameweek:", error);
+      throw error;
+    }
+  };  
 
   async getTotalManagers(): Promise<number> {
     try {

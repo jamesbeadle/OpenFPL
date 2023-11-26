@@ -581,13 +581,6 @@ async function saveFantasyTeam(){
 
 </script>
 
-<style>
-  .inactive-btn {
-    background-color: black;
-    color: white;
-  }
-</style>
-
 <Layout>
   {#if isLoading}
     <LoadingIcon {progress} />
