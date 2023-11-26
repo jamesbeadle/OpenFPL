@@ -6,10 +6,7 @@
   import ManagerGameweekDetails from "$lib/components/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import { ManagerService } from "$lib/services/ManagerService";
-  import type {
-    ManagerDTO,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ManagerDTO, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -38,10 +35,7 @@
 
       manager = await managerService.getManager(id ?? "");
       const blob = new Blob([new Uint8Array(manager.profilePicture)]);
-      const blobUrl =
-        manager.profilePicture.length > 0
-          ? URL.createObjectURL(blob)
-          : "profile_placeholder.png";
+      const blobUrl = manager.profilePicture.length > 0 ? URL.createObjectURL(blob) : "profile_placeholder.png";
       profilePicture = blobUrl;
 
       const dateInMilliseconds = Number(manager.createDate / 1000000n);
@@ -85,16 +79,11 @@
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex">
             <img class="w-20" src={profilePicture} alt={manager.displayName} />
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Manager</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -102,15 +91,10 @@
             </p>
             <p class="text-gray-300 text-xs">Joined: {joinedDate}</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Favourite Team</p>
-            <p
-              class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold flex items-center"
-            >
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold flex items-center">
               <BadgeIcon
                 className="w-7 mr-2"
                 primaryColour={favouriteTeam?.primaryColourHex}
@@ -122,9 +106,7 @@
             <p class="text-gray-300 text-xs">{favouriteTeam?.name}</p>
           </div>
         </div>
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Leaderboards</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -157,36 +139,36 @@
         </div>
       </div>
 
-      <div class="flex flex-col md:flex-row">
-        <div
-          class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md md:w-full"
-        >
-          <div
-            class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4 order-3 md:order-1"
-          >
-            <button
-              class={`btn ${
-                activeTab == "details" ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md font-bold text-md min-w-[125px] my-4`}
-              on:click={() => setActiveTab("details")}
-              >Details
+      <div class="flex flex-col bg-panel m-4 rounded-md">
+        
+        <div class="flex justify-between items-center text-white px-4 pt-4 rounded-md w-full">
+          <div class="flex">
+            <button class={`btn ${activeTab == "details" ? `fpl-button` : `inactive-btn`} px-4 py-2 rounded-l-md font-bold text-md min-w-[125px]`}
+              on:click={() => setActiveTab("details")}>
+              Details
             </button>
-            <button
-              class={`btn ${
-                activeTab == "gameweeks" ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-r-md font-bold text-md min-w-[125px] my-4`}
-              on:click={() => setActiveTab("gameweeks")}
-              >Gameweeks
+            <button class={`btn ${activeTab == "gameweeks" ? `fpl-button` : `inactive-btn`} px-4 py-2 rounded-r-md font-bold text-md min-w-[125px]`}
+              on:click={() => setActiveTab("gameweeks")}>
+              Gameweeks
             </button>
           </div>
+          
+          <div class="px-4">
+            {#if activeTab == 'details'}<span class="text-2xl">Total Points: {0}</span>{/if}
+          </div>
+        </div>
+        
+        <div class="w-full">
+          {#if activeTab === "details"}
+            <ManagerGameweekDetails />
+          {/if}
+          {#if activeTab === "gameweeks"}
+            <ManagerGameweeks />
+          {/if}
         </div>
       </div>
-      {#if activeTab === "details"}
-        <ManagerGameweekDetails />
-      {/if}
-      {#if activeTab === "gameweeks"}
-        <ManagerGameweeks />
-      {/if}
+      
+      
     </div>
   {/if}
 </Layout>

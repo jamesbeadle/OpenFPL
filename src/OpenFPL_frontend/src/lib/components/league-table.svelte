@@ -7,9 +7,6 @@
   import { TeamService } from "$lib/services/TeamService";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../utils/Helpers";
-  const fixtureService = new FixtureService();
-  const teamService = new TeamService();
-  const systemService = new SystemService();
 
   let selectedGameweek: number = 1;
   let fixtures: FixtureWithTeams[] = [];
@@ -20,6 +17,9 @@
 
   onMount(async () => {
     try {
+      const fixtureService = new FixtureService();
+      const teamService = new TeamService();
+      const systemService = new SystemService();
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();
       await teamService.updateTeamsData();
