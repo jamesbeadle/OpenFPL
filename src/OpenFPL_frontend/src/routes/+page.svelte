@@ -17,7 +17,7 @@
     formatUnixTimeToTime,
     getCountdownTime,
   } from "../lib/utils/Helpers";
-  import type { Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, LeaderboardEntry, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
@@ -35,8 +35,7 @@
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
   let focusGameweek = -1;
-  let gwLeaderUsername = "-";
-  let gwLeaderPoints = 0;
+  let weeklyLeader: LeaderboardEntry;
   let nextFixtureHomeTeam: Team | undefined = undefined;
   let nextFixtureAwayTeam: Team | undefined = undefined;
 
@@ -81,9 +80,7 @@
 
       incrementProgress(80);
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      let leadingWeeklyTeam = await leaderboardService.getLeadingWeeklyTeam();
-      gwLeaderUsername = leadingWeeklyTeam.username;
-      gwLeaderPoints = leadingWeeklyTeam.points;
+      weeklyLeader = await leaderboardService.getLeadingWeeklyTeam();
 
       incrementProgress(100);
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -119,9 +116,7 @@
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -129,10 +124,7 @@
             </p>
             <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;" />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Managers</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -152,9 +144,7 @@
             <p class="text-gray-300 text-xs">$FPL</p>
           </div>
         </div>
-        <div
-          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">Next Game:</p>
             <div class="flex justify-center mb-2 mt-2">
@@ -205,8 +195,7 @@
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a
-                    class="text-gray-300 text-xs text-center"
+                  <a class="text-gray-300 text-xs text-center"
                     href={`/club?id=${
                       nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
                     }`}
@@ -219,8 +208,7 @@
               <div class="w-v ml-1 mr-1" />
               <div class="w-10 ml-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a
-                    class="text-gray-300 text-xs text-center"
+                  <a class="text-gray-300 text-xs text-center"
                     href={`/club?id=${
                       nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
                     }`}
@@ -232,10 +220,7 @@
               </div>
             </div>
           </div>
-          <div
-            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
 
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
@@ -263,9 +248,9 @@
               GW {focusGameweek} High Score
             </p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {gwLeaderUsername}
+              <a href={`/manager?id=${weeklyLeader.principalId}`}>{weeklyLeader.username}</a>
             </p>
-            <p class="text-gray-300 text-xs">{gwLeaderPoints} points</p>
+            <p class="text-gray-300 text-xs">{weeklyLeader.points} points</p>
           </div>
         </div>
       </div>
@@ -274,61 +259,29 @@
     <div class="m-4">
       <div class="bg-panel rounded-md m-4">
         <ul class="flex bg-light-gray px-4 pt-2">
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "fixtures" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "fixtures" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("fixtures")}
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "fixtures" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "fixtures" ? "text-white" : "text-gray-400" }`}
+              on:click={() => setActiveTab("fixtures")}>
               Fixtures
             </button>
           </li>
           {#if isLoggedIn}
-            <li
-              class={`mr-4 text-xs md:text-lg ${
-                activeTab === "points" ? "active-tab" : ""
-              }`}
-            >
-              <button
-                class={`p-2 ${
-                  activeTab === "points" ? "text-white" : "text-gray-400"
-                }`}
-                on:click={() => setActiveTab("points")}
-              >
+            <li class={`mr-4 text-xs md:text-lg ${ activeTab === "points" ? "active-tab" : "" }`}>
+              <button class={`p-2 ${ activeTab === "points" ? "text-white" : "text-gray-400" }`} 
+                on:click={() => setActiveTab("points")}>
                 Points
               </button>
             </li>
           {/if}
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "leaderboards" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "leaderboards" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("leaderboards")}
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "leaderboards" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "leaderboards" ? "text-white" : "text-gray-400"}`}
+              on:click={() => setActiveTab("leaderboards")}>
               Leaderboards
             </button>
           </li>
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "league-table" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "league-table" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("league-table")}
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "league-table" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "league-table" ? "text-white" : "text-gray-400" }`}
+              on:click={() => setActiveTab("league-table")}>
               Table
             </button>
           </li>
