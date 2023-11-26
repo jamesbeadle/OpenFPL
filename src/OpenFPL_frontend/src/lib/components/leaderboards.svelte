@@ -1,18 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type {
-    LeaderboardEntry,
-    PaginatedLeaderboard,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import { LeaderboardService } from "$lib/services/LeaderboardService";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-
-  const teamService = new TeamService();
-  const systemService = new SystemService();
-  const leaderboardService = new LeaderboardService();
+    import { ManagerService } from "$lib/services/ManagerService";
 
   let selectedLeaderboardType: number = 1;
   let selectedGameweek: number = 1;
@@ -37,15 +30,22 @@
 
   onMount(async () => {
     try {
+      const teamService = new TeamService();
+      const systemService = new SystemService();
+      const leaderboardService = new LeaderboardService();
+      let managerService = new ManagerService();
+    
       await systemService.updateSystemStateData();
       await leaderboardService.updateWeeklyLeaderboardData();
       await leaderboardService.updateMonthlyLeaderboardData();
       await leaderboardService.updateSeasonLeaderboardData();
       await teamService.updateTeamsData();
+    
       const fetchedTeams = await teamService.getTeams();
       teams = fetchedTeams.sort((a, b) =>
         a.friendlyName.localeCompare(b.friendlyName)
       );
+
       selectedTeamId = fetchedTeams[0].id;
 
       let systemState = await systemService.getSystemState();
@@ -72,6 +72,7 @@
   async function loadLeaderboardData() {
     try {
       isLoading = true;
+      const leaderboardService = new LeaderboardService();
       if (selectedLeaderboardType === 1) {
         if (selectedGameweek === focusGameweek && currentPage <= 4) {
           leaderboard = await leaderboardService.getWeeklyLeaderboard();
