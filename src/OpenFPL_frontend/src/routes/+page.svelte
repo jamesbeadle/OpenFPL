@@ -161,7 +161,7 @@
               <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
                   <a
-                    href={`/club/${
+                    href={`/club?id=${
                       nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
                     }`}
                   >
@@ -183,7 +183,7 @@
                 </div>
                 <div class="w-10 ml-4">
                   <a
-                    href={`/club/${
+                    href={`/club?id=${
                       nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
                     }`}
                   >
@@ -207,7 +207,7 @@
                 <p class="text-gray-300 text-xs text-center">
                   <a
                     class="text-gray-300 text-xs text-center"
-                    href={`/club/${
+                    href={`/club?id=${
                       nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
                     }`}
                     >{nextFixtureHomeTeam
@@ -221,7 +221,7 @@
                 <p class="text-gray-300 text-xs text-center">
                   <a
                     class="text-gray-300 text-xs text-center"
-                    href={`/club/${
+                    href={`/club?id=${
                       nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
                     }`}
                     >{nextFixtureAwayTeam

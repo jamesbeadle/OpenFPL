@@ -117,7 +117,8 @@
               <div class="flex items-center w-1/2 ml-4">
                 <div class="flex w-1/2 space-x-4 justify-center">
                   <div class="w-10 items-center justify-center">
-                    <a href={`/club/${fixture.homeTeamId}`}>
+                    
+                    <a href={`/club?id=${fixture.homeTeamId}`}>
                       <BadgeIcon
                         primaryColour={homeTeam
                           ? homeTeam.primaryColourHex
@@ -131,7 +132,7 @@
                   </div>
                   <span class="font-bold text-lg">v</span>
                   <div class="w-10 items-center justify-center">
-                    <a href={`/club/${fixture.awayTeamId}`}>
+                    <a href={`/club?id=${fixture.awayTeamId}`}>
                       <BadgeIcon
                         primaryColour={awayTeam
                           ? awayTeam.primaryColourHex
@@ -154,10 +155,10 @@
                 <div
                   class="flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg"
                 >
-                  <a href={`/club/${fixture.homeTeamId}`}
+                  <a href={`/club?id=${fixture.homeTeamId}`}
                     >{homeTeam ? homeTeam.friendlyName : ""}</a
                   >
-                  <a href={`/club/${fixture.awayTeamId}`}
+                  <a href={`/club?id=${fixture.awayTeamId}`}
                     >{awayTeam ? awayTeam.friendlyName : ""}</a
                   >
                 </div>

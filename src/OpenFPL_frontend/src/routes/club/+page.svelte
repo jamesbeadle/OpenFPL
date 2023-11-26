@@ -179,7 +179,7 @@
             <div class="flex justify-center mb-2 mt-2">
               <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
-                  <a href={`/club/${nextFixtureHomeTeam?.id}`}>
+                  <a href={`/club?id=${nextFixtureHomeTeam?.id}`}>
                     <BadgeIcon
                       primaryColour={nextFixtureHomeTeam?.primaryColourHex}
                       secondaryColour={nextFixtureHomeTeam?.secondaryColourHex}
@@ -191,7 +191,7 @@
                   <p class="text-xs mt-2 mb-2 font-bold">v</p>
                 </div>
                 <div class="w-10 ml-4">
-                  <a href={`/club/${nextFixtureAwayTeam?.id}`}>
+                  <a href={`/club?id=${nextFixtureAwayTeam?.id}`}>
                     <BadgeIcon
                       primaryColour={nextFixtureAwayTeam?.primaryColourHex}
                       secondaryColour={nextFixtureAwayTeam?.secondaryColourHex}
@@ -206,7 +206,7 @@
                 <p class="text-gray-300 text-xs text-center">
                   <a
                     class="text-gray-300 text-xs text-center"
-                    href={`/club/${nextFixtureHomeTeam?.id}`}
+                    href={`/club?id=${nextFixtureHomeTeam?.id}`}
                     >{nextFixtureHomeTeam?.abbreviatedName}</a
                   >
                 </p>
@@ -216,7 +216,7 @@
                 <p class="text-gray-300 text-xs text-center">
                   <a
                     class="text-gray-300 text-xs text-center"
-                    href={`/club/${nextFixtureAwayTeam?.id}`}
+                    href={`/club?id=${nextFixtureAwayTeam?.id}`}
                     >{nextFixtureAwayTeam?.abbreviatedName}</a
                   >
                 </p>

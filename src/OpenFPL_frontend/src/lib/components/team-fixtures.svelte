@@ -94,7 +94,7 @@
           <div class="w-1/6 ml-4">{fixture.gameweek}</div>
           <div class="w-1/3 flex justify-center">
             <div class="w-10 items-center justify-center mr-4">
-              <a href={`/club/${fixture.homeTeamId}`}>
+              <a href={`/club?id=${fixture.homeTeamId}`}>
                 <BadgeIcon
                   primaryColour={homeTeam ? homeTeam.primaryColourHex : ""}
                   secondaryColour={homeTeam ? homeTeam.secondaryColourHex : ""}
@@ -104,7 +104,7 @@
             </div>
             <span class="font-bold text-lg">v</span>
             <div class="w-10 items-center justify-center ml-4">
-              <a href={`/club/${fixture.awayTeamId}`}>
+              <a href={`/club?id=${fixture.awayTeamId}`}>
                 <BadgeIcon
                   primaryColour={awayTeam ? awayTeam.primaryColourHex : ""}
                   secondaryColour={awayTeam ? awayTeam.secondaryColourHex : ""}
@@ -122,10 +122,10 @@
           </div>
           <div class="w-1/3">
             <div class="flex flex-col text-xs md:text-lg">
-              <a href={`/club/${fixture.homeTeamId}`}
+              <a href={`/club?id=${fixture.homeTeamId}`}
                 >{homeTeam ? homeTeam.friendlyName : ""}</a
               >
-              <a href={`/club/${fixture.awayTeamId}`}
+              <a href={`/club?id=${fixture.awayTeamId}`}
                 >{awayTeam ? awayTeam.friendlyName : ""}</a
               >
             </div>
