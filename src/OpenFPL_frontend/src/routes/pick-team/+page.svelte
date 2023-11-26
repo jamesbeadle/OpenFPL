@@ -71,6 +71,8 @@
     updateTeamValue();
   }
 
+  $: isSaveButtonActive = checkSaveButtonConditions();
+
   onMount(async () => {
     const systemService = new SystemService();
     const teamService = new TeamService();
@@ -197,9 +199,6 @@
         sessionAddedPlayers.push(player.id);
       }
     }
-    
-    // Update header values
-    // Adjust bank baolance based on the change
   }
 
   function canAddPlayerToCurrentFormation(player: PlayerDTO, team: FantasyTeam, formation: string): boolean {
@@ -416,6 +415,96 @@
     }
   }
 
+  function checkSaveButtonConditions(): boolean {
+
+    const teamCount = new Map();
+    for (const playerId of $fantasyTeam?.playerIds || []) {
+      if (playerId > 0) {
+        const player = players.find(p => p.id === playerId);
+        if (player) {
+          teamCount.set(player.teamId, (teamCount.get(player.teamId) || 0) + 1);
+          if (teamCount.get(player.teamId) > 1) {
+            return false;
+          }
+        }
+      }
+    }
+
+    if (!isBonusConditionMet($fantasyTeam)) {
+      return false;
+    }
+
+    if ($fantasyTeam?.playerIds.filter(id => id > 0).length !== 11) {
+      return false;
+    }
+
+    if ($bankBalance < 0) {
+      return false;
+    }
+
+    if ($transfersAvailable < 0) {
+      return false;
+    }
+
+    if (!isValidFormation(players, $fantasyTeam, selectedFormation)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function isBonusConditionMet(team: FantasyTeam | null): boolean {
+    if(!team){
+      return false;
+    }
+
+    const gameweekCounts: { [key: number]: number } = {};
+
+    const bonusGameweeks = [
+      team.hatTrickHeroGameweek,
+      team.teamBoostGameweek,
+      team.captainFantasticGameweek,
+      team.braceBonusGameweek,
+      team.passMasterGameweek,
+      team.goalGetterGameweek,
+      team.noEntryGameweek,
+      team.safeHandsGameweek
+    ];
+
+    for (const gw of bonusGameweeks) {
+      if (gw !== 0) {
+        gameweekCounts[gw] = (gameweekCounts[gw] || 0) + 1;
+        if (gameweekCounts[gw] > 1) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  function isValidFormation(players: PlayerDTO[], team: FantasyTeam, selectedFormation: string): boolean {
+    const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
+    team.playerIds.forEach(id => {
+      const teamPlayer = players.find(p => p.id === id);
+      if (teamPlayer) {
+        positionCounts[teamPlayer.position]++;
+      }
+    });
+
+    const [def, mid, fwd] = selectedFormation.split('-').map(Number);
+    const minDef = Math.max(0, def - (positionCounts[1] || 0));
+    const minMid = Math.max(0, mid - (positionCounts[2] || 0));
+    const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
+    const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
+
+    const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
+    const totalPlayers = Object.values(positionCounts).reduce((a, b) => a + b, 0);
+
+    return totalPlayers + additionalPlayersNeeded <= 11;
+  }
+
+
 </script>
 
 <style>
@@ -511,10 +600,12 @@
           </div>
 
           <div class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3">
-            <button class="btn w-full md:w-auto px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
+            <button disabled={$fantasyTeam?.playerIds ? $fantasyTeam?.playerIds.filter(x => x == 0).length == 0 : true} 
+              class={`btn w-full md:w-auto px-4 py-2 rounded ${$fantasyTeam?.playerIds && $fantasyTeam?.playerIds.filter(x => x == 0).length > 0 ? 'fpl-purple-btn' : 'bg-gray-500'} text-white min-w-[125px]`}>
               Auto Fill
             </button>
-            <button class="btn w-full md:w-auto px-4 py-2 rounded bg-gray-500 text-white min-w-[125px]">
+            <button disabled={$fantasyTeam?.playerIds ? $fantasyTeam?.playerIds.filter(x => x == 0).length > 0 : true} 
+              class={`btn w-full md:w-auto px-4 py-2 rounded ${$fantasyTeam?.playerIds && $fantasyTeam?.playerIds.filter(x => x == 0).length == 0 ? 'fpl-purple-btn' : 'bg-gray-500'} text-white min-w-[125px]`}>
               Save Team
             </button>
           </div>
