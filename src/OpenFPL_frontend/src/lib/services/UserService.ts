@@ -53,4 +53,30 @@ export class UserService {
       throw error;
     }
   }
+
+  async updateProfilePicture(picture: File): Promise<any> {
+    try {
+      const maxPictureSize = 1000; 
+
+      if (picture.size > maxPictureSize * 1024) {
+        return null;
+      }
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(picture);
+      reader.onloadend = async () => {
+        const arrayBuffer = reader.result as ArrayBuffer;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        try {
+          const identityActor = await this.actorFromIdentity();
+          const result = await identityActor.updateProfilePicture(uint8Array);
+          return result;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
 }

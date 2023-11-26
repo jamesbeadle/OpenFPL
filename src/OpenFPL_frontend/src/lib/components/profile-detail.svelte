@@ -11,11 +11,28 @@
   const userService = new UserService();
 
   let profile: ProfileDTO;
+  let profileSrc = "profile_placeholder.png";
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let isLoading = true;
   let progress = 0;
   let fileInput: HTMLInputElement;
+
+  onMount(async () => {
+    try {
+      incrementProgress(20);
+      const profileData = await userService.getProfile();
+      incrementProgress(60);
+      profile = profileData;
+      if(profile.profilePicture.length > 0){
+        const blob = new Blob([new Uint8Array(profile.profilePicture)]);
+        profileSrc = URL.createObjectURL(blob);
+      }
+      isLoading = false;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  });
 
   function displayUsernameModal(): void {
     showUsernameModal = true;
@@ -32,18 +49,6 @@
   function closeFavouriteTeamModal(): void {
     showFavouriteTeamModal = false;
   }
-
-  onMount(async () => {
-    try {
-      incrementProgress(20);
-      const profileData = await userService.getProfile();
-      incrementProgress(60);
-      profile = profileData;
-      isLoading = false;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  });
 
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(() => {
@@ -69,9 +74,7 @@
   }
 
   async function uploadProfileImage(file: File) {
-    // Implement the logic to upload the image to your server
-    // This could be an API call to your backend
-    // Example: await userService.uploadProfileImage(file);
+    await userService.updateProfilePicture(file);
   }
 
   function incrementProgress(newProgress: number) {
@@ -91,20 +94,16 @@
 
 
 <style>
-  .file-upload-container {
-    /* Set to the width of the image or as required */
-    width: 100%; /* Assuming the image is full width of its container */
-  }
-
+ 
   .file-upload-wrapper {
     position: relative;
     overflow: hidden;
     display: inline-block;
-    width: 100%; /* This will make the wrapper full width of its container */
+    width: 100%; 
   }
 
   .btn-file-upload {
-    width: 100%; /* This will make the button full width of the wrapper */
+    width: 100%;
     border: none;
     color: white;
     background-color: #6c5ce7;
@@ -122,9 +121,9 @@
     left: 0;
     top: 0;
     opacity: 0;
-    width: 100%; /* This ensures the invisible file input spans the entire area of the button */
-    height: 100%; /* Match the height of the button to ensure the clickable area is the same */
-    cursor: pointer; /* Change the cursor to indicate it's clickable */
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
   }
 </style>
 
@@ -143,7 +142,7 @@
     <div class="flex flex-wrap">
       <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
         <div class="group">
-          <img src="profile_placeholder.png" alt="Profile" class="w-48 md:w-80 mb-1"/>
+          <img src={profileSrc} alt="Profile" class="w-48 md:w-80 mb-1 rounded-lg"/>
 
           <div class="file-upload-wrapper mt-4">
             <button class="btn-file-upload" on:click={clickFileInput}>Upload Photo</button>
