@@ -504,6 +504,64 @@
     return totalPlayers + additionalPlayersNeeded <= 11;
   }
 
+  function autofillTeam() {
+    const currentFantasyTeam = get(fantasyTeam);
+    if (!currentFantasyTeam || !players) return;
+
+    let updatedFantasyTeam = { ...currentFantasyTeam, playerIds: new Uint16Array(11) };
+    let remainingBudget = get(bankBalance);
+
+    const teamCounts = new Map<number, number>();
+    updatedFantasyTeam.playerIds.forEach(playerId => {
+        if (playerId > 0) {
+            const player = players.find(p => p.id === playerId);
+            if (player) {
+                teamCounts.set(player.teamId, (teamCounts.get(player.teamId) || 0) + 1);
+            }
+        }
+    });
+
+    let eligibleTeams = Array.from(new Set(players.map(player => player.teamId))).filter(id => id > 0);
+    eligibleTeams.sort(() => Math.random() - 0.5);
+
+    const formationPositions = formations[selectedFormation].positions;
+    
+    formationPositions.forEach((position, index) => {
+        if (remainingBudget <= 0 || eligibleTeams.length === 0) return;
+
+        const teamId = eligibleTeams.shift();
+        if (teamId === undefined) return;
+
+        const availablePlayers = players.filter(player => (
+            player.position === position &&
+            player.teamId === teamId &&
+            !updatedFantasyTeam.playerIds.includes(player.id) &&
+            (teamCounts.get(player.teamId) || 0) < 1
+        ));
+
+        availablePlayers.sort((a, b) => Number(a.value) - Number(b.value));
+        const lowerHalf = availablePlayers.slice(0, Math.ceil(availablePlayers.length / 2));
+        const selectedPlayer = lowerHalf[Math.floor(Math.random() * lowerHalf.length)];
+
+        if (selectedPlayer) {
+            const potentialNewBudget = remainingBudget - Number(selectedPlayer.value);
+            if (potentialNewBudget < 0) {
+                return;
+            }
+            updatedFantasyTeam.playerIds[index] = selectedPlayer.id;
+            remainingBudget = potentialNewBudget;
+            teamCounts.set(selectedPlayer.teamId, (teamCounts.get(selectedPlayer.teamId) || 0) + 1);
+        }
+    });
+
+    if (remainingBudget >= 0) {
+        fantasyTeam.set(updatedFantasyTeam);
+        bankBalance.set(remainingBudget);
+    }
+}
+
+
+
 
 </script>
 
@@ -601,6 +659,7 @@
 
           <div class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3">
             <button disabled={$fantasyTeam?.playerIds ? $fantasyTeam?.playerIds.filter(x => x == 0).length == 0 : true} 
+              on:click={autofillTeam}
               class={`btn w-full md:w-auto px-4 py-2 rounded ${$fantasyTeam?.playerIds && $fantasyTeam?.playerIds.filter(x => x == 0).length > 0 ? 'fpl-purple-btn' : 'bg-gray-500'} text-white min-w-[125px]`}>
               Auto Fill
             </button>
