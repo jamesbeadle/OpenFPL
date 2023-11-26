@@ -43,6 +43,17 @@ export class UserService {
     }
   }
 
+  async updateFavouriteTeam(favouriteTeamId: number): Promise<any> {
+    try {
+      const identityActor = await this.actorFromIdentity();
+      const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
+      return result;
+    } catch (error) {
+      console.error("Error updating favourite team:", error);
+      throw error;
+    }
+  }
+
   async getProfile(): Promise<any> {
     try {
       const identityActor = await this.actorFromIdentity();

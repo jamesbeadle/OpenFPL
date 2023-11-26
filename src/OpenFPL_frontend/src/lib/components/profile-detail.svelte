@@ -1,14 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ProfileDTO, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { toastStore } from "$lib/stores/toast";
   import UpdateUsernameModal from "$lib/components/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { UserService } from "$lib/services/UserService";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-
-  const userService = new UserService();
+    import { TeamService } from "$lib/services/TeamService";
 
   let profile: ProfileDTO;
   let profileSrc = "profile_placeholder.png";
@@ -17,10 +16,12 @@
   let isLoading = true;
   let progress = 0;
   let fileInput: HTMLInputElement;
+  let teams: Team[];
 
   onMount(async () => {
     try {
       incrementProgress(20);
+      const userService = new UserService();
       const profileData = await userService.getProfile();
       incrementProgress(60);
       profile = profileData;
@@ -28,6 +29,10 @@
         const blob = new Blob([new Uint8Array(profile.profilePicture)]);
         profileSrc = URL.createObjectURL(blob);
       }
+
+      let teamService = new TeamService();
+      teams = await teamService.getTeams();
+
       isLoading = false;
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -74,6 +79,7 @@
   }
 
   async function uploadProfileImage(file: File) {
+    const userService = new UserService();
     await userService.updateProfilePicture(file);
   }
 
@@ -131,10 +137,12 @@
   <LoadingIcon {progress} />
 {:else}
   <UpdateUsernameModal
+    newUsername={profile.displayName}
     showModal={showUsernameModal}
     closeModal={closeUsernameModal}
   />
   <UpdateFavouriteTeamModal
+    newFavouriteTeam={profile.favouriteTeamId}
     showModal={showFavouriteTeamModal}
     closeModal={closeFavouriteTeamModal}
   />
@@ -169,7 +177,7 @@
             Update
           </button>
           <p class="text-xs mb-2 mt-4">Favourite Team:</p>
-          <h2 class="text-2xl font-bold mb-2">Not Set</h2>
+          <h2 class="text-2xl font-bold mb-2">{teams.find(x => x.id == profile.favouriteTeamId)?.friendlyName}</h2>
           <button
           class="p-2 px-4 rounded fpl-purple-btn"
             on:click={displayFavouriteTeamModal}
