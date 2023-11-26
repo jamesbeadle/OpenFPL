@@ -25,17 +25,39 @@
   };
 
   const getUniqueCountries = () => {
-    const allCountries = players.map(p => p.nationality);
-    return [...new Set(allCountries)].sort();
+    const team = get(fantasyTeam);
+    if (!team || !team.playerIds) {
+      return [];
+    }
+
+    const fantasyTeamPlayerIds = new Set(team.playerIds);
+    const countriesOfFantasyTeamPlayers = players
+      .filter(player => fantasyTeamPlayerIds.has(player.id))
+      .map(player => player.nationality);
+
+    return [...new Set(countriesOfFantasyTeamPlayers)].sort();
   };
+
   
   const getPlayerNames = () => {
-    return players.map(p => ({ id: p.id, name: `${p.firstName} ${p.lastName}` }));
+    return players
+      .filter(p => isPlayerInFantasyTeam(p.id))
+      .map(p => ({ id: p.id, name: `${p.firstName} ${p.lastName}` }));
   };
+
+  const isPlayerInFantasyTeam = (playerId: number): boolean => {
+    const team = get(fantasyTeam);
+    return !team ? false : team.playerIds && team.playerIds.includes(playerId);
+  };
+
   
-  const getTeamNames = () => {
-    return teams.map(t => ({ id: t.id, name: t.friendlyName }));
+  const getRelatedTeamNames = () => {
+    const teamIds = new Set(players.filter(p => isPlayerInFantasyTeam(p.id)).map(p => p.teamId));
+    return teams
+      .filter(t => teamIds.has(t.id))
+      .map(t => ({ id: t.id, name: t.friendlyName }));
   };
+
 
   const getGoalkeeperId = () => {
     const team = get(fantasyTeam);
@@ -180,7 +202,7 @@
 
   $: countries = getUniqueCountries();
   $: playerOptions = getPlayerNames();
-  $: teamOptions = getTeamNames();
+  $: teamOptions = getRelatedTeamNames();
 </script>
 
 <style>
