@@ -6,8 +6,10 @@
     import ManagerGameweekDetails from "$lib/components/manager-gameweek-details.svelte";
     import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
     import { ManagerService } from "$lib/services/ManagerService";
-    import type { ManagerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ManagerDTO, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { SystemService } from "$lib/services/SystemService";
+    import { TeamService } from "$lib/services/TeamService";
+    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     
     let progress = 0;
     let isLoading = true;
@@ -15,17 +17,35 @@
     let manager: ManagerDTO;
     let selectedGameweek = 1;
     let selectedSeason = '';
+    let joinedDate = '';
+    let profilePicture: string;
+    let teams: Team[];
+    let favouriteTeam: Team | null = null;
   
     $: id = $page.url.searchParams.get("id");
     onMount(async () => {
       try {
         let systemService = new SystemService();
+        let managerService = new ManagerService();
+        let teamService = new TeamService();
+
         let systemState = await systemService.getSystemState();
         selectedGameweek = systemState?.activeGameweek ?? 1;
         selectedSeason = systemState?.activeSeason.name ?? "";
-        let managerService = new ManagerService();
+
         manager = await managerService.getManager(id ?? "");
-        console.log(manager)
+        const blob = new Blob([new Uint8Array(manager.profilePicture)]);
+        const blobUrl = manager.profilePicture.length > 0 ? URL.createObjectURL(blob) : 'profile_placeholder.png';
+        profilePicture = blobUrl;
+
+        const dateInMilliseconds = Number(manager.createDate / 1000000n);
+        const date = new Date(dateInMilliseconds);
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        joinedDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+
+        teams = await teamService.getTeams();
+        favouriteTeam = manager.favouriteTeamId > 0 ? teams.find(x => x.id == manager.favouriteTeamId) ?? null : null;
+
         isLoading = false;
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -44,12 +64,8 @@
       <div class="m-4">
         <div class="flex flex-col md:flex-row">
             <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
-                <div class="flex-grow">
-                  <p class="text-gray-300 text-xs">&nbsp</p>
-                  <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-                    Profile Picture
-                  </p>
-                  <p class="text-gray-300 text-xs">&nbsp</p>
+                <div class="flex">
+                  <img class="w-20" src={profilePicture} alt={manager.displayName} />
                 </div>
                 <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;" />
                 <div class="flex-grow">
@@ -57,15 +73,19 @@
                   <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
                     {manager.displayName}
                   </p>
-                  <p class="text-gray-300 text-xs">Joined</p>
+                  <p class="text-gray-300 text-xs">Joined: {joinedDate}</p>
                 </div>
                 <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
                 <div class="flex-grow">
                   <p class="text-gray-300 text-xs">Favourite Team</p>
-                  <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-                    MUN
+                  <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold flex items-center">
+                    <BadgeIcon className="w-7 mr-2" 
+                      primaryColour={favouriteTeam?.primaryColourHex}
+                      secondaryColour={favouriteTeam?.secondaryColourHex}
+                      thirdColour={favouriteTeam?.thirdColourHex} />
+                    {favouriteTeam?.abbreviatedName}
                   </p>
-                  <p class="text-gray-300 text-xs">Manchester United</p>
+                  <p class="text-gray-300 text-xs">{favouriteTeam?.name}</p>
                 </div>
             </div>
             <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
