@@ -89,7 +89,7 @@
         class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
       >
         <div class="w-1/12 text-center mx-4">Pos</div>
-        <div class="flex-grow px-4">Team</div>
+        <div class="w-3/12">Team</div>
         <div class="w-1/12 text-center">P</div>
         <div class="w-1/12 text-center">W</div>
         <div class="w-1/12 text-center">D</div>
@@ -101,14 +101,9 @@
       </div>
 
       {#each tableData as team, idx}
-        <div
-          class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
-        >
+        <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
           <div class="w-1/12 text-center mx-4">{idx + 1}</div>
-          <a
-            class="flex-grow flex items-center justify-start space-x-2 px-4 min-w-[200px] max-w-[300px]"
-            href={`/club?id=${team.id}`}
-          >
+          <a class="w-3/12 flex items-center justify-start" href={`/club?id=${team.id}`}>
             <BadgeIcon
               primaryColour={team.primaryColourHex}
               secondaryColour={team.secondaryColourHex}
