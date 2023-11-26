@@ -1,9 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type {
-    ProfileDTO,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { toastStore } from "$lib/stores/toast";
   import UpdateUsernameModal from "$lib/components/update-username-modal.svelte";
@@ -14,12 +11,11 @@
   const userService = new UserService();
 
   let profile: ProfileDTO;
-  let userPrincipal =
-    "yxaeb-cknlu-ymf7s-hyhv4-ngpus-hurji-roqrb-hcf46-6ed5v-cp3qa-uqe";
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let isLoading = true;
   let progress = 0;
+  let fileInput: HTMLInputElement;
 
   function displayUsernameModal(): void {
     showUsernameModal = true;
@@ -55,6 +51,29 @@
     });
   }
 
+  function clickFileInput() {
+    fileInput.click();
+  }
+  
+  function handleFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      if (file.size > 1000 * 1024) {
+        alert("File size exceeds 1000KB");
+        return;
+      }
+
+      uploadProfileImage(file);
+    }
+  }
+
+  async function uploadProfileImage(file: File) {
+    // Implement the logic to upload the image to your server
+    // This could be an API call to your backend
+    // Example: await userService.uploadProfileImage(file);
+  }
+
   function incrementProgress(newProgress: number) {
     const step = 1;
     const delay = 100;
@@ -69,6 +88,45 @@
     stepProgress();
   }
 </script>
+
+
+<style>
+  .file-upload-container {
+    /* Set to the width of the image or as required */
+    width: 100%; /* Assuming the image is full width of its container */
+  }
+
+  .file-upload-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%; /* This will make the wrapper full width of its container */
+  }
+
+  .btn-file-upload {
+    width: 100%; /* This will make the button full width of the wrapper */
+    border: none;
+    color: white;
+    background-color: #6c5ce7;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+  }
+
+  input[type='file'] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%; /* This ensures the invisible file input spans the entire area of the button */
+    height: 100%; /* Match the height of the button to ensure the clickable area is the same */
+    cursor: pointer; /* Change the cursor to indicate it's clickable */
+  }
+</style>
 
 {#if isLoading}
   <LoadingIcon {progress} />
@@ -85,17 +143,19 @@
     <div class="flex flex-wrap">
       <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
         <div class="group">
-          <img
-            src="profile_placeholder.png"
-            alt="Profile"
-            class="w-48 md:w-80 mb-1"
-          />
-          <button
-            class="py-4 rounded w-full mt-4 fpl-purple-btn"
-            on:click={displayFavouriteTeamModal}
-          >
-            Update
-          </button>
+          <img src="profile_placeholder.png" alt="Profile" class="w-48 md:w-80 mb-1"/>
+
+          <div class="file-upload-wrapper mt-4">
+            <button class="btn-file-upload" on:click={clickFileInput}>Upload Photo</button>
+            <input
+              type="file"
+              id="profile-image"
+              accept="image/*"
+              bind:this={fileInput}
+              on:change={handleFileChange}
+              style="opacity: 0; position: absolute; left: 0; top: 0;"
+            />
+          </div>     
         </div>
       </div>
       
@@ -123,10 +183,10 @@
 
           <p class="text-xs mb-2 mt-4">Principal:</p>
           <div class="flex items-center">
-            <h2 class="text-xs font-bold">{userPrincipal}</h2>
+            <h2 class="text-xs font-bold">{profile.principalName}</h2>
             <CopyIcon
               onClick={copyToClipboard}
-              principalId={userPrincipal}
+              principalId={profile.principalName}
               className="ml-2 w-4 h-4"
             />
           </div>
