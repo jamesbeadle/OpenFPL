@@ -63,7 +63,6 @@
   const transfersAvailable = writable(newTeam ? Infinity : 3);
   const bankBalance = writable(1200);
 
-
   $: gridSetup = getGridSetup(selectedFormation);
 
   $: if (players && $fantasyTeam) { 
@@ -88,6 +87,11 @@
     isLoading = true;
     try {
       progress = 20;
+
+      const storedViewMode = localStorage.getItem('viewMode');
+      if (storedViewMode) {
+        pitchView = storedViewMode === 'pitch';
+      }
 
       let systemState = await systemService.getSystemState();
       activeGameweek = systemState?.activeGameweek ?? activeGameweek;
@@ -163,10 +167,12 @@
 
   function showPitchView() {
     pitchView = true;
+    localStorage.setItem('viewMode', 'pitch');
   }
 
   function showListView() {
     pitchView = false;
+    localStorage.setItem('viewMode', 'list');
   }
 
   function loadAddPlayer(row: number, col: number) {
