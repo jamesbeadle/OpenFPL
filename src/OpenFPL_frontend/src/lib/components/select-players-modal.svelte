@@ -46,7 +46,7 @@
                 {#each teamPlayers as player}
                     <div class="flex-1 sm:flex-basis-1/2">
                         <label class="block">
-                            <input type="checkbox" checked={selectedPlayers.some(player => player.id === player.id)}
+                            <input type="checkbox" checked={selectedPlayers.some(p => p.id === player.id)}
                                 on:change={(e) => {handlePlayerSelection(e, player);}}/>
                             {`${player.firstName.length > 0 ? player.firstName.charAt(0) + '.' : '' } ${player.lastName}`}
                         </label>
