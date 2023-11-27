@@ -58,40 +58,29 @@
       {#if isLoggedIn}
         <ul class="hidden md:flex">
           <li class="mx-2 flex items-center h-16">
-            <a
-              href="/"
-              class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
-                '/'
-              )}"
-            >
+            <a href="/" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/')}">
               <span class="flex items-center h-full px-4">Home</span>
             </a>
           </li>
           <li class="mx-2 flex items-center h-16">
-            <a
-              href="/pick-team"
-              class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
-                '/pick-team'
-              )}"
-            >
+            <a href="/pick-team" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/pick-team')}">
               <span class="flex items-center h-full px-4">Squad Selection</span>
             </a>
           </li>
           <li class="mx-2 flex items-center h-16">
-            <a
-              href="/profile"
-              class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
-                '/profile'
-              )}"
-            >
+            <a href="/profile" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/profile')}">
               <span class="flex items-center h-full px-4">Profile</span>
+            </a>
+          </li>
+          <li class="mx-2 flex items-center h-16">
+            <a href="/governance" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/governance')}">
+              <span class="flex items-center h-full px-4">Governance</span>
             </a>
           </li>
           <li class="mx-2 flex items-center h-16">
             <button
               class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-              on:click={handleLogout}
-            >
+              on:click={handleLogout}>
               Disconnect
               <WalletIcon className="ml-2 h-6 w-6 mt-1" />
             </button>

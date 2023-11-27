@@ -7,7 +7,8 @@
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { UserService } from "$lib/services/UserService";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-    import { TeamService } from "$lib/services/TeamService";
+  import { TeamService } from "$lib/services/TeamService";
+    import { SystemService } from "$lib/services/SystemService";
 
   let profile: ProfileDTO;
   let profileSrc = "profile_placeholder.png";
@@ -17,6 +18,7 @@
   let progress = 0;
   let fileInput: HTMLInputElement;
   let teams: Team[];
+  let gameweek: number = 1;
 
   onMount(async () => {
     try {
@@ -32,6 +34,10 @@
 
       let teamService = new TeamService();
       teams = await teamService.getTeams();
+
+      let systemService = new SystemService();
+      let systemState = await systemService.getSystemState();
+      gameweek = systemState?.activeGameweek ?? 1;
 
       isLoading = false;
     } catch (error) {
@@ -111,8 +117,6 @@
   .btn-file-upload {
     width: 100%;
     border: none;
-    color: white;
-    background-color: #6c5ce7;
     padding: 10px 20px;
     border-radius: 5px;
     font-size: 1em;
@@ -153,7 +157,7 @@
           <img src={profileSrc} alt="Profile" class="w-48 md:w-80 mb-1 rounded-lg"/>
 
           <div class="file-upload-wrapper mt-4">
-            <button class="btn-file-upload" on:click={clickFileInput}>Upload Photo</button>
+            <button class="btn-file-upload fpl-button" on:click={clickFileInput}>Upload Photo</button>
             <input
               type="file"
               id="profile-image"
@@ -171,7 +175,7 @@
           <p class="text-xs mb-2">Display Name:</p>
           <h2 class="text-2xl font-bold mb-2">{profile.displayName}</h2>
           <button
-            class="p-2 px-4 rounded fpl-purple-btn"
+            class="p-2 px-4 rounded fpl-button"
             on:click={displayUsernameModal}
           >
             Update
@@ -179,9 +183,9 @@
           <p class="text-xs mb-2 mt-4">Favourite Team:</p>
           <h2 class="text-2xl font-bold mb-2">{teams.find(x => x.id == profile.favouriteTeamId)?.friendlyName}</h2>
           <button
-          class="p-2 px-4 rounded fpl-purple-btn"
+          class="p-2 px-4 rounded fpl-button"
             on:click={displayFavouriteTeamModal}
-          >
+            disabled={gameweek > 1 && profile.favouriteTeamId > 0}>
             Update
           </button>
 
