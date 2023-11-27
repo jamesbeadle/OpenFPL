@@ -1,7 +1,7 @@
 <script lang="ts">
     import { FixtureService } from '$lib/services/FixtureService';
     import { onMount } from 'svelte';
-    import type { Fixture, Season, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
+    import type { Fixture, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     import type { PlayerDTO } from '../../../../declarations/player_canister/player_canister.did';
     import { PlayerService } from '$lib/services/PlayerService';
     import { SystemService } from '$lib/services/SystemService';
@@ -73,7 +73,7 @@
                   <td>{`${getTeamById(fixture.homeTeamId).name} vs ${getTeamById(fixture.awayTeamId).name}`}</td>
                   <td>{fixture.status === 2 ? "Completed" : "Active"}</td>
                   <td>
-                    <a href="/add-fixture-data">
+                    <a href={`/add-fixture-data?id=${fixture.id}`}>
                         <button class="btn btn-primary">
                         Add Player Event Data
                         </button>

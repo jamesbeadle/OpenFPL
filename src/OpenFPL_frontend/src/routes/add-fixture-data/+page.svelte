@@ -1,21 +1,39 @@
 <script lang="ts">
-    import { onMount, getContext } from 'svelte';
-    import PlayerEventsModal from './PlayerEventsModal.svelte';
-    import PlayerSelectionModal from './SelectPlayersModal.svelte';
-    import ConfirmFixtureDataModal from './ConfirmFixtureDataModal.svelte';
-    import ConfirmClearDraftModal from './ConfirmClearDraftModal.svelte';
-    import { open_fpl_backend } from '../../../../../declarations/OpenFPL_backend'; // Update import path as needed
+    import { onMount} from 'svelte';
+    import { page } from "$app/stores";
+    import type { PlayerDTO } from '../../../../declarations/player_canister/player_canister.did';
+    import type { Fixture, SystemState, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
+    import { PlayerService } from '$lib/services/PlayerService';
+    import { TeamService } from '$lib/services/TeamService';
+    import { SystemService } from '$lib/services/SystemService';
+    import { FixtureService } from '$lib/services/FixtureService';
   
-    let fixtureId = ""; // Retrieve fixtureId from the URL
-    let teams; // Initialize teams (use getContext or import as needed)
-    let players; // Initialize players (use getContext or import as needed)
-    let systemState; // Initialize systemState (use getContext or import as needed)
+    $: fixtureId = Number($page.url.searchParams.get("id"));
+    let teams: Team[];
+    let players: PlayerDTO[];
+    let fixtures: Fixture[];
+    let systemState: SystemState | null;
     let isLoading = true;
-    let fixture;
+    let fixture: Fixture | null;
     let showPlayerSelectionModal = false;
-    // ... define other states and functions as in your React component
-  
-    onMount(() => {
+    let showPlayerEventModal = false;
+    let showClearDraftModal = false;
+    let showConfirmDataModal = false;
+    
+
+    onMount(async () => {
+        let playerService = new PlayerService();
+        players = await playerService.getPlayers();
+
+        let teamService = new TeamService();
+        teams = await teamService.getTeams();
+
+        let systemService = new SystemService();
+        systemState = await systemService.getSystemState();
+
+        let fixtureService = new FixtureService();
+        fixtures = await fixtureService.getFixtures();
+        fixture = fixtures.find(x => x.id == fixtureId) ?? null;
       // Implement the useEffect logic from React component here
     });
   
@@ -36,17 +54,13 @@
   
   <PlayerSelectionModal 
     {showPlayerSelectionModal} 
-    {/* Pass other required props */}
   />
   <PlayerEventsModal 
     {showPlayerEventModal}
-    {/* Pass other required props */}
   />
   <ConfirmFixtureDataModal 
     {showConfirmDataModal}
-    {/* Pass other required props */}
   />
   <ConfirmClearDraftModal 
-    {showConfirmClearDraftModal}
-    {/* Pass other required props */}
+    {showClearDraftModal}
   />
