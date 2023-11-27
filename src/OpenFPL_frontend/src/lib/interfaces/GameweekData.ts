@@ -2,6 +2,7 @@ import type { PlayerDTO } from "../../../../declarations/player_canister/player_
 
 export interface GameweekData {
     player: PlayerDTO,
+    gameweek: number;
     points: number,
     appearance: number,
     goals: number,
@@ -18,5 +19,5 @@ export interface GameweekData {
     goalPoints: number,
     assistPoints: number,
     goalsConcededPoints: number,
-    cleanSheetPoints: number
+    cleanSheetPoints: number;
 }

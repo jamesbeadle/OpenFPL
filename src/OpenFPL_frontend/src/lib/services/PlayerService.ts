@@ -1,5 +1,4 @@
 import type { GameweekData } from "$lib/interfaces/GameweekData";
-import type { PlayerGameweekDetails } from "$lib/interfaces/PlayerGameweekDetails";
 import type { DataCache, FantasyTeam, Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { idlFactory } from "../../../../declarations/player_canister";
 import type {
@@ -9,6 +8,7 @@ import type {
 } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
+import { FixtureService } from "./FixtureService";
 import { SystemService } from "./SystemService";
 
 export class PlayerService {
@@ -116,24 +116,26 @@ export class PlayerService {
       allPlayerEvents = await this.actor.getPlayersDetailsForGameweek(fantasyTeam.playerIds, systemState?.activeSeason.id, gameweek);    
     }
     
-    let detailedPlayers: GameweekData[] = await Promise.all(allPlayerEvents.map(async player => await this.extractPlayerData(player)));
+    let gameweekData: GameweekData[] = await Promise.all(allPlayerEvents.map(async player => await this.extractPlayerData(player)));
     
-    //now add in the points calculations
-      const playersWithPoints = detailedPlayers.map(player => {
-      const score = calculatePlayerScore(player, fixtures);
-      const bonusPoints = calculateBonusPoints(player, fantasyTeam, score);
-      const captainPoints = player.id == fantasyTeam.captainId ? (score + bonusPoints) : 0;
+    let fixtureService = new FixtureService();
+    let allFixtures = await fixtureService.getFixtures();
+
+    const playersWithPoints = gameweekData.map(entry => {
+      const score = this.calculatePlayerScore(entry, allFixtures);
+      const bonusPoints = this.calculateBonusPoints(entry, fantasyTeam, score);
+      const captainPoints = entry.player.id == fantasyTeam.captainId ? (score + bonusPoints) : 0;
       
       return {
-          ...player,
+          ...entry,
           points: score,
           bonusPoints: bonusPoints,
           totalPoints: score + bonusPoints + captainPoints
       };
-  });
+    });
 
 
-    return await Promise.all(detailedPlayers);
+    return await Promise.all(playersWithPoints);
   }
 
   
@@ -233,13 +235,13 @@ export class PlayerService {
       goalPoints: goalPoints,
       assistPoints: assistPoints,
       goalsConcededPoints: goalsConcededPoints,
-      cleanSheetPoints: cleanSheetPoints
+      cleanSheetPoints: cleanSheetPoints,
+      gameweek: playerPointsDTO.gameweek
     };
 
     return playerGameweekDetails;
   }
 
-  
   calculatePlayerScore (gameweekData: GameweekData, fixtures: Fixture[]) : number {
     if (!gameweekData) {
       console.error("No gameweek data found:", gameweekData);
@@ -338,5 +340,69 @@ export class PlayerService {
     score += gameweekData.assists * pointsForAssist;
 
     return score;
+  }
+
+  calculateBonusPoints (gameweekData: GameweekData, fantasyTeam: FantasyTeam, points: number) : number {
+    if (!gameweekData) {
+      console.error("No gameweek data found:", gameweekData);
+      return 0;
+  }
+  
+  let bonusPoints = 0; 
+  var pointsForGoal = 0;
+  var pointsForAssist = 0;
+  switch(gameweekData.player.position){
+      case 0:
+          pointsForGoal = 20;
+          pointsForAssist = 15;  
+          break;
+      case 1:
+          pointsForGoal = 20;
+          pointsForAssist = 15; 
+          break;
+      case 2:
+          pointsForGoal = 15;
+          pointsForAssist = 10; 
+          break;
+      case 3:
+          pointsForGoal = 10;
+          pointsForAssist = 10; 
+          break;
+  };
+
+  if(fantasyTeam.goalGetterGameweek === gameweekData.gameweek && fantasyTeam.goalGetterPlayerId === gameweekData.player.id){
+      bonusPoints = gameweekData.goals * pointsForGoal * 2;
+  }
+
+  if(fantasyTeam.passMasterGameweek === gameweekData.gameweek && fantasyTeam.passMasterPlayerId === gameweekData.player.id){
+      bonusPoints = gameweekData.assists * pointsForAssist * 2;
+  }
+  
+  if (fantasyTeam.noEntryGameweek === gameweekData.gameweek && fantasyTeam.noEntryPlayerId === gameweekData.player.id && 
+      (gameweekData.player.position === 0 || gameweekData.player.position === 1) && gameweekData.cleanSheets) {
+      bonusPoints = points * 2; 
+  }
+
+  if (fantasyTeam.safeHandsGameweek === gameweekData.gameweek && gameweekData.player.position === 0 && gameweekData.saves >= 5) {
+      bonusPoints = points * 2; 
+  }
+
+  if (fantasyTeam.captainFantasticGameweek === gameweekData.gameweek && fantasyTeam.captainId === gameweekData.player.id && gameweekData.goals > 0) {
+      bonusPoints = points; 
+  }
+
+  if (fantasyTeam.braceBonusGameweek === gameweekData.gameweek && gameweekData.goals >= 2) {
+      bonusPoints = points; 
+  }
+
+  if (fantasyTeam.hatTrickHeroGameweek === gameweekData.gameweek && gameweekData.goals >= 3) {
+      bonusPoints = points * 2; 
+  }
+
+  if (fantasyTeam.teamBoostGameweek === gameweekData.gameweek && gameweekData.player.teamId === fantasyTeam.teamBoostTeamId) {
+      bonusPoints = points;
+  }
+
+  return bonusPoints;
   }
 }

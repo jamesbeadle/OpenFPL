@@ -18,7 +18,7 @@
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let isLoading = true;
   let progress = 0;
-  let teamPlayers: GameweekData[] = [];
+  let gameweekData: GameweekData[] = [];
   let showModal = false;
   
   onMount(async () => {
@@ -50,7 +50,7 @@
     let fantasyTeam = await managerService.getFantasyTeamForGameweek(principalId, selectedGameweek);
     
     let playerService = new PlayerService();
-    teamPlayers = await playerService.getGameweekPlayers(fantasyTeam);
+    gameweekData = await playerService.getGameweekPlayers(fantasyTeam, selectedGameweek);
   }
 
   const changeGameweek = (delta: number) => {
@@ -96,8 +96,8 @@
             <div class="w-1/6 text-center">Points</div>
             <div class="w-1/6 text-center">&nbsp;</div>
           </div>
-          {#if teamPlayers.length > 0}
-            {#each teamPlayers as playerGameweek}
+          {#if gameweekData.length > 0}
+            {#each gameweekData as playerGameweek}
               <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
                 <div class="w-1/6 text-center">{getPositionAbbreviation(playerGameweek.player.position)}</div>
                 <div class="w-3/6 text-center">
