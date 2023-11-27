@@ -10,6 +10,7 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
+    import { FixtureService } from "$lib/services/FixtureService";
 
 
   let selectedGameweek: number = 1;
@@ -60,12 +61,23 @@
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
   };
 
-  function showDetailModal() {
+  async function showDetailModal(gameweekData: GameweekData) {
+    selectedGameweekData = gameweekData;
+  
+    let playerTeamId = gameweekData.player.teamId;
+    selectedTeam = teams.find(x => x.id == playerTeamId)!;
+
+    let fixtureService = new FixtureService();
+    let fixtures = await fixtureService.getFixtures();
+    let playerFixture = fixtures.find(x => x.gameweek == gameweekData.gameweek && (x.homeTeamId == playerTeamId || x.awayTeamId == playerTeamId))
+    let opponentId = playerFixture?.homeTeamId == playerTeamId ? playerFixture?.awayTeamId : playerFixture?.homeTeamId;
+    selectedOpponentTeam = teams.find(x => x.id == opponentId)!;
+
     showModal = true;
   }
 
   function closeDetailModal(){
-
+    
   }
 
 </script>
@@ -119,7 +131,7 @@
                 </div>
                 <div class="w-1/6 text-center">{playerGameweek.points}</div>
                 <div class="w-1/6 text-center">
-                  <button > <!--on:click={() => showDetailModal(gameweek, opponent)}-->
+                  <button on:click={() => showDetailModal(playerGameweek)}>
                     <span class="flex items-center">
                       <ViewDetailsIcon className="w-6 mr-2" />View Details
                     </span>
