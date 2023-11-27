@@ -12,16 +12,9 @@
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import {
-    formatUnixDateToReadable,
-    formatUnixTimeToTime,
-    getCountdownTime,
-  } from "../lib/utils/Helpers";
-  import type {
-    FantasyTeam,
-    LeaderboardEntry,
-    Team,
-  } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../lib/utils/Helpers";
+  import type { LeaderboardEntry, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { authStore } from "$lib/stores/auth";
 
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
@@ -47,6 +40,9 @@
   let isLoading = true;
   let isLoggedIn = false;
 
+onMount(async () => {
+});
+
   onMount(async () => {
     isLoading = true;
 
@@ -58,6 +54,11 @@
       await leaderboardService.updateMonthlyLeaderboardData();
       await leaderboardService.updateSeasonLeaderboardData();
 
+      await authStore.sync();
+      authStore.subscribe((store) => {
+        isLoggedIn = store.identity !== null && store.identity !== undefined;
+      });
+      
       managerCount = await managerService.getTotalManagers();
 
       let systemState = await systemService.getSystemState();

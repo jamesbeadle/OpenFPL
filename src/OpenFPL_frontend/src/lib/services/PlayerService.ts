@@ -1,4 +1,6 @@
-import type { DataCache } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { GameweekData } from "$lib/interfaces/GameweekData";
+import type { PlayerGameweekDetails } from "$lib/interfaces/PlayerGameweekDetails";
+import type { DataCache, FantasyTeam, Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { idlFactory } from "../../../../declarations/player_canister";
 import type {
   PlayerDetailDTO,
@@ -98,5 +100,243 @@ export class PlayerService {
       console.error("Error fetching player data:", error);
       throw error;
     }
+  }
+
+  async getGameweekPlayers(fantasyTeam: FantasyTeam, gameweek: number) : Promise<GameweekData[]>{
+    
+    let systemService = new SystemService();
+    let systemState = await systemService.getSystemState();
+    
+    let allPlayerEvents: PlayerPointsDTO[] = [];
+
+    if(systemState?.focusGameweek == gameweek){
+      allPlayerEvents = await this.getPlayerEvents();
+    }
+    else{
+      allPlayerEvents = await this.actor.getPlayersDetailsForGameweek(fantasyTeam.playerIds, systemState?.activeSeason.id, gameweek);    
+    }
+    
+    let detailedPlayers: GameweekData[] = await Promise.all(allPlayerEvents.map(async player => await this.extractPlayerData(player)));
+    
+    //now add in the points calculations
+      const playersWithPoints = detailedPlayers.map(player => {
+      const score = calculatePlayerScore(player, fixtures);
+      const bonusPoints = calculateBonusPoints(player, fantasyTeam, score);
+      const captainPoints = player.id == fantasyTeam.captainId ? (score + bonusPoints) : 0;
+      
+      return {
+          ...player,
+          points: score,
+          bonusPoints: bonusPoints,
+          totalPoints: score + bonusPoints + captainPoints
+      };
+  });
+
+
+    return await Promise.all(detailedPlayers);
+  }
+
+  
+  async extractPlayerData(playerPointsDTO: PlayerPointsDTO) : Promise<GameweekData> {
+    let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, 
+      saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
+    let goalPoints = 0, assistPoints = 0, goalsConcededPoints = 0, cleanSheetPoints = 0;
+
+    playerPointsDTO.events.forEach(event => {
+      switch(event.eventType) {
+          case 0:
+              appearance += 1;
+              break;
+          case 1:
+              goals += 1;
+              switch(playerPointsDTO.position){
+                  case 0:
+                  case 1:
+                      goalPoints += 20;
+                      break;
+                  case 2:
+                      goalPoints += 15;
+                      break;
+                  case 3:
+                      goalPoints += 10;
+                      break;
+              }
+              break;
+          case 2:
+              assists += 1;
+              switch(playerPointsDTO.position){
+                  case 0:
+                  case 1:
+                      assistPoints += 15;
+                      break;
+                  case 2:
+                      case 3:
+                      assistPoints += 10;
+                      break;
+              };
+              break;
+          case 3:
+              goalsConceded += 1;
+              if(playerPointsDTO.position < 2 && goalsConceded % 2 == 0){
+                  goalsConcededPoints += -15;
+              };
+              break;
+          case 4:
+              saves += 1;
+              break;
+          case 5:
+              cleanSheets += 1;
+              if(playerPointsDTO.position < 2 && goalsConceded == 0){
+                  cleanSheetPoints += 10;
+              };
+              break;
+          case 6:
+              penaltySaves += 1;
+              break;
+          case 7:
+              missedPenalties += 1;
+              break;
+          case 8:
+              yellowCards += 1;
+              break;
+          case 9:
+              redCards += 1;
+              break;
+          case 10:
+              ownGoals += 1;
+              break;
+          case 11:
+              highestScoringPlayerId += 1;
+              break;
+      }
+    });
+
+    let playerService = new PlayerService();
+    let allPlayers = await playerService.getPlayers();
+
+
+    let playerGameweekDetails: GameweekData = {
+      player: allPlayers.find(x => x.id == playerPointsDTO.id)!,
+      points: playerPointsDTO.points,
+      appearance: appearance,
+      goals: goals,
+      assists: assists,
+      goalsConceded: goalsConceded,
+      saves: saves,
+      cleanSheets: cleanSheets,
+      penaltySaves: penaltySaves,
+      missedPenalties: missedPenalties,
+      yellowCards: yellowCards,
+      redCards: redCards,
+      ownGoals: ownGoals,
+      highestScoringPlayerId: highestScoringPlayerId,
+      goalPoints: goalPoints,
+      assistPoints: assistPoints,
+      goalsConcededPoints: goalsConcededPoints,
+      cleanSheetPoints: cleanSheetPoints
+    };
+
+    return playerGameweekDetails;
+  }
+
+  
+  calculatePlayerScore (gameweekData: GameweekData, fixtures: Fixture[]) : number {
+    if (!gameweekData) {
+      console.error("No gameweek data found:", gameweekData);
+      return 0;
+    }
+    
+    let score = 0; 
+    let pointsForAppearance = 5;
+    let pointsFor3Saves = 5;
+    let pointsForPenaltySave = 20;
+    let pointsForHighestScore = 25;
+    let pointsForRedCard = -20;
+    let pointsForPenaltyMiss = -10;
+    let pointsForEach2Conceded = -15;
+    let pointsForOwnGoal = -10;
+    let pointsForYellowCard = -5;
+    let pointsForCleanSheet = 10;
+
+    var pointsForGoal = 0;
+    var pointsForAssist = 0;
+
+    if(gameweekData.appearance > 0){
+        score += pointsForAppearance * gameweekData.appearance;
+    }
+
+    if (gameweekData.redCards > 0) {
+        score += pointsForRedCard;
+    }
+
+    if (gameweekData.missedPenalties > 0) {
+        score += pointsForPenaltyMiss * gameweekData.missedPenalties;
+    }
+
+    if (gameweekData.ownGoals > 0) {
+        score += pointsForOwnGoal * gameweekData.ownGoals;
+    }
+
+    if (gameweekData.yellowCards > 0) {
+        score += pointsForYellowCard * gameweekData.yellowCards;
+    }
+
+    switch(gameweekData.player.position){
+        case 0:
+            pointsForGoal = 20;
+            pointsForAssist = 15;     
+            
+            if (gameweekData.saves >= 3) {
+                score += Math.floor(gameweekData.saves / 3) * pointsFor3Saves;
+            }
+            if (gameweekData.penaltySaves) {
+                score += pointsForPenaltySave * gameweekData.penaltySaves;
+            }
+
+            if (gameweekData.cleanSheets > 0) {
+                score += pointsForCleanSheet;
+            }
+            if (gameweekData.goalsConceded >= 2) {
+                score += Math.floor(gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
+            }
+
+            break;
+        case 1:
+            pointsForGoal = 20;
+            pointsForAssist = 15; 
+
+            if (gameweekData.cleanSheets > 0) {
+                score += pointsForCleanSheet;
+            }
+            if (gameweekData.goalsConceded >= 2) {
+                score += Math.floor(gameweekData.goalsConceded / 2) * pointsForEach2Conceded;
+            }
+
+            break;
+        case 2:
+            pointsForGoal = 15;
+            pointsForAssist = 10; 
+            break;
+        case 3:
+            pointsForGoal = 10;
+            pointsForAssist = 10; 
+            break;
+    };
+
+    const gameweekFixtures = fixtures ? fixtures.filter(fixture => fixture.gameweek === gameweekData.gameweek) : [];
+    const playerFixture = gameweekFixtures.find(fixture => 
+        (fixture.homeTeamId === gameweekData.player.teamId || fixture.awayTeamId === gameweekData.player.teamId) && 
+        fixture.highestScoringPlayerId === gameweekData.player.id
+    );
+    if (playerFixture) {
+        score += pointsForHighestScore;
+    }
+
+    
+    score += gameweekData.goals * pointsForGoal;
+
+    score += gameweekData.assists * pointsForAssist;
+
+    return score;
   }
 }

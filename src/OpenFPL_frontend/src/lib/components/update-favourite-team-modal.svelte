@@ -48,21 +48,39 @@
       on:click|stopPropagation
       on:keydown={handleKeydown}>
       <div class="mt-3 text-center">
-        <h3 class="text-lg leading-6 font-medium">Update Favourite Team</h3>
-        <form on:submit|preventDefault={updateFavouriteTeam}>
-          <div class="mt-4">
-            <select class="p-2 fpl-dropdown text-sm md:text-xl" bind:value={newFavouriteTeam}>
-              <option value={0}>Select</option>
-              {#each teams as team}
-                <option value={team.id}>{team.name}</option>
-              {/each}
-            </select>
-          </div>
-          <div class="mt-4">
-            <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white">Update</button>
-          </div>
-        </form>
+        <h3 class="text-lg leading-6 font-medium mb-2">Update Favourite Team</h3>
+        <div class="w-full border border-gray-500 mt-4 mb-2">
+          <select bind:value={newFavouriteTeam} class="w-full p-2 rounded-md fpl-dropdown">
+            <option value={0}>Select Team</option>
+            {#each teams as team}
+              <option value={team.id}>{team.friendlyName}</option>
+            {/each}
+          </select>
+        </div>
+      </div>
+
+      <div
+        class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-1 mt-4"
+        role="alert">
+        <p class="font-bold text-sm">Warning</p>
+        <p class="font-bold text-xs">
+          You can only set your favourite team once per season.
+        </p>
+      </div>
+
+      <div class="items-center py-3 flex space-x-4">
+        <button
+          class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          on:click={closeModal}>
+          Cancel
+        </button>
+        <button
+          class={`px-4 py-2 fpl-purple-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+          on:click={updateFavouriteTeam}>
+          Use
+        </button>
       </div>
     </div>
   </div>
 {/if}
+ 

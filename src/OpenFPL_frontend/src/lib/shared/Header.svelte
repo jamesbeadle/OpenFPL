@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { authStore, type AuthSignInParams } from "$lib/stores/auth";
-  import { derived } from "svelte/store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
   import { onMount } from "svelte";

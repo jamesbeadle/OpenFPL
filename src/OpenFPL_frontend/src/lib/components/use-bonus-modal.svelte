@@ -284,7 +284,7 @@
         {/if}
 
         <div
-          class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
+          class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2"
           role="alert"
         >
           <p class="font-bold text-sm">Warning</p>
@@ -294,7 +294,7 @@
           </p>
         </div>
 
-        <div class="items-center px-4 py-3 flex space-x-4">
+        <div class="items-center py-3 flex space-x-4">
           <button
             class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             on:click={closeBonusModal}
