@@ -236,7 +236,9 @@ export class PlayerService {
       assistPoints: assistPoints,
       goalsConcededPoints: goalsConcededPoints,
       cleanSheetPoints: cleanSheetPoints,
-      gameweek: playerPointsDTO.gameweek
+      gameweek: playerPointsDTO.gameweek,
+      bonusPoints: 0,
+      totalPoints: 0
     };
 
     return playerGameweekDetails;

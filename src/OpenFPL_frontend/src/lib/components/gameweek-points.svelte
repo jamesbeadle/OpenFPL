@@ -57,16 +57,21 @@
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
   };
 
+  /*
   function showDetailModal(playerGameweekDetails: PlayerGameweekDetails, opponent: Team) {
     showModal = true;
   }
+  */
 
 </script>
 
 {#if isLoading}
   <LoadingIcon {progress} />
 {:else}
-  <FantasyPlayerDetailModal />
+  {#if showModal}
+    <FantasyPlayerDetailModal playerTeam={selectedTeam} opponentTeam={selectedOpponentTeam} seasonName={activeSeasonName}  />
+  {/if}
+  
   <div class="container-fluid mt-4">
     <div class="flex flex-col space-y-4">
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">

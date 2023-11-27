@@ -4,6 +4,8 @@ export interface GameweekData {
     player: PlayerDTO,
     gameweek: number;
     points: number,
+    bonusPoints: number,
+    totalPoints: number,
     appearance: number,
     goals: number,
     assists: number,
