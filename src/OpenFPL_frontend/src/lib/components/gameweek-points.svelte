@@ -19,6 +19,10 @@
   let progress = 0;
   let gameweekData: GameweekData[] = [];
   let showModal = false;
+  let selectedTeam: Team;
+  let selectedOpponentTeam: Team;
+  let selectedGameweekData: GameweekData;
+  let activeSeasonName: string;
   
   onMount(async () => {
     try {
@@ -56,11 +60,13 @@
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
   };
 
-  /*
-  function showDetailModal(playerGameweekDetails: PlayerGameweekDetails, opponent: Team) {
+  function showDetailModal() {
     showModal = true;
   }
-  */
+
+  function closeDetailModal(){
+
+  }
 
 </script>
 
@@ -68,7 +74,7 @@
   <LoadingIcon {progress} />
 {:else}
   {#if showModal}
-    <FantasyPlayerDetailModal playerTeam={selectedTeam} opponentTeam={selectedOpponentTeam} seasonName={activeSeasonName}  />
+    <FantasyPlayerDetailModal playerTeam={selectedTeam} opponentTeam={selectedOpponentTeam} seasonName={activeSeasonName} {showModal} {closeDetailModal} gameweekData={selectedGameweekData}  />
   {/if}
   
   <div class="container-fluid mt-4">
