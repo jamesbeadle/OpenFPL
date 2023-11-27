@@ -5,7 +5,6 @@
   import { TeamService } from "$lib/services/TeamService";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import { ManagerService } from "$lib/services/ManagerService";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { PlayerService } from "$lib/services/PlayerService";
   import { getPositionAbbreviation } from "$lib/utils/Helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";

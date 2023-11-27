@@ -112,8 +112,32 @@
                 <div class="text-sm font-medium w-1/6">{gameweekData.goalsConcededPoints}</div>
             </div>
         {/if}
-        
-        
+  
+        {#if gameweekData.player.position == 0}
+            <div class="flex justify-between items-center p-2">
+                <div class="text-sm font-medium w-3/6">Saves</div>
+                <div class="text-sm font-medium w-2/6">{gameweekData.saves}</div>
+                <div class="text-sm font-medium w-1/6">{Math.floor(gameweekData.saves / 3) * 5}</div>
+            </div>
+
+            <div class="flex justify-between items-center p-2">
+                <div class="text-sm font-medium w-3/6">Penalty Saves</div>
+                <div class="text-sm font-medium w-2/6">{gameweekData.penaltySaves}</div>
+                <div class="text-sm font-medium w-1/6">{gameweekData.penaltySaves * 20}</div>
+            </div>
+        {/if}
+  
+        <div class="flex justify-between items-center p-2">
+            <div class="text-sm font-medium w-3/6">Own Goal</div>
+            <div class="text-sm font-medium w-2/6">{gameweekData.ownGoals}</div>
+            <div class="text-sm font-medium w-1/6">{gameweekData.ownGoals * -10}</div>
+        </div>
+  
+        <div class="flex justify-between items-center p-2">
+            <div class="text-sm font-medium w-3/6">Penalty Misses</div>
+            <div class="text-sm font-medium w-2/6">{gameweekData.missedPenalties}</div>
+            <div class="text-sm font-medium w-1/6">{gameweekData.missedPenalties * -15}</div>
+        </div>
   
         <div class="mt-2">
           <div class="flex justify-between items-center bg-light-gray p-2 border-t border-b border-gray-600">
