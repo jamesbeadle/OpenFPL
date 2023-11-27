@@ -146,44 +146,34 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <div class="flex items-center ml-4">
           <div class="flex items-center mr-8">
-            <button
-              class="text-2xl rounded fpl-button px-3 py-1"
-              on:click={() => changeLeaderboardType(-1)}
-            >
+            <button class="text-2xl rounded fpl-button px-3 py-1"
+            on:click={() => changeLeaderboardType(-1)}>
               &lt;
             </button>
 
-            <select
-              class="p-2 fpl-dropdown text-sm md:text-xl text-center mx-2"
-              bind:value={selectedLeaderboardType}
-            >
+            <select class="p-2 fpl-dropdown text-sm md:text-xl text-center mx-2"
+              bind:value={selectedLeaderboardType}>
               <option value={1}>Weekly</option>
               <option value={2}>Monthly</option>
               <option value={3}>Season</option>
             </select>
 
-            <button
-              class="text-2xl rounded fpl-button px-3 py-1 ml-1"
-              on:click={() => changeLeaderboardType(1)}
-            >
+            <button class="text-2xl rounded fpl-button px-3 py-1 ml-1"
+              on:click={() => changeLeaderboardType(1)}>
               &gt;
             </button>
           </div>
 
           {#if selectedLeaderboardType == 1}
             <div class="flex items-center mr-8">
-              <button
-                class="text-2xl rounded fpl-button px-3 py-1"
+              <button class="text-2xl rounded fpl-button px-3 py-1"
                 on:click={() => changeGameweek(-1)}
-                disabled={selectedGameweek === 1}
-              >
+                disabled={selectedGameweek === 1}>
                 &lt;
               </button>
 
-              <select
-                class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-                bind:value={selectedGameweek}
-              >
+              <select class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+                bind:value={selectedGameweek}>
                 {#each gameweeks as gameweek}
                   <option value={gameweek}>Gameweek {gameweek}</option>
                 {/each}
@@ -192,8 +182,7 @@
               <button
                 class="text-2xl rounded fpl-button px-3 py-1 ml-1"
                 on:click={() => changeGameweek(1)}
-                disabled={selectedGameweek === 38}
-              >
+                disabled={selectedGameweek === 38}>
                 &gt;
               </button>
             </div>
@@ -203,15 +192,13 @@
             <div class="flex items-center mr-8">
               <button
                 class="text-2xl rounded fpl-button px-3 py-1"
-                on:click={() => changeTeam(-1)}
-              >
+                on:click={() => changeTeam(-1)}>
                 &lt;
               </button>
 
               <select
                 class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-                bind:value={selectedTeamId}
-              >
+                bind:value={selectedTeamId}>
                 {#each teams as team}
                   <option value={team.id}>{team.friendlyName}</option>
                 {/each}
@@ -219,8 +206,7 @@
 
               <button
                 class="text-2xl rounded fpl-button px-3 py-1 ml-1"
-                on:click={() => changeTeam(1)}
-              >
+                on:click={() => changeTeam(1)}>
                 &gt;
               </button>
             </div>
@@ -228,15 +214,13 @@
             <div class="flex items-center">
               <button
                 class="text-2xl rounded fpl-button px-3 py-1"
-                on:click={() => changeMonth(-1)}
-              >
+                on:click={() => changeMonth(-1)}>
                 &lt;
               </button>
 
               <select
                 class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-                bind:value={selectedMonth}
-              >
+                bind:value={selectedMonth}>
                 <option value={1}>January</option>
                 <option value={2}>February</option>
                 <option value={3}>March</option>
@@ -253,8 +237,7 @@
 
               <button
                 class="text-2xl rounded fpl-button px-3 py-1 ml-1"
-                on:click={() => changeMonth(1)}
-              >
+                on:click={() => changeMonth(1)}>
                 &gt;
               </button>
             </div>
@@ -263,43 +246,33 @@
       </div>
       <div class="flex flex-col space-y-4 mt-4 text-lg">
         <div class="overflow-x-auto flex-1">
-          <div
-            class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
-          >
-            <div class="w-1/6 text-center mx-4">Pos</div>
+          <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
+            <div class="w-1/6 px-4">Pos</div>
             <div class="w-1/3 px-4">Manager</div>
-            <div class="w-1/2 text-center">Points</div>
+            <div class="w-1/2 px-4">Points</div>
           </div>
 
           {#if leaderboard && leaderboard.entries.length > 0}
             {#each leaderboard.entries as entry}
-              <div
-                class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
-              >
-                <div class="w-1/12 text-center">{entry.positionText}</div>
-                <div class="w-1/12 text-center">
+              <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer">
+                <div class="w-1/6 px-4">{entry.positionText}</div>
+                <div class="w-1/3 px-4">
                   <a href={`/manager/${entry.principalId}`}>{entry.username}</a>
                 </div>
-                <div class="w-1/12 text-center">{entry.points}</div>
+                <div class="w-1/2 px-4">{entry.points}</div>
               </div>
             {/each}
             <div class="flex justify-center items-center mt-4 mb-4">
-              <button
-                on:click={() => changePage(-1)}
-                disabled={currentPage === 1}
-                class="px-4 py-2 mx-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
+              <button on:click={() => changePage(-1)} disabled={currentPage === 1}
+                class="px-4 py-2 mx-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
                 Previous
               </button>
 
               <span class="px-4">Page {currentPage}</span>
 
-              <button
-                on:click={() => changePage(1)}
-                disabled={currentPage >= totalPages}
+              <button on:click={() => changePage(1)} disabled={currentPage >= totalPages}
                 class="px-4 py-2 mx-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                >Next</button
-              >
+                >Next</button>
             </div>
           {:else}
             <p class="w-100 p-4">No leaderboard data.</p>

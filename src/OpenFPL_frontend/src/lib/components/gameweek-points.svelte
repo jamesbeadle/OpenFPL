@@ -77,7 +77,7 @@
   }
 
   function closeDetailModal(){
-    
+    showModal = false;
   }
 
 </script>
