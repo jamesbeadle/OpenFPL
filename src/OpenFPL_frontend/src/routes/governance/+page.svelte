@@ -20,7 +20,7 @@
       {#if activeTab === "proposals"}
         <div class="p-4">
           <p>Proposals will appear here after the SNS decentralisation sale.</p>
-          <p>For now the OpenFPL team will continue to add fixture data through <a class="text-blue-500" href="/fixture-data-list">this</a> view.</p>
+          <p>For now the OpenFPL team will continue to add fixture data through <a class="text-blue-500" href="/fixture-validation">this</a> view.</p>
         </div>  
       {/if}
     </div>
