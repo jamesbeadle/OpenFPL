@@ -1,11 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
+
   import Layout from "../Layout.svelte";
   import { writable, get } from "svelte/store";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { toastStore } from "$lib/stores/toast-store";
+  import { systemStore } from '$lib/stores/system-store';
+  import { isLoading } from '$lib/stores/global-stores';
+  import { fixtureStore } from "$lib/stores/fixture-store";
+  import { teamStore } from "$lib/stores/team-store";
+  import { managerStore } from "$lib/stores/manager-store";
+  import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
@@ -18,11 +22,6 @@
   import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
-  import { SystemService } from "$lib/services/SystemService";
-  import { TeamService } from "$lib/services/TeamService";
-  import { ManagerService } from "$lib/services/ManagerService";
-  import { FixtureService } from "$lib/services/FixtureService";
-  import { PlayerService } from "$lib/services/PlayerService";
   import {
     formatUnixDateToReadable,
     formatUnixTimeToTime,
@@ -31,9 +30,8 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import { toastStore } from "$lib/stores/toast-store";
-  import { isLoading } from '$lib/stores/global-stores';
-
+    import { playerStore } from "$lib/stores/player-store";
+  
   interface FormationDetails {
     positions: number[];
   }
@@ -93,35 +91,31 @@
   onMount(async () => {
     isLoading.set(true);
     try {
-
-      await systemService.updateSystemStateData();
-      await fixtureService.updateFixturesData();
-      await teamService.updateTeamsData();
-      await playerService.updatePlayersData();
-
       const storedViewMode = localStorage.getItem("viewMode");
       if (storedViewMode) {
         pitchView = storedViewMode === "pitch";
       }
 
-      let systemState = await systemService.getSystemState();
-      activeGameweek = systemState?.activeGameweek ?? activeGameweek;
-      activeSeason = systemState?.activeSeason.name ?? activeSeason;
+      systemStore.subscribe(systemState => { 
+        activeGameweek = systemState?.activeGameweek ?? activeGameweek;
+        activeSeason = systemState?.activeSeason.name ?? activeSeason;
+      });
 
+      let nextFixture = await fixtureStore.getNextFixture();
 
-      let nextFixture = await fixtureService.getNextFixture();
+      teamStore.subscribe(teams => {
+        teams = teams;
+      });
 
-      teams = await teamService.getTeams();
-
-      nextFixtureHomeTeam = await teamService.getTeamById(
-        nextFixture.homeTeamId
+      nextFixtureHomeTeam = await teamStore.getTeamById(
+        nextFixture?.homeTeamId ?? 0
       );
 
-      nextFixtureAwayTeam = await teamService.getTeamById(
-        nextFixture.awayTeamId
+      nextFixtureAwayTeam = await teamStore.getTeamById(
+        nextFixture?.awayTeamId ?? 0
       );
 
-      let userFantasyTeam = await managerService.getFantasyTeam();
+      let userFantasyTeam = await managerStore.getFantasyTeam();
       fantasyTeam.set(userFantasyTeam);
 
       let principalId = get(fantasyTeam)?.principalId ?? "";
@@ -145,15 +139,17 @@
         return currentTeam;
       });
 
-      nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
-      nextFixtureTime = formatUnixTimeToTime(Number(nextFixture.kickOff));
+      nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
+      nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
 
-      let countdownTime = getCountdownTime(Number(nextFixture.kickOff));
+      let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
-      players = await playerService.getPlayers();
+      await playerStore.subscribe(players => {
+        players = players
+      });
 
     } catch (error) {
       toastStore.show("Error fetching team details.", "error");
@@ -675,7 +671,7 @@
     }
 
     try {
-      await managerService.saveFantasyTeam(team!, activeGameweek);
+      await managerStore.saveFantasyTeam(team!, activeGameweek);
       toastStore.show("Team saved successully!", "success");
     } catch (error) {
       toastStore.show("Error saving team.", "error");

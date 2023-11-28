@@ -21,16 +21,15 @@
   import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-    import { playerStore } from "$lib/stores/player-store";
-    import { teamStore } from "$lib/stores/team-store";
-    import { fixtureStore } from "$lib/stores/fixture-store";
+  import { playerStore } from "$lib/stores/player-store";
+  import { teamStore } from "$lib/stores/team-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
   
   let selectedGameweek: number = 1;
   let selectedPlayer: PlayerDTO | null = null;
   let fixtures: FixtureWithTeams[] = [];
   let teams: Team[] = [];
   let team: Team | null = null;
-  let players: PlayerDTO[] = [];
   let nextFixture: Fixture | null = null;
   let nextFixtureHomeTeam: Team | null = null;
   let nextFixtureAwayTeam: Team | null = null;
@@ -47,21 +46,19 @@
 
     try {
 
-      //NEED TO IMPLEMENT LIKE THE OTHER STORES USE EACH OTHER BY DEFINING AND ASSIGNING BUT SHOULD THIS BE DONE ONE MOUNT I THINK SO CHAT WITH AI?
-      let players = await playerStore.getPlayers();
-      let teams = await teamStore.getTeams();
-      let fixtures = await fixtureStore.getFixtures();
+      let players: PlayerDTO[] = [];
+      playerStore.subscribe(value => { players = value as PlayerDTO[] });
+      
+      let teams: Team[] = [];
+      teamStore.subscribe(value => { teams = value as Team[] });
+      
+      let allFixtures: Fixture[] = [];
+      fixtureStore.subscribe(value => { allFixtures = value as Fixture[] });
       
       selectedPlayer = players.find((x) => x.id === id) ?? null;
       team = teams.find((x) => x.id === selectedPlayer?.teamId) ?? null;
 
-      let teamFixtures = fixtures.filter((x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id);
-      fixtures = teamFixtures.map((fixture) => ({
-        fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
-      }));
-
+      let teamFixtures = allFixtures.filter((x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id);
       let systemState = await systemStore.getSystemState();
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
 
