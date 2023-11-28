@@ -1,17 +1,18 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import Layout from "../Layout.svelte";
+  import { onMount, onDestroy } from "svelte";
   import { page } from "$app/stores";
+  import { teamStore } from "$lib/stores/team-store";
+  import { systemStore } from "$lib/stores/system-store";
+  import { managerStore } from "$lib/stores/manager-store";
+  import Layout from "../Layout.svelte";
   import ManagerGameweekDetails from "$lib/components/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
-  import { ManagerService } from "$lib/services/ManagerService";
   import type {
     FantasyTeam,
     ManagerDTO,
+    SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { SystemService } from "$lib/services/SystemService";
-  import { TeamService } from "$lib/services/TeamService";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Writable } from "svelte/store";
   import { toastStore } from "$lib/stores/toast-store";
@@ -26,20 +27,31 @@
   let teams: Team[];
   let favouriteTeam: Team | null = null;
   let fantasyTeam: Writable<FantasyTeam | null>;
+  let systemState: SystemState | null;
+  
+  let unsubscribeSystemState: () => void;
+  let unsubscribeTeams: () => void;
 
   $: id = $page.url.searchParams.get("id");
-  $: gw = Number($page.url.searchParams.get("gw"));
+  $: gw = Number($page.url.searchParams.get("gw")) ?? 0;
   onMount(async () => {
     isLoading.set(true);
     try {
-      let systemState = await systemService.getSystemState();
-      selectedGameweek = gw ? gw : systemState?.activeGameweek ?? 1;
-      selectedSeason = systemState?.activeSeason.name ?? "";
+      systemStore.sync();
+      teamStore.sync();
 
-      manager = await managerService.getManager(
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+   
+      manager = await managerStore.getManager(
         id ?? "",
         systemState?.activeSeason.id ?? 1,
-        systemState?.activeGameweek ?? 1
+        gw && gw > 0 ? gw : systemState?.activeGameweek ?? 1
       );
       const blob = new Blob([new Uint8Array(manager.profilePicture)]);
       const blobUrl =
@@ -66,7 +78,6 @@
       ];
       joinedDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
 
-      teams = await teamService.getTeams();
       favouriteTeam =
         manager.favouriteTeamId > 0
           ? teams.find((x) => x.id == manager.favouriteTeamId) ?? null
@@ -76,6 +87,11 @@
       toastStore.show("Error fetching manager details.", "error");
       console.error("Error fetching manager details:", error);
     }
+  });
+
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribeSystemState?.();
   });
 
   function setActiveTab(tab: string): void {

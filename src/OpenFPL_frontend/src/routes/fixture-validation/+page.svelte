@@ -1,40 +1,60 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import type {
-    Fixture,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { onMount, onDestroy } from "svelte";
+  import type { Fixture, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import { PlayerService } from "$lib/services/PlayerService";
-  import { SystemService } from "$lib/services/SystemService";
-  import { TeamService } from "$lib/services/TeamService";
-  import { GovernanceService } from "$lib/services/GovernanceService";
+  import { systemStore } from "$lib/stores/system-store";
+  import { governanceStore } from "$lib/stores/governance-store";
+  import { teamStore } from "$lib/stores/team-store";
+  import { playerStore } from "$lib/stores/player-store";
   import { toastStore } from "$lib/stores/toast-store";
 
   let teams: Team[];
   let fixtures: Fixture[];
   let players: PlayerDTO[];
+  let systemState: SystemState | null;
+
+  let unsubscribeSystemState: () => void;
+  let unsubscribeTeams: () => void;
+  let unsubscribePlayers: () => void;
+  let unsubscribeFixtures: () => void;
+
   let currentGameweek: number;
   let currentSeason: string;
   let isLoading = true;
 
   onMount(async () => {
     try {
-      fixtures = await governanceService.getValidatableFixtures();
+        systemStore.sync();
+        teamStore.sync();
+        playerStore.sync();
+
+        unsubscribeSystemState = systemStore.subscribe((value) => {
+          systemState = value;
+          currentSeason = systemState?.activeSeason.name ?? "";
+        });
+      
+        unsubscribeTeams = teamStore.subscribe((value) => {
+          teams = value;
+        });
+        
+        unsubscribePlayers = playerStore.subscribe((value) => {
+          players = value;
+        });
+
+      fixtures = await governanceStore.getValidatableFixtures();
       currentGameweek = fixtures[0].gameweek;
-
-      players = await playerService.getPlayers();
-
-      teams = await teamService.getTeams();
-
-      let systemState = await systemService.getSystemState();
-      currentSeason = systemState?.activeSeason.name ?? "";
     } catch (error) {
       toastStore.show("Error fetching fixture validation list.", "error");
       console.error("Error fetching fixture validation list.", error);
     } finally {
       isLoading = false;
     }
+  });
+
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribePlayers?.();
+    unsubscribeSystemState?.();
   });
 
   function getTeamById(teamId: number): Team {
