@@ -48,7 +48,7 @@
 
         let fixtureService = new FixtureService();
         fixtures = await fixtureService.getFixtures();
-        fixture = fixtures.find(x => x.id == fixtureId) ?? null;
+        fixture = fixtures.find(x => x.id === fixtureId) ?? null;
 
         const draftKey = `fixtureDraft_${fixtureId}`;
         const savedDraft = localStorage.getItem(draftKey);
@@ -121,7 +121,7 @@
         </ul>
 
         {#if activeTab === "home"}
-          {#each $selectedPlayers.filter(x => x.teamId == fixture?.homeTeamId) as player (player.id)}
+          {#each $selectedPlayers.filter(x => x.teamId === fixture?.homeTeamId) as player (player.id)}
             <div class="card player-card mb-4">
               <div class="card-header">
                   <h5>{player.lastName}</h5>
@@ -134,7 +134,7 @@
             </div>
           {/each}
         {:else if activeTab === "away"}
-          {#each $selectedPlayers.filter(x => x.teamId == fixture?.awayTeamId) as player (player.id)}
+          {#each $selectedPlayers.filter(x => x.teamId === fixture?.awayTeamId) as player (player.id)}
               <div class="card player-card mb-4">
                 <div class="card-header">
                     <h5>{player.lastName}</h5>

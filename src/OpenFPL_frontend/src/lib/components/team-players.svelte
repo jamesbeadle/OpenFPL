@@ -55,10 +55,10 @@
             href={`/player?id=${player.id}`}
           >
             <div class="flex items-center w-1/2 px-3">
-              {player.shirtNumber == 0 ? "-" : player.shirtNumber}
+              {player.shirtNumber === 0 ? "-" : player.shirtNumber}
             </div>
             <div class="flex items-center w-1/2 px-3">
-              {player.firstName == "" ? "-" : player.firstName}
+              {player.firstName === "" ? "-" : player.firstName}
             </div>
             <div class="flex items-center w-1/2 px-3">
               {player.lastName}

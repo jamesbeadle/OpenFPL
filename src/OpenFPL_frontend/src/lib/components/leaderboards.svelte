@@ -165,7 +165,7 @@
             </button>
           </div>
 
-          {#if selectedLeaderboardType == 1}
+          {#if selectedLeaderboardType === 1}
             <div class="flex items-center mr-8">
               <button class="text-2xl rounded fpl-button px-3 py-1"
                 on:click={() => changeGameweek(-1)}
@@ -189,7 +189,7 @@
             </div>
           {/if}
 
-          {#if selectedLeaderboardType == 2}
+          {#if selectedLeaderboardType === 2}
             <div class="flex items-center mr-8">
               <button
                 class="text-2xl rounded fpl-button px-3 py-1"

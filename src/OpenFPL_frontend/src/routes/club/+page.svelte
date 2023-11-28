@@ -54,10 +54,10 @@
       const fetchedPlayers = await playersService.getPlayers();
 
       teams = fetchedTeams;
-      team = fetchedTeams.find((x) => x.id == id) ?? null;
+      team = fetchedTeams.find((x) => x.id === id) ?? null;
 
       let teamFixtures = fetchedFixtures.filter(
-        (x) => x.homeTeamId == id || x.awayTeamId == id
+        (x) => x.homeTeamId === id || x.awayTeamId === id
       );
 
       fixtures = teamFixtures.map((fixture) => ({
@@ -65,7 +65,7 @@
         homeTeam: getTeamFromId(fixture.homeTeamId),
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
-      players = fetchedPlayers.filter((player) => player.teamId == id);
+      players = fetchedPlayers.filter((player) => player.teamId === id);
       highestScoringPlayer = players
         .sort((a, b) => a.totalPoints - b.totalPoints)
         .sort((a, b) => Number(b.value) - Number(a.value))[0];
@@ -73,7 +73,7 @@
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
       nextFixture =
-        teamFixtures.find((x) => x.gameweek == selectedGameweek) ?? null;
+        teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
 

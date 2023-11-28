@@ -50,11 +50,11 @@
     };
 
     function getPlayerDTO(playerId: number): PlayerDTO | null{
-        return players.find(x => x.id == playerId) ?? null;
+        return players.find(x => x.id === playerId) ?? null;
     };
 
     function getPlayerTeam(teamId: number): Team | null{
-        return teams.find(x => x.id == teamId) ?? null;
+        return teams.find(x => x.id === teamId) ?? null;
     }
 
 </script>
@@ -120,8 +120,8 @@
                 </div>
                 <div class="w-1/2">
                     <div class={`w-1/12 text-center ${data.appearance > 0 ? '' : 'text-gray-500'}`}>{data.appearance}</div>
-                    <div class={`w-1/12 text-center ${data.highestScoringPlayerId == playerDTO?.id ? '' : 'text-gray-500'}`}>
-                        {data.highestScoringPlayerId == playerDTO?.id ? 1 : 0}
+                    <div class={`w-1/12 text-center ${data.highestScoringPlayerId === playerDTO?.id ? '' : 'text-gray-500'}`}>
+                        {data.highestScoringPlayerId === playerDTO?.id ? 1 : 0}
                     </div>
                     <div class={`w-1/12 text-center ${data.goals > 0 ? '' : 'text-gray-500'}`}>{data.goals}</div>
                     <div class={`w-1/12 text-center ${data.assists > 0 ? '' : 'text-gray-500'}`}>{data.assists}</div>

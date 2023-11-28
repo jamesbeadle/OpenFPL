@@ -436,7 +436,7 @@
         );
       }
       bankBalance.update(
-        (n) => n + Number(players.find((x) => x.id == playerId)?.value) ?? 0
+        (n) => n + Number(players.find((x) => x.id === playerId)?.value) ?? 0
       );
 
       return { ...currentTeam, playerIds: newPlayerIds };
@@ -457,7 +457,7 @@
   function updateCaptainIfNeeded(currentTeam: FantasyTeam) {
     if (
       !currentTeam.captainId ||
-      currentTeam.captainId == 0 ||
+      currentTeam.captainId === 0 ||
       !currentTeam.playerIds.includes(currentTeam.captainId)
     ) {
       const newCaptainId = getHighestValuedPlayerId(currentTeam);
@@ -676,15 +676,15 @@
     isLoading = true;
     let team = get(fantasyTeam);
 
-    if(team?.captainId == 0 || !team?.playerIds.includes(team?.captainId)){
+    if(team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)){
       team!.captainId = getHighestValuedPlayerId(team!);
     }
 
-    if(team?.safeHandsGameweek == activeGameweek && team?.safeHandsPlayerId != team?.playerIds[0]){
+    if(team?.safeHandsGameweek === activeGameweek && team?.safeHandsPlayerId !== team?.playerIds[0]){
       team.safeHandsPlayerId = team?.playerIds[0];
     }
 
-    if(team?.captainFantasticGameweek == activeGameweek && team?.captainFantasticPlayerId != team?.captainId){
+    if(team?.captainFantasticGameweek === activeGameweek && team?.captainFantasticPlayerId !== team?.captainId){
       team.captainFantasticPlayerId = team?.captainId;
     }
 
@@ -839,9 +839,9 @@
 
           <div class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3">
             <button
-              disabled={$fantasyTeam?.playerIds ? $fantasyTeam?.playerIds.filter((x) => x == 0).length == 0 : true}
+              disabled={$fantasyTeam?.playerIds ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0 : true}
               on:click={autofillTeam}
-              class={`btn w-full md:w-auto px-4 py-2 rounded ${ $fantasyTeam?.playerIds && $fantasyTeam?.playerIds.filter((x) => x == 0).length > 0 
+              class={`btn w-full md:w-auto px-4 py-2 rounded ${ $fantasyTeam?.playerIds && $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0 
               ? "fpl-purple-btn" : "bg-gray-500" } text-white min-w-[125px]`}>
               Auto Fill
             </button>
@@ -891,7 +891,7 @@
                     {@const player = players.find((p) => p.id === playerId)}
                     <div class="flex flex-col justify-center items-center flex-1">
                       {#if playerId > 0 && player}
-                        {@const team = teams.find((x) => x.id == player.teamId)}
+                        {@const team = teams.find((x) => x.id === player.teamId)}
                         <div class="mt-2 mb-2 md:mb-12 flex flex-col items-center text-center">
                           <div class="flex justify-center items-center">
                             <div class="flex justify-between items-end w-full">
@@ -964,7 +964,7 @@
           <div class="bg-panel rounded-md m-4 flex-1">
             <div class="container-fluid">
               {#each gridSetup as row, rowIndex}
-                {#if rowIndex == 0}
+                {#if rowIndex === 0}
                   <div class="flex items-center justify-between py-2 bg-light-gray px-4">
                     <div class="w-1/3">Goalkeeper</div>
                     <div class="w-1/6">(c)</div>
@@ -973,7 +973,7 @@
                     <div class="w-1/6">&nbsp;</div>
                   </div>
                 {/if}
-                {#if rowIndex == 1}
+                {#if rowIndex === 1}
                   <div class="flex items-center justify-between py-2 bg-light-gray px-4">
                     <div class="w-1/3">Defenders</div>
                     <div class="w-1/6">(c)</div>
@@ -982,7 +982,7 @@
                     <div class="w-1/6">&nbsp;</div>
                   </div>
                 {/if}
-                {#if rowIndex == 2}
+                {#if rowIndex === 2}
                   <div class="flex items-center justify-between py-2 bg-light-gray px-4">
                     <div class="w-1/3">Midfielders</div>
                     <div class="w-1/6">(c)</div>
@@ -991,7 +991,7 @@
                     <div class="w-1/6">&nbsp;</div>
                   </div>
                 {/if}
-                {#if rowIndex == 3}
+                {#if rowIndex === 3}
                   <div class="flex items-center justify-between py-2 bg-light-gray px-4">
                     <div class="w-1/3">Forwards</div>
                     <div class="w-1/6">(c)</div>
@@ -1005,7 +1005,7 @@
                   {@const playerIds = $fantasyTeam?.playerIds ?? []}
                   {@const playerId = playerIds[actualIndex]}
                   {@const player = players.find((p) => p.id === playerId)}
-                  {@const team = teams.find((x) => x.id == player?.teamId)}
+                  {@const team = teams.find((x) => x.id === player?.teamId)}
 
                   <div class="flex items-center justify-between py-2 px-4">
                     {#if playerId > 0 && player}

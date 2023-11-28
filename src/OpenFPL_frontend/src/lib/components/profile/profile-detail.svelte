@@ -188,7 +188,7 @@
             Update
           </button>
           <p class="text-xs mb-2 mt-4">Favourite Team:</p>
-          <h2 class="text-2xl font-bold mb-2">{teams.find(x => x.id == profile.favouriteTeamId)?.friendlyName}</h2>
+          <h2 class="text-2xl font-bold mb-2">{teams.find(x => x.id === profile.favouriteTeamId)?.friendlyName}</h2>
           <button
           class="p-2 px-4 rounded fpl-button"
             on:click={displayFavouriteTeamModal}

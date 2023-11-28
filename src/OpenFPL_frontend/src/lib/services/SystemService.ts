@@ -19,7 +19,7 @@ export class SystemService {
   async updateSystemStateData() {
     let category = "system_state";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
     if (liveHash?.hash != localHash) {

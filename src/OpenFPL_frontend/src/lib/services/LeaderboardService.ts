@@ -22,7 +22,7 @@ export class LeaderboardService {
   async updateWeeklyLeaderboardData() {
     let category = "weekly_leaderboard";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
       let systemService = new SystemService();
@@ -43,7 +43,7 @@ export class LeaderboardService {
   async updateMonthlyLeaderboardData() {
     let category = "monthly_leaderboards";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
       let systemService = new SystemService();
@@ -64,7 +64,7 @@ export class LeaderboardService {
   async updateSeasonLeaderboardData() {
     let category = "season_leaderboard";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category == category) ?? null;
+    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
       let systemService = new SystemService();

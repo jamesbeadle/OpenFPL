@@ -113,7 +113,7 @@
             </div>
         {/if}
   
-        {#if gameweekData.player.position == 0}
+        {#if gameweekData.player.position === 0}
             <div class="flex justify-between items-center p-2">
                 <div class="text-sm font-medium w-3/6">Saves</div>
                 <div class="text-sm font-medium w-2/6">{gameweekData.saves}</div>

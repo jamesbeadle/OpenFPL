@@ -25,7 +25,7 @@ export class PlayerService {
     let category = "players";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let livePlayersHash =
-      newHashValues.find((x) => x.category == category) ?? null;
+      newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (livePlayersHash?.hash != localHash) {
       let updatedPlayersData = await this.actor.getAllPlayers();
@@ -54,7 +54,7 @@ export class PlayerService {
     let category = "player_events";
     const newHashValues: DataCache[] = await this.actor.getDataHashes();
     let livePlayersHash =
-      newHashValues.find((x) => x.category == category) ?? null;
+      newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (livePlayersHash?.hash != localHash) {
       let systemService = new SystemService();
@@ -109,7 +109,7 @@ export class PlayerService {
     
     let allPlayerEvents: PlayerPointsDTO[] = [];
 
-    if(systemState?.focusGameweek == gameweek){
+    if(systemState?.focusGameweek === gameweek){
       allPlayerEvents = await this.getPlayerEvents();
     }
     else{
@@ -124,7 +124,7 @@ export class PlayerService {
     const playersWithPoints = gameweekData.map(entry => {
       const score = this.calculatePlayerScore(entry, allFixtures);
       const bonusPoints = this.calculateBonusPoints(entry, fantasyTeam, score);
-      const captainPoints = entry.player.id == fantasyTeam.captainId ? (score + bonusPoints) : 0;
+      const captainPoints = entry.player.id === fantasyTeam.captainId ? (score + bonusPoints) : 0;
       
       return {
           ...entry,
@@ -179,7 +179,7 @@ export class PlayerService {
               break;
           case 3:
               goalsConceded += 1;
-              if(playerPointsDTO.position < 2 && goalsConceded % 2 == 0){
+              if(playerPointsDTO.position < 2 && goalsConceded % 2 === 0){
                   goalsConcededPoints += -15;
               };
               break;
@@ -188,7 +188,7 @@ export class PlayerService {
               break;
           case 5:
               cleanSheets += 1;
-              if(playerPointsDTO.position < 2 && goalsConceded == 0){
+              if(playerPointsDTO.position < 2 && goalsConceded === 0){
                   cleanSheetPoints += 10;
               };
               break;
@@ -218,7 +218,7 @@ export class PlayerService {
 
 
     let playerGameweekDetails: GameweekData = {
-      player: allPlayers.find(x => x.id == playerPointsDTO.id)!,
+      player: allPlayers.find(x => x.id === playerPointsDTO.id)!,
       points: playerPointsDTO.points,
       appearance: appearance,
       goals: goals,

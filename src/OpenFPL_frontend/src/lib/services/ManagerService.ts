@@ -117,45 +117,45 @@ export class ManagerService {
   getBonusPlayed(userFantasyTeam: FantasyTeam, activeGameweek: number): number {
     let bonusPlayed = 0;
 
-    if (userFantasyTeam.goalGetterGameweek == activeGameweek) {
+    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
       bonusPlayed = 1;
     }
 
-    if (userFantasyTeam.passMasterGameweek == activeGameweek) {
+    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
       bonusPlayed = 2;
     }
 
-    if (userFantasyTeam.noEntryGameweek == activeGameweek) {
+    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
       bonusPlayed = 3;
     }
 
-    if (userFantasyTeam.teamBoostGameweek == activeGameweek) {
+    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
       bonusPlayed = 4;
     }
 
-    if (userFantasyTeam.safeHandsGameweek == activeGameweek) {
+    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
       bonusPlayed = 5;
     }
 
-    if (userFantasyTeam.captainFantasticGameweek == activeGameweek) {
+    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
       bonusPlayed = 6;
     }
 
     /* Coming soon
-    if(userFantasyTeam.prospectsGameweek == activeGameweek){
+    if(userFantasyTeam.prospectsGameweek === activeGameweek){
       bonusPlayed = 7;
     }
 
-    if(userFantasyTeam.countrymenGameweek == activeGameweek){
+    if(userFantasyTeam.countrymenGameweek === activeGameweek){
       bonusPlayed = 8;
     }
     */
 
-    if (userFantasyTeam.hatTrickHeroGameweek == activeGameweek) {
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
       bonusPlayed = 7;
     }
 
-    if (userFantasyTeam.hatTrickHeroGameweek == activeGameweek) {
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
       bonusPlayed = 8;
     }
 
@@ -168,23 +168,23 @@ export class ManagerService {
   ): number {
     let bonusPlayerId = 0;
 
-    if (userFantasyTeam.goalGetterGameweek == activeGameweek) {
+    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
       bonusPlayerId = userFantasyTeam.goalGetterPlayerId;
     }
 
-    if (userFantasyTeam.passMasterGameweek == activeGameweek) {
+    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
       bonusPlayerId = userFantasyTeam.passMasterPlayerId;
     }
 
-    if (userFantasyTeam.noEntryGameweek == activeGameweek) {
+    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
       bonusPlayerId = userFantasyTeam.noEntryPlayerId;
     }
 
-    if (userFantasyTeam.safeHandsGameweek == activeGameweek) {
+    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
       bonusPlayerId = userFantasyTeam.safeHandsPlayerId;
     }
 
-    if (userFantasyTeam.captainFantasticGameweek == activeGameweek) {
+    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
       bonusPlayerId = userFantasyTeam.captainId;
     }
 
@@ -194,7 +194,7 @@ export class ManagerService {
   getBonusTeamId(userFantasyTeam: FantasyTeam, activeGameweek: number): number {
     let bonusTeamId = 0;
 
-    if (userFantasyTeam.teamBoostGameweek == activeGameweek) {
+    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
       bonusTeamId = userFantasyTeam.teamBoostTeamId;
     }
 

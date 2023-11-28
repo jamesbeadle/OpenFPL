@@ -78,7 +78,7 @@
   }
 
   function viewGameweekDetail(principalId: string, selectedGameweek: number){
-    fantasyTeam.set(manager.gameweeks.find(x => x.gameweek == selectedGameweek)!);
+    fantasyTeam.set(manager.gameweeks.find(x => x.gameweek === selectedGameweek)!);
     setActiveTab('details');
   }
 </script>
@@ -153,18 +153,18 @@
         
         <div class="flex justify-between items-center text-white px-4 pt-4 rounded-md w-full">
           <div class="flex">
-            <button class={`btn ${activeTab == "details" ? `fpl-button` : `inactive-btn`} px-4 py-2 rounded-l-md font-bold text-md min-w-[125px]`}
+            <button class={`btn ${activeTab === "details" ? `fpl-button` : `inactive-btn`} px-4 py-2 rounded-l-md font-bold text-md min-w-[125px]`}
               on:click={() => setActiveTab("details")}>
               Details
             </button>
-            <button class={`btn ${activeTab == "gameweeks" ? `fpl-button` : `inactive-btn`} px-4 py-2 rounded-r-md font-bold text-md min-w-[125px]`}
+            <button class={`btn ${activeTab === "gameweeks" ? `fpl-button` : `inactive-btn`} px-4 py-2 rounded-r-md font-bold text-md min-w-[125px]`}
               on:click={() => setActiveTab("gameweeks")}>
               Gameweeks
             </button>
           </div>
           
           <div class="px-4">
-            {#if activeTab == 'details'}<span class="text-2xl">Total Points: {0}</span>{/if}
+            {#if activeTab === 'details'}<span class="text-2xl">Total Points: {0}</span>{/if}
           </div>
         </div>
         

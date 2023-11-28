@@ -21,16 +21,16 @@
     selectedFixtureType === -1
       ? fixtures.filter(
           ({ fixture }) =>
-            clubId == null ||
+            clubId === null ||
             fixture.homeTeamId === clubId ||
             fixture.awayTeamId === clubId
         )
       : selectedFixtureType === 0
       ? fixtures.filter(
-          ({ fixture }) => clubId == null || fixture.homeTeamId === clubId
+          ({ fixture }) => clubId === null || fixture.homeTeamId === clubId
         )
       : fixtures.filter(
-          ({ fixture }) => clubId == null || fixture.awayTeamId === clubId
+          ({ fixture }) => clubId === null || fixture.awayTeamId === clubId
         );
 
   onMount(async () => {

@@ -64,12 +64,12 @@
       const fetchedPlayers = await playersService.getPlayers();
 
       players = fetchedPlayers;
-      selectedPlayer = players.find((x) => x.id == id) ?? null;
+      selectedPlayer = players.find((x) => x.id === id) ?? null;
       teams = fetchedTeams;
-      team = fetchedTeams.find((x) => x.id == selectedPlayer?.teamId) ?? null;
+      team = fetchedTeams.find((x) => x.id === selectedPlayer?.teamId) ?? null;
 
       let teamFixtures = fetchedFixtures.filter(
-        (x) => x.homeTeamId == team?.id || x.awayTeamId == team?.id
+        (x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id
       );
       fixtures = teamFixtures.map((fixture) => ({
         fixture,
@@ -82,7 +82,7 @@
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
 
       nextFixture =
-        teamFixtures.find((x) => x.gameweek == selectedGameweek) ?? null;
+        teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
 

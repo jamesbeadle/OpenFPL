@@ -40,7 +40,7 @@
     });
 
     function getTeamById(teamId: number) : Team{
-        return teams.find(x => x.id == teamId)!; 
+        return teams.find(x => x.id === teamId)!; 
     }
   </script>
   

@@ -122,7 +122,7 @@
   {#if playerDetails}
     <PlayerGameweekModal
       gameweekDetail={playerDetails.gameweeks.find(
-        (x) => x.number == selectedGameweek
+        (x) => x.number === selectedGameweek
       ) ?? null}
       opponentTeam={selectedOpponent}
       playerTeam={getTeamFromId(playerDetails.teamId) ?? null}

@@ -67,12 +67,12 @@
     try{
       selectedGameweekData = gameweekData;
       let playerTeamId = gameweekData.player.teamId;
-      selectedTeam = teams.find(x => x.id == playerTeamId)!;
+      selectedTeam = teams.find(x => x.id === playerTeamId)!;
       let fixtureService = new FixtureService();
       let fixtures = await fixtureService.getFixtures();
-      let playerFixture = fixtures.find(x => x.gameweek == gameweekData.gameweek && (x.homeTeamId == playerTeamId || x.awayTeamId == playerTeamId))
-      let opponentId = playerFixture?.homeTeamId == playerTeamId ? playerFixture?.awayTeamId : playerFixture?.homeTeamId;
-      selectedOpponentTeam = teams.find(x => x.id == opponentId)!;
+      let playerFixture = fixtures.find(x => x.gameweek === gameweekData.gameweek && (x.homeTeamId === playerTeamId || x.awayTeamId === playerTeamId))
+      let opponentId = playerFixture?.homeTeamId === playerTeamId ? playerFixture?.awayTeamId : playerFixture?.homeTeamId;
+      selectedOpponentTeam = teams.find(x => x.id === opponentId)!;
       showModal = true;
     }
     catch(error){
