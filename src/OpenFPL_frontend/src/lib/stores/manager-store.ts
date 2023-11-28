@@ -24,24 +24,6 @@ function createManagerStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function actorFromIdentity() {
-    let unsubscribe: Unsubscriber;
-    return new Promise<OptionIdentity>((resolve, reject) => {
-      unsubscribe = authStore.subscribe((store) => {
-        if (store.identity) {
-          resolve(store.identity);
-        }
-      });
-    }).then((identity) => {
-      unsubscribe();
-      return ActorFactory.createActor(
-        idlFactory,
-        process.env.OPENFPL_BACKEND_CANISTER_ID,
-        identity
-      );
-    });
-  }
-
   async function getManager(
     managerId: string,
     seasonId: number,
@@ -88,7 +70,7 @@ function createManagerStore() {
 
   async function getFantasyTeam(): Promise<any> {
     try {
-      const identityActor = await actorFromIdentity();
+      const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
       const fantasyTeam = await identityActor.getFantasyTeam();
       return fantasyTeam;
     } catch (error) {
@@ -105,7 +87,7 @@ function createManagerStore() {
       let bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
       let bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
       let bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
-      const identityActor = await actorFromIdentity();
+      const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
       const fantasyTeam = await identityActor.saveFantasyTeam(
         userFantasyTeam.playerIds,
         userFantasyTeam.captainId,

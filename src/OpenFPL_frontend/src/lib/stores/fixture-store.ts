@@ -1,46 +1,26 @@
-import { authStore } from "$lib/stores/auth";
-import type { OptionIdentity } from "$lib/types/Identity";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type {
-  DataCache,
-  Fixture,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { DataCache,Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
 function createFixtureStore() {
   const { subscribe, set } = writable<Fixture[]>([]);
 
-  let actor: any;
-
-  async function actorFromIdentity() {
-    const identity = await new Promise<OptionIdentity>((resolve, reject) => {
-      const unsubscribe = authStore.subscribe((store) => {
-        if (store.identity) {
-          unsubscribe();
-          resolve(store.identity);
-        }
-      });
-    });
-
-    return ActorFactory.createActor(
-      idlFactory,
-      process.env.OPENFPL_BACKEND_CANISTER_ID,
-      identity
-    );
-  }
+  const actor = ActorFactory.createActor(
+    idlFactory,
+    process.env.OPENFPL_BACKEND_CANISTER_ID
+  );
 
   async function sync() {
-    if (!actor) actor = await actorFromIdentity();
-
+    
     let category = "fixtures";
-    const newHashValues: DataCache[] = await actor.getDataHashes();
+    const newHashValues: DataCache[] = await actor.getDataHashes() as DataCache[];
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
     if (liveHash?.hash != localHash) {
-      let updatedFixturesData = await actor.getFixtures();
+      let updatedFixturesData = await actor.getFixtures() as Fixture[];
       localStorage.setItem(
         "fixtures_data",
         JSON.stringify(updatedFixturesData, replacer)

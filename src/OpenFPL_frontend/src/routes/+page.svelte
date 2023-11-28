@@ -42,8 +42,9 @@
 
   onMount(async () => {
     isLoading.set(true);
-
     try {
+      await systemStore.sync();
+      await fixtureStore.sync();
       await authStore.sync();
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
@@ -52,6 +53,7 @@
       managerCount = await managerStore.getTotalManagers();
 
       let systemState = await systemStore.getSystemState();
+      console.log(systemState)
       activeGameweek = systemState?.activeGameweek ?? activeGameweek;
       activeSeason = systemState?.activeSeason.name ?? activeSeason;
       focusGameweek = systemState?.focusGameweek ?? activeGameweek;
@@ -236,12 +238,18 @@
             GW {focusGameweek} High Score
           </p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            <a
-              href={`/manager?id=${weeklyLeader.principalId}&gw=${activeGameweek}`}
-              >{weeklyLeader.username}</a
-            >
+            {#if weeklyLeader}
+              <a href={`/manager?id=${weeklyLeader.principalId}&gw=${activeGameweek}`}>{weeklyLeader.username}</a>
+            {:else}
+              -
+            {/if}
           </p>
-          <p class="text-gray-300 text-xs">{weeklyLeader.points} points</p>
+          <p class="text-gray-300 text-xs">
+            {#if weeklyLeader}
+              {weeklyLeader.points} points
+            {:else}
+              -
+            {/if}</p>
         </div>
       </div>
     </div>

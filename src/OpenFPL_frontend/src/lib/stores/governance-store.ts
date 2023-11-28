@@ -12,26 +12,8 @@ import { ActorFactory } from "../../utils/ActorFactory";
 function createGovernanceStore() {
   const { subscribe, set } = writable<Fixture[]>([]);
 
-  async function actorFromIdentity() {
-    let unsubscribe: Unsubscriber;
-    return new Promise<OptionIdentity>((resolve, reject) => {
-      unsubscribe = authStore.subscribe((store) => {
-        if (store.identity) {
-          resolve(store.identity);
-        }
-      });
-    }).then((identity) => {
-      unsubscribe();
-      return ActorFactory.createActor(
-        idlFactory,
-        process.env.OPENFPL_BACKEND_CANISTER_ID,
-        identity
-      );
-    });
-  }
-
   async function getValidatableFixtures(): Promise<any[]> {
-    const identityActor = await actorFromIdentity();
+    const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
     const fixtures =
       (await identityActor.getValidatableFixtures()) as Fixture[];
     set(fixtures);
@@ -43,7 +25,7 @@ function createGovernanceStore() {
     allPlayerEvents: PlayerEventData[]
   ): Promise<void> {
     try {
-      const identityActor = await actorFromIdentity();
+      const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
       await identityActor.submitFixtureData(fixtureId, allPlayerEvents);
       // Additional logic if needed after submission
     } catch (error) {

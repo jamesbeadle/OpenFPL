@@ -1,6 +1,10 @@
 // src/utils/ActorFactory.ts
+import type { AuthStore } from "$lib/stores/auth";
 import type { OptionIdentity } from "$lib/types/Identity";
 import { Actor, HttpAgent } from "@dfinity/agent";
+import type { Unsubscriber } from "svelte/store";
+import { idlFactory as main_canister } from "../../../declarations/OpenFPL_backend";
+import { idlFactory as player_canister } from "../../../declarations/player_canister";
 
 export class ActorFactory {
   static createActor(
@@ -42,6 +46,24 @@ export class ActorFactory {
       agent,
       canisterId: canisterId,
       ...options?.actorOptions,
+    });
+  }
+
+  static createIdentityActor(authStore: AuthStore, canisterId: string){
+    let unsubscribe: Unsubscriber;
+    return new Promise<OptionIdentity>((resolve, reject) => {
+      unsubscribe = authStore.subscribe((store) => {
+        if (store.identity) {
+          resolve(store.identity);
+        }
+      });
+    }).then((identity) => {
+      unsubscribe();
+      return ActorFactory.createActor(
+        canisterId === process.env.OPENFPL_BACKEND_CANISTER_ID ? main_canister : player_canister,
+        canisterId,
+        identity
+      );
     });
   }
 }
