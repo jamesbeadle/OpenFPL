@@ -28,6 +28,18 @@
   let systemState: SystemState | null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
 
+
+  let selectedGameweek: number = 1;
+  let selectedSeason: Season;
+  let team: Team | null = null;
+  let players: PlayerDTO[] = [];
+  let nextFixture: Fixture | null = null;
+  let nextFixtureHomeTeam: Team | null = null;
+  let nextFixtureAwayTeam: Team | null = null;
+  let highestScoringPlayer: PlayerDTO | null = null;
+
+  let activeTab: string = "players";
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;
@@ -52,17 +64,6 @@
   unsubscribePlayers = playerStore.subscribe((value) => {
     players = value.filter((player) => player.teamId === id);
   });
-
-  let selectedGameweek: number = 1;
-  let selectedSeason: Season;
-  let team: Team | null = null;
-  let players: PlayerDTO[] = [];
-  let nextFixture: Fixture | null = null;
-  let nextFixtureHomeTeam: Team | null = null;
-  let nextFixtureAwayTeam: Team | null = null;
-  let highestScoringPlayer: PlayerDTO | null = null;
-
-  let activeTab: string = "players";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -172,9 +173,7 @@
             <p class="text-gray-300 text-xs">{selectedSeason.name}</p>
           </div>
         </div>
-        <div
-          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">League Points</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
