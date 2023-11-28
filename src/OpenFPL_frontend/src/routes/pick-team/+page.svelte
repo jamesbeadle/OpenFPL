@@ -8,11 +8,9 @@
   import { isLoading } from "$lib/stores/global-stores";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
+  import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
@@ -33,7 +31,6 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import { playerStore } from "$lib/stores/player-store";
 
   interface FormationDetails {
     positions: number[];
@@ -77,7 +74,30 @@
 
   let teams: Team[];
   let players: PlayerDTO[];
+  let systemState: SystemState | null;
   let sessionAddedPlayers: number[] = [];
+  
+  systemStore.sync();
+  teamStore.sync();
+  playerStore.sync();
+  
+  let unsubscribeSystemState: () => void;
+  unsubscribeSystemState = systemStore.subscribe((value) => {
+    systemState = value;
+    activeGameweek = systemState?.activeGameweek ?? activeGameweek;
+    activeSeason = systemState?.activeSeason.name ?? activeSeason;
+  });
+  
+  let unsubscribeTeams: () => void;
+  unsubscribeTeams = teamStore.subscribe((value) => {
+    teams = value;
+  });
+  
+  let unsubscribePlayers: () => void;
+  unsubscribePlayers = playerStore.subscribe((value) => {
+    players = value;
+  });
+
   const fantasyTeam = writable<FantasyTeam | null>(null);
   const transfersAvailable = writable(newTeam ? Infinity : 3);
   const bankBalance = writable(1200);
@@ -99,16 +119,7 @@
         pitchView = storedViewMode === "pitch";
       }
 
-      systemStore.subscribe((systemState) => {
-        activeGameweek = systemState?.activeGameweek ?? activeGameweek;
-        activeSeason = systemState?.activeSeason.name ?? activeSeason;
-      });
-
       let nextFixture = await fixtureStore.getNextFixture();
-
-      teamStore.subscribe((teams) => {
-        teams = teams;
-      });
 
       nextFixtureHomeTeam = await teamStore.getTeamById(
         nextFixture?.homeTeamId ?? 0
@@ -141,7 +152,6 @@
         }
         return currentTeam;
       });
-
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
 
@@ -149,10 +159,6 @@
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
-
-      await playerStore.subscribe((players) => {
-        players = players;
-      });
     } catch (error) {
       toastStore.show("Error fetching team details.", "error");
       console.error("Error fetching team details:", error);

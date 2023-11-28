@@ -37,8 +37,8 @@
     isLoading.set(true);
     try {
       await systemStore.sync();
-      await fixtureStore.sync();
       await teamStore.sync();
+      await fixtureStore.sync();
       await leaderboardStore.syncWeeklyLeaderboard();
       await authStore.sync();
       authStore.subscribe((store) => {

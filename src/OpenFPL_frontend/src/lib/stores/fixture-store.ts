@@ -41,7 +41,8 @@ function createFixtureStore() {
 
   async function getNextFixture(): Promise<Fixture | undefined> {
     let fixtures: Fixture[] = [];
-    subscribe((value) => {
+    await sync();
+    await subscribe((value) => {
       fixtures = value;
     })();
     const now = new Date();

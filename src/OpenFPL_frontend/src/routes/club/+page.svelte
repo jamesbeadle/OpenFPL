@@ -129,9 +129,7 @@
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow flex flex-col items-center">
             <p class="text-gray-300 text-xs">{team?.friendlyName}</p>
             <div class="py-2 flex space-x-4">
@@ -181,10 +179,7 @@
             </p>
             <p class="text-gray-300 text-xs">Total</p>
           </div>
-          <div
-            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"/>
 
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">Next Game:</p>
@@ -216,10 +211,7 @@
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a
-                    class="text-gray-300 text-xs text-center"
-                    href={`/club?id=${nextFixtureHomeTeam?.id}`}
-                  >
+                  <a class="text-gray-300 text-xs text-center" href={`/club?id=${nextFixtureHomeTeam?.id}`}>
                     {nextFixtureHomeTeam?.abbreviatedName}
                   </a>
                 </p>
@@ -227,28 +219,20 @@
               <div class="w-v ml-2 mr-2" />
               <div class="w-10 ml-4">
                 <p class="text-gray-300 text-xs text-center">
-                  <a
-                    class="text-gray-300 text-xs text-center"
-                    href={`/club?id=${nextFixtureAwayTeam?.id}`}
-                  >
+                  <a class="text-gray-300 text-xs text-center" href={`/club?id=${nextFixtureAwayTeam?.id}`}>
                     {nextFixtureAwayTeam?.abbreviatedName}
                   </a>
                 </p>
               </div>
             </div>
           </div>
-          <div
-            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"/>
           <div class="flex-grow">
             <p class="text-gray-300 text-xs mt-4 md:mt-0">
               Highest Scoring Player
             </p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              <a href={`/player?id=${highestScoringPlayer?.id}`}
-                >{highestScoringPlayer?.lastName}</a
-              >
+              <a href={`/player?id=${highestScoringPlayer?.id}`}>{highestScoringPlayer?.lastName}</a>
             </p>
             <p class="text-gray-300 text-xs">
               {getPositionText(highestScoringPlayer?.position ?? 0)}
@@ -262,31 +246,14 @@
     <div class="m-4">
       <div class="bg-panel rounded-md m-4">
         <ul class="flex bg-light-gray px-4 pt-2">
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "players" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "players" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("players")}
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "players" ? "active-tab" : ""}`}>
+            <button class={`p-2 ${ activeTab === "players" ? "text-white" : "text-gray-400"}`} on:click={() => setActiveTab("players")}>
               Players
             </button>
           </li>
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "fixtures" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "fixtures" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("fixtures")}
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "fixtures" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "fixtures" ? "text-white" : "text-gray-400" }`} 
+              on:click={() => setActiveTab("fixtures")}>
               Fixtures
             </button>
           </li>
