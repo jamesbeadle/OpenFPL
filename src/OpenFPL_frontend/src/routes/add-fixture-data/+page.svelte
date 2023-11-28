@@ -2,7 +2,7 @@
     import { onMount} from 'svelte';
     import { page } from "$app/stores";
     import { writable } from "svelte/store";
-    import type { PlayerDTO } from '../../../../declarations/player_canister/player_canister.did';
+    import type { PlayerDTO, PlayerEventData } from '../../../../declarations/player_canister/player_canister.did';
     import type { Fixture, SystemState, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     import { PlayerService } from '$lib/services/PlayerService';
     import { TeamService } from '$lib/services/TeamService';
@@ -12,6 +12,7 @@
     import SelectPlayersModal from '$lib/components/select-players-modal.svelte';
     import ConfirmFixtureDataModal from '$lib/components/confirm-fixture-data-modal.svelte';
     import ClearDraftModal from '$lib/components/clear-draft-modal.svelte';
+    import { GovernanceService } from '$lib/services/GovernanceService';
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
     let teams: Team[];
@@ -28,6 +29,7 @@
     let selectedPlayers = writable<PlayerDTO[] | []>([]);
     let selectedTeam: Team;   
     let selectedPlayer: PlayerDTO; 
+    let playerEventData: PlayerEventData[] = [];
 
     onMount(async () => {
         let playerService = new PlayerService();
@@ -45,7 +47,8 @@
     });
 
     function confirmFixtureData(){
-
+      let governanceService = new GovernanceService();
+      governanceService.submitFixtureData(fixtureId, playerEventData);
     }
 
     function cancelConfirm(){

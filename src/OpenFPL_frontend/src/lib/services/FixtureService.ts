@@ -75,15 +75,4 @@ export class FixtureService {
       throw error;
     }
   }
-
-  async fetchValidatableFixtures(): Promise<any> {
-    try {
-      const identityActor = await this.actorFromIdentity();
-      const validatableFixtures = await identityActor.getValidatableFixtures();
-      return validatableFixtures;
-    } catch (error) {
-      console.error("Error fetching total managers:", error);
-      throw error;
-    }
-  }
 }

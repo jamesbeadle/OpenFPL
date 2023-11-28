@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { FixtureService } from '$lib/services/FixtureService';
     import { onMount } from 'svelte';
     import type { Fixture, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     import type { PlayerDTO } from '../../../../declarations/player_canister/player_canister.did';
     import { PlayerService } from '$lib/services/PlayerService';
     import { SystemService } from '$lib/services/SystemService';
     import { TeamService } from '$lib/services/TeamService';
+    import { GovernanceService } from '$lib/services/GovernanceService';
   
     let teams: Team[];
     let fixtures: Fixture[];
@@ -16,8 +16,8 @@
     
     onMount(async () => {
       try {
-        let fixtureService = new FixtureService();
-        fixtures = await fixtureService.fetchValidatableFixtures();
+        let governanceService = new GovernanceService();
+        fixtures = await governanceService.getValidatableFixtures();
         currentGameweek = fixtures[0].gameweek;
 
         let playerService = new PlayerService();
