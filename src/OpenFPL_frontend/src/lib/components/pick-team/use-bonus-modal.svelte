@@ -1,10 +1,7 @@
 <script lang="ts">
   import { writable, get } from "svelte/store";
   import type { Bonus } from "$lib/types/Bonus";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
   import { BonusType } from "$lib/enums/BonusType";
 
@@ -12,11 +9,6 @@
   export let players: PlayerDTO[];
   export let teams: Team[];
   export let activeGameweek: number;
-  let countries: string[];
-  let selectedTeamId = 0;
-  let selectedPlayerId = 0;
-  let selectedCountry = "";
-
   export let showModal: boolean;
   export let closeBonusModal: () => void;
   export let bonus: Bonus = {
@@ -26,6 +18,11 @@
     image: "",
     selectionType: 0,
   };
+
+  let countries: string[];
+  let selectedTeamId = 0;
+  let selectedPlayerId = 0;
+  let selectedCountry = "";
 
   const getUniqueCountries = () => {
     const team = get(fantasyTeam);
@@ -221,15 +218,8 @@
 
 {#if showModal}
   <div
-    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={closeBonusModal}
-    on:keydown={handleKeydown}
-  >
-    <div
-      class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
-      on:click|stopPropagation
-      on:keydown={handleKeydown}
-    >
+    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop" on:click={closeBonusModal} on:keydown={handleKeydown}>
+    <div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white" on:click|stopPropagation on:keydown={handleKeydown}>
       <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
       <div class="mt-3 text-center">
         <h3 class="text-lg leading-6 font-medium">
@@ -243,10 +233,7 @@
 
         {#if bonus.selectionType === BonusType.PLAYER}
           <div class="w-full border border-gray-500 my-4">
-            <select
-              bind:value={selectedPlayerId}
-              class="w-full p-2 rounded-md fpl-dropdown"
-            >
+            <select bind:value={selectedPlayerId} class="w-full p-2 rounded-md fpl-dropdown">
               <option value={0}>Select Player</option>
               {#each playerOptions as player}
                 <option value={player.id}>{player.name}</option>
@@ -257,10 +244,7 @@
 
         {#if bonus.selectionType === BonusType.COUNTRY}
           <div class="w-full border border-gray-500 my-4">
-            <select
-              bind:value={selectedCountry}
-              class="w-full p-2 rounded-md fpl-dropdown"
-            >
+            <select bind:value={selectedCountry} class="w-full p-2 rounded-md fpl-dropdown">
               <option value={0}>Select Country</option>
               {#each countries as country}
                 <option value={country}>{country}</option>
@@ -271,10 +255,7 @@
 
         {#if bonus.selectionType === BonusType.TEAM}
           <div class="w-full border border-gray-500 my-4">
-            <select
-              bind:value={selectedTeamId}
-              class="w-full p-2 rounded-md fpl-dropdown"
-            >
+            <select bind:value={selectedTeamId} class="w-full p-2 rounded-md fpl-dropdown">
               <option value={0}>Select Team</option>
               {#each teamOptions as team}
                 <option value={team.id}>{team.name}</option>
@@ -283,10 +264,7 @@
           </div>
         {/if}
 
-        <div
-          class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2"
-          role="alert"
-        >
+        <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2" role="alert">
           <p class="font-bold text-sm">Warning</p>
           <p class="font-bold text-xs">
             Your bonus will be activated when you save your team and it cannot
@@ -295,19 +273,12 @@
         </div>
 
         <div class="items-center py-3 flex space-x-4">
-          <button
-            class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            on:click={closeBonusModal}
-          >
+          <button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          on:click={closeBonusModal}>
             Cancel
           </button>
-          <button
-            class={`px-4 py-2 ${
-              isUseButtonEnabled ? "fpl-purple-btn" : "bg-gray-500"
-            } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-            on:click={handleUseBonus}
-            disabled={!isUseButtonEnabled}
-          >
+          <button class={`px-4 py-2 ${ isUseButtonEnabled ? "fpl-purple-btn" : "bg-gray-500" } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            on:click={handleUseBonus} disabled={!isUseButtonEnabled}>
             Use
           </button>
         </div>

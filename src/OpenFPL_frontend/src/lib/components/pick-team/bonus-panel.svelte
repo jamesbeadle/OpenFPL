@@ -1,9 +1,6 @@
 <script lang="ts">
   import { writable, get } from "svelte/store";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/Bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
@@ -158,6 +155,7 @@
         return false;
     }
   }
+
 </script>
 
 <div class="bonus-panel rounded-md m-4 flex-1">
@@ -178,28 +176,20 @@
   <div class="flex flex-col md:flex-row">
     <div class="flex items-center w-100 md:w-1/2">
       {#each leftPanelBonuses as bonus}
-        <div
-          class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-        >
+        <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
             <img alt={bonus.name} src={bonus.image} class="h-10 md:h-24 mt-2" />
             <p class="text-center text-xs mt-4 m-2 font-bold">
               {bonus.name}
             </p>
-            <button
-              on:click={() => showBonusModal(bonus.id)}
-              class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]"
-              >Use</button
-            >
+            <button on:click={() => showBonusModal(bonus.id)} class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]">Use</button>
           </div>
         </div>
       {/each}
     </div>
     <div class="flex items-center w-100 md:w-1/2">
       {#each rightPanelBonuses as bonus}
-        <div
-          class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
-        >
+        <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
             <img alt={bonus.name} src={bonus.image} class="h-10 md:h-24 mt-2" />
             <p class="text-center text-xs mt-4 m-2 font-bold">
@@ -210,10 +200,7 @@
                 Used in GW {isBonusUsed(bonus.id)}
               </p>
             {:else}
-              <button
-                class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]"
-                on:click={() => showBonusModal(bonus.id)}>Use</button
-              >
+              <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]" on:click={() => showBonusModal(bonus.id)}>Use</button>
             {/if}
           </div>
         </div>

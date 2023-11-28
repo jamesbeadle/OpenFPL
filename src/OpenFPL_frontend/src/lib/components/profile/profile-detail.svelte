@@ -8,7 +8,7 @@
   import { UserService } from "$lib/services/UserService";
   import { TeamService } from "$lib/services/TeamService";
   import { SystemService } from "$lib/services/SystemService";
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let profile: ProfileDTO;
   let profileSrc = "profile_placeholder.png";

@@ -2,6 +2,7 @@
     import { get, writable } from 'svelte/store';
     import type { Team } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     import type { PlayerDTO } from '../../../../../declarations/player_canister/player_canister.did';
+    
     export let teamPlayers = writable<PlayerDTO[]>([]);
     export let selectedTeam: Team;
     export let selectedPlayers = writable<PlayerDTO[]>([]);
@@ -21,12 +22,10 @@
             allSelectedPlayers = allSelectedPlayers.filter(x => x.id !== player.id);
         }
     }
-  
     function closeModal() {
         show = false;
     }
 </script>
-  
   
 {#if show}
     <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
