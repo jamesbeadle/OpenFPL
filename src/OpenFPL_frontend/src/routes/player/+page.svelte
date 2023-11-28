@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Layout from "../Layout.svelte";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { SystemService } from "$lib/services/SystemService";
-  import { FixtureService } from "$lib/services/FixtureService";
-  import { TeamService } from "$lib/services/TeamService";
   import { page } from "$app/stores";
+  import { toastStore } from "$lib/stores/toast-store";
+  import { isLoading } from '$lib/stores/global-stores';
+  import { systemStore } from "$lib/stores/system-store";
+  import Layout from "../Layout.svelte";
+  import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-  import { PlayerService } from "$lib/services/PlayerService";
   import {
     calculateAgeFromNanoseconds,
     convertDateToReadable,
@@ -21,10 +21,10 @@
   import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
-  import { toastStore } from "$lib/stores/toast-store";
-  import { isLoading } from '$lib/stores/global-stores';
-
+    import { playerStore } from "$lib/stores/player-store";
+    import { teamStore } from "$lib/stores/team-store";
+    import { fixtureStore } from "$lib/stores/fixture-store";
+  
   let selectedGameweek: number = 1;
   let selectedPlayer: PlayerDTO | null = null;
   let fixtures: FixtureWithTeams[] = [];
@@ -47,37 +47,25 @@
 
     try {
 
-
-      await systemService.updateSystemStateData();
-      await fixtureService.updateFixturesData();
-      await teamService.updateTeamsData();
-      await playersService.updatePlayersData();
-      await playersService.updatePlayerEventsData();
-
-      const fetchedFixtures = await fixtureService.getFixtures();
-      const fetchedTeams = await teamService.getTeams();
-      const fetchedPlayers = await playersService.getPlayers();
-
-      players = fetchedPlayers;
+      //NEED TO IMPLEMENT LIKE THE OTHER STORES USE EACH OTHER BY DEFINING AND ASSIGNING BUT SHOULD THIS BE DONE ONE MOUNT I THINK SO CHAT WITH AI?
+      let players = await playerStore.getPlayers();
+      let teams = await teamStore.getTeams();
+      let fixtures = await fixtureStore.getFixtures();
+      
       selectedPlayer = players.find((x) => x.id === id) ?? null;
-      teams = fetchedTeams;
-      team = fetchedTeams.find((x) => x.id === selectedPlayer?.teamId) ?? null;
+      team = teams.find((x) => x.id === selectedPlayer?.teamId) ?? null;
 
-      let teamFixtures = fetchedFixtures.filter(
-        (x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id
-      );
+      let teamFixtures = fixtures.filter((x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id);
       fixtures = teamFixtures.map((fixture) => ({
         fixture,
         homeTeam: getTeamFromId(fixture.homeTeamId),
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
 
-      let systemState = await systemService.getSystemState();
-
+      let systemState = await systemStore.getSystemState();
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
 
-      nextFixture =
-        teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
+      nextFixture = teamFixtures.find((x) => x.gameweek === selectedGameweek)  ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
 

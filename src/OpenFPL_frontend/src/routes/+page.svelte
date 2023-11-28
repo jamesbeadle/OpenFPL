@@ -1,11 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { authStore } from "$lib/stores/auth";
+  import { toastStore } from "$lib/stores/toast-store";
+  import { managerStore } from "$lib/stores/manager-store";
   import Layout from "./Layout.svelte";
-  import { SystemService } from "$lib/services/SystemService";
-  import { FixtureService } from "$lib/services/FixtureService";
-  import { TeamService } from "$lib/services/TeamService";
-  import { LeaderboardService } from "$lib/services/LeaderboardService";
-  import { ManagerService } from "$lib/services/ManagerService";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
@@ -13,9 +11,11 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../lib/utils/Helpers";
   import type { LeaderboardEntry, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { authStore } from "$lib/stores/auth";
-  import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
+  import { systemStore } from "$lib/stores/system-store";
+    import { fixtureStore } from "$lib/stores/fixture-store";
+    import { teamStore } from "$lib/stores/team-store";
+    import { leaderboardStore } from "$lib/stores/leaderboard-store";
 
   let activeTab: string = "fixtures";
   let activeGameweek = -1;
@@ -37,42 +37,35 @@
     isLoading.set(true);
 
     try {
-
-      await systemService.updateSystemStateData();
-      await fixtureService.updateFixturesData();
-      await teamService.updateTeamsData();
-      await leaderboardService.updateWeeklyLeaderboardData();
-      await leaderboardService.updateMonthlyLeaderboardData();
-      await leaderboardService.updateSeasonLeaderboardData();
-
       await authStore.sync();
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
       
-      managerCount = await managerService.getTotalManagers();
+      managerCount = await managerStore.getTotalManagers();
 
-      let systemState = await systemService.getSystemState();
+      let systemState = await systemStore.getSystemState();
       activeGameweek = systemState?.activeGameweek ?? activeGameweek;
       activeSeason = systemState?.activeSeason.name ?? activeSeason;
       focusGameweek = systemState?.focusGameweek ?? activeGameweek;
 
-      let nextFixture = await fixtureService.getNextFixture();
-      nextFixtureHomeTeam = await teamService.getTeamById(
-        nextFixture.homeTeamId
+      let nextFixture = await fixtureStore.getNextFixture();
+      
+      nextFixtureHomeTeam = await teamStore.getTeamById(
+        nextFixture ? nextFixture.homeTeamId : 0
       );
-      nextFixtureAwayTeam = await teamService.getTeamById(
-        nextFixture.awayTeamId
+      nextFixtureAwayTeam = await teamStore.getTeamById(
+        nextFixture ? nextFixture.awayTeamId : 0
       );
-      nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
-      nextFixtureTime = formatUnixTimeToTime(Number(nextFixture.kickOff));
+      nextFixtureDate = formatUnixDateToReadable(nextFixture ? Number(nextFixture.kickOff) : 0);
+      nextFixtureTime = formatUnixTimeToTime(nextFixture ? Number(nextFixture.kickOff) : 0);
 
-      let countdownTime = getCountdownTime(Number(nextFixture.kickOff));
+      let countdownTime = getCountdownTime(nextFixture ? Number(nextFixture.kickOff) : 0);
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
-      weeklyLeader = await leaderboardService.getLeadingWeeklyTeam();
+      weeklyLeader = await leaderboardStore.getLeadingWeeklyTeam();
 
     } catch (error) {
       toastStore.show("Error fetching homepage data.", "error");
