@@ -15,6 +15,7 @@
     import { GovernanceService } from '$lib/services/GovernanceService';
     import { redirect } from '@sveltejs/kit';
     import { toastStore } from '$lib/stores/toast';
+    import Layout from '../Layout.svelte';
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
     let teams: Team[];
@@ -32,6 +33,7 @@
     let selectedTeam: Team;   
     let selectedPlayer: PlayerDTO; 
     let playerEventData = writable<PlayerEventData[] | []>([]);
+    let activeTab: string = "home";
     
     onMount(async () => {
         let playerService = new PlayerService();
@@ -72,19 +74,75 @@
       toastStore.show("Draft cleared.", "success");
     }
 
+    function setActiveTab(tab: string): void {
+      activeTab = tab;
+    }
+
+    function getTeamFromId(teamId: number): Team | undefined {
+      return teams.find((team) => team.id === teamId);
+    }
+
+    function handleEditPlayerEvents(player: PlayerDTO) {
+        selectedPlayer = player;
+        showPlayerEventModal = true;
+    }
+
   </script>
   
+<Layout>
+  
   {#if isLoading}
-    <div class="flex items-center justify-center h-screen">
-      <p class='text-center mt-1'>Loading Fixture Data...</p>
-    </div>
+  <div class="flex items-center justify-center h-screen">
+    <p class='text-center mt-1'>Loading Fixture Data...</p>
+  </div>
   {:else}
-    <div class="container mx-auto my-5">
+    <div class="m-4">
+      <div class="bg-panel rounded-lg m-4">
+        <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "home" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400" }`}
+              on:click={() => setActiveTab("home")}>{getTeamFromId(fixture?.homeTeamId ?? 0)?.friendlyName}</button>
+          </li>
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "away" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${  activeTab === "away" ? "text-white" : "text-gray-400" }`}
+            on:click={() => setActiveTab("away")}>{getTeamFromId(fixture?.awayTeamId ?? 0)?.friendlyName}</button>
+          </li>
+        </ul>
 
+        {#if activeTab === "home"}
+          {#each $selectedPlayers.filter(x => x.teamId == fixture?.homeTeamId) as player (player.id)}
+            <div class="card player-card mb-4">
+              <div class="card-header">
+                  <h5>{player.lastName}</h5>
+                  <p class='small-text mb-0 mt-0'>{player.firstName}</p>
+              </div>
+              <div class="card-body">
+                <p>Events: {($playerEventData.filter(pe => pe.playerId === player.id).length)}</p>
+                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
+              </div>
+            </div>
+          {/each}
+        {:else if activeTab === "away"}
+          {#each $selectedPlayers.filter(x => x.teamId == fixture?.awayTeamId) as player (player.id)}
+              <div class="card player-card mb-4">
+                <div class="card-header">
+                    <h5>{player.lastName}</h5>
+                    <p class='small-text mb-0 mt-0'>{player.firstName}</p>
+                </div>
+                <div class="card-body">
+                  <p>Events: {($playerEventData.filter(pe => pe.playerId === player.id).length)}</p>
+                  <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
+                </div>
+              </div>
+            {/each}
+        {/if}
+      </div>
     </div>
   {/if}
-  
-  <SelectPlayersModal show={showPlayerSelectionModal} {teamPlayers} {selectedTeam} {selectedPlayers}  />
-  <PlayerEventsModal show={showPlayerEventModal} player={selectedPlayer} {fixtureId} {playerEventData} />
-  <ConfirmFixtureDataModal show={showConfirmDataModal} onConfirm={confirmFixtureData} />
-  <ClearDraftModal show={showClearDraftModal} onConfirm={clearDraft} />
+
+</Layout>
+
+<SelectPlayersModal show={showPlayerSelectionModal} {teamPlayers} {selectedTeam} {selectedPlayers}  />
+<PlayerEventsModal show={showPlayerEventModal} player={selectedPlayer} {fixtureId} {playerEventData} />
+<ConfirmFixtureDataModal show={showConfirmDataModal} onConfirm={confirmFixtureData} />
+<ClearDraftModal show={showClearDraftModal} onConfirm={clearDraft} />
