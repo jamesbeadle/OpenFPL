@@ -13,6 +13,7 @@
     import ConfirmFixtureDataModal from '$lib/components/confirm-fixture-data-modal.svelte';
     import ClearDraftModal from '$lib/components/clear-draft-modal.svelte';
     import { GovernanceService } from '$lib/services/GovernanceService';
+    import { replacer } from "../../lib/utils/Helpers";
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
     let teams: Team[];
@@ -44,15 +45,27 @@
         let fixtureService = new FixtureService();
         fixtures = await fixtureService.getFixtures();
         fixture = fixtures.find(x => x.id == fixtureId) ?? null;
+
+        const draftKey = `fixtureDraft_${fixtureId}`;
+        const savedDraft = localStorage.getItem(draftKey);
+        if (savedDraft) {
+            const draftData = JSON.parse(savedDraft);
+            playerEventData.set(draftData);
+        }
     });
 
-    function confirmFixtureData(){
-      let governanceService = new GovernanceService();
-      governanceService.submitFixtureData(fixtureId, get(playerEventData));
+    async function confirmFixtureData(){
+      try {
+        await new GovernanceService().submitFixtureData(fixtureId, get(playerEventData));
+        localStorage.removeItem(`fixtureDraft_${fixtureId}`);
+      } catch (error) {
+        console.error("Error saving fixture data: ", error);
+      }
     }
 
     function clearDraft(){
-
+      playerEventData = writable<PlayerEventData[] | []>([]);
+      localStorage.removeItem(`fixtureDraft_${fixtureId}`);
     }
 
   </script>

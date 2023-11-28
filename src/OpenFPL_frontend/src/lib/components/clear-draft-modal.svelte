@@ -13,7 +13,7 @@
       <div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white">
         <div class="flex justify-between items-center">
           <h4 class="text-lg font-bold">Confirm Clear Draft</h4>
-          <button class="text-black" on:click={closeModal}>✕</button>
+          <button class="text-black" on:click={onConfirm}>✕</button>
         </div>
         <div class="my-5">
           <h1>Please confirm you want to clear the draft from your cache.</h1>
