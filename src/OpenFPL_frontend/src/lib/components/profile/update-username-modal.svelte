@@ -3,11 +3,18 @@
   export let closeModal: () => void;
   export let newUsername: string;
   import { UserService } from "$lib/services/UserService";
+  import { toastStore } from "$lib/stores/toast";
 
   let userService = new UserService();
 
   async function updateUsername() {
-    await userService.updateUsername(newUsername);
+    try{      
+      await userService.updateUsername(newUsername);
+    }
+    catch(error){
+      toastStore.show("Error updating username." ,"error");
+      console.error("Error updating username:" ,error);
+    }
     closeModal();
   }
 

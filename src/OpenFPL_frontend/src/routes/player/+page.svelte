@@ -19,20 +19,11 @@
     getPositionText,
     updateTableData,
   } from "../../lib/utils/Helpers";
-  import type {
-    Fixture,
-    Season,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
-    import { toastStore } from "$lib/stores/toast";
-
-  const fixtureService = new FixtureService();
-  const teamService = new TeamService();
-  const systemService = new SystemService();
-  const playersService = new PlayerService();
+  import { toastStore } from "$lib/stores/toast";
 
   let selectedGameweek: number = 1;
   let selectedPlayer: PlayerDTO | null = null;
@@ -43,7 +34,6 @@
   let nextFixture: Fixture | null = null;
   let nextFixtureHomeTeam: Team | null = null;
   let nextFixtureAwayTeam: Team | null = null;
-  let highestScoringPlayer: PlayerDTO | null = null;
   let countdownDays = "00";
   let countdownHours = "00";
   let countdownMinutes = "00";
@@ -57,6 +47,12 @@
   $: id = Number($page.url.searchParams.get("id"));
   onMount(async () => {
     try {
+
+      const fixtureService = new FixtureService();
+      const teamService = new TeamService();
+      const systemService = new SystemService();
+      const playersService = new PlayerService();
+
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();
       await teamService.updateTeamsData();

@@ -3,7 +3,7 @@
   import { UserService } from "$lib/services/UserService";
   import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
-    import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast";
 
   export let showModal: boolean;
   export let closeModal: () => void;
@@ -23,8 +23,13 @@
   });
 
   async function updateFavouriteTeam() {
-    let userService = new UserService();
-    await userService.updateFavouriteTeam(newFavouriteTeam);
+    try {
+      let userService = new UserService();
+      await userService.updateFavouriteTeam(newFavouriteTeam);
+    } catch (error) {
+      toastStore.show("Error updating favourite team.", "error");
+      console.error("Error updating favourite team:", error);
+    }
     closeModal();
   }
 

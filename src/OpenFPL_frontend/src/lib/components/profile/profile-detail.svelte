@@ -86,8 +86,14 @@
   }
 
   async function uploadProfileImage(file: File) {
-    const userService = new UserService();
-    await userService.updateProfilePicture(file);
+    try{
+      const userService = new UserService();
+      await userService.updateProfilePicture(file);
+    }
+    catch(error){
+      toastStore.show("Error updating profile image" ,"error");
+      console.error("Error updating profile image" ,error);
+    }
   }
 
   function incrementProgress(newProgress: number) {

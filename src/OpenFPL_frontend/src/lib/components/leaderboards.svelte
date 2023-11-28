@@ -5,8 +5,7 @@
   import { TeamService } from "$lib/services/TeamService";
   import { LeaderboardService } from "$lib/services/LeaderboardService";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-    import { ManagerService } from "$lib/services/ManagerService";
-    import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast";
 
   let selectedLeaderboardType: number = 1;
   let selectedGameweek: number = 1;
@@ -34,7 +33,6 @@
       const teamService = new TeamService();
       const systemService = new SystemService();
       const leaderboardService = new LeaderboardService();
-      let managerService = new ManagerService();
     
       await systemService.updateSystemStateData();
       await leaderboardService.updateWeeklyLeaderboardData();

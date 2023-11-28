@@ -3,11 +3,7 @@
   import Layout from "../Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type {
-    Fixture,
-    Season,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Fixture, Season, Team  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
@@ -20,12 +16,7 @@
   import { getPositionText } from "../../lib/utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../../lib/utils/Helpers";
-    import { toastStore } from "$lib/stores/toast";
-
-  const fixtureService = new FixtureService();
-  const teamService = new TeamService();
-  const systemService = new SystemService();
-  const playersService = new PlayerService();
+  import { toastStore } from "$lib/stores/toast";
 
   let selectedGameweek: number = 1;
   let selectedSeason: Season;
@@ -46,6 +37,12 @@
 
   onMount(async () => {
     try {
+
+      const fixtureService = new FixtureService();
+      const teamService = new TeamService();
+      const systemService = new SystemService();
+      const playersService = new PlayerService();
+
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();
       await teamService.updateTeamsData();
