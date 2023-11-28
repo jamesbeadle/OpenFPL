@@ -1,10 +1,7 @@
 import { authStore } from "$lib/stores/auth";
 import type { OptionIdentity } from "$lib/types/Identity";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type {
-  DataCache,
-  Fixture,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { DataCache, Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 export class FixtureService {

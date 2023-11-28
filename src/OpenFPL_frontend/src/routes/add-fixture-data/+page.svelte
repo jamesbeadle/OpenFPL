@@ -16,6 +16,7 @@
     import { redirect } from '@sveltejs/kit';
     import { toastStore } from '$lib/stores/toast';
     import Layout from '../Layout.svelte';
+    import { replacer } from '$lib/utils/Helpers';
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
     let teams: Team[];
@@ -68,6 +69,15 @@
       }
     }
 
+    function saveDraft() {
+        const draftData = {
+            playerEventData: get(playerEventData),
+        };
+        const draftKey = `fixtureDraft_${fixtureId}`;
+        localStorage.setItem(draftKey, JSON.stringify(draftData, replacer));
+        toastStore.show("Draft saved.", "success");
+    }
+
     function clearDraft(){
       playerEventData = writable<PlayerEventData[] | []>([]);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
@@ -97,6 +107,7 @@
   </div>
   {:else}
     <div class="m-4">
+      <button class="fpl-button" on:click={saveDraft}>Save Draft</button>
       <div class="bg-panel rounded-lg m-4">
         <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
           <li class={`mr-4 text-xs md:text-lg ${ activeTab === "home" ? "active-tab" : "" }`}>
