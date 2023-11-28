@@ -1,64 +1,40 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
-    let show = false;
-    let player;
-    let playerEventMap = {};
-    let playerEvents = [];
-    let eventType = "-1";
-    let eventStartTime = "0";
-    let eventEndTime = "0";
-    const dispatch = createEventDispatcher();
-  
-    $: if (show && player) {
-      const existingEvents = playerEventMap[player.id] || [];
-      playerEvents = existingEvents;
-      eventType = "-1";
-      eventStartTime = "0";
-      eventEndTime = "0";
-    }
-  
+    import { writable, get } from "svelte/store";
+    import type { PlayerDTO, PlayerEventData } from '../../../../declarations/player_canister/player_canister.did';
+    export let show = false;
+    export let player: PlayerDTO;
+    export let fixtureId: number;
+    const playerEvents = writable<PlayerEventData[] | []>([]);
+
+    let eventType = -1;
+    let eventStartTime = 0;
+    let eventEndTime = 0;
+    
     function handleAddEvent() {
       if (eventType && eventStartTime !== null && eventEndTime !== null) {
         const newEvent = {
-          playerId: player.id,
-          eventType: Number(eventType),
-          eventStartTime: Number(eventStartTime),
-          eventEndTime: Number(eventEndTime)
+            playerId: player.id,
+            eventType: Number(eventType),
+            eventStartMinute: Number(eventStartTime),
+            eventEndMinute: Number(eventEndTime),
+            fixtureId: fixtureId,
+            teamId: player.teamId
+            
         };
-        let updatedEvents = [...playerEvents, newEvent];
-        playerEvents = updatedEvents;
-        dispatch('playerEventAdded', { playerId: player.id, newEvents: updatedEvents });
-        eventStartTime = "";
-        eventEndTime = "";
-      }
+        let updatedEvents: PlayerEventData[] = [...get(playerEvents), newEvent];
+        playerEvents.set(updatedEvents);
+        eventStartTime = 0;
+        eventEndTime = 0;
+        eventType = -1;
+        }
     }
   
-    function handleRemoveEvent(indexToRemove) {
-      const updatedEvents = playerEvents.filter((_, index) => index !== indexToRemove);
-      playerEvents = updatedEvents;
-      dispatch('playerEventAdded', { playerId: player.id, newEvents: updatedEvents });
+    function handleRemoveEvent(indexToRemove: number) {
+        playerEvents.update(currentEvents => {
+            return currentEvents.filter((_, index) => index !== indexToRemove);
+        });
     }
-  
-    function getEventOptions(position) {
-      const generalOptions = [
-        // ... define general options
-      ];
-      if (position === 0) {
-        return [
-          ...generalOptions,
-          // ... define keeper options
-        ];
-      }
-      return generalOptions;
-    }
-  
-    function getEventTypeLabel(id) {
-      const allOptions = [
-        // ... define all options
-      ];
-      const option = allOptions.find(option => option.id === id);
-      return option ? option.label : '';
-    }
+
   </script>
   
   {#if show}
@@ -69,7 +45,18 @@
             <h4 class="text-lg font-bold">{player.firstName !== "" ? player.firstName.charAt(0) + "." : ""} {player.lastName} - Match Events</h4>
             <button class="text-black" on:click={() => show = false}>✕</button>
           </div>
-          <!-- Form and event list here -->
+          <div class="mt-4">
+            <ul class="list-disc pl-5">
+              {#each $playerEvents as event, index}
+                <li class="flex justify-between items-center mb-2">
+                  <span>{event.eventType} - From {event.eventStartMinute} to {event.eventEndMinute} minutes</span>
+                  <button class="px-3 py-1 bg-red-500 text-white rounded" on:click={() => handleRemoveEvent(index)}>
+                    Remove
+                  </button>
+                </li>
+              {/each}
+            </ul>
+          </div>
         {/if}
         <div class="flex justify-end gap-3 mt-4">
           <button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={() => show = false}>Done</button>
