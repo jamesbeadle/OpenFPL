@@ -15,7 +15,7 @@
   let unsubscribeTeams: () => void;
 
   onMount(async () => {
-    teamStore.sync();
+    await teamStore.sync();
     unsubscribeTeams = teamStore.subscribe((value) => {
       teams = value;
     });

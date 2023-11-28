@@ -37,8 +37,8 @@
 
   onMount(async () => {
     try {
-      teamStore.sync();
-      systemStore.sync();
+      await teamStore.sync();
+      await systemStore.sync();
           
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));

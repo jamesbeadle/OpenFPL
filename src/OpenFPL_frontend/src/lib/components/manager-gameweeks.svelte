@@ -25,7 +25,7 @@
 
   onMount(async () => {
     try {
-      systemStore.sync();
+      await systemStore.sync();
           
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;

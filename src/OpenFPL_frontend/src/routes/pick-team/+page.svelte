@@ -75,6 +75,7 @@
   let players: PlayerDTO[];
   let systemState: SystemState | null;
   let sessionAddedPlayers: number[] = [];
+  let showView = false;
   
   let unsubscribeSystemState: () => void;
   let unsubscribeTeams: () => void;
@@ -96,9 +97,9 @@
   onMount(async () => {
     isLoading.set(true);
     try {
-      systemStore.sync();
-      teamStore.sync();
-      playerStore.sync();
+      await systemStore.sync();
+      await teamStore.sync();
+      await playerStore.sync();
 
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
@@ -113,7 +114,6 @@
       unsubscribePlayers = playerStore.subscribe((value) => {
         players = value;
       });
-
       
       const storedViewMode = localStorage.getItem("viewMode");
       if (storedViewMode) {
@@ -165,6 +165,7 @@
       console.error("Error fetching team details:", error);
     } finally {
       isLoading.set(false);
+      showView = true;
     }
   });
 
@@ -708,431 +709,422 @@
 </script>
 
 <Layout>
-  <AddPlayerModal
-    {handlePlayerSelection}
-    filterPosition={selectedPosition}
-    filterColumn={selectedColumn}
-    {showAddPlayer}
-    {closeAddPlayerModal}
-    {fantasyTeam}
-    {bankBalance}
-  />
-  <div class="m-4">
-    <div class="flex flex-col md:flex-row">
-      <div
-        class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-      >
-        <div class="flex-grow mb-4 md:mb-0">
-          <p class="text-gray-300 text-xs">Gameweek</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            {activeGameweek}
-          </p>
-          <p class="text-gray-300 text-xs">{activeSeason}</p>
-        </div>
-
-        <div
-          class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-          style="min-height: 2px; min-width: 2px;"
-        />
-
-        <div class="flex-grow mb-4 md:mb-0">
-          <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
-          <div class="flex">
+  {#if showView}
+    <AddPlayerModal
+      {handlePlayerSelection}
+      filterPosition={selectedPosition}
+      filterColumn={selectedColumn}
+      {showAddPlayer}
+      {closeAddPlayerModal}
+      {fantasyTeam}
+      {bankBalance}
+    />
+    <div class="m-4">
+      <div class="flex flex-col md:flex-row">
+        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+          <div class="flex-grow mb-4 md:mb-0">
+            <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-              : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span
-              >
-              : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
-                >m</span
-              >
+              {activeGameweek}
+            </p>
+            <p class="text-gray-300 text-xs">{activeSeason}</p>
+          </div>
+
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"/>
+
+          <div class="flex-grow mb-4 md:mb-0">
+            <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
+            <div class="flex">
+              <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
+                : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+              </p>
+            </div>
+            <p class="text-gray-300 text-xs">
+              {nextFixtureDate} | {nextFixtureTime}
             </p>
           </div>
-          <p class="text-gray-300 text-xs">
-            {nextFixtureDate} | {nextFixtureTime}
-          </p>
+
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"/>
+
+          <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
+            <p class="text-gray-300 text-xs">Players</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
+            </p>
+            <p class="text-gray-300 text-xs">Selected</p>
+          </div>
         </div>
 
         <div
-          class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-          style="min-height: 2px; min-width: 2px;"
-        />
-
-        <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
-          <p class="text-gray-300 text-xs">Players</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
-          </p>
-          <p class="text-gray-300 text-xs">Selected</p>
+          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+        >
+          <div class="flex-grow">
+            <p class="text-gray-300 text-xs">Team Value</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              £{teamValue.toFixed(2)}m
+            </p>
+            <p class="text-gray-300 text-xs">GBP</p>
+          </div>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
+          <div class="flex-grow">
+            <p class="text-gray-300 text-xs">Bank Balance</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              £{($bankBalance / 4).toFixed(2)}m
+            </p>
+            <p class="text-gray-300 text-xs">GBP</p>
+          </div>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
+          <div class="flex-grow">
+            <p class="text-gray-300 text-xs">Transfers</p>
+            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+              {$transfersAvailable === Infinity
+                ? "Unlimited"
+                : $transfersAvailable}
+            </p>
+            <p class="text-gray-300 text-xs">Available</p>
+          </div>
         </div>
       </div>
 
-      <div
-        class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-      >
-        <div class="flex-grow">
-          <p class="text-gray-300 text-xs">Team Value</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            £{teamValue.toFixed(2)}m
-          </p>
-          <p class="text-gray-300 text-xs">GBP</p>
-        </div>
+      <div class="flex flex-col md:flex-row">
         <div
-          class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-          style="min-width: 2px; min-height: 50px;"
-        />
-        <div class="flex-grow">
-          <p class="text-gray-300 text-xs">Bank Balance</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            £{($bankBalance / 4).toFixed(2)}m
-          </p>
-          <p class="text-gray-300 text-xs">GBP</p>
-        </div>
-        <div
-          class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-          style="min-width: 2px; min-height: 50px;"
-        />
-        <div class="flex-grow">
-          <p class="text-gray-300 text-xs">Transfers</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            {$transfersAvailable === Infinity
-              ? "Unlimited"
-              : $transfersAvailable}
-          </p>
-          <p class="text-gray-300 text-xs">Available</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex flex-col md:flex-row">
-      <div
-        class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md md:w-full"
-      >
-        <div
-          class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4 order-3 md:order-1"
+          class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md md:w-full"
         >
-          <button
-            class={`btn ${
-              pitchView ? `fpl-button` : `inactive-btn`
-            } px-4 py-2 rounded-l-md font-bold text-md min-w-[125px] my-4`}
-            on:click={showPitchView}
-            >Pitch View
-          </button>
-          <button
-            class={`btn ${
-              !pitchView ? `fpl-button` : `inactive-btn`
-            } px-4 py-2 rounded-r-md font-bold text-md min-w-[125px] my-4`}
-            on:click={showListView}
-            >List View
-          </button>
-        </div>
+          <div
+            class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4 order-3 md:order-1"
+          >
+            <button
+              class={`btn ${
+                pitchView ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-l-md font-bold text-md min-w-[125px] my-4`}
+              on:click={showPitchView}
+              >Pitch View
+            </button>
+            <button
+              class={`btn ${
+                !pitchView ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-r-md font-bold text-md min-w-[125px] my-4`}
+              on:click={showListView}
+              >List View
+            </button>
+          </div>
 
-        <div
-          class="text-center md:text-left w-full mt-4 md:mt-0 md:ml-8 order-2"
-        >
-          <span class="text-lg"
-            >Formation:
-            <select
-              class="p-2 fpl-dropdown text-lg text-center"
-              bind:value={selectedFormation}
+          <div
+            class="text-center md:text-left w-full mt-4 md:mt-0 md:ml-8 order-2"
+          >
+            <span class="text-lg"
+              >Formation:
+              <select
+                class="p-2 fpl-dropdown text-lg text-center"
+                bind:value={selectedFormation}
+              >
+                {#each $availableFormations as formation}
+                  <option value={formation}>{formation}</option>
+                {/each}
+              </select>
+            </span>
+          </div>
+
+          <div
+            class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3"
+          >
+            <button
+              disabled={$fantasyTeam?.playerIds
+                ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+                : true}
+              on:click={autofillTeam}
+              class={`btn w-full md:w-auto px-4 py-2 rounded ${
+                $fantasyTeam?.playerIds &&
+                $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+                  ? "fpl-purple-btn"
+                  : "bg-gray-500"
+              } text-white min-w-[125px]`}
             >
-              {#each $availableFormations as formation}
-                <option value={formation}>{formation}</option>
-              {/each}
-            </select>
-          </span>
-        </div>
-
-        <div
-          class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3"
-        >
-          <button
-            disabled={$fantasyTeam?.playerIds
-              ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
-              : true}
-            on:click={autofillTeam}
-            class={`btn w-full md:w-auto px-4 py-2 rounded ${
-              $fantasyTeam?.playerIds &&
-              $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
-                ? "fpl-purple-btn"
-                : "bg-gray-500"
-            } text-white min-w-[125px]`}
-          >
-            Auto Fill
-          </button>
-          <button
-            disabled={isSaveButtonActive}
-            on:click={saveFantasyTeam}
-            class={`btn w-full md:w-auto px-4 py-2 rounded  ${
-              isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
-            } text-white min-w-[125px]`}
-          >
-            Save Team
-          </button>
+              Auto Fill
+            </button>
+            <button
+              disabled={isSaveButtonActive}
+              on:click={saveFantasyTeam}
+              class={`btn w-full md:w-auto px-4 py-2 rounded  ${
+                isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
+              } text-white min-w-[125px]`}
+            >
+              Save Team
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="flex flex-col md:flex-row">
-      {#if pitchView}
-        <div class="relative w-full md:w-1/2 mt-4">
-          <img src="pitch.png" alt="pitch" class="w-full" />
-          <div class="absolute top-0 left-0 right-0 bottom-0">
-            <div class={`flex justify-around w-full h-auto`}>
-              <div class="relative inline-block">
-                <img
-                  class="h-6 md:h-12 m-0 md:m-1"
-                  src="board.png"
-                  alt="OpenChat"
-                />
-                <div class="absolute top-0 left-0 w-full h-full">
-                  <a
-                    class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
-                    target="_blank"
-                    href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
-                  >
-                    <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
-                    <span class="text-white text-xs md:text-xl mr-4 oc-logo"
-                      >OpenChat</span
+      <div class="flex flex-col md:flex-row">
+        {#if pitchView}
+          <div class="relative w-full md:w-1/2 mt-4">
+            <img src="pitch.png" alt="pitch" class="w-full" />
+            <div class="absolute top-0 left-0 right-0 bottom-0">
+              <div class={`flex justify-around w-full h-auto`}>
+                <div class="relative inline-block">
+                  <img
+                    class="h-6 md:h-12 m-0 md:m-1"
+                    src="board.png"
+                    alt="OpenChat"
+                  />
+                  <div class="absolute top-0 left-0 w-full h-full">
+                    <a
+                      class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
+                      target="_blank"
+                      href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
                     >
-                  </a>
+                      <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
+                      <span class="text-white text-xs md:text-xl mr-4 oc-logo"
+                        >OpenChat</span
+                      >
+                    </a>
+                  </div>
+                </div>
+                <div class="relative inline-block">
+                  <img
+                    class="h-6 md:h-12 m-0 md:m-1"
+                    src="board.png"
+                    alt="OpenChat"
+                  />
+                  <div class="absolute top-0 left-0 w-full h-full">
+                    <a
+                      class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
+                      target="_blank"
+                      href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
+                    >
+                      <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
+                      <span class="text-white text-xs md:text-xl mr-4 oc-logo"
+                        >OpenChat</span
+                      >
+                    </a>
+                  </div>
                 </div>
               </div>
-              <div class="relative inline-block">
-                <img
-                  class="h-6 md:h-12 m-0 md:m-1"
-                  src="board.png"
-                  alt="OpenChat"
-                />
-                <div class="absolute top-0 left-0 w-full h-full">
-                  <a
-                    class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
-                    target="_blank"
-                    href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
-                  >
-                    <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
-                    <span class="text-white text-xs md:text-xl mr-4 oc-logo"
-                      >OpenChat</span
-                    >
-                  </a>
+              {#each gridSetup as row, rowIndex}
+                <div class="flex justify-around items-center w-full">
+                  {#each row as _, colIndex (colIndex)}
+                    {@const actualIndex = getActualIndex(rowIndex, colIndex)}
+                    {@const playerIds = $fantasyTeam?.playerIds ?? []}
+                    {@const playerId = playerIds[actualIndex]}
+                    {@const player = players.find((p) => p.id === playerId)}
+                    <div class="flex flex-col justify-center items-center flex-1">
+                      {#if playerId > 0 && player}
+                        {@const team = teams.find((x) => x.id === player.teamId)}
+                        <div
+                          class="mt-2 mb-2 md:mb-12 flex flex-col items-center text-center"
+                        >
+                          <div class="flex justify-center items-center">
+                            <div class="flex justify-between items-end w-full">
+                              <button
+                                on:click={() => removePlayer(player.id)}
+                                class="bg-red-600 mb-1 rounded-sm"
+                              >
+                                <RemovePlayerIcon className="w-5 h-5 p-1" />
+                              </button>
+                              <div
+                                class="flex justify-center items-center flex-grow"
+                              >
+                                <ShirtIcon
+                                  className="h-16"
+                                  primaryColour={team?.primaryColourHex}
+                                  secondaryColour={team?.secondaryColourHex}
+                                  thirdColour={team?.thirdColourHex}
+                                />
+                              </div>
+                              {#if $fantasyTeam?.captainId === playerId}
+                                <span class="mb-1">
+                                  <ActiveCaptainIcon className="w-6 h-6" />
+                                </span>
+                              {:else}
+                                <button
+                                  on:click={() => setCaptain(player.id)}
+                                  class="mb-1"
+                                >
+                                  <PlayerCaptainIcon className="w-6 h-6" />
+                                </button>
+                              {/if}
+                            </div>
+                          </div>
+                          <div
+                            class="flex flex-col justify-center items-center text-xs"
+                          >
+                            <div
+                              class="flex justify-center items-center bg-gray-700 px-2 py-1 rounded-t-md min-w-[100px]"
+                            >
+                              <p class="min-w-[20px]">
+                                {getPositionAbbreviation(player.position)}
+                              </p>
+                              <svelte:component
+                                this={getFlagComponent(player.nationality)}
+                                class="h-4 w-4 ml-2 mr-2 min-w-[15px]"
+                              />
+                              <p class="truncate min-w-[60px] max-w-[60px]">
+                                {player.firstName.length > 2
+                                  ? player.firstName.substring(0, 1) + "."
+                                  : ""}
+                                {player.lastName}
+                              </p>
+                            </div>
+                            <div
+                              class="flex justify-center items-center bg-white text-black px-2 py-1 rounded-b-md min-w-[100px]"
+                            >
+                              <p class="min-w-[20px]">
+                                {team?.abbreviatedName}
+                              </p>
+                              <BadgeIcon
+                                className="h-4 w-4 mr-2 ml-2 min-w-[15px]"
+                                primaryColour={team?.primaryColourHex}
+                                secondaryColour={team?.secondaryColourHex}
+                                thirdColour={team?.thirdColourHex}
+                              />
+                              <p class="truncate min-w-[60px] max-w-[60px]">
+                                £{(Number(player.value) / 4).toFixed(2)}m
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      {:else}
+                        <button
+                          on:click={() => loadAddPlayer(rowIndex, colIndex)}
+                        >
+                          <AddPlayerIcon
+                            className="h-12 md:h-16 mt-2 mb-2 md:mb-24"
+                          />
+                        </button>
+                      {/if}
+                    </div>
+                  {/each}
                 </div>
-              </div>
+              {/each}
             </div>
-            {#each gridSetup as row, rowIndex}
-              <div class="flex justify-around items-center w-full">
+          </div>
+        {:else}
+          <div class="bg-panel rounded-md m-4 flex-1">
+            <div class="container-fluid">
+              {#each gridSetup as row, rowIndex}
+                {#if rowIndex === 0}
+                  <div
+                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                  >
+                    <div class="w-1/3">Goalkeeper</div>
+                    <div class="w-1/6">(c)</div>
+                    <div class="w-1/3">Team</div>
+                    <div class="w-1/6">Value</div>
+                    <div class="w-1/6">&nbsp;</div>
+                  </div>
+                {/if}
+                {#if rowIndex === 1}
+                  <div
+                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                  >
+                    <div class="w-1/3">Defenders</div>
+                    <div class="w-1/6">(c)</div>
+                    <div class="w-1/3">Team</div>
+                    <div class="w-1/6">Value</div>
+                    <div class="w-1/6">&nbsp;</div>
+                  </div>
+                {/if}
+                {#if rowIndex === 2}
+                  <div
+                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                  >
+                    <div class="w-1/3">Midfielders</div>
+                    <div class="w-1/6">(c)</div>
+                    <div class="w-1/3">Team</div>
+                    <div class="w-1/6">Value</div>
+                    <div class="w-1/6">&nbsp;</div>
+                  </div>
+                {/if}
+                {#if rowIndex === 3}
+                  <div
+                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                  >
+                    <div class="w-1/3">Forwards</div>
+                    <div class="w-1/6">(c)</div>
+                    <div class="w-1/3">Team</div>
+                    <div class="w-1/6">Value</div>
+                    <div class="w-1/6">&nbsp;</div>
+                  </div>
+                {/if}
                 {#each row as _, colIndex (colIndex)}
                   {@const actualIndex = getActualIndex(rowIndex, colIndex)}
                   {@const playerIds = $fantasyTeam?.playerIds ?? []}
                   {@const playerId = playerIds[actualIndex]}
                   {@const player = players.find((p) => p.id === playerId)}
-                  <div class="flex flex-col justify-center items-center flex-1">
+                  {@const team = teams.find((x) => x.id === player?.teamId)}
+
+                  <div class="flex items-center justify-between py-2 px-4">
                     {#if playerId > 0 && player}
-                      {@const team = teams.find((x) => x.id === player.teamId)}
-                      <div
-                        class="mt-2 mb-2 md:mb-12 flex flex-col items-center text-center"
-                      >
-                        <div class="flex justify-center items-center">
-                          <div class="flex justify-between items-end w-full">
-                            <button
-                              on:click={() => removePlayer(player.id)}
-                              class="bg-red-600 mb-1 rounded-sm"
-                            >
-                              <RemovePlayerIcon className="w-5 h-5 p-1" />
-                            </button>
-                            <div
-                              class="flex justify-center items-center flex-grow"
-                            >
-                              <ShirtIcon
-                                className="h-16"
-                                primaryColour={team?.primaryColourHex}
-                                secondaryColour={team?.secondaryColourHex}
-                                thirdColour={team?.thirdColourHex}
-                              />
-                            </div>
-                            {#if $fantasyTeam?.captainId === playerId}
-                              <span class="mb-1">
-                                <ActiveCaptainIcon className="w-6 h-6" />
-                              </span>
-                            {:else}
-                              <button
-                                on:click={() => setCaptain(player.id)}
-                                class="mb-1"
-                              >
-                                <PlayerCaptainIcon className="w-6 h-6" />
-                              </button>
-                            {/if}
-                          </div>
-                        </div>
-                        <div
-                          class="flex flex-col justify-center items-center text-xs"
+                      <div class="w-1/3">
+                        {player.firstName}
+                        {player.lastName}
+                      </div>
+                      <div class="w-1/6 flex items-center">
+                        {#if $fantasyTeam?.captainId === playerId}
+                          <span>
+                            <ActiveCaptainIcon className="w-6 h-6" />
+                          </span>
+                        {:else}
+                          <button on:click={() => setCaptain(player.id)}>
+                            <PlayerCaptainIcon className="w-6 h-6" />
+                          </button>
+                        {/if}
+                      </div>
+                      <div class="flex w-1/3 items-center">
+                        <BadgeIcon
+                          className="h-5 w-5 mr-2"
+                          primaryColour={team?.primaryColourHex}
+                          secondaryColour={team?.secondaryColourHex}
+                          thirdColour={team?.thirdColourHex}
+                        />
+                        <p>
+                          {team?.name}
+                        </p>
+                      </div>
+                      <div class="w-1/6">
+                        £{(Number(player.value) / 4).toFixed(2)}m
+                      </div>
+                      <div class="w-1/6 flex items-center">
+                        <button
+                          on:click={() => removePlayer(player.id)}
+                          class="bg-red-600 mb-1 rounded-sm"
                         >
-                          <div
-                            class="flex justify-center items-center bg-gray-700 px-2 py-1 rounded-t-md min-w-[100px]"
-                          >
-                            <p class="min-w-[20px]">
-                              {getPositionAbbreviation(player.position)}
-                            </p>
-                            <svelte:component
-                              this={getFlagComponent(player.nationality)}
-                              class="h-4 w-4 ml-2 mr-2 min-w-[15px]"
-                            />
-                            <p class="truncate min-w-[60px] max-w-[60px]">
-                              {player.firstName.length > 2
-                                ? player.firstName.substring(0, 1) + "."
-                                : ""}
-                              {player.lastName}
-                            </p>
-                          </div>
-                          <div
-                            class="flex justify-center items-center bg-white text-black px-2 py-1 rounded-b-md min-w-[100px]"
-                          >
-                            <p class="min-w-[20px]">
-                              {team?.abbreviatedName}
-                            </p>
-                            <BadgeIcon
-                              className="h-4 w-4 mr-2 ml-2 min-w-[15px]"
-                              primaryColour={team?.primaryColourHex}
-                              secondaryColour={team?.secondaryColourHex}
-                              thirdColour={team?.thirdColourHex}
-                            />
-                            <p class="truncate min-w-[60px] max-w-[60px]">
-                              £{(Number(player.value) / 4).toFixed(2)}m
-                            </p>
-                          </div>
-                        </div>
+                          <RemovePlayerIcon className="w-6 h-6 p-2" />
+                        </button>
                       </div>
                     {:else}
-                      <button
-                        on:click={() => loadAddPlayer(rowIndex, colIndex)}
-                      >
-                        <AddPlayerIcon
-                          className="h-12 md:h-16 mt-2 mb-2 md:mb-24"
-                        />
-                      </button>
+                      <div class="w-1/3">-</div>
+                      <div class="w-1/6">-</div>
+                      <div class="w-1/3">-</div>
+                      <div class="w-1/6">-</div>
+                      <div class="w-1/6 flex items-center">
+                        <button
+                          on:click={() => loadAddPlayer(rowIndex, colIndex)}
+                          class="text-xl rounded fpl-button flex items-center"
+                        >
+                          <AddIcon className="w-6 h-6 p-2" />
+                        </button>
+                      </div>
                     {/if}
                   </div>
                 {/each}
-              </div>
-            {/each}
-          </div>
-        </div>
-      {:else}
-        <div class="bg-panel rounded-md m-4 flex-1">
-          <div class="container-fluid">
-            {#each gridSetup as row, rowIndex}
-              {#if rowIndex === 0}
-                <div
-                  class="flex items-center justify-between py-2 bg-light-gray px-4"
-                >
-                  <div class="w-1/3">Goalkeeper</div>
-                  <div class="w-1/6">(c)</div>
-                  <div class="w-1/3">Team</div>
-                  <div class="w-1/6">Value</div>
-                  <div class="w-1/6">&nbsp;</div>
-                </div>
-              {/if}
-              {#if rowIndex === 1}
-                <div
-                  class="flex items-center justify-between py-2 bg-light-gray px-4"
-                >
-                  <div class="w-1/3">Defenders</div>
-                  <div class="w-1/6">(c)</div>
-                  <div class="w-1/3">Team</div>
-                  <div class="w-1/6">Value</div>
-                  <div class="w-1/6">&nbsp;</div>
-                </div>
-              {/if}
-              {#if rowIndex === 2}
-                <div
-                  class="flex items-center justify-between py-2 bg-light-gray px-4"
-                >
-                  <div class="w-1/3">Midfielders</div>
-                  <div class="w-1/6">(c)</div>
-                  <div class="w-1/3">Team</div>
-                  <div class="w-1/6">Value</div>
-                  <div class="w-1/6">&nbsp;</div>
-                </div>
-              {/if}
-              {#if rowIndex === 3}
-                <div
-                  class="flex items-center justify-between py-2 bg-light-gray px-4"
-                >
-                  <div class="w-1/3">Forwards</div>
-                  <div class="w-1/6">(c)</div>
-                  <div class="w-1/3">Team</div>
-                  <div class="w-1/6">Value</div>
-                  <div class="w-1/6">&nbsp;</div>
-                </div>
-              {/if}
-              {#each row as _, colIndex (colIndex)}
-                {@const actualIndex = getActualIndex(rowIndex, colIndex)}
-                {@const playerIds = $fantasyTeam?.playerIds ?? []}
-                {@const playerId = playerIds[actualIndex]}
-                {@const player = players.find((p) => p.id === playerId)}
-                {@const team = teams.find((x) => x.id === player?.teamId)}
-
-                <div class="flex items-center justify-between py-2 px-4">
-                  {#if playerId > 0 && player}
-                    <div class="w-1/3">
-                      {player.firstName}
-                      {player.lastName}
-                    </div>
-                    <div class="w-1/6 flex items-center">
-                      {#if $fantasyTeam?.captainId === playerId}
-                        <span>
-                          <ActiveCaptainIcon className="w-6 h-6" />
-                        </span>
-                      {:else}
-                        <button on:click={() => setCaptain(player.id)}>
-                          <PlayerCaptainIcon className="w-6 h-6" />
-                        </button>
-                      {/if}
-                    </div>
-                    <div class="flex w-1/3 items-center">
-                      <BadgeIcon
-                        className="h-5 w-5 mr-2"
-                        primaryColour={team?.primaryColourHex}
-                        secondaryColour={team?.secondaryColourHex}
-                        thirdColour={team?.thirdColourHex}
-                      />
-                      <p>
-                        {team?.name}
-                      </p>
-                    </div>
-                    <div class="w-1/6">
-                      £{(Number(player.value) / 4).toFixed(2)}m
-                    </div>
-                    <div class="w-1/6 flex items-center">
-                      <button
-                        on:click={() => removePlayer(player.id)}
-                        class="bg-red-600 mb-1 rounded-sm"
-                      >
-                        <RemovePlayerIcon className="w-6 h-6 p-2" />
-                      </button>
-                    </div>
-                  {:else}
-                    <div class="w-1/3">-</div>
-                    <div class="w-1/6">-</div>
-                    <div class="w-1/3">-</div>
-                    <div class="w-1/6">-</div>
-                    <div class="w-1/6 flex items-center">
-                      <button
-                        on:click={() => loadAddPlayer(rowIndex, colIndex)}
-                        class="text-xl rounded fpl-button flex items-center"
-                      >
-                        <AddIcon className="w-6 h-6 p-2" />
-                      </button>
-                    </div>
-                  {/if}
-                </div>
               {/each}
-            {/each}
+            </div>
           </div>
+        {/if}
+        <div class="flex w-100 md:w-1/2">
+          <SimpleFixtures />
         </div>
-      {/if}
-      <div class="flex w-100 md:w-1/2">
-        <SimpleFixtures />
       </div>
+      <BonusPanel {fantasyTeam} {teams} {players} {activeGameweek} />
     </div>
-    <BonusPanel {fantasyTeam} {teams} {players} {activeGameweek} />
-  </div>
+  {/if}
 </Layout>

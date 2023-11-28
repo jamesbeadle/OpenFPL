@@ -51,10 +51,10 @@
     isLoading.set(true);
 
     try {
-      teamStore.sync();
-      fixtureStore.sync();
-      systemStore.sync();
-      playerStore.sync();
+      await teamStore.sync();
+      await fixtureStore.sync();
+      await systemStore.sync();
+      await playerStore.sync();
       
       unsubscribeFixtures = fixtureStore.subscribe((value) => {
         fixtures = value;

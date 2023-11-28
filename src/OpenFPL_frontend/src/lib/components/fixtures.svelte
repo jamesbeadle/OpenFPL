@@ -51,9 +51,9 @@
 
   onMount(async () => {
     try{
-      teamStore.sync();
-      fixtureStore.sync();
-      systemStore.sync();
+      await teamStore.sync();
+      await fixtureStore.sync();
+      await systemStore.sync();
 
       unsubscribeTeams = teamStore.subscribe(value => {
         teams = value;
