@@ -38,16 +38,9 @@ export class ManagerService {
     });
   }
 
-  async getManager(managerId: string): Promise<ManagerDTO> {
+  async getManager(managerId: string, seasonId: number, gameweek: number): Promise<ManagerDTO> {
     try {
-      let systemService = new SystemService();
-      await systemService.updateSystemStateData();
-      let systemState = await systemService.getSystemState();
-      return await this.actor.getManager(
-        managerId,
-        systemState?.activeSeason.id,
-        systemState?.activeGameweek
-      );
+      return await this.actor.getManager(managerId, seasonId, gameweek);
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
       throw error;

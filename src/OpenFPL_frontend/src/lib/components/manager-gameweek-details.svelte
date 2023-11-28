@@ -9,7 +9,7 @@
     import { TeamService } from "$lib/services/TeamService";
 
     let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-    let selectedGameweek: number = 1;
+    export let selectedGameweek: number;
     let gameweekPlayers: PlayerPointsDTO[] = [];
     let players: PlayerDTO[];
     let teams: Team[];

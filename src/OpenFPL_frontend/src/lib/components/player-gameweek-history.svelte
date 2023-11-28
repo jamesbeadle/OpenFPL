@@ -13,10 +13,6 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
 
-  const fixtureService = new FixtureService();
-  const teamService = new TeamService();
-  const systemService = new SystemService();
-  const playerService = new PlayerService();
 
   let selectedGameweek: number = 1;
   let selectedSeason: Season | null = null;
@@ -35,6 +31,11 @@
 
   onMount(async () => {
     try {
+      const fixtureService = new FixtureService();
+      const teamService = new TeamService();
+      const systemService = new SystemService();
+      const playerService = new PlayerService();
+      
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();
       await teamService.updateTeamsData();

@@ -15,7 +15,7 @@
   let isLoading = true;
   let activeTab: string = "details";
   let manager: ManagerDTO;
-  let selectedGameweek = 1;
+  $: selectedGameweek = 1;
   let selectedSeason = "";
   let joinedDate = "";
   let profilePicture: string;
@@ -33,7 +33,7 @@
       selectedGameweek = systemState?.activeGameweek ?? 1;
       selectedSeason = systemState?.activeSeason.name ?? "";
 
-      manager = await managerService.getManager(id ?? "");
+      manager = await managerService.getManager(id ?? "", systemState?.activeSeason.id ?? 1, systemState?.activeGameweek ?? 1);
       const blob = new Blob([new Uint8Array(manager.profilePicture)]);
       const blobUrl = manager.profilePicture.length > 0 ? URL.createObjectURL(blob) : "profile_placeholder.png";
       profilePicture = blobUrl;
@@ -70,6 +70,10 @@
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
+  }
+
+  function viewGameweekDetail(gameweek: number){
+    setActiveTab('details')
   }
 </script>
 
@@ -160,10 +164,10 @@
         
         <div class="w-full">
           {#if activeTab === "details"}
-            <ManagerGameweekDetails />
+            <ManagerGameweekDetails {selectedGameweek} />
           {/if}
           {#if activeTab === "gameweeks"}
-            <ManagerGameweeks />
+            <ManagerGameweeks {viewGameweekDetail} />
           {/if}
         </div>
       </div>
