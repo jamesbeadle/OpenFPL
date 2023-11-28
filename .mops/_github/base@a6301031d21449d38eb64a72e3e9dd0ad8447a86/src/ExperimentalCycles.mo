@@ -15,7 +15,7 @@ module {
 
   /// Returns the actor's current balance of cycles as `amount`.
   public func balance() : (amount : Nat) {
-    Prim.nat64ToNat(Prim.cyclesBalance())
+    Prim.nat64ToNat(Prim.cyclesBalance());
   };
 
   /// Returns the currently available `amount` of cycles.
@@ -25,7 +25,7 @@ module {
   /// any remaining available amount is automatically
   /// refunded to the caller/context.
   public func available() : (amount : Nat) {
-    Prim.nat64ToNat(Prim.cyclesAvailable())
+    Prim.nat64ToNat(Prim.cyclesAvailable());
   };
 
   /// Transfers up to `amount` from `available()` to `balance()`.
@@ -45,7 +45,7 @@ module {
   /// **Note**: the implicit register of added amounts is reset to zero on entry to
   /// a shared function and after each shared function call or resume from an await.
   public func add(amount : Nat) : () {
-    Prim.cyclesAdd(Prim.natToNat64(amount))
+    Prim.cyclesAdd(Prim.natToNat64(amount));
   };
 
   /// Reports `amount` of cycles refunded in the last `await` of the current
@@ -54,7 +54,7 @@ module {
   /// Instead, refunds are automatically added to the current balance,
   /// whether or not `refunded` is used to observe them.
   public func refunded() : (amount : Nat) {
-    Prim.nat64ToNat(Prim.cyclesRefunded())
+    Prim.nat64ToNat(Prim.cyclesRefunded());
   };
 
-}
+};

@@ -13,7 +13,6 @@ module {
   /// * The error code and textual message data of an IC reject determines the future's `Error` value.
   ///
   /// Note: `call` is an asynchronous function and can only be applied in an asynchronous context.
-  public let call : (canister : Principal, name : Text, data : Blob) ->
-     async (reply : Blob) = Prim.call_raw;
+  public let call : (canister : Principal, name : Text, data : Blob) -> async (reply : Blob) = Prim.call_raw;
 
-}
+};

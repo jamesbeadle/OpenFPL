@@ -25,18 +25,21 @@ module {
   /// Append the values of two input arrays
   /// @deprecated Array.append has critical performance flaws; use a Buffer, and Buffer.append, instead.
   public func append<A>(xs : [A], ys : [A]) : [A] {
-    switch(xs.size(), ys.size()) {
-      case (0, 0) { []; };
-      case (0, _) { ys; };
-      case (_, 0) { xs; };
+    switch (xs.size(), ys.size()) {
+      case (0, 0) { [] };
+      case (0, _) { ys };
+      case (_, 0) { xs };
       case (xsSize, ysSize) {
-        Prim.Array_tabulate<A>(xsSize + ysSize, func (i : Nat) : A {
-          if (i < xsSize) {
-            xs[i];
-          } else {
-            ys[i - xsSize];
-          };
-        });
+        Prim.Array_tabulate<A>(
+          xsSize + ysSize,
+          func(i : Nat) : A {
+            if (i < xsSize) {
+              xs[i];
+            } else {
+              ys[i - xsSize];
+            };
+          },
+        );
       };
     };
   };
@@ -53,7 +56,7 @@ module {
   public func sort<A>(xs : [A], cmp : (A, A) -> Order.Order) : [A] {
     let tmp : [var A] = thaw(xs);
     sortInPlace(tmp, cmp);
-    freeze(tmp)
+    freeze(tmp);
   };
 
   /// Sorts the given array in place according to the `cmp` function.
@@ -74,12 +77,12 @@ module {
       var i = lo;
       var j = mid + 1;
       var k = lo;
-      while(k <= hi) {
+      while (k <= hi) {
         aux[k] := xs[k];
         k += 1;
       };
       k := lo;
-      while(k <= hi) {
+      while (k <= hi) {
         if (i > mid) {
           xs[k] := aux[j];
           j += 1;
@@ -133,7 +136,7 @@ module {
       switch (f(x)) {
         case null {};
         case (?y) { ys.add(y) };
-      }
+      };
     };
     ys.toArray();
   };
@@ -164,33 +167,45 @@ module {
     for (x in xs.vals()) {
       if (f(x)) {
         return ?x;
-      }
+      };
     };
     return null;
   };
   /// Transform mutable array into immutable array
   public func freeze<A>(xs : [var A]) : [A] {
-    Prim.Array_tabulate<A>(xs.size(), func (i : Nat) : A {
-      xs[i];
-    });
+    Prim.Array_tabulate<A>(
+      xs.size(),
+      func(i : Nat) : A {
+        xs[i];
+      },
+    );
   };
   /// Transform an array of arrays into a single array, with retained array-value order.
   public func flatten<A>(xs : [[A]]) : [A] {
-    chain<[A], A>(xs, func (x : [A]) : [A] {
-      x;
-    });
+    chain<[A], A>(
+      xs,
+      func(x : [A]) : [A] {
+        x;
+      },
+    );
   };
   /// Transform each value using a function, with retained array-value order.
   public func map<A, B>(xs : [A], f : A -> B) : [B] {
-    Prim.Array_tabulate<B>(xs.size(), func (i : Nat) : B {
-      f(xs[i]);
-    });
+    Prim.Array_tabulate<B>(
+      xs.size(),
+      func(i : Nat) : B {
+        f(xs[i]);
+      },
+    );
   };
   /// Transform each entry (index-value pair) using a function.
   public func mapEntries<A, B>(xs : [A], f : (A, Nat) -> B) : [B] {
-    Prim.Array_tabulate<B>(xs.size(), func (i : Nat) : B {
-      f(xs[i], i);
-    });
+    Prim.Array_tabulate<B>(
+      xs.size(),
+      func(i : Nat) : B {
+        f(xs[i], i);
+      },
+    );
   };
 
   /// Maps a Result-returning function over an Array and returns either
@@ -223,26 +238,26 @@ module {
             isInit := true;
             target := init(len, ok);
           } else {
-            target[i] := ok
-          }
+            target[i] := ok;
+          };
         };
       };
       i += 1;
     };
-    #ok(freeze(target))
+    #ok(freeze(target));
   };
 
   /// Make an array from a single value.
-  public func make<A>(x: A) : [A] {
+  public func make<A>(x : A) : [A] {
     [x];
   };
   /// Returns `xs.vals()`.
   public func vals<A>(xs : [A]) : I.Iter<A> {
-    xs.vals()
+    xs.vals();
   };
   /// Returns `xs.keys()`.
   public func keys<A>(xs : [A]) : I.Iter<Nat> {
-    xs.keys()
+    xs.keys();
   };
   /// Transform an immutable array into a mutable array.
   public func thaw<A>(xs : [A]) : [var A] {
@@ -257,11 +272,11 @@ module {
     ys;
   };
   /// Initialize a mutable array with `size` copies of the initial value.
-  public func init<A>(size : Nat,  initVal : A) : [var A] {
+  public func init<A>(size : Nat, initVal : A) : [var A] {
     Prim.Array_init<A>(size, initVal);
   };
   /// Initialize an immutable array of the given size, and use the `gen` function to produce the initial value for every index.
-  public func tabulate<A>(size : Nat,  gen : Nat -> A) : [A] {
+  public func tabulate<A>(size : Nat, gen : Nat -> A) : [A] {
     Prim.Array_tabulate<A>(size, gen);
   };
 
@@ -270,17 +285,17 @@ module {
     var i = x;
     public func next() : ?Nat {
       if (i > y) {
-         null
+        null;
       } else {
         let j = i;
         i += 1;
-        ?j
-      }
+        ?j;
+      };
     };
   };
 
   /// Initialize a mutable array using a generation function
-  public func tabulateVar<A>(size : Nat,  gen : Nat -> A) : [var A] {
+  public func tabulateVar<A>(size : Nat, gen : Nat -> A) : [var A] {
     if (size == 0) { return [var] };
     let xs = Prim.Array_init<A>(size, gen(0));
     for (i in range(1, size - 1)) {
@@ -288,4 +303,4 @@ module {
     };
     return xs;
   };
-}
+};

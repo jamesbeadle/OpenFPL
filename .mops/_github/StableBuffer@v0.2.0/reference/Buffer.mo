@@ -28,12 +28,11 @@ module {
     /// Adds a single element to the buffer.
     public func add(elem : X) {
       if (count == elems.size()) {
-        let size =
-          if (count == 0) {
-            if (initCapacity > 0) { initCapacity } else { 1 }
-          } else {
-            2 * elems.size()
-          };
+        let size = if (count == 0) {
+          if (initCapacity > 0) { initCapacity } else { 1 };
+        } else {
+          2 * elems.size();
+        };
         let elems2 = Prim.Array_init<X>(size, elem);
         var i = 0;
         label l loop {
@@ -51,10 +50,10 @@ module {
     /// elements had been added to the Buffer.
     public func removeLast() : ?X {
       if (count == 0) {
-        null
+        null;
       } else {
         count -= 1;
-        ?elems[count]
+        ?elems[count];
       };
     };
 
@@ -70,12 +69,10 @@ module {
     };
 
     /// Returns the current number of elements.
-    public func size() : Nat =
-      count;
+    public func size() : Nat = count;
 
     /// Resets the buffer.
-    public func clear() =
-      count := 0;
+    public func clear() = count := 0;
 
     /// Returns a copy of this buffer.
     public func clone() : Buffer<X> {
@@ -86,7 +83,7 @@ module {
         c.add(elems[i]);
         i += 1;
       };
-      c
+      c;
     };
 
     /// Returns an `Iter` over the elements of this buffer.
@@ -96,18 +93,18 @@ module {
         if (pos == count) { null } else {
           let elem = ?elems[pos];
           pos += 1;
-          elem
-        }
-      }
+          elem;
+        };
+      };
     };
 
     /// Creates a new array containing this buffer's elements.
     public func toArray() : [X] =
-      // immutable clone of array
-      Prim.Array_tabulate<X>(
-        count,
-        func(x : Nat) : X { elems[x] }
-      );
+    // immutable clone of array
+    Prim.Array_tabulate<X>(
+      count,
+      func(x : Nat) : X { elems[x] },
+    );
 
     /// Creates a mutable array containing this buffer's elements.
     public func toVarArray() : [var X] {
@@ -119,24 +116,23 @@ module {
           a[i] := elems[i];
           i += 1;
         };
-        a
-      }
+        a;
+      };
     };
 
     /// Gets the `i`-th element of this buffer. Traps if  `i >= count`. Indexing is zero-based.
     public func get(i : Nat) : X {
-      assert(i < count);
-      elems[i]
+      assert (i < count);
+      elems[i];
     };
 
     /// Gets the `i`-th element of the buffer as an option. Returns `null` when `i >= count`. Indexing is zero-based.
     public func getOpt(i : Nat) : ?X {
       if (i < count) {
-        ?elems[i]
-      }
-      else {
-        null
-      }
+        ?elems[i];
+      } else {
+        null;
+      };
     };
 
     /// Overwrites the current value of the `i`-entry of  this buffer with `elem`. Traps if the
@@ -146,4 +142,4 @@ module {
     };
   };
 
-}
+};

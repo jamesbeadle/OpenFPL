@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-display: swap;
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/poppins-regular-webfont.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/Manrope-Regular.woff2") format("woff2");
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif !important;
+  color: white !important;
+  background-color: #1a1a1d;
+  height: 100vh;
+  margin: 0;
+  background-image: url("background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.fpl-button {
+  background-color: #2ce3a6;
+  color: black;
+}
+
+.fpl-dropdown {
+  background-color: transparent;
+  border: none;
+}
+
+.fpl-dropdown option {
+  background-color: black;
+  border: none;
+}
+
+.bg-light-gray {
+  background-color: rgba(46, 50, 58, 0.6);
+}
+
+.fpl-purple-btn {
+  background-color: #7f56f1;
+}
+
+.fpl-cancel-btn {
+  background-color: #f27557;
+}
+
+.oc-logo {
+  font-family: "Manrope";
+  font-weight: bold;
+}
+
+.bg-panel {
+  background-color: rgba(36, 37, 41, 0.9);
+}
+
+.active-tab {
+  border-bottom: 4px #2ce3a6 solid;
+}
+
+.toast-panel {
+  background-color: #2ce3a6;
+}
+
+.inactive-btn {
+  background-color: black;
+  color: white;
+}

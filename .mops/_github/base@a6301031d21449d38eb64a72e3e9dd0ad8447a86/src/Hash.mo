@@ -14,42 +14,42 @@ module {
   /// Project a given bit from the bit vector.
   public func bit(h : Hash, pos : Nat) : Bool {
     assert (pos <= length);
-    (h & (Prim.natToNat32(1) << Prim.natToNat32(pos))) != Prim.natToNat32(0)
+    (h & (Prim.natToNat32(1) << Prim.natToNat32(pos))) != Prim.natToNat32(0);
   };
 
   /// Test if two hashes are equal
   public func equal(ha : Hash, hb : Hash) : Bool {
-    ha == hb
+    ha == hb;
   };
 
   public func hash(i : Nat) : Hash {
     let j = Prim.natToNat32(i);
-    hashNat8(
-      [j & (255 << 0),
-       j & (255 << 8),
-       j & (255 << 16),
-       j & (255 << 24)
-      ]);
+    hashNat8([
+      j & (255 << 0),
+      j & (255 << 8),
+      j & (255 << 16),
+      j & (255 << 24),
+    ]);
   };
 
   public func debugPrintBits(bits : Hash) {
     for (j in Iter.range(0, length - 1)) {
       if (bit(bits, j)) {
-        Prim.debugPrint("1")
+        Prim.debugPrint("1");
       } else {
-        Prim.debugPrint("0")
-      }
-    }
+        Prim.debugPrint("0");
+      };
+    };
   };
 
   public func debugPrintBitsRev(bits : Hash) {
     for (j in Iter.revRange(length - 1, 0)) {
       if (bit(bits, Prim.abs(j))) {
-        Prim.debugPrint("1")
+        Prim.debugPrint("1");
       } else {
-        Prim.debugPrint("0")
-      }
-    }
+        Prim.debugPrint("0");
+      };
+    };
   };
 
   /// Jenkin's one at a time:
@@ -73,4 +73,4 @@ module {
     return hash;
   };
 
-}
+};

@@ -45,7 +45,7 @@ module {
   public func find<K, V>(
     map : AssocList<K, V>,
     key : K,
-    equal : (K, K) -> Bool
+    equal : (K, K) -> Bool,
   ) : ?V {
     func rec(al : AssocList<K, V>) : ?V {
       label profile_assocList_find_rec : (?V) switch (al) {
@@ -53,17 +53,17 @@ module {
         case (?((hd_k, hd_v), tl)) {
           if (equal(key, hd_k)) {
             label profile_assocList_find_end_success : (?V) {
-              ?hd_v
-            }
+              ?hd_v;
+            };
           } else {
-            rec(tl)
-          }
-        }
-      }
+            rec(tl);
+          };
+        };
+      };
     };
     label profile_assocList_find_begin : (?V) {
-      rec(map)
-    }
+      rec(map);
+    };
   };
 
   /// Maps `key` to `value` in `map`, and overwrites the old entry if the key
@@ -92,15 +92,15 @@ module {
     map : AssocList<K, V>,
     key : K,
     equal : (K, K) -> Bool,
-    value : ?V
+    value : ?V,
   ) : (AssocList<K, V>, ?V) {
     func rec(al : AssocList<K, V>) : (AssocList<K, V>, ?V) {
       switch (al) {
         case (null) {
           switch value {
             case (null) { (null, null) };
-            case (?value) { (?((key, value), null), null) }
-          }
+            case (?value) { (?((key, value), null), null) };
+          };
         };
         case (?((hd_k, hd_v), tl)) {
           if (equal(key, hd_k)) {
@@ -108,16 +108,16 @@ module {
             // return old value
             switch value {
               case (null) { (tl, ?hd_v) };
-              case (?value) { (?((hd_k, value), tl), ?hd_v) }
-            }
+              case (?value) { (?((hd_k, value), tl), ?hd_v) };
+            };
           } else {
             let (tl2, old_v) = rec(tl);
-            (?((hd_k, hd_v), tl2), old_v)
-          }
-        }
-      }
+            (?((hd_k, hd_v), tl2), old_v);
+          };
+        };
+      };
     };
-    rec(map)
+    rec(map);
   };
 
   /// Produces a new map containing all entries from `map1` whose keys are not
@@ -149,7 +149,7 @@ module {
   public func diff<K, V, W>(
     map1 : AssocList<K, V>,
     map2 : AssocList<K, W>,
-    equal : (K, K) -> Bool
+    equal : (K, K) -> Bool,
   ) : AssocList<K, V> {
     func rec(al1 : AssocList<K, V>) : AssocList<K, V> {
       switch al1 {
@@ -157,28 +157,28 @@ module {
         case (?((k, v1), tl)) {
           switch (find<K, W>(map2, k, equal)) {
             case (null) { ?((k, v1), rec(tl)) };
-            case (?v2) { rec(tl) }
-          }
-        }
-      }
+            case (?v2) { rec(tl) };
+          };
+        };
+      };
     };
-    rec(map1)
+    rec(map1);
   };
 
   /// @deprecated
   public func mapAppend<K, V, W, X>(
     map1 : AssocList<K, V>,
     map2 : AssocList<K, W>,
-    f : (?V, ?W) -> X
+    f : (?V, ?W) -> X,
   ) : AssocList<K, X> = label profile_assocList_mapAppend : AssocList<K, X> {
     func rec(al1 : AssocList<K, V>, al2 : AssocList<K, W>) : AssocList<K, X> = label profile_assocList_mapAppend_rec : AssocList<K, X> {
       switch (al1, al2) {
         case (null, null) { null };
         case (?((k, v), al1_), _) { ?((k, f(?v, null)), rec(al1_, al2)) };
-        case (null, ?((k, v), al2_)) { ?((k, f(null, ?v)), rec(null, al2_)) }
-      }
+        case (null, ?((k, v), al2_)) { ?((k, f(null, ?v)), rec(null, al2_)) };
+      };
     };
-    rec(map1, map2)
+    rec(map1, map2);
   };
 
   /// Produces a new map by mapping entries in `map1` and `map2` using `f` and
@@ -230,9 +230,9 @@ module {
   public func disjDisjoint<K, V, W, X>(
     map1 : AssocList<K, V>,
     map2 : AssocList<K, W>,
-    f : (?V, ?W) -> X
+    f : (?V, ?W) -> X,
   ) : AssocList<K, X> = label profile_assocList_disjDisjoint : AssocList<K, X> {
-    mapAppend<K, V, W, X>(map1, map2, f)
+    mapAppend<K, V, W, X>(map1, map2, f);
   };
 
   /// Creates a new map by merging entries from `map1` and `map2`, and mapping
@@ -291,7 +291,7 @@ module {
     map1 : AssocList<K, V>,
     map2 : AssocList<K, W>,
     equal : (K, K) -> Bool,
-    combine : (?V, ?W) -> X
+    combine : (?V, ?W) -> X,
   ) : AssocList<K, X> {
     func rec1(al1Rec : AssocList<K, V>) : AssocList<K, X> {
       switch al1Rec {
@@ -302,22 +302,22 @@ module {
               case (?((k, v2), tl)) {
                 switch (find<K, V>(map1, k, equal)) {
                   case (null) { ?((k, combine(null, ?v2)), rec2(tl)) };
-                  case (?v1) { ?((k, combine(?v1, ?v2)), rec2(tl)) }
-                }
-              }
-            }
+                  case (?v1) { ?((k, combine(?v1, ?v2)), rec2(tl)) };
+                };
+              };
+            };
           };
-          rec2(map2)
+          rec2(map2);
         };
         case (?((k, v1), tl)) {
           switch (find<K, W>(map2, k, equal)) {
             case (null) { ?((k, combine(?v1, null)), rec1(tl)) };
-            case (?v2) { /* handled above */ rec1(tl) }
-          }
-        }
-      }
+            case (?v2) { /* handled above */ rec1(tl) };
+          };
+        };
+      };
     };
-    rec1(map1)
+    rec1(map1);
   };
 
   /// Takes the intersection of `map1` and `map2`, only keeping colliding keys
@@ -351,7 +351,7 @@ module {
     map1 : AssocList<K, V>,
     map2 : AssocList<K, W>,
     equal : (K, K) -> Bool,
-    combine : (V, W) -> X
+    combine : (V, W) -> X,
   ) : AssocList<K, X> {
     func rec(al1 : AssocList<K, V>) : AssocList<K, X> {
       switch al1 {
@@ -359,12 +359,12 @@ module {
         case (?((k, v1), tl)) {
           switch (find<K, W>(map2, k, equal)) {
             case (null) { rec(tl) };
-            case (?v2) { ?((k, combine(v1, v2)), rec(tl)) }
-          }
-        }
-      }
+            case (?v2) { ?((k, combine(v1, v2)), rec(tl)) };
+          };
+        };
+      };
     };
-    rec(map1)
+    rec(map1);
   };
 
   /// Collapses the elements in `map` into a single value by starting with `base`
@@ -391,14 +391,14 @@ module {
   public func fold<K, V, X>(
     map : AssocList<K, V>,
     base : X,
-    combine : (K, V, X) -> X
+    combine : (K, V, X) -> X,
   ) : X {
     func rec(al : AssocList<K, V>) : X {
       switch al {
         case null { base };
-        case (?((k, v), t)) { combine(k, v, rec(t)) }
-      }
+        case (?((k, v), t)) { combine(k, v, rec(t)) };
+      };
     };
-    rec(map)
-  }
-}
+    rec(map);
+  };
+};

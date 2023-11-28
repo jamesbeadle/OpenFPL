@@ -1,26 +1,16 @@
 {
   "canisters": {
     "OpenFPL_backend": {
-      "dependencies": [
-        "nns-ledger",
-        "token_canister",
-        "player_canister"
-      ],
+      "dependencies": ["nns-ledger", "token_canister", "player_canister"],
       "main": "src/OpenFPL_backend/main.mo",
       "type": "motoko"
     },
     "OpenFPL_frontend": {
-      "dependencies": [
-        "OpenFPL_backend",
-        "player_canister"
-      ],
+      "dependencies": ["OpenFPL_backend", "player_canister"],
       "frontend": {
-        "entrypoint": "src/OpenFPL_frontend/src/index.html"
+        "entrypoint": "build/index.html"
       },
-      "source": [
-        "src/OpenFPL_frontend/assets",
-        "dist/OpenFPL_frontend/"
-      ],
+      "source": ["build/"],
       "type": "assets"
     },
     "internet_identity": {
@@ -146,12 +136,9 @@
   "defaults": {
     "build": {
       "args": "",
-      "packtool": "mops sources"
-    },
-    "replica": {
-      "subnet_type": "system"
+      "packtool": ""
     }
   },
   "output_env_file": ".env",
-  "version": 1
+  "version": 2
 }
