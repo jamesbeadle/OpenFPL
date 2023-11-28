@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
+  import { toastStore } from "$lib/stores/toast-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type {
     SystemState,
@@ -10,37 +11,16 @@
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { formatUnixTimeToTime } from "../utils/Helpers";
-  import { toastStore } from "$lib/stores/toast-store";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
 
   let teams: Team[] = [];
   let fixtures: Fixture[] = [];
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let systemState: SystemState | null;
-
-  teamStore.sync();
-  fixtureStore.sync();
-  systemStore.sync();
-
+  
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe((value) => {
-    fixtures = value;
-    fixturesWithTeams = fixtures.map((fixture) => ({
-      fixture,
-      homeTeam: getTeamFromId(fixture.homeTeamId),
-      awayTeam: getTeamFromId(fixture.awayTeamId),
-    }));
-  });
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
 
   let isLoading = true;
   let selectedGameweek: number = 1;
@@ -69,7 +49,39 @@
     {} as { [key: string]: FixtureWithTeams[] }
   );
 
-  onMount(async () => {});
+  onMount(async () => {
+    try{
+      teamStore.sync();
+      fixtureStore.sync();
+      systemStore.sync();
+
+      unsubscribeTeams = teamStore.subscribe(value => {
+        teams = value;
+      });
+
+      unsubscribeFixtures = fixtureStore.subscribe(value => {
+        fixtures = value;
+        fixturesWithTeams = fixtures.map((fixture) => ({
+          fixture,
+          homeTeam: getTeamFromId(fixture.homeTeamId),
+          awayTeam: getTeamFromId(fixture.awayTeamId),
+        }));
+      });
+
+      unsubscribeSystemState = systemStore.subscribe(value => {
+        systemState = value;
+      });
+    } catch(error){
+      toastStore.show("Error fetching fixtures data.", "error");
+      console.error("Error fetching fixtures data:", error);
+    } finally { isLoading = false; }
+  });
+  
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribeFixtures?.();
+    unsubscribeSystemState?.();
+  });
 
   const changeGameweek = (delta: number) => {
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));

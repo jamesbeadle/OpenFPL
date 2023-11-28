@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
+  import { toastStore } from "$lib/stores/toast-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { formatUnixDateToReadable, formatUnixTimeToTime } from "../utils/Helpers";
@@ -15,23 +16,8 @@
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedFixtureType = -1;
 
-  teamStore.sync();
-  fixtureStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe((value) => {
-    fixtures = value;
-    fixturesWithTeams = fixtures.map((fixture) => ({
-      fixture,
-      homeTeam: getTeamFromId(fixture.homeTeamId),
-      awayTeam: getTeamFromId(fixture.awayTeamId),
-    }));
-  });
 
   $: filteredFixtures =
     selectedFixtureType === -1
@@ -49,15 +35,36 @@
           ({ fixture }) => clubId === null || fixture.awayTeamId === clubId
         );
 
-  onMount(async () => {});
+  onMount(async () => {
+    try{
+      teamStore.sync();
+      fixtureStore.sync();
+          
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+
+      unsubscribeFixtures = fixtureStore.subscribe((value) => {
+        fixtures = value;
+        fixturesWithTeams = fixtures.map((fixture) => ({
+          fixture,
+          homeTeam: getTeamFromId(fixture.homeTeamId),
+          awayTeam: getTeamFromId(fixture.awayTeamId),
+        }));
+      });
+      
+    } catch (error){
+      toastStore.show("Error fetching team fixtures.", "error");
+      console.error("Error fetching team fixtures:", error);
+    } finally {
+      
+    }
+    
+  });
 
   onDestroy(() => {
-    if (unsubscribeTeams) {
-      unsubscribeTeams();
-    }
-    if (unsubscribeFixtures) {
-      unsubscribeFixtures();
-    }
+    unsubscribeTeams?.();
+    unsubscribeFixtures?.();
   });
 
   function getTeamFromId(teamId: number): Team | undefined {

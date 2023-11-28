@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
@@ -40,42 +40,43 @@
 
   let activeTab: string = "players";
 
-  teamStore.sync();
-  fixtureStore.sync();
-  systemStore.sync();
-  playerStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe((value) => {
-    fixtures = value;
-    fixturesWithTeams = fixtures.map((fixture) => ({
-      fixture,
-      homeTeam: getTeamFromId(fixture.homeTeamId),
-      awayTeam: getTeamFromId(fixture.awayTeamId),
-    }));
-  });
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
-
   let unsubscribePlayers: () => void;
-  unsubscribePlayers = playerStore.subscribe((value) => {
-    players = value.filter((player) => player.teamId === id);
-  });
-
+  
   $: id = Number($page.url.searchParams.get("id"));
 
   onMount(async () => {
     isLoading.set(true);
 
     try {
+      teamStore.sync();
+      fixtureStore.sync();
+      systemStore.sync();
+      playerStore.sync();
+      
+      unsubscribeFixtures = fixtureStore.subscribe((value) => {
+        fixtures = value;
+        fixturesWithTeams = fixtures.map((fixture) => ({
+          fixture,
+          homeTeam: getTeamFromId(fixture.homeTeamId),
+          awayTeam: getTeamFromId(fixture.awayTeamId),
+        }));
+      });
+
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+
+      unsubscribePlayers = playerStore.subscribe((value) => {
+        players = value.filter((player) => player.teamId === id);
+      });
+      
       let teamFixtures = fixtures.filter(
         (x) => x.homeTeamId === id || x.awayTeamId === id
       );
@@ -102,6 +103,13 @@
     } finally {
       isLoading.set(false);
     }
+  });
+  
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribeFixtures?.();
+    unsubscribeSystemState?.();
+    unsubscribePlayers?.();
   });
 
   let tableData: any[] = [];

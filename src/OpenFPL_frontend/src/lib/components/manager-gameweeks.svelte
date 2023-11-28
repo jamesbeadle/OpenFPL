@@ -1,16 +1,10 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { toastStore } from "$lib/stores/toast-store";
-  import type {
-    FantasyTeam,
-    ManagerDTO,
-    Season,
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ManagerDTO, Season, SystemState } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
@@ -25,17 +19,18 @@
   let selectedGameweek: number = 1;
   let selectedSeason: Season | null = null;
 
-  systemStore.sync();
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
 
   $: id = $page.url.searchParams.get("id") ?? principalId;
 
   onMount(async () => {
     try {
+      systemStore.sync();
+          
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+      
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
       manager = await managerStore.getManager(
@@ -50,6 +45,11 @@
       isLoading = false;
     }
   });
+  
+  onDestroy(() => {
+    unsubscribeSystemState?.();
+  });
+
 </script>
 
 {#if isLoading}

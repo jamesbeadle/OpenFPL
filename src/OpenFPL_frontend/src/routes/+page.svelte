@@ -41,6 +41,7 @@
       await fixtureStore.sync();
       await leaderboardStore.syncWeeklyLeaderboard();
       await authStore.sync();
+      
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });

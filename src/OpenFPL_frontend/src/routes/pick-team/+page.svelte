@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
+  import { onMount, onDestroy } from "svelte";
   import Layout from "../Layout.svelte";
   import { writable, get } from "svelte/store";
   import { toastStore } from "$lib/stores/toast-store";
@@ -77,26 +76,9 @@
   let systemState: SystemState | null;
   let sessionAddedPlayers: number[] = [];
   
-  systemStore.sync();
-  teamStore.sync();
-  playerStore.sync();
-  
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-    activeGameweek = systemState?.activeGameweek ?? activeGameweek;
-    activeSeason = systemState?.activeSeason.name ?? activeSeason;
-  });
-  
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-  
   let unsubscribePlayers: () => void;
-  unsubscribePlayers = playerStore.subscribe((value) => {
-    players = value;
-  });
 
   const fantasyTeam = writable<FantasyTeam | null>(null);
   const transfersAvailable = writable(newTeam ? Infinity : 3);
@@ -114,6 +96,25 @@
   onMount(async () => {
     isLoading.set(true);
     try {
+      systemStore.sync();
+      teamStore.sync();
+      playerStore.sync();
+
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+        activeGameweek = systemState?.activeGameweek ?? activeGameweek;
+        activeSeason = systemState?.activeSeason.name ?? activeSeason;
+      });
+      
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+      
+      unsubscribePlayers = playerStore.subscribe((value) => {
+        players = value;
+      });
+
+      
       const storedViewMode = localStorage.getItem("viewMode");
       if (storedViewMode) {
         pitchView = storedViewMode === "pitch";
@@ -165,6 +166,12 @@
     } finally {
       isLoading.set(false);
     }
+  });
+
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribePlayers?.();
+    unsubscribeSystemState?.();
   });
 
   function getGridSetup(formation: string): number[][] {

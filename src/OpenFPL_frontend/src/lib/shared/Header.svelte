@@ -1,18 +1,31 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { authStore, type AuthSignInParams } from "$lib/stores/auth";
+  import { toastStore } from "$lib/stores/toast-store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
 
   let menuOpen = false;
   let isLoggedIn = false;
 
+  let unsubscribeLogin: () => void;
+  
   onMount(async () => {
-    await authStore.sync();
-    authStore.subscribe((store) => {
-      isLoggedIn = store.identity !== null && store.identity !== undefined;
-    });
+    try{
+      await authStore.sync();
+      unsubscribeLogin = authStore.subscribe((store) => {
+        isLoggedIn = store.identity !== null && store.identity !== undefined;
+      });
+    }
+    catch (error){
+      toastStore.show("Error syncing authentication.", "error");
+      console.error("EError syncing authentication:", error);
+    }
+  });
+
+  onDestroy(() => {
+    unsubscribeLogin?.();
   });
 
   $: currentClass = (route: string) =>

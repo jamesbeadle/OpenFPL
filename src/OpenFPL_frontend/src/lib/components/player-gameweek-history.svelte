@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
   import { toastStore } from "$lib/stores/toast-store";
@@ -35,34 +35,35 @@
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
   let showModal: boolean = false;
 
-  teamStore.sync();
-  fixtureStore.sync();
-  systemStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe((value) => {
-    fixtures = value;
-    fixturesWithTeams = fixtures.map((fixture) => ({
-      fixture,
-      homeTeam: getTeamFromId(fixture.homeTeamId),
-      awayTeam: getTeamFromId(fixture.awayTeamId),
-    }));
-  });
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
 
   $: id = Number($page.url.searchParams.get("id"));
 
   onMount(async () => {
     try {
+      teamStore.sync();
+      fixtureStore.sync();
+      systemStore.sync();
+          
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+
+      unsubscribeFixtures = fixtureStore.subscribe((value) => {
+        fixtures = value;
+        fixturesWithTeams = fixtures.map((fixture) => ({
+          fixture,
+          homeTeam: getTeamFromId(fixture.homeTeamId),
+          awayTeam: getTeamFromId(fixture.awayTeamId),
+        }));
+      });
+
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+      
       playerDetails = await playerStore.getPlayerDetails(
         id,
         systemState?.activeSeason.id ?? 0
@@ -75,6 +76,12 @@
     } finally {
       isLoading = false;
     }
+  });
+  
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribeFixtures?.();
+    unsubscribeSystemState?.();
   });
 
   function getTeamFromId(teamId: number): Team | undefined {

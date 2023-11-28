@@ -1,15 +1,12 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { toastStore } from "$lib/stores/toast-store";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { updateTableData } from "../utils/Helpers";
-  import type {
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
 
@@ -21,31 +18,44 @@
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let tableData: any[] = [];
 
-  teamStore.sync();
-  fixtureStore.sync();
-  systemStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe((value) => {
-    fixtures = value;
-    fixturesWithTeams = fixtures.map((fixture) => ({
-      fixture,
-      homeTeam: getTeamFromId(fixture.homeTeamId),
-      awayTeam: getTeamFromId(fixture.awayTeamId),
-    }));
-  });
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
 
-  onMount(async () => {});
+  onMount(async () => {
+    try{
+      teamStore.sync();
+      fixtureStore.sync();
+      systemStore.sync();
+
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+
+      unsubscribeFixtures = fixtureStore.subscribe((value) => {
+        fixtures = value;
+        fixturesWithTeams = fixtures.map((fixture) => ({
+          fixture,
+          homeTeam: getTeamFromId(fixture.homeTeamId),
+          awayTeam: getTeamFromId(fixture.awayTeamId),
+        }));
+      });
+
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+      
+    } catch(error){
+      toastStore.show("Error fetching league table.", "error");
+      console.error("Error fetching league table:", error);
+    } finally{}
+  });
+  
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribeFixtures?.();
+    unsubscribeSystemState?.();
+  });
 
   $: if (fixtures.length > 0 && teams.length > 0) {
     tableData = updateTableData(fixturesWithTeams, teams, selectedGameweek);

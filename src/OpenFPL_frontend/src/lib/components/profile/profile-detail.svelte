@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
+  import { toastStore } from "$lib/stores/toast-store";
   import type {
     ProfileDTO,
     SystemState,
     Team,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
-  import { toastStore } from "$lib/stores/toast-store";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
@@ -24,21 +24,22 @@
   let gameweek: number = 1;
   let isLoading = true;
 
-  teamStore.sync();
-  systemStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
 
   onMount(async () => {
     try {
+      teamStore.sync();
+      systemStore.sync();
+
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+
       const profileData = await userStore.getProfile();
       profile = profileData;
       if (profile.profilePicture.length > 0) {
@@ -52,6 +53,11 @@
     } finally {
       isLoading = false;
     }
+  });
+
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribeSystemState?.();
   });
 
   function displayUsernameModal(): void {

@@ -20,29 +20,9 @@
   let selectedGameweek = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
-  teamStore.sync();
-  fixtureStore.sync();
-  systemStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe((value) => {
-    fixtures = value;
-    fixturesWithTeams = fixtures.map((fixture) => ({
-      fixture,
-      homeTeam: getTeamFromId(fixture.homeTeamId),
-      awayTeam: getTeamFromId(fixture.awayTeamId),
-    }));
-  });
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
 
   $: filteredFixtures = fixturesWithTeams.filter(
     ({ fixture }) => fixture.gameweek === selectedGameweek
@@ -68,18 +48,33 @@
     {} as { [key: string]: FixtureWithTeams[] }
   );
 
-  onMount(async () => {});
+  onMount(async () => {
+    teamStore.sync();
+    fixtureStore.sync();
+    systemStore.sync();
+
+    unsubscribeTeams = teamStore.subscribe((value) => {
+      teams = value;
+    });
+
+    unsubscribeFixtures = fixtureStore.subscribe((value) => {
+      fixtures = value;
+      fixturesWithTeams = fixtures.map((fixture) => ({
+        fixture,
+        homeTeam: getTeamFromId(fixture.homeTeamId),
+        awayTeam: getTeamFromId(fixture.awayTeamId),
+      }));
+    });
+
+    unsubscribeSystemState = systemStore.subscribe((value) => {
+      systemState = value;
+    });
+  });
 
   onDestroy(() => {
-    if (unsubscribeTeams) {
-      unsubscribeTeams();
-    }
-    if (unsubscribeFixtures) {
-      unsubscribeFixtures();
-    }
-    if (unsubscribeSystemState) {
-      unsubscribeSystemState();
-    }
+    unsubscribeTeams?.();
+    unsubscribeFixtures?.();
+    unsubscribeSystemState?.();
   });
 
   const changeGameweek = (delta: number) => {

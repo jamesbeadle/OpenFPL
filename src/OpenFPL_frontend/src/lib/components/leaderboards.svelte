@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { toastStore } from "$lib/stores/toast-store";
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
@@ -13,18 +13,8 @@
   let teams: Team[] = [];
   let systemState: SystemState | null;
 
-  teamStore.sync();
-  systemStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
-  });
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
 
   let isLoading = true;
   let selectedLeaderboardType: number = 1;
@@ -47,6 +37,16 @@
 
   onMount(async () => {
     try {
+      teamStore.sync();
+      systemStore.sync();
+          
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
+      });
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+      
       selectedTeamId = teams[0].id;
       currentGameweek = systemState?.activeGameweek ?? 1;
       focusGameweek = systemState?.focusGameweek ?? 1;
@@ -61,6 +61,11 @@
     } finally {
       isLoading = false;
     }
+  });
+  
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribeSystemState?.();
   });
 
   $: selectedLeaderboardType,

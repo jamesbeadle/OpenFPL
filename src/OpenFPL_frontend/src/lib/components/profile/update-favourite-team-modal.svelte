@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
   import { toastStore } from "$lib/stores/toast-store";
@@ -12,14 +12,18 @@
 
   let teams: Team[];
 
-  teamStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
+
+  onMount(async () => {
+    teamStore.sync();
+    unsubscribeTeams = teamStore.subscribe((value) => {
+      teams = value;
+    });
   });
 
-  onMount(async () => {});
+  onDestroy(() => {
+    unsubscribeTeams?.();
+  });
 
   async function updateFavouriteTeam() {
     isLoading.set(true);

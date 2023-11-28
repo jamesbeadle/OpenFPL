@@ -10,11 +10,8 @@
     Fixture,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
   import { teamStore } from "$lib/stores/team-store";
-  import { playerStore } from "$lib/stores/player-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { systemStore } from "$lib/stores/system-store";
   import PlayerEventsModal from "$lib/components/fixture-validation/player-events-modal.svelte";
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
   import ConfirmFixtureDataModal from "$lib/components/fixture-validation/confirm-fixture-data-modal.svelte";
@@ -23,20 +20,16 @@
   import { toastStore } from "$lib/stores/toast-store";
   import Layout from "../Layout.svelte";
   import { replacer } from "$lib/utils/Helpers";
-    import { governanceStore } from "$lib/stores/governance-store";
+  import { governanceStore } from "$lib/stores/governance-store";
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
   let teams: Team[];
-
-  teamStore.sync();
-
-  let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let fixtures: Fixture[];
+  
+  let unsubscribeTeams: () => void;
+  let unsubscribeFixtures: () => void;
+
   let isLoading = true;
   let fixture: Fixture | null;
   let showPlayerSelectionModal = false;
@@ -51,9 +44,17 @@
   let activeTab: string = "home";
 
   onMount(async () => {
-    await playerStore.sync();
-    await systemStore.sync();
+
+    await teamStore.sync();
     await fixtureStore.sync();
+
+    unsubscribeTeams = teamStore.subscribe((value) => {
+      teams = value;
+    });
+
+    unsubscribeFixtures = fixtureStore.subscribe((value) => {
+      fixtures = value;
+    });
 
     fixture = fixtures.find((x) => x.id === fixtureId) ?? null;
 
@@ -66,9 +67,8 @@
   });
 
   onDestroy(() => {
-    if (unsubscribeTeams) {
-      unsubscribeTeams();
-    }
+    unsubscribeTeams?.();
+    unsubscribeFixtures?.();
   });
 
   async function confirmFixtureData() {

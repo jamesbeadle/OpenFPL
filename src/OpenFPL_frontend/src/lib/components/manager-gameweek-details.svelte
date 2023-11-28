@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { systemStore } from "$lib/stores/system-store";
   import { toastStore } from "$lib/stores/toast-store";
   import { teamStore } from "$lib/stores/team-store";
@@ -15,24 +15,9 @@
   let players: PlayerDTO[] = [];
   let systemState: SystemState | null;
 
-  systemStore.sync();
-  teamStore.sync();
-  playerStore.sync();
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribePlayers: () => void;
-  unsubscribePlayers = playerStore.subscribe((value) => {
-    players = value;
-  });
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   export let selectedGameweek: number;
@@ -41,6 +26,22 @@
 
   onMount(async () => {
     try {
+      systemStore.sync();
+      teamStore.sync();
+      playerStore.sync();
+          
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+
+      unsubscribePlayers = playerStore.subscribe((value) => {
+        players = value;
+      });
+
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       gameweekPlayers = await playerStore.getGameweekPlayers(
         get(fantasyTeam)!,
@@ -50,6 +51,12 @@
       toastStore.show("Error fetching manager gameweek detail.", "error");
       console.error("Error fetching manager gameweek detail:", error);
     }
+  });
+  
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribePlayers?.();
+    unsubscribeSystemState?.();
   });
 
   const changeGameweek = (delta: number) => {

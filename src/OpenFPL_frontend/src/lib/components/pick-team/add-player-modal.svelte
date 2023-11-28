@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { writable, get } from "svelte/store";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { toastStore } from "$lib/stores/toast-store";
@@ -24,18 +21,8 @@
   let players: any[] = [];
   let teams: Team[] = [];
 
-  teamStore.sync();
-  playerStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value;
-  });
-
   let unsubscribePlayers: () => void;
-  unsubscribePlayers = playerStore.subscribe((value) => {
-    players = value;
-  });
 
   let filterTeam = -1;
   let filterSurname = "";
@@ -82,12 +69,29 @@
 
   onMount(async () => {
     try {
+
+      teamStore.sync();
+      playerStore.sync();
+          
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+
+      unsubscribePlayers = playerStore.subscribe((value) => {
+        players = value;
+      });
+
       let team = get(fantasyTeam);
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch (error) {
       toastStore.show("Error loading add player modal.", "error");
       console.error("Error fetching homepage data:", error);
     }
+  });
+
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribePlayers?.();
   });
 
   function countPlayersByTeam(playerIds: Uint16Array | number[]) {

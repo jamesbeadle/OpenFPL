@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -20,25 +20,10 @@
   let teams: Team[] = [];
   let systemState: SystemState | null;
   let fixtures: Fixture[] = [];
-
-  teamStore.sync();
-  systemStore.sync();
-  fixtureStore.sync();
-
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe((value) => {
-    teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
-  });
-
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe((value) => {
-    systemState = value;
-  });
-
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe((value) => {
-    fixtures = value;
-  });
+  
 
   let selectedGameweek: number = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
@@ -52,6 +37,22 @@
 
   onMount(async () => {
     try {
+      teamStore.sync();
+      systemStore.sync();
+      fixtureStore.sync();
+          
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
+      });
+
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+      });
+
+      unsubscribeFixtures = fixtureStore.subscribe((value) => {
+        fixtures = value;
+      });
+      
       await loadGameweekPoints("");
     } catch (error) {
       toastStore.show("Error fetching gameweek points.", "error");
@@ -59,6 +60,12 @@
     } finally {
       isLoading = false;
     }
+  });
+  
+  onDestroy(() => {
+    unsubscribeTeams?.();
+    unsubscribeFixtures?.();
+    unsubscribeSystemState?.();
   });
 
   async function loadGameweekPoints(principalId: string) {
