@@ -6,7 +6,6 @@
     export let selectedTeam: Team;
     export let selectedPlayers = writable<PlayerDTO[]>([]);
     export let show = false;
-    export let closeModal: () => void;
     
     function handlePlayerSelection(event: Event, player: PlayerDTO) {
         const input = event.target as HTMLInputElement;
@@ -23,9 +22,8 @@
         }
     }
   
-    function handleCancel() {
+    function closeModal() {
         show = false;
-        closeModal();
     }
 </script>
   
@@ -35,7 +33,7 @@
         <div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center">
                 <h4 class="text-lg font-bold">Select {selectedTeam.friendlyName} Players</h4>
-                <button class="text-black" on:click={handleCancel}>✕</button>
+                <button class="text-black" on:click={closeModal}>✕</button>
             </div>
             <div class="my-5 flex flex-wrap">
                 {#each $teamPlayers as player}
@@ -49,7 +47,7 @@
                 {/each}
             </div>
             <div class="flex justify-end gap-3">
-                <button class="px-4 py-2 border rounded text-black" on:click={handleCancel}>Cancel</button>
+                <button class="px-4 py-2 border rounded text-black" on:click={closeModal}>Cancel</button>
                 <button class="px-4 py-2 bg-blue-500 text-white rounded" on:click={closeModal}>Select Players</button>
             </div>
         </div>

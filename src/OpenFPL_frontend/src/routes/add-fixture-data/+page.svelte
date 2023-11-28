@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount} from 'svelte';
     import { page } from "$app/stores";
-    import { writable } from "svelte/store";
+    import { get, writable } from "svelte/store";
     import type { PlayerDTO, PlayerEventData } from '../../../../declarations/player_canister/player_canister.did';
     import type { Fixture, SystemState, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     import { PlayerService } from '$lib/services/PlayerService';
@@ -29,8 +29,8 @@
     let selectedPlayers = writable<PlayerDTO[] | []>([]);
     let selectedTeam: Team;   
     let selectedPlayer: PlayerDTO; 
-    let playerEventData: PlayerEventData[] = [];
-
+    let playerEventData = writable<PlayerEventData[] | []>([]);
+    
     onMount(async () => {
         let playerService = new PlayerService();
         players = await playerService.getPlayers();
@@ -48,18 +48,10 @@
 
     function confirmFixtureData(){
       let governanceService = new GovernanceService();
-      governanceService.submitFixtureData(fixtureId, playerEventData);
-    }
-
-    function cancelConfirm(){
-
+      governanceService.submitFixtureData(fixtureId, get(playerEventData));
     }
 
     function clearDraft(){
-
-    }
-
-    function cancelClear(){
 
     }
 
@@ -75,7 +67,7 @@
     </div>
   {/if}
   
-  <SelectPlayersModal show={showPlayerSelectionModal} {teamPlayers} closeModal={() => showPlayerSelectionModal = false} {selectedTeam} {selectedPlayers}  />
-  <PlayerEventsModal show={showPlayerEventModal} player={selectedPlayer} {fixtureId} />
-  <ConfirmFixtureDataModal show={showConfirmDataModal} onConfirm={confirmFixtureData} onHide={cancelConfirm} />
-  <ClearDraftModal show={showClearDraftModal} onConfirm={clearDraft} onHide={cancelClear} />
+  <SelectPlayersModal show={showPlayerSelectionModal} {teamPlayers} {selectedTeam} {selectedPlayers}  />
+  <PlayerEventsModal show={showPlayerEventModal} player={selectedPlayer} {fixtureId} {playerEventData} />
+  <ConfirmFixtureDataModal show={showConfirmDataModal} onConfirm={confirmFixtureData} />
+  <ClearDraftModal show={showClearDraftModal} onConfirm={clearDraft} />
