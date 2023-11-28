@@ -1,16 +1,20 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { SystemService } from "$lib/services/SystemService";
-    import type { PlayerDTO, PlayerPointsDTO } from "../../../../declarations/player_canister/player_canister.did";
+    import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
     import { getFlagComponent, getPositionAbbreviation } from "$lib/utils/Helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { PlayerService } from "$lib/services/PlayerService";
     import { TeamService } from "$lib/services/TeamService";
+    import type { GameweekData } from "$lib/interfaces/GameweekData";
+    import { get, type Writable } from "svelte/store";
+    import { Id } from "svelte-flag-icons";
 
     let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
     export let selectedGameweek: number;
-    let gameweekPlayers: PlayerPointsDTO[] = [];
+    export let fantasyTeam: Writable<FantasyTeam | null>;
+    let gameweekPlayers: GameweekData[] = [];
     let players: PlayerDTO[];
     let teams: Team[];
   
@@ -28,6 +32,8 @@
 
             let systemState = await systemService.getSystemState();
             selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
+
+            gameweekPlayers = await playerService.getGameweekPlayers(get(fantasyTeam)!, selectedGameweek);
 
             players = await playerService.getPlayers();
             teams = await teamService.getTeams();
@@ -72,23 +78,36 @@
     <div class="flex flex-col space-y-4 mt-4 text-lg">
         <div class="overflow-x-auto flex-1">
           <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
-            <div class="w-1/6 text-center mx-4">Position</div>
-            <div class="w-2/6">Player</div>
-            <div class="w-2/6 text-center">Team</div>
-            <div class="w-1/6 text-center">Points</div>
+            <div class="w-1/12 text-center mx-4">Position</div>
+            <div class="w-2/12">Player</div>
+            <div class="w-2/12 text-center">Team</div>
+            <div class="w-1/2">
+                <div class="w-1/12 text-center">A</div>
+                <div class="w-1/12 text-center">HSP</div>
+                <div class="w-1/12 text-center">GS</div>
+                <div class="w-1/12 text-center">GA</div>
+                <div class="w-1/12 text-center">PS</div>
+                <div class="w-1/12 text-center">CS</div>
+                <div class="w-1/12 text-center">KS</div>
+                <div class="w-1/12 text-center">YC</div>
+                <div class="w-1/12 text-center">OG</div>
+                <div class="w-1/12 text-center">GC</div>
+                <div class="w-1/12 text-center">RC</div>
+                <div class="w-1/12 text-center">B</div>
+            </div>
+            <div class="w-1/12 text-center">PTS</div>
           </div>
     
-          {#each gameweekPlayers as player}
-            {@const playerDTO = getPlayerDTO(player.id)}
-            {@const playerTeam = getPlayerTeam(player.teamId)}
+          {#each gameweekPlayers as data}
+            {@const playerDTO = getPlayerDTO(data.player.id)}
+            {@const playerTeam = getPlayerTeam(data.player.teamId)}
             <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
-                <div class="w-1/6 text-center mx-4">{getPositionAbbreviation(player.position)}</div>
-                <div class="w-2/6">
+                <div class="w-1/12 text-center mx-4">{getPositionAbbreviation(data.player.position)}</div>
+                <div class="w-2/12">
                     <svelte:component this={getFlagComponent(playerDTO?.nationality ?? "")} class="w-4 h-4 mr-1" size="100" /> 
-                    {playerDTO ? 
-                        playerDTO.firstName.length > 2 ? playerDTO.firstName.substring(0, 1) + "." + playerDTO.lastName : "" : ""}
+                    {playerDTO ? playerDTO.firstName.length > 2 ? playerDTO.firstName.substring(0, 1) + "." + playerDTO.lastName : "" : ""}
                 </div>
-                <div class="w-2/6 text-center flex items-center">
+                <div class="w-2/12 text-center flex items-center">
                     <BadgeIcon
                         primaryColour={playerTeam?.primaryColourHex}
                         secondaryColour={playerTeam?.secondaryColourHex}
@@ -97,9 +116,23 @@
                     />
                     {playerTeam?.friendlyName}    
                 </div>
-                <div class="w-1/6 text-center">
-                    {player.points}
+                <div class="w-1/2">
+                    <div class={`w-1/12 text-center ${data.appearance > 0 ? '' : 'text-gray-500'}`}>{data.appearance}</div>
+                    <div class={`w-1/12 text-center ${data.highestScoringPlayerId == playerDTO?.id ? '' : 'text-gray-500'}`}>
+                        {data.highestScoringPlayerId == playerDTO?.id ? 1 : 0}
+                    </div>
+                    <div class={`w-1/12 text-center ${data.goals > 0 ? '' : 'text-gray-500'}`}>{data.goals}</div>
+                    <div class={`w-1/12 text-center ${data.assists > 0 ? '' : 'text-gray-500'}`}>{data.assists}</div>
+                    <div class={`w-1/12 text-center ${data.penaltySaves > 0 ? '' : 'text-gray-500'}`}>{data.penaltySaves}</div>
+                    <div class={`w-1/12 text-center ${data.cleanSheets > 0 ? '' : 'text-gray-500'}`}>{data.cleanSheets}</div>
+                    <div class={`w-1/12 text-center ${data.saves > 0 ? '' : 'text-gray-500'}`}>{data.saves}</div>
+                    <div class={`w-1/12 text-center ${data.yellowCards > 0 ? '' : 'text-gray-500'}`}>{data.yellowCards}</div>
+                    <div class={`w-1/12 text-center ${data.ownGoals > 0 ? '' : 'text-gray-500'}`}>{data.ownGoals}</div>
+                    <div class={`w-1/12 text-center ${data.goalsConceded > 0 ? '' : 'text-gray-500'}`}>{data.goalsConceded}</div>
+                    <div class={`w-1/12 text-center ${data.redCards > 0 ? '' : 'text-gray-500'}`}>{data.redCards}</div>
+                    <div class={`w-1/12 text-center ${data.bonusPoints > 0 ? '' : 'text-gray-500'}`}>{data.bonusPoints}</div>
                 </div>
+                <div class="w-1/12 text-center">{data.points}</div>
             </div>
           {/each}
         </div>

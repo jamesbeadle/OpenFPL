@@ -1,13 +1,13 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { page } from "$app/stores";
-    import type { ManagerDTO, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { FantasyTeam, ManagerDTO, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { SystemService } from "$lib/services/SystemService";
     import { ManagerService } from "$lib/services/ManagerService";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   
-    export let viewGameweekDetail: (gameweek: number) => void;
+    export let viewGameweekDetail: (fantasyTeam: FantasyTeam) => void;
     let manager: ManagerDTO;
     let selectedGameweek: number = 1;
     let selectedSeason: Season | null = null;
@@ -53,7 +53,7 @@
             <div class="w-1/4 px-4">{gameweek.gameweek}</div>
             <div class="w-1/4 px-4">{gameweek.points}</div>
             <div class="w-1/4 px-4 flex items-center">
-              <button on:click={() => viewGameweekDetail(gameweek.gameweek)}>
+              <button on:click={() => viewGameweekDetail(gameweek)}>
                 <span class="flex items-center">
                   <ViewDetailsIcon className="w-6 mr-2" />View Details
                 </span>

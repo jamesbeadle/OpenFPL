@@ -6,10 +6,11 @@
   import ManagerGameweekDetails from "$lib/components/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import { ManagerService } from "$lib/services/ManagerService";
-  import type { ManagerDTO, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, ManagerDTO, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+    import type { Writable } from "svelte/store";
 
   let progress = 0;
   let isLoading = true;
@@ -21,6 +22,7 @@
   let profilePicture: string;
   let teams: Team[];
   let favouriteTeam: Team | null = null;
+  let fantasyTeam: Writable<FantasyTeam | null>;
 
   $: id = $page.url.searchParams.get("id");
   onMount(async () => {
@@ -72,8 +74,9 @@
     activeTab = tab;
   }
 
-  function viewGameweekDetail(gameweek: number){
-    setActiveTab('details')
+  function viewGameweekDetail(gameweekTeam: FantasyTeam){
+    fantasyTeam.set(gameweekTeam);
+    setActiveTab('details');
   }
 </script>
 
@@ -164,7 +167,7 @@
         
         <div class="w-full">
           {#if activeTab === "details"}
-            <ManagerGameweekDetails {selectedGameweek} />
+            <ManagerGameweekDetails {selectedGameweek} {fantasyTeam} />
           {/if}
           {#if activeTab === "gameweeks"}
             <ManagerGameweeks {viewGameweekDetail} />
