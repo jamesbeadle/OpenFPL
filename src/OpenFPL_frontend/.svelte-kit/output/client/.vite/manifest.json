@@ -1,0 +1,55 @@
+{
+  "../../node_modules/@sveltejs/kit/src/runtime/client/start.js": {
+    "file": "_app/immutable/entry/start.a7d9ae63.js",
+    "imports": ["_scheduler.e108d1fd.js", "_singletons.e25685a9.js"],
+    "isEntry": true,
+    "src": "../../node_modules/@sveltejs/kit/src/runtime/client/start.js"
+  },
+  ".svelte-kit/generated/client-optimized/app.js": {
+    "dynamicImports": [
+      ".svelte-kit/generated/client-optimized/nodes/0.js",
+      ".svelte-kit/generated/client-optimized/nodes/1.js",
+      ".svelte-kit/generated/client-optimized/nodes/2.js"
+    ],
+    "file": "_app/immutable/entry/app.41dc0f1e.js",
+    "imports": ["_scheduler.e108d1fd.js", "_index.a21d6cee.js"],
+    "isEntry": true,
+    "src": ".svelte-kit/generated/client-optimized/app.js"
+  },
+  ".svelte-kit/generated/client-optimized/nodes/0.js": {
+    "file": "_app/immutable/nodes/0.18524db0.js",
+    "imports": ["_scheduler.e108d1fd.js", "_index.a21d6cee.js"],
+    "isDynamicEntry": true,
+    "isEntry": true,
+    "src": ".svelte-kit/generated/client-optimized/nodes/0.js"
+  },
+  ".svelte-kit/generated/client-optimized/nodes/1.js": {
+    "file": "_app/immutable/nodes/1.e54b5022.js",
+    "imports": [
+      "_scheduler.e108d1fd.js",
+      "_index.a21d6cee.js",
+      "_singletons.e25685a9.js"
+    ],
+    "isDynamicEntry": true,
+    "isEntry": true,
+    "src": ".svelte-kit/generated/client-optimized/nodes/1.js"
+  },
+  ".svelte-kit/generated/client-optimized/nodes/2.js": {
+    "file": "_app/immutable/nodes/2.5805b991.js",
+    "imports": ["_scheduler.e108d1fd.js", "_index.a21d6cee.js"],
+    "isDynamicEntry": true,
+    "isEntry": true,
+    "src": ".svelte-kit/generated/client-optimized/nodes/2.js"
+  },
+  "_index.a21d6cee.js": {
+    "file": "_app/immutable/chunks/index.a21d6cee.js",
+    "imports": ["_scheduler.e108d1fd.js"]
+  },
+  "_scheduler.e108d1fd.js": {
+    "file": "_app/immutable/chunks/scheduler.e108d1fd.js"
+  },
+  "_singletons.e25685a9.js": {
+    "file": "_app/immutable/chunks/singletons.e25685a9.js",
+    "imports": ["_scheduler.e108d1fd.js"]
+  }
+}

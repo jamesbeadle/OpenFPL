@@ -1757,7 +1757,12 @@ actor Self {
     return await seasonManager.rescheduleFixture(176, 18, 0, 1_703_343_600_000_000_000);
     await updateCacheHash("fixtures");
     await updateCacheHash("system_state");
-  }
+  };
+
+  public func setGameweekFixtures() : async (){
+    await seasonManager.setGameweekFixtures();
+  };
+
 
   //Local dev functions
   /*
