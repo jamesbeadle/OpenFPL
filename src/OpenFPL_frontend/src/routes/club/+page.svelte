@@ -40,6 +40,11 @@
 
   let activeTab: string = "players";
 
+  teamStore.sync();
+  fixtureStore.sync();
+  systemStore.sync();
+  playerStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;

@@ -21,6 +21,10 @@
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let tableData: any[] = [];
 
+  teamStore.sync();
+  fixtureStore.sync();
+  systemStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;

@@ -35,6 +35,10 @@
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
   let showModal: boolean = false;
 
+  teamStore.sync();
+  fixtureStore.sync();
+  systemStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;

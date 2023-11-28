@@ -3,13 +3,10 @@
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import { formatUnixDateToReadable, formatUnixTimeToTime } from "../utils/Helpers";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import {
-    formatUnixDateToReadable,
-    formatUnixTimeToTime,
-  } from "../utils/Helpers";
 
   export let clubId: number | null = null;
 
@@ -17,6 +14,9 @@
   let fixtures: Fixture[] = [];
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedFixtureType = -1;
+
+  teamStore.sync();
+  fixtureStore.sync();
 
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
@@ -71,19 +71,14 @@
       <div class="flex p-4">
         <div class="flex items-center ml-4">
           <p class="text-sm md:text-xl mr-4">Type:</p>
-          <select
-            class="p-2 fpl-dropdown text-sm md:text-xl"
-            bind:value={selectedFixtureType}
-          >
+          <select class="p-2 fpl-dropdown text-sm md:text-xl" bind:value={selectedFixtureType}>
             <option value={-1}>All</option>
             <option value={0}>Home</option>
             <option value={1}>Away</option>
           </select>
         </div>
       </div>
-      <div
-        class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray px-4"
-      >
+      <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray px-4">
         <div class="flex-grow w-1/6 ml-4">Gameweek</div>
         <div class="flex-grow w-1/3 text-center">Game</div>
         <div class="flex-grow w-1/3">Date</div>
@@ -93,10 +88,8 @@
       </div>
 
       {#each filteredFixtures as { fixture, homeTeam, awayTeam }}
-        <div
-          class={`flex items-center justify-between border-b border-gray-700 p-2 px-4 
-          ${fixture.status === 0 ? "text-gray-400" : "text-white"}`}
-        >
+        <div class={`flex items-center justify-between border-b border-gray-700 p-2 px-4  
+          ${fixture.status === 0 ? "text-gray-400" : "text-white"}`}>
           <div class="w-1/6 ml-4">{fixture.gameweek}</div>
           <div class="w-1/3 flex justify-center">
             <div class="w-10 items-center justify-center mr-4">

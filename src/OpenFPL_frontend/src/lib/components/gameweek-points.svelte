@@ -20,6 +20,11 @@
   let teams: Team[] = [];
   let systemState: SystemState | null;
   let fixtures: Fixture[] = [];
+
+  teamStore.sync();
+  systemStore.sync();
+  fixtureStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));

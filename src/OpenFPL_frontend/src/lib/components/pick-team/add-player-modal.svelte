@@ -24,6 +24,9 @@
   let players: any[] = [];
   let teams: Team[] = [];
 
+  teamStore.sync();
+  playerStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;

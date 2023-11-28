@@ -20,6 +20,10 @@
   let selectedGameweek = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
+  teamStore.sync();
+  fixtureStore.sync();
+  systemStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;

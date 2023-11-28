@@ -13,6 +13,9 @@
   let teams: Team[] = [];
   let systemState: SystemState | null;
 
+  teamStore.sync();
+  systemStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));

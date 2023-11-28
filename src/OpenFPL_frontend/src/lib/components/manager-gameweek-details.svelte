@@ -5,22 +5,20 @@
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import {
-    getFlagComponent,
-    getPositionAbbreviation,
-  } from "$lib/utils/Helpers";
+  import { getFlagComponent, getPositionAbbreviation } from "$lib/utils/Helpers";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type {
-    FantasyTeam,
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { get, type Writable } from "svelte/store";
 
   let teams: Team[] = [];
   let players: PlayerDTO[] = [];
   let systemState: SystemState | null;
+
+  systemStore.sync();
+  teamStore.sync();
+  playerStore.sync();
+
   let unsubscribeSystemState: () => void;
   unsubscribeSystemState = systemStore.subscribe((value) => {
     systemState = value;

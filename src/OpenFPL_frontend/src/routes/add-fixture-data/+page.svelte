@@ -19,20 +19,23 @@
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
   import ConfirmFixtureDataModal from "$lib/components/fixture-validation/confirm-fixture-data-modal.svelte";
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
-  import { GovernanceService } from "$lib/services/GovernanceService";
   import { redirect } from "@sveltejs/kit";
   import { toastStore } from "$lib/stores/toast-store";
   import Layout from "../Layout.svelte";
   import { replacer } from "$lib/utils/Helpers";
+    import { governanceStore } from "$lib/stores/governance-store";
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
+
+  let teams: Team[];
+
+  teamStore.sync();
 
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;
   });
 
-  let teams: Team[];
   let fixtures: Fixture[];
   let isLoading = true;
   let fixture: Fixture | null;
@@ -48,7 +51,6 @@
   let activeTab: string = "home";
 
   onMount(async () => {
-    await teamStore.sync();
     await playerStore.sync();
     await systemStore.sync();
     await fixtureStore.sync();
@@ -71,10 +73,7 @@
 
   async function confirmFixtureData() {
     try {
-      await new GovernanceService().submitFixtureData(
-        fixtureId,
-        get(playerEventData)
-      );
+      await governanceStore.submitFixtureData(fixtureId, get(playerEventData));
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       throw redirect(307, "/fixture-validation");
     } catch (error) {
@@ -122,31 +121,13 @@
       <button class="fpl-button" on:click={saveDraft}>Save Draft</button>
       <div class="bg-panel rounded-lg m-4">
         <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "home" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "home" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("home")}
-              >{getTeamFromId(fixture?.homeTeamId ?? 0)?.friendlyName}</button
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "home" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400" }`}
+              on:click={() => setActiveTab("home")}>{getTeamFromId(fixture?.homeTeamId ?? 0)?.friendlyName}</button>
           </li>
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "away" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "away" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("away")}
-              >{getTeamFromId(fixture?.awayTeamId ?? 0)?.friendlyName}</button
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "away" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "away" ? "text-white" : "text-gray-400" }`}
+              on:click={() => setActiveTab("away")}>{getTeamFromId(fixture?.awayTeamId ?? 0)?.friendlyName}</button>
           </li>
         </ul>
 
@@ -163,9 +144,7 @@
                     (pe) => pe.playerId === player.id
                   ).length}
                 </p>
-                <button on:click={() => handleEditPlayerEvents(player)}
-                  >Update</button
-                >
+                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
               </div>
             </div>
           {/each}
@@ -182,9 +161,7 @@
                     (pe) => pe.playerId === player.id
                   ).length}
                 </p>
-                <button on:click={() => handleEditPlayerEvents(player)}
-                  >Update</button
-                >
+                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
               </div>
             </div>
           {/each}

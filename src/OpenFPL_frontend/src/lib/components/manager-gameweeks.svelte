@@ -25,6 +25,8 @@
   let selectedGameweek: number = 1;
   let selectedSeason: Season | null = null;
 
+  systemStore.sync();
+
   let unsubscribeSystemState: () => void;
   unsubscribeSystemState = systemStore.subscribe((value) => {
     systemState = value;

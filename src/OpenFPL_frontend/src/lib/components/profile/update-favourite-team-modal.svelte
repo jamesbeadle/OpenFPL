@@ -12,6 +12,8 @@
 
   let teams: Team[];
 
+  teamStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;

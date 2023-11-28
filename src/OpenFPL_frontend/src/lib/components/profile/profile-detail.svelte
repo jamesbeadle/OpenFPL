@@ -24,6 +24,9 @@
   let gameweek: number = 1;
   let isLoading = true;
 
+  teamStore.sync();
+  systemStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;

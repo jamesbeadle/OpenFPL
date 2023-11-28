@@ -18,6 +18,10 @@
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let systemState: SystemState | null;
 
+  teamStore.sync();
+  fixtureStore.sync();
+  systemStore.sync();
+
   let unsubscribeTeams: () => void;
   unsubscribeTeams = teamStore.subscribe((value) => {
     teams = value;
