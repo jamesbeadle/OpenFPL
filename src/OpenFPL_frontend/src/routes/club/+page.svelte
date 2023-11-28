@@ -44,6 +44,8 @@
   let unsubscribeFixtures: () => void;
   let unsubscribeSystemState: () => void;
   let unsubscribePlayers: () => void;
+
+  let showView = false;
   
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -93,8 +95,7 @@
 
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
-      nextFixture =
-        teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
+      nextFixture = teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
     } catch (error) {
@@ -102,6 +103,7 @@
       console.error("Error fetching club details:", error);
     } finally {
       isLoading.set(false);
+      showView = true;
     }
   });
   
@@ -137,9 +139,7 @@
 </script>
 
 <Layout>
-  {#if isLoading}
-    <LoadingIcon />
-  {:else}
+  {#if showView}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
         <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
