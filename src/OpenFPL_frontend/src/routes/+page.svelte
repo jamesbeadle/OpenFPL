@@ -3,6 +3,7 @@
   import { authStore } from "$lib/stores/auth";
   import { toastStore } from "$lib/stores/toast-store";
   import { managerStore } from "$lib/stores/manager-store";
+  import { leaderboardStore } from "$lib/stores/leaderboard-store";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
@@ -22,7 +23,6 @@
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
-  import { leaderboardStore } from "$lib/stores/leaderboard-store";
 
   let activeTab: string = "fixtures";
   let activeGameweek = -1;
@@ -45,6 +45,8 @@
     try {
       await systemStore.sync();
       await fixtureStore.sync();
+      await teamStore.sync();
+      await leaderboardStore.syncWeeklyLeaderboard();
       await authStore.sync();
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;

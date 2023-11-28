@@ -18,10 +18,7 @@
     getPositionText,
     updateTableData,
   } from "../../lib/utils/Helpers";
-  import type {
-    Fixture,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { playerStore } from "$lib/stores/player-store";
