@@ -230,6 +230,7 @@ service : {
   executeUpdatePlayer : (PlayerId, nat8, text, text, nat8, int, text) -> (Result);
   executeUpdateTeam : (TeamId, text, text, text, text, text, text, nat8) -> (Result);
   getAccountBalanceDTO : () -> (AccountBalanceDTO);
+  getAddTeamsFunction : () -> (text);
   getClubLeaderboard : (nat16, nat8, TeamId, nat, nat) -> (PaginatedClubLeaderboard) query;
   getClubLeaderboardsCache : (nat16, nat8) -> (vec PaginatedClubLeaderboard) query;
   getDataHashes : () -> (vec DataCache) query;
@@ -257,6 +258,7 @@ service : {
   rescheduleFixture : () -> ();
   saveFantasyTeam : (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents : (FixtureId, vec PlayerEventData) -> ();
+  setGameweekFixtures : () -> ();
   updateDisplayName : (text) -> (Result);
   updateFavouriteTeam : (nat16) -> (Result);
   updateProfilePicture : (blob) -> (Result);

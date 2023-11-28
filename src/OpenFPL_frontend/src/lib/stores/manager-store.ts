@@ -1,7 +1,6 @@
 import { authStore } from "$lib/stores/auth";
 import { systemStore } from "$lib/stores/system-store";
-import type { OptionIdentity } from "$lib/types/Identity";
-import { writable, type Unsubscriber } from "svelte/store";
+import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   FantasyTeam,
@@ -70,7 +69,10 @@ function createManagerStore() {
 
   async function getFantasyTeam(): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
       const fantasyTeam = await identityActor.getFantasyTeam();
       return fantasyTeam;
     } catch (error) {
@@ -87,7 +89,10 @@ function createManagerStore() {
       let bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
       let bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
       let bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
-      const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
       const fantasyTeam = await identityActor.saveFantasyTeam(
         userFantasyTeam.playerIds,
         userFantasyTeam.captainId,

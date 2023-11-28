@@ -10,8 +10,15 @@
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../lib/utils/Helpers";
-  import type { LeaderboardEntry, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import {
+    formatUnixDateToReadable,
+    formatUnixTimeToTime,
+    getCountdownTime,
+  } from "../lib/utils/Helpers";
+  import type {
+    LeaderboardEntry,
+    Team,
+  } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { isLoading } from "$lib/stores/global-stores";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -41,7 +48,7 @@
       await fixtureStore.sync();
       await leaderboardStore.syncWeeklyLeaderboard();
       await authStore.sync();
-      
+
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
@@ -49,7 +56,7 @@
       managerCount = await managerStore.getTotalManagers();
 
       let systemState = await systemStore.getSystemState();
-      console.log(systemState)
+      console.log(systemState);
       activeGameweek = systemState?.activeGameweek ?? activeGameweek;
       activeSeason = systemState?.activeSeason.name ?? activeSeason;
       focusGameweek = systemState?.focusGameweek ?? activeGameweek;
@@ -235,7 +242,10 @@
           </p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
             {#if weeklyLeader}
-              <a href={`/manager?id=${weeklyLeader.principalId}&gw=${activeGameweek}`}>{weeklyLeader.username}</a>
+              <a
+                href={`/manager?id=${weeklyLeader.principalId}&gw=${activeGameweek}`}
+                >{weeklyLeader.username}</a
+              >
             {:else}
               -
             {/if}
@@ -245,7 +255,8 @@
               {weeklyLeader.points} points
             {:else}
               -
-            {/if}</p>
+            {/if}
+          </p>
         </div>
       </div>
     </div>

@@ -1,6 +1,10 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import type { Fixture, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Fixture,
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { systemStore } from "$lib/stores/system-store";
   import { governanceStore } from "$lib/stores/governance-store";
@@ -24,22 +28,22 @@
 
   onMount(async () => {
     try {
-        await systemStore.sync();
-        await teamStore.sync();
-        await playerStore.sync();
+      await systemStore.sync();
+      await teamStore.sync();
+      await playerStore.sync();
 
-        unsubscribeSystemState = systemStore.subscribe((value) => {
-          systemState = value;
-          currentSeason = systemState?.activeSeason.name ?? "";
-        });
-      
-        unsubscribeTeams = teamStore.subscribe((value) => {
-          teams = value;
-        });
-        
-        unsubscribePlayers = playerStore.subscribe((value) => {
-          players = value;
-        });
+      unsubscribeSystemState = systemStore.subscribe((value) => {
+        systemState = value;
+        currentSeason = systemState?.activeSeason.name ?? "";
+      });
+
+      unsubscribeTeams = teamStore.subscribe((value) => {
+        teams = value;
+      });
+
+      unsubscribePlayers = playerStore.subscribe((value) => {
+        players = value;
+      });
 
       fixtures = await governanceStore.getValidatableFixtures();
       currentGameweek = fixtures[0].gameweek;

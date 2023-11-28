@@ -6,7 +6,10 @@
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { updateTableData } from "../utils/Helpers";
-  import type {SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
 
@@ -23,7 +26,7 @@
   let unsubscribeSystemState: () => void;
 
   onMount(async () => {
-    try{
+    try {
       await teamStore.sync();
       await fixtureStore.sync();
       await systemStore.sync();
@@ -44,13 +47,13 @@
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
       });
-      
-    } catch(error){
+    } catch (error) {
       toastStore.show("Error fetching league table.", "error");
       console.error("Error fetching league table:", error);
-    } finally{}
+    } finally {
+    }
   });
-  
+
   onDestroy(() => {
     unsubscribeTeams?.();
     unsubscribeFixtures?.();

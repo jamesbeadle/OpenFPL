@@ -9,7 +9,11 @@
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import type { FantasyTeam, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    FantasyTeam,
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
@@ -76,7 +80,7 @@
   let systemState: SystemState | null;
   let sessionAddedPlayers: number[] = [];
   let showView = false;
-  
+
   let unsubscribeSystemState: () => void;
   let unsubscribeTeams: () => void;
   let unsubscribePlayers: () => void;
@@ -106,15 +110,15 @@
         activeGameweek = systemState?.activeGameweek ?? activeGameweek;
         activeSeason = systemState?.activeSeason.name ?? activeSeason;
       });
-      
+
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;
       });
-      
+
       unsubscribePlayers = playerStore.subscribe((value) => {
         players = value;
       });
-      
+
       const storedViewMode = localStorage.getItem("viewMode");
       if (storedViewMode) {
         pitchView = storedViewMode === "pitch";
@@ -721,7 +725,9 @@
     />
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+        <div
+          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+        >
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -730,15 +736,22 @@
             <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
 
-          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"/>
+          <div
+            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
 
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
             <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
+                  >h</span
+                >
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
+                  >m</span
+                >
               </p>
             </div>
             <p class="text-gray-300 text-xs">
@@ -746,7 +759,10 @@
             </p>
           </div>
 
-          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"/>
+          <div
+            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
 
           <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
             <p class="text-gray-300 text-xs">Players</p>
@@ -915,9 +931,13 @@
                     {@const playerIds = $fantasyTeam?.playerIds ?? []}
                     {@const playerId = playerIds[actualIndex]}
                     {@const player = players.find((p) => p.id === playerId)}
-                    <div class="flex flex-col justify-center items-center flex-1">
+                    <div
+                      class="flex flex-col justify-center items-center flex-1"
+                    >
                       {#if playerId > 0 && player}
-                        {@const team = teams.find((x) => x.id === player.teamId)}
+                        {@const team = teams.find(
+                          (x) => x.id === player.teamId
+                        )}
                         <div
                           class="mt-2 mb-2 md:mb-12 flex flex-col items-center text-center"
                         >

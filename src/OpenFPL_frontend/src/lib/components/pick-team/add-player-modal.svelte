@@ -2,7 +2,10 @@
   import { onMount, onDestroy } from "svelte";
   import { writable, get } from "svelte/store";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
-  import type { FantasyTeam, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    FantasyTeam,
+    Team,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { toastStore } from "$lib/stores/toast-store";
@@ -69,10 +72,9 @@
 
   onMount(async () => {
     try {
-
       await teamStore.sync();
       await playerStore.sync();
-          
+
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;
       });

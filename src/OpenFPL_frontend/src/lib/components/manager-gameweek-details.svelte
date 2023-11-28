@@ -5,9 +5,16 @@
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import { getFlagComponent, getPositionAbbreviation } from "$lib/utils/Helpers";
+  import {
+    getFlagComponent,
+    getPositionAbbreviation,
+  } from "$lib/utils/Helpers";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { FantasyTeam, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    FantasyTeam,
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { get, type Writable } from "svelte/store";
 
@@ -29,7 +36,7 @@
       await systemStore.sync();
       await teamStore.sync();
       await playerStore.sync();
-          
+
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
       });
@@ -52,7 +59,7 @@
       console.error("Error fetching manager gameweek detail:", error);
     }
   });
-  
+
   onDestroy(() => {
     unsubscribeTeams?.();
     unsubscribePlayers?.();

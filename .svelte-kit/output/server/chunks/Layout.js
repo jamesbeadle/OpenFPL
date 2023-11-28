@@ -1,4 +1,4 @@
-import { c as create_ssr_component, d as add_attribute, a as subscribe, v as validate_component, e as escape, n as null_to_empty } from "./index3.js";
+import { c as create_ssr_component, d as add_attribute, a as subscribe, o as onDestroy, v as validate_component, e as escape, n as null_to_empty } from "./index3.js";
 import { w as writable } from "./index2.js";
 import { p as page } from "./stores.js";
 import "./app.constants.js";
@@ -40,6 +40,8 @@ const css$2 = {
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_page;
   $$unsubscribe_page = subscribe(page, (value) => value);
+  onDestroy(() => {
+  });
   $$result.css.add(css$2);
   $$unsubscribe_page();
   return `<header class="svelte-tlhn8x"><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2">OpenFPL</b></a>
@@ -66,9 +68,7 @@ const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
           <span class="hidden sm:flex">|</span>
           <a href="/gameplay-rules" class="hover:text-gray-300">Gameplay Rules</a>
           <span class="hidden sm:flex">|</span>
-          <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a>
-          <span class="hidden sm:flex">|</span>
-          <a href="/fixture-validation" class="hover:text-gray-300">Pre-SNS Fixture Validation</a></div></div></div>
+          <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div>
     <div class="flex-0"><a href="/"><b class="px-4 mt-2 sm:mt-0 sm:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div>
     <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 sm:px-0 mt-1 sm:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;

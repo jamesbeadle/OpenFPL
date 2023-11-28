@@ -29,14 +29,22 @@
       "_app.constants.js"
     ]
   },
-  "_ShirtIcon.js": {
-    "file": "chunks/ShirtIcon.js",
-    "imports": [
-      "_index3.js"
-    ]
-  },
   "_app.constants.js": {
     "file": "chunks/app.constants.js"
+  },
+  "_auth.js": {
+    "file": "chunks/auth.js",
+    "imports": [
+      "_app.constants.js",
+      "_index2.js"
+    ]
+  },
+  "_fixture-store.js": {
+    "file": "chunks/fixture-store.js",
+    "imports": [
+      "_index2.js",
+      "_team-store.js"
+    ]
   },
   "_index.js": {
     "file": "chunks/index.js"
@@ -59,15 +67,19 @@
   "_manager-store.js": {
     "file": "chunks/manager-store.js",
     "imports": [
-      "_team-store.js",
-      "_index2.js"
+      "_auth.js",
+      "_system-store.js",
+      "_index2.js",
+      "_team-store.js"
     ]
   },
   "_player-store.js": {
     "file": "chunks/player-store.js",
     "imports": [
-      "_team-store.js",
-      "_index2.js"
+      "_fixture-store.js",
+      "_system-store.js",
+      "_index2.js",
+      "_team-store.js"
     ]
   },
   "_stores.js": {
@@ -76,10 +88,16 @@
       "_index3.js"
     ]
   },
+  "_system-store.js": {
+    "file": "chunks/system-store.js",
+    "imports": [
+      "_index2.js",
+      "_team-store.js"
+    ]
+  },
   "_team-store.js": {
     "file": "chunks/team-store.js",
     "imports": [
-      "_app.constants.js",
       "_index2.js",
       "_index3.js"
     ]
@@ -124,11 +142,13 @@
       "_index3.js",
       "_app.constants.js",
       "_manager-store.js",
-      "_Layout.js",
+      "_system-store.js",
+      "_index2.js",
       "_team-store.js",
-      "_player-store.js",
+      "_Layout.js",
+      "_fixture-store.js",
       "_BadgeIcon.js",
-      "_index2.js"
+      "_player-store.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/+page.svelte"
@@ -140,10 +160,10 @@
       "_stores.js",
       "_index2.js",
       "_team-store.js",
-      "_player-store.js",
-      "_app.constants.js",
+      "_fixture-store.js",
       "_index.js",
-      "_Layout.js"
+      "_Layout.js",
+      "_auth.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte"
@@ -153,12 +173,11 @@
     "imports": [
       "_index3.js",
       "_team-store.js",
+      "_fixture-store.js",
       "_player-store.js",
+      "_system-store.js",
       "_Layout.js",
-      "_BadgeIcon.js",
-      "_stores.js",
-      "_ShirtIcon.js",
-      "_index2.js"
+      "_stores.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/club/+page.svelte"
@@ -167,7 +186,10 @@
     "file": "entries/pages/fixture-validation/_page.svelte.js",
     "imports": [
       "_index3.js",
-      "_app.constants.js"
+      "_system-store.js",
+      "_app.constants.js",
+      "_team-store.js",
+      "_player-store.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/fixture-validation/+page.svelte"
@@ -201,13 +223,13 @@
     "file": "entries/pages/manager/_page.svelte.js",
     "imports": [
       "_index3.js",
-      "_Layout.js",
       "_stores.js",
       "_team-store.js",
-      "_player-store.js",
-      "_BadgeIcon.js",
+      "_system-store.js",
       "_manager-store.js",
-      "_app.constants.js"
+      "_Layout.js",
+      "_player-store.js",
+      "_BadgeIcon.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/manager/+page.svelte"
@@ -225,12 +247,11 @@
       "_index3.js",
       "_Layout.js",
       "_index2.js",
+      "_system-store.js",
+      "_fixture-store.js",
       "_team-store.js",
-      "_app.constants.js",
-      "_manager-store.js",
-      "_BadgeIcon.js",
       "_player-store.js",
-      "_ShirtIcon.js"
+      "_manager-store.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte"
@@ -247,12 +268,12 @@
     "imports": [
       "_index3.js",
       "_stores.js",
-      "_team-store.js",
+      "_system-store.js",
       "_Layout.js",
+      "_team-store.js",
+      "_fixture-store.js",
       "_player-store.js",
-      "_BadgeIcon.js",
-      "_ShirtIcon.js",
-      "_app.constants.js"
+      "_BadgeIcon.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/player/+page.svelte"
@@ -269,10 +290,11 @@
     "imports": [
       "_index3.js",
       "_index.js",
-      "_team-store.js",
+      "_system-store.js",
       "_manager-store.js",
       "_Layout.js",
-      "_app.constants.js"
+      "_app.constants.js",
+      "_team-store.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/profile/+page.svelte"

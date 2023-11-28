@@ -39,14 +39,16 @@
     try {
       await teamStore.sync();
       await systemStore.sync();
-          
+
       unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
+        teams = value.sort((a, b) =>
+          a.friendlyName.localeCompare(b.friendlyName)
+        );
       });
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
       });
-      
+
       selectedTeamId = teams[0].id;
       currentGameweek = systemState?.activeGameweek ?? 1;
       focusGameweek = systemState?.focusGameweek ?? 1;
@@ -62,7 +64,7 @@
       isLoading = false;
     }
   });
-  
+
   onDestroy(() => {
     unsubscribeTeams?.();
     unsubscribeSystemState?.();

@@ -46,7 +46,7 @@
       await teamStore.sync();
       await fixtureStore.sync();
       await systemStore.sync();
-          
+
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;
       });
@@ -63,7 +63,7 @@
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
       });
-      
+
       playerDetails = await playerStore.getPlayerDetails(
         id,
         systemState?.activeSeason.id ?? 0
@@ -77,7 +77,7 @@
       isLoading = false;
     }
   });
-  
+
   onDestroy(() => {
     unsubscribeTeams?.();
     unsubscribeFixtures?.();

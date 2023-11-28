@@ -1,6 +1,9 @@
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { DataCache,Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  DataCache,
+  Fixture,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
@@ -13,14 +16,14 @@ function createFixtureStore() {
   );
 
   async function sync() {
-    
     let category = "fixtures";
-    const newHashValues: DataCache[] = await actor.getDataHashes() as DataCache[];
+    const newHashValues: DataCache[] =
+      (await actor.getDataHashes()) as DataCache[];
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
     if (liveHash?.hash != localHash) {
-      let updatedFixturesData = await actor.getFixtures() as Fixture[];
+      let updatedFixturesData = (await actor.getFixtures()) as Fixture[];
       localStorage.setItem(
         "fixtures_data",
         JSON.stringify(updatedFixturesData, replacer)

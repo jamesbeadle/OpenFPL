@@ -1,29 +1,20 @@
-import { c as create_ssr_component, b as each, d as add_attribute, e as escape, v as validate_component, m as missing_component, a as subscribe } from "../../../chunks/index3.js";
-import { L as Layout } from "../../../chunks/Layout.js";
+import { c as create_ssr_component, o as onDestroy, b as each, d as add_attribute, e as escape, v as validate_component, m as missing_component, a as subscribe } from "../../../chunks/index3.js";
 import { p as page } from "../../../chunks/stores.js";
-import { s as systemStore, t as teamStore, d as getPositionAbbreviation, b as getFlagComponent } from "../../../chunks/team-store.js";
-import { p as playerStore } from "../../../chunks/player-store.js";
-import { B as BadgeIcon } from "../../../chunks/BadgeIcon.js";
+import { g as getPositionAbbreviation, a as getFlagComponent } from "../../../chunks/team-store.js";
+import "../../../chunks/system-store.js";
 import "../../../chunks/manager-store.js";
-import "../../../chunks/app.constants.js";
-import "@dfinity/auth-client";
-import "@dfinity/utils";
-import "@dfinity/agent";
+import { L as Layout } from "../../../chunks/Layout.js";
+import "../../../chunks/player-store.js";
+import { B as BadgeIcon } from "../../../chunks/BadgeIcon.js";
 const Manager_gameweek_details = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let teams = [];
   let players = [];
-  systemStore.subscribe((value) => {
-  });
-  teamStore.subscribe((value) => {
-    teams = value;
-  });
-  playerStore.subscribe((value) => {
-    players = value;
-  });
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let { selectedGameweek } = $$props;
   let { fantasyTeam } = $$props;
   let gameweekPlayers = [];
+  onDestroy(() => {
+  });
   function getPlayerDTO(playerId) {
     return players.find((x) => x.id === playerId) ?? null;
   }
@@ -101,19 +92,21 @@ const Manager_gameweek_details = create_ssr_component(($$result, $$props, $$bind
         </div>`;
   })}</div></div></div>`;
 });
+let selectedSeason = "";
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let selectedGameweek;
   let $page, $$unsubscribe_page;
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let manager;
-  let selectedSeason = "";
   let joinedDate = "";
   let profilePicture;
   let favouriteTeam = null;
   let fantasyTeam;
+  onDestroy(() => {
+  });
   selectedGameweek = 1;
   $page.url.searchParams.get("id");
-  Number($page.url.searchParams.get("gw"));
+  Number($page.url.searchParams.get("gw")) ?? 0;
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {

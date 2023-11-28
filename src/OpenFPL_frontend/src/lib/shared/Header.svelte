@@ -10,15 +10,14 @@
   let isLoggedIn = false;
 
   let unsubscribeLogin: () => void;
-  
+
   onMount(async () => {
-    try{
+    try {
       await authStore.sync();
       unsubscribeLogin = authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
-    }
-    catch (error){
+    } catch (error) {
       toastStore.show("Error syncing authentication.", "error");
       console.error("EError syncing authentication:", error);
     }

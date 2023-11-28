@@ -235,6 +235,7 @@ export interface _SERVICE {
     Result
   >;
   getAccountBalanceDTO: ActorMethod<[], AccountBalanceDTO>;
+  getAddTeamsFunction: ActorMethod<[], string>;
   getClubLeaderboard: ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard
@@ -283,6 +284,7 @@ export interface _SERVICE {
     Result
   >;
   savePlayerEvents: ActorMethod<[FixtureId, Array<PlayerEventData>], undefined>;
+  setGameweekFixtures: ActorMethod<[], undefined>;
   updateDisplayName: ActorMethod<[string], Result>;
   updateFavouriteTeam: ActorMethod<[number], Result>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result>;

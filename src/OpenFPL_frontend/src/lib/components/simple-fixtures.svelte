@@ -92,34 +92,44 @@
       <h1 class="mx-4 m-2 font-bold">Fixtures</h1>
     </div>
     <div class="flex items-center space-x-2 m-3 mx-4">
-      <button class="text-2xl rounded fpl-button px-3 py-1" 
+      <button
+        class="text-2xl rounded fpl-button px-3 py-1"
         on:click={() => changeGameweek(-1)}
-        disabled={selectedGameweek === 1}>
+        disabled={selectedGameweek === 1}
+      >
         &lt;
       </button>
 
-      <select class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-        bind:value={selectedGameweek}>
+      <select
+        class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+        bind:value={selectedGameweek}
+      >
         {#each gameweeks as gameweek}
           <option value={gameweek}>Gameweek {gameweek}</option>
         {/each}
       </select>
 
-      <button class="text-2xl rounded fpl-button px-3 py-1"
+      <button
+        class="text-2xl rounded fpl-button px-3 py-1"
         on:click={() => changeGameweek(1)}
-        disabled={selectedGameweek === 38}>
+        disabled={selectedGameweek === 38}
+      >
         &gt;
       </button>
     </div>
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
         <div>
-          <div class="flex items-center justify-between border border-gray-700 py-2 bg-light-gray">
+          <div
+            class="flex items-center justify-between border border-gray-700 py-2 bg-light-gray"
+          >
             <h2 class="date-header ml-4 text-xs">{date}</h2>
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}
-            <div class={`flex items-center justify-between py-2 border-b border-gray-700  
-              ${ fixture.status === 0 ? "text-gray-400" : "text-white" }`}>
+            <div
+              class={`flex items-center justify-between py-2 border-b border-gray-700  
+              ${fixture.status === 0 ? "text-gray-400" : "text-white"}`}
+            >
               <div class="flex items-center w-1/2 ml-4">
                 <div class="flex w-1/2 space-x-4 justify-center">
                   <div class="w-8 items-center justify-center">
@@ -151,13 +161,21 @@
                   </div>
                 </div>
                 <div class="flex w-1/2 md:justify-center">
-                  <span class="text-sm ml-4 md:ml-0 text-left">{formatUnixTimeToTime(Number(fixture.kickOff))}</span>
+                  <span class="text-sm ml-4 md:ml-0 text-left"
+                    >{formatUnixTimeToTime(Number(fixture.kickOff))}</span
+                  >
                 </div>
               </div>
               <div class="flex items-center space-x-10 w-1/2 md:justify-center">
-                <div class="flex flex-col min-w-[120px] md:min-w-[200px] text-xs 3xl:text-base">
-                  <a class="my-1" href={`/club?id=${fixture.homeTeamId}`}>{homeTeam ? homeTeam.friendlyName : ""}</a>
-                  <a class="my-1" href={`/club?id=${fixture.awayTeamId}`}>{awayTeam ? awayTeam.friendlyName : ""}</a>
+                <div
+                  class="flex flex-col min-w-[120px] md:min-w-[200px] text-xs 3xl:text-base"
+                >
+                  <a class="my-1" href={`/club?id=${fixture.homeTeamId}`}
+                    >{homeTeam ? homeTeam.friendlyName : ""}</a
+                  >
+                  <a class="my-1" href={`/club?id=${fixture.awayTeamId}`}
+                    >{awayTeam ? awayTeam.friendlyName : ""}</a
+                  >
                 </div>
                 <div class="flex flex-col items-center text-xs">
                   <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>

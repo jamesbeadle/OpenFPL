@@ -28,7 +28,7 @@
   let favouriteTeam: Team | null = null;
   let fantasyTeam: Writable<FantasyTeam | null>;
   let systemState: SystemState | null;
-  
+
   let unsubscribeSystemState: () => void;
   let unsubscribeTeams: () => void;
 
@@ -47,7 +47,7 @@
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;
       });
-   
+
       manager = await managerStore.getManager(
         id ?? "",
         systemState?.activeSeason.id ?? 1,

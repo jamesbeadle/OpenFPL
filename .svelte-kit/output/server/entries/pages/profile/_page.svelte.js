@@ -1,12 +1,13 @@
-import { c as create_ssr_component, v as validate_component, d as add_attribute } from "../../../chunks/index3.js";
+import { c as create_ssr_component, o as onDestroy, v as validate_component, d as add_attribute } from "../../../chunks/index3.js";
 import "../../../chunks/index.js";
-import { t as teamStore, s as systemStore } from "../../../chunks/team-store.js";
+import "../../../chunks/system-store.js";
 import "../../../chunks/manager-store.js";
 import { a as LoadingIcon, L as Layout } from "../../../chunks/Layout.js";
 import "../../../chunks/app.constants.js";
 import "@dfinity/auth-client";
 import "@dfinity/utils";
 import "@dfinity/agent";
+import "../../../chunks/team-store.js";
 const CopyIcon_svelte_svelte_type_style_lang = "";
 const updateUsernameModal_svelte_svelte_type_style_lang = "";
 const updateFavouriteTeamModal_svelte_svelte_type_style_lang = "";
@@ -16,9 +17,7 @@ const css = {
   map: null
 };
 const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  teamStore.subscribe((value) => {
-  });
-  systemStore.subscribe((value) => {
+  onDestroy(() => {
   });
   $$result.css.add(css);
   return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;

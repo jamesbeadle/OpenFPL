@@ -49,7 +49,7 @@ export class ActorFactory {
     });
   }
 
-  static createIdentityActor(authStore: AuthStore, canisterId: string){
+  static createIdentityActor(authStore: AuthStore, canisterId: string) {
     let unsubscribe: Unsubscriber;
     return new Promise<OptionIdentity>((resolve, reject) => {
       unsubscribe = authStore.subscribe((store) => {
@@ -60,7 +60,9 @@ export class ActorFactory {
     }).then((identity) => {
       unsubscribe();
       return ActorFactory.createActor(
-        canisterId === process.env.OPENFPL_BACKEND_CANISTER_ID ? main_canister : player_canister,
+        canisterId === process.env.OPENFPL_BACKEND_CANISTER_ID
+          ? main_canister
+          : player_canister,
         canisterId,
         identity
       );

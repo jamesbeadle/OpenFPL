@@ -17,7 +17,7 @@
   let fixtures: Fixture[] = [];
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let systemState: SystemState | null;
-  
+
   let unsubscribeTeams: () => void;
   let unsubscribeFixtures: () => void;
   let unsubscribeSystemState: () => void;
@@ -50,16 +50,16 @@
   );
 
   onMount(async () => {
-    try{
+    try {
       await teamStore.sync();
       await fixtureStore.sync();
       await systemStore.sync();
 
-      unsubscribeTeams = teamStore.subscribe(value => {
+      unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;
       });
 
-      unsubscribeFixtures = fixtureStore.subscribe(value => {
+      unsubscribeFixtures = fixtureStore.subscribe((value) => {
         fixtures = value;
         fixturesWithTeams = fixtures.map((fixture) => ({
           fixture,
@@ -68,15 +68,17 @@
         }));
       });
 
-      unsubscribeSystemState = systemStore.subscribe(value => {
+      unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
       });
-    } catch(error){
+    } catch (error) {
       toastStore.show("Error fetching fixtures data.", "error");
       console.error("Error fetching fixtures data:", error);
-    } finally { isLoading = false; }
+    } finally {
+      isLoading = false;
+    }
   });
-  
+
   onDestroy(() => {
     unsubscribeTeams?.();
     unsubscribeFixtures?.();

@@ -1,7 +1,5 @@
 import { authStore } from "$lib/stores/auth";
-import type { OptionIdentity } from "$lib/types/Identity";
-import { writable, type Unsubscriber } from "svelte/store";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { writable } from "svelte/store";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createUserStore() {
@@ -9,7 +7,10 @@ function createUserStore() {
 
   async function updateUsername(username: string): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
       const result = await identityActor.updateDisplayName(username);
       return result;
     } catch (error) {
@@ -20,7 +21,10 @@ function createUserStore() {
 
   async function updateFavouriteTeam(favouriteTeamId: number): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
       return result;
     } catch (error) {
@@ -31,7 +35,10 @@ function createUserStore() {
 
   async function getProfile(): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
       const result = await identityActor.getProfileDTO();
       set(result);
       return result;
@@ -54,7 +61,10 @@ function createUserStore() {
         const arrayBuffer = reader.result as ArrayBuffer;
         const uint8Array = new Uint8Array(arrayBuffer);
         try {
-          const identityActor = await ActorFactory.createIdentityActor(authStore, process.env.OPENFPL_BACKEND_CANISTER_ID ?? "");
+          const identityActor = await ActorFactory.createIdentityActor(
+            authStore,
+            process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+          );
           const result = await identityActor.updateProfilePicture(uint8Array);
           return result;
         } catch (error) {

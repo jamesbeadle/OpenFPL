@@ -23,7 +23,6 @@
   let unsubscribeTeams: () => void;
   let unsubscribeSystemState: () => void;
   let unsubscribeFixtures: () => void;
-  
 
   let selectedGameweek: number = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
@@ -40,9 +39,11 @@
       await teamStore.sync();
       await systemStore.sync();
       await fixtureStore.sync();
-          
+
       unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
+        teams = value.sort((a, b) =>
+          a.friendlyName.localeCompare(b.friendlyName)
+        );
       });
 
       unsubscribeSystemState = systemStore.subscribe((value) => {
@@ -52,7 +53,7 @@
       unsubscribeFixtures = fixtureStore.subscribe((value) => {
         fixtures = value;
       });
-      
+
       await loadGameweekPoints("");
     } catch (error) {
       toastStore.show("Error fetching gameweek points.", "error");
@@ -61,7 +62,7 @@
       isLoading = false;
     }
   });
-  
+
   onDestroy(() => {
     unsubscribeTeams?.();
     unsubscribeFixtures?.();
@@ -130,22 +131,28 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <div class="flex items-center ml-4">
           <div class="flex items-center mr-8">
-            <button class="text-2xl rounded fpl-button px-3 py-1"
+            <button
+              class="text-2xl rounded fpl-button px-3 py-1"
               on:click={() => changeGameweek(-1)}
-              disabled={selectedGameweek === 1}>
+              disabled={selectedGameweek === 1}
+            >
               &lt;
             </button>
 
-            <select class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-              bind:value={selectedGameweek}>
+            <select
+              class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+              bind:value={selectedGameweek}
+            >
               {#each gameweeks as gameweek}
                 <option value={gameweek}>Gameweek {gameweek}</option>
               {/each}
             </select>
 
-            <button class="text-2xl rounded fpl-button px-3 py-1 ml-1"
+            <button
+              class="text-2xl rounded fpl-button px-3 py-1 ml-1"
               on:click={() => changeGameweek(1)}
-              disabled={selectedGameweek === 38}>
+              disabled={selectedGameweek === 38}
+            >
               &gt;
             </button>
           </div>
@@ -153,7 +160,9 @@
       </div>
       <div class="flex flex-col space-y-4 mt-4 text-lg">
         <div class="overflow-x-auto flex-1">
-          <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
+          <div
+            class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+          >
             <div class="w-1/6 text-center mx-4">Pos</div>
             <div class="w-3/6 px-4">Player</div>
             <div class="w-1/6 text-center">Points</div>
@@ -161,7 +170,9 @@
           </div>
           {#if gameweekData.length > 0}
             {#each gameweekData as playerGameweek}
-              <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+              <div
+                class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
+              >
                 <div class="w-1/6 text-center">
                   {getPositionAbbreviation(playerGameweek.player.position)}
                 </div>
@@ -170,7 +181,8 @@
                     {playerGameweek.player.firstName.length > 2
                       ? playerGameweek.player.firstName.substring(0, 1) + "."
                       : ""}
-                    {playerGameweek.player.lastName}</a>
+                    {playerGameweek.player.lastName}</a
+                  >
                 </div>
                 <div class="w-1/6 text-center">{playerGameweek.points}</div>
                 <div class="w-1/6 text-center">
