@@ -1,15 +1,24 @@
-import { writable } from 'svelte/store';
+import { writable, type Unsubscriber } from 'svelte/store';
 import { authStore } from '$lib/stores/auth';
-import type { OptionIdentity, FantasyTeam, FantasyTeamSnapshot, ManagerDTO } from 'path-to-your-types';
+import { systemStore } from '$lib/stores/system-store';
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import { ActorFactory } from 'path-to-ActorFactory';
-import { SystemService } from './SystemService'; // Adjust the import path as necessary
+import { ActorFactory } from "../../utils/ActorFactory";
+import type { FantasyTeam, FantasyTeamSnapshot, ManagerDTO, SystemState } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { OptionIdentity } from '$lib/types/Identity';
 
 function createManagerStore() {
   const { subscribe, set } = writable<ManagerDTO | null>(null);
 
+  let systemState: SystemState;
+  systemStore.subscribe(value => { systemState = value as SystemState });
+  
+  const actor = ActorFactory.createActor(
+    idlFactory,
+    process.env.OPENFPL_BACKEND_CANISTER_ID
+  );
+
   async function actorFromIdentity() {
-    let unsubscribe;
+    let unsubscribe: Unsubscriber;
     return new Promise<OptionIdentity>((resolve, reject) => {
       unsubscribe = authStore.subscribe((store) => {
         if (store.identity) {
@@ -27,31 +36,158 @@ function createManagerStore() {
   }
 
   async function getManager(managerId: string, seasonId: number, gameweek: number): Promise<ManagerDTO> {
-    // Implementation of getManager
-    // ...
+    try {
+      return await actor.getManager(managerId, seasonId, gameweek) as ManagerDTO;
+    } catch (error) {
+      console.error("Error fetching fantasy team for gameweek:", error);
+      throw error;
+    }
   }
 
   async function getTotalManagers(): Promise<number> {
-    // Implementation of getTotalManagers
-    // ...
+    try {
+      const managerCountData = await actor.getTotalManagers();
+      return Number(managerCountData);
+    } catch (error) {
+      console.error("Error fetching total managers:", error);
+      throw error;
+    }
   }
 
   async function getFantasyTeamForGameweek(managerId: string, gameweek: number): Promise<FantasyTeamSnapshot> {
-    // Implementation of getFantasyTeamForGameweek
-    // ...
+    try {
+      const fantasyTeamData = await actor.getFantasyTeamForGameweek(
+        managerId,
+        systemState?.activeSeason.id,
+        gameweek
+      ) as FantasyTeamSnapshot;
+      return fantasyTeamData;
+    } catch (error) {
+      console.error("Error fetching fantasy team for gameweek:", error);
+      throw error;
+    }
   }
 
   async function getFantasyTeam(): Promise<any> {
-    // Implementation of getFantasyTeam
-    // ...
+    try {
+      const identityActor = await actorFromIdentity();
+      const fantasyTeam = await identityActor.getFantasyTeam();
+      return fantasyTeam;
+    } catch (error) {
+      console.error("Error fetching fantasy team:", error);
+      throw error;
+    }
   }
 
   async function saveFantasyTeam(userFantasyTeam: FantasyTeam, activeGameweek: number): Promise<any> {
-    // Implementation of saveFantasyTeam
-    // ...
+    try {
+      let bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
+      let bonusPlayerId = getBonusPlayerId(
+        userFantasyTeam,
+        activeGameweek
+      );
+      let bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
+      const identityActor = await actorFromIdentity();
+      const fantasyTeam = await identityActor.saveFantasyTeam(
+        userFantasyTeam.playerIds,
+        userFantasyTeam.captainId,
+        bonusPlayed,
+        bonusPlayerId,
+        bonusTeamId
+      );
+      return fantasyTeam;
+    } catch (error) {
+      console.error("Error saving fantasy team:", error);
+      throw error;
+    }
+  }
+  
+  function getBonusPlayed(userFantasyTeam: FantasyTeam, activeGameweek: number): number {
+    let bonusPlayed = 0;
+
+    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
+      bonusPlayed = 1;
+    }
+
+    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
+      bonusPlayed = 2;
+    }
+
+    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
+      bonusPlayed = 3;
+    }
+
+    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
+      bonusPlayed = 4;
+    }
+
+    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
+      bonusPlayed = 5;
+    }
+
+    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
+      bonusPlayed = 6;
+    }
+
+    /* Coming soon
+    if(userFantasyTeam.prospectsGameweek === activeGameweek){
+      bonusPlayed = 7;
+    }
+
+    if(userFantasyTeam.countrymenGameweek === activeGameweek){
+      bonusPlayed = 8;
+    }
+    */
+
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+      bonusPlayed = 7;
+    }
+
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+      bonusPlayed = 8;
+    }
+
+    return bonusPlayed;
   }
 
-  // Include any other relevant methods
+  function getBonusPlayerId(
+    userFantasyTeam: FantasyTeam,
+    activeGameweek: number
+  ): number {
+    let bonusPlayerId = 0;
+
+    if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.goalGetterPlayerId;
+    }
+
+    if (userFantasyTeam.passMasterGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.passMasterPlayerId;
+    }
+
+    if (userFantasyTeam.noEntryGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.noEntryPlayerId;
+    }
+
+    if (userFantasyTeam.safeHandsGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.safeHandsPlayerId;
+    }
+
+    if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
+      bonusPlayerId = userFantasyTeam.captainId;
+    }
+
+    return bonusPlayerId;
+  }
+
+  function getBonusTeamId(userFantasyTeam: FantasyTeam, activeGameweek: number): number {
+    let bonusTeamId = 0;
+
+    if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
+      bonusTeamId = userFantasyTeam.teamBoostTeamId;
+    }
+
+    return bonusTeamId;
+  }
 
   return {
     subscribe,
