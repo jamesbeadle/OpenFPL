@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { ProfileDTO, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ProfileDTO, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { toastStore } from "$lib/stores/toast";
-  import UpdateUsernameModal from "$lib/components/update-username-modal.svelte";
+  import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { UserService } from "$lib/services/UserService";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";

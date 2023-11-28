@@ -3,11 +3,11 @@
   import type {
     FantasyTeam,
     Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/Bonus";
   import { BonusType } from "$lib/enums/BonusType";
-  import UseBonusModal from "$lib/components/use-bonus-modal.svelte";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+  import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
+  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
 
   export let fantasyTeam = writable<FantasyTeam | null>(null);
   export let players: PlayerDTO[];

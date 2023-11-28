@@ -8,12 +8,11 @@
     import { TeamService } from '$lib/services/TeamService';
     import { SystemService } from '$lib/services/SystemService';
     import { FixtureService } from '$lib/services/FixtureService';
-    import PlayerEventsModal from '$lib/components/player-events-modal.svelte';
-    import SelectPlayersModal from '$lib/components/select-players-modal.svelte';
-    import ConfirmFixtureDataModal from '$lib/components/confirm-fixture-data-modal.svelte';
-    import ClearDraftModal from '$lib/components/clear-draft-modal.svelte';
+    import PlayerEventsModal from '$lib/components/fixture-validation/player-events-modal.svelte';
+    import SelectPlayersModal from '$lib/components/fixture-validation/select-players-modal.svelte';
+    import ConfirmFixtureDataModal from '$lib/components/fixture-validation/confirm-fixture-data-modal.svelte';
+    import ClearDraftModal from '$lib/components/fixture-validation/clear-draft-modal.svelte';
     import { GovernanceService } from '$lib/services/GovernanceService';
-    import { replacer } from "../../lib/utils/Helpers";
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
     let teams: Team[];

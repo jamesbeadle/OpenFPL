@@ -1,11 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, get } from "svelte/store";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
+  import type { FantasyTeam, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
   import { PlayerService } from "$lib/services/PlayerService";
   import AddIcon from "$lib/icons/AddIcon.svelte";
@@ -211,9 +208,7 @@
               </select>
             </div>
             <div>
-              <label for="filterPosition" class="text-sm"
-                >Filter by Position:</label
-              >
+              <label for="filterPosition" class="text-sm">Filter by Position:</label>
               <select
                 id="filterPosition"
                 class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"

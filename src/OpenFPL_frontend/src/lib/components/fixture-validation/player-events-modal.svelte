@@ -1,6 +1,6 @@
 <script lang="ts">
     import { writable, get, type Writable } from "svelte/store";
-    import type { PlayerDTO, PlayerEventData } from '../../../../declarations/player_canister/player_canister.did';
+    import type { PlayerDTO, PlayerEventData } from '../../../../../declarations/player_canister/player_canister.did';
     export let show = false;
     export let player: PlayerDTO;
     export let fixtureId: number;

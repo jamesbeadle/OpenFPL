@@ -1,6 +1,6 @@
 <script lang="ts">
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
-  import ProfileDetail from "$lib/components/profile-detail.svelte";
+  import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import Layout from "../Layout.svelte";
   let activeTab: string = "details";
 

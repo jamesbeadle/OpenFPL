@@ -7,8 +7,8 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import BonusPanel from "$lib/components/bonus-panel.svelte";
-  import AddPlayerModal from "$lib/components/add-player-modal.svelte";
+  import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
+  import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";

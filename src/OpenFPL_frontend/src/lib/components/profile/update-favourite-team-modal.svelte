@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { UserService } from "$lib/services/UserService";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
 
   export let showModal: boolean;

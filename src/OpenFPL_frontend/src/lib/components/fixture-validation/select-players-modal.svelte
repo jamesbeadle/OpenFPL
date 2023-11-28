@@ -1,7 +1,7 @@
 <script lang="ts">
     import { get, writable } from 'svelte/store';
-    import type { Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
-    import type { PlayerDTO } from '../../../../declarations/player_canister/player_canister.did';
+    import type { Team } from '../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
+    import type { PlayerDTO } from '../../../../../declarations/player_canister/player_canister.did';
     export let teamPlayers = writable<PlayerDTO[]>([]);
     export let selectedTeam: Team;
     export let selectedPlayers = writable<PlayerDTO[]>([]);

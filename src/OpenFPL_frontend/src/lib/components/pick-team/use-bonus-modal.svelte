@@ -4,8 +4,8 @@
   import type {
     FantasyTeam,
     Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
   import { BonusType } from "$lib/enums/BonusType";
 
   export let fantasyTeam = writable<FantasyTeam | null>(null);

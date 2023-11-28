@@ -2,19 +2,13 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type {
-    Season,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { FixtureService } from "$lib/services/FixtureService";
   import { TeamService } from "$lib/services/TeamService";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { PlayerService } from "$lib/services/PlayerService";
-  import type {
-    PlayerDetailDTO,
-    PlayerGameweekDTO,
-  } from "../../../../declarations/player_canister/player_canister.did";
+  import type { PlayerDetailDTO, PlayerGameweekDTO } from "../../../../declarations/player_canister/player_canister.did";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
@@ -138,9 +132,7 @@
   {/if}
   <div class="flex flex-col space-y-4 text-lg mt-4">
     <div class="overflow-x-auto flex-1">
-      <div
-        class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
-      >
+      <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
         <div class="w-1/4 px-4">Gameweek</div>
         <div class="w-1/4 px-4">Opponent</div>
         <div class="w-1/4 px-4">Points</div>
@@ -149,9 +141,7 @@
 
       {#each playerDetails.gameweeks as gameweek}
         {@const opponent = getOpponentFromFixtureId(gameweek.fixtureId)}
-        <div
-          class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer"
-        >
+        <div class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer">
           <div class="w-1/4 px-4">{gameweek.number}</div>
           <div class="w-1/4 px-4 flex items-center">
             <BadgeIcon
