@@ -75,8 +75,8 @@
     activeTab = tab;
   }
 
-  function viewGameweekDetail(gameweekTeam: FantasyTeam){
-    fantasyTeam.set(gameweekTeam);
+  function viewGameweekDetail(principalId: string, selectedGameweek: number){
+    fantasyTeam.set(manager.gameweeks.find(x => x.gameweek == selectedGameweek)!);
     setActiveTab('details');
   }
 </script>
@@ -171,7 +171,7 @@
             <ManagerGameweekDetails {selectedGameweek} {fantasyTeam} />
           {/if}
           {#if activeTab === "gameweeks"}
-            <ManagerGameweeks {viewGameweekDetail} />
+            <ManagerGameweeks {viewGameweekDetail} principalId={manager.principalId} />
           {/if}
         </div>
       </div>

@@ -13,6 +13,7 @@
     import ConfirmFixtureDataModal from '$lib/components/fixture-validation/confirm-fixture-data-modal.svelte';
     import ClearDraftModal from '$lib/components/fixture-validation/clear-draft-modal.svelte';
     import { GovernanceService } from '$lib/services/GovernanceService';
+    import { redirect } from '@sveltejs/kit';
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
     let teams: Team[];
@@ -57,6 +58,7 @@
       try {
         await new GovernanceService().submitFixtureData(fixtureId, get(playerEventData));
         localStorage.removeItem(`fixtureDraft_${fixtureId}`);
+        throw redirect(307, '/fixture-validation');
       } catch (error) {
         console.error("Error saving fixture data: ", error);
       }

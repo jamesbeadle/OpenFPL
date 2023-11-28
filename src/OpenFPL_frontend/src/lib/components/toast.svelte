@@ -1,14 +1,20 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { toastStore } from "$lib/stores/toast";
-</script>
+  let isScrolled = false;
 
-{#if $toastStore.visible}
-  <div
-    class={`fixed inset-x-0 bottom-0 toast-panel text-white text-center py-2 ${$toastStore.type}`}
-  >
-    {$toastStore.message}
-  </div>
-{/if}
+  function updateScroll() {
+    isScrolled = window.pageYOffset > 0;
+  }
+
+  onMount(() => {
+    window.addEventListener('scroll', updateScroll);
+    return () => {
+      window.removeEventListener('scroll', updateScroll);
+    };
+  });
+
+</script>
 
 <style>
   @keyframes fadeIn {
@@ -36,3 +42,9 @@
     animation-fill-mode: forwards;
   }
 </style>
+
+{#if $toastStore.visible}
+  <div  class={`fixed inset-x-0 ${isScrolled ? 'top-0' : 'bottom-0'} toast-panel text-white text-center py-2 ${$toastStore.type}`}>
+    {$toastStore.message}
+  </div>
+{/if}

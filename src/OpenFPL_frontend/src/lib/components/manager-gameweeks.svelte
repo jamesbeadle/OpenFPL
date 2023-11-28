@@ -7,7 +7,8 @@
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   
-    export let viewGameweekDetail: (fantasyTeam: FantasyTeam) => void;
+    export let principalId = '';
+    export let viewGameweekDetail: (principalId: string, selectedGameweek: number) => void;
     let manager: ManagerDTO;
     let selectedGameweek: number = 1;
     let selectedSeason: Season | null = null;
@@ -15,7 +16,7 @@
     let progress = 0;
     let isLoading = true;
   
-    $: id = $page.url.searchParams.get("id");
+    $: id = $page.url.searchParams.get("id") ?? principalId;
   
     onMount(async () => {
       try {
@@ -53,7 +54,7 @@
             <div class="w-1/4 px-4">{gameweek.gameweek}</div>
             <div class="w-1/4 px-4">{gameweek.points}</div>
             <div class="w-1/4 px-4 flex items-center">
-              <button on:click={() => viewGameweekDetail(gameweek)}>
+              <button on:click={() => viewGameweekDetail(gameweek.principalId, gameweek.gameweek)}>
                 <span class="flex items-center">
                   <ViewDetailsIcon className="w-6 mr-2" />View Details
                 </span>
