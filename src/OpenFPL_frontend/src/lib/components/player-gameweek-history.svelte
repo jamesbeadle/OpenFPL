@@ -63,7 +63,7 @@
       isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching player gameweek history.", "error");
-      console.error("Error fetching data:", error);
+      console.error("Error fetching player gameweek history:", error);
     }
   });
 

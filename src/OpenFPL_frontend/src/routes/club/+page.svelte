@@ -80,7 +80,7 @@
       isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching club details.", "error");
-      console.error("Error fetching data:", error);
+      console.error("Error fetching club details:", error);
     }
   });
 

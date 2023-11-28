@@ -33,7 +33,7 @@
         
       } catch (error) {
         toastStore.show("Error fetching fixture validation list.", "error");
-        console.error(error);
+        console.error("Error fetching fixture validation list.", error);
       } finally {
         isLoading = false;
       }

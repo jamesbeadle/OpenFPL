@@ -59,7 +59,7 @@
       isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching leaderboard data.", "error");
-      console.error("Error fetching data:", error);
+      console.error("Error fetching leaderboard data:", error);
     }
   });
 

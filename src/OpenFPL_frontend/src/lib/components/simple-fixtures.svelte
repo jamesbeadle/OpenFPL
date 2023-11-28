@@ -60,7 +60,7 @@
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
     } catch (error) {
       toastStore.show("Error fetching fixtures.", "error");
-      console.error("Error fetching data:", error);
+      console.error("Error fetching fixtures:", error);
     }
   });
 

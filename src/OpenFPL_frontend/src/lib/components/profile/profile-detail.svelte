@@ -42,7 +42,7 @@
       isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching profile detail.", "error");
-      console.error("Error fetching data:", error);
+      console.error("Error fetching profile detail:", error);
     }
   });
 

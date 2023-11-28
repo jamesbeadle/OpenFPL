@@ -38,7 +38,7 @@
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
     } catch (error) {
       toastStore.show("Error fetching league table.", "error");
-      console.error("Error fetching data:", error);
+      console.error("Error fetching league table:", error);
     }
   });
 

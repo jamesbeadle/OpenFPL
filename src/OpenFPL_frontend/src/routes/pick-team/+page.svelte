@@ -171,7 +171,7 @@
       isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching team details.", "error");
-      console.error("Error fetching homepage data:", error);
+      console.error("Error fetching team details:", error);
       isLoading = false;
     }
   });
@@ -299,9 +299,7 @@
         newPlayerIds[indexToAdd] = player.id;
         return { ...currentTeam, playerIds: newPlayerIds };
       } else {
-        console.error(
-          "Index out of bounds when attempting to add player to team."
-        );
+        console.error("Index out of bounds when attempting to add player to team.");
         return currentTeam;
       }
     });
@@ -697,7 +695,7 @@
       toastStore.show("Team saved successully!", "success");
     } catch (error) {
       toastStore.show("Error saving team.", "error");
-      console.error("Error fetching homepage data:", error);
+      console.error("Error saving team:", error);
     }
   }
 </script>

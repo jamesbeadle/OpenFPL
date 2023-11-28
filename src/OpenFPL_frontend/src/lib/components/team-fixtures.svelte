@@ -52,7 +52,7 @@
       }));
     } catch (error) {
       toastStore.show("Error fetching gameweek points.", "error");
-      console.error("Error fetching data:", error);
+      console.error("Error fetching gameweek points:", error);
     }
   });
 
