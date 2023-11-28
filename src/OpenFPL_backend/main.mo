@@ -118,6 +118,10 @@ actor Self {
 
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer, getProfiles, getAllPlayers);
 
+  public query func getActiveFixtures() : async [T.Fixture] {
+    let fixtures = seasonManager.getActiveGameweekFixtures();
+  };
+
   public query func getSystemState() : async T.SystemState {
     let fixtures = seasonManager.getActiveGameweekFixtures();
 

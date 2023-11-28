@@ -235,6 +235,7 @@ export interface _SERVICE {
     Result
   >;
   getAccountBalanceDTO: ActorMethod<[], AccountBalanceDTO>;
+  getActiveFixtures: ActorMethod<[], Array<Fixture>>;
   getAddTeamsFunction: ActorMethod<[], string>;
   getClubLeaderboard: ActorMethod<
     [number, number, TeamId, bigint, bigint],

@@ -271,6 +271,7 @@ const idlFactory$1 = ({ IDL }) => {
       []
     ),
     getAccountBalanceDTO: IDL.Func([], [AccountBalanceDTO], []),
+    getActiveFixtures: IDL.Func([], [IDL.Vec(Fixture)], ["query"]),
     getAddTeamsFunction: IDL.Func([], [IDL.Text], []),
     getClubLeaderboard: IDL.Func(
       [IDL.Nat16, IDL.Nat8, TeamId, IDL.Nat, IDL.Nat],

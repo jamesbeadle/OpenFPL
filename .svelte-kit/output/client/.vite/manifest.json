@@ -16,7 +16,7 @@
       ".svelte-kit/generated/client-optimized/nodes/12.js",
       ".svelte-kit/generated/client-optimized/nodes/13.js"
     ],
-    "file": "_app/immutable/entry/app.2a427c21.js",
+    "file": "_app/immutable/entry/app.7c99eaf1.js",
     "imports": [
       "_preload-helper.a4192956.js",
       "_index.c7b38e5e.js"
@@ -34,10 +34,10 @@
     "src": ".svelte-kit/generated/client-optimized/nodes/0.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/1.js": {
-    "file": "_app/immutable/nodes/1.154e3a4c.js",
+    "file": "_app/immutable/nodes/1.fcd8a0c8.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_stores.46fe71ba.js"
+      "_stores.193d467e.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -51,19 +51,19 @@
     "css": [
       "_app/immutable/assets/10.7515d509.css"
     ],
-    "file": "_app/immutable/nodes/10.510777f3.js",
+    "file": "_app/immutable/nodes/10.25cb1bea.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_stores.46fe71ba.js",
+      "_stores.193d467e.js",
       "_toast-store.6633d9f4.js",
       "_global-stores.803ba169.js",
-      "_system-store.7be81c44.js",
-      "_Layout.a0c76cdc.js",
-      "_team-store.5723d493.js",
-      "_fixture-store.43de3d27.js",
+      "_system-store.dbd4d10a.js",
+      "_Layout.71e081ca.js",
+      "_team-store.3192300a.js",
+      "_fixture-store.9be225ff.js",
       "_BadgeIcon.5f1570c4.js",
       "_ViewDetailsIcon.98b59799.js",
-      "_player-store.f7250a59.js",
+      "_player-store.e6d1d691.js",
       "_ShirtIcon.cbb688e3.js"
     ],
     "isDynamicEntry": true,
@@ -78,27 +78,27 @@
     "css": [
       "_app/immutable/assets/11.873b27b5.css"
     ],
-    "file": "_app/immutable/nodes/11.cd8ecbf9.js",
+    "file": "_app/immutable/nodes/11.deb155e0.js",
     "imports": [
       "_index.c7b38e5e.js",
       "_index.d7eb2526.js",
-      "_manager-gameweeks.5a5b9d40.js",
+      "_manager-gameweeks.df369c88.js",
       "_toast-store.6633d9f4.js",
       "_index.8caf67b2.js",
-      "_team-store.5723d493.js",
-      "_system-store.7be81c44.js",
+      "_team-store.3192300a.js",
+      "_system-store.dbd4d10a.js",
       "_global-stores.803ba169.js",
-      "_Layout.a0c76cdc.js"
+      "_Layout.71e081ca.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
     "src": ".svelte-kit/generated/client-optimized/nodes/11.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/12.js": {
-    "file": "_app/immutable/nodes/12.47265303.js",
+    "file": "_app/immutable/nodes/12.de25e3c8.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_Layout.a0c76cdc.js"
+      "_Layout.71e081ca.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -112,10 +112,10 @@
     "css": [
       "_app/immutable/assets/6.b3013d1d.css"
     ],
-    "file": "_app/immutable/nodes/13.89fe6dd7.js",
+    "file": "_app/immutable/nodes/13.8e822546.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_Layout.a0c76cdc.js"
+      "_Layout.71e081ca.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
@@ -129,19 +129,19 @@
     "css": [
       "_app/immutable/assets/2.8041c969.css"
     ],
-    "file": "_app/immutable/nodes/2.723157d5.js",
+    "file": "_app/immutable/nodes/2.467b345c.js",
     "imports": [
       "_index.c7b38e5e.js",
       "_toast-store.6633d9f4.js",
-      "_manager-store.f9046f9a.js",
-      "_system-store.7be81c44.js",
+      "_manager-store.4a87cac1.js",
+      "_system-store.dbd4d10a.js",
       "_index.8caf67b2.js",
-      "_team-store.5723d493.js",
-      "_Layout.a0c76cdc.js",
-      "_fixture-store.43de3d27.js",
+      "_team-store.3192300a.js",
+      "_Layout.71e081ca.js",
+      "_fixture-store.9be225ff.js",
       "_BadgeIcon.5f1570c4.js",
       "_ViewDetailsIcon.98b59799.js",
-      "_player-store.f7250a59.js",
+      "_player-store.e6d1d691.js",
       "_global-stores.803ba169.js"
     ],
     "isDynamicEntry": true,
@@ -149,34 +149,34 @@
     "src": ".svelte-kit/generated/client-optimized/nodes/2.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/3.js": {
-    "file": "_app/immutable/nodes/3.7a673793.js",
+    "file": "_app/immutable/nodes/3.01c40ebf.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_stores.46fe71ba.js",
+      "_stores.193d467e.js",
       "_index.8caf67b2.js",
-      "_team-store.5723d493.js",
-      "_fixture-store.43de3d27.js",
+      "_team-store.3192300a.js",
+      "_fixture-store.9be225ff.js",
       "_index.d7eb2526.js",
       "_toast-store.6633d9f4.js",
-      "_Layout.a0c76cdc.js",
-      "_governance-store.cada9302.js"
+      "_Layout.71e081ca.js",
+      "_governance-store.48fd731d.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
     "src": ".svelte-kit/generated/client-optimized/nodes/3.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/4.js": {
-    "file": "_app/immutable/nodes/4.8b76d721.js",
+    "file": "_app/immutable/nodes/4.f45d0598.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_team-store.5723d493.js",
-      "_fixture-store.43de3d27.js",
-      "_player-store.f7250a59.js",
-      "_system-store.7be81c44.js",
+      "_team-store.3192300a.js",
+      "_fixture-store.9be225ff.js",
+      "_player-store.e6d1d691.js",
+      "_system-store.dbd4d10a.js",
       "_toast-store.6633d9f4.js",
-      "_Layout.a0c76cdc.js",
+      "_Layout.71e081ca.js",
       "_BadgeIcon.5f1570c4.js",
-      "_stores.46fe71ba.js",
+      "_stores.193d467e.js",
       "_ShirtIcon.cbb688e3.js",
       "_global-stores.803ba169.js"
     ],
@@ -185,13 +185,13 @@
     "src": ".svelte-kit/generated/client-optimized/nodes/4.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/5.js": {
-    "file": "_app/immutable/nodes/5.08bb6ac3.js",
+    "file": "_app/immutable/nodes/5.fb33f381.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_system-store.7be81c44.js",
-      "_governance-store.cada9302.js",
-      "_team-store.5723d493.js",
-      "_player-store.f7250a59.js",
+      "_system-store.dbd4d10a.js",
+      "_governance-store.48fd731d.js",
+      "_team-store.3192300a.js",
+      "_player-store.e6d1d691.js",
       "_toast-store.6633d9f4.js"
     ],
     "isDynamicEntry": true,
@@ -206,38 +206,38 @@
     "css": [
       "_app/immutable/assets/6.b3013d1d.css"
     ],
-    "file": "_app/immutable/nodes/6.6984796c.js",
+    "file": "_app/immutable/nodes/6.ee938f5a.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_Layout.a0c76cdc.js"
+      "_Layout.71e081ca.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
     "src": ".svelte-kit/generated/client-optimized/nodes/6.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/7.js": {
-    "file": "_app/immutable/nodes/7.e642c858.js",
+    "file": "_app/immutable/nodes/7.61100236.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_Layout.a0c76cdc.js"
+      "_Layout.71e081ca.js"
     ],
     "isDynamicEntry": true,
     "isEntry": true,
     "src": ".svelte-kit/generated/client-optimized/nodes/7.js"
   },
   ".svelte-kit/generated/client-optimized/nodes/8.js": {
-    "file": "_app/immutable/nodes/8.aa4fad2a.js",
+    "file": "_app/immutable/nodes/8.92f6b7eb.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_stores.46fe71ba.js",
-      "_team-store.5723d493.js",
-      "_system-store.7be81c44.js",
-      "_manager-store.f9046f9a.js",
-      "_Layout.a0c76cdc.js",
+      "_stores.193d467e.js",
+      "_team-store.3192300a.js",
+      "_system-store.dbd4d10a.js",
+      "_manager-store.4a87cac1.js",
+      "_Layout.71e081ca.js",
       "_toast-store.6633d9f4.js",
-      "_player-store.f7250a59.js",
+      "_player-store.e6d1d691.js",
       "_BadgeIcon.5f1570c4.js",
-      "_manager-gameweeks.5a5b9d40.js",
+      "_manager-gameweeks.df369c88.js",
       "_global-stores.803ba169.js"
     ],
     "isDynamicEntry": true,
@@ -252,18 +252,18 @@
     "css": [
       "_app/immutable/assets/9.336c70f6.css"
     ],
-    "file": "_app/immutable/nodes/9.2c97a69e.js",
+    "file": "_app/immutable/nodes/9.e55571bc.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_Layout.a0c76cdc.js",
+      "_Layout.71e081ca.js",
       "_index.8caf67b2.js",
       "_toast-store.6633d9f4.js",
-      "_system-store.7be81c44.js",
+      "_system-store.dbd4d10a.js",
       "_global-stores.803ba169.js",
-      "_fixture-store.43de3d27.js",
-      "_team-store.5723d493.js",
-      "_player-store.f7250a59.js",
-      "_manager-store.f9046f9a.js",
+      "_fixture-store.9be225ff.js",
+      "_team-store.3192300a.js",
+      "_player-store.e6d1d691.js",
+      "_manager-store.4a87cac1.js",
       "_BadgeIcon.5f1570c4.js",
       "_ShirtIcon.cbb688e3.js"
     ],
@@ -281,15 +281,15 @@
       "_index.c7b38e5e.js"
     ]
   },
-  "_Layout.a0c76cdc.js": {
+  "_Layout.71e081ca.js": {
     "css": [
       "_app/immutable/assets/Layout.1b44d07a.css"
     ],
-    "file": "_app/immutable/chunks/Layout.a0c76cdc.js",
+    "file": "_app/immutable/chunks/Layout.71e081ca.js",
     "imports": [
       "_index.c7b38e5e.js",
       "_index.8caf67b2.js",
-      "_stores.46fe71ba.js",
+      "_stores.193d467e.js",
       "_toast-store.6633d9f4.js"
     ]
   },
@@ -308,12 +308,12 @@
   "_control.f5b05b5f.js": {
     "file": "_app/immutable/chunks/control.f5b05b5f.js"
   },
-  "_fixture-store.43de3d27.js": {
-    "file": "_app/immutable/chunks/fixture-store.43de3d27.js",
+  "_fixture-store.9be225ff.js": {
+    "file": "_app/immutable/chunks/fixture-store.9be225ff.js",
     "imports": [
       "_index.8caf67b2.js",
       "_toast-store.6633d9f4.js",
-      "_team-store.5723d493.js"
+      "_team-store.3192300a.js"
     ]
   },
   "_global-stores.803ba169.js": {
@@ -322,12 +322,12 @@
       "_index.8caf67b2.js"
     ]
   },
-  "_governance-store.cada9302.js": {
-    "file": "_app/immutable/chunks/governance-store.cada9302.js",
+  "_governance-store.48fd731d.js": {
+    "file": "_app/immutable/chunks/governance-store.48fd731d.js",
     "imports": [
       "_toast-store.6633d9f4.js",
       "_index.8caf67b2.js",
-      "_team-store.5723d493.js"
+      "_team-store.3192300a.js"
     ]
   },
   "_index.8caf67b2.js": {
@@ -345,62 +345,62 @@
       "_control.f5b05b5f.js"
     ]
   },
-  "_manager-gameweeks.5a5b9d40.js": {
-    "file": "_app/immutable/chunks/manager-gameweeks.5a5b9d40.js",
+  "_manager-gameweeks.df369c88.js": {
+    "file": "_app/immutable/chunks/manager-gameweeks.df369c88.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_stores.46fe71ba.js",
-      "_system-store.7be81c44.js",
-      "_manager-store.f9046f9a.js",
+      "_stores.193d467e.js",
+      "_system-store.dbd4d10a.js",
+      "_manager-store.4a87cac1.js",
       "_toast-store.6633d9f4.js",
       "_ViewDetailsIcon.98b59799.js",
-      "_Layout.a0c76cdc.js"
+      "_Layout.71e081ca.js"
     ]
   },
-  "_manager-store.f9046f9a.js": {
-    "file": "_app/immutable/chunks/manager-store.f9046f9a.js",
+  "_manager-store.4a87cac1.js": {
+    "file": "_app/immutable/chunks/manager-store.4a87cac1.js",
     "imports": [
       "_toast-store.6633d9f4.js",
-      "_system-store.7be81c44.js",
+      "_system-store.dbd4d10a.js",
       "_index.8caf67b2.js",
-      "_team-store.5723d493.js"
+      "_team-store.3192300a.js"
     ]
   },
-  "_player-store.f7250a59.js": {
-    "file": "_app/immutable/chunks/player-store.f7250a59.js",
+  "_player-store.e6d1d691.js": {
+    "file": "_app/immutable/chunks/player-store.e6d1d691.js",
     "imports": [
-      "_fixture-store.43de3d27.js",
-      "_system-store.7be81c44.js",
+      "_fixture-store.9be225ff.js",
+      "_system-store.dbd4d10a.js",
       "_index.8caf67b2.js",
       "_toast-store.6633d9f4.js",
-      "_team-store.5723d493.js"
+      "_team-store.3192300a.js"
     ]
   },
   "_preload-helper.a4192956.js": {
     "file": "_app/immutable/chunks/preload-helper.a4192956.js"
   },
-  "_singletons.095fe9e5.js": {
-    "file": "_app/immutable/chunks/singletons.095fe9e5.js",
+  "_singletons.20852139.js": {
+    "file": "_app/immutable/chunks/singletons.20852139.js",
     "imports": [
       "_index.8caf67b2.js"
     ]
   },
-  "_stores.46fe71ba.js": {
-    "file": "_app/immutable/chunks/stores.46fe71ba.js",
+  "_stores.193d467e.js": {
+    "file": "_app/immutable/chunks/stores.193d467e.js",
     "imports": [
-      "_singletons.095fe9e5.js"
+      "_singletons.20852139.js"
     ]
   },
-  "_system-store.7be81c44.js": {
-    "file": "_app/immutable/chunks/system-store.7be81c44.js",
+  "_system-store.dbd4d10a.js": {
+    "file": "_app/immutable/chunks/system-store.dbd4d10a.js",
     "imports": [
       "_index.8caf67b2.js",
       "_toast-store.6633d9f4.js",
-      "_team-store.5723d493.js"
+      "_team-store.3192300a.js"
     ]
   },
-  "_team-store.5723d493.js": {
-    "file": "_app/immutable/chunks/team-store.5723d493.js",
+  "_team-store.3192300a.js": {
+    "file": "_app/immutable/chunks/team-store.3192300a.js",
     "imports": [
       "_index.8caf67b2.js",
       "_toast-store.6633d9f4.js",
@@ -426,10 +426,10 @@
     "src": "node_modules/@dfinity/agent/lib/esm/canisterStatus/index.js"
   },
   "node_modules/@sveltejs/kit/src/runtime/client/start.js": {
-    "file": "_app/immutable/entry/start.560e84d8.js",
+    "file": "_app/immutable/entry/start.11070305.js",
     "imports": [
       "_index.c7b38e5e.js",
-      "_singletons.095fe9e5.js",
+      "_singletons.20852139.js",
       "_control.f5b05b5f.js"
     ],
     "isEntry": true,

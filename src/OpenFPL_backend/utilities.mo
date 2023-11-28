@@ -76,7 +76,7 @@ module {
 
     var month = 0;
 
-    label check for (m in Iter.range(0, 11)) {
+    label check for (m in Iter.range(0, 10)) {
       if (dayOfYear < monthEnds[m +1]) {
         month := m;
         break check;
