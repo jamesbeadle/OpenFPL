@@ -14,7 +14,7 @@
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../lib/utils/Helpers";
   import type { LeaderboardEntry, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { authStore } from "$lib/stores/auth";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
 
   let activeTab: string = "fixtures";
@@ -37,11 +37,6 @@
     isLoading.set(true);
 
     try {
-      const systemService = new SystemService();
-      const fixtureService = new FixtureService();
-      const teamService = new TeamService();
-      const leaderboardService = new LeaderboardService();
-      const managerService = new ManagerService();
 
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();

@@ -31,7 +31,7 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
 
   interface FormationDetails {
@@ -93,12 +93,6 @@
   onMount(async () => {
     isLoading.set(true);
     try {
-
-      const systemService = new SystemService();
-      const teamService = new TeamService();
-      const fixtureService = new FixtureService();
-      const managerService = new ManagerService();
-      const playerService = new PlayerService();
 
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();
@@ -680,7 +674,6 @@
       team.captainFantasticPlayerId = team?.captainId;
     }
 
-    let managerService = new ManagerService();
     try {
       await managerService.saveFantasyTeam(team!, activeGameweek);
       toastStore.show("Team saved successully!", "success");

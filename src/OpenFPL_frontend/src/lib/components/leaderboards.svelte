@@ -4,7 +4,7 @@
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import { LeaderboardService } from "$lib/services/LeaderboardService";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let isLoading = true;
@@ -29,9 +29,6 @@
 
   onMount(async () => {
     try {
-      const teamService = new TeamService();
-      const systemService = new SystemService();
-      const leaderboardService = new LeaderboardService();
     
       await systemService.updateSystemStateData();
       await leaderboardService.updateWeeklyLeaderboardData();
@@ -70,7 +67,6 @@
   async function loadLeaderboardData() {
     try {
       isLoading = true;
-      const leaderboardService = new LeaderboardService();
       if (selectedLeaderboardType === 1) {
         if (selectedGameweek === focusGameweek && currentPage <= 4) {
           leaderboard = await leaderboardService.getWeeklyLeaderboard();

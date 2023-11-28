@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import type { ProfileDTO, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { UserService } from "$lib/services/UserService";
@@ -21,7 +21,6 @@
 
   onMount(async () => {
     try {
-      const userService = new UserService();
       const profileData = await userService.getProfile();
       profile = profileData;
       if(profile.profilePicture.length > 0){
@@ -29,10 +28,8 @@
         profileSrc = URL.createObjectURL(blob);
       }
 
-      let teamService = new TeamService();
       teams = await teamService.getTeams();
 
-      let systemService = new SystemService();
       let systemState = await systemService.getSystemState();
       gameweek = systemState?.activeGameweek ?? 1;
     } catch (error) {
@@ -82,7 +79,6 @@
 
   async function uploadProfileImage(file: File) {
     try{
-      const userService = new UserService();
       await userService.updateProfilePicture(file);
     }
     catch(error){

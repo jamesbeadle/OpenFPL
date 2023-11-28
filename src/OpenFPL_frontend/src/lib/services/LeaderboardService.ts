@@ -25,7 +25,6 @@ export class LeaderboardService {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getWeeklyLeaderboardCache(
@@ -46,7 +45,6 @@ export class LeaderboardService {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getClubLeaderboardsCache(
@@ -67,7 +65,6 @@ export class LeaderboardService {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getSeasonLeaderboardCache(
@@ -110,7 +107,6 @@ export class LeaderboardService {
   ): Promise<PaginatedLeaderboard> {
     const limit = this.itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let systemService = new SystemService();
     await systemService.updateSystemStateData();
     let systemState = await systemService.getSystemState();
     let weeklyLeaderboardData = await this.actor.getWeeklyLeaderboard(

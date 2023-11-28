@@ -4,22 +4,26 @@
     import { get, writable } from "svelte/store";
     import type { PlayerDTO, PlayerEventData } from '../../../../declarations/player_canister/player_canister.did';
     import type { Fixture, SystemState, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
-    import { PlayerService } from '$lib/services/PlayerService';
-    import { TeamService } from '$lib/services/TeamService';
-    import { SystemService } from '$lib/services/SystemService';
-    import { FixtureService } from '$lib/services/FixtureService';
+    
+    import { teamStore } from '$lib/stores/team-store';
+    import { playerStore } from '$lib/stores/player-store';
+    import { fixtureStore } from '$lib/stores/fixture-store';
+    import { systemStore } from '$lib/stores/team-store';
     import PlayerEventsModal from '$lib/components/fixture-validation/player-events-modal.svelte';
     import SelectPlayersModal from '$lib/components/fixture-validation/select-players-modal.svelte';
     import ConfirmFixtureDataModal from '$lib/components/fixture-validation/confirm-fixture-data-modal.svelte';
     import ClearDraftModal from '$lib/components/fixture-validation/clear-draft-modal.svelte';
     import { GovernanceService } from '$lib/services/GovernanceService';
     import { redirect } from '@sveltejs/kit';
-    import { toastStore } from '$lib/stores/toast';
+    import { toastStore } from '$lib/stores/toast-store';
     import Layout from '../Layout.svelte';
     import { replacer } from '$lib/utils/Helpers';
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
+    
     let teams: Team[];
+    teamStore.subscribe(value => { teams = value });
+    
     let players: PlayerDTO[];
     let fixtures: Fixture[];
     let systemState: SystemState | null;
@@ -35,27 +39,21 @@
     let selectedPlayer: PlayerDTO; 
     let playerEventData = writable<PlayerEventData[] | []>([]);
     let activeTab: string = "home";
-    
+
     onMount(async () => {
-        let playerService = new PlayerService();
-        players = await playerService.getPlayers();
+      await teamStore.sync();
+      await playerStore.sync();
+      await systemStore.sync();
+      await fixtureStore.sync();
 
-        let teamService = new TeamService();
-        teams = await teamService.getTeams();
+      fixture = fixtures.find(x => x.id === fixtureId) ?? null;
 
-        let systemService = new SystemService();
-        systemState = await systemService.getSystemState();
-
-        let fixtureService = new FixtureService();
-        fixtures = await fixtureService.getFixtures();
-        fixture = fixtures.find(x => x.id === fixtureId) ?? null;
-
-        const draftKey = `fixtureDraft_${fixtureId}`;
-        const savedDraft = localStorage.getItem(draftKey);
-        if (savedDraft) {
-            const draftData = JSON.parse(savedDraft);
-            playerEventData.set(draftData);
-        }
+      const draftKey = `fixtureDraft_${fixtureId}`;
+      const savedDraft = localStorage.getItem(draftKey);
+      if (savedDraft) {
+          const draftData = JSON.parse(savedDraft);
+          playerEventData.set(draftData);
+      }
     });
 
     async function confirmFixtureData(){

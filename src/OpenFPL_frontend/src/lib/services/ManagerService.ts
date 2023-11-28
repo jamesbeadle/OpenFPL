@@ -62,7 +62,6 @@ export class ManagerService {
     gameweek: number
   ): Promise<FantasyTeamSnapshot> {
     try {
-      let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
       const fantasyTeamData = await this.actor.getFantasyTeamForGameweek(

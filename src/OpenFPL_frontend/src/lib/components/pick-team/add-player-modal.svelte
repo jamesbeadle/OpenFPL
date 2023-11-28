@@ -5,7 +5,7 @@
   import type { FantasyTeam, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   
   import { TeamService } from "$lib/services/TeamService";
   import { PlayerService } from "$lib/services/PlayerService";
@@ -67,8 +67,6 @@
 
   onMount(async () => {
     try{
-      let playerService = new PlayerService();
-      let teamsService = new TeamService();
       playerService.updatePlayersData();
       players = await playerService.getPlayers();
       teams = await teamsService.getTeams();

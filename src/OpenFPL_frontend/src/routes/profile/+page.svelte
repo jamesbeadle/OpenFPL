@@ -2,7 +2,6 @@
   import { redirect } from '@sveltejs/kit';
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
-  import type { FantasyTeam } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
   let activeTab: string = "details";
 

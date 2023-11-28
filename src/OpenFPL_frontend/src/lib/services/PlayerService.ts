@@ -57,7 +57,6 @@ export class PlayerService {
       newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (livePlayersHash?.hash != localHash) {
-      let systemService = new SystemService();
       await systemService.updateSystemStateData();
       let systemState = await systemService.getSystemState();
 
@@ -104,7 +103,6 @@ export class PlayerService {
 
   async getGameweekPlayers(fantasyTeam: FantasyTeam, gameweek: number) : Promise<GameweekData[]>{
     
-    let systemService = new SystemService();
     let systemState = await systemService.getSystemState();
     
     let allPlayerEvents: PlayerPointsDTO[] = [];
@@ -118,7 +116,6 @@ export class PlayerService {
     
     let gameweekData: GameweekData[] = await Promise.all(allPlayerEvents.map(async player => await this.extractPlayerData(player)));
     
-    let fixtureService = new FixtureService();
     let allFixtures = await fixtureService.getFixtures();
 
     const playersWithPoints = gameweekData.map(entry => {
@@ -213,7 +210,6 @@ export class PlayerService {
       }
     });
 
-    let playerService = new PlayerService();
     let allPlayers = await playerService.getPlayers();
 
 

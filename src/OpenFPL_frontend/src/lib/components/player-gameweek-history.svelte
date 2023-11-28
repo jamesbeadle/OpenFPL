@@ -11,7 +11,7 @@
   import type { PlayerDetailDTO, PlayerGameweekDTO } from "../../../../declarations/player_canister/player_canister.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   
   let isLoading = true;
@@ -30,10 +30,6 @@
 
   onMount(async () => {
     try {
-      const fixtureService = new FixtureService();
-      const teamService = new TeamService();
-      const systemService = new SystemService();
-      const playerService = new PlayerService();
       
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();

@@ -6,7 +6,7 @@
     import { SystemService } from '$lib/services/SystemService';
     import { TeamService } from '$lib/services/TeamService';
     import { GovernanceService } from '$lib/services/GovernanceService';
-    import { toastStore } from '$lib/stores/toast';
+    import { toastStore } from '$lib/stores/toast-store';
   
     let teams: Team[];
     let fixtures: Fixture[];
@@ -17,17 +17,13 @@
     
     onMount(async () => {
       try {
-        let governanceService = new GovernanceService();
         fixtures = await governanceService.getValidatableFixtures();
         currentGameweek = fixtures[0].gameweek;
 
-        let playerService = new PlayerService();
         players = await playerService.getPlayers();
 
-        let teamService = new TeamService();
         teams = await teamService.getTeams();
 
-        let systemService = new SystemService();
         let systemState = await systemService.getSystemState();
         currentSeason = systemState?.activeSeason.name ?? "";
         

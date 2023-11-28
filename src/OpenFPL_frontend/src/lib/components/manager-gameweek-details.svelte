@@ -10,7 +10,7 @@
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import { get, type Writable } from "svelte/store";
     import { Id } from "svelte-flag-icons";
-    import { toastStore } from "$lib/stores/toast";
+    import { toastStore } from "$lib/stores/toast-store";
 
     let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
     export let selectedGameweek: number;
@@ -21,9 +21,6 @@
   
     onMount(async () => {
         try {
-            const systemService = new SystemService();
-            const playerService = new PlayerService();
-            const teamService = new TeamService();
             
             await systemService.updateSystemStateData();
             await playerService.updatePlayersData();

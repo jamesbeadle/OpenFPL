@@ -3,7 +3,7 @@
   import { UserService } from "$lib/services/UserService";
   import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
 
   export let showModal: boolean;
@@ -15,7 +15,6 @@
 
   onMount(async () => {
     try {
-      let teamService = new TeamService();
       teams = await teamService.getTeams();
     } catch (error) {
       toastStore.show("Error fetching teams.", "error");
@@ -26,7 +25,6 @@
   async function updateFavouriteTeam() {
     isLoading.set(true);
     try {
-      let userService = new UserService();
       await userService.updateFavouriteTeam(newFavouriteTeam);
     } catch (error) {
       toastStore.show("Error updating favourite team.", "error");

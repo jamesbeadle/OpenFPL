@@ -3,14 +3,13 @@
   export let closeModal: () => void;
   export let newUsername: string;
   import { UserService } from "$lib/services/UserService";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
 
 
   async function updateUsername() {
     isLoading.set(true);
     try{      
-      let userService = new UserService();
       await userService.updateUsername(newUsername);
     }
     catch(error){

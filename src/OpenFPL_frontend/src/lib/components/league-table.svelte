@@ -7,7 +7,7 @@
   import { TeamService } from "$lib/services/TeamService";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../utils/Helpers";
-    import { toastStore } from "$lib/stores/toast";
+    import { toastStore } from "$lib/stores/toast-store";
 
   let selectedGameweek: number = 1;
   let fixtures: FixtureWithTeams[] = [];
@@ -18,9 +18,6 @@
 
   onMount(async () => {
     try {
-      const fixtureService = new FixtureService();
-      const teamService = new TeamService();
-      const systemService = new SystemService();
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();
       await teamService.updateTeamsData();

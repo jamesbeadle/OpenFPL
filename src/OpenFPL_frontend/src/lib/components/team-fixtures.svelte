@@ -9,7 +9,7 @@
     formatUnixTimeToTime,
   } from "../utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
 
 
   export let clubId: number | null = null;
@@ -35,8 +35,6 @@
 
   onMount(async () => {
     try {
-      const fixtureService = new FixtureService();
-      const teamService = new TeamService();
       
       await fixtureService.updateFixturesData();
       await teamService.updateTeamsData();

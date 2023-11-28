@@ -15,7 +15,7 @@
   import { getPositionText } from "../../lib/utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../../lib/utils/Helpers";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
@@ -38,10 +38,6 @@
     isLoading.set(true);
 
     try {
-      const fixtureService = new FixtureService();
-      const teamService = new TeamService();
-      const systemService = new SystemService();
-      const playersService = new PlayerService();
 
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();

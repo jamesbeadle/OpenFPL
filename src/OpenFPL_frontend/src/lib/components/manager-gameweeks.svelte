@@ -5,7 +5,7 @@
     import { SystemService } from "$lib/services/SystemService";
     import { ManagerService } from "$lib/services/ManagerService";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-    import { toastStore } from "$lib/stores/toast";
+    import { toastStore } from "$lib/stores/toast-store";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
     
     let isLoading = true;
@@ -19,13 +19,11 @@
   
     onMount(async () => {
       try {
-        const systemService = new SystemService();
         await systemService.updateSystemStateData();
         
         let systemState = await systemService.getSystemState();
         selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
         selectedSeason = systemState?.activeSeason ?? selectedSeason;
-        let managerService = new ManagerService();
         manager = await managerService.getManager(id ?? "", selectedSeason?.id ?? 1, selectedGameweek);
       } catch (error) {
         toastStore.show("Error fetching manager gameweeks.", "error");

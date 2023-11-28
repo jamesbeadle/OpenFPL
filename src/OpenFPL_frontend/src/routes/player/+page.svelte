@@ -22,7 +22,7 @@
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
 
   let selectedGameweek: number = 1;
@@ -47,10 +47,6 @@
 
     try {
 
-      const fixtureService = new FixtureService();
-      const teamService = new TeamService();
-      const systemService = new SystemService();
-      const playersService = new PlayerService();
 
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();

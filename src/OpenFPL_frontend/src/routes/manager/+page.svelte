@@ -10,7 +10,7 @@
   import { TeamService } from "$lib/services/TeamService";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Writable } from "svelte/store";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
 
   let activeTab: string = "details";
@@ -28,9 +28,6 @@
   onMount(async () => {
     isLoading.set(true);
     try {
-      let systemService = new SystemService();
-      let managerService = new ManagerService();
-      let teamService = new TeamService();
 
       let systemState = await systemService.getSystemState();
       selectedGameweek = gw ? gw : systemState?.activeGameweek ?? 1;

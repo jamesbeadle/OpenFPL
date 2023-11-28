@@ -10,7 +10,7 @@
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { FixtureService } from "$lib/services/FixtureService";
-  import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast-store";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let selectedGameweek: number = 1;
@@ -26,8 +26,6 @@
   
   onMount(async () => {
     try {
-      const teamService = new TeamService();
-      const systemService = new SystemService();
       
       await systemService.updateSystemStateData();
       await teamService.updateTeamsData();
@@ -48,10 +46,8 @@
   });
 
   async function loadGameweekPoints(principalId: string) {
-    let managerService = new ManagerService();
     let fantasyTeam = await managerService.getFantasyTeamForGameweek(principalId, selectedGameweek);
     
-    let playerService = new PlayerService();
     gameweekData = await playerService.getGameweekPlayers(fantasyTeam, selectedGameweek);
   }
 
@@ -64,7 +60,6 @@
       selectedGameweekData = gameweekData;
       let playerTeamId = gameweekData.player.teamId;
       selectedTeam = teams.find(x => x.id === playerTeamId)!;
-      let fixtureService = new FixtureService();
       let fixtures = await fixtureService.getFixtures();
       let playerFixture = fixtures.find(x => x.gameweek === gameweekData.gameweek && (x.homeTeamId === playerTeamId || x.awayTeamId === playerTeamId))
       let opponentId = playerFixture?.homeTeamId === playerTeamId ? playerFixture?.awayTeamId : playerFixture?.homeTeamId;
