@@ -2,8 +2,8 @@ import { authStore } from "$lib/stores/auth";
 import type { OptionIdentity } from "$lib/types/Identity";
 import type { Unsubscriber } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import { ActorFactory } from "../../utils/ActorFactory";
 import type { PlayerEventData } from "../../../../declarations/player_canister/player_canister.did";
+import { ActorFactory } from "../../utils/ActorFactory";
 
 export class GovernanceService {
   private actor: any;
@@ -39,7 +39,10 @@ export class GovernanceService {
     return fixtures;
   }
 
-  async submitFixtureData(fixtureId: number, allPlayerEvents: PlayerEventData[]): Promise<any> {
+  async submitFixtureData(
+    fixtureId: number,
+    allPlayerEvents: PlayerEventData[]
+  ): Promise<any> {
     try {
       const identityActor = await this.actorFromIdentity();
       await identityActor.submitFixtureData(fixtureId, allPlayerEvents);

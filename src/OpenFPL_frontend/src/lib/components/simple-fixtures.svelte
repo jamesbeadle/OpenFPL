@@ -1,14 +1,17 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { teamStore } from '$lib/stores/team-store';
-  import { fixtureStore } from '$lib/stores/fixture-store';
+  import { teamStore } from "$lib/stores/team-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
-  import type { SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { formatUnixTimeToTime } from "../utils/Helpers";
-  
+
   let teams: Team[] = [];
   let fixtures: Fixture[] = [];
   let systemState: SystemState | null;
@@ -18,21 +21,25 @@
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+  unsubscribeTeams = teamStore.subscribe((value) => {
+    teams = value;
+  });
 
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe(value => { 
-    fixtures = value; 
+  unsubscribeFixtures = fixtureStore.subscribe((value) => {
+    fixtures = value;
     fixturesWithTeams = fixtures.map((fixture) => ({
       fixture,
       homeTeam: getTeamFromId(fixture.homeTeamId),
       awayTeam: getTeamFromId(fixture.awayTeamId),
     }));
   });
-  
+
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
-  
+  unsubscribeSystemState = systemStore.subscribe((value) => {
+    systemState = value;
+  });
+
   $: filteredFixtures = fixturesWithTeams.filter(
     ({ fixture }) => fixture.gameweek === selectedGameweek
   );
@@ -63,10 +70,10 @@
     if (unsubscribeTeams) {
       unsubscribeTeams();
     }
-    if(unsubscribeFixtures){
+    if (unsubscribeFixtures) {
       unsubscribeFixtures();
     }
-    if(unsubscribeSystemState){
+    if (unsubscribeSystemState) {
       unsubscribeSystemState();
     }
   });

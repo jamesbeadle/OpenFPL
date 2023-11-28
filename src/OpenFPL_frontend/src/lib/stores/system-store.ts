@@ -1,6 +1,9 @@
-import { writable } from 'svelte/store';
-import type { SystemState, DataCache } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type {
+  DataCache,
+  SystemState,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
@@ -15,12 +18,15 @@ function createSystemStore() {
   async function sync() {
     let category = "system_state";
     const newHashValues: DataCache[] = await actor.getDataHashes();
-    let liveHash = newHashValues.find(x => x.category === category) ?? null;
+    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
     if (liveHash?.hash != localHash) {
       let updatedSystemStateData = await actor.getSystemState();
-      localStorage.setItem("system_state_data", JSON.stringify(updatedSystemStateData, replacer));
+      localStorage.setItem(
+        "system_state_data",
+        JSON.stringify(updatedSystemStateData, replacer)
+      );
       localStorage.setItem(category, liveHash?.hash ?? "");
       set(updatedSystemStateData);
     } else {
@@ -37,14 +43,16 @@ function createSystemStore() {
 
   async function getSystemState(): Promise<SystemState | undefined> {
     let systemState;
-    subscribe(value => { systemState = value! })();
+    subscribe((value) => {
+      systemState = value!;
+    })();
     return systemState;
   }
 
   return {
     subscribe,
     sync,
-    getSystemState
+    getSystemState,
   };
 }
 

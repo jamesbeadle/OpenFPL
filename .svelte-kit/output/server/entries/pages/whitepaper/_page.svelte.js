@@ -1,4 +1,4 @@
-import { c as create_ssr_component, v as validate_component, b as add_attribute } from "../../../chunks/index2.js";
+import { c as create_ssr_component, v as validate_component, d as add_attribute } from "../../../chunks/index3.js";
 import { L as Layout } from "../../../chunks/Layout.js";
 const dao_svelte_svelte_type_style_lang = "";
 const tokenomics_svelte_svelte_type_style_lang = "";

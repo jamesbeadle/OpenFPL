@@ -1,9 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { userStore } from '$lib/stores/user-store';
-  import { teamStore } from '$lib/stores/team-store';
+  import { userStore } from "$lib/stores/user-store";
+  import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
-  import type { ProfileDTO, SystemState, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    ProfileDTO,
+    SystemState,
+    Team,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { toastStore } from "$lib/stores/toast-store";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
@@ -21,16 +25,20 @@
   let isLoading = true;
 
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+  unsubscribeTeams = teamStore.subscribe((value) => {
+    teams = value;
+  });
 
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
-  
+  unsubscribeSystemState = systemStore.subscribe((value) => {
+    systemState = value;
+  });
+
   onMount(async () => {
     try {
       const profileData = await userStore.getProfile();
       profile = profileData;
-      if(profile.profilePicture.length > 0){
+      if (profile.profilePicture.length > 0) {
         const blob = new Blob([new Uint8Array(profile.profilePicture)]);
         profileSrc = URL.createObjectURL(blob);
       }
@@ -38,7 +46,9 @@
     } catch (error) {
       toastStore.show("Error fetching profile detail.", "error");
       console.error("Error fetching profile detail:", error);
-    } finally { isLoading = false; }
+    } finally {
+      isLoading = false;
+    }
   });
 
   function displayUsernameModal(): void {
@@ -66,7 +76,7 @@
   function clickFileInput() {
     fileInput.click();
   }
-  
+
   function handleFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -81,51 +91,17 @@
   }
 
   async function uploadProfileImage(file: File) {
-    try{
+    try {
       await userStore.updateProfilePicture(file);
-    }
-    catch(error){
-      toastStore.show("Error updating profile image" ,"error");
-      console.error("Error updating profile image" ,error);
+    } catch (error) {
+      toastStore.show("Error updating profile image", "error");
+      console.error("Error updating profile image", error);
     }
   }
 </script>
 
-
-<style>
- 
-  .file-upload-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    width: 100%; 
-  }
-
-  .btn-file-upload {
-    width: 100%;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    text-align: center;
-    display: block;
-  }
-
-  input[type='file'] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
-</style>
-
 {#if isLoading}
-  <LoadingIcon  />
+  <LoadingIcon />
 {:else}
   <UpdateUsernameModal
     newUsername={profile.displayName}
@@ -141,10 +117,16 @@
     <div class="flex flex-wrap">
       <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
         <div class="group">
-          <img src={profileSrc} alt="Profile" class="w-48 md:w-80 mb-1 rounded-lg"/>
+          <img
+            src={profileSrc}
+            alt="Profile"
+            class="w-48 md:w-80 mb-1 rounded-lg"
+          />
 
           <div class="file-upload-wrapper mt-4">
-            <button class="btn-file-upload fpl-button" on:click={clickFileInput}>Upload Photo</button>
+            <button class="btn-file-upload fpl-button" on:click={clickFileInput}
+              >Upload Photo</button
+            >
             <input
               type="file"
               id="profile-image"
@@ -153,10 +135,10 @@
               on:change={handleFileChange}
               style="opacity: 0; position: absolute; left: 0; top: 0;"
             />
-          </div>     
+          </div>
         </div>
       </div>
-      
+
       <div class="w-full md:w-3/4 px-2 mb-4">
         <div class="ml-4 p-4 rounded-lg">
           <p class="text-xs mb-2">Display Name:</p>
@@ -168,11 +150,14 @@
             Update
           </button>
           <p class="text-xs mb-2 mt-4">Favourite Team:</p>
-          <h2 class="text-2xl font-bold mb-2">{teams.find(x => x.id === profile.favouriteTeamId)?.friendlyName}</h2>
+          <h2 class="text-2xl font-bold mb-2">
+            {teams.find((x) => x.id === profile.favouriteTeamId)?.friendlyName}
+          </h2>
           <button
-          class="p-2 px-4 rounded fpl-button"
+            class="p-2 px-4 rounded fpl-button"
             on:click={displayFavouriteTeamModal}
-            disabled={gameweek > 1 && profile.favouriteTeamId > 0}>
+            disabled={gameweek > 1 && profile.favouriteTeamId > 0}
+          >
             Update
           </button>
 
@@ -238,3 +223,34 @@
     </div>
   </div>
 {/if}
+
+<style>
+  .file-upload-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .btn-file-upload {
+    width: 100%;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+  }
+
+  input[type="file"] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+</style>

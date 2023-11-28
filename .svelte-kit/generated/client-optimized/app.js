@@ -13,23 +13,25 @@ export const nodes = [
 	() => import('./nodes/9'),
 	() => import('./nodes/10'),
 	() => import('./nodes/11'),
-	() => import('./nodes/12')
+	() => import('./nodes/12'),
+	() => import('./nodes/13')
 ];
 
 export const server_loads = [];
 
 export const dictionary = {
 		"/": [2],
-		"/club": [3],
-		"/fixture-validation": [4],
-		"/gameplay-rules": [5],
-		"/governance": [6],
-		"/manager": [7],
-		"/pick-team": [8],
-		"/player": [9],
-		"/profile": [10],
-		"/terms": [11],
-		"/whitepaper": [12]
+		"/add-fixture-data": [3],
+		"/club": [4],
+		"/fixture-validation": [5],
+		"/gameplay-rules": [6],
+		"/governance": [7],
+		"/manager": [8],
+		"/pick-team": [9],
+		"/player": [10],
+		"/profile": [11],
+		"/terms": [12],
+		"/whitepaper": [13]
 	};
 
 export const hooks = {

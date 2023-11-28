@@ -1,8 +1,11 @@
-import { writable } from 'svelte/store';
-import type { DataCache, Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { authStore } from '$lib/stores/auth';
-import type { OptionIdentity } from '$lib/types/Identity';
+import { authStore } from "$lib/stores/auth";
+import type { OptionIdentity } from "$lib/types/Identity";
+import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type {
+  DataCache,
+  Fixture,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
@@ -38,7 +41,10 @@ function createFixtureStore() {
 
     if (liveHash?.hash != localHash) {
       let updatedFixturesData = await actor.getFixtures();
-      localStorage.setItem("fixtures_data", JSON.stringify(updatedFixturesData, replacer));
+      localStorage.setItem(
+        "fixtures_data",
+        JSON.stringify(updatedFixturesData, replacer)
+      );
       localStorage.setItem(category, liveHash?.hash ?? "");
       set(updatedFixturesData);
     } else {
@@ -55,7 +61,9 @@ function createFixtureStore() {
 
   async function getNextFixture(): Promise<Fixture | undefined> {
     let fixtures: Fixture[] = [];
-    subscribe(value => { fixtures = value })();
+    subscribe((value) => {
+      fixtures = value;
+    })();
     const now = new Date();
     return fixtures.find(
       (fixture) => new Date(Number(fixture.kickOff) / 1000000) > now
@@ -65,7 +73,7 @@ function createFixtureStore() {
   return {
     subscribe,
     sync,
-    getNextFixture
+    getNextFixture,
   };
 }
 

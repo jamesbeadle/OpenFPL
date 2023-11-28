@@ -1,3 +1,4 @@
+import { systemStore } from "$lib/stores/system-store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCache,
@@ -8,7 +9,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
-import { systemStore } from '$lib/stores/system-store';
 
 export class LeaderboardService {
   private actor: any;
@@ -20,7 +20,9 @@ export class LeaderboardService {
       idlFactory,
       process.env.OPENFPL_BACKEND_CANISTER_ID
     );
-    systemStore.subscribe(value => { this.systemState = value });
+    systemStore.subscribe((value) => {
+      this.systemState = value;
+    });
   }
 
   async updateWeeklyLeaderboardData() {

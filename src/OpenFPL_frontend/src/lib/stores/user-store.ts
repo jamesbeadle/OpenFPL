@@ -1,6 +1,6 @@
-import { writable, type Unsubscriber } from 'svelte/store';
-import { authStore } from '$lib/stores/auth';
-import type { OptionIdentity } from '$lib/types/Identity';
+import { authStore } from "$lib/stores/auth";
+import type { OptionIdentity } from "$lib/types/Identity";
+import { writable, type Unsubscriber } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
 
@@ -61,7 +61,7 @@ function createUserStore() {
 
   async function updateProfilePicture(picture: File): Promise<any> {
     try {
-      const maxPictureSize = 1000; 
+      const maxPictureSize = 1000;
 
       if (picture.size > maxPictureSize * 1024) {
         return null;
@@ -90,7 +90,7 @@ function createUserStore() {
     updateUsername,
     updateFavouriteTeam,
     getProfile,
-    updateProfilePicture
+    updateProfilePicture,
   };
 }
 

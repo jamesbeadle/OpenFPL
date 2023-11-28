@@ -2,19 +2,17 @@
   export let showModal: boolean;
   export let closeModal: () => void;
   export let newUsername: string;
-  import { userStore } from '$lib/stores/user-store';
+  import { userStore } from "$lib/stores/user-store";
   import { toastStore } from "$lib/stores/toast-store";
-  import { isLoading } from '$lib/stores/global-stores';
-
+  import { isLoading } from "$lib/stores/global-stores";
 
   async function updateUsername() {
     isLoading.set(true);
-    try{      
+    try {
       await userStore.updateUsername(newUsername);
-    }
-    catch(error){
-      toastStore.show("Error updating username." ,"error");
-      console.error("Error updating username:" ,error);
+    } catch (error) {
+      toastStore.show("Error updating username.", "error");
+      console.error("Error updating username:", error);
     }
     isLoading.set(true);
     closeModal();
@@ -31,11 +29,13 @@
   <div
     class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
     on:click={closeModal}
-    on:keydown={handleKeydown}>
+    on:keydown={handleKeydown}
+  >
     <div
       class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
       on:click|stopPropagation
-      on:keydown={handleKeydown}>
+      on:keydown={handleKeydown}
+    >
       <div class="mt-3 text-center">
         <h3 class="text-lg leading-6 font-medium">Update Username</h3>
         <form on:submit|preventDefault={updateUsername}>

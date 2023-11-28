@@ -10,7 +10,7 @@ return {
 	assets: new Set(["FPLCoin.png","ICPCoin.png","Manrope-Regular.woff2","apple-touch-icon.png","background.jpg","board.png","brace-bonus.png","captain-fantastic.png","ckBTCCoin.png","ckETHCoin.png","countrymen.png","discord.png","favicon.png","github.png","goal-getter.png","hat-trick-hero.png","no-entry.png","openchat.png","openfpl.webmanifest","pass-master.png","pitch.png","poppins-regular-webfont.woff2","profile_placeholder.png","prospects.png","safe-hands.png","team-boost.png","telegram.png","twitter.png"]),
 	mimeTypes: {".png":"image/png",".woff2":"font/woff2",".jpg":"image/jpeg",".webmanifest":"application/manifest+json"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.d3d52890.js","app":"_app/immutable/entry/app.ad70b76a.js","imports":["_app/immutable/entry/start.d3d52890.js","_app/immutable/chunks/index.dab0e011.js","_app/immutable/chunks/singletons.4559802b.js","_app/immutable/entry/app.ad70b76a.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/index.dab0e011.js"],"stylesheets":[],"fonts":[]},
+		client: {"start":"_app/immutable/entry/start.19c92b6e.js","app":"_app/immutable/entry/app.1bee5532.js","imports":["_app/immutable/entry/start.19c92b6e.js","_app/immutable/chunks/index.85206748.js","_app/immutable/chunks/singletons.e3eeeb27.js","_app/immutable/chunks/index.b378d913.js","_app/immutable/chunks/control.f5b05b5f.js","_app/immutable/entry/app.1bee5532.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/index.85206748.js"],"stylesheets":[],"fonts":[]},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),
@@ -24,7 +24,8 @@ return {
 			__memo(() => import('./nodes/9.js')),
 			__memo(() => import('./nodes/10.js')),
 			__memo(() => import('./nodes/11.js')),
-			__memo(() => import('./nodes/12.js'))
+			__memo(() => import('./nodes/12.js')),
+			__memo(() => import('./nodes/13.js'))
 		],
 		routes: [
 			{
@@ -35,73 +36,80 @@ return {
 				endpoint: null
 			},
 			{
+				id: "/add-fixture-data",
+				pattern: /^\/add-fixture-data\/?$/,
+				params: [],
+				page: { layouts: [0,], errors: [1,], leaf: 3 },
+				endpoint: null
+			},
+			{
 				id: "/club",
 				pattern: /^\/club\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 3 },
+				page: { layouts: [0,], errors: [1,], leaf: 4 },
 				endpoint: null
 			},
 			{
 				id: "/fixture-validation",
 				pattern: /^\/fixture-validation\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 4 },
+				page: { layouts: [0,], errors: [1,], leaf: 5 },
 				endpoint: null
 			},
 			{
 				id: "/gameplay-rules",
 				pattern: /^\/gameplay-rules\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 5 },
+				page: { layouts: [0,], errors: [1,], leaf: 6 },
 				endpoint: null
 			},
 			{
 				id: "/governance",
 				pattern: /^\/governance\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 6 },
+				page: { layouts: [0,], errors: [1,], leaf: 7 },
 				endpoint: null
 			},
 			{
 				id: "/manager",
 				pattern: /^\/manager\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 7 },
+				page: { layouts: [0,], errors: [1,], leaf: 8 },
 				endpoint: null
 			},
 			{
 				id: "/pick-team",
 				pattern: /^\/pick-team\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 8 },
+				page: { layouts: [0,], errors: [1,], leaf: 9 },
 				endpoint: null
 			},
 			{
 				id: "/player",
 				pattern: /^\/player\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 9 },
+				page: { layouts: [0,], errors: [1,], leaf: 10 },
 				endpoint: null
 			},
 			{
 				id: "/profile",
 				pattern: /^\/profile\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 10 },
+				page: { layouts: [0,], errors: [1,], leaf: 11 },
 				endpoint: null
 			},
 			{
 				id: "/terms",
 				pattern: /^\/terms\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 11 },
+				page: { layouts: [0,], errors: [1,], leaf: 12 },
 				endpoint: null
 			},
 			{
 				id: "/whitepaper",
 				pattern: /^\/whitepaper\/?$/,
 				params: [],
-				page: { layouts: [0,], errors: [1,], leaf: 12 },
+				page: { layouts: [0,], errors: [1,], leaf: 13 },
 				endpoint: null
 			}
 		],

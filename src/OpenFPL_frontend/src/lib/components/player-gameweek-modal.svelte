@@ -210,10 +210,14 @@
               {#if event.eventType === 9}<div class="text-sm font-medium w-3/6">
                   Red Card
                 </div>{/if}
-              {#if event.eventType === 10}<div class="text-sm font-medium w-3/6">
+              {#if event.eventType === 10}<div
+                  class="text-sm font-medium w-3/6"
+                >
                   Own Goal
                 </div>{/if}
-              {#if event.eventType === 11}<div class="text-sm font-medium w-3/6">
+              {#if event.eventType === 11}<div
+                  class="text-sm font-medium w-3/6"
+                >
                   Highest Scoring Player
                 </div>{/if}
             </div>
@@ -239,10 +243,14 @@
               {#if event.eventType === 9}<div class="text-sm font-medium w-3/6">
                   -
                 </div>{/if}
-              {#if event.eventType === 10}<div class="text-sm font-medium w-3/6">
+              {#if event.eventType === 10}<div
+                  class="text-sm font-medium w-3/6"
+                >
                   {event.eventEndMinute}
                 </div>{/if}
-              {#if event.eventType === 11}<div class="text-sm font-medium w-3/6">
+              {#if event.eventType === 11}<div
+                  class="text-sm font-medium w-3/6"
+                >
                   -
                 </div>{/if}
             </div>
@@ -268,10 +276,14 @@
               {#if event.eventType === 9}<div class="text-sm font-medium w-3/6">
                   {pointsForRedCard}
                 </div>{/if}
-              {#if event.eventType === 10}<div class="text-sm font-medium w-3/6">
+              {#if event.eventType === 10}<div
+                  class="text-sm font-medium w-3/6"
+                >
                   {pointsForOwnGoal}
                 </div>{/if}
-              {#if event.eventType === 11}<div class="text-sm font-medium w-3/6">
+              {#if event.eventType === 11}<div
+                  class="text-sm font-medium w-3/6"
+                >
                   {pointsForHighestScore}
                 </div>{/if}
             </div>

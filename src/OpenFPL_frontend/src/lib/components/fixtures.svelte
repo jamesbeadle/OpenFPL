@@ -1,36 +1,43 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { teamStore } from '$lib/stores/team-store';
-  import { fixtureStore } from '$lib/stores/fixture-store';
+  import { teamStore } from "$lib/stores/team-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { formatUnixTimeToTime } from "../utils/Helpers";
   import { toastStore } from "$lib/stores/toast-store";
-    import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
+  import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
 
   let teams: Team[] = [];
   let fixtures: Fixture[] = [];
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let systemState: SystemState | null;
-  
+
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+  unsubscribeTeams = teamStore.subscribe((value) => {
+    teams = value;
+  });
 
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe(value => { 
-    fixtures = value; 
+  unsubscribeFixtures = fixtureStore.subscribe((value) => {
+    fixtures = value;
     fixturesWithTeams = fixtures.map((fixture) => ({
       fixture,
       homeTeam: getTeamFromId(fixture.homeTeamId),
       awayTeam: getTeamFromId(fixture.awayTeamId),
     }));
   });
-  
+
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
-  
+  unsubscribeSystemState = systemStore.subscribe((value) => {
+    systemState = value;
+  });
+
   let isLoading = true;
   let selectedGameweek: number = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
@@ -58,7 +65,7 @@
     {} as { [key: string]: FixtureWithTeams[] }
   );
 
-  onMount(async () => { });
+  onMount(async () => {});
 
   const changeGameweek = (delta: number) => {
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
@@ -73,22 +80,28 @@
   <div class="flex flex-col space-y-4">
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
       <div class="flex items-center space-x-2 ml-4">
-        <button class="text-2xl rounded fpl-button px-3 py-1"
+        <button
+          class="text-2xl rounded fpl-button px-3 py-1"
           on:click={() => changeGameweek(-1)}
-          disabled={selectedGameweek === 1}>
+          disabled={selectedGameweek === 1}
+        >
           &lt;
         </button>
 
-        <select class="p-2 fpl-dropdown text-sm md:text-xl text-center"
-          bind:value={selectedGameweek}>
+        <select
+          class="p-2 fpl-dropdown text-sm md:text-xl text-center"
+          bind:value={selectedGameweek}
+        >
           {#each gameweeks as gameweek}
             <option value={gameweek}>Gameweek {gameweek}</option>
           {/each}
         </select>
 
-        <button class="text-2xl rounded fpl-button px-3 py-1 ml-1" 
+        <button
+          class="text-2xl rounded fpl-button px-3 py-1 ml-1"
           on:click={() => changeGameweek(1)}
-          disabled={selectedGameweek === 38}>
+          disabled={selectedGameweek === 38}
+        >
           &gt;
         </button>
       </div>
@@ -96,7 +109,9 @@
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
         <div>
-          <div class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray">
+          <div
+            class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray"
+          >
             <h2 class="date-header ml-4 text-xs md:text-lg">{date}</h2>
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}

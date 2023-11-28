@@ -2,13 +2,16 @@
   import { onMount } from "svelte";
   import { writable, get } from "svelte/store";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
-  import type { FantasyTeam, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    FantasyTeam,
+    Team,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { toastStore } from "$lib/stores/toast-store";
-  import { teamStore } from '$lib/stores/team-store';
-  import { playerStore } from '$lib/stores/player-store';
-  
+  import { teamStore } from "$lib/stores/team-store";
+  import { playerStore } from "$lib/stores/player-store";
+
   export let showAddPlayer: boolean;
   export let closeAddPlayerModal: () => void;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
@@ -20,12 +23,16 @@
 
   let players: any[] = [];
   let teams: Team[] = [];
-  
+
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
-  
+  unsubscribeTeams = teamStore.subscribe((value) => {
+    teams = value;
+  });
+
   let unsubscribePlayers: () => void;
-  unsubscribePlayers = playerStore.subscribe(value => { players = value; });
+  unsubscribePlayers = playerStore.subscribe((value) => {
+    players = value;
+  });
 
   let filterTeam = -1;
   let filterSurname = "";
@@ -71,10 +78,10 @@
   }
 
   onMount(async () => {
-    try{
+    try {
       let team = get(fantasyTeam);
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
-    } catch(error){
+    } catch (error) {
       toastStore.show("Error loading add player modal.", "error");
       console.error("Error fetching homepage data:", error);
     }
@@ -174,20 +181,31 @@
 </script>
 
 {#if showAddPlayer}
-  <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={closeAddPlayerModal} on:keydown={closeAddPlayerModal}>
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white"
-      on:click|stopPropagation   on:keydown|stopPropagation>
+  <div
+    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
+    on:click={closeAddPlayerModal}
+    on:keydown={closeAddPlayerModal}
+  >
+    <div
+      class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white"
+      on:click|stopPropagation
+      on:keydown|stopPropagation
+    >
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-semibold">Select Player</h3>
-        <button class="text-3xl leading-none" on:click={closeAddPlayerModal}>&times;</button>
+        <button class="text-3xl leading-none" on:click={closeAddPlayerModal}
+          >&times;</button
+        >
       </div>
       <div class="mb-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label for="filterTeam" class="text-sm">Filter by Team:</label>
-            <select id="filterTeam" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-              bind:value={filterTeam}>
+            <select
+              id="filterTeam"
+              class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+              bind:value={filterTeam}
+            >
               <option value={-1}>All</option>
               {#each teams as team}
                 <option value={team.id}>{team.friendlyName}</option>
@@ -195,9 +213,14 @@
             </select>
           </div>
           <div>
-            <label for="filterPosition" class="text-sm">Filter by Position:</label>
-            <select id="filterPosition" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" 
-              bind:value={filterPosition}>
+            <label for="filterPosition" class="text-sm"
+              >Filter by Position:</label
+            >
+            <select
+              id="filterPosition"
+              class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+              bind:value={filterPosition}
+            >
               <option value={-1}>All</option>
               <option value={0}>Goalkeepers</option>
               <option value={1}>Defenders</option>
@@ -210,21 +233,39 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label for="minValue" class="text-sm">Min Value:</label>
-            <input id="minValue" type="number" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" bind:value={minValue}/>
+            <input
+              id="minValue"
+              type="number"
+              class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+              bind:value={minValue}
+            />
           </div>
           <div>
             <label for="maxValue" class="text-sm">Max Value:</label>
-            <input id="maxValue" type="number" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" bind:value={maxValue}/>
+            <input
+              id="maxValue"
+              type="number"
+              class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+              bind:value={maxValue}
+            />
           </div>
         </div>
 
         <div class="mb-4">
           <label for="filterSurname" class="text-sm">Search by Name:</label>
-          <input id="filterSurname" type="text" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" placeholder="Enter" bind:value={filterSurname}/>
+          <input
+            id="filterSurname"
+            type="text"
+            class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+            placeholder="Enter"
+            bind:value={filterSurname}
+          />
         </div>
 
         <div class="mb-4">
-          <label for="bankBalance" class="font-bold">Available Balance: £{($bankBalance / 4).toFixed(2)}m</label>
+          <label for="bankBalance" class="font-bold"
+            >Available Balance: £{($bankBalance / 4).toFixed(2)}m</label
+          >
         </div>
       </div>
 
@@ -266,7 +307,10 @@
                     {#if disableReasons[index]}
                       <span class="text-xs">{disableReasons[index]}</span>
                     {:else}
-                      <button on:click={() => selectPlayer(player)} class="text-xl rounded fpl-button flex items-center">
+                      <button
+                        on:click={() => selectPlayer(player)}
+                        class="text-xl rounded fpl-button flex items-center"
+                      >
                         <AddIcon className="w-6 h-6 p-2" />
                       </button>
                     {/if}
@@ -281,8 +325,11 @@
       <div class="justify-center mt-4 pb-4 overflow-x-auto">
         <div class="flex space-x-1 min-w-max">
           {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
-            <button class:active={index + 1 === currentPage} class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600" 
-              on:click={() => goToPage(index + 1)}>
+            <button
+              class:active={index + 1 === currentPage}
+              class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600"
+              on:click={() => goToPage(index + 1)}
+            >
               {index + 1}
             </button>
           {/each}
@@ -290,7 +337,10 @@
       </div>
 
       <div class="flex justify-end mt-4">
-        <button on:click={closeAddPlayerModal} class="px-4 py-2 fpl-purple-btn rounded-md text-white">Close</button>
+        <button
+          on:click={closeAddPlayerModal}
+          class="px-4 py-2 fpl-purple-btn rounded-md text-white">Close</button
+        >
       </div>
     </div>
   </div>

@@ -8,79 +8,86 @@
     "src": ".svelte-kit/generated/server/internal.js"
   },
   "Layout.css": {
-    "file": "_app/immutable/assets/Layout.429444e5.css",
+    "file": "_app/immutable/assets/Layout.705adbe0.css",
     "src": "Layout.css"
   },
-  "LoadingIcon.css": {
-    "file": "_app/immutable/assets/LoadingIcon.2aedc414.css",
-    "src": "LoadingIcon.css"
-  },
-  "_ActorFactory.js": {
-    "file": "chunks/ActorFactory.js",
+  "_BadgeIcon.js": {
+    "file": "chunks/BadgeIcon.js",
     "imports": [
-      "_Layout.js",
-      "_index.js"
+      "_index3.js"
     ]
   },
   "_Layout.js": {
     "css": [
-      "_app/immutable/assets/Layout.429444e5.css"
+      "_app/immutable/assets/Layout.705adbe0.css"
     ],
     "file": "chunks/Layout.js",
     "imports": [
+      "_index3.js",
       "_index2.js",
       "_stores.js",
-      "_index.js"
+      "_app.constants.js"
     ]
   },
-  "_LoadingIcon.js": {
-    "css": [
-      "_app/immutable/assets/LoadingIcon.2aedc414.css"
-    ],
-    "file": "chunks/LoadingIcon.js",
+  "_ShirtIcon.js": {
+    "file": "chunks/ShirtIcon.js",
     "imports": [
-      "_index2.js",
-      "_Layout.js"
+      "_index3.js"
     ]
   },
-  "_PlayerService.js": {
-    "file": "chunks/PlayerService.js",
-    "imports": [
-      "_ActorFactory.js",
-      "_TeamService.js"
-    ]
-  },
-  "_TeamService.js": {
-    "file": "chunks/TeamService.js",
-    "imports": [
-      "_ActorFactory.js"
-    ]
+  "_app.constants.js": {
+    "file": "chunks/app.constants.js"
   },
   "_index.js": {
-    "file": "chunks/index.js",
-    "imports": [
-      "_index2.js"
-    ]
+    "file": "chunks/index.js"
   },
   "_index2.js": {
-    "file": "chunks/index2.js"
+    "file": "chunks/index2.js",
+    "imports": [
+      "_index3.js"
+    ]
+  },
+  "_index3.js": {
+    "file": "chunks/index3.js"
   },
   "_internal.js": {
     "file": "chunks/internal.js",
     "imports": [
+      "_index3.js"
+    ]
+  },
+  "_manager-store.js": {
+    "file": "chunks/manager-store.js",
+    "imports": [
+      "_team-store.js",
+      "_index2.js"
+    ]
+  },
+  "_player-store.js": {
+    "file": "chunks/player-store.js",
+    "imports": [
+      "_team-store.js",
       "_index2.js"
     ]
   },
   "_stores.js": {
     "file": "chunks/stores.js",
     "imports": [
-      "_index2.js"
+      "_index3.js"
+    ]
+  },
+  "_team-store.js": {
+    "file": "chunks/team-store.js",
+    "imports": [
+      "_app.constants.js",
+      "_index2.js",
+      "_index3.js"
     ]
   },
   "node_modules/@sveltejs/kit/src/runtime/components/error.svelte": {
     "file": "entries/fallbacks/error.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
       "_stores.js"
     ],
     "isEntry": true,
@@ -89,7 +96,7 @@
   "node_modules/@sveltejs/kit/src/runtime/components/layout.svelte": {
     "file": "entries/fallbacks/layout.svelte.js",
     "imports": [
-      "_index2.js"
+      "_index3.js"
     ],
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/components/layout.svelte"
@@ -98,39 +105,60 @@
     "file": "index.js",
     "imports": [
       "_internal.js",
-      "_index.js"
+      "_index.js",
+      "_index2.js"
     ],
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js"
   },
   "src/OpenFPL_frontend/src/routes/+page.css": {
-    "file": "_app/immutable/assets/_page.4d84599f.css",
+    "file": "_app/immutable/assets/_page.8041c969.css",
     "src": "src/OpenFPL_frontend/src/routes/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/+page.svelte": {
     "css": [
-      "_app/immutable/assets/_page.4d84599f.css"
+      "_app/immutable/assets/_page.8041c969.css"
     ],
     "file": "entries/pages/_page.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
+      "_app.constants.js",
+      "_manager-store.js",
       "_Layout.js",
-      "_TeamService.js",
-      "_ActorFactory.js",
-      "_LoadingIcon.js"
+      "_team-store.js",
+      "_player-store.js",
+      "_BadgeIcon.js",
+      "_index2.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/+page.svelte"
   },
+  "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte": {
+    "file": "entries/pages/add-fixture-data/_page.svelte.js",
+    "imports": [
+      "_index3.js",
+      "_stores.js",
+      "_index2.js",
+      "_team-store.js",
+      "_player-store.js",
+      "_app.constants.js",
+      "_index.js",
+      "_Layout.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte"
+  },
   "src/OpenFPL_frontend/src/routes/club/+page.svelte": {
     "file": "entries/pages/club/_page.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
+      "_team-store.js",
+      "_player-store.js",
       "_Layout.js",
-      "_LoadingIcon.js",
-      "_TeamService.js",
+      "_BadgeIcon.js",
       "_stores.js",
-      "_PlayerService.js"
+      "_ShirtIcon.js",
+      "_index2.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/club/+page.svelte"
@@ -138,7 +166,8 @@
   "src/OpenFPL_frontend/src/routes/fixture-validation/+page.svelte": {
     "file": "entries/pages/fixture-validation/_page.svelte.js",
     "imports": [
-      "_index2.js"
+      "_index3.js",
+      "_app.constants.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/fixture-validation/+page.svelte"
@@ -153,7 +182,7 @@
     ],
     "file": "entries/pages/gameplay-rules/_page.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
       "_Layout.js"
     ],
     "isEntry": true,
@@ -162,7 +191,7 @@
   "src/OpenFPL_frontend/src/routes/governance/+page.svelte": {
     "file": "entries/pages/governance/_page.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
       "_Layout.js"
     ],
     "isEntry": true,
@@ -171,10 +200,14 @@
   "src/OpenFPL_frontend/src/routes/manager/+page.svelte": {
     "file": "entries/pages/manager/_page.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
       "_Layout.js",
-      "_LoadingIcon.js",
-      "_stores.js"
+      "_stores.js",
+      "_team-store.js",
+      "_player-store.js",
+      "_BadgeIcon.js",
+      "_manager-store.js",
+      "_app.constants.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/manager/+page.svelte"
@@ -189,10 +222,15 @@
     ],
     "file": "entries/pages/pick-team/_page.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
       "_Layout.js",
-      "_index.js",
-      "_LoadingIcon.js"
+      "_index2.js",
+      "_team-store.js",
+      "_app.constants.js",
+      "_manager-store.js",
+      "_BadgeIcon.js",
+      "_player-store.js",
+      "_ShirtIcon.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte"
@@ -207,30 +245,34 @@
     ],
     "file": "entries/pages/player/_page.svelte.js",
     "imports": [
-      "_index2.js",
-      "_Layout.js",
-      "_LoadingIcon.js",
-      "_TeamService.js",
+      "_index3.js",
       "_stores.js",
-      "_PlayerService.js"
+      "_team-store.js",
+      "_Layout.js",
+      "_player-store.js",
+      "_BadgeIcon.js",
+      "_ShirtIcon.js",
+      "_app.constants.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/player/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/profile/+page.css": {
-    "file": "_app/immutable/assets/_page.f774a8e5.css",
+    "file": "_app/immutable/assets/_page.873b27b5.css",
     "src": "src/OpenFPL_frontend/src/routes/profile/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/profile/+page.svelte": {
     "css": [
-      "_app/immutable/assets/_page.f774a8e5.css"
+      "_app/immutable/assets/_page.873b27b5.css"
     ],
     "file": "entries/pages/profile/_page.svelte.js",
     "imports": [
-      "_index2.js",
-      "_ActorFactory.js",
-      "_LoadingIcon.js",
-      "_Layout.js"
+      "_index3.js",
+      "_index.js",
+      "_team-store.js",
+      "_manager-store.js",
+      "_Layout.js",
+      "_app.constants.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/profile/+page.svelte"
@@ -238,7 +280,7 @@
   "src/OpenFPL_frontend/src/routes/terms/+page.svelte": {
     "file": "entries/pages/terms/_page.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
       "_Layout.js"
     ],
     "isEntry": true,
@@ -254,7 +296,7 @@
     ],
     "file": "entries/pages/whitepaper/_page.svelte.js",
     "imports": [
-      "_index2.js",
+      "_index3.js",
       "_Layout.js"
     ],
     "isEntry": true,

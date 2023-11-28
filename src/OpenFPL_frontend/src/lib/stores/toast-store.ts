@@ -15,7 +15,10 @@ function createToastStore() {
 
   function show(message: string, type: "success" | "error" = "success") {
     update(() => ({ visible: true, message, type }));
-    setTimeout(() => set({ visible: false, message: "", type: "success" }),3000);
+    setTimeout(
+      () => set({ visible: false, message: "", type: "success" }),
+      3000
+    );
   }
 
   return { subscribe, show };

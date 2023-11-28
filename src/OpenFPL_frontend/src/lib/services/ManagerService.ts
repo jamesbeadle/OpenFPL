@@ -8,7 +8,6 @@ import type {
   ManagerDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { SystemService } from "./SystemService";
 
 export class ManagerService {
   private actor: any;
@@ -38,7 +37,11 @@ export class ManagerService {
     });
   }
 
-  async getManager(managerId: string, seasonId: number, gameweek: number): Promise<ManagerDTO> {
+  async getManager(
+    managerId: string,
+    seasonId: number,
+    gameweek: number
+  ): Promise<ManagerDTO> {
     try {
       return await this.actor.getManager(managerId, seasonId, gameweek);
     } catch (error) {

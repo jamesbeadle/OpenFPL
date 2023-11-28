@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { toastStore } from "$lib/stores/toast-store";
-  import { isLoading } from '$lib/stores/global-stores';
+  import { isLoading } from "$lib/stores/global-stores";
   import { systemStore } from "$lib/stores/system-store";
   import Layout from "../Layout.svelte";
   import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
@@ -18,13 +18,16 @@
     getPositionText,
     updateTableData,
   } from "../../lib/utils/Helpers";
-  import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Fixture,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { playerStore } from "$lib/stores/player-store";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  
+
   let selectedGameweek: number = 1;
   let selectedPlayer: PlayerDTO | null = null;
   let fixtures: FixtureWithTeams[] = [];
@@ -45,24 +48,32 @@
     isLoading.set(true);
 
     try {
-
       let players: PlayerDTO[] = [];
-      playerStore.subscribe(value => { players = value as PlayerDTO[] });
-      
+      playerStore.subscribe((value) => {
+        players = value as PlayerDTO[];
+      });
+
       let teams: Team[] = [];
-      teamStore.subscribe(value => { teams = value as Team[] });
-      
+      teamStore.subscribe((value) => {
+        teams = value as Team[];
+      });
+
       let allFixtures: Fixture[] = [];
-      fixtureStore.subscribe(value => { allFixtures = value as Fixture[] });
-      
+      fixtureStore.subscribe((value) => {
+        allFixtures = value as Fixture[];
+      });
+
       selectedPlayer = players.find((x) => x.id === id) ?? null;
       team = teams.find((x) => x.id === selectedPlayer?.teamId) ?? null;
 
-      let teamFixtures = allFixtures.filter((x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id);
+      let teamFixtures = allFixtures.filter(
+        (x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id
+      );
       let systemState = await systemStore.getSystemState();
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
 
-      nextFixture = teamFixtures.find((x) => x.gameweek === selectedGameweek)  ?? null;
+      nextFixture =
+        teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
 
@@ -76,7 +87,9 @@
     } catch (error) {
       toastStore.show("Error fetching player details.", "error");
       console.error("Error fetching data:", error);
-    } finally{ isLoading.set(false); }
+    } finally {
+      isLoading.set(false);
+    }
   });
 
   let tableData: any[] = [];
@@ -248,8 +261,7 @@
           <div class="flex">
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-              : {countdownHours}<span class="text-gray-300 text-xs ml-1"
-                >h</span
+              : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span
               >
               : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
                 >m</span

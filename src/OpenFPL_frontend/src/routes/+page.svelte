@@ -9,13 +9,20 @@
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../lib/utils/Helpers";
-  import type { LeaderboardEntry, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { isLoading } from '$lib/stores/global-stores';
+  import {
+    formatUnixDateToReadable,
+    formatUnixTimeToTime,
+    getCountdownTime,
+  } from "../lib/utils/Helpers";
+  import type {
+    LeaderboardEntry,
+    Team,
+  } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { isLoading } from "$lib/stores/global-stores";
   import { systemStore } from "$lib/stores/system-store";
-    import { fixtureStore } from "$lib/stores/fixture-store";
-    import { teamStore } from "$lib/stores/team-store";
-    import { leaderboardStore } from "$lib/stores/leaderboard-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
+  import { teamStore } from "$lib/stores/team-store";
+  import { leaderboardStore } from "$lib/stores/leaderboard-store";
 
   let activeTab: string = "fixtures";
   let activeGameweek = -1;
@@ -41,7 +48,7 @@
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
       });
-      
+
       managerCount = await managerStore.getTotalManagers();
 
       let systemState = await systemStore.getSystemState();
@@ -50,27 +57,34 @@
       focusGameweek = systemState?.focusGameweek ?? activeGameweek;
 
       let nextFixture = await fixtureStore.getNextFixture();
-      
+
       nextFixtureHomeTeam = await teamStore.getTeamById(
         nextFixture ? nextFixture.homeTeamId : 0
       );
       nextFixtureAwayTeam = await teamStore.getTeamById(
         nextFixture ? nextFixture.awayTeamId : 0
       );
-      nextFixtureDate = formatUnixDateToReadable(nextFixture ? Number(nextFixture.kickOff) : 0);
-      nextFixtureTime = formatUnixTimeToTime(nextFixture ? Number(nextFixture.kickOff) : 0);
+      nextFixtureDate = formatUnixDateToReadable(
+        nextFixture ? Number(nextFixture.kickOff) : 0
+      );
+      nextFixtureTime = formatUnixTimeToTime(
+        nextFixture ? Number(nextFixture.kickOff) : 0
+      );
 
-      let countdownTime = getCountdownTime(nextFixture ? Number(nextFixture.kickOff) : 0);
+      let countdownTime = getCountdownTime(
+        nextFixture ? Number(nextFixture.kickOff) : 0
+      );
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
       weeklyLeader = await leaderboardStore.getLeadingWeeklyTeam();
-
     } catch (error) {
       toastStore.show("Error fetching homepage data.", "error");
       console.error("Error fetching homepage data:", error);
-    } finally{ isLoading.set(false); }
+    } finally {
+      isLoading.set(false);
+    }
   });
 
   function setActiveTab(tab: string): void {
@@ -108,9 +122,7 @@
         />
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Weekly Prize Pool</p>
-          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            0
-          </p>
+          <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">0</p>
           <p class="text-gray-300 text-xs">$FPL</p>
         </div>
       </div>
@@ -204,8 +216,7 @@
           <div class="flex">
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-              : {countdownHours}<span class="text-gray-300 text-xs ml-1"
-                >h</span
+              : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span
               >
               : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
                 >m</span
@@ -225,7 +236,8 @@
             GW {focusGameweek} High Score
           </p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-            <a href={`/manager?id=${weeklyLeader.principalId}&gw=${activeGameweek}`}
+            <a
+              href={`/manager?id=${weeklyLeader.principalId}&gw=${activeGameweek}`}
               >{weeklyLeader.username}</a
             >
           </p>

@@ -1,15 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { toastStore } from "$lib/stores/toast-store";
-  import { teamStore } from '$lib/stores/team-store';
-  import { fixtureStore } from '$lib/stores/fixture-store';
+  import { teamStore } from "$lib/stores/team-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { updateTableData } from "../utils/Helpers";
-  import type { SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-    import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
-  
+  import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
+
   let teams: Team[] = [];
   let fixtures: Fixture[] = [];
   let systemState: SystemState | null;
@@ -17,23 +20,27 @@
   let selectedGameweek: number = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let tableData: any[] = [];
-  
+
   let unsubscribeTeams: () => void;
-  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+  unsubscribeTeams = teamStore.subscribe((value) => {
+    teams = value;
+  });
 
   let unsubscribeFixtures: () => void;
-  unsubscribeFixtures = fixtureStore.subscribe(value => { 
-    fixtures = value; 
+  unsubscribeFixtures = fixtureStore.subscribe((value) => {
+    fixtures = value;
     fixturesWithTeams = fixtures.map((fixture) => ({
       fixture,
       homeTeam: getTeamFromId(fixture.homeTeamId),
       awayTeam: getTeamFromId(fixture.awayTeamId),
     }));
   });
-  
+
   let unsubscribeSystemState: () => void;
-  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
-  
+  unsubscribeSystemState = systemStore.subscribe((value) => {
+    systemState = value;
+  });
+
   onMount(async () => {});
 
   $: if (fixtures.length > 0 && teams.length > 0) {
@@ -97,9 +104,14 @@
       </div>
 
       {#each tableData as team, idx}
-        <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+        <div
+          class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
+        >
           <div class="w-1/12 text-center mx-4">{idx + 1}</div>
-          <a class="w-3/12 flex items-center justify-start" href={`/club?id=${team.id}`}>
+          <a
+            class="w-3/12 flex items-center justify-start"
+            href={`/club?id=${team.id}`}
+          >
             <BadgeIcon
               primaryColour={team.primaryColourHex}
               secondaryColour={team.secondaryColourHex}

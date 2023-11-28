@@ -67,7 +67,7 @@ export class UserService {
 
   async updateProfilePicture(picture: File): Promise<any> {
     try {
-      const maxPictureSize = 1000; 
+      const maxPictureSize = 1000;
 
       if (picture.size > maxPictureSize * 1024) {
         return null;

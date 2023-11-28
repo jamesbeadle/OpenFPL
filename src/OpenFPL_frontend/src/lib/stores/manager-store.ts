@@ -1,17 +1,24 @@
-import { writable, type Unsubscriber } from 'svelte/store';
-import { authStore } from '$lib/stores/auth';
-import { systemStore } from '$lib/stores/system-store';
+import { authStore } from "$lib/stores/auth";
+import { systemStore } from "$lib/stores/system-store";
+import type { OptionIdentity } from "$lib/types/Identity";
+import { writable, type Unsubscriber } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type {
+  FantasyTeam,
+  FantasyTeamSnapshot,
+  ManagerDTO,
+  SystemState,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import type { FantasyTeam, FantasyTeamSnapshot, ManagerDTO, SystemState } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type { OptionIdentity } from '$lib/types/Identity';
 
 function createManagerStore() {
   const { subscribe, set } = writable<ManagerDTO | null>(null);
 
   let systemState: SystemState;
-  systemStore.subscribe(value => { systemState = value as SystemState });
-  
+  systemStore.subscribe((value) => {
+    systemState = value as SystemState;
+  });
+
   const actor = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
@@ -35,9 +42,17 @@ function createManagerStore() {
     });
   }
 
-  async function getManager(managerId: string, seasonId: number, gameweek: number): Promise<ManagerDTO> {
+  async function getManager(
+    managerId: string,
+    seasonId: number,
+    gameweek: number
+  ): Promise<ManagerDTO> {
     try {
-      return await actor.getManager(managerId, seasonId, gameweek) as ManagerDTO;
+      return (await actor.getManager(
+        managerId,
+        seasonId,
+        gameweek
+      )) as ManagerDTO;
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
       throw error;
@@ -54,13 +69,16 @@ function createManagerStore() {
     }
   }
 
-  async function getFantasyTeamForGameweek(managerId: string, gameweek: number): Promise<FantasyTeamSnapshot> {
+  async function getFantasyTeamForGameweek(
+    managerId: string,
+    gameweek: number
+  ): Promise<FantasyTeamSnapshot> {
     try {
-      const fantasyTeamData = await actor.getFantasyTeamForGameweek(
+      const fantasyTeamData = (await actor.getFantasyTeamForGameweek(
         managerId,
         systemState?.activeSeason.id,
         gameweek
-      ) as FantasyTeamSnapshot;
+      )) as FantasyTeamSnapshot;
       return fantasyTeamData;
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
@@ -79,13 +97,13 @@ function createManagerStore() {
     }
   }
 
-  async function saveFantasyTeam(userFantasyTeam: FantasyTeam, activeGameweek: number): Promise<any> {
+  async function saveFantasyTeam(
+    userFantasyTeam: FantasyTeam,
+    activeGameweek: number
+  ): Promise<any> {
     try {
       let bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
-      let bonusPlayerId = getBonusPlayerId(
-        userFantasyTeam,
-        activeGameweek
-      );
+      let bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
       let bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
       const identityActor = await actorFromIdentity();
       const fantasyTeam = await identityActor.saveFantasyTeam(
@@ -101,8 +119,11 @@ function createManagerStore() {
       throw error;
     }
   }
-  
-  function getBonusPlayed(userFantasyTeam: FantasyTeam, activeGameweek: number): number {
+
+  function getBonusPlayed(
+    userFantasyTeam: FantasyTeam,
+    activeGameweek: number
+  ): number {
     let bonusPlayed = 0;
 
     if (userFantasyTeam.goalGetterGameweek === activeGameweek) {
@@ -179,7 +200,10 @@ function createManagerStore() {
     return bonusPlayerId;
   }
 
-  function getBonusTeamId(userFantasyTeam: FantasyTeam, activeGameweek: number): number {
+  function getBonusTeamId(
+    userFantasyTeam: FantasyTeam,
+    activeGameweek: number
+  ): number {
     let bonusTeamId = 0;
 
     if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
@@ -195,7 +219,7 @@ function createManagerStore() {
     getTotalManagers,
     getFantasyTeamForGameweek,
     getFantasyTeam,
-    saveFantasyTeam
+    saveFantasyTeam,
     // Add any other methods as needed
   };
 }

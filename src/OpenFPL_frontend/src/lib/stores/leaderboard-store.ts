@@ -1,23 +1,30 @@
-import { writable } from 'svelte/store';
+import { systemStore } from "$lib/stores/system-store";
+import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type {
+  DataCache,
+  LeaderboardEntry,
+  PaginatedClubLeaderboard,
+  PaginatedLeaderboard,
+  SystemState,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
-import { systemStore } from '$lib/stores/system-store';
-import type { SystemState, PaginatedLeaderboard, PaginatedClubLeaderboard, LeaderboardEntry, DataCache } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createLeaderboardStore() {
   const { subscribe, set } = writable<PaginatedLeaderboard | null>(null);
   const itemsPerPage = 25;
-  
+
   let systemState: SystemState;
-  systemStore.subscribe(value => { systemState = value as SystemState });
-  
+  systemStore.subscribe((value) => {
+    systemState = value as SystemState;
+  });
+
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  
   async function syncWeeklyLeaderboard() {
     let category = "weekly_leaderboard";
     const newHashValues: DataCache[] = await actor.getDataHashes();
@@ -94,7 +101,10 @@ function createLeaderboardStore() {
     return cachedWeeklyLeaderboard;
   }
 
-  async function getWeeklyLeaderboardPage(gameweek: number, currentPage: number): Promise<PaginatedLeaderboard> {
+  async function getWeeklyLeaderboardPage(
+    gameweek: number,
+    currentPage: number
+  ): Promise<PaginatedLeaderboard> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     let weeklyLeaderboardData = await actor.getWeeklyLeaderboard(
@@ -106,7 +116,9 @@ function createLeaderboardStore() {
     return weeklyLeaderboardData;
   }
 
-  async function getMonthlyLeaderboard(clubId: number): Promise<PaginatedClubLeaderboard | null> {
+  async function getMonthlyLeaderboard(
+    clubId: number
+  ): Promise<PaginatedClubLeaderboard | null> {
     const cachedMonthlyLeaderboardData = localStorage.getItem(
       "monthly_leaderboards_data"
     );
@@ -161,7 +173,7 @@ function createLeaderboardStore() {
     getWeeklyLeaderboardPage,
     getMonthlyLeaderboard,
     getSeasonLeaderboard,
-    getLeadingWeeklyTeam
+    getLeadingWeeklyTeam,
   };
 }
 

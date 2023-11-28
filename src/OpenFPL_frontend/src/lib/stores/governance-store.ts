@@ -1,10 +1,13 @@
-import { writable } from 'svelte/store';
+import { authStore } from "$lib/stores/auth";
+import type { OptionIdentity } from "$lib/types/Identity";
 import type { Unsubscriber } from "svelte/store";
-import { authStore } from '$lib/stores/auth';
+import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type {
+  Fixture,
+  PlayerEventData,
+} from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import type { OptionIdentity } from '$lib/types/Identity';
-import type { Fixture, PlayerEventData } from "../../../../declarations/player_canister/player_canister.did";
 
 function createGovernanceStore() {
   const { subscribe, set } = writable<Fixture[]>([]);
@@ -29,12 +32,16 @@ function createGovernanceStore() {
 
   async function getValidatableFixtures(): Promise<any[]> {
     const identityActor = await actorFromIdentity();
-    const fixtures = await identityActor.getValidatableFixtures() as Fixture[];
+    const fixtures =
+      (await identityActor.getValidatableFixtures()) as Fixture[];
     set(fixtures);
     return fixtures;
   }
 
-  async function submitFixtureData(fixtureId: number, allPlayerEvents: PlayerEventData[]): Promise<void> {
+  async function submitFixtureData(
+    fixtureId: number,
+    allPlayerEvents: PlayerEventData[]
+  ): Promise<void> {
     try {
       const identityActor = await actorFromIdentity();
       await identityActor.submitFixtureData(fixtureId, allPlayerEvents);
@@ -48,7 +55,7 @@ function createGovernanceStore() {
   return {
     subscribe,
     getValidatableFixtures,
-    submitFixtureData
+    submitFixtureData,
   };
 }
 
