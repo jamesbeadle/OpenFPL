@@ -11,6 +11,7 @@
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
     import { FixtureService } from "$lib/services/FixtureService";
+    import { toastStore } from "$lib/stores/toast";
 
 
   let selectedGameweek: number = 1;
@@ -45,6 +46,7 @@
 
       isLoading = false;
     } catch (error) {
+      toastStore.show("Error fetching gameweek points", "error");
       console.error("Error fetching data:", error);
     }
   });

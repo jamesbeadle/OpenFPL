@@ -10,6 +10,7 @@
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import { get, type Writable } from "svelte/store";
     import { Id } from "svelte-flag-icons";
+    import { toastStore } from "$lib/stores/toast";
 
     let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
     export let selectedGameweek: number;
@@ -39,6 +40,7 @@
             teams = await teamService.getTeams();
 
         } catch (error) {
+            toastStore.show("Error fetching manager gameweek detail", "error");
             console.error("Error fetching data:", error);
         }
     });

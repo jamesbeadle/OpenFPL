@@ -7,10 +7,7 @@
   import { TeamService } from "$lib/services/TeamService";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { formatUnixTimeToTime } from "../utils/Helpers";
-
-  const fixtureService = new FixtureService();
-  const teamService = new TeamService();
-  const systemService = new SystemService();
+  import { toastStore } from "$lib/stores/toast";
 
   let selectedGameweek: number = 1;
   let fixtures: FixtureWithTeams[] = [];
@@ -42,6 +39,11 @@
 
   onMount(async () => {
     try {
+      
+      const fixtureService = new FixtureService();
+      const teamService = new TeamService();
+      const systemService = new SystemService();
+
       await systemService.updateSystemStateData();
       await fixtureService.updateFixturesData();
       await teamService.updateTeamsData();
@@ -57,6 +59,7 @@
       let systemState = await systemService.getSystemState();
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
     } catch (error) {
+      toastStore.show("Error fetching fixtures", "error");
       console.error("Error fetching data:", error);
     }
   });

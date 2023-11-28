@@ -9,6 +9,7 @@
     formatUnixTimeToTime,
   } from "../utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+    import { toastStore } from "$lib/stores/toast";
 
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
@@ -49,6 +50,7 @@
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
     } catch (error) {
+      toastStore.show("Error fetching gameweek points", "error");
       console.error("Error fetching data:", error);
     }
   });

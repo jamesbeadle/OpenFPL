@@ -15,6 +15,7 @@
   import { formatUnixDateToReadable, formatUnixTimeToTime, getCountdownTime } from "../lib/utils/Helpers";
   import type { LeaderboardEntry, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { authStore } from "$lib/stores/auth";
+    import { toastStore } from "$lib/stores/toast";
 
   const systemService = new SystemService();
   const fixtureService = new FixtureService();
@@ -91,6 +92,7 @@ onMount(async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       isLoading = false;
     } catch (error) {
+      toastStore.show("Error fetching homepage data", "error");
       console.error("Error fetching homepage data:", error);
       isLoading = false;
     }

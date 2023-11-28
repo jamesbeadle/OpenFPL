@@ -32,6 +32,7 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
+    import { toastStore } from "$lib/stores/toast";
 
   interface FormationDetails {
     positions: number[];
@@ -169,6 +170,7 @@
       progress = 100;
       isLoading = false;
     } catch (error) {
+      toastStore.show("Error fetching team details", "error");
       console.error("Error fetching homepage data:", error);
       isLoading = false;
     }
@@ -692,7 +694,9 @@
     try {
       await managerService.saveFantasyTeam(team!, activeGameweek);
       isLoading = false;
+      toastStore.show("Team saved successully!", "success");
     } catch (error) {
+      toastStore.show("Error saving team", "error");
       console.error("Error fetching homepage data:", error);
     }
   }

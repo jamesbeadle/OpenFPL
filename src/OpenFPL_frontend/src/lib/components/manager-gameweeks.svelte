@@ -6,6 +6,7 @@
     import { ManagerService } from "$lib/services/ManagerService";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+    import { toastStore } from "$lib/stores/toast";
   
     export let principalId = '';
     export let viewGameweekDetail: (principalId: string, selectedGameweek: number) => void;
@@ -31,6 +32,7 @@
         
         isLoading = false;
       } catch (error) {
+        toastStore.show("Error fetching manager gameweeks", "error");
         console.error("Error fetching data:", error);
       }
     });

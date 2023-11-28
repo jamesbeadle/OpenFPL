@@ -11,6 +11,7 @@
   import { TeamService } from "$lib/services/TeamService";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { Writable } from "svelte/store";
+    import { toastStore } from "$lib/stores/toast";
 
   let progress = 0;
   let isLoading = true;
@@ -67,6 +68,7 @@
 
       isLoading = false;
     } catch (error) {
+      toastStore.show("Error fetching manager details", "error");
       console.error("Error fetching data:", error);
     }
   });

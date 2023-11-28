@@ -12,6 +12,7 @@
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
+    import { toastStore } from "$lib/stores/toast";
 
 
   let selectedGameweek: number = 1;
@@ -61,6 +62,7 @@
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
       isLoading = false;
     } catch (error) {
+      toastStore.show("Error fetching player gameweek history", "error");
       console.error("Error fetching data:", error);
     }
   });

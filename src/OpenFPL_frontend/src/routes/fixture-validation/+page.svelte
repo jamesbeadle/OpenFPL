@@ -6,6 +6,7 @@
     import { SystemService } from '$lib/services/SystemService';
     import { TeamService } from '$lib/services/TeamService';
     import { GovernanceService } from '$lib/services/GovernanceService';
+    import { toastStore } from '$lib/stores/toast';
   
     let teams: Team[];
     let fixtures: Fixture[];
@@ -31,6 +32,7 @@
         currentSeason = systemState?.activeSeason.name ?? "";
         
       } catch (error) {
+        toastStore.show("Error fetching fixture validation list", "error");
         console.error(error);
       } finally {
         isLoading = false;

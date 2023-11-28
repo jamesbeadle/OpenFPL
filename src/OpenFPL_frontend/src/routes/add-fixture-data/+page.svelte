@@ -14,6 +14,7 @@
     import ClearDraftModal from '$lib/components/fixture-validation/clear-draft-modal.svelte';
     import { GovernanceService } from '$lib/services/GovernanceService';
     import { redirect } from '@sveltejs/kit';
+    import { toastStore } from '$lib/stores/toast';
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
     let teams: Team[];
@@ -60,6 +61,7 @@
         localStorage.removeItem(`fixtureDraft_${fixtureId}`);
         throw redirect(307, '/fixture-validation');
       } catch (error) {
+        toastStore.show("Error fetching fixture data", "error");
         console.error("Error saving fixture data: ", error);
       }
     }

@@ -3,6 +3,7 @@
   import { UserService } from "$lib/services/UserService";
   import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { TeamService } from "$lib/services/TeamService";
+    import { toastStore } from "$lib/stores/toast";
 
   export let showModal: boolean;
   export let closeModal: () => void;
@@ -16,6 +17,7 @@
       let teamService = new TeamService();
       teams = await teamService.getTeams();
     } catch (error) {
+      toastStore.show("Error fetching teams", "error");
       console.error("Error fetching data:", error);
     }
   });

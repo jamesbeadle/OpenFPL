@@ -6,6 +6,7 @@
   import { LeaderboardService } from "$lib/services/LeaderboardService";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
     import { ManagerService } from "$lib/services/ManagerService";
+    import { toastStore } from "$lib/stores/toast";
 
   let selectedLeaderboardType: number = 1;
   let selectedGameweek: number = 1;
@@ -59,6 +60,7 @@
       leaderboard = leaderboardData;
       isLoading = false;
     } catch (error) {
+      toastStore.show("Error fetching leaderboard", "error");
       console.error("Error fetching data:", error);
     }
   });
@@ -95,6 +97,7 @@
         leaderboard = await leaderboardService.getSeasonLeaderboard();
       }
     } catch (error) {
+      toastStore.show("Error fetching leaderboard", "error");
       console.error("Error fetching leaderboard data:", error);
     } finally {
       isLoading = false;

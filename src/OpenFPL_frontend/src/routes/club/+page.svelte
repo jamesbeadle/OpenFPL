@@ -20,6 +20,7 @@
   import { getPositionText } from "../../lib/utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../../lib/utils/Helpers";
+    import { toastStore } from "$lib/stores/toast";
 
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
@@ -81,6 +82,7 @@
 
       isLoading = false;
     } catch (error) {
+      toastStore.show("Error fetching club details", "error");
       console.error("Error fetching data:", error);
     }
   });

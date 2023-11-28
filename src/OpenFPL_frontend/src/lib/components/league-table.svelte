@@ -7,6 +7,7 @@
   import { TeamService } from "$lib/services/TeamService";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../utils/Helpers";
+    import { toastStore } from "$lib/stores/toast";
 
   let selectedGameweek: number = 1;
   let fixtures: FixtureWithTeams[] = [];
@@ -36,6 +37,7 @@
       let systemState = await systemService.getSystemState();
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
     } catch (error) {
+      toastStore.show("Error fetching league table", "error");
       console.error("Error fetching data:", error);
     }
   });

@@ -27,6 +27,7 @@
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
+    import { toastStore } from "$lib/stores/toast";
 
   const fixtureService = new FixtureService();
   const teamService = new TeamService();
@@ -99,6 +100,7 @@
 
       isLoading = false;
     } catch (error) {
+      toastStore.show("Error fetching player details", "error");
       console.error("Error fetching data:", error);
     }
   });
