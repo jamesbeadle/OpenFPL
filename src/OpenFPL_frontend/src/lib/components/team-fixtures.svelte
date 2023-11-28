@@ -1,56 +1,48 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
+  import { teamStore } from '$lib/stores/team-store';
+  import { fixtureStore } from '$lib/stores/fixture-store';
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { FixtureService } from "$lib/services/FixtureService";
-  import { TeamService } from "$lib/services/TeamService";
-  import {
-    formatUnixDateToReadable,
-    formatUnixTimeToTime,
-  } from "../utils/Helpers";
+  import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import { toastStore } from "$lib/stores/toast-store";
-
-
+  import { formatUnixDateToReadable, formatUnixTimeToTime } from "../utils/Helpers";
+  
   export let clubId: number | null = null;
-
-  let fixtures: FixtureWithTeams[] = [];
+  
   let teams: Team[] = [];
+  let fixtures: Fixture[] = [];
+  let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedFixtureType = -1;
-  $: filteredFixtures =
-    selectedFixtureType === -1
-      ? fixtures.filter(
-          ({ fixture }) =>
-            clubId === null ||
-            fixture.homeTeamId === clubId ||
-            fixture.awayTeamId === clubId
-        )
-      : selectedFixtureType === 0
-      ? fixtures.filter(
-          ({ fixture }) => clubId === null || fixture.homeTeamId === clubId
-        )
-      : fixtures.filter(
-          ({ fixture }) => clubId === null || fixture.awayTeamId === clubId
-        );
+
+  let unsubscribeTeams: () => void;
+  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+
+  let unsubscribeFixtures: () => void;
+  unsubscribeFixtures = fixtureStore.subscribe(value => { 
+    fixtures = value; 
+    fixturesWithTeams = fixtures.map((fixture) => ({
+      fixture,
+      homeTeam: getTeamFromId(fixture.homeTeamId),
+      awayTeam: getTeamFromId(fixture.awayTeamId),
+    }));
+  });
+
+  $: filteredFixtures = selectedFixtureType === -1 ? 
+    fixturesWithTeams.filter(({ fixture }) => clubId === null || fixture.homeTeamId === clubId || fixture.awayTeamId === clubId)
+      : selectedFixtureType === 0 
+      ? fixturesWithTeams.filter(({ fixture }) => clubId === null || fixture.homeTeamId === clubId)
+      : fixturesWithTeams.filter(({ fixture }) => clubId === null || fixture.awayTeamId === clubId);
 
   onMount(async () => {
-    try {
-      
-      await fixtureService.updateFixturesData();
-      await teamService.updateTeamsData();
+  });
 
-      const fetchedFixtures = await fixtureService.getFixtures();
-      const fetchedTeams = await teamService.getTeams();
-
-      teams = fetchedTeams;
-      fixtures = fetchedFixtures.map((fixture) => ({
-        fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
-      }));
-    } catch (error) {
-      toastStore.show("Error fetching gameweek points.", "error");
-      console.error("Error fetching gameweek points:", error);
+  onDestroy(() => {
+    if (unsubscribeTeams) {
+      unsubscribeTeams();
+    }
+    if(unsubscribeFixtures){
+      unsubscribeFixtures();
     }
   });
 
@@ -65,19 +57,15 @@
       <div class="flex p-4">
         <div class="flex items-center ml-4">
           <p class="text-sm md:text-xl mr-4">Type:</p>
-          <select
-            class="p-2 fpl-dropdown text-sm md:text-xl"
-            bind:value={selectedFixtureType}
-          >
+          <select class="p-2 fpl-dropdown text-sm md:text-xl"
+            bind:value={selectedFixtureType}>
             <option value={-1}>All</option>
             <option value={0}>Home</option>
             <option value={1}>Away</option>
           </select>
         </div>
       </div>
-      <div
-        class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray px-4"
-      >
+      <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray px-4">
         <div class="flex-grow w-1/6 ml-4">Gameweek</div>
         <div class="flex-grow w-1/3 text-center">Game</div>
         <div class="flex-grow w-1/3">Date</div>
@@ -87,11 +75,8 @@
       </div>
 
       {#each filteredFixtures as { fixture, homeTeam, awayTeam }}
-        <div
-          class={`flex items-center justify-between border-b border-gray-700 p-2 px-4 ${
-            fixture.status === 0 ? "text-gray-400" : "text-white"
-          }`}
-        >
+        <div class={`flex items-center justify-between border-b border-gray-700 p-2 px-4 
+          ${fixture.status === 0 ? "text-gray-400" : "text-white"}`}>
           <div class="w-1/6 ml-4">{fixture.gameweek}</div>
           <div class="w-1/3 flex justify-center">
             <div class="w-10 items-center justify-center mr-4">
@@ -114,7 +99,6 @@
               </a>
             </div>
           </div>
-
           <div class="w-1/3">
             {formatUnixDateToReadable(Number(fixture.kickOff))}
           </div>
@@ -123,12 +107,8 @@
           </div>
           <div class="w-1/3">
             <div class="flex flex-col text-xs md:text-lg">
-              <a href={`/club?id=${fixture.homeTeamId}`}
-                >{homeTeam ? homeTeam.friendlyName : ""}</a
-              >
-              <a href={`/club?id=${fixture.awayTeamId}`}
-                >{awayTeam ? awayTeam.friendlyName : ""}</a
-              >
+              <a href={`/club?id=${fixture.homeTeamId}`}>{homeTeam ? homeTeam.friendlyName : ""}</a>
+              <a href={`/club?id=${fixture.awayTeamId}`}>{awayTeam ? awayTeam.friendlyName : ""}</a>
             </div>
           </div>
           <div class="w-1/4 mr-4">

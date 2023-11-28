@@ -1,57 +1,53 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { SystemService } from "$lib/services/SystemService";
-  import { FixtureService } from "$lib/services/FixtureService";
-  import { TeamService } from "$lib/services/TeamService";
-  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import { PlayerService } from "$lib/services/PlayerService";
-  import type { PlayerDetailDTO, PlayerGameweekDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import PlayerGameweekModal from "./player-gameweek-modal.svelte";
+  import { systemStore } from "$lib/stores/system-store";
   import { toastStore } from "$lib/stores/toast-store";
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import { teamStore } from '$lib/stores/team-store';
+  import { fixtureStore } from '$lib/stores/fixture-store';
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import PlayerGameweekModal from "./player-gameweek-modal.svelte";
+  import type { Season, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+  import type { Fixture, PlayerDetailDTO, PlayerGameweekDTO } from "../../../../declarations/player_canister/player_canister.did";
+    import { playerStore } from "$lib/stores/player-store";
   
   let isLoading = true;
+  let teams: Team[] = [];
+  let fixtures: Fixture[] = [];
+  let systemState: SystemState | null;
   let selectedGameweek: number = 1;
   let selectedSeason: Season | null = null;
-  let fixtures: FixtureWithTeams[] = [];
-  let teams: Team[] = [];
+  let fixturesWithTeams: FixtureWithTeams[] = [];
   let playerDetails: PlayerDetailDTO;
   let selectedOpponent: Team | null = null;
   let opponentCache = new Map<number, Team>();
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
-
   let showModal: boolean = false;
+
+  let unsubscribeTeams: () => void;
+  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+
+  let unsubscribeFixtures: () => void;
+  unsubscribeFixtures = fixtureStore.subscribe(value => { 
+    fixtures = value; 
+    fixturesWithTeams = fixtures.map((fixture) => ({
+      fixture,
+      homeTeam: getTeamFromId(fixture.homeTeamId),
+      awayTeam: getTeamFromId(fixture.awayTeamId),
+    }));
+  });
+  
+  let unsubscribeSystemState: () => void;
+  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
 
   $: id = Number($page.url.searchParams.get("id"));
 
   onMount(async () => {
     try {
-      
-      await systemService.updateSystemStateData();
-      await fixtureService.updateFixturesData();
-      await teamService.updateTeamsData();
-      await playerService.updatePlayersData();
-      await playerService.updatePlayerEventsData();
-
-      const fetchedFixtures = await fixtureService.getFixtures();
-      const fetchedTeams = await teamService.getTeams();
-
-      teams = fetchedTeams;
-      fixtures = fetchedFixtures.map((fixture) => ({
-        fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
-      }));
-      let systemState = await systemService.getSystemState();
-      const fetchedPlayerDetails = await playerService.getPlayerDetails(
-        id,
-        systemState?.activeSeason.id ?? 0
-      );
-      playerDetails = fetchedPlayerDetails;
+      playerDetails = await playerStore.getPlayerDetails(id,systemState?.activeSeason.id ?? 0);
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
     } catch (error) {
@@ -69,7 +65,7 @@
       return opponentCache.get(fixtureId)!;
     }
 
-    let fixture = fixtures.find((f) => f.fixture.id === fixtureId);
+    let fixture = fixturesWithTeams.find((f) => f.fixture.id === fixtureId);
     let opponentId =
       fixture?.homeTeam?.id === playerDetails.teamId
         ? fixture?.awayTeam?.id

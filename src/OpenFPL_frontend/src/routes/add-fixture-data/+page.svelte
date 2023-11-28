@@ -1,14 +1,14 @@
 <script lang="ts">
-    import { onMount} from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { page } from "$app/stores";
     import { get, writable } from "svelte/store";
     import type { PlayerDTO, PlayerEventData } from '../../../../declarations/player_canister/player_canister.did';
-    import type { Fixture, SystemState, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
+    import type { Fixture, Team } from '../../../../declarations/OpenFPL_backend/OpenFPL_backend.did';
     
     import { teamStore } from '$lib/stores/team-store';
     import { playerStore } from '$lib/stores/player-store';
     import { fixtureStore } from '$lib/stores/fixture-store';
-    import { systemStore } from '$lib/stores/team-store';
+    import { systemStore } from '$lib/stores/system-store';
     import PlayerEventsModal from '$lib/components/fixture-validation/player-events-modal.svelte';
     import SelectPlayersModal from '$lib/components/fixture-validation/select-players-modal.svelte';
     import ConfirmFixtureDataModal from '$lib/components/fixture-validation/confirm-fixture-data-modal.svelte';
@@ -20,13 +20,14 @@
     import { replacer } from '$lib/utils/Helpers';
   
     $: fixtureId = Number($page.url.searchParams.get("id"));
-    
+
+    let unsubscribeTeams: () => void;
+    unsubscribeTeams = teamStore.subscribe(value => { 
+      teams = value;
+    });
+
     let teams: Team[];
-    teamStore.subscribe(value => { teams = value });
-    
-    let players: PlayerDTO[];
     let fixtures: Fixture[];
-    let systemState: SystemState | null;
     let isLoading = true;
     let fixture: Fixture | null;
     let showPlayerSelectionModal = false;
@@ -53,6 +54,12 @@
       if (savedDraft) {
           const draftData = JSON.parse(savedDraft);
           playerEventData.set(draftData);
+      }
+    });
+
+    onDestroy(() => {
+      if (unsubscribeTeams) {
+        unsubscribeTeams();
       }
     });
 

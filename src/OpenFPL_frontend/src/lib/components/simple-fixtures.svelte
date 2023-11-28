@@ -1,19 +1,39 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
+  import { teamStore } from '$lib/stores/team-store';
+  import { fixtureStore } from '$lib/stores/fixture-store';
+  import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { SystemService } from "$lib/services/SystemService";
-  import { FixtureService } from "$lib/services/FixtureService";
-  import { TeamService } from "$lib/services/TeamService";
-  import { formatUnixTimeToTime } from "../utils/Helpers";
+  import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
+  import type { SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import { toastStore } from "$lib/stores/toast-store";
-
-  let selectedGameweek: number = 1;
-  let fixtures: FixtureWithTeams[] = [];
+  import { formatUnixTimeToTime } from "../utils/Helpers";
+  
   let teams: Team[] = [];
+  let fixtures: Fixture[] = [];
+  let systemState: SystemState | null;
+  let fixturesWithTeams: FixtureWithTeams[] = [];
+  let selectedFixtureType = -1;
+  let selectedGameweek = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  $: filteredFixtures = fixtures.filter(
+
+  let unsubscribeTeams: () => void;
+  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+
+  let unsubscribeFixtures: () => void;
+  unsubscribeFixtures = fixtureStore.subscribe(value => { 
+    fixtures = value; 
+    fixturesWithTeams = fixtures.map((fixture) => ({
+      fixture,
+      homeTeam: getTeamFromId(fixture.homeTeamId),
+      awayTeam: getTeamFromId(fixture.awayTeamId),
+    }));
+  });
+  
+  let unsubscribeSystemState: () => void;
+  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
+  
+  $: filteredFixtures = fixturesWithTeams.filter(
     ({ fixture }) => fixture.gameweek === selectedGameweek
   );
 
@@ -37,27 +57,17 @@
     {} as { [key: string]: FixtureWithTeams[] }
   );
 
-  onMount(async () => {
-    try {
-      
-      await systemService.updateSystemStateData();
-      await fixtureService.updateFixturesData();
-      await teamService.updateTeamsData();
+  onMount(async () => {});
 
-      const fetchedFixtures = await fixtureService.getFixtures();
-      const fetchedTeams = await teamService.getTeams();
-
-      teams = fetchedTeams;
-      fixtures = fetchedFixtures.map((fixture) => ({
-        fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
-      }));
-      let systemState = await systemService.getSystemState();
-      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
-    } catch (error) {
-      toastStore.show("Error fetching fixtures.", "error");
-      console.error("Error fetching fixtures:", error);
+  onDestroy(() => {
+    if (unsubscribeTeams) {
+      unsubscribeTeams();
+    }
+    if(unsubscribeFixtures){
+      unsubscribeFixtures();
+    }
+    if(unsubscribeSystemState){
+      unsubscribeSystemState();
     }
   });
 

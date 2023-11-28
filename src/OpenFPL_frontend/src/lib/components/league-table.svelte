@@ -1,14 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { toastStore } from "$lib/stores/toast-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { SystemService } from "$lib/services/SystemService";
-  import { FixtureService } from "$lib/services/FixtureService";
-  import { TeamService } from "$lib/services/TeamService";
-  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../utils/Helpers";
-    import { toastStore } from "$lib/stores/toast-store";
-
+  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+  
   let selectedGameweek: number = 1;
   let fixtures: FixtureWithTeams[] = [];
   let teams: Team[] = [];
@@ -18,10 +15,7 @@
 
   onMount(async () => {
     try {
-      await systemService.updateSystemStateData();
-      await fixtureService.updateFixturesData();
-      await teamService.updateTeamsData();
-
+  
       const fetchedFixtures = await fixtureService.getFixtures();
       const fetchedTeams = await teamService.getTeams();
 

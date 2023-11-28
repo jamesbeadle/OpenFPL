@@ -3,21 +3,17 @@
   import Layout from "../Layout.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Fixture, Season, Team  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { SystemService } from "$lib/services/SystemService";
-  import { FixtureService } from "$lib/services/FixtureService";
-  import { TeamService } from "$lib/services/TeamService";
   import { page } from "$app/stores";
   import TeamPlayers from "$lib/components/team-players.svelte";
   import TeamFixtures from "$lib/components/team-fixtures.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
-  import { PlayerService } from "$lib/services/PlayerService";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { getPositionText } from "../../lib/utils/Helpers";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../../lib/utils/Helpers";
   import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let selectedGameweek: number = 1;
   let selectedSeason: Season;
@@ -38,13 +34,6 @@
     isLoading.set(true);
 
     try {
-
-      await systemService.updateSystemStateData();
-      await fixtureService.updateFixturesData();
-      await teamService.updateTeamsData();
-      await playersService.updatePlayersData();
-      await playersService.updatePlayerEventsData();
-
       const fetchedFixtures = await fixtureService.getFixtures();
       const fetchedTeams = await teamService.getTeams();
       const fetchedPlayers = await playersService.getPlayers();

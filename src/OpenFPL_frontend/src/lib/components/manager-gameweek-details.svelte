@@ -1,12 +1,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { SystemService } from "$lib/services/SystemService";
     import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
     import { getFlagComponent, getPositionAbbreviation } from "$lib/utils/Helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
     import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { PlayerService } from "$lib/services/PlayerService";
-    import { TeamService } from "$lib/services/TeamService";
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import { get, type Writable } from "svelte/store";
     import { Id } from "svelte-flag-icons";

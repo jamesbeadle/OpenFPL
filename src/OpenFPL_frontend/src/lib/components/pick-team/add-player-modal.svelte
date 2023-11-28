@@ -6,9 +6,8 @@
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { toastStore } from "$lib/stores/toast-store";
-  
-  import { TeamService } from "$lib/services/TeamService";
-  import { PlayerService } from "$lib/services/PlayerService";
+  import { teamStore } from '$lib/stores/team-store';
+  import { playerStore } from '$lib/stores/player-store';
   
   export let showAddPlayer: boolean;
   export let closeAddPlayerModal: () => void;
@@ -21,6 +20,12 @@
 
   let players: any[] = [];
   let teams: Team[] = [];
+  
+  let unsubscribeTeams: () => void;
+  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+  
+  let unsubscribePlayers: () => void;
+  unsubscribePlayers = playerStore.subscribe(value => { players = value; });
 
   let filterTeam = -1;
   let filterSurname = "";
@@ -67,10 +72,6 @@
 
   onMount(async () => {
     try{
-      playerService.updatePlayersData();
-      players = await playerService.getPlayers();
-      teams = await teamsService.getTeams();
-      players = addTeamDataToPlayers(players, teams);
       let team = get(fantasyTeam);
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch(error){

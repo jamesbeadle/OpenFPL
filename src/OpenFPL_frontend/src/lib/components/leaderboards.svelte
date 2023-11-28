@@ -1,11 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { SystemService } from "$lib/services/SystemService";
-  import { TeamService } from "$lib/services/TeamService";
-  import { LeaderboardService } from "$lib/services/LeaderboardService";
   import { toastStore } from "$lib/stores/toast-store";
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let isLoading = true;
   let selectedLeaderboardType: number = 1;
