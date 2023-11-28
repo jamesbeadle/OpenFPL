@@ -68,7 +68,7 @@
 
       isLoading = false;
     } catch (error) {
-      toastStore.show("Error fetching manager details", "error");
+      toastStore.show("Error fetching manager details.", "error");
       console.error("Error fetching data:", error);
     }
   });

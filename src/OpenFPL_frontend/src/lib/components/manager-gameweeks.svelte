@@ -32,7 +32,7 @@
         
         isLoading = false;
       } catch (error) {
-        toastStore.show("Error fetching manager gameweeks", "error");
+        toastStore.show("Error fetching manager gameweeks.", "error");
         console.error("Error fetching data:", error);
       }
     });

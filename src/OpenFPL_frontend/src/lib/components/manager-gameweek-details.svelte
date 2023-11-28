@@ -40,7 +40,7 @@
             teams = await teamService.getTeams();
 
         } catch (error) {
-            toastStore.show("Error fetching manager gameweek detail", "error");
+            toastStore.show("Error fetching manager gameweek detail.", "error");
             console.error("Error fetching data:", error);
         }
     });

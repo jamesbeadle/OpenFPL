@@ -17,7 +17,7 @@
       let teamService = new TeamService();
       teams = await teamService.getTeams();
     } catch (error) {
-      toastStore.show("Error fetching teams", "error");
+      toastStore.show("Error fetching teams.", "error");
       console.error("Error fetching data:", error);
     }
   });

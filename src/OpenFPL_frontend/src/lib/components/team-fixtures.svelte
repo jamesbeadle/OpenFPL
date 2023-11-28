@@ -50,7 +50,7 @@
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
     } catch (error) {
-      toastStore.show("Error fetching gameweek points", "error");
+      toastStore.show("Error fetching gameweek points.", "error");
       console.error("Error fetching data:", error);
     }
   });

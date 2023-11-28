@@ -58,7 +58,7 @@
       let systemState = await systemService.getSystemState();
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
     } catch (error) {
-      toastStore.show("Error fetching fixtures", "error");
+      toastStore.show("Error fetching fixtures.", "error");
       console.error("Error fetching data:", error);
     }
   });

@@ -32,7 +32,7 @@
         currentSeason = systemState?.activeSeason.name ?? "";
         
       } catch (error) {
-        toastStore.show("Error fetching fixture validation list", "error");
+        toastStore.show("Error fetching fixture validation list.", "error");
         console.error(error);
       } finally {
         isLoading = false;

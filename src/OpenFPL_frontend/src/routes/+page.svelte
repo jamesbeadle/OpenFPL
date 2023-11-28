@@ -92,7 +92,7 @@ onMount(async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       isLoading = false;
     } catch (error) {
-      toastStore.show("Error fetching homepage data", "error");
+      toastStore.show("Error fetching homepage data.", "error");
       console.error("Error fetching homepage data:", error);
       isLoading = false;
     }

@@ -170,7 +170,7 @@
       progress = 100;
       isLoading = false;
     } catch (error) {
-      toastStore.show("Error fetching team details", "error");
+      toastStore.show("Error fetching team details.", "error");
       console.error("Error fetching homepage data:", error);
       isLoading = false;
     }
@@ -696,7 +696,7 @@
       isLoading = false;
       toastStore.show("Team saved successully!", "success");
     } catch (error) {
-      toastStore.show("Error saving team", "error");
+      toastStore.show("Error saving team.", "error");
       console.error("Error fetching homepage data:", error);
     }
   }

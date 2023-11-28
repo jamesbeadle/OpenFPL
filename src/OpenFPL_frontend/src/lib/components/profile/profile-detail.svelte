@@ -41,7 +41,7 @@
 
       isLoading = false;
     } catch (error) {
-      toastStore.show("Error fetching profile detail", "error");
+      toastStore.show("Error fetching profile detail.", "error");
       console.error("Error fetching data:", error);
     }
   });
@@ -64,7 +64,7 @@
 
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(() => {
-      toastStore.show("Copied", "success");
+      toastStore.show("Copied!", "success");
     });
   }
 

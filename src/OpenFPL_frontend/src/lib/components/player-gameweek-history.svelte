@@ -62,7 +62,7 @@
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
       isLoading = false;
     } catch (error) {
-      toastStore.show("Error fetching player gameweek history", "error");
+      toastStore.show("Error fetching player gameweek history.", "error");
       console.error("Error fetching data:", error);
     }
   });

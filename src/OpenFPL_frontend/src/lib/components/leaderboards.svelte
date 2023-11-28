@@ -60,7 +60,7 @@
       leaderboard = leaderboardData;
       isLoading = false;
     } catch (error) {
-      toastStore.show("Error fetching leaderboard", "error");
+      toastStore.show("Error fetching leaderboard data.", "error");
       console.error("Error fetching data:", error);
     }
   });
@@ -97,7 +97,7 @@
         leaderboard = await leaderboardService.getSeasonLeaderboard();
       }
     } catch (error) {
-      toastStore.show("Error fetching leaderboard", "error");
+      toastStore.show("Error fetching leaderboard data.", "error");
       console.error("Error fetching leaderboard data:", error);
     } finally {
       isLoading = false;

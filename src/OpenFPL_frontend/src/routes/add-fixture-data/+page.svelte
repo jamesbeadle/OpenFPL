@@ -61,7 +61,7 @@
         localStorage.removeItem(`fixtureDraft_${fixtureId}`);
         throw redirect(307, '/fixture-validation');
       } catch (error) {
-        toastStore.show("Error fetching fixture data", "error");
+        toastStore.show("Error fetching fixture data.", "error");
         console.error("Error saving fixture data: ", error);
       }
     }
@@ -69,6 +69,7 @@
     function clearDraft(){
       playerEventData = writable<PlayerEventData[] | []>([]);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
+      toastStore.show("Draft cleared.", "success");
     }
 
   </script>
