@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { Fixture, Season, Team  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
@@ -17,6 +16,8 @@
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { updateTableData } from "../../lib/utils/Helpers";
   import { toastStore } from "$lib/stores/toast";
+  import { isLoading } from '$lib/stores/global-stores';
+    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let selectedGameweek: number = 1;
   let selectedSeason: Season;
@@ -29,15 +30,14 @@
   let nextFixtureAwayTeam: Team | null = null;
   let highestScoringPlayer: PlayerDTO | null = null;
 
-  let progress = 0;
-  let isLoading = true;
   let activeTab: string = "players";
 
   $: id = Number($page.url.searchParams.get("id"));
 
   onMount(async () => {
-    try {
+    isLoading.set(true);
 
+    try {
       const fixtureService = new FixtureService();
       const teamService = new TeamService();
       const systemService = new SystemService();
@@ -76,12 +76,10 @@
         teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
-
-      isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching club details.", "error");
       console.error("Error fetching club details:", error);
-    }
+    } finally{ isLoading.set(false); }
   });
 
   let tableData: any[] = [];
@@ -110,7 +108,7 @@
 
 <Layout>
   {#if isLoading}
-    <LoadingIcon {progress} />
+    <LoadingIcon />
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">

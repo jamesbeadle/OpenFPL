@@ -4,17 +4,20 @@
   export let newUsername: string;
   import { UserService } from "$lib/services/UserService";
   import { toastStore } from "$lib/stores/toast";
+  import { isLoading } from '$lib/stores/global-stores';
 
-  let userService = new UserService();
 
   async function updateUsername() {
+    isLoading.set(true);
     try{      
+      let userService = new UserService();
       await userService.updateUsername(newUsername);
     }
     catch(error){
       toastStore.show("Error updating username." ,"error");
       console.error("Error updating username:" ,error);
     }
+    isLoading.set(true);
     closeModal();
   }
 

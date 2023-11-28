@@ -4,9 +4,10 @@
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
   import { LeaderboardService } from "$lib/services/LeaderboardService";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import { toastStore } from "$lib/stores/toast";
+    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
+  let isLoading = true;
   let selectedLeaderboardType: number = 1;
   let selectedGameweek: number = 1;
   let selectedMonth: number = 1;
@@ -16,8 +17,6 @@
   let currentPage = 1;
   let itemsPerPage = 25;
   let leaderboard: any;
-  let isLoading = true;
-  let progress = 0;
   let currentGameweek: number;
   let focusGameweek: number;
   let totalPages: number = 0;
@@ -56,11 +55,10 @@
       let leaderboardData = await leaderboardService.getWeeklyLeaderboard();
 
       leaderboard = leaderboardData;
-      isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching leaderboard data.", "error");
       console.error("Error fetching leaderboard data:", error);
-    }
+    } finally {isLoading = false;}
   });
 
   $: selectedLeaderboardType,
@@ -140,7 +138,7 @@
 </script>
 
 {#if isLoading}
-  <LoadingIcon {progress} />
+  <LoadingIcon />
 {:else}
   <div class="container-fluid mt-4">
     <div class="flex flex-col space-y-4">

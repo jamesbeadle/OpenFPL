@@ -3,28 +3,26 @@
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { SystemService } from "$lib/services/SystemService";
   import { TeamService } from "$lib/services/TeamService";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import { ManagerService } from "$lib/services/ManagerService";
   import { PlayerService } from "$lib/services/PlayerService";
   import { getPositionAbbreviation } from "$lib/utils/Helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-    import { FixtureService } from "$lib/services/FixtureService";
-    import { toastStore } from "$lib/stores/toast";
-
+  import { FixtureService } from "$lib/services/FixtureService";
+  import { toastStore } from "$lib/stores/toast";
+    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let selectedGameweek: number = 1;
   let teams: Team[] = [];
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  let isLoading = true;
-  let progress = 0;
   let gameweekData: GameweekData[] = [];
   let showModal = false;
   let selectedTeam: Team;
   let selectedOpponentTeam: Team;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
+  let isLoading = true;
   
   onMount(async () => {
     try {
@@ -43,12 +41,10 @@
       selectedGameweek = systemState?.focusGameweek ?? selectedGameweek;
 
       await loadGameweekPoints("");
-
-      isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching gameweek points.", "error");
       console.error("Error fetching gameweek points:", error);
-    }
+    } finally { isLoading = false; }
   });
 
   async function loadGameweekPoints(principalId: string) {
@@ -89,7 +85,7 @@
 </script>
 
 {#if isLoading}
-  <LoadingIcon {progress} />
+  <LoadingIcon />
 {:else}
   {#if showModal}
     <FantasyPlayerDetailModal playerTeam={selectedTeam} opponentTeam={selectedOpponentTeam} seasonName={activeSeasonName} {showModal} {closeDetailModal} gameweekData={selectedGameweekData}  />

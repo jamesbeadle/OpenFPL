@@ -9,23 +9,21 @@
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import { PlayerService } from "$lib/services/PlayerService";
   import type { PlayerDetailDTO, PlayerGameweekDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
-    import { toastStore } from "$lib/stores/toast";
-
-
+  import { toastStore } from "$lib/stores/toast";
+    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  
+  let isLoading = true;
   let selectedGameweek: number = 1;
   let selectedSeason: Season | null = null;
   let fixtures: FixtureWithTeams[] = [];
   let teams: Team[] = [];
   let playerDetails: PlayerDetailDTO;
-  let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
   let selectedOpponent: Team | null = null;
   let opponentCache = new Map<number, Team>();
+  let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
 
-  let progress = 0;
-  let isLoading = true;
   let showModal: boolean = false;
 
   $: id = Number($page.url.searchParams.get("id"));
@@ -60,11 +58,10 @@
       playerDetails = fetchedPlayerDetails;
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
-      isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching player gameweek history.", "error");
       console.error("Error fetching player gameweek history:", error);
-    }
+    } finally {isLoading = false;}
   });
 
   function getTeamFromId(teamId: number): Team | undefined {
@@ -117,7 +114,7 @@
 </script>
 
 {#if isLoading}
-  <LoadingIcon {progress} />
+  <LoadingIcon />
 {:else}
   {#if playerDetails}
     <PlayerGameweekModal

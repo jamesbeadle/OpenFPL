@@ -6,26 +6,23 @@
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { UserService } from "$lib/services/UserService";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import { TeamService } from "$lib/services/TeamService";
-    import { SystemService } from "$lib/services/SystemService";
+  import { SystemService } from "$lib/services/SystemService";
+    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let profile: ProfileDTO;
   let profileSrc = "profile_placeholder.png";
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
-  let isLoading = true;
-  let progress = 0;
   let fileInput: HTMLInputElement;
   let teams: Team[];
   let gameweek: number = 1;
+  let isLoading = true;
 
   onMount(async () => {
     try {
-      incrementProgress(20);
       const userService = new UserService();
       const profileData = await userService.getProfile();
-      incrementProgress(60);
       profile = profileData;
       if(profile.profilePicture.length > 0){
         const blob = new Blob([new Uint8Array(profile.profilePicture)]);
@@ -38,12 +35,10 @@
       let systemService = new SystemService();
       let systemState = await systemService.getSystemState();
       gameweek = systemState?.activeGameweek ?? 1;
-
-      isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching profile detail.", "error");
       console.error("Error fetching profile detail:", error);
-    }
+    } finally { isLoading = false; }
   });
 
   function displayUsernameModal(): void {
@@ -95,20 +90,6 @@
       console.error("Error updating profile image" ,error);
     }
   }
-
-  function incrementProgress(newProgress: number) {
-    const step = 1;
-    const delay = 100;
-
-    function stepProgress() {
-      if (progress < newProgress) {
-        progress += step;
-        setTimeout(stepProgress, delay);
-      }
-    }
-
-    stepProgress();
-  }
 </script>
 
 
@@ -145,7 +126,7 @@
 </style>
 
 {#if isLoading}
-  <LoadingIcon {progress} />
+  <LoadingIcon  />
 {:else}
   <UpdateUsernameModal
     newUsername={profile.displayName}

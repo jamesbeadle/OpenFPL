@@ -4,19 +4,17 @@
     import type { FantasyTeam, ManagerDTO, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { SystemService } from "$lib/services/SystemService";
     import { ManagerService } from "$lib/services/ManagerService";
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
     import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     import { toastStore } from "$lib/stores/toast";
-  
+    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+    
+    let isLoading = true;
     export let principalId = '';
     export let viewGameweekDetail: (principalId: string, selectedGameweek: number) => void;
     let manager: ManagerDTO;
     let selectedGameweek: number = 1;
     let selectedSeason: Season | null = null;
-  
-    let progress = 0;
-    let isLoading = true;
-  
+    
     $: id = $page.url.searchParams.get("id") ?? principalId;
   
     onMount(async () => {
@@ -29,19 +27,17 @@
         selectedSeason = systemState?.activeSeason ?? selectedSeason;
         let managerService = new ManagerService();
         manager = await managerService.getManager(id ?? "", selectedSeason?.id ?? 1, selectedGameweek);
-        
-        isLoading = false;
       } catch (error) {
         toastStore.show("Error fetching manager gameweeks.", "error");
         console.error("Error fetching manager gameweeks:", error);
-      }
+      } finally { isLoading = false; }
     });
 
   
   </script>
   
   {#if isLoading}
-    <LoadingIcon {progress} />
+    <LoadingIcon />
   {:else}
     <div class="flex flex-col space-y-4 text-lg mt-4">
       <div class="overflow-x-auto flex-1">

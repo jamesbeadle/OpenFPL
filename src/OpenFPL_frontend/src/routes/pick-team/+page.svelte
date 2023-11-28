@@ -9,7 +9,6 @@
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
@@ -32,7 +31,8 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-    import { toastStore } from "$lib/stores/toast";
+  import { toastStore } from "$lib/stores/toast";
+  import { isLoading } from '$lib/stores/global-stores';
 
   interface FormationDetails {
     positions: number[];
@@ -71,8 +71,6 @@
   let selectedColumn = -1;
   let pitchView = true;
   let showAddPlayer = false;
-  let progress = 0;
-  let isLoading = true;
   let teamValue = 0;
   let newTeam = true;
 
@@ -93,20 +91,19 @@
   $: isSaveButtonActive = checkSaveButtonConditions();
 
   onMount(async () => {
-    const systemService = new SystemService();
-    const teamService = new TeamService();
-    const fixtureService = new FixtureService();
-    const managerService = new ManagerService();
-    const playerService = new PlayerService();
-
-    await systemService.updateSystemStateData();
-    await fixtureService.updateFixturesData();
-    await teamService.updateTeamsData();
-    await playerService.updatePlayersData();
-
-    isLoading = true;
+    isLoading.set(true);
     try {
-      progress = 20;
+
+      const systemService = new SystemService();
+      const teamService = new TeamService();
+      const fixtureService = new FixtureService();
+      const managerService = new ManagerService();
+      const playerService = new PlayerService();
+
+      await systemService.updateSystemStateData();
+      await fixtureService.updateFixturesData();
+      await teamService.updateTeamsData();
+      await playerService.updatePlayersData();
 
       const storedViewMode = localStorage.getItem("viewMode");
       if (storedViewMode) {
@@ -117,7 +114,6 @@
       activeGameweek = systemState?.activeGameweek ?? activeGameweek;
       activeSeason = systemState?.activeSeason.name ?? activeSeason;
 
-      progress = 40;
 
       let nextFixture = await fixtureService.getNextFixture();
 
@@ -158,22 +154,17 @@
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture.kickOff));
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture.kickOff));
 
-      progress = 60;
       let countdownTime = getCountdownTime(Number(nextFixture.kickOff));
       countdownDays = countdownTime.days.toString();
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
-      progress = 80;
       players = await playerService.getPlayers();
 
-      progress = 100;
-      isLoading = false;
     } catch (error) {
       toastStore.show("Error fetching team details.", "error");
       console.error("Error fetching team details:", error);
-      isLoading = false;
-    }
+    } finally{ isLoading.set(false); }
   });
 
   function getGridSetup(formation: string): number[][] {
@@ -673,7 +664,8 @@
   }
 
   async function saveFantasyTeam() {
-    isLoading = true;
+    isLoading.set(true);
+
     let team = get(fantasyTeam);
 
     if(team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)){
@@ -691,20 +683,16 @@
     let managerService = new ManagerService();
     try {
       await managerService.saveFantasyTeam(team!, activeGameweek);
-      isLoading = false;
       toastStore.show("Team saved successully!", "success");
     } catch (error) {
       toastStore.show("Error saving team.", "error");
       console.error("Error saving team:", error);
-    }
+    } finally{ isLoading.set(false); }
   }
 </script>
 
 <Layout>
-  {#if isLoading}
-    <LoadingIcon {progress} />
-  {:else}
-    <AddPlayerModal
+  <AddPlayerModal
       {handlePlayerSelection}
       filterPosition={selectedPosition}
       filterColumn={selectedColumn}
@@ -1066,5 +1054,4 @@
       </div>
       <BonusPanel {fantasyTeam} {teams} {players} {activeGameweek} />
     </div>
-  {/if}
 </Layout>
