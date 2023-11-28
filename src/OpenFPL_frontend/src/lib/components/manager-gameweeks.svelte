@@ -1,11 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { page } from "$app/stores";
-    import type { FantasyTeam, ManagerDTO, Season, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+    import { systemStore } from "$lib/stores/system-store";
+    import { managerStore } from "$lib/stores/manager-store";
     import { toastStore } from "$lib/stores/toast-store";
+    import type { FantasyTeam, ManagerDTO, Season, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
     import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
     
+    let systemState: SystemState | null;
     let isLoading = true;
     export let principalId = '';
     export let viewGameweekDetail: (principalId: string, selectedGameweek: number) => void;
@@ -13,16 +16,16 @@
     let selectedGameweek: number = 1;
     let selectedSeason: Season | null = null;
     
+    let unsubscribeSystemState: () => void;
+    unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
+  
     $: id = $page.url.searchParams.get("id") ?? principalId;
   
     onMount(async () => {
       try {
-        await systemService.updateSystemStateData();
-        
-        let systemState = await systemService.getSystemState();
         selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
         selectedSeason = systemState?.activeSeason ?? selectedSeason;
-        manager = await managerService.getManager(id ?? "", selectedSeason?.id ?? 1, selectedGameweek);
+        manager = await managerStore.getManager(id ?? "", selectedSeason?.id ?? 1, selectedGameweek);
       } catch (error) {
         toastStore.show("Error fetching manager gameweeks.", "error");
         console.error("Error fetching manager gameweeks:", error);

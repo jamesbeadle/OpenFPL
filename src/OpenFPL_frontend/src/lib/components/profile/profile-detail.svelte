@@ -1,36 +1,39 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { ProfileDTO, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { userStore } from '$lib/stores/user-store';
+  import { teamStore } from '$lib/stores/team-store';
+  import { systemStore } from "$lib/stores/system-store";
+  import type { ProfileDTO, SystemState, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import { toastStore } from "$lib/stores/toast-store";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
-  import { UserService } from "$lib/services/UserService";
-  import { TeamService } from "$lib/services/TeamService";
-  import { SystemService } from "$lib/services/SystemService";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
+  let teams: Team[];
+  let systemState: SystemState | null;
   let profile: ProfileDTO;
   let profileSrc = "profile_placeholder.png";
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let fileInput: HTMLInputElement;
-  let teams: Team[];
   let gameweek: number = 1;
   let isLoading = true;
 
+  let unsubscribeTeams: () => void;
+  unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+
+  let unsubscribeSystemState: () => void;
+  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
+  
   onMount(async () => {
     try {
-      const profileData = await userService.getProfile();
+      const profileData = await userStore.getProfile();
       profile = profileData;
       if(profile.profilePicture.length > 0){
         const blob = new Blob([new Uint8Array(profile.profilePicture)]);
         profileSrc = URL.createObjectURL(blob);
       }
-
-      teams = await teamService.getTeams();
-
-      let systemState = await systemService.getSystemState();
       gameweek = systemState?.activeGameweek ?? 1;
     } catch (error) {
       toastStore.show("Error fetching profile detail.", "error");
@@ -79,7 +82,7 @@
 
   async function uploadProfileImage(file: File) {
     try{
-      await userService.updateProfilePicture(file);
+      await userStore.updateProfilePicture(file);
     }
     catch(error){
       toastStore.show("Error updating profile image" ,"error");

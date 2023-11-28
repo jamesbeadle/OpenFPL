@@ -1,38 +1,37 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { systemStore } from "$lib/stores/system-store";
+    import { toastStore } from "$lib/stores/toast-store";
+    import { teamStore } from "$lib/stores/team-store";
+    import { playerStore } from "$lib/stores/player-store";
     import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
     import { getFlagComponent, getPositionAbbreviation } from "$lib/utils/Helpers";
     import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import type { FantasyTeam, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { FantasyTeam, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import type { GameweekData } from "$lib/interfaces/GameweekData";
     import { get, type Writable } from "svelte/store";
-    import { Id } from "svelte-flag-icons";
-    import { toastStore } from "$lib/stores/toast-store";
+    
+    let teams: Team[] = [];
+    let players: PlayerDTO[] = [];
+    let systemState: SystemState | null;
+    let unsubscribeSystemState: () => void;
+    unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
+  
+    let unsubscribeTeams: () => void;
+    unsubscribeTeams = teamStore.subscribe(value => { teams = value; });
+    
+    let unsubscribePlayers: () => void;
+    unsubscribePlayers = playerStore.subscribe(value => { players = value; });
 
     let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
     export let selectedGameweek: number;
     export let fantasyTeam: Writable<FantasyTeam | null>;
     let gameweekPlayers: GameweekData[] = [];
-    let players: PlayerDTO[];
-    let teams: Team[];
-  
+    
     onMount(async () => {
         try {
-            
-            await systemService.updateSystemStateData();
-            await playerService.updatePlayersData();
-            await playerService.updatePlayerEventsData();
-            await systemService.updateSystemStateData();
-            await teamService.updateTeamsData();
-
-            let systemState = await systemService.getSystemState();
             selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
-
-            gameweekPlayers = await playerService.getGameweekPlayers(get(fantasyTeam)!, selectedGameweek);
-
-            players = await playerService.getPlayers();
-            teams = await teamService.getTeams();
-
+            gameweekPlayers = await playerStore.getGameweekPlayers(get(fantasyTeam)!, selectedGameweek);
         } catch (error) {
             toastStore.show("Error fetching manager gameweek detail.", "error");
             console.error("Error fetching manager gameweek detail:", error);

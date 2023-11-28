@@ -2,7 +2,7 @@
   export let showModal: boolean;
   export let closeModal: () => void;
   export let newUsername: string;
-  import { UserService } from "$lib/services/UserService";
+  import { userStore } from '$lib/stores/user-store';
   import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from '$lib/stores/global-stores';
 
@@ -10,7 +10,7 @@
   async function updateUsername() {
     isLoading.set(true);
     try{      
-      await userService.updateUsername(newUsername);
+      await userStore.updateUsername(newUsername);
     }
     catch(error){
       toastStore.show("Error updating username." ,"error");

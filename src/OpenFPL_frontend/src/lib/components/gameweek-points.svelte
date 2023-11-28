@@ -1,20 +1,34 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { SystemService } from "$lib/services/SystemService";
-  import { TeamService } from "$lib/services/TeamService";
-  import { ManagerService } from "$lib/services/ManagerService";
-  import { PlayerService } from "$lib/services/PlayerService";
+  import { teamStore } from '$lib/stores/team-store';
+  import { systemStore } from "$lib/stores/system-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
   import { getPositionAbbreviation } from "$lib/utils/Helpers";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
-  import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import { FixtureService } from "$lib/services/FixtureService";
   import { toastStore } from "$lib/stores/toast-store";
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import { managerStore } from "$lib/stores/manager-store";
+  import { playerStore } from "$lib/stores/player-store";
+  import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
+  import type { GameweekData } from "$lib/interfaces/GameweekData";
+  import type { SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+
+  let teams: Team[] = [];
+  let systemState: SystemState | null;
+  let fixtures: Fixture[] = [];
+  let unsubscribeTeams: () => void;
+  unsubscribeTeams = teamStore.subscribe(value => { 
+    teams = value.sort((a, b) =>a.friendlyName.localeCompare(b.friendlyName)); 
+  });
+
+  let unsubscribeSystemState: () => void;
+  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
+  
+  let unsubscribeFixtures: () => void;
+  unsubscribeFixtures = fixtureStore.subscribe(value => { fixtures = value;  });
 
   let selectedGameweek: number = 1;
-  let teams: Team[] = [];
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let gameweekData: GameweekData[] = [];
   let showModal = false;
@@ -26,18 +40,6 @@
   
   onMount(async () => {
     try {
-      
-      await systemService.updateSystemStateData();
-      await teamService.updateTeamsData();
-    
-      const fetchedTeams = await teamService.getTeams();
-      teams = fetchedTeams.sort((a, b) =>
-        a.friendlyName.localeCompare(b.friendlyName)
-      );
-
-      let systemState = await systemService.getSystemState();
-      selectedGameweek = systemState?.focusGameweek ?? selectedGameweek;
-
       await loadGameweekPoints("");
     } catch (error) {
       toastStore.show("Error fetching gameweek points.", "error");
@@ -46,9 +48,8 @@
   });
 
   async function loadGameweekPoints(principalId: string) {
-    let fantasyTeam = await managerService.getFantasyTeamForGameweek(principalId, selectedGameweek);
-    
-    gameweekData = await playerService.getGameweekPlayers(fantasyTeam, selectedGameweek);
+    let fantasyTeam = await managerStore.getFantasyTeamForGameweek(principalId, selectedGameweek);
+    gameweekData = await playerStore.getGameweekPlayers(fantasyTeam, selectedGameweek);
   }
 
   const changeGameweek = (delta: number) => {
@@ -60,7 +61,7 @@
       selectedGameweekData = gameweekData;
       let playerTeamId = gameweekData.player.teamId;
       selectedTeam = teams.find(x => x.id === playerTeamId)!;
-      let fixtures = await fixtureService.getFixtures();
+      
       let playerFixture = fixtures.find(x => x.gameweek === gameweekData.gameweek && (x.homeTeamId === playerTeamId || x.awayTeamId === playerTeamId))
       let opponentId = playerFixture?.homeTeamId === playerTeamId ? playerFixture?.awayTeamId : playerFixture?.homeTeamId;
       selectedOpponentTeam = teams.find(x => x.id === opponentId)!;

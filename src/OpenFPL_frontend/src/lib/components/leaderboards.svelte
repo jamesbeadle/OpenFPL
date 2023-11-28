@@ -1,15 +1,28 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { toastStore } from "$lib/stores/toast-store";
+  import { teamStore } from '$lib/stores/team-store';
+  import { systemStore } from "$lib/stores/system-store";
+  import { leaderboardStore } from "$lib/stores/leaderboard-store";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import type { SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
+  let teams: Team[] = [];
+  let systemState: SystemState | null;
+  
+  let unsubscribeTeams: () => void;
+  unsubscribeTeams = teamStore.subscribe(value => { 
+    teams = value.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName)); 
+  });
 
+  let unsubscribeSystemState: () => void;
+  unsubscribeSystemState = systemStore.subscribe(value => { systemState = value; });
+  
   let isLoading = true;
   let selectedLeaderboardType: number = 1;
   let selectedGameweek: number = 1;
   let selectedMonth: number = 1;
   let selectedTeamId: number;
-  let teams: Team[] = [];
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let currentPage = 1;
   let itemsPerPage = 25;
@@ -27,28 +40,15 @@
   onMount(async () => {
     try {
     
-      await systemService.updateSystemStateData();
-      await leaderboardService.updateWeeklyLeaderboardData();
-      await leaderboardService.updateMonthlyLeaderboardData();
-      await leaderboardService.updateSeasonLeaderboardData();
-      await teamService.updateTeamsData();
-    
-      const fetchedTeams = await teamService.getTeams();
-      teams = fetchedTeams.sort((a, b) =>
-        a.friendlyName.localeCompare(b.friendlyName)
-      );
-
-      selectedTeamId = fetchedTeams[0].id;
-
-      let systemState = await systemService.getSystemState();
+      selectedTeamId = teams[0].id;
       currentGameweek = systemState?.activeGameweek ?? 1;
       focusGameweek = systemState?.focusGameweek ?? 1;
       selectedGameweek = systemState?.focusGameweek ?? selectedGameweek;
       selectedMonth = systemState?.activeMonth ?? selectedMonth;
 
-      let leaderboardData = await leaderboardService.getWeeklyLeaderboard();
-
+      let leaderboardData = await leaderboardStore.getWeeklyLeaderboard();
       leaderboard = leaderboardData;
+
     } catch (error) {
       toastStore.show("Error fetching leaderboard data.", "error");
       console.error("Error fetching leaderboard data:", error);
@@ -66,12 +66,12 @@
       isLoading = true;
       if (selectedLeaderboardType === 1) {
         if (selectedGameweek === focusGameweek && currentPage <= 4) {
-          leaderboard = await leaderboardService.getWeeklyLeaderboard();
+          leaderboard = await leaderboardStore.getWeeklyLeaderboard();
         } else if (
           selectedGameweek < focusGameweek ||
           (selectedGameweek === focusGameweek && currentPage > 4)
         ) {
-          leaderboard = await leaderboardService.getWeeklyLeaderboardPage(
+          leaderboard = await leaderboardStore.getWeeklyLeaderboardPage(
             selectedGameweek,
             currentPage
           );
@@ -79,11 +79,11 @@
           leaderboard = null;
         }
       } else if (selectedLeaderboardType === 2) {
-        leaderboard = await leaderboardService.getMonthlyLeaderboard(
+        leaderboard = await leaderboardStore.getMonthlyLeaderboard(
           selectedTeamId
         );
       } else if (selectedLeaderboardType === 3) {
-        leaderboard = await leaderboardService.getSeasonLeaderboard();
+        leaderboard = await leaderboardStore.getSeasonLeaderboard();
       }
     } catch (error) {
       toastStore.show("Error fetching leaderboard data.", "error");
