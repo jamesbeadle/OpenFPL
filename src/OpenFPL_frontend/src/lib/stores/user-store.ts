@@ -1,14 +1,14 @@
-import { writable } from 'svelte/store';
+import { writable, type Unsubscriber } from 'svelte/store';
 import { authStore } from '$lib/stores/auth';
 import type { OptionIdentity } from '$lib/types/Identity';
-import { idlFactory } from 'path-to-idlFactory';
-import { ActorFactory } from 'path-to-ActorFactory';
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { ActorFactory } from "../../utils/ActorFactory";
 
 function createUserStore() {
-  const { subscribe, set, update } = writable<any>(null); // Replace 'any' with the actual user type
+  const { subscribe, set, update } = writable<any>(null);
 
   async function actorFromIdentity() {
-    let unsubscribe;
+    let unsubscribe: Unsubscriber;
     return new Promise<OptionIdentity>((resolve, reject) => {
       unsubscribe = authStore.subscribe((store) => {
         if (store.identity) {
@@ -29,7 +29,6 @@ function createUserStore() {
     try {
       const identityActor = await actorFromIdentity();
       const result = await identityActor.updateDisplayName(username);
-      // Update the user store if necessary
       return result;
     } catch (error) {
       console.error("Error updating username:", error);
@@ -41,7 +40,6 @@ function createUserStore() {
     try {
       const identityActor = await actorFromIdentity();
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
-      // Update the user store if necessary
       return result;
     } catch (error) {
       console.error("Error updating favourite team:", error);
@@ -53,7 +51,7 @@ function createUserStore() {
     try {
       const identityActor = await actorFromIdentity();
       const result = await identityActor.getProfileDTO();
-      set(result); // Set the user's profile in the store
+      set(result);
       return result;
     } catch (error) {
       console.error("Error getting profile:", error);
@@ -62,8 +60,29 @@ function createUserStore() {
   }
 
   async function updateProfilePicture(picture: File): Promise<any> {
-    // Implementation of updateProfilePicture
-    // ...
+    try {
+      const maxPictureSize = 1000; 
+
+      if (picture.size > maxPictureSize * 1024) {
+        return null;
+      }
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(picture);
+      reader.onloadend = async () => {
+        const arrayBuffer = reader.result as ArrayBuffer;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        try {
+          const identityActor = await actorFromIdentity();
+          const result = await identityActor.updateProfilePicture(uint8Array);
+          return result;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
   }
 
   return {
@@ -72,7 +91,6 @@ function createUserStore() {
     updateFavouriteTeam,
     getProfile,
     updateProfilePicture
-    // Add any other methods as needed
   };
 }
 
