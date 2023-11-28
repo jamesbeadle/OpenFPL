@@ -257,7 +257,7 @@
               <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer">
                 <div class="w-1/6 px-4">{entry.positionText}</div>
                 <div class="w-1/3 px-4">
-                  <a href={`/manager?id=${entry.principalId}`}>{entry.username}</a>
+                  <a href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}>{entry.username}</a>
                 </div>
                 <div class="w-1/2 px-4">{entry.points}</div>
               </div>

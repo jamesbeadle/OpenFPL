@@ -265,7 +265,7 @@ onMount(async () => {
               GW {focusGameweek} High Score
             </p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              <a href={`/manager?id=${weeklyLeader.principalId}`}
+              <a href={`/manager?id=${weeklyLeader.principalId}&gw=${activeGameweek}`}
                 >{weeklyLeader.username}</a
               >
             </p>

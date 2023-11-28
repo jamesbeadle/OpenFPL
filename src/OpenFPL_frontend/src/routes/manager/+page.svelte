@@ -25,6 +25,7 @@
   let fantasyTeam: Writable<FantasyTeam | null>;
 
   $: id = $page.url.searchParams.get("id");
+  $: gw = Number($page.url.searchParams.get("gw"));
   onMount(async () => {
     try {
       let systemService = new SystemService();
@@ -32,7 +33,7 @@
       let teamService = new TeamService();
 
       let systemState = await systemService.getSystemState();
-      selectedGameweek = systemState?.activeGameweek ?? 1;
+      selectedGameweek = gw ? gw : systemState?.activeGameweek ?? 1;
       selectedSeason = systemState?.activeSeason.name ?? "";
 
       manager = await managerService.getManager(id ?? "", systemState?.activeSeason.id ?? 1, systemState?.activeGameweek ?? 1);
