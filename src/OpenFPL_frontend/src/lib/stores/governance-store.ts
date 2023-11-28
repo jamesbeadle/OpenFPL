@@ -1,15 +1,16 @@
 import { writable } from 'svelte/store';
+import type { Unsubscriber } from "svelte/store";
 import { authStore } from '$lib/stores/auth';
-import type { OptionIdentity } from '$lib/types/Identity';
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
-import type { PlayerEventData } from 'path-to-your-types';
+import type { OptionIdentity } from '$lib/types/Identity';
+import type { Fixture, PlayerEventData } from "../../../../declarations/player_canister/player_canister.did";
 
 function createGovernanceStore() {
-  const { subscribe, set } = writable<any[]>([]); // Replace 'any' with the actual fixture type
+  const { subscribe, set } = writable<Fixture[]>([]);
 
   async function actorFromIdentity() {
-    let unsubscribe;
+    let unsubscribe: Unsubscriber;
     return new Promise<OptionIdentity>((resolve, reject) => {
       unsubscribe = authStore.subscribe((store) => {
         if (store.identity) {
@@ -28,7 +29,7 @@ function createGovernanceStore() {
 
   async function getValidatableFixtures(): Promise<any[]> {
     const identityActor = await actorFromIdentity();
-    const fixtures = await identityActor.getValidatableFixtures();
+    const fixtures = await identityActor.getValidatableFixtures() as Fixture[];
     set(fixtures);
     return fixtures;
   }

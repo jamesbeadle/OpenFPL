@@ -4,19 +4,23 @@ import type {
   LeaderboardEntry,
   PaginatedClubLeaderboard,
   PaginatedLeaderboard,
+  SystemState,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
-import { SystemService } from "./SystemService";
+import { systemStore } from '$lib/stores/system-store';
 
 export class LeaderboardService {
   private actor: any;
   private itemsPerPage = 25;
+  private systemState: SystemState | null = null;
+
   constructor() {
     this.actor = ActorFactory.createActor(
       idlFactory,
       process.env.OPENFPL_BACKEND_CANISTER_ID
     );
+    systemStore.subscribe(value => { this.systemState = value });
   }
 
   async updateWeeklyLeaderboardData() {
@@ -25,11 +29,9 @@ export class LeaderboardService {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      await systemService.updateSystemStateData();
-      let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getWeeklyLeaderboardCache(
-        systemState?.activeSeason.id,
-        systemState?.focusGameweek
+        this.systemState?.activeSeason.id,
+        this.systemState?.focusGameweek
       );
       localStorage.setItem(
         "weekly_leaderboard_data",
@@ -45,11 +47,9 @@ export class LeaderboardService {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      await systemService.updateSystemStateData();
-      let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getClubLeaderboardsCache(
-        systemState?.activeSeason.id,
-        systemState?.activeMonth
+        this.systemState?.activeSeason.id,
+        this.systemState?.activeMonth
       );
       localStorage.setItem(
         "monthly_leaderboard_data",
@@ -65,10 +65,8 @@ export class LeaderboardService {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      await systemService.updateSystemStateData();
-      let systemState = await systemService.getSystemState();
       let updatedLeaderboardData = await this.actor.getSeasonLeaderboardCache(
-        systemState?.activeSeason.id
+        this.systemState?.activeSeason.id
       );
       localStorage.setItem(
         "season_leaderboard_data",

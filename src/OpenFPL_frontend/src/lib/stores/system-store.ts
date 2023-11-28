@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { SystemState, DataCache } from 'path-to-your-types';
+import type { SystemState, DataCache } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
@@ -12,7 +12,7 @@ function createSystemStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function updateSystemStateData() {
+  async function sync() {
     let category = "system_state";
     const newHashValues: DataCache[] = await actor.getDataHashes();
     let liveHash = newHashValues.find(x => x.category === category) ?? null;
@@ -35,9 +35,16 @@ function createSystemStore() {
     }
   }
 
+  async function getSystemState(): Promise<SystemState | undefined> {
+    let systemState;
+    subscribe(value => { systemState = value! })();
+    return systemState;
+  }
+
   return {
     subscribe,
-    updateSystemStateData
+    sync,
+    getSystemState
   };
 }
 

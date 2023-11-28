@@ -15,7 +15,7 @@ function createPlayerStore() {
     process.env.PLAYER_CANISTER_CANISTER_ID
   );
 
-  async function updatePlayersData() {
+  async function sync() {
     let category = "players";
     const newHashValues: DataCache[] = await actor.getDataHashes();
     let livePlayersHash = newHashValues.find(x => x.category === category) ?? null;
@@ -52,7 +52,7 @@ function createPlayerStore() {
 
   return {
     subscribe,
-    updatePlayersData,
+    sync,
     getPlayerDetails,
     // ... (Expose other methods)
   };

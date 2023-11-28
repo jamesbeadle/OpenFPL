@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Fixture, DataCache } from 'path-to-your-types';
+import type { DataCache, Fixture } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { authStore } from '$lib/stores/auth';
 import type { OptionIdentity } from '$lib/types/Identity';
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
@@ -28,7 +28,7 @@ function createFixtureStore() {
     );
   }
 
-  async function updateFixturesData() {
+  async function sync() {
     if (!actor) actor = await actorFromIdentity();
 
     let category = "fixtures";
@@ -64,7 +64,7 @@ function createFixtureStore() {
 
   return {
     subscribe,
-    updateFixturesData,
+    sync,
     getNextFixture
   };
 }

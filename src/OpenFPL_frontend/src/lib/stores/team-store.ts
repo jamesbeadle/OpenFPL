@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store';
-import type { DataCache, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
+import type { DataCache, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createTeamStore() {
   const { subscribe, set } = writable<Team[]>([]);
@@ -15,8 +15,7 @@ function createTeamStore() {
   async function sync() {
     const category = "teams";
     const newHashValues: DataCache[] = await actor.getDataHashes() as DataCache[];
-    const liveTeamsHash =
-      newHashValues.find(x => x.category === category) ?? null;
+    const liveTeamsHash = newHashValues.find(x => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
     if (liveTeamsHash?.hash != localHash) {
