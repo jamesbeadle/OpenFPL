@@ -1,25 +1,43 @@
 <script lang="ts">
-  import { writable } from "svelte/store";
+  import { isLoading } from '../lib/stores/global-stores';
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
   import Toast from "$lib/components/toast.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import "../app.css";
 
-  export const isLoading = writable(true);
-  isLoading.subscribe(value => {
-    console.log('isLoading:', value);
-  });
 </script>
 
-<div class="flex flex-col h-screen justify-between">
+<div class="flex flex-col h-screen justify-between custom-container">
   <Header />
-  <main class="mb-auto">
-    <slot />
-  </main>
   <Toast />
   {#if $isLoading}
-    <LoadingIcon />
+    <div class="loading-overlay">
+      <LoadingIcon />
+    </div>
+  {:else}
+    <main>
+      <slot />
+    </main>
   {/if}
   <Footer />
 </div>
+
+<style>
+   .custom-container {
+    position: relative;
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+</style>
