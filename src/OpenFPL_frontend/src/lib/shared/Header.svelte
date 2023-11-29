@@ -70,7 +70,7 @@
         </svg>
       </button>
       {#if isLoggedIn}
-        <ul class="hidden md:flex">
+        <ul class="hidden md:flex text-base md:text-xs lg:text-base">
           <li class="mx-2 flex items-center h-16">
             <a
               href="/"

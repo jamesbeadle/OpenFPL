@@ -99,7 +99,7 @@
 
 <Layout>
   <div class="m-4">
-    <div class="flex flex-col md:flex-row">
+    <div class="flex flex-col lg:flex-row">
       <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Gameweek</p>
@@ -210,28 +210,28 @@
 
   <div class="mx-4">
     <div class="bg-panel rounded-md mx-4">
-      <ul class="flex bg-light-gray px-4 pt-2">
-        <li class={`mr-4 text-xs md:text-base ${ activeTab === "fixtures" ? "active-tab" : "" }`}>
+      <ul class="flex bg-light-gray px-4 pt-2 text-xs md:text-sm lg:text-base">
+        <li class={`mr-4 ${ activeTab === "fixtures" ? "active-tab" : "" }`}>
           <button class={`p-2 ${ activeTab === "fixtures" ? "text-white" : "text-gray-400" }`} 
             on:click={() => setActiveTab("fixtures")}>
             Fixtures
           </button>
         </li>
         {#if isLoggedIn}
-          <li class={`mr-4 text-xs md:text-base ${ activeTab === "points" ? "active-tab" : "" }`}>
+          <li class={`mr-4 ${ activeTab === "points" ? "active-tab" : "" }`}>
             <button class={`p-2 ${ activeTab === "points" ? "text-white" : "text-gray-400" }`}
               on:click={() => setActiveTab("points")}>
               Points
             </button>
           </li>
         {/if}
-        <li class={`mr-4 text-xs md:text-base ${ activeTab === "leaderboards" ? "active-tab" : "" }`}>
+        <li class={`mr-4 ${ activeTab === "leaderboards" ? "active-tab" : "" }`}>
           <button class={`p-2 ${ activeTab === "leaderboards" ? "text-white" : "text-gray-400"}`}
             on:click={() => setActiveTab("leaderboards")}>
             Leaderboards
           </button>
         </li>
-        <li class={`mr-4 text-xs md:text-base ${ activeTab === "league-table" ? "active-tab" : "" }`}>
+        <li class={`mr-4 ${ activeTab === "league-table" ? "active-tab" : "" }`}>
           <button class={`p-2 ${ activeTab === "league-table" ? "text-white" : "text-gray-400" }`}
             on:click={() => setActiveTab("league-table")}>
             Table
