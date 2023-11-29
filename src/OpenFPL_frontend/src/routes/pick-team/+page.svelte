@@ -738,9 +738,7 @@
     />
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div
-          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -749,22 +747,15 @@
             <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
 
-          <div
-            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
 
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
             <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
-                  >h</span
-                >
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
-                  >m</span
-                >
+                : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
               </p>
             </div>
             <p class="text-gray-300 text-xs">
@@ -772,10 +763,7 @@
             </p>
           </div>
 
-          <div
-            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
 
           <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
             <p class="text-gray-300 text-xs">Players</p>
@@ -786,37 +774,27 @@
           </div>
         </div>
 
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
-          <div class="flex-grow">
+        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+          <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xs">Team Value</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               £{teamValue.toFixed(2)}m
             </p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
-          <div class="flex-grow">
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
             <p class="text-gray-300 text-xs">Bank Balance</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               £{($bankBalance / 4).toFixed(2)}m
             </p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
-          <div class="flex-grow">
+          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
             <p class="text-gray-300 text-xs">Transfers</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {$transfersAvailable === Infinity
-                ? "Unlimited"
-                : $transfersAvailable}
+              {$transfersAvailable === Infinity ? "Unlimited" : $transfersAvailable}
             </p>
             <p class="text-gray-300 text-xs">Available</p>
           </div>
@@ -904,11 +882,11 @@
                           <div class="flex justify-center items-center">
                             <div class="flex justify-between items-end w-full">
                               <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
-                                <RemovePlayerIcon className="w-5 h-5 p-1" />
+                                <RemovePlayerIcon className="w-4 h-4 p-1" />
                               </button>
                               <div class="flex justify-center items-center flex-grow">
                                 <ShirtIcon
-                                  className="h-16"
+                                  className="h-8 md:h-16"
                                   primaryColour={team?.primaryColourHex}
                                   secondaryColour={team?.secondaryColourHex}
                                   thirdColour={team?.thirdColourHex}
@@ -916,34 +894,34 @@
                               </div>
                               {#if $fantasyTeam?.captainId === playerId}
                                 <span class="mb-1">
-                                  <ActiveCaptainIcon className="w-6 h-6" />
+                                  <ActiveCaptainIcon className="w-4 h-4 md:w-6 md:h-6" />
                                 </span>
                               {:else}
                                 <button on:click={() => setCaptain(player.id)} class="mb-1">
-                                  <PlayerCaptainIcon className="w-6 h-6" />
+                                  <PlayerCaptainIcon className="w-4 h-4 md:w-6 md:h-6" />
                                 </button>
                               {/if}
                             </div>
                           </div>
                           <div class="flex flex-col justify-center items-center text-xs">
-                            <div class="flex justify-center items-center bg-gray-700 px-2 py-1 rounded-t-md min-w-[100px]">
-                              <p class="min-w-[20px]">{getPositionAbbreviation(player.position)}</p>
-                              <svelte:component this={getFlagComponent(player.nationality)} class="h-4 w-4 ml-2 mr-2 min-w-[15px]"/>
-                              <p class="truncate min-w-[60px] max-w-[60px]">
+                            <div class="flex justify-center items-center bg-gray-700 md:px-2 py-1 rounded-t-md min-w-[80px] max-w-[80px]">
+                              <p class="collapse md:visible md:min-w-[20px]">{getPositionAbbreviation(player.position)}</p>
+                              <svelte:component this={getFlagComponent(player.nationality)} class="h-2 w-2 md:h-4 md:w-4 mr-1 md:mr-0 md:mx-1 md:mx-2 min-w-[15px]"/>
+                              <p class="truncate min-w-[50px] max-w-[50px]">
                                 {player.firstName.length > 2 ? player.firstName.substring(0, 1) + "." : ""} {player.lastName}
                               </p>
                             </div>
-                            <div class="flex justify-center items-center bg-white text-black px-2 py-1 rounded-b-md min-w-[100px]">
-                              <p class="min-w-[20px]">
+                            <div class="flex justify-center items-center bg-white text-black md:px-2 py-1 rounded-b-md min-w-[80px] max-w-[80px]">
+                              <p class="collapse md:visible md:min-w-[20px]">
                                 {team?.abbreviatedName}
                               </p>
                               <BadgeIcon
-                                className="h-4 w-4 mr-2 ml-2 min-w-[15px]"
+                                className="h-4 w-4 mr-1 md:mr-0 md:mx-1 min-w-[15px]"
                                 primaryColour={team?.primaryColourHex}
                                 secondaryColour={team?.secondaryColourHex}
                                 thirdColour={team?.thirdColourHex}
                               />
-                              <p class="truncate min-w-[60px] max-w-[60px]">
+                              <p class="truncate min-w-[50px] max-w-[50px]">
                                 £{(Number(player.value) / 4).toFixed(2)}m
                               </p>
                             </div>
