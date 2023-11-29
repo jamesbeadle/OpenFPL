@@ -2,7 +2,7 @@ import { c as create_ssr_component, v as validate_component } from "../../../chu
 import { L as Layout } from "../../../chunks/Layout.js";
 const _page_svelte_svelte_type_style_lang = "";
 const css = {
-  code: ".striped.svelte-a09ql9 tr.svelte-a09ql9:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
+  code: ".striped.svelte-58jp75 tr.svelte-58jp75:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
   map: null
 };
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -48,37 +48,37 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
             team:
           </p>
 
-          <table class="w-full border-collapse striped mb-8 mt-4 svelte-a09ql9"><tr class="svelte-a09ql9"><th class="text-left px-4 py-2">For</th>
+          <table class="w-full border-collapse striped mb-8 mt-4 svelte-58jp75"><tr class="svelte-58jp75"><th class="text-left px-4 py-2">For</th>
               <th class="text-left">Points</th></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Appearing in the game.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Appearing in the game.</td>
               <td>5</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Every 3 saves a goalkeeper makes.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Every 3 saves a goalkeeper makes.</td>
               <td>5</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Goalkeeper or defender cleansheet.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Goalkeeper or defender cleansheet.</td>
               <td>10</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Forward scores a goal.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Forward scores a goal.</td>
               <td>10</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Midfielder or Forward assists a goal.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Midfielder or Forward assists a goal.</td>
               <td>10</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Midfielder scores a goal.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Midfielder scores a goal.</td>
               <td>15</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Goalkeeper or defender assists a goal.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Goalkeeper or defender assists a goal.</td>
               <td>15</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Goalkeeper or defender scores a goal.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Goalkeeper or defender scores a goal.</td>
               <td>20</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Goalkeeper saves a penalty.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Goalkeeper saves a penalty.</td>
               <td>20</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Player is highest scoring player in match.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Player is highest scoring player in match.</td>
               <td>25</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Player receives a red card.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Player receives a red card.</td>
               <td>-20</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Player misses a penalty.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Player misses a penalty.</td>
               <td>-15</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Each time a goalkeeper or defender concedes 2 goals.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Each time a goalkeeper or defender concedes 2 goals.</td>
               <td>-15</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">A player scores an own goal.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">A player scores an own goal.</td>
               <td>-10</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">A player receives a yellow card.</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">A player receives a yellow card.</td>
               <td>-5</td></tr></table>
 
           <h2 class="text-xl font-bold">Bonuses</h2>
@@ -86,35 +86,35 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
             the following 8 bonuses:
           </p>
 
-          <table class="w-full border-collapse striped mb-8 mt-4 svelte-a09ql9"><tr class="svelte-a09ql9"><th class="text-left px-4 py-2">Bonus</th>
+          <table class="w-full border-collapse striped mb-8 mt-4 svelte-58jp75"><tr class="svelte-58jp75"><th class="text-left px-4 py-2">Bonus</th>
               <th class="text-left">Description</th></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Goal Getter</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Goal Getter</td>
               <td>Select a player you think will score in a game to receive a X3
                 mulitplier for each goal scored.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Pass Master</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Pass Master</td>
               <td>Select a player you think will assist in a game to receive a X3
                 mulitplier for each assist.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">No Entry</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">No Entry</td>
               <td>Select a goalkeeper or defender you think will keep a clean
                 sheet to receive a X3 multipler on their total score.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Team Boost</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Team Boost</td>
               <td>Receive a X2 multiplier from all players from a single club
                 that are in your team.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Safe Hands</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Safe Hands</td>
               <td>Receive a X3 multiplier on your goalkeeper if they make 5 saves
                 in a match.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Captain Fantastic</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Captain Fantastic</td>
               <td>Receive a X2 multiplier on your team captain&#39;s score if they
                 score a goal in a match.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Countrymen</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Countrymen</td>
               <td>Receive a X2 multiplier for players of a selected nationality.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Prospects</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Prospects</td>
               <td>Receive a X2 multiplier for players under the age of 21.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Brace Bonus</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Brace Bonus</td>
               <td>Receive a X2 multiplier on a player&#39;s score if they score 2 or
                 more goals in a game. Applies to every player who scores a
                 brace.</td></tr>
-            <tr class="svelte-a09ql9"><td class="text-left px-4 py-2">Hat Trick Hero</td>
+            <tr class="svelte-58jp75"><td class="text-left px-4 py-2">Hat Trick Hero</td>
               <td>Receive a X3 multiplier on a player&#39;s score if they score 3 or
                 more goals in a game. Applies to every player who scores a
                 hat-trick.</td></tr></table></div></div></div></div>`;

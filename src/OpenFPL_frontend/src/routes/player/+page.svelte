@@ -21,10 +21,14 @@
     getPositionText,
     updateTableData,
   } from "../../lib/utils/Helpers";
-  import type { Fixture, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Fixture,
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
- 
+
   let selectedGameweek: number = 1;
   let selectedPlayer: PlayerDTO | null = null;
   let players: PlayerDTO[] = [];
@@ -33,7 +37,7 @@
   let systemState: SystemState | null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let team: Team | null = null;
-  
+
   let unsubscribeSystemState: () => void;
   let unsubscribeTeams: () => void;
   let unsubscribePlayers: () => void;
@@ -58,7 +62,6 @@
       await fixtureStore.sync();
       await systemStore.sync();
       await playerStore.sync();
-      
 
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;
@@ -80,7 +83,6 @@
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
       });
-      
 
       selectedPlayer = players.find((x) => x.id === id) ?? null;
       team = teams.find((x) => x.id === selectedPlayer?.teamId) ?? null;
@@ -94,8 +96,8 @@
         teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
-      console.log(nextFixtureHomeTeam)
-      
+      console.log(nextFixtureHomeTeam);
+
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
       let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
@@ -128,7 +130,9 @@
 <Layout>
   <div class="m-4">
     <div class="flex flex-col md:flex-row">
-      <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+      <div
+        class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+      >
         <div class="flex-grow flex flex-col items-center">
           <p class="text-gray-300 text-xs">
             {getPositionText(selectedPlayer?.position ?? -1)}
@@ -145,7 +149,10 @@
             Shirt: {selectedPlayer?.shirtNumber}
           </p>
         </div>
-        <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
+        <div
+          class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+          style="min-width: 2px; min-height: 50px;"
+        />
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">{team?.name}</p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -159,7 +166,10 @@
             />{selectedPlayer?.firstName}
           </p>
         </div>
-        <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
+        <div
+          class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+          style="min-width: 2px; min-height: 50px;"
+        />
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Value</p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -167,7 +177,10 @@
           </p>
           <p class="text-gray-300 text-xs">Weekly Change: 0%</p>
         </div>
-        <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;"/>
+        <div
+          class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+          style="min-height: 2px; min-width: 2px;"
+        />
         <div class="flex-grow mb-4 md:mb-0">
           <p class="text-gray-300 text-xs">Age</p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -180,16 +193,29 @@
           </p>
         </div>
       </div>
-      <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+      <div
+        class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+      >
         <div class="flex-grow mb-4 md:mb-0">
           <p class="text-gray-300 text-xs">Next Game:</p>
           <div class="flex justify-center mb-2 mt-2">
             <div class="flex justify-center items-center">
               <div class="w-10 ml-4 mr-4">
-                <a href={`/club?id=${ nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1 }`}>
-                  <BadgeIcon primaryColour={nextFixtureHomeTeam ? nextFixtureHomeTeam.primaryColourHex : ""}
-                    secondaryColour={nextFixtureHomeTeam ? nextFixtureHomeTeam.secondaryColourHex : ""} 
-                    thirdColour={nextFixtureHomeTeam ? nextFixtureHomeTeam.thirdColourHex : ""}
+                <a
+                  href={`/club?id=${
+                    nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                  }`}
+                >
+                  <BadgeIcon
+                    primaryColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.primaryColourHex
+                      : ""}
+                    secondaryColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.secondaryColourHex
+                      : ""}
+                    thirdColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.thirdColourHex
+                      : ""}
                   />
                 </a>
               </div>
@@ -197,10 +223,21 @@
                 <p class="text-xs mt-2 mb-2 font-bold">v</p>
               </div>
               <div class="w-10 ml-4">
-                <a href={`/club?id=${ nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1 }`}>
-                  <BadgeIcon primaryColour={nextFixtureAwayTeam ? nextFixtureAwayTeam.primaryColourHex : ""}
-                    secondaryColour={nextFixtureAwayTeam ? nextFixtureAwayTeam.secondaryColourHex : ""}
-                    thirdColour={nextFixtureAwayTeam ? nextFixtureAwayTeam.thirdColourHex : ""}
+                <a
+                  href={`/club?id=${
+                    nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                  }`}
+                >
+                  <BadgeIcon
+                    primaryColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.primaryColourHex
+                      : ""}
+                    secondaryColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.secondaryColourHex
+                      : ""}
+                    thirdColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.thirdColourHex
+                      : ""}
                   />
                 </a>
               </div>
@@ -209,29 +246,49 @@
           <div class="flex justify-center">
             <div class="w-10 ml-4 mr-4">
               <p class="text-gray-300 text-xs text-center">
-                <a class="text-gray-300 text-xs text-center" 
-                href={`/club?id=${ nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1 }`}>
-                {nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ""}</a>
+                <a
+                  class="text-gray-300 text-xs text-center"
+                  href={`/club?id=${
+                    nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                  }`}
+                >
+                  {nextFixtureHomeTeam
+                    ? nextFixtureHomeTeam.abbreviatedName
+                    : ""}</a
+                >
               </p>
             </div>
             <div class="w-v ml-2 mr-2" />
             <div class="w-10 ml-4">
               <p class="text-gray-300 text-xs text-center">
-                <a class="text-gray-300 text-xs text-center" 
-                href={`/club?id=${ nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1 }`}>
-                {nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ""}</a>
+                <a
+                  class="text-gray-300 text-xs text-center"
+                  href={`/club?id=${
+                    nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                  }`}
+                >
+                  {nextFixtureAwayTeam
+                    ? nextFixtureAwayTeam.abbreviatedName
+                    : ""}</a
+                >
               </p>
             </div>
           </div>
         </div>
-        <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
+        <div
+          class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+          style="min-height: 2px; min-width: 2px;"
+        />
         <div class="flex-grow mb-4 md:mb-0">
           <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
           <div class="flex">
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-              : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
-              : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+              : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span
+              >
+              : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
+                >m</span
+              >
             </p>
           </div>
           <p class="text-gray-300 text-xs">
@@ -245,9 +302,17 @@
   <div class="m-4">
     <div class="bg-panel rounded-md m-4">
       <ul class="flex bg-light-gray px-4 pt-2">
-        <li class={`mr-4 text-xs md:text-lg ${ activeTab === "history" ? "active-tab" : "" }`}>
-          <button class={`p-2 ${ activeTab === "history" ? "text-white" : "text-gray-400" }`}
-            on:click={() => setActiveTab("history")}>
+        <li
+          class={`mr-4 text-xs md:text-lg ${
+            activeTab === "history" ? "active-tab" : ""
+          }`}
+        >
+          <button
+            class={`p-2 ${
+              activeTab === "history" ? "text-white" : "text-gray-400"
+            }`}
+            on:click={() => setActiveTab("history")}
+          >
             Gameweek History
           </button>
         </li>

@@ -95,7 +95,7 @@
               <th scope="col">Action</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody class="divide-y divide-gray-200">
             {#each fixtures as fixture, index (fixture.id)}
               <tr>
                 <td>{index + 1}</td>

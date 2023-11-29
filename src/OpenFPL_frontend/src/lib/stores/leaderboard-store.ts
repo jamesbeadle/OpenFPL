@@ -107,7 +107,7 @@ function createLeaderboardStore() {
   ): Promise<PaginatedLeaderboard> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-  
+
     if (currentPage <= 4) {
       const cachedData = localStorage.getItem("weekly_leaderboard_data");
       if (cachedData) {
@@ -120,7 +120,7 @@ function createLeaderboardStore() {
         };
       }
     }
-  
+
     let leaderboardData = await actor.getWeeklyLeaderboard(
       systemState?.activeSeason.id,
       gameweek,
@@ -129,7 +129,7 @@ function createLeaderboardStore() {
     );
     return leaderboardData;
   }
-  
+
   async function getMonthlyLeaderboard(
     clubId: number,
     month: number,
@@ -137,12 +137,15 @@ function createLeaderboardStore() {
   ): Promise<PaginatedClubLeaderboard | null> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-  
+
     if (currentPage <= 4) {
       const cachedData = localStorage.getItem("monthly_leaderboard_data");
       if (cachedData) {
-        let cachedLeaderboards: PaginatedClubLeaderboard[] = JSON.parse(cachedData);
-        let clubLeaderboard = cachedLeaderboards.find((x) => x.clubId === clubId);
+        let cachedLeaderboards: PaginatedClubLeaderboard[] =
+          JSON.parse(cachedData);
+        let clubLeaderboard = cachedLeaderboards.find(
+          (x) => x.clubId === clubId
+        );
         if (clubLeaderboard) {
           return {
             ...clubLeaderboard,
@@ -151,7 +154,7 @@ function createLeaderboardStore() {
         }
       }
     }
-  
+
     let leaderboardData = await actor.getClubLeaderboard(
       systemState?.activeSeason.id,
       month,
@@ -161,14 +164,13 @@ function createLeaderboardStore() {
     );
     return leaderboardData;
   }
-  
 
   async function getSeasonLeaderboardPage(
     currentPage: number
   ): Promise<PaginatedLeaderboard> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-  
+
     if (currentPage <= 4) {
       const cachedData = localStorage.getItem("season_leaderboard_data");
       if (cachedData) {
@@ -179,7 +181,7 @@ function createLeaderboardStore() {
         };
       }
     }
-  
+
     let leaderboardData = await actor.getSeasonLeaderboard(
       systemState?.activeSeason.id,
       limit,
@@ -187,7 +189,6 @@ function createLeaderboardStore() {
     );
     return leaderboardData;
   }
-  
 
   async function getLeadingWeeklyTeam(): Promise<LeaderboardEntry> {
     let weeklyLeaderboard = await getWeeklyLeaderboard();

@@ -1,10 +1,10 @@
 import { c as create_ssr_component, d as add_attribute, a as subscribe, o as onDestroy, v as validate_component, e as escape, m as missing_component } from "../../../chunks/index3.js";
 import { p as page } from "../../../chunks/stores.js";
-import "../../../chunks/system-store.js";
-import { a as LoadingIcon, L as Layout } from "../../../chunks/Layout.js";
+import "../../../chunks/player-store.js";
 import { u as updateTableData, b as getPositionText, c as calculateAgeFromNanoseconds, d as convertDateToReadable, a as getFlagComponent } from "../../../chunks/team-store.js";
 import "../../../chunks/fixture-store.js";
-import "../../../chunks/player-store.js";
+import "../../../chunks/system-store.js";
+import { a as LoadingIcon, L as Layout } from "../../../chunks/Layout.js";
 import { B as BadgeIcon } from "../../../chunks/BadgeIcon.js";
 const ShirtIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { className = "" } = $$props;
@@ -36,8 +36,9 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let selectedGameweek = 1;
   let selectedPlayer = null;
-  let fixtures = [];
   let teams = [];
+  let fixtures = [];
+  let fixturesWithTeams = [];
   let team = null;
   let countdownDays = "00";
   let countdownHours = "00";
@@ -47,7 +48,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   Number($page.url.searchParams.get("id"));
   {
     if (fixtures.length > 0 && teams.length > 0) {
-      updateTableData(fixtures, teams, selectedGameweek);
+      updateTableData(fixturesWithTeams, teams, selectedGameweek);
     }
   }
   $$unsubscribe_page();

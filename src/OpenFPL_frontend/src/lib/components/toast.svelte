@@ -3,7 +3,9 @@
 </script>
 
 {#if $toastStore.visible}
-  <div class={`fixed inset-x-0 bottom-0 text-white text-center py-2 toast-panel-${$toastStore.type}`}>
+  <div
+    class={`fixed inset-x-0 bottom-0 text-white text-center py-2 toast-panel-${$toastStore.type}`}
+  >
     {$toastStore.message}
   </div>
 {/if}
@@ -33,6 +35,6 @@
     animation-delay: 0s, 2s;
     animation-fill-mode: forwards;
     position: fixed;
-    z-index: 9999 !important; 
+    z-index: 9999 !important;
   }
 </style>

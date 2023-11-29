@@ -185,7 +185,7 @@
   function selectPlayer(player: PlayerDTO) {
     handlePlayerSelection(player);
     closeAddPlayerModal();
-    filteredPlayers = []; //test
+    filteredPlayers = [];
   }
 </script>
 

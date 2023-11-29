@@ -13,8 +13,8 @@
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-  import { writable, type Writable } from 'svelte/store';
-    import { loadingText } from "$lib/stores/global-stores";
+  import { writable, type Writable } from "svelte/store";
+  import { loadingText } from "$lib/stores/global-stores";
 
   let teams: Team[];
   let systemState: SystemState | null;
@@ -30,7 +30,7 @@
   let unsubscribeSystemState: () => void;
 
   onMount(async () => {
-    isLoading.set(true)
+    isLoading.set(true);
     try {
       await teamStore.sync();
       await systemStore.sync();
@@ -45,7 +45,7 @@
 
       const profileData = await userStore.getProfile();
       profile.set(profileData);
-      
+
       if (profileData && profileData.profilePicture.length > 0) {
         const blob = new Blob([new Uint8Array(profileData.profilePicture)]);
         profileSrc.set(URL.createObjectURL(blob));
@@ -116,7 +116,7 @@
   }
 
   async function uploadProfileImage(file: File) {
-    isLoading.set(true)
+    isLoading.set(true);
     loadingText.set("Updating Profile Picture");
     try {
       await userStore.updateProfilePicture(file);
@@ -130,9 +130,9 @@
     } catch (error) {
       toastStore.show("Error updating profile image", "error");
       console.error("Error updating profile image", error);
-    } finally { 
+    } finally {
       isLoading.set(false);
-      loadingText.set("Loading"); 
+      loadingText.set("Loading");
     }
   }
 </script>
@@ -166,8 +166,9 @@
             />
 
             <div class="file-upload-wrapper mt-4">
-              <button class="btn-file-upload fpl-button" on:click={clickFileInput}
-                >Upload Photo</button
+              <button
+                class="btn-file-upload fpl-button"
+                on:click={clickFileInput}>Upload Photo</button
               >
               <input
                 type="file"
@@ -193,7 +194,8 @@
             </button>
             <p class="text-xs mb-2 mt-4">Favourite Team:</p>
             <h2 class="text-2xl font-bold mb-2">
-              {teams.find((x) => x.id === $profile?.favouriteTeamId)?.friendlyName}
+              {teams.find((x) => x.id === $profile?.favouriteTeamId)
+                ?.friendlyName}
             </h2>
             <button
               class="p-2 px-4 rounded fpl-button"

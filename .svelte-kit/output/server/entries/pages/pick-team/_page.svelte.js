@@ -16,6 +16,7 @@ function getGridSetup(formation) {
 }
 function isBonusConditionMet(team) {
   if (!team) {
+    console.log("a");
     return false;
   }
   const gameweekCounts = {};
@@ -33,21 +34,22 @@ function isBonusConditionMet(team) {
     if (gw !== 0) {
       gameweekCounts[gw] = (gameweekCounts[gw] || 0) + 1;
       if (gameweekCounts[gw] > 1) {
+        console.log("b");
         return false;
       }
     }
   }
   return true;
 }
-function isValidFormation(players, team, selectedFormation) {
+function isValidFormation(players2, team, selectedFormation2) {
   const positionCounts = { 0: 0, 1: 0, 2: 0, 3: 0 };
   team.playerIds.forEach((id) => {
-    const teamPlayer = players.find((p) => p.id === id);
+    const teamPlayer = players2.find((p) => p.id === id);
     if (teamPlayer) {
       positionCounts[teamPlayer.position]++;
     }
   });
-  const [def, mid, fwd] = selectedFormation.split("-").map(Number);
+  const [def, mid, fwd] = selectedFormation2.split("-").map(Number);
   const minDef = Math.max(0, def - (positionCounts[1] || 0));
   const minMid = Math.max(0, mid - (positionCounts[2] || 0));
   const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
@@ -81,21 +83,26 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         if (player) {
           teamCount.set(player.teamId, (teamCount.get(player.teamId) || 0) + 1);
           if (teamCount.get(player.teamId) > 1) {
+            console.log("1");
             return false;
           }
         }
       }
     }
     if (!isBonusConditionMet($fantasyTeam)) {
+      console.log("2");
       return false;
     }
     if ($fantasyTeam?.playerIds.filter((id) => id > 0).length !== 11) {
+      console.log("3");
       return false;
     }
     if ($bankBalance < 0) {
+      console.log("4");
       return false;
     }
     if ($transfersAvailable < 0) {
+      console.log("5");
       return false;
     }
     if (!isValidFormation(players, $fantasyTeam, selectedFormation)) {
@@ -104,7 +111,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     return true;
   }
   getGridSetup(selectedFormation);
-  checkSaveButtonConditions();
+  $fantasyTeam ? checkSaveButtonConditions() : false;
   $$unsubscribe_fantasyTeam();
   $$unsubscribe_transfersAvailable();
   $$unsubscribe_bankBalance();

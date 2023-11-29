@@ -178,7 +178,9 @@
   <div class="flex flex-col md:flex-row">
     <div class="flex items-center w-100 md:w-1/2">
       {#each leftPanelBonuses as bonus}
-        <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+        <div
+          class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
+        >
           <div class={`flex flex-col justify-center items-center flex-1`}>
             <img alt={bonus.name} src={bonus.image} class="h-10 md:h-24 mt-2" />
             <p class="text-center text-xs mt-4 m-2 font-bold">
@@ -195,7 +197,9 @@
     </div>
     <div class="flex items-center w-100 md:w-1/2">
       {#each rightPanelBonuses as bonus}
-        <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+        <div
+          class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700"
+        >
           <div class={`flex flex-col justify-center items-center flex-1`}>
             <img alt={bonus.name} src={bonus.image} class="h-10 md:h-24 mt-2" />
             <p class="text-center text-xs mt-4 m-2 font-bold">
@@ -205,13 +209,17 @@
               <p class="text-center text-xs mt-4 m-2">
                 Used in GW {isBonusUsed(bonus.id)}
               </p>
+            {:else if bonus.id == 7 || bonus.id == 8}
+              <!-- Remove when implemented -->
+              <button
+                class="bg-gray-500 mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px] text-xs"
+                disabled={true}>Coming Soon</button
+              >
             {:else}
-              {#if bonus.id == 7 || bonus.id == 8} <!-- Remove when implemented -->
-                <button class="bg-gray-500 mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px] text-xs" disabled={true}>Coming Soon</button>
-              {:else}
-                <button class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]"
-                on:click={() => showBonusModal(bonus.id)}>Use</button>
-              {/if}
+              <button
+                class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]"
+                on:click={() => showBonusModal(bonus.id)}>Use</button
+              >
             {/if}
           </div>
         </div>

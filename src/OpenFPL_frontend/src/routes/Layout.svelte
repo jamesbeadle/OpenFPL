@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { isLoading } from '../lib/stores/global-stores';
+  import { isLoading } from "../lib/stores/global-stores";
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
   import Toast from "$lib/components/toast.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import "../app.css";
-
 </script>
 
 <div class="flex flex-col h-screen justify-between">
@@ -24,7 +23,6 @@
 </div>
 
 <style>
-
   .loading-overlay {
     position: absolute;
     top: 0;

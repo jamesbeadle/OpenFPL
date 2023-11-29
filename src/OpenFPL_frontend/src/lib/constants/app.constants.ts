@@ -8,7 +8,6 @@ export const AUTH_MAX_TIME_TO_LIVE = BigInt(
 export const AUTH_POPUP_WIDTH = 576;
 export const AUTH_POPUP_HEIGHT = 625;
 
-// Workers
 export const AUTH_TIMER_INTERVAL = 1000;
 export const CODE_TIMER_INTERVAL = 10000;
 

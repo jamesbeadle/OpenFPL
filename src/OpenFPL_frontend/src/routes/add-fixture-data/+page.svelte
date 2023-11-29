@@ -21,6 +21,7 @@
   import Layout from "../Layout.svelte";
   import { replacer } from "$lib/utils/Helpers";
   import { governanceStore } from "$lib/stores/governance-store";
+  import { isLoading, loadingText } from "$lib/stores/global-stores";
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
@@ -30,7 +31,6 @@
   let unsubscribeTeams: () => void;
   let unsubscribeFixtures: () => void;
 
-  let isLoading = true;
   let fixture: Fixture | null;
   let showPlayerSelectionModal = false;
   let showPlayerEventModal = false;
@@ -71,13 +71,19 @@
   });
 
   async function confirmFixtureData() {
+    isLoading.set(true);
+    loadingText.set("Saving Fixture Data");
     try {
       await governanceStore.submitFixtureData(fixtureId, get(playerEventData));
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
+      toastStore.show("Fixture data saved", "success");
       throw redirect(307, "/fixture-validation");
     } catch (error) {
       toastStore.show("Error saving fixture data.", "error");
       console.error("Error saving fixture data: ", error);
+    } finally {
+      isLoading.set(false);
+      loadingText.set("Loading");
     }
   }
 
@@ -120,31 +126,14 @@
       <button class="fpl-button" on:click={saveDraft}>Save Draft</button>
       <div class="bg-panel rounded-lg m-4">
         <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "home" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "home" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("home")}
-              >{getTeamFromId(fixture?.homeTeamId ?? 0)?.friendlyName}</button
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "home" ? "active-tab" : ""}`}>
+            <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400" }`}
+              on:click={() => setActiveTab("home")}>
+              {getTeamFromId(fixture?.homeTeamId ?? 0)?.friendlyName}</button>
           </li>
-          <li
-            class={`mr-4 text-xs md:text-lg ${
-              activeTab === "away" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "away" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("away")}
-              >{getTeamFromId(fixture?.awayTeamId ?? 0)?.friendlyName}</button
-            >
+          <li class={`mr-4 text-xs md:text-lg ${ activeTab === "away" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "away" ? "text-white" : "text-gray-400" }`}
+              on:click={() => setActiveTab("away")} >{getTeamFromId(fixture?.awayTeamId ?? 0)?.friendlyName}</button>
           </li>
         </ul>
 
@@ -156,14 +145,8 @@
                 <p class="small-text mb-0 mt-0">{player.firstName}</p>
               </div>
               <div class="card-body">
-                <p>
-                  Events: {$playerEventData.filter(
-                    (pe) => pe.playerId === player.id
-                  ).length}
-                </p>
-                <button on:click={() => handleEditPlayerEvents(player)}
-                  >Update</button
-                >
+                <p>Events: {$playerEventData.filter((pe) => pe.playerId === player.id).length}</p>
+                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
               </div>
             </div>
           {/each}
@@ -175,14 +158,8 @@
                 <p class="small-text mb-0 mt-0">{player.firstName}</p>
               </div>
               <div class="card-body">
-                <p>
-                  Events: {$playerEventData.filter(
-                    (pe) => pe.playerId === player.id
-                  ).length}
-                </p>
-                <button on:click={() => handleEditPlayerEvents(player)}
-                  >Update</button
-                >
+                <p>Events: {$playerEventData.filter((pe) => pe.playerId === player.id).length}</p>
+                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
               </div>
             </div>
           {/each}

@@ -8,7 +8,7 @@
     "src": ".svelte-kit/generated/server/internal.js"
   },
   "Layout.css": {
-    "file": "_app/immutable/assets/Layout.705adbe0.css",
+    "file": "_app/immutable/assets/Layout.6904ddda.css",
     "src": "Layout.css"
   },
   "_BadgeIcon.js": {
@@ -19,7 +19,7 @@
   },
   "_Layout.js": {
     "css": [
-      "_app/immutable/assets/Layout.705adbe0.css"
+      "_app/immutable/assets/Layout.6904ddda.css"
     ],
     "file": "chunks/Layout.js",
     "imports": [
@@ -130,12 +130,12 @@
     "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js"
   },
   "src/OpenFPL_frontend/src/routes/+page.css": {
-    "file": "_app/immutable/assets/_page.8041c969.css",
+    "file": "_app/immutable/assets/_page.64cc99d9.css",
     "src": "src/OpenFPL_frontend/src/routes/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/+page.svelte": {
     "css": [
-      "_app/immutable/assets/_page.8041c969.css"
+      "_app/immutable/assets/_page.64cc99d9.css"
     ],
     "file": "entries/pages/_page.svelte.js",
     "imports": [
@@ -195,12 +195,12 @@
     "src": "src/OpenFPL_frontend/src/routes/fixture-validation/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.css": {
-    "file": "_app/immutable/assets/_page.b3013d1d.css",
+    "file": "_app/immutable/assets/_page.2206b352.css",
     "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte": {
     "css": [
-      "_app/immutable/assets/_page.b3013d1d.css"
+      "_app/immutable/assets/_page.2206b352.css"
     ],
     "file": "entries/pages/gameplay-rules/_page.svelte.js",
     "imports": [
@@ -235,12 +235,12 @@
     "src": "src/OpenFPL_frontend/src/routes/manager/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/pick-team/+page.css": {
-    "file": "_app/immutable/assets/_page.336c70f6.css",
+    "file": "_app/immutable/assets/_page.69c14fad.css",
     "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte": {
     "css": [
-      "_app/immutable/assets/_page.336c70f6.css"
+      "_app/immutable/assets/_page.69c14fad.css"
     ],
     "file": "entries/pages/pick-team/_page.svelte.js",
     "imports": [
@@ -257,34 +257,34 @@
     "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/player/+page.css": {
-    "file": "_app/immutable/assets/_page.7515d509.css",
+    "file": "_app/immutable/assets/_page.ff16016e.css",
     "src": "src/OpenFPL_frontend/src/routes/player/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/player/+page.svelte": {
     "css": [
-      "_app/immutable/assets/_page.7515d509.css"
+      "_app/immutable/assets/_page.ff16016e.css"
     ],
     "file": "entries/pages/player/_page.svelte.js",
     "imports": [
       "_index3.js",
       "_stores.js",
-      "_system-store.js",
-      "_Layout.js",
+      "_player-store.js",
       "_team-store.js",
       "_fixture-store.js",
-      "_player-store.js",
+      "_system-store.js",
+      "_Layout.js",
       "_BadgeIcon.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/player/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/profile/+page.css": {
-    "file": "_app/immutable/assets/_page.873b27b5.css",
+    "file": "_app/immutable/assets/_page.a52d0793.css",
     "src": "src/OpenFPL_frontend/src/routes/profile/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/profile/+page.svelte": {
     "css": [
-      "_app/immutable/assets/_page.873b27b5.css"
+      "_app/immutable/assets/_page.a52d0793.css"
     ],
     "file": "entries/pages/profile/_page.svelte.js",
     "imports": [
@@ -293,8 +293,10 @@
       "_system-store.js",
       "_manager-store.js",
       "_Layout.js",
-      "_app.constants.js",
-      "_team-store.js"
+      "_auth.js",
+      "_index2.js",
+      "_team-store.js",
+      "_app.constants.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/profile/+page.svelte"
@@ -309,12 +311,12 @@
     "src": "src/OpenFPL_frontend/src/routes/terms/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/whitepaper/+page.css": {
-    "file": "_app/immutable/assets/_page.b3013d1d.css",
+    "file": "_app/immutable/assets/_page.2206b352.css",
     "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/whitepaper/+page.svelte": {
     "css": [
-      "_app/immutable/assets/_page.b3013d1d.css"
+      "_app/immutable/assets/_page.2206b352.css"
     ],
     "file": "entries/pages/whitepaper/_page.svelte.js",
     "imports": [
