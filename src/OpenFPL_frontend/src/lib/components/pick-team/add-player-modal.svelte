@@ -190,7 +190,7 @@
 
 {#if showAddPlayer}
   <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop" on:click={closeAddPlayerModal} on:keydown={closeAddPlayerModal}>
-    <div class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white" on:click|stopPropagation on:keydown|stopPropagation>
+    <div class="relative top-10 md:top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white" on:click|stopPropagation on:keydown|stopPropagation>
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-semibold">Select Player</h3>
         <button class="text-3xl leading-none" on:click={closeAddPlayerModal}>&times;</button>
@@ -257,57 +257,54 @@
         </div>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <thead>
-            <tr>
-              <th class="text-left p-2">Pos</th>
-              <th class="text-left p-2">Name</th>
-              <th class="text-left p-2">Club</th>
-              <th class="text-left p-2">Value</th>
-              <th class="text-left p-2">Pts</th>
-              <th class="text-left p-2">&nbsp;</th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each paginatedPlayers as player, index}
-              <tr>
-                {#if player.position === 0}<td class="p-2">GK</td>{/if}
-                {#if player.position === 1}<td class="p-2">DF</td>{/if}
-                {#if player.position === 2}<td class="p-2">MF</td>{/if}
-                {#if player.position === 3}<td class="p-2">FW</td>{/if}
-                <td class="p-2">{player.firstName} {player.lastName}</td>
-                <td class="p-2">
-                  <p class="flex items-center">
-                    <BadgeIcon
-                      className="w-6 h-6 mr-2"
-                      primaryColour={player.team?.primaryColourHex}
-                      secondaryColour={player.team?.secondaryColourHex}
-                      thirdColour={player.team?.thirdColourHex}
-                    />
-                    {player.team?.abbreviatedName}
-                  </p>
-                </td>
-                <td class="p-2">£{(Number(player.value) / 4).toFixed(2)}m</td>
-                <td class="p-2">{player.totalPoints}</td>
-                <td class="p-2">
-                  <div class="w-1/6 flex items-center">
-                    {#if disableReasons[index]}
-                      <span class="text-xs">{disableReasons[index]}</span>
-                    {:else}
-                      <button
-                        on:click={() => selectPlayer(player)}
-                        class="text-xl rounded fpl-button flex items-center"
-                      >
-                        <AddIcon className="w-6 h-6 p-2" />
-                      </button>
-                    {/if}
-                  </div>
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
+      <div class="overflow-x-auto flex-1 text-xs md:text-base">
+        <div class="flex justify-between border border-gray-700 py-4 bg-light-gray">
+          <div class="w-1/12 text-center mx-4">Pos</div>
+          <div class="w-4/12">Player</div>
+          <div class="w-2/12">Team</div>
+          <div class="w-2/12">Value</div>
+          <div class="w-1/12">PTS</div>
+          <div class="w-2/12 text-center">&nbsp</div>
+        </div>
+  
+        {#each paginatedPlayers as player, index}
+          <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+            <div class="w-1/12 text-center mx-4">
+              {#if player.position === 0}GK{/if}
+              {#if player.position === 1}DF{/if}
+              {#if player.position === 2}MF{/if}
+              {#if player.position === 3}FW{/if}
+            </div>
+            <div class="w-4/12">
+              {player.firstName} {player.lastName}
+            </div>
+            <div class="w-2/12">
+              <p class="flex items-center">
+                <BadgeIcon
+                  className="w-6 h-6 mr-2"
+                  primaryColour={player.team?.primaryColourHex}
+                  secondaryColour={player.team?.secondaryColourHex}
+                  thirdColour={player.team?.thirdColourHex}
+                />
+                {player.team?.abbreviatedName}
+              </p>
+            </div>
+            <div class="w-2/12">£{(Number(player.value) / 4).toFixed(2)}m</div>
+            <div class="w-1/12">{player.totalPoints}</div>
+            <div class="w-2/12 flex justify-center items-center">
+              {#if disableReasons[index]}
+              <span class="text-xs text">{disableReasons[index]}</span>
+            {:else}
+              <button
+                on:click={() => selectPlayer(player)}
+                class="text-xl rounded fpl-button flex items-center"
+              >
+                <AddIcon className="w-6 h-6 p-2" />
+              </button>
+            {/if}
+          </div>
+          </div>
+        {/each}
       </div>
 
       <div class="justify-center mt-4 pb-4 overflow-x-auto">
