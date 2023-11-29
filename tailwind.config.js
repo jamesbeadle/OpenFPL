@@ -21,6 +21,9 @@ export default {
       "3xl": "1920px",
       // => @media (min-width: 1920px) { ... }
     },
+    fontSize: {
+      'xxs': '.625rem',
+    }
   },
   plugins: [],
 };

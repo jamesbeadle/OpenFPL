@@ -16,7 +16,6 @@
   let fixtures: Fixture[] = [];
   let systemState: SystemState | null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
-  let selectedFixtureType = -1;
   let selectedGameweek = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 

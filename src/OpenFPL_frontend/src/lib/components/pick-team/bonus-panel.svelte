@@ -177,7 +177,7 @@ function bonusPlayedThisWeek(): boolean {
 }
 </script>
 
-<div class="bonus-panel rounded-md m-4 flex-1">
+<div class="bonus-panel rounded-md mx-4 flex-1">
   {#if selectedBonusId > 0}
     <UseBonusModal
       {showModal}
@@ -190,28 +190,35 @@ function bonusPlayedThisWeek(): boolean {
     />
   {/if}
   <div class="flex flex-col md:flex-row bonus-panel-inner">
-    <h1 class="m-4 font-bold">Bonuses</h1>
+    <h1 class="m-3 md:m-4 font-bold">Bonuses</h1>
   </div>
   <div class="flex flex-col md:flex-row">
     <div class="flex items-center w-100 md:w-1/2">
       {#each leftPanelBonuses as bonus}
-        <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
+        <div class="flex items-center w-1/5 bonus-panel-inner m-1 mt-2 md:m-4 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <img alt={bonus.name} src={bonus.image} class="h-10 md:h-24 mt-2" />
-            <p class="text-center text-xs mt-4 m-2 font-bold">
-              {bonus.name}
-            </p>
-            {#if isBonusUsed(bonus.id)}
-              <p class="text-center text-xs mt-4 m-2">
-                Used GW{isBonusUsed(bonus.id)}
+            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 mt-4 md:h-24" />
+            <div class="mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-h-[40px] flex items-center">
+              <p class="text-center text-xxs font-bold">
+                {bonus.name}
               </p>
+            </div>
+            
+            {#if isBonusUsed(bonus.id)}
+              <div class="mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-h-[25px] flex items-center">
+                <p class="text-center text-xxs mx-1">
+                  Used GW{isBonusUsed(bonus.id)}
+                </p>
+              </div>  
             {:else}
               {#if !bonusPlayedThisWeek()}
-                <button on:click={() => showBonusModal(bonus.id)} class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]">Use</button>
+                <button on:click={() => showBonusModal(bonus.id)} class="fpl-purple-btn mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-w-[25px]">Use</button>
               {:else}
-                <p class="text-center text-xs mt-4 m-2">
+              <div class="mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-h-[25px] flex items-center">
+                <p class="text-center text-xxs">
                   1 Per Week
                 </p>
+              </div>
               {/if}
             {/if}
           </div>
@@ -222,26 +229,34 @@ function bonusPlayedThisWeek(): boolean {
       {#each rightPanelBonuses as bonus}
         <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-4 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <img alt={bonus.name} src={bonus.image} class="h-10 md:h-24 mt-2" />
-            <p class="text-center text-xs mt-4 m-2 font-bold">
-              {bonus.name}
-            </p>
-            {#if isBonusUsed(bonus.id)}
-              <p class="text-center text-xs mt-4 m-2">
-                Used GW{isBonusUsed(bonus.id)}
+            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 mt-4 md:h-24" />
+            <div class="min-h-[40px] mx-1 flex items-center">
+              <p class="text-center text-xxs font-bold">
+                {bonus.name}
               </p>
+            </div>
+            {#if isBonusUsed(bonus.id)}
+              <div class="mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-h-[25px] flex items-center">
+                <p class="text-center text-xxs">
+                  Used GW{isBonusUsed(bonus.id)}
+                </p>
+              </div>  
             {:else if bonus.id == 7 || bonus.id == 8}
               <!-- Remove when implemented -->
-              <p class="text-center text-xs mt-4 m-2">
-                Coming Soon
-              </p>
+              <div class="mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-h-[25px] flex items-center">
+                <p class="text-center text-xxs">
+                  Coming Soon
+                </p>
+              </div>
             {:else}
               {#if !bonusPlayedThisWeek()}
-                <button on:click={() => showBonusModal(bonus.id)} class="fpl-purple-btn mt-4 mb-8 p-2 px-4 rounded-md min-w-[100px]">Use</button>
+              <button on:click={() => showBonusModal(bonus.id)} class="fpl-purple-btn mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-w-[25px]">Use</button>
               {:else}
-                <p class="text-center text-xs mt-4 m-2">
-                  1 Per Week
-                </p>
+                <div class="mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-h-[25px] flex items-center">
+                  <p class="text-center text-xxs">
+                    1 Per Week
+                  </p>
+                </div>
               {/if}
             {/if}
           </div>
