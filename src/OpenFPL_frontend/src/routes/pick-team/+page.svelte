@@ -733,9 +733,9 @@
       {players}
       {teams}
     />
-    <div class="m-4">
+    <div class="sm:m-1 md:m-2 lg:m-3 xl:m-4">
       <div class="flex flex-col xl:flex-row">
-        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow m-4 bg-panel p-4 pb-0 xl:pb-4 rounded-md">
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -771,7 +771,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow m-4 my-0 xl:my-4 bg-panel p-4 pb-0 xl:pb-4 rounded-md">
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs">Team Value</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -799,7 +799,7 @@
       </div>
 
       <div class="flex flex-col md:flex-row">
-        <div class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md md:w-full">
+        <div class="flex flex-col md:flex-row justify-between items-center text-white m-4 bg-panel p-4 pb-0 xl:pb-4 rounded-md md:w-full">
           <div class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4 order-3 md:order-1">
             <button class={`btn ${ pitchView ? `fpl-button` : `inactive-btn` } px-4 py-2 rounded-l-md font-bold text-md min-w-[125px] my-4`} 
               on:click={showPitchView}>
