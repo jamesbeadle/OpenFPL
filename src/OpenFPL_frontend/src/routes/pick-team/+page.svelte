@@ -846,7 +846,7 @@
             <div class="absolute top-0 left-0 right-0 bottom-0">
               <div class={`flex justify-around w-full h-auto`}>
                 <div class="relative inline-block">
-                  <img class="h-6 md:h-12 m-0 md:m-1" src="board.png" alt="OpenChat"/>
+                  <img class="h-6 sm:h-8 md:h-12 m-0 md:m-1" src="board.png" alt="OpenChat"/>
                   <div class="absolute top-0 left-0 w-full h-full">
                     <a class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0" target="_blank"
                     href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
@@ -856,7 +856,7 @@
                   </div>
                 </div>
                 <div class="relative inline-block">
-                  <img class="h-6 md:h-12 m-0 md:m-1" src="board.png" alt="OpenChat"/>
+                  <img class="h-6 sm:h-8 md:h-12 m-0 md:m-1" src="board.png" alt="OpenChat"/>
                   <div class="absolute top-0 left-0 w-full h-full">
                     <a class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0" target="_blank"
                       href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
@@ -878,15 +878,15 @@
                         {@const team = teams.find(
                           (x) => x.id === player.teamId
                         )}
-                        <div class="mt-2 mb-2 md:mb-12 flex flex-col items-center text-center">
+                        <div class="mt-2 mb-2 sm:mb-6 md:mb-12 flex flex-col items-center text-center">
                           <div class="flex justify-center items-center">
                             <div class="flex justify-between items-end w-full">
                               <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
-                                <RemovePlayerIcon className="w-4 h-4 p-1" />
+                                <RemovePlayerIcon className="w-4 h-4 sm:w-6 sm:h-6 p-1" />
                               </button>
                               <div class="flex justify-center items-center flex-grow">
                                 <ShirtIcon
-                                  className="h-8 md:h-16"
+                                  className="h-8 sm:h-16"
                                   primaryColour={team?.primaryColourHex}
                                   secondaryColour={team?.secondaryColourHex}
                                   thirdColour={team?.thirdColourHex}
@@ -894,29 +894,29 @@
                               </div>
                               {#if $fantasyTeam?.captainId === playerId}
                                 <span class="mb-1">
-                                  <ActiveCaptainIcon className="w-4 h-4 md:w-6 md:h-6" />
+                                  <ActiveCaptainIcon className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6" />
                                 </span>
                               {:else}
                                 <button on:click={() => setCaptain(player.id)} class="mb-1">
-                                  <PlayerCaptainIcon className="w-4 h-4 md:w-6 md:h-6" />
+                                  <PlayerCaptainIcon className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6" />
                                 </button>
                               {/if}
                             </div>
                           </div>
                           <div class="flex flex-col justify-center items-center text-xs">
-                            <div class="flex justify-center items-center bg-gray-700 md:px-2 py-1 rounded-t-md min-w-[80px] max-w-[80px]">
-                              <p class="collapse md:visible md:min-w-[20px]">{getPositionAbbreviation(player.position)}</p>
-                              <svelte:component this={getFlagComponent(player.nationality)} class="h-2 w-2 md:h-4 md:w-4 mr-1 md:mr-0 md:mx-1 md:mx-2 min-w-[15px]"/>
+                            <div class="flex justify-center items-center bg-gray-700 md:px-2 py-1 rounded-t-md min-w-[80px] max-w-[80px] sm:min-w-[120px] sm:max-w-[120px]">
+                              <p class="collapse sm:visible sm:min-w-[15px]">{getPositionAbbreviation(player.position)}</p>
+                              <svelte:component this={getFlagComponent(player.nationality)} class="h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"/>
                               <p class="truncate min-w-[50px] max-w-[50px]">
                                 {player.firstName.length > 2 ? player.firstName.substring(0, 1) + "." : ""} {player.lastName}
                               </p>
                             </div>
-                            <div class="flex justify-center items-center bg-white text-black md:px-2 py-1 rounded-b-md min-w-[80px] max-w-[80px]">
-                              <p class="collapse md:visible md:min-w-[20px]">
+                            <div class="flex justify-center items-center bg-white text-black md:px-2 py-1 rounded-b-md min-w-[80px] max-w-[80px] sm:min-w-[120px] sm:max-w-[120px]">
+                              <p class="collapse sm:visible sm:min-w-[20px]">
                                 {team?.abbreviatedName}
                               </p>
                               <BadgeIcon
-                                className="h-4 w-4 mr-1 md:mr-0 md:mx-1 min-w-[15px]"
+                                className="h-4 w-4 md:mx-1 min-w-[15px]"
                                 primaryColour={team?.primaryColourHex}
                                 secondaryColour={team?.secondaryColourHex}
                                 thirdColour={team?.thirdColourHex}
