@@ -22,7 +22,7 @@
       <div class="bg-panel rounded-lg m-4">
         <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
           <li
-            class={`mr-4 text-xs md:text-lg ${
+            class={`mr-4 text-xs md:text-base ${
               activeTab === "vision" ? "active-tab" : ""
             }`}
           >
@@ -36,7 +36,7 @@
             </button>
           </li>
           <li
-            class={`mr-4 text-xs md:text-lg ${
+            class={`mr-4 text-xs md:text-base ${
               activeTab === "gameplay" ? "active-tab" : ""
             }`}
           >
@@ -50,7 +50,7 @@
             </button>
           </li>
           <li
-            class={`mr-4 text-xs md:text-lg ${
+            class={`mr-4 text-xs md:text-base ${
               activeTab === "roadmap" ? "active-tab" : ""
             }`}
           >
@@ -64,7 +64,7 @@
             </button>
           </li>
           <li
-            class={`mr-4 text-xs md:text-lg ${
+            class={`mr-4 text-xs md:text-base ${
               activeTab === "marketing" ? "active-tab" : ""
             }`}
           >
@@ -78,7 +78,7 @@
             </button>
           </li>
           <li
-            class={`mr-4 text-xs md:text-lg ${
+            class={`mr-4 text-xs md:text-base ${
               activeTab === "revenue" ? "active-tab" : ""
             }`}
           >
@@ -92,7 +92,7 @@
             </button>
           </li>
           <li
-            class={`mr-4 text-xs md:text-lg ${
+            class={`mr-4 text-xs md:text-base ${
               activeTab === "dao" ? "active-tab" : ""
             }`}
           >
@@ -106,7 +106,7 @@
             </button>
           </li>
           <li
-            class={`mr-4 text-xs md:text-lg ${
+            class={`mr-4 text-xs md:text-base ${
               activeTab === "tokenomics" ? "active-tab" : ""
             }`}
           >
@@ -120,7 +120,7 @@
             </button>
           </li>
           <li
-            class={`mr-4 text-xs md:text-lg ${
+            class={`mr-4 text-xs md:text-base ${
               activeTab === "architecture" ? "active-tab" : ""
             }`}
           >

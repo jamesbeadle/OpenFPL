@@ -133,7 +133,7 @@
             {formatUnixTimeToTime(Number(fixture.kickOff))}
           </div>
           <div class="w-1/3">
-            <div class="flex flex-col text-xs md:text-lg">
+            <div class="flex flex-col text-xs md:text-base">
               <a href={`/club?id=${fixture.homeTeamId}`}
                 >{homeTeam ? homeTeam.friendlyName : ""}</a
               >
@@ -143,7 +143,7 @@
             </div>
           </div>
           <div class="w-1/4 mr-4">
-            <div class="flex flex-col text-xs md:text-lg">
+            <div class="flex flex-col text-xs md:text-base">
               <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
               <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>
             </div>

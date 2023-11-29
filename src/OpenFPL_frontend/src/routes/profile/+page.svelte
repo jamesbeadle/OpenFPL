@@ -24,7 +24,7 @@
     <div class="bg-panel rounded-lg m-4">
       <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
         <li
-          class={`mr-4 text-xs md:text-lg ${
+          class={`mr-4 text-xs md:text-base ${
             activeTab === "details" ? "active-tab" : ""
           }`}
         >
@@ -36,7 +36,7 @@
           >
         </li>
         <li
-          class={`mr-4 text-xs md:text-lg ${
+          class={`mr-4 text-xs md:text-base ${
             activeTab === "gameweeks" ? "active-tab" : ""
           }`}
         >

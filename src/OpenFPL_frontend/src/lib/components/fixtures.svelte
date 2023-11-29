@@ -130,7 +130,7 @@
           <div
             class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray"
           >
-            <h2 class="date-header ml-4 text-xs md:text-lg">{date}</h2>
+            <h2 class="date-header ml-4 text-xs md:text-base">{date}</h2>
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}
             <div
@@ -176,7 +176,7 @@
               </div>
               <div class="flex items-center space-x-10 w-1/2 md:justify-center">
                 <div
-                  class="flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg"
+                  class="flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-base"
                 >
                   <a href={`/club?id=${fixture.homeTeamId}`}
                     >{homeTeam ? homeTeam.friendlyName : ""}</a
@@ -186,7 +186,7 @@
                   >
                 </div>
                 <div
-                  class="flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-lg"
+                  class="flex flex-col min-w-[120px] md:min-w-[300px] text-xs md:text-base"
                 >
                   <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
                   <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>

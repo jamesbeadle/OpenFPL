@@ -303,7 +303,7 @@
     <div class="bg-panel rounded-md m-4">
       <ul class="flex bg-light-gray px-4 pt-2">
         <li
-          class={`mr-4 text-xs md:text-lg ${
+          class={`mr-4 text-xs md:text-base ${
             activeTab === "history" ? "active-tab" : ""
           }`}
         >
