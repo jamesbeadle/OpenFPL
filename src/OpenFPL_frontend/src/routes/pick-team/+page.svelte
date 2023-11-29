@@ -733,6 +733,8 @@
       {closeAddPlayerModal}
       {fantasyTeam}
       {bankBalance}
+      {players}
+      {teams}
     />
     <div class="m-4">
       <div class="flex flex-col md:flex-row">

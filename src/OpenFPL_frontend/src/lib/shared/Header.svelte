@@ -5,6 +5,7 @@
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
   import { onMount, onDestroy } from "svelte";
+  import { goto } from '$app/navigation';
 
   let menuOpen = false;
   let isLoggedIn = false;
@@ -45,6 +46,7 @@
 
   function handleLogout() {
     authStore.signOut();
+    goto('/');
   }
 </script>
 
@@ -147,10 +149,8 @@
               >
             </li>
             <li class="p-2">
-              <button
-                class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-                on:click={handleLogout}
-              >
+              <button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
+                on:click={handleLogout}>
                 Disconnect
                 <WalletIcon className="ml-2 h-6 w-6 mt-1" />
               </button>

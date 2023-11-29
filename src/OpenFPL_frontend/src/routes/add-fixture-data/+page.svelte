@@ -16,12 +16,12 @@
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
   import ConfirmFixtureDataModal from "$lib/components/fixture-validation/confirm-fixture-data-modal.svelte";
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
-  import { redirect } from "@sveltejs/kit";
   import { toastStore } from "$lib/stores/toast-store";
   import Layout from "../Layout.svelte";
   import { replacer } from "$lib/utils/Helpers";
   import { governanceStore } from "$lib/stores/governance-store";
   import { isLoading, loadingText } from "$lib/stores/global-stores";
+  import { goto } from '$app/navigation';
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
@@ -77,7 +77,7 @@
       await governanceStore.submitFixtureData(fixtureId, get(playerEventData));
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       toastStore.show("Fixture data saved", "success");
-      throw redirect(307, "/fixture-validation");
+      goto("/fixture-validation");
     } catch (error) {
       toastStore.show("Error saving fixture data.", "error");
       console.error("Error saving fixture data: ", error);

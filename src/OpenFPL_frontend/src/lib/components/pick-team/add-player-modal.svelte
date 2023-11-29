@@ -21,8 +21,8 @@
   export let filterColumn = -1;
   export let bankBalance = writable<number>(0);
 
-  let players: any[] = [];
-  let teams: Team[] = [];
+  export let players: any[];
+  export let teams: Team[];
 
   let unsubscribeTeams: () => void;
   let unsubscribePlayers: () => void;
@@ -46,10 +46,10 @@
     );
   });
 
-  $: paginatedPlayers = filteredPlayers.slice(
+  $: paginatedPlayers = addTeamDataToPlayers(filteredPlayers.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
-  );
+  ));
 
   $: teamPlayerCounts = countPlayersByTeam(get(fantasyTeam)?.playerIds ?? []);
   $: disableReasons = paginatedPlayers.map((player) =>
@@ -72,9 +72,9 @@
 
   onMount(async () => {
     try {
-      await teamStore.sync();
       await playerStore.sync();
-
+      await teamStore.sync();
+      
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;
       });
@@ -169,9 +169,8 @@
   }
 
   function addTeamDataToPlayers(
-    players: PlayerDTO[],
-    teams: Team[]
-  ): PlayerDTO[] {
+    players: PlayerDTO[]
+  ): any[] {
     return players.map((player) => {
       const team = teams.find((t) => t.id === player.teamId);
       return { ...player, team };
@@ -190,31 +189,17 @@
 </script>
 
 {#if showAddPlayer}
-  <div
-    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={closeAddPlayerModal}
-    on:keydown={closeAddPlayerModal}
-  >
-    <div
-      class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white"
-      on:click|stopPropagation
-      on:keydown|stopPropagation
-    >
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop" on:click={closeAddPlayerModal} on:keydown={closeAddPlayerModal}>
+    <div class="relative top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white" on:click|stopPropagation on:keydown|stopPropagation>
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-xl font-semibold">Select Player</h3>
-        <button class="text-3xl leading-none" on:click={closeAddPlayerModal}
-          >&times;</button
-        >
+        <button class="text-3xl leading-none" on:click={closeAddPlayerModal}>&times;</button>
       </div>
       <div class="mb-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label for="filterTeam" class="text-sm">Filter by Team:</label>
-            <select
-              id="filterTeam"
-              class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-              bind:value={filterTeam}
-            >
+            <select id="filterTeam" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" bind:value={filterTeam}>
               <option value={-1}>All</option>
               {#each teams as team}
                 <option value={team.id}>{team.friendlyName}</option>
@@ -222,14 +207,8 @@
             </select>
           </div>
           <div>
-            <label for="filterPosition" class="text-sm"
-              >Filter by Position:</label
-            >
-            <select
-              id="filterPosition"
-              class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
-              bind:value={filterPosition}
-            >
+            <label for="filterPosition" class="text-sm">Filter by Position:</label>
+            <select id="filterPosition" class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md" bind:value={filterPosition}>
               <option value={-1}>All</option>
               <option value={0}>Goalkeepers</option>
               <option value={1}>Defenders</option>

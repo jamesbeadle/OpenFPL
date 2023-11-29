@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { redirect } from "@sveltejs/kit";
+  import { goto } from '$app/navigation';
   import { isLoading } from "$lib/stores/global-stores";
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
@@ -15,7 +15,7 @@
   }
 
   function viewGameweekDetail(principalId: string, selectedGameweek: number) {
-    throw redirect(307, `/manager?id=${principalId}&gw=${selectedGameweek}`);
+    goto(`/manager?id=${principalId}&gw=${selectedGameweek}`);
   }
 </script>
 
