@@ -4,17 +4,11 @@
   import { writable, get } from "svelte/store";
   import { toastStore } from "$lib/stores/toast-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { isLoading, loadingText } from "$lib/stores/global-stores";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import type {
-    FantasyTeam,
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
@@ -26,6 +20,7 @@
   import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
+  import { isLoading, loadingText } from "$lib/stores/global-stores";
   import {
     formatUnixDateToReadable,
     formatUnixTimeToTime,
@@ -34,7 +29,9 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-
+  import type { FantasyTeam, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+  
   interface FormationDetails {
     positions: number[];
   }
@@ -737,9 +734,9 @@
       {teams}
     />
     <div class="m-4">
-      <div class="flex flex-col md:flex-row">
-        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
-          <div class="flex-grow mb-4 md:mb-0">
+      <div class="flex flex-col xl:flex-row">
+        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+          <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {activeGameweek}
@@ -747,10 +744,10 @@
             <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
 
-          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
 
-          <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xs mt-4 md:mt-0">Kick Off:</p>
+          <div class="flex-grow mb-4 xl:mb-0">
+            <p class="text-gray-300 text-xs mt-4 xl:mt-0">Kick Off:</p>
             <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
@@ -763,9 +760,9 @@
             </p>
           </div>
 
-          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
 
-          <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
+          <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Players</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
@@ -774,24 +771,24 @@
           </div>
         </div>
 
-        <div class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
-          <div class="flex-grow mb-4 md:mb-0">
+        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+          <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs">Team Value</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               £{teamValue.toFixed(2)}m
             </p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
-          <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
+          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Bank Balance</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               £{($bankBalance / 4).toFixed(2)}m
             </p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch" style="min-height: 2px; min-width: 2px;" />
-          <div class="flex-grow mb-4 md:mb-0 mt-4 md:mt-0">
+          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Transfers</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {$transfersAvailable === Infinity ? "Unlimited" : $transfersAvailable}
@@ -839,9 +836,9 @@
         </div>
       </div>
 
-      <div class="flex flex-col md:flex-row">
+      <div class="flex flex-col xl:flex-row">
         {#if pitchView}
-          <div class="relative w-full md:w-1/2 mt-4">
+          <div class="relative w-full xl:w-1/2 mt-4">
             <img src="pitch.png" alt="pitch" class="w-full" />
             <div class="absolute top-0 left-0 right-0 bottom-0">
               <div class={`flex justify-around w-full h-auto`}>
@@ -916,7 +913,7 @@
                                 {team?.abbreviatedName}
                               </p>
                               <BadgeIcon
-                                className="h-4 w-4 md:mx-1 min-w-[15px]"
+                                className="h-4 w-4 sm:mx-1 min-w-[15px]"
                                 primaryColour={team?.primaryColourHex}
                                 secondaryColour={team?.secondaryColourHex}
                                 thirdColour={team?.thirdColourHex}
@@ -1040,7 +1037,7 @@
             </div>
           </div>
         {/if}
-        <div class="flex w-100 md:w-1/2">
+        <div class="flex w-100 xl:w-1/2">
           <SimpleFixtures />
         </div>
       </div>
