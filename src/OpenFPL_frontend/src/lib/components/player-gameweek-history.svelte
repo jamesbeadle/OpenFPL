@@ -167,14 +167,15 @@
           class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer"
         >
           <div class="w-1/4 px-4">{gameweek.number}</div>
-          <div class="w-1/4 px-4 flex items-center">
-            <BadgeIcon
+          <div class="w-1/4 px-4">
+            <a class="flex items-center" href={`/club?id=${opponent?.id}`}>
+              <BadgeIcon
               className="w-6 mr-2"
               primaryColour={opponent?.primaryColourHex}
               secondaryColour={opponent?.secondaryColourHex}
               thirdColour={opponent?.thirdColourHex}
             />
-            {opponent?.friendlyName}
+            {opponent?.friendlyName}</a>
           </div>
           <div class="w-1/4 px-4">{gameweek.points}</div>
           <div class="w-1/4 px-4 flex items-center">
