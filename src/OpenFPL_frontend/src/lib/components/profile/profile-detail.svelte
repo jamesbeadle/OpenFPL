@@ -13,21 +13,23 @@
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import type { Writable } from "svelte/store";
 
   let teams: Team[];
   let systemState: SystemState | null;
-  let profile: ProfileDTO;
+  let profile: ProfileDTO | null;
   let profileSrc = "profile_placeholder.png";
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let fileInput: HTMLInputElement;
   let gameweek: number = 1;
-  let isLoading = true;
+  let isLoading: Writable<boolean | null>;
 
   let unsubscribeTeams: () => void;
   let unsubscribeSystemState: () => void;
 
   onMount(async () => {
+    isLoading.set(true)
     try {
       await teamStore.sync();
       await systemStore.sync();
@@ -42,7 +44,7 @@
 
       const profileData = await userStore.getProfile();
       profile = profileData;
-      if (profile.profilePicture.length > 0) {
+      if (profile && profile.profilePicture.length > 0) {
         const blob = new Blob([new Uint8Array(profile.profilePicture)]);
         profileSrc = URL.createObjectURL(blob);
       }
@@ -51,7 +53,7 @@
       toastStore.show("Error fetching profile detail.", "error");
       console.error("Error fetching profile detail:", error);
     } finally {
-      isLoading = false;
+      isLoading.set(false);
     }
   });
 
@@ -109,83 +111,85 @@
   }
 </script>
 
-{#if isLoading}
+{#if $isLoading}
   <LoadingIcon />
 {:else}
   <UpdateUsernameModal
-    newUsername={profile.displayName}
+    newUsername={profile ? profile.displayName : ""}
     showModal={showUsernameModal}
     closeModal={closeUsernameModal}
+    {isLoading}
   />
   <UpdateFavouriteTeamModal
-    newFavouriteTeam={profile.favouriteTeamId}
+    newFavouriteTeam={profile ? profile.favouriteTeamId : 0}
     showModal={showFavouriteTeamModal}
     closeModal={closeFavouriteTeamModal}
   />
   <div class="container mx-auto p-4">
-    <div class="flex flex-wrap">
-      <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
-        <div class="group">
-          <img
-            src={profileSrc}
-            alt="Profile"
-            class="w-48 md:w-80 mb-1 rounded-lg"
-          />
+    {#if profile}
+      <div class="flex flex-wrap">
+        <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
+          <div class="group">
+            <img
+              src={profileSrc}
+              alt="Profile"
+              class="w-48 md:w-80 mb-1 rounded-lg"
+            />
 
-          <div class="file-upload-wrapper mt-4">
-            <button class="btn-file-upload fpl-button" on:click={clickFileInput}
-              >Upload Photo</button
+            <div class="file-upload-wrapper mt-4">
+              <button class="btn-file-upload fpl-button" on:click={clickFileInput}
+                >Upload Photo</button
+              >
+              <input
+                type="file"
+                id="profile-image"
+                accept="image/*"
+                bind:this={fileInput}
+                on:change={handleFileChange}
+                style="opacity: 0; position: absolute; left: 0; top: 0;"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full md:w-3/4 px-2 mb-4">
+          <div class="ml-4 p-4 rounded-lg">
+            <p class="text-xs mb-2">Display Name:</p>
+            <h2 class="text-2xl font-bold mb-2">{profile.displayName}</h2>
+            <button
+              class="p-2 px-4 rounded fpl-button"
+              on:click={displayUsernameModal}
             >
-            <input
-              type="file"
-              id="profile-image"
-              accept="image/*"
-              bind:this={fileInput}
-              on:change={handleFileChange}
-              style="opacity: 0; position: absolute; left: 0; top: 0;"
-            />
+              Update
+            </button>
+            <p class="text-xs mb-2 mt-4">Favourite Team:</p>
+            <h2 class="text-2xl font-bold mb-2">
+              {teams.find((x) => x.id === profile?.favouriteTeamId)?.friendlyName}
+            </h2>
+            <button
+              class="p-2 px-4 rounded fpl-button"
+              on:click={displayFavouriteTeamModal}
+              disabled={gameweek > 1 && profile.favouriteTeamId > 0}
+            >
+              Update
+            </button>
+
+            <p class="text-xs mb-2 mt-4">Joined:</p>
+            <h2 class="text-2xl font-bold mb-2">August 2023</h2>
+
+            <p class="text-xs mb-2 mt-4">Principal:</p>
+            <div class="flex items-center">
+              <h2 class="text-xs font-bold">{profile.principalName}</h2>
+              <CopyIcon
+                onClick={copyToClipboard}
+                principalId={profile.principalName}
+                className="ml-2 w-4 h-4"
+              />
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="w-full md:w-3/4 px-2 mb-4">
-        <div class="ml-4 p-4 rounded-lg">
-          <p class="text-xs mb-2">Display Name:</p>
-          <h2 class="text-2xl font-bold mb-2">{profile.displayName}</h2>
-          <button
-            class="p-2 px-4 rounded fpl-button"
-            on:click={displayUsernameModal}
-          >
-            Update
-          </button>
-          <p class="text-xs mb-2 mt-4">Favourite Team:</p>
-          <h2 class="text-2xl font-bold mb-2">
-            {teams.find((x) => x.id === profile.favouriteTeamId)?.friendlyName}
-          </h2>
-          <button
-            class="p-2 px-4 rounded fpl-button"
-            on:click={displayFavouriteTeamModal}
-            disabled={gameweek > 1 && profile.favouriteTeamId > 0}
-          >
-            Update
-          </button>
-
-          <p class="text-xs mb-2 mt-4">Joined:</p>
-          <h2 class="text-2xl font-bold mb-2">August 2023</h2>
-
-          <p class="text-xs mb-2 mt-4">Principal:</p>
-          <div class="flex items-center">
-            <h2 class="text-xs font-bold">{profile.principalName}</h2>
-            <CopyIcon
-              onClick={copyToClipboard}
-              principalId={profile.principalName}
-              className="ml-2 w-4 h-4"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
+    {/if}
     <div class="flex flex-wrap -mx-2 mt-4">
       <div class="w-full px-2 mb-4">
         <div class="mt-4 px-2">

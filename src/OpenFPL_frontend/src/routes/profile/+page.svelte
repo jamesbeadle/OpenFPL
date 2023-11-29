@@ -1,10 +1,15 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { redirect } from "@sveltejs/kit";
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import Layout from "../Layout.svelte";
   let activeTab: string = "details";
+  import { isLoading } from "$lib/stores/global-stores";
 
+  onMount(async () => {
+    isLoading.set(false)
+  });
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }

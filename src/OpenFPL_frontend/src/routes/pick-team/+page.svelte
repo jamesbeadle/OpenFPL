@@ -139,10 +139,13 @@
 
       let principalId = get(fantasyTeam)?.principalId ?? "";
 
-      if (activeGameweek > 1 && principalId.length > 0) {
+      if(principalId.length > 0){
         newTeam = false;
+        bankBalance.set(Number(userFantasyTeam.bankBalance));
+      }
+
+      if (activeGameweek > 1 && principalId.length > 0) {
         transfersAvailable.set(userFantasyTeam.transfersAvailable);
-        bankBalance.set(userFantasyTeam.bankBalance);
       }
 
       fantasyTeam.update((currentTeam) => {

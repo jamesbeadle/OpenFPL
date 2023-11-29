@@ -1,11 +1,12 @@
 <script lang="ts">
   import { userStore } from "$lib/stores/user-store";
   import { toastStore } from "$lib/stores/toast-store";
-  import { isLoading } from "$lib/stores/global-stores";
+  import type { Writable } from "svelte/store";
 
   export let showModal: boolean;
   export let closeModal: () => void;
   export let newUsername: string = '';  
+  export let isLoading: Writable<boolean | null>;
   
   function isDisplayNameValid(displayName: string): boolean {
     if (displayName.length < 3 || displayName.length > 20) {
