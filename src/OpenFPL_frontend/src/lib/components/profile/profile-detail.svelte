@@ -73,6 +73,10 @@
     showUsernameModal = false;
   }
 
+  function cancelUsernameModal() {
+    showUsernameModal = false;
+  }
+
   function displayFavouriteTeamModal(): void {
     showFavouriteTeamModal = true;
   }
@@ -80,6 +84,10 @@
   async function closeFavouriteTeamModal() {
     const profileData = await userStore.getProfile();
     profile.set(profileData);
+    showFavouriteTeamModal = false;
+  }
+
+  function cancelFavouriteTeamModal() {
     showFavouriteTeamModal = false;
   }
 
@@ -131,12 +139,14 @@
     newUsername={$profile ? $profile.displayName : ""}
     showModal={showUsernameModal}
     closeModal={closeUsernameModal}
+    cancelModal={cancelUsernameModal}
     {isLoading}
   />
   <UpdateFavouriteTeamModal
     newFavouriteTeam={$profile ? $profile.favouriteTeamId : 0}
     showModal={showFavouriteTeamModal}
     closeModal={closeFavouriteTeamModal}
+    cancelModal={cancelFavouriteTeamModal}
     {isLoading}
   />
   <div class="container mx-auto p-4">

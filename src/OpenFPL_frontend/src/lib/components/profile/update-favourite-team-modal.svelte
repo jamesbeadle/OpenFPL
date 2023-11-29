@@ -5,9 +5,11 @@
   import { toastStore } from "$lib/stores/toast-store";
   import type { Writable } from "svelte/store";
   import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { loadingText } from "$lib/stores/global-stores";
 
   export let showModal: boolean;
   export let closeModal: () => void;
+  export let cancelModal: () => void;
   export let newFavouriteTeam: number = 0;
   export let isLoading: Writable<boolean | null>;
 
@@ -31,15 +33,19 @@
 
   async function updateFavouriteTeam() {
     isLoading.set(true);
+    loadingText.set("Updating Favourite Club");
     try {
       await userStore.updateFavouriteTeam(newFavouriteTeam);
+      await closeModal();
       toastStore.show("Favourite team updated.", "success");
     } catch (error) {
       toastStore.show("Error updating favourite team.", "error");
       console.error("Error updating favourite team:", error);
+      cancelModal();
+    } finally{
+      isLoading.set(false);
+      loadingText.set("Loading");
     }
-    await closeModal();
-    isLoading.set(false);
   }
 
   function handleKeydown(event: KeyboardEvent): void {
@@ -51,7 +57,7 @@
 
 {#if showModal}
   <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={closeModal} on:keydown={handleKeydown}>
+    on:click={cancelModal} on:keydown={handleKeydown}>
     <div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
       on:click|stopPropagation on:keydown={handleKeydown}>
       <div class="mt-3 text-center">
@@ -76,7 +82,7 @@
       <div class="items-center py-3 flex space-x-4">
         <button
           class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-          on:click={closeModal}>
+          on:click={cancelModal}>
           Cancel
         </button>
         <button
