@@ -125,7 +125,7 @@
     <div class="m-4">
       <button class="fpl-button" on:click={saveDraft}>Save Draft</button>
       <div class="bg-panel rounded-lg m-4">
-        <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
+        <ul class="flex rounded-t-lg bg-light-gray px-4 pt-2">
           <li class={`mr-4 text-xs md:text-base ${ activeTab === "home" ? "active-tab" : ""}`}>
             <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400" }`}
               on:click={() => setActiveTab("home")}>
