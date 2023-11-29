@@ -11,9 +11,7 @@
   <div class="m-4">
     <div class="bg-panel rounded-lg m-4">
       <ul class="flex rounded-lg bg-light-gray px-4 pt-2">
-        <li
-          class={`mr-4 text-xs md:text-lg ${
-            activeTab === "proposals" ? "active-tab" : ""
+        <li class={`mr-4 text-xs md:text-lg ${ activeTab === "proposals" ? "active-tab" : ""
           }`}
         >
           <button
