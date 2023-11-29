@@ -33,6 +33,7 @@
     isLoading.set(true);
     try {
       await userStore.updateFavouriteTeam(newFavouriteTeam);
+      toastStore.show("Favourite team updated.", "success");
     } catch (error) {
       toastStore.show("Error updating favourite team.", "error");
       console.error("Error updating favourite team:", error);

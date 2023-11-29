@@ -4,7 +4,7 @@
   import { writable, get } from "svelte/store";
   import { toastStore } from "$lib/stores/toast-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { isLoading } from "$lib/stores/global-stores";
+  import { isLoading, loadingText } from "$lib/stores/global-stores";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
@@ -688,8 +688,10 @@
   }
 
   async function saveFantasyTeam() {
+    
+    loadingText.set("Saving Fantasy Team");
     isLoading.set(true);
-
+    
     let team = get(fantasyTeam);
 
     if (team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)) {
@@ -718,6 +720,7 @@
       console.error("Error saving team:", error);
     } finally {
       isLoading.set(false);
+      loadingText.set("Loading");
     }
   }
 </script>

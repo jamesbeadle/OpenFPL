@@ -8,9 +8,8 @@
 
 </script>
 
-<div class="flex flex-col h-screen justify-between custom-container">
+<div class="flex flex-col h-screen justify-between">
   <Header />
-  <Toast />
   {#if $isLoading}
     <div class="loading-overlay">
       <LoadingIcon />
@@ -19,14 +18,12 @@
     <main>
       <slot />
     </main>
+    <Toast />
   {/if}
   <Footer />
 </div>
 
 <style>
-   .custom-container {
-    position: relative;
-  }
 
   .loading-overlay {
     position: absolute;

@@ -116,6 +116,7 @@
         const blob = new Blob([new Uint8Array(profileData.profilePicture)]);
         profileSrc.set(URL.createObjectURL(blob));
       }
+      toastStore.show("Profile image updated.", "success");
     } catch (error) {
       toastStore.show("Error updating profile image", "error");
       console.error("Error updating profile image", error);

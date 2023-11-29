@@ -22,6 +22,7 @@
     isLoading.set(true);
     try {
       await userStore.updateUsername(newUsername);
+      toastStore.show("Display name updated.", "success");
     } catch (error) {
       toastStore.show("Error updating username.", "error");
       console.error("Error updating username:", error);
