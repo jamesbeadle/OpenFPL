@@ -210,7 +210,7 @@
 
   <div class="mx-4">
     <div class="bg-panel rounded-md mx-4">
-      <ul class="flex bg-light-gray px-4 pt-2 text-xs md:text-sm lg:text-base">
+      <ul class="flex bg-light-gray px-4 pt-2 text-sm sm:text-base md:text-lg">
         <li class={`mr-4 ${ activeTab === "fixtures" ? "active-tab" : "" }`}>
           <button class={`p-2 ${ activeTab === "fixtures" ? "text-white" : "text-gray-400" }`} 
             on:click={() => setActiveTab("fixtures")}>

@@ -177,7 +177,7 @@ function bonusPlayedThisWeek(): boolean {
 }
 </script>
 
-<div class="bonus-panel rounded-md mx-4 flex-1">
+<div class="bonus-panel rounded-md mx-4 flex-1 mb-2 lg:mb-0">
   {#if selectedBonusId > 0}
     <UseBonusModal
       {showModal}
@@ -199,7 +199,7 @@ function bonusPlayedThisWeek(): boolean {
           <div class={`flex flex-col justify-center items-center flex-1`}>
             <img alt={bonus.name} src={bonus.image} class="h-12 m-2 mt-4 md:h-24" />
             <div class="mt-3 mb-3 lg:mb-8 lg:p-2 p-1 px-4 rounded-md min-h-[40px] flex items-center">
-              <p class="text-center text-xxs font-bold">
+              <p class="text-center text-xxs sm:text-xl font-bold">
                 {bonus.name}
               </p>
             </div>
@@ -231,7 +231,7 @@ function bonusPlayedThisWeek(): boolean {
           <div class={`flex flex-col justify-center items-center flex-1`}>
             <img alt={bonus.name} src={bonus.image} class="h-12 m-2 mt-4 md:h-24" />
             <div class="min-h-[40px] mx-1 flex items-center">
-              <p class="text-center text-xxs font-bold">
+              <p class="text-center text-xxs sm:text-base font-bold">
                 {bonus.name}
               </p>
             </div>

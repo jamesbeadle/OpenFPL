@@ -800,7 +800,7 @@
 
       <div class="flex flex-col md:flex-row">
         <div class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full">
-          <div class="flex flex-row justify-between md:justify-start flex-grow mb-2 md:mb-0 ml-4 order-3 md:order-1">
+          <div class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1">
             <button class={`btn ${ pitchView ? `fpl-button` : `inactive-btn` } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`} 
               on:click={showPitchView}>
               Pitch View
@@ -811,8 +811,8 @@
             </button>
           </div>
 
-          <div class="text-center md:text-left w-full mt-0 md:ml-8 order-2">
-            <span class="text-xs xl:text-lg">
+          <div class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0">
+            <span class="text-lg">
               Formation:
               <select class="p-2 fpl-dropdown xl:text-lg text-center" bind:value={selectedFormation}>
                 {#each $availableFormations as formation}
@@ -822,7 +822,7 @@
             </span>
           </div>
 
-          <div class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3">
+          <div class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0">
             <button disabled={$fantasyTeam?.playerIds ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0 : true}
               on:click={autofillTeam} class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded  
               ${ $fantasyTeam?.playerIds && $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0 ? "fpl-purple-btn" : "bg-gray-500" } text-white min-w-[125px]`}>
@@ -883,7 +883,7 @@
                               </button>
                               <div class="flex justify-center items-center flex-grow">
                                 <ShirtIcon
-                                  className="h-8 sm:h-16"
+                                  className="h-12 md:h-16"
                                   primaryColour={team?.primaryColourHex}
                                   secondaryColour={team?.secondaryColourHex}
                                   thirdColour={team?.thirdColourHex}
@@ -926,7 +926,7 @@
                         </div>
                       {:else}
                         <button on:click={() => loadAddPlayer(rowIndex, colIndex)}>
-                          <AddPlayerIcon className="h-12 md:h-16 mt-2 mb-2 md:mb-24" />
+                          <AddPlayerIcon className="h-12 md:h-16 mt-7 mb-7 sm:mt-12 sm:mb-12 lg:mt-20 lg:mb-20 xl:mb-8 xl:mt-8 2xl:mb-12 2xl:mt-12 3xl:mb-16 3xl:mt-16" />
                         </button>
                       {/if}
                     </div>
