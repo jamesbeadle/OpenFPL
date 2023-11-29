@@ -293,7 +293,7 @@
             <div class="w-1/12">{player.totalPoints}</div>
             <div class="w-2/12 flex justify-center items-center">
               {#if disableReasons[index]}
-              <span class="text-xs text">{disableReasons[index]}</span>
+              <span class="text-xs text-center">{disableReasons[index]}</span>
             {:else}
               <button
                 on:click={() => selectPlayer(player)}
