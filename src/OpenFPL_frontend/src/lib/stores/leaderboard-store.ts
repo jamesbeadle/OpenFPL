@@ -107,57 +107,87 @@ function createLeaderboardStore() {
   ): Promise<PaginatedLeaderboard> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let weeklyLeaderboardData = await actor.getWeeklyLeaderboard(
+  
+    if (currentPage <= 4) {
+      const cachedData = localStorage.getItem("weekly_leaderboard_data");
+      if (cachedData) {
+        let cachedLeaderboard: PaginatedLeaderboard = JSON.parse(cachedData);
+        return {
+          entries: cachedLeaderboard.entries.slice(offset, offset + limit),
+          gameweek: cachedLeaderboard.gameweek,
+          seasonId: cachedLeaderboard.seasonId,
+          totalEntries: cachedLeaderboard.totalEntries,
+        };
+      }
+    }
+  
+    let leaderboardData = await actor.getWeeklyLeaderboard(
       systemState?.activeSeason.id,
       gameweek,
       limit,
       offset
     );
-    return weeklyLeaderboardData;
+    return leaderboardData;
   }
-
+  
   async function getMonthlyLeaderboard(
-    clubId: number
+    clubId: number,
+    month: number,
+    currentPage: number
   ): Promise<PaginatedClubLeaderboard | null> {
-    const cachedMonthlyLeaderboardData = localStorage.getItem(
-      "monthly_leaderboards_data"
-    );
-    let cachedMonthlyLeaderboards: PaginatedClubLeaderboard[];
-    try {
-      cachedMonthlyLeaderboards = JSON.parse(
-        cachedMonthlyLeaderboardData || "[]"
-      );
-    } catch (e) {
-      cachedMonthlyLeaderboards = [];
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
+  
+    if (currentPage <= 4) {
+      const cachedData = localStorage.getItem("monthly_leaderboard_data");
+      if (cachedData) {
+        let cachedLeaderboards: PaginatedClubLeaderboard[] = JSON.parse(cachedData);
+        let clubLeaderboard = cachedLeaderboards.find((x) => x.clubId === clubId);
+        if (clubLeaderboard) {
+          return {
+            ...clubLeaderboard,
+            entries: clubLeaderboard.entries.slice(offset, offset + limit),
+          };
+        }
+      }
     }
-
-    let clubLeaderboard =
-      cachedMonthlyLeaderboards.find((x) => x.clubId === clubId) ?? null;
-    return clubLeaderboard;
-  }
-
-  async function getSeasonLeaderboard(): Promise<PaginatedLeaderboard> {
-    const cachedSeasonLeaderboardData = localStorage.getItem(
-      "season_leaderboard_data"
+  
+    let leaderboardData = await actor.getClubLeaderboard(
+      systemState?.activeSeason.id,
+      month,
+      clubId,
+      limit,
+      offset
     );
-
-    let cachedSeasonLeaderboard: PaginatedLeaderboard;
-    try {
-      cachedSeasonLeaderboard = JSON.parse(
-        cachedSeasonLeaderboardData ||
-          "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
-      );
-    } catch (e) {
-      cachedSeasonLeaderboard = {
-        entries: [],
-        gameweek: 0,
-        seasonId: 0,
-        totalEntries: 0n,
-      };
-    }
-
-    return cachedSeasonLeaderboard;
+    return leaderboardData;
   }
+  
+
+  async function getSeasonLeaderboardPage(
+    currentPage: number
+  ): Promise<PaginatedLeaderboard> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
+  
+    if (currentPage <= 4) {
+      const cachedData = localStorage.getItem("season_leaderboard_data");
+      if (cachedData) {
+        let cachedLeaderboard: PaginatedLeaderboard = JSON.parse(cachedData);
+        return {
+          ...cachedLeaderboard,
+          entries: cachedLeaderboard.entries.slice(offset, offset + limit),
+        };
+      }
+    }
+  
+    let leaderboardData = await actor.getSeasonLeaderboard(
+      systemState?.activeSeason.id,
+      limit,
+      offset
+    );
+    return leaderboardData;
+  }
+  
 
   async function getLeadingWeeklyTeam(): Promise<LeaderboardEntry> {
     let weeklyLeaderboard = await getWeeklyLeaderboard();
@@ -172,7 +202,7 @@ function createLeaderboardStore() {
     getWeeklyLeaderboard,
     getWeeklyLeaderboardPage,
     getMonthlyLeaderboard,
-    getSeasonLeaderboard,
+    getSeasonLeaderboardPage,
     getLeadingWeeklyTeam,
   };
 }
