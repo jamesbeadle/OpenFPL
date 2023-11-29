@@ -14,6 +14,7 @@
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import { writable, type Writable } from 'svelte/store';
+    import { loadingText } from "$lib/stores/global-stores";
 
   let teams: Team[];
   let systemState: SystemState | null;
@@ -116,6 +117,7 @@
 
   async function uploadProfileImage(file: File) {
     isLoading.set(true)
+    loadingText.set("Updating Profile Picture");
     try {
       await userStore.updateProfilePicture(file);
       const profileData = await userStore.getProfile();
@@ -128,7 +130,10 @@
     } catch (error) {
       toastStore.show("Error updating profile image", "error");
       console.error("Error updating profile image", error);
-    } finally { isLoading.set(false) }
+    } finally { 
+      isLoading.set(false);
+      loadingText.set("Loading"); 
+    }
   }
 </script>
 
