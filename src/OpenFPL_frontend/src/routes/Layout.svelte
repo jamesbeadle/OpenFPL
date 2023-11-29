@@ -40,9 +40,10 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 10;
   }
-main {
-  flex: 1; /* This will make the main content stretch and take available space */
-  display: flex;
-  flex-direction: column;
-}
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 </style>

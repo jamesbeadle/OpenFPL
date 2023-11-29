@@ -26,8 +26,8 @@
       toastStore.show("Error updating username.", "error");
       console.error("Error updating username:", error);
     }
-    isLoading.set(true);
-    closeModal();
+    await closeModal();
+    isLoading.set(false);
   }
 
   function handleKeydown(event: KeyboardEvent): void {

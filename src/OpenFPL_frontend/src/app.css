@@ -77,8 +77,12 @@ body {
   border-bottom: 4px #2ce3a6 solid;
 }
 
-.toast-panel {
+.toast-panel-success {
   background-color: #2ce3a6;
+}
+
+.toast-panel-error {
+  background-color: #f27557;
 }
 
 .inactive-btn {

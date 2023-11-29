@@ -4,7 +4,7 @@
   let isScrolled = false;
 
   function updateScroll() {
-    isScrolled = window.pageYOffset > 0;
+    isScrolled = window.screenY > 0;
   }
 
   onMount(() => {
@@ -16,11 +16,8 @@
 </script>
 
 {#if $toastStore.visible}
-  <div
-    class={`fixed inset-x-0 ${
-      isScrolled ? "top-0" : "bottom-0"
-    } toast-panel text-white text-center py-2 ${$toastStore.type}`}
-  >
+  <div class={`fixed inset-x-0 ${ isScrolled ? "top-0" : "bottom-0" } 
+    text-white text-center py-2 toast-panel-${$toastStore.type}`}>
     {$toastStore.message}
   </div>
 {/if}

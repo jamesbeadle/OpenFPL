@@ -3,12 +3,14 @@
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
   import { toastStore } from "$lib/stores/toast-store";
-  import { isLoading } from "$lib/stores/global-stores";
+  import type { Writable } from "svelte/store";
   import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let showModal: boolean;
   export let closeModal: () => void;
   export let newFavouriteTeam: number = 0;
+  export let isLoading: Writable<boolean | null>;
+
   let isSubmitDisabled: boolean = true;  
   $: isSubmitDisabled = newFavouriteTeam <= 0;
   
@@ -35,8 +37,8 @@
       toastStore.show("Error updating favourite team.", "error");
       console.error("Error updating favourite team:", error);
     }
+    await closeModal();
     isLoading.set(false);
-    closeModal();
   }
 
   function handleKeydown(event: KeyboardEvent): void {
