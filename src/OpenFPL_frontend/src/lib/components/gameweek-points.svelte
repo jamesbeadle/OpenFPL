@@ -131,19 +131,19 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <div class="flex items-center ml-4">
           <div class="flex items-center mr-8">
-            <button class="text-2xl rounded fpl-button px-3 py-1" 
+            <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
               on:click={() => changeGameweek(-1)}
               disabled={selectedGameweek === 1}>
               &lt;
             </button>
-
-            <select class="p-2 fpl-dropdown text-sm md:text-xl text-center" bind:value={selectedGameweek}>
+    
+            <select class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]" bind:value={selectedGameweek}>
               {#each gameweeks as gameweek}
                 <option value={gameweek}>Gameweek {gameweek}</option>
               {/each}
             </select>
-
-            <button class="text-2xl rounded fpl-button px-3 py-1 ml-1"
+    
+            <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
               on:click={() => changeGameweek(1)}
               disabled={selectedGameweek === 38}>
               &gt;
