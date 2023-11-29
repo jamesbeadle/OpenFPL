@@ -14,7 +14,7 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
   import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from "$lib/stores/global-stores";
 
@@ -26,7 +26,7 @@
   let profilePicture: string;
   let teams: Team[];
   let favouriteTeam: Team | null = null;
-  let fantasyTeam: Writable<FantasyTeam | null>;
+  let fantasyTeam: Writable<FantasyTeam | null> = writable(null);
   let systemState: SystemState | null;
 
   let unsubscribeSystemState: () => void;
@@ -103,9 +103,8 @@
   }
 
   function viewGameweekDetail(principalId: string, selectedGameweek: number) {
-    fantasyTeam.set(
-      manager.gameweeks.find((x) => x.gameweek === selectedGameweek)!
-    );
+    let team = manager.gameweeks.find(x => x.gameweek === selectedGameweek)!
+    fantasyTeam.set(team);
     setActiveTab("details");
   }
 </script>

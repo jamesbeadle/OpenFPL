@@ -15,10 +15,7 @@
   let systemState: SystemState | null;
   let isLoading = true;
   export let principalId = "";
-  export let viewGameweekDetail: (
-    principalId: string,
-    selectedGameweek: number
-  ) => void;
+  export let viewGameweekDetail: (principalId: string, selectedGameweek: number) => void;
   let manager: ManagerDTO;
   let selectedGameweek: number = 1;
   let selectedSeason: Season | null = null;
@@ -75,10 +72,7 @@
           <div class="w-1/4 px-4">{gameweek.gameweek}</div>
           <div class="w-1/4 px-4">{gameweek.points}</div>
           <div class="w-1/4 px-4 flex items-center">
-            <button
-              on:click={() =>
-                viewGameweekDetail(gameweek.principalId, gameweek.gameweek)}
-            >
+            <button on:click={() => viewGameweekDetail(gameweek.principalId, gameweek.gameweek)}>
               <span class="flex items-center">
                 <ViewDetailsIcon className="w-6 mr-2" />View Details
               </span>
