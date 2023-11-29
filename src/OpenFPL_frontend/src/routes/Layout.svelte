@@ -6,7 +6,10 @@
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import "../app.css";
 
-  export const isLoading = writable(false);
+  export const isLoading = writable(true);
+  isLoading.subscribe(value => {
+    console.log('isLoading:', value);
+  });
 </script>
 
 <div class="flex flex-col h-screen justify-between">

@@ -99,10 +99,8 @@
 
 <Layout>
   <div class="m-4">
-    <div class="flex flex-col md:flex-row">
-      <div
-        class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-      >
+    <div class="flex flex-col md:flex-row 3xl:bg-red-500">
+      <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
         <div class="flex-grow">
           <p class="text-gray-300 text-xs">Gameweek</p>
           <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">

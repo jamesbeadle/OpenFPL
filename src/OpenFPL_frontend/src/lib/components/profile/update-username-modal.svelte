@@ -1,10 +1,21 @@
 <script lang="ts">
-  export let showModal: boolean;
-  export let closeModal: () => void;
-  export let newUsername: string;
   import { userStore } from "$lib/stores/user-store";
   import { toastStore } from "$lib/stores/toast-store";
   import { isLoading } from "$lib/stores/global-stores";
+
+  export let showModal: boolean;
+  export let closeModal: () => void;
+  export let newUsername: string = '';  
+  
+  function isDisplayNameValid(displayName: string): boolean {
+    if (displayName.length < 3 || displayName.length > 20) {
+      return false;
+    }
+
+    return /^[a-zA-Z0-9 ]+$/.test(displayName);
+  }
+  
+  $: isSubmitDisabled = !isDisplayNameValid(newUsername);
 
   async function updateUsername() {
     isLoading.set(true);
@@ -26,33 +37,31 @@
 </script>
 
 {#if showModal}
-  <div
-    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={closeModal}
-    on:keydown={handleKeydown}
-  >
-    <div
-      class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
-      on:click|stopPropagation
-      on:keydown={handleKeydown}
-    >
-      <div class="mt-3 text-center">
-        <h3 class="text-lg leading-6 font-medium">Update Username</h3>
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
+  on:click={closeModal} on:keydown={handleKeydown}>
+  <div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
+    on:click|stopPropagation on:keydown={handleKeydown}>
+    <div class="mt-3 text-center">
+      <h3 class="text-lg leading-6 font-medium mb-2">
+        Update Display Name
+      </h3>
         <form on:submit|preventDefault={updateUsername}>
           <div class="mt-4">
-            <input
-              type="text"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              placeholder="New Username"
-              bind:value={newUsername}
-            />
+            <input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              placeholder="New Username" bind:value={newUsername} />
           </div>
-          <div class="mt-4">
+          <div class="items-center py-3 flex space-x-4">
             <button
+              class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              on:click={closeModal}>
+              Cancel
+            </button>
+            <button
+              class={`px-4 py-2 fpl-purple-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
               type="submit"
-              class="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-white"
-              >Update</button
-            >
+              disabled={isSubmitDisabled}>
+              Use
+            </button>
           </div>
         </form>
       </div>

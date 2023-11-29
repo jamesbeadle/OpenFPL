@@ -142,9 +142,7 @@
   {#if showView}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
           <div class="flex-grow flex flex-col items-center">
             <p class="text-gray-300 text-xs">{team?.friendlyName}</p>
             <div class="py-2 flex space-x-4">
