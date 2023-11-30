@@ -16,7 +16,7 @@ export class ActorFactory {
     const hostOptions = {
       host:
         process.env.DFX_NETWORK === "ic"
-          ? `https://${canisterId}.ic0.app`
+          ? `https://${canisterId}.icp-api.io`
           : "http://127.0.0.1:8080",
       identity: identity,
     };
