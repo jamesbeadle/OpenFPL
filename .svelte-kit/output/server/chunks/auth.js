@@ -17,6 +17,11 @@ const popupCenter = ({
   }
 };
 let authClient;
+const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
+const NNS_IC_APP_DERIVATION_ORIGIN = "https://bgpwv-eqaaa-aaaal-qb6eq-cai.icp0.io";
+const isNnsAlternativeOrigin = () => {
+  return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
+};
 const initAuthStore = () => {
   const { subscribe, set, update } = writable({
     identity: void 0
@@ -44,6 +49,9 @@ const initAuthStore = () => {
         },
         onError: reject,
         identityProvider,
+        ...isNnsAlternativeOrigin() && {
+          derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN
+        },
         windowOpenerFeatures: popupCenter({
           width: AUTH_POPUP_WIDTH,
           height: AUTH_POPUP_HEIGHT

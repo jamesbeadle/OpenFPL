@@ -19,11 +19,19 @@ export interface AuthSignInParams {
   domain?: "ic0.app" | "internetcomputer.org";
 }
 
+const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
+const NNS_IC_APP_DERIVATION_ORIGIN =
+  "https://bgpwv-eqaaa-aaaal-qb6eq-cai.icp0.io";
+
 export interface AuthStore extends Readable<AuthStoreData> {
   sync: () => Promise<void>;
   signIn: (params: AuthSignInParams) => Promise<void>;
   signOut: () => Promise<void>;
 }
+
+const isNnsAlternativeOrigin = () => {
+  return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
+};
 
 const initAuthStore = (): AuthStore => {
   const { subscribe, set, update } = writable<AuthStoreData>({
@@ -59,6 +67,9 @@ const initAuthStore = (): AuthStore => {
           },
           onError: reject,
           identityProvider,
+          ...(isNnsAlternativeOrigin() && {
+            derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN,
+          }),
           windowOpenerFeatures: popupCenter({
             width: AUTH_POPUP_WIDTH,
             height: AUTH_POPUP_HEIGHT,

@@ -2,6 +2,7 @@ import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/kit/vite";
 import autoprefixer from "autoprefixer";
 import { readFileSync } from "fs";
+import tailwindcss from "tailwindcss";
 import { fileURLToPath } from "url";
 
 const file = fileURLToPath(new URL("package.json", import.meta.url));
@@ -14,7 +15,7 @@ const filesPath = (path) => `src/OpenFPL_frontend/${path}`;
 const config = {
   preprocess: vitePreprocess({
     postcss: {
-      plugins: [autoprefixer],
+      plugins: [tailwindcss(), autoprefixer],
     },
   }),
   kit: {
