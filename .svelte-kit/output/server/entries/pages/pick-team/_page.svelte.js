@@ -1,17 +1,29 @@
-import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component } from "../../../chunks/index2.js";
-import { L as Layout } from "../../../chunks/Layout.js";
-import { w as writable } from "../../../chunks/index.js";
-import "../../../chunks/system-store.js";
 import "../../../chunks/fixture-store.js";
-import "../../../chunks/team-store.js";
-import "../../../chunks/player-store.js";
+import { w as writable } from "../../../chunks/index.js";
+import {
+  a as subscribe,
+  c as create_ssr_component,
+  o as onDestroy,
+  v as validate_component,
+} from "../../../chunks/index2.js";
+import { L as Layout } from "../../../chunks/Layout.js";
 import "../../../chunks/manager-store.js";
+import "../../../chunks/player-store.js";
+import "../../../chunks/system-store.js";
+import "../../../chunks/team-store.js";
 const useBonusModal_svelte_svelte_type_style_lang = "";
 const bonusPanel_svelte_svelte_type_style_lang = "";
 const addPlayerModal_svelte_svelte_type_style_lang = "";
 function getGridSetup(formation) {
   const formationSplits = formation.split("-").map(Number);
-  const setups = [[1], ...formationSplits.map((s) => Array(s).fill(0).map((_, i) => i + 1))];
+  const setups = [
+    [1],
+    ...formationSplits.map((s) =>
+      Array(s)
+        .fill(0)
+        .map((_, i) => i + 1)
+    ),
+  ];
   return setups;
 }
 function isBonusConditionMet(team) {
@@ -28,7 +40,7 @@ function isBonusConditionMet(team) {
     team.passMasterGameweek,
     team.goalGetterGameweek,
     team.noEntryGameweek,
-    team.safeHandsGameweek
+    team.safeHandsGameweek,
   ];
   for (const gw of bonusGameweeks) {
     if (gw !== 0) {
@@ -63,18 +75,37 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $transfersAvailable, $$unsubscribe_transfersAvailable;
   let $bankBalance, $$unsubscribe_bankBalance;
   let $$unsubscribe_availableFormations;
-  const availableFormations = writable(["3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-4-1", "5-3-2"]);
-  $$unsubscribe_availableFormations = subscribe(availableFormations, (value) => value);
+  const availableFormations = writable([
+    "3-4-3",
+    "3-5-2",
+    "4-3-3",
+    "4-4-2",
+    "4-5-1",
+    "5-4-1",
+    "5-3-2",
+  ]);
+  $$unsubscribe_availableFormations = subscribe(
+    availableFormations,
+    (value) => value
+  );
   let selectedFormation = "4-4-2";
   let players;
   const fantasyTeam = writable(null);
-  $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => $fantasyTeam = value);
+  $$unsubscribe_fantasyTeam = subscribe(
+    fantasyTeam,
+    (value) => ($fantasyTeam = value)
+  );
   const transfersAvailable = writable(Infinity);
-  $$unsubscribe_transfersAvailable = subscribe(transfersAvailable, (value) => $transfersAvailable = value);
+  $$unsubscribe_transfersAvailable = subscribe(
+    transfersAvailable,
+    (value) => ($transfersAvailable = value)
+  );
   const bankBalance = writable(1200);
-  $$unsubscribe_bankBalance = subscribe(bankBalance, (value) => $bankBalance = value);
-  onDestroy(() => {
-  });
+  $$unsubscribe_bankBalance = subscribe(
+    bankBalance,
+    (value) => ($bankBalance = value)
+  );
+  onDestroy(() => {});
   function checkSaveButtonConditions() {
     const teamCount = /* @__PURE__ */ new Map();
     for (const playerId of $fantasyTeam?.playerIds || []) {
@@ -115,12 +146,15 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_transfersAvailable();
   $$unsubscribe_bankBalance();
   $$unsubscribe_availableFormations();
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `${``}`;
+  return `${validate_component(Layout, "Layout").$$render(
+    $$result,
+    {},
+    {},
+    {
+      default: () => {
+        return `${``}`;
+      },
     }
-  })}`;
+  )}`;
 });
-export {
-  Page as default
-};
+export { Page as default };

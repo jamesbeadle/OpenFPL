@@ -1,1 +1,3 @@
-.striped.svelte-58jp75 tr.svelte-58jp75:nth-child(odd){background-color:#2e323a99}
+.striped.svelte-58jp75 tr.svelte-58jp75:nth-child(odd) {
+  background-color: #2e323a99;
+}
