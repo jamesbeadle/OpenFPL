@@ -1,207 +1,187 @@
-type ValueHistory = 
- record {
-   gameweek: nat8;
-   newValue: nat;
-   oldValue: nat;
-   seasonId: nat16;
- };
-type TransferHistory = 
- record {
-   fromTeam: TeamId;
-   loanEndDate: int;
-   toTeam: TeamId;
-   transferDate: int;
-   transferGameweek: GameweekNumber;
-   transferSeason: SeasonId;
- };
+type ValueHistory = record {
+  gameweek : nat8;
+  newValue : nat;
+  oldValue : nat;
+  seasonId : nat16;
+};
+type TransferHistory = record {
+  fromTeam : TeamId;
+  loanEndDate : int;
+  toTeam : TeamId;
+  transferDate : int;
+  transferGameweek : GameweekNumber;
+  transferSeason : SeasonId;
+};
 type TeamId = nat16;
 type SeasonId = nat16;
-type PlayerSeason = 
- record {
-   gameweeks: List_2;
-   id: nat16;
- };
-type PlayerScoreDTO = 
- record {
-   assists: int16;
-   events: List_3;
-   goalsConceded: int16;
-   goalsScored: int16;
-   id: nat16;
-   points: int16;
-   position: nat8;
-   saves: int16;
-   teamId: nat16;
- };
-type PlayerPointsDTO = 
- record {
-   events: vec PlayerEventData;
-   gameweek: GameweekNumber;
-   id: nat16;
-   points: int16;
-   position: nat8;
-   teamId: nat16;
- };
+type PlayerSeason = record {
+  gameweeks : List_2;
+  id : nat16;
+};
+type PlayerScoreDTO = record {
+  assists : int16;
+  events : List_3;
+  goalsConceded : int16;
+  goalsScored : int16;
+  id : nat16;
+  points : int16;
+  position : nat8;
+  saves : int16;
+  teamId : nat16;
+};
+type PlayerPointsDTO = record {
+  events : vec PlayerEventData;
+  gameweek : GameweekNumber;
+  id : nat16;
+  points : int16;
+  position : nat8;
+  teamId : nat16;
+};
 type PlayerId = nat16;
-type PlayerGameweekDTO = 
- record {
-   events: vec PlayerEventData;
-   fixtureId: FixtureId;
-   number: nat8;
-   points: int16;
- };
-type PlayerGameweek = 
- record {
-   events: List_3;
-   number: nat8;
-   points: int16;
- };
-type PlayerEventData = 
- record {
-   eventEndMinute: nat8;
-   eventStartMinute: nat8;
-   eventType: nat8;
-   fixtureId: FixtureId;
-   playerId: nat16;
-   teamId: TeamId;
- };
-type PlayerDetailDTO = 
- record {
-   dateOfBirth: int;
-   firstName: text;
-   gameweeks: vec PlayerGameweekDTO;
-   id: PlayerId;
-   injuryHistory: vec InjuryHistory;
-   isInjured: bool;
-   lastName: text;
-   nationality: text;
-   onLoan: bool;
-   parentTeamId: nat16;
-   position: nat8;
-   retirementDate: int;
-   seasonId: SeasonId;
-   shirtNumber: nat8;
-   teamId: TeamId;
-   value: nat;
-   valueHistory: vec ValueHistory;
- };
-type PlayerDTO = 
- record {
-   dateOfBirth: int;
-   firstName: text;
-   id: nat16;
-   lastName: text;
-   nationality: text;
-   position: nat8;
-   shirtNumber: nat8;
-   teamId: nat16;
-   totalPoints: int16;
-   value: nat;
- };
-type Player = 
- record {
-   dateOfBirth: int;
-   firstName: text;
-   id: PlayerId;
-   injuryHistory: List;
-   isInjured: bool;
-   lastName: text;
-   nationality: text;
-   onLoan: bool;
-   parentTeamId: nat16;
-   position: nat8;
-   retirementDate: int;
-   seasons: List_1;
-   shirtNumber: nat8;
-   teamId: TeamId;
-   transferHistory: List_4;
-   value: nat;
-   valueHistory: List_5;
- };
-type List_5 = 
- opt record {
-       ValueHistory;
-       List_5;
-     };
-type List_4 = 
- opt record {
-       TransferHistory;
-       List_4;
-     };
-type List_3 = 
- opt record {
-       PlayerEventData;
-       List_3;
-     };
-type List_2 = 
- opt record {
-       PlayerGameweek;
-       List_2;
-     };
-type List_1 = 
- opt record {
-       PlayerSeason;
-       List_1;
-     };
-type List = 
- opt record {
-       InjuryHistory;
-       List;
-     };
-type InjuryHistory = 
- record {
-   description: text;
-   expectedEndDate: int;
-   injuryStartDate: int;
- };
+type PlayerGameweekDTO = record {
+  events : vec PlayerEventData;
+  fixtureId : FixtureId;
+  number : nat8;
+  points : int16;
+};
+type PlayerGameweek = record {
+  events : List_3;
+  number : nat8;
+  points : int16;
+};
+type PlayerEventData = record {
+  eventEndMinute : nat8;
+  eventStartMinute : nat8;
+  eventType : nat8;
+  fixtureId : FixtureId;
+  playerId : nat16;
+  teamId : TeamId;
+};
+type PlayerDetailDTO = record {
+  dateOfBirth : int;
+  firstName : text;
+  gameweeks : vec PlayerGameweekDTO;
+  id : PlayerId;
+  injuryHistory : vec InjuryHistory;
+  isInjured : bool;
+  lastName : text;
+  nationality : text;
+  onLoan : bool;
+  parentTeamId : nat16;
+  position : nat8;
+  retirementDate : int;
+  seasonId : SeasonId;
+  shirtNumber : nat8;
+  teamId : TeamId;
+  value : nat;
+  valueHistory : vec ValueHistory;
+};
+type PlayerDTO = record {
+  dateOfBirth : int;
+  firstName : text;
+  id : nat16;
+  lastName : text;
+  nationality : text;
+  position : nat8;
+  shirtNumber : nat8;
+  teamId : nat16;
+  totalPoints : int16;
+  value : nat;
+};
+type Player = record {
+  dateOfBirth : int;
+  firstName : text;
+  id : PlayerId;
+  injuryHistory : List;
+  isInjured : bool;
+  lastName : text;
+  nationality : text;
+  onLoan : bool;
+  parentTeamId : nat16;
+  position : nat8;
+  retirementDate : int;
+  seasons : List_1;
+  shirtNumber : nat8;
+  teamId : TeamId;
+  transferHistory : List_4;
+  value : nat;
+  valueHistory : List_5;
+};
+type List_5 = opt record {
+  ValueHistory;
+  List_5;
+};
+type List_4 = opt record {
+  TransferHistory;
+  List_4;
+};
+type List_3 = opt record {
+  PlayerEventData;
+  List_3;
+};
+type List_2 = opt record {
+  PlayerGameweek;
+  List_2;
+};
+type List_1 = opt record {
+  PlayerSeason;
+  List_1;
+};
+type List = opt record {
+  InjuryHistory;
+  List;
+};
+type InjuryHistory = record {
+  description : text;
+  expectedEndDate : int;
+  injuryStartDate : int;
+};
 type GameweekNumber = nat8;
 type FixtureId = nat32;
-type Fixture = 
- record {
-   awayGoals: nat8;
-   awayTeamId: TeamId;
-   events: List_3;
-   gameweek: GameweekNumber;
-   highestScoringPlayerId: nat16;
-   homeGoals: nat8;
-   homeTeamId: TeamId;
-   id: nat32;
-   kickOff: int;
-   seasonId: SeasonId;
-   status: nat8;
- };
-type DataCache = 
- record {
-   category: text;
-   hash: text;
- };
+type Fixture = record {
+  awayGoals : nat8;
+  awayTeamId : TeamId;
+  events : List_3;
+  gameweek : GameweekNumber;
+  highestScoringPlayerId : nat16;
+  homeGoals : nat8;
+  homeTeamId : TeamId;
+  id : nat32;
+  kickOff : int;
+  seasonId : SeasonId;
+  status : nat8;
+};
+type DataCache = record {
+  category : text;
+  hash : text;
+};
 service : {
-  calculatePlayerScores: (nat16, nat8, Fixture) -> (Fixture);
-  createPlayer: (TeamId, nat8, text, text, nat8, nat, int, text) -> ();
-  getActivePlayers: () -> (vec PlayerDTO) query;
-  getAllPlayers: () -> (vec PlayerDTO) query;
-  getAllPlayersMap: (nat16, nat8) ->
-   (vec record {
-          nat16;
-          PlayerScoreDTO;
-        }) query;
-  getDataHashes: () -> (vec DataCache) query;
-  getPlayer: (nat16) -> (Player) query;
-  getPlayerDetails: (nat16, SeasonId) -> (PlayerDetailDTO) query;
-  getPlayerDetailsForGameweek: (nat16, nat8) -> (vec PlayerPointsDTO) query;
-  getPlayersDetailsForGameweek: (vec PlayerId, nat16, nat8) ->
-   (vec PlayerPointsDTO) query;
-  getRetiredPlayer: (text) -> (vec Player) query;
-  loanPlayer: (PlayerId, TeamId, int, SeasonId, GameweekNumber) -> ();
-  recallPlayer: (PlayerId) -> ();
-  retirePlayer: (PlayerId, int) -> ();
-  revaluePlayerDown: (PlayerId, SeasonId, GameweekNumber) -> () oneway;
-  revaluePlayerUp: (PlayerId, SeasonId, GameweekNumber) -> ();
-  setDefaultHashes: () -> ();
-  setPlayerInjury: (PlayerId, text, int) -> ();
-  transferPlayer: (PlayerId, TeamId, SeasonId, GameweekNumber) -> ();
-  unretirePlayer: (PlayerId) -> ();
-  updateHashForCategory: (text) -> ();
-  updatePlayer: (PlayerId, nat8, text, text, nat8, int, text) -> ();
-  updatePlayerEventDataCache: () -> ();
-}
+  calculatePlayerScores : (nat16, nat8, Fixture) -> (Fixture);
+  createPlayer : (TeamId, nat8, text, text, nat8, nat, int, text) -> ();
+  getActivePlayers : () -> (vec PlayerDTO) query;
+  getAllPlayers : () -> (vec PlayerDTO) query;
+  getAllPlayersMap : (nat16, nat8) -> (
+    vec record {
+      nat16;
+      PlayerScoreDTO;
+    },
+  ) query;
+  getDataHashes : () -> (vec DataCache) query;
+  getPlayer : (nat16) -> (Player) query;
+  getPlayerDetails : (nat16, SeasonId) -> (PlayerDetailDTO) query;
+  getPlayerDetailsForGameweek : (nat16, nat8) -> (vec PlayerPointsDTO) query;
+  getPlayersDetailsForGameweek : (vec PlayerId, nat16, nat8) -> (vec PlayerPointsDTO) query;
+  getRetiredPlayer : (text) -> (vec Player) query;
+  loanPlayer : (PlayerId, TeamId, int, SeasonId, GameweekNumber) -> ();
+  recallPlayer : (PlayerId) -> ();
+  retirePlayer : (PlayerId, int) -> ();
+  revaluePlayerDown : (PlayerId, SeasonId, GameweekNumber) -> () oneway;
+  revaluePlayerUp : (PlayerId, SeasonId, GameweekNumber) -> ();
+  setDefaultHashes : () -> ();
+  setPlayerInjury : (PlayerId, text, int) -> ();
+  transferPlayer : (PlayerId, TeamId, SeasonId, GameweekNumber) -> ();
+  unretirePlayer : (PlayerId) -> ();
+  updateHashForCategory : (text) -> ();
+  updatePlayer : (PlayerId, nat8, text, text, nat8, int, text) -> ();
+  updatePlayerEventDataCache : () -> ();
+};

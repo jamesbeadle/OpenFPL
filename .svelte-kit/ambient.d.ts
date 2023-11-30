@@ -53,10 +53,10 @@ declare module '$env/static/private' {
 	export const npm_node_execpath: string;
 	export const SHLVL: string;
 	export const npm_config_noproxy: string;
-	export const MOTD_SHOWN: string;
 	export const HOME: string;
-	export const TERM_PROGRAM_VERSION: string;
+	export const MOTD_SHOWN: string;
 	export const NVM_BIN: string;
+	export const TERM_PROGRAM_VERSION: string;
 	export const VSCODE_IPC_HOOK_CLI: string;
 	export const npm_package_json: string;
 	export const NVM_INC: string;
@@ -82,8 +82,8 @@ declare module '$env/static/private' {
 	export const npm_package_name: string;
 	export const LANG: string;
 	export const LS_COLORS: string;
-	export const VSCODE_GIT_IPC_HANDLE: string;
 	export const TERM_PROGRAM: string;
+	export const VSCODE_GIT_IPC_HANDLE: string;
 	export const npm_lifecycle_script: string;
 	export const SHELL: string;
 	export const npm_package_version: string;
@@ -99,10 +99,16 @@ declare module '$env/static/private' {
 	export const npm_config_global_prefix: string;
 	export const npm_command: string;
 	export const HOSTTYPE: string;
+	export const NODE_ENV: string;
 	export const WSLENV: string;
 	export const INIT_CWD: string;
 	export const EDITOR: string;
-	export const NODE_ENV: string;
+	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
+	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
+	export const VITE_PLAYER_CANISTER_CANISTER_ID: string;
+	export const VITE_TOKEN_CANISTER_CANISTER_ID: string;
+	export const VITE_DFX_NETWORK: string;
+	export const VITE_HOST: string;
 }
 
 /**
@@ -159,10 +165,10 @@ declare module '$env/dynamic/private' {
 		npm_node_execpath: string;
 		SHLVL: string;
 		npm_config_noproxy: string;
-		MOTD_SHOWN: string;
 		HOME: string;
-		TERM_PROGRAM_VERSION: string;
+		MOTD_SHOWN: string;
 		NVM_BIN: string;
+		TERM_PROGRAM_VERSION: string;
 		VSCODE_IPC_HOOK_CLI: string;
 		npm_package_json: string;
 		NVM_INC: string;
@@ -188,8 +194,8 @@ declare module '$env/dynamic/private' {
 		npm_package_name: string;
 		LANG: string;
 		LS_COLORS: string;
-		VSCODE_GIT_IPC_HANDLE: string;
 		TERM_PROGRAM: string;
+		VSCODE_GIT_IPC_HANDLE: string;
 		npm_lifecycle_script: string;
 		SHELL: string;
 		npm_package_version: string;
@@ -205,10 +211,16 @@ declare module '$env/dynamic/private' {
 		npm_config_global_prefix: string;
 		npm_command: string;
 		HOSTTYPE: string;
+		NODE_ENV: string;
 		WSLENV: string;
 		INIT_CWD: string;
 		EDITOR: string;
-		NODE_ENV: string;
+		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
+		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
+		VITE_PLAYER_CANISTER_CANISTER_ID: string;
+		VITE_TOKEN_CANISTER_CANISTER_ID: string;
+		VITE_DFX_NETWORK: string;
+		VITE_HOST: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}
