@@ -1,7 +1,9 @@
 {
   ".svelte-kit/generated/server/internal.js": {
     "file": "internal.js",
-    "imports": ["_internal.js"],
+    "imports": [
+      "_internal.js"
+    ],
     "isEntry": true,
     "src": ".svelte-kit/generated/server/internal.js"
   },
@@ -11,38 +13,62 @@
   },
   "_BadgeIcon.js": {
     "file": "chunks/BadgeIcon.js",
-    "imports": ["_index2.js"]
+    "imports": [
+      "_index2.js"
+    ]
   },
   "_Layout.js": {
-    "css": ["_app/immutable/assets/Layout.abbb9e51.css"],
+    "css": [
+      "_app/immutable/assets/Layout.abbb9e51.css"
+    ],
     "file": "chunks/Layout.js",
-    "imports": ["_index2.js", "_index.js", "_stores.js", "_app.constants.js"]
+    "imports": [
+      "_index2.js",
+      "_index.js",
+      "_stores.js",
+      "_app.constants.js"
+    ]
   },
   "_app.constants.js": {
     "file": "chunks/app.constants.js"
   },
   "_auth.js": {
     "file": "chunks/auth.js",
-    "imports": ["_app.constants.js", "_index.js"]
+    "imports": [
+      "_app.constants.js",
+      "_index.js"
+    ]
   },
   "_fixture-store.js": {
     "file": "chunks/fixture-store.js",
-    "imports": ["_index.js", "_team-store.js"]
+    "imports": [
+      "_index.js",
+      "_team-store.js"
+    ]
   },
   "_index.js": {
     "file": "chunks/index.js",
-    "imports": ["_index2.js"]
+    "imports": [
+      "_index2.js"
+    ]
   },
   "_index2.js": {
     "file": "chunks/index2.js"
   },
   "_internal.js": {
     "file": "chunks/internal.js",
-    "imports": ["_index2.js"]
+    "imports": [
+      "_index2.js"
+    ]
   },
   "_manager-store.js": {
     "file": "chunks/manager-store.js",
-    "imports": ["_auth.js", "_system-store.js", "_index.js", "_team-store.js"]
+    "imports": [
+      "_auth.js",
+      "_system-store.js",
+      "_index.js",
+      "_team-store.js"
+    ]
   },
   "_player-store.js": {
     "file": "chunks/player-store.js",
@@ -55,31 +81,47 @@
   },
   "_stores.js": {
     "file": "chunks/stores.js",
-    "imports": ["_index2.js"]
+    "imports": [
+      "_index2.js"
+    ]
   },
   "_system-store.js": {
     "file": "chunks/system-store.js",
-    "imports": ["_index.js", "_team-store.js"]
+    "imports": [
+      "_index.js",
+      "_team-store.js"
+    ]
   },
   "_team-store.js": {
     "file": "chunks/team-store.js",
-    "imports": ["_index.js", "_index2.js"]
+    "imports": [
+      "_index.js",
+      "_index2.js"
+    ]
   },
   "node_modules/@sveltejs/kit/src/runtime/components/error.svelte": {
     "file": "entries/fallbacks/error.svelte.js",
-    "imports": ["_index2.js", "_stores.js"],
+    "imports": [
+      "_index2.js",
+      "_stores.js"
+    ],
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/components/error.svelte"
   },
   "node_modules/@sveltejs/kit/src/runtime/components/layout.svelte": {
     "file": "entries/fallbacks/layout.svelte.js",
-    "imports": ["_index2.js"],
+    "imports": [
+      "_index2.js"
+    ],
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/components/layout.svelte"
   },
   "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
     "file": "index.js",
-    "imports": ["_internal.js", "_index.js"],
+    "imports": [
+      "_internal.js",
+      "_index.js"
+    ],
     "isEntry": true,
     "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js"
   },
@@ -88,7 +130,9 @@
     "src": "src/OpenFPL_frontend/src/routes/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/+page.svelte": {
-    "css": ["_app/immutable/assets/_page.64cc99d9.css"],
+    "css": [
+      "_app/immutable/assets/_page.64cc99d9.css"
+    ],
     "file": "entries/pages/_page.svelte.js",
     "imports": [
       "_index2.js",
@@ -150,15 +194,23 @@
     "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte": {
-    "css": ["_app/immutable/assets/_page.2206b352.css"],
+    "css": [
+      "_app/immutable/assets/_page.2206b352.css"
+    ],
     "file": "entries/pages/gameplay-rules/_page.svelte.js",
-    "imports": ["_index2.js", "_Layout.js"],
+    "imports": [
+      "_index2.js",
+      "_Layout.js"
+    ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/governance/+page.svelte": {
     "file": "entries/pages/governance/_page.svelte.js",
-    "imports": ["_index2.js", "_Layout.js"],
+    "imports": [
+      "_index2.js",
+      "_Layout.js"
+    ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/governance/+page.svelte"
   },
@@ -181,7 +233,9 @@
     "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte": {
-    "css": ["_app/immutable/assets/_page.69c14fad.css"],
+    "css": [
+      "_app/immutable/assets/_page.69c14fad.css"
+    ],
     "file": "entries/pages/pick-team/_page.svelte.js",
     "imports": [
       "_index2.js",
@@ -201,7 +255,9 @@
     "src": "src/OpenFPL_frontend/src/routes/player/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/player/+page.svelte": {
-    "css": ["_app/immutable/assets/_page.ff16016e.css"],
+    "css": [
+      "_app/immutable/assets/_page.ff16016e.css"
+    ],
     "file": "entries/pages/player/_page.svelte.js",
     "imports": [
       "_index2.js",
@@ -221,7 +277,9 @@
     "src": "src/OpenFPL_frontend/src/routes/profile/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/profile/+page.svelte": {
-    "css": ["_app/immutable/assets/_page.a52d0793.css"],
+    "css": [
+      "_app/immutable/assets/_page.a52d0793.css"
+    ],
     "file": "entries/pages/profile/_page.svelte.js",
     "imports": [
       "_index2.js",
@@ -238,7 +296,10 @@
   },
   "src/OpenFPL_frontend/src/routes/terms/+page.svelte": {
     "file": "entries/pages/terms/_page.svelte.js",
-    "imports": ["_index2.js", "_Layout.js"],
+    "imports": [
+      "_index2.js",
+      "_Layout.js"
+    ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/terms/+page.svelte"
   },
@@ -247,9 +308,14 @@
     "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.css"
   },
   "src/OpenFPL_frontend/src/routes/whitepaper/+page.svelte": {
-    "css": ["_app/immutable/assets/_page.2206b352.css"],
+    "css": [
+      "_app/immutable/assets/_page.2206b352.css"
+    ],
     "file": "entries/pages/whitepaper/_page.svelte.js",
-    "imports": ["_index2.js", "_Layout.js"],
+    "imports": [
+      "_index2.js",
+      "_Layout.js"
+    ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.svelte"
   }

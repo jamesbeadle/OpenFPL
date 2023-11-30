@@ -1,22 +1,15 @@
-import {
-  c as create_ssr_component,
-  v as validate_component,
-} from "../../../chunks/index2.js";
+import { c as create_ssr_component, v as validate_component } from "../../../chunks/index2.js";
 import { L as Layout } from "../../../chunks/Layout.js";
 const _page_svelte_svelte_type_style_lang = "";
 const css = {
   code: ".striped.svelte-58jp75 tr.svelte-58jp75:nth-child(odd){background-color:rgba(46, 50, 58, 0.6)}",
-  map: null,
+  map: null
 };
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css);
-  return `${validate_component(Layout, "Layout").$$render(
-    $$result,
-    {},
-    {},
-    {
-      default: () => {
-        return `<div class="m-4"><div class="bg-panel rounded-lg m-4 p-4"><h1 class="p-4 mx-1 text-2xl">OpenFPL Gameplay Rules</h1>
+  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+    default: () => {
+      return `<div class="m-4"><div class="bg-panel rounded-lg m-4 p-4"><h1 class="p-4 mx-1 text-2xl">OpenFPL Gameplay Rules</h1>
       <div class="bg-panel rounded-lg m-4"><div><p class="my-2">Please see the below OpenFPL fantasy football gameplay rules.
           </p>
 
@@ -125,8 +118,9 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
               <td>Receive a X3 multiplier on a player&#39;s score if they score 3 or
                 more goals in a game. Applies to every player who scores a
                 hat-trick.</td></tr></table></div></div></div></div>`;
-      },
     }
-  )}`;
+  })}`;
 });
-export { Page as default };
+export {
+  Page as default
+};

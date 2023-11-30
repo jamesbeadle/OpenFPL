@@ -1,13 +1,13 @@
 import type {
-  ActorSubclass,
-  HttpAgentOptions,
   ActorConfig,
+  ActorSubclass,
   Agent,
+  HttpAgentOptions,
 } from "@dfinity/agent";
-import type { Principal } from "@dfinity/principal";
 import type { IDL } from "@dfinity/candid";
+import type { Principal } from "@dfinity/principal";
 
-import { _SERVICE } from './OpenFPL_backend.did';
+import { _SERVICE } from "./OpenFPL_backend.did";
 
 export declare const idlFactory: IDL.InterfaceFactory;
 export declare const canisterId: string;

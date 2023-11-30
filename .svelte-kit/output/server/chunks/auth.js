@@ -1,19 +1,17 @@
+import { A as AUTH_MAX_TIME_TO_LIVE, a as AUTH_POPUP_WIDTH, b as AUTH_POPUP_HEIGHT } from "./app.constants.js";
 import { AuthClient } from "@dfinity/auth-client";
 import "@dfinity/utils";
-import {
-  A as AUTH_MAX_TIME_TO_LIVE,
-  a as AUTH_POPUP_WIDTH,
-  b as AUTH_POPUP_HEIGHT,
-} from "./app.constants.js";
 import { w as writable } from "./index.js";
-const createAuthClient = () =>
-  AuthClient.create({
-    idleOptions: {
-      disableIdle: true,
-      disableDefaultIdleCallback: true,
-    },
-  });
-const popupCenter = ({ width, height }) => {
+const createAuthClient = () => AuthClient.create({
+  idleOptions: {
+    disableIdle: true,
+    disableDefaultIdleCallback: true
+  }
+});
+const popupCenter = ({
+  width,
+  height
+}) => {
   {
     return void 0;
   }
@@ -21,48 +19,49 @@ const popupCenter = ({ width, height }) => {
 let authClient;
 const initAuthStore = () => {
   const { subscribe, set, update } = writable({
-    identity: void 0,
+    identity: void 0
   });
   return {
     subscribe,
     sync: async () => {
-      authClient = authClient ?? (await createAuthClient());
+      authClient = authClient ?? await createAuthClient();
       const isAuthenticated = await authClient.isAuthenticated();
       set({
-        identity: isAuthenticated ? authClient.getIdentity() : null,
+        identity: isAuthenticated ? authClient.getIdentity() : null
       });
     },
-    signIn: ({ domain }) =>
-      new Promise(async (resolve, reject) => {
-        authClient = authClient ?? (await createAuthClient());
-        const identityProvider = "https://identity.ic0.app";
-        await authClient?.login({
-          maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
-          onSuccess: () => {
-            update((state) => ({
-              ...state,
-              identity: authClient?.getIdentity(),
-            }));
-            resolve();
-          },
-          onError: reject,
-          identityProvider,
-          windowOpenerFeatures: popupCenter({
-            width: AUTH_POPUP_WIDTH,
-            height: AUTH_POPUP_HEIGHT,
-          }),
-        });
-      }),
+    signIn: ({ domain }) => new Promise(async (resolve, reject) => {
+      authClient = authClient ?? await createAuthClient();
+      const identityProvider = "https://identity.ic0.app";
+      await authClient?.login({
+        maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
+        onSuccess: () => {
+          update((state) => ({
+            ...state,
+            identity: authClient?.getIdentity()
+          }));
+          resolve();
+        },
+        onError: reject,
+        identityProvider,
+        windowOpenerFeatures: popupCenter({
+          width: AUTH_POPUP_WIDTH,
+          height: AUTH_POPUP_HEIGHT
+        })
+      });
+    }),
     signOut: async () => {
-      const client = authClient ?? (await createAuthClient());
+      const client = authClient ?? await createAuthClient();
       await client.logout();
       authClient = null;
       update((state) => ({
         ...state,
-        identity: null,
+        identity: null
       }));
-    },
+    }
   };
 };
 const authStore = initAuthStore();
-export { authStore as a };
+export {
+  authStore as a
+};

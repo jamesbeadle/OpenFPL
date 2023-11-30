@@ -2,6 +2,7 @@ import inject from "@rollup/plugin-inject";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { fileURLToPath } from "url";
 import type { UserConfig } from "vite";
 import { defineConfig, loadEnv } from "vite";
 
@@ -10,7 +11,10 @@ import { defineConfig, loadEnv } from "vite";
 // dfx deploy = local
 // dfx deploy --network ic = ic
 const network = process.env.DFX_NETWORK ?? "local";
-const host = network === "local" ? "http://localhost:8000" : "https://ic0.app";
+
+const file = fileURLToPath(new URL("package.json", import.meta.url));
+const json = readFileSync(file, "utf8");
+const { version } = JSON.parse(json);
 
 const readCanisterIds = ({
   prefix,
@@ -70,24 +74,29 @@ const config: UserConfig = {
 };
 
 export default defineConfig(({ mode }: UserConfig): UserConfig => {
-  // Load environment variables
-  const env = loadEnv(mode ?? "development", process.cwd(), "");
-
-  // Combine environment variables with canister IDs
-  const combinedEnv = {
-    ...env,
+  process.env = {
+    ...process.env,
+    ...loadEnv(
+      network === "ic"
+        ? "production"
+        : network === "staging"
+        ? "staging"
+        : "development",
+      process.cwd()
+    ),
     ...readCanisterIds({ prefix: "VITE_" }),
-    VITE_DFX_NETWORK: network,
-    VITE_HOST: host,
   };
 
   return {
     ...config,
+    // Backwards compatibility for auto generated types of dfx that are meant for webpack and process.env
     define: {
-      // Make sure to spread the combined environment variables here
       "process.env": {
-        ...combinedEnv,
+        ...readCanisterIds({}),
+        DFX_NETWORK: network,
       },
+      VITE_APP_VERSION: JSON.stringify(version),
+      VITE_DFX_NETWORK: JSON.stringify(network),
     },
   };
 });

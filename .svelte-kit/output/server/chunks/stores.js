@@ -4,20 +4,22 @@ const getStores = () => {
   return {
     /** @type {typeof page} */
     page: {
-      subscribe: stores.page.subscribe,
+      subscribe: stores.page.subscribe
     },
     /** @type {typeof navigating} */
     navigating: {
-      subscribe: stores.navigating.subscribe,
+      subscribe: stores.navigating.subscribe
     },
     /** @type {typeof updated} */
-    updated: stores.updated,
+    updated: stores.updated
   };
 };
 const page = {
   subscribe(fn) {
     const store = getStores().page;
     return store.subscribe(fn);
-  },
+  }
 };
-export { page as p };
+export {
+  page as p
+};
