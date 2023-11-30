@@ -619,7 +619,7 @@ const idlFactory = ({ IDL }) => {
 class ActorFactory {
   static createActor(idlFactory2, canisterId = "", identity = null, options = null) {
     const hostOptions = {
-      host: `https://${canisterId}.ic0.app`,
+      host: `https://${canisterId}.icp-api.io`,
       identity
     };
     if (!options) {
