@@ -21,7 +21,7 @@
   import { replacer } from "$lib/utils/Helpers";
   import { governanceStore } from "$lib/stores/governance-store";
   import { isLoading, loadingText } from "$lib/stores/global-stores";
-  import { goto } from '$app/navigation';
+  import { goto } from "$app/navigation";
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
@@ -126,14 +126,32 @@
       <button class="fpl-button" on:click={saveDraft}>Save Draft</button>
       <div class="bg-panel rounded-lg m-4">
         <ul class="flex rounded-t-lg bg-light-gray px-4 pt-2">
-          <li class={`mr-4 text-xs md:text-base ${ activeTab === "home" ? "active-tab" : ""}`}>
-            <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400" }`}
-              on:click={() => setActiveTab("home")}>
-              {getTeamFromId(fixture?.homeTeamId ?? 0)?.friendlyName}</button>
+          <li
+            class={`mr-4 text-xs md:text-base ${
+              activeTab === "home" ? "active-tab" : ""
+            }`}
+          >
+            <button
+              class={`p-2 ${
+                activeTab === "home" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("home")}
+            >
+              {getTeamFromId(fixture?.homeTeamId ?? 0)?.friendlyName}</button
+            >
           </li>
-          <li class={`mr-4 text-xs md:text-base ${ activeTab === "away" ? "active-tab" : "" }`}>
-            <button class={`p-2 ${ activeTab === "away" ? "text-white" : "text-gray-400" }`}
-              on:click={() => setActiveTab("away")} >{getTeamFromId(fixture?.awayTeamId ?? 0)?.friendlyName}</button>
+          <li
+            class={`mr-4 text-xs md:text-base ${
+              activeTab === "away" ? "active-tab" : ""
+            }`}
+          >
+            <button
+              class={`p-2 ${
+                activeTab === "away" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("away")}
+              >{getTeamFromId(fixture?.awayTeamId ?? 0)?.friendlyName}</button
+            >
           </li>
         </ul>
 
@@ -145,8 +163,14 @@
                 <p class="small-text mb-0 mt-0">{player.firstName}</p>
               </div>
               <div class="card-body">
-                <p>Events: {$playerEventData.filter((pe) => pe.playerId === player.id).length}</p>
-                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
+                <p>
+                  Events: {$playerEventData.filter(
+                    (pe) => pe.playerId === player.id
+                  ).length}
+                </p>
+                <button on:click={() => handleEditPlayerEvents(player)}
+                  >Update</button
+                >
               </div>
             </div>
           {/each}
@@ -158,8 +182,14 @@
                 <p class="small-text mb-0 mt-0">{player.firstName}</p>
               </div>
               <div class="card-body">
-                <p>Events: {$playerEventData.filter((pe) => pe.playerId === player.id).length}</p>
-                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
+                <p>
+                  Events: {$playerEventData.filter(
+                    (pe) => pe.playerId === player.id
+                  ).length}
+                </p>
+                <button on:click={() => handleEditPlayerEvents(player)}
+                  >Update</button
+                >
               </div>
             </div>
           {/each}

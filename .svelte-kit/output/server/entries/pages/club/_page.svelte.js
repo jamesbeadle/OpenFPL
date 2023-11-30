@@ -1,4 +1,4 @@
-import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component } from "../../../chunks/index3.js";
+import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component } from "../../../chunks/index2.js";
 import { u as updateTableData } from "../../../chunks/team-store.js";
 import "../../../chunks/fixture-store.js";
 import "../../../chunks/player-store.js";

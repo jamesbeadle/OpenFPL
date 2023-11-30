@@ -1,4 +1,4 @@
-import { c as create_ssr_component, v as validate_component, d as add_attribute } from "../../../chunks/index3.js";
+import { c as create_ssr_component, v as validate_component, d as add_attribute } from "../../../chunks/index2.js";
 import { L as Layout } from "../../../chunks/Layout.js";
 const dao_svelte_svelte_type_style_lang = "";
 const tokenomics_svelte_svelte_type_style_lang = "";
@@ -51,41 +51,41 @@ const Vision = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="m-4"><div class="bg-panel rounded-lg m-4 p-4"><h1 class="p-4 mx-1 text-2xl">OpenFPL Whitepaper</h1>
-      <div class="bg-panel rounded-lg m-4"><ul class="flex rounded-lg bg-light-gray px-4 pt-2"><li${add_attribute("class", `mr-4 text-xs md:text-lg ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>Vision
-            </button></li>
-          <li${add_attribute("class", `mr-4 text-xs md:text-lg ${""}`, 0)}><button${add_attribute(
+      return `<div class="bg-panel rounded-lg mx-4 mt-4"><h1 class="p-4 mx-1 text-2xl">OpenFPL Whitepaper</h1></div>
+  <div class="bg-panel rounded-lg m-4"><ul class="flex rounded-t-lg bg-light-gray px-4 pt-2"><li${add_attribute("class", `mr-4 text-xs md:text-base ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>Vision
+        </button></li>
+      <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-gray-400"}`,
         0
       )}>Gameplay
-            </button></li>
-          <li${add_attribute("class", `mr-4 text-xs md:text-lg ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Roadmap
-            </button></li>
-          <li${add_attribute("class", `mr-4 text-xs md:text-lg ${""}`, 0)}><button${add_attribute(
+        </button></li>
+      <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Roadmap
+        </button></li>
+      <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-gray-400"}`,
         0
       )}>Marketing
-            </button></li>
-          <li${add_attribute("class", `mr-4 text-xs md:text-lg ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Revenue
-            </button></li>
-          <li${add_attribute("class", `mr-4 text-xs md:text-lg ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>DAO
-            </button></li>
-          <li${add_attribute("class", `mr-4 text-xs md:text-lg ${""}`, 0)}><button${add_attribute(
+        </button></li>
+      <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>Revenue
+        </button></li>
+      <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>DAO
+        </button></li>
+      <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-gray-400"}`,
         0
       )}>Tokenomics
-            </button></li>
-          <li${add_attribute("class", `mr-4 text-xs md:text-lg ${""}`, 0)}><button${add_attribute(
+        </button></li>
+      <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-gray-400"}`,
         0
       )}>Architecture
-            </button></li></ul>
+        </button></li></ul>
 
-        ${`${validate_component(Vision, "Vision").$$render($$result, {}, {}, {})}`}</div></div></div>`;
+    ${`${validate_component(Vision, "Vision").$$render($$result, {}, {}, {})}`}</div>`;
     }
   })}`;
 });

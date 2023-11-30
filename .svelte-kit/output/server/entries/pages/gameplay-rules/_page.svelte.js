@@ -1,4 +1,4 @@
-import { c as create_ssr_component, v as validate_component } from "../../../chunks/index3.js";
+import { c as create_ssr_component, v as validate_component } from "../../../chunks/index2.js";
 import { L as Layout } from "../../../chunks/Layout.js";
 const _page_svelte_svelte_type_style_lang = "";
 const css = {

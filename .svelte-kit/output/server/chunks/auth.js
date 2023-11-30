@@ -1,7 +1,7 @@
 import { A as AUTH_MAX_TIME_TO_LIVE, a as AUTH_POPUP_WIDTH, b as AUTH_POPUP_HEIGHT } from "./app.constants.js";
 import { AuthClient } from "@dfinity/auth-client";
 import "@dfinity/utils";
-import { w as writable } from "./index2.js";
+import { w as writable } from "./index.js";
 const createAuthClient = () => AuthClient.create({
   idleOptions: {
     disableIdle: true,

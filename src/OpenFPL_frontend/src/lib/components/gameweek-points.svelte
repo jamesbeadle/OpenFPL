@@ -131,21 +131,28 @@
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <div class="flex items-center ml-4">
           <div class="flex items-center mr-8">
-            <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+            <button
+              class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
               on:click={() => changeGameweek(-1)}
-              disabled={selectedGameweek === 1}>
+              disabled={selectedGameweek === 1}
+            >
               &lt;
             </button>
-    
-            <select class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]" bind:value={selectedGameweek}>
+
+            <select
+              class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]"
+              bind:value={selectedGameweek}
+            >
               {#each gameweeks as gameweek}
                 <option value={gameweek}>Gameweek {gameweek}</option>
               {/each}
             </select>
-    
-            <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+
+            <button
+              class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
               on:click={() => changeGameweek(1)}
-              disabled={selectedGameweek === 38}>
+              disabled={selectedGameweek === 38}
+            >
               &gt;
             </button>
           </div>
@@ -153,7 +160,9 @@
       </div>
       <div class="flex flex-col space-y-4 mt-4 text-lg text-xs md:text-base">
         <div class="overflow-x-auto flex-1">
-          <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
+          <div
+            class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+          >
             <div class="w-1/6 text-center mx-4">Pos</div>
             <div class="w-3/6 px-4">Player</div>
             <div class="w-1/6 text-center">Points</div>

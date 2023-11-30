@@ -1,6 +1,6 @@
-import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component } from "../../../chunks/index3.js";
+import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component } from "../../../chunks/index2.js";
 import { L as Layout } from "../../../chunks/Layout.js";
-import { w as writable } from "../../../chunks/index2.js";
+import { w as writable } from "../../../chunks/index.js";
 import "../../../chunks/system-store.js";
 import "../../../chunks/fixture-store.js";
 import "../../../chunks/team-store.js";
@@ -82,8 +82,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         const player = players.find((p) => p.id === playerId);
         if (player) {
           teamCount.set(player.teamId, (teamCount.get(player.teamId) || 0) + 1);
-          if (teamCount.get(player.teamId) > 1) {
-            console.log("1");
+          if (teamCount.get(player.teamId) > 2) {
             return false;
           }
         }

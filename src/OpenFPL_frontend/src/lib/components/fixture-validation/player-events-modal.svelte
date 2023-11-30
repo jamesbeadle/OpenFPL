@@ -53,7 +53,9 @@
 </script>
 
 {#if show}
-  <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+  <div
+    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+  >
     <div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md">
       {#if player}
         <div class="flex justify-between items-center">
@@ -68,8 +70,16 @@
           <h4 class="text-lg font-bold mb-3">Add Event</h4>
           <div class="flex flex-col gap-3">
             <div>
-              <label for="eventType" class="block text-sm font-medium text-gray-700">Event Type</label>
-              <select id="eventType" bind:value={eventType} class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+              <label
+                for="eventType"
+                class="block text-sm font-medium text-gray-700"
+                >Event Type</label
+              >
+              <select
+                id="eventType"
+                bind:value={eventType}
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+              >
                 <option value="-1" disabled>Select event type</option>
                 {#each eventOptions as option}
                   <option value={option.id}>{option.label}</option>
@@ -77,20 +87,37 @@
               </select>
             </div>
             <div>
-              <label for="startMinute" class="block text-sm font-medium text-gray-700">Start Minute</label>
-              <input type="number" id="startMinute" bind:value={eventStartTime}
+              <label
+                for="startMinute"
+                class="block text-sm font-medium text-gray-700"
+                >Start Minute</label
+              >
+              <input
+                type="number"
+                id="startMinute"
+                bind:value={eventStartTime}
                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 placeholder="Enter start minute"
               />
             </div>
             <div>
-              <label for="endMinute" class="block text-sm font-medium text-gray-700">End Minute</label>
-              <input type="number" id="endMinute" bind:value={eventEndTime}
+              <label
+                for="endMinute"
+                class="block text-sm font-medium text-gray-700"
+                >End Minute</label
+              >
+              <input
+                type="number"
+                id="endMinute"
+                bind:value={eventEndTime}
                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 placeholder="Enter end minute"
               />
             </div>
-            <button class="mt-2 px-4 py-2 bg-blue-500 text-white rounded" on:click={handleAddEvent}>Add Event</button>
+            <button
+              class="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+              on:click={handleAddEvent}>Add Event</button
+            >
           </div>
         </div>
 

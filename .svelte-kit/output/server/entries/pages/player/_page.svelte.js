@@ -1,7 +1,7 @@
-import { c as create_ssr_component, d as add_attribute, a as subscribe, o as onDestroy, v as validate_component, e as escape, m as missing_component } from "../../../chunks/index3.js";
+import { c as create_ssr_component, d as add_attribute, a as subscribe, o as onDestroy, v as validate_component, e as escape, m as missing_component } from "../../../chunks/index2.js";
 import { p as page } from "../../../chunks/stores.js";
 import "../../../chunks/player-store.js";
-import { u as updateTableData, b as getPositionText, c as calculateAgeFromNanoseconds, d as convertDateToReadable, a as getFlagComponent } from "../../../chunks/team-store.js";
+import { u as updateTableData, g as getPositionText, c as calculateAgeFromNanoseconds, a as convertDateToReadable, b as getFlagComponent } from "../../../chunks/team-store.js";
 import "../../../chunks/fixture-store.js";
 import "../../../chunks/system-store.js";
 import { a as LoadingIcon, L as Layout } from "../../../chunks/Layout.js";
@@ -112,7 +112,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
               : ${escape(countdownMinutes)}<span class="text-gray-300 text-xs ml-1">m</span></p></div>
           <p class="text-gray-300 text-xs">${escape(nextFixtureDate)} | ${escape(nextFixtureTime)}</p></div></div></div></div>
 
-  <div class="m-4"><div class="bg-panel rounded-md m-4"><ul class="flex bg-light-gray px-4 pt-2"><li${add_attribute("class", `mr-4 text-xs md:text-lg ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>Gameweek History
+  <div class="m-4"><div class="bg-panel rounded-md m-4"><ul class="flex bg-light-gray px-4 pt-2"><li${add_attribute("class", `mr-4 text-xs md:text-base ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>Gameweek History
           </button></li></ul>
       ${`${validate_component(Player_gameweek_history, "PlayerGameweekHistory").$$render($$result, {}, {}, {})}`}</div></div>`;
     }

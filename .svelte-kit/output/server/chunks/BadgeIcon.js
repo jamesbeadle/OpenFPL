@@ -1,4 +1,4 @@
-import { c as create_ssr_component, d as add_attribute } from "./index3.js";
+import { c as create_ssr_component, d as add_attribute } from "./index2.js";
 const BadgeIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { className = "" } = $$props;
   let { primaryColour = "" } = $$props;

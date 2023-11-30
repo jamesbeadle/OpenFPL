@@ -103,7 +103,7 @@
   }
 
   function viewGameweekDetail(principalId: string, selectedGameweek: number) {
-    let team = manager.gameweeks.find(x => x.gameweek === selectedGameweek)!
+    let team = manager.gameweeks.find((x) => x.gameweek === selectedGameweek)!;
     fantasyTeam.set(team);
     setActiveTab("details");
   }
@@ -113,11 +113,16 @@
   {#if showView}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+        <div
+          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+        >
           <div class="flex">
             <img class="w-20" src={profilePicture} alt={manager.displayName} />
           </div>
-          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Manager</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -125,10 +130,15 @@
             </p>
             <p class="text-gray-300 text-xs">Joined: {joinedDate}</p>
           </div>
-          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Favourite Team</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold flex items-center">
+            <p
+              class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold flex items-center"
+            >
               <BadgeIcon
                 className="w-7 mr-2"
                 primaryColour={favouriteTeam?.primaryColourHex}
@@ -140,7 +150,9 @@
             <p class="text-gray-300 text-xs">{favouriteTeam?.name}</p>
           </div>
         </div>
-        <div class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md">
+        <div
+          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+        >
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Leaderboards</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -151,21 +163,31 @@
             </p>
             <p class="text-gray-300 text-xs">Weekly</p>
           </div>
-          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">{favouriteTeam?.friendlyName}</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {manager.monthlyPositionText}
-              <span class="text-xs">({manager.monthlyPoints.toLocaleString()})</span>
+              <span class="text-xs"
+                >({manager.monthlyPoints.toLocaleString()})</span
+              >
             </p>
             <p class="text-gray-300 text-xs">Club</p>
           </div>
-          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">{selectedSeason}</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {manager.seasonPositionText}
-              <span class="text-xs">({manager.seasonPoints.toLocaleString()})</span>
+              <span class="text-xs"
+                >({manager.seasonPoints.toLocaleString()})</span
+              >
             </p>
             <p class="text-gray-300 text-xs">Season</p>
           </div>
@@ -173,14 +195,24 @@
       </div>
 
       <div class="flex flex-col bg-panel m-4 rounded-md">
-        <div class="flex justify-between items-center text-white px-4 pt-4 rounded-md w-full">
+        <div
+          class="flex justify-between items-center text-white px-4 pt-4 rounded-md w-full"
+        >
           <div class="flex">
-            <button class={`btn ${ activeTab === "details" ? `fpl-button` : `inactive-btn` } px-4 py-2 rounded-l-md font-bold text-md min-w-[125px]`}
-              on:click={() => setActiveTab("details")}>
+            <button
+              class={`btn ${
+                activeTab === "details" ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-l-md font-bold text-md min-w-[125px]`}
+              on:click={() => setActiveTab("details")}
+            >
               Details
             </button>
-            <button class={`btn ${ activeTab === "gameweeks" ? `fpl-button` : `inactive-btn` } px-4 py-2 rounded-r-md font-bold text-md min-w-[125px]`}
-              on:click={() => setActiveTab("gameweeks")}>
+            <button
+              class={`btn ${
+                activeTab === "gameweeks" ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-r-md font-bold text-md min-w-[125px]`}
+              on:click={() => setActiveTab("gameweeks")}
+            >
               Gameweeks
             </button>
           </div>

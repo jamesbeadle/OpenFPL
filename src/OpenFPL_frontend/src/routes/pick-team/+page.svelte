@@ -29,9 +29,13 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import type { FantasyTeam, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    FantasyTeam,
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  
+
   interface FormationDetails {
     positions: number[];
   }
@@ -735,7 +739,9 @@
     />
     <div class="sm:m-1 md:m-2 lg:m-3 xl:m-4">
       <div class="flex flex-col sm:flex-row">
-        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md">
+        <div
+          class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md"
+        >
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -744,15 +750,22 @@
             <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
 
-          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div
+            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
 
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs mt-4 xl:mt-0">Kick Off:</p>
             <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
+                  >h</span
+                >
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
+                  >m</span
+                >
               </p>
             </div>
             <p class="text-gray-300 text-xs">
@@ -760,7 +773,10 @@
             </p>
           </div>
 
-          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div
+            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
 
           <div class="flex-grow mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Players</p>
@@ -771,7 +787,9 @@
           </div>
         </div>
 
-        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-1 xl:m-4 bg-panel py-2 px-4 lg:py-4 rounded-md">
+        <div
+          class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-1 xl:m-4 bg-panel py-2 px-4 lg:py-4 rounded-md"
+        >
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs">Team Value</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -779,7 +797,10 @@
             </p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div
+            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Bank Balance</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -787,11 +808,16 @@
             </p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div
+            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Transfers</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {$transfersAvailable === Infinity ? "Unlimited" : $transfersAvailable}
+              {$transfersAvailable === Infinity
+                ? "Unlimited"
+                : $transfersAvailable}
             </p>
             <p class="text-gray-300 text-xs">Available</p>
           </div>
@@ -799,22 +825,39 @@
       </div>
 
       <div class="flex flex-col md:flex-row">
-        <div class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full">
-          <div class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1">
-            <button class={`btn ${ pitchView ? `fpl-button` : `inactive-btn` } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`} 
-              on:click={showPitchView}>
+        <div
+          class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full"
+        >
+          <div
+            class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1"
+          >
+            <button
+              class={`btn ${
+                pitchView ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              on:click={showPitchView}
+            >
               Pitch View
             </button>
-            <button class={`btn ${ !pitchView ? `fpl-button` : `inactive-btn` } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
-              on:click={showListView}>
+            <button
+              class={`btn ${
+                !pitchView ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              on:click={showListView}
+            >
               List View
             </button>
           </div>
 
-          <div class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0">
+          <div
+            class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0"
+          >
             <span class="text-lg">
               Formation:
-              <select class="p-2 fpl-dropdown xl:text-lg text-center" bind:value={selectedFormation}>
+              <select
+                class="p-2 fpl-dropdown xl:text-lg text-center"
+                bind:value={selectedFormation}
+              >
                 {#each $availableFormations as formation}
                   <option value={formation}>{formation}</option>
                 {/each}
@@ -822,14 +865,31 @@
             </span>
           </div>
 
-          <div class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0">
-            <button disabled={$fantasyTeam?.playerIds ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0 : true}
-              on:click={autofillTeam} class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded  
-              ${ $fantasyTeam?.playerIds && $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0 ? "fpl-purple-btn" : "bg-gray-500" } text-white min-w-[125px]`}>
+          <div
+            class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
+          >
+            <button
+              disabled={$fantasyTeam?.playerIds
+                ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+                : true}
+              on:click={autofillTeam}
+              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded  
+              ${
+                $fantasyTeam?.playerIds &&
+                $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+                  ? "fpl-purple-btn"
+                  : "bg-gray-500"
+              } text-white min-w-[125px]`}
+            >
               Auto Fill
             </button>
-            <button disabled={!isSaveButtonActive} on:click={saveFantasyTeam} class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded ${
-                isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500" } text-white min-w-[125px]`}>
+            <button
+              disabled={!isSaveButtonActive}
+              on:click={saveFantasyTeam}
+              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded ${
+                isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
+              } text-white min-w-[125px]`}
+            >
               Save Team
             </button>
           </div>
@@ -843,22 +903,40 @@
             <div class="absolute top-0 left-0 right-0 bottom-0">
               <div class={`flex justify-around w-full h-auto`}>
                 <div class="relative inline-block">
-                  <img class="h-6 sm:h-8 md:h-12 m-0 md:m-1" src="board.png" alt="OpenChat"/>
+                  <img
+                    class="h-6 sm:h-8 md:h-12 m-0 md:m-1"
+                    src="board.png"
+                    alt="OpenChat"
+                  />
                   <div class="absolute top-0 left-0 w-full h-full">
-                    <a class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0" target="_blank"
-                    href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
+                    <a
+                      class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
+                      target="_blank"
+                      href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
+                    >
                       <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
-                      <span class="text-white text-xs md:text-xl mr-4 oc-logo">OpenChat</span>
+                      <span class="text-white text-xs md:text-xl mr-4 oc-logo"
+                        >OpenChat</span
+                      >
                     </a>
                   </div>
                 </div>
                 <div class="relative inline-block">
-                  <img class="h-6 sm:h-8 md:h-12 m-0 md:m-1" src="board.png" alt="OpenChat"/>
+                  <img
+                    class="h-6 sm:h-8 md:h-12 m-0 md:m-1"
+                    src="board.png"
+                    alt="OpenChat"
+                  />
                   <div class="absolute top-0 left-0 w-full h-full">
-                    <a class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0" target="_blank"
-                      href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai">
+                    <a
+                      class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
+                      target="_blank"
+                      href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
+                    >
                       <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
-                      <span class="text-white text-xs md:text-xl mr-4 oc-logo">OpenChat</span>
+                      <span class="text-white text-xs md:text-xl mr-4 oc-logo"
+                        >OpenChat</span
+                      >
                     </a>
                   </div>
                 </div>
@@ -870,7 +948,9 @@
                     {@const playerIds = $fantasyTeam?.playerIds ?? []}
                     {@const playerId = playerIds[actualIndex]}
                     {@const player = players.find((p) => p.id === playerId)}
-                    <div class="flex flex-col justify-center items-center flex-1 mt-2 mb-2 sm:mb-6 md:mb-12 lg:mb-16 xl:mb-6 2xl:mb-12">
+                    <div
+                      class="flex flex-col justify-center items-center flex-1 mt-2 mb-2 sm:mb-6 md:mb-12 lg:mb-16 xl:mb-6 2xl:mb-12"
+                    >
                       {#if playerId > 0 && player}
                         {@const team = teams.find(
                           (x) => x.id === player.teamId
@@ -878,10 +958,17 @@
                         <div class="flex flex-col items-center text-center">
                           <div class="flex justify-center items-center">
                             <div class="flex justify-between items-end w-full">
-                              <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
-                                <RemovePlayerIcon className="w-4 h-4 sm:w-6 sm:h-6 p-1" />
+                              <button
+                                on:click={() => removePlayer(player.id)}
+                                class="bg-red-600 mb-1 rounded-sm"
+                              >
+                                <RemovePlayerIcon
+                                  className="w-4 h-4 sm:w-6 sm:h-6 p-1"
+                                />
                               </button>
-                              <div class="flex justify-center items-center flex-grow">
+                              <div
+                                class="flex justify-center items-center flex-grow"
+                              >
                                 <ShirtIcon
                                   className="h-8 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16"
                                   primaryColour={team?.primaryColourHex}
@@ -891,24 +978,45 @@
                               </div>
                               {#if $fantasyTeam?.captainId === playerId}
                                 <span class="mb-1">
-                                  <ActiveCaptainIcon className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6" />
+                                  <ActiveCaptainIcon
+                                    className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
+                                  />
                                 </span>
                               {:else}
-                                <button on:click={() => setCaptain(player.id)} class="mb-1">
-                                  <PlayerCaptainIcon className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6" />
+                                <button
+                                  on:click={() => setCaptain(player.id)}
+                                  class="mb-1"
+                                >
+                                  <PlayerCaptainIcon
+                                    className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
+                                  />
                                 </button>
                               {/if}
                             </div>
                           </div>
-                          <div class="flex flex-col justify-center items-center text-xs">
-                            <div class="flex justify-center items-center bg-gray-700 md:px-2 py-1 rounded-t-md min-w-[80px] max-w-[80px] sm:min-w-[120px] sm:max-w-[120px]">
-                              <p class="collapse sm:visible sm:min-w-[15px]">{getPositionAbbreviation(player.position)}</p>
-                              <svelte:component this={getFlagComponent(player.nationality)} class="h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"/>
+                          <div
+                            class="flex flex-col justify-center items-center text-xs"
+                          >
+                            <div
+                              class="flex justify-center items-center bg-gray-700 md:px-2 py-1 rounded-t-md min-w-[80px] max-w-[80px] sm:min-w-[120px] sm:max-w-[120px]"
+                            >
+                              <p class="collapse sm:visible sm:min-w-[15px]">
+                                {getPositionAbbreviation(player.position)}
+                              </p>
+                              <svelte:component
+                                this={getFlagComponent(player.nationality)}
+                                class="h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
+                              />
                               <p class="truncate min-w-[50px] max-w-[50px]">
-                                {player.firstName.length > 2 ? player.firstName.substring(0, 1) + "." : ""} {player.lastName}
+                                {player.firstName.length > 2
+                                  ? player.firstName.substring(0, 1) + "."
+                                  : ""}
+                                {player.lastName}
                               </p>
                             </div>
-                            <div class="flex justify-center items-center bg-white text-black md:px-2 py-1 rounded-b-md min-w-[80px] max-w-[80px] sm:min-w-[120px] sm:max-w-[120px]">
+                            <div
+                              class="flex justify-center items-center bg-white text-black md:px-2 py-1 rounded-b-md min-w-[80px] max-w-[80px] sm:min-w-[120px] sm:max-w-[120px]"
+                            >
                               <p class="collapse sm:visible sm:min-w-[20px]">
                                 {team?.abbreviatedName}
                               </p>
@@ -925,8 +1033,13 @@
                           </div>
                         </div>
                       {:else}
-                        <button on:click={() => loadAddPlayer(rowIndex, colIndex)} class="flex items-center ">
-                          <AddPlayerIcon className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-16 2xl:h-20" />
+                        <button
+                          on:click={() => loadAddPlayer(rowIndex, colIndex)}
+                          class="flex items-center"
+                        >
+                          <AddPlayerIcon
+                            className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-16 2xl:h-20"
+                          />
                         </button>
                       {/if}
                     </div>
@@ -940,7 +1053,9 @@
             <div class="container-fluid">
               {#each gridSetup as row, rowIndex}
                 {#if rowIndex === 0}
-                  <div class="flex items-center justify-between py-2 bg-light-gray px-4">
+                  <div
+                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                  >
                     <div class="w-1/3">Goalkeeper</div>
                     <div class="w-1/6">(c)</div>
                     <div class="w-1/3">Team</div>
@@ -949,7 +1064,9 @@
                   </div>
                 {/if}
                 {#if rowIndex === 1}
-                  <div class="flex items-center justify-between py-2 bg-light-gray px-4">
+                  <div
+                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                  >
                     <div class="w-1/3">Defenders</div>
                     <div class="w-1/6">(c)</div>
                     <div class="w-1/3">Team</div>
@@ -958,7 +1075,9 @@
                   </div>
                 {/if}
                 {#if rowIndex === 2}
-                  <div class="flex items-center justify-between py-2 bg-light-gray px-4">
+                  <div
+                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                  >
                     <div class="w-1/3">Midfielders</div>
                     <div class="w-1/6">(c)</div>
                     <div class="w-1/3">Team</div>
@@ -967,7 +1086,9 @@
                   </div>
                 {/if}
                 {#if rowIndex === 3}
-                  <div class="flex items-center justify-between py-2 bg-light-gray px-4">
+                  <div
+                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                  >
                     <div class="w-1/3">Forwards</div>
                     <div class="w-1/6">(c)</div>
                     <div class="w-1/3">Team</div>
@@ -1016,7 +1137,8 @@
                       <div class="w-1/6 flex items-center">
                         <button
                           on:click={() => removePlayer(player.id)}
-                          class="bg-red-600 mb-1 rounded-sm">
+                          class="bg-red-600 mb-1 rounded-sm"
+                        >
                           <RemovePlayerIcon className="w-6 h-6 p-2" />
                         </button>
                       </div>
@@ -1026,7 +1148,10 @@
                       <div class="w-1/3">-</div>
                       <div class="w-1/6">-</div>
                       <div class="w-1/6 flex items-center">
-                        <button on:click={() => loadAddPlayer(rowIndex, colIndex)} class="text-xl rounded fpl-button flex items-center">
+                        <button
+                          on:click={() => loadAddPlayer(rowIndex, colIndex)}
+                          class="text-xl rounded fpl-button flex items-center"
+                        >
                           <AddIcon className="w-6 h-6 p-2" />
                         </button>
                       </div>

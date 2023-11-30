@@ -1,4 +1,4 @@
-import { c as create_ssr_component, o as onDestroy } from "../../../chunks/index3.js";
+import { c as create_ssr_component, o as onDestroy } from "../../../chunks/index2.js";
 import "../../../chunks/system-store.js";
 import "../../../chunks/app.constants.js";
 import "@dfinity/auth-client";
