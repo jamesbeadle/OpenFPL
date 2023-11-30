@@ -870,12 +870,12 @@
                     {@const playerIds = $fantasyTeam?.playerIds ?? []}
                     {@const playerId = playerIds[actualIndex]}
                     {@const player = players.find((p) => p.id === playerId)}
-                    <div class="flex flex-col justify-center items-center flex-1">
+                    <div class="flex flex-col justify-center items-center flex-1 mt-2 mb-2 sm:mb-6 md:mb-12 lg:mb-16 xl:mb-6 2xl:mb-12">
                       {#if playerId > 0 && player}
                         {@const team = teams.find(
                           (x) => x.id === player.teamId
                         )}
-                        <div class="mt-2 mb-2 sm:mb-6 md:mb-12 flex flex-col items-center text-center">
+                        <div class="flex flex-col items-center text-center">
                           <div class="flex justify-center items-center">
                             <div class="flex justify-between items-end w-full">
                               <button on:click={() => removePlayer(player.id)} class="bg-red-600 mb-1 rounded-sm">
@@ -883,7 +883,7 @@
                               </button>
                               <div class="flex justify-center items-center flex-grow">
                                 <ShirtIcon
-                                  className="h-12 md:h-16"
+                                  className="h-8 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16"
                                   primaryColour={team?.primaryColourHex}
                                   secondaryColour={team?.secondaryColourHex}
                                   thirdColour={team?.thirdColourHex}
@@ -925,8 +925,8 @@
                           </div>
                         </div>
                       {:else}
-                        <button on:click={() => loadAddPlayer(rowIndex, colIndex)}>
-                          <AddPlayerIcon className="h-12 md:h-16 mt-7 mb-7 sm:mt-12 sm:mb-12 lg:mt-20 lg:mb-20 xl:mb-8 xl:mt-8 2xl:mb-12 2xl:mt-12 3xl:mb-16 3xl:mt-16" />
+                        <button on:click={() => loadAddPlayer(rowIndex, colIndex)} class="flex items-center ">
+                          <AddPlayerIcon className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-16 2xl:h-20" />
                         </button>
                       {/if}
                     </div>
