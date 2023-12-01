@@ -13,7 +13,8 @@
   let menuOpen = false;
   let isLoggedIn = false;
   let profile: Writable<ProfileDTO | null> = writable(null);
-  
+  let showProfileDropdown = false;
+
   $: profileSrc =  URL.createObjectURL(new Blob([new Uint8Array($profile?.profilePicture ?? [])]));
   let unsubscribeLogin: () => void;
 
@@ -55,6 +56,7 @@
   function handleLogout() {
     authStore.signOut();
     goto("/");
+    showProfileDropdown = false;
   }
   
   function handleImageError(event: Event) {
@@ -62,6 +64,11 @@
     console.error('Error loading image: ', input.src);
     profileSrc = 'profile_placeholder.png';
   }
+
+  function toggleProfileDropdown() {
+    showProfileDropdown = !showProfileDropdown;
+  }
+
 </script>
 
 <header>
@@ -100,23 +107,36 @@
               <span class="flex items-center h-full px-4">Governance</span>
             </a>
           </li>
-          <li class="mx-2 flex items-center h-16">
-            <button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-              on:click={handleLogout}>
-              Disconnect
-              <WalletIcon className="ml-2 h-6 w-6 mt-1" />
-            </button>
+          <li class="p-2 flex flex-1 items-center">
+            <div class="relative inline-block"> <!-- Make the container inline-block -->
+              <img src={profileSrc} alt={profileSrc} class='w-12 h-12 rounded-sm' 
+            on:error={handleImageError}
+            on:click={toggleProfileDropdown}
+            on:keydown={toggleProfileDropdown}  />
+            
+              <!-- Dropdown Menu -->
+              <div class={`absolute right-0 top-full mt-1 w-48 bg-gray-900 rounded-md shadow-lg z-50 ${showProfileDropdown ? 'block' : 'hidden'}`}>
+                <!-- top-full will position the dropdown right below the image -->
+                <ul class="text-gray-700">
+                  <li>
+                    <a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400">
+                      <span class="flex items-center h-full w-full py-2">
+                        <img src={profileSrc} alt='logo' class='w-8 h-8 mx-2' /> 
+                        <p class="w-full min-w-[125px] max-w-[125px] truncate">{$profile?.displayName != $profile?.principalId ? $profile?.displayName : 'Profile'}</p>
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
+                    on:click={handleLogout}>
+                    Disconnect
+                    <WalletIcon className="ml-2 h-6 w-6 mt-1" />
+                  </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </li>
-          <li class="mx-2 flex items-center h-16">
-            <a href="/profile" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/profile')}">
-              <span class="flex items-center h-full px-4">Profile</span>
-            </a>
-          </li>
-          {#if profileSrc}
-            <li class="p-2 flex flex-1 items-center">
-              <img src={profileSrc} alt={profileSrc} class='w-12 h-12 rounded-sm' on:error={handleImageError}  />
-            </li>
-          {/if}
         </ul>
         <div class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${ menuOpen ? "block" : "hidden"} md:hidden`}>
           <ul class="flex flex-col">
@@ -127,22 +147,15 @@
               <a href="/pick-team" class={currentClass("/pick-team")} on:click={toggleMenu}>Squad Selection</a>
             </li>
             <li class="p-2">
-              <a href="/profile" class={currentClass("/profile")} on:click={toggleMenu}>Profile</a>
-            </li>
-            <li class="p-2">
               <a href="/governance" class={currentClass("/governance")} on:click={toggleMenu}>Governance</a>
             </li>
-            {#if profileSrc}
-              <li class="p-2">
-                <img src={profileSrc} alt='logo' class='w-8 h-8' />
-              </li>
-            {/if}
             <li class="p-2">
-              <button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-                on:click={handleLogout}>
-                Disconnect
-                <WalletIcon className="ml-2 h-6 w-6 mt-1" />
-              </button>
+              <a href="/profile" class="flex h-full w-full nav-underline hover:text-gray-400 w-full ${currentClass('/profile')}">
+                <span class="flex items-center h-full w-full py-2">
+                  <img src={profileSrc} alt='logo' class='w-8 h-8' /> 
+                  <p class="w-full text-center min-w-[100px] max-w-[100px] truncate p-2">{$profile?.displayName != $profile?.principalId ? $profile?.displayName : 'Profile'}</p>
+                </span>
+              </a>
             </li>
           </ul>
         </div>

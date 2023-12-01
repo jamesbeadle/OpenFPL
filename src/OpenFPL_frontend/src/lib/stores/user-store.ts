@@ -51,9 +51,6 @@ function createUserStore() {
         updatedProfileDataObj = await identityActor.getProfileDTO() as any;
       }
       let updatedProfileData = updatedProfileDataObj[0];
-
-      console.log("updatedProfileData")
-      console.log(updatedProfileData)
       if (updatedProfileData && updatedProfileData.profilePicture instanceof Uint8Array) {
         const base64Picture = uint8ArrayToBase64(updatedProfileData.profilePicture);
         localStorage.setItem('user_profile_data', JSON.stringify({
@@ -63,8 +60,6 @@ function createUserStore() {
       } else {
         localStorage.setItem('user_profile_data', JSON.stringify(updatedProfileData, replacer));
       }
-      console.log("updatedProfileData")
-      console.log(updatedProfileData)
       set(updatedProfileData);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -95,6 +90,7 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateDisplayName(username);
+      sync();
       return result;
     } catch (error) {
       console.error("Error updating username:", error);
@@ -108,6 +104,7 @@ function createUserStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      sync();
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
       return result;
     } catch (error) {
@@ -149,6 +146,7 @@ function createUserStore() {
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
+          sync();
           return result;
         } catch (error) {
           console.error(error);

@@ -130,11 +130,11 @@
 
     loadingText.set("Updating Profile Picture");
     try {
-      userStore.sync();
       await userStore.updateProfilePicture(file);
+      userStore.sync();
       const profileData = await userStore.getProfile();
       setProfile(profileData);
-      if (profileData && profileData.profilePicture.length > 0) {
+      if (profileData && profileData.profilePicture && profileData.profilePicture.length > 0) {
         const blob = new Blob([new Uint8Array(profileData.profilePicture)]);
         profileSrc = URL.createObjectURL(blob);
       }
@@ -172,7 +172,7 @@
       <div class="flex flex-wrap">
         <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
           <div class="group">
-            <img src={profileSrc} alt="Profile" class="w-48 md:w-80 mb-1 rounded-lg" />
+            <img src={profileSrc} alt="Profile" class="w-100 md:w-80 mb-1 rounded-lg" />
 
             <div class="file-upload-wrapper mt-4">
               <button class="btn-file-upload fpl-button" on:click={clickFileInput}>Upload Photo</button>

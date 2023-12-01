@@ -36,8 +36,8 @@
     loadingText.set("Updating Favourite Club");
 
     try {
-      userStore.sync();
       await userStore.updateFavouriteTeam(newFavouriteTeam);
+      userStore.sync();
       await closeModal();
       toastStore.show("Favourite team updated.", "success");
     } catch (error) {
