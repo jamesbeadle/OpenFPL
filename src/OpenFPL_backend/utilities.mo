@@ -60,30 +60,53 @@ module {
   };
 
   public func unixTimeToMonth(unixTime : Int) : Nat8 {
+
     let secondsInADay = 86400;
     let seconds = unixTime / 1000000000;
+    var days = seconds / secondsInADay;
 
-    let days = seconds / secondsInADay;
-
-    let years = (1970 + days / 365);
-    let leapYears : Int = (years - 1969) / 4 - (years - 1901) / 100 + (years - 1600) / 400;
-    let dayOfYear : Int = days - (years - 1970) * 365 - leapYears;
-    let isLeapYear = (years % 4 == 0 and (years % 100 != 0 or years % 400 == 0));
-    var monthEnds = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
-    if (isLeapYear) {
-      monthEnds := [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335];
+    var years = 1970;
+    var dayCounter = days;
+    label leapLoop while (dayCounter > 365) {
+      if (years % 4 == 0 and (years % 100 != 0 or years % 400 == 0) and dayCounter > 366) {
+        dayCounter -= 366;
+      } else {
+        dayCounter -= 365;
+      };
+      years += 1;
     };
 
-    var month = 0;
+    var dayOfYear : Int = dayCounter + 1;
+    if (dayOfYear == 366) {
+      dayOfYear := 1;
+    };
 
-    label check for (m in Iter.range(0, 10)) {
-      if (dayOfYear < monthEnds[m +1]) {
-        month := m;
-        break check;
+    var isLeapYear = false;
+    if (years % 4 == 0) {
+      if (years % 100 != 0) {
+        isLeapYear := true;
+      } else if (years % 400 == 0) {
+        isLeapYear := true;
       };
     };
 
-    return Nat8.fromNat(month + 1); // To make it 1-based
+    var monthEnds : [Nat] = [];
+
+    if (isLeapYear) {
+      monthEnds := [31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
+    } else {
+      monthEnds := [31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+    };
+
+    var month = 0;
+    label monthLoop for (m in Iter.range(0, 11)) {
+      month += 1;
+      if (dayOfYear <= monthEnds[m]) {
+        break monthLoop;
+      };
+    };
+
+    return Nat8.fromNat(month);
   };
 
   public func isNationalityValid(checkNationality : Text) : Bool {

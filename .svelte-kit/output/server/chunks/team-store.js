@@ -272,7 +272,6 @@ const idlFactory$1 = ({ IDL }) => {
     ),
     getAccountBalanceDTO: IDL.Func([], [AccountBalanceDTO], []),
     getActiveFixtures: IDL.Func([], [IDL.Vec(Fixture)], ["query"]),
-    getAddTeamsFunction: IDL.Func([], [IDL.Text], []),
     getClubLeaderboard: IDL.Func(
       [IDL.Nat16, IDL.Nat8, TeamId, IDL.Nat, IDL.Nat],
       [PaginatedClubLeaderboard],
@@ -336,9 +335,9 @@ const idlFactory$1 = ({ IDL }) => {
       []
     ),
     savePlayerEvents: IDL.Func([FixtureId, IDL.Vec(PlayerEventData)], [], []),
-    setGameweekFixtures: IDL.Func([], [], []),
     updateDisplayName: IDL.Func([IDL.Text], [Result], []),
     updateFavouriteTeam: IDL.Func([IDL.Nat16], [Result], []),
+    updateHashForCategory: IDL.Func([IDL.Text], [], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
     updateTeamValueInfo: IDL.Func([], [], []),
     validateAddInitialFixtures: IDL.Func(

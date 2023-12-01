@@ -1,6 +1,4 @@
 <script lang="ts">
-  let value = process.env.DFX_NETWORK;
-  console.log(value);
   import { isLoading } from "../lib/stores/global-stores";
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";

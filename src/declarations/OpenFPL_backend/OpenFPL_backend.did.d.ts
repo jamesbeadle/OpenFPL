@@ -236,7 +236,6 @@ export interface _SERVICE {
   >;
   getAccountBalanceDTO: ActorMethod<[], AccountBalanceDTO>;
   getActiveFixtures: ActorMethod<[], Array<Fixture>>;
-  getAddTeamsFunction: ActorMethod<[], string>;
   getClubLeaderboard: ActorMethod<
     [number, number, TeamId, bigint, bigint],
     PaginatedClubLeaderboard
@@ -285,9 +284,9 @@ export interface _SERVICE {
     Result
   >;
   savePlayerEvents: ActorMethod<[FixtureId, Array<PlayerEventData>], undefined>;
-  setGameweekFixtures: ActorMethod<[], undefined>;
   updateDisplayName: ActorMethod<[string], Result>;
   updateFavouriteTeam: ActorMethod<[number], Result>;
+  updateHashForCategory: ActorMethod<[string], undefined>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result>;
   updateTeamValueInfo: ActorMethod<[], undefined>;
   validateAddInitialFixtures: ActorMethod<[SeasonId, Array<Fixture>], Result>;

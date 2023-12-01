@@ -112,9 +112,7 @@ const css = {
 };
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $isLoading, $$unsubscribe_isLoading;
-  $$unsubscribe_isLoading = subscribe(isLoading, (value2) => $isLoading = value2);
-  let value = { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.DFX_NETWORK;
-  console.log(value);
+  $$unsubscribe_isLoading = subscribe(isLoading, (value) => $isLoading = value);
   $$result.css.add(css);
   $$unsubscribe_isLoading();
   return `<div class="flex flex-col h-screen justify-between">${validate_component(Header, "Header").$$render($$result, {}, {}, {})}
