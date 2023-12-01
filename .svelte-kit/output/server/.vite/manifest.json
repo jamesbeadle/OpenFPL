@@ -8,7 +8,7 @@
     "src": ".svelte-kit/generated/server/internal.js"
   },
   "Layout.css": {
-    "file": "_app/immutable/assets/Layout.abbb9e51.css",
+    "file": "_app/immutable/assets/Layout.1fd1e92b.css",
     "src": "Layout.css"
   },
   "_BadgeIcon.js": {
@@ -19,7 +19,7 @@
   },
   "_Layout.js": {
     "css": [
-      "_app/immutable/assets/Layout.abbb9e51.css"
+      "_app/immutable/assets/Layout.1fd1e92b.css"
     ],
     "file": "chunks/Layout.js",
     "imports": [

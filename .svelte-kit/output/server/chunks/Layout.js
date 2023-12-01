@@ -4,6 +4,7 @@ import { p as page } from "./stores.js";
 import "./app.constants.js";
 import "@dfinity/auth-client";
 import "@dfinity/utils";
+import "@dfinity/agent";
 function createToastStore() {
   const { subscribe: subscribe2, set, update } = writable({
     visible: false,
@@ -41,11 +42,26 @@ const css$3 = {
 };
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_page;
+  let $profile, $$unsubscribe_profile;
   $$unsubscribe_page = subscribe(page, (value) => value);
+  let profile = writable(null);
+  $$unsubscribe_profile = subscribe(profile, (value) => $profile = value);
   onDestroy(() => {
+    if (typeof window !== "undefined") {
+      document.removeEventListener("click", closeDropdownOnClickOutside);
+    }
   });
+  function closeDropdownOnClickOutside(event) {
+    const target = event.target;
+    if (target instanceof Element) {
+      if (!target.closest(".profile-dropdown") && !target.closest(".profile-pic"))
+        ;
+    }
+  }
   $$result.css.add(css$3);
+  URL.createObjectURL(new Blob([new Uint8Array($profile?.profilePicture ?? [])]));
   $$unsubscribe_page();
+  $$unsubscribe_profile();
   return `<header class="svelte-197nckd"><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2">OpenFPL</b></a>
       <button class="md:hidden focus:outline-none"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button>
       ${`<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-197nckd">Connect

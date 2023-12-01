@@ -60,17 +60,27 @@
         <h3 class="text-lg leading-6 font-medium mb-2">Update Display Name</h3>
         <form on:submit|preventDefault={updateUsername}>
           <div class="mt-4">
-            <input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              placeholder="New Username" bind:value={newUsername} />
+            <input
+              type="text"
+              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              placeholder="New Username"
+              bind:value={newUsername}
+            />
           </div>
           <div class="items-center py-3 flex space-x-4">
-            <button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-              on:click={cancelModal}>
+            <button
+              class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              on:click={cancelModal}
+            >
               Cancel
             </button>
             <button
-              class={`px-4 py-2 ${ isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn" } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-              type="submit" disabled={isSubmitDisabled}>
+              class={`px-4 py-2 ${
+                isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
+              } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+              type="submit"
+              disabled={isSubmitDisabled}
+            >
               Update
             </button>
           </div>

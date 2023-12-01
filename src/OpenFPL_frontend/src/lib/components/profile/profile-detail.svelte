@@ -6,7 +6,11 @@
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastStore } from "$lib/stores/toast-store";
-  import type { ProfileDTO, SystemState, Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    ProfileDTO,
+    SystemState,
+    Team,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
@@ -32,7 +36,9 @@
 
   $: gameweek = $systemState?.activeGameweek ?? 1;
 
-  $: teamName = $teams.find((x) => x.id == $profile?.favouriteTeamId)?.friendlyName ?? "Not Set";
+  $: teamName =
+    $teams.find((x) => x.id == $profile?.favouriteTeamId)?.friendlyName ??
+    "Not Set";
 
   onMount(async () => {
     isLoading.set(true);
@@ -65,10 +71,9 @@
     unsubscribeSystemState?.();
   });
 
-  function setProfile(updatedProfile: any){
-    if(updatedProfile){
+  function setProfile(updatedProfile: any) {
+    if (updatedProfile) {
       profile.set(updatedProfile);
-        
     }
   }
 
@@ -132,7 +137,11 @@
       userStore.sync();
       const profileData = await userStore.getProfile();
       setProfile(profileData);
-      if (profileData && profileData.profilePicture && profileData.profilePicture.length > 0) {
+      if (
+        profileData &&
+        profileData.profilePicture &&
+        profileData.profilePicture.length > 0
+      ) {
         const blob = new Blob([new Uint8Array(profileData.profilePicture)]);
         profileSrc = URL.createObjectURL(blob);
       }
@@ -145,7 +154,6 @@
       loadingText.set("Loading");
     }
   }
-
 </script>
 
 {#if $isLoading}
@@ -170,12 +178,25 @@
       <div class="flex flex-wrap">
         <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
           <div class="group">
-            <img src={profileSrc} alt="Profile" class="w-100 md:w-80 mb-1 rounded-lg" />
+            <img
+              src={profileSrc}
+              alt="Profile"
+              class="w-100 md:w-80 mb-1 rounded-lg"
+            />
 
             <div class="file-upload-wrapper mt-4">
-              <button class="btn-file-upload fpl-button" on:click={clickFileInput}>Upload Photo</button>
-              <input type="file" id="profile-image" accept="image/*" bind:this={fileInput} on:change={handleFileChange}
-                style="opacity: 0; position: absolute; left: 0; top: 0;" />
+              <button
+                class="btn-file-upload fpl-button"
+                on:click={clickFileInput}>Upload Photo</button
+              >
+              <input
+                type="file"
+                id="profile-image"
+                accept="image/*"
+                bind:this={fileInput}
+                on:change={handleFileChange}
+                style="opacity: 0; position: absolute; left: 0; top: 0;"
+              />
             </div>
           </div>
         </div>
@@ -184,7 +205,10 @@
           <div class="ml-4 p-4 rounded-lg">
             <p class="text-xs mb-2">Display Name:</p>
             <h2 class="text-2xl font-bold mb-2">{$profile?.displayName}</h2>
-            <button class="p-2 px-4 rounded fpl-button" on:click={displayUsernameModal}>
+            <button
+              class="p-2 px-4 rounded fpl-button"
+              on:click={displayUsernameModal}
+            >
               Update
             </button>
             <p class="text-xs mb-2 mt-4">Favourite Team:</p>
@@ -192,7 +216,10 @@
               {teamName}
             </h2>
             <button
-              class="p-2 px-4 rounded fpl-button" on:click={displayFavouriteTeamModal} disabled={gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0}>
+              class="p-2 px-4 rounded fpl-button"
+              on:click={displayFavouriteTeamModal}
+              disabled={gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0}
+            >
               Update
             </button>
 
@@ -216,28 +243,36 @@
       <div class="w-full px-2 mb-4">
         <div class="mt-4 px-2">
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div class="flex items-center p-4 rounded-lg shadow-md border border-gray-700">
+            <div
+              class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
+            >
               <img src="ICPCoin.png" alt="ICP" class="h-12 w-12" />
               <div class="ml-4">
                 <p class="font-bold">ICP</p>
                 <p>0.00 ICP</p>
               </div>
             </div>
-            <div class="flex items-center p-4 rounded-lg shadow-md border border-gray-700">
+            <div
+              class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
+            >
               <img src="FPLCoin.png" alt="FPL" class="h-12 w-12" />
               <div class="ml-4">
                 <p class="font-bold">FPL</p>
                 <p>0.00 FPL</p>
               </div>
             </div>
-            <div class="flex items-center p-4 rounded-lg shadow-md border border-gray-700">
+            <div
+              class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
+            >
               <img src="ckBTCCoin.png" alt="ICP" class="h-12 w-12" />
               <div class="ml-4">
                 <p class="font-bold">ckBTC</p>
                 <p>0.00 ckBTC</p>
               </div>
             </div>
-            <div class="flex items-center p-4 rounded-lg shadow-md border border-gray-700">
+            <div
+              class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
+            >
               <img src="ckETHCoin.png" alt="ICP" class="h-12 w-12" />
               <div class="ml-4">
                 <p class="font-bold">ckETH</p>

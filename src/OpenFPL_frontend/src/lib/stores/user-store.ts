@@ -1,15 +1,17 @@
 import { authStore } from "$lib/stores/auth";
 import { replacer } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
-import { ActorFactory } from "../../utils/ActorFactory";
 import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { ActorFactory } from "../../utils/ActorFactory";
 
 function createUserStore() {
   const { subscribe, set, update } = writable<any>(null);
 
   // Convert a Uint8Array to a base64 string
   function uint8ArrayToBase64(bytes: Uint8Array): string {
-    const binary = Array.from(bytes).map((byte) => String.fromCharCode(byte)).join('');
+    const binary = Array.from(bytes)
+      .map((byte) => String.fromCharCode(byte))
+      .join("");
     return btoa(binary);
   }
 
@@ -25,12 +27,14 @@ function createUserStore() {
   }
 
   function getProfileFromLocalStorage(): ProfileDTO | null {
-    const storedData = localStorage.getItem('user_profile_data');
+    const storedData = localStorage.getItem("user_profile_data");
     if (storedData) {
       const profileData: ProfileDTO = JSON.parse(storedData);
-      if (profileData && typeof profileData.profilePicture === 'string') {
+      if (profileData && typeof profileData.profilePicture === "string") {
         // Decode the Base64 string back to a Uint8Array
-        profileData.profilePicture = base64ToUint8Array(profileData.profilePicture);
+        profileData.profilePicture = base64ToUint8Array(
+          profileData.profilePicture
+        );
       }
       return profileData;
     }
@@ -44,21 +48,35 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let updatedProfileDataObj = await identityActor.getProfileDTO() as any;
-      
+      let updatedProfileDataObj = (await identityActor.getProfileDTO()) as any;
+
       if (!updatedProfileDataObj) {
         await identityActor.createProfile();
-        updatedProfileDataObj = await identityActor.getProfileDTO() as any;
+        updatedProfileDataObj = (await identityActor.getProfileDTO()) as any;
       }
       let updatedProfileData = updatedProfileDataObj[0];
-      if (updatedProfileData && updatedProfileData.profilePicture instanceof Uint8Array) {
-        const base64Picture = uint8ArrayToBase64(updatedProfileData.profilePicture);
-        localStorage.setItem('user_profile_data', JSON.stringify({
-          ...updatedProfileData,
-          profilePicture: base64Picture
-        }, replacer));
+      if (
+        updatedProfileData &&
+        updatedProfileData.profilePicture instanceof Uint8Array
+      ) {
+        const base64Picture = uint8ArrayToBase64(
+          updatedProfileData.profilePicture
+        );
+        localStorage.setItem(
+          "user_profile_data",
+          JSON.stringify(
+            {
+              ...updatedProfileData,
+              profilePicture: base64Picture,
+            },
+            replacer
+          )
+        );
       } else {
-        localStorage.setItem('user_profile_data', JSON.stringify(updatedProfileData, replacer));
+        localStorage.setItem(
+          "user_profile_data",
+          JSON.stringify(updatedProfileData, replacer)
+        );
       }
       set(updatedProfileData);
     } catch (error) {
@@ -66,8 +84,6 @@ function createUserStore() {
       throw error;
     }
   }
-  
-
 
   async function createProfile(): Promise<any> {
     try {
@@ -166,7 +182,7 @@ function createUserStore() {
     getProfile,
     updateProfilePicture,
     createProfile,
-    getProfileFromLocalStorage
+    getProfileFromLocalStorage,
   };
 }
 

@@ -11,21 +11,64 @@ import "@dfinity/utils";
 import "@dfinity/agent";
 function createUserStore() {
   const { subscribe: subscribe2, set, update } = writable(null);
+  function uint8ArrayToBase64(bytes) {
+    const binary = Array.from(bytes).map((byte) => String.fromCharCode(byte)).join("");
+    return btoa(binary);
+  }
+  function base64ToUint8Array(base64) {
+    const binary_string = atob(base64);
+    const len = binary_string.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes;
+  }
+  function getProfileFromLocalStorage() {
+    const storedData = localStorage.getItem("user_profile_data");
+    if (storedData) {
+      const profileData = JSON.parse(storedData);
+      if (profileData && typeof profileData.profilePicture === "string") {
+        profileData.profilePicture = base64ToUint8Array(
+          profileData.profilePicture
+        );
+      }
+      return profileData;
+    }
+    return null;
+  }
   async function sync() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let updatedProfileData = await identityActor.getProfileDTO();
-      if (!updatedProfileData) {
+      let updatedProfileDataObj = await identityActor.getProfileDTO();
+      if (!updatedProfileDataObj) {
         await identityActor.createProfile();
-        updatedProfileData = await identityActor.getProfileDTO();
+        updatedProfileDataObj = await identityActor.getProfileDTO();
       }
-      localStorage.setItem(
-        "user_profile_data",
-        JSON.stringify(updatedProfileData, replacer)
-      );
+      let updatedProfileData = updatedProfileDataObj[0];
+      if (updatedProfileData && updatedProfileData.profilePicture instanceof Uint8Array) {
+        const base64Picture = uint8ArrayToBase64(
+          updatedProfileData.profilePicture
+        );
+        localStorage.setItem(
+          "user_profile_data",
+          JSON.stringify(
+            {
+              ...updatedProfileData,
+              profilePicture: base64Picture
+            },
+            replacer
+          )
+        );
+      } else {
+        localStorage.setItem(
+          "user_profile_data",
+          JSON.stringify(updatedProfileData, replacer)
+        );
+      }
       set(updatedProfileData);
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -36,7 +79,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.createProfile();
       return result;
@@ -49,9 +92,10 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateDisplayName(username);
+      sync();
       return result;
     } catch (error) {
       console.error("Error updating username:", error);
@@ -62,8 +106,9 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      sync();
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
       return result;
     } catch (error) {
@@ -75,7 +120,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfileDTO();
       set(result);
@@ -99,9 +144,10 @@ function createUserStore() {
         try {
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+            { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
+          sync();
           return result;
         } catch (error) {
           console.error(error);
@@ -119,7 +165,8 @@ function createUserStore() {
     updateFavouriteTeam,
     getProfile,
     updateProfilePicture,
-    createProfile
+    createProfile,
+    getProfileFromLocalStorage
   };
 }
 const userStore = createUserStore();
@@ -178,7 +225,7 @@ const Update_username_modal = create_ssr_component(($$result, $$props, $$binding
         <form><div class="mt-4"><input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="New Username"${add_attribute("value", newUsername, 0)}></div>
           <div class="items-center py-3 flex space-x-4"><button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300">Cancel
             </button>
-            <button class="${escape(null_to_empty(`px-4 py-2 ${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`), true) + " svelte-1fl295u"}" type="submit" ${isSubmitDisabled ? "disabled" : ""}>Use
+            <button class="${escape(null_to_empty(`px-4 py-2 ${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`), true) + " svelte-1fl295u"}" type="submit" ${isSubmitDisabled ? "disabled" : ""}>Update
             </button></div></form></div></div></div>` : ``}`;
 });
 const updateFavouriteTeamModal_svelte_svelte_type_style_lang = "";
@@ -220,8 +267,11 @@ const Update_favourite_team_modal = create_ssr_component(($$result, $$props, $$b
 
       <div class="items-center py-3 flex space-x-4"><button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300">Cancel
         </button>
-        <button class="${escape(null_to_empty(`px-4 py-2 ${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`), true) + " svelte-1fl295u"}" ${isSubmitDisabled ? "disabled" : ""}>Use
-        </button></div></div></div>` : ``}`;
+        <button class="${escape(
+    null_to_empty(`px-4 py-2 ${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
+          text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`),
+    true
+  ) + " svelte-1fl295u"}" ${isSubmitDisabled ? "disabled" : ""}>Update</button></div></div></div>` : ``}`;
 });
 const profileDetail_svelte_svelte_type_style_lang = "";
 const css = {
@@ -248,9 +298,14 @@ const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slot
   $$unsubscribe_isLoading = subscribe(isLoading, (value) => $isLoading = value);
   onDestroy(() => {
   });
+  function setProfile(updatedProfile) {
+    if (updatedProfile) {
+      profile.set(updatedProfile);
+    }
+  }
   async function closeUsernameModal() {
     const profileData = await userStore.getProfile();
-    profile.set(profileData);
+    setProfile(profileData);
     showUsernameModal = false;
   }
   function cancelUsernameModal() {
@@ -258,7 +313,7 @@ const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slot
   }
   async function closeFavouriteTeamModal() {
     const profileData = await userStore.getProfile();
-    profile.set(profileData);
+    setProfile(profileData);
     showFavouriteTeamModal = false;
   }
   function cancelFavouriteTeamModal() {
@@ -272,7 +327,7 @@ const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slot
   $$result.css.add(css);
   profileSrc = $profile && $profile?.profilePicture && $profile?.profilePicture?.length > 0 ? URL.createObjectURL(new Blob([new Uint8Array($profile.profilePicture)])) : "profile_placeholder.png";
   gameweek = $systemState?.activeGameweek ?? 1;
-  teamName = $teams.find((x) => x.id == $profile?.favouriteTeamId) ?? "Not Set";
+  teamName = $teams.find((x) => x.id == $profile?.favouriteTeamId)?.friendlyName ?? "Not Set";
   $$unsubscribe_profile();
   $$unsubscribe_teams();
   $$unsubscribe_systemState();
@@ -301,7 +356,7 @@ const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slot
     {},
     {}
   )}
-  <div class="container mx-auto p-4">${$profile ? `<div class="flex flex-wrap"><div class="w-full md:w-auto px-2 ml-4 md:ml-0"><div class="group"><img${add_attribute("src", profileSrc, 0)} alt="Profile" class="w-48 md:w-80 mb-1 rounded-lg">
+  <div class="container mx-auto p-4">${$profile ? `<div class="flex flex-wrap"><div class="w-full md:w-auto px-2 ml-4 md:ml-0"><div class="group"><img${add_attribute("src", profileSrc, 0)} alt="Profile" class="w-100 md:w-80 mb-1 rounded-lg">
 
             <div class="file-upload-wrapper mt-4 svelte-e6um5o"><button class="btn-file-upload fpl-button svelte-e6um5o">Upload Photo</button>
               <input type="file" id="profile-image" accept="image/*" style="opacity: 0; position: absolute; left: 0; top: 0;" class="svelte-e6um5o"></div></div></div>
