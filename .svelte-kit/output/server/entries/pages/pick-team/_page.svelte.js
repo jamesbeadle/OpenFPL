@@ -47,6 +47,29 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $systemState, $$unsubscribe_systemState;
   let $teams, $$unsubscribe_teams;
   let $$unsubscribe_availableFormations;
+  const formations = {
+    "3-4-3": {
+      positions: [0, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3]
+    },
+    "3-5-2": {
+      positions: [0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3]
+    },
+    "4-3-3": {
+      positions: [0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 3]
+    },
+    "4-4-2": {
+      positions: [0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3]
+    },
+    "4-5-1": {
+      positions: [0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3]
+    },
+    "5-4-1": {
+      positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3]
+    },
+    "5-3-2": {
+      positions: [0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3]
+    }
+  };
   const availableFormations = writable(["3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-4-1", "5-3-2"]);
   $$unsubscribe_availableFormations = subscribe(availableFormations, (value) => value);
   let activeSeason = "-";
@@ -66,6 +89,37 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_bankBalance = subscribe(bankBalance, (value) => $bankBalance = value);
   onDestroy(() => {
   });
+  function getTeamFormation(team) {
+    const positionCounts = { 0: 0, 1: 0, 2: 0, 3: 0 };
+    team.playerIds.forEach((id) => {
+      const teamPlayer = $players.find((p) => p.id === id);
+      if (teamPlayer) {
+        positionCounts[teamPlayer.position]++;
+      }
+    });
+    for (const formation of Object.keys(formations)) {
+      const formationPositions = formations[formation].positions;
+      let isMatch = true;
+      const formationCount = formationPositions.reduce(
+        (acc, pos) => {
+          acc[pos] = (acc[pos] || 0) + 1;
+          return acc;
+        },
+        {}
+      );
+      for (const pos in formationCount) {
+        if (formationCount[pos] !== positionCounts[pos]) {
+          isMatch = false;
+          break;
+        }
+      }
+      if (isMatch) {
+        return formation;
+      }
+    }
+    console.error("No valid formation found for the team");
+    return "Unknown Formation";
+  }
   function disableInvalidFormations() {
     if (!$fantasyTeam || !$fantasyTeam.playerIds) {
       return;
@@ -131,6 +185,15 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
     const totalPlayers = Object.values(positionCounts).reduce((a, b) => a + b, 0);
     return totalPlayers + additionalPlayersNeeded <= 11;
+  }
+  {
+    {
+      if ($fantasyTeam) {
+        getGridSetup(selectedFormation);
+        const newFormation = getTeamFormation($fantasyTeam);
+        selectedFormation = newFormation;
+      }
+    }
   }
   getGridSetup(selectedFormation);
   {

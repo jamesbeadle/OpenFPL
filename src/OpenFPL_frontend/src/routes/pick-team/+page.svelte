@@ -94,6 +94,7 @@
     disableInvalidFormations();
     updateTeamValue();
   }
+
   $: isSaveButtonActive =
     $systemState && $teams && $players && $fantasyTeam
       ? checkSaveButtonConditions()
@@ -103,6 +104,14 @@
     if ($systemState) {
       activeSeason = $systemState?.activeSeason.name ?? activeSeason;
       activeGameweek = $systemState?.activeGameweek ?? activeGameweek;
+    }
+  }
+
+  $: {
+    if ($fantasyTeam) {
+      getGridSetup(selectedFormation);
+      const newFormation = getTeamFormation($fantasyTeam);
+      selectedFormation = newFormation;
     }
   }
 
@@ -191,6 +200,42 @@
       ),
     ];
     return setups;
+  }
+
+  function getTeamFormation(team: FantasyTeam): string {
+    const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
+
+    team.playerIds.forEach((id) => {
+      const teamPlayer = $players.find((p) => p.id === id);
+
+      if (teamPlayer) {
+        positionCounts[teamPlayer.position]++;
+      }
+    });
+
+    for (const formation of Object.keys(formations)) {
+      const formationPositions = formations[formation].positions;
+      let isMatch = true;
+
+      const formationCount = formationPositions.reduce((acc, pos) => {
+        acc[pos] = (acc[pos] || 0) + 1;
+        return acc;
+      }, {} as Record<number, number>);
+
+      for (const pos in formationCount) {
+        if (formationCount[pos] !== positionCounts[pos]) {
+          isMatch = false;
+          break;
+        }
+      }
+
+      if (isMatch) {
+        return formation;
+      }
+    }
+
+    console.error("No valid formation found for the team");
+    return "Unknown Formation";
   }
 
   function showPitchView() {
@@ -323,7 +368,7 @@
     team: FantasyTeam,
     player: PlayerDTO
   ): string {
-    const positionCounts: Record<number, number> = { 0: 1, 1: 0, 2: 0, 3: 0 };
+    const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
     team.playerIds.forEach((id) => {
       const teamPlayer = $players.find((p) => p.id === id);
@@ -568,7 +613,10 @@
     return true;
   }
 
-  function isValidFormation(team: FantasyTeam, selectedFormation: string): boolean {
+  function isValidFormation(
+    team: FantasyTeam,
+    selectedFormation: string
+  ): boolean {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
     team.playerIds.forEach((id) => {
       const teamPlayer = $players.find((p) => p.id === id);
