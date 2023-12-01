@@ -50,6 +50,8 @@
       });
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
+        console.log("value")
+        console.log(value)
         setProfile(value);
       });
     } catch (error) {
@@ -66,8 +68,9 @@
   });
 
   function setProfile(updatedProfile: any){
-    if(updatedProfile && updatedProfile.length > 0){
-      profile.set(updatedProfile[0]);
+    if(updatedProfile){
+      profile.set(updatedProfile);
+        
     }
   }
 
@@ -144,6 +147,7 @@
       loadingText.set("Loading");
     }
   }
+
 </script>
 
 {#if $isLoading}
