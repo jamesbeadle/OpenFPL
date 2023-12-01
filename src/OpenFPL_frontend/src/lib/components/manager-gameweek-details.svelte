@@ -4,19 +4,19 @@
   import { toastStore } from "$lib/stores/toast-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import {
     getFlagComponent,
     getPositionAbbreviation,
   } from "$lib/utils/Helpers";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type {
     FantasyTeam,
     SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import { get, type Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
   let teams: Team[] = [];
   let players: PlayerDTO[] = [];
@@ -51,7 +51,7 @@
 
       selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
       gameweekPlayers = await playerStore.getGameweekPlayers(
-        get(fantasyTeam)!,
+        $fantasyTeam!,
         selectedGameweek
       );
     } catch (error) {

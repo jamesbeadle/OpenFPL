@@ -96,7 +96,6 @@
         teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
-      console.log(nextFixtureHomeTeam);
 
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));

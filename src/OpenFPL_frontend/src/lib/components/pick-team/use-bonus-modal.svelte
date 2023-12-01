@@ -9,8 +9,8 @@
   import { BonusType } from "$lib/enums/BonusType";
 
   export let fantasyTeam = writable<FantasyTeam | null>(null);
-  export let players: PlayerDTO[];
-  export let teams: Team[];
+  export let players = writable<PlayerDTO[] | []>([]);
+  export let teams = writable<Team[] | []>([]);
   export let activeGameweek: number;
   export let showModal: boolean;
   export let closeBonusModal: () => void;
@@ -28,13 +28,12 @@
   let selectedCountry = "";
 
   const getUniqueCountries = () => {
-    const team = get(fantasyTeam);
-    if (!team || !team.playerIds) {
+    if (!$fantasyTeam || !$fantasyTeam.playerIds) {
       return [];
     }
 
-    const fantasyTeamPlayerIds = new Set(team.playerIds);
-    const countriesOfFantasyTeamPlayers = players
+    const fantasyTeamPlayerIds = new Set($fantasyTeam.playerIds);
+    const countriesOfFantasyTeamPlayers = $players
       .filter((player) => fantasyTeamPlayerIds.has(player.id))
       .map((player) => player.nationality);
 
@@ -42,31 +41,31 @@
   };
 
   const getPlayerNames = () => {
-    return players
+    return $players
       .filter((p) => isPlayerInFantasyTeam(p.id))
       .map((p) => ({ id: p.id, name: `${p.firstName} ${p.lastName}` }));
   };
 
   const isPlayerInFantasyTeam = (playerId: number): boolean => {
-    const team = get(fantasyTeam);
-    return !team ? false : team.playerIds && team.playerIds.includes(playerId);
+    return !$fantasyTeam
+      ? false
+      : $fantasyTeam.playerIds && $fantasyTeam.playerIds.includes(playerId);
   };
 
   const getRelatedTeamNames = () => {
     const teamIds = new Set(
-      players.filter((p) => isPlayerInFantasyTeam(p.id)).map((p) => p.teamId)
+      $players.filter((p) => isPlayerInFantasyTeam(p.id)).map((p) => p.teamId)
     );
-    return teams
+    return $teams
       .filter((t) => teamIds.has(t.id))
       .map((t) => ({ id: t.id, name: t.friendlyName }));
   };
 
   const getGoalkeeperId = () => {
-    const team = get(fantasyTeam);
-    if (!team || !team.playerIds) return 0;
+    if (!$fantasyTeam || !$fantasyTeam.playerIds) return 0;
 
-    for (const playerId of team.playerIds) {
-      const player = players.find((p) => p.id === playerId);
+    for (const playerId of $fantasyTeam.playerIds) {
+      const player = $players.find((p) => p.id === playerId);
       if (player && player.position === 0) {
         return player.id;
       }
@@ -76,8 +75,7 @@
   };
 
   function handleUseBonus() {
-    const currentFantasyTeam = get(fantasyTeam);
-    if (!currentFantasyTeam) return;
+    if (!$fantasyTeam) return;
 
     switch (bonus.id) {
       case 1:

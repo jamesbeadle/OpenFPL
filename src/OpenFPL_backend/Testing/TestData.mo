@@ -26,52 +26,52 @@ module {
     public var playerCanisterDataCacheHashes : [T.DataCache] = [];
     public var mainCanisterTimers : [T.TimerInfo] = [];
     public var playerCanisterTimers : [T.TimerInfo] = [];
-    
-    public func setData(){
-        
-        players := getDemoPlayers();
-        
-        activeSeasonId := 1;
-        activeGameweek := 1;
-        interestingGameweek := 1;
-        nextPlayerId := Array.size(players) + 1;
-        nextSeasonId := 2;
-        nextTeamId := 21;
-        nextFixtureId := 381;
-        
-        teams := getDemoTeams();
-        seasons := getDemoSeasons();
-        activeFixtures := getDemoActiveFixtures();
-        /*
+
+    public func setData() {
+
+      players := getDemoPlayers();
+
+      activeSeasonId := 1;
+      activeGameweek := 1;
+      interestingGameweek := 1;
+      nextPlayerId := Array.size(players) + 1;
+      nextSeasonId := 2;
+      nextTeamId := 21;
+      nextFixtureId := 381;
+
+      teams := getDemoTeams();
+      seasons := getDemoSeasons();
+      activeFixtures := getDemoActiveFixtures();
+      /*
         profiles := getDemoProfiles();
         fantasyTeams := getDemoFantasyTeam();
         seasonLeaderboards := getDemoSeasonLeaderboards();
         monthlyLeaderboards := getDemoMonthlyLeaderboards();
         mainCanisterDataCacheHashes := getDemoMainDataCacheHashes();
         playerCanisterDataCacheHashes := getDemoPlayerDataCacheHashes();
-        */
+        */;
     };
 
     private func getDemoTeams() : [T.Team] {
-        return [];
+      return [];
     };
 
     private func getDemoPlayers() : [T.Player] {
-        return [];
+      return [];
     };
 
     private func getDemoSeasons() : [T.Season] {
-        return [];
+      return [];
     };
 
-    private func getDemoActiveFixtures() : [T.Fixture]{
-        return [];
+    private func getDemoActiveFixtures() : [T.Fixture] {
+      return [];
     };
 
-    private func getDemoProfiles() : [T.Profile]{
-        return [];
+    private func getDemoProfiles() : [T.Profile] {
+      return [];
     };
 
     //private func getDemoFantasyTeam() : T.
-  }
+  };
 };

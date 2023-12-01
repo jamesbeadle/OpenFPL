@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { get, type Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
   import type {
     PlayerDTO,
     PlayerEventData,
@@ -34,10 +34,7 @@
         fixtureId: fixtureId,
         teamId: player.teamId,
       };
-      let updatedEvents: PlayerEventData[] = [
-        ...get(playerEventData),
-        newEvent,
-      ];
+      let updatedEvents: PlayerEventData[] = [...$playerEventData, newEvent];
       playerEventData.set(updatedEvents);
       eventStartTime = 0;
       eventEndTime = 0;

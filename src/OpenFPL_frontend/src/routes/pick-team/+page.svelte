@@ -63,8 +63,6 @@
   let activeGameweek = -1;
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
-  let nextFixtureHomeTeam: Team | undefined = undefined;
-  let nextFixtureAwayTeam: Team | undefined = undefined;
   let countdownDays = "00";
   let countdownHours = "00";
   let countdownMinutes = "00";
@@ -76,9 +74,9 @@
   let teamValue = 0;
   let newTeam = true;
 
-  let teams: Team[];
-  let players: PlayerDTO[];
-  let systemState: SystemState | null;
+  let teams = writable<Team[] | []>([]);
+  let players = writable<PlayerDTO[] | []>([]);
+  let systemState = writable<SystemState | null>(null);
   let sessionAddedPlayers: number[] = [];
   let showView = false;
 
@@ -96,8 +94,14 @@
     disableInvalidFormations();
     updateTeamValue();
   }
-
   $: isSaveButtonActive = $fantasyTeam ? checkSaveButtonConditions() : false;
+
+  $: {
+    if ($systemState) {
+      activeSeason = $systemState?.activeSeason.name ?? activeSeason;
+      activeGameweek = $systemState?.activeGameweek ?? activeGameweek;
+    }
+  }
 
   onMount(async () => {
     isLoading.set(true);
@@ -107,17 +111,15 @@
       await playerStore.sync();
 
       unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-        activeGameweek = systemState?.activeGameweek ?? activeGameweek;
-        activeSeason = systemState?.activeSeason.name ?? activeSeason;
+        systemState.set(value);
       });
 
       unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
+        teams.set(value);
       });
 
       unsubscribePlayers = playerStore.subscribe((value) => {
-        players = value;
+        players.set(value);
       });
 
       const storedViewMode = localStorage.getItem("viewMode");
@@ -127,18 +129,10 @@
 
       let nextFixture = await fixtureStore.getNextFixture();
 
-      nextFixtureHomeTeam = await teamStore.getTeamById(
-        nextFixture?.homeTeamId ?? 0
-      );
-
-      nextFixtureAwayTeam = await teamStore.getTeamById(
-        nextFixture?.awayTeamId ?? 0
-      );
-
       let userFantasyTeam = await managerStore.getFantasyTeam();
       fantasyTeam.set(userFantasyTeam);
 
-      let principalId = get(fantasyTeam)?.principalId ?? "";
+      let principalId = $fantasyTeam?.principalId ?? "";
 
       if (principalId.length > 0) {
         newTeam = false;
@@ -217,24 +211,16 @@
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
-    const currentFantasyTeam = get(fantasyTeam);
-    if (currentFantasyTeam) {
+    if ($fantasyTeam) {
       if (
-        canAddPlayerToCurrentFormation(
-          player,
-          currentFantasyTeam,
-          selectedFormation
-        )
+        canAddPlayerToCurrentFormation(player, $fantasyTeam, selectedFormation)
       ) {
-        addPlayerToTeam(player, currentFantasyTeam, selectedFormation);
+        addPlayerToTeam(player, $fantasyTeam, selectedFormation);
       } else {
-        const newFormation = findValidFormationWithPlayer(
-          currentFantasyTeam,
-          player
-        );
-        repositionPlayersForNewFormation(currentFantasyTeam, newFormation);
+        const newFormation = findValidFormationWithPlayer($fantasyTeam, player);
+        repositionPlayersForNewFormation($fantasyTeam, newFormation);
         selectedFormation = newFormation;
-        addPlayerToTeam(player, currentFantasyTeam, newFormation);
+        addPlayerToTeam(player, $fantasyTeam, newFormation);
       }
       if (!newTeam && activeGameweek > 1) {
         transfersAvailable.update((n) => (n > 0 ? n - 1 : 0));
@@ -243,7 +229,7 @@
         n - Number(player.value) > 0 ? n - Number(player.value) : n
       );
 
-      if (!currentFantasyTeam.playerIds.includes(player.id)) {
+      if (!$fantasyTeam.playerIds.includes(player.id)) {
         sessionAddedPlayers.push(player.id);
       }
     }
@@ -261,7 +247,7 @@
       3: 0,
     };
     team.playerIds.forEach((id) => {
-      const teamPlayer = players.find((p) => p.id === id);
+      const teamPlayer = $players.find((p) => p.id === id);
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
       }
@@ -313,7 +299,7 @@
       }
     });
 
-    updateCaptainIfNeeded(get(fantasyTeam)!);
+    updateCaptainIfNeeded($fantasyTeam!);
   }
 
   function getAvailablePositionIndex(
@@ -337,7 +323,7 @@
     const positionCounts: Record<number, number> = { 0: 1, 1: 0, 2: 0, 3: 0 };
 
     team.playerIds.forEach((id) => {
-      const teamPlayer = players.find((p) => p.id === id);
+      const teamPlayer = $players.find((p) => p.id === id);
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
       }
@@ -397,7 +383,7 @@
     let newPlayerIds: number[] = new Array(11).fill(0);
 
     team.playerIds.forEach((playerId) => {
-      const player = players.find((p) => p.id === playerId);
+      const player = $players.find((p) => p.id === playerId);
       if (player) {
         for (let i = 0; i < newFormationArray.length; i++) {
           if (
@@ -445,13 +431,13 @@
         );
       }
       bankBalance.update(
-        (n) => n + Number(players.find((x) => x.id === playerId)?.value) ?? 0
+        (n) => n + Number($players.find((x) => x.id === playerId)?.value) ?? 0
       );
 
       return { ...currentTeam, playerIds: newPlayerIds };
     });
 
-    updateCaptainIfNeeded(get(fantasyTeam)!);
+    updateCaptainIfNeeded($fantasyTeam!);
   }
 
   function setCaptain(playerId: number) {
@@ -479,7 +465,7 @@
     let highestValuedPlayerId = 0;
 
     team.playerIds.forEach((playerId) => {
-      const player = players.find((p) => p.id === playerId);
+      const player = $players.find((p) => p.id === playerId);
       if (player && Number(player.value) > highestValue) {
         highestValue = Number(player.value);
         highestValuedPlayerId = playerId;
@@ -490,21 +476,20 @@
   }
 
   function disableInvalidFormations() {
-    const currentTeam = get(fantasyTeam);
-    if (!currentTeam || !currentTeam.playerIds) {
+    if (!$fantasyTeam || !$fantasyTeam.playerIds) {
       return;
     }
 
-    const formations = getAvailableFormations(players, currentTeam);
+    const formations = getAvailableFormations($players, $fantasyTeam);
     availableFormations.set(formations);
   }
 
   function updateTeamValue() {
-    const team = get(fantasyTeam);
+    const team = $fantasyTeam;
     if (team) {
       let totalValue = 0;
       team.playerIds.forEach((id) => {
-        const player = players.find((p) => p.id === id);
+        const player = $players.find((p) => p.id === id);
         if (player) {
           totalValue += Number(player.value);
         }
@@ -517,7 +502,7 @@
     const teamCount = new Map();
     for (const playerId of $fantasyTeam?.playerIds || []) {
       if (playerId > 0) {
-        const player = players.find((p) => p.id === playerId);
+        const player = $players.find((p) => p.id === playerId);
         if (player) {
           teamCount.set(player.teamId, (teamCount.get(player.teamId) || 0) + 1);
           if (teamCount.get(player.teamId) > 2) {
@@ -528,26 +513,22 @@
     }
 
     if (!isBonusConditionMet($fantasyTeam)) {
-      console.log("2");
       return false;
     }
 
     if ($fantasyTeam?.playerIds.filter((id) => id > 0).length !== 11) {
-      console.log("3");
       return false;
     }
 
     if ($bankBalance < 0) {
-      console.log("4");
       return false;
     }
 
     if ($transfersAvailable < 0) {
-      console.log("5");
       return false;
     }
 
-    if (!isValidFormation(players, $fantasyTeam, selectedFormation)) {
+    if (!isValidFormation($fantasyTeam, selectedFormation)) {
       return false;
     }
 
@@ -556,7 +537,6 @@
 
   function isBonusConditionMet(team: FantasyTeam | null): boolean {
     if (!team) {
-      console.log("a");
       return false;
     }
 
@@ -577,7 +557,6 @@
       if (gw !== 0) {
         gameweekCounts[gw] = (gameweekCounts[gw] || 0) + 1;
         if (gameweekCounts[gw] > 1) {
-          console.log("b");
           return false;
         }
       }
@@ -587,13 +566,12 @@
   }
 
   function isValidFormation(
-    players: PlayerDTO[],
     team: FantasyTeam,
     selectedFormation: string
   ): boolean {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
     team.playerIds.forEach((id) => {
-      const teamPlayer = players.find((p) => p.id === id);
+      const teamPlayer = $players.find((p) => p.id === id);
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
       }
@@ -615,19 +593,18 @@
   }
 
   function autofillTeam() {
-    const currentFantasyTeam = get(fantasyTeam);
-    if (!currentFantasyTeam || !players) return;
+    if (!$fantasyTeam || !$players) return;
 
     let updatedFantasyTeam = {
-      ...currentFantasyTeam,
+      ...$fantasyTeam,
       playerIds: new Uint16Array(11),
     };
-    let remainingBudget = get(bankBalance);
+    let remainingBudget = $bankBalance;
 
     const teamCounts = new Map<number, number>();
     updatedFantasyTeam.playerIds.forEach((playerId) => {
       if (playerId > 0) {
-        const player = players.find((p) => p.id === playerId);
+        const player = $players.find((p) => p.id === playerId);
         if (player) {
           teamCounts.set(
             player.teamId,
@@ -638,7 +615,7 @@
     });
 
     let eligibleTeams = Array.from(
-      new Set(players.map((player) => player.teamId))
+      new Set($players.map((player) => player.teamId))
     ).filter((id) => id > 0);
     eligibleTeams.sort(() => Math.random() - 0.5);
 
@@ -650,7 +627,7 @@
       const teamId = eligibleTeams.shift();
       if (teamId === undefined) return;
 
-      const availablePlayers = players.filter(
+      const availablePlayers = $players.filter(
         (player) =>
           player.position === position &&
           player.teamId === teamId &&
@@ -691,7 +668,7 @@
     loadingText.set("Saving Fantasy Team");
     isLoading.set(true);
 
-    let team = get(fantasyTeam);
+    let team = $fantasyTeam;
 
     if (team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)) {
       team!.captainId = getHighestValuedPlayerId(team!);
@@ -947,12 +924,12 @@
                     {@const actualIndex = getActualIndex(rowIndex, colIndex)}
                     {@const playerIds = $fantasyTeam?.playerIds ?? []}
                     {@const playerId = playerIds[actualIndex]}
-                    {@const player = players.find((p) => p.id === playerId)}
+                    {@const player = $players.find((p) => p.id === playerId)}
                     <div
                       class="flex flex-col justify-center items-center flex-1 mt-2 mb-2 sm:mb-6 md:mb-12 lg:mb-16 xl:mb-6 2xl:mb-12"
                     >
                       {#if playerId > 0 && player}
-                        {@const team = teams.find(
+                        {@const team = $teams.find(
                           (x) => x.id === player.teamId
                         )}
                         <div class="flex flex-col items-center text-center">
@@ -1100,8 +1077,8 @@
                   {@const actualIndex = getActualIndex(rowIndex, colIndex)}
                   {@const playerIds = $fantasyTeam?.playerIds ?? []}
                   {@const playerId = playerIds[actualIndex]}
-                  {@const player = players.find((p) => p.id === playerId)}
-                  {@const team = teams.find((x) => x.id === player?.teamId)}
+                  {@const player = $players.find((p) => p.id === playerId)}
+                  {@const team = $teams.find((x) => x.id === player?.teamId)}
 
                   <div class="flex items-center justify-between py-2 px-4">
                     {#if playerId > 0 && player}

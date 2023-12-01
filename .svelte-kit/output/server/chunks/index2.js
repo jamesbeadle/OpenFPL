@@ -19,11 +19,6 @@ function subscribe(store, ...callbacks) {
   const unsub = store.subscribe(...callbacks);
   return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
 }
-function get_store_value(store) {
-  let value;
-  subscribe(store, (_) => value = _)();
-  return value;
-}
 function compute_rest_props(props, keys) {
   const rest = {};
   keys = new Set(keys);
@@ -237,16 +232,15 @@ export {
   add_attribute as d,
   escape as e,
   noop as f,
-  get_store_value as g,
-  compute_rest_props as h,
-  getContext as i,
-  spread as j,
-  escape_attribute_value as k,
-  escape_object as l,
+  compute_rest_props as g,
+  getContext as h,
+  spread as i,
+  escape_attribute_value as j,
+  escape_object as k,
+  safe_not_equal as l,
   missing_component as m,
   null_to_empty as n,
   onDestroy as o,
-  safe_not_equal as p,
   setContext as s,
   validate_component as v
 };

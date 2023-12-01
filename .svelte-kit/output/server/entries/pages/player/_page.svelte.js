@@ -1,7 +1,7 @@
 import { c as create_ssr_component, d as add_attribute, a as subscribe, o as onDestroy, v as validate_component, e as escape, m as missing_component } from "../../../chunks/index2.js";
 import { p as page } from "../../../chunks/stores.js";
 import "../../../chunks/player-store.js";
-import { u as updateTableData, g as getPositionText, c as calculateAgeFromNanoseconds, a as convertDateToReadable, b as getFlagComponent } from "../../../chunks/team-store.js";
+import { u as updateTableData, a as getPositionText, c as calculateAgeFromNanoseconds, b as convertDateToReadable, d as getFlagComponent } from "../../../chunks/team-store.js";
 import "../../../chunks/fixture-store.js";
 import "../../../chunks/system-store.js";
 import { a as LoadingIcon, L as Layout } from "../../../chunks/Layout.js";

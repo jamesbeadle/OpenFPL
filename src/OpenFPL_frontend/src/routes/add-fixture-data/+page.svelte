@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { page } from "$app/stores";
-  import { get, writable } from "svelte/store";
+  import { writable } from "svelte/store";
   import type {
     PlayerDTO,
     PlayerEventData,
@@ -74,7 +74,7 @@
     isLoading.set(true);
     loadingText.set("Saving Fixture Data");
     try {
-      await governanceStore.submitFixtureData(fixtureId, get(playerEventData));
+      await governanceStore.submitFixtureData(fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       toastStore.show("Fixture data saved", "success");
       goto("/fixture-validation");
@@ -89,7 +89,7 @@
 
   function saveDraft() {
     const draftData = {
-      playerEventData: get(playerEventData),
+      playerEventData: $playerEventData,
     };
     const draftKey = `fixtureDraft_${fixtureId}`;
     localStorage.setItem(draftKey, JSON.stringify(draftData, replacer));

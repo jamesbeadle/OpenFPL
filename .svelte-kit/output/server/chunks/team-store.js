@@ -1,6 +1,6 @@
 import { w as writable } from "./index.js";
 import { HttpAgent, Actor } from "@dfinity/agent";
-import { c as create_ssr_component, h as compute_rest_props, i as getContext, j as spread, k as escape_attribute_value, l as escape_object } from "./index2.js";
+import { c as create_ssr_component, g as compute_rest_props, h as getContext, i as spread, j as escape_attribute_value, k as escape_object } from "./index2.js";
 const idlFactory$1 = ({ IDL }) => {
   const List = IDL.Rec();
   const List_1 = IDL.Rec();
@@ -2813,6 +2813,37 @@ function initTeamData(teamId, table, teams) {
     }
   }
 }
+function getAvailableFormations(players, team) {
+  const positionCounts = { 0: 0, 1: 0, 2: 0, 3: 0 };
+  team.playerIds.forEach((id) => {
+    const teamPlayer = players.find((p) => p.id === id);
+    if (teamPlayer) {
+      positionCounts[teamPlayer.position]++;
+    }
+  });
+  const formations = [
+    "3-4-3",
+    "3-5-2",
+    "4-3-3",
+    "4-4-2",
+    "4-5-1",
+    "5-4-1",
+    "5-3-2"
+  ];
+  return formations.filter((formation) => {
+    const [def, mid, fwd] = formation.split("-").map(Number);
+    const minDef = Math.max(0, def - (positionCounts[1] || 0));
+    const minMid = Math.max(0, mid - (positionCounts[2] || 0));
+    const minFwd = Math.max(0, fwd - (positionCounts[3] || 0));
+    const minGK = Math.max(0, 1 - (positionCounts[0] || 0));
+    const additionalPlayersNeeded = minDef + minMid + minFwd + minGK;
+    const totalPlayers = Object.values(positionCounts).reduce(
+      (a, b) => a + b,
+      0
+    );
+    return totalPlayers + additionalPlayersNeeded <= 11;
+  });
+}
 function createTeamStore() {
   const { subscribe, set } = writable([]);
   const actor = ActorFactory.createActor(
@@ -2859,12 +2890,13 @@ function createTeamStore() {
 createTeamStore();
 export {
   ActorFactory as A,
-  convertDateToReadable as a,
-  getFlagComponent as b,
+  getPositionText as a,
+  convertDateToReadable as b,
   calculateAgeFromNanoseconds as c,
-  idlFactory as d,
+  getFlagComponent as d,
+  idlFactory as e,
   formatUnixTimeToTime as f,
-  getPositionText as g,
+  getAvailableFormations as g,
   idlFactory$1 as i,
   replacer as r,
   updateTableData as u

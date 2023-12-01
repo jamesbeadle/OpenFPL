@@ -1,4 +1,4 @@
-import { c as create_ssr_component, a as subscribe, e as escape, b as each, d as add_attribute, g as get_store_value, o as onDestroy, v as validate_component, f as noop } from "../../../chunks/index2.js";
+import { c as create_ssr_component, a as subscribe, e as escape, b as each, d as add_attribute, o as onDestroy, v as validate_component, f as noop } from "../../../chunks/index2.js";
 import { p as page } from "../../../chunks/stores.js";
 import { w as writable } from "../../../chunks/index.js";
 import { A as ActorFactory } from "../../../chunks/team-store.js";
@@ -78,10 +78,12 @@ const Player_events_modal = create_ssr_component(($$result, $$props, $$bindings,
 });
 const Select_players_modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamPlayers, $$unsubscribe_teamPlayers;
+  let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let { teamPlayers = writable([]) } = $$props;
   $$unsubscribe_teamPlayers = subscribe(teamPlayers, (value) => $teamPlayers = value);
   let { selectedTeam } = $$props;
   let { selectedPlayers = writable([]) } = $$props;
+  $$unsubscribe_selectedPlayers = subscribe(selectedPlayers, (value) => $selectedPlayers = value);
   let { show = false } = $$props;
   if ($$props.teamPlayers === void 0 && $$bindings.teamPlayers && teamPlayers !== void 0)
     $$bindings.teamPlayers(teamPlayers);
@@ -92,11 +94,12 @@ const Select_players_modal = create_ssr_component(($$result, $$props, $$bindings
   if ($$props.show === void 0 && $$bindings.show && show !== void 0)
     $$bindings.show(show);
   $$unsubscribe_teamPlayers();
+  $$unsubscribe_selectedPlayers();
   return `${show ? `<div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"><div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md"><div class="flex justify-between items-center"><h4 class="text-lg font-bold">Select ${escape(selectedTeam.friendlyName)} Players
         </h4>
         <button class="text-black">✕</button></div>
       <div class="my-5 flex flex-wrap">${each($teamPlayers, (player) => {
-    let selected = get_store_value(selectedPlayers).some((p) => p.id === player.id);
+    let selected = $selectedPlayers.some((p) => p.id === player.id);
     return `
           <div class="flex-1 sm:flex-basis-1/2"><label class="block"><input type="checkbox" ${selected ? "checked" : ""}>
               ${escape(`${player.firstName.length > 0 ? player.firstName.charAt(0) + "." : ""} ${player.lastName}`)}</label>
@@ -171,9 +174,9 @@ let showClearDraftModal = false;
 let showConfirmDataModal = false;
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
+  let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $page, $$unsubscribe_page;
   let $selectedPlayers, $$unsubscribe_selectedPlayers;
-  let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let teams;
   let fixture;
@@ -191,7 +194,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     isLoading.set(true);
     loadingText.set("Saving Fixture Data");
     try {
-      await governanceStore.submitFixtureData(fixtureId, get_store_value(playerEventData));
+      await governanceStore.submitFixtureData(fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       toastStore.show("Fixture data saved", "success");
       goto("/fixture-validation");
@@ -212,9 +215,9 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     return teams.find((team) => team.id === teamId);
   }
   fixtureId = Number($page.url.searchParams.get("id"));
+  $$unsubscribe_playerEventData();
   $$unsubscribe_page();
   $$unsubscribe_selectedPlayers();
-  $$unsubscribe_playerEventData();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${isLoading ? `<div class="flex items-center justify-center h-screen"><p class="text-center mt-1">Loading Fixture Data...</p></div>` : `<div class="m-4"><button class="fpl-button">Save Draft</button>

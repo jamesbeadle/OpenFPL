@@ -2,7 +2,7 @@ import { f as fixtureStore } from "./fixture-store.js";
 import { s as systemStore } from "./system-store.js";
 import { w as writable } from "./index.js";
 import "@dfinity/agent";
-import { A as ActorFactory, d as idlFactory, r as replacer } from "./team-store.js";
+import { A as ActorFactory, e as idlFactory, r as replacer } from "./team-store.js";
 function createPlayerStore() {
   const { subscribe, set } = writable([]);
   let systemState;

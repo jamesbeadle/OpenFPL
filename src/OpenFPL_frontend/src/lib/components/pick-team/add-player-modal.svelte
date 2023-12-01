@@ -21,8 +21,8 @@
   export let filterColumn = -1;
   export let bankBalance = writable<number>(0);
 
-  export let players: any[];
-  export let teams: Team[];
+  export let players = writable<PlayerDTO[] | []>([]);
+  export let teams = writable<Team[] | []>([]);
 
   let unsubscribeTeams: () => void;
   let unsubscribePlayers: () => void;
@@ -34,7 +34,7 @@
   let currentPage = 1;
   const pageSize = 10;
 
-  $: filteredPlayers = players.filter((player) => {
+  $: filteredPlayers = $players.filter((player) => {
     return (
       (filterTeam === -1 || player.teamId === filterTeam) &&
       (filterPosition === -1 || player.position === filterPosition) &&
@@ -50,7 +50,7 @@
     filteredPlayers.slice((currentPage - 1) * pageSize, currentPage * pageSize)
   );
 
-  $: teamPlayerCounts = countPlayersByTeam(get(fantasyTeam)?.playerIds ?? []);
+  $: teamPlayerCounts = countPlayersByTeam($fantasyTeam?.playerIds ?? []);
   $: disableReasons = paginatedPlayers.map((player) =>
     reasonToDisablePlayer(player)
   );
@@ -64,7 +64,7 @@
       maxValue ||
       filterSurname
     ) {
-      teamPlayerCounts = countPlayersByTeam(get(fantasyTeam)?.playerIds ?? []);
+      teamPlayerCounts = countPlayersByTeam($fantasyTeam?.playerIds ?? []);
       currentPage = 1;
     }
   }
@@ -75,14 +75,14 @@
       await teamStore.sync();
 
       unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
+        teams.set(value);
       });
 
       unsubscribePlayers = playerStore.subscribe((value) => {
-        players = value;
+        players.set(value);
       });
 
-      let team = get(fantasyTeam);
+      let team = $fantasyTeam;
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch (error) {
       toastStore.show("Error loading add player modal.", "error");
@@ -98,7 +98,7 @@
   function countPlayersByTeam(playerIds: Uint16Array | number[]) {
     const counts: Record<number, number> = {};
     playerIds.forEach((playerId) => {
-      const player = players.find((p) => p.id === playerId);
+      const player = $players.find((p) => p.id === playerId);
       if (player) {
         if (!counts[player.teamId]) {
           counts[player.teamId] = 0;
@@ -113,9 +113,9 @@
     const teamCount = teamPlayerCounts[player.teamId] || 0;
     if (teamCount >= 2) return "Max 2 Per Team";
 
-    let team = get(fantasyTeam);
+    let team = $fantasyTeam;
 
-    const canAfford = get(bankBalance) >= Number(player.value);
+    const canAfford = $bankBalance >= Number(player.value);
     if (!canAfford) return "Over Budget";
 
     if (team && team.playerIds.includes(player.id)) return "Selected";
@@ -129,7 +129,7 @@
 
     team &&
       team.playerIds.forEach((id) => {
-        const teamPlayer = players.find((p) => p.id === id);
+        const teamPlayer = $players.find((p) => p.id === id);
         if (teamPlayer) {
           positionCounts[teamPlayer.position]++;
         }
@@ -169,7 +169,7 @@
 
   function addTeamDataToPlayers(players: PlayerDTO[]): any[] {
     return players.map((player) => {
-      const team = teams.find((t) => t.id === player.teamId);
+      const team = $teams.find((t) => t.id === player.teamId);
       return { ...player, team };
     });
   }
@@ -212,7 +212,7 @@
               bind:value={filterTeam}
             >
               <option value={-1}>All</option>
-              {#each teams as team}
+              {#each $teams as team}
                 <option value={team.id}>{team.friendlyName}</option>
               {/each}
             </select>

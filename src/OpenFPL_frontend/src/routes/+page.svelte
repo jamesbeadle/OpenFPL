@@ -56,7 +56,6 @@
       managerCount = await managerStore.getTotalManagers();
 
       let systemState = await systemStore.getSystemState();
-      console.log(systemState);
       activeGameweek = systemState?.activeGameweek ?? activeGameweek;
       activeSeason = systemState?.activeSeason.name ?? activeSeason;
       focusGameweek = systemState?.focusGameweek ?? activeGameweek;

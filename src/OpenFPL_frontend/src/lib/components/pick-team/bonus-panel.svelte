@@ -10,8 +10,8 @@
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
 
   export let fantasyTeam = writable<FantasyTeam | null>(null);
-  export let players: PlayerDTO[];
-  export let teams: Team[];
+  export let players = writable<PlayerDTO[] | []>([]);
+  export let teams = writable<Team[] | []>([]);
   export let activeGameweek: number;
 
   let showModal: boolean = false;
@@ -100,7 +100,6 @@
   ];
   let leftPanelBonuses = bonuses.slice(0, 5);
   let rightPanelBonuses = bonuses.slice(5, 10);
-  let bonusPlayedThisGameweek = false;
 
   function showBonusModal(bonusId: number): void {
     selectedBonusId = bonusId;
@@ -112,49 +111,53 @@
   }
 
   function isBonusUsed(bonusId: number): number | false {
-    const team = get(fantasyTeam);
-
-    if (!team) return false;
+    if (!$fantasyTeam) return false;
 
     switch (bonusId) {
       case 1:
-        return team.goalGetterGameweek && team.goalGetterGameweek > 0
-          ? team.goalGetterGameweek
+        return $fantasyTeam.goalGetterGameweek &&
+          $fantasyTeam.goalGetterGameweek > 0
+          ? $fantasyTeam.goalGetterGameweek
           : false;
       case 2:
-        return team.passMasterGameweek && team.passMasterGameweek > 0
-          ? team.passMasterGameweek
+        return $fantasyTeam.passMasterGameweek &&
+          $fantasyTeam.passMasterGameweek > 0
+          ? $fantasyTeam.passMasterGameweek
           : false;
       case 3:
-        return team.noEntryGameweek && team.noEntryGameweek > 0
-          ? team.noEntryGameweek
+        return $fantasyTeam.noEntryGameweek && $fantasyTeam.noEntryGameweek > 0
+          ? $fantasyTeam.noEntryGameweek
           : false;
       case 4:
-        return team.teamBoostGameweek && team.teamBoostGameweek > 0
-          ? team.teamBoostGameweek
+        return $fantasyTeam.teamBoostGameweek &&
+          $fantasyTeam.teamBoostGameweek > 0
+          ? $fantasyTeam.teamBoostGameweek
           : false;
       case 5:
-        return team.safeHandsGameweek && team.safeHandsGameweek > 0
-          ? team.safeHandsGameweek
+        return $fantasyTeam.safeHandsGameweek &&
+          $fantasyTeam.safeHandsGameweek > 0
+          ? $fantasyTeam.safeHandsGameweek
           : false;
       case 6:
-        return team.captainFantasticGameweek &&
-          team.captainFantasticGameweek > 0
-          ? team.captainFantasticGameweek
+        return $fantasyTeam.captainFantasticGameweek &&
+          $fantasyTeam.captainFantasticGameweek > 0
+          ? $fantasyTeam.captainFantasticGameweek
           : false;
       case 7:
-        /* Coming soon: return team.prospectsGameweek && team.prospectsGameweek > 0 ? team.prospectsGameweek : false; */
+        /* Coming soon: return $fantasyTeam.prospectsGameweek && $fantasyTeam.prospectsGameweek > 0 ? $fantasyTeam.prospectsGameweek : false; */
         return false;
       case 8:
-        /* Coming soon: team.countrymenGameweek && team.countrymenGameweek > 0 ? team.countrymenGameweek : false */
+        /* Coming soon: $fantasyTeam.countrymenGameweek && $fantasyTeam.countrymenGameweek > 0 ? $fantasyTeam.countrymenGameweek : false */
         return false;
       case 9:
-        return team.braceBonusGameweek && team.braceBonusGameweek > 0
-          ? team.braceBonusGameweek
+        return $fantasyTeam.braceBonusGameweek &&
+          $fantasyTeam.braceBonusGameweek > 0
+          ? $fantasyTeam.braceBonusGameweek
           : false;
       case 10:
-        return team.hatTrickHeroGameweek && team.hatTrickHeroGameweek > 0
-          ? team.hatTrickHeroGameweek
+        return $fantasyTeam.hatTrickHeroGameweek &&
+          $fantasyTeam.hatTrickHeroGameweek > 0
+          ? $fantasyTeam.hatTrickHeroGameweek
           : false;
       default:
         return false;
@@ -162,18 +165,16 @@
   }
 
   function bonusPlayedThisWeek(): boolean {
-    const team = get(fantasyTeam);
-
-    if (!team) return false;
+    if (!$fantasyTeam) return false;
     let bonusPlayed: boolean =
-      team?.goalGetterGameweek == activeGameweek ||
-      team?.passMasterGameweek == activeGameweek ||
-      team?.noEntryGameweek == activeGameweek ||
-      team?.teamBoostGameweek == activeGameweek ||
-      team?.safeHandsGameweek == activeGameweek ||
-      team?.captainFantasticGameweek == activeGameweek ||
-      team?.braceBonusGameweek == activeGameweek ||
-      team?.hatTrickHeroGameweek == activeGameweek;
+      $fantasyTeam?.goalGetterGameweek == activeGameweek ||
+      $fantasyTeam?.passMasterGameweek == activeGameweek ||
+      $fantasyTeam?.noEntryGameweek == activeGameweek ||
+      $fantasyTeam?.teamBoostGameweek == activeGameweek ||
+      $fantasyTeam?.safeHandsGameweek == activeGameweek ||
+      $fantasyTeam?.captainFantasticGameweek == activeGameweek ||
+      $fantasyTeam?.braceBonusGameweek == activeGameweek ||
+      $fantasyTeam?.hatTrickHeroGameweek == activeGameweek;
     return bonusPlayed;
   }
 </script>

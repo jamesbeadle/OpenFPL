@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { get, writable } from "svelte/store";
+  import { writable } from "svelte/store";
   import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
 
@@ -10,8 +10,8 @@
 
   function handlePlayerSelection(event: Event, player: PlayerDTO) {
     const input = event.target as HTMLInputElement;
-    let allSelectedPlayers = get(selectedPlayers);
-    let allTeamPlayers = get(teamPlayers);
+    let allSelectedPlayers = $selectedPlayers;
+    let allTeamPlayers = $teamPlayers;
     if (input.checked) {
       const playerToAdd = allTeamPlayers.find((x) => x.id === player.id);
       if (playerToAdd && !allSelectedPlayers.some((x) => x.id === player.id)) {
@@ -39,9 +39,7 @@
       </div>
       <div class="my-5 flex flex-wrap">
         {#each $teamPlayers as player}
-          {@const selected = get(selectedPlayers).some(
-            (p) => p.id === player.id
-          )}
+          {@const selected = $selectedPlayers.some((p) => p.id === player.id)}
           <div class="flex-1 sm:flex-basis-1/2">
             <label class="block">
               <input
