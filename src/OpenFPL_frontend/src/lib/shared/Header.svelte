@@ -19,6 +19,9 @@
   let unsubscribeLogin: () => void;
 
   onMount(async () => {
+    if (typeof window !== 'undefined') {
+      document.addEventListener('click', closeDropdownOnClickOutside);
+    }
     try {
       await authStore.sync();
       unsubscribeLogin = authStore.subscribe((store) => {
@@ -35,6 +38,9 @@
 
   onDestroy(() => {
     unsubscribeLogin?.();
+    if (typeof window !== 'undefined') {
+      document.removeEventListener('click', closeDropdownOnClickOutside);
+    }
   });
 
   $: currentClass = (route: string) =>
@@ -64,9 +70,26 @@
     console.error('Error loading image: ', input.src);
     profileSrc = 'profile_placeholder.png';
   }
-
-  function toggleProfileDropdown() {
+  
+  
+  function toggleProfileDropdown(event: Event) {
+    event.stopPropagation();
     showProfileDropdown = !showProfileDropdown;
+  }
+
+  function closeDropdownOnClickOutside(event: MouseEvent) {
+    const target = event.target;
+    if (target instanceof Element) {
+      if (!target.closest('.profile-dropdown') && !target.closest('.profile-pic')) {
+        showProfileDropdown = false;
+      }
+    }
+  }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      toggleProfileDropdown(event);
+    }
   }
 
 </script>
@@ -108,31 +131,26 @@
             </a>
           </li>
           <li class="p-2 flex flex-1 items-center">
-            <div class="relative inline-block"> <!-- Make the container inline-block -->
-              <img src={profileSrc} alt={profileSrc} class='w-12 h-12 rounded-sm' 
-            on:error={handleImageError}
-            on:click={toggleProfileDropdown}
-            on:keydown={toggleProfileDropdown}  />
-            
-              <!-- Dropdown Menu -->
-              <div class={`absolute right-0 top-full mt-1 w-48 bg-gray-900 rounded-md shadow-lg z-50 ${showProfileDropdown ? 'block' : 'hidden'}`}>
-                <!-- top-full will position the dropdown right below the image -->
-                <ul class="text-gray-700">
-                  <li>
-                    <a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400">
-                      <span class="flex items-center h-full w-full py-2">
-                        <img src={profileSrc} alt='logo' class='w-8 h-8 mx-2' /> 
-                        <p class="w-full min-w-[125px] max-w-[125px] truncate">{$profile?.displayName != $profile?.principalId ? $profile?.displayName : 'Profile'}</p>
-                      </span>
-                    </a>
-                  </li>
-                  <li>
-                    <button class="flex items-center justify-center px-4 py-2 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-                    on:click={handleLogout}>
-                    Disconnect
-                    <WalletIcon className="ml-2 h-6 w-6 mt-1" />
-                  </button>
-                  </li>
+            <div class="relative inline-block">
+              <img src={profileSrc} alt="Profile" class='w-12 h-12 rounded-sm profile-pic' 
+                on:click={toggleProfileDropdown} on:error={handleImageError} on:keydown={handleKeyDown} aria-label="Toggle Profile" />
+                <div class={`absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? 'block' : 'hidden'}`}>
+                  <ul class="text-gray-700">
+                    <li>
+                      <a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400">
+                        <span class="flex items-center h-full w-full">
+                          <img src={profileSrc} alt='logo' class='w-8 h-8 my-2 ml-4 mr-2' /> 
+                          <p class="w-full min-w-[125px] max-w-[125px] truncate">{$profile?.displayName != $profile?.principalId ? $profile?.displayName : 'Profile'}</p>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
+                        on:click={handleLogout}>
+                        Disconnect
+                        <WalletIcon className="ml-2 h-6 w-6 mt-1" />
+                      </button>
+                    </li>
                 </ul>
               </div>
             </div>
@@ -151,9 +169,9 @@
             </li>
             <li class="p-2">
               <a href="/profile" class="flex h-full w-full nav-underline hover:text-gray-400 w-full ${currentClass('/profile')}">
-                <span class="flex items-center h-full w-full py-2">
-                  <img src={profileSrc} alt='logo' class='w-8 h-8' /> 
-                  <p class="w-full text-center min-w-[100px] max-w-[100px] truncate p-2">{$profile?.displayName != $profile?.principalId ? $profile?.displayName : 'Profile'}</p>
+                <span class="flex items-center h-full w-full">
+                  <img src={profileSrc} alt='logo' class='w-8 h-8 rounded-sm' /> 
+                  <p class="w-full min-w-[100px] max-w-[100px] truncate p-2">{$profile?.displayName != $profile?.principalId ? $profile?.displayName : 'Profile'}</p>
                 </span>
               </a>
             </li>

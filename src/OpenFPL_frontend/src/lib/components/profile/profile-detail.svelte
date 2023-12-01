@@ -50,8 +50,6 @@
       });
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
-        console.log("value")
-        console.log(value)
         setProfile(value);
       });
     } catch (error) {
