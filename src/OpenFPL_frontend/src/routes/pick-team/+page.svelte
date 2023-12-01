@@ -94,7 +94,10 @@
     disableInvalidFormations();
     updateTeamValue();
   }
-  $: isSaveButtonActive = $fantasyTeam ? checkSaveButtonConditions() : false;
+  $: isSaveButtonActive =
+    $systemState && $teams && $players && $fantasyTeam
+      ? checkSaveButtonConditions()
+      : false;
 
   $: {
     if ($systemState) {
@@ -565,10 +568,7 @@
     return true;
   }
 
-  function isValidFormation(
-    team: FantasyTeam,
-    selectedFormation: string
-  ): boolean {
+  function isValidFormation(team: FantasyTeam, selectedFormation: string): boolean {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
     team.playerIds.forEach((id) => {
       const teamPlayer = $players.find((p) => p.id === id);

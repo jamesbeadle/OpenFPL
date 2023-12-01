@@ -45,15 +45,15 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $bankBalance, $$unsubscribe_bankBalance;
   let $transfersAvailable, $$unsubscribe_transfersAvailable;
   let $systemState, $$unsubscribe_systemState;
+  let $teams, $$unsubscribe_teams;
   let $$unsubscribe_availableFormations;
-  let $$unsubscribe_teams;
   const availableFormations = writable(["3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-4-1", "5-3-2"]);
   $$unsubscribe_availableFormations = subscribe(availableFormations, (value) => value);
   let activeSeason = "-";
   let activeGameweek = -1;
   let selectedFormation = "4-4-2";
   let teams = writable([]);
-  $$unsubscribe_teams = subscribe(teams, (value) => value);
+  $$unsubscribe_teams = subscribe(teams, (value) => $teams = value);
   let players = writable([]);
   $$unsubscribe_players = subscribe(players, (value) => $players = value);
   let systemState = writable(null);
@@ -139,7 +139,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       updateTeamValue();
     }
   }
-  $fantasyTeam ? checkSaveButtonConditions() : false;
+  $systemState && $teams && $players && $fantasyTeam ? checkSaveButtonConditions() : false;
   {
     {
       if ($systemState) {
@@ -153,8 +153,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_bankBalance();
   $$unsubscribe_transfersAvailable();
   $$unsubscribe_systemState();
-  $$unsubscribe_availableFormations();
   $$unsubscribe_teams();
+  $$unsubscribe_availableFormations();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${``}`;
