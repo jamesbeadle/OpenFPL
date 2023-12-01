@@ -1,15 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
+
   import { authStore } from "$lib/stores/auth";
   import { toastStore } from "$lib/stores/toast-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
-  import Layout from "./Layout.svelte";
-  import FixturesComponent from "$lib/components/fixtures.svelte";
-  import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
-  import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
-  import LeagueTableComponent from "$lib/components/league-table.svelte";
-  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
+  import { systemStore } from "$lib/stores/system-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
+  import { teamStore } from "$lib/stores/team-store";
+  import { isLoading } from "$lib/stores/global-stores";
   import {
     formatUnixDateToReadable,
     formatUnixTimeToTime,
@@ -19,10 +18,12 @@
     LeaderboardEntry,
     Team,
   } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { isLoading } from "$lib/stores/global-stores";
-  import { systemStore } from "$lib/stores/system-store";
-  import { fixtureStore } from "$lib/stores/fixture-store";
-  import { teamStore } from "$lib/stores/team-store";
+  import Layout from "./Layout.svelte";
+  import FixturesComponent from "$lib/components/fixtures.svelte";
+  import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
+  import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
+  import LeagueTableComponent from "$lib/components/league-table.svelte";
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
   let activeTab: string = "fixtures";
   let activeGameweek = -1;

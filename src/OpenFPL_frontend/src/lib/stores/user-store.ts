@@ -1,9 +1,49 @@
 import { authStore } from "$lib/stores/auth";
+import { replacer } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createUserStore() {
   const { subscribe, set, update } = writable<any>(null);
+
+  async function sync() {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+
+      let updatedProfileData = await identityActor.getProfileDTO();
+      if (!updatedProfileData) {
+        await identityActor.createProfile();
+        updatedProfileData = await identityActor.getProfileDTO();
+      }
+
+      localStorage.setItem(
+        "user_profile_data",
+        JSON.stringify(updatedProfileData, replacer)
+      );
+
+      set(updatedProfileData);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
+  }
+
+  async function createProfile(): Promise<any> {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      const result = await identityActor.createProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
 
   async function updateUsername(username: string): Promise<any> {
     try {
@@ -79,10 +119,12 @@ function createUserStore() {
 
   return {
     subscribe,
+    sync,
     updateUsername,
     updateFavouriteTeam,
     getProfile,
     updateProfilePicture,
+    createProfile,
   };
 }
 

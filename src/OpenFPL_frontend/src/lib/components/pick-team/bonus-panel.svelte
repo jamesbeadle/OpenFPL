@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { writable, get } from "svelte/store";
+  import { writable } from "svelte/store";
   import type {
     FantasyTeam,
     Team,

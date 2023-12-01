@@ -154,9 +154,9 @@ export interface ProfileDTO {
   createDate: bigint;
   canUpdateFavouriteTeam: boolean;
   reputation: number;
-  principalName: string;
   profilePicture: Uint8Array | number[];
   membershipType: number;
+  principalId: string;
 }
 export type Result = { ok: null } | { err: Error };
 export interface Season {
@@ -197,6 +197,7 @@ export interface TimerInfo {
   triggerTime: bigint;
 }
 export interface _SERVICE {
+  createProfile: ActorMethod<[], undefined>;
   executeAddInitialFixtures: ActorMethod<[SeasonId, Array<Fixture>], Result>;
   executeCreatePlayer: ActorMethod<
     [TeamId, number, string, string, number, bigint, bigint, string],
@@ -250,12 +251,11 @@ export interface _SERVICE {
     [string, number, number],
     FantasyTeamSnapshot
   >;
-  getFixture: ActorMethod<[SeasonId, GameweekNumber, FixtureId], Fixture>;
   getFixtureDTOs: ActorMethod<[], Array<FixtureDTO>>;
   getFixtures: ActorMethod<[], Array<Fixture>>;
   getFixturesForSeason: ActorMethod<[SeasonId], Array<Fixture>>;
   getManager: ActorMethod<[string, SeasonId, GameweekNumber], ManagerDTO>;
-  getProfileDTO: ActorMethod<[], ProfileDTO>;
+  getProfileDTO: ActorMethod<[], [] | [ProfileDTO]>;
   getPublicProfileDTO: ActorMethod<[string], ProfileDTO>;
   getSeasonLeaderboard: ActorMethod<
     [number, bigint, bigint],
@@ -278,7 +278,6 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >;
   isDisplayNameValid: ActorMethod<[string], boolean>;
-  rescheduleFixture: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result

@@ -24,6 +24,8 @@
     isLoading.set(true);
     loadingText.set("Updating Display Name");
     try {
+      userStore.sync();
+
       await userStore.updateUsername(newUsername);
       await closeModal();
       toastStore.show("Display name updated.", "success");

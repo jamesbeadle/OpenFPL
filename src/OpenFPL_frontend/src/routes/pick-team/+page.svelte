@@ -235,7 +235,7 @@
     }
 
     console.error("No valid formation found for the team");
-    return "Unknown Formation";
+    return selectedFormation;
   }
 
   function showPitchView() {
@@ -427,7 +427,6 @@
     newFormation: string
   ) {
     const newFormationArray = formations[newFormation].positions;
-
     let newPlayerIds: number[] = new Array(11).fill(0);
 
     team.playerIds.forEach((playerId) => {

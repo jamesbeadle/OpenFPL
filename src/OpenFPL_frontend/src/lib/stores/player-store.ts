@@ -101,8 +101,20 @@ function createPlayerStore() {
       );
     }
 
+    await sync();
+    let allPlayers: PlayerDTO[] = [];
+    const unsubscribe = playerStore.subscribe((players) => {
+      allPlayers = players;
+    });
+    unsubscribe();
     let gameweekData: GameweekData[] = await Promise.all(
-      allPlayerEvents.map(async (player) => await extractPlayerData(player))
+      allPlayerEvents.map(
+        async (playerEvents) =>
+          await extractPlayerData(
+            playerEvents,
+            allPlayers.find((x) => x.id == playerEvents.id)!
+          )
+      )
     );
 
     const playersWithPoints = gameweekData.map((entry) => {
@@ -123,7 +135,8 @@ function createPlayerStore() {
   }
 
   async function extractPlayerData(
-    playerPointsDTO: PlayerPointsDTO
+    playerPointsDTO: PlayerPointsDTO,
+    player: PlayerDTO
   ): Promise<GameweekData> {
     let goals = 0,
       assists = 0,
@@ -137,6 +150,7 @@ function createPlayerStore() {
       goalsConceded = 0,
       appearance = 0,
       highestScoringPlayerId = 0;
+
     let goalPoints = 0,
       assistPoints = 0,
       goalsConcededPoints = 0,
@@ -211,11 +225,8 @@ function createPlayerStore() {
       }
     });
 
-    let allPlayers: PlayerDTO[] = [];
-    subscribe((players) => (allPlayers = players));
-
     let playerGameweekDetails: GameweekData = {
-      player: allPlayers.find((x) => x.id === playerPointsDTO.id)!,
+      player: player,
       points: playerPointsDTO.points,
       appearance: appearance,
       goals: goals,

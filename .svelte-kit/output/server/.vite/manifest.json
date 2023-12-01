@@ -141,8 +141,8 @@
       "_system-store.js",
       "_index.js",
       "_team-store.js",
-      "_Layout.js",
       "_fixture-store.js",
+      "_Layout.js",
       "_BadgeIcon.js",
       "_player-store.js"
     ],
@@ -286,8 +286,8 @@
       "_system-store.js",
       "_manager-store.js",
       "_Layout.js",
-      "_auth.js",
       "_index.js",
+      "_auth.js",
       "_team-store.js",
       "_app.constants.js"
     ],

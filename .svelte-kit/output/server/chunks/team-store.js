@@ -147,9 +147,9 @@ const idlFactory$1 = ({ IDL }) => {
     createDate: IDL.Int,
     canUpdateFavouriteTeam: IDL.Bool,
     reputation: IDL.Nat32,
-    principalName: IDL.Text,
     profilePicture: IDL.Vec(IDL.Nat8),
-    membershipType: IDL.Nat8
+    membershipType: IDL.Nat8,
+    principalId: IDL.Text
   });
   const PaginatedLeaderboard = IDL.Record({
     totalEntries: IDL.Nat,
@@ -200,6 +200,7 @@ const idlFactory$1 = ({ IDL }) => {
     triggerTime: IDL.Int
   });
   return IDL.Service({
+    createProfile: IDL.Func([], [], []),
     executeAddInitialFixtures: IDL.Func(
       [SeasonId, IDL.Vec(Fixture)],
       [Result],
@@ -289,7 +290,6 @@ const idlFactory$1 = ({ IDL }) => {
       [FantasyTeamSnapshot],
       ["query"]
     ),
-    getFixture: IDL.Func([SeasonId, GameweekNumber, FixtureId], [Fixture], []),
     getFixtureDTOs: IDL.Func([], [IDL.Vec(FixtureDTO)], ["query"]),
     getFixtures: IDL.Func([], [IDL.Vec(Fixture)], ["query"]),
     getFixturesForSeason: IDL.Func([SeasonId], [IDL.Vec(Fixture)], ["query"]),
@@ -298,7 +298,7 @@ const idlFactory$1 = ({ IDL }) => {
       [ManagerDTO],
       ["query"]
     ),
-    getProfileDTO: IDL.Func([], [ProfileDTO], []),
+    getProfileDTO: IDL.Func([], [IDL.Opt(ProfileDTO)], ["query"]),
     getPublicProfileDTO: IDL.Func([IDL.Text], [ProfileDTO], ["query"]),
     getSeasonLeaderboard: IDL.Func(
       [IDL.Nat16, IDL.Nat, IDL.Nat],
@@ -328,7 +328,6 @@ const idlFactory$1 = ({ IDL }) => {
       ["query"]
     ),
     isDisplayNameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
-    rescheduleFixture: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func(
       [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
       [Result],
@@ -618,7 +617,7 @@ const idlFactory = ({ IDL }) => {
 class ActorFactory {
   static createActor(idlFactory2, canisterId = "", identity = null, options = null) {
     const hostOptions = {
-      host: `https://${canisterId}.icp-api.io`,
+      host: "http://127.0.0.1:8080",
       identity
     };
     if (!options) {
@@ -631,7 +630,7 @@ class ActorFactory {
       options.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options.agentOptions });
-    if ({ "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.NODE_ENV !== "production") {
+    if ({ "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.NODE_ENV !== "production") {
       agent.fetchRootKey().catch((err) => {
         console.warn(
           "Unable to fetch root key. Ensure your local replica is running"
@@ -656,7 +655,7 @@ class ActorFactory {
     }).then((identity) => {
       unsubscribe();
       return ActorFactory.createActor(
-        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
+        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
         canisterId,
         identity
       );
@@ -2848,7 +2847,7 @@ function createTeamStore() {
   const { subscribe, set } = writable([]);
   const actor = ActorFactory.createActor(
     idlFactory$1,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     const category = "teams";

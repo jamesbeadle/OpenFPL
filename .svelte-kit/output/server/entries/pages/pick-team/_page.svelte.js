@@ -118,7 +118,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       }
     }
     console.error("No valid formation found for the team");
-    return "Unknown Formation";
+    return selectedFormation;
   }
   function disableInvalidFormations() {
     if (!$fantasyTeam || !$fantasyTeam.playerIds) {

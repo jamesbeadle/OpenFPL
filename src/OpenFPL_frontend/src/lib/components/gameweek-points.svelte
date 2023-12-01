@@ -1,28 +1,35 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
+
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { getPositionAbbreviation } from "$lib/utils/Helpers";
-  import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import { toastStore } from "$lib/stores/toast-store";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import { managerStore } from "$lib/stores/manager-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { authStore } from "$lib/stores/auth";
+
+  import { getPositionAbbreviation } from "$lib/utils/Helpers";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type {
     SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Principal } from "@dfinity/principal";
 
-  let teams: Team[] = [];
-  let systemState: SystemState | null;
-  let fixtures: Fixture[] = [];
+  import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+  import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+
   let unsubscribeTeams: () => void;
   let unsubscribeSystemState: () => void;
   let unsubscribeFixtures: () => void;
+
+  let isLoading = true;
+  let teams: Team[] = [];
+  let systemState: SystemState | null;
+  let fixtures: Fixture[] = [];
 
   let selectedGameweek: number = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
@@ -32,13 +39,13 @@
   let selectedOpponentTeam: Team;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
-  let isLoading = true;
 
   onMount(async () => {
     try {
       await teamStore.sync();
       await systemStore.sync();
       await fixtureStore.sync();
+      await authStore.sync();
 
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value.sort((a, b) =>
@@ -54,7 +61,7 @@
         fixtures = value;
       });
 
-      await loadGameweekPoints("");
+      await loadGameweekPoints($authStore?.identity?.getPrincipal());
     } catch (error) {
       toastStore.show("Error fetching gameweek points.", "error");
       console.error("Error fetching gameweek points:", error);
@@ -69,9 +76,16 @@
     unsubscribeSystemState?.();
   });
 
-  async function loadGameweekPoints(principalId: string) {
+  $: if ($authStore?.identity?.getPrincipal()) {
+    loadGameweekPoints($authStore?.identity?.getPrincipal());
+  }
+
+  async function loadGameweekPoints(principal: Principal | undefined | null) {
+    if (!principal) {
+      return;
+    }
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
-      principalId,
+      principal?.toText(),
       selectedGameweek
     );
     gameweekData = await playerStore.getGameweekPlayers(

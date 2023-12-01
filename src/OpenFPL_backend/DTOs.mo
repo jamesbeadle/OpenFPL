@@ -4,7 +4,7 @@ import List "mo:base/List";
 module DTOs {
 
   public type ProfileDTO = {
-    principalName : Text;
+    principalId : Text;
     icpDepositAddress : Blob;
     fplDepositAddress : Blob;
     displayName : Text;

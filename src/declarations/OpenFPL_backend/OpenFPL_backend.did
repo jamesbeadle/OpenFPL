@@ -47,7 +47,7 @@ type ProfileDTO = record {
   fplDepositAddress : blob;
   icpDepositAddress : blob;
   membershipType : nat8;
-  principalName : text;
+  principalId : text;
   profilePicture : blob;
   reputation : nat32;
 };
@@ -208,6 +208,7 @@ type AccountBalanceDTO = record {
   icpBalance : nat64;
 };
 service : {
+  createProfile : () -> ();
   executeAddInitialFixtures : (SeasonId, vec Fixture) -> (Result);
   executeCreatePlayer : (TeamId, nat8, text, text, nat8, nat, int, text) -> (Result);
   executeLoanPlayer : (PlayerId, TeamId, int) -> (Result);
@@ -236,12 +237,11 @@ service : {
   getDataHashes : () -> (vec DataCache) query;
   getFantasyTeam : () -> (FantasyTeam) query;
   getFantasyTeamForGameweek : (text, nat16, nat8) -> (FantasyTeamSnapshot) query;
-  getFixture : (SeasonId, GameweekNumber, FixtureId) -> (Fixture);
   getFixtureDTOs : () -> (vec FixtureDTO) query;
   getFixtures : () -> (vec Fixture) query;
   getFixturesForSeason : (SeasonId) -> (vec Fixture) query;
   getManager : (text, SeasonId, GameweekNumber) -> (ManagerDTO) query;
-  getProfileDTO : () -> (ProfileDTO);
+  getProfileDTO : () -> (opt ProfileDTO) query;
   getPublicProfileDTO : (text) -> (ProfileDTO) query;
   getSeasonLeaderboard : (nat16, nat, nat) -> (PaginatedLeaderboard) query;
   getSeasonLeaderboardCache : (nat16) -> (PaginatedLeaderboard) query;
@@ -255,7 +255,6 @@ service : {
   getWeeklyLeaderboard : (nat16, nat8, nat, nat) -> (PaginatedLeaderboard) query;
   getWeeklyLeaderboardCache : (nat16, nat8) -> (PaginatedLeaderboard) query;
   isDisplayNameValid : (text) -> (bool) query;
-  rescheduleFixture : () -> ();
   saveFantasyTeam : (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents : (FixtureId, vec PlayerEventData) -> ();
   updateDisplayName : (text) -> (Result);

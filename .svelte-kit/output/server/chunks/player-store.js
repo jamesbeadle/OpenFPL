@@ -13,7 +13,7 @@ function createPlayerStore() {
   fixtureStore.subscribe((value) => allFixtures = value);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.PLAYER_CANISTER_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.PLAYER_CANISTER_CANISTER_ID
   );
   async function sync() {
     let category = "players";
@@ -69,8 +69,19 @@ function createPlayerStore() {
         gameweek
       );
     }
+    await sync();
+    let allPlayers = [];
+    const unsubscribe = playerStore.subscribe((players) => {
+      allPlayers = players;
+    });
+    unsubscribe();
     let gameweekData = await Promise.all(
-      allPlayerEvents.map(async (player) => await extractPlayerData(player))
+      allPlayerEvents.map(
+        async (playerEvents) => await extractPlayerData(
+          playerEvents,
+          allPlayers.find((x) => x.id == playerEvents.id)
+        )
+      )
     );
     const playersWithPoints = gameweekData.map((entry) => {
       const score = calculatePlayerScore(entry, allFixtures);
@@ -85,7 +96,7 @@ function createPlayerStore() {
     });
     return await Promise.all(playersWithPoints);
   }
-  async function extractPlayerData(playerPointsDTO) {
+  async function extractPlayerData(playerPointsDTO, player) {
     let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
     let goalPoints = 0, assistPoints = 0, goalsConcededPoints = 0, cleanSheetPoints = 0;
     playerPointsDTO.events.forEach((event) => {
@@ -156,10 +167,8 @@ function createPlayerStore() {
           break;
       }
     });
-    let allPlayers = [];
-    subscribe((players) => allPlayers = players);
     let playerGameweekDetails = {
-      player: allPlayers.find((x) => x.id === playerPointsDTO.id),
+      player,
       points: playerPointsDTO.points,
       appearance,
       goals,
@@ -322,4 +331,4 @@ function createPlayerStore() {
     getGameweekPlayers
   };
 }
-createPlayerStore();
+const playerStore = createPlayerStore();

@@ -56,19 +56,19 @@ actor Self {
 
   private let oneHour = 1_000_000_000 * 60 * 60;
 
-  /*
   //USE FOR LOCAL DEV
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
   };
-  */
+  /*
   //Live canisters
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
     governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
   };
+  */
 
   let tokenCanister = actor (CANISTER_IDS.token_canister) : actor {
     icrc1_name : () -> async Text;
@@ -181,13 +181,10 @@ actor Self {
     return seasonManager.getFixturesForSeason(seasonId);
   };
 
-  public shared ({ caller }) func getFixture(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId) : async T.Fixture {
-    return await seasonManager.getFixture(seasonId, gameweekNumber, fixtureId);
-  };
-
-  public shared ({ caller }) func getProfileDTO() : async DTOs.ProfileDTO {
+  public shared query ({ caller }) func getProfileDTO() : async ?DTOs.ProfileDTO {
     assert not Principal.isAnonymous(caller);
-    let principalName = Principal.toText(caller);
+    let principalId = Principal.toText(caller);
+
     var icpDepositAddress = Blob.fromArray([]);
     var fplDepositAddress = Blob.fromArray([]);
     var displayName = "";
@@ -200,13 +197,8 @@ actor Self {
 
     var profile = profilesInstance.getProfile(Principal.toText(caller));
 
-    if (profile == null) {
-      profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
-      profile := profilesInstance.getProfile(Principal.toText(caller));
-    };
-
     switch (profile) {
-      case (null) {};
+      case (null) { return null };
       case (?p) {
         icpDepositAddress := p.icpDepositAddress;
         fplDepositAddress := p.fplDepositAddress;
@@ -221,7 +213,7 @@ actor Self {
     };
 
     let profileDTO : DTOs.ProfileDTO = {
-      principalName = principalName;
+      principalId = principalId;
       icpDepositAddress = icpDepositAddress;
       fplDepositAddress = fplDepositAddress;
       displayName = displayName;
@@ -233,7 +225,20 @@ actor Self {
       canUpdateFavouriteTeam = canUpdateFavouriteTeam;
     };
 
-    return profileDTO;
+    return ?profileDTO;
+  };
+
+  public shared ({ caller }) func createProfile() : async () {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+
+    var existingProfile = profilesInstance.getProfile(Principal.toText(caller));
+    switch (existingProfile) {
+      case (null) {
+        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
+      };
+      case (_) {};
+    };
   };
 
   public shared query ({ caller }) func getPublicProfileDTO(principalId : Text) : async DTOs.ProfileDTO {
@@ -260,7 +265,7 @@ actor Self {
     };
 
     let profileDTO : DTOs.ProfileDTO = {
-      principalName = principalId;
+      principalId = principalId;
       icpDepositAddress = icpDepositAddress;
       fplDepositAddress = fplDepositAddress;
       displayName = displayName;
@@ -1627,12 +1632,14 @@ actor Self {
     };
   };
 
-  /* Remove these functions post-sns */
+  /* Admin only functions to be removed after the SNS sale.*/
+  //let adminPrincipal = assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB Live
+  /*LOCALDEVONLY*/
+  let adminPrincipal = "kydhj-2crf5-wwkao-msv4s-vbyvu-kkroq-apnyv-zykjk-r6oyk-ksodu-vqe "; //JB Local
+
   public shared ({ caller }) func savePlayerEvents(fixtureId : T.FixtureId, allPlayerEvents : [T.PlayerEventData]) : async () {
     assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB LIVE
-    //assert Principal.toText(caller) == "5mizu-xuphz-aex5b-ovid6-oqt34-jdb5k-fn5hr-ip7iu-ghgz4-jilrl-bqe"; //JB Local 2
-    //assert Principal.toText(caller) == "6sbwi-mq6zw-jcwiq-urs3i-2abjy-o7p3o-n33vj-ecw43-vsd2w-4poay-iqe"; //JB LOCAL
+    assert Principal.toText(caller) == adminPrincipal;
 
     let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
 
@@ -1826,7 +1833,10 @@ actor Self {
     return seasonManager.getValidatableFixtures();
   };
 
-  public func updateTeamValueInfo() : async () {
+  public shared ({ caller }) func updateTeamValueInfo() : async () {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
+
     await fantasyTeamsInstance.updateTeamValueInfo();
   };
 
@@ -1838,13 +1848,9 @@ actor Self {
     return stable_timers;
   };
 
-  public func rescheduleFixture() : async () {
-    return await seasonManager.rescheduleFixture(176, 18, 0, 1_703_343_600_000_000_000);
-    await updateCacheHash("fixtures");
-    await updateCacheHash("system_state");
-  };
-
-  public func updateHashForCategory(category : Text) : async () {
+  public shared ({ caller }) func updateHashForCategory(category : Text) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
 
     let hashBuffer = Buffer.fromArray<T.DataCache>([]);
 

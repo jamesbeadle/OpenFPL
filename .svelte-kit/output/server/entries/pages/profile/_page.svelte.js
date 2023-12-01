@@ -2,20 +2,54 @@ import { c as create_ssr_component, e as escape, n as null_to_empty, d as add_at
 import "../../../chunks/system-store.js";
 import "../../../chunks/manager-store.js";
 import { a as LoadingIcon, t as toastStore, L as Layout } from "../../../chunks/Layout.js";
-import { a as authStore } from "../../../chunks/auth.js";
 import { w as writable } from "../../../chunks/index.js";
-import { A as ActorFactory } from "../../../chunks/team-store.js";
+import { a as authStore } from "../../../chunks/auth.js";
+import { A as ActorFactory, r as replacer } from "../../../chunks/team-store.js";
 import "../../../chunks/app.constants.js";
 import "@dfinity/auth-client";
 import "@dfinity/utils";
 import "@dfinity/agent";
 function createUserStore() {
   const { subscribe: subscribe2, set, update } = writable(null);
+  async function sync() {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let updatedProfileData = await identityActor.getProfileDTO();
+      if (!updatedProfileData) {
+        await identityActor.createProfile();
+        updatedProfileData = await identityActor.getProfileDTO();
+      }
+      localStorage.setItem(
+        "user_profile_data",
+        JSON.stringify(updatedProfileData, replacer)
+      );
+      set(updatedProfileData);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
+  }
+  async function createProfile() {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      const result = await identityActor.createProfile();
+      return result;
+    } catch (error) {
+      console.error("Error updating username:", error);
+      throw error;
+    }
+  }
   async function updateUsername(username) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateDisplayName(username);
       return result;
@@ -28,7 +62,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
       return result;
@@ -41,7 +75,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfileDTO();
       set(result);
@@ -65,7 +99,7 @@ function createUserStore() {
         try {
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+            { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
           return result;
@@ -80,10 +114,12 @@ function createUserStore() {
   }
   return {
     subscribe: subscribe2,
+    sync,
     updateUsername,
     updateFavouriteTeam,
     getProfile,
-    updateProfilePicture
+    updateProfilePicture,
+    createProfile
   };
 }
 const userStore = createUserStore();
@@ -193,16 +229,21 @@ const css = {
   map: null
 };
 const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $isLoading, $$unsubscribe_isLoading;
+  let profileSrc;
+  let teamName;
   let $profile, $$unsubscribe_profile;
-  let $profileSrc, $$unsubscribe_profileSrc;
-  let teams;
+  let $teams, $$unsubscribe_teams;
+  let $systemState, $$unsubscribe_systemState;
+  let $isLoading, $$unsubscribe_isLoading;
+  let teams = writable([]);
+  $$unsubscribe_teams = subscribe(teams, (value) => $teams = value);
+  let systemState = writable(null);
+  $$unsubscribe_systemState = subscribe(systemState, (value) => $systemState = value);
   let profile = writable(null);
   $$unsubscribe_profile = subscribe(profile, (value) => $profile = value);
-  let profileSrc = writable("profile_placeholder.png");
-  $$unsubscribe_profileSrc = subscribe(profileSrc, (value) => $profileSrc = value);
   let showUsernameModal = false;
   let showFavouriteTeamModal = false;
+  let gameweek = 1;
   let isLoading = writable(false);
   $$unsubscribe_isLoading = subscribe(isLoading, (value) => $isLoading = value);
   onDestroy(() => {
@@ -229,9 +270,13 @@ const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slot
     });
   }
   $$result.css.add(css);
-  $$unsubscribe_isLoading();
+  profileSrc = $profile && $profile?.profilePicture && $profile?.profilePicture?.length > 0 ? URL.createObjectURL(new Blob([new Uint8Array($profile.profilePicture)])) : "profile_placeholder.png";
+  gameweek = $systemState?.activeGameweek ?? 1;
+  teamName = $teams.find((x) => x.id == $profile?.favouriteTeamId) ?? "Not Set";
   $$unsubscribe_profile();
-  $$unsubscribe_profileSrc();
+  $$unsubscribe_teams();
+  $$unsubscribe_systemState();
+  $$unsubscribe_isLoading();
   return `${$isLoading ? `${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}` : `${validate_component(Update_username_modal, "UpdateUsernameModal").$$render(
     $$result,
     {
@@ -256,7 +301,7 @@ const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slot
     {},
     {}
   )}
-  <div class="container mx-auto p-4">${$profile ? `<div class="flex flex-wrap"><div class="w-full md:w-auto px-2 ml-4 md:ml-0"><div class="group"><img${add_attribute("src", $profileSrc, 0)} alt="Profile" class="w-48 md:w-80 mb-1 rounded-lg">
+  <div class="container mx-auto p-4">${$profile ? `<div class="flex flex-wrap"><div class="w-full md:w-auto px-2 ml-4 md:ml-0"><div class="group"><img${add_attribute("src", profileSrc, 0)} alt="Profile" class="w-48 md:w-80 mb-1 rounded-lg">
 
             <div class="file-upload-wrapper mt-4 svelte-e6um5o"><button class="btn-file-upload fpl-button svelte-e6um5o">Upload Photo</button>
               <input type="file" id="profile-image" accept="image/*" style="opacity: 0; position: absolute; left: 0; top: 0;" class="svelte-e6um5o"></div></div></div>
@@ -266,20 +311,20 @@ const Profile_detail = create_ssr_component(($$result, $$props, $$bindings, slot
             <button class="p-2 px-4 rounded fpl-button">Update
             </button>
             <p class="text-xs mb-2 mt-4">Favourite Team:</p>
-            <h2 class="text-2xl font-bold mb-2">${escape(teams.find((x) => x.id === $profile?.favouriteTeamId)?.friendlyName)}</h2>
-            <button class="p-2 px-4 rounded fpl-button" ${""}>Update
+            <h2 class="text-2xl font-bold mb-2">${escape(teamName)}</h2>
+            <button class="p-2 px-4 rounded fpl-button" ${gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0 ? "disabled" : ""}>Update
             </button>
 
             <p class="text-xs mb-2 mt-4">Joined:</p>
             <h2 class="text-2xl font-bold mb-2">August 2023</h2>
 
             <p class="text-xs mb-2 mt-4">Principal:</p>
-            <div class="flex items-center"><h2 class="text-xs font-bold">${escape($profile?.principalName)}</h2>
+            <div class="flex items-center"><h2 class="text-xs font-bold">${escape($profile?.principalId)}</h2>
               ${validate_component(CopyIcon, "CopyIcon").$$render(
     $$result,
     {
       onClick: copyToClipboard,
-      principalId: $profile?.principalName,
+      principalId: $profile?.principalId,
       className: "ml-2 w-4 h-4"
     },
     {},

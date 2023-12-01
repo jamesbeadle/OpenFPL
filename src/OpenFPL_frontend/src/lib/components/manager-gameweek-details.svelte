@@ -15,21 +15,21 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { Writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
-  let teams: Team[] = [];
-  let players: PlayerDTO[] = [];
-  let systemState: SystemState | null;
+  export let teams = writable<Team[] | []>([]);
+  export let players = writable<PlayerDTO[] | []>([]);
+  export let systemState = writable<SystemState | null>(null);
 
   let unsubscribeSystemState: () => void;
   let unsubscribeTeams: () => void;
   let unsubscribePlayers: () => void;
 
+  let gameweekPlayers: GameweekData[] = [];
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   export let selectedGameweek: number;
   export let fantasyTeam: Writable<FantasyTeam | null>;
-  let gameweekPlayers: GameweekData[] = [];
 
   onMount(async () => {
     try {
@@ -38,27 +38,43 @@
       await playerStore.sync();
 
       unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
+        systemState.set(value);
       });
 
       unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
+        teams.set(value);
       });
 
       unsubscribePlayers = playerStore.subscribe((value) => {
-        players = value;
+        players.set(value);
       });
-
-      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
-      gameweekPlayers = await playerStore.getGameweekPlayers(
-        $fantasyTeam!,
-        selectedGameweek
-      );
     } catch (error) {
       toastStore.show("Error fetching manager gameweek detail.", "error");
       console.error("Error fetching manager gameweek detail:", error);
     }
   });
+
+  $: {
+    if ($systemState) {
+      selectedGameweek = $systemState?.activeGameweek ?? selectedGameweek;
+    }
+  }
+
+  $: if ($fantasyTeam) {
+    updateGameweekPlayers();
+  }
+
+  async function updateGameweekPlayers() {
+    try {
+      gameweekPlayers = await playerStore.getGameweekPlayers(
+        $fantasyTeam!,
+        selectedGameweek
+      );
+    } catch (error) {
+      toastStore.show("Error updating gameweek players.", "error");
+      console.error("Error updating gameweek players:", error);
+    }
+  }
 
   onDestroy(() => {
     unsubscribeTeams?.();
@@ -71,11 +87,11 @@
   };
 
   function getPlayerDTO(playerId: number): PlayerDTO | null {
-    return players.find((x) => x.id === playerId) ?? null;
+    return $players.find((x) => x.id === playerId) ?? null;
   }
 
   function getPlayerTeam(teamId: number): Team | null {
-    return teams.find((x) => x.id === teamId) ?? null;
+    return $teams.find((x) => x.id === teamId) ?? null;
   }
 </script>
 

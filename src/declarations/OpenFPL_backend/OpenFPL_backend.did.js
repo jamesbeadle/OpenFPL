@@ -144,9 +144,9 @@ export const idlFactory = ({ IDL }) => {
     createDate: IDL.Int,
     canUpdateFavouriteTeam: IDL.Bool,
     reputation: IDL.Nat32,
-    principalName: IDL.Text,
     profilePicture: IDL.Vec(IDL.Nat8),
     membershipType: IDL.Nat8,
+    principalId: IDL.Text,
   });
   const PaginatedLeaderboard = IDL.Record({
     totalEntries: IDL.Nat,
@@ -197,6 +197,7 @@ export const idlFactory = ({ IDL }) => {
     triggerTime: IDL.Int,
   });
   return IDL.Service({
+    createProfile: IDL.Func([], [], []),
     executeAddInitialFixtures: IDL.Func(
       [SeasonId, IDL.Vec(Fixture)],
       [Result],
@@ -286,7 +287,6 @@ export const idlFactory = ({ IDL }) => {
       [FantasyTeamSnapshot],
       ["query"]
     ),
-    getFixture: IDL.Func([SeasonId, GameweekNumber, FixtureId], [Fixture], []),
     getFixtureDTOs: IDL.Func([], [IDL.Vec(FixtureDTO)], ["query"]),
     getFixtures: IDL.Func([], [IDL.Vec(Fixture)], ["query"]),
     getFixturesForSeason: IDL.Func([SeasonId], [IDL.Vec(Fixture)], ["query"]),
@@ -295,7 +295,7 @@ export const idlFactory = ({ IDL }) => {
       [ManagerDTO],
       ["query"]
     ),
-    getProfileDTO: IDL.Func([], [ProfileDTO], []),
+    getProfileDTO: IDL.Func([], [IDL.Opt(ProfileDTO)], ["query"]),
     getPublicProfileDTO: IDL.Func([IDL.Text], [ProfileDTO], ["query"]),
     getSeasonLeaderboard: IDL.Func(
       [IDL.Nat16, IDL.Nat, IDL.Nat],
@@ -325,7 +325,6 @@ export const idlFactory = ({ IDL }) => {
       ["query"]
     ),
     isDisplayNameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
-    rescheduleFixture: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func(
       [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
       [Result],

@@ -4,19 +4,18 @@
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import type {
     SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
-  let teams: Team[] = [];
-  let systemState: SystemState | null;
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let unsubscribeTeams: () => void;
   let unsubscribeSystemState: () => void;
 
   let isLoading = true;
+  let teams: Team[] = [];
+  let systemState: SystemState | null;
   let selectedLeaderboardType: number = 1;
   let selectedGameweek: number = 1;
   let selectedMonth: number = 1;
@@ -274,7 +273,9 @@
                 <div class="w-1/3 px-4">
                   <a
                     href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}
-                    >{entry.username}</a
+                    >{entry.principalId === entry.username
+                      ? "Unknown"
+                      : entry.username}</a
                   >
                 </div>
                 <div class="w-1/2 px-4">{entry.points}</div>
@@ -296,8 +297,8 @@
                 disabled={currentPage >= totalPages}
                 class="px-4 py-2 mx-2 fpl-button rounded disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] text-sm"
               >
-                Next</button
-              >
+                Next
+              </button>
             </div>
           {:else}
             <p class="w-100 p-4">No leaderboard data.</p>
