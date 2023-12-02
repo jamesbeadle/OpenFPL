@@ -7,8 +7,9 @@ import { s as systemStore, A as ActorFactory, i as idlFactory, r as replacer, f 
 import { w as writable } from "../../chunks/index.js";
 import "@dfinity/agent";
 import "../../chunks/fixture-store.js";
-import { B as BadgeIcon } from "../../chunks/BadgeIcon.js";
 import "../../chunks/player-store.js";
+import "../../chunks/player-events-store.js";
+import { B as BadgeIcon } from "../../chunks/BadgeIcon.js";
 function createLeaderboardStore() {
   const { subscribe, set } = writable(null);
   const itemsPerPage = 25;

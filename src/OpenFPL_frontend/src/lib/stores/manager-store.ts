@@ -35,7 +35,7 @@ function createManagerStore() {
         gameweek
       )) as ManagerDTO;
     } catch (error) {
-      console.error("Error fetching fantasy team for gameweek:", error);
+      console.error("Error fetching manager for gameweek:", error);
       throw error;
     }
   }

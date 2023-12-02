@@ -8,7 +8,7 @@
   export let closeModal: () => void;
   export let cancelModal: () => void;
   export let newUsername: string = "";
-  export let isLoading: Writable<boolean | null>;
+  export let isLoading: boolean;
 
   function isDisplayNameValid(displayName: string): boolean {
     if (displayName.length < 3 || displayName.length > 20) {
@@ -21,7 +21,7 @@
   $: isSubmitDisabled = !isDisplayNameValid(newUsername);
 
   async function updateUsername() {
-    isLoading.set(true);
+    isLoading = true;
     loadingText.set("Updating Display Name");
     try {
       await userStore.updateUsername(newUsername);
@@ -33,7 +33,7 @@
       console.error("Error updating username:", error);
       cancelModal();
     } finally {
-      isLoading.set(false);
+      isLoading = false;
       loadingText.set("Loading");
     }
   }

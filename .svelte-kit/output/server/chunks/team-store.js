@@ -2672,20 +2672,6 @@ function getPositionText(position) {
       return "Unknown position";
   }
 }
-function getPositionAbbreviation(position) {
-  switch (position) {
-    case Position.GOALKEEPER:
-      return "GK";
-    case Position.DEFENDER:
-      return "DF";
-    case Position.MIDFIELDER:
-      return "MF";
-    case Position.FORWARD:
-      return "FW";
-    default:
-      return "?";
-  }
-}
 function convertDateToReadable(nanoseconds) {
   const milliseconds = nanoseconds / 1e6;
   const date = new Date(milliseconds);
@@ -3038,15 +3024,14 @@ createTeamStore();
 export {
   ActorFactory as A,
   authStore as a,
-  getFlagComponent as b,
-  getAvailableFormations as c,
-  getPositionText as d,
-  calculateAgeFromNanoseconds as e,
+  idlFactory as b,
+  getPositionText as c,
+  calculateAgeFromNanoseconds as d,
+  convertDateToReadable as e,
   formatUnixTimeToTime as f,
-  getPositionAbbreviation as g,
-  convertDateToReadable as h,
+  getAvailableFormations as g,
+  getFlagComponent as h,
   idlFactory$1 as i,
-  idlFactory as j,
   replacer as r,
   systemStore as s,
   updateTableData as u

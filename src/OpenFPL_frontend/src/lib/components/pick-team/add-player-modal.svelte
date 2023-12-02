@@ -11,6 +11,7 @@
   import { toastStore } from "$lib/stores/toast-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
+    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   export let showAddPlayer: boolean;
   export let closeAddPlayerModal: () => void;
@@ -69,6 +70,8 @@
     }
   }
 
+  let isLoading = true;
+
   onMount(async () => {
     try {
       await playerStore.sync();
@@ -87,6 +90,8 @@
     } catch (error) {
       toastStore.show("Error loading add player modal.", "error");
       console.error("Error fetching homepage data:", error);
+    } finally {
+      isLoading = false;
     }
   });
 
@@ -186,6 +191,9 @@
 </script>
 
 {#if showAddPlayer}
+  {#if isLoading}
+    <LoadingIcon />
+  {:else}
   <div
     class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
     on:click={closeAddPlayerModal}
@@ -351,6 +359,8 @@
       </div>
     </div>
   </div>
+  {/if}
+
 {/if}
 
 <style>

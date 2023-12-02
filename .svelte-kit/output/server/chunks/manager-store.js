@@ -19,7 +19,7 @@ function createManagerStore() {
         gameweek
       );
     } catch (error) {
-      console.error("Error fetching fantasy team for gameweek:", error);
+      console.error("Error fetching manager for gameweek:", error);
       throw error;
     }
   }

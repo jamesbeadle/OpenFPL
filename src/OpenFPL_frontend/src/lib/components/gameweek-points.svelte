@@ -6,7 +6,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { toastStore } from "$lib/stores/toast-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import { playerStore } from "$lib/stores/player-store";
+  import { playerEventsStore } from "$lib/stores/player-events-store";
   import { authStore } from "$lib/stores/auth";
 
   import { getPositionAbbreviation } from "$lib/utils/Helpers";
@@ -26,7 +26,6 @@
   let unsubscribeSystemState: () => void;
   let unsubscribeFixtures: () => void;
 
-  let isLoading = true;
   let teams: Team[] = [];
   let systemState: SystemState | null;
   let fixtures: Fixture[] = [];
@@ -40,6 +39,8 @@
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
 
+  let isLoading = true;
+  
   onMount(async () => {
     try {
       await teamStore.sync();
@@ -88,7 +89,7 @@
       principal?.toText(),
       selectedGameweek
     );
-    gameweekData = await playerStore.getGameweekPlayers(
+    gameweekData = await playerEventsStore.getGameweekPlayers(
       fantasyTeam,
       selectedGameweek
     );

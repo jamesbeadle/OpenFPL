@@ -1,7 +1,7 @@
 import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component } from "../../../chunks/index2.js";
 import { L as Layout } from "../../../chunks/Layout.js";
 import { w as writable } from "../../../chunks/index.js";
-import { c as getAvailableFormations } from "../../../chunks/team-store.js";
+import { g as getAvailableFormations } from "../../../chunks/team-store.js";
 import "../../../chunks/fixture-store.js";
 import "../../../chunks/player-store.js";
 import "../../../chunks/manager-store.js";

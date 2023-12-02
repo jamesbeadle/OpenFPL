@@ -2,6 +2,13 @@
   import { page } from "$app/stores";
   import { writable, type Writable } from "svelte/store";
   import { authStore, type AuthSignInParams } from "$lib/stores/auth";
+  import { systemStore } from "$lib/stores/system-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
+  import { teamStore } from "$lib/stores/team-store";
+  import { leaderboardStore } from "$lib/stores/leaderboard-store";
+  import { playerStore } from "$lib/stores/player-store";
+  import { playerEventsStore } from "$lib/stores/player-events-store";
+  import { isLoading } from "$lib/stores/global-stores";
   import { userStore } from "$lib/stores/user-store";
   import { toastStore } from "$lib/stores/toast-store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
@@ -9,7 +16,7 @@
   import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
   import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+  
   let menuOpen = false;
   let isLoggedIn = false;
   let profile: Writable<ProfileDTO | null> = writable(null);
@@ -22,18 +29,26 @@
   let unsubscribeLogin: () => void;
 
   //Remove after SNS
-  let adminPrincipal =
+  //let adminPrincipal =
     "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae";
 
   //LOCALDEVONLY
-  //let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
+  let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
 
   onMount(async () => {
     if (typeof window !== "undefined") {
       document.addEventListener("click", closeDropdownOnClickOutside);
     }
     try {
+
       await authStore.sync();
+      await systemStore.sync();
+      await fixtureStore.sync();
+      await teamStore.sync();
+      await leaderboardStore.syncWeeklyLeaderboard();
+      await playerStore.sync();
+      await playerEventsStore.sync();
+      
       unsubscribeLogin = authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
         if (isLoggedIn) {
@@ -44,6 +59,8 @@
     } catch (error) {
       toastStore.show("Error syncing authentication.", "error");
       console.error("Error syncing authentication:", error);
+    } finally{
+      $isLoading = false;
     }
   });
 

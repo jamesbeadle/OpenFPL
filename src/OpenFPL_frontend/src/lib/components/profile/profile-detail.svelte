@@ -23,7 +23,6 @@
   let showFavouriteTeamModal: boolean = false;
   let fileInput: HTMLInputElement;
   let gameweek: number = 1;
-  let isLoading = writable(false);
 
   let unsubscribeTeams: () => void;
   let unsubscribeSystemState: () => void;
@@ -40,8 +39,9 @@
     $teams.find((x) => x.id == $profile?.favouriteTeamId)?.friendlyName ??
     "Not Set";
 
+  let isLoading = true;
+
   onMount(async () => {
-    isLoading.set(true);
     try {
       await teamStore.sync();
       await systemStore.sync();
@@ -62,7 +62,7 @@
       toastStore.show("Error fetching profile detail.", "error");
       console.error("Error fetching profile detail:", error);
     } finally {
-      isLoading.set(false);
+      isLoading = false;
     }
   });
 
@@ -129,9 +129,9 @@
   }
 
   async function uploadProfileImage(file: File) {
-    isLoading.set(true);
-
-    loadingText.set("Updating Profile Picture");
+    $loadingText = "Uploading Profile Image"
+    isLoading = true;
+    
     try {
       await userStore.updateProfilePicture(file);
       userStore.sync();
@@ -150,13 +150,13 @@
       toastStore.show("Error updating profile image", "error");
       console.error("Error updating profile image", error);
     } finally {
-      isLoading.set(false);
-      loadingText.set("Loading");
+      isLoading = false;
+      $loadingText = "Loading";
     }
   }
 </script>
 
-{#if $isLoading}
+{#if isLoading}
   <LoadingIcon />
 {:else}
   <UpdateUsernameModal

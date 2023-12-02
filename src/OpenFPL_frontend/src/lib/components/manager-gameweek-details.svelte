@@ -4,6 +4,7 @@
   import { toastStore } from "$lib/stores/toast-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { playerEventsStore } from "$lib/stores/player-events-store";
   import {
     getFlagComponent,
     getPositionAbbreviation,
@@ -36,6 +37,7 @@
       await systemStore.sync();
       await teamStore.sync();
       await playerStore.sync();
+      await playerEventsStore.sync();
 
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState.set(value);
@@ -66,7 +68,7 @@
 
   async function updateGameweekPlayers() {
     try {
-      gameweekPlayers = await playerStore.getGameweekPlayers(
+      gameweekPlayers = await playerEventsStore.getGameweekPlayers(
         $fantasyTeam!,
         selectedGameweek
       );

@@ -14,14 +14,8 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import type {
-    Fixture,
-    Season,
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Fixture, Season, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
-  import { isLoading } from "$lib/stores/global-stores";
 
   let teams: Team[] = [];
   let fixtures: Fixture[] = [];
@@ -44,13 +38,11 @@
   let unsubscribeSystemState: () => void;
   let unsubscribePlayers: () => void;
 
-  let showView = false;
+  let isLoading = true;
 
   $: id = Number($page.url.searchParams.get("id"));
 
   onMount(async () => {
-    isLoading.set(true);
-
     try {
       await teamStore.sync();
       await fixtureStore.sync();
@@ -102,8 +94,7 @@
       toastStore.show("Error fetching club details.", "error");
       console.error("Error fetching club details:", error);
     } finally {
-      isLoading.set(false);
-      showView = true;
+      isLoading = false;
     }
   });
 
@@ -139,7 +130,9 @@
 </script>
 
 <Layout>
-  {#if showView}
+  {#if isLoading}
+    <LoadingIcon />
+  {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
         <div

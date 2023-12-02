@@ -57,6 +57,15 @@
       "_index.js"
     ]
   },
+  "_player-events-store.js": {
+    "file": "chunks/player-events-store.js",
+    "imports": [
+      "_fixture-store.js",
+      "_player-store.js",
+      "_team-store.js",
+      "_index.js"
+    ]
+  },
   "_player-store.js": {
     "file": "chunks/player-store.js",
     "imports": [
@@ -121,8 +130,9 @@
       "_team-store.js",
       "_index.js",
       "_fixture-store.js",
-      "_BadgeIcon.js",
-      "_player-store.js"
+      "_player-store.js",
+      "_player-events-store.js",
+      "_BadgeIcon.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/+page.svelte"
@@ -213,8 +223,7 @@
       "_manager-store.js",
       "_Layout.js",
       "_player-store.js",
-      "_index.js",
-      "_BadgeIcon.js"
+      "_player-events-store.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/manager/+page.svelte"

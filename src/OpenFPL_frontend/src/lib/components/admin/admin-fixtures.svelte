@@ -22,7 +22,6 @@
   let unsubscribeFixtures: () => void;
   let unsubscribeSystemState: () => void;
 
-  let isLoading = true;
   let selectedGameweek: number = 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   $: filteredFixtures = fixturesWithTeams.filter(
@@ -49,6 +48,8 @@
     {} as { [key: string]: FixtureWithTeams[] }
   );
 
+  let isLoading = true;
+  
   onMount(async () => {
     try {
       await teamStore.sync();

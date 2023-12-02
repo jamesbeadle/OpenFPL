@@ -4,7 +4,6 @@
   import { systemStore } from "$lib/stores/system-store";
   import { authStore } from "$lib/stores/auth";
   import { toastStore } from "$lib/stores/toast-store";
-  import { loadingText } from "$lib/stores/global-stores";
   import type { Writable } from "svelte/store";
   import type {
     Season,
@@ -15,7 +14,6 @@
   export let showModal: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
-  export let isLoading: Writable<boolean | null>;
   let seasons: Season[] = [];
   let systemState: SystemState | null;
 
@@ -28,6 +26,8 @@
   $: isSubmitDisabled =
     ($authStore.identity?.getPrincipal().toString() ?? "") !==
     "kydhj-2crf5-wwkao-msv4s-vbyvu-kkroq-apnyv-zykjk-r6oyk-ksodu-vqe";
+
+  let isLoading = true;
 
   onMount(async () => {
     await seasonStore.sync();
@@ -48,8 +48,7 @@
   });
 
   async function updateSystemState() {
-    isLoading.set(true);
-    loadingText.set("Updating System State");
+    isLoading = true;
     try {
       let systemState: UpdateSystemStateDTO = {
         activeGameweek: activeGameweek,
@@ -64,8 +63,7 @@
       console.error("Error updating system state:", error);
       cancelModal();
     } finally {
-      isLoading.set(false);
-      loadingText.set("Loading");
+      isLoading = false;
     }
   }
 
