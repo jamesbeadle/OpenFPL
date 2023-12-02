@@ -4,11 +4,11 @@
   import Layout from "../Layout.svelte";
   import AdminFixtures from "$lib/components/admin/admin-fixtures.svelte";
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
-  
+
   //get seasons for dropdown
 
   export let showModal: boolean = false;
-  
+
   let activeTab: string = "fixtures";
 
   onMount(async () => {
@@ -26,12 +26,11 @@
   function hideModal(): void {
     showModal = false;
   }
-
 </script>
 
 <Layout>
   <SystemStateModal
-    showModal={showModal}
+    {showModal}
     closeModal={hideModal}
     cancelModal={hideModal}
     {isLoading}
@@ -44,13 +43,24 @@
       </div>
 
       <div class="flex flex-row p-4 space-x-4">
-        <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1" on:click={displaySystemStateModal}>System Status</button>
+        <button
+          class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+          on:click={displaySystemStateModal}>System Status</button
+        >
       </div>
 
       <ul class="flex rounded-t-lg bg-light-gray px-4 pt-2">
-        <li class={`mr-4 text-xs md:text-base ${ activeTab === "fixtures" ? "active-tab" : ""}`}>
-          <button class={`p-2 ${ activeTab === "fixtures" ? "text-white" : "text-gray-400" }`}
-            on:click={() => setActiveTab("fixtures")}>Fixtures</button>
+        <li
+          class={`mr-4 text-xs md:text-base ${
+            activeTab === "fixtures" ? "active-tab" : ""
+          }`}
+        >
+          <button
+            class={`p-2 ${
+              activeTab === "fixtures" ? "text-white" : "text-gray-400"
+            }`}
+            on:click={() => setActiveTab("fixtures")}>Fixtures</button
+          >
         </li>
       </ul>
 

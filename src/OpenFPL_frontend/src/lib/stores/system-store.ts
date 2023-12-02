@@ -1,7 +1,11 @@
 import { authStore } from "$lib/stores/auth";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { DataCache, SystemState, UpdateSystemStateDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  DataCache,
+  SystemState,
+  UpdateSystemStateDTO,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
@@ -47,7 +51,9 @@ function createSystemStore() {
     return systemState;
   }
 
-  async function updateSystemState(systemState: UpdateSystemStateDTO): Promise<any> {
+  async function updateSystemState(
+    systemState: UpdateSystemStateDTO
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,

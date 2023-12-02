@@ -332,8 +332,11 @@
       <div class="justify-center mt-4 pb-4 overflow-x-auto">
         <div class="flex space-x-1 min-w-max">
           {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
-            <button class:active={index + 1 === currentPage} class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600"
-              on:click={() => goToPage(index + 1)}>
+            <button
+              class:active={index + 1 === currentPage}
+              class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600"
+              on:click={() => goToPage(index + 1)}
+            >
               {index + 1}
             </button>
           {/each}
@@ -351,7 +354,6 @@
 {/if}
 
 <style>
-
   .active {
     background-color: #2ce3a6;
     color: white;

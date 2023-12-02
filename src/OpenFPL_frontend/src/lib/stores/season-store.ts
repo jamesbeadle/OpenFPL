@@ -2,7 +2,6 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type { Season } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../utils/Helpers";
 
 function createSeasonStore() {
   const { subscribe, set } = writable<Season[]>([]);
@@ -13,13 +12,13 @@ function createSeasonStore() {
   );
 
   async function sync() {
-    const updatedSeasonsData = await actor.getSeasons() as Season[];
+    const updatedSeasonsData = (await actor.getSeasons()) as Season[];
     set(updatedSeasonsData);
   }
 
   return {
     subscribe,
-    sync
+    sync,
   };
 }
 

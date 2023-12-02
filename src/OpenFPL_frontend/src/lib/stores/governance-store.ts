@@ -1,7 +1,5 @@
-
-import { writable } from "svelte/store";
 import { authStore } from "$lib/stores/auth";
-import { fixtureStore } from "$lib/stores/fixture-store";
+import { writable } from "svelte/store";
 import type {
   Fixture,
   PlayerEventData,
@@ -20,7 +18,7 @@ function createGovernanceStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      await identityActor.submitFixtureData(fixtureId, allPlayerEvents);
+      await identityActor.savePlayerEvents(fixtureId, allPlayerEvents);
       // Additional logic if needed after submission
     } catch (error) {
       console.error("Error submitting fixture data:", error);

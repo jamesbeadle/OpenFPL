@@ -56,19 +56,19 @@ actor Self {
 
   private let oneHour = 1_000_000_000 * 60 * 60;
 
+  /*
   //USE FOR LOCAL DEV
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
   };
-  /*
+  */
   //Live canisters
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
     governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
   };
-  */
 
   let tokenCanister = actor (CANISTER_IDS.token_canister) : actor {
     icrc1_name : () -> async Text;
@@ -1633,9 +1633,9 @@ actor Self {
   };
 
   /* Admin only functions to be removed after the SNS sale.*/
-  //let adminPrincipal = assert Principal.toText(caller) == "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB Live
+  let adminPrincipal = "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB Live
   /*LOCALDEVONLY*/
-  let adminPrincipal = "kydhj-2crf5-wwkao-msv4s-vbyvu-kkroq-apnyv-zykjk-r6oyk-ksodu-vqe"; //JB Local
+  //let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe"; //JB Local
 
   public shared ({ caller }) func savePlayerEvents(fixtureId : T.FixtureId, allPlayerEvents : [T.PlayerEventData]) : async () {
     assert not Principal.isAnonymous(caller);

@@ -1,9 +1,9 @@
-import { A as AUTH_MAX_TIME_TO_LIVE, a as AUTH_POPUP_WIDTH, b as AUTH_POPUP_HEIGHT } from "./app.constants.js";
+import { A as AUTH_MAX_TIME_TO_LIVE, b as AUTH_POPUP_WIDTH, c as AUTH_POPUP_HEIGHT } from "./Layout.js";
 import { AuthClient } from "@dfinity/auth-client";
 import "@dfinity/utils";
 import { w as writable } from "./index.js";
 import { HttpAgent, Actor } from "@dfinity/agent";
-import { c as create_ssr_component, g as compute_rest_props, h as getContext, i as spread, j as escape_attribute_value, k as escape_object } from "./index2.js";
+import { c as create_ssr_component, h as compute_rest_props, i as getContext, j as spread, k as escape_attribute_value, l as escape_object } from "./index2.js";
 const createAuthClient = () => AuthClient.create({
   idleOptions: {
     disableIdle: true,
@@ -391,7 +391,6 @@ const idlFactory$1 = ({ IDL }) => {
     getTeams: IDL.Func([], [IDL.Vec(Team)], ["query"]),
     getTimers: IDL.Func([], [IDL.Vec(TimerInfo)], []),
     getTotalManagers: IDL.Func([], [IDL.Nat], ["query"]),
-    getValidatableFixtures: IDL.Func([], [IDL.Vec(Fixture)], ["query"]),
     getWeeklyLeaderboard: IDL.Func(
       [IDL.Nat16, IDL.Nat8, IDL.Nat, IDL.Nat],
       [PaginatedLeaderboard],
@@ -693,7 +692,7 @@ const idlFactory = ({ IDL }) => {
 class ActorFactory {
   static createActor(idlFactory2, canisterId = "", identity = null, options = null) {
     const hostOptions = {
-      host: "http://127.0.0.1:8080",
+      host: `https://${canisterId}.icp-api.io`,
       identity
     };
     if (!options) {
@@ -706,7 +705,7 @@ class ActorFactory {
       options.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options.agentOptions });
-    if ({ "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.NODE_ENV !== "production") {
+    if ({ "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.NODE_ENV !== "production") {
       agent.fetchRootKey().catch((err) => {
         console.warn(
           "Unable to fetch root key. Ensure your local replica is running"
@@ -731,7 +730,7 @@ class ActorFactory {
     }).then((identity) => {
       unsubscribe();
       return ActorFactory.createActor(
-        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
+        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
         canisterId,
         identity
       );
@@ -2919,11 +2918,70 @@ function getAvailableFormations(players, team) {
     return totalPlayers + additionalPlayersNeeded <= 11;
   });
 }
+function createSystemStore() {
+  const { subscribe, set } = writable(null);
+  let actor = ActorFactory.createActor(
+    idlFactory$1,
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
+  );
+  async function sync() {
+    let category = "system_state";
+    const newHashValues = await actor.getDataHashes();
+    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
+    const localHash = localStorage.getItem(category);
+    if (liveHash?.hash != localHash) {
+      let updatedSystemStateData = await actor.getSystemState();
+      localStorage.setItem(
+        "system_state_data",
+        JSON.stringify(updatedSystemStateData, replacer)
+      );
+      localStorage.setItem(category, liveHash?.hash ?? "");
+      set(updatedSystemStateData);
+    } else {
+      const cachedSystemStateData = localStorage.getItem("system_state_data");
+      let cachedSystemState = null;
+      try {
+        cachedSystemState = JSON.parse(cachedSystemStateData || "{}");
+      } catch (e) {
+        cachedSystemState = null;
+      }
+      set(cachedSystemState);
+    }
+  }
+  async function getSystemState() {
+    let systemState;
+    subscribe((value) => {
+      systemState = value;
+    })();
+    return systemState;
+  }
+  async function updateSystemState(systemState) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      const result = await identityActor.updateSystemState(systemState);
+      sync();
+      return result;
+    } catch (error) {
+      console.error("Error updating system state:", error);
+      throw error;
+    }
+  }
+  return {
+    subscribe,
+    sync,
+    getSystemState,
+    updateSystemState
+  };
+}
+const systemStore = createSystemStore();
 function createTeamStore() {
   const { subscribe, set } = writable([]);
   const actor = ActorFactory.createActor(
     idlFactory$1,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     const category = "teams";
@@ -2975,5 +3033,6 @@ export {
   idlFactory as h,
   idlFactory$1 as i,
   replacer as r,
+  systemStore as s,
   updateTableData as u
 };

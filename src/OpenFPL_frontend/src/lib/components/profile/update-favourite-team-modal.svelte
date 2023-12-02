@@ -58,10 +58,16 @@
 </script>
 
 {#if showModal}
-  <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={cancelModal} on:keydown={handleKeydown}>
-    <div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
-      on:click|stopPropagation on:keydown={handleKeydown}>
+  <div
+    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
+    on:click={cancelModal}
+    on:keydown={handleKeydown}
+  >
+    <div
+      class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
+      on:click|stopPropagation
+      on:keydown={handleKeydown}
+    >
       <div class="mt-3 text-center">
         <h3 class="text-lg leading-6 font-medium mb-2">
           Update Favourite Team
@@ -102,7 +108,8 @@
           } 
           text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
           on:click={updateFavouriteTeam}
-          disabled={isSubmitDisabled}>Update</button>
+          disabled={isSubmitDisabled}>Update</button
+        >
       </div>
     </div>
   </div>

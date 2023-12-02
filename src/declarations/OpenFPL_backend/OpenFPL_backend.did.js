@@ -317,7 +317,6 @@ export const idlFactory = ({ IDL }) => {
     getTeams: IDL.Func([], [IDL.Vec(Team)], ["query"]),
     getTimers: IDL.Func([], [IDL.Vec(TimerInfo)], []),
     getTotalManagers: IDL.Func([], [IDL.Nat], ["query"]),
-    getValidatableFixtures: IDL.Func([], [IDL.Vec(Fixture)], ["query"]),
     getWeeklyLeaderboard: IDL.Func(
       [IDL.Nat16, IDL.Nat8, IDL.Nat, IDL.Nat],
       [PaginatedLeaderboard],

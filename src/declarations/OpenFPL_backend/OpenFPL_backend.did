@@ -255,7 +255,6 @@ service : {
   getTeams : () -> (vec Team) query;
   getTimers : () -> (vec TimerInfo);
   getTotalManagers : () -> (nat) query;
-  getValidatableFixtures : () -> (vec Fixture) query;
   getWeeklyLeaderboard : (nat16, nat8, nat, nat) -> (PaginatedLeaderboard) query;
   getWeeklyLeaderboardCache : (nat16, nat8) -> (PaginatedLeaderboard) query;
   isDisplayNameValid : (text) -> (bool) query;

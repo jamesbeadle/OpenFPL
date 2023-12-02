@@ -1,10 +1,14 @@
 import { c as create_ssr_component, d as add_attribute, a as subscribe, o as onDestroy, v as validate_component, e as escape, n as null_to_empty } from "./index2.js";
 import { w as writable } from "./index.js";
 import { p as page } from "./stores.js";
-import "./app.constants.js";
 import "@dfinity/auth-client";
 import "@dfinity/utils";
 import "@dfinity/agent";
+const AUTH_MAX_TIME_TO_LIVE = BigInt(
+  60 * 60 * 1e3 * 1e3 * 1e3 * 24 * 14
+);
+const AUTH_POPUP_WIDTH = 576;
+const AUTH_POPUP_HEIGHT = 625;
 function createToastStore() {
   const { subscribe: subscribe2, set, update } = writable({
     visible: false,
@@ -138,8 +142,11 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 </div>`;
 });
 export {
+  AUTH_MAX_TIME_TO_LIVE as A,
   Layout as L,
   LoadingIcon as a,
+  AUTH_POPUP_WIDTH as b,
+  AUTH_POPUP_HEIGHT as c,
   isLoading as i,
   loadingText as l,
   toastStore as t

@@ -30,6 +30,10 @@ function compute_rest_props(props, keys) {
 function null_to_empty(value) {
   return value == null ? "" : value;
 }
+function set_store_value(store, ret, value) {
+  store.set(value);
+  return ret;
+}
 let current_component;
 function set_current_component(component) {
   current_component = component;
@@ -232,15 +236,16 @@ export {
   add_attribute as d,
   escape as e,
   noop as f,
-  compute_rest_props as g,
-  getContext as h,
-  spread as i,
-  escape_attribute_value as j,
-  escape_object as k,
-  safe_not_equal as l,
+  set_store_value as g,
+  compute_rest_props as h,
+  getContext as i,
+  spread as j,
+  escape_attribute_value as k,
+  escape_object as l,
   missing_component as m,
   null_to_empty as n,
   onDestroy as o,
+  safe_not_equal as p,
   setContext as s,
   validate_component as v
 };

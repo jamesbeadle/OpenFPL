@@ -380,7 +380,7 @@ module {
     };
 
     /*Remove these functions post sns*/
-    
+
     public func updateSystemState(systemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
       activeGameweek := systemState.activeGameweek;
       activeSeasonId := systemState.activeSeasonId;

@@ -6,7 +6,10 @@
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { updateTableData } from "../utils/Helpers";
-  import type { SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
 
@@ -73,20 +76,28 @@
 <div class="container-fluid mt-4">
   <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
     <div class="flex items-center space-x-2 ml-4">
-      <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
-        on:click={() => changeGameweek(-1)} disabled={selectedGameweek === 1}>
+      <button
+        class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+        on:click={() => changeGameweek(-1)}
+        disabled={selectedGameweek === 1}
+      >
         &lt;
       </button>
 
-      <select class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]"
-        bind:value={selectedGameweek}>
+      <select
+        class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]"
+        bind:value={selectedGameweek}
+      >
         {#each gameweeks as gameweek}
           <option value={gameweek}>Gameweek {gameweek}</option>
         {/each}
       </select>
 
-      <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
-        on:click={() => changeGameweek(1)} disabled={selectedGameweek === 38}>
+      <button
+        class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+        on:click={() => changeGameweek(1)}
+        disabled={selectedGameweek === 38}
+      >
         &gt;
       </button>
     </div>
@@ -94,7 +105,9 @@
 
   <div class="flex flex-col space-y-4 mt-4 text-xs md:text-base">
     <div class="overflow-x-auto flex-1">
-      <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
+      <div
+        class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+      >
         <div class="w-1/12 text-center mx-4">Pos</div>
         <div class="w-3/12">Team</div>
         <div class="w-1/12 text-center">P</div>
@@ -108,9 +121,14 @@
       </div>
 
       {#each tableData as team, idx}
-        <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+        <div
+          class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
+        >
           <div class="w-1/12 text-center mx-4">{idx + 1}</div>
-          <a class="w-3/12 flex items-center justify-start" href={`/club?id=${team.id}`}>
+          <a
+            class="w-3/12 flex items-center justify-start"
+            href={`/club?id=${team.id}`}
+          >
             <BadgeIcon
               primaryColour={team.primaryColourHex}
               secondaryColour={team.secondaryColourHex}
@@ -125,7 +143,9 @@
           <div class="w-1/12 text-center">{team.losses}</div>
           <div class="w-1/12 text-center">{team.goalsFor}</div>
           <div class="w-1/12 text-center">{team.goalsAgainst}</div>
-          <div class="w-1/12 text-center">{team.goalsFor - team.goalsAgainst}</div>
+          <div class="w-1/12 text-center">
+            {team.goalsFor - team.goalsAgainst}
+          </div>
           <div class="w-1/12 text-center">{team.points}</div>
         </div>
       {/each}

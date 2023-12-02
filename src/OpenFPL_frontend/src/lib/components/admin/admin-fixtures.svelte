@@ -115,8 +115,11 @@
           {/each}
         </select>
 
-        <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1" 
-          on:click={() => changeGameweek(1)} disabled={selectedGameweek === 38}>
+        <button
+          class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+          on:click={() => changeGameweek(1)}
+          disabled={selectedGameweek === 38}
+        >
           &gt;
         </button>
       </div>

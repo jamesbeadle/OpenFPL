@@ -272,7 +272,6 @@ export interface _SERVICE {
   getTeams: ActorMethod<[], Array<Team>>;
   getTimers: ActorMethod<[], Array<TimerInfo>>;
   getTotalManagers: ActorMethod<[], bigint>;
-  getValidatableFixtures: ActorMethod<[], Array<Fixture>>;
   getWeeklyLeaderboard: ActorMethod<
     [number, number, bigint, bigint],
     PaginatedLeaderboard

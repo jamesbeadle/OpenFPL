@@ -1,14 +1,12 @@
 import { c as create_ssr_component, o as onDestroy, b as each, d as add_attribute, e as escape, v as validate_component, n as null_to_empty } from "../../chunks/index2.js";
-import "../../chunks/app.constants.js";
+import { L as Layout } from "../../chunks/Layout.js";
 import "@dfinity/auth-client";
 import "@dfinity/utils";
 import "../../chunks/manager-store.js";
-import { s as systemStore } from "../../chunks/system-store.js";
+import { s as systemStore, A as ActorFactory, i as idlFactory, r as replacer, f as formatUnixTimeToTime } from "../../chunks/team-store.js";
 import { w as writable } from "../../chunks/index.js";
 import "@dfinity/agent";
-import { A as ActorFactory, i as idlFactory, r as replacer, f as formatUnixTimeToTime } from "../../chunks/team-store.js";
 import "../../chunks/fixture-store.js";
-import { L as Layout } from "../../chunks/Layout.js";
 import { B as BadgeIcon } from "../../chunks/BadgeIcon.js";
 import "../../chunks/player-store.js";
 function createLeaderboardStore() {
@@ -20,7 +18,7 @@ function createLeaderboardStore() {
   });
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function syncWeeklyLeaderboard() {
     let category = "weekly_leaderboard";
@@ -255,7 +253,6 @@ const Fixtures = create_ssr_component(($$result, $$props, $$bindings, slots) => 
         </div>`;
   })}</div></div></div>`;
 });
-const fantasyPlayerDetailModal_svelte_svelte_type_style_lang = "";
 const _page_svelte_svelte_type_style_lang = "";
 const css = {
   code: ".w-v.svelte-18fkfyi{width:20px}",

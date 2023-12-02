@@ -2,7 +2,6 @@ import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validat
 import { u as updateTableData } from "../../../chunks/team-store.js";
 import "../../../chunks/fixture-store.js";
 import "../../../chunks/player-store.js";
-import "../../../chunks/system-store.js";
 import { L as Layout } from "../../../chunks/Layout.js";
 import { p as page } from "../../../chunks/stores.js";
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {

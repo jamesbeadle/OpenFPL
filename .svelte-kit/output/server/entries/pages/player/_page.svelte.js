@@ -3,7 +3,6 @@ import { p as page } from "../../../chunks/stores.js";
 import "../../../chunks/player-store.js";
 import { u as updateTableData, b as getPositionText, c as calculateAgeFromNanoseconds, d as convertDateToReadable, e as getFlagComponent } from "../../../chunks/team-store.js";
 import "../../../chunks/fixture-store.js";
-import "../../../chunks/system-store.js";
 import { a as LoadingIcon, L as Layout } from "../../../chunks/Layout.js";
 import { B as BadgeIcon } from "../../../chunks/BadgeIcon.js";
 const ShirtIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {

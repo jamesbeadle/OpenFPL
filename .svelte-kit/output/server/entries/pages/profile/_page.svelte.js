@@ -1,10 +1,8 @@
 import { c as create_ssr_component, e as escape, n as null_to_empty, d as add_attribute, o as onDestroy, b as each, a as subscribe, v as validate_component } from "../../../chunks/index2.js";
-import "../../../chunks/system-store.js";
+import { A as ActorFactory, a as authStore, r as replacer } from "../../../chunks/team-store.js";
 import "../../../chunks/manager-store.js";
 import { a as LoadingIcon, t as toastStore, L as Layout } from "../../../chunks/Layout.js";
 import { w as writable } from "../../../chunks/index.js";
-import { A as ActorFactory, a as authStore, r as replacer } from "../../../chunks/team-store.js";
-import "../../../chunks/app.constants.js";
 import "@dfinity/auth-client";
 import "@dfinity/utils";
 import "@dfinity/agent";
@@ -40,7 +38,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       let updatedProfileDataObj = await identityActor.getProfileDTO();
       if (!updatedProfileDataObj) {
@@ -78,7 +76,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.createProfile();
       return result;
@@ -91,7 +89,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateDisplayName(username);
       sync();
@@ -105,7 +103,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       sync();
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
@@ -119,7 +117,7 @@ function createUserStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfileDTO();
       set(result);
@@ -143,7 +141,7 @@ function createUserStore() {
         try {
           const identityActor = await ActorFactory.createIdentityActor(
             authStore,
-            { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+            { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
           sync();
@@ -170,7 +168,7 @@ function createUserStore() {
 }
 const userStore = createUserStore();
 const CopyIcon_svelte_svelte_type_style_lang = "";
-const css$3 = {
+const css$1 = {
   code: ".icon.svelte-1qbujws:hover{fill:var(--hover-color)}",
   map: null
 };
@@ -187,14 +185,9 @@ const CopyIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => 
     $$bindings.onClick(onClick);
   if ($$props.hoverColor === void 0 && $$bindings.hoverColor && hoverColor !== void 0)
     $$bindings.hoverColor(hoverColor);
-  $$result.css.add(css$3);
+  $$result.css.add(css$1);
   return `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="${escape(null_to_empty(className), true) + " svelte-1qbujws"}" fill="currentColor" viewBox="0 0 16 16" style="${"--hover-color: " + escape(hoverColor, true) + "; cursor: 'pointer'"}"><path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"></path><path d="M3.5 2a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-.5-.5h-9zM2 2.5A1.5 1.5 0 0 1 3.5 1h9A1.5 1.5 0 0 1 14 2.5v10a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-10zm9.5 3A1.5 1.5 0 0 1 13 7h1.5V3.5a1.5 1.5 0 0 0-1.5-1.5H9V4a1.5 1.5 0 0 1 1.5 1.5v1zm0 1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1z"></path></svg>`;
 });
-const updateUsernameModal_svelte_svelte_type_style_lang = "";
-const css$2 = {
-  code: ".modal-backdrop.svelte-1fl295u{z-index:1000}",
-  map: null
-};
 function isDisplayNameValid(displayName) {
   if (displayName.length < 3 || displayName.length > 20) {
     return false;
@@ -218,20 +211,14 @@ const Update_username_modal = create_ssr_component(($$result, $$props, $$binding
     $$bindings.newUsername(newUsername);
   if ($$props.isLoading === void 0 && $$bindings.isLoading && isLoading !== void 0)
     $$bindings.isLoading(isLoading);
-  $$result.css.add(css$2);
   isSubmitDisabled = !isDisplayNameValid(newUsername);
-  return `${showModal ? `<div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop svelte-1fl295u"><div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"><div class="mt-3 text-center"><h3 class="text-lg leading-6 font-medium mb-2">Update Display Name</h3>
+  return `${showModal ? `<div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"><div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"><div class="mt-3 text-center"><h3 class="text-lg leading-6 font-medium mb-2">Update Display Name</h3>
         <form><div class="mt-4"><input type="text" class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black" placeholder="New Username"${add_attribute("value", newUsername, 0)}></div>
           <div class="items-center py-3 flex space-x-4"><button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300">Cancel
             </button>
-            <button class="${escape(null_to_empty(`px-4 py-2 ${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`), true) + " svelte-1fl295u"}" type="submit" ${isSubmitDisabled ? "disabled" : ""}>Update
+            <button${add_attribute("class", `px-4 py-2 ${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`, 0)} type="submit" ${isSubmitDisabled ? "disabled" : ""}>Update
             </button></div></form></div></div></div>` : ``}`;
 });
-const updateFavouriteTeamModal_svelte_svelte_type_style_lang = "";
-const css$1 = {
-  code: ".modal-backdrop.svelte-1fl295u{z-index:1000}",
-  map: null
-};
 const Update_favourite_team_modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { showModal } = $$props;
   let { closeModal } = $$props;
@@ -252,9 +239,8 @@ const Update_favourite_team_modal = create_ssr_component(($$result, $$props, $$b
     $$bindings.newFavouriteTeam(newFavouriteTeam);
   if ($$props.isLoading === void 0 && $$bindings.isLoading && isLoading !== void 0)
     $$bindings.isLoading(isLoading);
-  $$result.css.add(css$1);
   isSubmitDisabled = newFavouriteTeam <= 0;
-  return `${showModal ? `<div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop svelte-1fl295u"><div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"><div class="mt-3 text-center"><h3 class="text-lg leading-6 font-medium mb-2">Update Favourite Team
+  return `${showModal ? `<div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"><div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"><div class="mt-3 text-center"><h3 class="text-lg leading-6 font-medium mb-2">Update Favourite Team
         </h3>
         <div class="w-full border border-gray-500 mt-4 mb-2"><select class="w-full p-2 rounded-md fpl-dropdown"><option${add_attribute("value", 0, 0)}>Select Team</option>${each(teams, (team) => {
     return `<option${add_attribute("value", team.id, 0)}>${escape(team.friendlyName)}</option>`;
@@ -266,11 +252,12 @@ const Update_favourite_team_modal = create_ssr_component(($$result, $$props, $$b
 
       <div class="items-center py-3 flex space-x-4"><button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300">Cancel
         </button>
-        <button class="${escape(
-    null_to_empty(`px-4 py-2 ${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-          text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`),
-    true
-  ) + " svelte-1fl295u"}" ${isSubmitDisabled ? "disabled" : ""}>Update</button></div></div></div>` : ``}`;
+        <button${add_attribute(
+    "class",
+    `px-4 py-2 ${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
+          text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`,
+    0
+  )} ${isSubmitDisabled ? "disabled" : ""}>Update</button></div></div></div>` : ``}`;
 });
 const profileDetail_svelte_svelte_type_style_lang = "";
 const css = {
