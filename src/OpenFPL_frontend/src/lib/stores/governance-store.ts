@@ -1,5 +1,7 @@
-import { authStore } from "$lib/stores/auth";
+
 import { writable } from "svelte/store";
+import { authStore } from "$lib/stores/auth";
+import { fixtureStore } from "$lib/stores/fixture-store";
 import type {
   Fixture,
   PlayerEventData,
@@ -8,17 +10,6 @@ import { ActorFactory } from "../../utils/ActorFactory";
 
 function createGovernanceStore() {
   const { subscribe, set } = writable<Fixture[]>([]);
-
-  async function getValidatableFixtures(): Promise<any[]> {
-    const identityActor = await ActorFactory.createIdentityActor(
-      authStore,
-      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-    );
-    const fixtures =
-      (await identityActor.getValidatableFixtures()) as Fixture[];
-    set(fixtures);
-    return fixtures;
-  }
 
   async function submitFixtureData(
     fixtureId: number,
@@ -39,7 +30,6 @@ function createGovernanceStore() {
 
   return {
     subscribe,
-    getValidatableFixtures,
     submitFixtureData,
   };
 }

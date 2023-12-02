@@ -1,21 +1,46 @@
 <script lang="ts">
+    import { onMount, onDestroy } from "svelte";
+    import { seasonStore } from "$lib/stores/season-store";
     import { systemStore } from "$lib/stores/system-store";
     import { authStore } from "$lib/stores/auth";
     import { toastStore } from "$lib/stores/toast-store";
-    import type { Writable } from "svelte/store";
     import { loadingText } from "$lib/stores/global-stores";
-    import type { UpdateSystemStateDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { Writable } from "svelte/store";
+    import type { Season, SystemState, UpdateSystemStateDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     
     export let showModal: boolean;
     export let closeModal: () => void;
     export let cancelModal: () => void;
     export let isLoading: Writable<boolean | null>;
+    let seasons: Season[] = [];
+    let systemState: SystemState | null;
   
     let activeGameweek = 1;
     let activeSeasonId = 1;
+    
+    let unsubscribeSeasons: () => void;
+    let unsubscribeSystemState: () => void;
 
     $: isSubmitDisabled = ($authStore.identity?.getPrincipal().toString() ?? "") !== "kydhj-2crf5-wwkao-msv4s-vbyvu-kkroq-apnyv-zykjk-r6oyk-ksodu-vqe";
 
+    onMount(async () => {
+        await seasonStore.sync();
+        await systemStore.sync();
+
+        unsubscribeSeasons = seasonStore.subscribe((value) => {
+            seasons = value;
+        });
+
+        unsubscribeSystemState = systemStore.subscribe((value) => {
+            systemState = value;
+        });
+    });
+
+    onDestroy(() => {
+        unsubscribeSeasons?.();
+        unsubscribeSystemState?.();
+    });
+    
     async function updateSystemState() {
       isLoading.set(true);
       loadingText.set("Updating System State");

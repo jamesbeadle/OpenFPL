@@ -1828,11 +1828,6 @@ actor Self {
     await seasonManager.fixtureConsensusReached(seasonId, gameweekNumber, fixtureId, events);
   };
 
-  public shared query ({ caller }) func getValidatableFixtures() : async [T.Fixture] {
-    assert not Principal.isAnonymous(caller);
-    return seasonManager.getValidatableFixtures();
-  };
-
   public shared ({ caller }) func updateSystemState(systemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert Principal.toText(caller) == adminPrincipal;

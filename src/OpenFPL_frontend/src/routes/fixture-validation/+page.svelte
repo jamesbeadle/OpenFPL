@@ -1,18 +1,17 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import type {
-    Fixture,
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import { systemStore } from "$lib/stores/system-store";
-  import { governanceStore } from "$lib/stores/governance-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { isLoading } from "$lib/stores/global-stores";
   import { toastStore } from "$lib/stores/toast-store";
-
+  import type { Fixture, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+  import Layout from "../Layout.svelte";
+  
   let teams: Team[];
+  let allFixtures: Fixture[];
   let fixtures: Fixture[];
   let players: PlayerDTO[];
   let systemState: SystemState | null;
@@ -22,10 +21,10 @@
   let unsubscribePlayers: () => void;
   let unsubscribeFixtures: () => void;
 
+  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let currentGameweek: number;
   let currentSeason: string;
-  let isLoading = true;
-
+  
   onMount(async () => {
     try {
       await systemStore.sync();
@@ -45,13 +44,17 @@
         players = value;
       });
 
-      fixtures = await governanceStore.getValidatableFixtures();
-      currentGameweek = fixtures[0].gameweek;
+      unsubscribeFixtures = fixtureStore.subscribe((value) => {
+        allFixtures = value;
+        fixtures = value.filter(x => x.gameweek == systemState?.activeGameweek);
+      });
+
+      currentGameweek = systemState?.activeGameweek ?? 1;
     } catch (error) {
       toastStore.show("Error fetching fixture validation list.", "error");
       console.error("Error fetching fixture validation list.", error);
     } finally {
-      isLoading = false;
+      $isLoading = false;
     }
   });
 
@@ -61,62 +64,72 @@
     unsubscribeSystemState?.();
   });
 
+  $: if(systemState && currentGameweek){
+    fixtures = allFixtures.filter(x => x.gameweek === currentGameweek);
+  }
+  
+  const changeGameweek = (delta: number) => {
+    currentGameweek = Math.max(1, Math.min(38, currentGameweek + delta));
+  };
+
   function getTeamById(teamId: number): Team {
     return teams.find((x) => x.id === teamId)!;
   }
 </script>
 
-{#if isLoading}
-  <div class="flex items-center justify-center h-screen">
-    <div
-      class="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
-      role="status"
-    >
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <p class="text-center mt-1">Loading Fixtures</p>
-  </div>
-{:else}
-  <div class="container mx-auto my-5 flex-grow">
-    <div class="card mb-3 p-4">
-      <p>This view will be removed after the SNS decentralisation sale</p>
-    </div>
-    <div class="card custom-card mt-3 p-4">
-      <div class="card-header">
-        {`Season ${currentSeason}`} - {`Gameweek ${currentGameweek}`}
+<Layout>
+  <div class="container-fluid mt-4">
+    <div class="flex flex-col space-y-4 text-xs md:text-base">
+      <div class="flex">
+        <h1>{`Season ${currentSeason}`} - {`Gameweek ${currentGameweek}`}</h1>
       </div>
-      <div class="card-body">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Match</th>
-              <th scope="col">Status</th>
-              <th scope="col">Action</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200">
-            {#each fixtures as fixture, index (fixture.id)}
-              <tr>
-                <td>{index + 1}</td>
-                <td
-                  >{`${getTeamById(fixture.homeTeamId).name} vs ${
-                    getTeamById(fixture.awayTeamId).name
-                  }`}</td
-                >
-                <td>{fixture.status === 2 ? "Completed" : "Active"}</td>
-                <td>
-                  <a href={`/add-fixture-data?id=${fixture.id}`}>
-                    <button class="btn btn-primary">
-                      Add Player Event Data
-                    </button>
-                  </a>
-                </td>
-              </tr>
+      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center">
+          <div class="md:flex md:items-center mt-2 sm:mt-0 ml-2">
+            <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+              on:click={() => changeGameweek(-1)}
+              disabled={currentGameweek === 1}>&lt;</button>
+            <select class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px] md:min-w-[140px]"
+              bind:value={currentGameweek}>
+              {#each gameweeks as gameweek}
+                <option value={gameweek}>Gameweek {gameweek}</option>
+              {/each}
+            </select>
+            <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+              on:click={() => changeGameweek(1)} disabled={currentGameweek === 38}>&gt;</button>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col space-y-4 mt-4 text-xs md:text-base">
+        <div class="overflow-x-auto flex-1">
+          <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
+            <div class="w-1/4 px-4">Home Team</div>
+            <div class="w-1/4 px-4">Away Team</div>
+            <div class="w-1/4 px-4">Status</div>
+            <div class="w-1/4 px-4">Actions</div>
+          </div>
+
+          {#if fixtures && fixtures.length > 0}
+            {#each fixtures as fixture}
+              {@const homeTeam = getTeamById(fixture.homeTeamId)}
+              {@const awayTeam = getTeamById(fixture.awayTeamId)}
+              <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer">
+                <div class="w-1/4 px-4">{homeTeam.friendlyName}</div>
+                <div class="w-1/4 px-4">{awayTeam.friendlyName}</div>
+                {#if fixture.status == 0}<div class="w-1/4 px-4">Scheduled</div>{/if}
+                {#if fixture.status == 1}<div class="w-1/4 px-4">Active</div>{/if}
+                {#if fixture.status == 2}<div class="w-1/4 px-4">Completed</div>{/if}
+                {#if fixture.status == 4}<div class="w-1/4 px-4">Verified</div>{/if}
+                <div class="w-1/4 px-4">
+                  Buttons
+                </div>
+              </div>
             {/each}
-          </tbody>
-        </table>
+          {:else}
+            <p class="w-100 p-4">No leaderboard data.</p>
+          {/if}
+        </div>
       </div>
     </div>
   </div>
-{/if}
+</Layout> 
