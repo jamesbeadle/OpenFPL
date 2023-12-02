@@ -31,12 +31,13 @@
   let teamPlayers = writable<PlayerDTO[] | []>([]);
   let selectedPlayers = writable<PlayerDTO[] | []>([]);
   
-  let selectedTeam: Team;
+  let selectedTeam: Team | null = null;
   let selectedPlayer: PlayerDTO;
   let playerEventData = writable<PlayerEventData[] | []>([]);
   let activeTab: string = "home";
 
   onMount(async () => {
+    console.log("View mounted")
     $isLoading = true;
     try {
       await teamStore.sync();
@@ -53,6 +54,7 @@
         console.log(fixture)
         homeTeam = teams.find(x => x.id == fixture?.homeTeamId)!;
         awayTeam = teams.find(x => x.id == fixture?.awayTeamId)!;
+        selectedTeam = homeTeam;
       });
 
       const draftKey = `fixtureDraft_${fixtureId}`;
@@ -105,6 +107,7 @@
   }
 
   function setActiveTab(tab: string): void {
+    selectedTeam = tab === 'home' ? homeTeam : awayTeam;
     activeTab = tab;
   }
 
@@ -112,13 +115,25 @@
     selectedPlayer = player;
     showPlayerEventModal = true;
   }
+
+  function showSelectPlayersModal(): void {
+    showPlayerSelectionModal = true;
+  }
 </script>
 
 <Layout>
+  {#if selectedTeam}     
+    <SelectPlayersModal
+    show={showPlayerSelectionModal}
+    {teamPlayers}
+    {selectedTeam}
+    {selectedPlayers}
+    />
+  {/if}
   <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
     <div class="flex flex-col text-xs md:text-base">
       <div class="flex flex-row space-x-2 p-4">
-        <button class="fpl-button px-4 py-2" on:click={saveDraft}>Select Players</button>
+        <button class="fpl-button px-4 py-2" on:click={showSelectPlayersModal}>Select Players</button>
         <button class="fpl-button px-4 py-2" on:click={saveDraft}>Save Draft</button>
         <button class="fpl-button px-4 py-2" on:click={saveDraft}>Clear Draft</button>
       </div>
@@ -176,12 +191,6 @@
   </div>  
 </Layout>
 
-<SelectPlayersModal
-  show={showPlayerSelectionModal}
-  {teamPlayers}
-  {selectedTeam}
-  {selectedPlayers}
-/>
 <PlayerEventsModal
   show={showPlayerEventModal}
   player={selectedPlayer}
