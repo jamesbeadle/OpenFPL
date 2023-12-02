@@ -119,7 +119,7 @@
                 {#if fixture.status == 0}<div class="w-1/4 px-4">Scheduled</div>{/if}
                 {#if fixture.status == 1}<div class="w-1/4 px-4">Active</div>{/if}
                 {#if fixture.status == 2}<div class="w-1/4 px-4">Completed</div>{/if}
-                {#if fixture.status == 4}<div class="w-1/4 px-4">Verified</div>{/if}
+                {#if fixture.status == 3}<div class="w-1/4 px-4">Verified</div>{/if}
                 <div class="w-1/4 px-4">
                   <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">
                     <a href='/add-fixture-data?id={fixture.id}'>

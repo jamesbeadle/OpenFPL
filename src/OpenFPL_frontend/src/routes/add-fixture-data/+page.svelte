@@ -61,7 +61,7 @@
       const savedDraft = localStorage.getItem(draftKey);
       if (savedDraft) {
         const draftData = JSON.parse(savedDraft);
-        playerEventData.set(draftData);
+        playerEventData.set(draftData.playerEventData);
       }
     } catch (error) {
       toastStore.show("Error fetching fixture validation list.", "error");
@@ -139,15 +139,15 @@
     />
   {/if}
   <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
-    <div class="flex flex-col text-xs md:text-base">
+    <div class="flex flex-col text-xs md:text-base mt-4">
       <div class="flex flex-row space-x-2 p-4">
         <button class="fpl-button px-4 py-2" on:click={showSelectPlayersModal}>Select Players</button>
         <button class="fpl-button px-4 py-2" on:click={saveDraft}>Save Draft</button>
         <button class="fpl-button px-4 py-2" on:click={saveDraft}>Clear Draft</button>
       </div>
       {#if !$isLoading}
-      <div class="flex p-4">
-        <ul class="flex rounded-t-lg bg-light-gray px-4 pt-2">
+      <div class="flex w-full">
+        <ul class="flex bg-light-gray px-4 pt-2 w-full mt-4">
           <li class={`mr-4 text-xs md:text-base ${ activeTab === "home" ? "active-tab" : "" }`}>
             <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400"}`}
               on:click={() => setActiveTab("home")}>{homeTeam?.friendlyName}</button>
@@ -157,40 +157,41 @@
               on:click={() => setActiveTab("away")}>{awayTeam?.friendlyName}</button>
           </li>
         </ul>
-
+      </div>
+      <div class="flex w-full flex-col">
+        <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full">
+          <div class="w-1/6 px-4">Player</div>
+          <div class="w-1/6 px-4">Position</div>
+          <div class="w-1/6 px-4">Events</div>
+          <div class="w-1/6 px-4">Start</div>
+          <div class="w-1/6 px-4">End</div>
+          <div class="w-1/6 px-4">&nbsp;</div>
+        </div>
         {#if activeTab === "home"}
           {#each $selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId) as player (player.id)}
-            <div class="card player-card mb-4">
-              <div class="card-header">
-                <h5>{player.lastName}</h5>
-                <p class="small-text mb-0 mt-0">{player.firstName}</p>
+              <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full">
+                <div class="w-1/6 px-4">{`${ player.firstName.length > 0 ? player.firstName.charAt(0) + "." : "" } ${player.lastName}`}</div>
+                {#if player.position == 0}<div class="w-1/6 px-4">GK</div>{/if}
+                {#if player.position == 1}<div class="w-1/6 px-4">DF</div>{/if}
+                {#if player.position == 2}<div class="w-1/6 px-4">MF</div>{/if}
+                {#if player.position == 3}<div class="w-1/6 px-4">FW</div>{/if}
+                <div class="w-1/6 px-4">Events: 
+                  {$playerEventData?.length > 0 && $playerEventData?.filter(e => e.playerId === player.id).length ? $playerEventData?.filter(e => e.playerId === player.id).length : 0}
+                </div>
+                <div class="w-1/6 px-4">
+                  {$playerEventData && $playerEventData?.length > 0 && $playerEventData?.find(e => e.playerId === player.id && e.eventType == 0) ? 
+                    $playerEventData?.find(e => e.playerId === player.id)?.eventStartMinute : '-'}
+                </div>
+                <div class="w-1/6 px-4">
+                  {$playerEventData && $playerEventData?.length > 0 && $playerEventData?.find(e => e.playerId === player.id && e.eventType == 0) ? 
+                    $playerEventData?.find(e => e.playerId === player.id)?.eventEndMinute : '-'}
+                </div>
+                <div class="w-1/6 px-4">
+                  <button on:click={() => handleEditPlayerEvents(player)} class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">
+                    Update Events
+                  </button>
+                </div>
               </div>
-              <div class="card-body">
-                <p>
-                  Events: {$playerEventData.filter(
-                    (pe) => pe.playerId === player.id
-                  ).length}
-                </p>
-                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
-              </div>
-            </div>
-          {/each}
-        {:else if activeTab === "away"}
-          {#each $selectedPlayers.filter((x) => x.teamId === fixture?.awayTeamId) as player (player.id)}
-            <div class="card player-card mb-4">
-              <div class="card-header">
-                <h5>{player.lastName}</h5>
-                <p class="small-text mb-0 mt-0">{player.firstName}</p>
-              </div>
-              <div class="card-body">
-                <p>
-                  Events: {$playerEventData.filter(
-                    (pe) => pe.playerId === player.id
-                  ).length}
-                </p>
-                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
-              </div>
-            </div>
           {/each}
         {/if}
       </div>

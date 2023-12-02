@@ -20,6 +20,7 @@
     } else {
       allSelectedPlayers = allSelectedPlayers.filter((x) => x.id !== player.id);
     }
+    $selectedPlayers = allSelectedPlayers;
   }
   
   export let closeModal: () => void;
@@ -29,6 +30,7 @@
       closeModal();
     }
   }
+
 </script>
 
 {#if show}
