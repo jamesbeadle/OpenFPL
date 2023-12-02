@@ -104,6 +104,7 @@
     playerEventData = writable<PlayerEventData[] | []>([]);
     localStorage.removeItem(`fixtureDraft_${fixtureId}`);
     toastStore.show("Draft cleared.", "success");
+    closeConfirmClearDraftModal();
   }
 
   async function setActiveTab(tab: string) {
@@ -126,24 +127,23 @@
     showPlayerSelectionModal = false;
   }
 
+  function showConfirmClearDraftModal(): void {
+    showClearDraftModal = true;
+  }
+
+  function closeConfirmClearDraftModal(): void{
+    showClearDraftModal = false;
+  }
+
 </script>
 
 <Layout>
-  {#if selectedTeam}     
-    <SelectPlayersModal
-    show={showPlayerSelectionModal}
-    {teamPlayers}
-    {selectedTeam}
-    {selectedPlayers}
-    closeModal={closeSelectPlayersModal}
-    />
-  {/if}
   <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
     <div class="flex flex-col text-xs md:text-base mt-4">
       <div class="flex flex-row space-x-2 p-4">
         <button class="fpl-button px-4 py-2" on:click={showSelectPlayersModal}>Select Players</button>
         <button class="fpl-button px-4 py-2" on:click={saveDraft}>Save Draft</button>
-        <button class="fpl-button px-4 py-2" on:click={saveDraft}>Clear Draft</button>
+        <button class="fpl-button px-4 py-2" on:click={showConfirmClearDraftModal}>Clear Draft</button>
       </div>
       {#if !$isLoading}
       <div class="flex w-full">
@@ -200,14 +200,28 @@
   </div>  
 </Layout>
 
-<PlayerEventsModal
-  show={showPlayerEventModal}
-  player={selectedPlayer}
-  {fixtureId}
-  {playerEventData}
-/>
+{#if selectedTeam}     
+  <SelectPlayersModal
+    show={showPlayerSelectionModal}
+    {teamPlayers}
+    {selectedTeam}
+    {selectedPlayers}
+  closeModal={closeSelectPlayersModal}
+  />
+{/if}
+
+{#if selectedPlayer}
+  <PlayerEventsModal
+    show={showPlayerEventModal}
+    player={selectedPlayer}
+    {fixtureId}
+    {playerEventData}
+  />
+{/if}
+
 <ConfirmFixtureDataModal
   show={showConfirmDataModal}
   onConfirm={confirmFixtureData}
 />
+
 <ClearDraftModal show={showClearDraftModal} onConfirm={clearDraft} />
