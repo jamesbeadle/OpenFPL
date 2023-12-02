@@ -16,6 +16,7 @@
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
   import ConfirmFixtureDataModal from "$lib/components/fixture-validation/confirm-fixture-data-modal.svelte";
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
+  import { playerStore } from "$lib/stores/player-store";
   
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
@@ -37,7 +38,6 @@
   let activeTab: string = "home";
 
   onMount(async () => {
-    console.log("View mounted")
     $isLoading = true;
     try {
       await teamStore.sync();
@@ -50,11 +50,11 @@
       
       fixtureStore.subscribe((value) => { 
         fixture = value.find(x => x.id == fixtureId)!;
-        console.log("Fixture")
-        console.log(fixture)
         homeTeam = teams.find(x => x.id == fixture?.homeTeamId)!;
         awayTeam = teams.find(x => x.id == fixture?.awayTeamId)!;
         selectedTeam = homeTeam;
+        teamPlayers.set($playerStore.filter(x => x.teamId == selectedTeam?.id));
+  
       });
 
       const draftKey = `fixtureDraft_${fixtureId}`;
@@ -106,8 +106,10 @@
     toastStore.show("Draft cleared.", "success");
   }
 
-  function setActiveTab(tab: string): void {
+  async function setActiveTab(tab: string) {
+    await playerStore.sync();
     selectedTeam = tab === 'home' ? homeTeam : awayTeam;
+    teamPlayers.set($playerStore.filter(x => x.teamId == selectedTeam?.id));
     activeTab = tab;
   }
 
@@ -119,6 +121,11 @@
   function showSelectPlayersModal(): void {
     showPlayerSelectionModal = true;
   }
+
+  function closeSelectPlayersModal(): void{
+    showPlayerSelectionModal = false;
+  }
+
 </script>
 
 <Layout>
@@ -128,6 +135,7 @@
     {teamPlayers}
     {selectedTeam}
     {selectedPlayers}
+    closeModal={closeSelectPlayersModal}
     />
   {/if}
   <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
