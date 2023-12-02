@@ -1,8 +1,6 @@
 import { c as create_ssr_component, v as validate_component } from "../../../chunks/index2.js";
 import { L as Layout, a as LoadingIcon } from "../../../chunks/Layout.js";
 import "../../../chunks/manager-store.js";
-import "@dfinity/auth-client";
-import "@dfinity/utils";
 import "@dfinity/agent";
 const CopyIcon_svelte_svelte_type_style_lang = "";
 const profileDetail_svelte_svelte_type_style_lang = "";

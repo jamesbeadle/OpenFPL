@@ -29,12 +29,11 @@
   let unsubscribeLogin: () => void;
 
   //Remove after SNS
-  //let adminPrincipal =
-  ("opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae");
+  let adminPrincipal =
+    "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae";
 
   //LOCALDEVONLY
-  let adminPrincipal =
-    "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
+  //let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
 
   onMount(async () => {
     if (typeof window !== "undefined") {
@@ -142,7 +141,7 @@
           <rect y="16" width="24" height="2" rx="1" fill="currentColor" />
         </svg>
       </button>
-      {#if isLoggedIn}
+      {#if $authStore.identity != null}
         <ul class="hidden md:flex text-base md:text-xs lg:text-base">
           <li class="mx-2 flex items-center h-16">
             <a

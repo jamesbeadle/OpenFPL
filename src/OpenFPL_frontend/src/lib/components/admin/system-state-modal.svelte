@@ -4,7 +4,11 @@
   import { systemStore } from "$lib/stores/system-store";
   import { authStore } from "$lib/stores/auth";
   import { toastStore } from "$lib/stores/toast-store";
-  import type { Season, SystemState, UpdateSystemStateDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Season,
+    SystemState,
+    UpdateSystemStateDTO,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   export let showModal: boolean;
   export let closeModal: () => void;

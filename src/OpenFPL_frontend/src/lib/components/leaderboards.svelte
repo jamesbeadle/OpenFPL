@@ -4,7 +4,10 @@
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
-  import type { SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let unsubscribeTeams: () => void;

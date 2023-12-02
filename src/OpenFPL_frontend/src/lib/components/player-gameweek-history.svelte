@@ -46,7 +46,7 @@
       await teamStore.sync();
       await fixtureStore.sync();
       await systemStore.sync();
-      await playerEventsStore.sync
+      await playerEventsStore.sync;
 
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;

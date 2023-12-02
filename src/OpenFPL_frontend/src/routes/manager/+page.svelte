@@ -58,8 +58,6 @@
         gw && gw > 0 ? gw : systemState?.activeGameweek ?? 1
       );
 
-      console.log("manager");
-      console.log(manager);
       displayName = manager.displayName;
       const blob = new Blob([new Uint8Array(manager.profilePicture)]);
       const blobUrl =

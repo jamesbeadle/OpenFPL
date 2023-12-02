@@ -33,7 +33,7 @@ const initAuthStore = () => {
   const { subscribe: subscribe2, set, update } = writable({
     identity: void 0
   });
-  return {
+  const store = {
     subscribe: subscribe2,
     sync: async () => {
       authClient = authClient ?? await createAuthClient();
@@ -75,6 +75,8 @@ const initAuthStore = () => {
       }));
     }
   };
+  store.sync().catch(console.error);
+  return store;
 };
 const authStore = initAuthStore();
 const idlFactory$1 = ({ IDL }) => {
@@ -697,7 +699,7 @@ const idlFactory = ({ IDL }) => {
 class ActorFactory {
   static createActor(idlFactory2, canisterId = "", identity = null, options = null) {
     const hostOptions = {
-      host: "http://127.0.0.1:8080",
+      host: `https://${canisterId}.icp-api.io`,
       identity
     };
     if (!options) {
@@ -710,7 +712,7 @@ class ActorFactory {
       options.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options.agentOptions });
-    if ({ "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.NODE_ENV !== "production") {
+    if ({ "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.NODE_ENV !== "production") {
       agent.fetchRootKey().catch((err) => {
         console.warn(
           "Unable to fetch root key. Ensure your local replica is running"
@@ -735,7 +737,7 @@ class ActorFactory {
     }).then((identity) => {
       unsubscribe();
       return ActorFactory.createActor(
-        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
+        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
         canisterId,
         identity
       );
@@ -847,7 +849,7 @@ function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
     idlFactory$1,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "system_state";
@@ -884,7 +886,7 @@ function createSystemStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateSystemState(systemState);
       sync();
@@ -906,7 +908,7 @@ function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   const actor = ActorFactory.createActor(
     idlFactory$1,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "fixtures";
@@ -954,7 +956,7 @@ function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   const actor = ActorFactory.createActor(
     idlFactory$1,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     const category = "teams";
@@ -1003,7 +1005,7 @@ function createLeaderboardStore() {
   });
   let actor = ActorFactory.createActor(
     idlFactory$1,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function syncWeeklyLeaderboard() {
     let category = "weekly_leaderboard";
@@ -1186,7 +1188,7 @@ function createPlayerStore() {
   fixtureStore.subscribe((value) => value);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.PLAYER_CANISTER_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.PLAYER_CANISTER_CANISTER_ID
   );
   async function sync() {
     let category = "players";
@@ -1228,7 +1230,7 @@ function createPlayerEventsStore() {
   fixtureStore.subscribe((value) => allFixtures = value);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.PLAYER_CANISTER_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.PLAYER_CANISTER_CANISTER_ID
   );
   async function sync() {
     let category = "playerEventData";
@@ -1570,13 +1572,18 @@ const css$3 = {
   map: null
 };
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_page;
+  let profileSrc;
+  let currentClass;
+  let $page, $$unsubscribe_page;
   let $$unsubscribe_isLoading;
   let $profile, $$unsubscribe_profile;
-  $$unsubscribe_page = subscribe(page, (value) => value);
+  let $authStore, $$unsubscribe_authStore;
+  $$unsubscribe_page = subscribe(page, (value) => $page = value);
   $$unsubscribe_isLoading = subscribe(isLoading, (value) => value);
+  $$unsubscribe_authStore = subscribe(authStore, (value) => $authStore = value);
   let profile = writable(null);
   $$unsubscribe_profile = subscribe(profile, (value) => $profile = value);
+  let showProfileDropdown = false;
   onDestroy(() => {
     if (typeof window !== "undefined") {
       document.removeEventListener("click", closeDropdownOnClickOutside);
@@ -1585,18 +1592,34 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   function closeDropdownOnClickOutside(event) {
     const target = event.target;
     if (target instanceof Element) {
-      if (!target.closest(".profile-dropdown") && !target.closest(".profile-pic"))
-        ;
+      if (!target.closest(".profile-dropdown") && !target.closest(".profile-pic")) {
+        showProfileDropdown = false;
+      }
     }
   }
   $$result.css.add(css$3);
-  URL.createObjectURL(new Blob([new Uint8Array($profile?.profilePicture ?? [])]));
+  profileSrc = URL.createObjectURL(new Blob([new Uint8Array($profile?.profilePicture ?? [])]));
+  currentClass = (route) => $page.url.pathname === route ? "text-blue-500 nav-underline active" : "nav-underline";
   $$unsubscribe_page();
   $$unsubscribe_isLoading();
   $$unsubscribe_profile();
+  $$unsubscribe_authStore();
   return `<header class="svelte-197nckd"><nav class="text-white"><div class="px-4 h-16 flex justify-between items-center w-full"><a href="/" class="hover:text-gray-400 flex items-center">${validate_component(OpenFPLIcon, "OpenFPLIcon").$$render($$result, { className: "h-8 w-auto" }, {}, {})}<b class="ml-2">OpenFPL</b></a>
       <button class="md:hidden focus:outline-none"><svg width="24" height="18" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="2" rx="1" fill="currentColor"></rect><rect y="8" width="24" height="2" rx="1" fill="currentColor"></rect><rect y="16" width="24" height="2" rx="1" fill="currentColor"></rect></svg></button>
-      ${`<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-197nckd">Connect
+      ${$authStore.identity != null ? `<ul class="hidden md:flex text-base md:text-xs lg:text-base"><li class="mx-2 flex items-center h-16"><a href="/" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/"), true) + " svelte-197nckd"}"><span class="flex items-center h-full px-4">Home</span></a></li>
+          <li class="mx-2 flex items-center h-16"><a href="/pick-team" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/pick-team"), true) + " svelte-197nckd"}"><span class="flex items-center h-full px-4">Squad Selection</span></a></li>
+          <li class="mx-2 flex items-center h-16"><a href="/governance" class="${"flex items-center h-full nav-underline hover:text-gray-400 $" + escape(currentClass("/governance"), true) + " svelte-197nckd"}"><span class="flex items-center h-full px-4">Governance</span></a></li>
+          ${``}
+          <li class="p-2 flex flex-1 items-center"><div class="relative inline-block"><img${add_attribute("src", profileSrc, 0)} alt="Profile" class="w-12 h-12 rounded-sm profile-pic" aria-label="Toggle Profile">
+              <div class="${escape(null_to_empty(`absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${showProfileDropdown ? "block" : "hidden"}`), true) + " svelte-197nckd"}"><ul class="text-gray-700"><li><a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400 svelte-197nckd"><span class="flex items-center h-full w-full"><img${add_attribute("src", profileSrc, 0)} alt="logo" class="w-8 h-8 my-2 ml-4 mr-2">
+                        <p class="w-full min-w-[125px] max-w-[125px] truncate">${escape($profile?.displayName != $profile?.principalId ? $profile?.displayName : "Profile")}</p></span></a></li>
+                  <li><button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-197nckd">Disconnect
+                      ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div></div></li></ul>
+        <div class="${escape(null_to_empty(`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-197nckd"}"><ul class="flex flex-col"><li class="p-2"><a href="/" class="${escape(null_to_empty(`nav-underline hover:text-gray-400 ${currentClass("/")}`), true) + " svelte-197nckd"}">Home</a></li>
+            <li class="p-2"><a href="/pick-team" class="${escape(null_to_empty(currentClass("/pick-team")), true) + " svelte-197nckd"}">Squad Selection</a></li>
+            <li class="p-2"><a href="/governance" class="${escape(null_to_empty(currentClass("/governance")), true) + " svelte-197nckd"}">Governance</a></li>
+            <li class="p-2"><a href="/profile" class="${"flex h-full w-full nav-underline hover:text-gray-400 w-full $" + escape(currentClass("/profile"), true) + " svelte-197nckd"}"><span class="flex items-center h-full w-full"><img${add_attribute("src", profileSrc, 0)} alt="logo" class="w-8 h-8 rounded-sm">
+                  <p class="w-full min-w-[100px] max-w-[100px] truncate p-2">${escape($profile?.displayName != $profile?.principalId ? $profile?.displayName : "Profile")}</p></span></a></li></ul></div>` : `<ul class="hidden md:flex"><li class="mx-2 flex items-center h-16"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-197nckd">Connect
               ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul>
         <div class="${escape(null_to_empty(`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${"hidden"} md:hidden`), true) + " svelte-197nckd"}"><ul class="flex flex-col"><li class="p-2"><button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button svelte-197nckd">Connect
                 ${validate_component(WalletIcon, "WalletIcon").$$render($$result, { className: "ml-2 h-6 w-6 mt-1" }, {}, {})}</button></li></ul></div>`}</div></nav>
