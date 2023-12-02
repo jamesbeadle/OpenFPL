@@ -19,54 +19,62 @@
   
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
-  let teams: Team[];
-  let fixtures: Fixture[];
-
-  let unsubscribeTeams: () => void;
-  let unsubscribeFixtures: () => void;
-
   let fixture: Fixture | null;
+  let homeTeam: Team | null;
+  let awayTeam: Team | null;
+
   let showPlayerSelectionModal = false;
   let showPlayerEventModal = false;
   let showClearDraftModal = false;
   let showConfirmDataModal = false;
+  
   let teamPlayers = writable<PlayerDTO[] | []>([]);
   let selectedPlayers = writable<PlayerDTO[] | []>([]);
+  
   let selectedTeam: Team;
   let selectedPlayer: PlayerDTO;
   let playerEventData = writable<PlayerEventData[] | []>([]);
   let activeTab: string = "home";
 
   onMount(async () => {
-    await teamStore.sync();
-    await fixtureStore.sync();
+    $isLoading = true;
+    try {
+      await teamStore.sync();
+      await fixtureStore.sync();
+      
+      let teams: Team[] = [];
+      teamStore.subscribe((value) => { 
+        teams = value;
+      });
+      
+      fixtureStore.subscribe((value) => { 
+        fixture = value.find(x => x.id == fixtureId)!;
+        console.log("Fixture")
+        console.log(fixture)
+        homeTeam = teams.find(x => x.id == fixture?.homeTeamId)!;
+        awayTeam = teams.find(x => x.id == fixture?.awayTeamId)!;
+      });
 
-    unsubscribeTeams = teamStore.subscribe((value) => {
-      teams = value;
-    });
-
-    unsubscribeFixtures = fixtureStore.subscribe((value) => {
-      fixtures = value;
-    });
-
-    fixture = fixtures.find((x) => x.id === fixtureId) ?? null;
-
-    const draftKey = `fixtureDraft_${fixtureId}`;
-    const savedDraft = localStorage.getItem(draftKey);
-    if (savedDraft) {
-      const draftData = JSON.parse(savedDraft);
-      playerEventData.set(draftData);
+      const draftKey = `fixtureDraft_${fixtureId}`;
+      const savedDraft = localStorage.getItem(draftKey);
+      if (savedDraft) {
+        const draftData = JSON.parse(savedDraft);
+        playerEventData.set(draftData);
+      }
+    } catch (error) {
+      toastStore.show("Error fetching fixture validation list.", "error");
+      console.error("Error fetching fixture validation list.", error);
+    } finally {
+      $isLoading = false;
     }
+
   });
 
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribeFixtures?.();
-  });
+  onDestroy(() => {});
 
   async function confirmFixtureData() {
-    isLoading.set(true);
-    loadingText.set("Saving Fixture Data");
+      $isLoading = true;
+      $loadingText = "Saving Fixture Data";
     try {
       await governanceStore.submitFixtureData(fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
@@ -76,8 +84,8 @@
       toastStore.show("Error saving fixture data.", "error");
       console.error("Error saving fixture data: ", error);
     } finally {
-      isLoading.set(false);
-      loadingText.set("Loading");
+      $isLoading = false;
+      $loadingText = "Loading";
     }
   }
 
@@ -100,10 +108,6 @@
     activeTab = tab;
   }
 
-  function getTeamFromId(teamId: number): Team | undefined {
-    return teams.find((team) => team.id === teamId);
-  }
-
   function handleEditPlayerEvents(player: PlayerDTO) {
     selectedPlayer = player;
     showPlayerEventModal = true;
@@ -111,41 +115,23 @@
 </script>
 
 <Layout>
-  {#if isLoading}
-    <div class="flex items-center justify-center h-screen">
-      <p class="text-center mt-1">Loading Fixture Data...</p>
-    </div>
-  {:else}
-    <div class="m-4">
-      <button class="fpl-button" on:click={saveDraft}>Save Draft</button>
-      <div class="bg-panel rounded-lg m-4">
+  <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
+    <div class="flex flex-col text-xs md:text-base">
+      <div class="flex flex-row space-x-2 p-4">
+        <button class="fpl-button px-4 py-2" on:click={saveDraft}>Select Players</button>
+        <button class="fpl-button px-4 py-2" on:click={saveDraft}>Save Draft</button>
+        <button class="fpl-button px-4 py-2" on:click={saveDraft}>Clear Draft</button>
+      </div>
+      {#if !$isLoading}
+      <div class="flex p-4">
         <ul class="flex rounded-t-lg bg-light-gray px-4 pt-2">
-          <li
-            class={`mr-4 text-xs md:text-base ${
-              activeTab === "home" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "home" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("home")}
-            >
-              {getTeamFromId(fixture?.homeTeamId ?? 0)?.friendlyName}</button
-            >
+          <li class={`mr-4 text-xs md:text-base ${ activeTab === "home" ? "active-tab" : "" }`}>
+            <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400"}`}
+              on:click={() => setActiveTab("home")}>{homeTeam?.friendlyName}</button>
           </li>
-          <li
-            class={`mr-4 text-xs md:text-base ${
-              activeTab === "away" ? "active-tab" : ""
-            }`}
-          >
-            <button
-              class={`p-2 ${
-                activeTab === "away" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("away")}
-              >{getTeamFromId(fixture?.awayTeamId ?? 0)?.friendlyName}</button
-            >
+          <li class={`mr-4 text-xs md:text-base ${ activeTab === "away" ? "active-tab" : ""}`}>
+            <button class={`p-2 ${ activeTab === "away" ? "text-white" : "text-gray-400" }`}
+              on:click={() => setActiveTab("away")}>{awayTeam?.friendlyName}</button>
           </li>
         </ul>
 
@@ -162,9 +148,7 @@
                     (pe) => pe.playerId === player.id
                   ).length}
                 </p>
-                <button on:click={() => handleEditPlayerEvents(player)}
-                  >Update</button
-                >
+                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
               </div>
             </div>
           {/each}
@@ -181,16 +165,15 @@
                     (pe) => pe.playerId === player.id
                   ).length}
                 </p>
-                <button on:click={() => handleEditPlayerEvents(player)}
-                  >Update</button
-                >
+                <button on:click={() => handleEditPlayerEvents(player)}>Update</button>
               </div>
             </div>
           {/each}
         {/if}
       </div>
+      {/if}
     </div>
-  {/if}
+  </div>  
 </Layout>
 
 <SelectPlayersModal

@@ -122,7 +122,7 @@
                 {#if fixture.status == 4}<div class="w-1/4 px-4">Verified</div>{/if}
                 <div class="w-1/4 px-4">
                   <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">
-                    <a href='/add-fixture-data'>
+                    <a href='/add-fixture-data?id={fixture.id}'>
                       Add Fixture Data
                     </a>
                   </button>
