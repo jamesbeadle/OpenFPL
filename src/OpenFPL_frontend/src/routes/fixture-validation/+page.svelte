@@ -34,6 +34,7 @@
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
         currentSeason = systemState?.activeSeason.name ?? "";
+        currentGameweek = systemState?.activeGameweek ?? 1;
       });
 
       unsubscribeTeams = teamStore.subscribe((value) => {
@@ -49,7 +50,6 @@
         fixtures = value.filter(x => x.gameweek == systemState?.activeGameweek);
       });
 
-      currentGameweek = systemState?.activeGameweek ?? 1;
     } catch (error) {
       toastStore.show("Error fetching fixture validation list.", "error");
       console.error("Error fetching fixture validation list.", error);
@@ -78,9 +78,9 @@
 </script>
 
 <Layout>
-  <div class="container-fluid mt-4">
+  <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
     <div class="flex flex-col space-y-4 text-xs md:text-base">
-      <div class="flex">
+      <div class="flex p-4">
         <h1>{`Season ${currentSeason}`} - {`Gameweek ${currentGameweek}`}</h1>
       </div>
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
@@ -121,7 +121,11 @@
                 {#if fixture.status == 2}<div class="w-1/4 px-4">Completed</div>{/if}
                 {#if fixture.status == 4}<div class="w-1/4 px-4">Verified</div>{/if}
                 <div class="w-1/4 px-4">
-                  Buttons
+                  <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">
+                    <a href='/add-fixture-data'>
+                      Add Fixture Data
+                    </a>
+                  </button>
                 </div>
               </div>
             {/each}

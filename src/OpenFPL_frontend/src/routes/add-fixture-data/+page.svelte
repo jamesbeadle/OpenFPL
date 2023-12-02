@@ -1,28 +1,22 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
   import { writable } from "svelte/store";
-  import type {
-    PlayerDTO,
-    PlayerEventData,
-  } from "../../../../declarations/player_canister/player_canister.did";
-  import type {
-    Fixture,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
+  import { governanceStore } from "$lib/stores/governance-store";
+  import { toastStore } from "$lib/stores/toast-store";
+  import { isLoading, loadingText } from "$lib/stores/global-stores";
+  import type { PlayerDTO, PlayerEventData } from "../../../../declarations/player_canister/player_canister.did";
+  import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { replacer } from "$lib/utils/Helpers";
+  import Layout from "../Layout.svelte";
   import PlayerEventsModal from "$lib/components/fixture-validation/player-events-modal.svelte";
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
   import ConfirmFixtureDataModal from "$lib/components/fixture-validation/confirm-fixture-data-modal.svelte";
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
-  import { toastStore } from "$lib/stores/toast-store";
-  import Layout from "../Layout.svelte";
-  import { replacer } from "$lib/utils/Helpers";
-  import { governanceStore } from "$lib/stores/governance-store";
-  import { isLoading, loadingText } from "$lib/stores/global-stores";
-  import { goto } from "$app/navigation";
-
+  
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
   let teams: Team[];
