@@ -212,7 +212,9 @@
       "_team-store.js",
       "_manager-store.js",
       "_Layout.js",
-      "_player-store.js"
+      "_player-store.js",
+      "_index.js",
+      "_BadgeIcon.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/manager/+page.svelte"

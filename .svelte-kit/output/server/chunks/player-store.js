@@ -1,5 +1,5 @@
 import { f as fixtureStore } from "./fixture-store.js";
-import { s as systemStore, A as ActorFactory, h as idlFactory, r as replacer } from "./team-store.js";
+import { s as systemStore, A as ActorFactory, j as idlFactory, r as replacer } from "./team-store.js";
 import { w as writable } from "./index.js";
 import "@dfinity/agent";
 function createPlayerStore() {
@@ -331,3 +331,6 @@ function createPlayerStore() {
   };
 }
 const playerStore = createPlayerStore();
+export {
+  playerStore as p
+};

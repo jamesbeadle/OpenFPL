@@ -155,8 +155,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
                 ${player.position == 3 ? `<div class="w-1/6 px-4">FW</div>` : ``}
                 <div class="w-1/6 px-4">Events:
                   ${escape($playerEventData?.length > 0 && $playerEventData?.filter((e) => e.playerId === player.id).length ? $playerEventData?.filter((e) => e.playerId === player.id).length : 0)}</div>
-                <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id)?.eventStartMinute : "-")}</div>
-                <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id)?.eventEndMinute : "-")}</div>
+                <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventStartMinute : "-")}</div>
+                <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventEndMinute : "-")}</div>
                 <div class="w-1/6 px-4"><button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">Update Events
                   </button></div>
               </div>`;

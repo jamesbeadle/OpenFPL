@@ -261,8 +261,9 @@
                   $playerEventData?.find(
                     (e) => e.playerId === player.id && e.eventType == 0
                   )
-                    ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)
-                        ?.eventStartMinute
+                    ? $playerEventData?.find(
+                        (e) => e.playerId === player.id && e.eventType == 0
+                      )?.eventStartMinute
                     : "-"}
                 </div>
                 <div class="w-1/6 px-4">
@@ -271,8 +272,9 @@
                   $playerEventData?.find(
                     (e) => e.playerId === player.id && e.eventType == 0
                   )
-                    ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)
-                        ?.eventEndMinute
+                    ? $playerEventData?.find(
+                        (e) => e.playerId === player.id && e.eventType == 0
+                      )?.eventEndMinute
                     : "-"}
                 </div>
                 <div class="w-1/6 px-4">
