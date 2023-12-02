@@ -14,11 +14,16 @@
   let isLoggedIn = false;
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showProfileDropdown = false;
+  let loggedInPrincipal = "";
 
   $: profileSrc = URL.createObjectURL(
     new Blob([new Uint8Array($profile?.profilePicture ?? [])])
   );
   let unsubscribeLogin: () => void;
+
+  //Remove after SNS
+  let adminPrincipal =
+    "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
 
   onMount(async () => {
     if (typeof window !== "undefined") {
@@ -30,6 +35,7 @@
         isLoggedIn = store.identity !== null && store.identity !== undefined;
         if (isLoggedIn) {
           profile.set(userStore.getProfileFromLocalStorage());
+          loggedInPrincipal = store.identity?.getPrincipal().toString() ?? "";
         }
       });
     } catch (error) {
@@ -148,6 +154,18 @@
               <span class="flex items-center h-full px-4">Governance</span>
             </a>
           </li>
+          {#if loggedInPrincipal === adminPrincipal}
+            <li class="mx-2 flex items-center h-16">
+              <a
+                href="/admin"
+                class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
+                  '/admin'
+                )}"
+              >
+                <span class="flex items-center h-full px-4">Admin</span>
+              </a>
+            </li>
+          {/if}
           <li class="p-2 flex flex-1 items-center">
             <div class="relative inline-block">
               <img

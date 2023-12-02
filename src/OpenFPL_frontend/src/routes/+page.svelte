@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-
   import { authStore } from "$lib/stores/auth";
   import { toastStore } from "$lib/stores/toast-store";
   import { managerStore } from "$lib/stores/manager-store";

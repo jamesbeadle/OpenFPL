@@ -32,13 +32,6 @@
   "_app.constants.js": {
     "file": "chunks/app.constants.js"
   },
-  "_auth.js": {
-    "file": "chunks/auth.js",
-    "imports": [
-      "_app.constants.js",
-      "_index.js"
-    ]
-  },
   "_fixture-store.js": {
     "file": "chunks/fixture-store.js",
     "imports": [
@@ -64,10 +57,9 @@
   "_manager-store.js": {
     "file": "chunks/manager-store.js",
     "imports": [
-      "_auth.js",
+      "_team-store.js",
       "_system-store.js",
-      "_index.js",
-      "_team-store.js"
+      "_index.js"
     ]
   },
   "_player-store.js": {
@@ -88,13 +80,14 @@
   "_system-store.js": {
     "file": "chunks/system-store.js",
     "imports": [
-      "_index.js",
-      "_team-store.js"
+      "_team-store.js",
+      "_index.js"
     ]
   },
   "_team-store.js": {
     "file": "chunks/team-store.js",
     "imports": [
+      "_app.constants.js",
       "_index.js",
       "_index2.js"
     ]
@@ -157,11 +150,23 @@
       "_index.js",
       "_team-store.js",
       "_fixture-store.js",
-      "_Layout.js",
-      "_auth.js"
+      "_Layout.js"
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/admin/+page.svelte": {
+    "file": "entries/pages/admin/_page.svelte.js",
+    "imports": [
+      "_index2.js",
+      "_Layout.js",
+      "_team-store.js",
+      "_fixture-store.js",
+      "_system-store.js",
+      "_BadgeIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/admin/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/club/+page.svelte": {
     "file": "entries/pages/club/_page.svelte.js",
@@ -287,7 +292,6 @@
       "_manager-store.js",
       "_Layout.js",
       "_index.js",
-      "_auth.js",
       "_team-store.js",
       "_app.constants.js"
     ],

@@ -1,3 +1,7 @@
+type UpdateSystemStateDTO = record {
+  activeGameweek : GameweekNumber;
+  activeSeasonId : SeasonId;
+};
 type TimerInfo = record {
   callbackName : text;
   fixtureId : FixtureId;
@@ -261,6 +265,7 @@ service : {
   updateFavouriteTeam : (nat16) -> (Result);
   updateHashForCategory : (text) -> ();
   updateProfilePicture : (blob) -> (Result);
+  updateSystemState : (UpdateSystemStateDTO) -> (Result);
   updateTeamValueInfo : () -> ();
   validateAddInitialFixtures : (SeasonId, vec Fixture) -> (Result);
   validateCreatePlayer : (TeamId, nat8, text, text, nat8, nat, int, text) -> (Result);

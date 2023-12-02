@@ -196,6 +196,10 @@ export interface TimerInfo {
   callbackName: string;
   triggerTime: bigint;
 }
+export interface UpdateSystemStateDTO {
+  activeSeasonId: SeasonId;
+  activeGameweek: GameweekNumber;
+}
 export interface _SERVICE {
   createProfile: ActorMethod<[], undefined>;
   executeAddInitialFixtures: ActorMethod<[SeasonId, Array<Fixture>], Result>;
@@ -287,6 +291,7 @@ export interface _SERVICE {
   updateFavouriteTeam: ActorMethod<[number], Result>;
   updateHashForCategory: ActorMethod<[string], undefined>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result>;
+  updateSystemState: ActorMethod<[UpdateSystemStateDTO], Result>;
   updateTeamValueInfo: ActorMethod<[], undefined>;
   validateAddInitialFixtures: ActorMethod<[SeasonId, Array<Fixture>], Result>;
   validateCreatePlayer: ActorMethod<

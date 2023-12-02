@@ -140,4 +140,9 @@ module DTOs {
     seasonPoints : Int16;
   };
 
+  public type UpdateSystemStateDTO = {
+    activeSeasonId : T.SeasonId;
+    activeGameweek : T.GameweekNumber;
+  }
+
 };

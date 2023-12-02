@@ -13,6 +13,7 @@ import Option "mo:base/Option";
 import Nat8 "mo:base/Nat8";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
+import Result "mo:base/Result";
 
 module {
 
@@ -381,6 +382,12 @@ module {
     /*Remove these functions post sns*/
     public func getValidatableFixtures() : [T.Fixture] {
       return seasonsInstance.getValidatableFixtures(activeSeasonId, activeGameweek);
+    };
+
+    public func updateSystemState(systemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
+      activeGameweek := systemState.activeGameweek;
+      activeSeasonId := systemState.activeSeasonId;
+      return #ok;
     };
 
     public func updateFixtureStatus(fixtureId : T.FixtureId, status : Nat8) : async () {

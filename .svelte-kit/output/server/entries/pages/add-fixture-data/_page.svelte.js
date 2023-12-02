@@ -1,10 +1,9 @@
 import { c as create_ssr_component, a as subscribe, e as escape, b as each, d as add_attribute, o as onDestroy, v as validate_component, f as noop } from "../../../chunks/index2.js";
 import { p as page } from "../../../chunks/stores.js";
 import { w as writable } from "../../../chunks/index.js";
-import { A as ActorFactory } from "../../../chunks/team-store.js";
+import { A as ActorFactory, a as authStore } from "../../../chunks/team-store.js";
 import "../../../chunks/fixture-store.js";
 import { i as isLoading, l as loadingText, t as toastStore, L as Layout } from "../../../chunks/Layout.js";
-import { a as authStore } from "../../../chunks/auth.js";
 function client_method(key) {
   {
     if (key === "before_navigate" || key === "after_navigate" || key === "on_navigate") {
@@ -144,7 +143,7 @@ function createGovernanceStore() {
   async function getValidatableFixtures() {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
-      { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
+      { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
     );
     const fixtures = await identityActor.getValidatableFixtures();
     set(fixtures);
@@ -154,7 +153,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       await identityActor.submitFixtureData(fixtureId, allPlayerEvents);
     } catch (error) {

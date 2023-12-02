@@ -313,9 +313,3 @@
     </div>
   </div>
 {/if}
-
-<style>
-  .modal-backdrop {
-    z-index: 1000;
-  }
-</style>

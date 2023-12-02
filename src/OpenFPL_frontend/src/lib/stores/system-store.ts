@@ -1,9 +1,7 @@
+import { authStore } from "$lib/stores/auth";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type {
-  DataCache,
-  SystemState,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { DataCache, SystemState, UpdateSystemStateDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
@@ -49,10 +47,26 @@ function createSystemStore() {
     return systemState;
   }
 
+  async function updateSystemState(systemState: UpdateSystemStateDTO): Promise<any> {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      const result = await identityActor.updateSystemState(systemState);
+      sync();
+      return result;
+    } catch (error) {
+      console.error("Error updating system state:", error);
+      throw error;
+    }
+  }
+
   return {
     subscribe,
     sync,
     getSystemState,
+    updateSystemState,
   };
 }
 

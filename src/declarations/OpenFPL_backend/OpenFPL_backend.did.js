@@ -196,6 +196,10 @@ export const idlFactory = ({ IDL }) => {
     callbackName: IDL.Text,
     triggerTime: IDL.Int,
   });
+  const UpdateSystemStateDTO = IDL.Record({
+    activeSeasonId: SeasonId,
+    activeGameweek: GameweekNumber,
+  });
   return IDL.Service({
     createProfile: IDL.Func([], [], []),
     executeAddInitialFixtures: IDL.Func(
@@ -335,6 +339,7 @@ export const idlFactory = ({ IDL }) => {
     updateFavouriteTeam: IDL.Func([IDL.Nat16], [Result], []),
     updateHashForCategory: IDL.Func([IDL.Text], [], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
+    updateSystemState: IDL.Func([UpdateSystemStateDTO], [Result], []),
     updateTeamValueInfo: IDL.Func([], [], []),
     validateAddInitialFixtures: IDL.Func(
       [SeasonId, IDL.Vec(Fixture)],

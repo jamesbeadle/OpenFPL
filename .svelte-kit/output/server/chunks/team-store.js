@@ -1,6 +1,77 @@
+import { A as AUTH_MAX_TIME_TO_LIVE, a as AUTH_POPUP_WIDTH, b as AUTH_POPUP_HEIGHT } from "./app.constants.js";
+import { AuthClient } from "@dfinity/auth-client";
+import "@dfinity/utils";
 import { w as writable } from "./index.js";
 import { HttpAgent, Actor } from "@dfinity/agent";
 import { c as create_ssr_component, g as compute_rest_props, h as getContext, i as spread, j as escape_attribute_value, k as escape_object } from "./index2.js";
+const createAuthClient = () => AuthClient.create({
+  idleOptions: {
+    disableIdle: true,
+    disableDefaultIdleCallback: true
+  }
+});
+const popupCenter = ({
+  width,
+  height
+}) => {
+  {
+    return void 0;
+  }
+};
+let authClient;
+const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
+const NNS_IC_APP_DERIVATION_ORIGIN = "https://bgpwv-eqaaa-aaaal-qb6eq-cai.icp0.io";
+const isNnsAlternativeOrigin = () => {
+  return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
+};
+const initAuthStore = () => {
+  const { subscribe, set, update } = writable({
+    identity: void 0
+  });
+  return {
+    subscribe,
+    sync: async () => {
+      authClient = authClient ?? await createAuthClient();
+      const isAuthenticated = await authClient.isAuthenticated();
+      set({
+        identity: isAuthenticated ? authClient.getIdentity() : null
+      });
+    },
+    signIn: ({ domain }) => new Promise(async (resolve, reject) => {
+      authClient = authClient ?? await createAuthClient();
+      const identityProvider = "https://identity.ic0.app";
+      await authClient?.login({
+        maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
+        onSuccess: () => {
+          update((state) => ({
+            ...state,
+            identity: authClient?.getIdentity()
+          }));
+          resolve();
+        },
+        onError: reject,
+        identityProvider,
+        ...isNnsAlternativeOrigin() && {
+          derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN
+        },
+        windowOpenerFeatures: popupCenter({
+          width: AUTH_POPUP_WIDTH,
+          height: AUTH_POPUP_HEIGHT
+        })
+      });
+    }),
+    signOut: async () => {
+      const client = authClient ?? await createAuthClient();
+      await client.logout();
+      authClient = null;
+      update((state) => ({
+        ...state,
+        identity: null
+      }));
+    }
+  };
+};
+const authStore = initAuthStore();
 const idlFactory$1 = ({ IDL }) => {
   const List = IDL.Rec();
   const List_1 = IDL.Rec();
@@ -199,6 +270,10 @@ const idlFactory$1 = ({ IDL }) => {
     callbackName: IDL.Text,
     triggerTime: IDL.Int
   });
+  const UpdateSystemStateDTO = IDL.Record({
+    activeSeasonId: SeasonId,
+    activeGameweek: GameweekNumber
+  });
   return IDL.Service({
     createProfile: IDL.Func([], [], []),
     executeAddInitialFixtures: IDL.Func(
@@ -338,6 +413,7 @@ const idlFactory$1 = ({ IDL }) => {
     updateFavouriteTeam: IDL.Func([IDL.Nat16], [Result], []),
     updateHashForCategory: IDL.Func([IDL.Text], [], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
+    updateSystemState: IDL.Func([UpdateSystemStateDTO], [Result], []),
     updateTeamValueInfo: IDL.Func([], [], []),
     validateAddInitialFixtures: IDL.Func(
       [SeasonId, IDL.Vec(Fixture)],
@@ -617,7 +693,7 @@ const idlFactory = ({ IDL }) => {
 class ActorFactory {
   static createActor(idlFactory2, canisterId = "", identity = null, options = null) {
     const hostOptions = {
-      host: `https://${canisterId}.icp-api.io`,
+      host: "http://127.0.0.1:8080",
       identity
     };
     if (!options) {
@@ -630,7 +706,7 @@ class ActorFactory {
       options.agentOptions.host = hostOptions.host;
     }
     const agent = new HttpAgent({ ...options.agentOptions });
-    if ({ "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.NODE_ENV !== "production") {
+    if ({ "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.NODE_ENV !== "production") {
       agent.fetchRootKey().catch((err) => {
         console.warn(
           "Unable to fetch root key. Ensure your local replica is running"
@@ -644,10 +720,10 @@ class ActorFactory {
       ...options?.actorOptions
     });
   }
-  static createIdentityActor(authStore, canisterId) {
+  static createIdentityActor(authStore2, canisterId) {
     let unsubscribe;
     return new Promise((resolve, reject) => {
-      unsubscribe = authStore.subscribe((store) => {
+      unsubscribe = authStore2.subscribe((store) => {
         if (store.identity) {
           resolve(store.identity);
         }
@@ -655,7 +731,7 @@ class ActorFactory {
     }).then((identity) => {
       unsubscribe();
       return ActorFactory.createActor(
-        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
+        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
         canisterId,
         identity
       );
@@ -2847,7 +2923,7 @@ function createTeamStore() {
   const { subscribe, set } = writable([]);
   const actor = ActorFactory.createActor(
     idlFactory$1,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     const category = "teams";
@@ -2889,13 +2965,14 @@ function createTeamStore() {
 createTeamStore();
 export {
   ActorFactory as A,
-  getPositionText as a,
-  convertDateToReadable as b,
+  authStore as a,
+  getPositionText as b,
   calculateAgeFromNanoseconds as c,
-  getFlagComponent as d,
-  idlFactory as e,
+  convertDateToReadable as d,
+  getFlagComponent as e,
   formatUnixTimeToTime as f,
   getAvailableFormations as g,
+  idlFactory as h,
   idlFactory$1 as i,
   replacer as r,
   updateTableData as u

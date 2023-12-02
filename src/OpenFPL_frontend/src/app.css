@@ -37,6 +37,10 @@ body {
   background-attachment: fixed;
 }
 
+.modal-backdrop {
+  z-index: 1000;
+}
+
 .fpl-button {
   background-color: #2ce3a6;
   color: black;

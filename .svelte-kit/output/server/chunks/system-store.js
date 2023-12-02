@@ -1,11 +1,11 @@
+import { A as ActorFactory, i as idlFactory, r as replacer, a as authStore } from "./team-store.js";
 import { w as writable } from "./index.js";
 import "@dfinity/agent";
-import { A as ActorFactory, i as idlFactory, r as replacer } from "./team-store.js";
 function createSystemStore() {
   const { subscribe, set } = writable(null);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "system_state";
@@ -38,10 +38,25 @@ function createSystemStore() {
     })();
     return systemState;
   }
+  async function updateSystemState(systemState) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      const result = await identityActor.updateSystemState(systemState);
+      sync();
+      return result;
+    } catch (error) {
+      console.error("Error updating system state:", error);
+      throw error;
+    }
+  }
   return {
     subscribe,
     sync,
-    getSystemState
+    getSystemState,
+    updateSystemState
   };
 }
 const systemStore = createSystemStore();
