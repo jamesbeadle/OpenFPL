@@ -19,14 +19,6 @@ function subscribe(store, ...callbacks) {
   const unsub = store.subscribe(...callbacks);
   return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
 }
-function compute_rest_props(props, keys) {
-  const rest = {};
-  keys = new Set(keys);
-  for (const k in props)
-    if (!keys.has(k) && k[0] !== "$")
-      rest[k] = props[k];
-  return rest;
-}
 function null_to_empty(value) {
   return value == null ? "" : value;
 }
@@ -53,91 +45,6 @@ function setContext(key, context) {
 function getContext(key) {
   return get_current_component().$$.context.get(key);
 }
-const _boolean_attributes = [
-  "allowfullscreen",
-  "allowpaymentrequest",
-  "async",
-  "autofocus",
-  "autoplay",
-  "checked",
-  "controls",
-  "default",
-  "defer",
-  "disabled",
-  "formnovalidate",
-  "hidden",
-  "inert",
-  "ismap",
-  "loop",
-  "multiple",
-  "muted",
-  "nomodule",
-  "novalidate",
-  "open",
-  "playsinline",
-  "readonly",
-  "required",
-  "reversed",
-  "selected"
-];
-const boolean_attributes = /* @__PURE__ */ new Set([..._boolean_attributes]);
-const invalid_attribute_name_character = /[\s'">/=\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
-function spread(args, attrs_to_add) {
-  const attributes = Object.assign({}, ...args);
-  if (attrs_to_add) {
-    const classes_to_add = attrs_to_add.classes;
-    const styles_to_add = attrs_to_add.styles;
-    if (classes_to_add) {
-      if (attributes.class == null) {
-        attributes.class = classes_to_add;
-      } else {
-        attributes.class += " " + classes_to_add;
-      }
-    }
-    if (styles_to_add) {
-      if (attributes.style == null) {
-        attributes.style = style_object_to_string(styles_to_add);
-      } else {
-        attributes.style = style_object_to_string(merge_ssr_styles(attributes.style, styles_to_add));
-      }
-    }
-  }
-  let str = "";
-  Object.keys(attributes).forEach((name) => {
-    if (invalid_attribute_name_character.test(name))
-      return;
-    const value = attributes[name];
-    if (value === true)
-      str += " " + name;
-    else if (boolean_attributes.has(name.toLowerCase())) {
-      if (value)
-        str += " " + name;
-    } else if (value != null) {
-      str += ` ${name}="${value}"`;
-    }
-  });
-  return str;
-}
-function merge_ssr_styles(style_attribute, style_directive) {
-  const style_object = {};
-  for (const individual_style of style_attribute.split(";")) {
-    const colon_index = individual_style.indexOf(":");
-    const name = individual_style.slice(0, colon_index).trim();
-    const value = individual_style.slice(colon_index + 1).trim();
-    if (!name)
-      continue;
-    style_object[name] = value;
-  }
-  for (const name in style_directive) {
-    const value = style_directive[name];
-    if (value) {
-      style_object[name] = value;
-    } else {
-      delete style_object[name];
-    }
-  }
-  return style_object;
-}
 const ATTR_REGEX = /[&"]/g;
 const CONTENT_REGEX = /[&<]/g;
 function escape(value, is_attr = false) {
@@ -153,17 +60,6 @@ function escape(value, is_attr = false) {
     last = i + 1;
   }
   return escaped + str.substring(last);
-}
-function escape_attribute_value(value) {
-  const should_escape = typeof value === "string" || value && typeof value === "object";
-  return should_escape ? escape(value, true) : value;
-}
-function escape_object(obj) {
-  const result = {};
-  for (const key in obj) {
-    result[key] = escape_attribute_value(obj[key]);
-  }
-  return result;
 }
 function each(items, fn) {
   let str = "";
@@ -226,26 +122,19 @@ function add_attribute(name, value, boolean) {
   const assignment = boolean && value === true ? "" : `="${escape(value, true)}"`;
   return ` ${name}${assignment}`;
 }
-function style_object_to_string(style_object) {
-  return Object.keys(style_object).filter((key) => style_object[key]).map((key) => `${key}: ${escape_attribute_value(style_object[key])};`).join(" ");
-}
 export {
   subscribe as a,
-  each as b,
+  set_store_value as b,
   create_ssr_component as c,
   add_attribute as d,
   escape as e,
-  noop as f,
-  set_store_value as g,
-  compute_rest_props as h,
+  each as f,
+  null_to_empty as g,
+  safe_not_equal as h,
   getContext as i,
-  spread as j,
-  escape_attribute_value as k,
-  escape_object as l,
   missing_component as m,
-  null_to_empty as n,
+  noop as n,
   onDestroy as o,
-  safe_not_equal as p,
   setContext as s,
   validate_component as v
 };

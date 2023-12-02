@@ -1,10 +1,7 @@
-import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component, d as add_attribute, e as escape, b as each, f as noop, g as set_store_value } from "../../../chunks/index2.js";
+import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component, n as noop, b as set_store_value, d as add_attribute, e as escape, f as each } from "../../../chunks/index2.js";
 import { p as page } from "../../../chunks/stores.js";
 import { w as writable } from "../../../chunks/index.js";
-import { A as ActorFactory, a as authStore } from "../../../chunks/team-store.js";
-import "../../../chunks/fixture-store.js";
-import { l as loadingText, i as isLoading, t as toastStore, L as Layout } from "../../../chunks/Layout.js";
-import "../../../chunks/player-store.js";
+import { A as ActorFactory, b as authStore, l as loadingText, t as toastStore, L as Layout, a as LoadingIcon } from "../../../chunks/Layout.js";
 function client_method(key) {
   {
     if (key === "before_navigate" || key === "after_navigate" || key === "on_navigate") {
@@ -30,7 +27,7 @@ function createGovernanceStore() {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
-        { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       await identityActor.savePlayerEvents(fixtureId, allPlayerEvents);
     } catch (error) {
@@ -85,11 +82,9 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
   let $loadingText, $$unsubscribe_loadingText;
-  let $isLoading, $$unsubscribe_isLoading;
   let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $page, $$unsubscribe_page;
   $$unsubscribe_loadingText = subscribe(loadingText, (value) => $loadingText = value);
-  $$unsubscribe_isLoading = subscribe(isLoading, (value) => $isLoading = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let fixture;
   let homeTeam;
@@ -100,10 +95,11 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let playerEventData = writable([]);
   $$subscribe_playerEventData();
   let isSubmitDisabled = true;
+  let isLoading = true;
   onDestroy(() => {
   });
   async function confirmFixtureData() {
-    set_store_value(isLoading, $isLoading = true, $isLoading);
+    isLoading = true;
     set_store_value(loadingText, $loadingText = "Saving Fixture Data", $loadingText);
     try {
       await governanceStore.submitFixtureData(fixtureId, $playerEventData);
@@ -114,7 +110,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       toastStore.show("Error saving fixture data.", "error");
       console.error("Error saving fixture data: ", error);
     } finally {
-      set_store_value(isLoading, $isLoading = false, $isLoading);
+      isLoading = false;
       set_store_value(loadingText, $loadingText = "Loading", $loadingText);
     }
   }
@@ -131,54 +127,57 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   isSubmitDisabled = $playerEventData.length == 0 || $playerEventData.filter((x) => x.eventType == 0).length != $selectedPlayers.length;
   $$unsubscribe_playerEventData();
   $$unsubscribe_loadingText();
-  $$unsubscribe_isLoading();
   $$unsubscribe_selectedPlayers();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel"><div class="flex flex-col text-xs md:text-base mt-4"><div class="flex flex-row space-x-2 p-4"><button class="fpl-button px-4 py-2">Select Players</button>
-        <button class="fpl-button px-4 py-2">Save Draft</button>
-        <button class="fpl-button px-4 py-2">Clear Draft</button></div>
-      ${!$isLoading ? `<div class="flex w-full"><ul class="flex bg-light-gray px-4 pt-2 w-full mt-4"><li${add_attribute("class", `mr-4 text-xs md:text-base ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>${escape(homeTeam?.friendlyName)}</button></li>
-            <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>${escape(awayTeam?.friendlyName)}</button></li></ul></div>
-        <div class="flex w-full flex-col"><div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"><div class="w-1/6 px-4">Player</div>
-            <div class="w-1/6 px-4">Position</div>
-            <div class="w-1/6 px-4">Events</div>
-            <div class="w-1/6 px-4">Start</div>
-            <div class="w-1/6 px-4">End</div>
-            <div class="w-1/6 px-4"> </div></div>
-          ${`${each($selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId), (player) => {
+      return `${isLoading ? `${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}` : `<div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel"><div class="flex flex-col text-xs md:text-base mt-4"><div class="flex flex-row space-x-2 p-4"><button class="fpl-button px-4 py-2">Select Players</button>
+          <button class="fpl-button px-4 py-2">Save Draft</button>
+          <button class="fpl-button px-4 py-2">Clear Draft</button></div>
+        ${isLoading ? `<div class="flex w-full"><ul class="flex bg-light-gray px-4 pt-2 w-full mt-4"><li${add_attribute("class", `mr-4 text-xs md:text-base ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>${escape(homeTeam?.friendlyName)}</button></li>
+              <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>${escape(awayTeam?.friendlyName)}</button></li></ul></div>
+          <div class="flex w-full flex-col"><div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"><div class="w-1/6 px-4">Player</div>
+              <div class="w-1/6 px-4">Position</div>
+              <div class="w-1/6 px-4">Events</div>
+              <div class="w-1/6 px-4">Start</div>
+              <div class="w-1/6 px-4">End</div>
+              <div class="w-1/6 px-4"> </div></div>
+            ${`${each($selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId), (player) => {
         return `<div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"><div class="w-1/6 px-4">${escape(`${player.firstName.length > 0 ? player.firstName.charAt(0) + "." : ""} ${player.lastName}`)}</div>
-                ${player.position == 0 ? `<div class="w-1/6 px-4">GK</div>` : ``}
-                ${player.position == 1 ? `<div class="w-1/6 px-4">DF</div>` : ``}
-                ${player.position == 2 ? `<div class="w-1/6 px-4">MF</div>` : ``}
-                ${player.position == 3 ? `<div class="w-1/6 px-4">FW</div>` : ``}
-                <div class="w-1/6 px-4">Events:
-                  ${escape($playerEventData?.length > 0 && $playerEventData?.filter((e) => e.playerId === player.id).length ? $playerEventData?.filter((e) => e.playerId === player.id).length : 0)}</div>
-                <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventStartMinute : "-")}</div>
-                <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventEndMinute : "-")}</div>
-                <div class="w-1/6 px-4"><button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">Update Events
-                  </button></div>
-              </div>`;
+                  ${player.position == 0 ? `<div class="w-1/6 px-4">GK
+                    </div>` : ``}
+                  ${player.position == 1 ? `<div class="w-1/6 px-4">DF
+                    </div>` : ``}
+                  ${player.position == 2 ? `<div class="w-1/6 px-4">MF
+                    </div>` : ``}
+                  ${player.position == 3 ? `<div class="w-1/6 px-4">FW
+                    </div>` : ``}
+                  <div class="w-1/6 px-4">Events:
+                    ${escape($playerEventData?.length > 0 && $playerEventData?.filter((e) => e.playerId === player.id).length ? $playerEventData?.filter((e) => e.playerId === player.id).length : 0)}</div>
+                  <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventStartMinute : "-")}</div>
+                  <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventEndMinute : "-")}</div>
+                  <div class="w-1/6 px-4"><button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">Update Events
+                    </button></div>
+                </div>`;
       })}`}
-          ${``}</div>
-        <div class="flex w-full m-4"><h1>Summary</h1></div>
-        <div class="flex flex-row w-full m-4"><div class="text-sm font-medium flex-grow">Appearances: ${escape($playerEventData.filter((x) => x.eventType == 0).length)}</div>
-          <div class="text-sm font-medium flex-grow">Goals: ${escape($playerEventData.filter((x) => x.eventType == 1).length)}</div>
-          <div class="text-sm font-medium flex-grow">Own Goals: ${escape($playerEventData.filter((x) => x.eventType == 10).length)}</div>
-          <div class="text-sm font-medium flex-grow">Assists: ${escape($playerEventData.filter((x) => x.eventType == 2).length)}</div>
-          <div class="text-sm font-medium flex-grow">Keeper Saves: ${escape($playerEventData.filter((x) => x.eventType == 4).length)}</div>
-          <div class="text-sm font-medium flex-grow">Yellow Cards: ${escape($playerEventData.filter((x) => x.eventType == 8).length)}</div>
-          <div class="text-sm font-medium flex-grow">Red Cards: ${escape($playerEventData.filter((x) => x.eventType == 9).length)}</div>
-          <div class="text-sm font-medium flex-grow">Penalties Saved: ${escape($playerEventData.filter((x) => x.eventType == 6).length)}</div>
-          <div class="text-sm font-medium flex-grow">Penalties Missed: ${escape($playerEventData.filter((x) => x.eventType == 7).length)}</div></div>
+            ${``}</div>
+          <div class="flex w-full m-4"><h1>Summary</h1></div>
+          <div class="flex flex-row w-full m-4"><div class="text-sm font-medium flex-grow">Appearances: ${escape($playerEventData.filter((x) => x.eventType == 0).length)}</div>
+            <div class="text-sm font-medium flex-grow">Goals: ${escape($playerEventData.filter((x) => x.eventType == 1).length)}</div>
+            <div class="text-sm font-medium flex-grow">Own Goals: ${escape($playerEventData.filter((x) => x.eventType == 10).length)}</div>
+            <div class="text-sm font-medium flex-grow">Assists: ${escape($playerEventData.filter((x) => x.eventType == 2).length)}</div>
+            <div class="text-sm font-medium flex-grow">Keeper Saves: ${escape($playerEventData.filter((x) => x.eventType == 4).length)}</div>
+            <div class="text-sm font-medium flex-grow">Yellow Cards: ${escape($playerEventData.filter((x) => x.eventType == 8).length)}</div>
+            <div class="text-sm font-medium flex-grow">Red Cards: ${escape($playerEventData.filter((x) => x.eventType == 9).length)}</div>
+            <div class="text-sm font-medium flex-grow">Penalties Saved: ${escape($playerEventData.filter((x) => x.eventType == 6).length)}</div>
+            <div class="text-sm font-medium flex-grow">Penalties Missed: ${escape($playerEventData.filter((x) => x.eventType == 7).length)}</div></div>
 
-        <div class="items-center mt-3 flex space-x-4"><button${add_attribute(
+          <div class="items-center mt-3 flex space-x-4"><button${add_attribute(
         "class",
         `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-            px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`,
+              px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`,
         0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Submit Event Data</button></div>` : ``}</div></div>`;
+      )} ${isSubmitDisabled ? "disabled" : ""}>Submit Event Data</button></div>` : ``}</div></div>`}`;
     }
   })}
 

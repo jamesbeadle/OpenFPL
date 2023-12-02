@@ -3,7 +3,7 @@
   import Layout from "../Layout.svelte";
   import AdminFixtures from "$lib/components/admin/admin-fixtures.svelte";
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   //get seasons for dropdown
 
@@ -33,7 +33,11 @@
   {#if isLoading}
     <LoadingIcon />
   {:else}
-    <SystemStateModal {showModal} closeModal={hideModal} cancelModal={hideModal} />
+    <SystemStateModal
+      {showModal}
+      closeModal={hideModal}
+      cancelModal={hideModal}
+    />
     <div class="m-4">
       <div class="bg-panel rounded-lg m-4">
         <div class="flex flex-col p-4">

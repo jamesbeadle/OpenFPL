@@ -1,7 +1,6 @@
 <script lang="ts">
   import { userStore } from "$lib/stores/user-store";
   import { toastStore } from "$lib/stores/toast-store";
-  import type { Writable } from "svelte/store";
   import { loadingText } from "$lib/stores/global-stores";
 
   export let showModal: boolean;

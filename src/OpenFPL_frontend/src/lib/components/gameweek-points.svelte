@@ -40,13 +40,14 @@
   let activeSeasonName: string;
 
   let isLoading = true;
-  
+
   onMount(async () => {
     try {
       await teamStore.sync();
       await systemStore.sync();
       await fixtureStore.sync();
       await authStore.sync();
+      await playerEventsStore.sync();
 
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value.sort((a, b) =>

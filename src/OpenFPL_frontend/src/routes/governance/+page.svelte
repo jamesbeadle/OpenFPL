@@ -11,9 +11,17 @@
   <div class="m-4">
     <div class="bg-panel rounded-lg m-4">
       <ul class="flex rounded-t-lg bg-light-gray px-4 pt-2">
-        <li class={`mr-4 text-xs md:text-base ${ activeTab === "proposals" ? "active-tab" : "" }`}>
-          <button class={`p-2 ${ activeTab === "proposals" ? "text-white" : "text-gray-400" }`}
-            on:click={() => setActiveTab("details")}>Proposals</button>
+        <li
+          class={`mr-4 text-xs md:text-base ${
+            activeTab === "proposals" ? "active-tab" : ""
+          }`}
+        >
+          <button
+            class={`p-2 ${
+              activeTab === "proposals" ? "text-white" : "text-gray-400"
+            }`}
+            on:click={() => setActiveTab("details")}>Proposals</button
+          >
         </li>
       </ul>
 

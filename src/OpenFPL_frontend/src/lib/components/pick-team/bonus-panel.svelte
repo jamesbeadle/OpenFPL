@@ -1,9 +1,6 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam, Team  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/Bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";

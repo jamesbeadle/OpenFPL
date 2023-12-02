@@ -14,7 +14,12 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import type { Fixture, Season, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Fixture,
+    Season,
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
 
   let teams: Team[] = [];

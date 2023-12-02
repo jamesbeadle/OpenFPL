@@ -29,7 +29,11 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import type { FantasyTeam, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    FantasyTeam,
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
@@ -56,7 +60,6 @@
     "5-3-2",
   ]);
 
-  
   $: gridSetup = getGridSetup(selectedFormation);
 
   $: if (players && $fantasyTeam) {
@@ -111,7 +114,6 @@
   const fantasyTeam = writable<FantasyTeam | null>(null);
   const transfersAvailable = writable(newTeam ? Infinity : 3);
   const bankBalance = writable(1200);
-
 
   let isLoading = true;
 
@@ -177,7 +179,7 @@
       toastStore.show("Error fetching team details.", "error");
       console.error("Error fetching team details:", error);
     } finally {
-      isLoading = false
+      isLoading = false;
     }
   });
 
@@ -763,7 +765,9 @@
     />
     <div class="sm:m-1 md:m-2 lg:m-3 xl:m-4">
       <div class="flex flex-col sm:flex-row">
-        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md">
+        <div
+          class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md"
+        >
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -772,15 +776,22 @@
             <p class="text-gray-300 text-xs">{activeSeason}</p>
           </div>
 
-          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;" />
+          <div
+            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
 
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs mt-4 xl:mt-0">Kick Off:</p>
             <div class="flex">
               <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
+                  >h</span
+                >
+                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
+                  >m</span
+                >
               </p>
             </div>
             <p class="text-gray-300 text-xs">
@@ -788,7 +799,10 @@
             </p>
           </div>
 
-          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;"/>
+          <div
+            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
 
           <div class="flex-grow mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Players</p>
@@ -799,7 +813,9 @@
           </div>
         </div>
 
-        <div class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-1 xl:m-4 bg-panel py-2 px-4 lg:py-4 rounded-md">
+        <div
+          class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-1 xl:m-4 bg-panel py-2 px-4 lg:py-4 rounded-md"
+        >
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="text-gray-300 text-xs">Team Value</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -807,7 +823,10 @@
             </p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;"/>
+          <div
+            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Bank Balance</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -815,7 +834,10 @@
             </p>
             <p class="text-gray-300 text-xs">GBP</p>
           </div>
-          <div class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch" style="min-height: 2px; min-width: 2px;"/>
+          <div
+            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
+            style="min-height: 2px; min-width: 2px;"
+          />
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="text-gray-300 text-xs">Transfers</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
@@ -829,22 +851,39 @@
       </div>
 
       <div class="flex flex-col md:flex-row">
-        <div class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full">
-          <div class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1">
-            <button class={`btn ${ pitchView ? `fpl-button` : `inactive-btn` } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
-              on:click={showPitchView}>
+        <div
+          class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full"
+        >
+          <div
+            class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1"
+          >
+            <button
+              class={`btn ${
+                pitchView ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              on:click={showPitchView}
+            >
               Pitch View
             </button>
-            <button class={`btn ${ !pitchView ? `fpl-button` : `inactive-btn` } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
-              on:click={showListView}>
+            <button
+              class={`btn ${
+                !pitchView ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              on:click={showListView}
+            >
               List View
             </button>
           </div>
 
-          <div class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0">
+          <div
+            class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0"
+          >
             <span class="text-lg">
               Formation:
-              <select class="p-2 fpl-dropdown xl:text-lg text-center" bind:value={selectedFormation}>
+              <select
+                class="p-2 fpl-dropdown xl:text-lg text-center"
+                bind:value={selectedFormation}
+              >
                 {#each $availableFormations as formation}
                   <option value={formation}>{formation}</option>
                 {/each}
@@ -852,7 +891,9 @@
             </span>
           </div>
 
-          <div class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0">
+          <div
+            class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
+          >
             <button
               disabled={$fantasyTeam?.playerIds
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
@@ -1122,7 +1163,8 @@
                       <div class="w-1/6 flex items-center">
                         <button
                           on:click={() => removePlayer(player.id)}
-                          class="bg-red-600 mb-1 rounded-sm">
+                          class="bg-red-600 mb-1 rounded-sm"
+                        >
                           <RemovePlayerIcon className="w-6 h-6 p-2" />
                         </button>
                       </div>
@@ -1132,7 +1174,10 @@
                       <div class="w-1/3">-</div>
                       <div class="w-1/6">-</div>
                       <div class="w-1/6 flex items-center">
-                        <button on:click={() => loadAddPlayer(rowIndex, colIndex)} class="text-xl rounded fpl-button flex items-center">
+                        <button
+                          on:click={() => loadAddPlayer(rowIndex, colIndex)}
+                          class="text-xl rounded fpl-button flex items-center"
+                        >
                           <AddIcon className="w-6 h-6 p-2" />
                         </button>
                       </div>

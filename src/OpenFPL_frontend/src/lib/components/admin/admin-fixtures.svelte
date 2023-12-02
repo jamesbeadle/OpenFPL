@@ -49,7 +49,7 @@
   );
 
   let isLoading = true;
-  
+
   onMount(async () => {
     try {
       await teamStore.sync();

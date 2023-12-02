@@ -4,7 +4,7 @@
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import Layout from "../Layout.svelte";
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   let activeTab: string = "details";
 
   let isLoading = true;

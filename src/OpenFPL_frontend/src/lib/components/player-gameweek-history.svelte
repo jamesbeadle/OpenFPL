@@ -20,7 +20,7 @@
     PlayerDetailDTO,
     PlayerGameweekDTO,
   } from "../../../../declarations/player_canister/player_canister.did";
-  import { playerStore } from "$lib/stores/player-store";
+  import { playerEventsStore } from "$lib/stores/player-events-store";
 
   let isLoading = true;
   let teams: Team[] = [];
@@ -46,6 +46,7 @@
       await teamStore.sync();
       await fixtureStore.sync();
       await systemStore.sync();
+      await playerEventsStore.sync
 
       unsubscribeTeams = teamStore.subscribe((value) => {
         teams = value;
@@ -64,7 +65,7 @@
         systemState = value;
       });
 
-      playerDetails = await playerStore.getPlayerDetails(
+      playerDetails = await playerEventsStore.getPlayerDetails(
         id,
         systemState?.activeSeason.id ?? 0
       );

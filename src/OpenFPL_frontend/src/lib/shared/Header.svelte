@@ -16,7 +16,7 @@
   import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
   import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  
+
   let menuOpen = false;
   let isLoggedIn = false;
   let profile: Writable<ProfileDTO | null> = writable(null);
@@ -30,17 +30,17 @@
 
   //Remove after SNS
   //let adminPrincipal =
-    "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae";
+  ("opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae");
 
   //LOCALDEVONLY
-  let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
+  let adminPrincipal =
+    "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
 
   onMount(async () => {
     if (typeof window !== "undefined") {
       document.addEventListener("click", closeDropdownOnClickOutside);
     }
     try {
-
       await authStore.sync();
       await systemStore.sync();
       await fixtureStore.sync();
@@ -48,7 +48,7 @@
       await leaderboardStore.syncWeeklyLeaderboard();
       await playerStore.sync();
       await playerEventsStore.sync();
-      
+
       unsubscribeLogin = authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
         if (isLoggedIn) {
@@ -59,7 +59,7 @@
     } catch (error) {
       toastStore.show("Error syncing authentication.", "error");
       console.error("Error syncing authentication:", error);
-    } finally{
+    } finally {
       $isLoading = false;
     }
   });

@@ -5,10 +5,14 @@
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { toastStore } from "$lib/stores/toast-store";
-  import type { Fixture, SystemState, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Fixture,
+    SystemState,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import Layout from "../Layout.svelte";
-    import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let teams: Team[];
   let allFixtures: Fixture[];
@@ -90,7 +94,9 @@
           <h1>{`Season ${currentSeason}`} - {`Gameweek ${currentGameweek}`}</h1>
         </div>
         <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
-          <div class="flex flex-col sm:flex-row justify-between sm:items-center">
+          <div
+            class="flex flex-col sm:flex-row justify-between sm:items-center"
+          >
             <div class="md:flex md:items-center mt-2 sm:mt-0 ml-2">
               <button
                 class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"

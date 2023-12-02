@@ -1,8 +1,5 @@
 import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component } from "../../../chunks/index2.js";
-import { u as updateTableData } from "../../../chunks/team-store.js";
-import "../../../chunks/fixture-store.js";
-import "../../../chunks/player-store.js";
-import { L as Layout } from "../../../chunks/Layout.js";
+import { u as updateTableData, L as Layout, a as LoadingIcon } from "../../../chunks/Layout.js";
 import { p as page } from "../../../chunks/stores.js";
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $page, $$unsubscribe_page;
@@ -21,7 +18,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${``}`;
+      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });

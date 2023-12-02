@@ -129,9 +129,9 @@
   }
 
   async function uploadProfileImage(file: File) {
-    $loadingText = "Uploading Profile Image"
+    $loadingText = "Uploading Profile Image";
     isLoading = true;
-    
+
     try {
       await userStore.updateProfilePicture(file);
       userStore.sync();

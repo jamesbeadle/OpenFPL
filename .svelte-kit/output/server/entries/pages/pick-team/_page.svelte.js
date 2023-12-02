@@ -1,9 +1,6 @@
 import { c as create_ssr_component, a as subscribe, o as onDestroy, v as validate_component } from "../../../chunks/index2.js";
-import { L as Layout } from "../../../chunks/Layout.js";
+import { L as Layout, a as LoadingIcon, g as getAvailableFormations } from "../../../chunks/Layout.js";
 import { w as writable } from "../../../chunks/index.js";
-import { g as getAvailableFormations } from "../../../chunks/team-store.js";
-import "../../../chunks/fixture-store.js";
-import "../../../chunks/player-store.js";
 import "../../../chunks/manager-store.js";
 const bonusPanel_svelte_svelte_type_style_lang = "";
 const addPlayerModal_svelte_svelte_type_style_lang = "";
@@ -218,7 +215,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_availableFormations();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${``}`;
+      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
