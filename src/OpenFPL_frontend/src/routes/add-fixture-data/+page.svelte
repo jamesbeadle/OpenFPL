@@ -78,10 +78,13 @@
       const savedDraft = localStorage.getItem(draftKey);
       if (savedDraft) {
         const draftData = JSON.parse(savedDraft);
-        let draftEventData = draftData.playerEventData[0];
+        let draftEventData = draftData.playerEventData;
+        console.log(draftEventData);
         if (draftEventData) {
           playerEventData.set(draftEventData);
+          updateSelectedPlayers();
         }
+        console.log($playerEventData);
       }
     } catch (error) {
       toastStore.show("Error fetching fixture validation list.", "error");
@@ -108,6 +111,16 @@
       $isLoading = false;
       $loadingText = "Loading";
     }
+  }
+
+  function updateSelectedPlayers() {
+    const uniquePlayerIds = new Set(
+      $playerEventData.map((event) => event.playerId)
+    );
+    const selectedPlayerObjects = players.filter((player) =>
+      uniquePlayerIds.has(player.id)
+    );
+    selectedPlayers.set(selectedPlayerObjects);
   }
 
   function saveDraft() {
@@ -248,7 +261,7 @@
                   $playerEventData?.find(
                     (e) => e.playerId === player.id && e.eventType == 0
                   )
-                    ? $playerEventData?.find((e) => e.playerId === player.id)
+                    ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)
                         ?.eventStartMinute
                     : "-"}
                 </div>
@@ -258,7 +271,7 @@
                   $playerEventData?.find(
                     (e) => e.playerId === player.id && e.eventType == 0
                   )
-                    ? $playerEventData?.find((e) => e.playerId === player.id)
+                    ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)
                         ?.eventEndMinute
                     : "-"}
                 </div>

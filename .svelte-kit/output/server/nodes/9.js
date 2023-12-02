@@ -3,6 +3,6 @@
 export const index = 9;
 let component_cache;
 export const component = async () => component_cache ??= (await import('../entries/pages/manager/_page.svelte.js')).default;
-export const imports = ["_app/immutable/nodes/9.9879f442.js","_app/immutable/chunks/index.a8c54947.js","_app/immutable/chunks/stores.61650043.js","_app/immutable/chunks/singletons.3dcb92f8.js","_app/immutable/chunks/team-store.b38566f6.js","_app/immutable/chunks/Layout.ca043cdb.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/manager-store.2eabe04b.js","_app/immutable/chunks/player-store.7033c4f0.js","_app/immutable/chunks/fixture-store.ad45d677.js","_app/immutable/chunks/BadgeIcon.ac2d82f5.js","_app/immutable/chunks/manager-gameweeks.fec23022.js","_app/immutable/chunks/ViewDetailsIcon.d864d339.js"];
+export const imports = ["_app/immutable/nodes/9.d122f387.js","_app/immutable/chunks/index.a8c54947.js","_app/immutable/chunks/stores.609df4f6.js","_app/immutable/chunks/singletons.1e6ef3c9.js","_app/immutable/chunks/team-store.6fe81208.js","_app/immutable/chunks/Layout.133d3dbe.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/manager-store.0a59abeb.js","_app/immutable/chunks/player-store.8fae22f0.js","_app/immutable/chunks/fixture-store.6c78e237.js","_app/immutable/chunks/BadgeIcon.ac2d82f5.js","_app/immutable/chunks/manager-gameweeks.18433350.js","_app/immutable/chunks/ViewDetailsIcon.d864d339.js"];
 export const stylesheets = ["_app/immutable/assets/Layout.ef6abfb5.css"];
 export const fonts = [];

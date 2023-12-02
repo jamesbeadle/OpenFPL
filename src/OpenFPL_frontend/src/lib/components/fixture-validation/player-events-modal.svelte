@@ -158,7 +158,7 @@
         </div>
         <div class="mt-1 text-xs mx-4">
           <ul class="list-disc">
-            {#each $playerEventData as event, index}
+            {#each $playerEventData.filter((x) => x.playerId == player.id) as event, index}
               <li class="flex justify-between items-center mb-2">
                 <span
                   >{getEventTypeLabel(event.eventType)} ({event.eventStartMinute}
