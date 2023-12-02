@@ -1,14 +1,12 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type {
-    PlayerDTO,
-    PlayerEventData,
-  } from "../../../../../declarations/player_canister/player_canister.did";
+  import type { PlayerDTO, PlayerEventData } from "../../../../../declarations/player_canister/player_canister.did";
 
   export let show = false;
   export let player: PlayerDTO;
   export let fixtureId: number;
   export let playerEventData: Writable<[] | PlayerEventData[]>;
+  export let closeModal: () => void;
 
   let eventType = -1;
   let eventStartTime = 0;
@@ -47,14 +45,20 @@
       return currentEvents.filter((_, index) => index !== indexToRemove);
     });
   }
+
+  function handleKeydown(event: KeyboardEvent): void {
+    if (!(event.target instanceof HTMLInputElement) && event.key === "Escape") {
+      closeModal();
+    }
+  }
 </script>
 
 {#if show}
-  <div
-    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
-  >
-    <div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md">
-      {#if player}
+  <div class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
+    on:click={closeModal} on:keydown={handleKeydown}>
+    <div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel"
+      on:click|stopPropagation on:keydown={handleKeydown}>
+      <div class="mt-3 text-center">
         <div class="flex justify-between items-center">
           <h4 class="text-lg font-bold">
             {player.firstName !== "" ? player.firstName.charAt(0) + "." : ""}
@@ -67,54 +71,27 @@
           <h4 class="text-lg font-bold mb-3">Add Event</h4>
           <div class="flex flex-col gap-3">
             <div>
-              <label
-                for="eventType"
-                class="block text-sm font-medium text-gray-700"
-                >Event Type</label
-              >
-              <select
-                id="eventType"
-                bind:value={eventType}
-                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-              >
-                <option value="-1" disabled>Select event type</option>
+              <select id="eventType" bind:value={eventType}
+                class="mt-1 block w-full fpl-dropdown pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                <option value={-1} disabled>Select event type</option>
                 {#each eventOptions as option}
                   <option value={option.id}>{option.label}</option>
                 {/each}
               </select>
             </div>
             <div>
-              <label
-                for="startMinute"
-                class="block text-sm font-medium text-gray-700"
-                >Start Minute</label
-              >
-              <input
-                type="number"
-                id="startMinute"
-                bind:value={eventStartTime}
+              <label for="startMinute" class="block text-sm font-medium">Start Minute</label>
+              <input type="number" id="startMinute" bind:value={eventStartTime}
                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                placeholder="Enter start minute"
-              />
+                placeholder="Enter start minute"/>
             </div>
             <div>
-              <label
-                for="endMinute"
-                class="block text-sm font-medium text-gray-700"
-                >End Minute</label
-              >
-              <input
-                type="number"
-                id="endMinute"
-                bind:value={eventEndTime}
+              <label for="endMinute" class="block text-sm font-medium">End Minute</label>
+              <input type="number" id="endMinute" bind:value={eventEndTime}
                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                placeholder="Enter end minute"
-              />
+                placeholder="Enter end minute"/>
             </div>
-            <button
-              class="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-              on:click={handleAddEvent}>Add Event</button
-            >
+            <button class="mt-2 px-4 py-2 bg-blue-500 rounded" on:click={handleAddEvent}>Add Event</button>
           </div>
         </div>
 
@@ -122,26 +99,17 @@
           <ul class="list-disc pl-5">
             {#each $playerEventData as event, index}
               <li class="flex justify-between items-center mb-2">
-                <span
-                  >{event.eventType} - From {event.eventStartMinute} to {event.eventEndMinute}
-                  minutes</span
-                >
-                <button
-                  class="px-3 py-1 bg-red-500 text-white rounded"
-                  on:click={() => handleRemoveEvent(index)}
-                >
+                <span>{event.eventType} - From {event.eventStartMinute} to {event.eventEndMinute} minutes</span>
+                <button class="px-3 py-1 bg-red-500 rounded" on:click={() => handleRemoveEvent(index)}>
                   Remove
                 </button>
               </li>
             {/each}
           </ul>
         </div>
-      {/if}
-      <div class="flex justify-end gap-3 mt-4">
-        <button
-          class="px-4 py-2 bg-blue-500 text-white rounded"
-          on:click={() => (show = false)}>Done</button
-        >
+        <div class="flex justify-end gap-3 mt-4">
+          <button class="px-4 py-2 bg-blue-500 rounded" on:click={closeModal}>Done</button>
+        </div>
       </div>
     </div>
   </div>

@@ -20,6 +20,8 @@
   
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
+  let teams: Team[] = [];
+  let players: PlayerDTO[] = [];
   let fixture: Fixture | null;
   let homeTeam: Team | null;
   let awayTeam: Team | null;
@@ -33,7 +35,7 @@
   let selectedPlayers = writable<PlayerDTO[] | []>([]);
   
   let selectedTeam: Team | null = null;
-  let selectedPlayer: PlayerDTO;
+  let selectedPlayer: PlayerDTO | null = null;;
   let playerEventData = writable<PlayerEventData[] | []>([]);
   let activeTab: string = "home";
 
@@ -42,10 +44,14 @@
     try {
       await teamStore.sync();
       await fixtureStore.sync();
+      await playerStore.sync();
       
-      let teams: Team[] = [];
       teamStore.subscribe((value) => { 
         teams = value;
+      });
+
+      playerStore.subscribe((value) => { 
+        players = value;
       });
       
       fixtureStore.subscribe((value) => { 
@@ -53,15 +59,17 @@
         homeTeam = teams.find(x => x.id == fixture?.homeTeamId)!;
         awayTeam = teams.find(x => x.id == fixture?.awayTeamId)!;
         selectedTeam = homeTeam;
-        teamPlayers.set($playerStore.filter(x => x.teamId == selectedTeam?.id));
-  
+        teamPlayers.set(players.filter(x => x.teamId == selectedTeam?.id));
       });
 
       const draftKey = `fixtureDraft_${fixtureId}`;
       const savedDraft = localStorage.getItem(draftKey);
       if (savedDraft) {
         const draftData = JSON.parse(savedDraft);
-        playerEventData.set(draftData.playerEventData);
+        let draftEventData = draftData.playerEventData[0];
+        if(draftEventData){
+          playerEventData.set(draftEventData);
+        }
       }
     } catch (error) {
       toastStore.show("Error fetching fixture validation list.", "error");
@@ -110,13 +118,18 @@
   async function setActiveTab(tab: string) {
     await playerStore.sync();
     selectedTeam = tab === 'home' ? homeTeam : awayTeam;
-    teamPlayers.set($playerStore.filter(x => x.teamId == selectedTeam?.id));
+    teamPlayers.set(players.filter(x => x.teamId == selectedTeam?.id));
     activeTab = tab;
   }
 
   function handleEditPlayerEvents(player: PlayerDTO) {
     selectedPlayer = player;
     showPlayerEventModal = true;
+  }
+
+  function closeEventPlayerEventsModal(): void {
+    showPlayerEventModal = false;
+    selectedPlayer = null;
   }
 
   function showSelectPlayersModal(): void {
@@ -146,18 +159,18 @@
         <button class="fpl-button px-4 py-2" on:click={showConfirmClearDraftModal}>Clear Draft</button>
       </div>
       {#if !$isLoading}
-      <div class="flex w-full">
-        <ul class="flex bg-light-gray px-4 pt-2 w-full mt-4">
-          <li class={`mr-4 text-xs md:text-base ${ activeTab === "home" ? "active-tab" : "" }`}>
-            <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400"}`}
-              on:click={() => setActiveTab("home")}>{homeTeam?.friendlyName}</button>
-          </li>
-          <li class={`mr-4 text-xs md:text-base ${ activeTab === "away" ? "active-tab" : ""}`}>
-            <button class={`p-2 ${ activeTab === "away" ? "text-white" : "text-gray-400" }`}
-              on:click={() => setActiveTab("away")}>{awayTeam?.friendlyName}</button>
-          </li>
-        </ul>
-      </div>
+        <div class="flex w-full">
+          <ul class="flex bg-light-gray px-4 pt-2 w-full mt-4">
+            <li class={`mr-4 text-xs md:text-base ${ activeTab === "home" ? "active-tab" : "" }`}>
+              <button class={`p-2 ${ activeTab === "home" ? "text-white" : "text-gray-400"}`}
+                on:click={() => setActiveTab("home")}>{homeTeam?.friendlyName}</button>
+            </li>
+            <li class={`mr-4 text-xs md:text-base ${ activeTab === "away" ? "active-tab" : ""}`}>
+              <button class={`p-2 ${ activeTab === "away" ? "text-white" : "text-gray-400" }`}
+                on:click={() => setActiveTab("away")}>{awayTeam?.friendlyName}</button>
+            </li>
+          </ul>
+        </div>
       <div class="flex w-full flex-col">
         <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full">
           <div class="w-1/6 px-4">Player</div>
@@ -216,6 +229,7 @@
     player={selectedPlayer}
     {fixtureId}
     {playerEventData}
+    closeModal={closeEventPlayerEventsModal}
   />
 {/if}
 
