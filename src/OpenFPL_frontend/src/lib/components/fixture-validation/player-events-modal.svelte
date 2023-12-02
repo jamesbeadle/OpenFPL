@@ -12,6 +12,9 @@
   let eventStartTime = 0;
   let eventEndTime = 0;
 
+  let isSubmitDisabled: boolean = true;
+  $: isSubmitDisabled = eventType < 0;
+
   const eventOptions = [
     { id: 0, label: "Appearance" },
     { id: 1, label: "Goal Scored" },
@@ -23,7 +26,8 @@
   ];
 
   function handleAddEvent() {
-    if (eventType && eventStartTime !== null && eventEndTime !== null) {
+    
+    if (eventType >= 0 && eventStartTime !== null && eventEndTime !== null) {
       const newEvent = {
         playerId: player.id,
         eventType: Number(eventType),
@@ -58,44 +62,56 @@
     on:click={closeModal} on:keydown={handleKeydown}>
     <div class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel"
       on:click|stopPropagation on:keydown={handleKeydown}>
-      <div class="mt-3 text-center">
+      <div class="mt-3">
         <div class="flex justify-between items-center">
           <h4 class="text-lg font-bold">
             {player.firstName !== "" ? player.firstName.charAt(0) + "." : ""}
             {player.lastName} - Match Events
           </h4>
-          <button class="text-black" on:click={() => (show = false)}>✕</button>
         </div>
 
         <div class="mt-4 p-4 border-t border-gray-200">
-          <h4 class="text-lg font-bold mb-3">Add Event</h4>
-          <div class="flex flex-col gap-3">
-            <div>
-              <select id="eventType" bind:value={eventType}
-                class="mt-1 block w-full fpl-dropdown pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+          <h4 class="font-bold">Add Event</h4>
+          <div class="flex flex-col gap-1">
+            <div class="mt-1">
+              <select id="eventType" 
+                bind:value={eventType}
+                class="w-full p-2 rounded-md fpl-dropdown">
                 <option value={-1} disabled>Select event type</option>
                 {#each eventOptions as option}
                   <option value={option.id}>{option.label}</option>
                 {/each}
               </select>
             </div>
-            <div>
+            <div class="mt-1">
               <label for="startMinute" class="block text-sm font-medium">Start Minute</label>
               <input type="number" id="startMinute" bind:value={eventStartTime}
-                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 placeholder="Enter start minute"/>
             </div>
-            <div>
+            <div class="mt-2">
               <label for="endMinute" class="block text-sm font-medium">End Minute</label>
               <input type="number" id="endMinute" bind:value={eventEndTime}
-                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 placeholder="Enter end minute"/>
             </div>
-            <button class="mt-2 px-4 py-2 bg-blue-500 rounded" on:click={handleAddEvent}>Add Event</button>
+            
+            <div class="items-center mt-3 flex space-x-4">
+              <button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                on:click={closeModal}>
+                Cancel
+              </button>
+              
+              <button class={`${ isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`} on:click={handleAddEvent} disabled={isSubmitDisabled}>Add Event</button>
+            </div>
+            
           </div>
         </div>
-
-        <div class="mt-4">
+        
+        <div class="px-4">
+          <h4 class="text-sm">Events:</h4>
+        </div>
+        <div class="mt-1 text-xs">
           <ul class="list-disc pl-5">
             {#each $playerEventData as event, index}
               <li class="flex justify-between items-center mb-2">
