@@ -10,7 +10,7 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { isLoading } from "$lib/stores/global-stores";
   import { userStore } from "$lib/stores/user-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
   import { onMount, onDestroy } from "svelte";
@@ -50,7 +50,10 @@
       await playerEventsStore.sync();
 
     } catch (error) {
-      toastStore.show("Error syncing authentication.", "error");
+      toastsError({
+				msg: { text: 'Error syncing authentication.' },
+				err: error
+			});
       console.error("Error syncing authentication:", error);
     } finally {
       $isLoading = false;

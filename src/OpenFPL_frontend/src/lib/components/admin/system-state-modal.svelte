@@ -3,7 +3,7 @@
   import { seasonStore } from "$lib/stores/season-store";
   import { systemStore } from "$lib/stores/system-store";
   import { authStore } from "$lib/stores/auth.store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError, toastsShow } from '$lib/stores/toasts-store';
   import type {
     Season,
     SystemState,
@@ -57,9 +57,16 @@
       await systemStore.updateSystemState(systemState);
       systemStore.sync();
       await closeModal();
-      toastStore.show("System State Updated.", "success");
+      toastsShow({
+        text: 'System State Updated.',
+        level: 'success',
+        duration: 2000
+      });
     } catch (error) {
-      toastStore.show("Error updating system state.", "error");
+      toastsError({
+				msg: { text: 'Error updating system state.' },
+				err: error
+			});
       console.error("Error updating system state:", error);
       cancelModal();
     } finally {

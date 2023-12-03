@@ -8,7 +8,7 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
@@ -88,7 +88,10 @@
       let team = $fantasyTeam;
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch (error) {
-      toastStore.show("Error loading add player modal.", "error");
+      toastsError({
+				msg: { text: 'Error fetching homepage data.' },
+				err: error
+			});
       console.error("Error fetching homepage data:", error);
     } finally {
       isLoading = false;

@@ -3,7 +3,7 @@
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type {
     SystemState,
@@ -72,7 +72,10 @@
         systemState = value;
       });
     } catch (error) {
-      toastStore.show("Error fetching fixtures data.", "error");
+      toastsError({
+				msg: { text: 'Error fetching fixtures data.' },
+				err: error
+			});
       console.error("Error fetching fixtures data:", error);
     } finally {
       isLoading = false;

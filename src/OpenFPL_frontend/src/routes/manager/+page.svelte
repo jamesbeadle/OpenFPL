@@ -5,7 +5,7 @@
   import { systemStore } from "$lib/stores/system-store";
   import { teamStore } from "$lib/stores/team-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import type {
     FantasyTeam,
     ManagerDTO,
@@ -88,7 +88,10 @@
           ? teams.find((x) => x.id == manager.favouriteTeamId) ?? null
           : null;
     } catch (error) {
-      toastStore.show("Error fetching manager details.", "error");
+      toastsError({
+				msg: { text: 'Error fetching manager details.' },
+				err: error
+			});
       console.error("Error fetching manager details:", error);
     } finally {
       isLoading = false;

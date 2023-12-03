@@ -5,7 +5,7 @@
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError, toastsShow } from '$lib/stores/toasts-store';
   import type {
     ProfileDTO,
     SystemState,
@@ -59,7 +59,10 @@
         setProfile(value);
       });
     } catch (error) {
-      toastStore.show("Error fetching profile detail.", "error");
+      toastsError({
+				msg: { text: 'Error fetching profile detail.' },
+				err: error
+			});
       console.error("Error fetching profile detail:", error);
     } finally {
       isLoading = false;
@@ -107,7 +110,11 @@
 
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text).then(() => {
-      toastStore.show("Copied!", "success");
+      toastsShow({
+        text: 'Copied to clipboard.',
+        level: 'success',
+        duration: 2000
+      });
     });
   }
 
@@ -145,9 +152,16 @@
         const blob = new Blob([new Uint8Array(profileData.profilePicture)]);
         profileSrc = URL.createObjectURL(blob);
       }
-      toastStore.show("Profile image updated.", "success");
+      toastsShow({
+        text: 'Profile image updated.',
+        level: 'success',
+        duration: 2000
+      });
     } catch (error) {
-      toastStore.show("Error updating profile image", "error");
+      toastsError({
+				msg: { text: 'Error updating profile image.' },
+				err: error
+			});
       console.error("Error updating profile image", error);
     } finally {
       isLoading = false;

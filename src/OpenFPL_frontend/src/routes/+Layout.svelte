@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import { browser } from '$app/environment';
 	import { authStore, type AuthStoreData } from '$lib/stores/auth.store';
-	import { onMount } from 'svelte';
+	import { toastsError } from '$lib/stores/toasts-store';
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
-  import Toast from "$lib/components/toast.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-	import { fade } from 'svelte/transition';
+	import Busy from '$lib/components/Busy.svelte';
   import "../app.css";
   
-  import { toastStore } from '$lib/stores/toast-store';
+	import { Spinner, Toasts } from '@dfinity/gix-components';
 	import { initAuthWorker } from '$lib/services/worker.auth.services';
 
 	const init = async () => await Promise.all([syncAuthStore()]);
@@ -22,7 +22,10 @@
 		try {
 			await authStore.sync();
 		} catch (err: unknown) {
-			toastStore.show("Unexpected error syncing authentication.", "error");
+			toastsError({
+				msg: { text: 'Unexpected issue while syncing the status of your authentication.' },
+				err
+			});
 		}
 	};
   
@@ -50,8 +53,8 @@
 
 <svelte:window on:storage={syncAuthStore} />
 {#await init()}
-  <div in:fade class="loading-overlay">
-    <LoadingIcon />
+  <div in:fade>
+    <Spinner />
   </div>
 {:then _}
   <div class="flex flex-col h-screen justify-between">
@@ -59,25 +62,14 @@
     <main>
       <slot />
     </main>
-    <Toast />
     <Footer />
   </div>
 {/await}
 
-<style>
-  .loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 10;
-  }
+<Toasts />
+<Busy />
 
+<style>
   main {
     flex: 1;
     display: flex;

@@ -6,7 +6,7 @@
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError, toastsShow } from '$lib/stores/toasts-store';
   import { loadingText } from "$lib/stores/global-stores";
   import type {
     PlayerDTO,
@@ -87,8 +87,11 @@
         }
       }
     } catch (error) {
-      toastStore.show("Error fetching fixture validation list.", "error");
-      console.error("Error fetching fixture validation list.", error);
+      toastsError({
+				msg: { text: 'Error fetching fixture information.' },
+				err: error
+			});
+      console.error("Error fetching fixture information.", error);
     } finally {
       isLoading = false;
     }
@@ -102,10 +105,17 @@
     try {
       await governanceStore.submitFixtureData(fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
-      toastStore.show("Fixture data saved", "success");
+      toastsShow({
+        text: 'Fixture data saved.',
+        level: 'success',
+        duration: 2000
+      });
       goto("/fixture-validation");
     } catch (error) {
-      toastStore.show("Error saving fixture data.", "error");
+      toastsError({
+				msg: { text: 'Error saving fixture data.' },
+				err: error
+			});
       console.error("Error saving fixture data: ", error);
     } finally {
       isLoading = false;
@@ -129,13 +139,21 @@
     };
     const draftKey = `fixtureDraft_${fixtureId}`;
     localStorage.setItem(draftKey, JSON.stringify(draftData, replacer));
-    toastStore.show("Draft saved.", "success");
+    toastsShow({
+      text: 'Draft saved.',
+      level: 'success',
+      duration: 2000
+    });
   }
 
   function clearDraft() {
     playerEventData = writable<PlayerEventData[] | []>([]);
     localStorage.removeItem(`fixtureDraft_${fixtureId}`);
-    toastStore.show("Draft cleared.", "success");
+    toastsShow({
+      text: 'Draft cleared.',
+      level: 'success',
+      duration: 2000
+    });
     closeConfirmClearDraftModal();
   }
 

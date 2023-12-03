@@ -4,7 +4,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import Layout from "../+Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -96,7 +96,10 @@
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
     } catch (error) {
-      toastStore.show("Error fetching club details.", "error");
+      toastsError({
+				msg: { text: 'Error fetching club details.' },
+				err: error
+			});
       console.error("Error fetching club details:", error);
     } finally {
       isLoading = false;

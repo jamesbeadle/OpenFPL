@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
@@ -60,7 +60,10 @@
       let leaderboardData = await leaderboardStore.getWeeklyLeaderboard();
       leaderboard = leaderboardData;
     } catch (error) {
-      toastStore.show("Error fetching leaderboard data.", "error");
+      toastsError({
+				msg: { text: 'Error fetching leaderboard data.' },
+				err: error
+			});
       console.error("Error fetching leaderboard data:", error);
     } finally {
       isLoading = false;
@@ -102,7 +105,10 @@
           break;
       }
     } catch (error) {
-      toastStore.show("Error fetching leaderboard data.", "error");
+      toastsError({
+				msg: { text: 'Error fetching leaderboard data.' },
+				err: error
+			});
       console.error("Error fetching leaderboard data:", error);
     } finally {
       isLoading = false;

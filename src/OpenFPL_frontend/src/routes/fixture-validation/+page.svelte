@@ -4,7 +4,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import type {
     Fixture,
     SystemState,
@@ -58,7 +58,10 @@
         );
       });
     } catch (error) {
-      toastStore.show("Error fetching fixture validation list.", "error");
+      toastsError({
+				msg: { text: 'Error fetching fixture validation list.' },
+				err: error
+			});
       console.error("Error fetching fixture validation list.", error);
     } finally {
       isLoading = false;

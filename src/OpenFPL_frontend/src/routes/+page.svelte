@@ -5,7 +5,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import { managerStore } from "$lib/stores/manager-store";
   import {
     formatUnixDateToReadable,
@@ -83,7 +83,10 @@
 
       weeklyLeader = await leaderboardStore.getLeadingWeeklyTeam();
     } catch (error) {
-      toastStore.show("Error fetching homepage data.", "error");
+      toastsError({
+				msg: { text: 'Error fetching homepage data.' },
+				err: error
+			});
       console.error("Error fetching homepage data:", error);
     } finally {
       isLoading = false;

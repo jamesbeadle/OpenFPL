@@ -178,14 +178,10 @@
 			}
 		</style>
 
-		<!-- LINKS_PRELOADER -->
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 
-		<!-- All resources required to boot the dapp can take some times to be downloaded on the IC. -->
-		<!-- That's why we are displaying a spinner while the dapp is starting. -->
-		<!-- Spinner which is then removed as soon as the authentication is initialized (regardless if sign-in or sign-out) -->
 		<svg
 			id="app-spinner"
 			preserveAspectRatio="xMidYMid meet"
@@ -196,7 +192,5 @@
 		>
 			<circle cx="50%" cy="50%" r="45" />
 		</svg>
-
-		<!-- SCRIPT_LOADER -->
 	</body>
 </html>

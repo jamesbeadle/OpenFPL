@@ -3,7 +3,7 @@
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import type {
     ManagerDTO,
     Season,
@@ -43,7 +43,10 @@
         selectedGameweek
       );
     } catch (error) {
-      toastStore.show("Error fetching manager gameweeks.", "error");
+      toastsError({
+				msg: { text: 'Error fetching manager gameweeks.' },
+				err: error
+			});
       console.error("Error fetching manager gameweeks:", error);
     } finally {
       isLoading = false;

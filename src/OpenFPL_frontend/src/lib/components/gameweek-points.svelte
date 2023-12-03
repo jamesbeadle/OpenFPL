@@ -4,7 +4,7 @@
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError } from '$lib/stores/toasts-store';
   import { managerStore } from "$lib/stores/manager-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { authStore } from "$lib/stores/auth.store";
@@ -65,7 +65,10 @@
 
       await loadGameweekPoints($authStore?.identity?.getPrincipal());
     } catch (error) {
-      toastStore.show("Error fetching gameweek points.", "error");
+      toastsError({
+				msg: { text: 'Error fetching gameweek points.' },
+				err: error
+			});
       console.error("Error fetching gameweek points:", error);
     } finally {
       isLoading = false;
@@ -118,7 +121,10 @@
       selectedOpponentTeam = teams.find((x) => x.id === opponentId)!;
       showModal = true;
     } catch (error) {
-      toastStore.show("Error loading gameweek detail.", "error");
+      toastsError({
+				msg: { text: 'Error loading gameweek detail.' },
+				err: error
+			});
       console.error("Error loading gameweek detail:", error);
     }
   }

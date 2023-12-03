@@ -1,6 +1,6 @@
 <script lang="ts">
   import { userStore } from "$lib/stores/user-store";
-  import { toastStore } from "$lib/stores/toast-store";
+  import { toastsError, toastsShow } from '$lib/stores/toasts-store';
   import { loadingText } from "$lib/stores/global-stores";
 
   export let showModal: boolean;
@@ -26,9 +26,16 @@
       await userStore.updateUsername(newUsername);
       userStore.sync();
       await closeModal();
-      toastStore.show("Display name updated.", "success");
+      toastsShow({
+        text: 'Display name updated.',
+        level: 'success',
+        duration: 2000
+      });
     } catch (error) {
-      toastStore.show("Error updating username.", "error");
+      toastsError({
+				msg: { text: 'Error updating username.' },
+				err: error
+			});
       console.error("Error updating username:", error);
       cancelModal();
     } finally {
