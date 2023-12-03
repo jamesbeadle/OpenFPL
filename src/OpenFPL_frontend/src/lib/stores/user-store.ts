@@ -1,4 +1,4 @@
-import { authStore } from "$lib/stores/auth";
+import { authStore } from "$lib/stores/auth.store";
 import { replacer } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";

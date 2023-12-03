@@ -11,8 +11,8 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { idlFactory } from "../../../../declarations/player_canister";
 import type {
-  PlayerDetailDTO,
   PlayerDTO,
+  PlayerDetailDTO,
   PlayerPointsDTO,
 } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";

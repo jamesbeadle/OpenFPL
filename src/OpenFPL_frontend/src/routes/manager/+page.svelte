@@ -5,14 +5,14 @@
   import { systemStore } from "$lib/stores/system-store";
   import { teamStore } from "$lib/stores/team-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import type {
     FantasyTeam,
     ManagerDTO,
     SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import Layout from "../+Layout.svelte";
+  import Layout from "../Layout.svelte";
   import ManagerGameweekDetails from "$lib/components/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -89,9 +89,9 @@
           : null;
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching manager details.' },
-				err: error
-			});
+        msg: { text: "Error fetching manager details." },
+        err: error,
+      });
       console.error("Error fetching manager details:", error);
     } finally {
       isLoading = false;

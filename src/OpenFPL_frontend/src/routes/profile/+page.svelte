@@ -3,7 +3,7 @@
   import { goto } from "$app/navigation";
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
-  import Layout from "../+Layout.svelte";
+  import Layout from "../Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   let activeTab: string = "details";
 

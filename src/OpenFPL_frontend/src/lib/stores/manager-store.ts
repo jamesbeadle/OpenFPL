@@ -1,4 +1,4 @@
-import { authStore } from "$lib/stores/auth";
+import { authStore } from "$lib/stores/auth.store";
 import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";

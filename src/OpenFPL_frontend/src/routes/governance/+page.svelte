@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Layout from "../+Layout.svelte";
+  import Layout from "../Layout.svelte";
   let activeTab: string = "proposals";
 
   function setActiveTab(tab: string): void {

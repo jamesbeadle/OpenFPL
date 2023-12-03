@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import Layout from "../+Layout.svelte";
+  import Layout from "../Layout.svelte";
   import { writable } from "svelte/store";
-  import { toastsError, toastsShow } from '$lib/stores/toasts-store';
+  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
@@ -177,9 +177,9 @@
       countdownMinutes = countdownTime.minutes.toString();
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching team details.' },
-				err: error
-			});
+        msg: { text: "Error fetching team details." },
+        err: error,
+      });
       console.error("Error fetching team details:", error);
     } finally {
       isLoading = false;
@@ -740,17 +740,17 @@
 
     try {
       await managerStore.saveFantasyTeam(team!, activeGameweek);
-      
+
       toastsShow({
-        text: 'Team saved successully!',
-        level: 'success',
-        duration: 2000
+        text: "Team saved successully!",
+        level: "success",
+        duration: 2000,
       });
     } catch (error) {
       toastsError({
-				msg: { text: 'Error saving team.' },
-				err: error
-			});
+        msg: { text: "Error saving team." },
+        err: error,
+      });
       console.error("Error saving team:", error);
     } finally {
       isLoading = false;

@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte";
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
-  import { toastsError, toastsShow } from '$lib/stores/toasts-store';
+  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { loadingText } from "$lib/stores/global-stores";
 
@@ -40,15 +40,15 @@
       userStore.sync();
       await closeModal();
       toastsShow({
-        text: 'Favourite team updated.',
-        level: 'success',
-        duration: 2000
+        text: "Favourite team updated.",
+        level: "success",
+        duration: 2000,
       });
     } catch (error) {
       toastsError({
-				msg: { text: 'Error updating favourite team.' },
-				err: error
-			});
+        msg: { text: "Error updating favourite team." },
+        err: error,
+      });
       console.error("Error updating favourite team:", error);
       cancelModal();
     } finally {
@@ -69,6 +69,7 @@
     class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
     on:click={cancelModal}
     on:keydown={handleKeydown}
+    role="dialog"
   >
     <div
       class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"

@@ -8,7 +8,7 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
@@ -89,9 +89,9 @@
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching homepage data.' },
-				err: error
-			});
+        msg: { text: "Error fetching homepage data." },
+        err: error,
+      });
       console.error("Error fetching homepage data:", error);
     } finally {
       isLoading = false;
@@ -201,6 +201,7 @@
       class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
       on:click={closeAddPlayerModal}
       on:keydown={closeAddPlayerModal}
+      role="dialog"
     >
       <div
         class="relative top-10 md:top-20 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-panel text-white"

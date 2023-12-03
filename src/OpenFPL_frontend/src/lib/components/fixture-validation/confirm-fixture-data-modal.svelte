@@ -5,11 +5,20 @@
   function closeModal() {
     show = false;
   }
+
+  function handleKeydown(event: KeyboardEvent): void {
+    if (!(event.target instanceof HTMLInputElement) && event.key === "Escape") {
+      closeModal();
+    }
+  }
 </script>
 
 {#if show}
   <div
-    class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
+    on:click={closeModal}
+    on:keydown={handleKeydown}
+    role="dialog"
   >
     <div class="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md">
       <div class="flex justify-between items-center">

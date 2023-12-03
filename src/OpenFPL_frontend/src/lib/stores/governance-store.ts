@@ -1,4 +1,4 @@
-import { authStore } from "$lib/stores/auth";
+import { authStore } from "$lib/stores/auth.store";
 import { writable } from "svelte/store";
 import type {
   Fixture,

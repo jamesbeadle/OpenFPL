@@ -5,7 +5,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import { managerStore } from "$lib/stores/manager-store";
   import {
     formatUnixDateToReadable,
@@ -16,7 +16,7 @@
     LeaderboardEntry,
     Team,
   } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import Layout from "./+Layout.svelte";
+  import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
@@ -84,9 +84,9 @@
       weeklyLeader = await leaderboardStore.getLeadingWeeklyTeam();
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching homepage data.' },
-				err: error
-			});
+        msg: { text: "Error fetching homepage data." },
+        err: error,
+      });
       console.error("Error fetching homepage data:", error);
     } finally {
       isLoading = false;

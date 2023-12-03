@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import {
@@ -57,9 +57,9 @@
       });
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching team fixtures.' },
-				err: error
-			});
+        msg: { text: "Error fetching team fixtures." },
+        err: error,
+      });
       console.error("Error fetching team fixtures:", error);
     } finally {
     }

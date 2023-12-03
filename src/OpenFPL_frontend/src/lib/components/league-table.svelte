@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
@@ -49,9 +49,9 @@
       });
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching league table.' },
-				err: error
-			});
+        msg: { text: "Error fetching league table." },
+        err: error,
+      });
       console.error("Error fetching league table:", error);
     } finally {
     }

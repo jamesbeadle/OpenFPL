@@ -6,7 +6,7 @@
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";
-  import { toastsError, toastsShow } from '$lib/stores/toasts-store';
+  import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import { loadingText } from "$lib/stores/global-stores";
   import type {
     PlayerDTO,
@@ -17,7 +17,7 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { replacer } from "$lib/utils/Helpers";
-  import Layout from "../+Layout.svelte";
+  import Layout from "../Layout.svelte";
   import PlayerEventsModal from "$lib/components/fixture-validation/player-events-modal.svelte";
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
   import ConfirmFixtureDataModal from "$lib/components/fixture-validation/confirm-fixture-data-modal.svelte";
@@ -88,9 +88,9 @@
       }
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching fixture information.' },
-				err: error
-			});
+        msg: { text: "Error fetching fixture information." },
+        err: error,
+      });
       console.error("Error fetching fixture information.", error);
     } finally {
       isLoading = false;
@@ -106,16 +106,16 @@
       await governanceStore.submitFixtureData(fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       toastsShow({
-        text: 'Fixture data saved.',
-        level: 'success',
-        duration: 2000
+        text: "Fixture data saved.",
+        level: "success",
+        duration: 2000,
       });
       goto("/fixture-validation");
     } catch (error) {
       toastsError({
-				msg: { text: 'Error saving fixture data.' },
-				err: error
-			});
+        msg: { text: "Error saving fixture data." },
+        err: error,
+      });
       console.error("Error saving fixture data: ", error);
     } finally {
       isLoading = false;
@@ -140,9 +140,9 @@
     const draftKey = `fixtureDraft_${fixtureId}`;
     localStorage.setItem(draftKey, JSON.stringify(draftData, replacer));
     toastsShow({
-      text: 'Draft saved.',
-      level: 'success',
-      duration: 2000
+      text: "Draft saved.",
+      level: "success",
+      duration: 2000,
     });
   }
 
@@ -150,9 +150,9 @@
     playerEventData = writable<PlayerEventData[] | []>([]);
     localStorage.removeItem(`fixtureDraft_${fixtureId}`);
     toastsShow({
-      text: 'Draft cleared.',
-      level: 'success',
-      duration: 2000
+      text: "Draft cleared.",
+      level: "success",
+      duration: 2000,
     });
     closeConfirmClearDraftModal();
   }

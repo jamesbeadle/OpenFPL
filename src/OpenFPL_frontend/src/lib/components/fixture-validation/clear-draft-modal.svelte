@@ -15,6 +15,7 @@
     class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
     on:click={closeModal}
     on:keydown={handleKeydown}
+    role="dialog"
   >
     <div
       class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"

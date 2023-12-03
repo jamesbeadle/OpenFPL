@@ -4,14 +4,14 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import type {
     Fixture,
     SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import Layout from "../+Layout.svelte";
+  import Layout from "../Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let teams: Team[];
@@ -59,9 +59,9 @@
       });
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching fixture validation list.' },
-				err: error
-			});
+        msg: { text: "Error fetching fixture validation list." },
+        err: error,
+      });
       console.error("Error fetching fixture validation list.", error);
     } finally {
       isLoading = false;

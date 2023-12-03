@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
@@ -61,9 +61,9 @@
       leaderboard = leaderboardData;
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching leaderboard data.' },
-				err: error
-			});
+        msg: { text: "Error fetching leaderboard data." },
+        err: error,
+      });
       console.error("Error fetching leaderboard data:", error);
     } finally {
       isLoading = false;
@@ -106,9 +106,9 @@
       }
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching leaderboard data.' },
-				err: error
-			});
+        msg: { text: "Error fetching leaderboard data." },
+        err: error,
+      });
       console.error("Error fetching leaderboard data:", error);
     } finally {
       isLoading = false;

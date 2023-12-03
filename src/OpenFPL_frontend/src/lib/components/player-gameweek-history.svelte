@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -73,9 +73,9 @@
       selectedSeason = systemState?.activeSeason ?? selectedSeason;
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching player gameweek history.' },
-				err: error
-			});
+        msg: { text: "Error fetching player gameweek history." },
+        err: error,
+      });
       console.error("Error fetching player gameweek history:", error);
     } finally {
       isLoading = false;

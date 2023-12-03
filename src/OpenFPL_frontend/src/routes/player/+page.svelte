@@ -5,7 +5,7 @@
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import {
     calculateAgeFromNanoseconds,
     convertDateToReadable,
@@ -23,7 +23,7 @@
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-  import Layout from "../+Layout.svelte";
+  import Layout from "../Layout.svelte";
   import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
@@ -107,9 +107,9 @@
       countdownMinutes = countdownTime.minutes.toString();
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching player details.' },
-				err: error
-			});
+        msg: { text: "Error fetching player details." },
+        err: error,
+      });
       console.error("Error fetching data:", error);
     } finally {
       isLoading = false;

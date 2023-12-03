@@ -1,38 +1,41 @@
-import { idleSignOut } from '$lib/services/auth.services';
-import type { AuthStoreData } from '$lib/stores/auth.store';
-import {authRemainingTimeStore} from '$lib/stores/auth.store';
+import { idleSignOut } from "$lib/services/auth.services";
+import type { AuthStoreData } from "$lib/stores/auth.store";
+import { authRemainingTimeStore } from "$lib/stores/auth.store";
 
-import type { PostMessage, PostMessageDataResponseAuth } from '$lib/types/PostMessage';
+import type {
+  PostMessage,
+  PostMessageDataResponseAuth,
+} from "$lib/types/PostMessage";
 
 export const initAuthWorker = async () => {
-	const AuthWorker = await import('$lib/workers/auth.worker?worker');
-	const authWorker: Worker = new AuthWorker.default();
+  const AuthWorker = await import("$lib/workers/auth.worker?worker");
+  const authWorker: Worker = new AuthWorker.default();
 
-	authWorker.onmessage = async ({
-		data
-	}: MessageEvent<PostMessage<PostMessageDataResponseAuth>>) => {
-		const { msg, data: value } = data;
+  authWorker.onmessage = async ({
+    data,
+  }: MessageEvent<PostMessage<PostMessageDataResponseAuth>>) => {
+    const { msg, data: value } = data;
 
-		switch (msg) {
-			case 'signOutIdleTimer':
-				await idleSignOut();
-				return;
-			case 'delegationRemainingTime':
-				authRemainingTimeStore.set(value?.authRemainingTime);
-				return;
-		}
-	};
+    switch (msg) {
+      case "signOutIdleTimer":
+        await idleSignOut();
+        return;
+      case "delegationRemainingTime":
+        authRemainingTimeStore.set(value?.authRemainingTime);
+        return;
+    }
+  };
 
-	return {
-		syncAuthIdle: (auth: AuthStoreData) => {
-			if (!auth.identity) {
-				authWorker.postMessage({ msg: 'stopIdleTimer' });
-				return;
-			}
+  return {
+    syncAuthIdle: (auth: AuthStoreData) => {
+      if (!auth.identity) {
+        authWorker.postMessage({ msg: "stopIdleTimer" });
+        return;
+      }
 
-			authWorker.postMessage({
-				msg: 'startIdleTimer'
-			});
-		}
-	};
+      authWorker.postMessage({
+        msg: "startIdleTimer",
+      });
+    },
+  };
 };

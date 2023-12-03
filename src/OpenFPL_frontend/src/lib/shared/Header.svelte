@@ -10,13 +10,13 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { isLoading } from "$lib/stores/global-stores";
   import { userStore } from "$lib/stores/user-store";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
   import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
   import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-	import { authSignedInStore } from '$lib/derived/auth.derived';
+  import { authSignedInStore } from "$lib/derived/auth.derived";
 
   let menuOpen = false;
   let profile: Writable<ProfileDTO | null> = writable(null);
@@ -48,12 +48,11 @@
       await leaderboardStore.syncWeeklyLeaderboard();
       await playerStore.sync();
       await playerEventsStore.sync();
-
     } catch (error) {
       toastsError({
-				msg: { text: 'Error syncing authentication.' },
-				err: error
-			});
+        msg: { text: "Error syncing authentication." },
+        err: error,
+      });
       console.error("Error syncing authentication:", error);
     } finally {
       $isLoading = false;

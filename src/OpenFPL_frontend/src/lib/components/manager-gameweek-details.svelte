@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { systemStore } from "$lib/stores/system-store";
-  import { toastsError } from '$lib/stores/toasts-store';
+  import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
@@ -52,9 +52,9 @@
       });
     } catch (error) {
       toastsError({
-				msg: { text: 'Error fetching manager gameweek detail.' },
-				err: error
-			});
+        msg: { text: "Error fetching manager gameweek detail." },
+        err: error,
+      });
       console.error("Error fetching manager gameweek detail:", error);
     }
   });
@@ -77,9 +77,9 @@
       );
     } catch (error) {
       toastsError({
-				msg: { text: 'Error updating gameweek players.' },
-				err: error
-			});
+        msg: { text: "Error updating gameweek players." },
+        err: error,
+      });
       console.error("Error updating gameweek players:", error);
     }
   }
