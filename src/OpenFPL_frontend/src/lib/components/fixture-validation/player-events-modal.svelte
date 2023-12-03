@@ -53,11 +53,17 @@
     }
   }
 
-  function handleRemoveEvent(indexToRemove: number) {
+  function handleRemoveEvent(removedEvent: PlayerEventData) {
     playerEventData.update((currentEvents) => {
-      return currentEvents
-        .filter((x) => x.playerId == player.id)
-        .filter((_, index) => index !== indexToRemove);
+      return currentEvents.filter(
+        (event) =>
+          event.playerId != removedEvent.playerId &&
+          event.eventStartMinute != removedEvent.eventStartMinute &&
+          event.eventEndMinute != removedEvent.eventEndMinute &&
+          event.eventType != eventType &&
+          event.fixtureId != event.fixtureId &&
+          event.teamId != event.teamId
+      );
     });
   }
 
@@ -152,7 +158,7 @@
             >
             <button
               class="px-3 py-1 bg-red-500 rounded"
-              on:click={() => handleRemoveEvent(index)}
+              on:click={() => handleRemoveEvent(event)}
             >
               Remove
             </button>

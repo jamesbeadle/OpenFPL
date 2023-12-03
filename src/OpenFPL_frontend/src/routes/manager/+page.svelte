@@ -7,7 +7,7 @@
   import { managerStore } from "$lib/stores/manager-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import type {
-    FantasyTeam,
+    FantasyTeamSnapshot,
     ManagerDTO,
     SystemState,
     Team,
@@ -25,7 +25,7 @@
   let activeTab: string = "details";
 
   let teams: Team[];
-  let fantasyTeam: Writable<FantasyTeam | null> = writable(null);
+  let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
   let systemState: SystemState | null;
 
   let unsubscribeSystemState: () => void;
@@ -233,7 +233,7 @@
 
           <div class="px-4">
             {#if activeTab === "details"}
-              <span class="text-2xl">Total Points: {0}</span>
+              <span class="text-2xl">Total Points: {$fantasyTeam?.points}</span>
             {/if}
           </div>
         </div>

@@ -43,6 +43,7 @@
 
       unsubscribeSystemState = systemStore.subscribe((value) => {
         systemState = value;
+        selectedGameweek = systemState?.focusGameweek ?? selectedGameweek;
       });
 
       unsubscribeTeams = teamStore.subscribe((value) => {
@@ -63,32 +64,24 @@
     }
   });
 
-  $: {
-    if (systemState) {
-      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
-    }
-  }
-
-  $: if (!isLoading && $fantasyTeam && teams.length > 0 && players.length > 0) {
-    console.log("Teams");
-    console.log(teams);
-    console.log("Players");
-    console.log(players);
-    console.log("Fantasy Team");
-    console.log(fantasyTeam);
+  $: if (
+    !isLoading &&
+    $fantasyTeam &&
+    teams.length > 0 &&
+    players.length > 0 &&
+    selectedGameweek > 0
+  ) {
     updateGameweekPlayers();
   }
 
   async function updateGameweekPlayers() {
+    console.log(selectedGameweek);
     try {
-      console.log("updateGameweekPlayers");
-      console.log(selectedGameweek);
-      console.log($fantasyTeam);
       let fetchedPlayers = await playerEventsStore.getGameweekPlayers(
         $fantasyTeam!,
         selectedGameweek
       );
-      gameweekPlayers.set(fetchedPlayers);
+      gameweekPlayers.set(fetchedPlayers.sort((a, b) => b.points - a.points));
     } catch (error) {
       toastsError({
         msg: { text: "Error updating gameweek players." },
@@ -154,7 +147,7 @@
       >
         <div class="w-1/12 text-center mx-4">Position</div>
         <div class="w-2/12">Player</div>
-        <div class="w-2/12 text-center">Team</div>
+        <div class="w-2/12">Team</div>
         <div class="w-1/2 flex">
           <div class="w-1/12 text-center">A</div>
           <div class="w-1/12 text-center">HSP</div>
@@ -181,17 +174,21 @@
           <div class="w-1/12 text-center mx-4">
             {getPositionAbbreviation(data.player.position)}
           </div>
-          <div class="w-2/12">
+          <div class="w-2/12 flex items-center">
             <svelte:component
               this={getFlagComponent(playerDTO?.nationality ?? "")}
               class="w-4 h-4 mr-1"
               size="100"
             />
-            {playerDTO
-              ? playerDTO.firstName.length > 0
-                ? playerDTO.firstName.substring(0, 1) + "." + playerDTO.lastName
-                : ""
-              : ""}
+            <span>
+              {playerDTO
+                ? playerDTO.firstName.length > 0
+                  ? playerDTO.firstName.substring(0, 1) +
+                    "." +
+                    playerDTO.lastName
+                  : ""
+                : ""}
+            </span>
           </div>
           <div class="w-2/12 text-center flex items-center">
             <BadgeIcon
@@ -212,7 +209,7 @@
             </div>
             <div
               class={`w-1/12 text-center ${
-                data.highestScoringPlayerId === playerDTO?.id
+                data.highestScoringPlayerId === data.player.id
                   ? ""
                   : "text-gray-500"
               }`}
