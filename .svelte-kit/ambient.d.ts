@@ -56,6 +56,9 @@ declare module '$env/static/private' {
 	export const INTERNET_IDENTITY_CANISTER_ID: string;
 	export const CANISTER_ID_INTERNET_IDENTITY: string;
 	export const CANISTER_ID_internet_identity: string;
+	export const TOKEN_CANISTER_CANISTER_ID: string;
+	export const CANISTER_ID_TOKEN_CANISTER: string;
+	export const CANISTER_ID_token_canister: string;
 	export const NNS_LEDGER_CANISTER_ID: string;
 	export const CANISTER_ID_NNS_LEDGER: string;
 	export const CANISTER_ID_nns_ledger: string;
@@ -68,9 +71,6 @@ declare module '$env/static/private' {
 	export const PLAYER_CANISTER_CANISTER_ID: string;
 	export const CANISTER_ID_PLAYER_CANISTER: string;
 	export const CANISTER_ID_player_canister: string;
-	export const TOKEN_CANISTER_CANISTER_ID: string;
-	export const CANISTER_ID_TOKEN_CANISTER: string;
-	export const CANISTER_ID_token_canister: string;
 	export const CANISTER_ID: string;
 	export const CANISTER_CANDID_PATH: string;
 	export const VITE_AUTH_PROVIDER_URL: string;
@@ -195,6 +195,9 @@ declare module '$env/dynamic/private' {
 		INTERNET_IDENTITY_CANISTER_ID: string;
 		CANISTER_ID_INTERNET_IDENTITY: string;
 		CANISTER_ID_internet_identity: string;
+		TOKEN_CANISTER_CANISTER_ID: string;
+		CANISTER_ID_TOKEN_CANISTER: string;
+		CANISTER_ID_token_canister: string;
 		NNS_LEDGER_CANISTER_ID: string;
 		CANISTER_ID_NNS_LEDGER: string;
 		CANISTER_ID_nns_ledger: string;
@@ -207,9 +210,6 @@ declare module '$env/dynamic/private' {
 		PLAYER_CANISTER_CANISTER_ID: string;
 		CANISTER_ID_PLAYER_CANISTER: string;
 		CANISTER_ID_player_canister: string;
-		TOKEN_CANISTER_CANISTER_ID: string;
-		CANISTER_ID_TOKEN_CANISTER: string;
-		CANISTER_ID_token_canister: string;
 		CANISTER_ID: string;
 		CANISTER_CANDID_PATH: string;
 		VITE_AUTH_PROVIDER_URL: string;

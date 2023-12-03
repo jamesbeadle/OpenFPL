@@ -191,231 +191,209 @@
             on:click={showConfirmClearDraftModal}>Clear Draft</button
           >
         </div>
-        {#if isLoading}
-          <div class="flex w-full">
-            <ul class="flex bg-light-gray px-4 pt-2 w-full mt-4">
-              <li
-                class={`mr-4 text-xs md:text-base ${
-                  activeTab === "home" ? "active-tab" : ""
-                }`}
-              >
-                <button
-                  class={`p-2 ${
-                    activeTab === "home" ? "text-white" : "text-gray-400"
-                  }`}
-                  on:click={() => setActiveTab("home")}
-                  >{homeTeam?.friendlyName}</button
-                >
-              </li>
-              <li
-                class={`mr-4 text-xs md:text-base ${
-                  activeTab === "away" ? "active-tab" : ""
-                }`}
-              >
-                <button
-                  class={`p-2 ${
-                    activeTab === "away" ? "text-white" : "text-gray-400"
-                  }`}
-                  on:click={() => setActiveTab("away")}
-                  >{awayTeam?.friendlyName}</button
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="flex w-full flex-col">
-            <div
-              class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
+        <div class="flex w-full">
+          <ul class="flex bg-light-gray px-4 pt-2 w-full mt-4">
+            <li
+              class={`mr-4 text-xs md:text-base ${
+                activeTab === "home" ? "active-tab" : ""
+              }`}
             >
-              <div class="w-1/6 px-4">Player</div>
-              <div class="w-1/6 px-4">Position</div>
-              <div class="w-1/6 px-4">Events</div>
-              <div class="w-1/6 px-4">Start</div>
-              <div class="w-1/6 px-4">End</div>
-              <div class="w-1/6 px-4">&nbsp;</div>
-            </div>
-            {#if activeTab === "home"}
-              {#each $selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId) as player (player.id)}
-                <div
-                  class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
-                >
-                  <div class="w-1/6 px-4">
-                    {`${
-                      player.firstName.length > 0
-                        ? player.firstName.charAt(0) + "."
-                        : ""
-                    } ${player.lastName}`}
-                  </div>
-                  {#if player.position == 0}<div class="w-1/6 px-4">
-                      GK
-                    </div>{/if}
-                  {#if player.position == 1}<div class="w-1/6 px-4">
-                      DF
-                    </div>{/if}
-                  {#if player.position == 2}<div class="w-1/6 px-4">
-                      MF
-                    </div>{/if}
-                  {#if player.position == 3}<div class="w-1/6 px-4">
-                      FW
-                    </div>{/if}
-                  <div class="w-1/6 px-4">
-                    Events:
-                    {$playerEventData?.length > 0 &&
-                    $playerEventData?.filter((e) => e.playerId === player.id)
-                      .length
-                      ? $playerEventData?.filter(
-                          (e) => e.playerId === player.id
-                        ).length
-                      : 0}
-                  </div>
-                  <div class="w-1/6 px-4">
-                    {$playerEventData &&
-                    $playerEventData?.length > 0 &&
-                    $playerEventData?.find(
-                      (e) => e.playerId === player.id && e.eventType == 0
-                    )
-                      ? $playerEventData?.find(
-                          (e) => e.playerId === player.id && e.eventType == 0
-                        )?.eventStartMinute
-                      : "-"}
-                  </div>
-                  <div class="w-1/6 px-4">
-                    {$playerEventData &&
-                    $playerEventData?.length > 0 &&
-                    $playerEventData?.find(
-                      (e) => e.playerId === player.id && e.eventType == 0
-                    )
-                      ? $playerEventData?.find(
-                          (e) => e.playerId === player.id && e.eventType == 0
-                        )?.eventEndMinute
-                      : "-"}
-                  </div>
-                  <div class="w-1/6 px-4">
-                    <button
-                      on:click={() => handleEditPlayerEvents(player)}
-                      class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
-                    >
-                      Update Events
-                    </button>
-                  </div>
+              <button
+                class={`p-2 ${
+                  activeTab === "home" ? "text-white" : "text-gray-400"
+                }`}
+                on:click={() => setActiveTab("home")}
+                >{homeTeam?.friendlyName}</button
+              >
+            </li>
+            <li
+              class={`mr-4 text-xs md:text-base ${
+                activeTab === "away" ? "active-tab" : ""
+              }`}
+            >
+              <button
+                class={`p-2 ${
+                  activeTab === "away" ? "text-white" : "text-gray-400"
+                }`}
+                on:click={() => setActiveTab("away")}
+                >{awayTeam?.friendlyName}</button
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="flex w-full flex-col">
+          <div
+            class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
+          >
+            <div class="w-1/6 px-4">Player</div>
+            <div class="w-1/6 px-4">Position</div>
+            <div class="w-1/6 px-4">Events</div>
+            <div class="w-1/6 px-4">Start</div>
+            <div class="w-1/6 px-4">End</div>
+            <div class="w-1/6 px-4">&nbsp;</div>
+          </div>
+          {#if activeTab === "home"}
+            {#each $selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId) as player (player.id)}
+              <div
+                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
+              >
+                <div class="w-1/6 px-4">
+                  {`${
+                    player.firstName.length > 0
+                      ? player.firstName.charAt(0) + "."
+                      : ""
+                  } ${player.lastName}`}
                 </div>
-              {/each}
-            {/if}
-            {#if activeTab === "away"}
-              {#each $selectedPlayers.filter((x) => x.teamId === fixture?.awayTeamId) as player (player.id)}
-                <div
-                  class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
-                >
-                  <div class="w-1/6 px-4">
-                    {`${
-                      player.firstName.length > 0
-                        ? player.firstName.charAt(0) + "."
-                        : ""
-                    } ${player.lastName}`}
-                  </div>
-                  {#if player.position == 0}<div class="w-1/6 px-4">
-                      GK
-                    </div>{/if}
-                  {#if player.position == 1}<div class="w-1/6 px-4">
-                      DF
-                    </div>{/if}
-                  {#if player.position == 2}<div class="w-1/6 px-4">
-                      MF
-                    </div>{/if}
-                  {#if player.position == 3}<div class="w-1/6 px-4">
-                      FW
-                    </div>{/if}
-                  <div class="w-1/6 px-4">
-                    Events:
-                    {$playerEventData?.length > 0 &&
-                    $playerEventData?.filter((e) => e.playerId === player.id)
-                      .length
-                      ? $playerEventData?.filter(
-                          (e) => e.playerId === player.id
-                        ).length
-                      : 0}
-                  </div>
-                  <div class="w-1/6 px-4">
-                    {$playerEventData &&
-                    $playerEventData?.length > 0 &&
-                    $playerEventData?.find(
-                      (e) => e.playerId === player.id && e.eventType == 0
-                    )
-                      ? $playerEventData?.find((e) => e.playerId === player.id)
-                          ?.eventStartMinute
-                      : "-"}
-                  </div>
-                  <div class="w-1/6 px-4">
-                    {$playerEventData &&
-                    $playerEventData?.length > 0 &&
-                    $playerEventData?.find(
-                      (e) => e.playerId === player.id && e.eventType == 0
-                    )
-                      ? $playerEventData?.find((e) => e.playerId === player.id)
-                          ?.eventEndMinute
-                      : "-"}
-                  </div>
-                  <div class="w-1/6 px-4">
-                    <button
-                      on:click={() => handleEditPlayerEvents(player)}
-                      class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
-                    >
-                      Update Events
-                    </button>
-                  </div>
+                {#if player.position == 0}<div class="w-1/6 px-4">GK</div>{/if}
+                {#if player.position == 1}<div class="w-1/6 px-4">DF</div>{/if}
+                {#if player.position == 2}<div class="w-1/6 px-4">MF</div>{/if}
+                {#if player.position == 3}<div class="w-1/6 px-4">FW</div>{/if}
+                <div class="w-1/6 px-4">
+                  Events:
+                  {$playerEventData?.length > 0 &&
+                  $playerEventData?.filter((e) => e.playerId === player.id)
+                    .length
+                    ? $playerEventData?.filter((e) => e.playerId === player.id)
+                        .length
+                    : 0}
                 </div>
-              {/each}
-            {/if}
+                <div class="w-1/6 px-4">
+                  {$playerEventData &&
+                  $playerEventData?.length > 0 &&
+                  $playerEventData?.find(
+                    (e) => e.playerId === player.id && e.eventType == 0
+                  )
+                    ? $playerEventData?.find(
+                        (e) => e.playerId === player.id && e.eventType == 0
+                      )?.eventStartMinute
+                    : "-"}
+                </div>
+                <div class="w-1/6 px-4">
+                  {$playerEventData &&
+                  $playerEventData?.length > 0 &&
+                  $playerEventData?.find(
+                    (e) => e.playerId === player.id && e.eventType == 0
+                  )
+                    ? $playerEventData?.find(
+                        (e) => e.playerId === player.id && e.eventType == 0
+                      )?.eventEndMinute
+                    : "-"}
+                </div>
+                <div class="w-1/6 px-4">
+                  <button
+                    on:click={() => handleEditPlayerEvents(player)}
+                    class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                  >
+                    Update Events
+                  </button>
+                </div>
+              </div>
+            {/each}
+          {/if}
+          {#if activeTab === "away"}
+            {#each $selectedPlayers.filter((x) => x.teamId === fixture?.awayTeamId) as player (player.id)}
+              <div
+                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
+              >
+                <div class="w-1/6 px-4">
+                  {`${
+                    player.firstName.length > 0
+                      ? player.firstName.charAt(0) + "."
+                      : ""
+                  } ${player.lastName}`}
+                </div>
+                {#if player.position == 0}<div class="w-1/6 px-4">GK</div>{/if}
+                {#if player.position == 1}<div class="w-1/6 px-4">DF</div>{/if}
+                {#if player.position == 2}<div class="w-1/6 px-4">MF</div>{/if}
+                {#if player.position == 3}<div class="w-1/6 px-4">FW</div>{/if}
+                <div class="w-1/6 px-4">
+                  Events:
+                  {$playerEventData?.length > 0 &&
+                  $playerEventData?.filter((e) => e.playerId === player.id)
+                    .length
+                    ? $playerEventData?.filter((e) => e.playerId === player.id)
+                        .length
+                    : 0}
+                </div>
+                <div class="w-1/6 px-4">
+                  {$playerEventData &&
+                  $playerEventData?.length > 0 &&
+                  $playerEventData?.find(
+                    (e) => e.playerId === player.id && e.eventType == 0
+                  )
+                    ? $playerEventData?.find((e) => e.playerId === player.id)
+                        ?.eventStartMinute
+                    : "-"}
+                </div>
+                <div class="w-1/6 px-4">
+                  {$playerEventData &&
+                  $playerEventData?.length > 0 &&
+                  $playerEventData?.find(
+                    (e) => e.playerId === player.id && e.eventType == 0
+                  )
+                    ? $playerEventData?.find((e) => e.playerId === player.id)
+                        ?.eventEndMinute
+                    : "-"}
+                </div>
+                <div class="w-1/6 px-4">
+                  <button
+                    on:click={() => handleEditPlayerEvents(player)}
+                    class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                  >
+                    Update Events
+                  </button>
+                </div>
+              </div>
+            {/each}
+          {/if}
+        </div>
+        <div class="flex w-full m-4">
+          <h1>Summary</h1>
+        </div>
+        <div class="flex flex-row w-full m-4">
+          <div class="text-sm font-medium flex-grow">
+            Appearances: {$playerEventData.filter((x) => x.eventType == 0)
+              .length}
           </div>
-          <div class="flex w-full m-4">
-            <h1>Summary</h1>
+          <div class="text-sm font-medium flex-grow">
+            Goals: {$playerEventData.filter((x) => x.eventType == 1).length}
           </div>
-          <div class="flex flex-row w-full m-4">
-            <div class="text-sm font-medium flex-grow">
-              Appearances: {$playerEventData.filter((x) => x.eventType == 0)
-                .length}
-            </div>
-            <div class="text-sm font-medium flex-grow">
-              Goals: {$playerEventData.filter((x) => x.eventType == 1).length}
-            </div>
-            <div class="text-sm font-medium flex-grow">
-              Own Goals: {$playerEventData.filter((x) => x.eventType == 10)
-                .length}
-            </div>
-            <div class="text-sm font-medium flex-grow">
-              Assists: {$playerEventData.filter((x) => x.eventType == 2).length}
-            </div>
-            <div class="text-sm font-medium flex-grow">
-              Keeper Saves: {$playerEventData.filter((x) => x.eventType == 4)
-                .length}
-            </div>
-            <div class="text-sm font-medium flex-grow">
-              Yellow Cards: {$playerEventData.filter((x) => x.eventType == 8)
-                .length}
-            </div>
-            <div class="text-sm font-medium flex-grow">
-              Red Cards: {$playerEventData.filter((x) => x.eventType == 9)
-                .length}
-            </div>
-            <div class="text-sm font-medium flex-grow">
-              Penalties Saved: {$playerEventData.filter((x) => x.eventType == 6)
-                .length}
-            </div>
-            <div class="text-sm font-medium flex-grow">
-              Penalties Missed: {$playerEventData.filter(
-                (x) => x.eventType == 7
-              ).length}
-            </div>
+          <div class="text-sm font-medium flex-grow">
+            Own Goals: {$playerEventData.filter((x) => x.eventType == 10)
+              .length}
           </div>
+          <div class="text-sm font-medium flex-grow">
+            Assists: {$playerEventData.filter((x) => x.eventType == 2).length}
+          </div>
+          <div class="text-sm font-medium flex-grow">
+            Keeper Saves: {$playerEventData.filter((x) => x.eventType == 4)
+              .length}
+          </div>
+          <div class="text-sm font-medium flex-grow">
+            Yellow Cards: {$playerEventData.filter((x) => x.eventType == 8)
+              .length}
+          </div>
+          <div class="text-sm font-medium flex-grow">
+            Red Cards: {$playerEventData.filter((x) => x.eventType == 9).length}
+          </div>
+          <div class="text-sm font-medium flex-grow">
+            Penalties Saved: {$playerEventData.filter((x) => x.eventType == 6)
+              .length}
+          </div>
+          <div class="text-sm font-medium flex-grow">
+            Penalties Missed: {$playerEventData.filter((x) => x.eventType == 7)
+              .length}
+          </div>
+        </div>
 
-          <div class="items-center mt-3 flex space-x-4">
-            <button
-              class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-              px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-              on:click={confirmFixtureData}
-              disabled={isSubmitDisabled}>Submit Event Data</button
-            >
-          </div>
-        {/if}
+        <div class="items-center mt-3 flex space-x-4">
+          <button
+            class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
+            px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            on:click={confirmFixtureData}
+            disabled={isSubmitDisabled}>Submit Event Data</button
+          >
+        </div>
       </div>
     </div>
   {/if}

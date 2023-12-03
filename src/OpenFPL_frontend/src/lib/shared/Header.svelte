@@ -40,6 +40,7 @@
       document.addEventListener("click", closeDropdownOnClickOutside);
     }
     try {
+      await userStore.sync();
       await authStore.sync();
       await systemStore.sync();
       await fixtureStore.sync();

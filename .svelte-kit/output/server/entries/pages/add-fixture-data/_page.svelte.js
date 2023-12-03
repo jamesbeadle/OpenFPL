@@ -134,50 +134,46 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       return `${isLoading ? `${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}` : `<div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel"><div class="flex flex-col text-xs md:text-base mt-4"><div class="flex flex-row space-x-2 p-4"><button class="fpl-button px-4 py-2">Select Players</button>
           <button class="fpl-button px-4 py-2">Save Draft</button>
           <button class="fpl-button px-4 py-2">Clear Draft</button></div>
-        ${isLoading ? `<div class="flex w-full"><ul class="flex bg-light-gray px-4 pt-2 w-full mt-4"><li${add_attribute("class", `mr-4 text-xs md:text-base ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>${escape(homeTeam?.friendlyName)}</button></li>
-              <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>${escape(awayTeam?.friendlyName)}</button></li></ul></div>
-          <div class="flex w-full flex-col"><div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"><div class="w-1/6 px-4">Player</div>
-              <div class="w-1/6 px-4">Position</div>
-              <div class="w-1/6 px-4">Events</div>
-              <div class="w-1/6 px-4">Start</div>
-              <div class="w-1/6 px-4">End</div>
-              <div class="w-1/6 px-4"> </div></div>
-            ${`${each($selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId), (player) => {
+        <div class="flex w-full"><ul class="flex bg-light-gray px-4 pt-2 w-full mt-4"><li${add_attribute("class", `mr-4 text-xs md:text-base ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>${escape(homeTeam?.friendlyName)}</button></li>
+            <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>${escape(awayTeam?.friendlyName)}</button></li></ul></div>
+        <div class="flex w-full flex-col"><div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"><div class="w-1/6 px-4">Player</div>
+            <div class="w-1/6 px-4">Position</div>
+            <div class="w-1/6 px-4">Events</div>
+            <div class="w-1/6 px-4">Start</div>
+            <div class="w-1/6 px-4">End</div>
+            <div class="w-1/6 px-4"> </div></div>
+          ${`${each($selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId), (player) => {
         return `<div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"><div class="w-1/6 px-4">${escape(`${player.firstName.length > 0 ? player.firstName.charAt(0) + "." : ""} ${player.lastName}`)}</div>
-                  ${player.position == 0 ? `<div class="w-1/6 px-4">GK
-                    </div>` : ``}
-                  ${player.position == 1 ? `<div class="w-1/6 px-4">DF
-                    </div>` : ``}
-                  ${player.position == 2 ? `<div class="w-1/6 px-4">MF
-                    </div>` : ``}
-                  ${player.position == 3 ? `<div class="w-1/6 px-4">FW
-                    </div>` : ``}
-                  <div class="w-1/6 px-4">Events:
-                    ${escape($playerEventData?.length > 0 && $playerEventData?.filter((e) => e.playerId === player.id).length ? $playerEventData?.filter((e) => e.playerId === player.id).length : 0)}</div>
-                  <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventStartMinute : "-")}</div>
-                  <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventEndMinute : "-")}</div>
-                  <div class="w-1/6 px-4"><button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">Update Events
-                    </button></div>
-                </div>`;
+                ${player.position == 0 ? `<div class="w-1/6 px-4">GK</div>` : ``}
+                ${player.position == 1 ? `<div class="w-1/6 px-4">DF</div>` : ``}
+                ${player.position == 2 ? `<div class="w-1/6 px-4">MF</div>` : ``}
+                ${player.position == 3 ? `<div class="w-1/6 px-4">FW</div>` : ``}
+                <div class="w-1/6 px-4">Events:
+                  ${escape($playerEventData?.length > 0 && $playerEventData?.filter((e) => e.playerId === player.id).length ? $playerEventData?.filter((e) => e.playerId === player.id).length : 0)}</div>
+                <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventStartMinute : "-")}</div>
+                <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventEndMinute : "-")}</div>
+                <div class="w-1/6 px-4"><button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1">Update Events
+                  </button></div>
+              </div>`;
       })}`}
-            ${``}</div>
-          <div class="flex w-full m-4"><h1>Summary</h1></div>
-          <div class="flex flex-row w-full m-4"><div class="text-sm font-medium flex-grow">Appearances: ${escape($playerEventData.filter((x) => x.eventType == 0).length)}</div>
-            <div class="text-sm font-medium flex-grow">Goals: ${escape($playerEventData.filter((x) => x.eventType == 1).length)}</div>
-            <div class="text-sm font-medium flex-grow">Own Goals: ${escape($playerEventData.filter((x) => x.eventType == 10).length)}</div>
-            <div class="text-sm font-medium flex-grow">Assists: ${escape($playerEventData.filter((x) => x.eventType == 2).length)}</div>
-            <div class="text-sm font-medium flex-grow">Keeper Saves: ${escape($playerEventData.filter((x) => x.eventType == 4).length)}</div>
-            <div class="text-sm font-medium flex-grow">Yellow Cards: ${escape($playerEventData.filter((x) => x.eventType == 8).length)}</div>
-            <div class="text-sm font-medium flex-grow">Red Cards: ${escape($playerEventData.filter((x) => x.eventType == 9).length)}</div>
-            <div class="text-sm font-medium flex-grow">Penalties Saved: ${escape($playerEventData.filter((x) => x.eventType == 6).length)}</div>
-            <div class="text-sm font-medium flex-grow">Penalties Missed: ${escape($playerEventData.filter((x) => x.eventType == 7).length)}</div></div>
+          ${``}</div>
+        <div class="flex w-full m-4"><h1>Summary</h1></div>
+        <div class="flex flex-row w-full m-4"><div class="text-sm font-medium flex-grow">Appearances: ${escape($playerEventData.filter((x) => x.eventType == 0).length)}</div>
+          <div class="text-sm font-medium flex-grow">Goals: ${escape($playerEventData.filter((x) => x.eventType == 1).length)}</div>
+          <div class="text-sm font-medium flex-grow">Own Goals: ${escape($playerEventData.filter((x) => x.eventType == 10).length)}</div>
+          <div class="text-sm font-medium flex-grow">Assists: ${escape($playerEventData.filter((x) => x.eventType == 2).length)}</div>
+          <div class="text-sm font-medium flex-grow">Keeper Saves: ${escape($playerEventData.filter((x) => x.eventType == 4).length)}</div>
+          <div class="text-sm font-medium flex-grow">Yellow Cards: ${escape($playerEventData.filter((x) => x.eventType == 8).length)}</div>
+          <div class="text-sm font-medium flex-grow">Red Cards: ${escape($playerEventData.filter((x) => x.eventType == 9).length)}</div>
+          <div class="text-sm font-medium flex-grow">Penalties Saved: ${escape($playerEventData.filter((x) => x.eventType == 6).length)}</div>
+          <div class="text-sm font-medium flex-grow">Penalties Missed: ${escape($playerEventData.filter((x) => x.eventType == 7).length)}</div></div>
 
-          <div class="items-center mt-3 flex space-x-4"><button${add_attribute(
+        <div class="items-center mt-3 flex space-x-4"><button${add_attribute(
         "class",
         `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-              px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`,
+            px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`,
         0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Submit Event Data</button></div>` : ``}</div></div>`}`;
+      )} ${isSubmitDisabled ? "disabled" : ""}>Submit Event Data</button></div></div></div>`}`;
     }
   })}
 
