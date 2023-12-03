@@ -77,33 +77,35 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="mt-3 text-center">
-    <h3 class="text-lg leading-6 font-medium mb-2">Update System State</h3>
-    <form on:submit|preventDefault={updateSystemState}>
-      <div class="mt-4">
-        <!-- Dropdown for seasons -->
+  <div class="bg-gray-900 p-4">
+    <div class="mt-3 text-center">
+      <h3 class="text-lg leading-6 font-medium mb-2">Update System State</h3>
+      <form on:submit|preventDefault={updateSystemState}>
+        <div class="mt-4">
+          <!-- Dropdown for seasons -->
 
-        <!-- Dropdown for active gameweeks -->
+          <!-- Dropdown for active gameweeks -->
 
-        <!-- Dropdown for focus gameweeks -->
-      </div>
-      <div class="items-center py-3 flex space-x-4">
-        <button
-          class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-          on:click={cancelModal}
-        >
-          Cancel
-        </button>
-        <button
-          class={`px-4 py-2 ${
-            isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-          } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-          type="submit"
-          disabled={isSubmitDisabled}
-        >
-          Update
-        </button>
-      </div>
-    </form>
+          <!-- Dropdown for focus gameweeks -->
+        </div>
+        <div class="items-center py-3 flex space-x-4">
+          <button
+            class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            on:click={cancelModal}
+          >
+            Cancel
+          </button>
+          <button
+            class={`px-4 py-2 ${
+              isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
+            } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            type="submit"
+            disabled={isSubmitDisabled}
+          >
+            Update
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </Modal>

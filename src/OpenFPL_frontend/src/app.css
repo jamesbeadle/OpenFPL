@@ -98,5 +98,7 @@ body {
   /* other styles */
   position: fixed !important; /* or absolute */
   z-index: 9999 !important; /* Arbitrary high number */
-  top: 10;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  border-radius: 8px;
 }

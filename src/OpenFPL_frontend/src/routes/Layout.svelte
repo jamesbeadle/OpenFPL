@@ -62,11 +62,11 @@
     <main>
       <slot />
     </main>
+    <Toasts />
     <Footer />
   </div>
 {/await}
 
-<Toasts />
 <Busy />
 
 <style>

@@ -68,7 +68,7 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
-  <div class="mt-3">
+  <div class="bg-gray-900 p-4">
     <div class="flex justify-between items-center">
       <h4 class="text-lg font-bold">
         {player.firstName !== "" ? player.firstName.charAt(0) + "." : ""}
@@ -130,9 +130,8 @@
 
         <div class="items-center mt-3 flex space-x-4">
           <button
-            class={`${
-              isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-            } px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
+            px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
             on:click={handleAddEvent}
             disabled={isSubmitDisabled}>Add Event</button
           >
@@ -148,8 +147,8 @@
         {#each $playerEventData.filter((x) => x.playerId == player.id) as event, index}
           <li class="flex justify-between items-center mb-2">
             <span
-              >{getEventTypeLabel(event.eventType)} ({event.eventStartMinute}
-              - {event.eventEndMinute}) mins</span
+              >{getEventTypeLabel(event.eventType)} ({event.eventStartMinute} - {event.eventEndMinute})
+              mins</span
             >
             <button
               class="px-3 py-1 bg-red-500 rounded"

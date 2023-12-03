@@ -1,6 +1,6 @@
 {
-  "name": "{{VITE_OPENFPL_NAME}}",
-  "short_name": "{{VITE_OPENFPL_NAME}}",
+  "name": "OpenFPL",
+  "short_name": "OpenFPL",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#2CE3A6",

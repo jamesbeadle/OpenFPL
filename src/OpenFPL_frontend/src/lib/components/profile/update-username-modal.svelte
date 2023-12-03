@@ -47,7 +47,7 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="mt-3 text-center">
+  <div class="bg-gray-900 p-4">
     <h3 class="text-lg leading-6 font-medium mb-2">Update Display Name</h3>
     <form on:submit|preventDefault={updateUsername}>
       <div class="mt-4">

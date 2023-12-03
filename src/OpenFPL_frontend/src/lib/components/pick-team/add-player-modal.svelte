@@ -11,7 +11,6 @@
   import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import { Modal } from "@dfinity/gix-components";
 
   export let visible: boolean;
@@ -74,7 +73,6 @@
   let isLoading = true;
 
   onMount(async () => {
-    console.log("MOUNT")
     try {
       await playerStore.sync();
       await teamStore.sync();
@@ -193,7 +191,6 @@
     closeAddPlayerModal();
     filteredPlayers = [];
   }
-  
 </script>
 
 <Modal {visible} on:nnsClose={closeAddPlayerModal}>
@@ -220,7 +217,8 @@
           </select>
         </div>
         <div>
-          <label for="filterPosition" class="text-sm">Filter by Position:</label>
+          <label for="filterPosition" class="text-sm">Filter by Position:</label
+          >
           <select
             id="filterPosition"
             class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
@@ -234,7 +232,7 @@
           </select>
         </div>
       </div>
-  
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
           <label for="minValue" class="text-sm">Min Value:</label>
@@ -255,7 +253,7 @@
           />
         </div>
       </div>
-  
+
       <div class="mb-4">
         <label for="filterSurname" class="text-sm">Search by Name:</label>
         <input
@@ -266,16 +264,18 @@
           bind:value={filterSurname}
         />
       </div>
-  
+
       <div class="mb-4">
         <label for="bankBalance" class="font-bold"
           >Available Balance: £{($bankBalance / 4).toFixed(2)}m</label
         >
       </div>
     </div>
-  
+
     <div class="overflow-x-auto flex-1 text-xs md:text-base">
-      <div class="flex justify-between border border-gray-700 py-4 bg-light-gray">
+      <div
+        class="flex justify-between border border-gray-700 py-4 bg-light-gray"
+      >
         <div class="w-1/12 text-center mx-4">Pos</div>
         <div class="w-4/12">Player</div>
         <div class="w-2/12">Team</div>
@@ -283,7 +283,7 @@
         <div class="w-1/12">PTS</div>
         <div class="w-2/12 text-center">&nbsp</div>
       </div>
-  
+
       {#each paginatedPlayers as player, index}
         <div
           class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
@@ -328,7 +328,7 @@
         </div>
       {/each}
     </div>
-  
+
     <div class="justify-center mt-4 pb-4 overflow-x-auto">
       <div class="flex space-x-1 min-w-max">
         {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
@@ -342,14 +342,13 @@
         {/each}
       </div>
     </div>
-  
+
     <div class="flex justify-end mt-4">
       <button
         on:click={closeAddPlayerModal}
         class="px-4 py-2 fpl-purple-btn rounded-md text-white">Close</button
       >
     </div>
-
   </div>
 </Modal>
 

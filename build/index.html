@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- CONTENT_SECURITY_POLICY -->
-
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1" name="viewport" />
 
     <title>OpenFPL</title>
     <link href="https://openfpl.xyz" rel="canonical" />
-    <meta content="{{VITE_OPENFPL_DESCRIPTION}}" name="description" />
+    <meta
+      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."
+      name="description"
+    />
     <meta content="OpenFPL" property="og:title" />
-    <meta content="{{VITE_OPENFPL_DESCRIPTION}}" property="og:description" />
+    <meta
+      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."
+      property="og:description"
+    />
     <meta content="website" property="og:type" />
     <meta content="https://openfpl.xyz" property="og:url" />
     <meta content="https://openfpl.xyz/meta-share.jpg" property="og:image" />
     <meta content="summary_large_image" name="twitter:card" />
     <meta content="OpenFPL" name="twitter:title" />
-    <meta content="{{VITE_OPENFPL_DESCRIPTION}}" name="twitter:description" />
+    <meta
+      content="OpenFPL is a decentralised fantasy football game on the Internet Computer blockchain."
+      name="twitter:description"
+    />
     <meta content="https://openfpl.xyz/meta-share.jpg" name="twitter:image" />
     <meta content="@beadle1989" name="twitter:creator" />
 
@@ -35,7 +42,7 @@
       sizes="16x16"
       href="/favicons/favicon-16x16.png"
     />
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicons/favicon.ico" />
 
     <!-- iOS meta tags & icons -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -60,12 +67,11 @@
 
     <meta content="#2CE3A6" name="theme-color" />
     
-		<link rel="modulepreload" href="/_app/immutable/entry/start.d365e079.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/scheduler.2037d42e.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/singletons.4e632dcd.js">
-		<link rel="modulepreload" href="/_app/immutable/entry/app.e00e6d94.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/preload-helper.a4192956.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/index.cd713282.js">
+		<link href="/_app/immutable/assets/index.71e058bb.css" rel="stylesheet">
+		<link rel="modulepreload" href="/_app/immutable/entry/start.08451ae2.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/index.b17ea26b.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/vendor.f74fbb8c.js">
+		<link rel="modulepreload" href="/_app/immutable/entry/app.dd27bb34.js">
 
     <style>
       body {
@@ -194,7 +200,7 @@
     <div style="display: contents">
 			<script>
 				{
-					__sveltekit_1tm5g6p = {
+					__sveltekit_apsyih = {
 						base: "",
 						env: {}
 					};
@@ -202,8 +208,8 @@
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("/_app/immutable/entry/start.d365e079.js"),
-						import("/_app/immutable/entry/app.e00e6d94.js")
+						import("/_app/immutable/entry/start.08451ae2.js"),
+						import("/_app/immutable/entry/app.dd27bb34.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});

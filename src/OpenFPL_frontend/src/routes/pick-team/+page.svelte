@@ -82,7 +82,7 @@
   $: {
     if ($fantasyTeam) {
       getGridSetup(selectedFormation);
-      if($fantasyTeam.playerIds.filter(x => x > 0).length == 11){
+      if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
         const newFormation = getTeamFormation($fantasyTeam);
         selectedFormation = newFormation;
       }
@@ -257,12 +257,10 @@
     selectedPosition = row;
     selectedColumn = col;
     showAddPlayer = true;
-    console.log(showAddPlayer)
   }
 
   function closeAddPlayerModal() {
     showAddPlayer = false;
-    console.log(showAddPlayer)
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
@@ -744,10 +742,10 @@
 
     try {
       await managerStore.saveFantasyTeam(team!, activeGameweek);
-
       toastsShow({
         text: "Team saved successully!",
         level: "success",
+        position: "bottom",
         duration: 2000,
       });
     } catch (error) {
