@@ -142,7 +142,7 @@
       playerTeam={selectedTeam}
       opponentTeam={selectedOpponentTeam}
       seasonName={activeSeasonName}
-      {showModal}
+      visible={showModal}
       {closeDetailModal}
       gameweekData={selectedGameweekData}
     />

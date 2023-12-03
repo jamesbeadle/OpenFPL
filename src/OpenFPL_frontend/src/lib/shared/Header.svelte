@@ -8,7 +8,6 @@
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import { isLoading } from "$lib/stores/global-stores";
   import { userStore } from "$lib/stores/user-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import OpenFPLIcon from "$lib/icons/OpenFPLIcon.svelte";
@@ -54,8 +53,6 @@
         err: error,
       });
       console.error("Error syncing authentication:", error);
-    } finally {
-      $isLoading = false;
     }
   });
 
@@ -183,15 +180,15 @@
           {/if}
           <li class="p-2 flex flex-1 items-center">
             <div class="relative inline-block">
-              <img
-                src={profileSrc}
-                alt="Profile"
-                class="w-12 h-12 rounded-sm profile-pic"
-                on:click={toggleProfileDropdown}
-                on:error={handleImageError}
-                on:keydown={handleKeyDown}
-                aria-label="Toggle Profile"
-              />
+              <button on:click={toggleProfileDropdown}>
+                <img
+                  src={profileSrc}
+                  alt="Profile"
+                  class="w-12 h-12 rounded-sm profile-pic"
+                  on:error={handleImageError}
+                  aria-label="Toggle Profile"
+                />
+              </button>
               <div
                 class={`absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${
                   showProfileDropdown ? "block" : "hidden"

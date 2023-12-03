@@ -182,7 +182,7 @@
 <div class="bonus-panel rounded-md mx-4 flex-1 mb-2 lg:mb-0">
   {#if selectedBonusId > 0}
     <UseBonusModal
-      {showModal}
+      visible={showModal}
       bonus={bonuses[selectedBonusId - 1]}
       {closeBonusModal}
       {players}

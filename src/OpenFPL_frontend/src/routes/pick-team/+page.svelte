@@ -82,8 +82,10 @@
   $: {
     if ($fantasyTeam) {
       getGridSetup(selectedFormation);
-      const newFormation = getTeamFormation($fantasyTeam);
-      selectedFormation = newFormation;
+      if($fantasyTeam.playerIds.filter(x => x > 0).length == 11){
+        const newFormation = getTeamFormation($fantasyTeam);
+        selectedFormation = newFormation;
+      }
     }
   }
 
@@ -255,10 +257,12 @@
     selectedPosition = row;
     selectedColumn = col;
     showAddPlayer = true;
+    console.log(showAddPlayer)
   }
 
   function closeAddPlayerModal() {
     showAddPlayer = false;
+    console.log(showAddPlayer)
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
@@ -767,7 +771,7 @@
       {handlePlayerSelection}
       filterPosition={selectedPosition}
       filterColumn={selectedColumn}
-      {showAddPlayer}
+      visible={showAddPlayer}
       {closeAddPlayerModal}
       {fantasyTeam}
       {bankBalance}

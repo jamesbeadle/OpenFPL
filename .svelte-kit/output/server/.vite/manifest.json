@@ -1,0 +1,285 @@
+{
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "imports": [
+      "_internal.js"
+    ],
+    "isEntry": true,
+    "src": ".svelte-kit/generated/server/internal.js"
+  },
+  "Layout.css": {
+    "file": "_app/immutable/assets/Layout.80387cff.css",
+    "src": "Layout.css"
+  },
+  "LoadingIcon.css": {
+    "file": "_app/immutable/assets/LoadingIcon.d404a2c5.css",
+    "src": "LoadingIcon.css"
+  },
+  "_Layout.js": {
+    "css": [
+      "_app/immutable/assets/Layout.80387cff.css"
+    ],
+    "file": "chunks/Layout.js",
+    "imports": [
+      "_ssr.js",
+      "_index.js",
+      "_stores.js"
+    ]
+  },
+  "_LoadingIcon.js": {
+    "css": [
+      "_app/immutable/assets/LoadingIcon.d404a2c5.css"
+    ],
+    "file": "chunks/LoadingIcon.js",
+    "imports": [
+      "_ssr.js",
+      "_index.js"
+    ]
+  },
+  "_index.js": {
+    "file": "chunks/index.js",
+    "imports": [
+      "_ssr.js"
+    ]
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "imports": [
+      "_ssr.js"
+    ]
+  },
+  "_manager-store.js": {
+    "file": "chunks/manager-store.js",
+    "imports": [
+      "_Layout.js",
+      "_index.js"
+    ]
+  },
+  "_ssr.js": {
+    "file": "chunks/ssr.js"
+  },
+  "_stores.js": {
+    "file": "chunks/stores.js",
+    "imports": [
+      "_ssr.js"
+    ]
+  },
+  "node_modules/@dfinity/gix-components/dist/assets/logo-nns.svg": {
+    "file": "_app/immutable/assets/logo-nns.1ed1f865.svg",
+    "src": "node_modules/@dfinity/gix-components/dist/assets/logo-nns.svg"
+  },
+  "node_modules/@dfinity/gix-components/dist/assets/logo-onchain-dark.svg": {
+    "file": "_app/immutable/assets/logo-onchain-dark.9cb3296c.svg",
+    "src": "node_modules/@dfinity/gix-components/dist/assets/logo-onchain-dark.svg"
+  },
+  "node_modules/@dfinity/gix-components/dist/assets/logo-onchain-light.svg": {
+    "file": "_app/immutable/assets/logo-onchain-light.fa202b6e.svg",
+    "src": "node_modules/@dfinity/gix-components/dist/assets/logo-onchain-light.svg"
+  },
+  "node_modules/@dfinity/gix-components/dist/assets/menu-bg-dark.png": {
+    "file": "_app/immutable/assets/menu-bg-dark.6f485986.png",
+    "src": "node_modules/@dfinity/gix-components/dist/assets/menu-bg-dark.png"
+  },
+  "node_modules/@dfinity/gix-components/dist/assets/menu-bg-light.png": {
+    "file": "_app/immutable/assets/menu-bg-light.fb6f88c4.png",
+    "src": "node_modules/@dfinity/gix-components/dist/assets/menu-bg-light.png"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/components/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_stores.js"
+    ],
+    "isEntry": true,
+    "src": "node_modules/@sveltejs/kit/src/runtime/components/error.svelte"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/components/layout.svelte": {
+    "file": "entries/fallbacks/layout.svelte.js",
+    "imports": [
+      "_ssr.js"
+    ],
+    "isEntry": true,
+    "src": "node_modules/@sveltejs/kit/src/runtime/components/layout.svelte"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "imports": [
+      "_internal.js",
+      "_index.js"
+    ],
+    "isEntry": true,
+    "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js"
+  },
+  "src/OpenFPL_frontend/src/routes/+page.css": {
+    "file": "_app/immutable/assets/_page.cc11644e.css",
+    "src": "src/OpenFPL_frontend/src/routes/+page.css"
+  },
+  "src/OpenFPL_frontend/src/routes/+page.svelte": {
+    "css": [
+      "_app/immutable/assets/_page.cc11644e.css"
+    ],
+    "file": "entries/pages/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js",
+      "_manager-store.js",
+      "_LoadingIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte": {
+    "file": "entries/pages/add-fixture-data/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_stores.js",
+      "_index.js",
+      "_Layout.js",
+      "_LoadingIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/add-fixture-data/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/admin/+page.svelte": {
+    "file": "entries/pages/admin/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js",
+      "_index.js",
+      "_LoadingIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/admin/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/club/+page.svelte": {
+    "file": "entries/pages/club/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js",
+      "_LoadingIcon.js",
+      "_stores.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/club/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/fixture-validation/+page.svelte": {
+    "file": "entries/pages/fixture-validation/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js",
+      "_LoadingIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/fixture-validation/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.css": {
+    "file": "_app/immutable/assets/_page.2206b352.css",
+    "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.css"
+  },
+  "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte": {
+    "css": [
+      "_app/immutable/assets/_page.2206b352.css"
+    ],
+    "file": "entries/pages/gameplay-rules/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/governance/+page.svelte": {
+    "file": "entries/pages/governance/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/governance/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/manager/+page.svelte": {
+    "file": "entries/pages/manager/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_stores.js",
+      "_Layout.js",
+      "_manager-store.js",
+      "_LoadingIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/manager/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/pick-team/+page.css": {
+    "file": "_app/immutable/assets/_page.291f2ab9.css",
+    "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.css"
+  },
+  "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte": {
+    "css": [
+      "_app/immutable/assets/_page.291f2ab9.css"
+    ],
+    "file": "entries/pages/pick-team/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js",
+      "_index.js",
+      "_manager-store.js",
+      "_LoadingIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/pick-team/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/player/+page.svelte": {
+    "file": "entries/pages/player/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_stores.js",
+      "_Layout.js",
+      "_LoadingIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/player/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/profile/+page.css": {
+    "file": "_app/immutable/assets/_page.1aed53fb.css",
+    "src": "src/OpenFPL_frontend/src/routes/profile/+page.css"
+  },
+  "src/OpenFPL_frontend/src/routes/profile/+page.svelte": {
+    "css": [
+      "_app/immutable/assets/_page.1aed53fb.css"
+    ],
+    "file": "entries/pages/profile/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js",
+      "_manager-store.js",
+      "_LoadingIcon.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/profile/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/terms/+page.svelte": {
+    "file": "entries/pages/terms/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/terms/+page.svelte"
+  },
+  "src/OpenFPL_frontend/src/routes/whitepaper/+page.css": {
+    "file": "_app/immutable/assets/_page.2206b352.css",
+    "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.css"
+  },
+  "src/OpenFPL_frontend/src/routes/whitepaper/+page.svelte": {
+    "css": [
+      "_app/immutable/assets/_page.2206b352.css"
+    ],
+    "file": "entries/pages/whitepaper/_page.svelte.js",
+    "imports": [
+      "_ssr.js",
+      "_Layout.js"
+    ],
+    "isEntry": true,
+    "src": "src/OpenFPL_frontend/src/routes/whitepaper/+page.svelte"
+  }
+}

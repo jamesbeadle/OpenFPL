@@ -7,7 +7,6 @@ import { ActorFactory } from "../../utils/ActorFactory";
 function createUserStore() {
   const { subscribe, set, update } = writable<any>(null);
 
-  // Convert a Uint8Array to a base64 string
   function uint8ArrayToBase64(bytes: Uint8Array): string {
     const binary = Array.from(bytes)
       .map((byte) => String.fromCharCode(byte))
@@ -15,7 +14,6 @@ function createUserStore() {
     return btoa(binary);
   }
 
-  // Convert a base64 string to a Uint8Array
   function base64ToUint8Array(base64: string): Uint8Array {
     const binary_string = atob(base64);
     const len = binary_string.length;

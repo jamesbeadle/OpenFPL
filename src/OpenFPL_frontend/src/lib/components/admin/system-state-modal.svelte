@@ -9,8 +9,9 @@
     SystemState,
     UpdateSystemStateDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { Modal } from "@dfinity/gix-components";
 
-  export let showModal: boolean;
+  export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
   let seasons: Season[] = [];
@@ -73,58 +74,36 @@
       isLoading = false;
     }
   }
-
-  function handleKeydown(event: KeyboardEvent): void {
-    if (!(event.target instanceof HTMLInputElement) && event.key === "Escape") {
-      closeModal();
-    }
-  }
 </script>
 
-{#if showModal}
-  <div
-    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={cancelModal}
-    on:keydown={handleKeydown}
-    role="dialog"
-  >
-    <div
-      class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
-      on:click|stopPropagation
-      on:keydown={handleKeydown}
-    >
-      <div class="mt-3 text-center">
-        <h3 class="text-lg leading-6 font-medium mb-2">Update System State</h3>
-        <form on:submit|preventDefault={updateSystemState}>
-          <div class="mt-4">
-            <!-- Dropdown for seasons -->
+<Modal {visible} on:nnsClose={cancelModal}>
+  <div class="mt-3 text-center">
+    <h3 class="text-lg leading-6 font-medium mb-2">Update System State</h3>
+    <form on:submit|preventDefault={updateSystemState}>
+      <div class="mt-4">
+        <!-- Dropdown for seasons -->
 
-            <!-- Dropdown for active gameweeks -->
+        <!-- Dropdown for active gameweeks -->
 
-            <!-- Dropdown for focus gameweeks -->
-          </div>
-          <div class="items-center py-3 flex space-x-4">
-            <button
-              class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-              on:click={cancelModal}
-            >
-              Cancel
-            </button>
-            <button
-              class={`px-4 py-2 ${
-                isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-              } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-              type="submit"
-              disabled={isSubmitDisabled}
-            >
-              Update
-            </button>
-          </div>
-        </form>
+        <!-- Dropdown for focus gameweeks -->
       </div>
-    </div>
+      <div class="items-center py-3 flex space-x-4">
+        <button
+          class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          on:click={cancelModal}
+        >
+          Cancel
+        </button>
+        <button
+          class={`px-4 py-2 ${
+            isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
+          } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+          type="submit"
+          disabled={isSubmitDisabled}
+        >
+          Update
+        </button>
+      </div>
+    </form>
   </div>
-{/if}
-
-<style>
-</style>
+</Modal>

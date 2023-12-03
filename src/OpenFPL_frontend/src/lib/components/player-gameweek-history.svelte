@@ -148,7 +148,7 @@
       opponentTeam={selectedOpponent}
       playerTeam={getTeamFromId(playerDetails.teamId) ?? null}
       {closeDetailModal}
-      {showModal}
+      visible={showModal}
       playerDetail={playerDetails}
       gameweek={selectedGameweek}
       seasonName={selectedSeason?.name}

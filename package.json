@@ -21,6 +21,7 @@
     "generate": "dfx generate && node ./update.types.mjs && npm run format"
   },
   "devDependencies": {
+		"@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@rollup/plugin-inject": "^5.0.5",
     "@sveltejs/adapter-static": "^2.0.3",
     "@sveltejs/kit": "^1.27.1",

@@ -74,12 +74,6 @@ declare module '$env/static/private' {
 	export const CANISTER_ID: string;
 	export const CANISTER_CANDID_PATH: string;
 	export const VITE_AUTH_PROVIDER_URL: string;
-	export const VITE_OPENFPL_NAME: string;
-	export const VITE_OPENFPL_ONELINER: string;
-	export const VITE_OPENFPL_DESCRIPTION: string;
-	export const VITE_OPENFPL_URL: string;
-	export const VITE_OPENFPL_ICON: string;
-	export const VITE_OPENFPL_REPO_URL: string;
 	export const LESSOPEN: string;
 	export const USER: string;
 	export const npm_config_user_agent: string;
@@ -88,8 +82,8 @@ declare module '$env/static/private' {
 	export const SHLVL: string;
 	export const npm_config_noproxy: string;
 	export const HOME: string;
-	export const NVM_BIN: string;
 	export const TERM_PROGRAM_VERSION: string;
+	export const NVM_BIN: string;
 	export const VSCODE_IPC_HOOK_CLI: string;
 	export const npm_package_json: string;
 	export const NVM_INC: string;
@@ -115,8 +109,8 @@ declare module '$env/static/private' {
 	export const npm_package_name: string;
 	export const LANG: string;
 	export const LS_COLORS: string;
-	export const TERM_PROGRAM: string;
 	export const VSCODE_GIT_IPC_HANDLE: string;
+	export const TERM_PROGRAM: string;
 	export const npm_lifecycle_script: string;
 	export const SHELL: string;
 	export const npm_package_version: string;
@@ -136,13 +130,17 @@ declare module '$env/static/private' {
 	export const INIT_CWD: string;
 	export const EDITOR: string;
 	export const NODE_ENV: string;
+	export const VITE_OPENFPL_NAME: string;
+	export const VITE_OPENFPL_ONELINER: string;
+	export const VITE_OPENFPL_DESCRIPTION: string;
+	export const VITE_OPENFPL_URL: string;
+	export const VITE_OPENFPL_ICON: string;
+	export const VITE_OPENFPL_REPO_URL: string;
 	export const VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 	export const VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
 	export const VITE___CANDID_UI_CANISTER_ID: string;
 	export const VITE_PLAYER_CANISTER_CANISTER_ID: string;
 	export const VITE_TOKEN_CANISTER_CANISTER_ID: string;
-	export const VITE_DFX_NETWORK: string;
-	export const VITE_HOST: string;
 }
 
 /**
@@ -220,12 +218,6 @@ declare module '$env/dynamic/private' {
 		CANISTER_ID: string;
 		CANISTER_CANDID_PATH: string;
 		VITE_AUTH_PROVIDER_URL: string;
-		VITE_OPENFPL_NAME: string;
-		VITE_OPENFPL_ONELINER: string;
-		VITE_OPENFPL_DESCRIPTION: string;
-		VITE_OPENFPL_URL: string;
-		VITE_OPENFPL_ICON: string;
-		VITE_OPENFPL_REPO_URL: string;
 		LESSOPEN: string;
 		USER: string;
 		npm_config_user_agent: string;
@@ -234,8 +226,8 @@ declare module '$env/dynamic/private' {
 		SHLVL: string;
 		npm_config_noproxy: string;
 		HOME: string;
-		NVM_BIN: string;
 		TERM_PROGRAM_VERSION: string;
+		NVM_BIN: string;
 		VSCODE_IPC_HOOK_CLI: string;
 		npm_package_json: string;
 		NVM_INC: string;
@@ -261,8 +253,8 @@ declare module '$env/dynamic/private' {
 		npm_package_name: string;
 		LANG: string;
 		LS_COLORS: string;
-		TERM_PROGRAM: string;
 		VSCODE_GIT_IPC_HANDLE: string;
+		TERM_PROGRAM: string;
 		npm_lifecycle_script: string;
 		SHELL: string;
 		npm_package_version: string;
@@ -282,13 +274,17 @@ declare module '$env/dynamic/private' {
 		INIT_CWD: string;
 		EDITOR: string;
 		NODE_ENV: string;
+		VITE_OPENFPL_NAME: string;
+		VITE_OPENFPL_ONELINER: string;
+		VITE_OPENFPL_DESCRIPTION: string;
+		VITE_OPENFPL_URL: string;
+		VITE_OPENFPL_ICON: string;
+		VITE_OPENFPL_REPO_URL: string;
 		VITE_OPENFPL_BACKEND_CANISTER_ID: string;
 		VITE_OPENFPL_FRONTEND_CANISTER_ID: string;
 		VITE___CANDID_UI_CANISTER_ID: string;
 		VITE_PLAYER_CANISTER_CANISTER_ID: string;
 		VITE_TOKEN_CANISTER_CANISTER_ID: string;
-		VITE_DFX_NETWORK: string;
-		VITE_HOST: string;
 		[key: `PUBLIC_${string}`]: undefined;
 		[key: `${string}`]: string | undefined;
 	}

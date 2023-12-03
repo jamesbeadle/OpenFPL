@@ -175,14 +175,14 @@
 {:else}
   <UpdateUsernameModal
     newUsername={$profile ? $profile.displayName : ""}
-    showModal={showUsernameModal}
+    visible={showUsernameModal}
     closeModal={closeUsernameModal}
     cancelModal={cancelUsernameModal}
     {isLoading}
   />
   <UpdateFavouriteTeamModal
     newFavouriteTeam={$profile ? $profile.favouriteTeamId : 0}
-    showModal={showFavouriteTeamModal}
+    visible={showFavouriteTeamModal}
     closeModal={closeFavouriteTeamModal}
     cancelModal={cancelFavouriteTeamModal}
     {isLoading}

@@ -419,7 +419,7 @@
 
 {#if selectedTeam}
   <SelectPlayersModal
-    show={showPlayerSelectionModal}
+    visible={showPlayerSelectionModal}
     {teamPlayers}
     {selectedTeam}
     {selectedPlayers}
@@ -429,7 +429,7 @@
 
 {#if selectedPlayer}
   <PlayerEventsModal
-    show={showPlayerEventModal}
+    visible={showPlayerEventModal}
     player={selectedPlayer}
     {fixtureId}
     {playerEventData}
@@ -438,12 +438,12 @@
 {/if}
 
 <ConfirmFixtureDataModal
-  show={showConfirmDataModal}
+  visible={showConfirmDataModal}
   onConfirm={confirmFixtureData}
 />
 
 <ClearDraftModal
   closeModal={closeConfirmClearDraftModal}
-  show={showClearDraftModal}
+  visible={showClearDraftModal}
   onConfirm={clearDraft}
 />

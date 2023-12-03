@@ -4,8 +4,9 @@
     PlayerDTO,
     PlayerEventData,
   } from "../../../../../declarations/player_canister/player_canister.did";
+  import { Modal } from "@dfinity/gix-components";
 
-  export let show = false;
+  export let visible = false;
   export let player: PlayerDTO;
   export let fixtureId: number;
   export let playerEventData: Writable<[] | PlayerEventData[]>;
@@ -60,131 +61,112 @@
     });
   }
 
-  function handleKeydown(event: KeyboardEvent): void {
-    if (!(event.target instanceof HTMLInputElement) && event.key === "Escape") {
-      closeModal();
-    }
-  }
-
   const getEventTypeLabel = (id: number) => {
     const option = eventOptions.find((option) => option.id === id);
     return option ? option.label : "";
   };
 </script>
 
-{#if show}
-  <div
-    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={closeModal}
-    on:keydown={handleKeydown}
-    role="dialog"
-  >
-    <div
-      class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel"
-      on:click|stopPropagation
-      on:keydown={handleKeydown}
-    >
-      <div class="mt-3">
-        <div class="flex justify-between items-center">
-          <h4 class="text-lg font-bold">
-            {player.firstName !== "" ? player.firstName.charAt(0) + "." : ""}
-            {player.lastName} - Match Events
-          </h4>
-        </div>
+<Modal {visible} on:nnsClose={closeModal}>
+  <div class="mt-3">
+    <div class="flex justify-between items-center">
+      <h4 class="text-lg font-bold">
+        {player.firstName !== "" ? player.firstName.charAt(0) + "." : ""}
+        {player.lastName} - Match Events
+      </h4>
+    </div>
 
-        <div class="mt-4 p-4 border-t border-gray-200">
-          <h4 class="font-bold">Add Event</h4>
-          <div class="flex flex-col gap-1">
-            <div class="mt-1">
-              <select
-                id="eventType"
-                bind:value={eventType}
-                class="w-full p-2 fpl-dropdown"
-              >
-                <option value={-1} disabled>Select event type</option>
-                <option value={0}>Appearance</option>
-                <option value={1}>Goal Scored</option>
-                <option value={2}>Goal Assisted</option>
-                <option value={7}>Penalty Missed</option>
-                <option value={8}>Yellow Card</option>
-                <option value={9}> Card</option>
-                <option value={10}>Own Goal</option>
-                {#if player.position === 0}
-                  <option value={4}>Keeper Save</option>
-                  <option value={6}>Penalty Save</option>
-                {/if}
-              </select>
-            </div>
-            <div class="mt-1">
-              <label for="startMinute" class="block text-sm font-medium"
-                >Start Minute</label
-              >
-              <input
-                type="number"
-                id="startMinute"
-                bind:value={eventStartTime}
-                class="bg-gray-900 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter start minute"
-                min="0"
-                max="90"
-              />
-            </div>
-            <div class="mt-2">
-              <label for="endMinute" class="block text-sm font-medium"
-                >End Minute</label
-              >
-              <input
-                type="number"
-                id="endMinute"
-                bind:value={eventEndTime}
-                class="bg-gray-900 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter end minute"
-                min="0"
-                max="90"
-              />
-            </div>
-
-            <div class="items-center mt-3 flex space-x-4">
-              <button
-                class={`${
-                  isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-                } px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-                on:click={handleAddEvent}
-                disabled={isSubmitDisabled}>Add Event</button
-              >
-            </div>
-          </div>
+    <div class="mt-4 p-4 border-t border-gray-200">
+      <h4 class="font-bold">Add Event</h4>
+      <div class="flex flex-col gap-1">
+        <div class="mt-1">
+          <select
+            id="eventType"
+            bind:value={eventType}
+            class="w-full p-2 fpl-dropdown"
+          >
+            <option value={-1} disabled>Select event type</option>
+            <option value={0}>Appearance</option>
+            <option value={1}>Goal Scored</option>
+            <option value={2}>Goal Assisted</option>
+            <option value={7}>Penalty Missed</option>
+            <option value={8}>Yellow Card</option>
+            <option value={9}> Card</option>
+            <option value={10}>Own Goal</option>
+            {#if player.position === 0}
+              <option value={4}>Keeper Save</option>
+              <option value={6}>Penalty Save</option>
+            {/if}
+          </select>
         </div>
-
-        <div class="px-4">
-          <h4 class="text-sm">Events:</h4>
+        <div class="mt-1">
+          <label for="startMinute" class="block text-sm font-medium"
+            >Start Minute</label
+          >
+          <input
+            type="number"
+            id="startMinute"
+            bind:value={eventStartTime}
+            class="bg-gray-900 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter start minute"
+            min="0"
+            max="90"
+          />
         </div>
-        <div class="mt-1 text-xs mx-4">
-          <ul class="list-disc">
-            {#each $playerEventData.filter((x) => x.playerId == player.id) as event, index}
-              <li class="flex justify-between items-center mb-2">
-                <span
-                  >{getEventTypeLabel(event.eventType)} ({event.eventStartMinute}
-                  - {event.eventEndMinute}) mins</span
-                >
-                <button
-                  class="px-3 py-1 bg-red-500 rounded"
-                  on:click={() => handleRemoveEvent(index)}
-                >
-                  Remove
-                </button>
-              </li>
-            {/each}
-          </ul>
+        <div class="mt-2">
+          <label for="endMinute" class="block text-sm font-medium"
+            >End Minute</label
+          >
+          <input
+            type="number"
+            id="endMinute"
+            bind:value={eventEndTime}
+            class="bg-gray-900 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter end minute"
+            min="0"
+            max="90"
+          />
         </div>
 
         <div class="items-center mt-3 flex space-x-4">
           <button
-            class="fpl-button mx-4 px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            on:click={closeModal}>Done</button
+            class={`${
+              isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
+            } px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            on:click={handleAddEvent}
+            disabled={isSubmitDisabled}>Add Event</button
           >
         </div>
       </div>
     </div>
+
+    <div class="px-4">
+      <h4 class="text-sm">Events:</h4>
+    </div>
+    <div class="mt-1 text-xs mx-4">
+      <ul class="list-disc">
+        {#each $playerEventData.filter((x) => x.playerId == player.id) as event, index}
+          <li class="flex justify-between items-center mb-2">
+            <span
+              >{getEventTypeLabel(event.eventType)} ({event.eventStartMinute}
+              - {event.eventEndMinute}) mins</span
+            >
+            <button
+              class="px-3 py-1 bg-red-500 rounded"
+              on:click={() => handleRemoveEvent(index)}
+            >
+              Remove
+            </button>
+          </li>
+        {/each}
+      </ul>
+    </div>
+
+    <div class="items-center mt-3 flex space-x-4">
+      <button
+        class="fpl-button mx-4 px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+        on:click={closeModal}>Done</button
+      >
+    </div>
   </div>
-{/if}
+</Modal>

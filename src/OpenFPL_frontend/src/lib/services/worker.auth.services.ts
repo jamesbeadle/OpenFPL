@@ -5,7 +5,7 @@ import { authRemainingTimeStore } from "$lib/stores/auth.store";
 import type {
   PostMessage,
   PostMessageDataResponseAuth,
-} from "$lib/types/PostMessage";
+} from "$lib/types/post-message";
 
 export const initAuthWorker = async () => {
   const AuthWorker = await import("$lib/workers/auth.worker?worker");

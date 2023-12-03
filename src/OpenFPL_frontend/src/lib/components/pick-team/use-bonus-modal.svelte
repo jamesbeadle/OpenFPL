@@ -7,12 +7,13 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
   import { BonusType } from "$lib/enums/BonusType";
+  import { Modal } from "@dfinity/gix-components";
 
+  export let visible: boolean;
   export let fantasyTeam = writable<FantasyTeam | null>(null);
   export let players = writable<PlayerDTO[] | []>([]);
   export let teams = writable<Team[] | []>([]);
   export let activeGameweek: number;
-  export let showModal: boolean;
   export let closeBonusModal: () => void;
   export let bonus: Bonus = {
     id: 0,
@@ -194,12 +195,6 @@
     closeBonusModal();
   }
 
-  function handleKeydown(event: KeyboardEvent): void {
-    if (!(event.target instanceof HTMLInputElement) && event.key === "Escape") {
-      closeBonusModal();
-    }
-  }
-
   $: countries = getUniqueCountries();
   $: playerOptions = getPlayerNames();
   $: teamOptions = getRelatedTeamNames();
@@ -217,100 +212,87 @@
   })();
 </script>
 
-{#if showModal}
-  <div
-    class="fixed inset-0 bg-gray-900 bg-opacity-80 overflow-y-auto h-full w-full modal-backdrop"
-    on:click={closeBonusModal}
-    on:keydown={handleKeydown}
-    role="dialog"
-  >
-    <div
-      class="relative top-20 mx-auto p-5 border border-gray-700 w-96 shadow-lg rounded-md bg-panel text-white"
-      on:click|stopPropagation
-      on:keydown={handleKeydown}
-    >
-      <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
-      <div class="mt-3 text-center">
-        <h3 class="text-lg leading-6 font-medium">
-          {bonus.name}
-        </h3>
-        <div class="mt-2 px-7 py-3">
-          <p class="text-sm">
-            {bonus.description}
-          </p>
-        </div>
+<Modal {visible} on:nnsClose={closeBonusModal}>
+  <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
+  <div class="mt-3 text-center">
+    <h3 class="text-lg leading-6 font-medium">
+      {bonus.name}
+    </h3>
+    <div class="mt-2 px-7 py-3">
+      <p class="text-sm">
+        {bonus.description}
+      </p>
+    </div>
 
-        {#if bonus.selectionType === BonusType.PLAYER}
-          <div class="w-full border border-gray-500 my-4">
-            <select
-              bind:value={selectedPlayerId}
-              class="w-full p-2 rounded-md fpl-dropdown"
-            >
-              <option value={0}>Select Player</option>
-              {#each playerOptions as player}
-                <option value={player.id}>{player.name}</option>
-              {/each}
-            </select>
-          </div>
-        {/if}
-
-        {#if bonus.selectionType === BonusType.COUNTRY}
-          <div class="w-full border border-gray-500 my-4">
-            <select
-              bind:value={selectedCountry}
-              class="w-full p-2 rounded-md fpl-dropdown"
-            >
-              <option value={0}>Select Country</option>
-              {#each countries as country}
-                <option value={country}>{country}</option>
-              {/each}
-            </select>
-          </div>
-        {/if}
-
-        {#if bonus.selectionType === BonusType.TEAM}
-          <div class="w-full border border-gray-500 my-4">
-            <select
-              bind:value={selectedTeamId}
-              class="w-full p-2 rounded-md fpl-dropdown"
-            >
-              <option value={0}>Select Team</option>
-              {#each teamOptions as team}
-                <option value={team.id}>{team.name}</option>
-              {/each}
-            </select>
-          </div>
-        {/if}
-
-        <div
-          class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2"
-          role="alert"
+    {#if bonus.selectionType === BonusType.PLAYER}
+      <div class="w-full border border-gray-500 my-4">
+        <select
+          bind:value={selectedPlayerId}
+          class="w-full p-2 rounded-md fpl-dropdown"
         >
-          <p class="font-bold text-sm">Warning</p>
-          <p class="font-bold text-xs">
-            Your bonus will be activated when you save your team and it cannot
-            be reversed. A bonus can only be played once per season.
-          </p>
-        </div>
-
-        <div class="items-center py-3 flex space-x-4">
-          <button
-            class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            on:click={closeBonusModal}
-          >
-            Cancel
-          </button>
-          <button
-            class={`px-4 py-2 ${
-              isUseButtonEnabled ? "fpl-purple-btn" : "bg-gray-500"
-            } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-            on:click={handleUseBonus}
-            disabled={!isUseButtonEnabled}
-          >
-            Use
-          </button>
-        </div>
+          <option value={0}>Select Player</option>
+          {#each playerOptions as player}
+            <option value={player.id}>{player.name}</option>
+          {/each}
+        </select>
       </div>
+    {/if}
+
+    {#if bonus.selectionType === BonusType.COUNTRY}
+      <div class="w-full border border-gray-500 my-4">
+        <select
+          bind:value={selectedCountry}
+          class="w-full p-2 rounded-md fpl-dropdown"
+        >
+          <option value={0}>Select Country</option>
+          {#each countries as country}
+            <option value={country}>{country}</option>
+          {/each}
+        </select>
+      </div>
+    {/if}
+
+    {#if bonus.selectionType === BonusType.TEAM}
+      <div class="w-full border border-gray-500 my-4">
+        <select
+          bind:value={selectedTeamId}
+          class="w-full p-2 rounded-md fpl-dropdown"
+        >
+          <option value={0}>Select Team</option>
+          {#each teamOptions as team}
+            <option value={team.id}>{team.name}</option>
+          {/each}
+        </select>
+      </div>
+    {/if}
+
+    <div
+      class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2"
+      role="alert"
+    >
+      <p class="font-bold text-sm">Warning</p>
+      <p class="font-bold text-xs">
+        Your bonus will be activated when you save your team and it cannot be
+        reversed. A bonus can only be played once per season.
+      </p>
+    </div>
+
+    <div class="items-center py-3 flex space-x-4">
+      <button
+        class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+        on:click={closeBonusModal}
+      >
+        Cancel
+      </button>
+      <button
+        class={`px-4 py-2 ${
+          isUseButtonEnabled ? "fpl-purple-btn" : "bg-gray-500"
+        } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+        on:click={handleUseBonus}
+        disabled={!isUseButtonEnabled}
+      >
+        Use
+      </button>
     </div>
   </div>
-{/if}
+</Modal>

@@ -1,11 +1,11 @@
 {
-  "name": "{{VITE_OPENFPL_NAME}}",
-  "short_name": "{{VITE_OPENFPL_NAME}}",
+  "name": "OpenFPL",
+  "short_name": "OpenFPL",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#2CE3A6",
   "background_color": "#2CE3A6",
-  "description": "{{VITE_OPENFPL_ONELINER}}",
+  "description": "Decentralised Fantasy Premier League football.",
   "orientation": "landscape-primary",
   "prefer_related_applications": false,
   "icons": [

@@ -93,3 +93,10 @@ body {
   background-color: black;
   color: white;
 }
+
+.modal {
+  /* other styles */
+  position: fixed !important; /* or absolute */
+  z-index: 9999 !important; /* Arbitrary high number */
+  top: 10;
+}
