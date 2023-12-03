@@ -38,7 +38,7 @@ const initAuthStore = (): AuthStore => {
     identity: undefined,
   });
 
-  const store = {
+  return {
     subscribe,
 
     sync: async () => {
@@ -90,10 +90,6 @@ const initAuthStore = (): AuthStore => {
       }));
     },
   };
-
-  store.sync().catch(console.error);
-
-  return store;
 };
 
 export const authStore = initAuthStore();

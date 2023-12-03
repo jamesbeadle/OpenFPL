@@ -29,11 +29,11 @@
   let unsubscribeLogin: () => void;
 
   //Remove after SNS
-  //let adminPrincipal ="opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae";
+  let adminPrincipal =
+    "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae";
 
   //LOCALDEVONLY
-  let adminPrincipal =
-    "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
+  //let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
 
   onMount(async () => {
     if (typeof window !== "undefined") {
