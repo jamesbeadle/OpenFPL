@@ -54,7 +54,9 @@
 
   function handleRemoveEvent(indexToRemove: number) {
     playerEventData.update((currentEvents) => {
-      return currentEvents.filter(x => x.playerId == player.id).filter((_, index) => index !== indexToRemove);
+      return currentEvents
+        .filter((x) => x.playerId == player.id)
+        .filter((_, index) => index !== indexToRemove);
     });
   }
 

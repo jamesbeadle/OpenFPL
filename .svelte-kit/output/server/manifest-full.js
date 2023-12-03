@@ -10,7 +10,7 @@ return {
 	assets: new Set([".ic-assets.json",".well-known/ic-domains",".well-known/ii-alternative-origins","FPLCoin.png","ICPCoin.png","Manrope-Regular.woff2","apple-touch-icon.png","background.jpg","board.png","brace-bonus.png","captain-fantastic.png","ckBTCCoin.png","ckETHCoin.png","countrymen.png","discord.png","favicon.ico","favicon.png","github.png","goal-getter.png","hat-trick-hero.png","no-entry.png","openchat.png","openfpl.webmanifest","pass-master.png","pitch.png","poppins-regular-webfont.woff2","profile_placeholder.png","prospects.png","safe-hands.png","team-boost.png","telegram.png","twitter.png"]),
 	mimeTypes: {".json":"application/json",".png":"image/png",".woff2":"font/woff2",".jpg":"image/jpeg",".webmanifest":"application/manifest+json"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.98d33f27.js","app":"_app/immutable/entry/app.4a5e5ce9.js","imports":["_app/immutable/entry/start.98d33f27.js","_app/immutable/chunks/index.a8c54947.js","_app/immutable/chunks/singletons.08cdb953.js","_app/immutable/entry/app.4a5e5ce9.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/index.a8c54947.js"],"stylesheets":[],"fonts":[]},
+		client: {"start":"_app/immutable/entry/start.39ce13c1.js","app":"_app/immutable/entry/app.6881a217.js","imports":["_app/immutable/entry/start.39ce13c1.js","_app/immutable/chunks/index.a8c54947.js","_app/immutable/chunks/singletons.bce1901b.js","_app/immutable/entry/app.6881a217.js","_app/immutable/chunks/preload-helper.a4192956.js","_app/immutable/chunks/index.a8c54947.js"],"stylesheets":[],"fonts":[]},
 		nodes: [
 			__memo(() => import('./nodes/0.js')),
 			__memo(() => import('./nodes/1.js')),
