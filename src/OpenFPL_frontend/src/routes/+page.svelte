@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { authStore } from "$lib/stores/auth";
+  import { authStore } from "$lib/stores/auth.store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
@@ -16,7 +16,7 @@
     LeaderboardEntry,
     Team,
   } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import Layout from "./Layout.svelte";
+  import Layout from "./+Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";

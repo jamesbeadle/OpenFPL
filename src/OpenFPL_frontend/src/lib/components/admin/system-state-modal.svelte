@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte";
   import { seasonStore } from "$lib/stores/season-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { authStore } from "$lib/stores/auth";
+  import { authStore } from "$lib/stores/auth.store";
   import { toastStore } from "$lib/stores/toast-store";
   import type {
     Season,

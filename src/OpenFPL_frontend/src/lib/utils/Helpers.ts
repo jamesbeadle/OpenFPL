@@ -1,5 +1,5 @@
 import { Position } from "$lib/enums/Position";
-import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
 export function formatUnixDateToReadable(unixNano: number) {
   const date = new Date(unixNano / 1000000);
@@ -104,7 +104,7 @@ export function calculateAgeFromNanoseconds(nanoseconds: number) {
   return age;
 }
 
-import type { TeamStats } from "$lib/types/TeamStats";
+import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
 import type {
   FantasyTeam,

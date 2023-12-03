@@ -10,7 +10,7 @@
     SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
 
   let teams: Team[] = [];

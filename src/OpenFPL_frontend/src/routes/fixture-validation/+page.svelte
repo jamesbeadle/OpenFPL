@@ -11,7 +11,7 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import Layout from "../Layout.svelte";
+  import Layout from "../+Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let teams: Team[];

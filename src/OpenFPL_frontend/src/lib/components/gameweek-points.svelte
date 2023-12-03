@@ -7,7 +7,7 @@
   import { toastStore } from "$lib/stores/toast-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-  import { authStore } from "$lib/stores/auth";
+  import { authStore } from "$lib/stores/auth.store";
 
   import { getPositionAbbreviation } from "$lib/utils/Helpers";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { writable, type Writable } from "svelte/store";
-  import { authStore, type AuthSignInParams } from "$lib/stores/auth";
+  import { authStore, type AuthSignInParams } from "$lib/stores/auth.store";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
@@ -16,9 +16,9 @@
   import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
   import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+	import { authSignedInStore } from '$lib/derived/auth.derived';
 
   let menuOpen = false;
-  let isLoggedIn = false;
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showProfileDropdown = false;
   let loggedInPrincipal = "";
@@ -49,13 +49,6 @@
       await playerStore.sync();
       await playerEventsStore.sync();
 
-      unsubscribeLogin = authStore.subscribe((store) => {
-        isLoggedIn = store.identity !== null && store.identity !== undefined;
-        if (isLoggedIn) {
-          profile.set(userStore.getProfileFromLocalStorage());
-          loggedInPrincipal = store.identity?.getPrincipal().toString() ?? "";
-        }
-      });
     } catch (error) {
       toastStore.show("Error syncing authentication.", "error");
       console.error("Error syncing authentication:", error);
@@ -142,7 +135,7 @@
           <rect y="16" width="24" height="2" rx="1" fill="currentColor" />
         </svg>
       </button>
-      {#if $authStore.identity != null}
+      {#if $authSignedInStore}
         <ul class="hidden md:flex text-base md:text-xs lg:text-base">
           <li class="mx-2 flex items-center h-16">
             <a

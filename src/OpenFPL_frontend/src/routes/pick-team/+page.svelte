@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import Layout from "../Layout.svelte";
+  import Layout from "../+Layout.svelte";
   import { writable } from "svelte/store";
   import { toastStore } from "$lib/stores/toast-store";
   import { systemStore } from "$lib/stores/system-store";

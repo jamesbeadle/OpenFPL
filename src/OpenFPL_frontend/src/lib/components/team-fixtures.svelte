@@ -10,7 +10,7 @@
   } from "../utils/Helpers";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
-  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
   export let clubId: number | null = null;
 

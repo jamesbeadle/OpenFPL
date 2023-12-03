@@ -4,7 +4,7 @@
     FantasyTeam,
     Team,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { Bonus } from "$lib/types/Bonus";
+  import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";

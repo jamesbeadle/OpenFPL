@@ -22,8 +22,8 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
-  import Layout from "../Layout.svelte";
+  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+  import Layout from "../+Layout.svelte";
   import PlayerGameweekHistory from "$lib/components/player-gameweek-history.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";

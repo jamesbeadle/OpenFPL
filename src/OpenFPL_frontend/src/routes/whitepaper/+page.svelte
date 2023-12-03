@@ -7,7 +7,7 @@
   import Roadmap from "$lib/components/whitepaper/roadmap.svelte";
   import Tokenomics from "$lib/components/whitepaper/tokenomics.svelte";
   import Vision from "$lib/components/whitepaper/vision.svelte";
-  import Layout from "../Layout.svelte";
+  import Layout from "../+Layout.svelte";
   let activeTab: string = "vision";
 
   function setActiveTab(tab: string): void {

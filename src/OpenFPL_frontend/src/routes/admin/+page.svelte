@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Layout from "../Layout.svelte";
+  import Layout from "../+Layout.svelte";
   import AdminFixtures from "$lib/components/admin/admin-fixtures.svelte";
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";

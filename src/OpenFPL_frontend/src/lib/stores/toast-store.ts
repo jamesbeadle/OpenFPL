@@ -1,27 +1,28 @@
-import { writable } from "svelte/store";
+import type { ToastMsg } from '$lib/types//toast';
+import { errorDetailToString } from '$lib/utils/error.utils';
+import { toastsStore } from '@dfinity/gix-components';
+import { nonNullish } from '@dfinity/utils';
 
-interface ToastState {
-  visible: boolean;
-  message: string;
-  type: "success" | "error";
-}
+export const toastsShow = (msg: ToastMsg): symbol => toastsStore.show(msg);
 
-function createToastStore() {
-  const { subscribe, set, update } = writable<ToastState>({
-    visible: false,
-    message: "",
-    type: "success",
-  });
+export const toastsError = ({
+	msg: { text, ...rest },
+	err
+}: {
+	msg: Omit<ToastMsg, 'level'>;
+	err?: unknown;
+}): symbol => {
+	if (nonNullish(err)) {
+		console.error(err);
+	}
 
-  function show(message: string, type: "success" | "error" = "success") {
-    update(() => ({ visible: true, message, type }));
-    setTimeout(
-      () => set({ visible: false, message: "", type: "success" }),
-      3000
-    );
-  }
+	return toastsStore.show({
+		text: `${text}${nonNullish(err) ? ` / ${errorDetailToString(err)}` : ''}`,
+		...rest,
+		level: 'error'
+	});
+};
 
-  return { subscribe, show };
-}
+export const toastsClean = () => toastsStore.reset(['success', 'warn', 'info']);
 
-export const toastStore = createToastStore();
+export const toastsHide = (ids: symbol[]) => ids.forEach((id) => toastsStore.hide(id));

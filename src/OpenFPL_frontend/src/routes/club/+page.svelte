@@ -5,7 +5,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastStore } from "$lib/stores/toast-store";
-  import Layout from "../Layout.svelte";
+  import Layout from "../+Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { page } from "$app/stores";
@@ -13,7 +13,7 @@
   import TeamFixtures from "$lib/components/team-fixtures.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import type { FixtureWithTeams } from "$lib/types/FixtureWithTeams";
+  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import type {
     Fixture,
     Season,

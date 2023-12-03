@@ -1,6 +1,6 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type { Bonus } from "$lib/types/Bonus";
+  import type { Bonus } from "$lib/types/bonus";
   import type {
     FantasyTeam,
     Team,
