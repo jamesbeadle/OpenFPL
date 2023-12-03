@@ -16,21 +16,23 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import { writable, type Writable } from "svelte/store";
+  import { writable } from "svelte/store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
-  export let teams = writable<Team[] | []>([]);
-  export let players = writable<PlayerDTO[] | []>([]);
-  export let systemState = writable<SystemState | null>(null);
+  let teams: Team[] = [];
+  let players: PlayerDTO[] = [];
+  let systemState: SystemState | null;
 
   let unsubscribeSystemState: () => void;
   let unsubscribeTeams: () => void;
   let unsubscribePlayers: () => void;
 
-  let gameweekPlayers: GameweekData[] = [];
+  let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   export let selectedGameweek: number;
-  export let fantasyTeam: Writable<FantasyTeam | null>;
+  export let fantasyTeam = writable<FantasyTeam | null>(null);
+
+  let isLoading = true;
 
   onMount(async () => {
     try {
@@ -40,15 +42,15 @@
       await playerEventsStore.sync();
 
       unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState.set(value);
+        systemState = value;
       });
 
       unsubscribeTeams = teamStore.subscribe((value) => {
-        teams.set(value);
+        teams = value;
       });
 
       unsubscribePlayers = playerStore.subscribe((value) => {
-        players.set(value);
+        players = value;
       });
     } catch (error) {
       toastsError({
@@ -56,25 +58,37 @@
         err: error,
       });
       console.error("Error fetching manager gameweek detail:", error);
+    } finally {
+      isLoading = false;
     }
   });
 
   $: {
-    if ($systemState) {
-      selectedGameweek = $systemState?.activeGameweek ?? selectedGameweek;
+    if (systemState) {
+      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
     }
   }
 
-  $: if ($fantasyTeam) {
+  $: if (!isLoading && $fantasyTeam && teams.length > 0 && players.length > 0) {
+    console.log("Teams");
+    console.log(teams);
+    console.log("Players");
+    console.log(players);
+    console.log("Fantasy Team");
+    console.log(fantasyTeam);
     updateGameweekPlayers();
   }
 
   async function updateGameweekPlayers() {
     try {
-      gameweekPlayers = await playerEventsStore.getGameweekPlayers(
+      console.log("updateGameweekPlayers");
+      console.log(selectedGameweek);
+      console.log($fantasyTeam);
+      let fetchedPlayers = await playerEventsStore.getGameweekPlayers(
         $fantasyTeam!,
         selectedGameweek
       );
+      gameweekPlayers.set(fetchedPlayers);
     } catch (error) {
       toastsError({
         msg: { text: "Error updating gameweek players." },
@@ -95,11 +109,11 @@
   };
 
   function getPlayerDTO(playerId: number): PlayerDTO | null {
-    return $players.find((x) => x.id === playerId) ?? null;
+    return players.find((x) => x.id === playerId) ?? null;
   }
 
   function getPlayerTeam(teamId: number): Team | null {
-    return $teams.find((x) => x.id === teamId) ?? null;
+    return teams.find((x) => x.id === teamId) ?? null;
   }
 </script>
 
@@ -158,7 +172,7 @@
         <div class="w-1/12 text-center">PTS</div>
       </div>
 
-      {#each gameweekPlayers as data}
+      {#each $gameweekPlayers as data}
         {@const playerDTO = getPlayerDTO(data.player.id)}
         {@const playerTeam = getPlayerTeam(data.player.teamId)}
         <div
@@ -174,7 +188,7 @@
               size="100"
             />
             {playerDTO
-              ? playerDTO.firstName.length > 2
+              ? playerDTO.firstName.length > 0
                 ? playerDTO.firstName.substring(0, 1) + "." + playerDTO.lastName
                 : ""
               : ""}

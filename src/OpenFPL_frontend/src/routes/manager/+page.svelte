@@ -110,6 +110,8 @@
   function viewGameweekDetail(principalId: string, selectedGameweek: number) {
     let team = manager.gameweeks.find((x) => x.gameweek === selectedGameweek)!;
     fantasyTeam.set(team);
+    console.log("$fantasyTeam");
+    console.log($fantasyTeam);
     setActiveTab("details");
   }
 </script>

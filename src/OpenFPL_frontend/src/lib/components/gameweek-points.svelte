@@ -200,7 +200,7 @@
                 </div>
                 <div class="w-3/6 text-center">
                   <a href={`/player?id=${playerGameweek.player.id}`}>
-                    {playerGameweek.player.firstName.length > 2
+                    {playerGameweek.player.firstName.length > 0
                       ? playerGameweek.player.firstName.substring(0, 1) + "."
                       : ""}
                     {playerGameweek.player.lastName}</a

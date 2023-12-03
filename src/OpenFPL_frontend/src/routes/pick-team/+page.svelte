@@ -1047,7 +1047,7 @@
                                 class="h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
                               />
                               <p class="truncate min-w-[50px] max-w-[50px]">
-                                {player.firstName.length > 2
+                                {player.firstName.length > 0
                                   ? player.firstName.substring(0, 1) + "."
                                   : ""}
                                 {player.lastName}

@@ -17,6 +17,14 @@ export interface AuthStoreData {
 
 let authClient: AuthClient | undefined | null;
 
+const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
+const NNS_IC_APP_DERIVATION_ORIGIN =
+  "https://bgpwv-eqaaa-aaaal-qb6eq-cai.icp0.io";
+
+const isNnsAlternativeOrigin = () => {
+  return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
+};
+
 export interface AuthSignInParams {
   domain?: "ic0.app" | "internetcomputer.org";
 }
@@ -51,7 +59,7 @@ const initAuthStore = (): AuthStore => {
 
         const identityProvider = nonNullish(localIdentityCanisterId)
           ? `http://localhost:4943?canisterId=${localIdentityCanisterId}`
-          : `https://identity.${domain ?? "ic0.app"}`;
+          : `${domain ?? "https://identity.ic0.app"}`;
 
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
@@ -65,6 +73,9 @@ const initAuthStore = (): AuthStore => {
           },
           onError: reject,
           identityProvider,
+          ...(isNnsAlternativeOrigin() && {
+            derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN,
+          }),
           windowOpenerFeatures: popupCenter({
             width: AUTH_POPUP_WIDTH,
             height: AUTH_POPUP_HEIGHT,

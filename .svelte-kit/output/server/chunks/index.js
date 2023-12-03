@@ -3266,7 +3266,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "apsyih"
+  version_hash: "16cemkz"
 };
 function get_hooks() {
   return {};
@@ -3414,6 +3414,11 @@ const popupCenter = ({
   }
 };
 let authClient;
+const NNS_IC_ORG_ALTERNATIVE_ORIGIN = "https://openfpl.xyz";
+const NNS_IC_APP_DERIVATION_ORIGIN = "https://bgpwv-eqaaa-aaaal-qb6eq-cai.icp0.io";
+const isNnsAlternativeOrigin = () => {
+  return window.location.origin === NNS_IC_ORG_ALTERNATIVE_ORIGIN;
+};
 const initAuthStore = () => {
   const { subscribe: subscribe2, set, update } = writable({
     identity: void 0
@@ -3431,7 +3436,7 @@ const initAuthStore = () => {
       // eslint-disable-next-line no-async-promise-executor
       new Promise(async (resolve, reject) => {
         authClient = authClient ?? await createAuthClient();
-        const identityProvider = nonNullish(localIdentityCanisterId) ? `http://localhost:4943?canisterId=${localIdentityCanisterId}` : `https://identity.${domain ?? "ic0.app"}`;
+        const identityProvider = nonNullish(localIdentityCanisterId) ? `http://localhost:4943?canisterId=${localIdentityCanisterId}` : `${domain ?? "https://identity.ic0.app"}`;
         await authClient?.login({
           maxTimeToLive: AUTH_MAX_TIME_TO_LIVE,
           onSuccess: () => {
@@ -3443,6 +3448,9 @@ const initAuthStore = () => {
           },
           onError: reject,
           identityProvider,
+          ...isNnsAlternativeOrigin() && {
+            derivationOrigin: NNS_IC_APP_DERIVATION_ORIGIN
+          },
           windowOpenerFeatures: popupCenter({
             width: AUTH_POPUP_WIDTH,
             height: AUTH_POPUP_HEIGHT
@@ -5877,12 +5885,16 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_fantasyTeam;
   let $page, $$unsubscribe_page;
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
+  let fantasyTeam = writable(null);
+  $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => value);
   onDestroy(() => {
   });
   $page.url.searchParams.get("id");
   Number($page.url.searchParams.get("gw")) ?? 0;
+  $$unsubscribe_fantasyTeam();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
