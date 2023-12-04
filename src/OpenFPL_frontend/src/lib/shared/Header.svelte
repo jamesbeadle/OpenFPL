@@ -109,7 +109,7 @@
         </svg>
       </button>
       {#if $authSignedInStore}
-        <ul class="hidden md:flex text-base md:text-xs lg:text-base">
+        <ul class="hidden md:flex text-base md:text-xs lg:text-base h-16">
           <li class="mx-2 flex items-center h-16">
             <a
               href="/"
@@ -152,13 +152,13 @@
               </a>
             </li>
           {/if}
-          <li class="p-2 flex flex-1 items-center">
+          <li class="flex flex-1 items-center">
             <div class="relative inline-block">
-              <button on:click={toggleProfileDropdown}>
+              <button on:click={toggleProfileDropdown} class="h-full flex items-center">
                 <img
                   src={$userGetProfilePicture}
                   alt="Profile"
-                  class="w-12 h-12 rounded-sm profile-pic"
+                  class="h-12 rounded-sm profile-pic"
                   aria-label="Toggle Profile"
                 />
               </button>
