@@ -5,7 +5,7 @@ import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFP
 import { ActorFactory } from "../../utils/ActorFactory";
 
 function createUserStore() {
-  const { subscribe, set, update } = writable<any>(null);
+  const { subscribe, set } = writable<any>(null);
 
   function uint8ArrayToBase64(bytes: Uint8Array): string {
     const binary = Array.from(bytes)
