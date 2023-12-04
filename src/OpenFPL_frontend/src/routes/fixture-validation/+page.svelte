@@ -9,7 +9,10 @@
   import Layout from "../Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
-  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let gameweeks = Array.from(
+    { length: $systemStore?.activeGameweek ?? 1 },
+    (_, i) => i + 1
+  );
   let currentGameweek: number = $systemStore?.activeGameweek ?? 1;
   let currentSeasonName: string = $systemStore?.activeSeason.name ?? "";
 
@@ -111,12 +114,12 @@
                     </div>{/if}
                   <div class="w-1/4 px-4">
                     <a href="/add-fixture-data?id={fixture.id}">
-                    <button
-                      class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
-                    >
+                      <button
+                        class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                      >
                         Add Fixture Data
-                    </button>
-                  </a>
+                      </button>
+                    </a>
                   </div>
                 </div>
               {/each}

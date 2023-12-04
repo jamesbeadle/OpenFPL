@@ -6,9 +6,7 @@
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type {
-    ProfileDTO,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { authIsAdmin } from "$lib/derived/auth.derived";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
@@ -23,7 +24,10 @@
   let kickOff: bigint = fixture.kickOff;
   let status: number = fixture.status;
 
-  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let gameweeks = Array.from(
+    { length: $systemStore?.activeGameweek ?? 1 },
+    (_, i) => i + 1
+  );
 
   const statuses: Status[] = [
     { id: 0, description: "Unplayed" },

@@ -58,18 +58,23 @@
       </div>
 
       {#each manager.gameweeks as gameweek}
-        <button class="w-full" on:click={() => viewGameweekDetail(gameweek.principalId, gameweek.gameweek)}>
-            
-        <div class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer">
-          <div class="w-1/4 px-4">{gameweek.gameweek}</div>
-          <div class="w-1/4 px-4">{gameweek.points}</div>
-          <div class="w-1/4 px-4 flex items-center">
+        <button
+          class="w-full"
+          on:click={() =>
+            viewGameweekDetail(gameweek.principalId, gameweek.gameweek)}
+        >
+          <div
+            class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer"
+          >
+            <div class="w-1/4 px-4">{gameweek.gameweek}</div>
+            <div class="w-1/4 px-4">{gameweek.points}</div>
+            <div class="w-1/4 px-4 flex items-center">
               <span class="flex items-center">
                 <ViewDetailsIcon className="w-6 mr-2" />View Details
               </span>
+            </div>
           </div>
-        </div>
-      </button>
+        </button>
       {/each}
     </div>
   </div>

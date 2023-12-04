@@ -13,7 +13,7 @@
   import WalletIcon from "$lib/icons/WalletIcon.svelte";
   import { onMount, onDestroy } from "svelte";
   import { goto } from "$app/navigation";
-  import { authSignedInStore } from "$lib/derived/auth.derived";
+  import { authSignedInStore, authIsAdmin } from "$lib/derived/auth.derived";
   import { userGetProfilePicture } from "$lib/derived/user.derived";
 
   let menuOpen = false;
@@ -140,7 +140,7 @@
               <span class="flex items-center h-full px-4">Governance</span>
             </a>
           </li>
-          {#if $authSignedInStore}
+          {#if $authIsAdmin}
             <li class="mx-2 flex items-center h-16">
               <a
                 href="/admin"
@@ -154,7 +154,10 @@
           {/if}
           <li class="flex flex-1 items-center">
             <div class="relative inline-block">
-              <button on:click={toggleProfileDropdown} class="h-full flex items-center">
+              <button
+                on:click={toggleProfileDropdown}
+                class="h-full flex items-center"
+              >
                 <img
                   src={$userGetProfilePicture}
                   alt="Profile"

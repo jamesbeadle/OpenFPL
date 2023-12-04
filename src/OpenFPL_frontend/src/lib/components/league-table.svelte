@@ -11,7 +11,10 @@
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number = $systemStore?.activeGameweek ?? 1;
-  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let gameweeks = Array.from(
+    { length: $systemStore?.activeGameweek ?? 1 },
+    (_, i) => i + 1
+  );
   let tableData: any[] = [];
 
   onMount(async () => {
@@ -56,7 +59,9 @@
   <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
     <div class="flex items-center space-x-2 ml-4">
       <button
-        class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+        class={`${
+          selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
+        } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1`}
         on:click={() => changeGameweek(-1)}
         disabled={selectedGameweek === 1}
       >
@@ -73,7 +78,11 @@
       </select>
 
       <button
-        class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+        class={`${
+          selectedGameweek === $systemStore?.activeGameweek
+            ? "bg-gray-500"
+            : "fpl-button"
+        } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
         on:click={() => changeGameweek(1)}
         disabled={selectedGameweek === $systemStore?.activeGameweek}
       >

@@ -5,10 +5,7 @@
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type {
-    SystemState,
-    Team,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import {
     formatUnixTimeToTime,
@@ -21,7 +18,10 @@
   let selectedFixture: Fixture | null;
 
   let selectedGameweek: number = $systemStore?.activeGameweek ?? 1;
-  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let gameweeks = Array.from(
+    { length: $systemStore?.activeGameweek ?? 1 },
+    (_, i) => i + 1
+  );
   $: filteredFixtures = fixturesWithTeams.filter(
     ({ fixture }) => fixture.gameweek === selectedGameweek
   );
@@ -104,7 +104,9 @@
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
       <div class="flex items-center space-x-2 ml-4">
         <button
-          class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+          class={`${
+            selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
+          } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1`}
           on:click={() => changeGameweek(-1)}
           disabled={selectedGameweek === 1}
         >
@@ -121,9 +123,14 @@
         </select>
 
         <button
-          class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+          class={`${
+            selectedGameweek === $systemStore?.activeGameweek
+              ? "bg-gray-500"
+              : "fpl-button"
+          } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
           on:click={() => changeGameweek(1)}
-          disabled={selectedGameweek === $systemStore?.activeGameweek}>
+          disabled={selectedGameweek === $systemStore?.activeGameweek}
+        >
           &gt;
         </button>
       </div>
