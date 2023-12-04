@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
@@ -16,20 +16,9 @@
   let isSubmitDisabled: boolean = true;
   $: isSubmitDisabled = newFavouriteTeam <= 0;
 
-  let teams: Team[];
-
-  let unsubscribeTeams: () => void;
-
   onMount(async () => {
     await userStore.sync();
     await teamStore.sync();
-    unsubscribeTeams = teamStore.subscribe((value) => {
-      teams = value;
-    });
-  });
-
-  onDestroy(() => {
-    unsubscribeTeams?.();
   });
 
   async function updateFavouriteTeam() {
@@ -68,7 +57,7 @@
         class="w-full p-2 rounded-md fpl-dropdown"
       >
         <option value={0}>Select Team</option>
-        {#each teams as team}
+        {#each $teamStore as team}
           <option value={team.id}>{team.friendlyName}</option>
         {/each}
       </select>

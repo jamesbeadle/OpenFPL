@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
 
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
@@ -10,36 +10,24 @@
   import { authStore } from "$lib/stores/auth.store";
 
   import { getPositionAbbreviation } from "$lib/utils/Helpers";
-  import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type {
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Principal } from "@dfinity/principal";
 
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
-  let unsubscribeTeams: () => void;
-  let unsubscribeSystemState: () => void;
-  let unsubscribeFixtures: () => void;
-
-  let teams: Team[] = [];
-  let systemState: SystemState | null;
-  let fixtures: Fixture[] = [];
-
-  let selectedGameweek: number = 1;
+  let isLoading = true;
+  let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  let gameweekData: GameweekData[] = [];
   let showModal = false;
+
+  let gameweekData: GameweekData[] = [];
   let selectedTeam: Team;
   let selectedOpponentTeam: Team;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
-
-  let isLoading = true;
 
   onMount(async () => {
     try {
@@ -48,20 +36,6 @@
       await fixtureStore.sync();
       await authStore.sync();
       await playerEventsStore.sync();
-
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value.sort((a, b) =>
-          a.friendlyName.localeCompare(b.friendlyName)
-        );
-      });
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-      });
-
-      unsubscribeFixtures = fixtureStore.subscribe((value) => {
-        fixtures = value;
-      });
 
       await loadGameweekPoints($authStore?.identity?.getPrincipal());
     } catch (error) {
@@ -74,13 +48,6 @@
       isLoading = false;
     }
   });
-
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribeFixtures?.();
-    unsubscribeSystemState?.();
-  });
-
   $: if ($authStore?.identity?.getPrincipal()) {
     loadGameweekPoints($authStore?.identity?.getPrincipal());
   }
@@ -107,9 +74,9 @@
     try {
       selectedGameweekData = gameweekData;
       let playerTeamId = gameweekData.player.teamId;
-      selectedTeam = teams.find((x) => x.id === playerTeamId)!;
+      selectedTeam = $teamStore.find((x) => x.id === playerTeamId)!;
 
-      let playerFixture = fixtures.find(
+      let playerFixture = $fixtureStore.find(
         (x) =>
           x.gameweek === gameweekData.gameweek &&
           (x.homeTeamId === playerTeamId || x.awayTeamId === playerTeamId)
@@ -118,7 +85,7 @@
         playerFixture?.homeTeamId === playerTeamId
           ? playerFixture?.awayTeamId
           : playerFixture?.homeTeamId;
-      selectedOpponentTeam = teams.find((x) => x.id === opponentId)!;
+      selectedOpponentTeam = $teamStore.find((x) => x.id === opponentId)!;
       showModal = true;
     } catch (error) {
       toastsError({

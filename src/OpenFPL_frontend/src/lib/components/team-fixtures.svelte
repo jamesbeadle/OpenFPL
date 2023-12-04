@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
@@ -9,18 +9,12 @@
     formatUnixTimeToTime,
   } from "../utils/Helpers";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { Fixture } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
   export let clubId: number | null = null;
 
-  let teams: Team[] = [];
-  let fixtures: Fixture[] = [];
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedFixtureType = -1;
-
-  let unsubscribeTeams: () => void;
-  let unsubscribeFixtures: () => void;
 
   $: filteredFixtures =
     selectedFixtureType === -1
@@ -43,18 +37,11 @@
       await teamStore.sync();
       await fixtureStore.sync();
 
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
-      });
-
-      unsubscribeFixtures = fixtureStore.subscribe((value) => {
-        fixtures = value;
-        fixturesWithTeams = fixtures.map((fixture) => ({
-          fixture,
-          homeTeam: getTeamFromId(fixture.homeTeamId),
-          awayTeam: getTeamFromId(fixture.awayTeamId),
-        }));
-      });
+      fixturesWithTeams = $fixtureStore.map((fixture) => ({
+        fixture,
+        homeTeam: getTeamFromId(fixture.homeTeamId),
+        awayTeam: getTeamFromId(fixture.awayTeamId),
+      }));
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching team fixtures." },
@@ -65,13 +52,8 @@
     }
   });
 
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribeFixtures?.();
-  });
-
   function getTeamFromId(teamId: number): Team | undefined {
-    return teams.find((team) => team.id === teamId);
+    return $teamStore.find((team) => team.id === teamId);
   }
 </script>
 

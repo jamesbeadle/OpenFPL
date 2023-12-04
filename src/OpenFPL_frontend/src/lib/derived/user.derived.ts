@@ -8,3 +8,8 @@ export const userGetProfilePicture: Readable<string> = derived(
       ? URL.createObjectURL(new Blob([new Uint8Array(user.profilePicture)]))
       : "profile_placeholder.png"
 );
+
+export const userGetFavouriteTeam: Readable<number> = derived(
+  userStore,
+  (user) => (user !== null && user !== undefined ? user.favouriteTeamId : 0)
+);

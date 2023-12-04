@@ -1,12 +1,18 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { authIsAdmin } from "$lib/derived/auth.derived";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type { Fixture, UpdateFixtureDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Fixture,
+    UpdateFixtureDTO,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
-  interface Status { id: number; description: string; }
 
+  interface Status {
+    id: number;
+    description: string;
+  }
 
   export let visible: boolean;
   export let closeModal: () => void;
@@ -26,20 +32,18 @@
     { id: 3, description: "Data Finalised" },
   ];
 
-  let kickOffInput: string = ""; 
+  let kickOffInput: string = "";
 
   let isLoading = true;
 
   function bigintToDateStr(kickOff: bigint): string {
-    const date = new Date(Number(kickOff) / 1000000); // Convert nanoseconds to milliseconds
-    return date.toISOString().slice(0, 16); // Format suitable for datetime-local input
+    const date = new Date(Number(kickOff) / 1000000);
+    return date.toISOString().slice(0, 16);
   }
 
   onMount(async () => {
-    kickOffInput = bigintToDateStr(kickOff); 
+    kickOffInput = bigintToDateStr(kickOff);
   });
-
-  onDestroy(() => {});
 
   async function updateFixture() {
     isLoading = true;
@@ -76,9 +80,6 @@
     const date = new Date(dateString);
     return BigInt(date.getTime()) * BigInt(1000000);
   }
-  
-
-
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
@@ -86,10 +87,12 @@
     <div class="mt-3">
       <h3 class="text-lg leading-6 font-medium mb-2">Update Fixture</h3>
       <form on:submit|preventDefault={updateFixture}>
-        
         <div class="mt-4 flex flex-col space-y-2">
           <h5>Fixture Gameweek</h5>
-          <select bind:value={gameweek} class="w-full p-2 rounded-md fpl-dropdown">
+          <select
+            bind:value={gameweek}
+            class="w-full p-2 rounded-md fpl-dropdown"
+          >
             {#each gameweeks as gameweek}
               <option value={gameweek}>Gameweek {gameweek}</option>
             {/each}
@@ -98,25 +101,40 @@
 
         <div class="mt-4 flex flex-col space-y-2">
           <h5>Fixture Status</h5>
-          <select bind:value={status} class="w-full p-2 rounded-md fpl-dropdown">
+          <select
+            bind:value={status}
+            class="w-full p-2 rounded-md fpl-dropdown"
+          >
             {#each statuses as status}
               <option value={status.id}>{status.description}</option>
             {/each}
           </select>
         </div>
-        
+
         <div class="mt-4 flex flex-col space-y-2">
           <h5>Fixture Kick Off</h5>
-          <input type="datetime-local" bind:value={kickOffInput} class="w-full p-2 rounded-md fpl-dropdown"/>
+          <input
+            type="datetime-local"
+            bind:value={kickOffInput}
+            class="w-full p-2 rounded-md fpl-dropdown"
+          />
         </div>
 
         <div class="items-center py-3 flex space-x-4">
-          <button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            on:click={cancelModal}>
+          <button
+            class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            on:click={cancelModal}
+          >
             Cancel
           </button>
-          <button class={`px-4 py-2 ${ !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn" } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-            type="submit" disabled={!$authIsAdmin}>
+          <button
+            class={`px-4 py-2 ${
+              !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"
+            } 
+            text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            type="submit"
+            disabled={!$authIsAdmin}
+          >
             Update
           </button>
         </div>

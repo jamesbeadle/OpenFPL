@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { toastsError } from "$lib/stores/toasts-store";
@@ -22,12 +19,6 @@
   export let filterColumn = -1;
   export let bankBalance = writable<number>(0);
 
-  export let players = writable<PlayerDTO[] | []>([]);
-  export let teams = writable<Team[] | []>([]);
-
-  let unsubscribeTeams: () => void;
-  let unsubscribePlayers: () => void;
-
   let filterTeam = -1;
   let filterSurname = "";
   let minValue = 0;
@@ -35,7 +26,7 @@
   let currentPage = 1;
   const pageSize = 10;
 
-  $: filteredPlayers = $players.filter((player) => {
+  $: filteredPlayers = $playerStore.filter((player) => {
     return (
       (filterTeam === -1 || player.teamId === filterTeam) &&
       (filterPosition === -1 || player.position === filterPosition) &&
@@ -77,14 +68,6 @@
       await playerStore.sync();
       await teamStore.sync();
 
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams.set(value);
-      });
-
-      unsubscribePlayers = playerStore.subscribe((value) => {
-        players.set(value);
-      });
-
       let team = $fantasyTeam;
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch (error) {
@@ -98,15 +81,10 @@
     }
   });
 
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribePlayers?.();
-  });
-
   function countPlayersByTeam(playerIds: Uint16Array | number[]) {
     const counts: Record<number, number> = {};
     playerIds.forEach((playerId) => {
-      const player = $players.find((p) => p.id === playerId);
+      const player = $playerStore.find((p) => p.id === playerId);
       if (player) {
         if (!counts[player.teamId]) {
           counts[player.teamId] = 0;
@@ -137,7 +115,7 @@
 
     team &&
       team.playerIds.forEach((id) => {
-        const teamPlayer = $players.find((p) => p.id === id);
+        const teamPlayer = $playerStore.find((p) => p.id === id);
         if (teamPlayer) {
           positionCounts[teamPlayer.position]++;
         }
@@ -177,7 +155,7 @@
 
   function addTeamDataToPlayers(players: PlayerDTO[]): any[] {
     return players.map((player) => {
-      const team = $teams.find((t) => t.id === player.teamId);
+      const team = $teamStore.find((t) => t.id === player.teamId);
       return { ...player, team };
     });
   }
@@ -211,7 +189,7 @@
             bind:value={filterTeam}
           >
             <option value={-1}>All</option>
-            {#each $teams as team}
+            {#each $teamStore as team}
               <option value={team.id}>{team.friendlyName}</option>
             {/each}
           </select>

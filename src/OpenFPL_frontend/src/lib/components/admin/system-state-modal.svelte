@@ -1,42 +1,23 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { systemStore } from "$lib/stores/system-store";
   import { authIsAdmin } from "$lib/derived/auth.derived";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type {
-    SystemState,
-    UpdateSystemStateDTO,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { UpdateSystemStateDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
 
   export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
 
-  let systemState: SystemState | null;
-
-  let activeGameweek = 1;
-  let focusGameweek = 1;
+  let activeGameweek = $systemStore?.activeGameweek ?? 1;
+  let focusGameweek = $systemStore?.focusGameweek ?? 1;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-
-  let unsubscribeSeasons: () => void;
-  let unsubscribeSystemState: () => void;
 
   let isLoading = true;
 
   onMount(async () => {
     await systemStore.sync();
-
-    unsubscribeSystemState = systemStore.subscribe((value) => {
-      systemState = value;
-      activeGameweek = value?.activeGameweek ?? 1;
-      focusGameweek = value?.focusGameweek ?? 1;
-    });
-  });
-
-  onDestroy(() => {
-    unsubscribeSeasons?.();
-    unsubscribeSystemState?.();
   });
 
   async function updateSystemState() {
@@ -46,7 +27,6 @@
         activeGameweek: activeGameweek,
         focusGameweek: focusGameweek,
       };
-      console.log(newSystemState);
       await systemStore.updateSystemState(newSystemState);
       systemStore.sync();
       await closeModal();

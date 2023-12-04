@@ -1,33 +1,17 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { toastsError } from "$lib/stores/toasts-store";
-  import type {
-    Fixture,
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
-  let teams: Team[];
-  let allFixtures: Fixture[];
-  let fixtures: Fixture[];
-  let players: PlayerDTO[];
-  let systemState: SystemState | null;
-
-  let unsubscribeSystemState: () => void;
-  let unsubscribeTeams: () => void;
-  let unsubscribePlayers: () => void;
-  let unsubscribeFixtures: () => void;
-
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  let currentGameweek: number;
-  let currentSeason: string;
+  let currentGameweek: number = $systemStore?.activeGameweek ?? 1;
+  let currentSeasonName: string = $systemStore?.activeSeason.name ?? "";
 
   let isLoading = true;
 
@@ -36,27 +20,6 @@
       await systemStore.sync();
       await teamStore.sync();
       await playerStore.sync();
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-        currentSeason = systemState?.activeSeason.name ?? "";
-        currentGameweek = systemState?.activeGameweek ?? 1;
-      });
-
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
-      });
-
-      unsubscribePlayers = playerStore.subscribe((value) => {
-        players = value;
-      });
-
-      unsubscribeFixtures = fixtureStore.subscribe((value) => {
-        allFixtures = value;
-        fixtures = value.filter(
-          (x) => x.gameweek == systemState?.activeGameweek
-        );
-      });
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching fixture validation list." },
@@ -68,22 +31,12 @@
     }
   });
 
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribePlayers?.();
-    unsubscribeSystemState?.();
-  });
-
-  $: if (systemState && currentGameweek) {
-    fixtures = allFixtures.filter((x) => x.gameweek === currentGameweek);
-  }
-
   const changeGameweek = (delta: number) => {
     currentGameweek = Math.max(1, Math.min(38, currentGameweek + delta));
   };
 
   function getTeamById(teamId: number): Team {
-    return teams.find((x) => x.id === teamId)!;
+    return $teamStore.find((x) => x.id === teamId)!;
   }
 </script>
 
@@ -94,7 +47,9 @@
     <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
       <div class="flex flex-col space-y-4 text-xs md:text-base">
         <div class="flex p-4">
-          <h1>{`Season ${currentSeason}`} - {`Gameweek ${currentGameweek}`}</h1>
+          <h1>
+            {`Season ${currentSeasonName}`} - {`Gameweek ${currentGameweek}`}
+          </h1>
         </div>
         <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
           <div
@@ -133,8 +88,8 @@
               <div class="w-1/4 px-4">Actions</div>
             </div>
 
-            {#if fixtures && fixtures.length > 0}
-              {#each fixtures as fixture}
+            {#if $fixtureStore.filter((x) => x.gameweek === currentGameweek) && $fixtureStore.filter((x) => x.gameweek === currentGameweek).length > 0}
+              {#each $fixtureStore.filter((x) => x.gameweek === currentGameweek) as fixture}
                 {@const homeTeam = getTeamById(fixture.homeTeamId)}
                 {@const awayTeam = getTeamById(fixture.awayTeamId)}
                 <div

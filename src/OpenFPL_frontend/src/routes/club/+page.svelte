@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { teamStore } from "$lib/stores/team-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { playerStore } from "$lib/stores/player-store";
@@ -17,33 +17,21 @@
   import type {
     Fixture,
     Season,
-    SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
 
-  let teams: Team[] = [];
-  let fixtures: Fixture[] = [];
-  let systemState: SystemState | null;
+  let isLoading = true;
   let fixturesWithTeams: FixtureWithTeams[] = [];
-
-  let selectedGameweek: number = 1;
-  let selectedSeason: Season;
+  let selectedGameweek: number = $systemStore?.activeGameweek ?? 1;
+  let selectedSeason: Season | null = $systemStore?.activeSeason ?? null;
   let team: Team | null = null;
-  let players: PlayerDTO[] = [];
   let nextFixture: Fixture | null = null;
   let nextFixtureHomeTeam: Team | null = null;
   let nextFixtureAwayTeam: Team | null = null;
   let highestScoringPlayer: PlayerDTO | null = null;
 
   let activeTab: string = "players";
-
-  let unsubscribeTeams: () => void;
-  let unsubscribeFixtures: () => void;
-  let unsubscribeSystemState: () => void;
-  let unsubscribePlayers: () => void;
-
-  let isLoading = true;
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -54,28 +42,7 @@
       await systemStore.sync();
       await playerStore.sync();
 
-      unsubscribeFixtures = fixtureStore.subscribe((value) => {
-        fixtures = value;
-        fixturesWithTeams = fixtures.map((fixture) => ({
-          fixture,
-          homeTeam: getTeamFromId(fixture.homeTeamId),
-          awayTeam: getTeamFromId(fixture.awayTeamId),
-        }));
-      });
-
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
-      });
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-      });
-
-      unsubscribePlayers = playerStore.subscribe((value) => {
-        players = value.filter((player) => player.teamId === id);
-      });
-
-      let teamFixtures = fixtures.filter(
+      let teamFixtures = $fixtureStore.filter(
         (x) => x.homeTeamId === id || x.awayTeamId === id
       );
 
@@ -85,12 +52,10 @@
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
 
-      highestScoringPlayer = players
+      highestScoringPlayer = $playerStore
         .sort((a, b) => a.totalPoints - b.totalPoints)
         .sort((a, b) => Number(b.value) - Number(a.value))[0];
 
-      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
-      selectedSeason = systemState?.activeSeason ?? selectedSeason;
       nextFixture =
         teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
       nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
@@ -106,20 +71,17 @@
     }
   });
 
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribeFixtures?.();
-    unsubscribeSystemState?.();
-    unsubscribePlayers?.();
-  });
-
   let tableData: any[] = [];
-  $: if (fixturesWithTeams.length > 0 && teams.length > 0) {
-    tableData = updateTableData(fixturesWithTeams, teams, selectedGameweek);
+  $: if (fixturesWithTeams.length > 0 && $teamStore.length > 0) {
+    tableData = updateTableData(
+      fixturesWithTeams,
+      $teamStore,
+      selectedGameweek
+    );
   }
 
   function getTeamFromId(teamId: number): Team | undefined {
-    return teams.find((team) => team.id === teamId);
+    return $teamStore.find((team) => team.id === teamId);
   }
 
   function setActiveTab(tab: string): void {
@@ -171,7 +133,7 @@
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Players</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {players.length}
+              {$playerStore.filter((x) => x.teamId == id).length}
             </p>
             <p class="text-gray-300 text-xs">Total</p>
           </div>
@@ -184,7 +146,9 @@
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
               {getTeamPosition(id)}
             </p>
-            <p class="text-gray-300 text-xs">{selectedSeason.name}</p>
+            <p class="text-gray-300 text-xs">
+              {$systemStore?.activeSeason.name}
+            </p>
           </div>
         </div>
         <div
@@ -309,7 +273,7 @@
         </ul>
 
         {#if activeTab === "players"}
-          <TeamPlayers {players} />
+          <TeamPlayers players={$playerStore.filter((x) => x.teamId == id)} />
         {:else if activeTab === "fixtures"}
           <TeamFixtures clubId={id} />
         {/if}

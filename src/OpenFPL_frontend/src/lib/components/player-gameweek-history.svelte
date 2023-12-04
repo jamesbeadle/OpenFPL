@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
@@ -11,22 +11,17 @@
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
   import type {
     Season,
-    SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import type {
-    Fixture,
     PlayerDetailDTO,
     PlayerGameweekDTO,
   } from "../../../../declarations/player_canister/player_canister.did";
   import { playerEventsStore } from "$lib/stores/player-events-store";
 
   let isLoading = true;
-  let teams: Team[] = [];
-  let fixtures: Fixture[] = [];
-  let systemState: SystemState | null;
-  let selectedGameweek: number = 1;
+  let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
   let selectedSeason: Season | null = null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let playerDetails: PlayerDetailDTO;
@@ -34,10 +29,6 @@
   let opponentCache = new Map<number, Team>();
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
   let showModal: boolean = false;
-
-  let unsubscribeTeams: () => void;
-  let unsubscribeFixtures: () => void;
-  let unsubscribeSystemState: () => void;
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -48,29 +39,18 @@
       await systemStore.sync();
       await playerEventsStore.sync;
 
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
-      });
-
-      unsubscribeFixtures = fixtureStore.subscribe((value) => {
-        fixtures = value;
-        fixturesWithTeams = fixtures.map((fixture) => ({
-          fixture,
-          homeTeam: getTeamFromId(fixture.homeTeamId),
-          awayTeam: getTeamFromId(fixture.awayTeamId),
-        }));
-      });
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-      });
+      fixturesWithTeams = $fixtureStore.map((fixture) => ({
+        fixture,
+        homeTeam: getTeamFromId(fixture.homeTeamId),
+        awayTeam: getTeamFromId(fixture.awayTeamId),
+      }));
 
       playerDetails = await playerEventsStore.getPlayerDetails(
         id,
-        systemState?.activeSeason.id ?? 0
+        $systemStore?.activeSeason.id ?? 0
       );
-      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
-      selectedSeason = systemState?.activeSeason ?? selectedSeason;
+      selectedGameweek = $systemStore?.activeGameweek ?? selectedGameweek;
+      selectedSeason = $systemStore?.activeSeason ?? selectedSeason;
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching player gameweek history." },
@@ -82,14 +62,8 @@
     }
   });
 
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribeFixtures?.();
-    unsubscribeSystemState?.();
-  });
-
   function getTeamFromId(teamId: number): Team | undefined {
-    return teams.find((team) => team.id === teamId);
+    return $teamStore.find((team) => team.id === teamId);
   }
 
   function getOpponentFromFixtureId(fixtureId: number): Team {
@@ -103,7 +77,7 @@
         ? fixture?.awayTeam?.id
         : fixture?.homeTeam?.id;
 
-    let opponent = teams.find((team) => team.id === opponentId);
+    let opponent = $teamStore.find((team) => team.id === opponentId);
 
     if (!opponent) {
       return {

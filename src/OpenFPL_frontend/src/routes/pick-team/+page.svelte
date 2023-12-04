@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
   import { writable } from "svelte/store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
@@ -62,22 +62,12 @@
 
   $: gridSetup = getGridSetup(selectedFormation);
 
-  $: if (players && $fantasyTeam) {
+  $: if ($fantasyTeam) {
     disableInvalidFormations();
     updateTeamValue();
   }
 
-  $: isSaveButtonActive =
-    $systemState && $teams && $players && $fantasyTeam
-      ? checkSaveButtonConditions()
-      : false;
-
-  $: {
-    if ($systemState) {
-      activeSeason = $systemState?.activeSeason.name ?? activeSeason;
-      activeGameweek = $systemState?.activeGameweek ?? activeGameweek;
-    }
-  }
+  $: isSaveButtonActive = $fantasyTeam ?? checkSaveButtonConditions();
 
   $: {
     if ($fantasyTeam) {
@@ -90,7 +80,7 @@
   }
 
   let activeSeason = "-";
-  let activeGameweek = -1;
+  let activeGameweek = $systemStore?.activeGameweek ?? 1;
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
   let countdownDays = "00";
@@ -104,14 +94,7 @@
   let teamValue = 0;
   let newTeam = true;
 
-  let teams = writable<Team[] | []>([]);
-  let players = writable<PlayerDTO[] | []>([]);
-  let systemState = writable<SystemState | null>(null);
   let sessionAddedPlayers: number[] = [];
-
-  let unsubscribeSystemState: () => void;
-  let unsubscribeTeams: () => void;
-  let unsubscribePlayers: () => void;
 
   const fantasyTeam = writable<FantasyTeam | null>(null);
   const transfersAvailable = writable(newTeam ? Infinity : 3);
@@ -124,18 +107,6 @@
       await systemStore.sync();
       await teamStore.sync();
       await playerStore.sync();
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState.set(value);
-      });
-
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams.set(value);
-      });
-
-      unsubscribePlayers = playerStore.subscribe((value) => {
-        players.set(value);
-      });
 
       const storedViewMode = localStorage.getItem("viewMode");
       if (storedViewMode) {
@@ -188,12 +159,6 @@
     }
   });
 
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribePlayers?.();
-    unsubscribeSystemState?.();
-  });
-
   function getGridSetup(formation: string): number[][] {
     const formationSplits = formation.split("-").map(Number);
     const setups = [
@@ -211,12 +176,14 @@
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
     team.playerIds.forEach((id) => {
-      const teamPlayer = $players.find((p) => p.id === id);
+      const teamPlayer = $playerStore.find((p) => p.id === id);
 
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
       }
     });
+
+    console.log(positionCounts);
 
     for (const formation of Object.keys(formations)) {
       const formationPositions = formations[formation].positions;
@@ -300,7 +267,7 @@
       3: 0,
     };
     team.playerIds.forEach((id) => {
-      const teamPlayer = $players.find((p) => p.id === id);
+      const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
       }
@@ -376,7 +343,7 @@
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
     team.playerIds.forEach((id) => {
-      const teamPlayer = $players.find((p) => p.id === id);
+      const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
       }
@@ -435,7 +402,7 @@
     let newPlayerIds: number[] = new Array(11).fill(0);
 
     team.playerIds.forEach((playerId) => {
-      const player = $players.find((p) => p.id === playerId);
+      const player = $playerStore.find((p) => p.id === playerId);
       if (player) {
         for (let i = 0; i < newFormationArray.length; i++) {
           if (
@@ -483,7 +450,8 @@
         );
       }
       bankBalance.update(
-        (n) => n + Number($players.find((x) => x.id === playerId)?.value) ?? 0
+        (n) =>
+          n + Number($playerStore.find((x) => x.id === playerId)?.value) ?? 0
       );
 
       return { ...currentTeam, playerIds: newPlayerIds };
@@ -517,7 +485,7 @@
     let highestValuedPlayerId = 0;
 
     team.playerIds.forEach((playerId) => {
-      const player = $players.find((p) => p.id === playerId);
+      const player = $playerStore.find((p) => p.id === playerId);
       if (player && Number(player.value) > highestValue) {
         highestValue = Number(player.value);
         highestValuedPlayerId = playerId;
@@ -532,7 +500,7 @@
       return;
     }
 
-    const formations = getAvailableFormations($players, $fantasyTeam);
+    const formations = getAvailableFormations($playerStore, $fantasyTeam);
     availableFormations.set(formations);
   }
 
@@ -541,7 +509,7 @@
     if (team) {
       let totalValue = 0;
       team.playerIds.forEach((id) => {
-        const player = $players.find((p) => p.id === id);
+        const player = $playerStore.find((p) => p.id === id);
         if (player) {
           totalValue += Number(player.value);
         }
@@ -554,7 +522,7 @@
     const teamCount = new Map();
     for (const playerId of $fantasyTeam?.playerIds || []) {
       if (playerId > 0) {
-        const player = $players.find((p) => p.id === playerId);
+        const player = $playerStore.find((p) => p.id === playerId);
         if (player) {
           teamCount.set(player.teamId, (teamCount.get(player.teamId) || 0) + 1);
           if (teamCount.get(player.teamId) > 2) {
@@ -623,7 +591,7 @@
   ): boolean {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
     team.playerIds.forEach((id) => {
-      const teamPlayer = $players.find((p) => p.id === id);
+      const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
         positionCounts[teamPlayer.position]++;
       }
@@ -645,7 +613,7 @@
   }
 
   function autofillTeam() {
-    if (!$fantasyTeam || !$players) return;
+    if (!$fantasyTeam || !$playerStore) return;
 
     let updatedFantasyTeam = {
       ...$fantasyTeam,
@@ -656,7 +624,7 @@
     const teamCounts = new Map<number, number>();
     updatedFantasyTeam.playerIds.forEach((playerId) => {
       if (playerId > 0) {
-        const player = $players.find((p) => p.id === playerId);
+        const player = $playerStore.find((p) => p.id === playerId);
         if (player) {
           teamCounts.set(
             player.teamId,
@@ -667,7 +635,7 @@
     });
 
     let eligibleTeams = Array.from(
-      new Set($players.map((player) => player.teamId))
+      new Set($playerStore.map((player) => player.teamId))
     ).filter((id) => id > 0);
     eligibleTeams.sort(() => Math.random() - 0.5);
 
@@ -679,7 +647,7 @@
       const teamId = eligibleTeams.shift();
       if (teamId === undefined) return;
 
-      const availablePlayers = $players.filter(
+      const availablePlayers = $playerStore.filter(
         (player) =>
           player.position === position &&
           player.teamId === teamId &&
@@ -773,8 +741,6 @@
       {closeAddPlayerModal}
       {fantasyTeam}
       {bankBalance}
-      {players}
-      {teams}
     />
     <div class="sm:m-1 md:m-2 lg:m-3 xl:m-4">
       <div class="flex flex-col sm:flex-row">
@@ -986,12 +952,14 @@
                     {@const actualIndex = getActualIndex(rowIndex, colIndex)}
                     {@const playerIds = $fantasyTeam?.playerIds ?? []}
                     {@const playerId = playerIds[actualIndex]}
-                    {@const player = $players.find((p) => p.id === playerId)}
+                    {@const player = $playerStore.find(
+                      (p) => p.id === playerId
+                    )}
                     <div
                       class="flex flex-col justify-center items-center flex-1 mt-2 mb-2 sm:mb-6 md:mb-12 lg:mb-16 xl:mb-6 2xl:mb-12"
                     >
                       {#if playerId > 0 && player}
-                        {@const team = $teams.find(
+                        {@const team = $teamStore.find(
                           (x) => x.id === player.teamId
                         )}
                         <div class="flex flex-col items-center text-center">
@@ -1139,8 +1107,10 @@
                   {@const actualIndex = getActualIndex(rowIndex, colIndex)}
                   {@const playerIds = $fantasyTeam?.playerIds ?? []}
                   {@const playerId = playerIds[actualIndex]}
-                  {@const player = $players.find((p) => p.id === playerId)}
-                  {@const team = $teams.find((x) => x.id === player?.teamId)}
+                  {@const player = $playerStore.find((p) => p.id === playerId)}
+                  {@const team = $teamStore.find(
+                    (x) => x.id === player?.teamId
+                  )}
 
                   <div class="flex items-center justify-between py-2 px-4">
                     {#if playerId > 0 && player}
@@ -1205,7 +1175,7 @@
           <SimpleFixtures />
         </div>
       </div>
-      <BonusPanel {fantasyTeam} {teams} {players} {activeGameweek} />
+      <BonusPanel {fantasyTeam} {activeGameweek} />
     </div>
   {/if}
 </Layout>

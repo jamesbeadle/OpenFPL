@@ -1,34 +1,32 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
+  import { authSignedInStore } from "$lib/derived/auth.derived";
+  import { userGetFavouriteTeam } from "$lib/derived/user.derived";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
-  import type {
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
-  let unsubscribeTeams: () => void;
-  let unsubscribeSystemState: () => void;
-
   let isLoading = true;
-  let teams: Team[] = [];
-  let systemState: SystemState | null;
-  let selectedLeaderboardType: number = 1;
-  let selectedGameweek: number = 1;
-  let selectedMonth: number = 1;
-  let selectedTeamId: number;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
+  let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
   let currentPage = 1;
   let itemsPerPage = 25;
+
+  let selectedLeaderboardType: number = 1;
+  let selectedMonth: number = 1;
+  let selectedTeamId: number = $authSignedInStore
+    ? $userGetFavouriteTeam ?? $teamStore[0].id
+    : $teamStore[0].id;
+
   let leaderboard: any;
-  let currentGameweek: number;
-  let focusGameweek: number;
   let totalPages: number = 0;
   let selectedTeamIndex: number = 0;
-  $: selectedTeamIndex = teams.findIndex((team) => team.id === selectedTeamId);
+
+  $: selectedTeamIndex = $teamStore.findIndex(
+    (team) => team.id === selectedTeamId
+  );
 
   $: if (leaderboard && leaderboard.totalEntries) {
     totalPages = Math.ceil(Number(leaderboard.totalEntries) / itemsPerPage);
@@ -42,21 +40,6 @@
       await leaderboardStore.syncMonthlyLeaderboards();
       await leaderboardStore.syncSeasonLeaderboard();
 
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value.sort((a, b) =>
-          a.friendlyName.localeCompare(b.friendlyName)
-        );
-      });
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-      });
-
-      selectedTeamId = teams[0].id;
-      currentGameweek = systemState?.activeGameweek ?? 1;
-      focusGameweek = systemState?.focusGameweek ?? 1;
-      selectedGameweek = systemState?.focusGameweek ?? selectedGameweek;
-      selectedMonth = systemState?.activeMonth ?? selectedMonth;
-
       let leaderboardData = await leaderboardStore.getWeeklyLeaderboard();
       leaderboard = leaderboardData;
     } catch (error) {
@@ -68,11 +51,6 @@
     } finally {
       isLoading = false;
     }
-  });
-
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribeSystemState?.();
   });
 
   $: selectedLeaderboardType,
@@ -146,8 +124,8 @@
 
   function changeTeam(delta: number) {
     selectedTeamIndex =
-      (selectedTeamIndex + delta + teams.length) % teams.length;
-    selectedTeamId = teams[selectedTeamIndex].id;
+      (selectedTeamIndex + delta + $teamStore.length) % $teamStore.length;
+    selectedTeamId = $teamStore[selectedTeamIndex].id;
     loadLeaderboardData();
   }
 </script>
@@ -214,7 +192,7 @@
                 class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]"
                 bind:value={selectedTeamId}
               >
-                {#each teams as team}
+                {#each $teamStore as team}
                   <option value={team.id}>{team.friendlyName}</option>
                 {/each}
               </select>

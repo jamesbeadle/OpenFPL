@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
@@ -12,24 +12,15 @@
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type {
     FantasyTeam,
-    SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { writable } from "svelte/store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
-  let teams: Team[] = [];
-  let players: PlayerDTO[] = [];
-  let systemState: SystemState | null;
-
-  let unsubscribeSystemState: () => void;
-  let unsubscribeTeams: () => void;
-  let unsubscribePlayers: () => void;
-
   let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  export let selectedGameweek: number;
+  export let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
   export let fantasyTeam = writable<FantasyTeam | null>(null);
 
   let isLoading = true;
@@ -40,19 +31,6 @@
       await teamStore.sync();
       await playerStore.sync();
       await playerEventsStore.sync();
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-        selectedGameweek = systemState?.focusGameweek ?? selectedGameweek;
-      });
-
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
-      });
-
-      unsubscribePlayers = playerStore.subscribe((value) => {
-        players = value;
-      });
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager gameweek detail." },
@@ -67,8 +45,8 @@
   $: if (
     !isLoading &&
     $fantasyTeam &&
-    teams.length > 0 &&
-    players.length > 0 &&
+    $teamStore.length > 0 &&
+    $playerStore.length > 0 &&
     selectedGameweek > 0
   ) {
     updateGameweekPlayers();
@@ -91,22 +69,16 @@
     }
   }
 
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribePlayers?.();
-    unsubscribeSystemState?.();
-  });
-
   const changeGameweek = (delta: number) => {
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
   };
 
   function getPlayerDTO(playerId: number): PlayerDTO | null {
-    return players.find((x) => x.id === playerId) ?? null;
+    return $playerStore.find((x) => x.id === playerId) ?? null;
   }
 
   function getPlayerTeam(teamId: number): Team | null {
-    return teams.find((x) => x.id === teamId) ?? null;
+    return $teamStore.find((x) => x.id === teamId) ?? null;
   }
 </script>
 

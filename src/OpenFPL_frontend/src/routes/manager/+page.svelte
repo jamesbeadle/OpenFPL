@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
@@ -24,12 +24,8 @@
 
   let activeTab: string = "details";
 
-  let teams: Team[];
   let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
   let systemState: SystemState | null;
-
-  let unsubscribeSystemState: () => void;
-  let unsubscribeTeams: () => void;
 
   let manager: ManagerDTO;
   let displayName = "";
@@ -43,14 +39,6 @@
     try {
       await systemStore.sync();
       await teamStore.sync();
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-      });
-
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
-      });
 
       manager = await managerStore.getManager(
         id ?? "",
@@ -85,7 +73,7 @@
       joinedDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
       favouriteTeam =
         manager.favouriteTeamId > 0
-          ? teams.find((x) => x.id == manager.favouriteTeamId) ?? null
+          ? $teamStore.find((x) => x.id == manager.favouriteTeamId) ?? null
           : null;
     } catch (error) {
       toastsError({
@@ -96,11 +84,6 @@
     } finally {
       isLoading = false;
     }
-  });
-
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribeSystemState?.();
   });
 
   function setActiveTab(tab: string): void {

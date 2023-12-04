@@ -69,9 +69,39 @@
     %sveltekit.head%
 
     <style>
+      html,
       body {
-        background: #fcfaf6;
-        color: #0e002d;
+        height: 100%;
+        margin: 0;
+      }
+
+      @font-face {
+        font-display: swap;
+        font-family: "Poppins";
+        font-style: normal;
+        font-weight: 400;
+        src: url("%sveltekit.assets%/poppins-regular-webfont.woff2")
+          format("woff2");
+      }
+
+      @font-face {
+        font-display: swap;
+        font-family: "Manrope";
+        font-style: normal;
+        font-weight: 400;
+        src: url("%sveltekit.assets%/Manrope-Regular.woff2") format("woff2");
+      }
+      body {
+        font-family: "Poppins", sans-serif !important;
+        color: white !important;
+        background-color: #1a1a1d;
+        height: 100vh;
+        margin: 0;
+        background-image: url("%sveltekit.assets%/background.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
       }
 
       #app-spinner {

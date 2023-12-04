@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { writable } from "svelte/store";
@@ -96,8 +96,6 @@
       isLoading = false;
     }
   });
-
-  onDestroy(() => {});
 
   async function confirmFixtureData() {
     isLoading = true;

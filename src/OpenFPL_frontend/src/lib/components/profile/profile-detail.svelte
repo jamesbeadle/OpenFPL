@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
   import { loadingText } from "$lib/stores/global-stores";
   import { userStore } from "$lib/stores/user-store";
@@ -24,8 +24,6 @@
   let fileInput: HTMLInputElement;
   let gameweek: number = 1;
 
-  let unsubscribeTeams: () => void;
-  let unsubscribeSystemState: () => void;
   let unsubscribeUserProfile: () => void;
 
   $: profileSrc =
@@ -47,14 +45,6 @@
       await systemStore.sync();
       await userStore.sync();
 
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams.set(value);
-      });
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState.set(value);
-      });
-
       unsubscribeUserProfile = userStore.subscribe((value) => {
         setProfile(value);
       });
@@ -67,11 +57,6 @@
     } finally {
       isLoading = false;
     }
-  });
-
-  onDestroy(() => {
-    unsubscribeTeams?.();
-    unsubscribeSystemState?.();
   });
 
   function setProfile(updatedProfile: any) {

@@ -1,7 +1,11 @@
-import { writable } from "svelte/store";
 import { authStore } from "$lib/stores/auth.store";
+import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import type { DataCache, Fixture, UpdateFixtureDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type {
+  DataCache,
+  Fixture,
+  UpdateFixtureDTO,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
@@ -52,7 +56,9 @@ function createFixtureStore() {
     );
   }
 
-  async function updateFixture(updatedFixture: UpdateFixtureDTO): Promise<void> {
+  async function updateFixture(
+    updatedFixture: UpdateFixtureDTO
+  ): Promise<void> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -69,7 +75,7 @@ function createFixtureStore() {
     subscribe,
     sync,
     getNextFixture,
-    updateFixture
+    updateFixture,
   };
 }
 

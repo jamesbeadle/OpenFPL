@@ -1853,7 +1853,7 @@ actor Self {
 
   public shared ({ caller }) func updateHashForCategory(category : Text) : async () {
     assert not Principal.isAnonymous(caller);
-    
+
     let hashBuffer = Buffer.fromArray<T.DataCache>([]);
 
     for (hashObj in Iter.fromList(dataCacheHashes)) {

@@ -18,7 +18,6 @@
   } from "../../lib/utils/Helpers";
   import type {
     Fixture,
-    SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
@@ -31,19 +30,10 @@
 
   $: id = Number($page.url.searchParams.get("id"));
 
-  let selectedGameweek: number = 1;
+  let selectedGameweek: number = $systemStore?.activeGameweek ?? 1;
   let selectedPlayer: PlayerDTO | null = null;
-  let players: PlayerDTO[] = [];
-  let teams: Team[] = [];
-  let fixtures: Fixture[] = [];
-  let systemState: SystemState | null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let team: Team | null = null;
-
-  let unsubscribeSystemState: () => void;
-  let unsubscribeTeams: () => void;
-  let unsubscribePlayers: () => void;
-  let unsubscribeFixtures: () => void;
 
   let nextFixture: Fixture | null = null;
   let nextFixtureHomeTeam: Team | null = null;
@@ -64,34 +54,18 @@
       await systemStore.sync();
       await playerStore.sync();
 
-      unsubscribeTeams = teamStore.subscribe((value) => {
-        teams = value;
-      });
+      fixturesWithTeams = $fixtureStore.map((fixture) => ({
+        fixture,
+        homeTeam: getTeamFromId(fixture.homeTeamId),
+        awayTeam: getTeamFromId(fixture.awayTeamId),
+      }));
 
-      unsubscribePlayers = playerStore.subscribe((value) => {
-        players = value;
-      });
+      selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;
+      team = $teamStore.find((x) => x.id === selectedPlayer?.teamId) ?? null;
 
-      unsubscribeFixtures = fixtureStore.subscribe((value) => {
-        fixtures = value;
-        fixturesWithTeams = fixtures.map((fixture) => ({
-          fixture,
-          homeTeam: getTeamFromId(fixture.homeTeamId),
-          awayTeam: getTeamFromId(fixture.awayTeamId),
-        }));
-      });
-
-      unsubscribeSystemState = systemStore.subscribe((value) => {
-        systemState = value;
-      });
-
-      selectedPlayer = players.find((x) => x.id === id) ?? null;
-      team = teams.find((x) => x.id === selectedPlayer?.teamId) ?? null;
-
-      let teamFixtures = fixtures.filter(
+      let teamFixtures = $fixtureStore.filter(
         (x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id
       );
-      selectedGameweek = systemState?.activeGameweek ?? selectedGameweek;
 
       nextFixture =
         teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
@@ -117,12 +91,16 @@
   });
 
   let tableData: any[] = [];
-  $: if (fixtures.length > 0 && teams.length > 0) {
-    tableData = updateTableData(fixturesWithTeams, teams, selectedGameweek);
+  $: if ($fixtureStore.length > 0 && $teamStore.length > 0) {
+    tableData = updateTableData(
+      fixturesWithTeams,
+      $teamStore,
+      selectedGameweek
+    );
   }
 
   function getTeamFromId(teamId: number): Team | undefined {
-    return teams.find((team) => team.id === teamId);
+    return $teamStore.find((team) => team.id === teamId);
   }
 
   function setActiveTab(tab: string): void {
