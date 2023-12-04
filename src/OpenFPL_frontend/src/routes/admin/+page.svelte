@@ -5,9 +5,7 @@
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
-  //get seasons for dropdown
-
-  export let showModal: boolean = false;
+  export let showSystemStateModal: boolean = false;
 
   let activeTab: string = "fixtures";
   let isLoading = true;
@@ -17,15 +15,15 @@
   });
 
   function displaySystemStateModal(): void {
-    showModal = true;
+    showSystemStateModal = true;
   }
 
   function setActiveTab(tab: string): void {
     activeTab = tab;
   }
 
-  function hideModal(): void {
-    showModal = false;
+  function hideSystemStateModal(): void {
+    showSystemStateModal = false;
   }
 </script>
 
@@ -34,9 +32,9 @@
     <LoadingIcon />
   {:else}
     <SystemStateModal
-      {showModal}
-      closeModal={hideModal}
-      cancelModal={hideModal}
+      visible={showSystemStateModal}
+      closeModal={hideSystemStateModal}
+      cancelModal={hideSystemStateModal}
     />
     <div class="m-4">
       <div class="bg-panel rounded-lg m-4">

@@ -197,7 +197,7 @@ export interface TimerInfo {
   triggerTime: bigint;
 }
 export interface UpdateSystemStateDTO {
-  activeSeasonId: SeasonId;
+  focusGameweek: GameweekNumber;
   activeGameweek: GameweekNumber;
 }
 export interface _SERVICE {

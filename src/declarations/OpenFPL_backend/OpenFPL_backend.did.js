@@ -197,7 +197,7 @@ export const idlFactory = ({ IDL }) => {
     triggerTime: IDL.Int,
   });
   const UpdateSystemStateDTO = IDL.Record({
-    activeSeasonId: SeasonId,
+    focusGameweek: GameweekNumber,
     activeGameweek: GameweekNumber,
   });
   return IDL.Service({

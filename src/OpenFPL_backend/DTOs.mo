@@ -141,8 +141,8 @@ module DTOs {
   };
 
   public type UpdateSystemStateDTO = {
-    activeSeasonId : T.SeasonId;
     activeGameweek : T.GameweekNumber;
+    focusGameweek : T.GameweekNumber;
   }
 
 };

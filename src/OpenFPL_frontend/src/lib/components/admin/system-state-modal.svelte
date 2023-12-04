@@ -1,45 +1,33 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
-  import { seasonStore } from "$lib/stores/season-store";
   import { systemStore } from "$lib/stores/system-store";
-  import { authStore } from "$lib/stores/auth.store";
+  import { authIsAdmin } from "$lib/derived/auth.derived";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type {
-    Season,
-    SystemState,
-    UpdateSystemStateDTO,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { SystemState, UpdateSystemStateDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
 
   export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
-  let seasons: Season[] = [];
+
   let systemState: SystemState | null;
 
   let activeGameweek = 1;
-  let activeSeasonId = 1;
+  let focusGameweek = 1;
+  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
   let unsubscribeSeasons: () => void;
   let unsubscribeSystemState: () => void;
 
-  $: isSubmitDisabled =
-    ($authStore.identity?.getPrincipal().toString() ?? "") !==
-    "kydhj-2crf5-wwkao-msv4s-vbyvu-kkroq-apnyv-zykjk-r6oyk-ksodu-vqe";
-
   let isLoading = true;
 
   onMount(async () => {
-    await authStore.sync();
-    await seasonStore.sync();
     await systemStore.sync();
-
-    unsubscribeSeasons = seasonStore.subscribe((value) => {
-      seasons = value;
-    });
 
     unsubscribeSystemState = systemStore.subscribe((value) => {
       systemState = value;
+      activeGameweek = value?.activeGameweek ?? 1;
+      focusGameweek = value?.focusGameweek ?? 1;
     });
   });
 
@@ -51,11 +39,12 @@
   async function updateSystemState() {
     isLoading = true;
     try {
-      let systemState: UpdateSystemStateDTO = {
+      let newSystemState: UpdateSystemStateDTO = {
         activeGameweek: activeGameweek,
-        activeSeasonId: activeSeasonId,
+        focusGameweek: focusGameweek,
       };
-      await systemStore.updateSystemState(systemState);
+      console.log(newSystemState)
+      await systemStore.updateSystemState(newSystemState);
       systemStore.sync();
       await closeModal();
       toastsShow({
@@ -78,30 +67,34 @@
 
 <Modal {visible} on:nnsClose={cancelModal}>
   <div class="bg-gray-900 p-4">
-    <div class="mt-3 text-center">
+    <div class="mt-3">
       <h3 class="text-lg leading-6 font-medium mb-2">Update System State</h3>
       <form on:submit|preventDefault={updateSystemState}>
-        <div class="mt-4">
-          <!-- Dropdown for seasons -->
+        <div class="mt-4 flex flex-col space-y-2">
+        
+          <h5>Active Gameweek</h5>
+          <select
+            bind:value={activeGameweek} class="w-full p-2 rounded-md fpl-dropdown">
+            {#each gameweeks as gameweek}
+              <option value={gameweek}>Gameweek {gameweek}</option>
+            {/each}
+          </select>
 
-          <!-- Dropdown for active gameweeks -->
-
-          <!-- Dropdown for focus gameweeks -->
+          <h5>Focus Gameweek</h5>
+          <select bind:value={focusGameweek} class="w-full p-2 rounded-md fpl-dropdown">
+            {#each gameweeks as gameweek}
+              <option value={gameweek}>Gameweek {gameweek}</option>
+            {/each}
+          </select>
         </div>
         <div class="items-center py-3 flex space-x-4">
-          <button
-            class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            on:click={cancelModal}
-          >
+          <button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            on:click={cancelModal}>
             Cancel
           </button>
           <button
-            class={`px-4 py-2 ${
-              isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-            } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-            type="submit"
-            disabled={isSubmitDisabled}
-          >
+            class={`px-4 py-2 ${ !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn" } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            type="submit" disabled={!$authIsAdmin}>
             Update
           </button>
         </div>

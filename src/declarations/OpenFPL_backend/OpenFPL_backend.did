@@ -1,6 +1,6 @@
 type UpdateSystemStateDTO = record {
   activeGameweek : GameweekNumber;
-  activeSeasonId : SeasonId;
+  focusGameweek : GameweekNumber;
 };
 type TimerInfo = record {
   callbackName : text;

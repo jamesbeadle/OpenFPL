@@ -111,23 +111,43 @@
       {#if $authSignedInStore}
         <ul class="hidden md:flex text-base md:text-xs lg:text-base">
           <li class="mx-2 flex items-center h-16">
-            <a href="/" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/')}">
+            <a
+              href="/"
+              class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
+                '/'
+              )}"
+            >
               <span class="flex items-center h-full px-4">Home</span>
             </a>
           </li>
           <li class="mx-2 flex items-center h-16">
-            <a href="/pick-team" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/pick-team')}">
+            <a
+              href="/pick-team"
+              class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
+                '/pick-team'
+              )}"
+            >
               <span class="flex items-center h-full px-4">Squad Selection</span>
             </a>
           </li>
           <li class="mx-2 flex items-center h-16">
-            <a href="/governance" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/governance')}">
+            <a
+              href="/governance"
+              class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
+                '/governance'
+              )}"
+            >
               <span class="flex items-center h-full px-4">Governance</span>
             </a>
           </li>
           {#if $authSignedInStore}
             <li class="mx-2 flex items-center h-16">
-              <a href="/admin" class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass('/admin')}">
+              <a
+                href="/admin"
+                class="flex items-center h-full nav-underline hover:text-gray-400 ${currentClass(
+                  '/admin'
+                )}"
+              >
                 <span class="flex items-center h-full px-4">Admin</span>
               </a>
             </li>
@@ -142,12 +162,23 @@
                   aria-label="Toggle Profile"
                 />
               </button>
-              <div class={`absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${ showProfileDropdown ? "block" : "hidden"}`}>
+              <div
+                class={`absolute right-0 top-full w-48 bg-black rounded-b-md rounded-l-md shadow-lg z-50 profile-dropdown ${
+                  showProfileDropdown ? "block" : "hidden"
+                }`}
+              >
                 <ul class="text-gray-700">
                   <li>
-                    <a href="/profile" class="flex items-center h-full w-full nav-underline hover:text-gray-400">
+                    <a
+                      href="/profile"
+                      class="flex items-center h-full w-full nav-underline hover:text-gray-400"
+                    >
                       <span class="flex items-center h-full w-full">
-                        <img src={$userGetProfilePicture} alt="logo" class="w-8 h-8 my-2 ml-4 mr-2"/>
+                        <img
+                          src={$userGetProfilePicture}
+                          alt="logo"
+                          class="w-8 h-8 my-2 ml-4 mr-2"
+                        />
                         <p class="w-full min-w-[125px] max-w-[125px] truncate">
                           Profile
                         </p>
@@ -155,8 +186,10 @@
                     </a>
                   </li>
                   <li>
-                    <button class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-                      on:click={handleLogout}>
+                    <button
+                      class="flex items-center justify-center px-4 pb-2 pt-1 text-white rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
+                      on:click={handleLogout}
+                    >
                       Disconnect
                       <WalletIcon className="ml-2 h-6 w-6 mt-1" />
                     </button>
@@ -166,22 +199,49 @@
             </div>
           </li>
         </ul>
-        <div class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${ menuOpen ? "block" : "hidden" } md:hidden`}>
+        <div
+          class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${
+            menuOpen ? "block" : "hidden"
+          } md:hidden`}
+        >
           <ul class="flex flex-col">
             <li class="p-2">
-              <a href="/" class={`nav-underline hover:text-gray-400 ${currentClass("/")}`}>Home</a>
+              <a
+                href="/"
+                class={`nav-underline hover:text-gray-400 ${currentClass("/")}`}
+                >Home</a
+              >
             </li>
             <li class="p-2">
-              <a href="/pick-team" class={currentClass("/pick-team")} on:click={toggleMenu}>Squad Selection</a>
+              <a
+                href="/pick-team"
+                class={currentClass("/pick-team")}
+                on:click={toggleMenu}>Squad Selection</a
+              >
             </li>
             <li class="p-2">
-              <a href="/governance" class={currentClass("/governance")} on:click={toggleMenu}>Governance</a>
+              <a
+                href="/governance"
+                class={currentClass("/governance")}
+                on:click={toggleMenu}>Governance</a
+              >
             </li>
             <li class="p-2">
-              <a href="/profile" class="flex h-full w-full nav-underline hover:text-gray-400 w-full ${currentClass('/profile')}">
+              <a
+                href="/profile"
+                class="flex h-full w-full nav-underline hover:text-gray-400 w-full ${currentClass(
+                  '/profile'
+                )}"
+              >
                 <span class="flex items-center h-full w-full">
-                  <img src={$userGetProfilePicture} alt="logo" class="w-8 h-8 rounded-sm" />
-                  <p class="w-full min-w-[100px] max-w-[100px] truncate p-2">Profile</p>
+                  <img
+                    src={$userGetProfilePicture}
+                    alt="logo"
+                    class="w-8 h-8 rounded-sm"
+                  />
+                  <p class="w-full min-w-[100px] max-w-[100px] truncate p-2">
+                    Profile
+                  </p>
                 </span>
               </a>
             </li>
@@ -190,19 +250,26 @@
       {:else}
         <ul class="hidden md:flex">
           <li class="mx-2 flex items-center h-16">
-            <button class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-              on:click={handleLogin}>
+            <button
+              class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
+              on:click={handleLogin}
+            >
               Connect
               <WalletIcon className="ml-2 h-6 w-6 mt-1" />
             </button>
           </li>
         </ul>
-        <div class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${ menuOpen ? "block" : "hidden" } md:hidden`}>
+        <div
+          class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${
+            menuOpen ? "block" : "hidden"
+          } md:hidden`}
+        >
           <ul class="flex flex-col">
             <li class="p-2">
               <button
                 class="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 nav-button"
-                on:click={handleLogin}>
+                on:click={handleLogin}
+              >
                 Connect
                 <WalletIcon className="ml-2 h-6 w-6 mt-1" />
               </button>
