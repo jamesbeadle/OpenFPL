@@ -3,7 +3,10 @@
   import { systemStore } from "$lib/stores/system-store";
   import { authIsAdmin } from "$lib/derived/auth.derived";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type { SystemState, UpdateSystemStateDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    SystemState,
+    UpdateSystemStateDTO,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
 
   export let visible: boolean;
@@ -43,7 +46,7 @@
         activeGameweek: activeGameweek,
         focusGameweek: focusGameweek,
       };
-      console.log(newSystemState)
+      console.log(newSystemState);
       await systemStore.updateSystemState(newSystemState);
       systemStore.sync();
       await closeModal();
@@ -71,30 +74,40 @@
       <h3 class="text-lg leading-6 font-medium mb-2">Update System State</h3>
       <form on:submit|preventDefault={updateSystemState}>
         <div class="mt-4 flex flex-col space-y-2">
-        
           <h5>Active Gameweek</h5>
           <select
-            bind:value={activeGameweek} class="w-full p-2 rounded-md fpl-dropdown">
+            bind:value={activeGameweek}
+            class="w-full p-2 rounded-md fpl-dropdown"
+          >
             {#each gameweeks as gameweek}
               <option value={gameweek}>Gameweek {gameweek}</option>
             {/each}
           </select>
 
           <h5>Focus Gameweek</h5>
-          <select bind:value={focusGameweek} class="w-full p-2 rounded-md fpl-dropdown">
+          <select
+            bind:value={focusGameweek}
+            class="w-full p-2 rounded-md fpl-dropdown"
+          >
             {#each gameweeks as gameweek}
               <option value={gameweek}>Gameweek {gameweek}</option>
             {/each}
           </select>
         </div>
         <div class="items-center py-3 flex space-x-4">
-          <button class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            on:click={cancelModal}>
+          <button
+            class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            on:click={cancelModal}
+          >
             Cancel
           </button>
           <button
-            class={`px-4 py-2 ${ !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn" } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-            type="submit" disabled={!$authIsAdmin}>
+            class={`px-4 py-2 ${
+              !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"
+            } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            type="submit"
+            disabled={!$authIsAdmin}
+          >
             Update
           </button>
         </div>

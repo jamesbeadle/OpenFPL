@@ -196,6 +196,13 @@ export interface TimerInfo {
   callbackName: string;
   triggerTime: bigint;
 }
+export interface UpdateFixtureDTO {
+  status: number;
+  fixtureId: FixtureId;
+  seasonId: SeasonId;
+  kickOff: bigint;
+  gameweek: GameweekNumber;
+}
 export interface UpdateSystemStateDTO {
   focusGameweek: GameweekNumber;
   activeGameweek: GameweekNumber;
@@ -286,8 +293,10 @@ export interface _SERVICE {
     Result
   >;
   savePlayerEvents: ActorMethod<[FixtureId, Array<PlayerEventData>], undefined>;
+  snapshotFantasyTeams: ActorMethod<[], undefined>;
   updateDisplayName: ActorMethod<[string], Result>;
   updateFavouriteTeam: ActorMethod<[number], Result>;
+  updateFixture: ActorMethod<[UpdateFixtureDTO], undefined>;
   updateHashForCategory: ActorMethod<[string], undefined>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result>;
   updateSystemState: ActorMethod<[UpdateSystemStateDTO], Result>;

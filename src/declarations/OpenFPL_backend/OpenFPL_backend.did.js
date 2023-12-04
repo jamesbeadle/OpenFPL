@@ -196,6 +196,13 @@ export const idlFactory = ({ IDL }) => {
     callbackName: IDL.Text,
     triggerTime: IDL.Int,
   });
+  const UpdateFixtureDTO = IDL.Record({
+    status: IDL.Nat8,
+    fixtureId: FixtureId,
+    seasonId: SeasonId,
+    kickOff: IDL.Int,
+    gameweek: GameweekNumber,
+  });
   const UpdateSystemStateDTO = IDL.Record({
     focusGameweek: GameweekNumber,
     activeGameweek: GameweekNumber,
@@ -334,8 +341,10 @@ export const idlFactory = ({ IDL }) => {
       []
     ),
     savePlayerEvents: IDL.Func([FixtureId, IDL.Vec(PlayerEventData)], [], []),
+    snapshotFantasyTeams: IDL.Func([], [], []),
     updateDisplayName: IDL.Func([IDL.Text], [Result], []),
     updateFavouriteTeam: IDL.Func([IDL.Nat16], [Result], []),
+    updateFixture: IDL.Func([UpdateFixtureDTO], [], []),
     updateHashForCategory: IDL.Func([IDL.Text], [], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
     updateSystemState: IDL.Func([UpdateSystemStateDTO], [Result], []),

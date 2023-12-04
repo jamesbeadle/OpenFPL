@@ -200,8 +200,17 @@ function createManagerStore() {
     return bonusTeamId;
   }
 
-  async function snapshotFantasyTeams(){
-
+  async function snapshotFantasyTeams() {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      await identityActor.snapshotFantasyTeams();
+    } catch (error) {
+      console.error("Error snapshotting fantasy teams:", error);
+      throw error;
+    }
   }
 
   return {
@@ -211,7 +220,7 @@ function createManagerStore() {
     getFantasyTeamForGameweek,
     getFantasyTeam,
     saveFantasyTeam,
-    snapshotFantasyTeams
+    snapshotFantasyTeams,
   };
 }
 

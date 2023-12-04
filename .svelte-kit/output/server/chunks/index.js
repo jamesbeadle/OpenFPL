@@ -3266,7 +3266,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "6ew5rs"
+  version_hash: "10cyy9j"
 };
 function get_hooks() {
   return {};
@@ -3668,6 +3668,13 @@ const idlFactory$1 = ({ IDL }) => {
     callbackName: IDL.Text,
     triggerTime: IDL.Int
   });
+  const UpdateFixtureDTO = IDL.Record({
+    status: IDL.Nat8,
+    fixtureId: FixtureId,
+    seasonId: SeasonId,
+    kickOff: IDL.Int,
+    gameweek: GameweekNumber
+  });
   const UpdateSystemStateDTO = IDL.Record({
     focusGameweek: GameweekNumber,
     activeGameweek: GameweekNumber
@@ -3806,8 +3813,10 @@ const idlFactory$1 = ({ IDL }) => {
       []
     ),
     savePlayerEvents: IDL.Func([FixtureId, IDL.Vec(PlayerEventData)], [], []),
+    snapshotFantasyTeams: IDL.Func([], [], []),
     updateDisplayName: IDL.Func([IDL.Text], [Result], []),
     updateFavouriteTeam: IDL.Func([IDL.Nat16], [Result], []),
+    updateFixture: IDL.Func([UpdateFixtureDTO], [], []),
     updateHashForCategory: IDL.Func([IDL.Text], [], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result], []),
     updateSystemState: IDL.Func([UpdateSystemStateDTO], [Result], []),
@@ -5097,14 +5106,26 @@ function createManagerStore() {
     }
     return bonusTeamId;
   }
+  async function snapshotFantasyTeams() {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "bkyz2-fmaaa-aaaaa-qaaaq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bd3sg-teaaa-aaaaa-qaaba-cai", "__CANDID_UI_CANISTER_ID": "bw4dl-smaaa-aaaaa-qaacq-cai", "PLAYER_CANISTER_CANISTER_ID": "be2us-64aaa-aaaaa-qaabq-cai", "TOKEN_CANISTER_CANISTER_ID": "br5f7-7uaaa-aaaaa-qaaca-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      await identityActor.snapshotFantasyTeams();
+    } catch (error2) {
+      console.error("Error snapshotting fantasy teams:", error2);
+      throw error2;
+    }
+  }
   return {
     subscribe: subscribe2,
     getManager,
     getTotalManagers,
     getFantasyTeamForGameweek,
     getFantasyTeam,
-    saveFantasyTeam
-    // Add any other methods as needed
+    saveFantasyTeam,
+    snapshotFantasyTeams
   };
 }
 createManagerStore();
@@ -5948,8 +5969,11 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 });
 const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { showSystemStateModal = false } = $$props;
+  let { showSnapshotModal = false } = $$props;
   if ($$props.showSystemStateModal === void 0 && $$bindings.showSystemStateModal && showSystemStateModal !== void 0)
     $$bindings.showSystemStateModal(showSystemStateModal);
+  if ($$props.showSnapshotModal === void 0 && $$bindings.showSnapshotModal && showSnapshotModal !== void 0)
+    $$bindings.showSnapshotModal(showSnapshotModal);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;

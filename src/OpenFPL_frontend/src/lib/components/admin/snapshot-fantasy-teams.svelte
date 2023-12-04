@@ -22,10 +22,10 @@
       });
     } catch (error) {
       toastsError({
-        msg: { text: "Error updating system state." },
+        msg: { text: "Error snapshotting fantasy teams." },
         err: error,
       });
-      console.error("Error updating system state:", error);
+      console.error("Error snapshotting fantasy teams:", error);
       cancelModal();
     } finally {
       isLoading = false;
@@ -40,9 +40,12 @@
 
       <p>Are you sure you want to snapshot the fantasy teams?</p>
 
-      <button class={`px-4 py-2 ${ !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn" } 
+      <button
+        class={`px-4 py-2 ${!$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"} 
         text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-        on:click={snapshotFantasyTeams} disabled={!$authIsAdmin}>
+        on:click={snapshotFantasyTeams}
+        disabled={!$authIsAdmin}
+      >
         Update
       </button>
     </div>

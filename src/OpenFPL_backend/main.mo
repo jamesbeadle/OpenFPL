@@ -1853,8 +1853,7 @@ actor Self {
 
   public shared ({ caller }) func updateHashForCategory(category : Text) : async () {
     assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == adminPrincipal;
-
+    
     let hashBuffer = Buffer.fromArray<T.DataCache>([]);
 
     for (hashObj in Iter.fromList(dataCacheHashes)) {
@@ -1865,6 +1864,20 @@ actor Self {
     };
 
     dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+  };
+
+  public shared ({ caller }) func snapshotFantasyTeams() : async () {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
+    await seasonManager.gameweekBegin();
+  };
+
+  public shared ({ caller }) func updateFixture(updatedFixture : DTOs.UpdateFixtureDTO) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
+
+    await seasonManager.updateFixture(updatedFixture);
+    await updateHashForCategory("fixtures");
   };
 
 };

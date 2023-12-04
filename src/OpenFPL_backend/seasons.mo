@@ -1,6 +1,7 @@
 import List "mo:base/List";
 import Result "mo:base/Result";
 import T "types";
+import DTOs "DTOs";
 import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Nat16 "mo:base/Nat16";
@@ -604,28 +605,63 @@ module {
       );
     };
 
-    /*Remove these functions post sns*/ public func getValidatableFixtures(activeSeasonId : Nat16, activeGameweek : Nat8) : [T.Fixture] {
-      let season = List.find<T.Season>(seasons, func(s : T.Season) { s.id == activeSeasonId });
-      switch (season) {
-        case (null) {};
-        case (?s) {
-          let gameweeks = List.find<T.Gameweek>(s.gameweeks, func(gw : T.Gameweek) { gw.number == activeGameweek });
-          switch (gameweeks) {
-            case (null) {};
-            case (?gws) {
-              let validatableFixtures = List.filter<T.Fixture>(
-                gws.fixtures,
-                func(fixture : T.Fixture) {
-                  fixture.status == 2;
-                },
-              );
-              return List.toArray(validatableFixtures);
-            };
-          };
-        };
-      };
+    /*Remove these functions post sns*/
 
-      return [];
+    public func updateFixture(updatedFixture : DTOs.UpdateFixtureDTO) : async () {
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(season : T.Season) : T.Season {
+          if (season.id == updatedFixture.seasonId) {
+            let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(
+              season.gameweeks,
+              func(gw : T.Gameweek) : T.Gameweek {
+                if (gw.number == updatedFixture.gameweek) {
+                  let updatedFixtures = List.map<T.Fixture, T.Fixture>(
+                    gw.fixtures,
+                    func(fixture : T.Fixture) : T.Fixture {
+                      if (fixture.id == updatedFixture.fixtureId) {
+                        return {
+                          id = fixture.id;
+                          seasonId = fixture.seasonId;
+                          gameweek = updatedFixture.gameweek;
+                          kickOff = updatedFixture.kickOff;
+                          homeTeamId = fixture.homeTeamId;
+                          awayTeamId = fixture.awayTeamId;
+                          homeGoals = fixture.homeGoals;
+                          awayGoals = fixture.awayGoals;
+                          status = updatedFixture.status;
+                          events = fixture.events;
+                          highestScoringPlayerId = fixture.highestScoringPlayerId;
+                        };
+                      } else {
+                        return fixture;
+                      };
+                    },
+                  );
+                  return {
+                    number = gw.number;
+                    canisterId = gw.canisterId;
+                    fixtures = updatedFixtures;
+                  };
+                } else {
+                  return gw;
+                };
+              },
+            );
+
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+              gameweeks = updatedGameweeks;
+              postponedFixtures = season.postponedFixtures;
+            };
+          } else {
+            return season;
+          };
+        },
+      );
     };
+
   };
 };

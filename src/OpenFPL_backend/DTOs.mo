@@ -143,6 +143,14 @@ module DTOs {
   public type UpdateSystemStateDTO = {
     activeGameweek : T.GameweekNumber;
     focusGameweek : T.GameweekNumber;
+  };
+
+  public type UpdateFixtureDTO = {
+    seasonId : T.SeasonId;
+    fixtureId : T.FixtureId;
+    gameweek : T.GameweekNumber;
+    kickOff : Int;
+    status : Nat8;
   }
 
 };

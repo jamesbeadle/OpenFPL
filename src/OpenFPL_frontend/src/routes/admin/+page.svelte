@@ -4,7 +4,7 @@
   import AdminFixtures from "$lib/components/admin/admin-fixtures.svelte";
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-    import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
+  import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
 
   export let showSystemStateModal: boolean = false;
   export let showSnapshotModal: boolean = false;
@@ -46,7 +46,11 @@
       closeModal={hideSystemStateModal}
       cancelModal={hideSystemStateModal}
     />
-    <SnapshotFantasyTeams visible={showSnapshotModal} closeModal={hideSnapshotModal} cancelModal={hideSnapshotModal} />
+    <SnapshotFantasyTeams
+      visible={showSnapshotModal}
+      closeModal={hideSnapshotModal}
+      cancelModal={hideSnapshotModal}
+    />
     <div class="m-4">
       <div class="bg-panel rounded-lg m-4">
         <div class="flex flex-col p-4">
@@ -55,16 +59,28 @@
         </div>
 
         <div class="flex flex-row p-4 space-x-4">
-          <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1" 
-            on:click={displaySystemStateModal}>System Status</button>
-          <button class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1" 
-            on:click={displaySnapshotModal}>Snapshot Fantasy Teams</button>
+          <button
+            class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+            on:click={displaySystemStateModal}>System Status</button
+          >
+          <button
+            class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+            on:click={displaySnapshotModal}>Snapshot Fantasy Teams</button
+          >
         </div>
 
         <ul class="flex rounded-t-lg bg-light-gray px-4 pt-2">
-          <li class={`mr-4 text-xs md:text-base ${activeTab === "fixtures" ? "active-tab" : "" }`}>
-            <button class={`p-2 ${ activeTab === "fixtures" ? "text-white" : "text-gray-400" }`}
-              on:click={() => setActiveTab("fixtures")}>Fixtures</button>
+          <li
+            class={`mr-4 text-xs md:text-base ${
+              activeTab === "fixtures" ? "active-tab" : ""
+            }`}
+          >
+            <button
+              class={`p-2 ${
+                activeTab === "fixtures" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("fixtures")}>Fixtures</button
+            >
           </li>
         </ul>
 

@@ -381,6 +381,10 @@ module {
 
     /*Remove these functions post sns*/
 
+    public func updateFixture(updatedFixture : DTOs.UpdateFixtureDTO) : async () {
+      await seasonsInstance.updateFixture(updatedFixture);
+    };
+
     public func updateSystemState(systemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
       activeGameweek := systemState.activeGameweek;
       interestingGameweek := systemState.focusGameweek;

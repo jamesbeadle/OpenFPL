@@ -51,7 +51,9 @@ function createSystemStore() {
     return systemState;
   }
 
-  async function updateSystemState(systemState: UpdateSystemStateDTO): Promise<any> {
+  async function updateSystemState(
+    systemState: UpdateSystemStateDTO
+  ): Promise<any> {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
