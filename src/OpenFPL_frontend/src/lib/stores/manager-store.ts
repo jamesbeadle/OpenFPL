@@ -200,6 +200,10 @@ function createManagerStore() {
     return bonusTeamId;
   }
 
+  async function snapshotFantasyTeams(){
+
+  }
+
   return {
     subscribe,
     getManager,
@@ -207,7 +211,7 @@ function createManagerStore() {
     getFantasyTeamForGameweek,
     getFantasyTeam,
     saveFantasyTeam,
-    // Add any other methods as needed
+    snapshotFantasyTeams
   };
 }
 

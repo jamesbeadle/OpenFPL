@@ -12,10 +12,7 @@
     formatUnixTimeToTime,
     getCountdownTime,
   } from "../lib/utils/Helpers";
-  import type {
-    LeaderboardEntry,
-    Team,
-  } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { LeaderboardEntry, Team } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
   import GamweekPointsComponents from "$lib/components/gameweek-points.svelte";
