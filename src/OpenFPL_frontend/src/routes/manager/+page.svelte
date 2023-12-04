@@ -41,10 +41,13 @@
       manager = await managerStore.getManager(
         id ?? "",
         $systemStore?.activeSeason.id ?? 1,
-        gw && gw > 0 ? gw : $systemStore?.activeGameweek ?? 1
+        gw && gw > 0 ? gw : $systemStore?.focusGameweek ?? 1
       );
 
-      displayName = manager.displayName;
+      displayName =
+        manager.displayName === manager.principalId
+          ? "Unknown"
+          : manager.displayName;
       const blob = new Blob([new Uint8Array(manager.profilePicture)]);
       const blobUrl =
         manager.profilePicture.length > 0
