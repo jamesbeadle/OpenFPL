@@ -2,9 +2,9 @@ import { authStore } from "$lib/stores/auth.store";
 import { derived, type Readable } from "svelte/store";
 
 //LOCALDEVONLY
+/*const adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";*/
 const adminPrincipal =
-  "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
-//const adminPrincipal = "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae";
+  "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae";
 
 export const authSignedInStore: Readable<boolean> = derived(
   authStore,

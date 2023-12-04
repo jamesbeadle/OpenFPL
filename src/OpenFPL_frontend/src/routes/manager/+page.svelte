@@ -9,7 +9,6 @@
   import type {
     FantasyTeamSnapshot,
     ManagerDTO,
-    SystemState,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
@@ -25,7 +24,6 @@
   let activeTab: string = "details";
 
   let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
-  let systemState: SystemState | null;
 
   let manager: ManagerDTO;
   let displayName = "";
@@ -42,8 +40,8 @@
 
       manager = await managerStore.getManager(
         id ?? "",
-        systemState?.activeSeason.id ?? 1,
-        gw && gw > 0 ? gw : systemState?.activeGameweek ?? 1
+        $systemStore?.activeSeason.id ?? 1,
+        gw && gw > 0 ? gw : $systemStore?.activeGameweek ?? 1
       );
 
       displayName = manager.displayName;
@@ -75,6 +73,7 @@
         manager.favouriteTeamId > 0
           ? $teamStore.find((x) => x.id == manager.favouriteTeamId) ?? null
           : null;
+      viewGameweekDetail(manager.principalId, selectedGameweek);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager details." },

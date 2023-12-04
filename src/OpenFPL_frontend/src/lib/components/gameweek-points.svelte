@@ -48,6 +48,7 @@
       isLoading = false;
     }
   });
+
   $: if ($authStore?.identity?.getPrincipal()) {
     loadGameweekPoints($authStore?.identity?.getPrincipal());
   }

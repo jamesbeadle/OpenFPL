@@ -1,3 +1,4 @@
+import { FixtureStatus } from "$lib/enums/FixtureStatus";
 import { Position } from "$lib/enums/Position";
 import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
@@ -76,7 +77,22 @@ export function getPositionAbbreviation(position: Position): string {
     case Position.FORWARD:
       return "FW";
     default:
-      return "?";
+      return "-";
+  }
+}
+
+export function getFixtureStatusText(status: FixtureStatus): string {
+  switch (status) {
+    case FixtureStatus.UNPLAYED:
+      return "Unplayed";
+    case FixtureStatus.ACTIVE:
+      return "Active";
+    case FixtureStatus.COMPLETED:
+      return "Completed";
+    case FixtureStatus.VERIFIED:
+      return "Verified";
+    default:
+      return "-";
   }
 }
 

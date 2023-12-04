@@ -53,7 +53,6 @@
   }
 
   async function updateGameweekPlayers() {
-    console.log(selectedGameweek);
     try {
       let fetchedPlayers = await playerEventsStore.getGameweekPlayers(
         $fantasyTeam!,
@@ -137,7 +136,12 @@
         <div class="w-1/12 text-center">PTS</div>
       </div>
 
-      {#each $gameweekPlayers as data}
+      {#each $gameweekPlayers.sort((a, b) => {
+        if (b.points === a.points) {
+          return Number(b.player.value) - Number(a.player.value);
+        }
+        return b.points - a.points;
+      }) as data}
         {@const playerDTO = getPlayerDTO(data.player.id)}
         {@const playerTeam = getPlayerTeam(data.player.teamId)}
         <div
@@ -181,12 +185,10 @@
             </div>
             <div
               class={`w-1/12 text-center ${
-                data.highestScoringPlayerId === data.player.id
-                  ? ""
-                  : "text-gray-500"
+                data.highestScoringPlayerId > 0 ? "" : "text-gray-500"
               }`}
             >
-              {data.highestScoringPlayerId === playerDTO?.id ? 1 : 0}
+              {data.highestScoringPlayerId}
             </div>
             <div
               class={`w-1/12 text-center ${

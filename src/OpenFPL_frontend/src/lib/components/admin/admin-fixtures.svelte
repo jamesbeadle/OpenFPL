@@ -10,7 +10,10 @@
     Team,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-  import { formatUnixTimeToTime } from "../../utils/Helpers";
+  import {
+    formatUnixTimeToTime,
+    getFixtureStatusText,
+  } from "../../utils/Helpers";
   import type { Fixture } from "../../../../../declarations/player_canister/player_canister.did";
   import UpdateFixtureModal from "./update-fixture-modal.svelte";
 
@@ -173,6 +176,11 @@
                 <div class="flex w-1/2 lg:justify-center">
                   <span class="text-sm md:text-lg ml-4 md:ml-0 text-left"
                     >{formatUnixTimeToTime(Number(fixture.kickOff))}</span
+                  >
+                </div>
+                <div class="flex w-1/2 lg:justify-center">
+                  <span class="text-sm md:text-lg ml-4 md:ml-0 text-left"
+                    >{getFixtureStatusText(fixture.status)}</span
                   >
                 </div>
               </div>

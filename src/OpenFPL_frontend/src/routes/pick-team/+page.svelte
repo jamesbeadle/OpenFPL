@@ -29,11 +29,7 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import type {
-    FantasyTeam,
-    SystemState,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FantasyTeam } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
@@ -60,26 +56,7 @@
     "5-3-2",
   ]);
 
-  $: gridSetup = getGridSetup(selectedFormation);
-
-  $: if ($fantasyTeam) {
-    disableInvalidFormations();
-    updateTeamValue();
-  }
-
-  $: isSaveButtonActive = $fantasyTeam ?? checkSaveButtonConditions();
-
-  $: {
-    if ($fantasyTeam) {
-      getGridSetup(selectedFormation);
-      if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
-        const newFormation = getTeamFormation($fantasyTeam);
-        selectedFormation = newFormation;
-      }
-    }
-  }
-
-  let activeSeason = "-";
+  let activeSeason = $systemStore?.activeSeason.name;
   let activeGameweek = $systemStore?.activeGameweek ?? 1;
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
@@ -93,6 +70,7 @@
   let showAddPlayer = false;
   let teamValue = 0;
   let newTeam = true;
+  let isSaveButtonActive = false;
 
   let sessionAddedPlayers: number[] = [];
 
@@ -102,6 +80,23 @@
 
   let isLoading = true;
 
+  $: gridSetup = getGridSetup(selectedFormation);
+
+  $: if ($fantasyTeam) {
+    disableInvalidFormations();
+    updateTeamValue();
+    isSaveButtonActive = checkSaveButtonConditions();
+  }
+
+  $: {
+    if ($fantasyTeam) {
+      getGridSetup(selectedFormation);
+      if ($fantasyTeam.playerIds.filter((x) => x > 0).length == 11) {
+        const newFormation = getTeamFormation($fantasyTeam);
+        selectedFormation = newFormation;
+      }
+    }
+  }
   onMount(async () => {
     try {
       await systemStore.sync();
@@ -535,7 +530,7 @@
     if (!isBonusConditionMet($fantasyTeam)) {
       return false;
     }
-
+    console.log($fantasyTeam);
     if ($fantasyTeam?.playerIds.filter((id) => id > 0).length !== 11) {
       return false;
     }
