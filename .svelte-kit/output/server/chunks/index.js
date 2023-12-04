@@ -3266,7 +3266,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1ev4wmq"
+  version_hash: "1dbbyol"
 };
 function get_hooks() {
   return {};
@@ -5830,7 +5830,10 @@ const css$1 = {
   map: null
 };
 const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $$unsubscribe_systemStore;
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$result.css.add(css$1);
+  $$unsubscribe_systemStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
@@ -6096,15 +6099,15 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_fantasyTeam;
   let $$unsubscribe_teamStore;
-  let $$unsubscribe_systemStore;
+  let $systemStore, $$unsubscribe_systemStore;
   let $page, $$unsubscribe_page;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let fantasyTeam = writable(null);
   $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => value);
   $page.url.searchParams.get("id");
-  Number($page.url.searchParams.get("gw")) ?? 0;
+  $page.url.searchParams.get("gw") ? Number($page.url.searchParams.get("gw")) : $systemStore?.focusGameweek;
   $$unsubscribe_fantasyTeam();
   $$unsubscribe_teamStore();
   $$unsubscribe_systemStore();

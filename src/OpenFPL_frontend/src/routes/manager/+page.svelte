@@ -18,8 +18,9 @@
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   $: id = $page.url.searchParams.get("id");
-  $: gw = Number($page.url.searchParams.get("gw")) ?? 0;
-  $: selectedGameweek = gw;
+  $: selectedGameweek = $page.url.searchParams.get("gw")
+    ? Number($page.url.searchParams.get("gw"))
+    : $systemStore?.focusGameweek;
 
   let activeTab: string = "details";
 
@@ -41,7 +42,7 @@
       manager = await managerStore.getManager(
         id ?? "",
         $systemStore?.activeSeason.id ?? 1,
-        gw && gw > 0 ? gw : $systemStore?.focusGameweek ?? 1
+        selectedGameweek ?? 1
       );
 
       displayName =
@@ -76,7 +77,7 @@
         manager.favouriteTeamId > 0
           ? $teamStore.find((x) => x.id == manager.favouriteTeamId) ?? null
           : null;
-      viewGameweekDetail(manager.principalId, selectedGameweek);
+      viewGameweekDetail(manager.principalId, selectedGameweek!);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager details." },
@@ -152,7 +153,7 @@
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Leaderboards</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {manager.weeklyPositionText}
+              {manager.weeklyPosition}
               <span class="text-xs"
                 >({manager.weeklyPoints.toLocaleString()})</span
               >
@@ -168,7 +169,7 @@
               {favouriteTeam?.friendlyName ?? "Not Entered"}
             </p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {manager.monthlyPositionText}
+              {manager.monthlyPosition}
               <span class="text-xs"
                 >({favouriteTeam
                   ? manager.monthlyPoints.toLocaleString()
@@ -184,7 +185,7 @@
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">{selectedSeason}</p>
             <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
-              {manager.seasonPositionText}
+              {manager.seasonPosition}
               <span class="text-xs"
                 >({manager.seasonPoints.toLocaleString()})</span
               >

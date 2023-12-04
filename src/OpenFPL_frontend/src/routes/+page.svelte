@@ -25,15 +25,12 @@
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let activeTab: string = "fixtures";
-  let activeGameweek = -1;
-  let activeSeason = "-";
   let managerCount = -1;
   let countdownDays = "00";
   let countdownHours = "00";
   let countdownMinutes = "00";
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
-  let focusGameweek = -1;
   let weeklyLeader: LeaderboardEntry;
   let nextFixtureHomeTeam: Team | undefined = undefined;
   let nextFixtureAwayTeam: Team | undefined = undefined;
@@ -53,11 +50,6 @@
       });
 
       managerCount = await managerStore.getTotalManagers();
-
-      let systemState = await systemStore.getSystemState();
-      activeGameweek = systemState?.activeGameweek ?? activeGameweek;
-      activeSeason = systemState?.activeSeason.name ?? activeSeason;
-      focusGameweek = systemState?.focusGameweek ?? activeGameweek;
 
       let nextFixture = await fixtureStore.getNextFixture();
 
@@ -110,9 +102,11 @@
           <div class="flex-grow">
             <p class="text-gray-300 text-xs">Gameweek</p>
             <p class="text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
-              {activeGameweek}
+              {$systemStore?.activeGameweek}
             </p>
-            <p class="text-gray-300 text-xs">{activeSeason}</p>
+            <p class="text-gray-300 text-xs">
+              {$systemStore?.activeSeason.name}
+            </p>
           </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
@@ -247,14 +241,14 @@
           />
           <div class="flex-grow">
             <p class="text-gray-300 text-xs mt-4 lg:mt-0">
-              GW {focusGameweek} High Score
+              GW {$systemStore?.focusGameweek} High Score
             </p>
             <p
               class="text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold max-w-[200px] truncate"
             >
               {#if weeklyLeader}
                 <a
-                  href={`/manager?id=${weeklyLeader.principalId}&gw=${activeGameweek}`}
+                  href={`/manager?id=${weeklyLeader.principalId}&gw=${$systemStore?.focusGameweek}`}
                   >{weeklyLeader.username}</a
                 >
               {:else}
