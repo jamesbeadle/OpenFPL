@@ -52,7 +52,6 @@
 
   async function updateGameweekPlayers() {
     try {
-      isLoading = true;
       let fetchedPlayers = await playerEventsStore.getGameweekPlayers(
         $fantasyTeam!,
         selectedGameweek
