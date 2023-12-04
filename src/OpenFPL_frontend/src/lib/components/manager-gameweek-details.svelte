@@ -42,7 +42,6 @@
   });
 
   $: if (
-    !isLoading &&
     $fantasyTeam &&
     $teamStore.length > 0 &&
     $playerStore.length > 0 &&

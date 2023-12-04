@@ -7,7 +7,7 @@
 }
 
 .fpl-button {
-  background-color: #2ce3a6;
+  background-color: #2CE3A6;
   color: black;
 }
 
@@ -43,11 +43,11 @@
 }
 
 .active-tab {
-  border-bottom: 4px #2ce3a6 solid;
+  border-bottom: 4px #2CE3A6 solid;
 }
 
 .toast-panel-success {
-  background-color: #2ce3a6;
+  background-color: #2CE3A6;
 }
 
 .toast-panel-error {
@@ -66,4 +66,13 @@
   margin-top: 32px;
   margin-bottom: 32px;
   border-radius: 8px;
+}
+
+.toast{
+  background-color: #2CE3A6 !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  border-radius: 4px !important;
 }
