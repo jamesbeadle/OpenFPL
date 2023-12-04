@@ -8,16 +8,12 @@
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import type {
     ProfileDTO,
-    SystemState,
-    Team,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
-  let teams: Writable<Team[] | []> = writable([]);
-  let systemState: Writable<SystemState | null> = writable(null);
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
@@ -31,10 +27,10 @@
       ? URL.createObjectURL(new Blob([new Uint8Array($profile.profilePicture)]))
       : "profile_placeholder.png";
 
-  $: gameweek = $systemState?.activeGameweek ?? 1;
+  $: gameweek = $systemStore?.activeGameweek ?? 1;
 
   $: teamName =
-    $teams.find((x) => x.id == $profile?.favouriteTeamId)?.friendlyName ??
+    $teamStore.find((x) => x.id == $profile?.favouriteTeamId)?.friendlyName ??
     "Not Set";
 
   let isLoading = true;
