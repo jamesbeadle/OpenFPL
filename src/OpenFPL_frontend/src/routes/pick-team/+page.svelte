@@ -56,8 +56,8 @@
     "5-3-2",
   ]);
 
-  let activeSeason = $systemStore?.activeSeason.name;
-  let activeGameweek = $systemStore?.activeGameweek ?? 1;
+  let activeSeason: string;
+  let activeGameweek: number;
   let nextFixtureDate = "-";
   let nextFixtureTime = "-";
   let countdownDays = "00";
@@ -102,6 +102,9 @@
       await systemStore.sync();
       await teamStore.sync();
       await playerStore.sync();
+
+      activeSeason = $systemStore?.activeSeason.name ?? "-";
+      activeGameweek = $systemStore?.activeGameweek ?? 1;
 
       const storedViewMode = localStorage.getItem("viewMode");
       if (storedViewMode) {

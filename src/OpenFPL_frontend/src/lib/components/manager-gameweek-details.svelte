@@ -122,12 +122,12 @@
 
         <button
           class={`${
-            $selectedGameweek === $systemStore?.activeGameweek
+            $selectedGameweek === $systemStore?.focusGameweek
               ? "bg-gray-500"
               : "fpl-button"
           } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
           on:click={() => changeGameweek(1)}
-          disabled={$selectedGameweek === $systemStore?.activeGameweek}
+          disabled={$selectedGameweek === $systemStore?.focusGameweek}
         >
           &gt;
         </button>

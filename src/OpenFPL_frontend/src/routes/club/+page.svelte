@@ -23,8 +23,7 @@
 
   let isLoading = true;
   let fixturesWithTeams: FixtureWithTeams[] = [];
-  let selectedGameweek: number = $systemStore?.activeGameweek ?? 1;
-  let selectedSeason: Season | null = $systemStore?.activeSeason ?? null;
+  let selectedGameweek: number;
   let team: Team | null = null;
   let nextFixture: Fixture | null = null;
   let nextFixtureHomeTeam: Team | null = null;
@@ -41,6 +40,7 @@
       await fixtureStore.sync();
       await systemStore.sync();
       await playerStore.sync();
+      selectedGameweek = $systemStore?.activeGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter(
         (x) => x.homeTeamId === id || x.awayTeamId === id

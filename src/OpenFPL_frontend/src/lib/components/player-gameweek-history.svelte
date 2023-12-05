@@ -21,7 +21,7 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
 
   let isLoading = true;
-  let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
+  let selectedGameweek: number;
   let selectedSeason: Season | null = null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let playerDetails: PlayerDetailDTO;
@@ -38,6 +38,8 @@
       await fixtureStore.sync();
       await systemStore.sync();
       await playerEventsStore.sync;
+      selectedGameweek = $systemStore?.activeGameweek ?? 1;
+      selectedSeason = $systemStore?.activeSeason ?? null;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
@@ -49,8 +51,6 @@
         id,
         $systemStore?.activeSeason.id ?? 0
       );
-      selectedGameweek = $systemStore?.activeGameweek ?? selectedGameweek;
-      selectedSeason = $systemStore?.activeSeason ?? selectedSeason;
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching player gameweek history." },

@@ -10,8 +10,8 @@
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  let currentGameweek: number = $systemStore?.activeGameweek ?? 1;
-  let currentSeasonName: string = $systemStore?.activeSeason.name ?? "";
+  let currentGameweek: number;
+  let currentSeasonName: string;
 
   let isLoading = true;
 
@@ -20,6 +20,8 @@
       await systemStore.sync();
       await teamStore.sync();
       await playerStore.sync();
+      currentGameweek = $systemStore?.activeGameweek ?? 1;
+      currentSeasonName = $systemStore?.activeSeason.name ?? "";
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching fixture validation list." },

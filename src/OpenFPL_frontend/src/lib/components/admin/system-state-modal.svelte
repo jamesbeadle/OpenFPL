@@ -10,14 +10,16 @@
   export let closeModal: () => void;
   export let cancelModal: () => void;
 
-  let activeGameweek = $systemStore?.activeGameweek ?? 1;
-  let focusGameweek = $systemStore?.focusGameweek ?? 1;
+  let activeGameweek: number;
+  let focusGameweek: number;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
   let isLoading = true;
 
   onMount(async () => {
     await systemStore.sync();
+    activeGameweek = $systemStore?.activeGameweek ?? 1;
+    focusGameweek = $systemStore?.focusGameweek ?? 1;
   });
 
   async function updateSystemState() {

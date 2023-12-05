@@ -10,7 +10,7 @@
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
-  let selectedGameweek: number = $systemStore?.activeGameweek ?? 1;
+  let selectedGameweek: number;
   let gameweeks = Array.from(
     { length: $systemStore?.activeGameweek ?? 1 },
     (_, i) => i + 1
@@ -22,6 +22,7 @@
       await teamStore.sync();
       await fixtureStore.sync();
       await systemStore.sync();
+      selectedGameweek = $systemStore?.activeGameweek ?? 1;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,

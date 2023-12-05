@@ -9,7 +9,7 @@
   import { formatUnixTimeToTime } from "../utils/Helpers";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
-  let selectedGameweek = $systemStore?.activeGameweek ?? 1;
+  let selectedGameweek: number;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
   $: filteredFixtures = fixturesWithTeams.filter(
@@ -40,6 +40,7 @@
     await teamStore.sync();
     await fixtureStore.sync();
     await systemStore.sync();
+    selectedGameweek = $systemStore?.activeGameweek ?? 1;
     fixturesWithTeams = $fixtureStore.map((fixture) => ({
       fixture,
       homeTeam: getTeamFromId(fixture.homeTeamId),

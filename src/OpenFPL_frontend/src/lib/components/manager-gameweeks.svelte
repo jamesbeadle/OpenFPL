@@ -19,7 +19,7 @@
   ) => void;
   let manager: ManagerDTO;
   export let selectedGameweek = writable<number | null>(null);
-  let selectedSeason: Season | null = $systemStore?.activeSeason ?? null;
+  let selectedSeason: Season | null;
   let isLoading = true;
 
   $: id = $page.url.searchParams.get("id") ?? principalId;
@@ -27,7 +27,7 @@
   onMount(async () => {
     try {
       await systemStore.sync();
-
+      selectedSeason = $systemStore?.activeSeason ?? null;
       manager = await managerStore.getManager(
         id ?? "",
         selectedSeason?.id ?? 1,

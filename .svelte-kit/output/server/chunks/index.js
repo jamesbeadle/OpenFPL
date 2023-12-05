@@ -3266,7 +3266,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "78h1jw"
+  version_hash: "105t30a"
 };
 function get_hooks() {
   return {};
@@ -6005,16 +6005,15 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
+  let $$unsubscribe_systemStore;
   let $page, $$unsubscribe_page;
-  let $systemStore, $$unsubscribe_systemStore;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => $teamStore = value);
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   let fixturesWithTeams = [];
-  let selectedGameweek = $systemStore?.activeGameweek ?? 1;
-  $systemStore?.activeSeason ?? null;
+  let selectedGameweek;
   Number($page.url.searchParams.get("id"));
   {
     if (fixturesWithTeams.length > 0 && $teamStore.length > 0) {
@@ -6024,8 +6023,8 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_teamStore();
   $$unsubscribe_playerStore();
   $$unsubscribe_fixtureStore();
-  $$unsubscribe_page();
   $$unsubscribe_systemStore();
+  $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
@@ -6034,14 +6033,12 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 });
 const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_teamStore;
-  let $systemStore, $$unsubscribe_systemStore;
+  let $$unsubscribe_systemStore;
   let $$unsubscribe_fixtureStore;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   Array.from({ length: 38 }, (_, i) => i + 1);
-  $systemStore?.activeGameweek ?? 1;
-  $systemStore?.activeSeason.name ?? "";
   $$unsubscribe_teamStore();
   $$unsubscribe_systemStore();
   $$unsubscribe_fixtureStore();
@@ -6165,11 +6162,11 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $playerStore, $$unsubscribe_playerStore;
   let $bankBalance, $$unsubscribe_bankBalance;
   let $transfersAvailable, $$unsubscribe_transfersAvailable;
-  let $systemStore, $$unsubscribe_systemStore;
+  let $$unsubscribe_systemStore;
   let $$unsubscribe_availableFormations;
   let $$unsubscribe_teamStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => $playerStore = value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   const formations = {
     "3-4-3": {
@@ -6196,8 +6193,6 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   };
   const availableFormations = writable(["3-4-3", "3-5-2", "4-3-3", "4-4-2", "4-5-1", "5-4-1", "5-3-2"]);
   $$unsubscribe_availableFormations = subscribe(availableFormations, (value) => value);
-  $systemStore?.activeSeason.name;
-  $systemStore?.activeGameweek ?? 1;
   let selectedFormation = "4-4-2";
   const fantasyTeam = writable(null);
   $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => $fantasyTeam = value);

@@ -12,7 +12,7 @@
 
   let isLoading = true;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
+  let selectedGameweek: number;
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
 
@@ -45,6 +45,7 @@
       await teamStore.sync();
       await fixtureStore.sync();
       await systemStore.sync();
+      selectedGameweek = $systemStore?.focusGameweek ?? 1;
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
         homeTeam: getTeamFromId(fixture.homeTeamId),

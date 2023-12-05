@@ -13,18 +13,13 @@
     { length: $systemStore?.focusGameweek ?? 1 },
     (_, i) => i + 1
   );
-  let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
+  let selectedGameweek: number;
   let currentPage = 1;
   let itemsPerPage = 25;
 
   let selectedLeaderboardType: number = 1;
-  let selectedMonth: number = $systemStore?.activeMonth ?? 8;
-  let selectedTeamId: number = $authSignedInStore
-    ? $userGetFavouriteTeam ??
-      $teamStore.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))[0]
-        .id
-    : $teamStore.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))[0]
-        .id;
+  let selectedMonth: number;
+  let selectedTeamId: number;
 
   let leaderboard: any;
   let totalPages: number = 0;
@@ -45,6 +40,16 @@
       await leaderboardStore.syncWeeklyLeaderboard();
       await leaderboardStore.syncMonthlyLeaderboards();
       await leaderboardStore.syncSeasonLeaderboard();
+      selectedGameweek = $systemStore?.focusGameweek ?? 1;
+      selectedMonth = $systemStore?.activeMonth ?? 8;
+      selectedTeamId = $authSignedInStore
+        ? $userGetFavouriteTeam ??
+          $teamStore.sort((a, b) =>
+            a.friendlyName.localeCompare(b.friendlyName)
+          )[0].id
+        : $teamStore.sort((a, b) =>
+            a.friendlyName.localeCompare(b.friendlyName)
+          )[0].id;
 
       let leaderboardData = await leaderboardStore.getWeeklyLeaderboard();
       leaderboard = leaderboardData;

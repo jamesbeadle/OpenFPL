@@ -19,11 +19,8 @@
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   let isLoading = true;
-  let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
-  let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let selectedGameweek: number;
+  let gameweeks: number[];
   let showModal = false;
 
   let gameweekData: GameweekData[] = [];
@@ -40,6 +37,11 @@
       await authStore.sync();
       await playerEventsStore.sync();
 
+      selectedGameweek = $systemStore?.focusGameweek ?? 1;
+      gameweeks = Array.from(
+        { length: $systemStore?.activeGameweek ?? 1 },
+        (_, i) => i + 1
+      );
       await loadGameweekPoints($authStore?.identity?.getPrincipal());
     } catch (error) {
       toastsError({
