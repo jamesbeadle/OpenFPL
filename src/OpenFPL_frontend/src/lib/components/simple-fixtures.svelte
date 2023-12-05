@@ -103,7 +103,7 @@
           {#each fixtures as { fixture, homeTeam, awayTeam }}
             <div
               class={`flex items-center justify-between py-2 border-b border-gray-700  
-              ${fixture.status === 0 ? "text-gray-400" : "text-white"}`}
+              ${fixture.status < 3 ? "text-gray-400" : "text-white"}`}
             >
               <div class="flex items-center w-1/2 ml-4">
                 <div class="flex w-1/2 space-x-4 justify-center">
@@ -153,8 +153,8 @@
                   >
                 </div>
                 <div class="flex flex-col items-center text-xs">
-                  <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
-                  <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>
+                  <span>{fixture.status < 3 ? "-" : fixture.homeGoals}</span>
+                  <span>{fixture.status < 3 ? "-" : fixture.awayGoals}</span>
                 </div>
               </div>
             </div>
