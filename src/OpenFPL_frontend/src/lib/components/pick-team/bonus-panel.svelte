@@ -7,11 +7,8 @@
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
-  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
 
   export let fantasyTeam = writable<FantasyTeam | null>(null);
-  export let players = writable<PlayerDTO[] | []>([]);
-  export let teams = writable<Team[] | []>([]);
   export let activeGameweek: number;
 
   let showModal: boolean = false;
@@ -185,8 +182,6 @@
       visible={showModal}
       bonus={bonuses[selectedBonusId - 1]}
       {closeBonusModal}
-      {players}
-      {teams}
       {fantasyTeam}
       {activeGameweek}
     />

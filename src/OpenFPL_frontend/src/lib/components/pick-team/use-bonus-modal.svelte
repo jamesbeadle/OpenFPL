@@ -5,14 +5,14 @@
     FantasyTeam,
     Team,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
+
+  import { teamStore } from "$lib/stores/team-store";
+  import { playerStore } from "$lib/stores/player-store";
   import { BonusType } from "$lib/enums/BonusType";
   import { Modal } from "@dfinity/gix-components";
 
   export let visible: boolean;
   export let fantasyTeam = writable<FantasyTeam | null>(null);
-  export let players = writable<PlayerDTO[] | []>([]);
-  export let teams = writable<Team[] | []>([]);
   export let activeGameweek: number;
   export let closeBonusModal: () => void;
   export let bonus: Bonus = {
@@ -34,7 +34,7 @@
     }
 
     const fantasyTeamPlayerIds = new Set($fantasyTeam.playerIds);
-    const countriesOfFantasyTeamPlayers = $players
+    const countriesOfFantasyTeamPlayers = $playerStore
       .filter((player) => fantasyTeamPlayerIds.has(player.id))
       .map((player) => player.nationality);
 
@@ -42,7 +42,8 @@
   };
 
   const getPlayerNames = () => {
-    return $players
+    console.log("GETTING PLAYERS");
+    return $playerStore
       .filter((p) => isPlayerInFantasyTeam(p.id))
       .map((p) => ({ id: p.id, name: `${p.firstName} ${p.lastName}` }));
   };
@@ -55,9 +56,11 @@
 
   const getRelatedTeamNames = () => {
     const teamIds = new Set(
-      $players.filter((p) => isPlayerInFantasyTeam(p.id)).map((p) => p.teamId)
+      $playerStore
+        .filter((p) => isPlayerInFantasyTeam(p.id))
+        .map((p) => p.teamId)
     );
-    return $teams
+    return $teamStore
       .filter((t) => teamIds.has(t.id))
       .map((t) => ({ id: t.id, name: t.friendlyName }));
   };
@@ -66,7 +69,7 @@
     if (!$fantasyTeam || !$fantasyTeam.playerIds) return 0;
 
     for (const playerId of $fantasyTeam.playerIds) {
-      const player = $players.find((p) => p.id === playerId);
+      const player = $playerStore.find((p) => p.id === playerId);
       if (player && player.position === 0) {
         return player.id;
       }
