@@ -299,7 +299,7 @@
             {:else}
               <button
                 on:click={() => selectPlayer(player)}
-                class="text-xl rounded fpl-button flex items-center"
+                class="rounded fpl-button flex items-center"
               >
                 <AddIcon className="w-6 h-6 p-2" />
               </button>
@@ -313,8 +313,7 @@
       <div class="flex space-x-1 min-w-max">
         {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
           <button
-            class:active={index + 1 === currentPage}
-            class="px-4 py-2 bg-gray-700 rounded-md text-white hover:bg-gray-600"
+            class={`px-4 py-2 text-xs rounded-md ${index + 1 === currentPage ? 'fpl-button' : ''}`}
             on:click={() => goToPage(index + 1)}
           >
             {index + 1}

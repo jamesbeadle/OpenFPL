@@ -1,1 +1,2 @@
-import{v as m}from"../chunks/index.4471504d.js";export{m as component};
+import { v as m } from "../chunks/index.4471504d.js";
+export { m as component };
