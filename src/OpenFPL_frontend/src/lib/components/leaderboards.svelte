@@ -7,7 +7,7 @@
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-    import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+  import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
 
   let isLoading = true;
   let gameweeks = Array.from(
@@ -279,13 +279,17 @@
 
           {#if leaderboard && leaderboard.entries.length > 0}
             {#each leaderboard.entries as entry}
-              <a href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}>
-                <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer">
+              <a
+                href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}
+              >
+                <div
+                  class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
+                >
                   <div class="w-2/12 px-4">{entry.positionText}</div>
                   <div class="w-5/12 px-4">
                     {entry.principalId === entry.username
-                        ? "Unknown"
-                        : entry.username}
+                      ? "Unknown"
+                      : entry.username}
                   </div>
                   <div class="w-2/12 px-4">{entry.points}</div>
                   <div class="w-3/12 px-4 flex items-center">
