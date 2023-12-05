@@ -116,6 +116,7 @@
       });
       console.error("Error saving fixture data: ", error);
     } finally {
+      showConfirmDataModal = false;
       isLoading = false;
       $loadingText = "Loading";
     }
@@ -186,6 +187,14 @@
 
   function closeConfirmClearDraftModal(): void {
     showClearDraftModal = false;
+  }
+
+  function displayConfirmDataModal(): void {
+    showConfirmDataModal = true;
+  }
+
+  function closeConfirmDataModal(): void {
+    showConfirmDataModal = false;
   }
 </script>
 
@@ -406,7 +415,7 @@
           <button
             class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
             px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-            on:click={confirmFixtureData}
+            on:click={displayConfirmDataModal}
             disabled={isSubmitDisabled}>Submit Event Data</button
           >
         </div>
@@ -438,6 +447,7 @@
 <ConfirmFixtureDataModal
   visible={showConfirmDataModal}
   onConfirm={confirmFixtureData}
+  closeModal={closeConfirmDataModal}
 />
 
 <ClearDraftModal

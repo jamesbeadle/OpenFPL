@@ -3,10 +3,7 @@
 
   export let visible = false;
   export let onConfirm: () => void;
-
-  function closeModal() {
-    visible = false;
-  }
+  export let closeModal: () => void;
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
