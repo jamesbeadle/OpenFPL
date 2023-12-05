@@ -249,7 +249,9 @@
               {#if weeklyLeader}
                 <a
                   href={`/manager?id=${weeklyLeader.principalId}&gw=${$systemStore?.focusGameweek}`}
-                  >{weeklyLeader.username}</a
+                  >{weeklyLeader.principalId === weeklyLeader.username
+                    ? "Unknown"
+                    : weeklyLeader.username}</a
                 >
               {:else}
                 -

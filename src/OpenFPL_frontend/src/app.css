@@ -44,6 +44,8 @@ input {
 
 .bg-panel {
   background-color: rgba(36, 37, 41, 0.9);
+  border-radius: 8px;
+  border: 1px solid #2e323a !important;
 }
 
 .active-tab {
@@ -79,7 +81,7 @@ input {
   right: 0 !important;
   background-color: #161819 !important;
   border-radius: 8px;
-  border: 2px solid #2e323a !important;
+  border: 1px solid #2e323a !important;
 }
 
 .modal .container {

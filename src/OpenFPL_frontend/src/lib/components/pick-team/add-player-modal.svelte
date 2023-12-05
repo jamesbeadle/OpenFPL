@@ -313,7 +313,9 @@
       <div class="flex space-x-1 min-w-max">
         {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
           <button
-            class={`px-4 py-2 text-xs rounded-md ${index + 1 === currentPage ? 'fpl-button' : ''}`}
+            class={`px-4 py-2 text-xs rounded-md ${
+              index + 1 === currentPage ? "fpl-button" : ""
+            }`}
             on:click={() => goToPage(index + 1)}
           >
             {index + 1}
