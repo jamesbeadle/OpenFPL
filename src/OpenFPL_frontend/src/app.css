@@ -60,12 +60,22 @@
 }
 
 .modal {
-  /* other styles */
-  position: fixed !important; /* or absolute */
-  z-index: 9999 !important; /* Arbitrary high number */
-  margin-top: 32px;
-  margin-bottom: 32px;
-  border-radius: 8px;
+  position: fixed !important; 
+  z-index: 9999 !important;
+  background-color: rgba(36, 37, 41, 0.7) !important;
+}
+
+.modal .content {
+  max-height: 600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  position: relative !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+.modal .container {
+  border-radius: 0px !important;
 }
 
 .toast {
