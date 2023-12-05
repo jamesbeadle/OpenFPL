@@ -11,7 +11,7 @@
 
   import { Spinner, Toasts } from "@dfinity/gix-components";
   import { initAuthWorker } from "$lib/services/worker.auth.services";
-  
+
   const init = async () => await Promise.all([syncAuthStore()]);
 
   const syncAuthStore = async () => {

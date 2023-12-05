@@ -37,8 +37,7 @@
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="text-xl font-semibold text-white">Snapshot Fantasy Teams</h3>
-      <button class="text-white text-3xl" on:click={cancelModal}
-        >&times;</button
+      <button class="text-white text-3xl" on:click={cancelModal}>&times;</button
       >
     </div>
 

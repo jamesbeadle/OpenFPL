@@ -87,8 +87,7 @@
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="text-xl font-semibold text-white">Update Fixture</h3>
-      <button class="text-white text-3xl" on:click={cancelModal}
-        >&times;</button
+      <button class="text-white text-3xl" on:click={cancelModal}>&times;</button
       >
     </div>
 
@@ -107,10 +106,7 @@
 
       <div class="mt-4 flex flex-col space-y-2">
         <h5>Fixture Status</h5>
-        <select
-          bind:value={status}
-          class="w-full p-2 rounded-md fpl-dropdown"
-        >
+        <select bind:value={status} class="w-full p-2 rounded-md fpl-dropdown">
           {#each statuses as status}
             <option value={status.id}>{status.description}</option>
           {/each}
@@ -134,9 +130,7 @@
           Cancel
         </button>
         <button
-          class={`px-4 py-2 ${
-            !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"
-          } 
+          class={`px-4 py-2 ${!$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"} 
           text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
           type="submit"
           disabled={!$authIsAdmin}

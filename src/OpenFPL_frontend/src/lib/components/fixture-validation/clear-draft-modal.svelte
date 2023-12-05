@@ -10,9 +10,7 @@
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="text-xl font-semibold text-white">Clear Draft</h3>
-      <button class="text-white text-3xl" on:click={closeModal}
-        >&times;</button
-      >
+      <button class="text-white text-3xl" on:click={closeModal}>&times;</button>
     </div>
 
     <p>Please confirm you want to clear the draft from your cache.</p>

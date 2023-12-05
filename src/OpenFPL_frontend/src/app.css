@@ -21,13 +21,9 @@
   border: none;
 }
 
-
-input{
-  background-color: #2E323A !important;
+input {
+  background-color: #2e323a !important;
 }
-
-
-
 
 .bg-light-gray {
   background-color: rgba(46, 50, 58, 0.6);
@@ -68,7 +64,7 @@ input{
 }
 
 .modal {
-  position: fixed !important; 
+  position: fixed !important;
   z-index: 9999 !important;
   background-color: rgba(36, 37, 41, 0.7) !important;
 }
@@ -83,7 +79,7 @@ input{
   right: 0 !important;
   background-color: #161819 !important;
   border-radius: 8px;
-  border: 2px solid #2E323A !important;
+  border: 2px solid #2e323a !important;
 }
 
 .modal .container {

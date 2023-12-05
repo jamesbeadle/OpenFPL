@@ -195,8 +195,7 @@
           </select>
         </div>
         <div>
-          <label for="filterPosition">Filter by Position:</label
-          >
+          <label for="filterPosition">Filter by Position:</label>
           <select
             id="filterPosition"
             class="mt-1 block w-full py-2 text-white fpl-dropdown"
@@ -222,7 +221,7 @@
           />
         </div>
         <div>
-          <label for="maxValue" >Max Value:</label>
+          <label for="maxValue">Max Value:</label>
           <input
             id="maxValue"
             type="number"
@@ -233,7 +232,7 @@
       </div>
 
       <div class="my-4">
-        <label for="filterSurname" >Search by Name:</label>
+        <label for="filterSurname">Search by Name:</label>
         <input
           id="filterSurname"
           type="text"

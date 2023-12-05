@@ -54,11 +54,10 @@
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="text-xl font-semibold text-white">Update System State</h3>
-      <button class="text-white text-3xl" on:click={cancelModal}
-        >&times;</button
+      <button class="text-white text-3xl" on:click={cancelModal}>&times;</button
       >
     </div>
-    
+
     <form on:submit|preventDefault={updateSystemState}>
       <div class="mt-4 flex flex-col space-y-2">
         <h5>Active Gameweek</h5>
