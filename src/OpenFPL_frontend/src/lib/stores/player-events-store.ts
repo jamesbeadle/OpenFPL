@@ -352,20 +352,20 @@ function createPlayerEventsStore() {
     const gameweekFixtures = fixtures
       ? fixtures.filter((fixture) => fixture.gameweek === gameweekData.gameweek)
       : [];
-    const playerFixture = gameweekFixtures.find(
+    const playerFixtures = gameweekFixtures.filter(
       (fixture) =>
         (fixture.homeTeamId === gameweekData.player.teamId ||
           fixture.awayTeamId === gameweekData.player.teamId) &&
         fixture.highestScoringPlayerId === gameweekData.player.id
     );
-    if (playerFixture) {
-      score += pointsForHighestScore;
+
+    if (playerFixtures && playerFixtures.length > 0) {
+      score += pointsForHighestScore * playerFixtures.length;
     }
 
     score += gameweekData.goals * pointsForGoal;
 
     score += gameweekData.assists * pointsForAssist;
-
     return score;
   }
 

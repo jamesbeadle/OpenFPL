@@ -285,7 +285,7 @@
                   {data.bonusPoints}
                 </div>
               </div>
-              <div class="w-1/12 text-center">{data.points}</div>
+              <div class="w-1/12 text-center">{data.totalPoints}</div>
             </div>
           {/each}
         </div>

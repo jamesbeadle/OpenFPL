@@ -59,7 +59,7 @@
           >
             <div class="md:flex md:items-center mt-2 sm:mt-0 ml-2">
               <button
-                class={`${currentGameweek === 1 ? "bg-gray-500" : "fpl-purple"} 
+                class={`${currentGameweek === 1 ? "bg-gray-500" : "fpl-button"} 
               text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1`}
                 on:click={() => changeGameweek(-1)}
                 disabled={currentGameweek === 1}>&lt;</button

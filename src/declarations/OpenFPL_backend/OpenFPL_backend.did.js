@@ -340,7 +340,11 @@ export const idlFactory = ({ IDL }) => {
       [Result],
       []
     ),
-    savePlayerEvents: IDL.Func([FixtureId, IDL.Vec(PlayerEventData)], [], []),
+    savePlayerEvents: IDL.Func(
+      [FixtureId, IDL.Vec(PlayerEventData)],
+      [Result],
+      []
+    ),
     snapshotFantasyTeams: IDL.Func([], [], []),
     updateDisplayName: IDL.Func([IDL.Text], [Result], []),
     updateFavouriteTeam: IDL.Func([IDL.Nat16], [Result], []),

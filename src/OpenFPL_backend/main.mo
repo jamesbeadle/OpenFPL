@@ -1637,27 +1637,43 @@ actor Self {
   /*LOCALDEVONLY*/
   //let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe"; //JB Local
 
-  public shared ({ caller }) func savePlayerEvents(fixtureId : T.FixtureId, allPlayerEvents : [T.PlayerEventData]) : async () {
+  public shared ({ caller }) func savePlayerEvents(fixtureId : T.FixtureId, allPlayerEvents : [T.PlayerEventData]) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert Principal.toText(caller) == adminPrincipal;
+
+    Debug.print(debug_show "fixtureId");
+    Debug.print(debug_show fixtureId);
+
+    Debug.print(debug_show "allPlayerEvents");
+    Debug.print(debug_show allPlayerEvents);
 
     let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
 
     if (not validPlayerEvents) {
-      return;
+      return #err(#InvalidData);
     };
 
     let activeSeasonId = seasonManager.getActiveSeasonId();
     let activeGameweek = seasonManager.getActiveGameweek();
+
+    Debug.print(debug_show "activeSeasonId");
+    Debug.print(debug_show activeSeasonId);
+
+    Debug.print(debug_show "activeGameweek");
+    Debug.print(debug_show activeGameweek);
+
     let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
 
     if (fixture.status != 2) {
-      return;
+      return #err(#NotAllowed);
     };
 
     let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(allPlayerEvents);
 
     let allPlayers = await playerCanister.getAllPlayers();
+
+    Debug.print(debug_show "allPlayers");
+    Debug.print(debug_show allPlayers);
 
     let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
     let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
@@ -1732,6 +1748,11 @@ actor Self {
 
     let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
     let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
+    Debug.print(debug_show "totalHomeScored");
+    Debug.print(debug_show totalHomeScored);
+
+    Debug.print(debug_show "totalAwayScored");
+    Debug.print(debug_show totalAwayScored);
 
     if (totalHomeScored == 0) {
       //add away team clean sheets
@@ -1822,6 +1843,7 @@ actor Self {
     };
 
     await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
+    return #ok();
   };
 
   private func finaliseFixture(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, events : [T.PlayerEventData]) : async () {

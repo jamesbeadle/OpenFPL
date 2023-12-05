@@ -292,7 +292,7 @@ export interface _SERVICE {
     [Uint16Array | number[], number, number, number, number],
     Result
   >;
-  savePlayerEvents: ActorMethod<[FixtureId, Array<PlayerEventData>], undefined>;
+  savePlayerEvents: ActorMethod<[FixtureId, Array<PlayerEventData>], Result>;
   snapshotFantasyTeams: ActorMethod<[], undefined>;
   updateDisplayName: ActorMethod<[string], Result>;
   updateFavouriteTeam: ActorMethod<[number], Result>;

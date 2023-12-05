@@ -35,9 +35,6 @@ module {
     private var activeGameweek : T.GameweekNumber = 1;
     private var interestingGameweek : T.GameweekNumber = 1;
 
-    //timer data
-    private var activeFixtures : [T.Fixture] = [];
-
     //child modules
     private let seasonsInstance = Seasons.Seasons();
 
@@ -50,7 +47,6 @@ module {
       activeSeasonId := stable_active_season_id;
       activeGameweek := stable_active_gameweek;
       interestingGameweek := stable_interesting_gameweek;
-      activeFixtures := stable_active_fixtures;
       seasonsInstance.setSeasons(stable_seasons);
       seasonsInstance.setNextFixtureId(stable_next_fixture_id);
       seasonsInstance.setNextSeasonId(stable_next_season_id);
@@ -62,6 +58,7 @@ module {
         return true;
       };
 
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
       if (List.some(List.fromArray(activeFixtures), func(fixture : T.Fixture) : Bool { return fixture.status > 0 })) {
         return true;
       };
@@ -70,6 +67,7 @@ module {
     };
 
     public func getActiveFixtures() : [T.Fixture] {
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
       return activeFixtures;
     };
 
@@ -87,7 +85,7 @@ module {
 
       await resetTransfers();
 
-      activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
       var gameKickOffTimers = List.nil<T.TimerInfo>();
       for (i in Iter.range(0, Array.size(activeFixtures) - 1)) {
         let gameKickOffDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[i].kickOff - Time.now()));
@@ -102,14 +100,11 @@ module {
 
     public func gameKickOff() : async () {
 
-      let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
-
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
       for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
         if (activeFixtures[i].kickOff <= Time.now() and activeFixtures[i].status == 0) {
 
           let updatedFixture = await seasonsInstance.updateStatus(activeSeasonId, activeGameweek, activeFixtures[i].id, 1);
-          activeFixturesBuffer.add(updatedFixture);
-
           let gameCompletedDuration : Timer.Duration = #nanoseconds(Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
           switch (setAndBackupTimer) {
             case (null) {};
@@ -117,25 +112,21 @@ module {
               await actualFunction(gameCompletedDuration, "gameCompletedExpired", activeFixtures[i].id);
             };
           };
-        } else {
-          activeFixturesBuffer.add(activeFixtures[i]);
         };
       };
-      activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
       await updateCacheHash("fixtures");
     };
 
     public func gameCompleted() : async () {
       let EventData_VotingPeriod = 0; // NEED TO SET THIS FROM THE GOVERNANCE CANISTER BUT IT NEEDS TO BE THE TIME SPECIFIC TO FIXTURE DATA COLLECTION
-      let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
 
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
       let timerCreatedTimes = Buffer.fromArray<Int>([]);
 
       for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
         if ((activeFixtures[i].kickOff + (oneHour * 2)) <= Time.now() and activeFixtures[i].status == 1) {
 
           let updatedFixture = await seasonsInstance.updateStatus(activeSeasonId, activeGameweek, activeFixtures[i].id, 2);
-          activeFixturesBuffer.add(updatedFixture);
 
           let votingPeriodOverDuration : Timer.Duration = #nanoseconds(Int.abs((Time.now() + EventData_VotingPeriod) - Time.now()));
 
@@ -148,12 +139,9 @@ module {
               };
             };
           };
-        } else {
-          activeFixturesBuffer.add(activeFixtures[i]);
         };
       };
 
-      activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
       await updateCacheHash("fixtures");
     };
 
@@ -172,20 +160,16 @@ module {
         interestingGameweek := activeGameweek;
       };
 
-      let activeFixturesBuffer = Buffer.fromArray<T.Fixture>([]);
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
 
       for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
         let fixture = activeFixtures[i];
         if (fixture.id == fixtureId and fixture.status == 2) {
           let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
-          activeFixturesBuffer.add(updatedFixture);
           await finaliseFixture(updatedFixture);
-        } else {
-          activeFixturesBuffer.add(fixture);
         };
       };
 
-      activeFixtures := Buffer.toArray<T.Fixture>(activeFixturesBuffer);
       await checkGameweekFinished();
       await updateCacheHash("fixtures");
       await updateCacheHash("weekly_leaderboard");
@@ -202,6 +186,7 @@ module {
     };
 
     private func checkGameweekFinished() : async () {
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
       let remainingFixtures = Array.find(
         activeFixtures,
         func(fixture : T.Fixture) : Bool {
@@ -231,7 +216,8 @@ module {
       };
 
       activeGameweek += 1;
-      activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
 
       let gameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
       switch (setAndBackupTimer) {
@@ -244,7 +230,7 @@ module {
 
     public func intialFixturesConfirmed() : async () {
       activeGameweek := 1;
-      activeFixtures := seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
 
       let initialGameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
       switch (setAndBackupTimer) {
@@ -394,11 +380,5 @@ module {
     public func updateFixtureStatus(fixtureId : T.FixtureId, status : Nat8) : async () {
       let updatedFixture = await seasonsInstance.updateStatus(activeSeasonId, activeGameweek, fixtureId, status);
     };
-
-    public func setGameweekFixtures() : async () {
-      let gameweekFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-      activeFixtures := gameweekFixtures;
-    };
-
   };
 };

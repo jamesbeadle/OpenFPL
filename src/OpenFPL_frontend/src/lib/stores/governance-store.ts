@@ -18,7 +18,10 @@ function createGovernanceStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      await identityActor.savePlayerEvents(fixtureId, allPlayerEvents);
+      let result = await identityActor.savePlayerEvents(
+        fixtureId,
+        allPlayerEvents
+      );
       // Additional logic if needed after submission
     } catch (error) {
       console.error("Error submitting fixture data:", error);

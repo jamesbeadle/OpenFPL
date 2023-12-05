@@ -3266,7 +3266,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1ijcqje"
+  version_hash: "ev70rg"
 };
 function get_hooks() {
   return {};
@@ -3812,7 +3812,11 @@ const idlFactory$1 = ({ IDL }) => {
       [Result],
       []
     ),
-    savePlayerEvents: IDL.Func([FixtureId, IDL.Vec(PlayerEventData)], [], []),
+    savePlayerEvents: IDL.Func(
+      [FixtureId, IDL.Vec(PlayerEventData)],
+      [Result],
+      []
+    ),
     snapshotFantasyTeams: IDL.Func([], [], []),
     updateDisplayName: IDL.Func([IDL.Text], [Result], []),
     updateFavouriteTeam: IDL.Func([IDL.Nat16], [Result], []),
@@ -5445,11 +5449,11 @@ function createPlayerEventsStore() {
         break;
     }
     const gameweekFixtures = fixtures ? fixtures.filter((fixture) => fixture.gameweek === gameweekData.gameweek) : [];
-    const playerFixture = gameweekFixtures.find(
+    const playerFixtures = gameweekFixtures.filter(
       (fixture) => (fixture.homeTeamId === gameweekData.player.teamId || fixture.awayTeamId === gameweekData.player.teamId) && fixture.highestScoringPlayerId === gameweekData.player.id
     );
-    if (playerFixture) {
-      score += pointsForHighestScore;
+    if (playerFixtures && playerFixtures.length > 0) {
+      score += pointsForHighestScore * playerFixtures.length;
     }
     score += gameweekData.goals * pointsForGoal;
     score += gameweekData.assists * pointsForAssist;
@@ -5851,7 +5855,10 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      await identityActor.savePlayerEvents(fixtureId, allPlayerEvents);
+      let result = await identityActor.savePlayerEvents(
+        fixtureId,
+        allPlayerEvents
+      );
     } catch (error2) {
       console.error("Error submitting fixture data:", error2);
       throw error2;
@@ -5866,10 +5873,13 @@ const governanceStore = createGovernanceStore();
 const Confirm_fixture_data_modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { visible = false } = $$props;
   let { onConfirm } = $$props;
+  let { closeModal } = $$props;
   if ($$props.visible === void 0 && $$bindings.visible && visible !== void 0)
     $$bindings.visible(visible);
   if ($$props.onConfirm === void 0 && $$bindings.onConfirm && onConfirm !== void 0)
     $$bindings.onConfirm(onConfirm);
+  if ($$props.closeModal === void 0 && $$bindings.closeModal && closeModal !== void 0)
+    $$bindings.closeModal(closeModal);
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
       return `<div class="bg-gray-900 p-4"><div class="flex justify-between items-center"><h4 class="text-lg font-bold" data-svelte-h="svelte-1q1allu">Confirm Fixture Data</h4> <button class="text-black" data-svelte-h="svelte-naxdfo">✕</button></div> <div class="my-5" data-svelte-h="svelte-1kz7cf"><h1>Please confirm your fixture data.</h1> <p class="text-sm text-gray-600">You will not be able to edit your submission and entries that differ
@@ -5895,7 +5905,6 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-let showConfirmDataModal = false;
 const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
@@ -5908,6 +5917,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let homeTeam;
   let awayTeam;
   let showClearDraftModal = false;
+  let showConfirmDataModal = false;
   let selectedPlayers = writable([]);
   $$unsubscribe_selectedPlayers = subscribe(selectedPlayers, (value) => $selectedPlayers = value);
   let playerEventData = writable([]);
@@ -5933,6 +5943,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       });
       console.error("Error saving fixture data: ", error2);
     } finally {
+      showConfirmDataModal = false;
       isLoading = false;
       set_store_value(loadingText, $loadingText = "Loading", $loadingText);
     }
@@ -5949,6 +5960,9 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   }
   function closeConfirmClearDraftModal() {
     showClearDraftModal = false;
+  }
+  function closeConfirmDataModal() {
+    showConfirmDataModal = false;
   }
   fixtureId = Number($page.url.searchParams.get("id"));
   isSubmitDisabled = $playerEventData.length == 0 || $playerEventData.filter((x) => x.eventType == 0).length != $selectedPlayers.length;
@@ -5973,7 +5987,8 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$result,
     {
       visible: showConfirmDataModal,
-      onConfirm: confirmFixtureData
+      onConfirm: confirmFixtureData,
+      closeModal: closeConfirmDataModal
     },
     {},
     {}

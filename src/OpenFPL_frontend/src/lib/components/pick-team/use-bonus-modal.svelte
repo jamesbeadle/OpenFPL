@@ -42,7 +42,6 @@
   };
 
   const getPlayerNames = () => {
-    console.log("GETTING PLAYERS");
     return $playerStore
       .filter((p) => isPlayerInFantasyTeam(p.id))
       .map((p) => ({ id: p.id, name: `${p.firstName} ${p.lastName}` }));
