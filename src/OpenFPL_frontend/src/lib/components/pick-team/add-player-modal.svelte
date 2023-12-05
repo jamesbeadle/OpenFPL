@@ -172,7 +172,7 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeAddPlayerModal}>
-  <div class="bg-gray-900 p-4">
+  <div class="p-4">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-xl font-semibold">Select Player</h3>
       <button class="text-3xl leading-none" on:click={closeAddPlayerModal}

@@ -28,7 +28,7 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
-  <div class="bg-gray-900 p-4">
+  <div class="p-4">
     <h3 class="text-lg leading-6 font-medium mb-2">
       Select {selectedTeam.friendlyName} Players
     </h3>

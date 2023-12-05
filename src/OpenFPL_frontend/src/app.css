@@ -66,12 +66,14 @@
 }
 
 .modal .content {
-  max-height: 600px !important;
+  max-height: 650px !important;
   margin-left: auto !important;
   margin-right: auto !important;
   position: relative !important;
   left: 0 !important;
   right: 0 !important;
+  background-color: #161819 !important;
+  border-radius: 8px;
 }
 
 .modal .container {
