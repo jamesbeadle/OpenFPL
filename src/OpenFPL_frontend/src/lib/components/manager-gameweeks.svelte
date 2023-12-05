@@ -3,6 +3,7 @@
   import { writable, type Writable } from "svelte/store";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
+  import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import type {
@@ -13,6 +14,7 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
+  import { getFlagComponent } from "$lib/utils/Helpers";
 
   export let principalId = "";
   export let viewGameweekDetail: (
@@ -29,6 +31,8 @@
   onMount(async () => {
     try {
       await systemStore.sync();
+      await playerStore.sync();
+
       selectedSeason = $systemStore?.activeSeason ?? null;
       manager = await managerStore.getManager(
         id ?? "",
@@ -85,6 +89,7 @@
       </div>
 
       {#each manager.gameweeks as gameweek}
+        {@const captain = $playerStore.find((x) => x.id === gameweek.captainId)}
         <button
           class="w-full"
           on:click={() =>
@@ -94,7 +99,18 @@
             class="flex items-center text-left justify-between p-2 py-4 border-b border-gray-700 cursor-pointer"
           >
             <div class="w-2/12 px-4">{gameweek.gameweek}</div>
-            <div class="w-3/12 px-4">{gameweek.captainId}</div>
+            <div class="w-3/12 px-4 flex items-center">
+              <svelte:component
+                this={getFlagComponent(captain?.nationality ?? "")}
+                class="w-9 h-9 mr-4"
+                size="100"
+              />
+              {`${
+                captain?.firstName.length ?? 0 > 0
+                  ? captain?.firstName.charAt(0) + "."
+                  : ""
+              } ${captain?.lastName}`}
+            </div>
             <div class="w-3/12 px-4">{@html getBonusIcon(gameweek)}</div>
             <div class="w-2/12 px-4">{gameweek.points}</div>
             <div class="w-2/12 px-4 flex items-center">
