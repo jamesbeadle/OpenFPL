@@ -84,62 +84,66 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="bg-gray-900 p-4">
-    <div class="mt-3">
-      <h3 class="text-lg leading-6 font-medium mb-2">Update Fixture</h3>
-      <form on:submit|preventDefault={updateFixture}>
-        <div class="mt-4 flex flex-col space-y-2">
-          <h5>Fixture Gameweek</h5>
-          <select
-            bind:value={gameweek}
-            class="w-full p-2 rounded-md fpl-dropdown"
-          >
-            {#each gameweeks as gameweek}
-              <option value={gameweek}>Gameweek {gameweek}</option>
-            {/each}
-          </select>
-        </div>
-
-        <div class="mt-4 flex flex-col space-y-2">
-          <h5>Fixture Status</h5>
-          <select
-            bind:value={status}
-            class="w-full p-2 rounded-md fpl-dropdown"
-          >
-            {#each statuses as status}
-              <option value={status.id}>{status.description}</option>
-            {/each}
-          </select>
-        </div>
-
-        <div class="mt-4 flex flex-col space-y-2">
-          <h5>Fixture Kick Off</h5>
-          <input
-            type="datetime-local"
-            bind:value={kickOffInput}
-            class="w-full p-2 rounded-md fpl-dropdown"
-          />
-        </div>
-
-        <div class="items-center py-3 flex space-x-4">
-          <button
-            class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-            on:click={cancelModal}
-          >
-            Cancel
-          </button>
-          <button
-            class={`px-4 py-2 ${
-              !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"
-            } 
-            text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
-            type="submit"
-            disabled={!$authIsAdmin}
-          >
-            Update
-          </button>
-        </div>
-      </form>
+  <div class="p-4">
+    <div class="flex justify-between items-center my-2">
+      <h3 class="text-xl font-semibold text-white">Update Fixture</h3>
+      <button class="text-white text-3xl" on:click={cancelModal}
+        >&times;</button
+      >
     </div>
+
+    <form on:submit|preventDefault={updateFixture}>
+      <div class="mt-4 flex flex-col space-y-2">
+        <h5>Fixture Gameweek</h5>
+        <select
+          bind:value={gameweek}
+          class="w-full p-2 rounded-md fpl-dropdown"
+        >
+          {#each gameweeks as gameweek}
+            <option value={gameweek}>Gameweek {gameweek}</option>
+          {/each}
+        </select>
+      </div>
+
+      <div class="mt-4 flex flex-col space-y-2">
+        <h5>Fixture Status</h5>
+        <select
+          bind:value={status}
+          class="w-full p-2 rounded-md fpl-dropdown"
+        >
+          {#each statuses as status}
+            <option value={status.id}>{status.description}</option>
+          {/each}
+        </select>
+      </div>
+
+      <div class="mt-4 flex flex-col space-y-2">
+        <h5>Fixture Kick Off</h5>
+        <input
+          type="datetime-local"
+          bind:value={kickOffInput}
+          class="w-full p-2 rounded-md fpl-dropdown"
+        />
+      </div>
+
+      <div class="items-center py-3 flex space-x-4">
+        <button
+          class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          on:click={cancelModal}
+        >
+          Cancel
+        </button>
+        <button
+          class={`px-4 py-2 ${
+            !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"
+          } 
+          text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+          type="submit"
+          disabled={!$authIsAdmin}
+        >
+          Update
+        </button>
+      </div>
+    </form>
   </div>
 </Modal>

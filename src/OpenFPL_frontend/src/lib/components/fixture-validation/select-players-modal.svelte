@@ -29,6 +29,12 @@
 
 <Modal {visible} on:nnsClose={closeModal}>
   <div class="p-4">
+    <div class="flex justify-between items-center my-2">
+      <h3 class="text-lg font-semibold">Select Players</h3>
+      <button class="text-2xl leading-none" on:click={closeModal}
+        >&times;</button
+      >
+    </div>
     <h3 class="text-lg leading-6 font-medium mb-2">
       Select {selectedTeam.friendlyName} Players
     </h3>

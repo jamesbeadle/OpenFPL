@@ -49,8 +49,13 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="bg-gray-900 p-4">
-    <h3 class="text-lg leading-6 font-medium mb-2">Update Favourite Team</h3>
+  <div class="p-4">
+    <div class="flex justify-between items-center my-2">
+      <h3 class="text-lg font-semibold">Update Favourite Team</h3>
+      <button class="text-2xl leading-none" on:click={cancelModal}
+        >&times;</button
+      >
+    </div>
     <div class="w-full border border-gray-500 mt-4 mb-2">
       <select
         bind:value={newFavouriteTeam}

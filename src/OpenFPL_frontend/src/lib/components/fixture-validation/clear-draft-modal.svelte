@@ -7,12 +7,15 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
-  <div class="bg-gray-900 p-4">
-    <div class="mt-3 text-center">
-      <h3 class="text-lg leading-6 font-medium mb-2">
-        Please confirm you want to clear the draft from your cache.
-      </h3>
+  <div class="p-4">
+    <div class="flex justify-between items-center my-2">
+      <h3 class="text-xl font-semibold text-white">Clear Draft</h3>
+      <button class="text-white text-3xl" on:click={closeModal}
+        >&times;</button
+      >
     </div>
+
+    <p>Please confirm you want to clear the draft from your cache.</p>
 
     <div class="items-center py-3 flex space-x-4">
       <button

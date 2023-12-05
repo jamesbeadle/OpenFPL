@@ -74,8 +74,8 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
-  <div class="bg-gray-900 p-4">
-    <div class="flex justify-between items-center">
+  <div class="p-4">
+    <div class="flex justify-between items-center my-2">
       <h4 class="text-lg font-bold">
         {player.firstName !== "" ? player.firstName.charAt(0) + "." : ""}
         {player.lastName} - Match Events

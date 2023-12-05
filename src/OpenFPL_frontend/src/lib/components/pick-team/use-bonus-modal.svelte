@@ -215,7 +215,13 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeBonusModal}>
-  <div class="bg-gray-900 p-4">
+  <div class="p-4">
+    <div class="flex justify-between items-center my-2">
+      <h3 class="text-lg font-semibold">Use Bonus</h3>
+      <button class="text-2xl leading-none" on:click={closeBonusModal}
+        >&times;</button
+      >
+    </div>
     <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
     <div class="mt-3 text-center">
       <h3 class="text-lg leading-6 font-medium">{bonus.name}</h3>
