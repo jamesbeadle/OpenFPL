@@ -76,3 +76,19 @@
   padding-bottom: 8px !important;
   border-radius: 4px !important;
 }
+
+.unplayed-divider {
+  background-color: #949494;
+}
+
+.active-divider {
+  background-color: #2c8be3;
+}
+
+.complete-divider {
+  background-color: #2ce3a6;
+}
+
+.verified-divider {
+  background-color: #7f56f1;
+}

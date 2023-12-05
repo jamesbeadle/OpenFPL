@@ -88,7 +88,7 @@ export function getFixtureStatusText(status: FixtureStatus): string {
     case FixtureStatus.ACTIVE:
       return "Active";
     case FixtureStatus.COMPLETED:
-      return "Completed";
+      return "In Consensus";
     case FixtureStatus.VERIFIED:
       return "Verified";
     default:
