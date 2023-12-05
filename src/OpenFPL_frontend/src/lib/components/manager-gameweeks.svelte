@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
   import { managerStore } from "$lib/stores/manager-store";
@@ -12,7 +12,6 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
-  let isLoading = true;
   export let principalId = "";
   export let viewGameweekDetail: (
     principalId: string,
@@ -21,6 +20,7 @@
   let manager: ManagerDTO;
   export let selectedGameweek = writable<number | null>(null);
   let selectedSeason: Season | null = $systemStore?.activeSeason ?? null;
+  let isLoading = true;
 
   $: id = $page.url.searchParams.get("id") ?? principalId;
 

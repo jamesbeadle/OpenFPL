@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { writable, type Writable } from "svelte/store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
@@ -15,7 +16,6 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import { writable } from "svelte/store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
@@ -27,10 +27,15 @@
 
   export let selectedGameweek = writable<number | null>(null);
   export let fantasyTeam = writable<FantasyTeam | null>(null);
-  let isLoading = true;
+  export let loadingGameweek: Writable<boolean>;
+  let isLoading = false;
 
   $: if ($fantasyTeam && $selectedGameweek && $selectedGameweek > 0) {
     updateGameweekPlayers();
+  }
+
+  $: if ($selectedGameweek) {
+    isLoading = true;
   }
 
   onMount(async () => {
@@ -50,7 +55,7 @@
       });
       console.error("Error fetching manager gameweek detail:", error);
     } finally {
-      isLoading = false;
+      $loadingGameweek = false;
     }
   });
 
@@ -77,6 +82,7 @@
   }
 
   const changeGameweek = (delta: number) => {
+    isLoading = true;
     $selectedGameweek = Math.max(1, Math.min(38, $selectedGameweek! + delta));
   };
 

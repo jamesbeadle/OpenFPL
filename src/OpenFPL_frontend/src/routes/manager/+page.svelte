@@ -32,10 +32,7 @@
   let joinedDate = "";
   let profilePicture: string;
   let isLoading = true;
-
-  $: if (manager && $selectedGameweek > 0) {
-    viewGameweekDetail(manager.principalId, $selectedGameweek);
-  }
+  let loadingGameweekDetail: Writable<boolean> = writable(false);
 
   onMount(async () => {
     try {
@@ -91,6 +88,9 @@
   });
 
   function setActiveTab(tab: string): void {
+    if (tab === "details") {
+      $loadingGameweekDetail = true;
+    }
     activeTab = tab;
   }
 
@@ -230,7 +230,11 @@
 
         <div class="w-full">
           {#if activeTab === "details"}
-            <ManagerGameweekDetails {selectedGameweek} {fantasyTeam} />
+            <ManagerGameweekDetails
+              loadingGameweek={loadingGameweekDetail}
+              {selectedGameweek}
+              {fantasyTeam}
+            />
           {/if}
           {#if activeTab === "gameweeks"}
             <ManagerGameweeks
