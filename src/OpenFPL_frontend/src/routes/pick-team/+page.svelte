@@ -856,7 +856,7 @@
             <span class="text-lg">
               Formation:
               <select
-                class="p-2 fpl-dropdown xl:text-lg text-center"
+                class="px-4 py-2 border-sm fpl-dropdown xl:text-lg text-center"
                 bind:value={selectedFormation}
               >
                 {#each $availableFormations as formation}

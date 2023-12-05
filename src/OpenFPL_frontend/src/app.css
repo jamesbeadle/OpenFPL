@@ -21,6 +21,14 @@
   border: none;
 }
 
+
+input{
+  background-color: #2E323A !important;
+}
+
+
+
+
 .bg-light-gray {
   background-color: rgba(46, 50, 58, 0.6);
 }
@@ -66,7 +74,8 @@
 }
 
 .modal .content {
-  max-height: 650px !important;
+  max-height: 850px !important;
+  min-width: 650px !important;
   margin-left: auto !important;
   margin-right: auto !important;
   position: relative !important;
@@ -74,6 +83,7 @@
   right: 0 !important;
   background-color: #161819 !important;
   border-radius: 8px;
+  border: 2px solid #2E323A !important;
 }
 
 .modal .container {

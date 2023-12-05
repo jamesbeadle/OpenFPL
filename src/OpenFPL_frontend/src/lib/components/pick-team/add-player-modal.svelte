@@ -173,19 +173,19 @@
 
 <Modal {visible} on:nnsClose={closeAddPlayerModal}>
   <div class="p-4">
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-xl font-semibold">Select Player</h3>
-      <button class="text-3xl leading-none" on:click={closeAddPlayerModal}
+    <div class="flex justify-between items-center my-2">
+      <h3 class="text-lg font-semibold">Select Player</h3>
+      <button class="text-2xl leading-none" on:click={closeAddPlayerModal}
         >&times;</button
       >
     </div>
-    <div class="mb-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <div class="my-4 text-sm">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
         <div>
-          <label for="filterTeam" class="text-sm">Filter by Team:</label>
+          <label for="filterTeam">Filter by Team:</label>
           <select
             id="filterTeam"
-            class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+            class="mt-1 block w-full py-2 text-white fpl-dropdown"
             bind:value={filterTeam}
           >
             <option value={-1}>All</option>
@@ -195,11 +195,11 @@
           </select>
         </div>
         <div>
-          <label for="filterPosition" class="text-sm">Filter by Position:</label
+          <label for="filterPosition">Filter by Position:</label
           >
           <select
             id="filterPosition"
-            class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+            class="mt-1 block w-full py-2 text-white fpl-dropdown"
             bind:value={filterPosition}
           >
             <option value={-1}>All</option>
@@ -211,29 +211,29 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
         <div>
-          <label for="minValue" class="text-sm">Min Value:</label>
+          <label for="minValue">Min Value:</label>
           <input
             id="minValue"
             type="number"
-            class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+            class="mt-1 block w-full p-2 bg-gray-700 text-white fpl-dropdown"
             bind:value={minValue}
           />
         </div>
         <div>
-          <label for="maxValue" class="text-sm">Max Value:</label>
+          <label for="maxValue" >Max Value:</label>
           <input
             id="maxValue"
             type="number"
-            class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md"
+            class="mt-1 block w-full p-2 bg-gray-700 text-white rounded-md fpl-dropdown"
             bind:value={maxValue}
           />
         </div>
       </div>
 
-      <div class="mb-4">
-        <label for="filterSurname" class="text-sm">Search by Name:</label>
+      <div class="my-4">
+        <label for="filterSurname" >Search by Name:</label>
         <input
           id="filterSurname"
           type="text"
@@ -243,38 +243,41 @@
         />
       </div>
 
-      <div class="mb-4">
-        <label for="bankBalance" class="font-bold"
-          >Available Balance: £{($bankBalance / 4).toFixed(2)}m</label
+      <div class="my-4">
+        <label for="bankBalance"
+          >Available Balance: <b>£{($bankBalance / 4).toFixed(2)}m</b></label
         >
       </div>
     </div>
 
-    <div class="overflow-x-auto flex-1 text-xs md:text-base">
+    <div class="overflow-x-auto flex-1 text-xs">
       <div
-        class="flex justify-between border border-gray-700 py-4 bg-light-gray"
+        class="flex justify-between border border-gray-700 py-2 bg-light-gray"
       >
-        <div class="w-1/12 text-center mx-4">Pos</div>
-        <div class="w-4/12">Player</div>
+        <div class="w-1/12 text-center">Pos</div>
+        <div class="w-2/12">Player</div>
         <div class="w-2/12">Team</div>
         <div class="w-2/12">Value</div>
         <div class="w-1/12">PTS</div>
-        <div class="w-2/12 text-center">&nbsp</div>
+        <div class="w-3/12">&nbsp</div>
       </div>
 
       {#each paginatedPlayers as player, index}
         <div
-          class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
+          class="flex items-center justify-between py-2 border-b border-gray-700 cursor-pointer"
         >
-          <div class="w-1/12 text-center mx-4">
+          <div class="w-1/12 text-center">
             {#if player.position === 0}GK{/if}
             {#if player.position === 1}DF{/if}
             {#if player.position === 2}MF{/if}
             {#if player.position === 3}FW{/if}
           </div>
-          <div class="w-4/12">
-            {player.firstName}
-            {player.lastName}
+          <div class="w-2/12">
+            {`${
+              player.firstName.length > 0
+                ? player.firstName.charAt(0) + "."
+                : ""
+            } ${player.lastName}`}
           </div>
           <div class="w-2/12">
             <p class="flex items-center">
@@ -291,9 +294,9 @@
             £{(Number(player.value) / 4).toFixed(2)}m
           </div>
           <div class="w-1/12">{player.totalPoints}</div>
-          <div class="w-2/12 flex justify-center items-center">
+          <div class="w-3/12 flex justify-center items-center">
             {#if disableReasons[index]}
-              <span class="text-xs text-center">{disableReasons[index]}</span>
+              <span class="text-xxs text-center">{disableReasons[index]}</span>
             {:else}
               <button
                 on:click={() => selectPlayer(player)}
@@ -319,13 +322,6 @@
           </button>
         {/each}
       </div>
-    </div>
-
-    <div class="flex justify-end mt-4">
-      <button
-        on:click={closeAddPlayerModal}
-        class="px-4 py-2 fpl-purple-btn rounded-md text-white">Close</button
-      >
     </div>
   </div>
 </Modal>
