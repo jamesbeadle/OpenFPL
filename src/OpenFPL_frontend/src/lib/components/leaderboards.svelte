@@ -7,6 +7,7 @@
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+    import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
 
   let isLoading = true;
   let gameweeks = Array.from(
@@ -270,27 +271,31 @@
           <div
             class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
           >
-            <div class="w-1/6 px-4">Pos</div>
-            <div class="w-1/3 px-4">Manager</div>
-            <div class="w-1/2 px-4">Points</div>
+            <div class="w-2/12 px-4">Pos</div>
+            <div class="w-5/12 px-4">Manager</div>
+            <div class="w-2/12 px-4">Points</div>
+            <div class="w-3/12 px-4">&nbsp;</div>
           </div>
 
           {#if leaderboard && leaderboard.entries.length > 0}
             {#each leaderboard.entries as entry}
-              <div
-                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
-              >
-                <div class="w-1/6 px-4">{entry.positionText}</div>
-                <div class="w-1/3 px-4">
-                  <a
-                    href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}
-                    >{entry.principalId === entry.username
-                      ? "Unknown"
-                      : entry.username}</a
-                  >
+              <a href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}>
+                <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer">
+                  <div class="w-2/12 px-4">{entry.positionText}</div>
+                  <div class="w-5/12 px-4">
+                    {entry.principalId === entry.username
+                        ? "Unknown"
+                        : entry.username}
+                  </div>
+                  <div class="w-2/12 px-4">{entry.points}</div>
+                  <div class="w-3/12 px-4 flex items-center">
+                    <span class="flex items-center">
+                      <ViewDetailsIcon className="w-6 mr-2" />
+                      <p class="">View Details</p>
+                    </span>
+                  </div>
                 </div>
-                <div class="w-1/2 px-4">{entry.points}</div>
-              </div>
+              </a>
             {/each}
             <div class="flex justify-center items-center mt-4 mb-4">
               <button

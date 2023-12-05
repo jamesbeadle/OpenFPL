@@ -115,7 +115,8 @@
             <div class="w-2/12 px-4">{gameweek.points}</div>
             <div class="w-2/12 px-4 flex items-center">
               <span class="flex items-center">
-                <ViewDetailsIcon className="w-6 mr-2" />View Details
+                <ViewDetailsIcon className="w-6 mr-2" />
+                <p class="">View Details</p>
               </span>
             </div>
           </div>

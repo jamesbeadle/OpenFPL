@@ -54,6 +54,11 @@
       ? "text-blue-500 nav-underline active"
       : "nav-underline";
 
+  $: currentBorder = (route: string) =>
+    $page.url.pathname === route
+      ? "active-border"
+      : "";
+
   function toggleMenu() {
     menuOpen = !menuOpen;
   }
@@ -156,7 +161,7 @@
             <div class="relative inline-block">
               <button
                 on:click={toggleProfileDropdown}
-                class="h-full flex items-center"
+                class={`h-full flex items-center border rounded-sm ${currentBorder('/profile')}`}
               >
                 <img
                   src={$userGetProfilePicture}
