@@ -69,7 +69,14 @@
         $fantasyTeam!,
         $selectedGameweek!
       );
-      gameweekPlayers.set(fetchedPlayers.sort((a, b) => b.points - a.points));
+      gameweekPlayers.set(
+        fetchedPlayers.sort((a, b) => {
+          if (b.totalPoints === a.totalPoints) {
+            return Number(b.player.value) - Number(a.player.value);
+          }
+          return b.totalPoints - a.totalPoints;
+        })
+      );
     } catch (error) {
       toastsError({
         msg: { text: "Error updating gameweek players." },
@@ -160,12 +167,7 @@
             <div class="w-1/12 text-center">PTS</div>
           </div>
 
-          {#each $gameweekPlayers.sort((a, b) => {
-            if (b.points === a.points) {
-              return Number(b.player.value) - Number(a.player.value);
-            }
-            return b.points - a.points;
-          }) as data}
+          {#each $gameweekPlayers as data}
             {@const playerDTO = getPlayerDTO(data.player.id)}
             {@const playerTeam = getPlayerTeam(data.player.teamId)}
             <div
