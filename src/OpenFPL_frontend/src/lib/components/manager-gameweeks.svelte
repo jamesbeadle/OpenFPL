@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { writable } from "svelte/store";
   import { page } from "$app/stores";
   import { systemStore } from "$lib/stores/system-store";
   import { managerStore } from "$lib/stores/manager-store";
@@ -18,7 +19,7 @@
     selectedGameweek: number
   ) => void;
   let manager: ManagerDTO;
-  let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
+  export let selectedGameweek = writable<number | null>(null);
   let selectedSeason: Season | null = $systemStore?.activeSeason ?? null;
 
   $: id = $page.url.searchParams.get("id") ?? principalId;
@@ -30,7 +31,7 @@
       manager = await managerStore.getManager(
         id ?? "",
         selectedSeason?.id ?? 1,
-        selectedGameweek
+        $selectedGameweek!
       );
     } catch (error) {
       toastsError({

@@ -64,10 +64,13 @@
       principal?.toText(),
       selectedGameweek
     );
-    gameweekData = await playerEventsStore.getGameweekPlayers(
+
+    let unsortedData = await playerEventsStore.getGameweekPlayers(
       fantasyTeam,
       selectedGameweek
     );
+
+    gameweekData = unsortedData.sort((a, b) => b.points - a.points);
   }
 
   const changeGameweek = (delta: number) => {

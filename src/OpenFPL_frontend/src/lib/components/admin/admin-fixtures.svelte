@@ -17,11 +17,8 @@
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedFixture: Fixture | null;
 
-  let selectedGameweek: number = $systemStore?.activeGameweek ?? 1;
-  let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let selectedGameweek: number;
+  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   $: filteredFixtures = fixturesWithTeams.filter(
     ({ fixture }) => fixture.gameweek === selectedGameweek
   );
@@ -54,6 +51,8 @@
       await teamStore.sync();
       await fixtureStore.sync();
       await systemStore.sync();
+
+      selectedGameweek = $systemStore?.activeGameweek ?? 1;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
@@ -124,12 +123,10 @@
 
         <button
           class={`${
-            selectedGameweek === $systemStore?.activeGameweek
-              ? "bg-gray-500"
-              : "fpl-button"
+            selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
           } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
           on:click={() => changeGameweek(1)}
-          disabled={selectedGameweek === $systemStore?.activeGameweek}
+          disabled={selectedGameweek === 38}
         >
           &gt;
         </button>

@@ -3266,7 +3266,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "hwts3e"
+  version_hash: "1umxd4m"
 };
 function get_hooks() {
   return {};
@@ -5689,7 +5689,7 @@ const WalletIcon = create_ssr_component(($$result, $$props, $$bindings, slots) =
   return `<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"${add_attribute("class", className, 0)} fill="currentColor" viewBox="0 0 24 24"><path d="M12.136.326A1.5 1.5 0 0 1 14 1.78V3h.5A1.5 1.5 0 0 1 16 4.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 13.5v-9a1.5 1.5 0 0 1 1.432-1.499L12.136.326zM5.562 3H13V1.78a.5.5 0 0 0-.621-.484L5.562 3zM1.5 4a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-13z"></path><path d="M15.5,6.5v3a1,1,0,0,1-1,1h-3.5v-5H14.5A1,1,0,0,1,15.5,6.5Z"></path><path d="M12,8a.5,.5 0,1,1,.001,0Z"></path></svg>`;
 });
 const goto = /* @__PURE__ */ client_method("goto");
-const adminPrincipal = "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae";
+const adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
 const authSignedInStore = derived(
   authStore,
   ({ identity }) => identity !== null && identity !== void 0
@@ -6039,12 +6039,7 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  Array.from(
-    {
-      length: $systemStore?.activeGameweek ?? 1
-    },
-    (_, i) => i + 1
-  );
+  Array.from({ length: 38 }, (_, i) => i + 1);
   $systemStore?.activeGameweek ?? 1;
   $systemStore?.activeSeason.name ?? "";
   $$unsubscribe_teamStore();
@@ -6105,21 +6100,24 @@ const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_fantasyTeam;
+  let $$unsubscribe_selectedGameweek;
   let $$unsubscribe_teamStore;
-  let $systemStore, $$unsubscribe_systemStore;
+  let $$unsubscribe_systemStore;
   let $page, $$unsubscribe_page;
+  let $$unsubscribe_fantasyTeam;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let fantasyTeam = writable(null);
   $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => value);
+  let selectedGameweek = writable(Number($page.url.searchParams.get("gw")) ?? 1);
+  $$unsubscribe_selectedGameweek = subscribe(selectedGameweek, (value) => value);
   $page.url.searchParams.get("id");
-  $page.url.searchParams.get("gw") ? Number($page.url.searchParams.get("gw")) : $systemStore?.focusGameweek;
-  $$unsubscribe_fantasyTeam();
+  $$unsubscribe_selectedGameweek();
   $$unsubscribe_teamStore();
   $$unsubscribe_systemStore();
   $$unsubscribe_page();
+  $$unsubscribe_fantasyTeam();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
@@ -6211,7 +6209,6 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         positionCounts[teamPlayer.position]++;
       }
     });
-    console.log(positionCounts);
     for (const formation of Object.keys(formations)) {
       const formationPositions = formations[formation].positions;
       let isMatch = true;
@@ -6270,7 +6267,6 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     if (!isBonusConditionMet($fantasyTeam)) {
       return false;
     }
-    console.log($fantasyTeam);
     if ($fantasyTeam?.playerIds.filter((id) => id > 0).length !== 11) {
       return false;
     }

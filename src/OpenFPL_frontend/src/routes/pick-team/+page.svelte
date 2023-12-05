@@ -178,8 +178,6 @@
       }
     });
 
-    console.log(positionCounts);
-
     for (const formation of Object.keys(formations)) {
       const formationPositions = formations[formation].positions;
       let isMatch = true;
@@ -530,7 +528,7 @@
     if (!isBonusConditionMet($fantasyTeam)) {
       return false;
     }
-    console.log($fantasyTeam);
+
     if ($fantasyTeam?.playerIds.filter((id) => id > 0).length !== 11) {
       return false;
     }

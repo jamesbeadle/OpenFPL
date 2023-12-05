@@ -209,7 +209,11 @@
               {teamName}
             </h2>
             <button
-              class="p-2 px-4 rounded fpl-button"
+              class={`px-4 py-2 ${
+                gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0
+                  ? "fpl-purple-btn"
+                  : "bg-gray-500"
+              } p-2 px-4 rounded fpl-button`}
               on:click={displayFavouriteTeamModal}
               disabled={gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0}
             >

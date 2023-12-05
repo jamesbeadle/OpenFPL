@@ -18,13 +18,12 @@
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
 
   $: id = $page.url.searchParams.get("id");
-  $: selectedGameweek = $page.url.searchParams.get("gw")
-    ? Number($page.url.searchParams.get("gw"))
-    : $systemStore?.focusGameweek;
 
   let activeTab: string = "details";
-
   let fantasyTeam: Writable<FantasyTeamSnapshot | null> = writable(null);
+  let selectedGameweek: Writable<number> = writable(
+    Number($page.url.searchParams.get("gw")) ?? 1
+  );
 
   let manager: ManagerDTO;
   let displayName = "";
@@ -34,17 +33,19 @@
   let profilePicture: string;
   let isLoading = true;
 
+  $: if (manager && $selectedGameweek > 0) {
+    viewGameweekDetail(manager.principalId, $selectedGameweek);
+  }
+
   onMount(async () => {
     try {
       await systemStore.sync();
       await teamStore.sync();
-
       manager = await managerStore.getManager(
         id ?? "",
         $systemStore?.activeSeason.id ?? 1,
-        selectedGameweek ?? 1
+        $selectedGameweek ?? 1
       );
-
       displayName =
         manager.displayName === manager.principalId
           ? "Unknown"
@@ -77,7 +78,7 @@
         manager.favouriteTeamId > 0
           ? $teamStore.find((x) => x.id == manager.favouriteTeamId) ?? null
           : null;
-      viewGameweekDetail(manager.principalId, selectedGameweek!);
+      viewGameweekDetail(manager.principalId, $selectedGameweek!);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager details." },
@@ -93,11 +94,14 @@
     activeTab = tab;
   }
 
-  function viewGameweekDetail(principalId: string, selectedGameweek: number) {
-    let team = manager.gameweeks.find((x) => x.gameweek === selectedGameweek)!;
-    fantasyTeam.set(team);
-    console.log("$fantasyTeam");
-    console.log($fantasyTeam);
+  function viewGameweekDetail(principalId: string, gw: number) {
+    $selectedGameweek = gw;
+    let team = manager.gameweeks.find((x) => x.gameweek === $selectedGameweek)!;
+    if (team) {
+      fantasyTeam.set(team);
+    } else {
+      fantasyTeam.set(null);
+    }
     setActiveTab("details");
   }
 </script>
@@ -218,7 +222,7 @@
           </div>
 
           <div class="px-4">
-            {#if activeTab === "details"}
+            {#if $fantasyTeam && activeTab === "details"}
               <span class="text-2xl">Total Points: {$fantasyTeam?.points}</span>
             {/if}
           </div>
@@ -231,6 +235,7 @@
           {#if activeTab === "gameweeks"}
             <ManagerGameweeks
               {viewGameweekDetail}
+              {selectedGameweek}
               principalId={manager.principalId}
             />
           {/if}

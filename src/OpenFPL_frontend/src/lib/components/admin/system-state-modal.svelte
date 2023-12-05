@@ -12,10 +12,7 @@
 
   let activeGameweek = $systemStore?.activeGameweek ?? 1;
   let focusGameweek = $systemStore?.focusGameweek ?? 1;
-  let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
   let isLoading = true;
 

@@ -10,7 +10,7 @@
 
   let isLoading = true;
   let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
+    { length: $systemStore?.focusGameweek ?? 1 },
     (_, i) => i + 1
   );
   let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
@@ -20,8 +20,11 @@
   let selectedLeaderboardType: number = 1;
   let selectedMonth: number = $systemStore?.activeMonth ?? 8;
   let selectedTeamId: number = $authSignedInStore
-    ? $userGetFavouriteTeam ?? $teamStore[0].id
-    : $teamStore[0].id;
+    ? $userGetFavouriteTeam ??
+      $teamStore.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))[0]
+        .id
+    : $teamStore.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName))[0]
+        .id;
 
   let leaderboard: any;
   let totalPages: number = 0;
@@ -128,6 +131,11 @@
   function changeTeam(delta: number) {
     selectedTeamIndex =
       (selectedTeamIndex + delta + $teamStore.length) % $teamStore.length;
+
+    if (selectedTeamIndex > $teamStore.length - 1) {
+      selectedTeamIndex = 0;
+    }
+
     selectedTeamId = $teamStore[selectedTeamIndex].id;
     loadLeaderboardData();
   }
@@ -178,12 +186,13 @@
               </select>
               <button
                 class={`${
-                  selectedGameweek === $systemStore?.activeGameweek
+                  selectedGameweek === $systemStore?.focusGameweek
                     ? "bg-gray-500"
                     : "fpl-button"
-                } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
+                } 
+                text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
                 on:click={() => changeGameweek(1)}
-                disabled={selectedGameweek === $systemStore?.activeGameweek}
+                disabled={selectedGameweek === $systemStore?.focusGameweek}
                 >&gt;</button
               >
             </div>
@@ -282,7 +291,8 @@
               <button
                 on:click={() => changePage(-1)}
                 disabled={currentPage === 1}
-                class="px-4 py-2 mx-2 fpl-button rounded disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] text-sm"
+                class={`${selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"}
+                px-4 py-2 mx-2 rounded disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] text-sm`}
               >
                 Previous
               </button>
@@ -292,7 +302,12 @@
               <button
                 on:click={() => changePage(1)}
                 disabled={currentPage >= totalPages}
-                class="px-4 py-2 mx-2 fpl-button rounded disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] text-sm"
+                class={`${
+                  selectedGameweek === $systemStore?.focusGameweek
+                    ? "bg-gray-500"
+                    : "fpl-button"
+                } 
+                  px-4 py-2 mx-2 rounded disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] text-sm`}
               >
                 Next
               </button>

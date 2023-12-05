@@ -24,10 +24,7 @@
   let kickOff: bigint = fixture.kickOff;
   let status: number = fixture.status;
 
-  let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
   const statuses: Status[] = [
     { id: 0, description: "Unplayed" },

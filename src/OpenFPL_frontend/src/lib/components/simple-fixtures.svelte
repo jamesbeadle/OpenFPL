@@ -10,10 +10,7 @@
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek = $systemStore?.activeGameweek ?? 1;
-  let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
   $: filteredFixtures = fixturesWithTeams.filter(
     ({ fixture }) => fixture.gameweek === selectedGameweek
@@ -85,9 +82,11 @@
       </select>
 
       <button
-        class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+        class={`${
+          selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
+        } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
         on:click={() => changeGameweek(1)}
-        disabled={selectedGameweek === $systemStore?.activeGameweek}
+        disabled={selectedGameweek === 38}
       >
         &gt;
       </button>

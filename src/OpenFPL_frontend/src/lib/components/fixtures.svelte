@@ -11,10 +11,7 @@
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
   let isLoading = true;
-  let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
-    (_, i) => i + 1
-  );
+  let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let selectedGameweek: number = $systemStore?.focusGameweek ?? 1;
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
@@ -98,12 +95,10 @@
 
         <button
           class={`${
-            selectedGameweek === $systemStore?.activeGameweek
-              ? "bg-gray-500"
-              : "fpl-button"
+            selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
           } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
           on:click={() => changeGameweek(1)}
-          disabled={selectedGameweek === $systemStore?.activeGameweek}
+          disabled={selectedGameweek === 38}
         >
           &gt;
         </button>
