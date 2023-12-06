@@ -13,6 +13,18 @@ export function formatUnixDateToReadable(unixNano: number) {
 
   return new Intl.DateTimeFormat("en-UK", options).format(date);
 }
+
+export function formatUnixDateToSmallReadable(unixNano: number) {
+  const date = new Date(unixNano / 1000000);
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+
+  return new Intl.DateTimeFormat("en-UK", options).format(date);
+}
+
 export function getCountdownTime(unixNano: number) {
   const targetDate = new Date(unixNano / 1000000);
   const now = new Date();

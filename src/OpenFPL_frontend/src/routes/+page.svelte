@@ -9,6 +9,7 @@
   import { managerStore } from "$lib/stores/manager-store";
   import {
     formatUnixDateToReadable,
+    formatUnixDateToSmallReadable,
     formatUnixTimeToTime,
     getCountdownTime,
   } from "../lib/utils/Helpers";
@@ -30,6 +31,7 @@
   let countdownHours = "00";
   let countdownMinutes = "00";
   let nextFixtureDate = "-";
+  let nextFixtureDateSmall = "-";
   let nextFixtureTime = "-";
   let weeklyLeader: LeaderboardEntry;
   let nextFixtureHomeTeam: Team | undefined = undefined;
@@ -60,6 +62,9 @@
         nextFixture ? nextFixture.awayTeamId : 0
       );
       nextFixtureDate = formatUnixDateToReadable(
+        nextFixture ? Number(nextFixture.kickOff) : 0
+      );
+      nextFixtureDateSmall = formatUnixDateToSmallReadable(
         nextFixture ? Number(nextFixture.kickOff) : 0
       );
       nextFixtureTime = formatUnixTimeToTime(
@@ -95,14 +100,14 @@
     <LoadingIcon />
   {:else}
     <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
-      <div class="flex flex-col lg:flex-row">
+      <div class="flex flex-col lg:flex-row lg:space-x-2">
         <div class="flex justify-start items-center text-white rounded-md bg-panel 
           space-x-2 sm:space-x-3 md:space-x-4 flex-grow 
           p-2 xs:p-3 sm:p-4  
           mb-5 xs:mb-7 sm:mb-8 lg:mb-0">
           <div class="flex-grow">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Gameweek</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold">
               {$systemStore?.activeGameweek}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
@@ -115,7 +120,7 @@
           />
           <div class="flex-grow">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Managers</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold">
               {managerCount * 10000000}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
@@ -129,7 +134,7 @@
               Weekly Prize Pool
             </p>
             <p class="text-gray-300 md:hidden text-xxs xs:text-sm sm:text-base">Weekly</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">5000</p>
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold">5000</p>
             <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">$FPL</p>
           </div>
         </div>
@@ -139,18 +144,16 @@
               Next Game
             </p>
             <div class="flex justify-center">
-              <div
-                class="flex justify-center items-center mb-2 text-xxs xs:text-sm sm:text-base"
-              >
-                <div class="w-10 ml-4 mr-4 flex">
+              <div class="flex justify-center items-center mb-2 text-xxs xs:text-sm sm:text-base">
+                <div class="ml-4 lg:ml-1 xl:ml-4 mr-4 lg:mr-1 xl:mr-4 flex">
                   <a
-                    class="flex flex-col items-center justify-center mt-6"
+                    class="flex flex-col items-center justify-center mt-6 lg:mt-3 xl:mt-6"
                     href={`/club?id=${
                       nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
                     }`}
                   >
                     <BadgeIcon
-                      className="h-8 mb-4"
+                      className="h-8 lg:h-7 xl:h-8 mb-4 lg:mb-2 xl:mb-4"
                       primaryColour={nextFixtureHomeTeam
                         ? nextFixtureHomeTeam.primaryColourHex
                         : ""}
@@ -168,18 +171,18 @@
                     </span>
                   </a>
                 </div>
-                <div class="w-v ml-1 mr-1 flex justify-center mt-6">
+                <div class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6">
                   <p class="text-xs mt-2 mb-2 font-bold">v</p>
                 </div>
-                <div class="w-10 ml-4 flex">
+                <div class="ml-4 lg:ml-1 xl:ml-4 mr-4 lg:mr-1 xl:mr-4 flex">
                   <a
-                    class="flex flex-col items-center justify-center mt-6"
+                    class="flex flex-col items-center justify-center mt-6 lg:mt-3 xl:mt-6"
                     href={`/club?id=${
                       nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
                     }`}
                   >
                     <BadgeIcon
-                      className="h-8 mb-4"
+                      className="h-8 lg:h-7 xl:h-8 mb-4 lg:mb-2 xl:mb-4"
                       primaryColour={nextFixtureAwayTeam
                         ? nextFixtureAwayTeam.primaryColourHex
                         : ""}
@@ -211,7 +214,7 @@
             </p>
             <div class="flex">
               <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold"
               >
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
                 : {countdownHours}<span class="text-gray-300 text-xs ml-1"
@@ -222,8 +225,11 @@
                 >
               </p>
             </div>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="lg:hidden xl:flex text-gray-300 text-xxs xs:text-sm sm:text-base">
               {nextFixtureDate} | {nextFixtureTime}
+            </p>
+            <p class="hidden lg:flex xl:hidden text-gray-300 text-xxs xs:text-sm sm:text-base">
+              {nextFixtureDateSmall}
             </p>
           </div>
           <div
@@ -235,7 +241,7 @@
               GW {$systemStore?.focusGameweek} High Score
             </p>
             <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold max-w-[200px] truncate"
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold max-w-[200px] truncate"
             >
               {#if weeklyLeader}
                 <a
