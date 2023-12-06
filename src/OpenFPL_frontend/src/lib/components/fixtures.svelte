@@ -86,7 +86,7 @@
         </button>
 
         <select
-          class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px] "
+          class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
           bind:value={selectedGameweek}
         >
           {#each gameweeks as gameweek}
@@ -108,18 +108,27 @@
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
         <div class="text-xxs sm:text-sm xl:text-base">
-          <div class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray">
+          <div
+            class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray"
+          >
             <h2 class="date-header ml-4 text-xs md:text-base">{date}</h2>
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}
-            <div class={`flex flex-row items-center py-2 border-b border-gray-700  ${ fixture.status < 3 ? "text-gray-400" : "text-white" }`}>
-              
-              <div class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 space-x-2 sm:space-x-3 lg:space-x-4 justify-center items-center">
-                <div class="w-5 xs:w-6  md:w-8 items-center justify-center">
+            <div
+              class={`flex flex-row items-center py-2 border-b border-gray-700  ${
+                fixture.status < 3 ? "text-gray-400" : "text-white"
+              }`}
+            >
+              <div
+                class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 space-x-2 sm:space-x-3 lg:space-x-4 justify-center items-center"
+              >
+                <div class="w-5 xs:w-6 md:w-8 items-center justify-center">
                   <a href={`/club?id=${fixture.homeTeamId}`}>
                     <BadgeIcon
                       primaryColour={homeTeam ? homeTeam.primaryColourHex : ""}
-                      secondaryColour={homeTeam ? homeTeam.secondaryColourHex : ""}
+                      secondaryColour={homeTeam
+                        ? homeTeam.secondaryColourHex
+                        : ""}
                       thirdColour={homeTeam ? homeTeam.thirdColourHex : ""}
                     />
                   </a>
@@ -138,17 +147,23 @@
                 </div>
               </div>
 
-              <div class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 flex-col ">
-                <a href={`/club?id=${fixture.homeTeamId}`}>{homeTeam ? homeTeam.friendlyName : ""}</a>
-                <a href={`/club?id=${fixture.awayTeamId}`}>{awayTeam ? awayTeam.friendlyName : ""}</a>
+              <div class="flex w-5/12 xs:w-4/12 md:w-3/12 lg:w-3/12 flex-col">
+                <a href={`/club?id=${fixture.homeTeamId}`}
+                  >{homeTeam ? homeTeam.friendlyName : ""}</a
+                >
+                <a href={`/club?id=${fixture.awayTeamId}`}
+                  >{awayTeam ? awayTeam.friendlyName : ""}</a
+                >
               </div>
-              
-              <div class="flex w-2/12 xs:w-2/12 md:w-2/12 lg:w-1/12 flex-col ">
+
+              <div class="flex w-2/12 xs:w-2/12 md:w-2/12 lg:w-1/12 flex-col">
                 <span>{fixture.status < 3 ? "-" : fixture.homeGoals}</span>
                 <span>{fixture.status < 3 ? "-" : fixture.awayGoals}</span>
               </div>
 
-              <div class="hidden xs:flex xs:w-2/12 md:w-2/12 lg:w-3/12 lg:justify-center">
+              <div
+                class="hidden xs:flex xs:w-2/12 md:w-2/12 lg:w-3/12 lg:justify-center"
+              >
                 <span class="ml-4 xs:ml-0 text-left"
                   >{formatUnixTimeToTime(Number(fixture.kickOff))}</span
                 >

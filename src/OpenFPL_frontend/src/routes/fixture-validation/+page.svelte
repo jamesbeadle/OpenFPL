@@ -59,12 +59,14 @@
           >
             <div class="md:flex md:items-center mt-2 sm:mt-0 ml-2">
               <button
-              class={`${ currentGameweek === 1 ? "bg-gray-500" : "fpl-button" } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
-              on:click={() => changeGameweek(-1)}
+                class={`${
+                  currentGameweek === 1 ? "bg-gray-500" : "fpl-button"
+                } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
+                on:click={() => changeGameweek(-1)}
                 disabled={currentGameweek === 1}>&lt;</button
               >
               <select
-                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px] "
+                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
                 bind:value={currentGameweek}
               >
                 {#each gameweeks as gameweek}
@@ -72,9 +74,11 @@
                 {/each}
               </select>
               <button
-              class={`${ currentGameweek === 38 ? "bg-gray-500" : "fpl-button" } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
-              on:click={() => changeGameweek(1)}
-              disabled={currentGameweek === 38}>&gt;</button
+                class={`${
+                  currentGameweek === 38 ? "bg-gray-500" : "fpl-button"
+                } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+                on:click={() => changeGameweek(1)}
+                disabled={currentGameweek === 38}>&gt;</button
               >
             </div>
           </div>

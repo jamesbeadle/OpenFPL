@@ -202,8 +202,8 @@
                   selectedGameweek === $systemStore?.focusGameweek
                     ? "bg-gray-500"
                     : "fpl-button"
-                  } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
-                 on:click={() => changeGameweek(1)}
+                } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+                on:click={() => changeGameweek(1)}
                 disabled={selectedGameweek === $systemStore?.focusGameweek}
                 >&gt;</button
               >
@@ -220,7 +220,7 @@
               </button>
 
               <select
-                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px] "
+                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
                 bind:value={selectedTeamId}
               >
                 {#each $teamStore.sort( (a, b) => a.friendlyName.localeCompare(b.friendlyName) ) as team}
@@ -245,7 +245,7 @@
               </button>
 
               <select
-                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px] "
+                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
                 bind:value={selectedMonth}
               >
                 <option value={1}>January</option>
