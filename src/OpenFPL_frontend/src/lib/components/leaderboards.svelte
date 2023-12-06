@@ -163,11 +163,11 @@
         <div class="flex flex-col sm:flex-row justify-between sm:items-center">
           <div class="md:flex md:items-center md:mt-0 ml-2 md:ml-4">
             <button
-              class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+              class="text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 fpl-button"
               on:click={() => changeLeaderboardType(-1)}>&lt;</button
             >
             <select
-              class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]"
+              class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[125px]"
               bind:value={selectedLeaderboardType}
             >
               <option value={1}>Weekly</option>
@@ -175,7 +175,7 @@
               <option value={3}>Season</option>
             </select>
             <button
-              class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+              class="text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 fpl-button ml-2"
               on:click={() => changeLeaderboardType(1)}>&gt;</button
             >
           </div>
@@ -185,12 +185,12 @@
               <button
                 class={`${
                   selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-                } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1`}
+                } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 mr-1`}
                 on:click={() => changeGameweek(-1)}
                 disabled={selectedGameweek === 1}>&lt;</button
               >
               <select
-                class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px] md:min-w-[140px]"
+                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[125px]"
                 bind:value={selectedGameweek}
               >
                 {#each gameweeks as gameweek}
@@ -202,9 +202,8 @@
                   selectedGameweek === $systemStore?.focusGameweek
                     ? "bg-gray-500"
                     : "fpl-button"
-                } 
-                text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
-                on:click={() => changeGameweek(1)}
+                  } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+                 on:click={() => changeGameweek(1)}
                 disabled={selectedGameweek === $systemStore?.focusGameweek}
                 >&gt;</button
               >
@@ -214,14 +213,14 @@
           {#if selectedLeaderboardType === 2}
             <div class="sm:flex sm:items-center sm:mt-0 mt-2 ml-2">
               <button
-                class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+                class="fpl-button text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1"
                 on:click={() => changeTeam(-1)}
               >
                 &lt;
               </button>
 
               <select
-                class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]"
+                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px] "
                 bind:value={selectedTeamId}
               >
                 {#each $teamStore.sort( (a, b) => a.friendlyName.localeCompare(b.friendlyName) ) as team}
@@ -230,7 +229,7 @@
               </select>
 
               <button
-                class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                class="text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1"
                 on:click={() => changeTeam(1)}
               >
                 &gt;
@@ -239,14 +238,14 @@
 
             <div class="sm:flex sm:items-center sm:mt-0 mt-2 ml-2">
               <button
-                class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+                class="fpl-button text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1"
                 on:click={() => changeMonth(-1)}
               >
                 &lt;
               </button>
 
               <select
-                class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px] md:min-w-[150px]"
+                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px] "
                 bind:value={selectedMonth}
               >
                 <option value={1}>January</option>
@@ -264,7 +263,7 @@
               </select>
 
               <button
-                class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                class="text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1"
                 on:click={() => changeMonth(1)}
               >
                 &gt;

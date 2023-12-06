@@ -64,7 +64,7 @@
         <div class="flex items-center ml-4">
           <p class="text-sm md:text-xl mr-4">Type:</p>
           <select
-            class="p-2 fpl-dropdown text-sm md:text-xl"
+            class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px] "
             bind:value={selectedFixtureType}
           >
             <option value={-1}>All</option>

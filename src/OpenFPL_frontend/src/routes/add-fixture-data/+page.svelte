@@ -309,7 +309,7 @@
                 <div class="w-1/6 px-4">
                   <button
                     on:click={() => handleEditPlayerEvents(player)}
-                    class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                    class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
                   >
                     Update Events
                   </button>
@@ -365,7 +365,7 @@
                 <div class="w-1/6 px-4">
                   <button
                     on:click={() => handleEditPlayerEvents(player)}
-                    class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                    class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
                   >
                     Update Events
                   </button>

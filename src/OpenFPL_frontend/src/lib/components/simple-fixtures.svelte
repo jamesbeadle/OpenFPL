@@ -66,7 +66,7 @@
       <button
         class={`${
           selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-        } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1`}
+        } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
         on:click={() => changeGameweek(-1)}
         disabled={selectedGameweek === 1}
       >
@@ -74,7 +74,7 @@
       </button>
 
       <select
-        class="p-2 fpl-dropdown text-xs md:text-base text-center mx-0 md:mx-2 min-w-[150px] sm:min-w-[100px]"
+        class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px] "
         bind:value={selectedGameweek}
       >
         {#each gameweeks as gameweek}
@@ -85,7 +85,7 @@
       <button
         class={`${
           selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
-        } text-base sm:text-xs md:text-base rounded px-3 sm:px-2 px-3 py-1 ml-1`}
+        } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
         on:click={() => changeGameweek(1)}
         disabled={selectedGameweek === 38}
       >

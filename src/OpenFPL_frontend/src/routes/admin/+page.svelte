@@ -60,11 +60,11 @@
 
         <div class="flex flex-row p-4 space-x-4">
           <button
-            class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+            class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
             on:click={displaySystemStateModal}>System Status</button
           >
           <button
-            class="text-base sm:text-xs md:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+            class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
             on:click={displaySnapshotModal}>Snapshot Fantasy Teams</button
           >
         </div>
