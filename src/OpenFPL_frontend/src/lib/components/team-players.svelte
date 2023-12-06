@@ -35,7 +35,7 @@
         </div>
       </div>
       <div
-        class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+        class="flex justify-between p-2 border-b border-gray-700 py-4 bg-light-gray"
       >
         <div class="flex-grow px-4 w-1/2">Number</div>
         <div class="flex-grow px-4 w-1/2">First Name</div>

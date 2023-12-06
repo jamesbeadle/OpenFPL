@@ -96,7 +96,7 @@
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
         <div>
           <div
-            class="flex items-center justify-between border border-gray-700 py-2 bg-light-gray"
+            class="flex items-center justify-between border-b border-gray-700 py-2 bg-light-gray"
           >
             <h2 class="date-header ml-4 text-xs">{date}</h2>
           </div>

@@ -165,22 +165,22 @@
       <div class="flex flex-col space-y-4 mt-4 text-lg text-xs md:text-base">
         <div class="overflow-x-auto flex-1">
           <div
-            class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+            class="flex justify-between border-b border-t border-gray-700 p-4 bg-light-gray"
           >
-            <div class="w-1/6 text-center mx-4">Pos</div>
-            <div class="w-3/6 px-4">Player</div>
-            <div class="w-1/6 text-center">Points</div>
-            <div class="w-1/6 text-center">&nbsp;</div>
+            <div class="w-1/6">Pos</div>
+            <div class="w-3/6">Player</div>
+            <div class="w-1/6">Points</div>
+            <div class="w-1/6">&nbsp;</div>
           </div>
           {#if gameweekData.length > 0}
             {#each gameweekData as playerGameweek}
               <div
-                class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
+                class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer"
               >
-                <div class="w-1/6 text-center">
+                <div class="w-1/6">
                   {getPositionAbbreviation(playerGameweek.player.position)}
                 </div>
-                <div class="w-3/6 text-center">
+                <div class="w-3/6">
                   <a href={`/player?id=${playerGameweek.player.id}`}>
                     {playerGameweek.player.firstName.length > 0
                       ? playerGameweek.player.firstName.substring(0, 1) + "."
@@ -188,8 +188,8 @@
                     {playerGameweek.player.lastName}</a
                   >
                 </div>
-                <div class="w-1/6 text-center">{playerGameweek.points}</div>
-                <div class="w-1/6 text-center">
+                <div class="w-1/6">{playerGameweek.points}</div>
+                <div class="w-1/6">
                   <button on:click={() => showDetailModal(playerGameweek)}>
                     <span class="flex items-center">
                       <ViewDetailsIcon className="w-6 mr-2" />View Details

@@ -86,7 +86,7 @@
         <div class="flex flex-col space-y-4 mt-4 text-xs md:text-base">
           <div class="overflow-x-auto flex-1">
             <div
-              class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+              class="flex justify-between p-2 border-y border-gray-700 py-4 bg-light-gray"
             >
               <div class="w-1/4 px-4">Home Team</div>
               <div class="w-1/4 px-4">Away Team</div>

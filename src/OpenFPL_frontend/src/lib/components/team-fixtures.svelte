@@ -74,7 +74,7 @@
         </div>
       </div>
       <div
-        class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray px-4"
+        class="flex justify-between p-2 border-b border-gray-700 py-4 bg-light-gray px-4"
       >
         <div class="flex-grow w-1/6 ml-4">Gameweek</div>
         <div class="flex-grow w-1/3 text-center">Game</div>

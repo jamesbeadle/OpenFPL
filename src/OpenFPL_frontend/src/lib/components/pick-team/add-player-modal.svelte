@@ -251,7 +251,7 @@
 
     <div class="overflow-x-auto flex-1 text-xs">
       <div
-        class="flex justify-between border border-gray-700 py-2 bg-light-gray"
+        class="flex justify-between border border-gray-700 py-2 bg-light-gray border-b border-gray-700"
       >
         <div class="w-1/12 text-center">Pos</div>
         <div class="w-2/12">Player</div>

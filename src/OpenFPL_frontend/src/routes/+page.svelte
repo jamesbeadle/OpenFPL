@@ -94,17 +94,17 @@
   {#if isLoading}
     <LoadingIcon />
   {:else}
-    <div class="m-4">
+    <div class="m-1 md:m-4">
       <div class="flex flex-col lg:flex-row">
         <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+          class="flex justify-start items-center text-white space-x-4 flex-grow m-2 md:m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Gameweek</p>
-            <p class="text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs sm:text-sm">Gameweek</p>
+            <p class="text-xs sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {$systemStore?.activeGameweek}
             </p>
-            <p class="text-gray-300 text-xs">
+            <p class="text-gray-300 text-xxs sm:text-sm">
               {$systemStore?.activeSeason.name}
             </p>
           </div>
@@ -113,26 +113,27 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Managers</p>
-            <p class="text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs sm:text-sm">Managers</p>
+            <p class="text-xs sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {managerCount}
             </p>
-            <p class="text-gray-300 text-xs">Total</p>
+            <p class="text-gray-300 text-xxs sm:text-sm">Total</p>
           </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Weekly Prize Pool</p>
-            <p class="text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 hidden md:block text-xs">Weekly Prize Pool</p>
+            <p class="text-gray-300 md:hidden text-xxs sm:text-sm">Weekly</p>
+            <p class="text-xs sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               0
             </p>
-            <p class="text-gray-300 text-xs">$FPL</p>
+            <p class="text-gray-300 text-xxs sm:text-sm">$FPL</p>
           </div>
         </div>
         <div
-          class="flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+          class="flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow m-2 md:m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 lg:mb-0">
             <p class="text-gray-300 text-xs">Next Game:</p>
@@ -269,12 +270,12 @@
       </div>
     </div>
 
-    <div class="mx-4">
+    <div class="mx-4 mb-8">
       <div class="bg-panel rounded-md mx-4">
         <ul
-          class="flex bg-light-gray px-4 pt-2 text-sm sm:text-base md:text-lg"
+          class="flex bg-light-gray px-1 md:px-4 pt-2 text-xxs sm:text-base md:text-lg border-b border-gray-700"
         >
-          <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
+          <li class={`mr-1 md:mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${
                 activeTab === "fixtures" ? "text-white" : "text-gray-400"
@@ -285,7 +286,7 @@
             </button>
           </li>
           {#if isLoggedIn}
-            <li class={`mr-4 ${activeTab === "points" ? "active-tab" : ""}`}>
+            <li class={`mr-1 md:mr-4 ${activeTab === "points" ? "active-tab" : ""}`}>
               <button
                 class={`p-2 ${
                   activeTab === "points" ? "text-white" : "text-gray-400"
@@ -297,7 +298,7 @@
             </li>
           {/if}
           <li
-            class={`mr-4 ${activeTab === "leaderboards" ? "active-tab" : ""}`}
+            class={`mr-1 md:mr-4 ${activeTab === "leaderboards" ? "active-tab" : ""}`}
           >
             <button
               class={`p-2 ${
@@ -309,7 +310,7 @@
             </button>
           </li>
           <li
-            class={`mr-4 ${activeTab === "league-table" ? "active-tab" : ""}`}
+            class={`mr-1 md:mr-4 ${activeTab === "league-table" ? "active-tab" : ""}`}
           >
             <button
               class={`p-2 ${

@@ -1046,7 +1046,7 @@
               {#each gridSetup as row, rowIndex}
                 {#if rowIndex === 0}
                   <div
-                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                    class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
                   >
                     <div class="w-1/3">Goalkeeper</div>
                     <div class="w-1/6">(c)</div>
@@ -1057,7 +1057,7 @@
                 {/if}
                 {#if rowIndex === 1}
                   <div
-                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                    class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
                   >
                     <div class="w-1/3">Defenders</div>
                     <div class="w-1/6">(c)</div>
@@ -1068,7 +1068,7 @@
                 {/if}
                 {#if rowIndex === 2}
                   <div
-                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                    class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
                   >
                     <div class="w-1/3">Midfielders</div>
                     <div class="w-1/6">(c)</div>
@@ -1079,7 +1079,7 @@
                 {/if}
                 {#if rowIndex === 3}
                   <div
-                    class="flex items-center justify-between py-2 bg-light-gray px-4"
+                    class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
                   >
                     <div class="w-1/3">Forwards</div>
                     <div class="w-1/6">(c)</div>
