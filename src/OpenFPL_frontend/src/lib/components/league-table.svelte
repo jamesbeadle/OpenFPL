@@ -97,27 +97,22 @@
       <div
         class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
       >
-        <div class="w-1/12 text-center mx-4">Pos</div>
-        <div class="w-3/12">Team</div>
-        <div class="w-1/12 text-center">P</div>
-        <div class="w-1/12 text-center">W</div>
-        <div class="w-1/12 text-center">D</div>
-        <div class="w-1/12 text-center">L</div>
-        <div class="w-1/12 text-center">GF</div>
-        <div class="w-1/12 text-center">GA</div>
-        <div class="w-1/12 text-center">GD</div>
-        <div class="w-1/12 text-center">PTS</div>
+        <div class="w-2/12 text-center">Pos</div>
+        <div class="w-6/12">Team</div>
+        <div class="w-1/12">P</div>
+        <div class="hidden sm:flex w-1/12 text-center">W</div>
+        <div class="hidden sm:flex w-1/12 text-center">D</div>
+        <div class="hidden sm:flex w-1/12 text-center">L</div>
+        <div class="hidden sm:flex w-1/12 text-center">GF</div>
+        <div class="hidden sm:flex w-1/12 text-center">GA</div>
+        <div class="w-1/12">GD</div>
+        <div class="w-1/12">PTS</div>
       </div>
 
       {#each tableData as team, idx}
-        <div
-          class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
-        >
-          <div class="w-1/12 text-center mx-4">{idx + 1}</div>
-          <a
-            class="w-3/12 flex items-center justify-start"
-            href={`/club?id=${team.id}`}
-          >
+        <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+          <div class="w-2/12 text-center">{idx + 1}</div>
+          <a class="w-6/12 flex items-center justify-start" href={`/club?id=${team.id}`}>
             <BadgeIcon
               primaryColour={team.primaryColourHex}
               secondaryColour={team.secondaryColourHex}
@@ -126,16 +121,16 @@
             />
             {team.friendlyName}
           </a>
-          <div class="w-1/12 text-center">{team.played}</div>
-          <div class="w-1/12 text-center">{team.wins}</div>
-          <div class="w-1/12 text-center">{team.draws}</div>
-          <div class="w-1/12 text-center">{team.losses}</div>
-          <div class="w-1/12 text-center">{team.goalsFor}</div>
-          <div class="w-1/12 text-center">{team.goalsAgainst}</div>
-          <div class="w-1/12 text-center">
+          <div class="w-1/12">{team.played}</div>
+          <div class="hidden sm:flex w-1/12">{team.wins}</div>
+          <div class="hidden sm:flex w-1/12">{team.draws}</div>
+          <div class="hidden sm:flex w-1/12">{team.losses}</div>
+          <div class="hidden sm:flex w-1/12">{team.goalsFor}</div>
+          <div class="hidden sm:flex w-1/12">{team.goalsAgainst}</div>
+          <div class="w-1/12">
             {team.goalsFor - team.goalsAgainst}
           </div>
-          <div class="w-1/12 text-center">{team.points}</div>
+          <div class="w-1/12">{team.points}</div>
         </div>
       {/each}
     </div>
