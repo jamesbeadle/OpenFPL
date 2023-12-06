@@ -111,24 +111,34 @@
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               Gameweek
             </p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold">
+            <p
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold"
+            >
               {$systemStore?.activeGameweek}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               {$systemStore?.activeSeason.name}
             </p>
           </div>
-          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
           <div class="flex-grow">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               Managers
             </p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold">
+            <p
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold"
+            >
               {managerCount}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
           </div>
-          <div class="flex-shrink-0 w-px bg-gray-400 self-stretch" style="min-width: 2px; min-height: 50px;"/>
+          <div
+            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
           <div class="flex-grow">
             <p
               class="text-gray-300 hidden md:block text-xxs xs:text-sm sm:text-base"
@@ -188,7 +198,9 @@
                     </span>
                   </a>
                 </div>
-                <div class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-1 xl:mt-6">
+                <div
+                  class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-1 xl:mt-6"
+                >
                   <p class="text-xs mt-2 mb-2 font-bold">v</p>
                 </div>
                 <div class="ml-4 lg:ml-1 xl:ml-4 mr-4 lg:mr-1 xl:mr-4 flex">
@@ -299,7 +311,9 @@
           mb-5 xs:mb-7 sm:mb-8 md:mb-0"
         >
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base w-full text-center lg:w-auto md:text-left">
+            <p
+              class="text-gray-300 text-xxs xs:text-sm sm:text-base w-full text-center lg:w-auto md:text-left"
+            >
               Next Game
             </p>
             <div class="flex flex-row">
@@ -329,7 +343,9 @@
                   </span>
                 </a>
               </div>
-              <div class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6">
+              <div
+                class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6"
+              >
                 <p class="text-xs mt-2 mb-2 font-bold">v</p>
               </div>
               <div class="ml-4 lg:ml-1 xl:ml-4 mr-4 lg:mr-1 xl:mr-4 flex">
