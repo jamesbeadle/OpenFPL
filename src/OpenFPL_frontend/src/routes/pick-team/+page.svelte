@@ -610,61 +610,61 @@
   }
 
   function autofillTeam() {
-  if (!$fantasyTeam || !$playerStore) return;
+    if (!$fantasyTeam || !$playerStore) return;
 
-  let updatedFantasyTeam = {
-    ...$fantasyTeam,
-    playerIds: Uint16Array.from($fantasyTeam.playerIds),
-  };
-  let remainingBudget = $bankBalance;
+    let updatedFantasyTeam = {
+      ...$fantasyTeam,
+      playerIds: Uint16Array.from($fantasyTeam.playerIds),
+    };
+    let remainingBudget = $bankBalance;
 
-  const teamCounts = new Map<number, number>();
-  updatedFantasyTeam.playerIds.forEach((playerId) => {
-    if (playerId > 0) {
-      const player = $playerStore.find((p) => p.id === playerId);
-      if (player) {
-        teamCounts.set(
-          player.teamId,
-          (teamCounts.get(player.teamId) || 0) + 1
-        );
+    const teamCounts = new Map<number, number>();
+    updatedFantasyTeam.playerIds.forEach((playerId) => {
+      if (playerId > 0) {
+        const player = $playerStore.find((p) => p.id === playerId);
+        if (player) {
+          teamCounts.set(
+            player.teamId,
+            (teamCounts.get(player.teamId) || 0) + 1
+          );
+        }
       }
-    }
-  });
+    });
 
-  const formationPositions = formations[selectedFormation].positions;
+    const formationPositions = formations[selectedFormation].positions;
 
-  formationPositions.forEach((position, index) => {
-    if (remainingBudget <= 0) return;
-    if (updatedFantasyTeam.playerIds[index] > 0) return; // Skip positions already filled
+    formationPositions.forEach((position, index) => {
+      if (remainingBudget <= 0) return;
+      if (updatedFantasyTeam.playerIds[index] > 0) return; // Skip positions already filled
 
-    const availablePlayers = $playerStore.filter(
-      (player) =>
-        player.position === position &&
-        !updatedFantasyTeam.playerIds.includes(player.id) &&
-        (teamCounts.get(player.teamId) || 0) < 2 // Check for team player limit
-    ).sort((a, b) => Number(a.value) - Number(b.value));
+      const availablePlayers = $playerStore
+        .filter(
+          (player) =>
+            player.position === position &&
+            !updatedFantasyTeam.playerIds.includes(player.id) &&
+            (teamCounts.get(player.teamId) || 0) < 2 // Check for team player limit
+        )
+        .sort((a, b) => Number(a.value) - Number(b.value));
 
-    for (let player of availablePlayers) {
-      const potentialNewBudget = remainingBudget - Number(player.value);
-      if (potentialNewBudget >= 0) {
-        updatedFantasyTeam.playerIds[index] = player.id;
-        remainingBudget = potentialNewBudget;
-        teamCounts.set(
-          player.teamId,
-          (teamCounts.get(player.teamId) || 0) + 1
-        );
-        break; // Found a suitable player, break the loop
+      for (let player of availablePlayers) {
+        const potentialNewBudget = remainingBudget - Number(player.value);
+        if (potentialNewBudget >= 0) {
+          updatedFantasyTeam.playerIds[index] = player.id;
+          remainingBudget = potentialNewBudget;
+          teamCounts.set(
+            player.teamId,
+            (teamCounts.get(player.teamId) || 0) + 1
+          );
+          break; // Found a suitable player, break the loop
+        }
       }
-    }
-  });
+    });
 
-  if (remainingBudget >= 0) {
-    fantasyTeam.set(updatedFantasyTeam);
-    bankBalance.set(remainingBudget);
+    if (remainingBudget >= 0) {
+      fantasyTeam.set(updatedFantasyTeam);
+      bankBalance.set(remainingBudget);
+    }
   }
-}
-
-
 
   async function saveFantasyTeam() {
     loadingText.set("Saving Fantasy Team");
@@ -690,7 +690,11 @@
     }
 
     try {
-      await managerStore.saveFantasyTeam(team!, activeGameweek, $bonusUsedInSession);
+      await managerStore.saveFantasyTeam(
+        team!,
+        activeGameweek,
+        $bonusUsedInSession
+      );
       toastsShow({
         text: "Team saved successully!",
         level: "success",

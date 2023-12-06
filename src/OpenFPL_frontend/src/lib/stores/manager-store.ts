@@ -87,12 +87,11 @@ function createManagerStore() {
     bonusUsedInSession: boolean
   ): Promise<any> {
     try {
-      
       let bonusPlayed = 0;
       let bonusPlayerId = 0;
       let bonusTeamId = 0;
 
-      if(bonusUsedInSession){
+      if (bonusUsedInSession) {
         bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
         bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
         bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
