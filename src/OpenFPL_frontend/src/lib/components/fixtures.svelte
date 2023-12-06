@@ -115,12 +115,12 @@
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}
             <div
-              class={`flex items-center justify-between py-2 border-b border-gray-700  ${
+              class={`flex items-center py-2 border-b border-gray-700  ${
                 fixture.status < 3 ? "text-gray-400" : "text-white"
               }`}
             >
-              <div class="flex w-3/12 space-x-4 justify-center">
-                <div class="w-10 items-center justify-center">
+              <div class="flex md:w-3/12 w-2/6 space-x-1 md:space-x-4 justify-center items-center">
+                <div class="w-4 md:w-10 items-center justify-center">
                   <a href={`/club?id=${fixture.homeTeamId}`}>
                     <BadgeIcon
                       primaryColour={homeTeam ? homeTeam.primaryColourHex : ""}
@@ -131,8 +131,8 @@
                     />
                   </a>
                 </div>
-                <span class="font-bold text-lg">v</span>
-                <div class="w-10 items-center justify-center">
+                <span class="font-bold text-xxs md:text-lg">v</span>
+                <div class="w-4 md:w-10 items-center justify-center">
                   <a href={`/club?id=${fixture.awayTeamId}`}>
                     <BadgeIcon
                       primaryColour={awayTeam ? awayTeam.primaryColourHex : ""}
@@ -145,18 +145,14 @@
                 </div>
               </div>
 
-              <div class="flex w-2/12 lg:justify-center">
+              <div class="md:w-2/12 hidden md:flex lg:justify-center">
                 <span class="text-sm md:text-lg ml-4 md:ml-0 text-left"
                   >{formatUnixTimeToTime(Number(fixture.kickOff))}</span
                 >
               </div>
 
-              <div
-                class="flex items-center space-x-10 w-4/12 lg:justify-center"
-              >
-                <div
-                  class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px] text-xs md:text-base"
-                >
+              <div class="flex w-4/6 items-center md:space-x-10 md:w-4/12 lg:justify-center">
+                <div class="flex flex-col min-w-[125px] md:min-w-[200px] lg:min-w-[120px] lg:min-w-[200px] text-xxs md:text-base">
                   <a href={`/club?id=${fixture.homeTeamId}`}
                     >{homeTeam ? homeTeam.friendlyName : ""}</a
                   >
@@ -164,15 +160,13 @@
                     >{awayTeam ? awayTeam.friendlyName : ""}</a
                   >
                 </div>
-                <div
-                  class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px] text-xs md:text-base"
-                >
+                <div class="flex flex-col text-xxs md:text-base">
                   <span>{fixture.status < 3 ? "-" : fixture.homeGoals}</span>
                   <span>{fixture.status < 3 ? "-" : fixture.awayGoals}</span>
                 </div>
               </div>
 
-              <div class="flex w-3/12">
+              <div class="hidden md:flex w-3/12 ">
                 {#if fixture.status == 0}<div
                     class="w-[4px] bg-gray-400 mr-2 unplayed-divider"
                   />{/if}
@@ -186,10 +180,9 @@
                     class="w-[4px] bg-gray-400 mr-2 verified-divider"
                   />{/if}
 
-                <span
-                  class="text-sm md:text-lg ml-4 md:ml-0 text-left min-w-[200px]"
-                  >{getFixtureStatusText(fixture.status)}</span
-                >
+                <span class="md:text-lg ml-4 md:ml-0 text-left min-w-[200px] text-xxs md:text-base">
+                  {getFixtureStatusText(fixture.status)}
+                </span>
               </div>
             </div>
           {/each}
