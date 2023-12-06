@@ -100,7 +100,7 @@
     <LoadingIcon />
   {:else}
     <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
-      <div class="flex flex-col lg:flex-row lg:space-x-2">
+      <div class="flex flex-col lg:flex-row lg:space-x-8">
         <div
           class="flex justify-start items-center text-white rounded-md bg-panel
           space-x-2 sm:space-x-3 md:space-x-4 flex-grow
@@ -154,12 +154,6 @@
             </p>
           </div>
         </div>
-
-
-
-
-
-
 
         <div class="md:hidden lg:flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow bg-panel p-4 rounded-md">
           <div class="flex-grow mb-3 md:mb-4 lg:mb-0">
@@ -280,8 +274,6 @@
           </div>
         </div>
 
-
-
         <div
           class="hidden md:flex lg:hidden justify-start items-center text-white rounded-md bg-panel
           space-x-2 sm:space-x-3 md:space-x-4 flex-grow
@@ -368,7 +360,7 @@
               >
             </p>
             <p class="lg:hidden xl:flex text-gray-300 text-xxs xs:text-sm sm:text-base">
-              {nextFixtureDate} | {nextFixtureTime}
+              {nextFixtureDate}
             </p>
           </div>
           <div
@@ -400,8 +392,6 @@
             </p>
           </div>
         </div>
-
-        
         
       </div>
     </div>
