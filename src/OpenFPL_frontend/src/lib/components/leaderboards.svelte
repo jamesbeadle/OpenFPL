@@ -272,7 +272,9 @@
           {/if}
         </div>
       </div>
-      <div class="flex flex-col space-y-4 mt-4 text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl">
+      <div
+        class="flex flex-col space-y-4 mt-4 text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl"
+      >
         <div class="overflow-x-auto flex-1">
           <div
             class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
@@ -285,8 +287,12 @@
 
           {#if leaderboard && leaderboard.entries.length > 0}
             {#each leaderboard.entries as entry}
-              <a href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}>
-                <div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer">
+              <a
+                href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}
+              >
+                <div
+                  class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
+                >
                   <div class="w-2/12 xs:w-2/12 px-4">{entry.positionText}</div>
                   <div class="w-5/12 xs:w-4/12 px-4">
                     {entry.principalId === entry.username
@@ -294,12 +300,16 @@
                       : entry.username}
                   </div>
                   <div class="w-2/12 xs:w-2/12 px-4">{entry.points}</div>
-                  <div class="w-3/12 xs:w-4/12 flex items-center justify-center xs:justify-center">
+                  <div
+                    class="w-3/12 xs:w-4/12 flex items-center justify-center xs:justify-center"
+                  >
                     <span class="flex items-center">
                       <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" />
-                      <span class="hidden xs:flex ml-1 lg:ml-2">View Details</span>
+                      <span class="hidden xs:flex ml-1 lg:ml-2"
+                        >View Details</span
+                      >
                     </span>
-                </div>
+                  </div>
                 </div>
               </a>
             {/each}
