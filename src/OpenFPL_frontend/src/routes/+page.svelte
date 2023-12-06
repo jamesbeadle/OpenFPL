@@ -101,13 +101,19 @@
   {:else}
     <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
       <div class="flex flex-col lg:flex-row lg:space-x-2">
-        <div class="flex justify-start items-center text-white rounded-md bg-panel 
-          space-x-2 sm:space-x-3 md:space-x-4 flex-grow 
-          p-2 xs:p-3 sm:p-4  
-          mb-5 xs:mb-7 sm:mb-8 lg:mb-0">
+        <div
+          class="flex justify-start items-center text-white rounded-md bg-panel
+          space-x-2 sm:space-x-3 md:space-x-4 flex-grow
+          p-2 xs:p-3 sm:p-4
+          mb-5 xs:mb-7 sm:mb-8 lg:mb-0"
+        >
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Gameweek</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              Gameweek
+            </p>
+            <p
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold"
+            >
               {$systemStore?.activeGameweek}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
@@ -119,8 +125,12 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Managers</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              Managers
+            </p>
+            <p
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold"
+            >
               {managerCount * 10000000}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
@@ -130,21 +140,37 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 hidden md:block text-xxs xs:text-sm sm:text-base">
+            <p
+              class="text-gray-300 hidden md:block text-xxs xs:text-sm sm:text-base"
+            >
               Weekly Prize Pool
             </p>
-            <p class="text-gray-300 md:hidden text-xxs xs:text-sm sm:text-base">Weekly</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold">5000</p>
-            <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">$FPL</p>
+            <p class="text-gray-300 md:hidden text-xxs xs:text-sm sm:text-base">
+              Weekly
+            </p>
+            <p
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg mt-2 mb-2 font-bold"
+            >
+              5000
+            </p>
+            <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">
+              $FPL
+            </p>
           </div>
         </div>
-        <div class="flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow bg-panel p-4 rounded-md">
+        <div
+          class="flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow bg-panel p-4 rounded-md"
+        >
           <div class="flex-grow mb-3 md:mb-4 lg:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base w-full text-center lg:w-auto lg:text-left">
+            <p
+              class="text-gray-300 text-xxs xs:text-sm sm:text-base w-full text-center lg:w-auto lg:text-left"
+            >
               Next Game
             </p>
             <div class="flex justify-center">
-              <div class="flex justify-center items-center mb-2 text-xxs xs:text-sm sm:text-base">
+              <div
+                class="flex justify-center items-center mb-2 text-xxs xs:text-sm sm:text-base"
+              >
                 <div class="ml-4 lg:ml-1 xl:ml-4 mr-4 lg:mr-1 xl:mr-4 flex">
                   <a
                     class="flex flex-col items-center justify-center mt-6 lg:mt-3 xl:mt-6"
@@ -171,7 +197,9 @@
                     </span>
                   </a>
                 </div>
-                <div class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6">
+                <div
+                  class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6"
+                >
                   <p class="text-xs mt-2 mb-2 font-bold">v</p>
                 </div>
                 <div class="ml-4 lg:ml-1 xl:ml-4 mr-4 lg:mr-1 xl:mr-4 flex">
@@ -209,7 +237,9 @@
           />
 
           <div class="flex-grow mb-4 lg:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 lg:mt-0">
+            <p
+              class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 lg:mt-0"
+            >
               Kick Off
             </p>
             <div class="flex">
@@ -225,10 +255,14 @@
                 >
               </p>
             </div>
-            <p class="lg:hidden xl:flex text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p
+              class="lg:hidden xl:flex text-gray-300 text-xxs xs:text-sm sm:text-base"
+            >
               {nextFixtureDate} | {nextFixtureTime}
             </p>
-            <p class="hidden lg:flex xl:hidden text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p
+              class="hidden lg:flex xl:hidden text-gray-300 text-xxs xs:text-sm sm:text-base"
+            >
               {nextFixtureDateSmall}
             </p>
           </div>
@@ -237,7 +271,9 @@
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 lg:mt-0">
+            <p
+              class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 lg:mt-0"
+            >
               GW {$systemStore?.focusGameweek} High Score
             </p>
             <p

@@ -138,11 +138,17 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">{team?.name}</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              {team?.name}
+            </p>
+            <p
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+            >
               {selectedPlayer?.lastName}
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base flex items-center">
+            <p
+              class="text-gray-300 text-xxs xs:text-sm sm:text-base flex items-center"
+            >
               <svelte:component
                 this={getFlagComponent(selectedPlayer?.nationality ?? "")}
                 class="w-4 h-4 mr-1"
@@ -156,10 +162,14 @@
           />
           <div class="flex-grow">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Value</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+            >
               £{(Number(selectedPlayer?.value ?? 0) / 4).toFixed(2)}m
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Weekly Change: 0%</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              Weekly Change: 0%
+            </p>
           </div>
           <div
             class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
@@ -167,7 +177,9 @@
           />
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Age</p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+            >
               {calculateAgeFromNanoseconds(
                 Number(selectedPlayer?.dateOfBirth ?? 0)
               )}
@@ -181,7 +193,9 @@
           class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Next Game:</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              Next Game:
+            </p>
             <div class="flex justify-center mb-2 mt-2">
               <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
@@ -229,17 +243,33 @@
             </div>
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
-                <p class="text-gray-300 text-xxs xs:text-sm sm:text-base text-center">
-                  <a href={`/club?id=${ nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1 }`}>
-                    {nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ""}
+                <p
+                  class="text-gray-300 text-xxs xs:text-sm sm:text-base text-center"
+                >
+                  <a
+                    href={`/club?id=${
+                      nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                    }`}
+                  >
+                    {nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.abbreviatedName
+                      : ""}
                   </a>
                 </p>
               </div>
               <div class="w-v ml-2 mr-2" />
               <div class="w-10 ml-4">
-                <p class="text-gray-300 text-xxs xs:text-sm sm:text-base text-xs text-center">
-                  <a href={`/club?id=${ nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1 }`}>
-                    {nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ""}
+                <p
+                  class="text-gray-300 text-xxs xs:text-sm sm:text-base text-xs text-center"
+                >
+                  <a
+                    href={`/club?id=${
+                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                    }`}
+                  >
+                    {nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.abbreviatedName
+                      : ""}
                   </a>
                 </p>
               </div>
@@ -250,9 +280,15 @@
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 md:mt-0">Kick Off:</p>
+            <p
+              class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 md:mt-0"
+            >
+              Kick Off:
+            </p>
             <div class="flex">
-              <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+              <p
+                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+              >
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
                 : {countdownHours}<span class="text-gray-300 text-xs ml-1"
                   >h</span
