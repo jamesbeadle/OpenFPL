@@ -96,13 +96,13 @@
   {:else}
     <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
       <div class="flex flex-col lg:flex-row">
-        <div class="flex justify-start items-center text-white space-x-4 flex-grow bg-panel p-4 rounded-md mb-5 xs:mb-7 sm:mb-8 lg:mb-0">
+        <div class="flex justify-start items-center text-white space-x-2 sm:space-x-3 md:space-x-4 flex-grow bg-panel p-2 xs:p-3 sm:p-4 rounded-md mb-5 xs:mb-7 sm:mb-8 lg:mb-0">
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs sm:text-sm">Gameweek</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Gameweek</p>
             <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {$systemStore?.activeGameweek}
             </p>
-            <p class="text-gray-300 text-xxs sm:text-sm">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               {$systemStore?.activeSeason.name}
             </p>
           </div>
@@ -111,11 +111,11 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs sm:text-sm">Managers</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Managers</p>
             <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {managerCount}
             </p>
-            <p class="text-gray-300 text-xxs sm:text-sm">Total</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
           </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
@@ -125,19 +125,19 @@
             <p class="text-gray-300 hidden md:block text-xs">
               Weekly Prize Pool
             </p>
-            <p class="text-gray-300 md:hidden text-xxs sm:text-sm">Weekly</p>
+            <p class="text-gray-300 md:hidden text-xxs xs:text-sm sm:text-base">Weekly</p>
             <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">0</p>
-            <p class="text-gray-300 text-xxs sm:text-sm">$FPL</p>
+            <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">$FPL</p>
           </div>
         </div>
         <div class="flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow bg-panel p-4 rounded-md">
           <div class="flex-grow mb-3 md:mb-4 lg:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-xs w-full text-center md:w-auto md:text-left">
-              Next Game:
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base w-full text-center lg:w-auto lg:text-left">
+              Next Game
             </p>
             <div class="flex justify-center">
               <div
-                class="flex justify-center items-center mb-2 text-xxs sm:text-xs"
+                class="flex justify-center items-center mb-2 text-xxs xs:text-sm sm:text-base"
               >
                 <div class="w-10 ml-4 mr-4 flex">
                   <a
@@ -204,7 +204,7 @@
 
           <div class="flex-grow mb-4 lg:mb-0">
             <p class="text-gray-300 text-xxs sm:text-xs mt-4 lg:mt-0">
-              Kick Off:
+              Kick Off
             </p>
             <div class="flex">
               <p
