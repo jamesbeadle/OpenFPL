@@ -69,7 +69,9 @@
           >
         </div>
 
-        <ul class="flex rounded-t-lg bg-light-gray px-4 pt-2 border-b border-gray-700">
+        <ul
+          class="flex rounded-t-lg bg-light-gray px-4 pt-2 border-b border-gray-700"
+        >
           <li
             class={`mr-4 text-xs md:text-base ${
               activeTab === "fixtures" ? "active-tab" : ""

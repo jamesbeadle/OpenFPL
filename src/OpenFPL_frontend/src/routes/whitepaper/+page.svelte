@@ -20,7 +20,9 @@
     <h1 class="p-4 mx-1 text-2xl">OpenFPL Whitepaper</h1>
   </div>
   <div class="bg-panel rounded-lg m-4">
-    <ul class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2">
+    <ul
+      class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"
+    >
       <li
         class={`mr-4 text-xs md:text-base ${
           activeTab === "vision" ? "active-tab" : ""

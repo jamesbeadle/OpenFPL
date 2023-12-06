@@ -119,7 +119,9 @@
                 fixture.status < 3 ? "text-gray-400" : "text-white"
               }`}
             >
-              <div class="flex md:w-3/12 w-2/6 space-x-1 md:space-x-4 justify-center items-center">
+              <div
+                class="flex md:w-3/12 w-2/6 space-x-1 md:space-x-4 justify-center items-center"
+              >
                 <div class="w-4 md:w-10 items-center justify-center">
                   <a href={`/club?id=${fixture.homeTeamId}`}>
                     <BadgeIcon
@@ -151,8 +153,12 @@
                 >
               </div>
 
-              <div class="flex w-4/6 items-center md:space-x-10 md:w-4/12 lg:justify-center">
-                <div class="flex flex-col min-w-[125px] md:min-w-[200px] lg:min-w-[120px] lg:min-w-[200px] text-xxs md:text-base">
+              <div
+                class="flex w-4/6 items-center md:space-x-10 md:w-4/12 lg:justify-center"
+              >
+                <div
+                  class="flex flex-col min-w-[125px] md:min-w-[200px] lg:min-w-[120px] lg:min-w-[200px] text-xxs md:text-base"
+                >
                   <a href={`/club?id=${fixture.homeTeamId}`}
                     >{homeTeam ? homeTeam.friendlyName : ""}</a
                   >
@@ -166,7 +172,7 @@
                 </div>
               </div>
 
-              <div class="hidden md:flex w-3/12 ">
+              <div class="hidden md:flex w-3/12">
                 {#if fixture.status == 0}<div
                     class="w-[4px] bg-gray-400 mr-2 unplayed-divider"
                   />{/if}
@@ -180,7 +186,9 @@
                     class="w-[4px] bg-gray-400 mr-2 verified-divider"
                   />{/if}
 
-                <span class="md:text-lg ml-4 md:ml-0 text-left min-w-[200px] text-xxs md:text-base">
+                <span
+                  class="md:text-lg ml-4 md:ml-0 text-left min-w-[200px] text-xxs md:text-base"
+                >
                   {getFixtureStatusText(fixture.status)}
                 </span>
               </div>

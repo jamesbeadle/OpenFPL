@@ -124,11 +124,11 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 hidden md:block text-xs">Weekly Prize Pool</p>
-            <p class="text-gray-300 md:hidden text-xxs sm:text-sm">Weekly</p>
-            <p class="text-xs sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
-              0
+            <p class="text-gray-300 hidden md:block text-xs">
+              Weekly Prize Pool
             </p>
+            <p class="text-gray-300 md:hidden text-xxs sm:text-sm">Weekly</p>
+            <p class="text-xs sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">0</p>
             <p class="text-gray-300 text-xxs sm:text-sm">$FPL</p>
           </div>
         </div>
@@ -136,12 +136,18 @@
           class="flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow m-2 md:m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-3 md:mb-4 lg:mb-0">
-            <p class="text-gray-300 text-xxs sm:text-xs w-full text-center md:w-auto md:text-left">Next Game:</p>
+            <p
+              class="text-gray-300 text-xxs sm:text-xs w-full text-center md:w-auto md:text-left"
+            >
+              Next Game:
+            </p>
             <div class="flex justify-center">
-              <div class="flex justify-center items-center mb-2 text-xxs sm:text-xs">
+              <div
+                class="flex justify-center items-center mb-2 text-xxs sm:text-xs"
+              >
                 <div class="w-10 ml-4 mr-4 flex">
                   <a
-                    class='flex flex-col items-center justify-center mt-6'
+                    class="flex flex-col items-center justify-center mt-6"
                     href={`/club?id=${
                       nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
                     }`}
@@ -170,7 +176,7 @@
                 </div>
                 <div class="w-10 ml-4 flex">
                   <a
-                    class='flex flex-col items-center justify-center mt-6'
+                    class="flex flex-col items-center justify-center mt-6"
                     href={`/club?id=${
                       nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
                     }`}
@@ -203,9 +209,13 @@
           />
 
           <div class="flex-grow mb-4 lg:mb-0">
-            <p class="text-gray-300 text-xxs sm:text-xs mt-4 lg:mt-0">Kick Off:</p>
+            <p class="text-gray-300 text-xxs sm:text-xs mt-4 lg:mt-0">
+              Kick Off:
+            </p>
             <div class="flex">
-              <p class="text-base md:text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+              <p
+                class="text-base md:text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+              >
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
                 : {countdownHours}<span class="text-gray-300 text-xs ml-1"
                   >h</span
@@ -253,12 +263,16 @@
       </div>
     </div>
 
-    <div class="mx-4 mb-8">
-      <div class="bg-panel rounded-md mx-4">
+    <div class="m-1 md:4 mb-8">
+      <div class="bg-panel rounded-md mx-2 md:mx-8">
         <ul
           class="flex bg-light-gray px-1 md:px-4 pt-2 text-xxs sm:text-base md:text-lg border-b border-gray-700"
         >
-          <li class={`mr-1 md:mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
+          <li
+            class={`mr-1 md:mr-4 ${
+              activeTab === "fixtures" ? "active-tab" : ""
+            }`}
+          >
             <button
               class={`p-2 ${
                 activeTab === "fixtures" ? "text-white" : "text-gray-400"
@@ -269,7 +283,11 @@
             </button>
           </li>
           {#if isLoggedIn}
-            <li class={`mr-1 md:mr-4 ${activeTab === "points" ? "active-tab" : ""}`}>
+            <li
+              class={`mr-1 md:mr-4 ${
+                activeTab === "points" ? "active-tab" : ""
+              }`}
+            >
               <button
                 class={`p-2 ${
                   activeTab === "points" ? "text-white" : "text-gray-400"
@@ -281,7 +299,9 @@
             </li>
           {/if}
           <li
-            class={`mr-1 md:mr-4 ${activeTab === "leaderboards" ? "active-tab" : ""}`}
+            class={`mr-1 md:mr-4 ${
+              activeTab === "leaderboards" ? "active-tab" : ""
+            }`}
           >
             <button
               class={`p-2 ${
@@ -293,7 +313,9 @@
             </button>
           </li>
           <li
-            class={`mr-1 md:mr-4 ${activeTab === "league-table" ? "active-tab" : ""}`}
+            class={`mr-1 md:mr-4 ${
+              activeTab === "league-table" ? "active-tab" : ""
+            }`}
           >
             <button
               class={`p-2 ${

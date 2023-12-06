@@ -217,7 +217,9 @@
           >
         </div>
         <div class="flex w-full">
-          <ul class="flex bg-light-gray px-4 pt-2 w-full mt-4 border-b border-gray-700">
+          <ul
+            class="flex bg-light-gray px-4 pt-2 w-full mt-4 border-b border-gray-700"
+          >
             <li
               class={`mr-4 text-xs md:text-base ${
                 activeTab === "home" ? "active-tab" : ""
