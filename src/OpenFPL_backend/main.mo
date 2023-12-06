@@ -56,19 +56,19 @@ actor Self {
 
   private let oneHour = 1_000_000_000 * 60 * 60;
 
+  /*
   //LOCALDEVONLY
   let CANISTER_IDS = {
     token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
     player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
   };
-  /*
+  */
   //Live canisters
   let CANISTER_IDS = {
     player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
     governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
   };
-  */
 
   let tokenCanister = actor (CANISTER_IDS.token_canister) : actor {
     icrc1_name : () -> async Text;
@@ -1633,19 +1633,13 @@ actor Self {
   };
 
   /* Admin only functions to be removed after the SNS sale.*/
-  let adminPrincipal = "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB Live
+  //let adminPrincipal = "opyzn-r7zln-jwgvb-tx75c-ncekh-xhvje-epcj7-saonq-z732m-zi4mm-qae"; //JB Live
   /*LOCALDEVONLY*/
-  //let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe"; //JB Local
+  let adminPrincipal = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe"; //JB Local
 
   public shared ({ caller }) func savePlayerEvents(fixtureId : T.FixtureId, allPlayerEvents : [T.PlayerEventData]) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     assert Principal.toText(caller) == adminPrincipal;
-
-    Debug.print(debug_show "fixtureId");
-    Debug.print(debug_show fixtureId);
-
-    Debug.print(debug_show "allPlayerEvents");
-    Debug.print(debug_show allPlayerEvents);
 
     let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
 
@@ -1656,12 +1650,6 @@ actor Self {
     let activeSeasonId = seasonManager.getActiveSeasonId();
     let activeGameweek = seasonManager.getActiveGameweek();
 
-    Debug.print(debug_show "activeSeasonId");
-    Debug.print(debug_show activeSeasonId);
-
-    Debug.print(debug_show "activeGameweek");
-    Debug.print(debug_show activeGameweek);
-
     let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
 
     if (fixture.status != 2) {
@@ -1671,9 +1659,6 @@ actor Self {
     let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(allPlayerEvents);
 
     let allPlayers = await playerCanister.getAllPlayers();
-
-    Debug.print(debug_show "allPlayers");
-    Debug.print(debug_show allPlayers);
 
     let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
     let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
@@ -1748,11 +1733,6 @@ actor Self {
 
     let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
     let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
-    Debug.print(debug_show "totalHomeScored");
-    Debug.print(debug_show totalHomeScored);
-
-    Debug.print(debug_show "totalAwayScored");
-    Debug.print(debug_show totalAwayScored);
 
     if (totalHomeScored == 0) {
       //add away team clean sheets
