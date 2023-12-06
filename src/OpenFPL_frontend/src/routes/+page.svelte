@@ -96,10 +96,13 @@
   {:else}
     <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
       <div class="flex flex-col lg:flex-row">
-        <div class="flex justify-start items-center text-white space-x-2 sm:space-x-3 md:space-x-4 flex-grow bg-panel p-2 xs:p-3 sm:p-4 rounded-md mb-5 xs:mb-7 sm:mb-8 lg:mb-0">
+        <div class="flex justify-start items-center text-white rounded-md bg-panel 
+          space-x-2 sm:space-x-3 md:space-x-4 flex-grow 
+          p-2 xs:p-3 sm:p-4  
+          mb-5 xs:mb-7 sm:mb-8 lg:mb-0">
           <div class="flex-grow">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Gameweek</p>
-            <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {$systemStore?.activeGameweek}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
@@ -112,8 +115,8 @@
           />
           <div class="flex-grow">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Managers</p>
-            <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
-              {managerCount}
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+              {managerCount * 10000000}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
           </div>
@@ -122,11 +125,11 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 hidden md:block text-xs">
+            <p class="text-gray-300 hidden md:block text-xxs xs:text-sm sm:text-base">
               Weekly Prize Pool
             </p>
             <p class="text-gray-300 md:hidden text-xxs xs:text-sm sm:text-base">Weekly</p>
-            <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">0</p>
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">5000</p>
             <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">$FPL</p>
           </div>
         </div>
@@ -203,12 +206,12 @@
           />
 
           <div class="flex-grow mb-4 lg:mb-0">
-            <p class="text-gray-300 text-xxs sm:text-xs mt-4 lg:mt-0">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 lg:mt-0">
               Kick Off
             </p>
             <div class="flex">
               <p
-                class="text-base md:text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
               >
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
                 : {countdownHours}<span class="text-gray-300 text-xs ml-1"
@@ -219,7 +222,7 @@
                 >
               </p>
             </div>
-            <p class="text-gray-300 text-xxs sm:text-xs">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               {nextFixtureDate} | {nextFixtureTime}
             </p>
           </div>
@@ -228,11 +231,11 @@
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs sm:text-xs mt-4 lg:mt-0">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 lg:mt-0">
               GW {$systemStore?.focusGameweek} High Score
             </p>
             <p
-              class="text-base sm:text-2xl sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold max-w-[200px] truncate"
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold max-w-[200px] truncate"
             >
               {#if weeklyLeader}
                 <a
@@ -245,7 +248,7 @@
                 -
               {/if}
             </p>
-            <p class="text-gray-300 text-xxs sm:text-xs">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               {#if weeklyLeader}
                 {weeklyLeader.points} points
               {:else}

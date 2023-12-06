@@ -109,7 +109,7 @@
           class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow flex flex-col items-center">
-            <p class="text-gray-300 text-xs">{team?.friendlyName}</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">{team?.friendlyName}</p>
             <div class="py-2 flex space-x-4">
               <BadgeIcon
                 className="h-10"
@@ -124,29 +124,29 @@
                 thirdColour={team?.thirdColourHex}
               />
             </div>
-            <p class="text-gray-300 text-xs">{team?.abbreviatedName}</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">{team?.abbreviatedName}</p>
           </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Players</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Players</p>
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {$playerStore.filter((x) => x.teamId == id).length}
             </p>
-            <p class="text-gray-300 text-xs">Total</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
           </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">League Position</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">League Position</p>
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {getTeamPosition(id)}
             </p>
-            <p class="text-gray-300 text-xs">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               {$systemStore?.activeSeason.name}
             </p>
           </div>
@@ -155,11 +155,11 @@
           class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xs">League Points</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">League Points</p>
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {getTeamPoints(id)}
             </p>
-            <p class="text-gray-300 text-xs">Total</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
           </div>
           <div
             class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
@@ -167,7 +167,7 @@
           />
 
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xs">Next Game:</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Next Game:</p>
             <div class="flex justify-center mb-2 mt-2">
               <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
@@ -195,22 +195,16 @@
             </div>
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
-                <p class="text-gray-300 text-xs text-center">
-                  <a
-                    class="text-gray-300 text-xs text-center"
-                    href={`/club?id=${nextFixtureHomeTeam?.id}`}
-                  >
+                <p class="text-gray-300 text-xxs xs:text-sm sm:text-base text-center">
+                  <a href={`/club?id=${nextFixtureHomeTeam?.id}`}>
                     {nextFixtureHomeTeam?.abbreviatedName}
                   </a>
                 </p>
               </div>
               <div class="w-v ml-2 mr-2" />
               <div class="w-10 ml-4">
-                <p class="text-gray-300 text-xs text-center">
-                  <a
-                    class="text-gray-300 text-xs text-center"
-                    href={`/club?id=${nextFixtureAwayTeam?.id}`}
-                  >
+                <p class="text-gray-300 text-xxs xs:text-sm sm:text-base text-center">
+                  <a href={`/club?id=${nextFixtureAwayTeam?.id}`}>
                     {nextFixtureAwayTeam?.abbreviatedName}
                   </a>
                 </p>
@@ -222,15 +216,15 @@
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs mt-4 md:mt-0">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 md:mt-0">
               Highest Scoring Player
             </p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               <a href={`/player?id=${highestScoringPlayer?.id}`}
                 >{highestScoringPlayer?.lastName}</a
               >
             </p>
-            <p class="text-gray-300 text-xs">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               {getPositionText(highestScoringPlayer?.position ?? 0)}
               ({highestScoringPlayer?.totalPoints})
             </p>

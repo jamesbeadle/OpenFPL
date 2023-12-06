@@ -123,20 +123,20 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Manager</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Manager</p>
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {displayName}
             </p>
-            <p class="text-gray-300 text-xs">Joined: {joinedDate}</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Joined: {joinedDate}</p>
           </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Favourite Team</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Favourite Team</p>
             <p
-              class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold flex items-center"
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold flex items-center"
             >
               <BadgeIcon
                 className="w-7 mr-2"
@@ -146,7 +146,7 @@
               />
               {favouriteTeam?.abbreviatedName ?? "-"}
             </p>
-            <p class="text-gray-300 text-xs">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               {favouriteTeam?.name ?? "Not Set"}
             </p>
           </div>
@@ -155,24 +155,24 @@
           class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">Leaderboards</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Leaderboards</p>
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {manager.weeklyPosition}
               <span class="text-xs"
                 >({manager.weeklyPoints.toLocaleString()})</span
               >
             </p>
-            <p class="text-gray-300 text-xs">Weekly</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Weekly</p>
           </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               {favouriteTeam?.friendlyName ?? "Not Entered"}
             </p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {manager.monthlyPosition}
               <span class="text-xs"
                 >({favouriteTeam
@@ -180,21 +180,21 @@
                   : "-"})</span
               >
             </p>
-            <p class="text-gray-300 text-xs">Club</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Club</p>
           </div>
           <div
             class="flex-shrink-0 w-px bg-gray-400 self-stretch"
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xs">{selectedSeason}</p>
-            <p class="text-2xl sm:text-3xl md:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">{selectedSeason}</p>
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {manager.seasonPosition}
               <span class="text-xs"
                 >({manager.seasonPoints.toLocaleString()})</span
               >
             </p>
-            <p class="text-gray-300 text-xs">Season</p>
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Season</p>
           </div>
         </div>
       </div>
