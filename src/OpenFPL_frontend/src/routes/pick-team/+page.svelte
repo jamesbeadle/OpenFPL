@@ -728,7 +728,8 @@
       {bankBalance}
     />
     <div class="sm:m-1 md:m-2 lg:m-3 xl:m-4">
-      <div class="flex flex-col sm:flex-row">
+      
+      <div class="hidden md:flex flex-col sm:flex-row">
         <div
           class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md"
         >
@@ -846,7 +847,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col md:flex-row">
+      <div class="hidden md:flex flex-col md:flex-row">
         <div
           class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full"
         >
@@ -918,7 +919,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col xl:flex-row">
+      <div class="flex flex-col xl:flex-row mt-4 mx-2 md:mt-0">
         {#if pitchView}
           <div class="relative w-full xl:w-1/2 mt-4">
             <img src="pitch.png" alt="pitch" class="w-full" />
@@ -973,7 +974,7 @@
                       (p) => p.id === playerId
                     )}
                     <div
-                      class="flex flex-col justify-center items-center flex-1 mt-2 mb-2 sm:mb-6 md:mb-12 lg:mb-16 xl:mb-6 2xl:mb-12"
+                      class="flex flex-col justify-center items-center flex-1 mt-1 mb-1 xs:mt-2 xs:mb-2 sm:mb-6 md:mb-12 lg:mb-16 xl:mb-6 2xl:mb-12"
                     >
                       {#if playerId > 0 && player}
                         {@const team = $teamStore.find(
@@ -994,7 +995,7 @@
                                 class="flex justify-center items-center flex-grow"
                               >
                                 <ShirtIcon
-                                  className="h-8 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16"
+                                  className="h-6 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16"
                                   primaryColour={team?.primaryColourHex}
                                   secondaryColour={team?.secondaryColourHex}
                                   thirdColour={team?.thirdColourHex}
@@ -1019,33 +1020,40 @@
                             </div>
                           </div>
                           <div
-                            class="flex flex-col justify-center items-center text-xs"
+                            class="flex flex-col justify-center items-center text-xs sm:text-xs"
                           >
                             <div
-                              class="flex justify-center items-center bg-gray-700 md:px-2 py-1 rounded-t-md min-w-[80px] max-w-[80px] sm:min-w-[120px] sm:max-w-[120px]"
+                              class="flex justify-center items-center bg-gray-700 rounded-t-md md:px-2 sm:py-1 
+                              min-w-[60px] sm:min-w-[120px] 
+                              max-w-[60px] sm:max-w-[120px]"
                             >
-                              <p class="collapse sm:visible sm:min-w-[15px]">
+                              <p class="hidden sm:flex sm:min-w-[15px]">
                                 {getPositionAbbreviation(player.position)}
                               </p>
                               <svelte:component
                                 this={getFlagComponent(player.nationality)}
-                                class="h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
+                                class="hidden xs:flex h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
                               />
-                              <p class="truncate min-w-[50px] max-w-[50px]">
+                              <p class="hidden xs:flex truncate min-w-[50px] max-w-[50px]">
                                 {player.firstName.length > 0
                                   ? player.firstName.substring(0, 1) + "."
                                   : ""}
                                 {player.lastName}
                               </p>
+                              <p class="xs:hidden truncate min-w-[50px] max-w-[50px]">
+                                {player.lastName}
+                              </p>
                             </div>
                             <div
-                              class="flex justify-center items-center bg-white text-black md:px-2 py-1 rounded-b-md min-w-[80px] max-w-[80px] sm:min-w-[120px] sm:max-w-[120px]"
+                              class="flex justify-center items-center bg-white text-black md:px-2  sm:py-1 rounded-b-md 
+                              min-w-[60px] sm:min-w-[120px] 
+                              max-w-[60px] sm:max-w-[120px]"
                             >
                               <p class="collapse sm:visible sm:min-w-[20px]">
                                 {team?.abbreviatedName}
                               </p>
                               <BadgeIcon
-                                className="h-4 w-4 sm:mx-1 min-w-[15px]"
+                                className="hidden xs:flex h-4 w-4 sm:mx-1 min-w-[15px]"
                                 primaryColour={team?.primaryColourHex}
                                 secondaryColour={team?.secondaryColourHex}
                                 thirdColour={team?.thirdColourHex}
