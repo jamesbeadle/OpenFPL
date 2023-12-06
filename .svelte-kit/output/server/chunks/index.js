@@ -3266,7 +3266,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1bft5p7"
+  version_hash: "174iksf"
 };
 function get_hooks() {
   return {};
@@ -4493,10 +4493,11 @@ function createLeaderboardStore() {
     }
     return cachedWeeklyLeaderboard;
   }
-  async function getWeeklyLeaderboardPage(gameweek, currentPage) {
+  async function getWeeklyLeaderboardPage(gameweek, currentPage, focusGameweek, seasonId) {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    if (currentPage <= 4) {
+    console.log("Getting weekly leaderboard");
+    if (currentPage <= 4 && systemState && focusGameweek == gameweek) {
       const cachedData = localStorage.getItem("weekly_leaderboard_data");
       if (cachedData) {
         let cachedLeaderboard = JSON.parse(cachedData);
@@ -4509,7 +4510,7 @@ function createLeaderboardStore() {
       }
     }
     let leaderboardData = await actor.getWeeklyLeaderboard(
-      systemState?.activeSeason.id,
+      seasonId,
       gameweek,
       limit,
       offset

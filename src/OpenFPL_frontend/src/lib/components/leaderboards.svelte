@@ -41,6 +41,7 @@
       await leaderboardStore.syncWeeklyLeaderboard();
       await leaderboardStore.syncMonthlyLeaderboards();
       await leaderboardStore.syncSeasonLeaderboard();
+
       selectedGameweek = $systemStore?.focusGameweek ?? 1;
       selectedMonth = $systemStore?.activeMonth ?? 8;
       selectedTeamId = $authSignedInStore
@@ -72,13 +73,19 @@
     loadLeaderboardData();
 
   async function loadLeaderboardData() {
+    if (!selectedGameweek) {
+      return;
+    }
+
     isLoading = true;
     try {
       switch (selectedLeaderboardType) {
         case 1:
           leaderboard = await leaderboardStore.getWeeklyLeaderboardPage(
             selectedGameweek,
-            currentPage
+            currentPage,
+            $systemStore?.focusGameweek ?? 1,
+            $systemStore?.activeSeason.id ?? 1
           );
           break;
         case 2:

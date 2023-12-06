@@ -103,12 +103,14 @@ function createLeaderboardStore() {
 
   async function getWeeklyLeaderboardPage(
     gameweek: number,
-    currentPage: number
+    currentPage: number,
+    focusGameweek: number,
+    seasonId: number
   ): Promise<PaginatedLeaderboard> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
 
-    if (currentPage <= 4) {
+    if (currentPage <= 4 && systemState && focusGameweek == gameweek) {
       const cachedData = localStorage.getItem("weekly_leaderboard_data");
       if (cachedData) {
         let cachedLeaderboard: PaginatedLeaderboard = JSON.parse(cachedData);
@@ -122,7 +124,7 @@ function createLeaderboardStore() {
     }
 
     let leaderboardData = await actor.getWeeklyLeaderboard(
-      systemState?.activeSeason.id,
+      seasonId,
       gameweek,
       limit,
       offset

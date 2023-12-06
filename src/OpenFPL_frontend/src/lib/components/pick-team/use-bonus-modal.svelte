@@ -13,6 +13,7 @@
 
   export let visible: boolean;
   export let fantasyTeam = writable<FantasyTeam | null>(null);
+  export let bonusUsedInSession = writable<boolean>(false);
   export let activeGameweek: number;
   export let closeBonusModal: () => void;
   export let bonus: Bonus = {
@@ -84,6 +85,7 @@
       case 1:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             goalGetterPlayerId: selectedPlayerId,
@@ -95,6 +97,7 @@
       case 2:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             passMasterPlayerId: selectedPlayerId,
@@ -106,6 +109,7 @@
       case 3:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             noEntryPlayerId: selectedTeamId,
@@ -117,6 +121,7 @@
       case 4:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             teamBoostTeamId: selectedTeamId,
@@ -128,6 +133,7 @@
       case 5:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             safeHandsGameweek: activeGameweek,
@@ -139,6 +145,7 @@
       case 6:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             captainFantasticPlayerId: $fantasyTeam?.captainId ?? 0,
@@ -175,6 +182,7 @@
       case 9:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             braceBonusGameweek: activeGameweek,
@@ -185,6 +193,7 @@
       case 10:
         fantasyTeam.update((team) => {
           if (!team) return team;
+          bonusUsedInSession.set(true);
           return {
             ...team,
             hatTrickHeroGameweek: activeGameweek,

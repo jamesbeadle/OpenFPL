@@ -83,12 +83,21 @@ function createManagerStore() {
 
   async function saveFantasyTeam(
     userFantasyTeam: FantasyTeam,
-    activeGameweek: number
+    activeGameweek: number,
+    bonusUsedInSession: boolean
   ): Promise<any> {
     try {
-      let bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
-      let bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
-      let bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
+      
+      let bonusPlayed = 0;
+      let bonusPlayerId = 0;
+      let bonusTeamId = 0;
+
+      if(bonusUsedInSession){
+        bonusPlayed = getBonusPlayed(userFantasyTeam, activeGameweek);
+        bonusPlayerId = getBonusPlayerId(userFantasyTeam, activeGameweek);
+        bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
+      }
+
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""

@@ -97,6 +97,7 @@
   ];
   let leftPanelBonuses = bonuses.slice(0, 5);
   let rightPanelBonuses = bonuses.slice(5, 10);
+  export let bonusUsedInSession = writable<boolean>(false);
 
   function showBonusModal(bonusId: number): void {
     selectedBonusId = bonusId;
@@ -184,6 +185,7 @@
       {closeBonusModal}
       {fantasyTeam}
       {activeGameweek}
+      {bonusUsedInSession}
     />
   {/if}
   <div class="flex flex-col md:flex-row bonus-panel-inner">

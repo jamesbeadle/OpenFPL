@@ -88,12 +88,14 @@ module {
           let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(newPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.value });
 
           if (not isTeamValid(newPlayers, bonusId, bonusPlayerId)) {
+            Debug.print("Invalid team");
             return #err(#InvalidTeamError);
           };
 
           let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
           if (totalTeamValue > 1200) {
+            Debug.print("over budget");
             return #err(#InvalidTeamError);
           };
 
@@ -233,6 +235,7 @@ module {
           let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(newPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.value });
 
           if (not isTeamValid(newPlayers, bonusId, bonusPlayerId)) {
+            Debug.print("Invalid team");
             return #err(#InvalidTeamError);
           };
 
@@ -251,6 +254,7 @@ module {
           );
 
           if (Nat8.fromNat(Array.size(playersAdded)) > existingTeam.transfersAvailable and gameweek != 1) {
+            Debug.print("transfers invalid");
             return #err(#InvalidTeamError);
           };
 
@@ -277,38 +281,47 @@ module {
           let netSpendQMs : Int = spent - sold;
 
           if (netSpendQMs > existingTeam.bankBalance) {
+            Debug.print("over budget");
             return #err(#InvalidTeamError);
           };
 
           if (bonusId == 1 and existingTeam.goalGetterGameweek != 0) {
+            Debug.print("Bonus error");
             return #err(#InvalidTeamError);
           };
 
           if (bonusId == 2 and existingTeam.passMasterGameweek != 0) {
+            Debug.print("Bonus error");
             return #err(#InvalidTeamError);
           };
 
           if (bonusId == 3 and existingTeam.noEntryGameweek != 0) {
+            Debug.print("Bonus error");
             return #err(#InvalidTeamError);
           };
 
           if (bonusId == 4 and existingTeam.teamBoostGameweek != 0) {
+            Debug.print("Bonus error");
             return #err(#InvalidTeamError);
           };
 
           if (bonusId == 5 and existingTeam.safeHandsGameweek != 0) {
+            Debug.print("Bonus error");
             return #err(#InvalidTeamError);
           };
 
           if (bonusId == 6 and existingTeam.captainFantasticGameweek != 0) {
+            Debug.print("Bonus error");
             return #err(#InvalidTeamError);
           };
 
           if (bonusId == 7 and existingTeam.braceBonusGameweek != 0) {
+            Debug.print("Bonus error");
             return #err(#InvalidTeamError);
           };
 
           if (bonusId == 8 and existingTeam.hatTrickHeroGameweek != 0) {
+            Debug.print("Bonus error");
             return #err(#InvalidTeamError);
           };
 
@@ -317,6 +330,7 @@ module {
               existingTeam.goalGetterGameweek == gameweek or existingTeam.passMasterGameweek == gameweek or existingTeam.noEntryGameweek == gameweek or existingTeam.teamBoostGameweek == gameweek or existingTeam.safeHandsGameweek == gameweek or existingTeam.captainFantasticGameweek == gameweek or existingTeam.braceBonusGameweek == gameweek or existingTeam.hatTrickHeroGameweek == gameweek,
             ),
           ) {
+            Debug.print("Bonus error x");
             return #err(#InvalidTeamError);
           };
 

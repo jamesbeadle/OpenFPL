@@ -77,6 +77,7 @@
   const fantasyTeam = writable<FantasyTeam | null>(null);
   const transfersAvailable = writable(newTeam ? Infinity : 3);
   const bankBalance = writable(1200);
+  const bonusUsedInSession = writable<boolean>(false);
 
   let isLoading = true;
 
@@ -609,83 +610,67 @@
   }
 
   function autofillTeam() {
-    if (!$fantasyTeam || !$playerStore) return;
+  if (!$fantasyTeam || !$playerStore) return;
 
-    let updatedFantasyTeam = {
-      ...$fantasyTeam,
-      playerIds: new Uint16Array(11),
-    };
-    let remainingBudget = $bankBalance;
+  let updatedFantasyTeam = {
+    ...$fantasyTeam,
+    playerIds: Uint16Array.from($fantasyTeam.playerIds),
+  };
+  let remainingBudget = $bankBalance;
 
-    const teamCounts = new Map<number, number>();
-    updatedFantasyTeam.playerIds.forEach((playerId) => {
-      if (playerId > 0) {
-        const player = $playerStore.find((p) => p.id === playerId);
-        if (player) {
-          teamCounts.set(
-            player.teamId,
-            (teamCounts.get(player.teamId) || 0) + 1
-          );
-        }
-      }
-    });
-
-    let eligibleTeams = Array.from(
-      new Set($playerStore.map((player) => player.teamId))
-    ).filter((id) => id > 0);
-    eligibleTeams.sort(() => Math.random() - 0.5);
-
-    const formationPositions = formations[selectedFormation].positions;
-
-    formationPositions.forEach((position, index) => {
-      if (remainingBudget <= 0 || eligibleTeams.length === 0) return;
-
-      const teamId = eligibleTeams.shift();
-      if (teamId === undefined) return;
-
-      const availablePlayers = $playerStore.filter(
-        (player) =>
-          player.position === position &&
-          player.teamId === teamId &&
-          !updatedFantasyTeam.playerIds.includes(player.id) &&
-          (teamCounts.get(player.teamId) || 0) < 1
-      );
-
-      availablePlayers.sort((a, b) => Number(a.value) - Number(b.value));
-      const lowerHalf = availablePlayers.slice(
-        0,
-        Math.ceil(availablePlayers.length / 2)
-      );
-      const selectedPlayer =
-        lowerHalf[Math.floor(Math.random() * lowerHalf.length)];
-
-      if (selectedPlayer) {
-        const potentialNewBudget =
-          remainingBudget - Number(selectedPlayer.value);
-        if (potentialNewBudget < 0) {
-          return;
-        }
-        updatedFantasyTeam.playerIds[index] = selectedPlayer.id;
-        remainingBudget = potentialNewBudget;
+  const teamCounts = new Map<number, number>();
+  updatedFantasyTeam.playerIds.forEach((playerId) => {
+    if (playerId > 0) {
+      const player = $playerStore.find((p) => p.id === playerId);
+      if (player) {
         teamCounts.set(
-          selectedPlayer.teamId,
-          (teamCounts.get(selectedPlayer.teamId) || 0) + 1
+          player.teamId,
+          (teamCounts.get(player.teamId) || 0) + 1
         );
       }
-    });
-
-    if (remainingBudget >= 0) {
-      fantasyTeam.set(updatedFantasyTeam);
-      bankBalance.set(remainingBudget);
     }
+  });
+
+  const formationPositions = formations[selectedFormation].positions;
+
+  formationPositions.forEach((position, index) => {
+    if (remainingBudget <= 0) return;
+    if (updatedFantasyTeam.playerIds[index] > 0) return; // Skip positions already filled
+
+    const availablePlayers = $playerStore.filter(
+      (player) =>
+        player.position === position &&
+        !updatedFantasyTeam.playerIds.includes(player.id) &&
+        (teamCounts.get(player.teamId) || 0) < 2 // Check for team player limit
+    ).sort((a, b) => Number(a.value) - Number(b.value));
+
+    for (let player of availablePlayers) {
+      const potentialNewBudget = remainingBudget - Number(player.value);
+      if (potentialNewBudget >= 0) {
+        updatedFantasyTeam.playerIds[index] = player.id;
+        remainingBudget = potentialNewBudget;
+        teamCounts.set(
+          player.teamId,
+          (teamCounts.get(player.teamId) || 0) + 1
+        );
+        break; // Found a suitable player, break the loop
+      }
+    }
+  });
+
+  if (remainingBudget >= 0) {
+    fantasyTeam.set(updatedFantasyTeam);
+    bankBalance.set(remainingBudget);
   }
+}
+
+
 
   async function saveFantasyTeam() {
     loadingText.set("Saving Fantasy Team");
     isLoading = true;
 
     let team = $fantasyTeam;
-
     if (team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)) {
       team!.captainId = getHighestValuedPlayerId(team!);
     }
@@ -705,7 +690,7 @@
     }
 
     try {
-      await managerStore.saveFantasyTeam(team!, activeGameweek);
+      await managerStore.saveFantasyTeam(team!, activeGameweek, $bonusUsedInSession);
       toastsShow({
         text: "Team saved successully!",
         level: "success",
