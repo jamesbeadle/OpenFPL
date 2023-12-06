@@ -94,14 +94,12 @@
   {#if isLoading}
     <LoadingIcon />
   {:else}
-    <div class="m-1 md:m-4">
+    <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
       <div class="flex flex-col lg:flex-row">
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-2 md:m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex justify-start items-center text-white space-x-4 flex-grow bg-panel p-4 rounded-md mb-5 xs:mb-7 sm:mb-8 lg:mb-0">
           <div class="flex-grow">
             <p class="text-gray-300 text-xxs sm:text-sm">Gameweek</p>
-            <p class="text-xs sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {$systemStore?.activeGameweek}
             </p>
             <p class="text-gray-300 text-xxs sm:text-sm">
@@ -114,7 +112,7 @@
           />
           <div class="flex-grow">
             <p class="text-gray-300 text-xxs sm:text-sm">Managers</p>
-            <p class="text-xs sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+            <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
               {managerCount}
             </p>
             <p class="text-gray-300 text-xxs sm:text-sm">Total</p>
@@ -128,17 +126,13 @@
               Weekly Prize Pool
             </p>
             <p class="text-gray-300 md:hidden text-xxs sm:text-sm">Weekly</p>
-            <p class="text-xs sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">0</p>
+            <p class="text-xs xs:text-sm sm:text-3xl lg:text-4xl mt-2 mb-2 font-bold">0</p>
             <p class="text-gray-300 text-xxs sm:text-sm">$FPL</p>
           </div>
         </div>
-        <div
-          class="flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow m-2 md:m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="flex flex-col lg:flex-row justify-start lg:items-center text-white space-x-0 lg:space-x-4 flex-grow bg-panel p-4 rounded-md">
           <div class="flex-grow mb-3 md:mb-4 lg:mb-0">
-            <p
-              class="text-gray-300 text-xxs sm:text-xs w-full text-center md:w-auto md:text-left"
-            >
+            <p class="text-gray-300 text-xxs xs:text-sm sm:text-xs w-full text-center md:w-auto md:text-left">
               Next Game:
             </p>
             <div class="flex justify-center">
@@ -263,8 +257,8 @@
       </div>
     </div>
 
-    <div class="m-1 md:4 mb-8">
-      <div class="bg-panel rounded-md mx-2 md:mx-8">
+    <div class="mx-4 xs:mx-6 sm:mx-8 lg:mx-10 mb-4 xs:mb-6 sm:mb-8">
+      <div class="bg-panel rounded-md">
         <ul
           class="flex bg-light-gray px-1 md:px-4 pt-2 text-xxs sm:text-base md:text-lg border-b border-gray-700"
         >
