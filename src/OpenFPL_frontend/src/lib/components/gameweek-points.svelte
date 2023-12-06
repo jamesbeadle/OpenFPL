@@ -126,7 +126,7 @@
 
   <div class="container-fluid mt-4 mb-4">
     <div class="flex flex-col space-y-4 text-xs md:text-base">
-      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
+      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 lg:px-4">
         <div class="flex items-center ml-4">
           <div class="flex items-center mr-8">
             <button
@@ -162,11 +162,9 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col space-y-4 mt-4 text-xxs xs:text-xs md:text-base">
+      <div class="flex flex-col space-y-4 mt-4 text-xxs xs:text-xs md:text-base lg:text-lg">
         <div class="overflow-x-auto flex-1">
-          <div
-            class="flex justify-between border-b border-t border-gray-700 p-4 bg-light-gray"
-          >
+          <div class="flex justify-between border-b border-t border-gray-700 p-4 bg-light-gray lg:px-8">
             <div class="w-2/12 xs:w-2/12">Pos</div>
             <div class="w-6/12 xs:w-4/12">Player</div>
             <div class="w-3/12 xs:w-3/12">Points</div>
@@ -175,7 +173,7 @@
           {#if gameweekData.length > 0}
             {#each gameweekData as playerGameweek}
               <div
-                class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer"
+                class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer lg:px-8"
               >
                 <div class="w-2/12 xs:w-2/12">
                   {getPositionAbbreviation(playerGameweek.player.position)}
@@ -192,7 +190,7 @@
                 <div class="w-2/12 xs:w-3/12 flex items-center justify-center xs:justify-start">
                   <button on:click={() => showDetailModal(playerGameweek)}>
                     <span class="flex items-center">
-                      <ViewDetailsIcon className="w-5 xs:w-6" /><span class="hidden xs:flex ml-1">View Details</span>
+                      <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" /><span class="hidden xs:flex ml-1 lg:ml-2">View Details</span>
                     </span>
                   </button>
                 </div>
