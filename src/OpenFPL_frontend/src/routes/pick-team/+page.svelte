@@ -31,8 +31,7 @@
   import { getFlagComponent } from "../../lib/utils/Helpers";
   import type { FantasyTeam } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-    import { busyStore } from "@dfinity/gix-components";
+    import { Spinner, busyStore } from "@dfinity/gix-components";
 
   interface FormationDetails {
     positions: number[];
@@ -745,7 +744,7 @@
 
 <Layout>
   {#if isLoading}
-    <LoadingIcon />
+    <Spinner />
   {:else}
     <AddPlayerModal
       {handlePlayerSelection}

@@ -17,7 +17,7 @@
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import { Spinner } from "@dfinity/gix-components";
 
   let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from(
@@ -103,7 +103,7 @@
 </script>
 
 {#if isLoading}
-  <LoadingIcon />
+  <Spinner />
 {:else}
   <div class="mx-5 my-4">
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">

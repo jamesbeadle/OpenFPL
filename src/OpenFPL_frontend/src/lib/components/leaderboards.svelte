@@ -6,8 +6,8 @@
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+    import { Spinner } from "@dfinity/gix-components";
 
   let isLoading = true;
   let gameweeks = Array.from(
@@ -155,7 +155,7 @@
 </script>
 
 {#if isLoading}
-  <LoadingIcon />
+  <Spinner />
 {:else}
   <div class="container-fluid mt-4">
     <div class="flex flex-col space-y-4 text-xs md:text-base">

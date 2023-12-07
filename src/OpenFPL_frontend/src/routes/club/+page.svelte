@@ -6,7 +6,6 @@
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import Layout from "../Layout.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { page } from "$app/stores";
   import TeamPlayers from "$lib/components/team-players.svelte";
@@ -16,10 +15,10 @@
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import type {
     Fixture,
-    Season,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
+    import { Spinner } from "@dfinity/gix-components";
 
   let isLoading = true;
   let fixturesWithTeams: FixtureWithTeams[] = [];
@@ -101,7 +100,7 @@
 
 <Layout>
   {#if isLoading}
-    <LoadingIcon />
+    <Spinner />
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">

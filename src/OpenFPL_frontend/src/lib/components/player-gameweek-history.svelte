@@ -7,7 +7,6 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
   import type {
     Season,
@@ -19,6 +18,7 @@
     PlayerGameweekDTO,
   } from "../../../../declarations/player_canister/player_canister.did";
   import { playerEventsStore } from "$lib/stores/player-events-store";
+    import { Spinner } from "@dfinity/gix-components";
 
   let isLoading = true;
   let selectedGameweek: number;
@@ -112,7 +112,7 @@
 </script>
 
 {#if isLoading}
-  <LoadingIcon />
+  <Spinner />
 {:else}
   {#if playerDetails}
     <PlayerGameweekModal

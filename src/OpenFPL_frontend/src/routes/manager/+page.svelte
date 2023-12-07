@@ -15,7 +15,7 @@
   import ManagerGameweekDetails from "$lib/components/manager-gameweek-details.svelte";
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import { Spinner } from "@dfinity/gix-components";
 
   $: id = $page.url.searchParams.get("id");
 
@@ -108,7 +108,7 @@
 
 <Layout>
   {#if isLoading}
-    <LoadingIcon />
+    <Spinner />
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">

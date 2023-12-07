@@ -10,7 +10,7 @@
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+    import { Spinner } from "@dfinity/gix-components";
 
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showUsernameModal: boolean = false;
@@ -150,7 +150,7 @@
 </script>
 
 {#if isLoading}
-  <LoadingIcon />
+  <Spinner />
 {:else}
   <UpdateUsernameModal
     newUsername={$profile ? $profile.displayName : ""}

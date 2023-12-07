@@ -7,7 +7,7 @@
   import { toastsError } from "$lib/stores/toasts-store";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import { Spinner } from "@dfinity/gix-components";
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let currentGameweek: number;
@@ -44,7 +44,7 @@
 
 <Layout>
   {#if isLoading}
-    <LoadingIcon />
+    <Spinner />
   {:else}
     <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
       <div class="flex flex-col space-y-4 text-xs md:text-base">

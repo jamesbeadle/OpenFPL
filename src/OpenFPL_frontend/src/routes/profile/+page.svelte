@@ -4,7 +4,7 @@
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import Layout from "../Layout.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+    import { Spinner } from "@dfinity/gix-components";
   let activeTab: string = "details";
 
   let isLoading = true;
@@ -22,7 +22,7 @@
 
 <Layout>
   {#if isLoading}
-    <LoadingIcon />
+    <Spinner />
   {:else}
     <div class="m-4">
       <div class="bg-panel rounded-lg m-4">

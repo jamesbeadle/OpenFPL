@@ -12,9 +12,9 @@
     Season,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { getFlagComponent } from "$lib/utils/Helpers";
+    import { Spinner } from "@dfinity/gix-components";
 
   export let principalId = "";
   export let viewGameweekDetail: (
@@ -74,7 +74,7 @@
 </script>
 
 {#if isLoading}
-  <LoadingIcon />
+  <Spinner />
 {:else}
   <div class="flex flex-col space-y-4 text-lg mt-4">
     <div class="overflow-x-auto flex-1">

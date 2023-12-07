@@ -23,8 +23,7 @@
   import ConfirmFixtureDataModal from "$lib/components/fixture-validation/confirm-fixture-data-modal.svelte";
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
   import { playerStore } from "$lib/stores/player-store";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
-  import { busyStore } from "@dfinity/gix-components";
+  import { Spinner, busyStore } from "@dfinity/gix-components";
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
@@ -205,7 +204,7 @@
 
 <Layout>
   {#if isLoading}
-    <LoadingIcon />
+    <Spinner />
   {:else}
     <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
       <div class="flex flex-col text-xs md:text-base mt-4">

@@ -23,7 +23,7 @@
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+    import { Spinner } from "@dfinity/gix-components";
 
   let activeTab: string = "fixtures";
   let managerCount = -1;
@@ -97,7 +97,7 @@
 
 <Layout>
   {#if isLoading}
-    <LoadingIcon />
+    <Spinner />
   {:else}
     <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
       <div class="flex flex-col lg:flex-row lg:space-x-8">
