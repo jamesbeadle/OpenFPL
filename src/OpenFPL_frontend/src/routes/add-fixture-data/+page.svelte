@@ -119,7 +119,7 @@
       console.error("Error saving fixture data: ", error);
     } finally {
       showConfirmDataModal = false;
-      busyStore.stopBusy("save-draft");
+      busyStore.stopBusy("confirm-data");
     }
   }
 

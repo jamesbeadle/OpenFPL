@@ -120,9 +120,14 @@
     });
 
     try {
+      console.log("updating profile image")
       await userStore.updateProfilePicture(file);
-      userStore.sync();
+      console.log("updating complete")
+      await userStore.sync();
+      console.log("store synced")
       const profileData = await userStore.getProfile();
+      console.log("Got Profile")
+      
       setProfile(profileData);
       if (
         profileData &&
@@ -144,6 +149,7 @@
       });
       console.error("Error updating profile image", error);
     } finally {
+      console.log("updating store")
       busyStore.stopBusy("upload-image");
     }
   }
@@ -167,12 +173,12 @@
   <div class="container mx-auto p-4">
     {#if $profile}
       <div class="flex flex-wrap">
-        <div class="w-full md:w-auto px-2 ml-4 md:ml-0">
-          <div class="group">
+        <div class="w-full md:w-1/2 px-2">
+          <div class="group flex flex-col md:block">
             <img
               src={profileSrc}
               alt="Profile"
-              class="w-100 md:w-80 mb-1 rounded-lg"
+              class="w-100 mb-1 rounded-lg"
             />
 
             <div class="file-upload-wrapper mt-4">
@@ -192,38 +198,38 @@
           </div>
         </div>
 
-        <div class="w-full md:w-3/4 px-2 mb-4">
-          <div class="ml-4 p-4 rounded-lg">
-            <p class="text-xs mb-2">Display Name:</p>
-            <h2 class="text-2xl font-bold mb-2">{$profile?.displayName}</h2>
+        <div class="w-full md:w-1/2 md:px-2 mb-4">
+          <div class="md:ml-4 md:p-4 px-4 mt-2 rounded-lg">
+            <p class="text-xs xs:text-base mb-1">Display Name:</p>
+            <h2 class="text-xl md:text-2xl font-bold mb-1 md:mb-2">{$profile?.displayName}</h2>
             <button
-              class="p-2 px-4 rounded fpl-button"
+              class="text-sm md:text-base p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
               on:click={displayUsernameModal}
             >
               Update
             </button>
-            <p class="text-xs mb-2 mt-4">Favourite Team:</p>
-            <h2 class="text-2xl font-bold mb-2">
+            <p class="text-xs xs:text-base mb-1 md:mb-2 mt-4">Favourite Team:</p>
+            <h2 class="text-xl md:text-2xl font-bold mb-1 md:mb-2">
               {teamName}
             </h2>
             <button
-              class={`px-4 py-2 ${
+              class={`text-sm xs:text-base md:text-base p-1 md:p-2 px-2 md:px-4 ${
                 gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0
-                  ? "fpl-button"
-                  : "bg-gray-500"
-              } p-2 px-4 rounded fpl-button`}
+                  ? "bg-gray-500"
+                  : "fpl-button"
+              } rounded`}
               on:click={displayFavouriteTeamModal}
               disabled={gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0}
             >
               Update
             </button>
 
-            <p class="text-xs mb-2 mt-4">Joined:</p>
-            <h2 class="text-2xl font-bold mb-2">August 2023</h2>
+            <p class="text-xs xs:text-base mb-1 md:mb-2 mt-4">Joined:</p>
+            <h2 class="text-xl md:text-2xl font-bold mb-1 md:mb-2">August 2023</h2>
 
-            <p class="text-xs mb-2 mt-4">Principal:</p>
+            <p class="text-xs xs:text-base mb-1 md:mb-2">Principal:</p>
             <div class="flex items-center">
-              <h2 class="text-xs font-bold">{$profile?.principalId}</h2>
+              <h2 class="text-xxs">{$profile?.principalId}</h2>
               <CopyIcon
                 onClick={copyToClipboard}
                 principalId={$profile?.principalId}
@@ -234,7 +240,7 @@
         </div>
       </div>
     {/if}
-    <div class="flex flex-wrap -mx-2 mt-4">
+    <div class="flex flex-wrap md:mt-4">
       <div class="w-full px-2 mb-4">
         <div class="mt-4 px-2">
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
