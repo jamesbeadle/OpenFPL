@@ -119,4 +119,5 @@ input {
 
 [data-tid="busy"] {
   background-color: rgba(36, 37, 41, 0.7) !important;
+  z-index: 99999 !important;
 }

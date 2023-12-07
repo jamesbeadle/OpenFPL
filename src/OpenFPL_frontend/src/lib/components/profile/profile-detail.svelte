@@ -144,7 +144,7 @@
       });
       console.error("Error updating profile image", error);
     } finally {
-      busyStore.stopBusy("save-team");
+      busyStore.stopBusy("upload-image");
     }
   }
 </script>
