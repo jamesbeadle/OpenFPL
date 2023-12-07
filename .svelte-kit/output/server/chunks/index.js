@@ -902,10 +902,6 @@ function compute_slots(slots) {
 function null_to_empty(value) {
   return value == null ? "" : value;
 }
-function set_store_value(store, ret, value) {
-  store.set(value);
-  return ret;
-}
 function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
   return new CustomEvent(type, { detail, bubbles, cancelable });
 }
@@ -3266,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1ynk1ay"
+  version_hash: "kzjj5o"
 };
 function get_hooks() {
   return {};
@@ -4625,7 +4621,7 @@ const Backdrop = create_ssr_component(($$result, $$props, $$bindings, slots) => 
 });
 const layoutBottomOffset = writable(0);
 const BottomSheet_svelte_svelte_type_style_lang = "";
-const initBusyStore$1 = () => {
+const initBusyStore = () => {
   const DEFAULT_STATE = [];
   const { subscribe: subscribe2, update, set } = writable(DEFAULT_STATE);
   return {
@@ -4650,9 +4646,9 @@ const initBusyStore$1 = () => {
     }
   };
 };
-const busyStore = initBusyStore$1();
-derived(busyStore, ($busyStore) => $busyStore.length > 0);
-derived(busyStore, ($busyStore) => $busyStore.reverse().find(({ text: text2 }) => nonNullish(text2))?.text);
+const busyStore = initBusyStore();
+const busy = derived(busyStore, ($busyStore) => $busyStore.length > 0);
+const busyMessage = derived(busyStore, ($busyStore) => $busyStore.reverse().find(({ text: text2 }) => nonNullish(text2))?.text);
 const Spinner_svelte_svelte_type_style_lang = "";
 const css$9 = {
   code: ".medium.svelte-85668t{--spinner-size:30px}.small.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 1rem)}.tiny.svelte-85668t{--spinner-size:calc(var(--line-height-standard) * 0.5rem)}svg.svelte-85668t{width:var(--spinner-size);height:var(--spinner-size);animation:spinner-linear-rotate 2000ms linear infinite;position:absolute;top:calc(50% - var(--spinner-size) / 2);left:calc(50% - var(--spinner-size) / 2);--radius:45px;--circumference:calc(3.1415926536 * var(--radius) * 2);--start:calc((1 - 0.05) * var(--circumference));--end:calc((1 - 0.8) * var(--circumference))}svg.inline.svelte-85668t{display:inline-block;position:relative}circle.svelte-85668t{stroke-dasharray:var(--circumference);stroke-width:10%;transform-origin:50% 50% 0;transition-property:stroke;animation-name:spinner-stroke-rotate-100;animation-duration:4000ms;animation-timing-function:cubic-bezier(0.35, 0, 0.25, 1);animation-iteration-count:infinite;fill:transparent;stroke:currentColor;transition:stroke-dashoffset 225ms linear}@keyframes spinner-linear-rotate{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes spinner-stroke-rotate-100{0%{stroke-dashoffset:var(--start);transform:rotate(0)}12.5%{stroke-dashoffset:var(--end);transform:rotate(0)}12.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(72.5deg)}25%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(72.5deg)}25.0001%{stroke-dashoffset:var(--start);transform:rotate(270deg)}37.5%{stroke-dashoffset:var(--end);transform:rotate(270deg)}37.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(161.5deg)}50%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(161.5deg)}50.0001%{stroke-dashoffset:var(--start);transform:rotate(180deg)}62.5%{stroke-dashoffset:var(--end);transform:rotate(180deg)}62.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(251.5deg)}75%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(251.5deg)}75.0001%{stroke-dashoffset:var(--start);transform:rotate(90deg)}87.5%{stroke-dashoffset:var(--end);transform:rotate(90deg)}87.5001%{stroke-dashoffset:var(--end);transform:rotateX(180deg) rotate(341.5deg)}100%{stroke-dashoffset:var(--start);transform:rotateX(180deg) rotate(341.5deg)}}",
@@ -4669,6 +4665,20 @@ const Spinner = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `  <svg class="${[escape(null_to_empty(size), true) + " svelte-85668t", inline ? "inline" : ""].join(" ").trim()}" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true" data-tid="spinner" viewBox="0 0 100 100"><circle cx="50%" cy="50%" r="45" class="svelte-85668t"></circle></svg>`;
 });
 const BusyScreen_svelte_svelte_type_style_lang = "";
+const css$8 = {
+  code: "div.svelte-14plyno{z-index:calc(var(--z-index) + 1000);position:fixed;top:0;right:0;bottom:0;left:0;background:var(--backdrop);color:var(--backdrop-contrast)}.content.svelte-14plyno{display:flex;flex-direction:column;justify-content:center;align-items:center}p.svelte-14plyno{padding-bottom:var(--padding);max-width:calc(var(--section-max-width) / 2)}",
+  map: null
+};
+const BusyScreen = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let $busy, $$unsubscribe_busy;
+  let $busyMessage, $$unsubscribe_busyMessage;
+  $$unsubscribe_busy = subscribe(busy, (value) => $busy = value);
+  $$unsubscribe_busyMessage = subscribe(busyMessage, (value) => $busyMessage = value);
+  $$result.css.add(css$8);
+  $$unsubscribe_busy();
+  $$unsubscribe_busyMessage();
+  return ` ${$busy ? `<div data-tid="busy" class="svelte-14plyno"><div class="content svelte-14plyno">${nonNullish($busyMessage) ? `<p class="svelte-14plyno">${escape($busyMessage)}</p>` : ``} <span>${validate_component(Spinner, "Spinner").$$render($$result, { inline: true }, {}, {})}</span></div></div>` : ``}`;
+});
 const IconCheckCircle = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { size = `24px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
@@ -4696,7 +4706,7 @@ const IconError = create_ssr_component(($$result, $$props, $$bindings, slots) =>
   return `  <svg xmlns="http://www.w3.org/2000/svg"${add_attribute("height", size, 0)} viewBox="0 0 24 24"${add_attribute("width", size, 0)} fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path></svg>`;
 });
 const IconInfo_svelte_svelte_type_style_lang = "";
-const css$8 = {
+const css$7 = {
   code: "svg.svelte-1lui9gh{vertical-align:middle}",
   map: null
 };
@@ -4704,7 +4714,7 @@ const IconInfo = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   let { size = `${DEFAULT_ICON_SIZE}px` } = $$props;
   if ($$props.size === void 0 && $$bindings.size && size !== void 0)
     $$bindings.size(size);
-  $$result.css.add(css$8);
+  $$result.css.add(css$7);
   return `  <svg${add_attribute("width", size, 0)}${add_attribute("height", size, 0)} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-tid="icon-info" class="svelte-1lui9gh"><path d="M10.2222 17.5C14.3643 17.5 17.7222 14.1421 17.7222 10C17.7222 5.85786 14.3643 2.5 10.2222 2.5C6.08003 2.5 2.72217 5.85786 2.72217 10C2.72217 14.1421 6.08003 17.5 10.2222 17.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 13.3333V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.2222 6.66699H10.2305" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
 });
 const IconMeter_svelte_svelte_type_style_lang = "";
@@ -4813,7 +4823,7 @@ const Menu_svelte_svelte_type_style_lang = "";
 const StretchPane_svelte_svelte_type_style_lang = "";
 const MenuItem_svelte_svelte_type_style_lang = "";
 const Modal_svelte_svelte_type_style_lang = "";
-const css$7 = {
+const css$6 = {
   code: ".modal.svelte-1bbimtl.svelte-1bbimtl{position:fixed;top:0;right:0;bottom:0;left:0;z-index:var(--modal-z-index);touch-action:initial;cursor:initial}.wrapper.svelte-1bbimtl.svelte-1bbimtl{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);display:flex;flex-direction:column;background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);overflow:hidden;box-sizing:border-box;box-shadow:var(--overlay-box-shadow)}.wrapper.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin:var(--padding-1_5x) var(--padding-2x) auto;display:flex;flex-direction:column;gap:var(--padding-1_5x);flex:1;overflow:hidden}.wrapper.alert.svelte-1bbimtl.svelte-1bbimtl{width:var(--alert-width);max-width:var(--alert-max-width);max-height:var(--alert-max-height);border-radius:var(--alert-border-radius)}.wrapper.alert.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--alert-padding-y) var(--alert-padding-x) var(--padding)}.wrapper.alert.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:calc(var(--alert-padding-y) * 2 / 3)}.wrapper.alert.svelte-1bbimtl .content.svelte-1bbimtl{margin:0 0 calc(var(--alert-padding-y) / 2);padding:calc(var(--alert-padding-y) / 2) calc(var(--alert-padding-x) / 2) 0}.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{padding:0 var(--alert-padding-x) calc(var(--alert-padding-y) * 2 / 3)}@media(min-width: 576px){.wrapper.alert.svelte-1bbimtl .footer.svelte-1bbimtl{justify-content:flex-end}}.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{width:var(--dialog-width);max-width:var(--dialog-max-width);min-height:var(--dialog-min-height);height:var(--dialog-height);max-height:var(--dialog-max-height, 100%);border-radius:var(--dialog-border-radius)}@supports (-webkit-touch-callout: none){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:-webkit-fill-available}@media(min-width: 768px){.wrapper.dialog.svelte-1bbimtl.svelte-1bbimtl{max-height:var(--dialog-max-height, 100%)}}}.wrapper.dialog.svelte-1bbimtl .header.svelte-1bbimtl{padding:var(--dialog-padding-y) var(--padding-3x) var(--padding)}.wrapper.dialog.svelte-1bbimtl .container-wrapper.svelte-1bbimtl{margin-bottom:var(--dialog-padding-y)}.wrapper.dialog.svelte-1bbimtl .content.svelte-1bbimtl{margin:0;padding:var(--dialog-padding-y) var(--dialog-padding-x)}.header.svelte-1bbimtl.svelte-1bbimtl{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--padding);z-index:var(--z-index);position:relative}.header.svelte-1bbimtl h2.svelte-1bbimtl{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis;grid-column-start:2;text-align:center}.header.svelte-1bbimtl button.svelte-1bbimtl{display:flex;justify-content:center;align-items:center;padding:0;justify-self:flex-end}.header.svelte-1bbimtl button.svelte-1bbimtl:active,.header.svelte-1bbimtl button.svelte-1bbimtl:focus,.header.svelte-1bbimtl button.svelte-1bbimtl:hover{background:var(--background-shade);border-radius:var(--border-radius)}.content.svelte-1bbimtl.svelte-1bbimtl{overflow-y:var(--modal-content-overflow-y, auto);overflow-x:hidden}.container.svelte-1bbimtl.svelte-1bbimtl{position:relative;display:flex;flex-direction:column;flex:1;overflow:hidden;border-radius:16px;background:var(--overlay-content-background);color:var(--overlay-content-background-contrast)}",
   map: null
 };
@@ -4838,7 +4848,7 @@ const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.testId(testId);
   if ($$props.disablePointerEvents === void 0 && $$bindings.disablePointerEvents && disablePointerEvents !== void 0)
     $$bindings.disablePointerEvents(disablePointerEvents);
-  $$result.css.add(css$7);
+  $$result.css.add(css$6);
   showHeader = nonNullish($$slots.title);
   showFooterAlert = nonNullish($$slots.footer) && role === "alert";
   $$unsubscribe_i18n();
@@ -4900,7 +4910,7 @@ const initToastsStore = () => {
 };
 const toastsStore = initToastsStore();
 const Toast_svelte_svelte_type_style_lang = "";
-const css$6 = {
+const css$5 = {
   code: ".toast.svelte-1ih7d9r.svelte-1ih7d9r{display:flex;justify-content:space-between;align-items:center;gap:var(--padding-1_5x);background:var(--overlay-background);color:var(--overlay-background-contrast);--button-secondary-background:var(--focus-background);border-radius:var(--border-radius);box-shadow:var(--strong-shadow, 8px 8px 16px 0 rgba(0, 0, 0, 0.25));padding:var(--padding-1_5x);box-sizing:border-box}.toast.inverted.svelte-1ih7d9r.svelte-1ih7d9r{background:var(--toast-inverted-background);color:var(--toast-inverted-background-contrast)}.toast.svelte-1ih7d9r .icon.svelte-1ih7d9r{line-height:0}.toast.svelte-1ih7d9r .icon.success.svelte-1ih7d9r{color:var(--positive-emphasis)}.toast.svelte-1ih7d9r .icon.info.svelte-1ih7d9r{color:var(--primary)}.toast.svelte-1ih7d9r .icon.warn.svelte-1ih7d9r{color:var(--warning-emphasis-shade)}.toast.svelte-1ih7d9r .icon.error.svelte-1ih7d9r{color:var(--negative-emphasis)}.toast.svelte-1ih7d9r .msg.svelte-1ih7d9r{flex-grow:1;margin:0;word-break:break-word}.toast.svelte-1ih7d9r .msg.scroll.svelte-1ih7d9r{max-height:calc(8.5 * var(--padding));overflow-y:auto}.toast.svelte-1ih7d9r .msg.truncate.svelte-1ih7d9r{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-1ih7d9r .msg.truncate .title.svelte-1ih7d9r{white-space:var(--text-white-space, nowrap);overflow:hidden;text-overflow:ellipsis}.toast.svelte-1ih7d9r .msg.clamp.svelte-1ih7d9r{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}.toast.svelte-1ih7d9r .msg.clamp .title.svelte-1ih7d9r{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.toast.svelte-1ih7d9r .title.svelte-1ih7d9r{display:block;font-size:var(--font-size-h4);line-height:var(--line-height-h4);font-weight:var(--font-weight-bold)}.toast.svelte-1ih7d9r button.close.svelte-1ih7d9r{padding:0;line-height:0;color:inherit}",
   map: null
 };
@@ -4937,7 +4947,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   onDestroy(cleanUpAutoHide);
   if ($$props.msg === void 0 && $$bindings.msg && msg !== void 0)
     $$bindings.msg(msg);
-  $$result.css.add(css$6);
+  $$result.css.add(css$5);
   ({ text: text2, level, spinner, title, overflow, position, icon, theme: theme2 } = msg);
   scroll = overflow === void 0 || overflow === "scroll";
   truncate = overflow === "truncate";
@@ -4949,7 +4959,7 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   ].join(" ").trim()}"${add_attribute("style", minHeightMessage, 0)}>${nonNullish(title) ? `<span class="title svelte-1ih7d9r">${escape(title)}</span>` : ``} ${escape(text2)}</p> <button class="close svelte-1ih7d9r"${add_attribute("aria-label", $i18n.core.close, 0)}>${validate_component(IconClose, "IconClose").$$render($$result, {}, {}, {})}</button> </div>`;
 });
 const Toasts_svelte_svelte_type_style_lang = "";
-const css$5 = {
+const css$4 = {
   code: ".wrapper.svelte-24m335{position:fixed;left:50%;transform:translate(-50%, 0);bottom:calc(var(--layout-bottom-offset, 0) + var(--padding-2x));width:calc(100% - var(--padding-8x) - var(--padding-0_5x));display:flex;flex-direction:column;gap:var(--padding);z-index:var(--toast-info-z-index)}.wrapper.error.svelte-24m335{z-index:var(--toast-error-z-index)}@media(min-width: 1024px){.wrapper.svelte-24m335{max-width:calc(var(--section-max-width) - var(--padding-2x))}}.top.svelte-24m335{top:calc(var(--header-height) + var(--padding-3x));bottom:unset;width:calc(100% - var(--padding-6x))}@media(min-width: 1024px){.top.svelte-24m335{right:var(--padding-2x);left:unset;transform:none;max-width:calc(var(--section-max-width) / 1.5 - var(--padding-2x))}}",
   map: null
 };
@@ -4963,7 +4973,7 @@ const Toasts = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let hasErrors;
   if ($$props.position === void 0 && $$bindings.position && position !== void 0)
     $$bindings.position(position);
-  $$result.css.add(css$5);
+  $$result.css.add(css$4);
   toasts = $toastsStore.filter(({ position: pos }) => (pos ?? "bottom") === position);
   hasErrors = toasts.find(({ level }) => ["error", "warn"].includes(level)) !== void 0;
   $$unsubscribe_toastsStore();
@@ -5716,7 +5726,7 @@ derived(
   (user) => user !== null && user !== void 0 ? user.favouriteTeamId : 0
 );
 const Header_svelte_svelte_type_style_lang = "";
-const css$4 = {
+const css$3 = {
   code: 'header.svelte-197nckd{background-color:rgba(36, 37, 41, 0.9)}.nav-underline.svelte-197nckd{position:relative;display:inline-block;color:white}.nav-underline.svelte-197nckd::after{content:"";position:absolute;width:100%;height:2px;background-color:#2ce3a6;bottom:0;left:0;transform:scaleX(0);transition:transform 0.3s ease-in-out;color:#2ce3a6}.nav-underline.svelte-197nckd:hover::after,.nav-underline.active.svelte-197nckd::after{transform:scaleX(1);color:#2ce3a6}.nav-underline.svelte-197nckd:hover::after{transform:scaleX(1);background-color:gray}.nav-button.svelte-197nckd{background-color:transparent}.nav-button.svelte-197nckd:hover{background-color:transparent;color:#2ce3a6;border:none}',
   map: null
 };
@@ -5745,7 +5755,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       }
     }
   }
-  $$result.css.add(css$4);
+  $$result.css.add(css$3);
   currentClass = (route) => $page.url.pathname === route ? "text-blue-500 nav-underline active" : "nav-underline";
   currentBorder = (route) => $page.url.pathname === route ? "active-border" : "";
   $$unsubscribe_page();
@@ -5766,34 +5776,6 @@ const JunoIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => 
 const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<footer class="bg-gray-900 text-white py-3"><div class="container mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs"><div class="flex-1" data-svelte-h="svelte-1x4c2nc"><div class="flex justify-start"><div class="flex flex-row pl-4"><a href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/?ref=zv6hh-xaaaa-aaaar-ac35q-cai" target="_blank" rel="noopener noreferrer"><img src="openchat.png" class="h-4 w-auto mb-2 mr-2" alt="OpenChat"></a> <a href="https://twitter.com/OpenFPL_DAO" target="_blank" rel="noopener noreferrer"><img src="twitter.png" class="h-4 w-auto mb-2 mr-2" alt="Twitter"></a> <a href="https://t.co/WmOhFA8JUR" target="_blank" rel="noopener noreferrer"><img src="discord.png" class="h-4 w-auto mb-2 mr-2" alt="Discord"></a> <a href="https://t.co/vVkquMrdOu" target="_blank" rel="noopener noreferrer"><img src="telegram.png" class="h-4 w-auto mb-2 mr-2" alt="Telegram"></a> <a href="https://github.com/jamesbeadle/OpenFPL" target="_blank" rel="noopener noreferrer"><img src="github.png" class="h-4 w-auto mb-2" alt="GitHub"></a></div></div> <div class="flex justify-start"><div class="flex flex-col sm:flex-row sm:space-x-2 pl-4"><a href="/whitepaper" class="hover:text-gray-300">Whitepaper</a> <span class="hidden sm:flex">|</span> <a href="/gameplay-rules" class="hover:text-gray-300">Gameplay Rules</a> <span class="hidden sm:flex">|</span> <a href="/terms" class="hover:text-gray-300">Terms &amp; Conditions</a></div></div></div> <div class="flex-0"><a href="/"><b class="px-4 mt-2 sm:mt-0 sm:px-10 flex items-center">${validate_component(OpenFPLIcon, "OpenFplIcon").$$render($$result, { className: "h-6 w-auto mr-2" }, {}, {})}OpenFPL</b></a></div> <div class="flex-1"><div class="flex justify-end"><div class="text-right px-4 sm:px-0 mt-1 sm:mt-0 md:mr-4"><a href="https://juno.build" target="_blank" class="hover:text-gray-300 flex items-center">Sponsored By juno.build
             ${validate_component(JunoIcon, "JunoIcon").$$render($$result, { className: "h-8 w-auto ml-2" }, {}, {})}</a></div></div></div></div></footer>`;
-});
-const initBusyStore = () => {
-  const { subscribe: subscribe2, set } = writable(void 0);
-  return {
-    subscribe: subscribe2,
-    start() {
-      set({ spinner: true, close: false });
-    },
-    show() {
-      set({ spinner: true, close: true });
-    },
-    stop() {
-      set(void 0);
-    }
-  };
-};
-const busy = initBusyStore();
-const Busy_svelte_svelte_type_style_lang = "";
-const css$3 = {
-  code: ".busy.svelte-19btxid{z-index:calc(var(--z-index) + 1000);position:fixed;top:0;right:0;bottom:0;left:0;background:var(--backdrop)}.content.svelte-19btxid{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);display:flex;justify-content:center;align-items:center;flex-direction:column;width:-moz-fit-content;width:fit-content;background:transparent}.spinner.svelte-19btxid{position:relative;height:30px;margin:1.45rem}.close.svelte-19btxid{align-self:flex-end}",
-  map: null
-};
-const Busy = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $busy, $$unsubscribe_busy;
-  $$unsubscribe_busy = subscribe(busy, (value) => $busy = value);
-  $$result.css.add(css$3);
-  $$unsubscribe_busy();
-  return `${nonNullish($busy) ? `<div class="${["busy svelte-19btxid", $busy.close ? "close" : ""].join(" ").trim()}" role="button" tabindex="-1"><div class="content svelte-19btxid">${$busy.spinner ? `<div class="spinner text-off-white svelte-19btxid">${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}</div>` : ``} ${$busy.close ? `<button aria-label="Close" class="text-off-white" data-svelte-h="svelte-1o9iah3">Cancel</button>` : ``}</div></div>` : ``}`;
 });
 const app = "";
 const Layout_svelte_svelte_type_style_lang = "";
@@ -5820,10 +5802,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     return function(_) {
       return ` <div class="flex flex-col h-screen justify-between">${validate_component(Header, "Header").$$render($$result, {}, {}, {})} <main class="svelte-vmfccd">${slots.default ? slots.default({}) : ``}</main> ${validate_component(Toasts, "Toasts").$$render($$result, {}, {}, {})} ${validate_component(Footer, "Footer").$$render($$result, {}, {}, {})}</div> `;
     }();
-  }(init2())} ${validate_component(Busy, "Busy").$$render($$result, {}, {}, {})}`;
-});
-const LoadingIcon = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`;
+  }(init2())} ${validate_component(BusyScreen, "BusyScreen").$$render($$result, {}, {}, {})}`;
 });
 const _page_svelte_svelte_type_style_lang$1 = "";
 const css$1 = {
@@ -5837,7 +5816,7 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_systemStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -5864,7 +5843,6 @@ function createGovernanceStore() {
   };
 }
 const governanceStore = createGovernanceStore();
-const loadingText = writable("Loading");
 const Confirm_fixture_data_modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { visible = false } = $$props;
   let { onConfirm } = $$props;
@@ -5903,25 +5881,20 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
 const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
-  let $loadingText, $$unsubscribe_loadingText;
   let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $page, $$unsubscribe_page;
-  $$unsubscribe_loadingText = subscribe(loadingText, (value) => $loadingText = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
-  let fixture;
-  let homeTeam;
-  let awayTeam;
   let showClearDraftModal = false;
   let showConfirmDataModal = false;
   let selectedPlayers = writable([]);
   $$unsubscribe_selectedPlayers = subscribe(selectedPlayers, (value) => $selectedPlayers = value);
   let playerEventData = writable([]);
   $$subscribe_playerEventData();
-  let isSubmitDisabled = true;
-  let isLoading = true;
   async function confirmFixtureData() {
-    isLoading = true;
-    set_store_value(loadingText, $loadingText = "Saving Fixture Data", $loadingText);
+    busyStore.startBusy({
+      initiator: "confirm-data",
+      text: "Saving fixture data..."
+    });
     try {
       await governanceStore.submitFixtureData(fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
@@ -5939,8 +5912,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       console.error("Error saving fixture data: ", error2);
     } finally {
       showConfirmDataModal = false;
-      isLoading = false;
-      set_store_value(loadingText, $loadingText = "Loading", $loadingText);
+      busyStore.stopBusy("save-draft");
     }
   }
   function clearDraft() {
@@ -5960,23 +5932,13 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     showConfirmDataModal = false;
   }
   fixtureId = Number($page.url.searchParams.get("id"));
-  isSubmitDisabled = $playerEventData.length == 0 || $playerEventData.filter((x) => x.eventType == 0).length != $selectedPlayers.length;
+  $playerEventData.length == 0 || $playerEventData.filter((x) => x.eventType == 0).length != $selectedPlayers.length;
   $$unsubscribe_playerEventData();
-  $$unsubscribe_loadingText();
   $$unsubscribe_selectedPlayers();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${isLoading ? `${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}` : `<div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel"><div class="flex flex-col text-xs md:text-base mt-4"><div class="flex flex-row space-x-2 p-4"><button class="fpl-button px-4 py-2" data-svelte-h="svelte-1r8hmpb">Select Players</button> <button class="fpl-button px-4 py-2" data-svelte-h="svelte-1km0b4b">Save Draft</button> <button class="fpl-button px-4 py-2" data-svelte-h="svelte-1m508oj">Clear Draft</button></div> <div class="flex w-full"><ul class="flex bg-light-gray px-4 pt-2 w-full mt-4 border-b border-gray-700"><li${add_attribute("class", `mr-4 text-xs md:text-base ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>${escape(homeTeam?.friendlyName)}</button></li> <li${add_attribute("class", `mr-4 text-xs md:text-base ${""}`, 0)}><button${add_attribute("class", `p-2 ${"text-gray-400"}`, 0)}>${escape(awayTeam?.friendlyName)}</button></li></ul></div> <div class="flex w-full flex-col"><div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full" data-svelte-h="svelte-15cg9f0"><div class="w-1/6 px-4">Player</div> <div class="w-1/6 px-4">Position</div> <div class="w-1/6 px-4">Events</div> <div class="w-1/6 px-4">Start</div> <div class="w-1/6 px-4">End</div> <div class="w-1/6 px-4"> </div></div> ${`${each($selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId), (player) => {
-        return `<div class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"><div class="w-1/6 px-4">${escape(`${player.firstName.length > 0 ? player.firstName.charAt(0) + "." : ""} ${player.lastName}`)}</div> ${player.position == 0 ? `<div class="w-1/6 px-4" data-svelte-h="svelte-mmeyla">GK</div>` : ``} ${player.position == 1 ? `<div class="w-1/6 px-4" data-svelte-h="svelte-1bhhlci">DF</div>` : ``} ${player.position == 2 ? `<div class="w-1/6 px-4" data-svelte-h="svelte-syz487">MF</div>` : ``} ${player.position == 3 ? `<div class="w-1/6 px-4" data-svelte-h="svelte-8mc40v">FW</div>` : ``} <div class="w-1/6 px-4">Events:
-                  ${escape($playerEventData?.length > 0 && $playerEventData?.filter((e) => e.playerId === player.id).length ? $playerEventData?.filter((e) => e.playerId === player.id).length : 0)}</div> <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventStartMinute : "-")}</div> <div class="w-1/6 px-4">${escape($playerEventData && $playerEventData?.length > 0 && $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0) ? $playerEventData?.find((e) => e.playerId === player.id && e.eventType == 0)?.eventEndMinute : "-")}</div> <div class="w-1/6 px-4"><button class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1" data-svelte-h="svelte-aabdn9">Update Events
-                  </button></div> </div>`;
-      })}`} ${``}</div> <div class="flex w-full m-4" data-svelte-h="svelte-1toeckg"><h1>Summary</h1></div> <div class="flex flex-row w-full m-4"><div class="text-sm font-medium flex-grow">Appearances: ${escape($playerEventData.filter((x) => x.eventType == 0).length)}</div> <div class="text-sm font-medium flex-grow">Goals: ${escape($playerEventData.filter((x) => x.eventType == 1).length)}</div> <div class="text-sm font-medium flex-grow">Own Goals: ${escape($playerEventData.filter((x) => x.eventType == 10).length)}</div> <div class="text-sm font-medium flex-grow">Assists: ${escape($playerEventData.filter((x) => x.eventType == 2).length)}</div> <div class="text-sm font-medium flex-grow">Keeper Saves: ${escape($playerEventData.filter((x) => x.eventType == 4).length)}</div> <div class="text-sm font-medium flex-grow">Yellow Cards: ${escape($playerEventData.filter((x) => x.eventType == 8).length)}</div> <div class="text-sm font-medium flex-grow">Red Cards: ${escape($playerEventData.filter((x) => x.eventType == 9).length)}</div> <div class="text-sm font-medium flex-grow">Penalties Saved: ${escape($playerEventData.filter((x) => x.eventType == 6).length)}</div> <div class="text-sm font-medium flex-grow">Penalties Missed: ${escape($playerEventData.filter((x) => x.eventType == 7).length)}</div></div> <div class="items-center mt-3 flex space-x-4"><button${add_attribute(
-        "class",
-        `${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-            px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`,
-        0
-      )} ${isSubmitDisabled ? "disabled" : ""}>Submit Event Data</button></div></div></div>`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })} ${``} ${``} ${validate_component(Confirm_fixture_data_modal, "ConfirmFixtureDataModal").$$render(
     $$result,
@@ -6007,7 +5969,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.showSnapshotModal(showSnapshotModal);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -6037,7 +5999,7 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -6054,7 +6016,7 @@ const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_fixtureStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -6131,7 +6093,7 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_fantasyTeam();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -6339,7 +6301,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_teamStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -6369,7 +6331,7 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });
@@ -6378,7 +6340,7 @@ const profileDetail_svelte_svelte_type_style_lang = "";
 const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `${`${validate_component(LoadingIcon, "LoadingIcon").$$render($$result, {}, {}, {})}`}`;
+      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
     }
   })}`;
 });

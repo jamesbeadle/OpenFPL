@@ -4,7 +4,7 @@
   import AdminFixtures from "$lib/components/admin/admin-fixtures.svelte";
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
   import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
-    import { Spinner } from "@dfinity/gix-components";
+  import { Spinner } from "@dfinity/gix-components";
 
   export let showSystemStateModal: boolean = false;
   export let showSnapshotModal: boolean = false;

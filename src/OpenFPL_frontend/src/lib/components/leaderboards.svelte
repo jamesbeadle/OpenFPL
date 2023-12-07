@@ -7,7 +7,7 @@
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-    import { Spinner } from "@dfinity/gix-components";
+  import { Spinner } from "@dfinity/gix-components";
 
   let isLoading = true;
   let gameweeks = Array.from(

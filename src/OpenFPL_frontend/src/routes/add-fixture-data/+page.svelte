@@ -134,7 +134,6 @@
   }
 
   function saveDraft() {
-
     const draftData = {
       playerEventData: $playerEventData,
     };

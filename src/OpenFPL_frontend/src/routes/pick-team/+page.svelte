@@ -30,7 +30,7 @@
   import { getFlagComponent } from "../../lib/utils/Helpers";
   import type { FantasyTeam } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
-    import { Spinner, busyStore } from "@dfinity/gix-components";
+  import { Spinner, busyStore } from "@dfinity/gix-components";
 
   interface FormationDetails {
     positions: number[];
@@ -695,7 +695,7 @@
       initiator: "save-team",
       text: "Saving fantasy team...",
     });
-    
+
     let team = $fantasyTeam;
     if (team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)) {
       team!.captainId = getHighestValuedPlayerId(team!);
@@ -873,7 +873,9 @@
       </div>
 
       <div class="flex md:hidden flex-col md:flex-row">
-        <div class="flex flex-col justify-between items-center text-white mx-8 mt-4 bg-panel p-2 rounded-md">
+        <div
+          class="flex flex-col justify-between items-center text-white mx-8 mt-4 bg-panel p-2 rounded-md"
+        >
           <div class="flex flex-row">
             <button
               class={`btn ${
@@ -907,7 +909,9 @@
             </span>
           </div>
 
-          <div class="flex flex-row md:flex-row w-full md:justify-end gap-4 my-2 md:mt-0">
+          <div
+            class="flex flex-row md:flex-row w-full md:justify-end gap-4 my-2 md:mt-0"
+          >
             <button
               disabled={$fantasyTeam?.playerIds
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
@@ -1236,16 +1240,19 @@
       </div>
 
       <div class="md:hidden mt-6">
-        <div class="flex flex-row justify-start items-center text-white space-x-0 flex-grow mx-4 my-2 bg-panel p-4 rounded-md">
-         
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+        <div
+          class="flex flex-row justify-start items-center text-white space-x-0 flex-grow mx-4 my-2 bg-panel p-4 rounded-md"
+        >
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
 
           <div class="flex-grow">
             <div class="ml-1">
               <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
                 Gameweek
               </p>
-              <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+              <p
+                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+              >
                 {activeGameweek}
               </p>
               <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
@@ -1254,7 +1261,7 @@
             </div>
           </div>
 
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
 
           <div class="flex-grow">
             <div class="ml-1">
@@ -1272,7 +1279,7 @@
             </div>
           </div>
 
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
 
           <div class="flex-grow">
             <div class="ml-1">
@@ -1287,8 +1294,8 @@
               <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">GBP</p>
             </div>
           </div>
-          
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
 
           <div class="flex-grow">
             <div class="ml-1">
@@ -1304,7 +1311,7 @@
             </div>
           </div>
 
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
 
           <div class="flex-grow">
             <div class="ml-1">

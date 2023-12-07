@@ -4,7 +4,7 @@
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import Layout from "../Layout.svelte";
-    import { Spinner } from "@dfinity/gix-components";
+  import { Spinner } from "@dfinity/gix-components";
   let activeTab: string = "details";
 
   let isLoading = true;

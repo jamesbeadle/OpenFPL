@@ -3,8 +3,8 @@ import { toastsClean, toastsError, toastsShow } from "$lib/stores/toasts-store";
 import type { ToastMsg } from "$lib/types/toast";
 import { replaceHistory } from "$lib/utils/route.utils";
 import type { ToastLevel } from "@dfinity/gix-components";
-import { isNullish } from "@dfinity/utils";
 import { busyStore } from "@dfinity/gix-components";
+import { isNullish } from "@dfinity/utils";
 
 export const signIn = async (
   params: AuthSignInParams

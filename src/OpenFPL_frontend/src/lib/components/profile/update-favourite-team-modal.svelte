@@ -9,7 +9,7 @@
   export let closeModal: () => void;
   export let cancelModal: () => void;
   export let newFavouriteTeam: number = 0;
-  
+
   let isSubmitDisabled: boolean = true;
   $: isSubmitDisabled = newFavouriteTeam <= 0;
 

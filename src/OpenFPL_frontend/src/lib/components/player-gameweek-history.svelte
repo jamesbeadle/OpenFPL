@@ -18,7 +18,7 @@
     PlayerGameweekDTO,
   } from "../../../../declarations/player_canister/player_canister.did";
   import { playerEventsStore } from "$lib/stores/player-events-store";
-    import { Spinner } from "@dfinity/gix-components";
+  import { Spinner } from "@dfinity/gix-components";
 
   let isLoading = true;
   let selectedGameweek: number;

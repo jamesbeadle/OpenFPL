@@ -14,7 +14,7 @@
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { getFlagComponent } from "$lib/utils/Helpers";
-    import { Spinner } from "@dfinity/gix-components";
+  import { Spinner } from "@dfinity/gix-components";
 
   export let principalId = "";
   export let viewGameweekDetail: (

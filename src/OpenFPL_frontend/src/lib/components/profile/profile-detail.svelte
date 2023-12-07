@@ -9,7 +9,7 @@
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
-    import { busyStore, Spinner } from "@dfinity/gix-components";
+  import { busyStore, Spinner } from "@dfinity/gix-components";
 
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showUsernameModal: boolean = false;
@@ -114,7 +114,6 @@
   }
 
   async function uploadProfileImage(file: File) {
-    
     busyStore.startBusy({
       initiator: "upload-image",
       text: "Uploading profile picture...",

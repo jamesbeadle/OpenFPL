@@ -18,7 +18,7 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
-    import { Spinner } from "@dfinity/gix-components";
+  import { Spinner } from "@dfinity/gix-components";
 
   let isLoading = true;
   let fixturesWithTeams: FixtureWithTeams[] = [];

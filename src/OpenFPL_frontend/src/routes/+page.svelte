@@ -23,7 +23,7 @@
   import LeaderboardsComponent from "$lib/components/leaderboards.svelte";
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-    import { Spinner } from "@dfinity/gix-components";
+  import { Spinner } from "@dfinity/gix-components";
 
   let activeTab: string = "fixtures";
   let managerCount = -1;
