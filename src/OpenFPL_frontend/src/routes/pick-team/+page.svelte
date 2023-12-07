@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import Layout from "../Layout.svelte";
   import { writable } from "svelte/store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
@@ -79,6 +79,9 @@
   const bankBalance = writable(1200);
   const bonusUsedInSession = writable<boolean>(false);
 
+  let pitchHeight = 0;
+  let pitchElement: HTMLElement;
+
   let isLoading = true;
 
   $: gridSetup = getGridSetup(selectedFormation);
@@ -98,55 +101,76 @@
       }
     }
   }
-  onMount(async () => {
+
+  $: rowHeight = pitchHeight / 4;
+
+  onMount(() => {
+    console.log("MOUNTED")
     try {
-      await systemStore.sync();
-      await teamStore.sync();
-      await playerStore.sync();
 
-      activeSeason = $systemStore?.activeSeason.name ?? "-";
-      activeGameweek = $systemStore?.activeGameweek ?? 1;
-
-      const storedViewMode = localStorage.getItem("viewMode");
-      if (storedViewMode) {
-        pitchView = storedViewMode === "pitch";
+      if (typeof window !== 'undefined') {
+        window.addEventListener('resize', updatePitchHeight);
+        updatePitchHeight();
       }
 
-      let nextFixture = await fixtureStore.getNextFixture();
+      async function loadData() {
+        
+        await systemStore.sync();
+        await teamStore.sync();
+        await playerStore.sync();
 
-      let userFantasyTeam = await managerStore.getFantasyTeam();
-      fantasyTeam.set(userFantasyTeam);
+        activeSeason = $systemStore?.activeSeason.name ?? "-";
+        activeGameweek = $systemStore?.activeGameweek ?? 1;
 
-      let principalId = $fantasyTeam?.principalId ?? "";
-
-      if (principalId.length > 0) {
-        newTeam = false;
-        bankBalance.set(Number(userFantasyTeam.bankBalance));
-      }
-
-      if (activeGameweek > 1 && principalId.length > 0) {
-        transfersAvailable.set(userFantasyTeam.transfersAvailable);
-      }
-
-      fantasyTeam.update((currentTeam) => {
-        if (
-          currentTeam &&
-          (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
-        ) {
-          return {
-            ...currentTeam,
-            playerIds: new Uint16Array(11).fill(0),
-          };
+        const storedViewMode = localStorage.getItem("viewMode");
+        if (storedViewMode) {
+          pitchView = storedViewMode === "pitch";
         }
-        return currentTeam;
-      });
-      nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
-      nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
 
-      let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
-      countdownDays = countdownTime.days.toString();
-      countdownHours = countdownTime.hours.toString();
-      countdownMinutes = countdownTime.minutes.toString();
+        let nextFixture = await fixtureStore.getNextFixture();
+
+        let userFantasyTeam = await managerStore.getFantasyTeam();
+        fantasyTeam.set(userFantasyTeam);
+
+        let principalId = $fantasyTeam?.principalId ?? "";
+
+        if (principalId.length > 0) {
+          newTeam = false;
+          bankBalance.set(Number(userFantasyTeam.bankBalance));
+        }
+
+        if (activeGameweek > 1 && principalId.length > 0) {
+          transfersAvailable.set(userFantasyTeam.transfersAvailable);
+        }
+
+        fantasyTeam.update((currentTeam) => {
+          if (
+            currentTeam &&
+            (!currentTeam.playerIds || currentTeam.playerIds.length !== 11)
+          ) {
+            return {
+              ...currentTeam,
+              playerIds: new Uint16Array(11).fill(0),
+            };
+          }
+          return currentTeam;
+        });
+        nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
+        nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
+
+        let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
+        countdownDays = countdownTime.days.toString();
+        countdownHours = countdownTime.hours.toString();
+        countdownMinutes = countdownTime.minutes.toString();
+        
+
+
+      }
+
+      loadData();
+
+      
+      
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching team details." },
@@ -157,6 +181,15 @@
       isLoading = false;
     }
   });
+  
+  function updatePitchHeight() {
+    if(!pitchElement){
+      return;
+    }
+    pitchHeight = pitchElement.clientHeight;
+    console.log(pitchHeight)
+  }
+  
 
   function getGridSetup(formation: string): number[][] {
     const formationSplits = formation.split("-").map(Number);
@@ -922,7 +955,7 @@
       <div class="flex flex-col xl:flex-row mt-4 mx-2 md:mt-0">
         {#if pitchView}
           <div class="relative w-full xl:w-1/2 mt-4">
-            <img src="pitch.png" alt="pitch" class="w-full" />
+            <img src="pitch.png" alt="pitch" class="w-full h-auto" on:load={updatePitchHeight} bind:this={pitchElement} />
             <div class="absolute top-0 left-0 right-0 bottom-0">
               <div class={`flex justify-around w-full h-auto`}>
                 <div class="relative inline-block">
@@ -965,7 +998,7 @@
                 </div>
               </div>
               {#each gridSetup as row, rowIndex}
-                <div class="flex justify-around items-center w-full">
+                <div class="flex justify-around items-center w-full"  style="height: {rowHeight}px;">
                   {#each row as _, colIndex (colIndex)}
                     {@const actualIndex = getActualIndex(rowIndex, colIndex)}
                     {@const playerIds = $fantasyTeam?.playerIds ?? []}
@@ -973,9 +1006,7 @@
                     {@const player = $playerStore.find(
                       (p) => p.id === playerId
                     )}
-                    <div
-                      class="flex flex-col justify-center items-center flex-1 mt-1 mb-1 xs:mt-2 xs:mb-2 sm:mb-6 md:mb-12 lg:mb-16 xl:mb-6 2xl:mb-12"
-                    >
+                    <div class="flex flex-col justify-center items-center flex-1 player-card">
                       {#if playerId > 0 && player}
                         {@const team = $teamStore.find(
                           (x) => x.id === player.teamId
