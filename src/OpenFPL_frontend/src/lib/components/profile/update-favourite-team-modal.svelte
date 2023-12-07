@@ -3,16 +3,13 @@
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { loadingText } from "$lib/stores/global-stores";
-  import { Modal } from "@dfinity/gix-components";
+  import { Modal, busyStore } from "@dfinity/gix-components";
 
   export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
   export let newFavouriteTeam: number = 0;
-  export let isLoading: boolean;
-
+  
   let isSubmitDisabled: boolean = true;
   $: isSubmitDisabled = newFavouriteTeam <= 0;
 
@@ -22,8 +19,10 @@
   });
 
   async function updateFavouriteTeam() {
-    isLoading = true;
-    loadingText.set("Updating Favourite Club");
+    busyStore.startBusy({
+      initiator: "update-club",
+      text: "Updating favourite club...",
+    });
 
     try {
       await userStore.updateFavouriteTeam(newFavouriteTeam);
@@ -42,8 +41,7 @@
       console.error("Error updating favourite team:", error);
       cancelModal();
     } finally {
-      isLoading = false;
-      loadingText.set("Loading");
+      busyStore.stopBusy("update-club");
     }
   }
 </script>

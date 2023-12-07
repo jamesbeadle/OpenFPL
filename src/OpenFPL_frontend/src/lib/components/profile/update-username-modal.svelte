@@ -1,14 +1,12 @@
 <script lang="ts">
   import { userStore } from "$lib/stores/user-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import { loadingText } from "$lib/stores/global-stores";
-  import { Modal } from "@dfinity/gix-components";
+  import { Modal, busyStore } from "@dfinity/gix-components";
 
   export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
   export let newUsername: string = "";
-  export let isLoading: boolean;
 
   function isDisplayNameValid(displayName: string): boolean {
     if (displayName.length < 3 || displayName.length > 20) {
@@ -21,8 +19,10 @@
   $: isSubmitDisabled = !isDisplayNameValid(newUsername);
 
   async function updateUsername() {
-    isLoading = true;
-    loadingText.set("Updating Display Name");
+    busyStore.startBusy({
+      initiator: "update-name",
+      text: "Updating display name...",
+    });
     try {
       await userStore.updateUsername(newUsername);
       userStore.sync();
@@ -40,8 +40,7 @@
       console.error("Error updating username:", error);
       cancelModal();
     } finally {
-      isLoading = false;
-      loadingText.set("Loading");
+      busyStore.stopBusy("update-name");
     }
   }
 </script>

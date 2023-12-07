@@ -10,7 +10,6 @@
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
-  let isLoading = true;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let selectedGameweek: number;
 
@@ -57,8 +56,6 @@
         err: error,
       });
       console.error("Error fetching fixtures data:", error);
-    } finally {
-      isLoading = false;
     }
   });
 

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable, type Writable } from "svelte/store";
-  import { loadingText } from "$lib/stores/global-stores";
   import { userStore } from "$lib/stores/user-store";
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
@@ -10,7 +9,7 @@
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
-    import { Spinner } from "@dfinity/gix-components";
+    import { busyStore, Spinner } from "@dfinity/gix-components";
 
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showUsernameModal: boolean = false;
@@ -115,8 +114,11 @@
   }
 
   async function uploadProfileImage(file: File) {
-    $loadingText = "Uploading Profile Image";
-    isLoading = true;
+    
+    busyStore.startBusy({
+      initiator: "upload-image",
+      text: "Uploading profile picture...",
+    });
 
     try {
       await userStore.updateProfilePicture(file);
@@ -143,8 +145,7 @@
       });
       console.error("Error updating profile image", error);
     } finally {
-      isLoading = false;
-      $loadingText = "Loading";
+      busyStore.stopBusy("save-team");
     }
   }
 </script>
@@ -157,14 +158,12 @@
     visible={showUsernameModal}
     closeModal={closeUsernameModal}
     cancelModal={cancelUsernameModal}
-    {isLoading}
   />
   <UpdateFavouriteTeamModal
     newFavouriteTeam={$profile ? $profile.favouriteTeamId : 0}
     visible={showFavouriteTeamModal}
     closeModal={closeFavouriteTeamModal}
     cancelModal={cancelFavouriteTeamModal}
-    {isLoading}
   />
   <div class="container mx-auto p-4">
     {#if $profile}

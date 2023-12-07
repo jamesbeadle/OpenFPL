@@ -7,7 +7,6 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
-  import { loadingText } from "$lib/stores/global-stores";
   import type {
     PlayerDTO,
     PlayerEventData,

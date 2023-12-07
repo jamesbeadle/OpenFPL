@@ -20,7 +20,6 @@
   import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
-  import { loadingText } from "$lib/stores/global-stores";
   import {
     formatUnixDateToReadable,
     formatUnixTimeToTime,
@@ -737,7 +736,6 @@
       console.error("Error saving team:", error);
     } finally {
       busyStore.stopBusy("save-team");
-      loadingText.set("Loading");
     }
   }
 </script>
@@ -831,7 +829,7 @@
               Team Value
             </p>
             <p
-              class="tetext-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
             >
               £{teamValue.toFixed(2)}m
             </p>
@@ -874,17 +872,13 @@
         </div>
       </div>
 
-      <div class="hidden md:flex flex-col md:flex-row">
-        <div
-          class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full"
-        >
-          <div
-            class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1"
-          >
+      <div class="flex md:hidden flex-col md:flex-row">
+        <div class="flex flex-col justify-between items-center text-white mx-8 mt-4 bg-panel p-2 rounded-md">
+          <div class="flex flex-row">
             <button
               class={`btn ${
                 pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-2`}
               on:click={showPitchView}
             >
               Pitch View
@@ -892,20 +886,18 @@
             <button
               class={`btn ${
                 !pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-2`}
               on:click={showListView}
             >
               List View
             </button>
           </div>
 
-          <div
-            class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0"
-          >
+          <div class="text-center md:text-left w-full">
             <span class="text-lg">
               Formation:
               <select
-                class="px-4 py-2 border-sm fpl-dropdown text-xs sm:text-sm md:text-base text-center text-center"
+                class="px-4 py-2 border-sm fpl-dropdown text-lg text-center text-center"
                 bind:value={selectedFormation}
               >
                 {#each $availableFormations as formation}
@@ -915,9 +907,7 @@
             </span>
           </div>
 
-          <div
-            class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
-          >
+          <div class="flex flex-row md:flex-row w-full md:justify-end gap-4 my-2 md:mt-0">
             <button
               disabled={$fantasyTeam?.playerIds
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
@@ -1240,10 +1230,106 @@
             </div>
           </div>
         {/if}
-        <div class="flex w-100 xl:w-1/2">
+        <div class="hidden md:flex w-100 xl:w-1/2">
           <SimpleFixtures />
         </div>
       </div>
+
+      <div class="md:hidden mt-6">
+        <div class="flex flex-row justify-start items-center text-white space-x-0 flex-grow mx-4 my-2 bg-panel p-4 rounded-md">
+         
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+
+          <div class="flex-grow">
+            <div class="ml-1">
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+                Gameweek
+              </p>
+              <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold">
+                {activeGameweek}
+              </p>
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+                {activeSeason}
+              </p>
+            </div>
+          </div>
+
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+
+          <div class="flex-grow">
+            <div class="ml-1">
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+                Players
+              </p>
+              <p
+                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+              >
+                {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
+              </p>
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+                Selected
+              </p>
+            </div>
+          </div>
+
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+
+          <div class="flex-grow">
+            <div class="ml-1">
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+                Team Value
+              </p>
+              <p
+                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+              >
+                £{teamValue.toFixed(2)}m
+              </p>
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">GBP</p>
+            </div>
+          </div>
+          
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+
+          <div class="flex-grow">
+            <div class="ml-1">
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+                Bank Balance
+              </p>
+              <p
+                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+              >
+                £{($bankBalance / 4).toFixed(2)}m
+              </p>
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">GBP</p>
+            </div>
+          </div>
+
+          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;"></div>
+
+          <div class="flex-grow">
+            <div class="ml-1">
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+                Transfers
+              </p>
+              <p
+                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+              >
+                {$transfersAvailable === Infinity
+                  ? "Unlimited"
+                  : $transfersAvailable}
+              </p>
+              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+                Available
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex md:hidden w-100 xl:w-1/2">
+        <SimpleFixtures />
+      </div>
+
       <BonusPanel {fantasyTeam} {activeGameweek} />
     </div>
   {/if}
