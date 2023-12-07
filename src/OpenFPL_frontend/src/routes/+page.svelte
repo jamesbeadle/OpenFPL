@@ -100,7 +100,7 @@
     <Spinner />
   {:else}
     <div class="page-header-wrapper">
-      <div class="content-panel w-1/2">
+      <div class="content-panel lg:w-1/2">
         <div class="flex-grow">
           <p class="content-panel-header">
             Gameweek
@@ -139,9 +139,9 @@
         </div>
       </div>
 
-      <div class="flex xs:hidden">
+      <div class="flex lg:hidden">
         <div class="content-panel">
-          <div class="flex flex-grow flex-col mt-2 w-1/3">
+          <div class="flex flex flex-col mt-2 xs:mr-2">
             <p class="content-panel-header">
               Next Game
             </p>
@@ -155,7 +155,7 @@
                   }`}
                 >
                   <BadgeIcon
-                    className="h-5 mb-2 mt-2"
+                    className="h-4 sm:h-6 my-2 sm:my-4"
                     primaryColour={nextFixtureHomeTeam
                       ? nextFixtureHomeTeam.primaryColourHex
                       : ""}
@@ -180,7 +180,7 @@
                   }`}
                 >
                   <BadgeIcon
-                    className="h-5 mb-2 mt-2"
+                    className="h-4 sm:h-6 my-2 sm:my-4"
                     primaryColour={nextFixtureAwayTeam
                       ? nextFixtureAwayTeam.primaryColourHex
                       : ""}
@@ -212,14 +212,17 @@
                 >
               </p>
             </div>
-            <p class="lg:hidden 2xl:hidden content-panel-header">
+            <p class="hidden xs:flex content-panel-header">
+              {nextFixtureDate}
+            </p>
+            <p class="xs:hidden content-panel-header">
               {nextFixtureDateSmall}
             </p>
           </div>
         </div>
       </div>
       
-      <div class="hidden xs:flex w-1/2">
+      <div class="hidden lg:flex w-1/2">
         <div class="content-panel">
           <div class="flex-grow">
             <p class="content-panel-header">
@@ -288,9 +291,6 @@
               {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
               : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
               : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
-            </p>
-            <p class="md:hidden content-panel-header">
-              {nextFixtureDateSmall}
             </p>
             <p class="hidden md:flex content-panel-header">
               {nextFixtureDate}
