@@ -132,10 +132,7 @@
               Shirt: {selectedPlayer?.shirtNumber}
             </p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
               {team?.name}
@@ -153,10 +150,7 @@
               />{selectedPlayer?.firstName}
             </p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">Value</p>
             <p class="content-panel-stat">

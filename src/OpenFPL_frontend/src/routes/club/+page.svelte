@@ -126,31 +126,25 @@
               {team?.abbreviatedName}
             </p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
               Players
             </p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold">
+            <p class="content-panel-stat">
               {$playerStore.filter((x) => x.teamId == id).length}
             </p>
             <p class="content-panel-header">Total</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
               League Position
             </p>
-            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold">
+            <p class="content-panel-stat">
               {getTeamPosition(id)}
             </p>
-            <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               {$systemStore?.activeSeason.name}
             </p>
           </div>
@@ -175,10 +169,7 @@
             style="min-height: 2px; min-width: 2px;"
           />
           
-          <div
-            class="hidden md:flex flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
 
           <div class="flex-grow my-4 md:mb-0">
             <p class="content-panel-header">
@@ -237,10 +228,7 @@
             style="min-height: 2px; min-width: 2px;"
           />
           
-          <div
-            class="hidden md:flex flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
 
           <div class="flex-grow">
             <p

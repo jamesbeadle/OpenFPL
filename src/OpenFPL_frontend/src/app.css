@@ -138,9 +138,14 @@ input {
 }
 
 .content-panel-header{
-  @apply text-gray-300 text-xxs xs:text-sm sm:text-base;
+  @apply text-gray-300 text-xxs xs:text-sm sm:text-base lg:text-sm;
 }
 
 .content-panel-stat{
-  @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold;
+  @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl mt-2 mb-2 font-bold;
+}
+
+.vertical-divider{
+  min-width: 2px; min-height: 50px;
+  @apply flex-shrink-0 w-px bg-gray-400 self-stretch;
 }

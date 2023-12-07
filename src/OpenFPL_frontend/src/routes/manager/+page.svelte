@@ -118,10 +118,7 @@
           <div class="flex">
             <img class="w-20" src={profilePicture} alt={displayName} />
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
               Manager
@@ -133,10 +130,7 @@
               Joined: {joinedDate}
             </p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
               Favourite Team
@@ -170,10 +164,7 @@
             </p>
             <p class="content-panel-header">Weekly</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
               {favouriteTeam?.friendlyName ?? "Not Entered"}
@@ -188,10 +179,7 @@
             </p>
             <p class="content-panel-header">Club</p>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
               {selectedSeason}

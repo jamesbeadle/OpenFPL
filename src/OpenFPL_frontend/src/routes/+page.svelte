@@ -100,7 +100,7 @@
     <Spinner />
   {:else}
     <div class="page-header-wrapper">
-      <div class="content-panel ">
+      <div class="content-panel w-1/2">
         <div class="flex-grow">
           <p class="content-panel-header">
             Gameweek
@@ -112,10 +112,7 @@
             {$systemStore?.activeSeason.name}
           </p>
         </div>
-        <div
-          class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-          style="min-width: 2px; min-height: 50px;"
-        />
+        <div class="vertical-divider" />
         <div class="flex-grow">
           <p class="content-panel-header">
             Managers
@@ -125,104 +122,87 @@
           </p>
           <p class="content-panel-header">Total</p>
         </div>
-        <div
-          class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-          style="min-width: 2px; min-height: 50px;"
-        />
+        <div class="vertical-divider" />
         <div class="flex-grow">
-          <p class="text-gray-300 hidden md:block text-xxs xs:text-sm sm:text-base">
+          <p class="hidden md:block content-panel-header">
             Weekly Prize Pool
           </p>
-          <p class="text-gray-300 md:hidden text-xxs xs:text-sm sm:text-base">
+          <p class="md:hidden content-panel-header">
             Weekly
           </p>
           <p class="content-panel-stat">
             0
           </p>
-          <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">
+          <p class="content-panel-header">
             $FPL
           </p>
         </div>
       </div>
 
-      <div class="flex lg:hidden">
-
+      <div class="flex xs:hidden">
         <div class="content-panel">
-          <div class="w-1/3">
+          <div class="flex flex-grow flex-col mt-2 w-1/3">
             <p class="content-panel-header">
               Next Game
             </p>
             
-            <div class="flex justify-center">
-              <div class="flex justify-center items-center mb-2 lg:mb-0 text-xxs xs:text-sm sm:text-base">
-                <div class="flex">
-                  <a
-                    class="flex flex-col items-center justify-center mt-6"
-                    href={`/club?id=${
-                      nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
-                    }`}
-                  >
-                    <BadgeIcon
-                      className="h-6"
-                      primaryColour={nextFixtureHomeTeam
-                        ? nextFixtureHomeTeam.primaryColourHex
-                        : ""}
-                      secondaryColour={nextFixtureHomeTeam
-                        ? nextFixtureHomeTeam.secondaryColourHex
-                        : ""}
-                      thirdColour={nextFixtureHomeTeam
-                        ? nextFixtureHomeTeam.thirdColourHex
-                        : ""}
-                    />
-                    <span>
-                      {nextFixtureHomeTeam
-                        ? nextFixtureHomeTeam.abbreviatedName
-                        : ""}
-                    </span>
-                  </a>
-                </div>
-                <div class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-1 xl:mt-6">
-                  <p class="text-xs mt-2 mb-2 font-bold">v</p>
-                </div>
-                <div class="flex">
-                  <a
-                    class="flex flex-col items-center justify-center mt-6 lg:mt-2 xl:mt-3"
-                    href={`/club?id=${
-                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
-                    }`}
-                  >
-                    <BadgeIcon
-                      className="h-6"
-                      primaryColour={nextFixtureAwayTeam
-                        ? nextFixtureAwayTeam.primaryColourHex
-                        : ""}
-                      secondaryColour={nextFixtureAwayTeam
-                        ? nextFixtureAwayTeam.secondaryColourHex
-                        : ""}
-                      thirdColour={nextFixtureAwayTeam
-                        ? nextFixtureAwayTeam.thirdColourHex
-                        : ""}
-                    />
-                    <span>
-                      {nextFixtureAwayTeam
-                        ? nextFixtureAwayTeam.abbreviatedName
-                        : ""}
-                    </span>
-                  </a>
-                </div>
+            <div class="flex justify-start ml-1 items-center mb-2">
+              <div class="flex">
+                <a
+                  class="flex flex-col items-center justify-center"
+                  href={`/club?id=${
+                    nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                  }`}
+                >
+                  <BadgeIcon
+                    className="h-5 mb-2 mt-2"
+                    primaryColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.primaryColourHex
+                      : ""}
+                    secondaryColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.secondaryColourHex
+                      : ""}
+                    thirdColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.thirdColourHex
+                      : ""}
+                  />
+                  <span class="content-panel-header">{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ""}</span>
+                </a>
+              </div>
+              <div class="w-v ml-1 mr-1 flex justify-center">
+                <p class="text-xs mt-2 mb-2 font-bold">v</p>
+              </div>
+              <div class="flex">
+                <a
+                  class="flex flex-col items-center justify-center"
+                  href={`/club?id=${
+                    nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                  }`}
+                >
+                  <BadgeIcon
+                    className="h-5 mb-2 mt-2"
+                    primaryColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.primaryColourHex
+                      : ""}
+                    secondaryColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.secondaryColourHex
+                      : ""}
+                    thirdColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.thirdColourHex
+                      : ""}
+                  />
+                  <span class="content-panel-header">{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName: ""}</span>
+                </a>
               </div>
             </div>
           </div>
-          <div
-            class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-            style="min-width: 2px; min-height: 50px;"
-          />
+          <div class="vertical-divider" />
           <div class="flex-grow">
-            <p class="content-panel-header mt-4 lg:mt-0">
+            <p class="content-panel-header">
               Kick Off
             </p>
             <div class="flex">
-              <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl xl:text-2xl mt-2 mb-2 font-bold">
+              <p class="content-panel-stat">
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
                 : {countdownHours}<span class="text-gray-300 text-xs ml-1"
                   >h</span
@@ -232,143 +212,116 @@
                 >
               </p>
             </div>
-            <p
-              class="lg:hidden 2xl:flex content-panel-header"
-            >
-              {nextFixtureDate} | {nextFixtureTime}
-            </p>
-            <p
-              class="hidden lg:flex 2xl:hidden content-panel-header"
-            >
+            <p class="lg:hidden 2xl:hidden content-panel-header">
               {nextFixtureDateSmall}
             </p>
           </div>
         </div>
       </div>
       
-      <div class="hidden lg:flex">
+      <div class="hidden xs:flex w-1/2">
         <div class="content-panel">
-          <div class="hidden md:flex lg:hidden content-panel">
-            <div class="flex-grow">
-              <p class="content-panel-header w-full text-center lg:w-auto md:text-left">
-                Next Game
-              </p>
-              <div class="flex flex-row">
-                <div class="ml-4 lg:ml-1 xl:ml-4 mr-4 lg:mr-1 xl:mr-4 flex">
-                  <a
-                    class="flex flex-col items-center justify-center mt-4 lg:mt-3 xl:mt-6"
-                    href={`/club?id=${
-                      nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
-                    }`}
-                  >
-                    <BadgeIcon
-                      className="h-8 mb-4"
-                      primaryColour={nextFixtureHomeTeam
-                        ? nextFixtureHomeTeam.primaryColourHex
-                        : ""}
-                      secondaryColour={nextFixtureHomeTeam
-                        ? nextFixtureHomeTeam.secondaryColourHex
-                        : ""}
-                      thirdColour={nextFixtureHomeTeam
-                        ? nextFixtureHomeTeam.thirdColourHex
-                        : ""}
-                    />
-                    <span>
-                      {nextFixtureHomeTeam
-                        ? nextFixtureHomeTeam.abbreviatedName
-                        : ""}
-                    </span>
-                  </a>
-                </div>
-                <div
-                  class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6"
+          <div class="flex-grow">
+            <p class="content-panel-header">
+              Next Game
+            </p>
+            <div class="flex flex-row">
+              <div class="flex justify-center">
+                <a
+                  class="flex flex-col items-center justify-left mt-4 lg:mt-3 xl:mt-6"
+                  href={`/club?id=${
+                    nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+                  }`}
                 >
-                  <p class="text-xs mt-2 mb-2 font-bold">v</p>
-                </div>
-                <div class="ml-4 lg:ml-1 xl:ml-4 mr-4 lg:mr-1 xl:mr-4 flex">
-                  <a
-                    class="flex flex-col items-center justify-center mt-4 lg:mt-3 xl:mt-6"
-                    href={`/club?id=${
-                      nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
-                    }`}
-                  >
-                    <BadgeIcon
-                      className="h-8 mb-4"
-                      primaryColour={nextFixtureAwayTeam
-                        ? nextFixtureAwayTeam.primaryColourHex
-                        : ""}
-                      secondaryColour={nextFixtureAwayTeam
-                        ? nextFixtureAwayTeam.secondaryColourHex
-                        : ""}
-                      thirdColour={nextFixtureAwayTeam
-                        ? nextFixtureAwayTeam.thirdColourHex
-                        : ""}
-                    />
-                    <span>
-                      {nextFixtureAwayTeam
-                        ? nextFixtureAwayTeam.abbreviatedName
-                        : ""}
-                    </span>
-                  </a>
-                </div>
+                  <BadgeIcon
+                    className="h-6 mb-4"
+                    primaryColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.primaryColourHex
+                      : ""}
+                    secondaryColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.secondaryColourHex
+                      : ""}
+                    thirdColour={nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.thirdColourHex
+                      : ""}
+                  />
+                  <span class="content-panel-header">
+                    {nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ""}
+                  </span>
+                </a>
+              </div>
+              <div class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6">
+                <p class="text-xs mt-2 mb-2 font-bold">v</p>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  class="flex flex-col items-center justify-center mt-4 lg:mt-3 xl:mt-6"
+                  href={`/club?id=${
+                    nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+                  }`}
+                >
+                  <BadgeIcon
+                    className="h-6 mb-4"
+                    primaryColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.primaryColourHex
+                      : ""}
+                    secondaryColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.secondaryColourHex
+                      : ""}
+                    thirdColour={nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.thirdColourHex
+                      : ""}
+                  />
+                  <span class="content-panel-header">
+                    {nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ""}
+                  </span>
+                </a>
               </div>
             </div>
-            <div
-              class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-              style="min-width: 2px; min-height: 50px;"
-            />
-            <div class="flex-grow">
-              <p class="content-panel-header">
-                Kick Off
-              </p>
-              <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold"
-              >
-                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span
+          </div>
+          <div class="vertical-divider" />
+          <div class="flex-grow">
+            <p class="content-panel-header">
+              Kick Off
+            </p>
+            <p class="content-panel-stat">
+              {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
+              : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
+              : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+            </p>
+            <p class="md:hidden content-panel-header">
+              {nextFixtureDateSmall}
+            </p>
+            <p class="hidden md:flex content-panel-header">
+              {nextFixtureDate}
+            </p>
+          </div>
+          <div class="vertical-divider" />
+          <div class="flex-grow">
+            <p class="content-panel-header">
+              GW {$systemStore?.focusGameweek} High Score
+            </p>
+            <p
+              class="content-panel-stat max-w-[200px] truncate"
+            >
+              {#if weeklyLeader}
+                <a
+                  href={`/manager?id=${weeklyLeader.principalId}&gw=${$systemStore?.focusGameweek}`}
+                  >{weeklyLeader.principalId === weeklyLeader.username
+                    ? "Unknown"
+                    : weeklyLeader.username}</a
                 >
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
-                  >m</span
-                >
-              </p>
-              <p
-                class="lg:hidden xl:flex content-panel-header"
-              >
-                {nextFixtureDate}
-              </p>
-            </div>
-            <div
-              class="flex-shrink-0 w-px bg-gray-400 self-stretch"
-              style="min-width: 2px; min-height: 50px;"
-            />
-            <div class="flex-grow">
-              <p
-                class="text-gray-300 hidden md:block text-xxs xs:text-sm sm:text-base"
-              >
-                GW {$systemStore?.focusGameweek} High Score
-              </p>
-              <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold max-w-[200px] truncate"
-              >
-                {#if weeklyLeader}
-                  <a
-                    href={`/manager?id=${weeklyLeader.principalId}&gw=${$systemStore?.focusGameweek}`}
-                    >{weeklyLeader.principalId === weeklyLeader.username
-                      ? "Unknown"
-                      : weeklyLeader.username}</a
-                  >
-                {:else}
-                  -
-                {/if}
-              </p>
-              <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">
-                {#if weeklyLeader}
-                  {weeklyLeader.points} points
-                {:else}
-                  -
-                {/if}
-              </p>
-            </div>
+              {:else}
+                -
+              {/if}
+            </p>
+            <p class="content-panel-header">
+              {#if weeklyLeader}
+                {weeklyLeader.points} points
+              {:else}
+                -
+              {/if}
+            </p>
           </div>
         </div>
       </div>  
