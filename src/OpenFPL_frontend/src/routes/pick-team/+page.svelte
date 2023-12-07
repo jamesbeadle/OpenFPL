@@ -102,19 +102,17 @@
     }
   }
 
-  $: rowHeight = pitchHeight / 4;
+  $: rowHeight = (pitchHeight * 0.9) / 4;
+  $: gridSetupComplete = rowHeight > 0;
 
   onMount(() => {
-    console.log("MOUNTED")
     try {
-
-      if (typeof window !== 'undefined') {
-        window.addEventListener('resize', updatePitchHeight);
+      if (typeof window !== "undefined") {
+        window.addEventListener("resize", updatePitchHeight);
         updatePitchHeight();
       }
 
       async function loadData() {
-        
         await systemStore.sync();
         await teamStore.sync();
         await playerStore.sync();
@@ -155,41 +153,35 @@
           }
           return currentTeam;
         });
-        nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
+        nextFixtureDate = formatUnixDateToReadable(
+          Number(nextFixture?.kickOff)
+        );
         nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
 
         let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
         countdownDays = countdownTime.days.toString();
         countdownHours = countdownTime.hours.toString();
         countdownMinutes = countdownTime.minutes.toString();
-        
-
-
+        isLoading = false;
       }
 
       loadData();
-
-      
-      
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching team details." },
         err: error,
       });
       console.error("Error fetching team details:", error);
-    } finally {
       isLoading = false;
     }
   });
-  
+
   function updatePitchHeight() {
-    if(!pitchElement){
+    if (!pitchElement) {
       return;
     }
     pitchHeight = pitchElement.clientHeight;
-    console.log(pitchHeight)
   }
-  
 
   function getGridSetup(formation: string): number[][] {
     const formationSplits = formation.split("-").map(Number);
@@ -761,7 +753,6 @@
       {bankBalance}
     />
     <div class="sm:m-1 md:m-2 lg:m-3 xl:m-4">
-      
       <div class="hidden md:flex flex-col sm:flex-row">
         <div
           class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md"
@@ -955,161 +946,178 @@
       <div class="flex flex-col xl:flex-row mt-4 mx-2 md:mt-0">
         {#if pitchView}
           <div class="relative w-full xl:w-1/2 mt-4">
-            <img src="pitch.png" alt="pitch" class="w-full h-auto" on:load={updatePitchHeight} bind:this={pitchElement} />
-            <div class="absolute top-0 left-0 right-0 bottom-0">
-              <div class={`flex justify-around w-full h-auto`}>
-                <div class="relative inline-block">
-                  <img
-                    class="h-6 sm:h-8 md:h-12 m-0 md:m-1"
-                    src="board.png"
-                    alt="OpenChat"
-                  />
-                  <div class="absolute top-0 left-0 w-full h-full">
-                    <a
-                      class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
-                      target="_blank"
-                      href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
-                    >
-                      <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
-                      <span class="text-white text-xs md:text-xl mr-4 oc-logo"
-                        >OpenChat</span
+            <img
+              src="pitch.png"
+              alt="pitch"
+              class="w-full h-auto"
+              on:load={updatePitchHeight}
+              bind:this={pitchElement}
+            />
+            {#if gridSetupComplete}
+              <div class="absolute top-0 left-0 right-0 bottom-0">
+                <div class={`flex justify-around w-full h-auto`}>
+                  <div class="relative inline-block">
+                    <img
+                      class="h-6 sm:h-8 md:h-12 m-0 md:m-1"
+                      src="board.png"
+                      alt="OpenChat"
+                    />
+                    <div class="absolute top-0 left-0 w-full h-full">
+                      <a
+                        class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
+                        target="_blank"
+                        href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
                       >
-                    </a>
+                        <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
+                        <span class="text-white text-xs md:text-xl mr-4 oc-logo"
+                          >OpenChat</span
+                        >
+                      </a>
+                    </div>
+                  </div>
+                  <div class="relative inline-block">
+                    <img
+                      class="h-6 sm:h-8 md:h-12 m-0 md:m-1"
+                      src="board.png"
+                      alt="OpenChat"
+                    />
+                    <div class="absolute top-0 left-0 w-full h-full">
+                      <a
+                        class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
+                        target="_blank"
+                        href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
+                      >
+                        <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
+                        <span class="text-white text-xs md:text-xl mr-4 oc-logo"
+                          >OpenChat</span
+                        >
+                      </a>
+                    </div>
                   </div>
                 </div>
-                <div class="relative inline-block">
-                  <img
-                    class="h-6 sm:h-8 md:h-12 m-0 md:m-1"
-                    src="board.png"
-                    alt="OpenChat"
-                  />
-                  <div class="absolute top-0 left-0 w-full h-full">
-                    <a
-                      class="flex items-center justify-center w-full h-full px-2 md:px-4 ml-1 md:ml-0"
-                      target="_blank"
-                      href="https://oc.app/community/uf3iv-naaaa-aaaar-ar3ta-cai/channel/231651284198326210763327878874377361028/?ref=zv6hh-xaaaa-aaaar-ac35q-cai"
-                    >
-                      <OpenChatIcon className="h-4 md:h-6 mr-1 md:mr-2" />
-                      <span class="text-white text-xs md:text-xl mr-4 oc-logo"
-                        >OpenChat</span
+                {#each gridSetup as row, rowIndex}
+                  <div
+                    class="flex justify-around items-center w-full"
+                    style="height: {rowHeight}px;"
+                  >
+                    {#each row as _, colIndex (colIndex)}
+                      {@const actualIndex = getActualIndex(rowIndex, colIndex)}
+                      {@const playerIds = $fantasyTeam?.playerIds ?? []}
+                      {@const playerId = playerIds[actualIndex]}
+                      {@const player = $playerStore.find(
+                        (p) => p.id === playerId
+                      )}
+                      <div
+                        class="flex flex-col justify-center items-center flex-1 player-card"
                       >
-                    </a>
-                  </div>
-                </div>
-              </div>
-              {#each gridSetup as row, rowIndex}
-                <div class="flex justify-around items-center w-full"  style="height: {rowHeight}px;">
-                  {#each row as _, colIndex (colIndex)}
-                    {@const actualIndex = getActualIndex(rowIndex, colIndex)}
-                    {@const playerIds = $fantasyTeam?.playerIds ?? []}
-                    {@const playerId = playerIds[actualIndex]}
-                    {@const player = $playerStore.find(
-                      (p) => p.id === playerId
-                    )}
-                    <div class="flex flex-col justify-center items-center flex-1 player-card">
-                      {#if playerId > 0 && player}
-                        {@const team = $teamStore.find(
-                          (x) => x.id === player.teamId
-                        )}
-                        <div class="flex flex-col items-center text-center">
-                          <div class="flex justify-center items-center">
-                            <div class="flex justify-between items-end w-full">
-                              <button
-                                on:click={() => removePlayer(player.id)}
-                                class="bg-red-600 mb-1 rounded-sm"
-                              >
-                                <RemovePlayerIcon
-                                  className="w-4 h-4 sm:w-6 sm:h-6 p-1"
-                                />
-                              </button>
+                        {#if playerId > 0 && player}
+                          {@const team = $teamStore.find(
+                            (x) => x.id === player.teamId
+                          )}
+                          <div class="flex flex-col items-center text-center">
+                            <div class="flex justify-center items-center">
+                              <div class="flex justify-between items-end w-full">
+                                <button
+                                  on:click={() => removePlayer(player.id)}
+                                  class="bg-red-600 mb-1 rounded-sm"
+                                >
+                                  <RemovePlayerIcon
+                                    className="w-4 h-4 sm:w-6 sm:h-6 p-1"
+                                  />
+                                </button>
+                                <div
+                                  class="flex justify-center items-center flex-grow"
+                                >
+                                  <ShirtIcon
+                                    className="h-6 xs:h-12 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16"
+                                    primaryColour={team?.primaryColourHex}
+                                    secondaryColour={team?.secondaryColourHex}
+                                    thirdColour={team?.thirdColourHex}
+                                  />
+                                </div>
+                                {#if $fantasyTeam?.captainId === playerId}
+                                  <span class="mb-1">
+                                    <ActiveCaptainIcon
+                                      className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
+                                    />
+                                  </span>
+                                {:else}
+                                  <button
+                                    on:click={() => setCaptain(player.id)}
+                                    class="mb-1"
+                                  >
+                                    <PlayerCaptainIcon
+                                      className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
+                                    />
+                                  </button>
+                                {/if}
+                              </div>
+                            </div>
+                            <div
+                              class="flex flex-col justify-center items-center text-xs sm:text-xs"
+                            >
                               <div
-                                class="flex justify-center items-center flex-grow"
+                                class="flex justify-center items-center bg-gray-700 rounded-t-md md:px-2 sm:py-1
+                                min-w-[60px] xs:min-w-[90px] sm:min-w-[120px]
+                                max-w-[60px] xs:max-w-[90px] sm:max-w-[120px]"
                               >
-                                <ShirtIcon
-                                  className="h-6 sm:h-12 md:h-16 lg:h-20 xl:h-12 2xl:h-16"
+                                <p class="hidden sm:flex sm:min-w-[15px]">
+                                  {getPositionAbbreviation(player.position)}
+                                </p>
+                                <svelte:component
+                                  this={getFlagComponent(player.nationality)}
+                                  class="hidden xs:flex h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
+                                />
+                                <p
+                                  class="hidden xs:block truncate min-w-[50px] max-w-[50px] xs:min-w-[60px] xs:max-w-[60px]"
+                                >
+                                  {player.firstName.length > 0
+                                    ? player.firstName.substring(0, 1) + "."
+                                    : ""}
+                                  {player.lastName}
+                                </p>
+                                <p
+                                  class="xs:hidden truncate min-w-[50px] max-w-[50px]"
+                                >
+                                  {player.lastName}
+                                </p>
+                              </div>
+                              <div
+                                class="flex justify-center items-center bg-white text-black md:px-2 sm:py-1 rounded-b-md
+                                min-w-[60px] xs:min-w-[90px] sm:min-w-[120px]
+                                max-w-[60px] xs:max-w-[90px] sm:max-w-[120px]"
+                              >
+                                <p class="collapse sm:visible sm:min-w-[20px]">
+                                  {team?.abbreviatedName}
+                                </p>
+                                <BadgeIcon
+                                  className="hidden xs:flex h-4 w-4 sm:mx-1 min-w-[15px]"
                                   primaryColour={team?.primaryColourHex}
                                   secondaryColour={team?.secondaryColourHex}
                                   thirdColour={team?.thirdColourHex}
                                 />
+                                <p class="truncate min-w-[50px] max-w-[50px]">
+                                  £{(Number(player.value) / 4).toFixed(2)}m
+                                </p>
                               </div>
-                              {#if $fantasyTeam?.captainId === playerId}
-                                <span class="mb-1">
-                                  <ActiveCaptainIcon
-                                    className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
-                                  />
-                                </span>
-                              {:else}
-                                <button
-                                  on:click={() => setCaptain(player.id)}
-                                  class="mb-1"
-                                >
-                                  <PlayerCaptainIcon
-                                    className="w-4 h-4 sm:w-7 sm:h-7 md:w-6 md:h-6"
-                                  />
-                                </button>
-                              {/if}
                             </div>
                           </div>
-                          <div
-                            class="flex flex-col justify-center items-center text-xs sm:text-xs"
+                        {:else}
+                          <button
+                            on:click={() => loadAddPlayer(rowIndex, colIndex)}
+                            class="flex items-center"
                           >
-                            <div
-                              class="flex justify-center items-center bg-gray-700 rounded-t-md md:px-2 sm:py-1 
-                              min-w-[60px] sm:min-w-[120px] 
-                              max-w-[60px] sm:max-w-[120px]"
-                            >
-                              <p class="hidden sm:flex sm:min-w-[15px]">
-                                {getPositionAbbreviation(player.position)}
-                              </p>
-                              <svelte:component
-                                this={getFlagComponent(player.nationality)}
-                                class="hidden xs:flex h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
-                              />
-                              <p class="hidden xs:flex truncate min-w-[50px] max-w-[50px]">
-                                {player.firstName.length > 0
-                                  ? player.firstName.substring(0, 1) + "."
-                                  : ""}
-                                {player.lastName}
-                              </p>
-                              <p class="xs:hidden truncate min-w-[50px] max-w-[50px]">
-                                {player.lastName}
-                              </p>
-                            </div>
-                            <div
-                              class="flex justify-center items-center bg-white text-black md:px-2  sm:py-1 rounded-b-md 
-                              min-w-[60px] sm:min-w-[120px] 
-                              max-w-[60px] sm:max-w-[120px]"
-                            >
-                              <p class="collapse sm:visible sm:min-w-[20px]">
-                                {team?.abbreviatedName}
-                              </p>
-                              <BadgeIcon
-                                className="hidden xs:flex h-4 w-4 sm:mx-1 min-w-[15px]"
-                                primaryColour={team?.primaryColourHex}
-                                secondaryColour={team?.secondaryColourHex}
-                                thirdColour={team?.thirdColourHex}
-                              />
-                              <p class="truncate min-w-[50px] max-w-[50px]">
-                                £{(Number(player.value) / 4).toFixed(2)}m
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      {:else}
-                        <button
-                          on:click={() => loadAddPlayer(rowIndex, colIndex)}
-                          class="flex items-center"
-                        >
-                          <AddPlayerIcon
-                            className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-16 2xl:h-20"
-                          />
-                        </button>
-                      {/if}
-                    </div>
-                  {/each}
-                </div>
-              {/each}
-            </div>
+                            <AddPlayerIcon
+                              className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-16 2xl:h-20"
+                            />
+                          </button>
+                        {/if}
+                      </div>
+                    {/each}
+                  </div>
+                {/each}
+              </div>
+            {/if}
           </div>
         {:else}
           <div class="bg-panel rounded-md m-4 flex-1">

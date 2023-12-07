@@ -110,9 +110,14 @@
       </div>
 
       {#each tableData as team, idx}
-        <div class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer">
+        <div
+          class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
+        >
           <div class="w-2/12 text-center">{idx + 1}</div>
-          <a class="w-6/12 flex items-center justify-start" href={`/club?id=${team.id}`}>
+          <a
+            class="w-6/12 flex items-center justify-start"
+            href={`/club?id=${team.id}`}
+          >
             <BadgeIcon
               primaryColour={team.primaryColourHex}
               secondaryColour={team.secondaryColourHex}
