@@ -9,10 +9,10 @@
   export let newUsername: string = "";
 
   function isDisplayNameValid(displayName: string): boolean {
-    if(!displayName){
+    if (!displayName) {
       return false;
     }
-    
+
     if (displayName.length < 3 || displayName.length > 20) {
       return false;
     }

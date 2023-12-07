@@ -120,14 +120,14 @@
     });
 
     try {
-      console.log("updating profile image")
+      console.log("updating profile image");
       await userStore.updateProfilePicture(file);
-      console.log("updating complete")
+      console.log("updating complete");
       await userStore.sync();
-      console.log("store synced")
+      console.log("store synced");
       const profileData = await userStore.getProfile();
-      console.log("Got Profile")
-      
+      console.log("Got Profile");
+
       setProfile(profileData);
       if (
         profileData &&
@@ -149,7 +149,7 @@
       });
       console.error("Error updating profile image", error);
     } finally {
-      console.log("updating store")
+      console.log("updating store");
       busyStore.stopBusy("upload-image");
     }
   }
@@ -175,11 +175,7 @@
       <div class="flex flex-wrap">
         <div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2">
           <div class="group flex flex-col md:block">
-            <img
-              src={profileSrc}
-              alt="Profile"
-              class="w-100 mb-1 rounded-lg"
-            />
+            <img src={profileSrc} alt="Profile" class="w-100 mb-1 rounded-lg" />
 
             <div class="file-upload-wrapper mt-4">
               <button
@@ -201,14 +197,18 @@
         <div class="w-full md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 mb-4 md:mb-0">
           <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
             <p class="text-xs xs:text-base md:text-sm mb-1">Display Name:</p>
-            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">{$profile?.displayName}</h2>
+            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">
+              {$profile?.displayName}
+            </h2>
             <button
               class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
               on:click={displayUsernameModal}
             >
               Update
             </button>
-            <p class="text-xs xs:text-base md:text-sm mb-1 mt-4">Favourite Team:</p>
+            <p class="text-xs xs:text-base md:text-sm mb-1 mt-4">
+              Favourite Team:
+            </p>
             <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">
               {teamName}
             </h2>
@@ -225,7 +225,9 @@
             </button>
 
             <p class="text-xs xs:text-base md:text-sm mb-1 mt-4">Joined:</p>
-            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">August 2023</h2>
+            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">
+              August 2023
+            </h2>
 
             <p class="text-xs xs:text-base md:text-sm mb-1">Principal:</p>
             <div class="flex items-center">
@@ -247,7 +249,11 @@
             <div
               class="flex items-center p-4 md:p-2 rounded-lg shadow-md border border-gray-700"
             >
-              <img src="ICPCoin.png" alt="ICP" class="h-12 w-12 md:h-9 md:w-9" />
+              <img
+                src="ICPCoin.png"
+                alt="ICP"
+                class="h-12 w-12 md:h-9 md:w-9"
+              />
               <div class="ml-4 md:ml-3">
                 <p class="font-bold">ICP</p>
                 <p>0.00 ICP</p>
@@ -256,7 +262,11 @@
             <div
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
-              <img src="FPLCoin.png" alt="FPL" class="h-12 w-12 md:h-9 md:w-9" />
+              <img
+                src="FPLCoin.png"
+                alt="FPL"
+                class="h-12 w-12 md:h-9 md:w-9"
+              />
               <div class="ml-4 md:ml-3">
                 <p class="font-bold">FPL</p>
                 <p>0.00 FPL</p>
@@ -265,7 +275,11 @@
             <div
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
-              <img src="ckBTCCoin.png" alt="ICP" class="h-12 w-12 md:h-9 md:w-9" />
+              <img
+                src="ckBTCCoin.png"
+                alt="ICP"
+                class="h-12 w-12 md:h-9 md:w-9"
+              />
               <div class="ml-4 md:ml-3">
                 <p class="font-bold">ckBTC</p>
                 <p>0.00 ckBTC</p>
@@ -274,7 +288,11 @@
             <div
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
-              <img src="ckETHCoin.png" alt="ICP" class="h-12 w-12 md:h-9 md:w-9" />
+              <img
+                src="ckETHCoin.png"
+                alt="ICP"
+                class="h-12 w-12 md:h-9 md:w-9"
+              />
               <div class="ml-4 md:ml-3">
                 <p class="font-bold">ckETH</p>
                 <p>0.00 ckETH</p>

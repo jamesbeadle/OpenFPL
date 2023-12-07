@@ -134,7 +134,7 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfileDTO();
-      console.log(result)
+      console.log(result);
       set(result);
       return result;
     } catch (error) {
