@@ -23,14 +23,14 @@
             clubId === null ||
             fixture.homeTeamId === clubId ||
             fixture.awayTeamId === clubId
-        )
+        ).sort((a,b) => a.fixture.gameweek - b.fixture.gameweek)
       : selectedFixtureType === 0
       ? fixturesWithTeams.filter(
           ({ fixture }) => clubId === null || fixture.homeTeamId === clubId
-        )
+        ).sort((a,b) => a.fixture.gameweek - b.fixture.gameweek)
       : fixturesWithTeams.filter(
           ({ fixture }) => clubId === null || fixture.awayTeamId === clubId
-        );
+        ).sort((a,b) => a.fixture.gameweek - b.fixture.gameweek);
 
   onMount(async () => {
     try {
