@@ -173,7 +173,7 @@
   <div class="container mx-auto p-4">
     {#if $profile}
       <div class="flex flex-wrap">
-        <div class="w-full md:w-1/2 px-2">
+        <div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2">
           <div class="group flex flex-col md:block">
             <img
               src={profileSrc}
@@ -198,22 +198,22 @@
           </div>
         </div>
 
-        <div class="w-full md:w-1/2 md:px-2 mb-4">
-          <div class="md:ml-4 md:p-4 px-4 mt-2 rounded-lg">
-            <p class="text-xs xs:text-base mb-1">Display Name:</p>
-            <h2 class="text-xl md:text-2xl font-bold mb-1 md:mb-2">{$profile?.displayName}</h2>
+        <div class="w-full md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 mb-4 md:mb-0">
+          <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
+            <p class="text-xs xs:text-base md:text-sm mb-1">Display Name:</p>
+            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">{$profile?.displayName}</h2>
             <button
-              class="text-sm md:text-base p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
+              class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
               on:click={displayUsernameModal}
             >
               Update
             </button>
-            <p class="text-xs xs:text-base mb-1 md:mb-2 mt-4">Favourite Team:</p>
-            <h2 class="text-xl md:text-2xl font-bold mb-1 md:mb-2">
+            <p class="text-xs xs:text-base md:text-sm mb-1 mt-4">Favourite Team:</p>
+            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">
               {teamName}
             </h2>
             <button
-              class={`text-sm xs:text-base md:text-base p-1 md:p-2 px-2 md:px-4 ${
+              class={`text-sm xs:text-base md:text-sm p-1 md:p-2 px-2 md:px-4 ${
                 gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0
                   ? "bg-gray-500"
                   : "fpl-button"
@@ -224,10 +224,10 @@
               Update
             </button>
 
-            <p class="text-xs xs:text-base mb-1 md:mb-2 mt-4">Joined:</p>
-            <h2 class="text-xl md:text-2xl font-bold mb-1 md:mb-2">August 2023</h2>
+            <p class="text-xs xs:text-base md:text-sm mb-1 mt-4">Joined:</p>
+            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">August 2023</h2>
 
-            <p class="text-xs xs:text-base mb-1 md:mb-2">Principal:</p>
+            <p class="text-xs xs:text-base md:text-sm mb-1">Principal:</p>
             <div class="flex items-center">
               <h2 class="text-xxs">{$profile?.principalId}</h2>
               <CopyIcon
@@ -240,15 +240,15 @@
         </div>
       </div>
     {/if}
-    <div class="flex flex-wrap md:mt-4">
+    <div class="flex flex-wrap md:mt-4 md:text-xs">
       <div class="w-full px-2 mb-4">
         <div class="mt-4 px-2">
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div
-              class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
+              class="flex items-center p-4 md:p-2 rounded-lg shadow-md border border-gray-700"
             >
-              <img src="ICPCoin.png" alt="ICP" class="h-12 w-12" />
-              <div class="ml-4">
+              <img src="ICPCoin.png" alt="ICP" class="h-12 w-12 md:h-9 md:w-9" />
+              <div class="ml-4 md:ml-3">
                 <p class="font-bold">ICP</p>
                 <p>0.00 ICP</p>
               </div>
@@ -256,8 +256,8 @@
             <div
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
-              <img src="FPLCoin.png" alt="FPL" class="h-12 w-12" />
-              <div class="ml-4">
+              <img src="FPLCoin.png" alt="FPL" class="h-12 w-12 md:h-9 md:w-9" />
+              <div class="ml-4 md:ml-3">
                 <p class="font-bold">FPL</p>
                 <p>0.00 FPL</p>
               </div>
@@ -265,8 +265,8 @@
             <div
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
-              <img src="ckBTCCoin.png" alt="ICP" class="h-12 w-12" />
-              <div class="ml-4">
+              <img src="ckBTCCoin.png" alt="ICP" class="h-12 w-12 md:h-9 md:w-9" />
+              <div class="ml-4 md:ml-3">
                 <p class="font-bold">ckBTC</p>
                 <p>0.00 ckBTC</p>
               </div>
@@ -274,8 +274,8 @@
             <div
               class="flex items-center p-4 rounded-lg shadow-md border border-gray-700"
             >
-              <img src="ckETHCoin.png" alt="ICP" class="h-12 w-12" />
-              <div class="ml-4">
+              <img src="ckETHCoin.png" alt="ICP" class="h-12 w-12 md:h-9 md:w-9" />
+              <div class="ml-4 md:ml-3">
                 <p class="font-bold">ckETH</p>
                 <p>0.00 ckETH</p>
               </div>
