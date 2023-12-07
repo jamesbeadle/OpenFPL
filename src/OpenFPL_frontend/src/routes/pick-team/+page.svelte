@@ -1016,7 +1016,9 @@
                           )}
                           <div class="flex flex-col items-center text-center">
                             <div class="flex justify-center items-center">
-                              <div class="flex justify-between items-end w-full">
+                              <div
+                                class="flex justify-between items-end w-full"
+                              >
                                 <button
                                   on:click={() => removePlayer(player.id)}
                                   class="bg-red-600 mb-1 rounded-sm"
