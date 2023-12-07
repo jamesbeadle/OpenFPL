@@ -116,3 +116,7 @@ input {
 .active-border {
   border-color: #2ce3a6;
 }
+
+[data-tid="busy"] {
+  background-color: rgba(36, 37, 41, 0.7) !important;
+}

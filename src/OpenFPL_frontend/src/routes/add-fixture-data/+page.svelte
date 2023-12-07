@@ -24,6 +24,7 @@
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
   import { playerStore } from "$lib/stores/player-store";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+  import { busyStore } from "@dfinity/gix-components";
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
@@ -98,8 +99,11 @@
   });
 
   async function confirmFixtureData() {
-    isLoading = true;
-    $loadingText = "Saving Fixture Data";
+    busyStore.startBusy({
+      initiator: "confirm-data",
+      text: "Saving fixture data...",
+    });
+
     try {
       await governanceStore.submitFixtureData(fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
@@ -117,8 +121,7 @@
       console.error("Error saving fixture data: ", error);
     } finally {
       showConfirmDataModal = false;
-      isLoading = false;
-      $loadingText = "Loading";
+      busyStore.stopBusy("save-draft");
     }
   }
 
@@ -133,6 +136,7 @@
   }
 
   function saveDraft() {
+
     const draftData = {
       playerEventData: $playerEventData,
     };
@@ -143,6 +147,7 @@
       level: "success",
       duration: 2000,
     });
+    busyStore.stopBusy("save-draft");
   }
 
   function clearDraft() {

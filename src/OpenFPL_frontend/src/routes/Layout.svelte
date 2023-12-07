@@ -6,10 +6,9 @@
   import { toastsError } from "$lib/stores/toasts-store";
   import Header from "$lib/shared/Header.svelte";
   import Footer from "$lib/shared/Footer.svelte";
-  import Busy from "$lib/components/Busy.svelte";
   import "../app.css";
 
-  import { Spinner, Toasts } from "@dfinity/gix-components";
+  import { BusyScreen, Spinner, Toasts } from "@dfinity/gix-components";
   import { initAuthWorker } from "$lib/services/worker.auth.services";
 
   const init = async () => await Promise.all([syncAuthStore()]);
@@ -67,7 +66,7 @@
   </div>
 {/await}
 
-<Busy />
+<BusyScreen />
 
 <style>
   main {

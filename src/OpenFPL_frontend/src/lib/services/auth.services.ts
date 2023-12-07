@@ -1,15 +1,18 @@
 import { authStore, type AuthSignInParams } from "$lib/stores/auth.store";
-import { busy } from "$lib/stores/busy.store";
 import { toastsClean, toastsError, toastsShow } from "$lib/stores/toasts-store";
 import type { ToastMsg } from "$lib/types/toast";
 import { replaceHistory } from "$lib/utils/route.utils";
 import type { ToastLevel } from "@dfinity/gix-components";
 import { isNullish } from "@dfinity/utils";
+import { busyStore } from "@dfinity/gix-components";
 
 export const signIn = async (
   params: AuthSignInParams
 ): Promise<{ success: "ok" | "cancelled" | "error"; err?: unknown }> => {
-  busy.show();
+  busyStore.startBusy({
+    initiator: "sign-in",
+    text: "Connecting...",
+  });
 
   try {
     await authStore.signIn(params);
@@ -31,7 +34,7 @@ export const signIn = async (
 
     return { success: "error", err };
   } finally {
-    busy.stop();
+    busyStore.stopBusy("sign-in");
   }
 };
 
@@ -47,7 +50,10 @@ export const idleSignOut = async () =>
 
 const logout = async ({ msg = undefined }: { msg?: ToastMsg }) => {
   // To mask not operational UI (a side effect of sometimes slow JS loading after window.reload because of service worker and no cache).
-  busy.start();
+  busyStore.startBusy({
+    initiator: "sign-out",
+    text: "Disconnecting...",
+  });
 
   await authStore.signOut();
 
@@ -61,6 +67,7 @@ const logout = async ({ msg = undefined }: { msg?: ToastMsg }) => {
   // Information the user want to preserve across sign-in. e.g. if I select the light theme, logout and sign-in again, I am happy if the dapp still uses the light theme.
 
   // We reload the page to make sure all the states are cleared
+  busyStore.stopBusy("sign-out");
   window.location.reload();
 };
 

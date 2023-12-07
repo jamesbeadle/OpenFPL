@@ -32,6 +32,7 @@
   import type { FantasyTeam } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import LoadingIcon from "$lib/icons/LoadingIcon.svelte";
+    import { busyStore } from "@dfinity/gix-components";
 
   interface FormationDetails {
     positions: number[];
@@ -692,9 +693,11 @@
   }
 
   async function saveFantasyTeam() {
-    loadingText.set("Saving Fantasy Team");
-    isLoading = true;
-
+    busyStore.startBusy({
+      initiator: "save-team",
+      text: "Saving fantasy team...",
+    });
+    
     let team = $fantasyTeam;
     if (team?.captainId === 0 || !team?.playerIds.includes(team?.captainId)) {
       team!.captainId = getHighestValuedPlayerId(team!);
@@ -720,6 +723,7 @@
         activeGameweek,
         $bonusUsedInSession
       );
+      busyStore.stopBusy("save-team");
       toastsShow({
         text: "Team saved successully!",
         level: "success",
@@ -733,7 +737,7 @@
       });
       console.error("Error saving team:", error);
     } finally {
-      isLoading = false;
+      busyStore.stopBusy("save-team");
       loadingText.set("Loading");
     }
   }
