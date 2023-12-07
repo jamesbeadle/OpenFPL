@@ -114,11 +114,10 @@
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+        <div class="page-header-wrapper"
         >
           <div class="flex-grow flex flex-col items-center">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               {getPositionText(selectedPlayer?.position ?? -1)}
             </p>
             <div class="py-2 flex">
@@ -129,7 +128,7 @@
                 thirdColour={team?.thirdColourHex}
               />
             </div>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Shirt: {selectedPlayer?.shirtNumber}
             </p>
           </div>
@@ -138,16 +137,14 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               {team?.name}
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="content-panel-stat">
               {selectedPlayer?.lastName}
             </p>
             <p
-              class="text-gray-300 text-xxs xs:text-sm sm:text-base flex items-center"
+              class="content-panel-header flex items-center"
             >
               <svelte:component
                 this={getFlagComponent(selectedPlayer?.nationality ?? "")}
@@ -161,13 +158,11 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Value</p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="content-panel-header">Value</p>
+            <p class="content-panel-stat">
               £{(Number(selectedPlayer?.value ?? 0) / 4).toFixed(2)}m
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Weekly Change: 0%
             </p>
           </div>
@@ -176,15 +171,13 @@
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Age</p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="content-panel-header">Age</p>
+            <p class="content-panel-stat">
               {calculateAgeFromNanoseconds(
                 Number(selectedPlayer?.dateOfBirth ?? 0)
               )}
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               {convertDateToReadable(Number(selectedPlayer?.dateOfBirth ?? 0))}
             </p>
           </div>
@@ -193,7 +186,7 @@
           class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Next Game:
             </p>
             <div class="flex justify-center mb-2 mt-2">
@@ -244,7 +237,7 @@
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
                 <p
-                  class="text-gray-300 text-xxs xs:text-sm sm:text-base text-center"
+                  class="content-panel-header text-center"
                 >
                   <a
                     href={`/club?id=${
@@ -260,7 +253,7 @@
               <div class="w-v ml-2 mr-2" />
               <div class="w-10 ml-4">
                 <p
-                  class="text-gray-300 text-xxs xs:text-sm sm:text-base text-xs text-center"
+                  class="content-panel-header text-xs text-center"
                 >
                   <a
                     href={`/club?id=${
@@ -281,13 +274,13 @@
           />
           <div class="flex-grow mb-4 md:mb-0">
             <p
-              class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 md:mt-0"
+              class="content-panel-header mt-4 md:mt-0"
             >
               Kick Off:
             </p>
             <div class="flex">
               <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
+                class="content-panel-stat"
               >
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
                 : {countdownHours}<span class="text-gray-300 text-xs ml-1"
@@ -298,7 +291,7 @@
                 >
               </p>
             </div>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base text-xs">
+            <p class="content-panel-header">
               {nextFixtureDate} | {nextFixtureTime}
             </p>
           </div>

@@ -759,15 +759,13 @@
           class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 xl:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Gameweek
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="content-panel-stat">
               {activeGameweek}
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               {activeSeason}
             </p>
           </div>
@@ -779,14 +777,12 @@
 
           <div class="flex-grow mb-4 xl:mb-0">
             <p
-              class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 xl:mt-0"
+              class="content-panel-header mt-4 xl:mt-0"
             >
               Kick Off:
             </p>
             <div class="flex">
-              <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-              >
+              <p class="content-panel-stat">
                 {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
                 : {countdownHours}<span class="text-gray-300 text-xs ml-1"
                   >h</span
@@ -796,7 +792,7 @@
                 >
               </p>
             </div>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               {nextFixtureDate} | {nextFixtureTime}
             </p>
           </div>
@@ -807,15 +803,13 @@
           />
 
           <div class="flex-grow mb-0 mt-4 xl:mt-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Players
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="content-panel-stat">
               {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Selected
             </p>
           </div>
@@ -825,47 +819,41 @@
           class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-1 xl:m-4 bg-panel py-2 px-4 lg:py-4 rounded-md"
         >
           <div class="flex-grow mb-4 xl:mb-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Team Value
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="content-panel-stat">
               £{teamValue.toFixed(2)}m
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">GBP</p>
+            <p class="content-panel-header">GBP</p>
           </div>
           <div
             class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Bank Balance
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="content-panel-stat">
               £{($bankBalance / 4).toFixed(2)}m
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">GBP</p>
+            <p class="content-panel-header">GBP</p>
           </div>
           <div
             class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Transfers
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="content-panel-stat">
               {$transfersAvailable === Infinity
                 ? "Unlimited"
                 : $transfersAvailable}
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="content-panel-header">
               Available
             </p>
           </div>
@@ -1319,15 +1307,13 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              <p class="content-panel-header">
                 Gameweek
               </p>
-              <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-              >
+              <p class="content-panel-stat">
                 {activeGameweek}
               </p>
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              <p class="content-panel-header">
                 {activeSeason}
               </p>
             </div>
@@ -1337,15 +1323,13 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              <p class="content-panel-header">
                 Players
               </p>
-              <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-              >
+              <p class="content-panel-stat">
                 {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
               </p>
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              <p class="content-panel-header">
                 Selected
               </p>
             </div>
@@ -1355,15 +1339,13 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              <p class="content-panel-header">
                 Team Value
               </p>
-              <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-              >
+              <p class="content-panel-stat">
                 £{teamValue.toFixed(2)}m
               </p>
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">GBP</p>
+              <p class="content-panel-header">GBP</p>
             </div>
           </div>
 
@@ -1371,15 +1353,13 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              <p class="content-panel-header">
                 Bank Balance
               </p>
-              <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-              >
+              <p class="content-panel-stat">
                 £{($bankBalance / 4).toFixed(2)}m
               </p>
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">GBP</p>
+              <p class="content-panel-header">GBP</p>
             </div>
           </div>
 
@@ -1387,17 +1367,15 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              <p class="content-panel-header">
                 Transfers
               </p>
-              <p
-                class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-              >
+              <p class="content-panel-stat">
                 {$transfersAvailable === Infinity
                   ? "Unlimited"
                   : $transfersAvailable}
               </p>
-              <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+              <p class="content-panel-header">
                 Available
               </p>
             </div>

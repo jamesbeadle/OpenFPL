@@ -58,7 +58,7 @@
 {:then _}
   <div class="flex flex-col h-screen justify-between">
     <Header />
-    <main>
+    <main class="page-wrapper">
       <slot />
     </main>
     <Toasts />
