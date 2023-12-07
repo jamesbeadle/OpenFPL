@@ -271,7 +271,7 @@
 
     <div class="mx-4 xs:mx-6 sm:mx-8 lg:mx-10">
       <div class="bg-panel rounded-md">
-        <ul class="flex bg-light-gray border-b border-gray-700 px-4 pt-2">
+        <ul class="flex bg-light-gray border-b border-gray-700 px-2 pt-2">
           <li
             class={`mr-4 text-xs md:text-base ${
               activeTab === "players" ? "active-tab" : ""
