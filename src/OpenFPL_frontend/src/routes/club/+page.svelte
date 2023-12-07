@@ -13,10 +13,7 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-  import type {
-    Fixture,
-    Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
   import { Spinner } from "@dfinity/gix-components";
 
@@ -45,11 +42,13 @@
         (x) => x.homeTeamId === id || x.awayTeamId === id
       );
 
-      fixturesWithTeams = teamFixtures.map((fixture) => ({
+      fixturesWithTeams = teamFixtures.sort((a,b) => Number(a.kickOff) - Number(b.kickOff)).map((fixture) => ({
         fixture,
         homeTeam: getTeamFromId(fixture.homeTeamId),
         awayTeam: getTeamFromId(fixture.awayTeamId),
       }));
+
+      team = $teamStore.find(x => x.id == id) ?? null;
 
       highestScoringPlayer = $playerStore
         .sort((a, b) => a.totalPoints - b.totalPoints)
@@ -102,10 +101,13 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <div class="m-4">
-      <div class="flex flex-col md:flex-row">
+    <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
+      <div class="flex flex-col lg:flex-row lg:space-x-8">
         <div
-          class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+          class="flex justify-start items-center text-white rounded-md bg-panel
+          space-x-2 sm:space-x-3 md:space-x-4 flex-grow
+          p-2 xs:p-3 sm:p-4
+          mb-5 xs:mb-7 sm:mb-8 lg:mb-0"
         >
           <div class="flex-grow flex flex-col items-center">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
@@ -113,13 +115,13 @@
             </p>
             <div class="py-2 flex space-x-4">
               <BadgeIcon
-                className="h-10"
+                className="h-4"
                 primaryColour={team?.primaryColourHex}
                 secondaryColour={team?.secondaryColourHex}
                 thirdColour={team?.thirdColourHex}
               />
               <ShirtIcon
-                className="h-10"
+                className="h-4"
                 primaryColour={team?.primaryColourHex}
                 secondaryColour={team?.secondaryColourHex}
                 thirdColour={team?.thirdColourHex}
@@ -137,9 +139,7 @@
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               Players
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold">
               {$playerStore.filter((x) => x.teamId == id).length}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
@@ -152,18 +152,16 @@
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               League Position
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-4xl mt-2 mb-2 font-bold"
-            >
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold">
               {getTeamPosition(id)}
             </p>
-            <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
+            <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">
               {$systemStore?.activeSeason.name}
             </p>
           </div>
         </div>
         <div
-          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
+          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
@@ -176,12 +174,18 @@
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
           </div>
+
           <div
-            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+            class="flex md:hidden h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
             style="min-height: 2px; min-width: 2px;"
           />
+          
+          <div
+            class="hidden md:flex flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
 
-          <div class="flex-grow mb-4 md:mb-0">
+          <div class="flex-grow my-4 md:mb-0">
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               Next Game:
             </p>
@@ -232,10 +236,17 @@
               </div>
             </div>
           </div>
+          
           <div
-            class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
+            class="flex md:hidden h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
             style="min-height: 2px; min-width: 2px;"
           />
+          
+          <div
+            class="hidden md:flex flex-shrink-0 w-px bg-gray-400 self-stretch"
+            style="min-width: 2px; min-height: 50px;"
+          />
+
           <div class="flex-grow">
             <p
               class="text-gray-300 text-xxs xs:text-sm sm:text-base mt-4 md:mt-0"
@@ -258,8 +269,8 @@
       </div>
     </div>
 
-    <div class="m-4">
-      <div class="bg-panel rounded-md m-4">
+    <div class="mx-4 xs:mx-6 sm:mx-8 lg:mx-10">
+      <div class="bg-panel rounded-md">
         <ul class="flex bg-light-gray border-b border-gray-700 px-4 pt-2">
           <li
             class={`mr-4 text-xs md:text-base ${

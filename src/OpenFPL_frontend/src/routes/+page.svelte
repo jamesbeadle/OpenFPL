@@ -128,9 +128,7 @@
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">
               Managers
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold"
-            >
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold">
               {managerCount}
             </p>
             <p class="text-gray-300 text-xxs xs:text-sm sm:text-base">Total</p>
@@ -140,17 +138,13 @@
             style="min-width: 2px; min-height: 50px;"
           />
           <div class="flex-grow">
-            <p
-              class="text-gray-300 hidden md:block text-xxs xs:text-sm sm:text-base"
-            >
+            <p class="text-gray-300 hidden md:block text-xxs xs:text-sm sm:text-base">
               Weekly Prize Pool
             </p>
             <p class="text-gray-300 md:hidden text-xxs xs:text-sm sm:text-base">
               Weekly
             </p>
-            <p
-              class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold"
-            >
+            <p class="text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-lg xl:text-2xl mt-2 mb-2 font-bold">
               0
             </p>
             <p class="text-gray-300 text-xxs text-xxs xs:text-sm sm:text-base">
