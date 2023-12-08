@@ -967,9 +967,7 @@
             </span>
           </div>
 
-          <div
-            class="flex flex-row md:flex-row w-full md:justify-end gap-4 my-2 md:mt-0"
-          >
+          <div class="flex flex-row md:flex-row w-full md:justify-end gap-4 m-2 md:mt-0">
             <button
               disabled={$fantasyTeam?.playerIds
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
@@ -998,7 +996,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col xl:flex-row mt-4 md:mt-0">
+      <div class="flex flex-col xl:flex-row mt-2 md:mt-0">
         {#if pitchView}
           <div class="relative w-full xl:w-1/2 mt-4">
             <img
