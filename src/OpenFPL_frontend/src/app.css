@@ -72,11 +72,6 @@ input {
 }
 
 .modal .content {
-  max-height: 850px !important;
-  min-width: 650px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  position: relative !important;
   left: 0 !important;
   right: 0 !important;
   background-color: #161819 !important;
@@ -199,7 +194,7 @@ input {
   @apply text-gray-300 text-xs ml-1;
 }
 
-.bigger-text{
+.bigger-text {
   @apply text-xs xs:text-base sm:text-lg;
 }
 
@@ -212,7 +207,6 @@ input {
   --dialog-max-height: 80vh !important;
   --dialog-border-radius: 1px !important;
 }
-
 
 /* Extra small devices (portrait phones, less than 480px) */
 @media (min-width: 480px) {
