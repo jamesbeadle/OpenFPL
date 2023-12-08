@@ -171,13 +171,6 @@ input {
   @apply w-full md:w-auto text-xs md:text-xs xl:text-base px-4 py-2 rounded;
 }
 
-.wrapper.dialog {
-  max-width: unset !important;
-  width: 100% !important;
-  margin-left: 5%;
-  margin-right: 5%;
-}
-
 .default-text {
   @apply text-xxs xs:text-xs sm:text-base;
 }
@@ -206,14 +199,23 @@ input {
   @apply text-gray-300 text-xs ml-1;
 }
 
+.bigger-text{
+  @apply text-xs xs:text-base sm:text-lg;
+}
+
+/* global.css */
+:root {
+  --dialog-width: 90% !important;
+  --dialog-max-width: 600px !important;
+  --dialog-min-height: 100px !important;
+  --dialog-height: auto !important;
+  --dialog-max-height: 80vh !important;
+  --dialog-border-radius: 1px !important;
+}
+
+
 /* Extra small devices (portrait phones, less than 480px) */
 @media (min-width: 480px) {
-  .wrapper.dialog {
-    max-width: unset !important;
-    width: 100% !important;
-    margin-left: 5%;
-    margin-right: 5%;
-  }
 }
 
 /* Small devices (landscape phones, 640px and up) */
