@@ -177,7 +177,7 @@
   }
 </script>
 
-<div class="bonus-panel rounded-md mx-4 flex-1 mb-2 lg:mb-0">
+<div class="bonus-panel rounded-md flex-1 my-4 lg:mb-0">
   {#if selectedBonusId > 0}
     <UseBonusModal
       visible={showModal}
@@ -194,21 +194,11 @@
   <div class="flex flex-col xl:flex-row md:mx-2">
     <div class="flex items-center w-100 xl:w-1/2">
       {#each leftPanelBonuses as bonus}
-        <div
-          class="flex items-center w-1/5 bonus-panel-inner m-1 mt-2 rounded-lg border border-gray-700"
-        >
+        <div class="flex items-center w-1/5 bonus-panel-inner m-1 mt-2 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <img
-              alt={bonus.name}
-              src={bonus.image}
-              class="h-12 m-2 mt-4 md:h-24 xl:h-20"
-            />
-            <div
-              class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md min-h-[40px] flex items-center"
-            >
-              <p
-                class="text-center text-xxs sm:text-xs md:text-base font-bold xl:text-sm xl:min-h-[40px]"
-              >
+            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 mt-4 md:h-24 xl:h-20"/>
+            <div class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md min-h-[40px] flex items-center">
+              <p class="text-center text-xxs sm:text-xs md:text-base font-bold xl:text-sm xl:min-h-[40px]">
                 {bonus.name}
               </p>
             </div>
@@ -240,21 +230,11 @@
     </div>
     <div class="flex items-center w-100 xl:w-1/2">
       {#each rightPanelBonuses as bonus}
-        <div
-          class="flex items-center w-1/5 bonus-panel-inner m-1 rounded-lg border border-gray-700"
-        >
+        <div class="flex items-center w-1/5 bonus-panel-inner m-1 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <img
-              alt={bonus.name}
-              src={bonus.image}
-              class="h-12 m-2 mt-4 md:h-24 xl:h-20"
-            />
-            <div
-              class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md min-h-[40px] flex items-center"
-            >
-              <p
-                class="text-center text-xxs sm:text-xs md:text-base font-bold xl:text-sm xl:min-h-[40px]"
-              >
+            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 mt-4 md:h-24 xl:h-20"/>
+            <div class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md min-h-[40px] flex items-center">
+              <p class="text-center text-xxs sm:text-xs md:text-base font-bold xl:text-sm xl:min-h-[40px]">
                 {bonus.name}
               </p>
             </div>
@@ -265,7 +245,6 @@
                 </p>
               </div>
             {:else if bonus.id == 7 || bonus.id == 8}
-              <!-- Remove when implemented -->
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[30px]">
                 <p class="text-center text-xxs md:text-base xl:text-xs xl:mt-1">
                   Coming Soon

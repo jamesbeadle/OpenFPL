@@ -753,7 +753,7 @@
       {fantasyTeam}
       {bankBalance}
     />
-    <div class="sm:m-1 md:m-2 lg:m-3 xl:m-4">
+    <div>
       <div class="hidden md:flex flex-col sm:flex-row">
         <div
           class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md"
@@ -870,7 +870,7 @@
             <button
               class={`btn ${
                 pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              } px-4 py-2 rounded-l-md tab-switcher-label min-w-[100px] lg:min-w-[125px] my-4`}
               on:click={showPitchView}
             >
               Pitch View
@@ -878,7 +878,7 @@
             <button
               class={`btn ${
                 !pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              } px-4 py-2 rounded-r-md tab-switcher-label min-w-[100px] lg:min-w-[125px] my-4`}
               on:click={showListView}
             >
               List View
@@ -909,7 +909,7 @@
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
                 : true}
               on:click={autofillTeam}
-              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded  
+              class={`button-base  
               ${
                 $fantasyTeam?.playerIds &&
                 $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
@@ -922,7 +922,7 @@
             <button
               disabled={!isSaveButtonActive}
               on:click={saveFantasyTeam}
-              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded ${
+              class={`button-base ${
                 isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
               } text-white min-w-[125px]`}
             >
@@ -933,14 +933,12 @@
       </div>
 
       <div class="flex md:hidden flex-col md:flex-row">
-        <div
-          class="flex flex-col justify-between items-center text-white mx-8 mt-4 bg-panel p-2 rounded-md"
-        >
+        <div class="flex flex-col justify-between items-center text-white mt-4 bg-panel p-2 rounded-md">
           <div class="flex flex-row">
             <button
               class={`btn ${
                 pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-2`}
+              } px-4 py-2 rounded-l-md tab-switcher-label min-w-[100px] lg:min-w-[125px] my-2`}
               on:click={showPitchView}
             >
               Pitch View
@@ -948,18 +946,18 @@
             <button
               class={`btn ${
                 !pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-2`}
+              } px-4 py-2 rounded-r-md tab-switcher-label min-w-[100px] lg:min-w-[125px] my-2`}
               on:click={showListView}
             >
               List View
             </button>
           </div>
 
-          <div class="text-center md:text-left w-full">
-            <span class="text-lg">
+          <div class="dropdown-text text-center md:text-left w-full">
+            <span>
               Formation:
               <select
-                class="px-4 py-2 border-sm fpl-dropdown text-lg text-center text-center"
+                class="px-4 py-2 border-sm fpl-dropdown text-center text-center"
                 bind:value={selectedFormation}
               >
                 {#each $availableFormations as formation}
@@ -977,7 +975,7 @@
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
                 : true}
               on:click={autofillTeam}
-              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded  
+              class={`button-base  
               ${
                 $fantasyTeam?.playerIds &&
                 $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
@@ -990,7 +988,7 @@
             <button
               disabled={!isSaveButtonActive}
               on:click={saveFantasyTeam}
-              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded ${
+              class={`button-base ${
                 isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
               } text-white min-w-[125px]`}
             >
@@ -1000,7 +998,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col xl:flex-row mt-4 mx-2 md:mt-0">
+      <div class="flex flex-col xl:flex-row mt-4 md:mt-0">
         {#if pitchView}
           <div class="relative w-full xl:w-1/2 mt-4">
             <img
@@ -1300,9 +1298,7 @@
       </div>
 
       <div class="hidden md:hidden mt-6">
-        <div
-          class="flex flex-row justify-start items-center text-white space-x-0 flex-grow mx-4 my-2 bg-panel p-4 rounded-md"
-        >
+        <div class="flex flex-row justify-start items-center text-white space-x-0 flex-grow my-2 bg-panel p-4 rounded-md">
           <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
 
           <div class="flex-grow">
@@ -1383,7 +1379,7 @@
         </div>
       </div>
 
-      <div class="flex md:hidden w-100 xl:w-1/2">
+      <div class="flex md:hidden w-100">
         <SimpleFixtures />
       </div>
 

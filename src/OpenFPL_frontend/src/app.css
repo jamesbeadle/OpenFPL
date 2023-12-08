@@ -149,3 +149,66 @@ input {
   min-width: 2px; min-height: 50px;
   @apply flex-shrink-0 w-px bg-gray-400 self-stretch;
 }
+
+.panel-header{
+  @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl font-bold;
+}
+
+.tab-switcher-label{
+  @apply font-bold text-xs xl:text-base;
+}
+
+.dropdown-text{
+  @apply text-xs;
+}
+
+.button-base{
+  @apply w-full md:w-auto text-xs md:text-xs xl:text-base px-4 py-2 rounded;
+}
+
+.wrapper.dialog{
+  max-width: unset !important;
+  width: 100% !important;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+/* Extra small devices (portrait phones, less than 480px) */
+@media (min-width: 480px) { 
+  .wrapper.dialog{
+    max-width: unset !important;
+    width: 100% !important;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+/* Small devices (landscape phones, 640px and up) */
+@media (min-width: 640px) { 
+  /* Your CSS here */
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+  /* Your CSS here */
+}
+
+/* Large devices (desktops, 1024px and up) */
+@media (min-width: 1024px) { 
+  /* Your CSS here */
+}
+
+/* Extra large devices (large desktops, 1280px and up) */
+@media (min-width: 1280px) { 
+  /* Your CSS here */
+}
+
+/* 2XL devices (larger desktops, 1536px and up) */
+@media (min-width: 1536px) { 
+  /* Your CSS here */
+}
+
+/* 3XL devices (extra large desktops, 1920px and up) */
+@media (min-width: 1920px) { 
+  /* Your CSS here */
+}
