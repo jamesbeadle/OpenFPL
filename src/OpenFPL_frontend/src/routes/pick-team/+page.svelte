@@ -1380,7 +1380,6 @@
       <div class="flex md:hidden w-100">
         <SimpleFixtures />
       </div>
-
       <BonusPanel {fantasyTeam} {activeGameweek} />
     </div>
   {/if}

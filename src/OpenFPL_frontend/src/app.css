@@ -154,6 +154,10 @@ input {
   @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl font-bold;
 }
 
+.side-panel-header{
+  @apply text-xs xs:text-sm sm:text-2xl md:text-3xl xl:text-base 2xl:text-lg font-bold;
+}
+
 .tab-switcher-label{
   @apply font-bold text-xs xl:text-base;
 }
@@ -171,6 +175,10 @@ input {
   width: 100% !important;
   margin-left: 5%;
   margin-right: 5%;
+}
+
+.default-row-text{
+  @apply text-xxs xs:text-xs sm:text-base;
 }
 
 /* Extra small devices (portrait phones, less than 480px) */

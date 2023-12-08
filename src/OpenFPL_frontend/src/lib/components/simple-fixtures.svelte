@@ -60,7 +60,7 @@
 <div class="bg-panel rounded-md mt-4 flex-1 xl:mx-4">
   <div class="container-fluid">
     <div class="flex items-center justify-between py-2 bg-light-gray">
-      <h1 class="mx-4 m-2 font-bold panel-header">Fixtures</h1>
+      <h1 class="mx-4 m-2 font-bold side-panel-header">Fixtures</h1>
     </div>
     <div class="flex items-center space-x-2 m-3 mx-4">
       <button
