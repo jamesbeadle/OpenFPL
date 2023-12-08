@@ -49,10 +49,8 @@
 <Modal {visible} on:nnsClose={cancelModal}>
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="text-lg font-semibold">Update Favourite Team</h3>
-      <button class="text-2xl leading-none" on:click={cancelModal}
-        >&times;</button
-      >
+      <h3 class="default-header">Update Favourite Team</h3>
+      <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
     <div class="w-full border border-gray-500 mt-4 mb-2">
       <select
@@ -70,15 +68,13 @@
       class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-1 mt-4"
       role="alert"
     >
-      <p class="font-bold text-sm">Warning</p>
-      <p class="font-bold text-xs">
-        You can only set your favourite team once per season.
-      </p>
+      <p>Warning</p>
+      <p>You can only set your favourite team once per season.</p>
     </div>
 
     <div class="items-center py-3 flex space-x-4">
       <button
-        class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+        class="px-4 py-2 fpl-cancel-btn text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
         on:click={cancelModal}
       >
         Cancel
@@ -87,7 +83,7 @@
         class={`px-4 py-2 ${
           isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
         } 
-        text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+        text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
         on:click={updateFavouriteTeam}
         disabled={isSubmitDisabled}>Update</button
       >

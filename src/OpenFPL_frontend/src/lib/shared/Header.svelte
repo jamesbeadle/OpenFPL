@@ -112,7 +112,7 @@
         </svg>
       </button>
       {#if $authSignedInStore}
-        <ul class="hidden md:flex text-base md:text-xs lg:text-base h-16">
+        <ul class="hidden md:flex h-16">
           <li class="mx-2 flex items-center h-16">
             <a
               href="/"

@@ -47,7 +47,7 @@
     <Spinner />
   {:else}
     <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
-      <div class="flex flex-col space-y-4 text-xs md:text-base">
+      <div class="flex flex-col space-y-4">
         <div class="flex p-4">
           <h1>
             {`Season ${currentSeasonName}`} - {`Gameweek ${currentGameweek}`}
@@ -61,12 +61,12 @@
               <button
                 class={`${
                   currentGameweek === 1 ? "bg-gray-500" : "fpl-button"
-                } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
+                } rounded px-3 md:px-4 py-1`}
                 on:click={() => changeGameweek(-1)}
                 disabled={currentGameweek === 1}>&lt;</button
               >
               <select
-                class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
+                class="p-2 fpl-dropdown mx-0 md:mx-2 min-w-[100px]"
                 bind:value={currentGameweek}
               >
                 {#each gameweeks as gameweek}
@@ -76,14 +76,14 @@
               <button
                 class={`${
                   currentGameweek === 38 ? "bg-gray-500" : "fpl-button"
-                } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+                } rounded px-3 md:px-4 py-1 ml-1`}
                 on:click={() => changeGameweek(1)}
                 disabled={currentGameweek === 38}>&gt;</button
               >
             </div>
           </div>
         </div>
-        <div class="flex flex-col space-y-4 mt-4 text-xs md:text-base">
+        <div class="flex flex-col space-y-4 mt-4">
           <div class="overflow-x-auto flex-1">
             <div
               class="flex justify-between p-2 border-y border-gray-700 py-4 bg-light-gray"
@@ -118,7 +118,7 @@
                   <div class="w-1/4 px-4">
                     <a href="/add-fixture-data?id={fixture.id}">
                       <button
-                        class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                        class="rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
                       >
                         Add Fixture Data
                       </button>

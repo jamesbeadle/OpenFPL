@@ -1,10 +1,10 @@
 <div class="container-fluid mx-auto p-4">
   <div class="m-4">
-    <h1 class="text-3xl font-bold">Roadmap</h1>
+    <h1 class="default-header">Roadmap</h1>
     <p class="my-4">
       We have an ambitious roadmap of features we aim to release:
     </p>
-    <h2 class="text-lg font-bold">November 2023: Investment NFTs Launch</h2>
+    <h2 class="default-sub-header">November 2023: Investment NFTs Launch</h2>
     <p class="my-2">
       We will be launching 2 NFT collections in November 2024 to give the
       opportunity for users to share in OpenFPL merchandise and podcast revenue.
@@ -14,7 +14,7 @@
       whitepaper.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       December 2023: Svelte Frontend Upgrade
     </h2>
     <p class="my-2">
@@ -23,7 +23,7 @@
       leverages Svelte’s server-side rendering for faster load times.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       Jan - Feb 2024: SNS Testflight Testing
     </h2>
     <p class="my-2">
@@ -33,7 +33,7 @@
       different situations.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       January 2024: 'The OpenFPL Podcast' Launch
     </h2>
     <p class="my-2">
@@ -43,7 +43,7 @@
       another dimension to our engagement strategy.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       January 2024: Shirt Production Begins
     </h2>
     <p class="my-2">
@@ -65,7 +65,7 @@
       investors.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       February 2024: Online Marketing Campaigns
     </h2>
     <p class="my-2">
@@ -81,7 +81,7 @@
       a manner that's both authentic and impactful.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       March 1st 2024: OpenFPL SNS Decentralisation Sale
     </h2>
     <p class="my-2">
@@ -89,7 +89,7 @@
       million $FPL tokens (25%).
     </p>
 
-    <h2 class="text-lg font-bold mt-4">April 2024: Private Leagues</h2>
+    <h2 class="default-sub-header mt-4">April 2024: Private Leagues</h2>
     <p class="my-2">
       The Private Leagues feature is the start of building your own OpenFPL
       community within the DAO. Managers will be able to create a Private League
@@ -99,7 +99,7 @@
       currency, amount and percentage payouts per finishing position.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">April 2024: OpenFPL Events</h2>
+    <h2 class="default-sub-header mt-4">April 2024: OpenFPL Events</h2>
     <p class="my-2">
       OpenFPL is set to create a series of interactive experiences at event
       locations in Premier League club cities, drawing inspiration from major UK
@@ -110,13 +110,13 @@
       OpenFPL, Internet Identity and the range of other IC dApps available.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">July 2024: Mobile App Launch</h2>
+    <h2 class="default-sub-header mt-4">July 2024: Mobile App Launch</h2>
     <p class="my-2">
       We will release a mobile app shortly before the genesis season begins to
       make OpenFPL more accessible and convenient for users on the go.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       August 2024: OpenFPL Genesis Season Begins
     </h2>
     <p class="my-2">
@@ -125,7 +125,7 @@
       maximise user engagment.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       November 2024: Content Subscription Launch
     </h2>
     <p class="my-2">
@@ -134,14 +134,14 @@
       subscription-based content.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">March 2025: OpenChat Integration</h2>
+    <h2 class="default-sub-header mt-4">March 2025: OpenChat Integration</h2>
     <p class="my-2">
       Integrating OpenChat for seamless communication within the OpenFPL
       community, providing updates and increasing engagement through group
       channels.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Future: 100% On-Chain AI</h2>
+    <h2 class="default-sub-header mt-4">Future: 100% On-Chain AI</h2>
     <p class="my-2">
       At OpenFPL, we are exploring the deployment of a 100% on-chain AI model
       within a dedicated canister. Our initial use case for this AI would be to

@@ -205,7 +205,7 @@
     <Spinner />
   {:else}
     <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
-      <div class="flex flex-col text-xs md:text-base mt-4">
+      <div class="flex flex-col mt-4">
         <div class="flex flex-row space-x-2 p-4">
           <button class="fpl-button px-4 py-2" on:click={showSelectPlayersModal}
             >Select Players</button
@@ -222,11 +222,7 @@
           <ul
             class="flex bg-light-gray px-4 pt-2 w-full mt-4 border-b border-gray-700"
           >
-            <li
-              class={`mr-4 text-xs md:text-base ${
-                activeTab === "home" ? "active-tab" : ""
-              }`}
-            >
+            <li class={`mr-4 ${activeTab === "home" ? "active-tab" : ""}`}>
               <button
                 class={`p-2 ${
                   activeTab === "home" ? "text-white" : "text-gray-400"
@@ -235,11 +231,7 @@
                 >{homeTeam?.friendlyName}</button
               >
             </li>
-            <li
-              class={`mr-4 text-xs md:text-base ${
-                activeTab === "away" ? "active-tab" : ""
-              }`}
-            >
+            <li class={`mr-4 ${activeTab === "away" ? "active-tab" : ""}`}>
               <button
                 class={`p-2 ${
                   activeTab === "away" ? "text-white" : "text-gray-400"
@@ -311,7 +303,7 @@
                 <div class="w-1/6 px-4">
                   <button
                     on:click={() => handleEditPlayerEvents(player)}
-                    class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                    class="rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
                   >
                     Update Events
                   </button>
@@ -367,7 +359,7 @@
                 <div class="w-1/6 px-4">
                   <button
                     on:click={() => handleEditPlayerEvents(player)}
-                    class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
+                    class="rounded fpl-button px-3 sm:px-2 px-3 py-1 ml-1"
                   >
                     Update Events
                   </button>
@@ -380,36 +372,36 @@
           <h1>Summary</h1>
         </div>
         <div class="flex flex-row w-full m-4">
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Appearances: {$playerEventData.filter((x) => x.eventType == 0)
               .length}
           </div>
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Goals: {$playerEventData.filter((x) => x.eventType == 1).length}
           </div>
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Own Goals: {$playerEventData.filter((x) => x.eventType == 10)
               .length}
           </div>
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Assists: {$playerEventData.filter((x) => x.eventType == 2).length}
           </div>
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Keeper Saves: {$playerEventData.filter((x) => x.eventType == 4)
               .length}
           </div>
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Yellow Cards: {$playerEventData.filter((x) => x.eventType == 8)
               .length}
           </div>
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Red Cards: {$playerEventData.filter((x) => x.eventType == 9).length}
           </div>
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Penalties Saved: {$playerEventData.filter((x) => x.eventType == 6)
               .length}
           </div>
-          <div class="text-sm font-medium flex-grow">
+          <div class="flex-grow">
             Penalties Missed: {$playerEventData.filter((x) => x.eventType == 7)
               .length}
           </div>
@@ -418,7 +410,7 @@
         <div class="items-center mt-3 flex space-x-4">
           <button
             class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-            px-4 py-2 text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            px-4 py-2 text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
             on:click={displayConfirmDataModal}
             disabled={isSubmitDisabled}>Submit Event Data</button
           >

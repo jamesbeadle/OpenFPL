@@ -18,19 +18,25 @@
 
   $: filteredFixtures =
     selectedFixtureType === -1
-      ? fixturesWithTeams.filter(
-          ({ fixture }) =>
-            clubId === null ||
-            fixture.homeTeamId === clubId ||
-            fixture.awayTeamId === clubId
-        ).sort((a,b) => a.fixture.gameweek - b.fixture.gameweek)
+      ? fixturesWithTeams
+          .filter(
+            ({ fixture }) =>
+              clubId === null ||
+              fixture.homeTeamId === clubId ||
+              fixture.awayTeamId === clubId
+          )
+          .sort((a, b) => a.fixture.gameweek - b.fixture.gameweek)
       : selectedFixtureType === 0
-      ? fixturesWithTeams.filter(
-          ({ fixture }) => clubId === null || fixture.homeTeamId === clubId
-        ).sort((a,b) => a.fixture.gameweek - b.fixture.gameweek)
-      : fixturesWithTeams.filter(
-          ({ fixture }) => clubId === null || fixture.awayTeamId === clubId
-        ).sort((a,b) => a.fixture.gameweek - b.fixture.gameweek);
+      ? fixturesWithTeams
+          .filter(
+            ({ fixture }) => clubId === null || fixture.homeTeamId === clubId
+          )
+          .sort((a, b) => a.fixture.gameweek - b.fixture.gameweek)
+      : fixturesWithTeams
+          .filter(
+            ({ fixture }) => clubId === null || fixture.awayTeamId === clubId
+          )
+          .sort((a, b) => a.fixture.gameweek - b.fixture.gameweek);
 
   onMount(async () => {
     try {
@@ -62,9 +68,9 @@
     <div>
       <div class="flex p-4">
         <div class="flex items-center ml-4">
-          <p class="text-sm md:text-xl mr-4">Type:</p>
+          <p class="mr-4">Type:</p>
           <select
-            class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
+            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
             bind:value={selectedFixtureType}
           >
             <option value={-1}>All</option>
@@ -100,7 +106,7 @@
                 />
               </a>
             </div>
-            <span class="font-bold text-lg">v</span>
+            <span>v</span>
             <div class="w-10 items-center justify-center ml-4">
               <a href={`/club?id=${fixture.awayTeamId}`}>
                 <BadgeIcon
@@ -118,7 +124,7 @@
             {formatUnixTimeToTime(Number(fixture.kickOff))}
           </div>
           <div class="w-1/3">
-            <div class="flex flex-col text-xs md:text-base">
+            <div class="flex flex-col">
               <a href={`/club?id=${fixture.homeTeamId}`}
                 >{homeTeam ? homeTeam.friendlyName : ""}</a
               >
@@ -128,7 +134,7 @@
             </div>
           </div>
           <div class="w-1/4 mr-4">
-            <div class="flex flex-col text-xs md:text-base">
+            <div class="flex flex-col">
               <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
               <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>
             </div>

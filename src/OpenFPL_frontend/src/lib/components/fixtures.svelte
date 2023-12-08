@@ -75,7 +75,7 @@
         <button
           class={`${
             selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-          } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
+          } rounded px-3 md:px-4 py-1`}
           on:click={() => changeGameweek(-1)}
           disabled={selectedGameweek === 1}
         >
@@ -83,7 +83,7 @@
         </button>
 
         <select
-          class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
+          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
           bind:value={selectedGameweek}
         >
           {#each gameweeks as gameweek}
@@ -94,7 +94,7 @@
         <button
           class={`${
             selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
-          } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+          } rounded px-3 md:px-4 py-1 ml-1`}
           on:click={() => changeGameweek(1)}
           disabled={selectedGameweek === 38}
         >
@@ -104,11 +104,11 @@
     </div>
     <div>
       {#each Object.entries(groupedFixtures) as [date, fixtures]}
-        <div class="text-xxs sm:text-sm xl:text-base">
+        <div>
           <div
             class="flex items-center justify-between border border-gray-700 py-4 bg-light-gray"
           >
-            <h2 class="date-header ml-4 text-xs md:text-base">{date}</h2>
+            <h2 class="ml-4">{date}</h2>
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}
             <div
@@ -130,7 +130,7 @@
                     />
                   </a>
                 </div>
-                <span class="font-bold">v</span>
+                <span>v</span>
                 <div class="w-5 xs:w-6 md:w-8 items-center justify-center">
                   <a href={`/club?id=${fixture.awayTeamId}`}>
                     <BadgeIcon

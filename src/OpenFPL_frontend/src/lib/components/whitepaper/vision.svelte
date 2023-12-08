@@ -1,6 +1,6 @@
 <div class="container-fluid mx-auto p-4">
   <div class="m-4">
-    <h1 class="text-3xl font-bold">Our Vision</h1>
+    <h1 class="default-header">Our Vision</h1>
     <p class="my-4">
       In an evolving landscape where blockchain technology is still unlocking
       its potential, the Internet Computer offers a promising platform for

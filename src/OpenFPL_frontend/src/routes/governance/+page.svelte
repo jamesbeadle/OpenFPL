@@ -13,11 +13,7 @@
       <ul
         class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"
       >
-        <li
-          class={`mr-4 text-xs md:text-base ${
-            activeTab === "proposals" ? "active-tab" : ""
-          }`}
-        >
+        <li class={`mr-4 ${activeTab === "proposals" ? "active-tab" : ""}`}>
           <button
             class={`p-2 ${
               activeTab === "proposals" ? "text-white" : "text-gray-400"

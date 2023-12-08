@@ -1,6 +1,6 @@
 <div class="container-fluid mx-auto p-4">
   <div class="m-4">
-    <h1 class="text-3xl font-bold">OpenFPL DAO</h1>
+    <h1 class="default-header">OpenFPL DAO</h1>
     <p class="my-4">
       OpenFPL functions entirely on-chain as a DAO, aspiring to operate under
       the Internet Computer’s Service Nervous System. The DAO is structured to
@@ -9,7 +9,7 @@
       third-party services.
     </p>
 
-    <h2 class="text-xl font-bold">DAO Reward Structure</h2>
+    <h2 class="default-sub-header">DAO Reward Structure</h2>
     <p class="my-2">
       The DAO incentivizes participation through monthly minting of new FPL
       tokens, calculated annually as 2.5% of the total $FPL supply as of August
@@ -21,7 +21,7 @@
       <li>Governance Rewards (25%)</li>
     </ul>
 
-    <h2 class="text-lg font-bold mt-4">Gameplay Rewards (75%)</h2>
+    <h2 class="default-sub-header mt-4">Gameplay Rewards (75%)</h2>
     <p class="my-2">
       The DAO is designed to reward users for their expertise in fantasy
       football, with rewards distributed weekly, monthly, and annually based on
@@ -370,7 +370,7 @@
       </li>
     </ul>
 
-    <h2 class="text-lg font-bold mt-4">Governance Rewards (25%)</h2>
+    <h2 class="default-sub-header mt-4">Governance Rewards (25%)</h2>
     <p class="my-2">
       OpenFPL values neuron holders' contributions to maintaining up-to-date
       Premier League data. Rewards are given for raising and voting on essential

@@ -105,7 +105,7 @@
         <button
           class={`${
             selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-          } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
+          } rounded px-3 md:px-4 py-1`}
           on:click={() => changeGameweek(-1)}
           disabled={selectedGameweek === 1}
         >
@@ -113,7 +113,7 @@
         </button>
 
         <select
-          class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
+          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
           bind:value={selectedGameweek}
         >
           {#each gameweeks as gameweek}
@@ -124,7 +124,7 @@
         <button
           class={`${
             selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
-          } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+          } rounded px-3 md:px-4 py-1 ml-1`}
           on:click={() => changeGameweek(1)}
           disabled={selectedGameweek === 38}
         >
@@ -138,7 +138,7 @@
           <div
             class="flex items-center justify-between border-b border-gray-700 py-4 bg-light-gray"
           >
-            <h2 class="date-header ml-4 text-xs md:text-base">{date}</h2>
+            <h2 class="ml-4">{date}</h2>
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}
             <div
@@ -161,7 +161,7 @@
                       />
                     </a>
                   </div>
-                  <span class="font-bold text-lg">v</span>
+                  <span>v</span>
                   <div class="w-10 items-center justify-center">
                     <a href={`/club?id=${fixture.awayTeamId}`}>
                       <BadgeIcon
@@ -177,19 +177,19 @@
                   </div>
                 </div>
                 <div class="flex w-1/2 lg:justify-center">
-                  <span class="text-sm md:text-lg ml-4 md:ml-0 text-left"
+                  <span class="text-sm ml-4 md:ml-0 text-left"
                     >{formatUnixTimeToTime(Number(fixture.kickOff))}</span
                   >
                 </div>
                 <div class="flex w-1/2 lg:justify-center">
-                  <span class="text-sm md:text-lg ml-4 md:ml-0 text-left"
+                  <span class="text-sm ml-4 md:ml-0 text-left"
                     >{getFixtureStatusText(fixture.status)}</span
                   >
                 </div>
               </div>
               <div class="flex items-center space-x-10 w-1/2 lg:justify-center">
                 <div
-                  class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px] text-xs md:text-base"
+                  class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px]"
                 >
                   <a href={`/club?id=${fixture.homeTeamId}`}
                     >{homeTeam ? homeTeam.friendlyName : ""}</a
@@ -199,12 +199,12 @@
                   >
                 </div>
                 <div
-                  class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px] text-xs md:text-base"
+                  class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px]"
                 >
                   <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
                   <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>
                 </div>
-                <div class="flex flex-col text-xs md:text-base">
+                <div class="flex flex-col">
                   <button
                     on:click={() => openUpdateModal(fixture)}
                     class="fpl-purple-btn text-white px-4 py-2 rounded-md"

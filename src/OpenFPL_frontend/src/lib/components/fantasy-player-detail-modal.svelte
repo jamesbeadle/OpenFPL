@@ -16,10 +16,8 @@
 <Modal {visible} on:nnsClose={closeDetailModal}>
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="text-xl font-semibold text-white">Player Detail</h3>
-      <button class="text-white text-3xl" on:click={closeDetailModal}
-        >&times;</button
-      >
+      <h3 class="default-header">Player Detail</h3>
+      <button class="times-button" on:click={closeDetailModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
@@ -28,12 +26,12 @@
         class="h-20 w-20"
       />
       <div class="ml-4">
-        <h3 class="text-2xl mb-2">
+        <h3 class="default-header mb-2">
           {(gameweekData.player.firstName != ""
             ? gameweekData.player.firstName.charAt(0) + "."
             : "") + gameweekData.player.lastName}
         </h3>
-        <p class="text-sm text-gray-400 flex items-center">
+        <p class="text-gray-400 flex items-center">
           <BadgeIcon
             className="w-5 h-5 mr-2"
             primaryColour={playerTeam?.primaryColourHex}
@@ -46,7 +44,7 @@
     </div>
 
     <div
-      class="flex justify-start items-center w-full border-t border-gray-600 text-sm"
+      class="flex justify-start items-center w-full border-t border-gray-600"
     >
       <p
         class="flex w-1/3 items-center border-r border-gray-600 justify-center pt-2"
@@ -71,67 +69,67 @@
       <div
         class="flex justify-between items-center mt-4 bg-light-gray p-2 border-t border-b border-gray-600"
       >
-        <div class="text-sm font-medium w-3/6">Category</div>
-        <div class="text-sm font-medium w-2/6">Detail</div>
-        <div class="text-sm font-medium w-1/6">Points</div>
+        <div class="w-3/6">Category</div>
+        <div class="w-2/6">Detail</div>
+        <div class="w-1/6">Points</div>
       </div>
     </div>
 
     <div class="flex justify-between items-center p-2">
-      <div class="text-sm font-medium w-3/6">Appearance</div>
-      <div class="text-sm font-medium w-2/6">
+      <div class="w-3/6">Appearance</div>
+      <div class="w-2/6">
         {gameweekData.appearance > 0 ? gameweekData.appearance : "-"}
       </div>
-      <div class="text-sm font-medium w-1/6">
+      <div class="w-1/6">
         {gameweekData.appearance > 0 ? gameweekData.appearance * 5 : "-"}
       </div>
     </div>
 
     <div class="flex justify-between items-center p-2">
-      <div class="text-sm font-medium w-3/6">Goals</div>
-      <div class="text-sm font-medium w-2/6">{gameweekData.goals}</div>
-      <div class="text-sm font-medium w-1/6">{gameweekData.goalPoints}</div>
+      <div class="w-3/6">Goals</div>
+      <div class="w-2/6">{gameweekData.goals}</div>
+      <div class="w-1/6">{gameweekData.goalPoints}</div>
     </div>
 
     <div class="flex justify-between items-center p-2">
-      <div class="text-sm font-medium w-3/6">Assists</div>
-      <div class="text-sm font-medium w-2/6">{gameweekData.assists}</div>
-      <div class="text-sm font-medium w-1/6">{gameweekData.assistPoints}</div>
+      <div class="w-3/6">Assists</div>
+      <div class="w-2/6">{gameweekData.assists}</div>
+      <div class="w-1/6">{gameweekData.assistPoints}</div>
     </div>
 
     <div class="flex justify-between items-center p-2">
-      <div class="text-sm font-medium w-3/6">Yellow Card</div>
-      <div class="text-sm font-medium w-2/6">{gameweekData.yellowCards}</div>
-      <div class="text-sm font-medium w-1/6">
+      <div class="w-3/6">Yellow Card</div>
+      <div class="w-2/6">{gameweekData.yellowCards}</div>
+      <div class="w-1/6">
         {gameweekData.yellowCards * -5}
       </div>
     </div>
 
     <div class="flex justify-between items-center p-2">
-      <div class="text-sm font-medium w-3/6">Red Card</div>
-      <div class="text-sm font-medium w-2/6">{gameweekData.redCards}</div>
-      <div class="text-sm font-medium w-1/6">
+      <div class="w-3/6">Red Card</div>
+      <div class="w-2/6">{gameweekData.redCards}</div>
+      <div class="w-1/6">
         {gameweekData.redCards > 0 ? -20 : 0}
       </div>
     </div>
 
     {#if gameweekData.player.position < 2}
       <div class="flex justify-between items-center p-2">
-        <div class="text-sm font-medium w-3/6">Clean Sheet</div>
-        <div class="text-sm font-medium w-2/6">
+        <div class="w-3/6">Clean Sheet</div>
+        <div class="w-2/6">
           {gameweekData.cleanSheets}
         </div>
-        <div class="text-sm font-medium w-1/6">
+        <div class="w-1/6">
           {gameweekData.cleanSheetPoints}
         </div>
       </div>
 
       <div class="flex justify-between items-center p-2">
-        <div class="text-sm font-medium w-3/6">Conceded</div>
-        <div class="text-sm font-medium w-2/6">
+        <div class="w-3/6">Conceded</div>
+        <div class="w-2/6">
           {gameweekData.goalsConceded}
         </div>
-        <div class="text-sm font-medium w-1/6">
+        <div class="w-1/6">
           {gameweekData.goalsConcededPoints}
         </div>
       </div>
@@ -139,38 +137,38 @@
 
     {#if gameweekData.player.position === 0}
       <div class="flex justify-between items-center p-2">
-        <div class="text-sm font-medium w-3/6">Saves</div>
-        <div class="text-sm font-medium w-2/6">{gameweekData.saves}</div>
-        <div class="text-sm font-medium w-1/6">
+        <div class="w-3/6">Saves</div>
+        <div class="w-2/6">{gameweekData.saves}</div>
+        <div class="w-1/6">
           {Math.floor(gameweekData.saves / 3) * 5}
         </div>
       </div>
 
       <div class="flex justify-between items-center p-2">
-        <div class="text-sm font-medium w-3/6">Penalty Saves</div>
-        <div class="text-sm font-medium w-2/6">
+        <div class="w-3/6">Penalty Saves</div>
+        <div class="w-2/6">
           {gameweekData.penaltySaves}
         </div>
-        <div class="text-sm font-medium w-1/6">
+        <div class="w-1/6">
           {gameweekData.penaltySaves * 20}
         </div>
       </div>
     {/if}
 
     <div class="flex justify-between items-center p-2">
-      <div class="text-sm font-medium w-3/6">Own Goal</div>
-      <div class="text-sm font-medium w-2/6">{gameweekData.ownGoals}</div>
-      <div class="text-sm font-medium w-1/6">
+      <div class="w-3/6">Own Goal</div>
+      <div class="w-2/6">{gameweekData.ownGoals}</div>
+      <div class="w-1/6">
         {gameweekData.ownGoals * -10}
       </div>
     </div>
 
     <div class="flex justify-between items-center p-2">
-      <div class="text-sm font-medium w-3/6">Penalty Misses</div>
-      <div class="text-sm font-medium w-2/6">
+      <div class="w-3/6">Penalty Misses</div>
+      <div class="w-2/6">
         {gameweekData.missedPenalties}
       </div>
-      <div class="text-sm font-medium w-1/6">
+      <div class="w-1/6">
         {gameweekData.missedPenalties * -15}
       </div>
     </div>
@@ -179,8 +177,8 @@
       <div
         class="flex justify-between items-center bg-light-gray p-2 border-t border-b border-gray-600"
       >
-        <span class="text-sm font-bold w-5/6">Player Points:</span>
-        <span class="text-sm font-bold w-1/6">{gameweekData.points}</span>
+        <span class="w-5/6">Player Points:</span>
+        <span class="w-1/6">{gameweekData.points}</span>
       </div>
     </div>
 
@@ -188,8 +186,8 @@
       <div
         class="flex justify-between items-center bg-light-gray p-2 border-t border-b border-gray-600"
       >
-        <span class="text-sm font-bold w-5/6">Bonus Points:</span>
-        <span class="text-sm font-bold w-1/6">{gameweekData.bonusPoints}</span>
+        <span class="w-5/6">Bonus Points:</span>
+        <span class="w-1/6">{gameweekData.bonusPoints}</span>
       </div>
     </div>
 
@@ -197,8 +195,8 @@
       <div
         class="flex justify-between items-center bg-light-gray p-2 border-t border-b border-gray-600"
       >
-        <span class="text-sm font-bold w-5/6">Total Points:</span>
-        <span class="text-sm font-bold w-1/6">{gameweekData.totalPoints}</span>
+        <span class="w-5/6">Total Points:</span>
+        <span class="w-1/6">{gameweekData.totalPoints}</span>
       </div>
     </div>
   </div>

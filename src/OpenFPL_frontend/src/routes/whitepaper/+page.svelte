@@ -17,17 +17,13 @@
 
 <Layout>
   <div class="bg-panel rounded-lg mx-4 mt-4">
-    <h1 class="p-4 mx-1 text-2xl">OpenFPL Whitepaper</h1>
+    <h1 class="p-4 mx-1 default-header">OpenFPL Whitepaper</h1>
   </div>
   <div class="bg-panel rounded-lg m-4">
     <ul
       class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"
     >
-      <li
-        class={`mr-4 text-xs md:text-base ${
-          activeTab === "vision" ? "active-tab" : ""
-        }`}
-      >
+      <li class={`mr-4 ${activeTab === "vision" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "vision" ? "text-white" : "text-gray-400"
@@ -37,11 +33,7 @@
           Vision
         </button>
       </li>
-      <li
-        class={`mr-4 text-xs md:text-base ${
-          activeTab === "gameplay" ? "active-tab" : ""
-        }`}
-      >
+      <li class={`mr-4 ${activeTab === "gameplay" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "gameplay" ? "text-white" : "text-gray-400"
@@ -51,11 +43,7 @@
           Gameplay
         </button>
       </li>
-      <li
-        class={`mr-4 text-xs md:text-base ${
-          activeTab === "roadmap" ? "active-tab" : ""
-        }`}
-      >
+      <li class={`mr-4 ${activeTab === "roadmap" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "roadmap" ? "text-white" : "text-gray-400"
@@ -65,11 +53,7 @@
           Roadmap
         </button>
       </li>
-      <li
-        class={`mr-4 text-xs md:text-base ${
-          activeTab === "marketing" ? "active-tab" : ""
-        }`}
-      >
+      <li class={`mr-4 ${activeTab === "marketing" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "marketing" ? "text-white" : "text-gray-400"
@@ -79,11 +63,7 @@
           Marketing
         </button>
       </li>
-      <li
-        class={`mr-4 text-xs md:text-base ${
-          activeTab === "revenue" ? "active-tab" : ""
-        }`}
-      >
+      <li class={`mr-4 ${activeTab === "revenue" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "revenue" ? "text-white" : "text-gray-400"
@@ -93,11 +73,7 @@
           Revenue
         </button>
       </li>
-      <li
-        class={`mr-4 text-xs md:text-base ${
-          activeTab === "dao" ? "active-tab" : ""
-        }`}
-      >
+      <li class={`mr-4 ${activeTab === "dao" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${activeTab === "dao" ? "text-white" : "text-gray-400"}`}
           on:click={() => setActiveTab("dao")}
@@ -105,11 +81,7 @@
           DAO
         </button>
       </li>
-      <li
-        class={`mr-4 text-xs md:text-base ${
-          activeTab === "tokenomics" ? "active-tab" : ""
-        }`}
-      >
+      <li class={`mr-4 ${activeTab === "tokenomics" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "tokenomics" ? "text-white" : "text-gray-400"
@@ -119,11 +91,7 @@
           Tokenomics
         </button>
       </li>
-      <li
-        class={`mr-4 text-xs md:text-base ${
-          activeTab === "architecture" ? "active-tab" : ""
-        }`}
-      >
+      <li class={`mr-4 ${activeTab === "architecture" ? "active-tab" : ""}`}>
         <button
           class={`p-2 ${
             activeTab === "architecture" ? "text-white" : "text-gray-400"

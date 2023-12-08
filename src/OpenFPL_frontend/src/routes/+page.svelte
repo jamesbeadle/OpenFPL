@@ -102,9 +102,7 @@
     <div class="page-header-wrapper">
       <div class="content-panel lg:w-1/2">
         <div class="flex-grow">
-          <p class="content-panel-header">
-            Gameweek
-          </p>
+          <p class="content-panel-header">Gameweek</p>
           <p class="content-panel-stat">
             {$systemStore?.activeGameweek}
           </p>
@@ -114,9 +112,7 @@
         </div>
         <div class="vertical-divider" />
         <div class="flex-grow">
-          <p class="content-panel-header">
-            Managers
-          </p>
+          <p class="content-panel-header">Managers</p>
           <p class="content-panel-stat">
             {managerCount}
           </p>
@@ -124,28 +120,18 @@
         </div>
         <div class="vertical-divider" />
         <div class="flex-grow">
-          <p class="hidden md:block content-panel-header">
-            Weekly Prize Pool
-          </p>
-          <p class="md:hidden content-panel-header">
-            Weekly
-          </p>
-          <p class="content-panel-stat">
-            0
-          </p>
-          <p class="content-panel-header">
-            $FPL
-          </p>
+          <p class="hidden md:block content-panel-header">Weekly Prize Pool</p>
+          <p class="md:hidden content-panel-header">Weekly</p>
+          <p class="content-panel-stat">0</p>
+          <p class="content-panel-header">$FPL</p>
         </div>
       </div>
 
       <div class="flex lg:hidden">
         <div class="content-panel">
           <div class="flex flex flex-col mt-2 xs:mr-2">
-            <p class="content-panel-header">
-              Next Game
-            </p>
-            
+            <p class="content-panel-header">Next Game</p>
+
             <div class="flex justify-start ml-1 items-center mb-2">
               <div class="flex">
                 <a
@@ -166,11 +152,15 @@
                       ? nextFixtureHomeTeam.thirdColourHex
                       : ""}
                   />
-                  <span class="content-panel-header">{nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ""}</span>
+                  <span class="content-panel-header"
+                    >{nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.abbreviatedName
+                      : ""}</span
+                  >
                 </a>
               </div>
               <div class="w-v ml-1 mr-1 flex justify-center">
-                <p class="text-xs mt-2 mb-2 font-bold">v</p>
+                <p class="mt-2 mb-2">v</p>
               </div>
               <div class="flex">
                 <a
@@ -191,25 +181,23 @@
                       ? nextFixtureAwayTeam.thirdColourHex
                       : ""}
                   />
-                  <span class="content-panel-header">{nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName: ""}</span>
+                  <span class="content-panel-header"
+                    >{nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.abbreviatedName
+                      : ""}</span
+                  >
                 </a>
               </div>
             </div>
           </div>
           <div class="vertical-divider" />
           <div class="flex-grow">
-            <p class="content-panel-header">
-              Kick Off
-            </p>
+            <p class="content-panel-header">Kick Off</p>
             <div class="flex">
               <p class="content-panel-stat">
-                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
-                  >h</span
-                >
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
-                  >m</span
-                >
+                {countdownDays}<span class="countdown-text">d</span>
+                : {countdownHours}<span class="countdown-text">h</span>
+                : {countdownMinutes}<span class="countdown-text">m</span>
               </p>
             </div>
             <p class="hidden xs:flex content-panel-header">
@@ -221,13 +209,11 @@
           </div>
         </div>
       </div>
-      
+
       <div class="hidden lg:flex w-1/2">
         <div class="content-panel">
           <div class="flex-grow">
-            <p class="content-panel-header">
-              Next Game
-            </p>
+            <p class="content-panel-header">Next Game</p>
             <div class="flex flex-row">
               <div class="flex justify-center">
                 <a
@@ -249,12 +235,16 @@
                       : ""}
                   />
                   <span class="content-panel-header">
-                    {nextFixtureHomeTeam ? nextFixtureHomeTeam.abbreviatedName : ""}
+                    {nextFixtureHomeTeam
+                      ? nextFixtureHomeTeam.abbreviatedName
+                      : ""}
                   </span>
                 </a>
               </div>
-              <div class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6">
-                <p class="text-xs mt-2 mb-2 font-bold">v</p>
+              <div
+                class="w-v ml-1 mr-1 flex justify-center mt-6 lg:mt-2 xl:mt-6"
+              >
+                <p class="mt-2 mb-2">v</p>
               </div>
               <div class="flex justify-center">
                 <a
@@ -276,7 +266,9 @@
                       : ""}
                   />
                   <span class="content-panel-header">
-                    {nextFixtureAwayTeam ? nextFixtureAwayTeam.abbreviatedName : ""}
+                    {nextFixtureAwayTeam
+                      ? nextFixtureAwayTeam.abbreviatedName
+                      : ""}
                   </span>
                 </a>
               </div>
@@ -284,13 +276,11 @@
           </div>
           <div class="vertical-divider" />
           <div class="flex-grow">
-            <p class="content-panel-header">
-              Kick Off
-            </p>
+            <p class="content-panel-header">Kick Off</p>
             <p class="content-panel-stat">
-              {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-              : {countdownHours}<span class="text-gray-300 text-xs ml-1">h</span>
-              : {countdownMinutes}<span class="text-gray-300 text-xs ml-1">m</span>
+              {countdownDays}<span class="countdown-text">d</span>
+              : {countdownHours}<span class="countdown-text">h</span>
+              : {countdownMinutes}<span class="countdown-text">m</span>
             </p>
             <p class="hidden md:flex content-panel-header">
               {nextFixtureDate}
@@ -301,9 +291,7 @@
             <p class="content-panel-header">
               GW {$systemStore?.focusGameweek} High Score
             </p>
-            <p
-              class="content-panel-stat max-w-[200px] truncate"
-            >
+            <p class="content-panel-stat max-w-[200px] truncate">
               {#if weeklyLeader}
                 <a
                   href={`/manager?id=${weeklyLeader.principalId}&gw=${$systemStore?.focusGameweek}`}
@@ -324,18 +312,15 @@
             </p>
           </div>
         </div>
-      </div>  
-
+      </div>
     </div>
-    
+
     <div class="bg-panel rounded-md">
       <ul
-        class="flex bg-light-gray px-1 md:px-4 pt-2 text-xxs sm:text-base md:text-lg border-b border-gray-700"
+        class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700"
       >
         <li
-          class={`mr-1 md:mr-4 ${
-            activeTab === "fixtures" ? "active-tab" : ""
-          }`}
+          class={`mr-1 md:mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}
         >
           <button
             class={`p-2 ${
@@ -348,9 +333,7 @@
         </li>
         {#if isLoggedIn}
           <li
-            class={`mr-1 md:mr-4 ${
-              activeTab === "points" ? "active-tab" : ""
-            }`}
+            class={`mr-1 md:mr-4 ${activeTab === "points" ? "active-tab" : ""}`}
           >
             <button
               class={`p-2 ${

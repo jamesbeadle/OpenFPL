@@ -60,11 +60,11 @@
 
         <div class="flex flex-row p-4 space-x-4">
           <button
-            class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+            class="rounded fpl-button px-3 sm:px-2 px-3 py-1"
             on:click={displaySystemStateModal}>System Status</button
           >
           <button
-            class="text-xs xs:text-sm sm:text-base rounded fpl-button px-3 sm:px-2 px-3 py-1"
+            class="rounded fpl-button px-3 sm:px-2 px-3 py-1"
             on:click={displaySnapshotModal}>Snapshot Fantasy Teams</button
           >
         </div>
@@ -72,11 +72,7 @@
         <ul
           class="flex rounded-t-lg bg-light-gray px-4 pt-2 border-b border-gray-700"
         >
-          <li
-            class={`mr-4 text-xs md:text-base ${
-              activeTab === "fixtures" ? "active-tab" : ""
-            }`}
-          >
+          <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${
                 activeTab === "fixtures" ? "text-white" : "text-gray-400"

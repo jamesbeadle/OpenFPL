@@ -56,7 +56,7 @@
     <Spinner />
   </div>
 {:then _}
-  <div class="flex flex-col h-screen justify-between">
+  <div class="flex flex-col h-screen justify-between default-text">
     <Header />
     <main class="page-wrapper">
       <slot />

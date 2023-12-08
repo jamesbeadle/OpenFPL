@@ -1,8 +1,8 @@
 <div class="container-fluid mx-auto p-4">
   <div class="m-4">
-    <h1 class="text-3xl font-bold my-4">$FPL Utility Token</h1>
+    <h1 class="default-header my-4">$FPL Utility Token</h1>
 
-    <h2 class="text-xl font-bold">Utility and Functionality</h2>
+    <h2 class="default-sub-header">Utility and Functionality</h2>
     <p class="my-2">
       OpenFPL will be revenue generating, the most important role of the Utility
       token is to manage the OpenFPL treasury. The token is also used throughout
@@ -32,7 +32,7 @@
       </li>
     </ul>
 
-    <h2 class="text-lg font-bold mt-4">Genesis Token Allocation</h2>
+    <h2 class="default-sub-header mt-4">Genesis Token Allocation</h2>
     <p class="my-2">
       At the outset, OpenFPL's token allocation will be as follows:
     </p>
@@ -84,7 +84,7 @@
       <li>Basket 5: Unlocked with 12 months dissolve delay.</li>
     </ul>
 
-    <h2 class="text-lg font-bold mt-4">DAO Valuation</h2>
+    <h2 class="default-sub-header mt-4">DAO Valuation</h2>
     <p class="my-2">
       We have used the discounted cashflow method to value the DAO. The
       following assumptions have been made:
@@ -195,7 +195,7 @@
       </tr>
     </table>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       SNS Decentralisation Sale Configuration
     </h2>
     <table class="w-full text-left border-collapse striped mb-8 mt-4">
@@ -242,7 +242,7 @@
       </tr>
     </table>
 
-    <h2 class="text-lg font-bold mt-4">Mitigation against a 51% Attack</h2>
+    <h2 class="default-sub-header mt-4">Mitigation against a 51% Attack</h2>
     <p class="my-2">
       There is a danger that the OpenFPL SNS treasury could be the target of an
       attack. One possible scenario is for an attacker to buy a large proportion
@@ -282,7 +282,7 @@
       DAO sees fit.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Tokenomics</h2>
+    <h2 class="default-sub-header mt-4">Tokenomics</h2>
     <p class="my-2">
       Each season, 2.5% of the total $FPL supply will be minted for DAO rewards.
       There is no mechanism to automatically burn $FPL as we anticipate the user
@@ -293,7 +293,7 @@
       from the DAO’s treasury.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">ICP FA Overview</h2>
+    <h2 class="default-sub-header mt-4">ICP FA Overview</h2>
     <p class="my-2">
       Managed by founder James Beadle, the ICP FA oversees the development,
       marketing, and management of OpenFPL. The aim is to build a strong team to

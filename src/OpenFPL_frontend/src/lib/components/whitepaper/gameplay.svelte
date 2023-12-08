@@ -1,6 +1,6 @@
 <div class="container-fluid mx-auto p-4">
   <div class="m-4">
-    <h1 class="text-3xl font-bold">OpenFPL Gameplay</h1>
+    <h1 class="default-header">OpenFPL Gameplay</h1>
     <p class="my-4">
       At OpenFPL, our gameplay rules are designed to create an immersive,
       engaging, and unique fantasy football experience. We understand the
@@ -9,7 +9,7 @@
       of each gameweek.
     </p>
 
-    <h2 class="text-lg font-bold">Starting Funds and Team Composition</h2>
+    <h2 class="default-header">Starting Funds and Team Composition</h2>
     <p class="my-2">
       Each user begins their journey with £300m, a budget to strategically build
       their dream team. The value of players fluctuates based on community
@@ -23,7 +23,7 @@
       goalkeeper, 3-5 defenders, 3-5 midfielders, and 1-3 strikers.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Transfers and Team Management</h2>
+    <h2 class="default-header mt-4">Transfers and Team Management</h2>
     <p class="my-2">
       Flexibility is a cornerstone of our gameplay. Users can make up to three
       transfers per week, allowing for dynamic team management and adaptation to
@@ -37,7 +37,7 @@
       window.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Scoring System</h2>
+    <h2 class="default-header mt-4">Scoring System</h2>
     <p class="my-2">
       Our scoring system rewards players for key contributions on the field:
     </p>
@@ -66,7 +66,7 @@
       <li>A player receives a yellow card: -5 points</li>
     </ul>
 
-    <h2 class="text-lg font-bold mt-4">Bonuses</h2>
+    <h2 class="default-header mt-4">Bonuses</h2>
     <p class="my-2">
       OpenFPL elevates the gameplay with a diverse set of bonuses. These bonuses
       play a pivotal role in keeping OpenFPL's gameplay both fresh and
@@ -99,7 +99,7 @@
       <li>Youth Prospects: Double points for players under 21.</li>
     </ul>
 
-    <h2 class="text-lg font-bold mt-4">Star Player</h2>
+    <h2 class="default-header mt-4">Star Player</h2>
     <p class="my-2">
       Each week a user can select a star player. This player will receive double
       points for the gameweek. If one is not set by the start of the gameweek it

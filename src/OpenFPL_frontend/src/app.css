@@ -122,68 +122,93 @@ input {
   z-index: 99999 !important;
 }
 
-.page-wrapper{
+.page-wrapper {
   @apply mx-4 xs:mx-6 sm:mx-8 lg:mx-10;
 }
 
-.page-header-wrapper{
+.page-header-wrapper {
   @apply flex flex-col lg:flex-row lg:space-x-8 my-4 xs:my-6 sm:my-8 lg:my-10;
 }
 
-.content-panel{
+.content-panel {
   @apply flex justify-start items-center text-white rounded-md bg-panel
   space-x-2 sm:space-x-3 md:space-x-4 flex-grow
   p-2 xs:p-3 sm:p-4
   mb-5 xs:mb-7 sm:mb-8 lg:mb-0;
 }
 
-.content-panel-header{
+.content-panel-header {
   @apply text-gray-300 text-xxs xs:text-sm sm:text-base lg:text-sm;
 }
 
-.content-panel-stat{
+.content-panel-stat {
   @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl mt-2 mb-2 font-bold;
 }
 
-.vertical-divider{
-  min-width: 2px; min-height: 50px;
+.vertical-divider {
+  min-width: 2px;
+  min-height: 50px;
   @apply flex-shrink-0 w-px bg-gray-400 self-stretch;
 }
 
-.panel-header{
+.panel-header {
   @apply text-xs xs:text-sm sm:text-2xl md:text-3xl lg:text-2xl font-bold;
 }
 
-.side-panel-header{
+.side-panel-header {
   @apply text-xs xs:text-sm sm:text-2xl md:text-3xl xl:text-base 2xl:text-lg font-bold;
 }
 
-.tab-switcher-label{
+.tab-switcher-label {
   @apply font-bold text-xs xl:text-base;
 }
 
-.dropdown-text{
+.dropdown-text {
   @apply text-xs;
 }
 
-.button-base{
+.button-base {
   @apply w-full md:w-auto text-xs md:text-xs xl:text-base px-4 py-2 rounded;
 }
 
-.wrapper.dialog{
+.wrapper.dialog {
   max-width: unset !important;
   width: 100% !important;
   margin-left: 5%;
   margin-right: 5%;
 }
 
-.default-row-text{
+.default-text {
   @apply text-xxs xs:text-xs sm:text-base;
 }
 
+.default-header {
+  @apply text-xl font-semibold text-white;
+}
+
+.default-sub-header {
+  @apply text-lg font-bold;
+}
+
+.times-button {
+  @apply text-white text-3xl;
+}
+
+.tiny-text {
+  @apply text-xxs lg:text-sm;
+}
+
+.contained-text {
+  @apply text-xxs sm:text-base md:text-lg;
+}
+
+.countdown-text {
+  @apply text-gray-300 text-xs ml-1;
+}
+
 /* Extra small devices (portrait phones, less than 480px) */
-@media (min-width: 480px) { 
-  .wrapper.dialog{
+@media (min-width: 480px) {
+  .wrapper.dialog {
     max-width: unset !important;
     width: 100% !important;
     margin-left: 5%;
@@ -192,31 +217,31 @@ input {
 }
 
 /* Small devices (landscape phones, 640px and up) */
-@media (min-width: 640px) { 
+@media (min-width: 640px) {
   /* Your CSS here */
 }
 
 /* Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) { 
+@media (min-width: 768px) {
   /* Your CSS here */
 }
 
 /* Large devices (desktops, 1024px and up) */
-@media (min-width: 1024px) { 
+@media (min-width: 1024px) {
   /* Your CSS here */
 }
 
 /* Extra large devices (large desktops, 1280px and up) */
-@media (min-width: 1280px) { 
+@media (min-width: 1280px) {
   /* Your CSS here */
 }
 
 /* 2XL devices (larger desktops, 1536px and up) */
-@media (min-width: 1536px) { 
+@media (min-width: 1536px) {
   /* Your CSS here */
 }
 
 /* 3XL devices (extra large desktops, 1920px and up) */
-@media (min-width: 1920px) { 
+@media (min-width: 1920px) {
   /* Your CSS here */
 }

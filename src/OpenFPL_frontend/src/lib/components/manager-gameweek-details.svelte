@@ -111,7 +111,7 @@
         <button
           class={`${
             $selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-          } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
+          } rounded px-3 md:px-4 py-1`}
           on:click={() => changeGameweek(-1)}
           disabled={$selectedGameweek === 1}
         >
@@ -119,7 +119,7 @@
         </button>
 
         <select
-          class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
+          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
           bind:value={$selectedGameweek}
         >
           {#each gameweeks as gameweek}
@@ -132,7 +132,7 @@
             $selectedGameweek === $systemStore?.focusGameweek
               ? "bg-gray-500"
               : "fpl-button"
-          } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+          } rounded px-3 md:px-4 py-1 ml-1`}
           on:click={() => changeGameweek(1)}
           disabled={$selectedGameweek === $systemStore?.focusGameweek}
         >
@@ -141,7 +141,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col space-y-4 mt-4 text-lg">
+    <div class="flex flex-col space-y-4 mt-4">
       {#if $fantasyTeam}
         <div class="overflow-x-auto flex-1">
           <div

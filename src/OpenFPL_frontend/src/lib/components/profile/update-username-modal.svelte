@@ -52,10 +52,8 @@
 <Modal {visible} on:nnsClose={cancelModal}>
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="text-lg font-semibold">Update Display Name</h3>
-      <button class="text-2xl leading-none" on:click={cancelModal}
-        >&times;</button
-      >
+      <h3 class="default-header">Update Display Name</h3>
+      <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
     <form on:submit|preventDefault={updateUsername}>
       <div class="mt-4">
@@ -68,7 +66,7 @@
       </div>
       <div class="items-center py-3 flex space-x-4">
         <button
-          class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          class="px-4 py-2 fpl-cancel-btn text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
           on:click={cancelModal}
         >
           Cancel
@@ -76,7 +74,7 @@
         <button
           class={`px-4 py-2 ${
             isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-          } text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+          } text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
           type="submit"
           disabled={isSubmitDisabled}
         >

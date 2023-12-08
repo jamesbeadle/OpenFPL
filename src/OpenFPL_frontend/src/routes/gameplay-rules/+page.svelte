@@ -5,7 +5,7 @@
 <Layout>
   <div class="m-4">
     <div class="bg-panel rounded-lg m-4 p-4">
-      <h1 class="p-4 mx-1 text-2xl">OpenFPL Gameplay Rules</h1>
+      <h1 class="p-4 mx-1 default-header">OpenFPL Gameplay Rules</h1>
       <div class="bg-panel rounded-lg m-4">
         <div>
           <p class="my-2">
@@ -48,7 +48,7 @@
             player in your team.
           </p>
 
-          <h2 class="text-xl font-bold">Points</h2>
+          <h2 class="default-sub-header">Points</h2>
           <p class="my-2">
             The user can get the following points during a gameweek for their
             team:
@@ -137,7 +137,7 @@
             </tr>
           </table>
 
-          <h2 class="text-xl font-bold">Bonuses</h2>
+          <h2 class="default-sub-header">Bonuses</h2>
           <p class="my-2">
             A user can play 1 bonus per gameweek. Each season a user starts with
             the following 8 bonuses:

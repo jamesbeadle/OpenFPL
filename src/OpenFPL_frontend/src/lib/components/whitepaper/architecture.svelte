@@ -1,6 +1,6 @@
 <div class="container-fluid mx-auto p-4">
   <div class="m-4">
-    <h1 class="text-3xl font-bold my-4">System Architecture</h1>
+    <h1 class="default-header my-4">System Architecture</h1>
 
     <p class="my-2">
       OpenFPL is being built as a progressive web application, it's curernt
@@ -11,7 +11,7 @@
       as user numbers grow. Here's how the system is structured:
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Profile Data</h2>
+    <h2 class="default-sub-header mt-4">Profile Data</h2>
     <p class="my-2">
       OpenFPL allocates approximately 254 bytes for a profile record. This means
       that a single Profile Canister could hold more than 16m profiles, scaling
@@ -25,7 +25,7 @@
       images.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Fantasy Teams Data</h2>
+    <h2 class="default-sub-header mt-4">Fantasy Teams Data</h2>
     <p class="my-2">
       OpenFPL allocates approximately 913 KB for a fantasy team with a lifetime
       of seasons history. Therefore we can store over 4,000 fantasy teams in
@@ -34,7 +34,7 @@
       profile record.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Leaderboard Data</h2>
+    <h2 class="default-sub-header mt-4">Leaderboard Data</h2>
     <p class="my-2">
       The size of the leaderboard data is very much dependent on the number of
       users on the site as each will create an entry in each leaderboard.
@@ -45,7 +45,7 @@
       market leading platform.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       Main Canister & Central Data Management
     </h2>
     <p class="my-2">
@@ -62,7 +62,7 @@
       <li>Canister References</li>
     </ul>
 
-    <h2 class="text-lg font-bold mt-4">Player Canisters</h2>
+    <h2 class="default-sub-header mt-4">Player Canisters</h2>
     <p class="my-2">
       The player canisters container information on all Premier League football
       players. OpenFPL allocates approximately 30 KB for each Player record.
@@ -88,14 +88,14 @@
       players canister when required.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Cycle Dispenser</h2>
+    <h2 class="default-sub-header mt-4">Cycle Dispenser</h2>
     <p class="my-2">
       The cycle dispenser canister watches each canister in the OpenFPL
       ecosystem and tops it up with cycles when it reaches 20% of its top up
       value.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">
+    <h2 class="default-sub-header mt-4">
       Note on Architecture Evolution and Whitepaper Updates
     </h2>
     <p class="my-2">

@@ -226,16 +226,14 @@
 <Modal {visible} on:nnsClose={closeBonusModal}>
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="text-lg font-semibold">Use Bonus</h3>
-      <button class="text-2xl leading-none" on:click={closeBonusModal}
-        >&times;</button
-      >
+      <h3 class="default-header">Use Bonus</h3>
+      <button class="times-button" on:click={closeBonusModal}>&times;</button>
     </div>
     <img src={bonus.image} class="w-16 mx-auto block" alt={bonus.name} />
     <div class="mt-3 text-center">
-      <h3 class="text-lg leading-6 font-medium">{bonus.name}</h3>
+      <h3 class="default-header">{bonus.name}</h3>
       <div class="mt-2 px-7 py-3">
-        <p class="text-sm">{bonus.description}</p>
+        <p>{bonus.description}</p>
       </div>
 
       {#if bonus.selectionType === BonusType.PLAYER}
@@ -284,8 +282,8 @@
         class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2"
         role="alert"
       >
-        <p class="font-bold text-sm">Warning</p>
-        <p class="font-bold text-xs">
+        <p>Warning</p>
+        <p>
           Your bonus will be activated when you save your team and it cannot be
           reversed. A bonus can only be played once per season.
         </p>
@@ -293,7 +291,7 @@
 
       <div class="items-center py-3 flex space-x-4">
         <button
-          class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          class="px-4 py-2 fpl-cancel-btn text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
           on:click={closeBonusModal}
         >
           Cancel
@@ -302,7 +300,7 @@
           class={`px-4 py-2 ${
             isUseButtonEnabled ? "fpl-purple-btn" : "bg-gray-500"
           } 
-          text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+          text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
           on:click={handleUseBonus}
           disabled={!isUseButtonEnabled}
         >

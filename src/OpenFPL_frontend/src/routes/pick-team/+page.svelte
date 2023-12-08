@@ -759,9 +759,7 @@
           class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 xl:mb-0">
-            <p class="content-panel-header">
-              Gameweek
-            </p>
+            <p class="content-panel-header">Gameweek</p>
             <p class="content-panel-stat">
               {activeGameweek}
             </p>
@@ -776,20 +774,12 @@
           />
 
           <div class="flex-grow mb-4 xl:mb-0">
-            <p
-              class="content-panel-header mt-4 xl:mt-0"
-            >
-              Kick Off:
-            </p>
+            <p class="content-panel-header mt-4 xl:mt-0">Kick Off:</p>
             <div class="flex">
               <p class="content-panel-stat">
-                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
-                  >h</span
-                >
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
-                  >m</span
-                >
+                {countdownDays}<span class="countdown-text">d</span>
+                : {countdownHours}<span class="countdown-text">h</span>
+                : {countdownMinutes}<span class="countdown-text">m</span>
               </p>
             </div>
             <p class="content-panel-header">
@@ -803,15 +793,11 @@
           />
 
           <div class="flex-grow mb-0 mt-4 xl:mt-0">
-            <p class="content-panel-header">
-              Players
-            </p>
+            <p class="content-panel-header">Players</p>
             <p class="content-panel-stat">
               {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
             </p>
-            <p class="content-panel-header">
-              Selected
-            </p>
+            <p class="content-panel-header">Selected</p>
           </div>
         </div>
 
@@ -819,9 +805,7 @@
           class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-1 xl:m-4 bg-panel py-2 px-4 lg:py-4 rounded-md"
         >
           <div class="flex-grow mb-4 xl:mb-0">
-            <p class="content-panel-header">
-              Team Value
-            </p>
+            <p class="content-panel-header">Team Value</p>
             <p class="content-panel-stat">
               £{teamValue.toFixed(2)}m
             </p>
@@ -832,9 +816,7 @@
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
-            <p class="content-panel-header">
-              Bank Balance
-            </p>
+            <p class="content-panel-header">Bank Balance</p>
             <p class="content-panel-stat">
               £{($bankBalance / 4).toFixed(2)}m
             </p>
@@ -845,17 +827,13 @@
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
-            <p class="content-panel-header">
-              Transfers
-            </p>
+            <p class="content-panel-header">Transfers</p>
             <p class="content-panel-stat">
               {$transfersAvailable === Infinity
                 ? "Unlimited"
                 : $transfersAvailable}
             </p>
-            <p class="content-panel-header">
-              Available
-            </p>
+            <p class="content-panel-header">Available</p>
           </div>
         </div>
       </div>
@@ -888,10 +866,10 @@
           <div
             class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0"
           >
-            <span class="text-lg">
+            <span>
               Formation:
               <select
-                class="px-4 py-2 border-sm fpl-dropdown text-xs sm:text-sm md:text-base text-center text-center"
+                class="px-4 py-2 border-sm fpl-dropdown text-center text-center"
                 bind:value={selectedFormation}
               >
                 {#each $availableFormations as formation}
@@ -933,7 +911,9 @@
       </div>
 
       <div class="flex md:hidden flex-col md:flex-row">
-        <div class="flex flex-col justify-between items-center text-white mt-4 bg-panel p-2 rounded-md">
+        <div
+          class="flex flex-col justify-between items-center text-white mt-4 bg-panel p-2 rounded-md"
+        >
           <div class="flex flex-row">
             <button
               class={`btn ${
@@ -967,7 +947,9 @@
             </span>
           </div>
 
-          <div class="flex flex-row md:flex-row w-full md:justify-end gap-4 m-2 md:mt-0">
+          <div
+            class="flex flex-row md:flex-row w-full md:justify-end gap-4 m-2 md:mt-0"
+          >
             <button
               disabled={$fantasyTeam?.playerIds
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
@@ -1278,7 +1260,7 @@
                       <div class="w-1/6 flex items-center">
                         <button
                           on:click={() => loadAddPlayer(rowIndex, colIndex)}
-                          class="text-xl rounded fpl-button flex items-center"
+                          class="rounded fpl-button flex items-center"
                         >
                           <AddIcon className="w-6 h-6 p-2" />
                         </button>
@@ -1296,14 +1278,14 @@
       </div>
 
       <div class="hidden md:hidden mt-6">
-        <div class="flex flex-row justify-start items-center text-white space-x-0 flex-grow my-2 bg-panel p-4 rounded-md">
+        <div
+          class="flex flex-row justify-start items-center text-white space-x-0 flex-grow my-2 bg-panel p-4 rounded-md"
+        >
           <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="content-panel-header">
-                Gameweek
-              </p>
+              <p class="content-panel-header">Gameweek</p>
               <p class="content-panel-stat">
                 {activeGameweek}
               </p>
@@ -1317,15 +1299,11 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="content-panel-header">
-                Players
-              </p>
+              <p class="content-panel-header">Players</p>
               <p class="content-panel-stat">
                 {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
               </p>
-              <p class="content-panel-header">
-                Selected
-              </p>
+              <p class="content-panel-header">Selected</p>
             </div>
           </div>
 
@@ -1333,9 +1311,7 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="content-panel-header">
-                Team Value
-              </p>
+              <p class="content-panel-header">Team Value</p>
               <p class="content-panel-stat">
                 £{teamValue.toFixed(2)}m
               </p>
@@ -1347,9 +1323,7 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="content-panel-header">
-                Bank Balance
-              </p>
+              <p class="content-panel-header">Bank Balance</p>
               <p class="content-panel-stat">
                 £{($bankBalance / 4).toFixed(2)}m
               </p>
@@ -1361,17 +1335,13 @@
 
           <div class="flex-grow">
             <div class="ml-1">
-              <p class="content-panel-header">
-                Transfers
-              </p>
+              <p class="content-panel-header">Transfers</p>
               <p class="content-panel-stat">
                 {$transfersAvailable === Infinity
                   ? "Unlimited"
                   : $transfersAvailable}
               </p>
-              <p class="content-panel-header">
-                Available
-              </p>
+              <p class="content-panel-header">Available</p>
             </div>
           </div>
         </div>

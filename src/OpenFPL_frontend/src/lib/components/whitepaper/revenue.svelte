@@ -1,12 +1,12 @@
 <div class="container-fluid mx-auto p-4">
   <div class="m-4">
-    <h1 class="text-3xl font-bold">OpenFPL Revenue Streams</h1>
+    <h1 class="default-header">OpenFPL Revenue Streams</h1>
     <p class="my-4">
       OpenFPL's revenue model is thoughtfully designed to sustain and grow the
       DAO while ensuring practical utility and value for its users.
     </p>
 
-    <h2 class="text-lg font-bold">Diversified Revenue Model</h2>
+    <h2 class="default-header">Diversified Revenue Model</h2>
     <p class="my-2">
       To avoid creating a supply shock by pegging services to a fixed token
       amount, OpenFPL's revenue streams are diversified. This approach mitigates
@@ -19,14 +19,14 @@
       of $FPL and $ICP revenue, enhancing the DAO's financial resilience.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Private Leagues</h2>
+    <h2 class="default-header mt-4">Private Leagues</h2>
     <p class="my-2">
       Private league fees in OpenFPL are charged in ICP to establish a stable
       revenue base. This approach aligns the revenue directly with the number of
       managers, ensuring it scales with user engagement.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Merchandise</h2>
+    <h2 class="default-header mt-4">Merchandise</h2>
     <p class="my-2">
       We have setup a shop at <a
         class="text-blue-500"
@@ -36,7 +36,7 @@
       be deposited into the DAO's treasury.
     </p>
 
-    <h2 class="text-xl font-bold">Podcasts</h2>
+    <h2 class="default-header">Podcasts</h2>
     <p class="my-2">
       OpenFPL is expanding into podcasting with a main podcast and then various
       club-specific satellite podcasts. Initially hosted off-chain, our
@@ -56,7 +56,7 @@
       valuable content to our audience.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Site Sponsorship</h2>
+    <h2 class="default-header mt-4">Site Sponsorship</h2>
     <p class="my-2">
       Starting from August 2025, following the conclusion of the sponsorship
       deal with OpenChat, OpenFPL will offer the site sponsorship rights for
@@ -76,7 +76,7 @@
       contributing to the financial health and sustainability of OpenFPL.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Content Creators</h2>
+    <h2 class="default-header mt-4">Content Creators</h2>
     <p class="my-2">
       OpenFPL will create a platform for content creators that is designed to
       both empower creators and enhance the utility of the FPL token. Creators
@@ -98,7 +98,7 @@
       community of neuron holders.
     </p>
 
-    <h2 class="text-lg font-bold mt-4">Revenue Redistribution Plan</h2>
+    <h2 class="default-header mt-4">Revenue Redistribution Plan</h2>
     <p class="my-2">
       In line with our commitment to directly benefit neuron holders, OpenFPL
       will allocate 50% of any ICRC-1 token received by the DAO each month to
@@ -115,7 +115,7 @@
       and community-focused ethos.
     </p>
 
-    <h2 class="text-xl font-bold mt-4">Overall Revenue Philosophy</h2>
+    <h2 class="default-header mt-4">Overall Revenue Philosophy</h2>
     <p class="my-2">
       OpenFPL’s revenue philosophy is rooted in creating a sustainable ecosystem
       where the utility token maintains its value and relevance.

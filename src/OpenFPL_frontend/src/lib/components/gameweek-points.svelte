@@ -125,14 +125,14 @@
   {/if}
 
   <div class="container-fluid mt-4 mb-4">
-    <div class="flex flex-col space-y-4 text-xs md:text-base">
+    <div class="flex flex-col space-y-4">
       <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 lg:px-4">
         <div class="flex items-center ml-4">
           <div class="flex items-center mr-8">
             <button
               class={`${
                 selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-              } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
+              } rounded px-3 md:px-4 py-1`}
               on:click={() => changeGameweek(-1)}
               disabled={selectedGameweek === 1}
             >
@@ -140,7 +140,7 @@
             </button>
 
             <select
-              class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
+              class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
               bind:value={selectedGameweek}
             >
               {#each gameweeks as gameweek}
@@ -153,7 +153,7 @@
                 selectedGameweek === $systemStore?.activeGameweek
                   ? "bg-gray-500"
                   : "fpl-button"
-              } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+              } rounded px-3 md:px-4 py-1 ml-1`}
               on:click={() => changeGameweek(1)}
               disabled={selectedGameweek === $systemStore?.activeGameweek}
             >
@@ -162,9 +162,7 @@
           </div>
         </div>
       </div>
-      <div
-        class="flex flex-col space-y-4 mt-4 text-xxs xs:text-xs md:text-base lg:text-lg"
-      >
+      <div class="flex flex-col space-y-4 mt-4">
         <div class="overflow-x-auto flex-1">
           <div
             class="flex justify-between border-b border-t border-gray-700 p-4 bg-light-gray lg:px-8"

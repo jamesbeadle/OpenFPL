@@ -196,8 +196,8 @@
 
         <div class="w-full md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 mb-4 md:mb-0">
           <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
-            <p class="text-xs xs:text-base md:text-sm mb-1">Display Name:</p>
-            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">
+            <p class="mb-1">Display Name:</p>
+            <h2 class="default-header mb-1 md:mb-2">
               {$profile?.displayName}
             </h2>
             <button
@@ -206,14 +206,12 @@
             >
               Update
             </button>
-            <p class="text-xs xs:text-base md:text-sm mb-1 mt-4">
-              Favourite Team:
-            </p>
-            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">
+            <p class="mb-1 mt-4">Favourite Team:</p>
+            <h2 class="default-header mb-1 md:mb-2">
               {teamName}
             </h2>
             <button
-              class={`text-sm xs:text-base md:text-sm p-1 md:p-2 px-2 md:px-4 ${
+              class={`p-1 md:p-2 px-2 md:px-4 ${
                 gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0
                   ? "bg-gray-500"
                   : "fpl-button"
@@ -224,14 +222,12 @@
               Update
             </button>
 
-            <p class="text-xs xs:text-base md:text-sm mb-1 mt-4">Joined:</p>
-            <h2 class="text-xl md:text-2xl lg:text-xl font-bold mb-1 md:mb-2">
-              August 2023
-            </h2>
+            <p class="mb-1 mt-4">Joined:</p>
+            <h2 class="default-header mb-1 md:mb-2">August 2023</h2>
 
-            <p class="text-xs xs:text-base md:text-sm mb-1">Principal:</p>
+            <p class="mb-1">Principal:</p>
             <div class="flex items-center">
-              <h2 class="text-xxs">{$profile?.principalId}</h2>
+              <h2 class="tiny-text">{$profile?.principalId}</h2>
               <CopyIcon
                 onClick={copyToClipboard}
                 principalId={$profile?.principalId}
@@ -242,7 +238,7 @@
         </div>
       </div>
     {/if}
-    <div class="flex flex-wrap md:mt-4 md:text-xs">
+    <div class="flex flex-wrap">
       <div class="w-full px-2 mb-4">
         <div class="mt-4 px-2">
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4">

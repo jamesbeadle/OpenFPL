@@ -86,9 +86,8 @@
 <Modal {visible} on:nnsClose={cancelModal}>
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="text-xl font-semibold text-white">Update Fixture</h3>
-      <button class="text-white text-3xl" on:click={cancelModal}>&times;</button
-      >
+      <h3 class="default-header">Update Fixture</h3>
+      <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <form on:submit|preventDefault={updateFixture}>
@@ -124,14 +123,14 @@
 
       <div class="items-center py-3 flex space-x-4">
         <button
-          class="px-4 py-2 fpl-cancel-btn text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          class="px-4 py-2 fpl-cancel-btn text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
           on:click={cancelModal}
         >
           Cancel
         </button>
         <button
           class={`px-4 py-2 ${!$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"} 
-          text-white text-base font-medium rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+          text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
           type="submit"
           disabled={!$authIsAdmin}
         >

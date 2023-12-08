@@ -60,13 +60,13 @@
 <div class="bg-panel rounded-md mt-4 flex-1 xl:mx-4">
   <div class="container-fluid">
     <div class="flex items-center justify-between py-2 bg-light-gray">
-      <h1 class="mx-4 m-2 font-bold side-panel-header">Fixtures</h1>
+      <h1 class="mx-4 m-2 side-panel-header">Fixtures</h1>
     </div>
     <div class="flex items-center space-x-2 m-3 mx-4">
       <button
         class={`${
           selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-        } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1`}
+        } rounded px-3 md:px-4 py-1`}
         on:click={() => changeGameweek(-1)}
         disabled={selectedGameweek === 1}
       >
@@ -74,7 +74,7 @@
       </button>
 
       <select
-        class="p-2 fpl-dropdown text-xs sm:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
+        class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
         bind:value={selectedGameweek}
       >
         {#each gameweeks as gameweek}
@@ -85,7 +85,7 @@
       <button
         class={`${
           selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
-        } text-xs xs:text-sm sm:text-base rounded px-3 md:px-4 py-1 ml-1`}
+        } rounded px-3 md:px-4 py-1 ml-1`}
         on:click={() => changeGameweek(1)}
         disabled={selectedGameweek === 38}
       >
@@ -98,30 +98,40 @@
           <div
             class="flex items-center justify-between border-b border-gray-700 py-2 bg-light-gray"
           >
-            <h2 class="date-header ml-4 text-xs">{date}</h2>
+            <h2 class="ml-4">{date}</h2>
           </div>
           {#each fixtures as { fixture, homeTeam, awayTeam }}
             <div
-              class={`flex items-center justify-between py-2 border-b border-gray-700 text-xxs sm:text-xs 3xl:text-base
+              class={`flex items-center justify-between py-2 border-b border-gray-700
               ${fixture.status < 3 ? "text-gray-400" : "text-white"}`}
             >
               <div class="flex w-full items-center space-x-10 mx-4 xs:mx-8">
                 <div class="flex flex-col w-3/6 min-w-[100px] md:min-w-[200px]">
-                  <a class="my-1 flex items-center" href={`/club?id=${fixture.homeTeamId}`}>
+                  <a
+                    class="my-1 flex items-center"
+                    href={`/club?id=${fixture.homeTeamId}`}
+                  >
                     <BadgeIcon
-                        className="w-4 mr-1"
-                        primaryColour={homeTeam ? homeTeam.primaryColourHex : ""}
-                        secondaryColour={homeTeam ? homeTeam.secondaryColourHex : ""}
-                        thirdColour={homeTeam ? homeTeam.thirdColourHex : ""}
-                      />
+                      className="w-4 mr-1"
+                      primaryColour={homeTeam ? homeTeam.primaryColourHex : ""}
+                      secondaryColour={homeTeam
+                        ? homeTeam.secondaryColourHex
+                        : ""}
+                      thirdColour={homeTeam ? homeTeam.thirdColourHex : ""}
+                    />
                     {homeTeam ? homeTeam.friendlyName : ""}
                   </a>
-                  <a class="my-1 flex items-center" href={`/club?id=${fixture.awayTeamId}`}>
+                  <a
+                    class="my-1 flex items-center"
+                    href={`/club?id=${fixture.awayTeamId}`}
+                  >
                     <BadgeIcon
-                    className="w-4 mr-1"
-                    primaryColour={awayTeam ? awayTeam.primaryColourHex : ""}
-                    secondaryColour={awayTeam ? awayTeam.secondaryColourHex: ""}
-                    thirdColour={awayTeam ? awayTeam.thirdColourHex : ""}
+                      className="w-4 mr-1"
+                      primaryColour={awayTeam ? awayTeam.primaryColourHex : ""}
+                      secondaryColour={awayTeam
+                        ? awayTeam.secondaryColourHex
+                        : ""}
+                      thirdColour={awayTeam ? awayTeam.thirdColourHex : ""}
                     />
                     {awayTeam ? awayTeam.friendlyName : ""}
                   </a>
@@ -129,7 +139,7 @@
                 <div class="flex flex-col w-1/6 items-center justify-center">
                   <span>{fixture.status < 3 ? "-" : fixture.homeGoals}</span>
                   <span>{fixture.status < 3 ? "-" : fixture.awayGoals}</span>
-                </div>     
+                </div>
                 <div class="flex flex-col w-2/6">
                   <span class="md:ml-0"
                     >{formatUnixTimeToTime(Number(fixture.kickOff))}</span

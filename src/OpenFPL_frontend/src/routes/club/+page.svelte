@@ -13,7 +13,10 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-  import type { Fixture, Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    Fixture,
+    Team,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
   import { Spinner } from "@dfinity/gix-components";
 
@@ -42,13 +45,15 @@
         (x) => x.homeTeamId === id || x.awayTeamId === id
       );
 
-      fixturesWithTeams = teamFixtures.sort((a,b) => Number(a.kickOff) - Number(b.kickOff)).map((fixture) => ({
-        fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
-      }));
+      fixturesWithTeams = teamFixtures
+        .sort((a, b) => Number(a.kickOff) - Number(b.kickOff))
+        .map((fixture) => ({
+          fixture,
+          homeTeam: getTeamFromId(fixture.homeTeamId),
+          awayTeam: getTeamFromId(fixture.awayTeamId),
+        }));
 
-      team = $teamStore.find(x => x.id == id) ?? null;
+      team = $teamStore.find((x) => x.id == id) ?? null;
 
       highestScoringPlayer = $playerStore
         .sort((a, b) => a.totalPoints - b.totalPoints)
@@ -128,9 +133,7 @@
           </div>
           <div class="vertical-divider" />
           <div class="flex-grow">
-            <p class="content-panel-header">
-              Players
-            </p>
+            <p class="content-panel-header">Players</p>
             <p class="content-panel-stat">
               {$playerStore.filter((x) => x.teamId == id).length}
             </p>
@@ -138,9 +141,7 @@
           </div>
           <div class="vertical-divider" />
           <div class="flex-grow">
-            <p class="content-panel-header">
-              League Position
-            </p>
+            <p class="content-panel-header">League Position</p>
             <p class="content-panel-stat">
               {getTeamPosition(id)}
             </p>
@@ -153,12 +154,8 @@
           class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="content-panel-header">
-              League Points
-            </p>
-            <p
-              class="content-panel-stat"
-            >
+            <p class="content-panel-header">League Points</p>
+            <p class="content-panel-stat">
               {getTeamPoints(id)}
             </p>
             <p class="content-panel-header">Total</p>
@@ -168,13 +165,11 @@
             class="flex md:hidden h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
             style="min-height: 2px; min-width: 2px;"
           />
-          
+
           <div class="vertical-divider" />
 
           <div class="flex-grow my-4 md:mb-0">
-            <p class="content-panel-header">
-              Next Game:
-            </p>
+            <p class="content-panel-header">Next Game:</p>
             <div class="flex justify-center mb-2 mt-2">
               <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
@@ -187,7 +182,7 @@
                   </a>
                 </div>
                 <div class="w-v ml-1 mr-1 flex justify-center">
-                  <p class="text-xs mt-2 mb-2 font-bold">v</p>
+                  <p class="mt-2 mb-2">v</p>
                 </div>
                 <div class="w-10 ml-4">
                   <a href={`/club?id=${nextFixtureAwayTeam?.id}`}>
@@ -202,9 +197,7 @@
             </div>
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
-                <p
-                  class="content-panel-header text-center"
-                >
+                <p class="content-panel-header text-center">
                   <a href={`/club?id=${nextFixtureHomeTeam?.id}`}>
                     {nextFixtureHomeTeam?.abbreviatedName}
                   </a>
@@ -212,9 +205,7 @@
               </div>
               <div class="w-v ml-2 mr-2" />
               <div class="w-10 ml-4">
-                <p
-                  class="content-panel-header text-center"
-                >
+                <p class="content-panel-header text-center">
                   <a href={`/club?id=${nextFixtureAwayTeam?.id}`}>
                     {nextFixtureAwayTeam?.abbreviatedName}
                   </a>
@@ -222,18 +213,16 @@
               </div>
             </div>
           </div>
-          
+
           <div
             class="flex md:hidden h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
             style="min-height: 2px; min-width: 2px;"
           />
-          
+
           <div class="vertical-divider" />
 
           <div class="flex-grow">
-            <p
-              class="content-panel-header mt-4 md:mt-0"
-            >
+            <p class="content-panel-header mt-4 md:mt-0">
               Highest Scoring Player
             </p>
             <p class="content-panel-stat">
@@ -253,11 +242,7 @@
     <div class="mx-4 xs:mx-6 sm:mx-8 lg:mx-10">
       <div class="bg-panel rounded-md">
         <ul class="flex bg-light-gray border-b border-gray-700 px-2 pt-2">
-          <li
-            class={`mr-4 text-xs md:text-base ${
-              activeTab === "players" ? "active-tab" : ""
-            }`}
-          >
+          <li class={`mr-4 ${activeTab === "players" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${
                 activeTab === "players" ? "text-white" : "text-gray-400"
@@ -267,11 +252,7 @@
               Players
             </button>
           </li>
-          <li
-            class={`mr-4 text-xs md:text-base ${
-              activeTab === "fixtures" ? "active-tab" : ""
-            }`}
-          >
+          <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${
                 activeTab === "fixtures" ? "text-white" : "text-gray-400"

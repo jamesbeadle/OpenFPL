@@ -76,7 +76,7 @@
 {#if isLoading}
   <Spinner />
 {:else}
-  <div class="flex flex-col space-y-4 text-lg mt-4">
+  <div class="flex flex-col space-y-4 mt-4">
     <div class="overflow-x-auto flex-1">
       <div
         class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"

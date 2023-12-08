@@ -120,9 +120,7 @@
           </div>
           <div class="vertical-divider" />
           <div class="flex-grow">
-            <p class="content-panel-header">
-              Manager
-            </p>
+            <p class="content-panel-header">Manager</p>
             <p class="content-panel-stat">
               {displayName}
             </p>
@@ -132,9 +130,7 @@
           </div>
           <div class="vertical-divider" />
           <div class="flex-grow">
-            <p class="content-panel-header">
-              Favourite Team
-            </p>
+            <p class="content-panel-header">Favourite Team</p>
             <p class="content-panel-stat flex items-center">
               <BadgeIcon
                 className="w-7 mr-2"
@@ -153,9 +149,7 @@
           class="flex justify-start items-center text-white space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow">
-            <p class="content-panel-header">
-              Leaderboards
-            </p>
+            <p class="content-panel-header">Leaderboards</p>
             <p class="content-panel-stat">
               {manager.weeklyPosition}
               <span class="text-xs"
@@ -202,7 +196,7 @@
             <button
               class={`btn ${
                 activeTab === "details" ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md font-bold text-md min-w-[125px]`}
+              } px-4 py-2 rounded-l-md  min-w-[125px]`}
               on:click={() => setActiveTab("details")}
             >
               Details
@@ -210,7 +204,7 @@
             <button
               class={`btn ${
                 activeTab === "gameweeks" ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-r-md font-bold text-md min-w-[125px]`}
+              } px-4 py-2 rounded-r-md min-w-[125px]`}
               on:click={() => setActiveTab("gameweeks")}
             >
               Gameweeks

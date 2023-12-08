@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Position } from "$lib/enums/Position";
-    import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+  import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import {
     calculateAgeFromNanoseconds,
@@ -24,9 +24,9 @@
     <div>
       <div class="flex p-4">
         <div class="flex items-center">
-          <p class="text-sm md:text-xl">Position:</p>
+          <p>Position:</p>
           <select
-            class="px-2 fpl-dropdown text-xs xs:text-sm md:text-base text-center mx-0 md:mx-2 min-w-[100px]"
+            class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
             bind:value={selectedPosition}
           >
             <option value={-1}>All</option>
@@ -36,7 +36,9 @@
           </select>
         </div>
       </div>
-      <div class="flex border-b border-gray-700 bg-light-gray text-xs xs:text-sm md:text-base p-2 xs:py-3 md:py-4 px-4">
+      <div
+        class="flex border-b border-gray-700 bg-light-gray p-2 xs:py-3 md:py-4 px-4"
+      >
         <div class="flex sm:hidden w-2/12">No.</div>
         <div class="hidden sm:flex w-2/12">Number</div>
         <div class="flex sm:hidden w-2/12">Pos.</div>
@@ -48,7 +50,9 @@
         <div class="flex 2/12 xl:w-1/12">&nbsp;</div>
       </div>
       {#each filteredPlayers as player}
-        <div class="flex items-center p-2 xs:py-3 md:py-4 px-4 border-b border-gray-700 text-white cursor-pointer text-xs xs:text-sm md:text-base">
+        <div
+          class="flex items-center p-2 xs:py-3 md:py-4 px-4 border-b border-gray-700 text-white cursor-pointer"
+        >
           <a
             class="flex-grow flex items-center justify-start"
             href={`/player?id=${player.id}`}
@@ -64,7 +68,8 @@
                 this={getFlagComponent(player.nationality)}
                 class="w-4 h-4 mr-2 hidden xs:flex"
               />
-              {player.firstName} {player.lastName}
+              {player.firstName}
+              {player.lastName}
             </div>
             <div class="hidden xl:flex items-center w-1/12">
               {calculateAgeFromNanoseconds(Number(player.dateOfBirth))}
@@ -76,7 +81,7 @@
               {player.totalPoints}
             </div>
             <div class="flex w-2/12 justify-center xl:justify-start xl:w-1/12">
-              <ViewDetailsIcon className='w-4 sm:w-5 md:w-6 xl:w-7' />
+              <ViewDetailsIcon className="w-4 sm:w-5 md:w-6 xl:w-7" />
             </div>
           </a>
         </div>

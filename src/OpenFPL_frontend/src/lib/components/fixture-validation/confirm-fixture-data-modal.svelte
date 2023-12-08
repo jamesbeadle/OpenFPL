@@ -9,12 +9,12 @@
 <Modal {visible} on:nnsClose={closeModal}>
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
-      <h4 class="text-lg font-bold">Confirm Fixture Data</h4>
+      <h4>Confirm Fixture Data</h4>
       <button class="text-black" on:click={closeModal}>✕</button>
     </div>
     <div class="my-5">
       <h1>Please confirm your fixture data.</h1>
-      <p class="text-sm text-gray-600">
+      <p class="text-gray-600">
         You will not be able to edit your submission and entries that differ
         from the accepted consensus data will not receive $FPL rewards. If
         consensus has already been reached for the fixture your submission will

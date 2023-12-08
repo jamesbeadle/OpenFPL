@@ -174,12 +174,12 @@
 <Modal {visible} on:nnsClose={closeAddPlayerModal}>
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
-      <h3 class="text-lg font-semibold">Select Player</h3>
-      <button class="text-2xl leading-none" on:click={closeAddPlayerModal}
+      <h3 class="default-header">Select Player</h3>
+      <button class="times-button" on:click={closeAddPlayerModal}
         >&times;</button
       >
     </div>
-    <div class="my-4 text-sm">
+    <div class="my-4">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
         <div>
           <label for="filterTeam">Filter by Team:</label>
@@ -249,7 +249,7 @@
       </div>
     </div>
 
-    <div class="overflow-x-auto flex-1 text-xs">
+    <div class="overflow-x-auto flex-1">
       <div
         class="flex justify-between border border-gray-700 py-2 bg-light-gray border-b border-gray-700"
       >
@@ -313,7 +313,7 @@
       <div class="flex space-x-1 min-w-max">
         {#each Array(Math.ceil(filteredPlayers.length / pageSize)) as _, index}
           <button
-            class={`px-4 py-2 text-xs rounded-md ${
+            class={`px-4 py-2 rounded-md ${
               index + 1 === currentPage ? "fpl-button" : ""
             }`}
             on:click={() => goToPage(index + 1)}

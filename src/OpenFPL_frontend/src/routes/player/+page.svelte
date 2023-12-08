@@ -114,8 +114,7 @@
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div class="page-header-wrapper"
-        >
+        <div class="page-header-wrapper">
           <div class="flex-grow flex flex-col items-center">
             <p class="content-panel-header">
               {getPositionText(selectedPlayer?.position ?? -1)}
@@ -140,9 +139,7 @@
             <p class="content-panel-stat">
               {selectedPlayer?.lastName}
             </p>
-            <p
-              class="content-panel-header flex items-center"
-            >
+            <p class="content-panel-header flex items-center">
               <svelte:component
                 this={getFlagComponent(selectedPlayer?.nationality ?? "")}
                 class="w-4 h-4 mr-1"
@@ -156,9 +153,7 @@
             <p class="content-panel-stat">
               £{(Number(selectedPlayer?.value ?? 0) / 4).toFixed(2)}m
             </p>
-            <p class="content-panel-header">
-              Weekly Change: 0%
-            </p>
+            <p class="content-panel-header">Weekly Change: 0%</p>
           </div>
           <div
             class="h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
@@ -180,9 +175,7 @@
           class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
         >
           <div class="flex-grow mb-4 md:mb-0">
-            <p class="content-panel-header">
-              Next Game:
-            </p>
+            <p class="content-panel-header">Next Game:</p>
             <div class="flex justify-center mb-2 mt-2">
               <div class="flex justify-center items-center">
                 <div class="w-10 ml-4 mr-4">
@@ -205,7 +198,7 @@
                   </a>
                 </div>
                 <div class="w-v ml-1 mr-1 flex justify-center">
-                  <p class="text-xs mt-2 mb-2 font-bold">v</p>
+                  <p class="mt-2 mb-2">v</p>
                 </div>
                 <div class="w-10 ml-4">
                   <a
@@ -230,9 +223,7 @@
             </div>
             <div class="flex justify-center">
               <div class="w-10 ml-4 mr-4">
-                <p
-                  class="content-panel-header text-center"
-                >
+                <p class="content-panel-header text-center">
                   <a
                     href={`/club?id=${
                       nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
@@ -246,9 +237,7 @@
               </div>
               <div class="w-v ml-2 mr-2" />
               <div class="w-10 ml-4">
-                <p
-                  class="content-panel-header text-xs text-center"
-                >
+                <p class="content-panel-header text-xs text-center">
                   <a
                     href={`/club?id=${
                       nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
@@ -267,22 +256,12 @@
             style="min-height: 2px; min-width: 2px;"
           />
           <div class="flex-grow mb-4 md:mb-0">
-            <p
-              class="content-panel-header mt-4 md:mt-0"
-            >
-              Kick Off:
-            </p>
+            <p class="content-panel-header mt-4 md:mt-0">Kick Off:</p>
             <div class="flex">
-              <p
-                class="content-panel-stat"
-              >
-                {countdownDays}<span class="text-gray-300 text-xs ml-1">d</span>
-                : {countdownHours}<span class="text-gray-300 text-xs ml-1"
-                  >h</span
-                >
-                : {countdownMinutes}<span class="text-gray-300 text-xs ml-1"
-                  >m</span
-                >
+              <p class="content-panel-stat">
+                {countdownDays}<span class="countdown-text">d</span>
+                : {countdownHours}<span class="countdown-text">h</span>
+                : {countdownMinutes}<span class="countdown-text">m</span>
               </p>
             </div>
             <p class="content-panel-header">
@@ -296,11 +275,7 @@
     <div class="m-4">
       <div class="bg-panel rounded-md m-4">
         <ul class="flex bg-light-gray border-b border-gray-700 px-4 pt-2">
-          <li
-            class={`mr-4 text-xs md:text-base ${
-              activeTab === "history" ? "active-tab" : ""
-            }`}
-          >
+          <li class={`mr-4 ${activeTab === "history" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${
                 activeTab === "history" ? "text-white" : "text-gray-400"
