@@ -95,6 +95,7 @@
       selectionType: BonusType.AUTOMATIC,
     },
   ];
+
   let leftPanelBonuses = bonuses.slice(0, 5);
   let rightPanelBonuses = bonuses.slice(5, 10);
   export let bonusUsedInSession = writable<boolean>(false);
@@ -196,7 +197,7 @@
       {#each leftPanelBonuses as bonus}
         <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-2 xl:m-1 my-2 md:my-3 lg:my-4 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 xl:m-1 mt-4 md:h-16" />
+            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16" />
             <div class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]">
               <p class="text-center smaller-text ">
                 {bonus.name}
@@ -230,7 +231,7 @@
       {#each rightPanelBonuses as bonus}
         <div class="flex items-center w-1/5 bonus-panel-inner m-1 my-2 md:m-2 xl:m-1 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 xl:m-1 mt-4 md:h-16" />
+            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16" />
             <div class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]">
               <p class="text-center smaller-text">
                 {bonus.name}
