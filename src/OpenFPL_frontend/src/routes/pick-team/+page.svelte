@@ -830,11 +830,10 @@
       </div>
 
       <div class="hidden xl:flex flex-col md:flex-row">
-        <div
-          class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full"
-        >
+
+        <div class="flex flex-row justify-between items-center text-white bg-panel p-2 rounded-md w-full mb-4">
           <div
-            class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1"
+            class="flex flex-row justify-between md:justify-start flex-grow ml-4"
           >
             <button
               class={`btn ${
