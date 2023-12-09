@@ -829,6 +829,7 @@
         </div>
       </div>
 
+      <!-- from 640 - 882 not working -->
       <div class="hidden sm:flex flex-col md:flex-row">
         <div class="flex flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md w-full">
           <div class="flex flex-row justify-start flex-grow ml-4">
@@ -924,10 +925,10 @@
           </div>
           <div class="w-full xs:w-1/2">
             <div class="flex">
-              <span class="mx-4 mt-4">
+              <span class="mx-4 xs:mt-4">
                 Formation:
                 <select
-                  class="px-4 mb-1 border-sm fpl-dropdown text-center text-center"
+                  class="px-4 xs:mb-1 border-sm fpl-dropdown text-center text-center"
                   bind:value={selectedFormation}
                 >
                   {#each $availableFormations as formation}
