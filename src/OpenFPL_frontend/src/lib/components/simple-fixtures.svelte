@@ -57,7 +57,7 @@
   }
 </script>
 
-<div class="bg-panel rounded-md mt-4 flex-1 xl:mx-4">
+<div class="bg-panel rounded-md">
   <div class="container-fluid">
     <div class="flex items-center justify-between py-2 bg-light-gray">
       <h1 class="mx-4 m-2 side-panel-header">Fixtures</h1>
@@ -66,7 +66,7 @@
       <button
         class={`${
           selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-        } rounded px-3 md:px-4 py-1`}
+        } default-button`}
         on:click={() => changeGameweek(-1)}
         disabled={selectedGameweek === 1}
       >
@@ -85,7 +85,7 @@
       <button
         class={`${
           selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
-        } rounded px-3 md:px-4 py-1 ml-1`}
+        } default-button ml-1`}
         on:click={() => changeGameweek(1)}
         disabled={selectedGameweek === 38}
       >

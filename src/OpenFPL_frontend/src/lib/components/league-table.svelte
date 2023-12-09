@@ -62,7 +62,7 @@
       <button
         class={`${
           selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-        } rounded px-3 md:px-4 py-1`}
+        } default-button`}
         on:click={() => changeGameweek(-1)}
         disabled={selectedGameweek === 1}
       >
@@ -83,7 +83,7 @@
           selectedGameweek === $systemStore?.activeGameweek
             ? "bg-gray-500"
             : "fpl-button"
-        } rounded px-3 md:px-4 py-1 ml-1`}
+        } default-button ml-1`}
         on:click={() => changeGameweek(1)}
         disabled={selectedGameweek === $systemStore?.activeGameweek}
       >

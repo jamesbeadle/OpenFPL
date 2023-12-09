@@ -46,7 +46,7 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
+    <div class="bg-panel rounded-md">
       <div class="flex flex-col space-y-4">
         <div class="flex p-4">
           <h1>
@@ -61,7 +61,7 @@
               <button
                 class={`${
                   currentGameweek === 1 ? "bg-gray-500" : "fpl-button"
-                } rounded px-3 md:px-4 py-1`}
+                } default-button`}
                 on:click={() => changeGameweek(-1)}
                 disabled={currentGameweek === 1}>&lt;</button
               >
@@ -76,7 +76,7 @@
               <button
                 class={`${
                   currentGameweek === 38 ? "bg-gray-500" : "fpl-button"
-                } rounded px-3 md:px-4 py-1 ml-1`}
+                } default-button ml-1`}
                 on:click={() => changeGameweek(1)}
                 disabled={currentGameweek === 38}>&gt;</button
               >

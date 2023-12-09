@@ -755,9 +755,7 @@
     />
     <div>
       <div class="hidden md:flex flex-col sm:flex-row">
-        <div
-          class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-2 xl:m-4 bg-panel p-4 rounded-md"
-        >
+        <div class="bg-panel rounded-md">
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="content-panel-header">Gameweek</p>
             <p class="content-panel-stat">
@@ -801,9 +799,7 @@
           </div>
         </div>
 
-        <div
-          class="flex flex-col xl:flex-row justify-start xl:items-center text-white space-x-0 xl:space-x-4 flex-grow mx-4 my-1 xl:m-4 bg-panel py-2 px-4 lg:py-4 rounded-md"
-        >
+        <div class="bg-panel rounded-md">
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="content-panel-header">Team Value</p>
             <p class="content-panel-stat">
@@ -839,9 +835,8 @@
       </div>
 
       <div class="hidden md:flex flex-col md:flex-row">
-        <div
-          class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full"
-        >
+        
+        <div class="bg-panel rounded-md">
           <div
             class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1"
           >
@@ -911,9 +906,8 @@
       </div>
 
       <div class="flex md:hidden flex-col md:flex-row">
-        <div
-          class="flex flex-col justify-between items-center text-white mt-4 bg-panel p-2 rounded-md"
-        >
+        
+        <div class="bg-panel rounded-md">
           <div class="flex flex-row">
             <button
               class={`btn ${
@@ -1157,7 +1151,7 @@
             {/if}
           </div>
         {:else}
-          <div class="bg-panel rounded-md m-4 flex-1">
+          <div class="bg-panel rounded-md">
             <div class="container-fluid">
               {#each gridSetup as row, rowIndex}
                 {#if rowIndex === 0}
@@ -1278,9 +1272,8 @@
       </div>
 
       <div class="hidden md:hidden mt-6">
-        <div
-          class="flex flex-row justify-start items-center text-white space-x-0 flex-grow my-2 bg-panel p-4 rounded-md"
-        >
+        
+        <div class="bg-panel rounded-md">
           <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
 
           <div class="flex-grow">

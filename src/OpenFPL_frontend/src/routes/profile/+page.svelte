@@ -25,7 +25,7 @@
     <Spinner />
   {:else}
     <div class="m-4">
-      <div class="bg-panel rounded-lg m-4">
+      <div class="bg-panel rounded-md">
         <ul
           class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"
         >

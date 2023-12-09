@@ -204,7 +204,7 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <div class="container-fluid mx-4 md:mx-16 mt-4 bg-panel">
+    <div class="bg-panel rounded-md">
       <div class="flex flex-col mt-4">
         <div class="flex flex-row space-x-2 p-4">
           <button class="fpl-button px-4 py-2" on:click={showSelectPlayersModal}

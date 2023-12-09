@@ -81,7 +81,7 @@
       </div>
       <div class="items-center py-3 flex space-x-4">
         <button
-          class="px-4 py-2 fpl-cancel-btn text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          class="default-button fpl-cancel-btn"
           on:click={cancelModal}
         >
           Cancel
@@ -89,7 +89,7 @@
         <button
           class={`px-4 py-2 ${
             !$authIsAdmin ? "bg-gray-500" : "fpl-purple-btn"
-          } text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+          } default-button fpl-purple-btn`}
           type="submit"
           disabled={!$authIsAdmin}
         >

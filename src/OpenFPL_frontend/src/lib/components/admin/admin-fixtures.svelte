@@ -105,7 +105,7 @@
         <button
           class={`${
             selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-          } rounded px-3 md:px-4 py-1`}
+          } default-button`}
           on:click={() => changeGameweek(-1)}
           disabled={selectedGameweek === 1}
         >
@@ -124,7 +124,7 @@
         <button
           class={`${
             selectedGameweek === 38 ? "bg-gray-500" : "fpl-button"
-          } rounded px-3 md:px-4 py-1 ml-1`}
+          } default-button ml-1`}
           on:click={() => changeGameweek(1)}
           disabled={selectedGameweek === 38}
         >
@@ -207,7 +207,7 @@
                 <div class="flex flex-col">
                   <button
                     on:click={() => openUpdateModal(fixture)}
-                    class="fpl-purple-btn text-white px-4 py-2 rounded-md"
+                    class="deault-button fpl-button"
                     >Edit</button
                   >
                 </div>

@@ -163,7 +163,7 @@
         <div class="flex flex-col sm:flex-row justify-between sm:items-center">
           <div class="md:flex md:items-center md:mt-0 ml-2 md:ml-4">
             <button
-              class="rounded px-3 md:px-4 py-1 fpl-button"
+              class="default-button fpl-button"
               on:click={() => changeLeaderboardType(-1)}>&lt;</button
             >
             <select
@@ -175,7 +175,7 @@
               <option value={3}>Season</option>
             </select>
             <button
-              class="rounded px-3 md:px-4 py-1 fpl-button ml-2"
+              class="default-button fpl-button ml-2"
               on:click={() => changeLeaderboardType(1)}>&gt;</button
             >
           </div>
@@ -185,7 +185,7 @@
               <button
                 class={`${
                   selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-                } rounded px-3 md:px-4 py-1 mr-1`}
+                } default-button mr-1`}
                 on:click={() => changeGameweek(-1)}
                 disabled={selectedGameweek === 1}>&lt;</button
               >
@@ -202,7 +202,7 @@
                   selectedGameweek === $systemStore?.focusGameweek
                     ? "bg-gray-500"
                     : "fpl-button"
-                } rounded px-3 md:px-4 py-1 ml-1`}
+                } default-button ml-1`}
                 on:click={() => changeGameweek(1)}
                 disabled={selectedGameweek === $systemStore?.focusGameweek}
                 >&gt;</button
@@ -213,7 +213,7 @@
           {#if selectedLeaderboardType === 2}
             <div class="sm:flex sm:items-center sm:mt-0 mt-2 ml-2">
               <button
-                class="fpl-button rounded px-3 md:px-4 py-1"
+                class="fpl-button default-button"
                 on:click={() => changeTeam(-1)}
               >
                 &lt;
@@ -229,7 +229,7 @@
               </select>
 
               <button
-                class="rounded px-3 md:px-4 py-1 ml-1"
+                class="default-button fpl-button ml-1"
                 on:click={() => changeTeam(1)}
               >
                 &gt;
@@ -238,7 +238,7 @@
 
             <div class="sm:flex sm:items-center sm:mt-0 mt-2 ml-2">
               <button
-                class="fpl-button rounded px-3 md:px-4 py-1"
+                class="fpl-button default-button"
                 on:click={() => changeMonth(-1)}
               >
                 &lt;
@@ -263,7 +263,7 @@
               </select>
 
               <button
-                class="rounded px-3 md:px-4 py-1 ml-1"
+                class="default-button fpl-button ml-1"
                 on:click={() => changeMonth(1)}
               >
                 &gt;
@@ -316,7 +316,7 @@
                 on:click={() => changePage(-1)}
                 disabled={currentPage === 1}
                 class={`${selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"}
-                px-4 py-2 mx-2 rounded disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px]`}
+                disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`}
               >
                 Previous
               </button>
@@ -331,7 +331,7 @@
                     ? "bg-gray-500"
                     : "fpl-button"
                 } 
-                  px-4 py-2 mx-2 rounded disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px]`}
+                  disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`}
               >
                 Next
               </button>

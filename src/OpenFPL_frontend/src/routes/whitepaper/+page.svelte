@@ -16,10 +16,10 @@
 </script>
 
 <Layout>
-  <div class="bg-panel rounded-lg mx-4 mt-4">
+  <div class="bg-panel rounded-md">
     <h1 class="p-4 mx-1 default-header">OpenFPL Whitepaper</h1>
   </div>
-  <div class="bg-panel rounded-lg m-4">
+  <div>
     <ul
       class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"
     >

@@ -171,9 +171,8 @@
             </p>
           </div>
         </div>
-        <div
-          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow m-4 bg-panel p-4 rounded-md"
-        >
+
+        <div class="bg-panel rounded-md">
           <div class="flex-grow mb-4 md:mb-0">
             <p class="content-panel-header">Next Game:</p>
             <div class="flex justify-center mb-2 mt-2">
@@ -273,7 +272,7 @@
     </div>
 
     <div class="m-4">
-      <div class="bg-panel rounded-md m-4">
+      <div class="bg-panel rounded-md">
         <ul class="flex bg-light-gray border-b border-gray-700 px-4 pt-2">
           <li class={`mr-4 ${activeTab === "history" ? "active-tab" : ""}`}>
             <button

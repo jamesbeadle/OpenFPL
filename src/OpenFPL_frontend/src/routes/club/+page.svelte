@@ -150,9 +150,7 @@
             </p>
           </div>
         </div>
-        <div
-          class="flex flex-col md:flex-row justify-start md:items-center text-white space-x-0 md:space-x-4 flex-grow bg-panel p-4 rounded-md"
-        >
+        <div class="bg-panel rounded-md">
           <div class="flex-grow mb-4 md:mb-0">
             <p class="content-panel-header">League Points</p>
             <p class="content-panel-stat">

@@ -22,11 +22,11 @@
       </p>
     </div>
     <div class="flex justify-end gap-3">
-      <button class="px-4 py-2 border rounded text-black" on:click={closeModal}
+      <button class="default-button fpl-cancel-btn" on:click={closeModal}
         >Cancel</button
       >
       <button
-        class="px-4 py-2 bg-blue-500 text-white rounded"
+        class="default-button fpl-button"
         on:click={onConfirm}>Confirm</button
       >
     </div>

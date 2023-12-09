@@ -190,13 +190,14 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-col bg-panel m-4 rounded-md">
+
+    <div class="bg-panel rounded-md">
       <div class="flex justify-between items-center text-white px-4 pt-4 rounded-md w-full">
         <div class="flex">
           <button
             class={`btn ${
               activeTab === "details" ? `fpl-button` : `inactive-btn`
-            } px-4 py-2 rounded-l-md  min-w-[125px]`}
+            } px-4 py-2 rounded-l-md min-w-[75px]`}
             on:click={() => setActiveTab("details")}
           >
             Details
@@ -204,18 +205,24 @@
           <button
             class={`btn ${
               activeTab === "gameweeks" ? `fpl-button` : `inactive-btn`
-            } px-4 py-2 rounded-r-md min-w-[125px]`}
+            } px-4 py-2 rounded-r-md min-w-[75px]`}
             on:click={() => setActiveTab("gameweeks")}
           >
             Gameweeks
           </button>
         </div>
 
-        <div class="px-4">
+        <div class="px-4 hidden lg:flex">
           {#if $fantasyTeam && activeTab === "details"}
-            <span class="text-2xl">Total Points: {$fantasyTeam?.points}</span>
+            <span>Total Points: {$fantasyTeam?.points}</span>
           {/if}
         </div>
+      </div>
+
+      <div class="flex px-4 my-4 lg:hidden">
+        {#if $fantasyTeam && activeTab === "details"}
+          <span>Total Points: {$fantasyTeam?.points}</span>
+        {/if}
       </div>
 
       <div class="w-full">

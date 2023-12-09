@@ -52,7 +52,7 @@
       cancelModal={hideSnapshotModal}
     />
     <div class="m-4">
-      <div class="bg-panel rounded-lg m-4">
+      <div class="bg-panel rounded-md">
         <div class="flex flex-col p-4">
           <h1 class="text-xl">OpenFPL Admin</h1>
           <p class="mt-2">This view is for testing purposes only.</p>

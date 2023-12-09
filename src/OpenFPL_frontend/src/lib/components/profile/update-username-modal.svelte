@@ -74,7 +74,7 @@
         <button
           class={`px-4 py-2 ${
             isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-          } text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+          } default-button fpl-purple-btn`}
           type="submit"
           disabled={isSubmitDisabled}
         >
