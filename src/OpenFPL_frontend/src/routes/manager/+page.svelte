@@ -192,25 +192,23 @@
     </div>
 
     <div class="bg-panel rounded-md">
-      <div class="flex justify-between items-center text-white px-4 pt-4 rounded-md w-full">
-        <div class="flex">
-          <button
-            class={`btn ${
-              activeTab === "details" ? `fpl-button` : `inactive-btn`
-            } px-4 py-2 rounded-l-md min-w-[75px]`}
-            on:click={() => setActiveTab("details")}
-          >
-            Details
-          </button>
-          <button
-            class={`btn ${
-              activeTab === "gameweeks" ? `fpl-button` : `inactive-btn`
-            } px-4 py-2 rounded-r-md min-w-[75px]`}
-            on:click={() => setActiveTab("gameweeks")}
-          >
-            Gameweeks
-          </button>
-        </div>
+      <div class="flex flex-row ml-4">
+        <button
+          class={`btn ${
+            activeTab === "details" ? `fpl-button` : `inactive-btn`
+          } tab-switcher-label rounded-l-md`}
+          on:click={() => setActiveTab("details")}
+        >
+          Details
+        </button>
+        <button
+          class={`btn ${
+            activeTab === "gameweeks" ? `fpl-button` : `inactive-btn`
+          } tab-switcher-label rounded-r-md`}
+          on:click={() => setActiveTab("gameweeks")}
+        >
+          Gameweeks
+        </button>
 
         <div class="px-4 hidden lg:flex">
           {#if $fantasyTeam && activeTab === "details"}

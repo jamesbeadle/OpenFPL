@@ -155,7 +155,8 @@ input {
 }
 
 .tab-switcher-label {
-  @apply font-bold text-xs xl:text-base;
+  @apply font-bold text-xs xl:text-base 
+    px-4 py-2 my-4 min-w-[100px] lg:min-w-[125px];
 }
 
 .dropdown-text {

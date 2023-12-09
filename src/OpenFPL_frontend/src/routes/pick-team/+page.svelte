@@ -908,11 +908,11 @@
       <div class="flex md:hidden flex-col md:flex-row">
         
         <div class="bg-panel rounded-md">
-          <div class="flex flex-row">
+          <div class="flex flex-row ml-4">
             <button
               class={`btn ${
                 pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md tab-switcher-label min-w-[100px] lg:min-w-[125px] my-2`}
+              } tab-switcher-label rounded-l-md`}
               on:click={showPitchView}
             >
               Pitch View
@@ -920,7 +920,7 @@
             <button
               class={`btn ${
                 !pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-r-md tab-switcher-label min-w-[100px] lg:min-w-[125px] my-2`}
+              } tab-switcher-label rounded-r-md`}
               on:click={showListView}
             >
               List View
