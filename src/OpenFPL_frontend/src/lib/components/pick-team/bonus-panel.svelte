@@ -195,11 +195,19 @@
   <div class="flex flex-col xl:flex-row m-2">
     <div class="hidden md:flex items-center w-full xl:w-1/2">
       {#each leftPanelBonuses as bonus}
-        <div class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-2 xl:m-1 my-2 md:my-3 lg:my-4 rounded-lg border border-gray-700">
+        <div
+          class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-2 xl:m-1 my-2 md:my-3 lg:my-4 rounded-lg border border-gray-700"
+        >
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16" />
-            <div class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]">
-              <p class="text-center smaller-text ">
+            <img
+              alt={bonus.name}
+              src={bonus.image}
+              class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16"
+            />
+            <div
+              class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]"
+            >
+              <p class="text-center smaller-text">
                 {bonus.name}
               </p>
             </div>
@@ -229,10 +237,18 @@
     </div>
     <div class="hidden md:flex items-center w-full xl:w-1/2">
       {#each rightPanelBonuses as bonus}
-        <div class="flex items-center w-1/5 bonus-panel-inner m-1 my-2 md:m-2 xl:m-1 rounded-lg border border-gray-700">
+        <div
+          class="flex items-center w-1/5 bonus-panel-inner m-1 my-2 md:m-2 xl:m-1 rounded-lg border border-gray-700"
+        >
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <img alt={bonus.name} src={bonus.image} class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16" />
-            <div class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]">
+            <img
+              alt={bonus.name}
+              src={bonus.image}
+              class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16"
+            />
+            <div
+              class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]"
+            >
               <p class="text-center smaller-text">
                 {bonus.name}
               </p>
@@ -269,7 +285,9 @@
   <div class="flex md:hidden flex-col md:mx-2">
     <div class="flex items-center flex-col mt-1 mx-2 mb-1">
       {#each bonuses as bonus}
-        <div class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]">
+        <div
+          class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]"
+        >
           <div class="w-2/12 flex items-center justify-center">
             <img
               alt={bonus.name}
