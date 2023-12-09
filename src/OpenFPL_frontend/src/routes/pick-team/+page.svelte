@@ -754,8 +754,9 @@
       {bankBalance}
     />
     <div>
-      <div class="hidden md:flex flex-col sm:flex-row">
-        <div class="bg-panel rounded-md">
+
+      <div class="hidden xl:flex page-header-wrapper">
+        <div class="content-panel lg:w-1/2">
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="content-panel-header">Gameweek</p>
             <p class="content-panel-stat">
@@ -766,10 +767,7 @@
             </p>
           </div>
 
-          <div
-            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          <div class="vertical-divider" />
 
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="content-panel-header mt-4 xl:mt-0">Kick Off:</p>
@@ -785,10 +783,7 @@
             </p>
           </div>
 
-          <div
-            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          <div class="vertical-divider" />
 
           <div class="flex-grow mb-0 mt-4 xl:mt-0">
             <p class="content-panel-header">Players</p>
@@ -797,9 +792,11 @@
             </p>
             <p class="content-panel-header">Selected</p>
           </div>
+  
         </div>
 
-        <div class="bg-panel rounded-md">
+        <div class="content-panel lg:w-1/2">
+          
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="content-panel-header">Team Value</p>
             <p class="content-panel-stat">
@@ -807,10 +804,9 @@
             </p>
             <p class="content-panel-header">GBP</p>
           </div>
-          <div
-            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+          
+          <div class="vertical-divider" />
+
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="content-panel-header">Bank Balance</p>
             <p class="content-panel-stat">
@@ -818,10 +814,9 @@
             </p>
             <p class="content-panel-header">GBP</p>
           </div>
-          <div
-            class="h-px bg-gray-400 w-full xl:w-px xl:h-full xl:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
-          />
+
+          <div class="vertical-divider" />
+
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
             <p class="content-panel-header">Transfers</p>
             <p class="content-panel-stat">
@@ -834,148 +829,84 @@
         </div>
       </div>
 
-      <div class="hidden md:flex flex-col md:flex-row">
+      <div class="flex xl:flex flex-col md:flex-row">
         
-        <div class="bg-panel rounded-md">
-          <div
-            class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1"
-          >
-            <button
-              class={`btn ${
-                pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md tab-switcher-label min-w-[100px] lg:min-w-[125px] my-4`}
-              on:click={showPitchView}
-            >
-              Pitch View
-            </button>
-            <button
-              class={`btn ${
-                !pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-r-md tab-switcher-label min-w-[100px] lg:min-w-[125px] my-4`}
-              on:click={showListView}
-            >
-              List View
-            </button>
-          </div>
+        <div class="bg-panel rounded-md xs:flex flex-row">
 
-          <div
-            class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0"
-          >
-            <span>
-              Formation:
-              <select
-                class="px-4 py-2 border-sm fpl-dropdown text-center text-center"
-                bind:value={selectedFormation}
+          <div class="w-full xs:w-1/2">
+            <div class="flex">
+              <p class="mx-4 mt-4">Gameweek {activeGameweek} {activeSeason}</p>
+            </div>
+            <div class="flex flex-row ml-4">
+              <button
+                class={`btn ${
+                  pitchView ? `fpl-button` : `inactive-btn`
+                } rounded-l-md tab-switcher-label`}
+                on:click={showPitchView}
               >
-                {#each $availableFormations as formation}
-                  <option value={formation}>{formation}</option>
-                {/each}
-              </select>
-            </span>
+                Pitch View
+              </button>
+              <button
+                class={`btn ${
+                  !pitchView ? `fpl-button` : `inactive-btn`
+                } rounded-r-md tab-switcher-label`}
+                on:click={showListView}
+              >
+                List View
+              </button>
+            </div>
+          </div>
+          <div class="w-full xs:w-1/2">
+            
+            <div class="ml-5">
+              <span>
+                Formation:
+                <select
+                  class="px-4 mb-1 border-sm fpl-dropdown text-center text-center"
+                  bind:value={selectedFormation}
+                >
+                  {#each $availableFormations as formation}
+                    <option value={formation}>{formation}</option>
+                  {/each}
+                </select>
+              </span>
+            </div>
+  
+            <div class="flex flex-row mx-2">
+              <button
+                disabled={$fantasyTeam?.playerIds
+                  ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+                  : true}
+                on:click={autofillTeam}
+                class={`button-base  
+                ${
+                  $fantasyTeam?.playerIds &&
+                  $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+                    ? "fpl-purple-btn"
+                    : "bg-gray-500"
+                } text-white m-2`}
+              >
+                Auto Fill
+              </button>
+              <button
+                disabled={!isSaveButtonActive}
+                on:click={saveFantasyTeam}
+                class={`button-base ${
+                  isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
+                } text-white m-2`}
+              >
+                Save Team
+              </button>
+            </div>
           </div>
 
-          <div
-            class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
-          >
-            <button
-              disabled={$fantasyTeam?.playerIds
-                ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
-                : true}
-              on:click={autofillTeam}
-              class={`button-base  
-              ${
-                $fantasyTeam?.playerIds &&
-                $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
-                  ? "fpl-purple-btn"
-                  : "bg-gray-500"
-              } text-white min-w-[125px]`}
-            >
-              Auto Fill
-            </button>
-            <button
-              disabled={!isSaveButtonActive}
-              on:click={saveFantasyTeam}
-              class={`button-base ${
-                isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
-              } text-white min-w-[125px]`}
-            >
-              Save Team
-            </button>
-          </div>
+          
+
+          
         </div>
       </div>
-
-      <div class="flex md:hidden flex-col md:flex-row">
         
-        <div class="bg-panel rounded-md">
-
-          <div class="flex flex-row ml-3 items-center mt-4">
-              <p>Gameweek {activeGameweek} {activeSeason}</p>
-          </div>
-
-          <div class="flex flex-row ml-3">
-            <button
-              class={`btn ${
-                pitchView ? `fpl-button` : `inactive-btn`
-              } tab-switcher-label rounded-l-md`}
-              on:click={showPitchView}
-            >
-              Pitch View
-            </button>
-            <button
-              class={`btn ${
-                !pitchView ? `fpl-button` : `inactive-btn`
-              } tab-switcher-label rounded-r-md`}
-              on:click={showListView}
-            >
-              List View
-            </button>
-          </div>
-
-          <div class="w-full ml-4">
-            <span>
-              Formation:
-              <select
-                class="px-4 border-sm fpl-dropdown text-center text-center"
-                bind:value={selectedFormation}
-              >
-                {#each $availableFormations as formation}
-                  <option value={formation}>{formation}</option>
-                {/each}
-              </select>
-            </span>
-          </div>
-
-          <div class="flex flex-row gap-4 m-3">
-            <button
-              disabled={$fantasyTeam?.playerIds
-                ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
-                : true}
-              on:click={autofillTeam}
-              class={`button-base  
-              ${
-                $fantasyTeam?.playerIds &&
-                $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
-                  ? "fpl-purple-btn"
-                  : "bg-gray-500"
-              } text-white`}
-            >
-              Auto Fill
-            </button>
-            <button
-              disabled={!isSaveButtonActive}
-              on:click={saveFantasyTeam}
-              class={`button-base ${
-                isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
-              } text-white`}
-            >
-              Save Team
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col xl:flex-row mt-2 md:mt-0">
+      <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
         {#if pitchView}
           <div class="relative w-full xl:w-1/2 mt-2">
             <img
@@ -1267,12 +1198,12 @@
             {/each}
           </div>
         {/if}
-        <div class="hidden md:flex w-full xl:w-1/2">
+        <div class="hidden xl:flex w-full xl:w-1/2">
           <SimpleFixtures />
         </div>
       </div>
 
-      <div class="content-panel flex md:hidden mt-4">
+      <div class="content-panel flex xl:hidden mt-4">
        
         <div class="flex-grow">
           <div class="ml-1">
@@ -1323,7 +1254,7 @@
         </div>
       </div>
 
-      <div class="flex md:hidden w-full mt-4">
+      <div class="flex xl:hidden w-full mt-4">
         <SimpleFixtures />
       </div>
       <BonusPanel {fantasyTeam} {activeGameweek} />

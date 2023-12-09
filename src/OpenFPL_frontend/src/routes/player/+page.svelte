@@ -114,7 +114,7 @@
   {:else}
     <div class="m-4">
       <div class="flex flex-col md:flex-row">
-        <div class="page-header-wrapper">
+        <div class="page-header-wrapper flex">
           <div class="flex-grow flex flex-col items-center">
             <p class="content-panel-header">
               {getPositionText(selectedPlayer?.position ?? -1)}

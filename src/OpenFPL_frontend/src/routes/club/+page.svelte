@@ -107,7 +107,7 @@
     <Spinner />
   {:else}
     <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
-      <div class="page-header-wrapper">
+      <div class="page-header-wrapper flex">
         <div class="content-panel">
           <div class="flex-grow flex flex-col items-center">
             <p class="content-panel-header">

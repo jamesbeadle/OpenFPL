@@ -99,7 +99,7 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <div class="page-header-wrapper">
+    <div class="page-header-wrapper flex">
       <div class="content-panel lg:w-1/2">
         <div class="flex-grow">
           <p class="content-panel-header">Gameweek</p>

@@ -122,7 +122,7 @@ input {
 }
 
 .page-header-wrapper {
-  @apply flex flex-col lg:flex-row lg:space-x-4;
+  @apply flex-col lg:flex-row lg:space-x-4;
 }
 
 .content-panel {
