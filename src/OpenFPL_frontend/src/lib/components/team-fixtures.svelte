@@ -6,6 +6,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import {
     formatUnixDateToReadable,
+    formatUnixDateToSmallReadable,
     formatUnixTimeToTime,
   } from "../utils/Helpers";
   import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -66,10 +67,10 @@
 <div class="flex flex-col space-y-4">
   <div>
     <div class="flex p-4">
-      <div class="flex items-center ml-4">
-        <p class="mr-4">Type:</p>
+      <div class="flex items-center">
+        <p>Type:</p>
         <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+          class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
           bind:value={selectedFixtureType}
         >
           <option value={-1}>All</option>
@@ -81,12 +82,13 @@
     <div
       class="flex justify-between p-2 border-b border-gray-700 py-4 bg-light-gray px-4"
     >
-      <div class="flex-grow w-1/6 ml-4">Gameweek</div>
-      <div class="flex-grow w-1/3 text-center">Game</div>
+      <div class="hidden md:flex flex-grow w-1/6 md:ml-4">Gameweek</div>
+      <div class="md:hidden flex-grow w-1/6 md:ml-4">GW</div>
+      <div class="flex-grow w-1/3">Game</div>
       <div class="flex-grow w-1/3">Date</div>
-      <div class="flex-grow w-1/4 text-center">Time</div>
+      <div class="hidden md:flex flex-grow w-1/4 text-center">Time</div>
       <div class="flex-grow w-1/3">Teams</div>
-      <div class="flex-grow w-1/4 mr-4">Result</div>
+      <div class="flex-grow w-1/6 md:w-1/4 md:mr-4">Result</div>
     </div>
 
     {#each filteredFixtures as { fixture, homeTeam, awayTeam }}
@@ -94,9 +96,9 @@
         class={`flex items-center justify-between border-b border-gray-700 p-2 px-4  
         ${fixture.status === 0 ? "text-gray-400" : "text-white"}`}
       >
-        <div class="w-1/6 ml-4">{fixture.gameweek}</div>
-        <div class="w-1/3 flex justify-center">
-          <div class="w-10 items-center justify-center mr-4">
+        <div class="w-1/6 md:ml-4">{fixture.gameweek}</div>
+        <div class="w-1/3 flex">
+          <div class="w-5 md:w-10 items-center justify-center mr-1 md:mr-4">
             <a href={`/club?id=${fixture.homeTeamId}`}>
               <BadgeIcon
                 primaryColour={homeTeam ? homeTeam.primaryColourHex : ""}
@@ -106,7 +108,7 @@
             </a>
           </div>
           <span>v</span>
-          <div class="w-10 items-center justify-center ml-4">
+          <div class="w-5 md:w-10 items-center justify-center ml-1 md:ml-4">
             <a href={`/club?id=${fixture.awayTeamId}`}>
               <BadgeIcon
                 primaryColour={awayTeam ? awayTeam.primaryColourHex : ""}
@@ -116,10 +118,13 @@
             </a>
           </div>
         </div>
-        <div class="w-1/3">
+        <div class="hidden md:flex w-1/3">
           {formatUnixDateToReadable(Number(fixture.kickOff))}
         </div>
-        <div class="w-1/4 text-center">
+        <div class="md:hidden w-1/3">
+          {formatUnixDateToSmallReadable(Number(fixture.kickOff))}
+        </div>
+        <div class="hidden md:flex w-1/4 text-center">
           {formatUnixTimeToTime(Number(fixture.kickOff))}
         </div>
         <div class="w-1/3">
@@ -132,7 +137,7 @@
             >
           </div>
         </div>
-        <div class="w-1/4 mr-4">
+        <div class="w-1/6 md:w-1/4 md:mr-4">
           <div class="flex flex-col">
             <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
             <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>

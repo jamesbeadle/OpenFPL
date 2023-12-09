@@ -106,159 +106,157 @@
   {#if isLoading}
     <Spinner />
   {:else}
-  <div class="page-header-wrapper flex">
-    <div class="content-panel">
-      <div class="flex-grow flex flex-col items-center">
-        <p class="content-panel-header">
-          {team?.friendlyName}
-        </p>
-        <div class="py-2 flex space-x-4">
-          <BadgeIcon
-            className="h-4"
-            primaryColour={team?.primaryColourHex}
-            secondaryColour={team?.secondaryColourHex}
-            thirdColour={team?.thirdColourHex}
-          />
-          <ShirtIcon
-            className="h-4"
-            primaryColour={team?.primaryColourHex}
-            secondaryColour={team?.secondaryColourHex}
-            thirdColour={team?.thirdColourHex}
-          />
+    <div class="page-header-wrapper flex">
+      <div class="content-panel">
+        <div class="flex-grow flex flex-col items-center">
+          <p class="content-panel-header">
+            {team?.friendlyName}
+          </p>
+          <div class="py-2 flex space-x-4">
+            <BadgeIcon
+              className="h-4"
+              primaryColour={team?.primaryColourHex}
+              secondaryColour={team?.secondaryColourHex}
+              thirdColour={team?.thirdColourHex}
+            />
+            <ShirtIcon
+              className="h-4"
+              primaryColour={team?.primaryColourHex}
+              secondaryColour={team?.secondaryColourHex}
+              thirdColour={team?.thirdColourHex}
+            />
+          </div>
+          <p class="content-panel-header">
+            {team?.abbreviatedName}
+          </p>
         </div>
-        <p class="content-panel-header">
-          {team?.abbreviatedName}
-        </p>
+        <div class="vertical-divider" />
+        <div class="flex-grow">
+          <p class="content-panel-header">Players</p>
+          <p class="content-panel-stat">
+            {$playerStore.filter((x) => x.teamId == id).length}
+          </p>
+          <p class="content-panel-header">Total</p>
+        </div>
+        <div class="vertical-divider" />
+        <div class="flex-grow">
+          <p class="content-panel-header">League Position</p>
+          <p class="content-panel-stat">
+            {getTeamPosition(id)}
+          </p>
+          <p class="content-panel-header">
+            {$systemStore?.activeSeason.name}
+          </p>
+        </div>
       </div>
-      <div class="vertical-divider" />
-      <div class="flex-grow">
-        <p class="content-panel-header">Players</p>
-        <p class="content-panel-stat">
-          {$playerStore.filter((x) => x.teamId == id).length}
-        </p>
-        <p class="content-panel-header">Total</p>
-      </div>
-      <div class="vertical-divider" />
-      <div class="flex-grow">
-        <p class="content-panel-header">League Position</p>
-        <p class="content-panel-stat">
-          {getTeamPosition(id)}
-        </p>
-        <p class="content-panel-header">
-          {$systemStore?.activeSeason.name}
-        </p>
-      </div>
-    </div>
-    <div class="content-panel">
-      <div class="flex-grow flex flex-col items-center">
-        <p class="content-panel-header">Next Game</p>
-        <div class="py-2 flex space-x-4"><a
-          class="flex flex-col items-center justify-center"
-          href={`/club?id=${
-            nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
-          }`}
-        >
-          <BadgeIcon
-            className="h-4 sm:h-6 my-2 sm:my-4"
-            primaryColour={nextFixtureHomeTeam
-              ? nextFixtureHomeTeam.primaryColourHex
-              : ""}
-            secondaryColour={nextFixtureHomeTeam
-              ? nextFixtureHomeTeam.secondaryColourHex
-              : ""}
-            thirdColour={nextFixtureHomeTeam
-              ? nextFixtureHomeTeam.thirdColourHex
-              : ""}
-          />
-          <span class="content-panel-header"
-            >{nextFixtureHomeTeam
-              ? nextFixtureHomeTeam.abbreviatedName
-              : ""}</span
+      <div class="content-panel">
+        <div class="flex-grow flex flex-col items-center">
+          <p class="content-panel-header">Next Game</p>
+          <div class="py-2 flex space-x-4">
+            <a
+              class="flex flex-col items-center justify-center"
+              href={`/club?id=${
+                nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+              }`}
             >
-          </a>
-          <a
-          class="flex flex-col items-center justify-center"
-          href={`/club?id=${
-            nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
-          }`}
-        >
-          <BadgeIcon
-            className="h-4 sm:h-6 my-2 sm:my-4"
-            primaryColour={nextFixtureAwayTeam
-              ? nextFixtureAwayTeam.primaryColourHex
-              : ""}
-            secondaryColour={nextFixtureAwayTeam
-              ? nextFixtureAwayTeam.secondaryColourHex
-              : ""}
-            thirdColour={nextFixtureAwayTeam
-              ? nextFixtureAwayTeam.thirdColourHex
-              : ""}
-          />
-          <span class="content-panel-header"
-            >{nextFixtureAwayTeam
-              ? nextFixtureAwayTeam.abbreviatedName
-              : ""}</span
-          >
-        </a>
+              <BadgeIcon
+                className="h-4 sm:h-6 my-2 sm:my-4"
+                primaryColour={nextFixtureHomeTeam
+                  ? nextFixtureHomeTeam.primaryColourHex
+                  : ""}
+                secondaryColour={nextFixtureHomeTeam
+                  ? nextFixtureHomeTeam.secondaryColourHex
+                  : ""}
+                thirdColour={nextFixtureHomeTeam
+                  ? nextFixtureHomeTeam.thirdColourHex
+                  : ""}
+              />
+              <span class="content-panel-header"
+                >{nextFixtureHomeTeam
+                  ? nextFixtureHomeTeam.abbreviatedName
+                  : ""}</span
+              >
+            </a>
+            <a
+              class="flex flex-col items-center justify-center"
+              href={`/club?id=${
+                nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+              }`}
+            >
+              <BadgeIcon
+                className="h-4 sm:h-6 my-2 sm:my-4"
+                primaryColour={nextFixtureAwayTeam
+                  ? nextFixtureAwayTeam.primaryColourHex
+                  : ""}
+                secondaryColour={nextFixtureAwayTeam
+                  ? nextFixtureAwayTeam.secondaryColourHex
+                  : ""}
+                thirdColour={nextFixtureAwayTeam
+                  ? nextFixtureAwayTeam.thirdColourHex
+                  : ""}
+              />
+              <span class="content-panel-header"
+                >{nextFixtureAwayTeam
+                  ? nextFixtureAwayTeam.abbreviatedName
+                  : ""}</span
+              >
+            </a>
+          </div>
+        </div>
+        <div class="vertical-divider" />
+        <div class="flex-grow flex flex-col">
+          <p class="content-panel-header">League Points</p>
+          <p class="content-panel-stat">
+            {getTeamPoints(id)}
+          </p>
+          <p class="content-panel-header">Total</p>
+        </div>
+
+        <div class="vertical-divider" />
+        <div class="flex-grow">
+          <p class="content-panel-header">Most Points</p>
+          <p class="content-panel-stat">
+            <a href={`/player?id=${highestScoringPlayer?.id}`}
+              >{highestScoringPlayer?.lastName}</a
+            >
+          </p>
+          <p class="content-panel-header">
+            {getPositionText(highestScoringPlayer?.position ?? 0)}
+            ({highestScoringPlayer?.totalPoints})
+          </p>
         </div>
       </div>
-      <div class="vertical-divider" />
-      <div class="flex-grow flex flex-col">
-        <p class="content-panel-header">League Points</p>
-        <p class="content-panel-stat">
-          {getTeamPoints(id)}
-        </p>
-        <p class="content-panel-header">Total</p>
-      </div>
-
-      <div class="vertical-divider" />
-      <div class="flex-grow">
-        <p class="content-panel-header">
-          Most Points
-        </p>
-        <p class="content-panel-stat">
-          <a href={`/player?id=${highestScoringPlayer?.id}`}
-            >{highestScoringPlayer?.lastName}</a
-          >
-        </p>
-        <p class="content-panel-header">
-          {getPositionText(highestScoringPlayer?.position ?? 0)}
-          ({highestScoringPlayer?.totalPoints})
-        </p>
-      </div>
     </div>
-    
-  </div>
 
-  <div class="bg-panel rounded-md">
-    <ul class="flex bg-light-gray border-b border-gray-700 px-2 pt-2">
-      <li class={`mr-4 ${activeTab === "players" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "players" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("players")}
-        >
-          Players
-        </button>
-      </li>
-      <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
-        <button
-          class={`p-2 ${
-            activeTab === "fixtures" ? "text-white" : "text-gray-400"
-          }`}
-          on:click={() => setActiveTab("fixtures")}
-        >
-          Fixtures
-        </button>
-      </li>
-    </ul>
+    <div class="bg-panel rounded-md">
+      <ul class="flex bg-light-gray border-b border-gray-700 px-2 pt-2">
+        <li class={`mr-4 ${activeTab === "players" ? "active-tab" : ""}`}>
+          <button
+            class={`p-2 ${
+              activeTab === "players" ? "text-white" : "text-gray-400"
+            }`}
+            on:click={() => setActiveTab("players")}
+          >
+            Players
+          </button>
+        </li>
+        <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
+          <button
+            class={`p-2 ${
+              activeTab === "fixtures" ? "text-white" : "text-gray-400"
+            }`}
+            on:click={() => setActiveTab("fixtures")}
+          >
+            Fixtures
+          </button>
+        </li>
+      </ul>
 
-    {#if activeTab === "players"}
-      <TeamPlayers players={$playerStore.filter((x) => x.teamId == id)} />
-    {:else if activeTab === "fixtures"}
-      <TeamFixtures clubId={id} />
-    {/if}
-  </div>
+      {#if activeTab === "players"}
+        <TeamPlayers players={$playerStore.filter((x) => x.teamId == id)} />
+      {:else if activeTab === "fixtures"}
+        <TeamFixtures clubId={id} />
+      {/if}
+    </div>
   {/if}
 </Layout>
