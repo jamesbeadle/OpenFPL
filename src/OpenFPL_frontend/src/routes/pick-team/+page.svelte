@@ -908,6 +908,11 @@
       <div class="flex md:hidden flex-col md:flex-row">
         
         <div class="bg-panel rounded-md">
+
+          <div class="flex flex-row ml-3 items-center mt-4">
+              <p>Gameweek {activeGameweek} {activeSeason}</p>
+          </div>
+
           <div class="flex flex-row ml-3">
             <button
               class={`btn ${
@@ -931,7 +936,7 @@
             <span>
               Formation:
               <select
-                class="px-4 py-2 border-sm fpl-dropdown text-center text-center"
+                class="px-4 border-sm fpl-dropdown text-center text-center"
                 bind:value={selectedFormation}
               >
                 {#each $availableFormations as formation}
@@ -1267,71 +1272,53 @@
         </div>
       </div>
 
-      <div class="hidden md:hidden mt-6">
+      <div class="content-panel flex md:hidden mt-4">
+       
+        <div class="flex-grow">
+          <div class="ml-1">
+            <p class="content-panel-header">Players</p>
+            <p class="content-panel-stat">
+              {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
+            </p>
+            <p class="content-panel-header">Selected</p>
+          </div>
+        </div>
+
+       
+        <div class="vertical-divider" />
+        <div class="flex-grow">
+          <div class="ml-1">
+            <p class="content-panel-header">Team Value</p>
+            <p class="content-panel-stat">
+              £{teamValue.toFixed(2)}m
+            </p>
+            <p class="content-panel-header">GBP</p>
+          </div>
+        </div>
+
         
-        <div class="bg-panel rounded-md">
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
-
-          <div class="flex-grow">
-            <div class="ml-1">
-              <p class="content-panel-header">Gameweek</p>
-              <p class="content-panel-stat">
-                {activeGameweek}
-              </p>
-              <p class="content-panel-header">
-                {activeSeason}
-              </p>
-            </div>
+        <div class="vertical-divider" />
+        <div class="flex-grow">
+          <div class="ml-1">
+            <p class="content-panel-header">Bank Balance</p>
+            <p class="content-panel-stat">
+              £{($bankBalance / 4).toFixed(2)}m
+            </p>
+            <p class="content-panel-header">GBP</p>
           </div>
+        </div>
 
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
-
-          <div class="flex-grow">
-            <div class="ml-1">
-              <p class="content-panel-header">Players</p>
-              <p class="content-panel-stat">
-                {$fantasyTeam?.playerIds.filter((x) => x > 0).length}/11
-              </p>
-              <p class="content-panel-header">Selected</p>
-            </div>
-          </div>
-
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
-
-          <div class="flex-grow">
-            <div class="ml-1">
-              <p class="content-panel-header">Team Value</p>
-              <p class="content-panel-stat">
-                £{teamValue.toFixed(2)}m
-              </p>
-              <p class="content-panel-header">GBP</p>
-            </div>
-          </div>
-
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
-
-          <div class="flex-grow">
-            <div class="ml-1">
-              <p class="content-panel-header">Bank Balance</p>
-              <p class="content-panel-stat">
-                £{($bankBalance / 4).toFixed(2)}m
-              </p>
-              <p class="content-panel-header">GBP</p>
-            </div>
-          </div>
-
-          <div class="w-px bg-gray-400 self-stretch" style="min-width: 2px;" />
-
-          <div class="flex-grow">
-            <div class="ml-1">
-              <p class="content-panel-header">Transfers</p>
-              <p class="content-panel-stat">
-                {$transfersAvailable === Infinity
-                  ? "Unlimited"
-                  : $transfersAvailable}
-              </p>
-              <p class="content-panel-header">Available</p>
-            </div>
+        
+        <div class="vertical-divider" />
+        <div class="flex-grow">
+          <div class="ml-1">
+            <p class="content-panel-header">Transfers</p>
+            <p class="content-panel-stat">
+              {$transfersAvailable === Infinity
+                ? "Unlimited"
+                : $transfersAvailable}
+            </p>
+            <p class="content-panel-header">Available</p>
           </div>
         </div>
       </div>
