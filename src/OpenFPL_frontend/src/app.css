@@ -118,18 +118,18 @@ input {
 }
 
 .page-wrapper {
-  @apply mx-4 xs:mx-6 sm:mx-8 lg:mx-10;
+  @apply mx-4 my-4 xs:mx-6 sm:mx-8 lg:mx-10;
 }
 
 .page-header-wrapper {
-  @apply flex flex-col lg:flex-row lg:space-x-8 my-4 xs:my-6 sm:my-8 lg:my-10;
+  @apply flex flex-col lg:flex-row lg:space-x-4;
 }
 
 .content-panel {
   @apply flex justify-start items-center text-white rounded-md bg-panel
   space-x-2 sm:space-x-3 md:space-x-4 flex-grow
   p-2 xs:p-3 sm:p-4
-  mb-5 xs:mb-7 sm:mb-8 lg:mb-0;
+  mb-4;
 }
 
 .content-panel-header {
