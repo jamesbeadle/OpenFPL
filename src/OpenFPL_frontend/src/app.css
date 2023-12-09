@@ -163,6 +163,11 @@ input {
   @apply w-full md:w-auto text-xs md:text-xs xl:text-base px-4 py-2 rounded;
 }
 
+.side-button-base{
+  @apply w-full text-xs xl:text-base 
+  px-4 py-2 my-4 rounded-md;
+}
+
 .default-text {
   @apply text-xxs xs:text-xs sm:text-base;
 }

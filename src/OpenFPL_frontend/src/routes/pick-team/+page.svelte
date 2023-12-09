@@ -832,12 +832,11 @@
       <div class="flex xl:flex flex-col md:flex-row">
         
         <div class="bg-panel rounded-md xs:flex flex-row">
-
           <div class="w-full xs:w-1/2">
             <div class="flex">
               <p class="mx-4 mt-4">Gameweek {activeGameweek} {activeSeason}</p>
             </div>
-            <div class="flex flex-row ml-4">
+            <div class="flex flex-row ml-4" style="margin-top: 2px;">
               <button
                 class={`btn ${
                   pitchView ? `fpl-button` : `inactive-btn`
@@ -857,9 +856,8 @@
             </div>
           </div>
           <div class="w-full xs:w-1/2">
-            
-            <div class="ml-5">
-              <span>
+            <div class="flex">
+              <span class="mx-4 mt-4">
                 Formation:
                 <select
                   class="px-4 mb-1 border-sm fpl-dropdown text-center text-center"
@@ -871,38 +869,33 @@
                 </select>
               </span>
             </div>
-  
-            <div class="flex flex-row mx-2">
+            <div class="flex flex-row mx-4 space-x-1">
               <button
                 disabled={$fantasyTeam?.playerIds
                   ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
                   : true}
                 on:click={autofillTeam}
-                class={`button-base  
+                class={`side-button-base  
                 ${
                   $fantasyTeam?.playerIds &&
                   $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
                     ? "fpl-purple-btn"
                     : "bg-gray-500"
-                } text-white m-2`}
+                } text-white`}
               >
                 Auto Fill
               </button>
               <button
                 disabled={!isSaveButtonActive}
                 on:click={saveFantasyTeam}
-                class={`button-base ${
+                class={`side-button-base ${
                   isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
-                } text-white m-2`}
+                } text-white`}
               >
-                Save Team
+                Save
               </button>
             </div>
           </div>
-
-          
-
-          
         </div>
       </div>
         
@@ -1254,10 +1247,10 @@
         </div>
       </div>
 
+      <BonusPanel {fantasyTeam} {activeGameweek} />
       <div class="flex xl:hidden w-full mt-4">
         <SimpleFixtures />
       </div>
-      <BonusPanel {fantasyTeam} {activeGameweek} />
     </div>
   {/if}
 </Layout>
