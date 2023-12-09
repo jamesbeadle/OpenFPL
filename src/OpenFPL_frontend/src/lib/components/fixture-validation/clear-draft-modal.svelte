@@ -16,16 +16,10 @@
     <p>Please confirm you want to clear the draft from your cache.</p>
 
     <div class="items-center py-3 flex space-x-4">
-      <button
-        class="default-button fpl-cancel-btn"
-        on:click={closeModal}
-      >
+      <button class="default-button fpl-cancel-btn" on:click={closeModal}>
         Cancel
       </button>
-      <button
-      class="default-button fpl-button"
-        on:click={onConfirm}
-      >
+      <button class="default-button fpl-button" on:click={onConfirm}>
         Clear
       </button>
     </div>

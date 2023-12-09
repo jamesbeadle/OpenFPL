@@ -150,9 +150,7 @@
                 <div class="w-10 items-center justify-center">
                   <a href={`/club?id=${fixture.homeTeamId}`}>
                     <BadgeIcon
-                      primaryColour={homeTeam
-                        ? homeTeam.primaryColourHex
-                        : ""}
+                      primaryColour={homeTeam ? homeTeam.primaryColourHex : ""}
                       secondaryColour={homeTeam
                         ? homeTeam.secondaryColourHex
                         : ""}
@@ -164,9 +162,7 @@
                 <div class="w-10 items-center justify-center">
                   <a href={`/club?id=${fixture.awayTeamId}`}>
                     <BadgeIcon
-                      primaryColour={awayTeam
-                        ? awayTeam.primaryColourHex
-                        : ""}
+                      primaryColour={awayTeam ? awayTeam.primaryColourHex : ""}
                       secondaryColour={awayTeam
                         ? awayTeam.secondaryColourHex
                         : ""}
@@ -206,8 +202,7 @@
               <div class="flex flex-col">
                 <button
                   on:click={() => openUpdateModal(fixture)}
-                  class="deault-button fpl-button"
-                  >Edit</button
+                  class="deault-button fpl-button">Edit</button
                 >
               </div>
             </div>

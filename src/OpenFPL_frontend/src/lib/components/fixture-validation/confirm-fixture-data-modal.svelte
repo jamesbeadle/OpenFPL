@@ -25,9 +25,8 @@
       <button class="default-button fpl-cancel-btn" on:click={closeModal}
         >Cancel</button
       >
-      <button
-        class="default-button fpl-button"
-        on:click={onConfirm}>Confirm</button
+      <button class="default-button fpl-button" on:click={onConfirm}
+        >Confirm</button
       >
     </div>
   </div>

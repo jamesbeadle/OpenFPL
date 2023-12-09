@@ -2,24 +2,24 @@
   <h1 class="default-header">OpenFPL Gameplay</h1>
   <p class="my-4">
     At OpenFPL, our gameplay rules are designed to create an immersive,
-    engaging, and unique fantasy football experience. We understand the
-    passion and strategy that goes into fantasy football, and our gameplay
-    rules are crafted to reflect this, enhancing the fun and competitiveness
-    of each gameweek.
+    engaging, and unique fantasy football experience. We understand the passion
+    and strategy that goes into fantasy football, and our gameplay rules are
+    crafted to reflect this, enhancing the fun and competitiveness of each
+    gameweek.
   </p>
 
   <h2 class="default-header">Starting Funds and Team Composition</h2>
   <p class="my-2">
     Each user begins their journey with £300m, a budget to strategically build
-    their dream team. The value of players fluctuates based on community
-    ratings within the DAO. If a player's performance garners enough votes,
-    their value can either increase or decrease by £0.25m each gameweek.
+    their dream team. The value of players fluctuates based on community ratings
+    within the DAO. If a player's performance garners enough votes, their value
+    can either increase or decrease by £0.25m each gameweek.
   </p>
   <p class="my-2">
-    In terms of team structure, each user's team consists of 11 players.
-    Picking from a range of clubs is key, so a maximum of two players from any
-    single club can be selected. Teams must adhere to a valid formation: 1
-    goalkeeper, 3-5 defenders, 3-5 midfielders, and 1-3 strikers.
+    In terms of team structure, each user's team consists of 11 players. Picking
+    from a range of clubs is key, so a maximum of two players from any single
+    club can be selected. Teams must adhere to a valid formation: 1 goalkeeper,
+    3-5 defenders, 3-5 midfielders, and 1-3 strikers.
   </p>
 
   <h2 class="default-header mt-4">Transfers and Team Management</h2>
@@ -27,13 +27,12 @@
     Flexibility is a cornerstone of our gameplay. Users can make up to three
     transfers per week, allowing for dynamic team management and adaptation to
     the ever-changing football landscape. These transfers don't roll over,
-    encouraging active participation each week. There are no substitutes in
-    our game, eliminating the frustration of unused bench points.
+    encouraging active participation each week. There are no substitutes in our
+    game, eliminating the frustration of unused bench points.
   </p>
   <p class="my-2">
-    Each January, users can overhaul their team completely once, adding
-    another strategic layer to the game reflecting the January transfer
-    window.
+    Each January, users can overhaul their team completely once, adding another
+    strategic layer to the game reflecting the January transfer window.
   </p>
 
   <h2 class="default-header mt-4">Scoring System</h2>
@@ -70,12 +69,12 @@
     OpenFPL elevates the gameplay with a diverse set of bonuses. These bonuses
     play a pivotal role in keeping OpenFPL's gameplay both fresh and
     exhilarating. Their strategic implementation allows for significant shifts
-    in the leaderboard, ensuring that the competition remains open and
-    dynamic. With these bonuses, any user, regardless of their position, has
-    the potential to make a substantial leap in the rankings. This
-    unpredictability means that victory is within reach for every participant,
-    fostering a thrilling environment where every gameweek holds the promise
-    of a shake-up at the top of the leaderboard. Our bonuses are as follows:
+    in the leaderboard, ensuring that the competition remains open and dynamic.
+    With these bonuses, any user, regardless of their position, has the
+    potential to make a substantial leap in the rankings. This unpredictability
+    means that victory is within reach for every participant, fostering a
+    thrilling environment where every gameweek holds the promise of a shake-up
+    at the top of the leaderboard. Our bonuses are as follows:
   </p>
   <ul class="list-disc ml-4">
     <li>
@@ -108,8 +107,8 @@
   <p class="my-4">
     OpenFPL's gameplay combines strategic team management, a dynamic scoring
     system, and diverse bonuses, offering a unique and competitive fantasy
-    football experience. Each decision impacts your journey through the
-    Premier League season, where football knowledge and strategy lead to
-    rewarding outcomes.
+    football experience. Each decision impacts your journey through the Premier
+    League season, where football knowledge and strategy lead to rewarding
+    outcomes.
   </p>
 </div>

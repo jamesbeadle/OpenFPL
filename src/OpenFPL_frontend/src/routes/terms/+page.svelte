@@ -11,23 +11,23 @@
 
         <p class="my-4">
           By accessing the OpenFPL website ("Site") and participating in the
-          OpenFPL Fantasy Football DAO ("Service"), you agree to comply with
-          and be bound by the following Terms and Conditions.
+          OpenFPL Fantasy Football DAO ("Service"), you agree to comply with and
+          be bound by the following Terms and Conditions.
         </p>
 
         <h2 class="default-sub-header">Acceptance of Terms</h2>
         <p class="my-4">
-          You acknowledge that you have read, understood, and agree to be
-          bound by these Terms. These Terms are subject to change by a DAO
-          proposal and vote.
+          You acknowledge that you have read, understood, and agree to be bound
+          by these Terms. These Terms are subject to change by a DAO proposal
+          and vote.
         </p>
 
         <h2 class="default-sub-header">Decentralised Structure</h2>
         <p class="my-4">
-          OpenFPL operates as a decentralised autonomous organisation (DAO).
-          As such, traditional legal and liability structures may not apply.
-          Members and users are responsible for their own actions within the
-          DAO framework.
+          OpenFPL operates as a decentralised autonomous organisation (DAO). As
+          such, traditional legal and liability structures may not apply.
+          Members and users are responsible for their own actions within the DAO
+          framework.
         </p>
 
         <h2 class="default-sub-header">Eligibility</h2>
@@ -41,8 +41,8 @@
 
         <h2 class="default-sub-header">Username Policy</h2>
         <p class="my-4">
-          You agree not to use usernames that are offensive, vulgar, or
-          infringe on the rights of others.
+          You agree not to use usernames that are offensive, vulgar, or infringe
+          on the rights of others.
         </p>
 
         <h2 class="default-sub-header">Changes to Terms</h2>

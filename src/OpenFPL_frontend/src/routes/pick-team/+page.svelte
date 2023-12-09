@@ -754,7 +754,6 @@
       {bankBalance}
     />
     <div>
-
       <div class="hidden xl:flex page-header-wrapper">
         <div class="content-panel lg:w-1/2">
           <div class="flex-grow mb-4 xl:mb-0">
@@ -792,11 +791,9 @@
             </p>
             <p class="content-panel-header">Selected</p>
           </div>
-  
         </div>
 
         <div class="content-panel lg:w-1/2">
-          
           <div class="flex-grow mb-4 xl:mb-0">
             <p class="content-panel-header">Team Value</p>
             <p class="content-panel-stat">
@@ -804,7 +801,7 @@
             </p>
             <p class="content-panel-header">GBP</p>
           </div>
-          
+
           <div class="vertical-divider" />
 
           <div class="flex-grow mb-4 xl:mb-0 mt-4 xl:mt-0">
@@ -830,15 +827,16 @@
       </div>
 
       <div class="hidden xl:flex flex-col md:flex-row">
-
-        <div class="flex flex-row justify-between items-center text-white bg-panel p-2 rounded-md w-full mb-4">
+        <div
+          class="flex flex-row justify-between items-center text-white bg-panel p-2 rounded-md w-full mb-4"
+        >
           <div
             class="flex flex-row justify-between md:justify-start flex-grow ml-4"
           >
             <button
               class={`btn ${
                 pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              } tab-switcher-label rounded-l-md`}
               on:click={showPitchView}
             >
               Pitch View
@@ -846,7 +844,7 @@
             <button
               class={`btn ${
                 !pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              } tab-switcher-label rounded-r-md`}
               on:click={showListView}
             >
               List View
@@ -859,7 +857,7 @@
             <span class="text-lg">
               Formation:
               <select
-                class="px-4 py-2 border-sm fpl-dropdown text-xs sm:text-sm md:text-base text-center text-center"
+                class="px-4 py-2 border-sm fpl-dropdown text-center"
                 bind:value={selectedFormation}
               >
                 {#each $availableFormations as formation}
@@ -877,7 +875,7 @@
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
                 : true}
               on:click={autofillTeam}
-              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded  
+              class={`btn w-full md:w-auto px-4 py-2 rounded  
               ${
                 $fantasyTeam?.playerIds &&
                 $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
@@ -890,7 +888,7 @@
             <button
               disabled={!isSaveButtonActive}
               on:click={saveFantasyTeam}
-              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded ${
+              class={`btn w-full md:w-auto px-4 py-2 rounded ${
                 isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
               } text-white min-w-[125px]`}
             >
@@ -899,7 +897,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="flex xl:hidden flex-col">
         <div class="bg-panel rounded-md xs:flex flex-row">
           <div class="w-full xs:w-1/2">
@@ -968,7 +966,7 @@
           </div>
         </div>
       </div>
-        
+
       <div class="flex flex-col xl:flex-row mt-2 xl:mt-0">
         {#if pitchView}
           <div class="relative w-full xl:w-1/2 mt-2">
@@ -1199,9 +1197,7 @@
                 {@const playerIds = $fantasyTeam?.playerIds ?? []}
                 {@const playerId = playerIds[actualIndex]}
                 {@const player = $playerStore.find((p) => p.id === playerId)}
-                {@const team = $teamStore.find(
-                  (x) => x.id === player?.teamId
-                )}
+                {@const team = $teamStore.find((x) => x.id === player?.teamId)}
 
                 <div class="flex items-center justify-between py-2 px-4">
                   {#if playerId > 0 && player}
@@ -1267,7 +1263,6 @@
       </div>
 
       <div class="content-panel flex xl:hidden mt-4">
-       
         <div class="flex-grow">
           <div class="ml-1">
             <p class="content-panel-header">Players</p>
@@ -1278,7 +1273,6 @@
           </div>
         </div>
 
-       
         <div class="vertical-divider" />
         <div class="flex-grow">
           <div class="ml-1">
@@ -1290,7 +1284,6 @@
           </div>
         </div>
 
-        
         <div class="vertical-divider" />
         <div class="flex-grow">
           <div class="ml-1">
@@ -1302,7 +1295,6 @@
           </div>
         </div>
 
-        
         <div class="vertical-divider" />
         <div class="flex-grow">
           <div class="ml-1">

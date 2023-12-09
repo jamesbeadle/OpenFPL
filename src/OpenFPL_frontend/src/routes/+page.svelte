@@ -316,9 +316,18 @@
     </div>
 
     <div class="bg-panel rounded-md">
-      <ul class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700">
-        <li class={`mr-1 md:mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
-          <button class={`p-2 ${ activeTab === "fixtures" ? "text-white" : "text-gray-400"}`} on:click={() => setActiveTab("fixtures")}>
+      <ul
+        class="flex bg-light-gray px-1 md:px-4 pt-2 contained-text border-b border-gray-700 mb-4"
+      >
+        <li
+          class={`mr-1 md:mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}
+        >
+          <button
+            class={`p-2 ${
+              activeTab === "fixtures" ? "text-white" : "text-gray-400"
+            }`}
+            on:click={() => setActiveTab("fixtures")}
+          >
             Fixtures
           </button>
         </li>

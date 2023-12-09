@@ -177,7 +177,7 @@
   }
 </script>
 
-<div class="bonus-panel rounded-md flex-1 my-4 lg:mb-0">
+<div class="bg-panel rounded-md flex-1 my-4 lg:mb-0">
   {#if selectedBonusId > 0}
     <UseBonusModal
       visible={showModal}
@@ -194,26 +194,24 @@
   <div class="flex flex-col xl:flex-row md:mx-2">
     <div class="hidden md:flex items-center w-full xl:w-1/2">
       {#each leftPanelBonuses as bonus}
-        <div
-          class="flex items-center w-1/5 bonus-panel-inner m-1 mt-4 rounded-lg border border-gray-700"
-        >
+        <div class="flex items-center w-1/5 bonus-panel-inner m-1 mt-2 mb-2 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
             <img
               alt={bonus.name}
               src={bonus.image}
-              class="h-12 m-2 mt-4 md:h-24 xl:h-20"
+              class="h-12 m-2 mt-4 md:h-16 xl:h-20"
             />
             <div
               class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md min-h-[40px] flex items-center"
             >
-              <p class="text-center xl:min-h-[40px]">
+              <p class="text-center xl:min-h-[40px] smaller-text">
                 {bonus.name}
               </p>
             </div>
 
             {#if isBonusUsed(bonus.id)}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[30px]">
-                <p class="text-center xl:mt-1">
+                <p class="text-center xl:mt-1 smaller-text">
                   Used GW{isBonusUsed(bonus.id)}
                 </p>
               </div>
@@ -221,13 +219,13 @@
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
-                  class="fpl-purple-btn rounded-md w-full py-1 min-h-[30px] md:text-base"
+                  class="fpl-purple-btn rounded-md w-full py-1 min-h-[30px] smaller-text"
                   >Use</button
                 >
               </div>
             {:else}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[30px]">
-                <p class="text-center xl:mt-1">1 Per Week</p>
+                <p class="text-center xl:mt-1 smaller-text">1 Per Week</p>
               </div>
             {/if}
           </div>
@@ -236,43 +234,41 @@
     </div>
     <div class="hidden md:flex items-center w-full xl:w-1/2">
       {#each rightPanelBonuses as bonus}
-        <div
-          class="flex items-center w-1/5 bonus-panel-inner m-1 rounded-lg border border-gray-700"
-        >
+        <div class="flex items-center w-1/5 bonus-panel-inner m-1 mt-2 mb-2 rounded-lg border border-gray-700">
           <div class={`flex flex-col justify-center items-center flex-1`}>
             <img
               alt={bonus.name}
               src={bonus.image}
-              class="h-12 m-2 mt-4 md:h-24 xl:h-20"
+              class="h-12 m-2 mt-4 md:h-16 xl:h-20"
             />
             <div
               class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md min-h-[40px] flex items-center"
             >
-              <p class="text-center xl:min-h-[40px]">
+              <p class="text-center xl:min-h-[40px] smaller-text">
                 {bonus.name}
               </p>
             </div>
             {#if isBonusUsed(bonus.id)}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[30px]">
-                <p class="text-center xl:mt-1">
+                <p class="text-center xl:mt-1 smaller-text">
                   Used GW{isBonusUsed(bonus.id)}
                 </p>
               </div>
             {:else if bonus.id == 7 || bonus.id == 8}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[30px]">
-                <p class="text-center xl:mt-1">Coming Soon</p>
+                <p class="text-center xl:mt-1 smaller-text">Coming Soon</p>
               </div>
             {:else if !bonusPlayedThisWeek()}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4">
                 <button
                   on:click={() => showBonusModal(bonus.id)}
-                  class="fpl-purple-btn rounded-md w-full py-1 min-h-[30px] md:text-base"
+                  class="fpl-purple-btn rounded-md w-full py-1 min-h-[30px] smaller-text"
                   >Use</button
                 >
               </div>
             {:else}
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[30px]">
-                <p class="text-center xl:mt-1">1 Per Week</p>
+                <p class="text-center xl:mt-1 smaller-text">1 Per Week</p>
               </div>
             {/if}
           </div>
@@ -282,11 +278,9 @@
   </div>
 
   <div class="flex md:hidden flex-col md:mx-2">
-    <div class="flex items-center w-full flex-col mt-1">
+    <div class="flex items-center flex-col mt-1 mx-2">
       {#each bonuses as bonus}
-        <div
-          class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]"
-        >
+        <div class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]">
           <div class="w-2/12 flex items-center justify-center">
             <img
               alt={bonus.name}
@@ -328,9 +322,5 @@
 <style>
   .bonus-panel-inner {
     background-color: rgba(46, 50, 58, 0.9);
-  }
-
-  .bonus-panel {
-    background-color: rgba(46, 50, 58, 0.8);
   }
 </style>

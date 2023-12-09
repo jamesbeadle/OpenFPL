@@ -20,9 +20,9 @@
         </p>
 
         <p class="my-2">
-          Each team has 11 players, with no more than 2 selected from any
-          single team. The team must be in a valid formation, with 1
-          goalkeeper, 3-5 defenders, 3-5 midfielders and 1-3 strikers.
+          Each team has 11 players, with no more than 2 selected from any single
+          team. The team must be in a valid formation, with 1 goalkeeper, 3-5
+          defenders, 3-5 midfielders and 1-3 strikers.
         </p>
 
         <p class="my-2">
@@ -36,15 +36,15 @@
         </p>
 
         <p class="my-2">
-          A user is allowed to make 3 transfers per week which are never
-          carried over.
+          A user is allowed to make 3 transfers per week which are never carried
+          over.
         </p>
 
         <p class="my-2">
           Each week a user can select a star player. This player will receive
-          double points for the gameweek. If one is not set by the start of
-          the gameweek it will automatically be set to the most valuable
-          player in your team.
+          double points for the gameweek. If one is not set by the start of the
+          gameweek it will automatically be set to the most valuable player in
+          your team.
         </p>
 
         <h2 class="default-sub-header">Points</h2>
@@ -129,8 +129,7 @@
             <td>-10</td>
           </tr>
           <tr>
-            <td class="text-left px-4 py-2"
-              >A player receives a yellow card.</td
+            <td class="text-left px-4 py-2">A player receives a yellow card.</td
             >
             <td>-5</td>
           </tr>
@@ -164,15 +163,15 @@
           <tr>
             <td class="text-left px-4 py-2">No Entry</td>
             <td
-              >Select a goalkeeper or defender you think will keep a clean
-              sheet to receive a X3 multipler on their total score.</td
+              >Select a goalkeeper or defender you think will keep a clean sheet
+              to receive a X3 multipler on their total score.</td
             >
           </tr>
           <tr>
             <td class="text-left px-4 py-2">Team Boost</td>
             <td
-              >Receive a X2 multiplier from all players from a single club
-              that are in your team.</td
+              >Receive a X2 multiplier from all players from a single club that
+              are in your team.</td
             >
           </tr>
           <tr>
@@ -203,8 +202,7 @@
             <td class="text-left px-4 py-2">Brace Bonus</td>
             <td
               >Receive a X2 multiplier on a player's score if they score 2 or
-              more goals in a game. Applies to every player who scores a
-              brace.</td
+              more goals in a game. Applies to every player who scores a brace.</td
             >
           </tr>
           <tr>

@@ -175,7 +175,11 @@
       <div class="flex flex-wrap">
         <div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2">
           <div class="group flex flex-col md:block">
-            <img src={profileSrc} alt="Profile" class="w-full mb-1 rounded-lg" />
+            <img
+              src={profileSrc}
+              alt="Profile"
+              class="w-full mb-1 rounded-lg"
+            />
 
             <div class="file-upload-wrapper mt-4">
               <button

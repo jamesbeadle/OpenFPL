@@ -146,7 +146,6 @@
             {favouriteTeam?.name ?? "Not Set"}
           </p>
         </div>
-
       </div>
       <div class="content-panel lg:w-1/2">
         <div class="flex-grow">

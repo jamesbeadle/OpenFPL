@@ -284,9 +284,7 @@
 
         {#if leaderboard && leaderboard.entries.length > 0}
           {#each leaderboard.entries as entry}
-            <a
-              href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}
-            >
+            <a href={`/manager?id=${entry.principalId}&gw=${selectedGameweek}`}>
               <div
                 class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
               >
@@ -302,8 +300,7 @@
                 >
                   <span class="flex items-center">
                     <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" />
-                    <span class="hidden xs:flex ml-1 lg:ml-2"
-                      >View Details</span
+                    <span class="hidden xs:flex ml-1 lg:ml-2">View Details</span
                     >
                   </span>
                 </div>

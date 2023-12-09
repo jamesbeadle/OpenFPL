@@ -163,7 +163,7 @@ input {
   @apply w-full md:w-auto text-xs md:text-xs xl:text-base px-4 py-2 rounded;
 }
 
-.side-button-base{
+.side-button-base {
   @apply w-full text-xs xl:text-base 
   px-4 py-2 my-4 rounded-md;
 }
@@ -200,6 +200,10 @@ input {
   @apply text-xs xs:text-base sm:text-lg;
 }
 
+.smaller-text {
+  @apply text-xxs xs:text-xs sm:text-sm;
+}
+
 /* global.css */
 :root {
   --dialog-width: 90% !important;
@@ -210,12 +214,12 @@ input {
   --dialog-border-radius: 1px !important;
 }
 
-.default-button{
+.default-button {
   @apply rounded px-3 md:px-4 py-1;
 }
 
-.bg-panel{
-  @apply bg-panel-color w-full; 
+.bg-panel {
+  @apply bg-panel-color w-full;
 }
 
 /* Extra small devices (portrait phones, less than 480px) */

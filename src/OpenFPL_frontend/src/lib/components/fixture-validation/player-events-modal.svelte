@@ -164,9 +164,8 @@
     </div>
 
     <div class="items-center mt-3 flex space-x-4">
-      <button
-        class="fpl-button default-button fpl-button"
-        on:click={closeModal}>Done</button
+      <button class="fpl-button default-button fpl-button" on:click={closeModal}
+        >Done</button
       >
     </div>
   </div>

@@ -1,11 +1,11 @@
 <div class="m-4">
   <h1 class="default-header">OpenFPL DAO</h1>
   <p class="my-4">
-    OpenFPL functions entirely on-chain as a DAO, aspiring to operate under
-    the Internet Computer’s Service Nervous System. The DAO is structured to
-    run in parallel with the Premier League season, relying on input from its
-    neuron holders who are rewarded for maintaining independence from
-    third-party services.
+    OpenFPL functions entirely on-chain as a DAO, aspiring to operate under the
+    Internet Computer’s Service Nervous System. The DAO is structured to run in
+    parallel with the Premier League season, relying on input from its neuron
+    holders who are rewarded for maintaining independence from third-party
+    services.
   </p>
 
   <h2 class="default-sub-header">DAO Reward Structure</h2>
@@ -22,10 +22,10 @@
 
   <h2 class="default-sub-header mt-4">Gameplay Rewards (75%)</h2>
   <p class="my-2">
-    The DAO is designed to reward users for their expertise in fantasy
-    football, with rewards distributed weekly, monthly, and annually based on
-    performance. The rewards are tiered to encourage ongoing engagement.
-    Here’s the breakdown:
+    The DAO is designed to reward users for their expertise in fantasy football,
+    with rewards distributed weekly, monthly, and annually based on performance.
+    The rewards are tiered to encourage ongoing engagement. Here’s the
+    breakdown:
   </p>
 
   <ul class="list-disc ml-4">
@@ -34,8 +34,8 @@
       positions.
     </li>
     <li>
-      Club Monthly Leaderboard Rewards: 20% for the top 100 in each monthly
-      club leaderboard, adjusted for the number of fans in each club.
+      Club Monthly Leaderboard Rewards: 20% for the top 100 in each monthly club
+      leaderboard, adjusted for the number of fans in each club.
     </li>
     <li>
       Global Weekly Leaderboard Rewards: 15% for the top 100 weekly positions.
@@ -348,8 +348,8 @@
   </table>
 
   <p class="my-2">
-    To ensure rewards are paid for active participation, a user would need to
-    do the following to qualify for the following OpenFPL gameplay rewards:
+    To ensure rewards are paid for active participation, a user would need to do
+    the following to qualify for the following OpenFPL gameplay rewards:
   </p>
 
   <ul class="list-disc ml-4">
@@ -358,14 +358,14 @@
       month's club leaderboard rewards and monthly ATH record rewards.
     </li>
     <li>
-      A user must have made at least 1 change in a gameweek to qualify for
-      that week's leaderboard rewards, highest-scoring match player rewards
-      and weekly ATH record rewards.
+      A user must have made at least 1 change in a gameweek to qualify for that
+      week's leaderboard rewards, highest-scoring match player rewards and
+      weekly ATH record rewards.
     </li>
     <li>
-      Rewards for the season total, most valuable team have and annual ATH
-      have no entry restrictions as it is based on the cumulative action of
-      managers transfers throughout the season.
+      Rewards for the season total, most valuable team have and annual ATH have
+      no entry restrictions as it is based on the cumulative action of managers
+      transfers throughout the season.
     </li>
   </ul>
 
@@ -380,8 +380,8 @@
   <p class="my-4">
     The OpenFPL DAO is an innovative approach to fantasy football, combining
     real-time data accuracy with rewarding community involvement. By aligning
-    rewards with active participation, OpenFPL ensures a vibrant, informed,
-    and engaged user base.
+    rewards with active participation, OpenFPL ensures a vibrant, informed, and
+    engaged user base.
   </p>
 </div>
 

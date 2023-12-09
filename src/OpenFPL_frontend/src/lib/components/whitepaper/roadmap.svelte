@@ -7,9 +7,9 @@
   <p class="my-2">
     We will be launching 2 NFT collections in November 2024 to give the
     opportunity for users to share in OpenFPL merchandise and podcast revenue.
-    These NFTs will be used to fund the production of OpenFPL merchandise
-    along with promotion of the OpenFPL platform in the run up to the genesis
-    season. Further information can be found in the marketing section of this
+    These NFTs will be used to fund the production of OpenFPL merchandise along
+    with promotion of the OpenFPL platform in the run up to the genesis season.
+    Further information can be found in the marketing section of this
     whitepaper.
   </p>
 
@@ -26,10 +26,10 @@
     Jan - Feb 2024: SNS Testflight Testing
   </h2>
   <p class="my-2">
-    We will perform comprehensive testing of the OpenFPL gameplay and
-    governance features. Detailed descriptions and outcomes of various use
-    case tests, demonstrating how gameplay and governance features perform in
-    different situations.
+    We will perform comprehensive testing of the OpenFPL gameplay and governance
+    features. Detailed descriptions and outcomes of various use case tests,
+    demonstrating how gameplay and governance features perform in different
+    situations.
   </p>
 
   <h2 class="default-sub-header mt-4">
@@ -42,42 +42,39 @@
     another dimension to our engagement strategy.
   </p>
 
-  <h2 class="default-sub-header mt-4">
-    January 2024: Shirt Production Begins
-  </h2>
+  <h2 class="default-sub-header mt-4">January 2024: Shirt Production Begins</h2>
   <p class="my-2">
-    We are actively engaged in shirt production for OpenFPL, moving beyond
-    mere concepts to tangible products. Our collaboration with a UK supplier
-    is set to kit out 200 junior clubs with OpenFPL-branded shirts for
-    charity, marking our first foray into merging style with the spirit of the
-    game. This initiative is further elevated by a successful partnership with
-    OpenChat. A recent proposal in the OpenChat DAO has been passed, resulting
-    in OpenChat sponsoring half of these shirts, a testament to our
-    collaborative efforts and shared vision. Concurrently, we are in advanced
-    talks with a manufacturer in India, having already developed a promising
-    prototype. We are fine-tuning the details to perfect the shirts, with
-    production anticipated to commence in just a few months. Additionally,
-    these shirts will be available for sale in the ICPFA shop, with a portion
-    of each sale benefiting our NFT holders. This dual approach not only
-    strengthens our brand presence but also underscores our commitment to
-    supporting grassroots football communities and providing value to our NFT
-    investors.
+    We are actively engaged in shirt production for OpenFPL, moving beyond mere
+    concepts to tangible products. Our collaboration with a UK supplier is set
+    to kit out 200 junior clubs with OpenFPL-branded shirts for charity, marking
+    our first foray into merging style with the spirit of the game. This
+    initiative is further elevated by a successful partnership with OpenChat. A
+    recent proposal in the OpenChat DAO has been passed, resulting in OpenChat
+    sponsoring half of these shirts, a testament to our collaborative efforts
+    and shared vision. Concurrently, we are in advanced talks with a
+    manufacturer in India, having already developed a promising prototype. We
+    are fine-tuning the details to perfect the shirts, with production
+    anticipated to commence in just a few months. Additionally, these shirts
+    will be available for sale in the ICPFA shop, with a portion of each sale
+    benefiting our NFT holders. This dual approach not only strengthens our
+    brand presence but also underscores our commitment to supporting grassroots
+    football communities and providing value to our NFT investors.
   </p>
 
   <h2 class="default-sub-header mt-4">
     February 2024: Online Marketing Campaigns
   </h2>
   <p class="my-2">
-    We are actively in discussions with a digital marketing agency, preparing
-    to launch campaigns aimed at organically growing our base of genuine
-    managers. The strategy being formulated focuses on SEO and PPC methods
-    aligned with OpenFPL's objectives. These deliberations include choosing
-    the most suitable online platforms and crafting a strategy that resonates
-    with our ethos. The direction of these campaigns is geared towards
-    measurable outcomes, especially in attracting genuine manager sign-ups and
-    naturally expanding our online footprint. This approach is designed to
-    cultivate a genuine and engaged community, enhancing OpenFPL's presence in
-    a manner that's both authentic and impactful.
+    We are actively in discussions with a digital marketing agency, preparing to
+    launch campaigns aimed at organically growing our base of genuine managers.
+    The strategy being formulated focuses on SEO and PPC methods aligned with
+    OpenFPL's objectives. These deliberations include choosing the most suitable
+    online platforms and crafting a strategy that resonates with our ethos. The
+    direction of these campaigns is geared towards measurable outcomes,
+    especially in attracting genuine manager sign-ups and naturally expanding
+    our online footprint. This approach is designed to cultivate a genuine and
+    engaged community, enhancing OpenFPL's presence in a manner that's both
+    authentic and impactful.
   </p>
 
   <h2 class="default-sub-header mt-4">
@@ -103,10 +100,10 @@
     OpenFPL is set to create a series of interactive experiences at event
     locations in Premier League club cities, drawing inspiration from major UK
     brands like IBM, Ford and Coca-Cola. Planned from Q2 2024 onwards, these
-    events will leverage the expertise of OpenFPL founder James Beadle. With
-    his experience in creating successful and engaging interactive
-    experiences, James aims to play a key role in educating attendees about
-    OpenFPL, Internet Identity and the range of other IC dApps available.
+    events will leverage the expertise of OpenFPL founder James Beadle. With his
+    experience in creating successful and engaging interactive experiences,
+    James aims to play a key role in educating attendees about OpenFPL, Internet
+    Identity and the range of other IC dApps available.
   </p>
 
   <h2 class="default-sub-header mt-4">July 2024: Mobile App Launch</h2>
@@ -120,17 +117,17 @@
   </h2>
   <p class="my-2">
     In August 2024, we launch our inaugural season, where fantasy teams start
-    competing for $FPL rewards on a weekly, monthly and annual basis to
-    maximise user engagment.
+    competing for $FPL rewards on a weekly, monthly and annual basis to maximise
+    user engagment.
   </p>
 
   <h2 class="default-sub-header mt-4">
     November 2024: Content Subscription Launch
   </h2>
   <p class="my-2">
-    Partnering with Premier League content creators to offer exclusive
-    insights, with a unique monetization model for both free and
-    subscription-based content.
+    Partnering with Premier League content creators to offer exclusive insights,
+    with a unique monetization model for both free and subscription-based
+    content.
   </p>
 
   <h2 class="default-sub-header mt-4">March 2025: OpenChat Integration</h2>
@@ -149,11 +146,11 @@
     and decide whether to implement these AI suggestions in their team
     management decisions. However, given that the Internet Computer's
     infrastructure is still evolving, especially in terms of on-chain training
-    capabilities, our immediate strategy involves training the model
-    off-chain. As the IC infrastructure evolves we would look to transition to
-    real-time, continual learning for the AI model directly on the IC. Looking
-    ahead, we're excited about the potential to develop new models using our
-    constantly expanding on-chain dataset, opening up more innovative
-    possibilities for OpenFPL.
+    capabilities, our immediate strategy involves training the model off-chain.
+    As the IC infrastructure evolves we would look to transition to real-time,
+    continual learning for the AI model directly on the IC. Looking ahead, we're
+    excited about the potential to develop new models using our constantly
+    expanding on-chain dataset, opening up more innovative possibilities for
+    OpenFPL.
   </p>
 </div>
