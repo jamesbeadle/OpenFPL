@@ -829,8 +829,75 @@
         </div>
       </div>
 
-      <div class="flex xl:flex flex-col md:flex-row">
-        
+      <div class="hidden sm:flex flex-col md:flex-row">
+        <div class="flex flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md w-full">
+          <div class="flex flex-row justify-start flex-grow ml-4">
+            <button
+              class={`btn ${
+                pitchView ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-l-md min-w-[125px] my-4`}
+              on:click={showPitchView}
+            >
+              Pitch View
+            </button>
+            <button
+              class={`btn ${
+                !pitchView ? `fpl-button` : `inactive-btn`
+              } px-4 py-2 rounded-r-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
+              on:click={showListView}
+            >
+              List View
+            </button>
+          </div>
+
+          <div
+            class="text-center md:text-left w-full mt-0 md:ml-8 order-2 mt-4 md:mt-0"
+          >
+            <span class="text-lg">
+              Formation:
+              <select
+                class="px-4 py-2 border-sm fpl-dropdown text-xs sm:text-sm md:text-base text-center text-center"
+                bind:value={selectedFormation}
+              >
+                {#each $availableFormations as formation}
+                  <option value={formation}>{formation}</option>
+                {/each}
+              </select>
+            </span>
+          </div>
+
+          <div
+            class="flex flex-col md:flex-row w-full md:justify-end gap-4 mr-0 md:mr-4 order-1 md:order-3 mt-2 md:mt-0"
+          >
+            <button
+              disabled={$fantasyTeam?.playerIds
+                ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
+                : true}
+              on:click={autofillTeam}
+              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded  
+              ${
+                $fantasyTeam?.playerIds &&
+                $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
+                  ? "fpl-purple-btn"
+                  : "bg-gray-500"
+              } text-white min-w-[125px]`}
+            >
+              Auto Fill
+            </button>
+            <button
+              disabled={!isSaveButtonActive}
+              on:click={saveFantasyTeam}
+              class={`btn w-full md:w-auto md:text-xs xl:text-base px-4 py-2 rounded ${
+                isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
+              } text-white min-w-[125px]`}
+            >
+              Save Team
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex sm:hidden flex-col md:flex-row">
         <div class="bg-panel rounded-md xs:flex flex-row">
           <div class="w-full xs:w-1/2">
             <div class="flex">
