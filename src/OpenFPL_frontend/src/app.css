@@ -159,10 +159,6 @@ input {
     px-4 py-2 my-4 min-w-[100px] lg:min-w-[125px];
 }
 
-.dropdown-text {
-  @apply text-xs;
-}
-
 .button-base {
   @apply w-full md:w-auto text-xs md:text-xs xl:text-base px-4 py-2 rounded;
 }

@@ -908,7 +908,7 @@
       <div class="flex md:hidden flex-col md:flex-row">
         
         <div class="bg-panel rounded-md">
-          <div class="flex flex-row ml-4">
+          <div class="flex flex-row ml-3">
             <button
               class={`btn ${
                 pitchView ? `fpl-button` : `inactive-btn`
@@ -927,7 +927,7 @@
             </button>
           </div>
 
-          <div class="dropdown-text text-center md:text-left w-full">
+          <div class="w-full ml-4">
             <span>
               Formation:
               <select
@@ -941,9 +941,7 @@
             </span>
           </div>
 
-          <div
-            class="flex flex-row md:flex-row w-full md:justify-end gap-4 m-2 md:mt-0"
-          >
+          <div class="flex flex-row gap-4 m-3">
             <button
               disabled={$fantasyTeam?.playerIds
                 ? $fantasyTeam?.playerIds.filter((x) => x === 0).length === 0
@@ -955,7 +953,7 @@
                 $fantasyTeam?.playerIds.filter((x) => x === 0).length > 0
                   ? "fpl-purple-btn"
                   : "bg-gray-500"
-              } text-white min-w-[125px]`}
+              } text-white`}
             >
               Auto Fill
             </button>
@@ -964,7 +962,7 @@
               on:click={saveFantasyTeam}
               class={`button-base ${
                 isSaveButtonActive ? "fpl-purple-btn" : "bg-gray-500"
-              } text-white min-w-[125px]`}
+              } text-white`}
             >
               Save Team
             </button>

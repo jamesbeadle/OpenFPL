@@ -192,7 +192,7 @@
     </div>
 
     <div class="bg-panel rounded-md">
-      <div class="flex flex-row ml-4">
+      <div class="flex flex-row ml-3">
         <button
           class={`btn ${
             activeTab === "details" ? `fpl-button` : `inactive-btn`
@@ -217,7 +217,7 @@
         </div>
       </div>
 
-      <div class="flex px-4 my-4 lg:hidden">
+      <div class="flex px-4 lg:hidden">
         {#if $fantasyTeam && activeTab === "details"}
           <span>Total Points: {$fantasyTeam?.points}</span>
         {/if}
