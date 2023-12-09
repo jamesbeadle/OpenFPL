@@ -106,168 +106,159 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <div class="m-4 xs:m-6 sm:m-8 lg:m-10">
-      <div class="page-header-wrapper flex">
-        <div class="content-panel">
-          <div class="flex-grow flex flex-col items-center">
-            <p class="content-panel-header">
-              {team?.friendlyName}
-            </p>
-            <div class="py-2 flex space-x-4">
-              <BadgeIcon
-                className="h-4"
-                primaryColour={team?.primaryColourHex}
-                secondaryColour={team?.secondaryColourHex}
-                thirdColour={team?.thirdColourHex}
-              />
-              <ShirtIcon
-                className="h-4"
-                primaryColour={team?.primaryColourHex}
-                secondaryColour={team?.secondaryColourHex}
-                thirdColour={team?.thirdColourHex}
-              />
-            </div>
-            <p class="content-panel-header">
-              {team?.abbreviatedName}
-            </p>
-          </div>
-          <div class="vertical-divider" />
-          <div class="flex-grow">
-            <p class="content-panel-header">Players</p>
-            <p class="content-panel-stat">
-              {$playerStore.filter((x) => x.teamId == id).length}
-            </p>
-            <p class="content-panel-header">Total</p>
-          </div>
-          <div class="vertical-divider" />
-          <div class="flex-grow">
-            <p class="content-panel-header">League Position</p>
-            <p class="content-panel-stat">
-              {getTeamPosition(id)}
-            </p>
-            <p class="content-panel-header">
-              {$systemStore?.activeSeason.name}
-            </p>
-          </div>
-        </div>
-        <div class="bg-panel rounded-md">
-          <div class="flex-grow mb-4 md:mb-0">
-            <p class="content-panel-header">League Points</p>
-            <p class="content-panel-stat">
-              {getTeamPoints(id)}
-            </p>
-            <p class="content-panel-header">Total</p>
-          </div>
-
-          <div
-            class="flex md:hidden h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
+  <div class="page-header-wrapper flex">
+    <div class="content-panel">
+      <div class="flex-grow flex flex-col items-center">
+        <p class="content-panel-header">
+          {team?.friendlyName}
+        </p>
+        <div class="py-2 flex space-x-4">
+          <BadgeIcon
+            className="h-4"
+            primaryColour={team?.primaryColourHex}
+            secondaryColour={team?.secondaryColourHex}
+            thirdColour={team?.thirdColourHex}
           />
-
-          <div class="vertical-divider" />
-
-          <div class="flex-grow my-4 md:mb-0">
-            <p class="content-panel-header">Next Game:</p>
-            <div class="flex justify-center mb-2 mt-2">
-              <div class="flex justify-center items-center">
-                <div class="w-10 ml-4 mr-4">
-                  <a href={`/club?id=${nextFixtureHomeTeam?.id}`}>
-                    <BadgeIcon
-                      primaryColour={nextFixtureHomeTeam?.primaryColourHex}
-                      secondaryColour={nextFixtureHomeTeam?.secondaryColourHex}
-                      thirdColour={nextFixtureHomeTeam?.thirdColourHex}
-                    />
-                  </a>
-                </div>
-                <div class="w-v ml-1 mr-1 flex justify-center">
-                  <p class="mt-2 mb-2">v</p>
-                </div>
-                <div class="w-10 ml-4">
-                  <a href={`/club?id=${nextFixtureAwayTeam?.id}`}>
-                    <BadgeIcon
-                      primaryColour={nextFixtureAwayTeam?.primaryColourHex}
-                      secondaryColour={nextFixtureAwayTeam?.secondaryColourHex}
-                      thirdColour={nextFixtureAwayTeam?.thirdColourHex}
-                    />
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="flex justify-center">
-              <div class="w-10 ml-4 mr-4">
-                <p class="content-panel-header text-center">
-                  <a href={`/club?id=${nextFixtureHomeTeam?.id}`}>
-                    {nextFixtureHomeTeam?.abbreviatedName}
-                  </a>
-                </p>
-              </div>
-              <div class="w-v ml-2 mr-2" />
-              <div class="w-10 ml-4">
-                <p class="content-panel-header text-center">
-                  <a href={`/club?id=${nextFixtureAwayTeam?.id}`}>
-                    {nextFixtureAwayTeam?.abbreviatedName}
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="flex md:hidden h-px bg-gray-400 w-full md:w-px md:h-full md:self-stretch"
-            style="min-height: 2px; min-width: 2px;"
+          <ShirtIcon
+            className="h-4"
+            primaryColour={team?.primaryColourHex}
+            secondaryColour={team?.secondaryColourHex}
+            thirdColour={team?.thirdColourHex}
           />
-
-          <div class="vertical-divider" />
-
-          <div class="flex-grow">
-            <p class="content-panel-header mt-4 md:mt-0">
-              Highest Scoring Player
-            </p>
-            <p class="content-panel-stat">
-              <a href={`/player?id=${highestScoringPlayer?.id}`}
-                >{highestScoringPlayer?.lastName}</a
-              >
-            </p>
-            <p class="content-panel-header">
-              {getPositionText(highestScoringPlayer?.position ?? 0)}
-              ({highestScoringPlayer?.totalPoints})
-            </p>
-          </div>
         </div>
+        <p class="content-panel-header">
+          {team?.abbreviatedName}
+        </p>
+      </div>
+      <div class="vertical-divider" />
+      <div class="flex-grow">
+        <p class="content-panel-header">Players</p>
+        <p class="content-panel-stat">
+          {$playerStore.filter((x) => x.teamId == id).length}
+        </p>
+        <p class="content-panel-header">Total</p>
+      </div>
+      <div class="vertical-divider" />
+      <div class="flex-grow">
+        <p class="content-panel-header">League Position</p>
+        <p class="content-panel-stat">
+          {getTeamPosition(id)}
+        </p>
+        <p class="content-panel-header">
+          {$systemStore?.activeSeason.name}
+        </p>
       </div>
     </div>
-
-    <div class="mx-4 xs:mx-6 sm:mx-8 lg:mx-10">
-      <div class="bg-panel rounded-md">
-        <ul class="flex bg-light-gray border-b border-gray-700 px-2 pt-2">
-          <li class={`mr-4 ${activeTab === "players" ? "active-tab" : ""}`}>
-            <button
-              class={`p-2 ${
-                activeTab === "players" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("players")}
+    <div class="content-panel">
+      <div class="flex-grow flex flex-col items-center">
+        <p class="content-panel-header">Next Game</p>
+        <div class="py-2 flex space-x-4"><a
+          class="flex flex-col items-center justify-center"
+          href={`/club?id=${
+            nextFixtureHomeTeam ? nextFixtureHomeTeam.id : -1
+          }`}
+        >
+          <BadgeIcon
+            className="h-4 sm:h-6 my-2 sm:my-4"
+            primaryColour={nextFixtureHomeTeam
+              ? nextFixtureHomeTeam.primaryColourHex
+              : ""}
+            secondaryColour={nextFixtureHomeTeam
+              ? nextFixtureHomeTeam.secondaryColourHex
+              : ""}
+            thirdColour={nextFixtureHomeTeam
+              ? nextFixtureHomeTeam.thirdColourHex
+              : ""}
+          />
+          <span class="content-panel-header"
+            >{nextFixtureHomeTeam
+              ? nextFixtureHomeTeam.abbreviatedName
+              : ""}</span
             >
-              Players
-            </button>
-          </li>
-          <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
-            <button
-              class={`p-2 ${
-                activeTab === "fixtures" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("fixtures")}
-            >
-              Fixtures
-            </button>
-          </li>
-        </ul>
+          </a>
+          <a
+          class="flex flex-col items-center justify-center"
+          href={`/club?id=${
+            nextFixtureAwayTeam ? nextFixtureAwayTeam.id : -1
+          }`}
+        >
+          <BadgeIcon
+            className="h-4 sm:h-6 my-2 sm:my-4"
+            primaryColour={nextFixtureAwayTeam
+              ? nextFixtureAwayTeam.primaryColourHex
+              : ""}
+            secondaryColour={nextFixtureAwayTeam
+              ? nextFixtureAwayTeam.secondaryColourHex
+              : ""}
+            thirdColour={nextFixtureAwayTeam
+              ? nextFixtureAwayTeam.thirdColourHex
+              : ""}
+          />
+          <span class="content-panel-header"
+            >{nextFixtureAwayTeam
+              ? nextFixtureAwayTeam.abbreviatedName
+              : ""}</span
+          >
+        </a>
+        </div>
+      </div>
+      <div class="vertical-divider" />
+      <div class="flex-grow flex flex-col">
+        <p class="content-panel-header">League Points</p>
+        <p class="content-panel-stat">
+          {getTeamPoints(id)}
+        </p>
+        <p class="content-panel-header">Total</p>
+      </div>
 
-        {#if activeTab === "players"}
-          <TeamPlayers players={$playerStore.filter((x) => x.teamId == id)} />
-        {:else if activeTab === "fixtures"}
-          <TeamFixtures clubId={id} />
-        {/if}
+      <div class="vertical-divider" />
+      <div class="flex-grow">
+        <p class="content-panel-header">
+          Most Points
+        </p>
+        <p class="content-panel-stat">
+          <a href={`/player?id=${highestScoringPlayer?.id}`}
+            >{highestScoringPlayer?.lastName}</a
+          >
+        </p>
+        <p class="content-panel-header">
+          {getPositionText(highestScoringPlayer?.position ?? 0)}
+          ({highestScoringPlayer?.totalPoints})
+        </p>
       </div>
     </div>
+    
+  </div>
+
+  <div class="bg-panel rounded-md">
+    <ul class="flex bg-light-gray border-b border-gray-700 px-2 pt-2">
+      <li class={`mr-4 ${activeTab === "players" ? "active-tab" : ""}`}>
+        <button
+          class={`p-2 ${
+            activeTab === "players" ? "text-white" : "text-gray-400"
+          }`}
+          on:click={() => setActiveTab("players")}
+        >
+          Players
+        </button>
+      </li>
+      <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
+        <button
+          class={`p-2 ${
+            activeTab === "fixtures" ? "text-white" : "text-gray-400"
+          }`}
+          on:click={() => setActiveTab("fixtures")}
+        >
+          Fixtures
+        </button>
+      </li>
+    </ul>
+
+    {#if activeTab === "players"}
+      <TeamPlayers players={$playerStore.filter((x) => x.teamId == id)} />
+    {:else if activeTab === "fixtures"}
+      <TeamFixtures clubId={id} />
+    {/if}
+  </div>
   {/if}
 </Layout>
