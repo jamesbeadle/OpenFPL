@@ -1261,7 +1261,7 @@
             {/each}
           </div>
         {/if}
-        <div class="hidden xl:flex w-full xl:w-1/2">
+        <div class="hidden xl:flex w-full xl:w-1/2 ml-2">
           <SimpleFixtures />
         </div>
       </div>
