@@ -173,8 +173,10 @@
         </div>
         {#if gameweekData.length > 0}
           {#each gameweekData as playerGameweek}
-            <button class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer lg:px-8 w-full" 
-              on:click={() => showDetailModal(playerGameweek)}>
+            <button
+              class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer lg:px-8 w-full"
+              on:click={() => showDetailModal(playerGameweek)}
+            >
               <div class="w-2/12 xs:w-2/12">
                 {getPositionAbbreviation(playerGameweek.player.position)}
               </div>
@@ -190,11 +192,11 @@
               <div
                 class="w-2/12 xs:w-3/12 flex items-center justify-center xs:justify-start"
               >
-                  <span class="flex items-center">
-                    <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" /><span
-                      class="hidden xs:flex ml-1 lg:ml-2">View Details</span
-                    >
-                  </span>
+                <span class="flex items-center">
+                  <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" /><span
+                    class="hidden xs:flex ml-1 lg:ml-2">View Details</span
+                  >
+                </span>
               </div>
             </button>
           {/each}

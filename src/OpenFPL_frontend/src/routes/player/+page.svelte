@@ -75,7 +75,9 @@
       nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
 
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
-      nextFixtureDateSmall = formatUnixDateToSmallReadable(Number(nextFixture?.kickOff));
+      nextFixtureDateSmall = formatUnixDateToSmallReadable(
+        Number(nextFixture?.kickOff)
+      );
       nextFixtureTime = formatUnixTimeToTime(Number(nextFixture?.kickOff));
       let countdownTime = getCountdownTime(Number(nextFixture?.kickOff));
 
@@ -123,11 +125,11 @@
           </p>
           <div class="py-2 flex">
             <ShirtIcon
-                  className="h-10"
-                  primaryColour={team?.primaryColourHex}
-                  secondaryColour={team?.secondaryColourHex}
-                  thirdColour={team?.thirdColourHex}
-                />
+              className="h-10"
+              primaryColour={team?.primaryColourHex}
+              secondaryColour={team?.secondaryColourHex}
+              thirdColour={team?.thirdColourHex}
+            />
           </div>
           <p class="content-panel-header">
             Shirt: {selectedPlayer?.shirtNumber}
@@ -249,7 +251,7 @@
             }`}
             on:click={() => setActiveTab("history")}
           >
-          Gameweek History
+            Gameweek History
           </button>
         </li>
       </ul>

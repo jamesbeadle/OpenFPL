@@ -143,8 +143,9 @@
 
       {#each playerDetails.gameweeks as gameweek}
         {@const opponent = getOpponentFromFixtureId(gameweek.fixtureId)}
-        <div
-          class="flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer"
+        <button
+          class="w-full flex items-center justify-between p-2 py-4 border-b border-gray-700 cursor-pointer"
+          on:click={() => showDetailModal(gameweek, opponent)}
         >
           <div class="w-1/6 md:w-1/4 px-4">{gameweek.number}</div>
           <div class="w-2/6 md:w-1/4 md:w-1/6 px-4">
@@ -160,13 +161,11 @@
           </div>
           <div class="w-1/6 md:w-1/4 px-4">{gameweek.points}</div>
           <div class="w-2/6 md:w-1/4 px-4 flex items-center">
-            <button on:click={() => showDetailModal(gameweek, opponent)}>
-              <span class="flex items-center">
-                <ViewDetailsIcon className="w-6 mr-2" />View Details
-              </span>
-            </button>
+            <span class="flex items-center">
+              <ViewDetailsIcon className="w-6 mr-2" />View Details
+            </span>
           </div>
-        </div>
+        </button>
       {/each}
     </div>
   </div>
