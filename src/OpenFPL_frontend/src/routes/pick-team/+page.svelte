@@ -829,14 +829,17 @@
         </div>
       </div>
 
-      <!-- from 640 - 882 not working -->
-      <div class="hidden sm:flex flex-col md:flex-row">
-        <div class="flex flex-row justify-between items-center text-white m-4 bg-panel p-4 rounded-md w-full">
-          <div class="flex flex-row justify-start flex-grow ml-4">
+      <div class="hidden xl:flex flex-col md:flex-row">
+        <div
+          class="flex flex-col md:flex-row justify-between items-center text-white mx-4 my-2 xl:m-4 bg-panel p-2 xl:p-4 rounded-md md:w-full"
+        >
+          <div
+            class="flex flex-row justify-between md:justify-start flex-grow ml-4 order-3 md:order-1"
+          >
             <button
               class={`btn ${
                 pitchView ? `fpl-button` : `inactive-btn`
-              } px-4 py-2 rounded-l-md min-w-[125px] my-4`}
+              } px-4 py-2 rounded-l-md font-bold md:text-xs xl:text-base min-w-[100px] lg:min-w-[125px] my-4`}
               on:click={showPitchView}
             >
               Pitch View
@@ -897,8 +900,8 @@
           </div>
         </div>
       </div>
-
-      <div class="flex sm:hidden flex-col md:flex-row">
+      
+      <div class="flex xl:hidden flex-col">
         <div class="bg-panel rounded-md xs:flex flex-row">
           <div class="w-full xs:w-1/2">
             <div class="flex">
