@@ -192,7 +192,7 @@
     <h1 class="m-3 md:m-4">Bonuses</h1>
   </div>
   <div class="flex flex-col xl:flex-row md:mx-2">
-    <div class="hidden md:flex items-center w-100 xl:w-1/2">
+    <div class="hidden md:flex items-center w-full xl:w-1/2">
       {#each leftPanelBonuses as bonus}
         <div
           class="flex items-center w-1/5 bonus-panel-inner m-1 mt-4 rounded-lg border border-gray-700"
@@ -234,7 +234,7 @@
         </div>
       {/each}
     </div>
-    <div class="hidden md:flex items-center w-100 xl:w-1/2">
+    <div class="hidden md:flex items-center w-full xl:w-1/2">
       {#each rightPanelBonuses as bonus}
         <div
           class="flex items-center w-1/5 bonus-panel-inner m-1 rounded-lg border border-gray-700"
@@ -282,7 +282,7 @@
   </div>
 
   <div class="flex md:hidden flex-col md:mx-2">
-    <div class="flex items-center w-100 flex-col mt-1">
+    <div class="flex items-center w-full flex-col mt-1">
       {#each bonuses as bonus}
         <div
           class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]"

@@ -127,7 +127,7 @@
                 </div>
               {/each}
             {:else}
-              <p class="w-100 p-4">No leaderboard data.</p>
+              <p class="w-full p-4">No leaderboard data.</p>
             {/if}
           </div>
         </div>

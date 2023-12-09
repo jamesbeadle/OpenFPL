@@ -58,7 +58,7 @@
 </script>
 
 <div class="bg-panel rounded-md">
-  <div class="container-fluid">
+  <div>
     <div class="flex items-center justify-between py-2 bg-light-gray">
       <h1 class="mx-4 m-2 side-panel-header">Fixtures</h1>
     </div>

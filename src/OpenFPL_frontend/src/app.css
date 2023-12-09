@@ -42,7 +42,7 @@ input {
   font-weight: bold;
 }
 
-.bg-panel {
+.bg-panel-color {
   background-color: rgba(36, 37, 41, 0.9);
   border-radius: 8px;
   border: 1px solid #2e323a !important;
@@ -207,6 +207,10 @@ input {
 
 .default-button{
   @apply rounded px-3 md:px-4 py-1;
+}
+
+.bg-panel{
+  @apply bg-panel-color w-full; 
 }
 
 /* Extra small devices (portrait phones, less than 480px) */

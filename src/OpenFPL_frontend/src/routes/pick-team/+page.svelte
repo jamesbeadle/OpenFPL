@@ -972,7 +972,7 @@
 
       <div class="flex flex-col xl:flex-row mt-2 md:mt-0">
         {#if pitchView}
-          <div class="relative w-full xl:w-1/2 mt-4">
+          <div class="relative w-full xl:w-1/2 mt-2">
             <img
               src="pitch.png"
               alt="pitch"
@@ -1150,121 +1150,119 @@
           </div>
         {:else}
           <div class="bg-panel rounded-md">
-            <div class="container-fluid">
-              {#each gridSetup as row, rowIndex}
-                {#if rowIndex === 0}
-                  <div
-                    class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
-                  >
-                    <div class="w-1/3">Goalkeeper</div>
-                    <div class="w-1/6">(c)</div>
-                    <div class="w-1/3">Team</div>
-                    <div class="w-1/6">Value</div>
-                    <div class="w-1/6">&nbsp;</div>
-                  </div>
-                {/if}
-                {#if rowIndex === 1}
-                  <div
-                    class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
-                  >
-                    <div class="w-1/3">Defenders</div>
-                    <div class="w-1/6">(c)</div>
-                    <div class="w-1/3">Team</div>
-                    <div class="w-1/6">Value</div>
-                    <div class="w-1/6">&nbsp;</div>
-                  </div>
-                {/if}
-                {#if rowIndex === 2}
-                  <div
-                    class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
-                  >
-                    <div class="w-1/3">Midfielders</div>
-                    <div class="w-1/6">(c)</div>
-                    <div class="w-1/3">Team</div>
-                    <div class="w-1/6">Value</div>
-                    <div class="w-1/6">&nbsp;</div>
-                  </div>
-                {/if}
-                {#if rowIndex === 3}
-                  <div
-                    class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
-                  >
-                    <div class="w-1/3">Forwards</div>
-                    <div class="w-1/6">(c)</div>
-                    <div class="w-1/3">Team</div>
-                    <div class="w-1/6">Value</div>
-                    <div class="w-1/6">&nbsp;</div>
-                  </div>
-                {/if}
-                {#each row as _, colIndex (colIndex)}
-                  {@const actualIndex = getActualIndex(rowIndex, colIndex)}
-                  {@const playerIds = $fantasyTeam?.playerIds ?? []}
-                  {@const playerId = playerIds[actualIndex]}
-                  {@const player = $playerStore.find((p) => p.id === playerId)}
-                  {@const team = $teamStore.find(
-                    (x) => x.id === player?.teamId
-                  )}
+            {#each gridSetup as row, rowIndex}
+              {#if rowIndex === 0}
+                <div
+                  class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
+                >
+                  <div class="w-1/3">Goalkeeper</div>
+                  <div class="w-1/6">(c)</div>
+                  <div class="w-1/3">Team</div>
+                  <div class="w-1/6">Value</div>
+                  <div class="w-1/6">&nbsp;</div>
+                </div>
+              {/if}
+              {#if rowIndex === 1}
+                <div
+                  class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
+                >
+                  <div class="w-1/3">Defenders</div>
+                  <div class="w-1/6">(c)</div>
+                  <div class="w-1/3">Team</div>
+                  <div class="w-1/6">Value</div>
+                  <div class="w-1/6">&nbsp;</div>
+                </div>
+              {/if}
+              {#if rowIndex === 2}
+                <div
+                  class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
+                >
+                  <div class="w-1/3">Midfielders</div>
+                  <div class="w-1/6">(c)</div>
+                  <div class="w-1/3">Team</div>
+                  <div class="w-1/6">Value</div>
+                  <div class="w-1/6">&nbsp;</div>
+                </div>
+              {/if}
+              {#if rowIndex === 3}
+                <div
+                  class="flex items-center justify-between py-2 bg-light-gray border-b border-gray-700 px-4"
+                >
+                  <div class="w-1/3">Forwards</div>
+                  <div class="w-1/6">(c)</div>
+                  <div class="w-1/3">Team</div>
+                  <div class="w-1/6">Value</div>
+                  <div class="w-1/6">&nbsp;</div>
+                </div>
+              {/if}
+              {#each row as _, colIndex (colIndex)}
+                {@const actualIndex = getActualIndex(rowIndex, colIndex)}
+                {@const playerIds = $fantasyTeam?.playerIds ?? []}
+                {@const playerId = playerIds[actualIndex]}
+                {@const player = $playerStore.find((p) => p.id === playerId)}
+                {@const team = $teamStore.find(
+                  (x) => x.id === player?.teamId
+                )}
 
-                  <div class="flex items-center justify-between py-2 px-4">
-                    {#if playerId > 0 && player}
-                      <div class="w-1/3">
-                        {player.firstName}
-                        {player.lastName}
-                      </div>
-                      <div class="w-1/6 flex items-center">
-                        {#if $fantasyTeam?.captainId === playerId}
-                          <span>
-                            <ActiveCaptainIcon className="w-6 h-6" />
-                          </span>
-                        {:else}
-                          <button on:click={() => setCaptain(player.id)}>
-                            <PlayerCaptainIcon className="w-6 h-6" />
-                          </button>
-                        {/if}
-                      </div>
-                      <div class="flex w-1/3 items-center">
-                        <BadgeIcon
-                          className="h-5 w-5 mr-2"
-                          primaryColour={team?.primaryColourHex}
-                          secondaryColour={team?.secondaryColourHex}
-                          thirdColour={team?.thirdColourHex}
-                        />
-                        <p>
-                          {team?.name}
-                        </p>
-                      </div>
-                      <div class="w-1/6">
-                        £{(Number(player.value) / 4).toFixed(2)}m
-                      </div>
-                      <div class="w-1/6 flex items-center">
-                        <button
-                          on:click={() => removePlayer(player.id)}
-                          class="bg-red-600 mb-1 rounded-sm"
-                        >
-                          <RemovePlayerIcon className="w-6 h-6 p-2" />
+                <div class="flex items-center justify-between py-2 px-4">
+                  {#if playerId > 0 && player}
+                    <div class="w-1/3">
+                      {player.firstName}
+                      {player.lastName}
+                    </div>
+                    <div class="w-1/6 flex items-center">
+                      {#if $fantasyTeam?.captainId === playerId}
+                        <span>
+                          <ActiveCaptainIcon className="w-6 h-6" />
+                        </span>
+                      {:else}
+                        <button on:click={() => setCaptain(player.id)}>
+                          <PlayerCaptainIcon className="w-6 h-6" />
                         </button>
-                      </div>
-                    {:else}
-                      <div class="w-1/3">-</div>
-                      <div class="w-1/6">-</div>
-                      <div class="w-1/3">-</div>
-                      <div class="w-1/6">-</div>
-                      <div class="w-1/6 flex items-center">
-                        <button
-                          on:click={() => loadAddPlayer(rowIndex, colIndex)}
-                          class="rounded fpl-button flex items-center"
-                        >
-                          <AddIcon className="w-6 h-6 p-2" />
-                        </button>
-                      </div>
-                    {/if}
-                  </div>
-                {/each}
+                      {/if}
+                    </div>
+                    <div class="flex w-1/3 items-center">
+                      <BadgeIcon
+                        className="h-5 w-5 mr-2"
+                        primaryColour={team?.primaryColourHex}
+                        secondaryColour={team?.secondaryColourHex}
+                        thirdColour={team?.thirdColourHex}
+                      />
+                      <p>
+                        {team?.name}
+                      </p>
+                    </div>
+                    <div class="w-1/6">
+                      £{(Number(player.value) / 4).toFixed(2)}m
+                    </div>
+                    <div class="w-1/6 flex items-center">
+                      <button
+                        on:click={() => removePlayer(player.id)}
+                        class="bg-red-600 mb-1 rounded-sm"
+                      >
+                        <RemovePlayerIcon className="w-6 h-6 p-2" />
+                      </button>
+                    </div>
+                  {:else}
+                    <div class="w-1/3">-</div>
+                    <div class="w-1/6">-</div>
+                    <div class="w-1/3">-</div>
+                    <div class="w-1/6">-</div>
+                    <div class="w-1/6 flex items-center">
+                      <button
+                        on:click={() => loadAddPlayer(rowIndex, colIndex)}
+                        class="rounded fpl-button flex items-center"
+                      >
+                        <AddIcon className="w-6 h-6 p-2" />
+                      </button>
+                    </div>
+                  {/if}
+                </div>
               {/each}
-            </div>
+            {/each}
           </div>
         {/if}
-        <div class="hidden md:flex w-100 xl:w-1/2">
+        <div class="hidden md:flex w-full xl:w-1/2">
           <SimpleFixtures />
         </div>
       </div>
@@ -1338,7 +1336,7 @@
         </div>
       </div>
 
-      <div class="flex md:hidden w-100">
+      <div class="flex md:hidden w-full mt-4">
         <SimpleFixtures />
       </div>
       <BonusPanel {fantasyTeam} {activeGameweek} />

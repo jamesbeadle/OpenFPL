@@ -124,88 +124,86 @@
     />
   {/if}
 
-  <div class="container-fluid mt-4 mb-4">
-    <div class="flex flex-col space-y-4">
-      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 lg:px-4">
-        <div class="flex items-center ml-4">
-          <div class="flex items-center mr-8">
-            <button
-              class={`${
-                selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-              } default-button`}
-              on:click={() => changeGameweek(-1)}
-              disabled={selectedGameweek === 1}
-            >
-              &lt;
-            </button>
+  <div class="flex flex-col space-y-4">
+    <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 lg:px-4">
+      <div class="flex items-center ml-4">
+        <div class="flex items-center mr-8">
+          <button
+            class={`${
+              selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
+            } default-button`}
+            on:click={() => changeGameweek(-1)}
+            disabled={selectedGameweek === 1}
+          >
+            &lt;
+          </button>
 
-            <select
-              class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-              bind:value={selectedGameweek}
-            >
-              {#each gameweeks as gameweek}
-                <option value={gameweek}>Gameweek {gameweek}</option>
-              {/each}
-            </select>
+          <select
+            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            bind:value={selectedGameweek}
+          >
+            {#each gameweeks as gameweek}
+              <option value={gameweek}>Gameweek {gameweek}</option>
+            {/each}
+          </select>
 
-            <button
-              class={`${
-                selectedGameweek === $systemStore?.activeGameweek
-                  ? "bg-gray-500"
-                  : "fpl-button"
-              } default-button ml-1`}
-              on:click={() => changeGameweek(1)}
-              disabled={selectedGameweek === $systemStore?.activeGameweek}
-            >
-              &gt;
-            </button>
-          </div>
+          <button
+            class={`${
+              selectedGameweek === $systemStore?.activeGameweek
+                ? "bg-gray-500"
+                : "fpl-button"
+            } default-button ml-1`}
+            on:click={() => changeGameweek(1)}
+            disabled={selectedGameweek === $systemStore?.activeGameweek}
+          >
+            &gt;
+          </button>
         </div>
       </div>
-      <div class="flex flex-col space-y-4 mt-4">
-        <div class="overflow-x-auto flex-1">
-          <div
-            class="flex justify-between border-b border-t border-gray-700 p-4 bg-light-gray lg:px-8"
-          >
-            <div class="w-2/12 xs:w-2/12">Pos</div>
-            <div class="w-6/12 xs:w-4/12">Player</div>
-            <div class="w-3/12 xs:w-3/12">Points</div>
-            <div class="w-2/12 xs:w-3/12">&nbsp;</div>
-          </div>
-          {#if gameweekData.length > 0}
-            {#each gameweekData as playerGameweek}
-              <div
-                class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer lg:px-8"
-              >
-                <div class="w-2/12 xs:w-2/12">
-                  {getPositionAbbreviation(playerGameweek.player.position)}
-                </div>
-                <div class="w-6/12 xs:w-4/12">
-                  <a href={`/player?id=${playerGameweek.player.id}`}>
-                    {playerGameweek.player.firstName.length > 0
-                      ? playerGameweek.player.firstName.substring(0, 1) + "."
-                      : ""}
-                    {playerGameweek.player.lastName}</a
-                  >
-                </div>
-                <div class="w-3/12 xs:w-3/12">{playerGameweek.points}</div>
-                <div
-                  class="w-2/12 xs:w-3/12 flex items-center justify-center xs:justify-start"
-                >
-                  <button on:click={() => showDetailModal(playerGameweek)}>
-                    <span class="flex items-center">
-                      <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" /><span
-                        class="hidden xs:flex ml-1 lg:ml-2">View Details</span
-                      >
-                    </span>
-                  </button>
-                </div>
-              </div>
-            {/each}
-          {:else}
-            <p class="w-100 p-4">No data.</p>
-          {/if}
+    </div>
+    <div class="flex flex-col space-y-4 mt-4">
+      <div class="overflow-x-auto flex-1">
+        <div
+          class="flex justify-between border-b border-t border-gray-700 p-4 bg-light-gray lg:px-8"
+        >
+          <div class="w-2/12 xs:w-2/12">Pos</div>
+          <div class="w-6/12 xs:w-4/12">Player</div>
+          <div class="w-3/12 xs:w-3/12">Points</div>
+          <div class="w-2/12 xs:w-3/12">&nbsp;</div>
         </div>
+        {#if gameweekData.length > 0}
+          {#each gameweekData as playerGameweek}
+            <div
+              class="flex items-center justify-between p-4 border-b border-gray-700 cursor-pointer lg:px-8"
+            >
+              <div class="w-2/12 xs:w-2/12">
+                {getPositionAbbreviation(playerGameweek.player.position)}
+              </div>
+              <div class="w-6/12 xs:w-4/12">
+                <a href={`/player?id=${playerGameweek.player.id}`}>
+                  {playerGameweek.player.firstName.length > 0
+                    ? playerGameweek.player.firstName.substring(0, 1) + "."
+                    : ""}
+                  {playerGameweek.player.lastName}</a
+                >
+              </div>
+              <div class="w-3/12 xs:w-3/12">{playerGameweek.points}</div>
+              <div
+                class="w-2/12 xs:w-3/12 flex items-center justify-center xs:justify-start"
+              >
+                <button on:click={() => showDetailModal(playerGameweek)}>
+                  <span class="flex items-center">
+                    <ViewDetailsIcon className="w-5 xs:w-6 lg:w-7" /><span
+                      class="hidden xs:flex ml-1 lg:ml-2">View Details</span
+                    >
+                  </span>
+                </button>
+              </div>
+            </div>
+          {/each}
+        {:else}
+          <p class="w-full p-4">No data.</p>
+        {/if}
       </div>
     </div>
   </div>
