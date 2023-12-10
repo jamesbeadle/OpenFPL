@@ -253,6 +253,15 @@
                 </span>
               </a>
             </li>
+            <li class="px-2">
+              <button
+                class="flex h-full w-full hover:text-gray-400 w-full items-center"
+                on:click={handleLogout}
+              >
+                Disconnect
+                <WalletIcon className="ml-2 h-6 w-6 mt-1" />
+              </button>
+            </li>
           </ul>
         </div>
       {:else}
