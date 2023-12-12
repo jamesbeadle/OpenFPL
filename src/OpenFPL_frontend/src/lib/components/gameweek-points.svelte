@@ -38,6 +38,7 @@
       await playerEventsStore.sync();
 
       selectedGameweek = $systemStore?.focusGameweek ?? 1;
+      activeSeasonName = $systemStore?.activeSeason.name ?? "-";
       gameweeks = Array.from(
         { length: $systemStore?.activeGameweek ?? 1 },
         (_, i) => i + 1
