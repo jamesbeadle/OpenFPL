@@ -52,21 +52,21 @@
 
   function getBonusIcon(snapshot: FantasyTeamSnapshot) {
     if (snapshot.goalGetterGameweek === snapshot.gameweek) {
-      return `<img src="goal-getter.png" alt="Bonus" class="w-9" />`;
+      return `<img src="goal-getter.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.passMasterGameweek === snapshot.gameweek) {
-      return `<img src="pass-master.png" alt="Bonus" class="w-9" />`;
+      return `<img src="pass-master.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.noEntryGameweek === snapshot.gameweek) {
-      return `<img src="no-entry.png" alt="Bonus" class="w-9" />`;
+      return `<img src="no-entry.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.teamBoostGameweek === snapshot.gameweek) {
-      return `<img src="team-boost.png" alt="Bonus" class="w-9" />`;
+      return `<img src="team-boost.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.safeHandsGameweek === snapshot.gameweek) {
-      return `<img src="safe-hands.png" alt="Bonus" class="w-9" />`;
+      return `<img src="safe-hands.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.captainFantasticGameweek === snapshot.gameweek) {
-      return `<img src="captain-fantastic.png" alt="Bonus" class="w-9" />`;
+      return `<img src="captain-fantastic.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.braceBonusGameweek === snapshot.gameweek) {
-      return `<img src="brace-bonus.png" alt="Bonus" class="w-9" />`;
+      return `<img src="brace-bonus.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.hatTrickHeroGameweek === snapshot.gameweek) {
-      return `<img src="hat-trick-hero.png" alt="Bonus" class="w-9" />`;
+      return `<img src="hat-trick-hero.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else {
       return "-";
     }
@@ -79,13 +79,14 @@
   <div class="flex flex-col space-y-4 mt-4">
     <div class="overflow-x-auto flex-1">
       <div
-        class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+        class="flex justify-between p-2 md:px-4 border border-gray-700 py-4 bg-light-gray"
       >
-        <div class="w-2/12 px-4">Gameweek</div>
-        <div class="w-3/12 px-4">Captain</div>
-        <div class="w-3/12 px-4">Bonus</div>
-        <div class="w-2/12 px-4">Points</div>
-        <div class="w-2/12 px-4">&nbsp;</div>
+        <div class="w-2/12">GW</div>
+        <div class="w-4/12 md:hidden">Cap.</div>
+        <div class="w-4/12 hidden md:flex">Captain</div>
+        <div class="w-3/12">Bonus</div>
+        <div class="w-2/12">Points</div>
+        <div class="w-3/12">&nbsp;</div>
       </div>
 
       {#each manager.gameweeks as gameweek}
@@ -96,27 +97,30 @@
             viewGameweekDetail(gameweek.principalId, gameweek.gameweek)}
         >
           <div
-            class="flex items-center text-left justify-between p-2 py-4 border-b border-gray-700 cursor-pointer"
+            class="flex items-center text-left justify-between p-2 md:px-4 py-4 border-b border-gray-700 cursor-pointer"
           >
-            <div class="w-2/12 px-4">{gameweek.gameweek}</div>
-            <div class="w-3/12 px-4 flex items-center">
+            <div class="w-2/12">{gameweek.gameweek}</div>
+            <div class="w-4/12 flex items-center">
               <svelte:component
                 this={getFlagComponent(captain?.nationality ?? "")}
-                class="w-9 h-9 mr-4"
+                class="w-9 h-9 mr-4 hidden md:flex"
                 size="100"
               />
-              {`${
-                captain?.firstName.length ?? 0 > 0
-                  ? captain?.firstName.charAt(0) + "."
-                  : ""
-              } ${captain?.lastName}`}
+              <p class="truncate min-w-[40px] max-w-[40px] xxs:min-w-[80px] xxs:max-w-[80px] sm:min-w-[160px] sm:max-w-[160px] md:min-w-none md:max-w-none">
+                {`${
+                  captain?.firstName.length ?? 0 > 0
+                    ? captain?.firstName.charAt(0) + "."
+                    : ""
+                } ${captain?.lastName}`}
+              </p>
             </div>
-            <div class="w-3/12 px-4">{@html getBonusIcon(gameweek)}</div>
-            <div class="w-2/12 px-4">{gameweek.points}</div>
-            <div class="w-2/12 px-4 flex items-center">
+            <div class="w-3/12">{@html getBonusIcon(gameweek)}</div>
+            <div class="w-2/12">{gameweek.points}</div>
+            <div class="w-3/12 flex items-center">
               <span class="flex items-center">
-                <ViewDetailsIcon className="w-6 mr-2" />
-                <p class="">View Details</p>
+                <ViewDetailsIcon className="w-4 mr-1 md:w-6 md:mr-2" />
+                <p class="tiny-text hidden md:flex">View Details</p>
+                <p class="tiny-text md:hidden">View</p>
               </span>
             </div>
           </div>

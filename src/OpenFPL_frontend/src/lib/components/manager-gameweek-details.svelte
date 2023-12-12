@@ -105,52 +105,52 @@
 {#if isLoading}
   <Spinner />
 {:else}
-  <div class="mx-5 my-4">
-    <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
-      <div class="flex items-center space-x-2">
-        <button
-          class={`${
-            $selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
-          } default-button`}
-          on:click={() => changeGameweek(-1)}
-          disabled={$selectedGameweek === 1}
-        >
-          &lt;
-        </button>
+  <div>
+    <div class="flex flex-col space-y-4">
+      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
+        <div class="flex items-center space-x-2 ml-4 md:mb-2 md:ml-3">
+          <button
+            class={`${
+              $selectedGameweek === 1 ? "bg-gray-500" : "fpl-button"
+            } default-button`}
+            on:click={() => changeGameweek(-1)}
+            disabled={$selectedGameweek === 1}
+          >
+            &lt;
+          </button>
 
-        <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-          bind:value={$selectedGameweek}
-        >
-          {#each gameweeks as gameweek}
-            <option value={gameweek}>Gameweek {gameweek}</option>
-          {/each}
-        </select>
+          <select
+            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            bind:value={$selectedGameweek}
+          >
+            {#each gameweeks as gameweek}
+              <option value={gameweek}>Gameweek {gameweek}</option>
+            {/each}
+          </select>
 
-        <button
-          class={`${
-            $selectedGameweek === $systemStore?.focusGameweek
-              ? "bg-gray-500"
-              : "fpl-button"
-          } default-button ml-1`}
-          on:click={() => changeGameweek(1)}
-          disabled={$selectedGameweek === $systemStore?.focusGameweek}
-        >
-          &gt;
-        </button>
+          <button
+            class={`${
+              $selectedGameweek === $systemStore?.focusGameweek
+                ? "bg-gray-500"
+                : "fpl-button"
+            } default-button ml-1`}
+            on:click={() => changeGameweek(1)}
+            disabled={$selectedGameweek === $systemStore?.focusGameweek}
+          >
+            &gt;
+          </button>
+        </div>
       </div>
     </div>
 
-    <div class="flex flex-col space-y-4 mt-4">
+    <div class="hidden xxs:flex flex-col space-y-4 mt-2">
       {#if $fantasyTeam}
         <div class="overflow-x-auto flex-1">
-          <div
-            class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
-          >
-            <div class="w-1/12 text-center mx-4">Position</div>
+          <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
+            <div class="w-1/12 md:text-center">Pos</div>
             <div class="w-2/12">Player</div>
-            <div class="w-2/12">Team</div>
-            <div class="w-1/2 flex">
+            <div class="w-1/12 hidden lg:flex">Team</div>
+            <div class="w-8/12 lg:7/12 flex">
               <div class="w-1/12 text-center">A</div>
               <div class="w-1/12 text-center">HSP</div>
               <div class="w-1/12 text-center">GS</div>
@@ -171,37 +171,49 @@
             {@const playerDTO = getPlayerDTO(data.player.id)}
             {@const playerTeam = getPlayerTeam(data.player.teamId)}
             <div
-              class="flex items-center justify-between py-4 border-b border-gray-700 cursor-pointer"
+              class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
             >
-              <div class="w-1/12 text-center mx-4">
+              <div class="w-1/12 md:text-center">
                 {getPositionAbbreviation(data.player.position)}
               </div>
               <div class="w-2/12 flex items-center">
                 <svelte:component
                   this={getFlagComponent(playerDTO?.nationality ?? "")}
-                  class="w-4 h-4 mr-1"
+                  class="w-4 h-4 mr-1 hidden md:flex"
                   size="100"
                 />
-                <span>
-                  {playerDTO
-                    ? playerDTO.firstName.length > 0
-                      ? playerDTO.firstName.substring(0, 1) +
-                        "." +
-                        playerDTO.lastName
-                      : playerDTO.lastName
-                    : "-"}
+                <span class="flex items-center">
+                  <BadgeIcon
+                    primaryColour={playerTeam?.primaryColourHex}
+                    secondaryColour={playerTeam?.secondaryColourHex}
+                    thirdColour={playerTeam?.thirdColourHex}
+                    className="w-4 h-4 mr-1 md:hidden"
+                  />
+                  <p
+                    class="truncate min-w-[30px] max-w-[30px] xs:min-w-[50px] xs:max-w-[50px] sm:min-w-[60px] sm:max-w-[60px] md:min-w-[75px] md:max-w-[75px]"
+                  >
+                    {playerDTO
+                      ? playerDTO.firstName.length > 0
+                        ? playerDTO.firstName.substring(0, 1) +
+                          "." +
+                          playerDTO.lastName
+                        : playerDTO.lastName
+                      : "-"}
+                  </p>
                 </span>
               </div>
-              <div class="w-2/12 text-center flex items-center">
+              <div class="w-1/12 hidden lg:flex text-center flex items-center">
                 <BadgeIcon
                   primaryColour={playerTeam?.primaryColourHex}
                   secondaryColour={playerTeam?.secondaryColourHex}
                   thirdColour={playerTeam?.thirdColourHex}
-                  className="w-6 h-6 mr-2"
+                  className="w-4 h-4 mr-2 hidden md:flex"
                 />
-                {playerTeam?.friendlyName}
+                <span class="hidden md:flex">
+                  {playerTeam?.abbreviatedName}
+                </span>
               </div>
-              <div class="w-1/2 flex">
+              <div class="w-8/12 lg:7/12 flex">
                 <div
                   class={`w-1/12 text-center ${
                     data.appearance > 0 ? "" : "text-gray-500"
@@ -281,6 +293,82 @@
                 </div>
                 <div
                   class={`w-1/12 text-center ${
+                    data.bonusPoints > 0 ? "" : "text-gray-500"
+                  }`}
+                >
+                  {data.bonusPoints}
+                </div>
+              </div>
+              <div class="w-1/12 text-center">{data.totalPoints}</div>
+            </div>
+          {/each}
+        </div>
+      {:else}
+        <p>No Fantasy Team Data</p>
+      {/if}
+    </div>
+
+    <div class="xxs:hidden flex-col space-y-4 mt-2">
+      {#if $fantasyTeam}
+        <div class="overflow-x-auto flex-1">
+          <div
+            class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+          >
+            <div class="w-1/12">Pos</div>
+            <div class="w-2/12">Player</div>
+            <div class="w-1/2 flex">
+              <div class="w-4/12 text-center">P</div>
+              <div class="w-4/12 text-center">HSP</div>
+              <div class="w-4/12 text-center">B</div>
+            </div>
+            <div class="w-1/12 text-center">PTS</div>
+          </div>
+
+          {#each $gameweekPlayers as data}
+            {@const playerDTO = getPlayerDTO(data.player.id)}
+            {@const playerTeam = getPlayerTeam(data.player.teamId)}
+            <div
+              class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
+            >
+              <div class="w-1/12 text-center">
+                {getPositionAbbreviation(data.player.position)}
+              </div>
+              <div class="w-2/12 flex items-center">
+                <span class="flex items-center">
+                  <BadgeIcon
+                    primaryColour={playerTeam?.primaryColourHex}
+                    secondaryColour={playerTeam?.secondaryColourHex}
+                    thirdColour={playerTeam?.thirdColourHex}
+                    className="w-4 h-4 mr-1 md:hidden"
+                  />
+                  <p class="truncate min-w-[40px] max-w-[40px]">
+                    {playerDTO
+                      ? playerDTO.firstName.length > 0
+                        ? playerDTO.firstName.substring(0, 1) +
+                          "." +
+                          playerDTO.lastName
+                        : playerDTO.lastName
+                      : "-"}
+                  </p>
+                </span>
+              </div>
+              <div class="w-1/2 flex">
+                <div
+                  class={`w-4/12 text-center ${
+                    data.appearance > 0 ? "" : "text-gray-500"
+                  }`}
+                >
+                  {data.appearance}
+                </div>
+                <div
+                  class={`w-4/12 text-center ${
+                    data.highestScoringPlayerId > 0 ? "" : "text-gray-500"
+                  }`}
+                >
+                  {data.highestScoringPlayerId}
+                </div>
+                <div
+                  class={`w-4/12 text-center ${
                     data.bonusPoints > 0 ? "" : "text-gray-500"
                   }`}
                 >
