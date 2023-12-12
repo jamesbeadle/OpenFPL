@@ -47,7 +47,7 @@
       class="flex justify-start items-center w-full border-t border-gray-600"
     >
       <p
-        class="flex w-1/3 items-center border-r border-gray-600 justify-center pt-2"
+        class="flex w-1/3 items-center border-r border-gray-600 pt-2 ml-2 xs:ml-0 xs:justify-center"
       >
         vs <BadgeIcon
           className="w-5 h-5 mx-1"
@@ -55,11 +55,11 @@
           secondaryColour={opponentTeam?.secondaryColourHex}
           thirdColour={opponentTeam?.thirdColourHex}
         />
-        {opponentTeam?.friendlyName}
+        {opponentTeam?.abbreviatedName}
       </p>
       <p class="flex w-1/3 justify-center items-center pt-2">{seasonName}</p>
       <p
-        class="flex w-1/3 items-center justify-center border-l border-gray-600 pt-2"
+        class="flex w-1/3 items-center justify-end border-l border-gray-600 pt-2 mr-2 xs:mr-0 xs:justify-center"
       >
         Gameweek {gameweekData.gameweek}
       </p>

@@ -10,12 +10,14 @@
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { busyStore, Spinner } from "@dfinity/gix-components";
+    import { getDateFromBigInt } from "$lib/utils/Helpers";
 
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let fileInput: HTMLInputElement;
   let gameweek: number = 1;
+  let joinedDate = "";
 
   let unsubscribeUserProfile: () => void;
 
@@ -40,6 +42,7 @@
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
         setProfile(value);
+        joinedDate = getDateFromBigInt(value.createDate);
       });
     } catch (error) {
       toastsError({
@@ -227,7 +230,7 @@
             </button>
 
             <p class="mb-1 mt-4">Joined:</p>
-            <h2 class="default-header mb-1 md:mb-2">August 2023</h2>
+            <h2 class="default-header mb-1 md:mb-2">{joinedDate}</h2>
 
             <p class="mb-1">Principal:</p>
             <div class="flex items-center">

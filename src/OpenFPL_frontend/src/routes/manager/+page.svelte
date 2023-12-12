@@ -16,6 +16,7 @@
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
+    import { getDateFromBigInt } from "$lib/utils/Helpers";
 
   $: id = $page.url.searchParams.get("id");
 
@@ -55,23 +56,7 @@
       profilePicture = blobUrl;
       selectedSeason = $systemStore?.activeSeason.name ?? "-";
 
-      const dateInMilliseconds = Number(manager.createDate / 1000000n);
-      const date = new Date(dateInMilliseconds);
-      const monthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      joinedDate = `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+      joinedDate = getDateFromBigInt(manager.createDate);
       favouriteTeam =
         manager.favouriteTeamId > 0
           ? $teamStore.find((x) => x.id == manager.favouriteTeamId) ?? null

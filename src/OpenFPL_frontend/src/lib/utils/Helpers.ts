@@ -395,3 +395,23 @@ export function getAvailableFormations(
     return totalPlayers + additionalPlayersNeeded <= 11;
   });
 }
+
+export function getDateFromBigInt(dateMS: bigint) : string {
+  const dateInMilliseconds = Number(dateMS / 1000000n);
+  const date = new Date(dateInMilliseconds);
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  return `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+}

@@ -19,7 +19,7 @@
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
-  import ManagerPlayerModal from "./manager-player-modal.svelte";
+  import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
  
   let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from(
@@ -145,7 +145,7 @@
   <Spinner />
 {:else}
   {#if showModal}
-    <ManagerPlayerModal
+    <FantasyPlayerDetailModal
       playerTeam={selectedTeam}
       opponentTeam={selectedOpponentTeam}
       seasonName={activeSeasonName}
