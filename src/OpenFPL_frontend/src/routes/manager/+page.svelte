@@ -191,8 +191,9 @@
     </div>
 
     <div class="bg-panel rounded-md">
-      <div class="flex flex-row ml-3">
-        <button
+      <div class="flex flex-row ml-3 md:justify-between md:items-center">
+        <div>
+          <button
           class={`btn ${
             activeTab === "details" ? `fpl-button` : `inactive-btn`
           } tab-switcher-label rounded-l-md`}
@@ -208,8 +209,10 @@
         >
           Gameweeks
         </button>
+        </div>
+        
 
-        <div class="px-4 hidden lg:flex">
+        <div class="px-4 hidden lg:flex md:mr-8">
           {#if $fantasyTeam && activeTab === "details"}
             <span>Total Points: {$fantasyTeam?.points}</span>
           {/if}
