@@ -106,7 +106,9 @@
                 class="w-9 h-9 mr-4 hidden md:flex"
                 size="100"
               />
-              <p class="truncate min-w-[40px] max-w-[40px] xxs:min-w-[80px] xxs:max-w-[80px] sm:min-w-[160px] sm:max-w-[160px] md:min-w-none md:max-w-none">
+              <p
+                class="truncate min-w-[40px] max-w-[40px] xxs:min-w-[80px] xxs:max-w-[80px] sm:min-w-[160px] sm:max-w-[160px] md:min-w-none md:max-w-none"
+              >
                 {`${
                   captain?.firstName.length ?? 0 > 0
                     ? captain?.firstName.charAt(0) + "."

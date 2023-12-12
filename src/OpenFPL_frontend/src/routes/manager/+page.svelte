@@ -16,7 +16,7 @@
   import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
-    import { getDateFromBigInt } from "$lib/utils/Helpers";
+  import { getDateFromBigInt } from "$lib/utils/Helpers";
 
   $: id = $page.url.searchParams.get("id");
 

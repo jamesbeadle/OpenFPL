@@ -10,7 +10,7 @@
   import UpdateUsernameModal from "$lib/components/profile/update-username-modal.svelte";
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { busyStore, Spinner } from "@dfinity/gix-components";
-    import { getDateFromBigInt } from "$lib/utils/Helpers";
+  import { getDateFromBigInt } from "$lib/utils/Helpers";
 
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showUsernameModal: boolean = false;

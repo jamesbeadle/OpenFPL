@@ -14,13 +14,13 @@
   import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import type {
     FantasyTeam,
-    Team
+    Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
- 
+
   let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from(
     { length: $systemStore?.activeGameweek ?? 1 },
@@ -195,7 +195,9 @@
     <div class="hidden xxs:flex flex-col space-y-4 mt-2">
       {#if $fantasyTeam}
         <div class="overflow-x-auto flex-1">
-          <div class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray">
+          <div
+            class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
+          >
             <div class="w-1/12 md:text-center">Pos</div>
             <div class="w-2/12">Player</div>
             <div class="w-1/12 hidden lg:flex">Team</div>
@@ -219,7 +221,12 @@
           {#each $gameweekPlayers as data}
             {@const playerDTO = getPlayerDTO(data.player.id)}
             {@const playerTeam = getPlayerTeam(data.player.teamId)}
-            <button class="w-full" on:click={() => {showDetailModal(data)}}>
+            <button
+              class="w-full"
+              on:click={() => {
+                showDetailModal(data);
+              }}
+            >
               <div
                 class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
               >
@@ -380,10 +387,15 @@
           {#each $gameweekPlayers as data}
             {@const playerDTO = getPlayerDTO(data.player.id)}
             {@const playerTeam = getPlayerTeam(data.player.teamId)}
-            <button class="w-full" on:click={() => {showDetailModal(data)}}>
-              <div
-              class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
+            <button
+              class="w-full"
+              on:click={() => {
+                showDetailModal(data);
+              }}
             >
+              <div
+                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
+              >
                 <div class="w-1/12 text-center">
                   {getPositionAbbreviation(data.player.position)}
                 </div>

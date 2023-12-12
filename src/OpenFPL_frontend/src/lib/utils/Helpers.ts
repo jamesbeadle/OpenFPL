@@ -396,7 +396,7 @@ export function getAvailableFormations(
   });
 }
 
-export function getDateFromBigInt(dateMS: bigint) : string {
+export function getDateFromBigInt(dateMS: bigint): string {
   const dateInMilliseconds = Number(dateMS / 1000000n);
   const date = new Date(dateInMilliseconds);
   const monthNames = [
