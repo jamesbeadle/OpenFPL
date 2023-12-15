@@ -20,6 +20,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
+  import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
 
   let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from(
@@ -152,6 +153,7 @@
       visible={showModal}
       {closeDetailModal}
       gameweekData={selectedGameweekData}
+      isCaptain={selectedGameweekData.player.id === $fantasyTeam?.captainId}
     />
   {/if}
   <div>
@@ -201,7 +203,7 @@
             <div class="w-1/12 md:text-center">Pos</div>
             <div class="w-2/12">Player</div>
             <div class="w-1/12 hidden lg:flex">Team</div>
-            <div class="w-8/12 lg:7/12 flex">
+            <div class="w-7/12 lg:7/12 flex">
               <div class="w-1/12 text-center">A</div>
               <div class="w-1/12 text-center">HSP</div>
               <div class="w-1/12 text-center">GS</div>
@@ -215,6 +217,7 @@
               <div class="w-1/12 text-center">RC</div>
               <div class="w-1/12 text-center">B</div>
             </div>
+            <div class="w-1/12 text-center">C</div>
             <div class="w-1/12 text-center">PTS</div>
           </div>
 
@@ -228,7 +231,10 @@
               }}
             >
               <div
-                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
+                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer {$fantasyTeam.captainId ==
+                playerDTO?.id
+                  ? 'captain-row'
+                  : ''}"
               >
                 <div class="w-1/12 md:text-center">
                   {getPositionAbbreviation(data.player.position)}
@@ -272,7 +278,7 @@
                     </span>
                   </a>
                 </div>
-                <div class="w-8/12 lg:7/12 flex">
+                <div class="w-7/12 lg:7/12 flex">
                   <div
                     class={`w-1/12 text-center ${
                       data.appearance > 0 ? "" : "text-gray-500"
@@ -357,6 +363,15 @@
                   >
                     {data.bonusPoints}
                   </div>
+                </div>
+                <div
+                  class={`w-1/12 text-center ${
+                    $fantasyTeam.captainId == playerDTO?.id
+                      ? ""
+                      : "text-gray-500"
+                  }`}
+                >
+                  {$fantasyTeam.captainId == playerDTO?.id ? data.points : "-"}
                 </div>
                 <div class="w-1/12 text-center">{data.totalPoints}</div>
               </div>

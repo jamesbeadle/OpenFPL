@@ -52,6 +52,10 @@ input {
   border-bottom: 4px #2ce3a6 solid;
 }
 
+.captain-row {
+  background-color: rgba(44, 227, 166, 0.1) !important;
+}
+
 .toast-panel-success {
   background-color: #2ce3a6;
 }

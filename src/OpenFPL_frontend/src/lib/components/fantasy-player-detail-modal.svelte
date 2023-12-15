@@ -11,6 +11,7 @@
   export let playerTeam: Team;
   export let opponentTeam: Team;
   export let seasonName: string;
+  export let isCaptain: boolean;
 </script>
 
 <Modal {visible} on:nnsClose={closeDetailModal}>
@@ -190,6 +191,16 @@
         <span class="w-1/6">{gameweekData.bonusPoints}</span>
       </div>
     </div>
+    {#if isCaptain}
+      <div class="mt-2">
+        <div
+          class="flex justify-between items-center bg-light-gray p-2 border-t border-b border-gray-600"
+        >
+          <span class="w-5/6">Captain Points:</span>
+          <span class="w-1/6">{gameweekData.points}</span>
+        </div>
+      </div>
+    {/if}
 
     <div class="mt-2">
       <div

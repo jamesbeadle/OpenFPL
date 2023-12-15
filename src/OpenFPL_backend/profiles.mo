@@ -164,19 +164,19 @@ module {
         case (null) {
           return #err(#NotFound);
         };
-        case (?existingProfile) {
+        case (?foundProfile) {
           let updatedProfile : T.Profile = {
-            principalName = existingProfile.principalName;
-            displayName = existingProfile.displayName;
-            icpDepositAddress = existingProfile.icpDepositAddress;
-            fplDepositAddress = existingProfile.fplDepositAddress;
-            termsAccepted = existingProfile.termsAccepted;
+            principalName = foundProfile.principalName;
+            displayName = foundProfile.displayName;
+            icpDepositAddress = foundProfile.icpDepositAddress;
+            fplDepositAddress = foundProfile.fplDepositAddress;
+            termsAccepted = foundProfile.termsAccepted;
             profilePicture = profilePicture;
-            favouriteTeamId = existingProfile.favouriteTeamId;
-            createDate = existingProfile.createDate;
-            subscriptionDate = existingProfile.subscriptionDate;
-            membershipType = existingProfile.membershipType;
-            reputation = existingProfile.reputation;
+            favouriteTeamId = foundProfile.favouriteTeamId;
+            createDate = foundProfile.createDate;
+            subscriptionDate = foundProfile.subscriptionDate;
+            membershipType = foundProfile.membershipType;
+            reputation = foundProfile.reputation;
           };
 
           userProfiles.put(principalName, updatedProfile);
