@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "5i8f31"
+  version_hash: "1lo1hld"
 };
 function get_hooks() {
   return {};
@@ -6139,6 +6139,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $bankBalance, $$unsubscribe_bankBalance;
   let $transfersAvailable, $$unsubscribe_transfersAvailable;
   let $$unsubscribe_systemStore;
+  let $$unsubscribe_newCaptain;
   let $$unsubscribe_availableFormations;
   let $$unsubscribe_teamStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => $playerStore = value);
@@ -6178,6 +6179,8 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_bankBalance = subscribe(bankBalance, (value) => $bankBalance = value);
   const bonusUsedInSession = writable(false);
   $$unsubscribe_bonusUsedInSession = subscribe(bonusUsedInSession, (value) => value);
+  const newCaptain = writable("");
+  $$unsubscribe_newCaptain = subscribe(newCaptain, (value) => value);
   function getTeamFormation(team) {
     const positionCounts = { 0: 0, 1: 0, 2: 0, 3: 0 };
     team.playerIds.forEach((id) => {
@@ -6300,6 +6303,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_bankBalance();
   $$unsubscribe_transfersAvailable();
   $$unsubscribe_systemStore();
+  $$unsubscribe_newCaptain();
   $$unsubscribe_availableFormations();
   $$unsubscribe_teamStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {

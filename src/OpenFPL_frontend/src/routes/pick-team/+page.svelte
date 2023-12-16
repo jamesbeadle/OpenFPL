@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
   import { writable } from "svelte/store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
@@ -11,6 +11,7 @@
 
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
+  import ConfirmCaptainChange from "$lib/components/pick-team/confirm-captain-change.svelte";
   import OpenChatIcon from "$lib/icons/OpenChatIcon.svelte";
   import SimpleFixtures from "$lib/components/simple-fixtures.svelte";
   import AddPlayerIcon from "$lib/icons/AddPlayerIcon.svelte";
@@ -67,6 +68,7 @@
   let selectedColumn = -1;
   let pitchView = true;
   let showAddPlayer = false;
+  let showCaptainModal = false;
   let teamValue = 0;
   let newTeam = true;
   let isSaveButtonActive = false;
@@ -80,6 +82,9 @@
 
   let pitchHeight = 0;
   let pitchElement: HTMLElement;
+
+  let newCaptainId = 0;
+  const newCaptain = writable("");
 
   let isLoading = true;
 
@@ -482,12 +487,10 @@
   }
 
   function setCaptain(playerId: number) {
-    selectedPosition = -1;
-    selectedColumn = -1;
-    fantasyTeam.update((currentTeam) => {
-      if (!currentTeam) return null;
-      return { ...currentTeam, captainId: playerId };
-    });
+    newCaptainId = playerId;
+    let player = $playerStore.find((x) => x.id === playerId);
+    newCaptain.update((x) => `${player?.firstName} ${player?.lastName}`);
+    showCaptainModal = true;
   }
 
   function updateCaptainIfNeeded(currentTeam: FantasyTeam) {
@@ -738,6 +741,20 @@
       busyStore.stopBusy("save-team");
     }
   }
+
+  function changeCaptain() {
+    selectedPosition = -1;
+    selectedColumn = -1;
+    fantasyTeam.update((currentTeam) => {
+      if (!currentTeam) return null;
+      return { ...currentTeam, captainId: newCaptainId };
+    });
+    showCaptainModal = false;
+  }
+
+  function closeCaptainModal() {
+    showCaptainModal = false;
+  }
 </script>
 
 <Layout>
@@ -752,6 +769,12 @@
       {closeAddPlayerModal}
       {fantasyTeam}
       {bankBalance}
+    />
+    <ConfirmCaptainChange
+      newCaptain={$newCaptain}
+      visible={showCaptainModal}
+      onClose={closeCaptainModal}
+      onConfirm={changeCaptain}
     />
     <div>
       <div class="hidden xl:flex page-header-wrapper">
