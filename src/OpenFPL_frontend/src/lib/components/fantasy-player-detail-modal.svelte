@@ -173,6 +173,17 @@
         {gameweekData.missedPenalties * -15}
       </div>
     </div>
+    {#if gameweekData.highestScoringPlayerId > 0}
+      <div class="flex justify-between items-center p-2">
+        <div class="w-3/6">Highest Scoring Player:</div>
+        <div class="w-2/6">
+          {gameweekData.highestScoringPlayerId}
+        </div>
+        <div class="w-1/6">
+          {gameweekData.highestScoringPlayerId * 25}
+        </div>
+      </div>
+    {/if}
 
     <div class="mt-2">
       <div
@@ -191,6 +202,7 @@
         <span class="w-1/6">{gameweekData.bonusPoints}</span>
       </div>
     </div>
+
     {#if isCaptain}
       <div class="mt-2">
         <div

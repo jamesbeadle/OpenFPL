@@ -392,7 +392,7 @@
             <div class="w-1/12">Pos</div>
             <div class="w-2/12">Player</div>
             <div class="w-1/2 flex">
-              <div class="w-4/12 text-center">P</div>
+              <div class="w-4/12 text-center">A</div>
               <div class="w-4/12 text-center">HSP</div>
               <div class="w-4/12 text-center">B</div>
             </div>
@@ -465,5 +465,37 @@
         <p>No Fantasy Team Data</p>
       {/if}
     </div>
+
   </div>
 {/if}
+
+<div class="flex flex-row px-4 py-2">
+  <div class="xxs:hidden w-full">
+    <div class="flex flex-row space-x-2">
+      <div class="w-1/2 flex flex-col">
+        <p class="mb-1">A: Appearance</p>
+        <p>HSP: Highest Scoring Player</p>
+      </div>
+      <div class="w-1/2 flex flex-col">
+        <p class="mb-1">B: Bonus Points</p>
+        <p>PTS: Total Points</p>
+      </div>
+    </div>
+    <div class="hidden xxs:flex flex-row">
+      <p class="w-1/2">A: Appearance</p>
+      <p class="w-1/2">HSP: Highest Scoring Player</p>
+      <p class="hidden xxs:flex">GS: Goals Scored</p>
+      <p class="hidden xxs:flex">GA: Goals Assisted</p>
+      <p class="hidden xxs:flex">PS: Penalties Saved</p>
+      <p class="hidden xxs:flex">CS: Clean Sheets</p>
+      <p class="hidden xxs:flex">KS: Keeper Saves</p>
+      <p class="hidden xxs:flex">YC: Yellow Cards</p>
+      <p class="hidden xxs:flex">OG: Own Goals</p>
+      <p class="hidden xxs:flex">GC: Goals Conceded</p>
+      <p class="hidden xxs:flex">RC: Red Cards</p>
+      <p class="w-1/2">B: Bonus Points</p>
+      <p class="hidden xxs:flex">C: Captain Points</p>
+      <p class="w-1/2">PTS: Total Points</p>
+    </div>
+  </div>
+</div>

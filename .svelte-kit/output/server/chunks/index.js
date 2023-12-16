@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1tq1ba5"
+  version_hash: "efbcze"
 };
 function get_hooks() {
   return {};
@@ -5270,6 +5270,7 @@ function createPlayerEventsStore() {
         gameweek
       );
     }
+    console.log(allPlayerEvents);
     let allPlayers = [];
     const unsubscribe = playerStore.subscribe((players) => {
       allPlayers = players.filter(
