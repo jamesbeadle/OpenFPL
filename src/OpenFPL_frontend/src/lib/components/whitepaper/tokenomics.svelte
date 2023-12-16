@@ -99,14 +99,153 @@
   </ul>
 
   <p class="mt-8">The financials below are in ICP:</p>
+  <div class="hidden md:flex">
+    <table class="w-full text-right border-collapse striped mb-8 mt-4 text-xs lg:text-base">
+      <tr class="text-right">
+        <th class="text-left px-4">Year</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+      </tr>
+      <tr>
+        <td class="h-6"><span /></td>
+      </tr>
+      <tr>
+        <td class="text-left px-4">Managers</td>
+        <td>10,000</td>
+        <td>50,000</td>
+        <td>250,000</td>
+        <td>1,000,000</td>
+        <td>2,500,000</td>
+        <td>5,000,000</td>
+        <td>7,500,000</td>
+        <td>10,000,000</td>
+      </tr>
+      <tr>
+        <td class="h-6"><span /></td>
+      </tr>
+      <tr>
+        <td class="text-left px-4" colspan="9">Revenue:</td>
+      </tr>
+      <tr>
+        <td class="text-left px-4">Private Leagues</td>
+        <td>1,000</td>
+        <td>5,000</td>
+        <td>25,000</td>
+        <td>100,000</td>
+        <td>250,000</td>
+        <td>500,000</td>
+        <td>750,000</td>
+        <td>1,000,000</td>
+      </tr>
+  
+      <tr>
+        <td class="text-left px-4">Merchandising</td>
+        <td>5,000</td>
+        <td>25,000</td>
+        <td>125,000</td>
+        <td>500,000</td>
+        <td>1,250,000</td>
+        <td>2,500,000</td>
+        <td>3,750,000</td>
+        <td>5,000,000</td>
+      </tr>
+  
+      <tr>
+        <td class="text-left px-4">Content Subscriptions</td>
+        <td>125</td>
+        <td>625</td>
+        <td>3,125</td>
+        <td>12,500</td>
+        <td>31,250</td>
+        <td>62,500</td>
+        <td>93,750</td>
+        <td>125,000</td>
+      </tr>
+      <tr>
+        <td colspan="9" class="h-6"><span /></td>
+      </tr>
+  
+      <tr class="font-bold">
+        <td class="text-left px-4">Total</td>
+        <td>6,125</td>
+        <td>30,625</td>
+        <td>153,125</td>
+        <td>612,500</td>
+        <td>1,531,250</td>
+        <td>3,062,500</td>
+        <td>4,593,750</td>
+        <td>6,125,000</td>
+      </tr>
+  
+      <tr>
+        <td colspan="9" class="h-6"><span /></td>
+      </tr>
+  
+      <tr class="font-bold">
+        <td class="text-left px-4" colspan="8">SNS Value (25%)</td>
+        <td>1,531,250</td>
+      </tr>
+    </table>
+  </div>
 
-  <table class="w-full text-right border-collapse striped mb-8 mt-4">
+  <table class="w-full text-right border-collapse striped mb-8 mt-4 md:hidden">
     <tr class="text-right">
-      <th class="text-left px-4">Year</th>
+      <th class="text-left">Year</th>
       <th>1</th>
       <th>2</th>
       <th>3</th>
       <th>4</th>
+    </tr>
+    <tr>
+      <td class="h-6"><span /></td>
+    </tr>
+    <tr>
+      <td class="text-left">Managers</td>
+      <td>10,000</td>
+      <td>50,000</td>
+      <td>250,000</td>
+      <td>1,000,000</td>
+    </tr>
+    <tr>
+      <td class="h-6"><span /></td>
+    </tr>
+    <tr>
+      <td class="text-left" colspan="5">Revenue:</td>
+    </tr>
+    <tr>
+      <td class="text-left">Private Leagues</td>
+      <td>1,000</td>
+      <td>5,000</td>
+      <td>25,000</td>
+      <td>100,000</td>
+    </tr>
+
+    <tr>
+      <td class="text-left">Merchandising</td>
+      <td>5,000</td>
+      <td>25,000</td>
+      <td>125,000</td>
+      <td>500,000</td>
+    </tr>
+
+    <tr>
+      <td class="text-left">Content Subscriptions</td>
+      <td>125</td>
+      <td>625</td>
+      <td>3,125</td>
+      <td>12,500</td>
+    </tr>
+  </table>
+
+  <table class="w-full text-right border-collapse striped mb-8 mt-4 md:hidden">
+    <tr class="text-right">
+      <th class="text-left">Year</th>
       <th>5</th>
       <th>6</th>
       <th>7</th>
@@ -116,79 +255,59 @@
       <td class="h-6"><span /></td>
     </tr>
     <tr>
-      <td class="text-left px-4">Managers</td>
-      <td>10,000</td>
-      <td>50,000</td>
-      <td>250,000</td>
-      <td>1,000,000</td>
-      <td>2,500,000</td>
-      <td>5,000,000</td>
-      <td>7,500,000</td>
-      <td>10,000,000</td>
+      <td class="text-left">Managers</td>
+      <td>2.5m</td>
+      <td>5.0m</td>
+      <td>7,5m</td>
+      <td>10m</td>
     </tr>
     <tr>
       <td class="h-6"><span /></td>
     </tr>
     <tr>
-      <td class="text-left px-4" colspan="9">Revenue:</td>
+      <td class="text-left" colspan="5">Revenue:</td>
     </tr>
     <tr>
-      <td class="text-left px-4">Private Leagues</td>
-      <td>1,000</td>
-      <td>5,000</td>
-      <td>25,000</td>
-      <td>100,000</td>
-      <td>250,000</td>
-      <td>500,000</td>
-      <td>750,000</td>
-      <td>1,000,000</td>
+      <td class="text-left">Private Leagues</td>
+      <td>0.25m</td>
+      <td>0.5m</td>
+      <td>0.75m</td>
+      <td>1m</td>
     </tr>
 
     <tr>
-      <td class="text-left px-4">Merchandising</td>
-      <td>5,000</td>
-      <td>25,000</td>
-      <td>125,000</td>
-      <td>500,000</td>
-      <td>1,250,000</td>
-      <td>2,500,000</td>
-      <td>3,750,000</td>
-      <td>5,000,000</td>
+      <td class="text-left">Merchandising</td>
+      <td>1.25m</td>
+      <td>2.5m</td>
+      <td>3.75m</td>
+      <td>5m</td>
     </tr>
 
     <tr>
-      <td class="text-left px-4">Content Subscriptions</td>
-      <td>125</td>
-      <td>625</td>
-      <td>3,125</td>
-      <td>12,500</td>
-      <td>31,250</td>
-      <td>62,500</td>
-      <td>93,750</td>
-      <td>125,000</td>
+      <td class="text-left">Content Subscriptions</td>
+      <td>0.3125m</td>
+      <td>0.625m</td>
+      <td>0.9375m</td>
+      <td>0.125m</td>
     </tr>
     <tr>
-      <td colspan="9" class="h-6"><span /></td>
+      <td colspan="5" class="h-6"><span /></td>
     </tr>
 
     <tr class="font-bold">
-      <td class="text-left px-4">Total</td>
-      <td>6,125</td>
-      <td>30,625</td>
-      <td>153,125</td>
-      <td>612,500</td>
-      <td>1,531,250</td>
-      <td>3,062,500</td>
-      <td>4,593,750</td>
-      <td>6,125,000</td>
+      <td class="text-left">Total</td>
+      <td>~1.5m</td>
+      <td>~3m</td>
+      <td>~4.5m</td>
+      <td>~6m</td>
     </tr>
 
     <tr>
-      <td colspan="9" class="h-6"><span /></td>
+      <td colspan="5" class="h-6"><span /></td>
     </tr>
 
     <tr class="font-bold">
-      <td class="text-left px-4" colspan="8">SNS Value (25%)</td>
+      <td class="text-left" colspan="4">SNS Value (25%)</td>
       <td>1,531,250</td>
     </tr>
   </table>
