@@ -40,29 +40,84 @@
     Our scoring system rewards players for key contributions on the field:
   </p>
 
-  <ul class="list-disc ml-4">
-    <li>Appearing in the game: +5 points</li>
-    <li>Every 3 saves a goalkeeper makes: +5 points</li>
-    <li>Goalkeeper or defender cleansheet: +10 points</li>
-    <li>Forward scores a goal: +10 points</li>
-    <li>Midfielder or Forward assists a goal: +10 points</li>
-    <li>Midfielder scores a goal: +15 points</li>
-    <li>Goalkeeper or defender assists a goal: +15 points</li>
-    <li>Goalkeeper or defender scores a goal: +20 points</li>
-    <li>Goalkeeper saves a penalty: +20 points</li>
-    <li>Player is highest scoring player in match: +25 points</li>
-  </ul>
-
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Appearing in the game:</div>
+    <div class="flex min-w-[50px] min-w-none">+5 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Every 3 saves a goalkeeper makes:</div>
+    <div class="flex min-w-[50px]">+5 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Goalkeeper or defender cleansheet:</div>
+    <div class="flex min-w-[50px]">+10 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Forward scores a goal:</div>
+    <div class="flex min-w-[50px]">+10 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Midfielder or Forward assists a goal:</div>
+    <div class="flex min-w-[50px]">+10 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Midfielder scores a goal:</div>
+    <div class="flex min-w-[50px]">+15 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Goalkeeper or defender assists a goal:</div>
+    <div class="flex min-w-[50px]">+15 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Goalkeeper or defender scores a goal:</div>
+    <div class="flex min-w-[50px]">+20 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Goalkeeper saves a penalty:</div>
+    <div class="flex min-w-[50px]">+20 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Player is highest scoring player in match:</div>
+    <div class="flex min-w-[50px]">+25 points</div>
+  </div>
+  
   <p class="my-2">
     Points are also deducted for the following on field events:
   </p>
-  <ul class="list-disc ml-4">
-    <li>Player receives a red card: -20 points</li>
-    <li>Player misses a penalty: -15 points</li>
-    <li>Each time a goalkeeper or defender concedes 2 goals: -15 points</li>
-    <li>A player scores an own goal: -10 points</li>
-    <li>A player receives a yellow card: -5 points</li>
-  </ul>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Player receives a red card:</div>
+    <div class="flex min-w-[50px]">-20 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Player misses a penalty:</div>
+    <div class="flex min-w-[50px]">-15 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">Each time a goalkeeper or defender concedes 2 goals:</div>
+    <div class="flex min-w-[50px]">-15 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">A player scores an own goal:</div>
+    <div class="flex min-w-[50px]">-10 points</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex-1 mr-4 md:flex-grow-0 md:min-w-[500px]">A player receives a yellow card:</div>
+    <div class="flex min-w-[50px]">-5 points</div>
+  </div>
 
   <h2 class="default-header mt-4">Bonuses</h2>
   <p class="my-2">
@@ -76,26 +131,56 @@
     thrilling environment where every gameweek holds the promise of a shake-up
     at the top of the leaderboard. Our bonuses are as follows:
   </p>
-  <ul class="list-disc ml-4">
-    <li>
-      Goal Getter: X3 multiplier for each goal scored by a selected player.
-    </li>
-    <li>Pass Master: X3 multiplier for each assist by a selected player.</li>
-    <li>
-      No Entry: X3 multiplier for a selected goalkeeper/defender for a clean
-      sheet.
-    </li>
-    <li>Safe Hands: X3 multiplier for a goalkeeper making 5 saves.</li>
-    <li>
-      Captain Fantastic: X2 multiplier on the captain’s score for scoring a
-      goal.
-    </li>
-    <li>Team Boost: X2 multiplier for all players from a single club.</li>
-    <li>Brace Bonus: X2 multiplier for any player scoring 2+ goals.</li>
-    <li>Hat-Trick Hero: X3 multiplier for any player scoring 3+ goals.</li>
-    <li>Countrymen: Double points for players of a selected nationality.</li>
-    <li>Youth Prospects: Double points for players under 21.</li>
-  </ul>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Goal Getter:</div>
+    <div class="flex-1">X3 multiplier for each goal scored by a selected player.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Pass Master:</div>
+    <div class="flex-1">X3 multiplier for each assist by a selected player.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">No Entry:</div>
+    <div class="flex-1">X3 multiplier for a selected goalkeeper/defender for a clean sheet.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Safe Hands:</div>
+    <div class="flex-1">X3 multiplier for a goalkeeper making 5 saves.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Captain Fantastic:</div>
+    <div class="flex-1">X2 multiplier on the captain’s score for scoring a goal.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Team Boost:</div>
+    <div class="flex-1">X2 multiplier for all players from a single club.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Brace Bonus:</div>
+    <div class="flex-1">X2 multiplier for any player scoring 2+ goals.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Hat-Trick Hero:</div>
+    <div class="flex-1">X3 multiplier for any player scoring 3+ goals.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Countrymen:</div>
+    <div class="flex-1">Double points for players of a selected nationality.</div>
+  </div>
+  
+  <div class="flex flex-row">
+    <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">Youth Prospects:</div>
+    <div class="flex-1">Double points for players under 21.</div>
+  </div>
 
   <h2 class="default-header mt-4">Star Player</h2>
   <p class="my-2">
