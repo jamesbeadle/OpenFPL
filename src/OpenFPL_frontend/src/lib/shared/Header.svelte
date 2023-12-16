@@ -81,12 +81,21 @@
 
   function closeDropdownOnClickOutside(event: MouseEvent) {
     const target = event.target;
+    console.log(target);
     if (target instanceof Element) {
       if (
         !target.closest(".profile-dropdown") &&
         !target.closest(".profile-pic")
       ) {
         showProfileDropdown = false;
+      }
+
+      if (
+        menuOpen &&
+        !target.closest(".mobile-menu-panel") &&
+        !target.closest(".menu-toggle")
+      ) {
+        menuOpen = false;
       }
     }
   }
@@ -98,7 +107,10 @@
       <a href="/" class="hover:text-gray-400 flex items-center">
         <OpenFPLIcon className="h-8 w-auto" /><b class="ml-2">OpenFPL</b>
       </a>
-      <button class="md:hidden focus:outline-none" on:click={toggleMenu}>
+      <button
+        class="menu-toggle md:hidden focus:outline-none"
+        on:click={toggleMenu}
+      >
         <svg
           width="24"
           height="18"
@@ -208,7 +220,7 @@
           </li>
         </ul>
         <div
-          class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${
+          class={`mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${
             menuOpen ? "block" : "hidden"
           } md:hidden`}
         >
@@ -277,7 +289,7 @@
           </li>
         </ul>
         <div
-          class={`absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${
+          class={`mobile-menu-panel absolute top-12 right-2.5 bg-black rounded-lg shadow-md z-10 p-2 ${
             menuOpen ? "block" : "hidden"
           } md:hidden`}
         >
