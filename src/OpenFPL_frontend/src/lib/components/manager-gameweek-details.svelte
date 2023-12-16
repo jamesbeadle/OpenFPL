@@ -200,7 +200,7 @@
           <div
             class="flex justify-between p-2 border border-gray-700 py-4 bg-light-gray"
           >
-            <div class="w-1/12 md:text-center">Pos</div>
+            <div class="w-1/12 text-center">Pos</div>
             <div class="w-2/12">Player</div>
             <div class="w-1/12 hidden lg:flex">Team</div>
             <div class="w-7/12 lg:7/12 flex">
@@ -236,9 +236,14 @@
                   ? 'captain-row'
                   : ''}"
               >
-                <div class="w-1/12 md:text-center">
+                
+              <div class="w-1/12 text-center items-center justify-center flex">
+                {#if $fantasyTeam.captainId == playerDTO?.id}
+                  <ActiveCaptainIcon className='w-5 sm:w-6 md:w-7' />
+                {:else}
                   {getPositionAbbreviation(data.player.position)}
-                </div>
+                {/if}
+              </div>
                 <div class="w-2/12 flex items-center">
                   <svelte:component
                     this={getFlagComponent(playerDTO?.nationality ?? "")}
@@ -408,11 +413,18 @@
                 showDetailModal(data);
               }}
             >
-              <div
-                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
+            <div
+                class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer {$fantasyTeam.captainId ==
+                playerDTO?.id
+                  ? 'captain-row'
+                  : ''}"
               >
-                <div class="w-1/12 text-center">
-                  {getPositionAbbreviation(data.player.position)}
+                <div class="w-1/12 text-center items-center justify-center flex">
+                  {#if $fantasyTeam.captainId == playerDTO?.id}
+                    <ActiveCaptainIcon className='w-5' />
+                  {:else}
+                    {getPositionAbbreviation(data.player.position)}
+                  {/if}
                 </div>
                 <div class="w-2/12 flex items-center">
                   <span class="flex items-center">
@@ -481,21 +493,28 @@
         <p>PTS: Total Points</p>
       </div>
     </div>
-    <div class="hidden xxs:flex flex-row">
-      <p class="w-1/2">A: Appearance</p>
-      <p class="w-1/2">HSP: Highest Scoring Player</p>
-      <p class="hidden xxs:flex">GS: Goals Scored</p>
-      <p class="hidden xxs:flex">GA: Goals Assisted</p>
-      <p class="hidden xxs:flex">PS: Penalties Saved</p>
-      <p class="hidden xxs:flex">CS: Clean Sheets</p>
-      <p class="hidden xxs:flex">KS: Keeper Saves</p>
-      <p class="hidden xxs:flex">YC: Yellow Cards</p>
-      <p class="hidden xxs:flex">OG: Own Goals</p>
-      <p class="hidden xxs:flex">GC: Goals Conceded</p>
-      <p class="hidden xxs:flex">RC: Red Cards</p>
-      <p class="w-1/2">B: Bonus Points</p>
-      <p class="hidden xxs:flex">C: Captain Points</p>
-      <p class="w-1/2">PTS: Total Points</p>
-    </div>
   </div>
+  
+  <div class="hidden xxs:grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 w-full text-xs my-4">
+    <p>A: Appearance</p>
+    <p>HSP: Highest Scoring Player</p>
+    <p>GS: Goals Scored</p>
+    <p>GA: Goals Assisted</p>
+    <p>PS: Penalties Saved</p>
+    <p>CS: Clean Sheets</p>
+    <p>KS: Keeper Saves</p>
+    <p>YC: Yellow Cards</p>
+    <p>OG: Own Goals</p>
+    <p>GC: Goals Conceded</p>
+    <p>RC: Red Cards</p>
+    <p>B: Bonus Points</p>
+    <div class="flex items-center">
+      <p>C: Captain Points </p>
+      <ActiveCaptainIcon className='w-4 md:w-6 ml-2' />
+    </div>
+    <p>PTS: Total Points</p>
+    
+    
+  </div>
+  
 </div>
