@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1lo1hld"
+  version_hash: "1evudui"
 };
 function get_hooks() {
   return {};
@@ -6404,7 +6404,7 @@ const Vision = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
-      return `<div class="bg-panel rounded-md" data-svelte-h="svelte-10t3j8y"><h1 class="p-4 mx-1 default-header">OpenFPL Whitepaper</h1></div> <div><ul class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"><li${add_attribute("class", `mr-4 ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>Vision</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
+      return `<div class="bg-panel mt-4"><h1 class="p-4 mx-1 default-header" data-svelte-h="svelte-pit84d">OpenFPL Whitepaper</h1> <ul class="flex flex-nowrap overflow-x-auto bg-light-gray border-b border-gray-700 px-4 pt-2"><li${add_attribute("class", `mr-4 ${"active-tab"}`, 0)}><button${add_attribute("class", `p-2 ${"text-white"}`, 0)}>Vision</button></li> <li${add_attribute("class", `mr-4 ${""}`, 0)}><button${add_attribute(
         "class",
         `p-2 ${"text-gray-400"}`,
         0

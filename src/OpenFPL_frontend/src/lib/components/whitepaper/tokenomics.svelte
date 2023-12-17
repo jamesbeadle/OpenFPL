@@ -100,7 +100,9 @@
 
   <p class="mt-8">The financials below are in ICP:</p>
   <div class="hidden md:flex">
-    <table class="w-full text-right border-collapse striped mb-8 mt-4 text-xs lg:text-base">
+    <table
+      class="w-full text-right border-collapse striped mb-8 mt-4 text-xs lg:text-base"
+    >
       <tr class="text-right">
         <th class="text-left px-4">Year</th>
         <th>1</th>
@@ -143,7 +145,7 @@
         <td>750,000</td>
         <td>1,000,000</td>
       </tr>
-  
+
       <tr>
         <td class="text-left px-4">Merchandising</td>
         <td>5,000</td>
@@ -155,7 +157,7 @@
         <td>3,750,000</td>
         <td>5,000,000</td>
       </tr>
-  
+
       <tr>
         <td class="text-left px-4">Content Subscriptions</td>
         <td>125</td>
@@ -170,7 +172,7 @@
       <tr>
         <td colspan="9" class="h-6"><span /></td>
       </tr>
-  
+
       <tr class="font-bold">
         <td class="text-left px-4">Total</td>
         <td>6,125</td>
@@ -182,11 +184,11 @@
         <td>4,593,750</td>
         <td>6,125,000</td>
       </tr>
-  
+
       <tr>
         <td colspan="9" class="h-6"><span /></td>
       </tr>
-  
+
       <tr class="font-bold">
         <td class="text-left px-4" colspan="8">SNS Value (25%)</td>
         <td>1,531,250</td>
