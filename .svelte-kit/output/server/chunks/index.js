@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1o8cb5f"
+  version_hash: "152s2zg"
 };
 function get_hooks() {
   return {};
@@ -5270,7 +5270,6 @@ function createPlayerEventsStore() {
         gameweek
       );
     }
-    console.log(allPlayerEvents);
     let allPlayers = [];
     const unsubscribe = playerStore.subscribe((players) => {
       allPlayers = players.filter(
@@ -5649,7 +5648,6 @@ function createUserStore() {
         { "OPENFPL_BACKEND_CANISTER_ID": "bboqb-jiaaa-aaaal-qb6ea-cai", "OPENFPL_FRONTEND_CANISTER_ID": "bgpwv-eqaaa-aaaal-qb6eq-cai", "PLAYER_CANISTER_CANISTER_ID": "pec6o-uqaaa-aaaal-qb7eq-cai", "TOKEN_CANISTER_CANISTER_ID": "hwd4h-eyaaa-aaaal-qb6ra-cai", "DFX_NETWORK": "ic" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfileDTO();
-      console.log(result);
       set(result);
       return result;
     } catch (error2) {
@@ -5751,7 +5749,6 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   });
   function closeDropdownOnClickOutside(event) {
     const target = event.target;
-    console.log(target);
     if (target instanceof Element) {
       if (!target.closest(".profile-dropdown") && !target.closest(".profile-pic")) {
         showProfileDropdown = false;
@@ -6340,7 +6337,6 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const CopyIcon_svelte_svelte_type_style_lang = "";
 const profileDetail_svelte_svelte_type_style_lang = "";
 const Page$2 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {

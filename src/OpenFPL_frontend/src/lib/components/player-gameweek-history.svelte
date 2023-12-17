@@ -149,15 +149,15 @@
         >
           <div class="w-1/6 md:w-1/4 px-4">{gameweek.number}</div>
           <div class="w-2/6 md:w-1/4 md:w-1/6 px-4">
-            <a class="flex items-center" href={`/club?id=${opponent?.id}`}>
+            <div class="flex items-center">
               <BadgeIcon
                 className="w-6 mr-2"
                 primaryColour={opponent?.primaryColourHex}
                 secondaryColour={opponent?.secondaryColourHex}
                 thirdColour={opponent?.thirdColourHex}
               />
-              {opponent?.friendlyName}</a
-            >
+              {opponent?.friendlyName}
+            </div>
           </div>
           <div class="w-1/6 md:w-1/4 px-4">{gameweek.points}</div>
           <div class="w-2/6 md:w-1/4 px-4 flex items-center">

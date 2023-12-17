@@ -410,7 +410,7 @@
         <div class="items-center mt-3 flex space-x-4">
           <button
             class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-            px-4 py-2 text-white rounded-md w-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            px-4 py-2 default-button`}
             on:click={displayConfirmDataModal}
             disabled={isSubmitDisabled}>Submit Event Data</button
           >

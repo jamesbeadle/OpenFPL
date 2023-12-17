@@ -10,7 +10,7 @@
   import UpdateFavouriteTeamModal from "./update-favourite-team-modal.svelte";
   import { busyStore, Spinner } from "@dfinity/gix-components";
   import { getDateFromBigInt } from "$lib/utils/Helpers";
-    import CopyIcon from "$lib/icons/CopyIcon.svelte";
+  import CopyIcon from "$lib/icons/CopyIcon.svelte";
 
   let profile: Writable<ProfileDTO | null> = writable(null);
   let showUsernameModal: boolean = false;
@@ -42,7 +42,7 @@
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
         setProfile(value);
-        console.log(value)
+        console.log(value);
         joinedDate = getDateFromBigInt(Number(value.createDate));
       });
     } catch (error) {
@@ -88,16 +88,6 @@
 
   function cancelFavouriteTeamModal() {
     showFavouriteTeamModal = false;
-  }
-
-  function copyToClipboard(text: string) {
-    navigator.clipboard.writeText(text).then(() => {
-      toastsShow({
-        text: "Copied to clipboard.",
-        level: "success",
-        duration: 2000,
-      });
-    });
   }
 
   function clickFileInput() {
@@ -155,18 +145,17 @@
 
   async function copyTextAndShowToast() {
     try {
-      const textToCopy = $profile ? $profile.principalId : '';
+      const textToCopy = $profile ? $profile.principalId : "";
       await navigator.clipboard.writeText(textToCopy);
       toastsShow({
-        text: 'Copied to clipboard.',
-        level: 'success',
+        text: "Copied to clipboard.",
+        level: "success",
         duration: 2000,
       });
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
     }
   }
-
 </script>
 
 {#if isLoading}
@@ -246,12 +235,12 @@
             <p class="mb-1">Principal:</p>
             <div class="flex items-center">
               <button
-                  class="flex items-center text-left"
-                  on:click={copyTextAndShowToast}
-                >
-                  <span>{$profile.principalId}</span>
-                  <CopyIcon className="w-7 xs:w-6 text-left" fill="#FFFFFF" />
-                </button>
+                class="flex items-center text-left"
+                on:click={copyTextAndShowToast}
+              >
+                <span>{$profile.principalId}</span>
+                <CopyIcon className="w-7 xs:w-6 text-left" fill="#FFFFFF" />
+              </button>
             </div>
           </div>
         </div>
