@@ -56,7 +56,7 @@
       profilePicture = blobUrl;
       selectedSeason = $systemStore?.activeSeason.name ?? "-";
 
-      joinedDate = getDateFromBigInt(manager.createDate);
+      joinedDate = getDateFromBigInt(Number(manager.createDate));
       favouriteTeam =
         manager.favouriteTeamId > 0
           ? $teamStore.find((x) => x.id == manager.favouriteTeamId) ?? null

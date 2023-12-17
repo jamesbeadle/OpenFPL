@@ -22,8 +22,10 @@
       </p>
     </div>
     <div class="flex justify-end gap-3">
-      <button class="default-button fpl-cancel-btn" type="button" on:click={onClose}
-        >Cancel</button
+      <button
+        class="default-button fpl-cancel-btn"
+        type="button"
+        on:click={onClose}>Cancel</button
       >
       <button class="default-button fpl-button" on:click={onConfirm}
         >Confirm</button

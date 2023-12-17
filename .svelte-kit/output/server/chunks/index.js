@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "152s2zg"
+  version_hash: "fbknyr"
 };
 function get_hooks() {
   return {};
@@ -5859,7 +5859,7 @@ const Confirm_fixture_data_modal = create_ssr_component(($$result, $$props, $$bi
       return `<div class="p-4"><div class="flex justify-between items-center my-2"><h4 data-svelte-h="svelte-1yevh2p">Confirm Fixture Data</h4> <button class="text-black" data-svelte-h="svelte-naxdfo">✕</button></div> <div class="my-5" data-svelte-h="svelte-1kpybyt"><h1>Please confirm your fixture data.</h1> <p class="text-gray-600">You will not be able to edit your submission and entries that differ
         from the accepted consensus data will not receive $FPL rewards. If
         consensus has already been reached for the fixture your submission will
-        also not be counted.</p></div> <div class="flex justify-end gap-3"><button class="default-button fpl-cancel-btn" data-svelte-h="svelte-q7s1lw">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-1pog147">Confirm</button></div></div>`;
+        also not be counted.</p></div> <div class="flex justify-end gap-3"><button class="default-button fpl-cancel-btn" type="button" data-svelte-h="svelte-1n52tb1">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-1pog147">Confirm</button></div></div>`;
     }
   })}`;
 });
@@ -5875,7 +5875,7 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     $$bindings.closeModal(closeModal);
   return `${validate_component(Modal, "Modal").$$render($$result, { visible }, {}, {
     default: () => {
-      return `<div class="p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-rcqdii">Clear Draft</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <p data-svelte-h="svelte-idipww">Please confirm you want to clear the draft from your cache.</p> <div class="items-center py-3 flex space-x-4"><button class="default-button fpl-cancel-btn" data-svelte-h="svelte-n2ege6">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-zv2dtu">Clear</button></div></div>`;
+      return `<div class="p-4"><div class="flex justify-between items-center my-2"><h3 class="default-header" data-svelte-h="svelte-rcqdii">Clear Draft</h3> <button class="times-button" data-svelte-h="svelte-2aq7vi">×</button></div> <p data-svelte-h="svelte-idipww">Please confirm you want to clear the draft from your cache.</p> <div class="items-center py-3 flex space-x-4"><button class="default-button fpl-cancel-btn" type="button" data-svelte-h="svelte-1husm0b">Cancel</button> <button class="default-button fpl-button" data-svelte-h="svelte-zv2dtu">Clear</button></div></div>`;
     }
   })}`;
 });

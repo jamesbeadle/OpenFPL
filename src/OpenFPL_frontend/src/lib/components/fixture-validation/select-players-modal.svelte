@@ -73,7 +73,11 @@
   </div>
 
   <div class="items-center py-3 flex space-x-4">
-    <button class="default-button fpl-cancel-btn" type="button" on:click={closeModal}>
+    <button
+      class="default-button fpl-cancel-btn"
+      type="button"
+      on:click={closeModal}
+    >
       Cancel
     </button>
     <button class={`default-button fpl-purple-btn`} on:click={closeModal}
