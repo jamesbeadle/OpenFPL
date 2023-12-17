@@ -2,10 +2,10 @@
   <h1 class="default-header my-4">System Architecture</h1>
 
   <p class="my-2">
-    OpenFPL is a progressive web application, built with Svelte and Motoko. The Github is publicly available
-    at github.com/jamesbeadle/openfpl. OpenFPL's architecture is designed for
-    scalability and efficiency, ensuring robust performance even as user numbers
-    grow. Here's how the system is structured:
+    OpenFPL is a progressive web application, built with Svelte and Motoko. The
+    Github is publicly available at github.com/jamesbeadle/openfpl. OpenFPL's
+    architecture is designed for scalability and efficiency, ensuring robust
+    performance even as user numbers grow. Here's how the system is structured:
   </p>
 
   <h2 class="default-sub-header mt-4">Profile Data</h2>
