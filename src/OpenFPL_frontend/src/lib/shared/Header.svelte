@@ -81,7 +81,6 @@
 
   function closeDropdownOnClickOutside(event: MouseEvent) {
     const target = event.target;
-    console.log(target);
     if (target instanceof Element) {
       if (
         !target.closest(".profile-dropdown") &&

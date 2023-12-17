@@ -108,8 +108,6 @@ function createPlayerEventsStore() {
       );
     }
 
-    console.log(allPlayerEvents);
-
     let allPlayers: PlayerDTO[] = [];
     const unsubscribe = playerStore.subscribe((players) => {
       allPlayers = players.filter((player) =>

@@ -123,7 +123,6 @@
     });
 
     try {
-      console.log("updating profile image");
       await userStore.updateProfilePicture(file);
       await userStore.sync();
       const profileData = await userStore.getProfile();
@@ -149,7 +148,6 @@
       });
       console.error("Error updating profile image", error);
     } finally {
-      console.log("updating store");
       busyStore.stopBusy("upload-image");
     }
   }
