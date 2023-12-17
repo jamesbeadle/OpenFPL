@@ -35,7 +35,7 @@ module DTOs {
     shirtNumber : Nat8;
     value : Nat;
     dateOfBirth : Int;
-    nationality : Text;
+    nationality : T.CountryId;
     totalPoints : Int16;
   };
 
@@ -46,6 +46,8 @@ module DTOs {
     goalsScored : Int16;
     goalsConceded : Int16;
     position : Nat8;
+    nationality : T.CountryId;
+    dateOfBirth : Int;
     saves : Int16;
     assists : Int16;
     events : List.List<T.PlayerEventData>;
@@ -69,7 +71,7 @@ module DTOs {
     shirtNumber : Nat8;
     value : Nat;
     dateOfBirth : Int;
-    nationality : Text;
+    nationality : T.CountryId;
     seasonId : T.SeasonId;
     gameweeks : [PlayerGameweekDTO];
     valueHistory : [T.ValueHistory];

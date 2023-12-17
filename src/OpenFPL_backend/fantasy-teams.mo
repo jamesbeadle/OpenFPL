@@ -110,6 +110,10 @@ module {
           var teamBoostTeamId = Nat16.fromNat(0);
           var safeHandsGameweek = Nat8.fromNat(0);
           var captainFantasticGameweek = Nat8.fromNat(0);
+          
+          var countrymenGameweek = Nat8.fromNat(0);
+          var countrymenCountryId = Nat16.fromNat(0);
+          var prospectsGameweek = Nat8.fromNat(0);
           var braceBonusGameweek = Nat8.fromNat(0);
           var hatTrickHeroGameweek = Nat8.fromNat(0);
           var newCaptainId = captainId;
@@ -156,10 +160,19 @@ module {
           };
 
           if (bonusId == 7) {
-            braceBonusGameweek := gameweek;
+            prospectsGameweek := gameweek;
           };
 
           if (bonusId == 8) {
+            countrymenGameweek := gameweek;
+            countrymenCountryId := bonusPlayerId;
+          };
+
+          if (bonusId == 9) {
+            braceBonusGameweek := gameweek;
+          };
+
+          if (bonusId == 10) {
             hatTrickHeroGameweek := gameweek;
           };
 
@@ -205,6 +218,9 @@ module {
             safeHandsPlayerId = safeHandsPlayerId;
             captainFantasticGameweek = captainFantasticGameweek;
             captainFantasticPlayerId = captainFantasticPlayerId;
+            countrymenGameweek = countrymenGameweek;
+            countrymenCountryId = countrymenCountryId;
+            prospectsGameweek = prospectsGameweek;
             braceBonusGameweek = braceBonusGameweek;
             hatTrickHeroGameweek = hatTrickHeroGameweek;
             teamName = teamName;
@@ -330,6 +346,12 @@ module {
           var teamBoostTeamId = existingTeam.teamBoostTeamId;
           var safeHandsGameweek = existingTeam.safeHandsGameweek;
           var captainFantasticGameweek = existingTeam.captainFantasticGameweek;
+          
+          var countrymenGameweek = existingTeam.countrymenGameweek;
+          var countrymenCountryId = existingTeam.countrymenCountryId;
+          var prospectsGameweek = existingTeam.prospectsGameweek;
+          
+          
           var braceBonusGameweek = existingTeam.braceBonusGameweek;
           var hatTrickHeroGameweek = existingTeam.hatTrickHeroGameweek;
           var newCaptainId = captainId;
@@ -439,6 +461,9 @@ module {
             safeHandsPlayerId = safeHandsPlayerId;
             captainFantasticGameweek = captainFantasticGameweek;
             captainFantasticPlayerId = captainFantasticPlayerId;
+            countrymenGameweek = countrymenGameweek;
+            countrymenCountryId = countrymenCountryId;
+            prospectsGameweek = prospectsGameweek;
             braceBonusGameweek = braceBonusGameweek;
             hatTrickHeroGameweek = hatTrickHeroGameweek;
             favouriteTeamId = existingTeam.favouriteTeamId;
@@ -575,6 +600,9 @@ module {
           safeHandsPlayerId = userFantasyTeam.safeHandsPlayerId;
           captainFantasticGameweek = userFantasyTeam.captainFantasticGameweek;
           captainFantasticPlayerId = userFantasyTeam.captainFantasticPlayerId;
+          countrymenGameweek = userFantasyTeam.countrymenGameweek;
+          countrymenCountryId = userFantasyTeam.countrymenCountryId;
+          prospectsGameweek = userFantasyTeam.prospectsGameweek;
           braceBonusGameweek = userFantasyTeam.braceBonusGameweek;
           hatTrickHeroGameweek = userFantasyTeam.hatTrickHeroGameweek;
           teamName = userFantasyTeam.teamName;
@@ -659,6 +687,16 @@ module {
                         totalScore := totalScore * 2;
                       };
 
+                      // Countrymen
+                      if (foundSnapshot.countrymenGameweek == gameweek and foundSnapshot.countrymenCountryId == player.nationality) {
+                        totalScore := totalScore * 2;
+                      };
+                      
+                      // Prospects
+                      if (foundSnapshot.prospectsGameweek == gameweek and Utilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
+                        totalScore := totalScore * 2;
+                      };
+
                       // Brace Bonus
                       if (foundSnapshot.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
                         totalScore := totalScore * 2;
@@ -727,6 +765,9 @@ module {
                         safeHandsPlayerId = snapshot.safeHandsPlayerId;
                         captainFantasticGameweek = snapshot.captainFantasticGameweek;
                         captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
+                        countrymenGameweek = snapshot.countrymenGameweek;
+                        countrymenCountryId = snapshot.countrymenCountryId;
+                        prospectsGameweek = snapshot.prospectsGameweek;
                         braceBonusGameweek = snapshot.braceBonusGameweek;
                         hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
                         favouriteTeamId = snapshot.favouriteTeamId;
@@ -1089,6 +1130,9 @@ module {
           safeHandsPlayerId = userFantasyTeam.fantasyTeam.safeHandsPlayerId;
           captainFantasticGameweek = userFantasyTeam.fantasyTeam.captainFantasticGameweek;
           captainFantasticPlayerId = userFantasyTeam.fantasyTeam.captainFantasticPlayerId;
+          countrymenGameweek = userFantasyTeam.fantasyTeam.countrymenGameweek;
+          countrymenCountryId = userFantasyTeam.fantasyTeam.countrymenCountryId;
+          prospectsGameweek = userFantasyTeam.fantasyTeam.prospectsGameweek;
           braceBonusGameweek = userFantasyTeam.fantasyTeam.braceBonusGameweek;
           hatTrickHeroGameweek = userFantasyTeam.fantasyTeam.hatTrickHeroGameweek;
           teamName = userFantasyTeam.fantasyTeam.teamName;
@@ -1321,6 +1365,9 @@ module {
         safeHandsPlayerId = 0;
         captainFantasticGameweek = 0;
         captainFantasticPlayerId = 0;
+        countrymenGameweek = 0;
+        countrymenCountryId = 0;
+        prospectsGameweek = 0;
         braceBonusGameweek = 0;
         hatTrickHeroGameweek = 0;
         points = 0;
@@ -1428,6 +1475,9 @@ module {
             safeHandsPlayerId = foundTeam.fantasyTeam.safeHandsPlayerId;
             captainFantasticGameweek = foundTeam.fantasyTeam.captainFantasticGameweek;
             captainFantasticPlayerId = foundTeam.fantasyTeam.captainFantasticPlayerId;
+            countrymenGameweek = foundTeam.fantasyTeam.countrymenGameweek;
+            countrymenCountryId = foundTeam.fantasyTeam.countrymenCountryId;
+            prospectsGameweek = foundTeam.fantasyTeam.prospectsGameweek;
             braceBonusGameweek = foundTeam.fantasyTeam.braceBonusGameweek;
             hatTrickHeroGameweek = foundTeam.fantasyTeam.hatTrickHeroGameweek;
           };
@@ -1468,6 +1518,9 @@ module {
             safeHandsPlayerId = foundTeam.fantasyTeam.safeHandsPlayerId;
             captainFantasticGameweek = foundTeam.fantasyTeam.captainFantasticGameweek;
             captainFantasticPlayerId = foundTeam.fantasyTeam.captainFantasticPlayerId;
+            countrymenGameweek = foundTeam.fantasyTeam.countrymenGameweek;
+            countrymenCountryId = foundTeam.fantasyTeam.countrymenCountryId;
+            prospectsGameweek = foundTeam.fantasyTeam.prospectsGameweek;
             braceBonusGameweek = foundTeam.fantasyTeam.braceBonusGameweek;
             hatTrickHeroGameweek = foundTeam.fantasyTeam.hatTrickHeroGameweek;
           };
@@ -1501,6 +1554,9 @@ module {
         safeHandsPlayerId = 0;
         captainFantasticGameweek = 0;
         captainFantasticPlayerId = 0;
+        countrymenGameweek = 0;
+        countrymenCountryId = 0;
+        prospectsGameweek = 0;
         braceBonusGameweek = 0;
         hatTrickHeroGameweek = 0;
         teamName = "";
@@ -1695,6 +1751,9 @@ module {
           safeHandsPlayerId = currentTeam.fantasyTeam.safeHandsPlayerId;
           captainFantasticGameweek = currentTeam.fantasyTeam.captainFantasticGameweek;
           captainFantasticPlayerId = currentTeam.fantasyTeam.captainFantasticPlayerId;
+          countrymenGameweek = currentTeam.fantasyTeam.countrymenGameweek;
+          countrymenCountryId = currentTeam.fantasyTeam.countrymenCountryId;
+          prospectsGameweek = currentTeam.fantasyTeam.prospectsGameweek;
           braceBonusGameweek = currentTeam.fantasyTeam.braceBonusGameweek;
           hatTrickHeroGameweek = currentTeam.fantasyTeam.hatTrickHeroGameweek;
         };

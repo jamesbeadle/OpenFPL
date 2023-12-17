@@ -109,100 +109,18 @@ module {
     return Nat8.fromNat(month);
   };
 
-  public func isNationalityValid(checkNationality : Text) : Bool {
-    let nationalities = List.fromArray<Text>([
-      "Albania",
-      "Algeria",
-      "Argentina",
-      "Australia",
-      "Austria",
-      "Belgium",
-      "Bosnia and Herzegovina",
-      "Brazil",
-      "Burkina Faso",
-      "Cameroon",
-      "Canada",
-      "Colombia",
-      "Costa Rica",
-      "Ivory Coast",
-      "Croatia",
-      "Czech Republic",
-      "Denmark",
-      "DR Congo",
-      "Ecuador",
-      "Egypt",
-      "England",
-      "Estonia",
-      "Finland",
-      "France",
-      "Gabon",
-      "Germany",
-      "Ghana",
-      "Greece",
-      "Grenada",
-      "Guinea",
-      "Iceland",
-      "Iran",
-      "Ireland",
-      "Israel",
-      "Italy",
-      "Ivory Coast",
-      "Jamaica",
-      "Japan",
-      "Macedonia",
-      "Mali",
-      "Mexico",
-      "Montserrat",
-      "Morocco",
-      "Netherlands",
-      "Nigeria",
-      "Northern Ireland",
-      "Norway",
-      "Paraguay",
-      "Poland",
-      "Portugal",
-      "Scotland",
-      "Senegal",
-      "Serbia",
-      "Slovakia",
-      "South Africa",
-      "South Korea",
-      "Spain",
-      "Sweden",
-      "Switzerland",
-      "Tunisia",
-      "Turkey",
-      "Ukraine",
-      "United States",
-      "Uruguay",
-      "Wales",
-      "Zimbabwe",
-    ]);
-
-    for (nationality in Iter.fromList(nationalities)) {
-      if (nationality == checkNationality) {
-        return true;
-      };
-    };
-
-    return false;
-  };
-
   public func calculateAgeFromUnix(dobUnix : Int) : Nat {
-    let secondsInADay : Int = 86400;
+     let secondsInADay : Int = 86_400;
     let currentUnixTime : Int = Time.now();
 
-    let currentDays : Int = currentUnixTime / secondsInADay;
-    let dobDays : Int = dobUnix / secondsInADay;
+    let currentDays : Int = currentUnixTime / (1_000_000_000 * secondsInADay);
+    let dobDays : Int = dobUnix / (1_000_000_000 * secondsInADay);
 
-    let currentYear : Int = 1970 + currentDays / 365;
-    let dobYear : Int = 1970 + dobDays / 365;
-
-    let currentLeapYears : Int = (currentYear - 1969) / 4 - (currentYear - 1901) / 100 + (currentYear - 1600) / 400;
-    let dobLeapYears : Int = (dobYear - 1969) / 4 - (dobYear - 1901) / 100 + (dobYear - 1600) / 400;
-
-    let currentDayOfYear : Int = currentDays - (currentYear - 1970) * 365 - currentLeapYears;
-    let dobDayOfYear : Int = dobDays - (dobYear - 1970) * 365 - dobLeapYears;
+    let currentYear : Int = getYear(currentDays);
+    let dobYear : Int = getYear(dobDays);
+   
+    let currentDayOfYear : Int = getDayOfYear(currentDays, currentYear);
+    let dobDayOfYear : Int = getDayOfYear(dobDays, dobYear);
 
     var age : Int = currentYear - dobYear;
     if (currentDayOfYear < dobDayOfYear) {
@@ -210,7 +128,35 @@ module {
     };
 
     return Nat64.toNat(Int64.toNat64(Int64.fromInt(age)));
+
   };
+
+  private func getYear(days : Int) : Int {
+    var years = 1970;
+    var dayCounter = days;
+    label leapLoop while (dayCounter > 365) {
+      if (years % 4 == 0 and (years % 100 != 0 or years % 400 == 0) and dayCounter > 366) {
+        dayCounter -= 366;
+      } else {
+        dayCounter -= 365;
+      };
+      years += 1;
+    };
+    return years;
+  };
+      
+  private func getDayOfYear(days : Int, year : Int) : Int {
+      var dayCounter = days;
+      for (y in Iter.range(1970, year - 1)) {
+          if (y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)) {
+              dayCounter -= 366; // Leap year
+          } else {
+              dayCounter -= 365; // Non-leap year
+          };
+      };
+      return dayCounter;
+  };
+
 
   public func validateHexColor(hex : Text) : Bool {
 

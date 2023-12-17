@@ -143,10 +143,13 @@
           ? $fantasyTeam.captainFantasticGameweek
           : false;
       case 7:
-        /* Coming soon: return $fantasyTeam.prospectsGameweek && $fantasyTeam.prospectsGameweek > 0 ? $fantasyTeam.prospectsGameweek : false; */
-        return false;
+        return $fantasyTeam.prospectsGameweek && 
+          $fantasyTeam.prospectsGameweek > 0 
+            ? $fantasyTeam.prospectsGameweek : false;
       case 8:
-        /* Coming soon: $fantasyTeam.countrymenGameweek && $fantasyTeam.countrymenGameweek > 0 ? $fantasyTeam.countrymenGameweek : false */
+        $fantasyTeam.countrymenGameweek && 
+          $fantasyTeam.countrymenGameweek > 0 
+            ? $fantasyTeam.countrymenGameweek : false;
         return false;
       case 9:
         return $fantasyTeam.braceBonusGameweek &&

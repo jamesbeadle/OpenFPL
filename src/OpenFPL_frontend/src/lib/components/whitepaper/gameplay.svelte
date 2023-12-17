@@ -237,7 +237,7 @@
 
   <div class="flex flex-row">
     <div class="flex mr-4 min-w-[100px] xs:min-w-[110px] sm:min-w-[150px]">
-      Youth Prospects:
+      Prospects:
     </div>
     <div class="flex-1">Double points for players under 21.</div>
   </div>

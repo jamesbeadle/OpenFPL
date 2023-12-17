@@ -442,6 +442,20 @@ function createPlayerEventsStore() {
     }
 
     if (
+      fantasyTeam.countrymenGameweek === gameweekData.gameweek &&
+      fantasyTeam.countrymenCountryId === gameweekData.player.nationality
+    ) {
+      bonusPoints = points * 2;
+    }
+
+    if (
+      fantasyTeam.prospectsGameweek === gameweekData.gameweek &&
+      getPlayerAge(gameweekData.player.dateOfBirth) < 21
+    ) {
+      bonusPoints = points * 2;
+    }
+
+    if (
       fantasyTeam.braceBonusGameweek === gameweekData.gameweek &&
       gameweekData.goals >= 2
     ) {

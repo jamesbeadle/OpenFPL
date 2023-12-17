@@ -595,6 +595,8 @@
       team.goalGetterGameweek,
       team.noEntryGameweek,
       team.safeHandsGameweek,
+      team.countrymenGameweek,
+      team.prospectsGameweek
     ];
 
     for (const gw of bonusGameweeks) {

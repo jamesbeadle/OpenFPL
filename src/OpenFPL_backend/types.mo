@@ -8,6 +8,7 @@ module Types {
   public type PlayerId = Nat16;
   public type TeamId = Nat16;
   public type ProposalId = Nat;
+  public type CountryId = Nat16;
 
   public type Error = {
     #NotFound;
@@ -81,7 +82,7 @@ module Types {
     shirtNumber : Nat8;
     value : Nat; //Value in £0.25m units
     dateOfBirth : Int;
-    nationality : Text;
+    nationality : CountryId;
     seasons : List.List<PlayerSeason>;
     valueHistory : List.List<ValueHistory>;
     onLoan : Bool;
@@ -150,6 +151,9 @@ module Types {
     safeHandsPlayerId : PlayerId;
     captainFantasticGameweek : GameweekNumber;
     captainFantasticPlayerId : PlayerId;
+    countrymenGameweek : GameweekNumber;
+    countrymenCountryId : CountryId;
+    prospectsGameweek : GameweekNumber;
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
   };
@@ -186,6 +190,9 @@ module Types {
     safeHandsPlayerId : PlayerId;
     captainFantasticGameweek : GameweekNumber;
     captainFantasticPlayerId : PlayerId;
+    countrymenGameweek : GameweekNumber;
+    countrymenCountryId : CountryId;
+    prospectsGameweek : GameweekNumber;
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
     points : Int16;
@@ -276,6 +283,14 @@ module Types {
     activeGameweek : GameweekNumber;
     activeMonth : Nat8;
     focusGameweek : GameweekNumber;
+  };
+
+
+
+  public type Country = {
+      id: CountryId;
+      name: Text;
+      code: Text;
   };
 
 };

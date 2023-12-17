@@ -155,7 +155,6 @@
         });
         break;
       case 7:
-        /* Coming Soon
         fantasyTeam.update(team => {
           if (!team) return team;
           return {
@@ -164,10 +163,8 @@
             playerIds: team.playerIds || new Uint16Array(11)
           };
         });
-        */
         break;
       case 8:
-        /* Coming Soon
         fantasyTeam.update(team => {
           if (!team) return team;
           return {
@@ -177,7 +174,6 @@
             playerIds: team.playerIds || new Uint16Array(11)
           };
         });
-        */
         break;
       case 9:
         fantasyTeam.update((team) => {
