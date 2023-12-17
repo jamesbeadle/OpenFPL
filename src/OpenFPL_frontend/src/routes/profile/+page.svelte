@@ -37,20 +37,10 @@
               on:click={() => setActiveTab("details")}>Details</button
             >
           </li>
-          <li class={`mr-4 ${activeTab === "gameweeks" ? "active-tab" : ""}`}>
-            <button
-              class={`p-2 ${
-                activeTab === "gameweeks" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("gameweeks")}>Gameweeks</button
-            >
-          </li>
         </ul>
 
         {#if activeTab === "details"}
           <ProfileDetail />
-        {:else if activeTab === "gameweeks"}
-          <ManagerGameweeks {viewGameweekDetail} />
         {/if}
       </div>
     </div>
