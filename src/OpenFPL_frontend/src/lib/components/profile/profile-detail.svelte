@@ -42,7 +42,8 @@
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
         setProfile(value);
-        joinedDate = getDateFromBigInt(value.createDate);
+        console.log(value)
+        joinedDate = getDateFromBigInt(Number(value.createDate));
       });
     } catch (error) {
       toastsError({
