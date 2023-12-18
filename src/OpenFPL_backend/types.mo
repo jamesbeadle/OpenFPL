@@ -22,15 +22,10 @@ module Types {
   public type Profile = {
     principalName : Text;
     displayName : Text;
-    icpDepositAddress : Blob;
-    fplDepositAddress : Blob;
     termsAccepted : Bool;
-    profilePicture : Blob;
+    profilePictureCanisterId : Text;
     favouriteTeamId : TeamId;
-    membershipType : Nat8;
     createDate : Int;
-    subscriptionDate : Int;
-    reputation : Nat32; //CAN REMOVE
   };
 
   public type Season = {

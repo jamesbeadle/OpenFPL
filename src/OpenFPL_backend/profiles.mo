@@ -12,6 +12,7 @@ module {
   public class Profiles() {
 
     private var userProfiles : HashMap.HashMap<Text, T.Profile> = HashMap.HashMap<Text, T.Profile>(100, Text.equal, Text.hash);
+    private var userProfilePictures : HashMap.HashMap<Text, Blob> = HashMap.HashMap<Text, Blob>(100, Text.equal, Text.hash);
 
     public func setData(stable_profiles : [(Text, T.Profile)]) {
       userProfiles := HashMap.fromIter<Text, T.Profile>(
@@ -30,6 +31,10 @@ module {
       return userProfiles.get(principalName);
     };
 
+    public func getProfilePicture(principalName : Text) : ?Blob {
+      return userProfilePictures.get(principalName);
+    };
+
     public func isWalletValid(walletAddress : Text) : Bool {
       let account_id = Account.decode(walletAddress);
       switch account_id {
@@ -46,20 +51,15 @@ module {
       return false;
     };
 
-    public func createProfile(principalName : Text, displayName : Text, icpDepositAddress : Account.AccountIdentifier, fplDepositAddress : Account.AccountIdentifier) : () {
+    public func createProfile(principalName : Text, displayName : Text) : () {
       if (userProfiles.get(principalName) == null) {
         let newProfile : T.Profile = {
           principalName = principalName;
           displayName = displayName;
-          icpDepositAddress = icpDepositAddress;
-          fplDepositAddress = fplDepositAddress;
-          profilePicture = Blob.fromArray([]);
+          profilePictureCanisterId = "";
           termsAccepted = false;
           favouriteTeamId = 0;
-          membershipType = 0;
-          subscriptionDate = 0;
           createDate = now();
-          reputation = 0;
         };
 
         userProfiles.put(principalName, newProfile);
@@ -113,15 +113,10 @@ module {
           let updatedProfile : T.Profile = {
             principalName = existingProfile.principalName;
             displayName = displayName;
-            icpDepositAddress = existingProfile.icpDepositAddress;
-            fplDepositAddress = existingProfile.fplDepositAddress;
-            profilePicture = existingProfile.profilePicture;
+            profilePictureCanisterId = existingProfile.profilePictureCanisterId;
             termsAccepted = existingProfile.termsAccepted;
             favouriteTeamId = existingProfile.favouriteTeamId;
-            membershipType = existingProfile.membershipType;
-            subscriptionDate = existingProfile.subscriptionDate;
             createDate = existingProfile.createDate;
-            reputation = existingProfile.reputation;
           };
 
           userProfiles.put(principalName, updatedProfile);
@@ -141,15 +136,10 @@ module {
           let updatedProfile : T.Profile = {
             principalName = existingProfile.principalName;
             displayName = existingProfile.displayName;
-            icpDepositAddress = existingProfile.icpDepositAddress;
-            fplDepositAddress = existingProfile.fplDepositAddress;
-            profilePicture = existingProfile.profilePicture;
+            profilePictureCanisterId = existingProfile.profilePictureCanisterId;
             termsAccepted = existingProfile.termsAccepted;
             favouriteTeamId = favouriteTeamId;
-            membershipType = existingProfile.membershipType;
-            subscriptionDate = existingProfile.subscriptionDate;
             createDate = existingProfile.createDate;
-            reputation = existingProfile.reputation;
           };
 
           userProfiles.put(principalName, updatedProfile);
@@ -165,21 +155,20 @@ module {
           return #err(#NotFound);
         };
         case (?foundProfile) {
+          userProfilePictures.put(principalName, profilePicture);
+
+          /*
           let updatedProfile : T.Profile = {
             principalName = foundProfile.principalName;
             displayName = foundProfile.displayName;
-            icpDepositAddress = foundProfile.icpDepositAddress;
-            fplDepositAddress = foundProfile.fplDepositAddress;
             termsAccepted = foundProfile.termsAccepted;
-            profilePicture = profilePicture;
+            profilePictureCanisterId = canisterId;
             favouriteTeamId = foundProfile.favouriteTeamId;
             createDate = foundProfile.createDate;
-            subscriptionDate = foundProfile.subscriptionDate;
-            membershipType = foundProfile.membershipType;
-            reputation = foundProfile.reputation;
           };
+          */
 
-          userProfiles.put(principalName, updatedProfile);
+          userProfilePictures.put(principalName, profilePicture);
           return #ok(());
         };
       };

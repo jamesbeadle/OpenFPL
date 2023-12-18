@@ -663,5 +663,43 @@ module {
       );
     };
 
+    public func postPoneFixtuure() {
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(season : T.Season) : T.Season {
+          if (season.id == 1) {
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+              gameweeks = List.map<T.Gameweek, T.Gameweek>(
+                season.gameweeks,
+                func(gameweek : T.Gameweek) : T.Gameweek {
+                  switch (gameweek.number) {
+                    case 17 {
+                      return {
+                        number = gameweek.number;
+                        canisterId = gameweek.canisterId;
+                        fixtures = List.filter<T.Fixture>(
+                          gameweek.fixtures,
+                          func(fixture : T.Fixture) : Bool {
+                            return fixture.id != 161;
+                          },
+                        );
+                      };
+                    };
+                    case _ {
+                      return gameweek;
+                    };
+                  };
+                },
+              );
+              postponedFixtures = List.append(season.postponedFixtures, List.fromArray<T.Fixture>([{ id = 161; seasonId = 1; gameweek = 17; kickOff = 1702738800000000000; homeTeamId = 3; awayTeamId = 12; homeGoals = 0; awayGoals = 0; status = 0; events = List.nil<T.PlayerEventData>(); highestScoringPlayerId = 0 }]));
+            };
+          } else { return season };
+        },
+      );
+    }
+
   };
 };

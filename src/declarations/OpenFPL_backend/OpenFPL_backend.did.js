@@ -335,6 +335,7 @@ export const idlFactory = ({ IDL }) => {
       ["query"]
     ),
     isDisplayNameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
+    movePostponedFixture: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func(
       [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
       [Result],
