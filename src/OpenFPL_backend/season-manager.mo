@@ -380,5 +380,10 @@ module {
     public func updateFixtureStatus(fixtureId : T.FixtureId, status : Nat8) : async () {
       let updatedFixture = await seasonsInstance.updateStatus(activeSeasonId, activeGameweek, fixtureId, status);
     };
+
+    public func postPoneFixtuure() {
+      seasonsInstance.postPoneFixtuure();
+    };
+
   };
 };

@@ -200,14 +200,9 @@ actor Self {
     switch (profile) {
       case (null) { return null };
       case (?p) {
-        icpDepositAddress := p.icpDepositAddress;
-        fplDepositAddress := p.fplDepositAddress;
         displayName := p.displayName;
-        membershipType := p.membershipType;
-        profilePicture := p.profilePicture;
         favouriteTeamId := p.favouriteTeamId;
         createDate := p.createDate;
-        reputation := p.reputation;
         canUpdateFavouriteTeam := p.favouriteTeamId == 0 or not seasonManager.seasonActive();
       };
     };
@@ -235,7 +230,7 @@ actor Self {
     var existingProfile = profilesInstance.getProfile(Principal.toText(caller));
     switch (existingProfile) {
       case (null) {
-        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
+        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
       };
       case (_) {};
     };
@@ -256,11 +251,17 @@ actor Self {
     switch (profile) {
       case (null) {};
       case (?p) {
+        
+        let existingProfilePicture = profilesInstance.getProfilePicture(principalId);
+        switch(existingProfilePicture){
+          case (null) {};
+          case (?foundPicture){
+            profilePicture := foundPicture;
+          }
+        };
+        
         displayName := p.displayName;
-        membershipType := p.membershipType;
-        profilePicture := p.profilePicture;
         favouriteTeamId := p.favouriteTeamId;
-        reputation := p.reputation;
       };
     };
 
@@ -293,7 +294,7 @@ actor Self {
     var profile = profilesInstance.getProfile(Principal.toText(caller));
     switch (profile) {
       case (null) {
-        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
+        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
         profile := profilesInstance.getProfile(Principal.toText(caller));
       };
       case (?foundProfile) {};
@@ -309,7 +310,7 @@ actor Self {
     var profile = profilesInstance.getProfile(Principal.toText(caller));
     switch (profile) {
       case (null) {
-        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
+        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
         profile := profilesInstance.getProfile(Principal.toText(caller));
       };
       case (?foundProfile) {
@@ -332,56 +333,6 @@ actor Self {
     };
 
     return profilesInstance.updateProfilePicture(Principal.toText(caller), profilePicture);
-  };
-
-  public shared ({ caller }) func getAccountBalanceDTO() : async DTOs.AccountBalanceDTO {
-
-    assert not Principal.isAnonymous(caller);
-    let principalName = Principal.toText(caller);
-    var icpBalance = Nat64.fromNat(0);
-    var fplBalance = Nat64.fromNat(0);
-
-    icpBalance := await bookInstance.getUserAccountBalance(Principal.fromActor(Self), caller);
-
-    let tokenCanisterUser : T.Account = {
-      owner = Principal.fromActor(tokenCanister);
-      subaccount = Account.principalToSubaccount(caller);
-    };
-
-    fplBalance := Nat64.fromNat(await tokenCanister.icrc1_balance_of(tokenCanisterUser));
-
-    let accountBalanceDTO : DTOs.AccountBalanceDTO = {
-      icpBalance = icpBalance;
-      fplBalance = fplBalance;
-    };
-
-    return accountBalanceDTO;
-  };
-
-  private func getICPDepositAccount(caller : Principal) : Account.AccountIdentifier {
-    Account.accountIdentifier(Principal.fromActor(Self), Account.principalToSubaccount(caller));
-  };
-
-  private func getFPLDepositAccount(caller : Principal) : Account.AccountIdentifier {
-    Account.accountIdentifier(Principal.fromActor(tokenCanister), Account.principalToSubaccount(caller));
-  };
-
-  public shared ({ caller }) func withdrawICP(amount : Float, withdrawalAddress : Text) : async Result.Result<(), T.Error> {
-    assert not Principal.isAnonymous(caller);
-
-    let userProfile = profilesInstance.getProfile(Principal.toText(caller));
-
-    switch userProfile {
-      case (null) {
-        return #err(#NotFound);
-      };
-      case (?profile) {
-        if (not profilesInstance.isWalletValid(withdrawalAddress)) {
-          return #err(#NotAllowed);
-        };
-        return await bookInstance.withdrawICP(Principal.fromActor(Self), caller, amount, withdrawalAddress);
-      };
-    };
   };
 
   //Season Functions
@@ -571,7 +522,7 @@ actor Self {
     switch (userProfile) {
       case (null) {
 
-        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller), getICPDepositAccount(caller), getFPLDepositAccount(caller));
+        profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
         let newProfile = profilesInstance.getProfile(Principal.toText(caller));
         switch (newProfile) {
           case (null) {};
@@ -1439,8 +1390,17 @@ actor Self {
     switch (userProfile) {
       case (null) {};
       case (?foundProfile) {
+
+        let existingProfilePicture = profilesInstance.getProfilePicture(managerId);
+        switch(existingProfilePicture){
+          case (null) {};
+          case (?foundPicture){
+            profilePicture := foundPicture;
+          }
+        };
+
+
         displayName := foundProfile.displayName;
-        profilePicture := foundProfile.profilePicture;
         favouriteTeamId := foundProfile.favouriteTeamId;
         createDate := foundProfile.createDate;
 
@@ -1881,5 +1841,14 @@ actor Self {
     await seasonManager.updateFixture(updatedFixture);
     await updateHashForCategory("fixtures");
   };
+  /*
+  public shared ({ caller }) func movePostponedFixture() : async () {
+
+    //move postponed fixture id 161
+    seasonManager.postPoneFixtuure();
+    await updateHashForCategory("fixtures");
+
+  };
+  */
 
 };

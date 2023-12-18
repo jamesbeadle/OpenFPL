@@ -288,6 +288,7 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >;
   isDisplayNameValid: ActorMethod<[string], boolean>;
+  movePostponedFixture: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result
