@@ -4,6 +4,12 @@ export interface AccountBalanceDTO {
   icpBalance: bigint;
   fplBalance: bigint;
 }
+export interface CountryDTO {
+  id: CountryId;
+  code: string;
+  name: string;
+}
+export type CountryId = number;
 export interface DataCache {
   hash: string;
   category: string;
@@ -19,6 +25,7 @@ export type Error =
 export interface FantasyTeam {
   playerIds: Uint16Array | number[];
   teamName: string;
+  countrymenCountryId: CountryId;
   goalGetterPlayerId: PlayerId;
   favouriteTeamId: TeamId;
   hatTrickHeroGameweek: GameweekNumber;
@@ -26,6 +33,7 @@ export interface FantasyTeam {
   teamBoostGameweek: GameweekNumber;
   captainFantasticGameweek: GameweekNumber;
   teamBoostTeamId: TeamId;
+  countrymenGameweek: GameweekNumber;
   noEntryPlayerId: PlayerId;
   safeHandsPlayerId: PlayerId;
   braceBonusGameweek: GameweekNumber;
@@ -34,6 +42,7 @@ export interface FantasyTeam {
   bankBalance: bigint;
   captainFantasticPlayerId: PlayerId;
   noEntryGameweek: GameweekNumber;
+  prospectsGameweek: GameweekNumber;
   safeHandsGameweek: GameweekNumber;
   principalId: string;
   passMasterPlayerId: PlayerId;
@@ -42,6 +51,7 @@ export interface FantasyTeam {
 export interface FantasyTeamSnapshot {
   playerIds: Uint16Array | number[];
   teamName: string;
+  countrymenCountryId: CountryId;
   goalGetterPlayerId: PlayerId;
   favouriteTeamId: TeamId;
   hatTrickHeroGameweek: GameweekNumber;
@@ -49,6 +59,7 @@ export interface FantasyTeamSnapshot {
   teamBoostGameweek: GameweekNumber;
   captainFantasticGameweek: GameweekNumber;
   teamBoostTeamId: TeamId;
+  countrymenGameweek: GameweekNumber;
   noEntryPlayerId: PlayerId;
   safeHandsPlayerId: PlayerId;
   braceBonusGameweek: GameweekNumber;
@@ -58,6 +69,7 @@ export interface FantasyTeamSnapshot {
   captainFantasticPlayerId: PlayerId;
   gameweek: GameweekNumber;
   noEntryGameweek: GameweekNumber;
+  prospectsGameweek: GameweekNumber;
   safeHandsGameweek: GameweekNumber;
   principalId: string;
   passMasterPlayerId: PlayerId;
@@ -211,7 +223,7 @@ export interface _SERVICE {
   createProfile: ActorMethod<[], undefined>;
   executeAddInitialFixtures: ActorMethod<[SeasonId, Array<Fixture>], Result>;
   executeCreatePlayer: ActorMethod<
-    [TeamId, number, string, string, number, bigint, bigint, string],
+    [TeamId, number, string, string, number, bigint, bigint, CountryId],
     Result
   >;
   executeLoanPlayer: ActorMethod<[PlayerId, TeamId, bigint], Result>;
@@ -239,7 +251,7 @@ export interface _SERVICE {
   executeTransferPlayer: ActorMethod<[PlayerId, TeamId], Result>;
   executeUnretirePlayer: ActorMethod<[PlayerId], Result>;
   executeUpdatePlayer: ActorMethod<
-    [PlayerId, number, string, string, number, bigint, string],
+    [PlayerId, number, string, string, number, bigint, CountryId],
     Result
   >;
   executeUpdateTeam: ActorMethod<
@@ -256,6 +268,7 @@ export interface _SERVICE {
     [number, number],
     Array<PaginatedClubLeaderboard>
   >;
+  getCountries: ActorMethod<[], Array<CountryDTO>>;
   getDataHashes: ActorMethod<[], Array<DataCache>>;
   getFantasyTeam: ActorMethod<[], FantasyTeam>;
   getFantasyTeamForGameweek: ActorMethod<
@@ -303,7 +316,7 @@ export interface _SERVICE {
   updateTeamValueInfo: ActorMethod<[], undefined>;
   validateAddInitialFixtures: ActorMethod<[SeasonId, Array<Fixture>], Result>;
   validateCreatePlayer: ActorMethod<
-    [TeamId, number, string, string, number, bigint, bigint, string],
+    [TeamId, number, string, string, number, bigint, bigint, CountryId],
     Result
   >;
   validateLoanPlayer: ActorMethod<[PlayerId, TeamId, bigint], Result>;
@@ -328,7 +341,7 @@ export interface _SERVICE {
   validateTransferPlayer: ActorMethod<[PlayerId, TeamId], Result>;
   validateUnretirePlayer: ActorMethod<[PlayerId], Result>;
   validateUpdatePlayer: ActorMethod<
-    [PlayerId, number, string, string, number, bigint, string],
+    [PlayerId, number, string, string, number, bigint, CountryId],
     Result
   >;
   validateUpdateTeam: ActorMethod<

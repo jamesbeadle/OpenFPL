@@ -303,7 +303,7 @@ actor Self {
     var shirtNumber : Nat8 = 0;
     var value : Nat = 0;
     var dateOfBirth : Int = 0;
-    var nationality: T.CountryId = 0;
+    var nationality : T.CountryId = 0;
     var valueHistory : [T.ValueHistory] = [];
     var onLoan = false;
     var parentTeamId : T.TeamId = 0;

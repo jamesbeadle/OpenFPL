@@ -22,4 +22,6 @@ export interface GameweekData {
   assistPoints: number;
   goalsConcededPoints: number;
   cleanSheetPoints: number;
+  isCaptain: boolean;
+  nationality: string;
 }

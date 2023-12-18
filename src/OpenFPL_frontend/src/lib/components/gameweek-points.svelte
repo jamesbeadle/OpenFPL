@@ -85,7 +85,7 @@
       selectedGameweekData = gameweekData;
       let playerTeamId = gameweekData.player.teamId;
       selectedTeam = $teamStore.find((x) => x.id === playerTeamId)!;
-
+      
       let playerFixture = $fixtureStore.find(
         (x) =>
           x.gameweek === gameweekData.gameweek &&

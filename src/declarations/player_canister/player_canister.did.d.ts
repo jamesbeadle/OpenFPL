@@ -1,5 +1,6 @@
 import type { ActorMethod } from "@dfinity/agent";
 
+export type CountryId = number;
 export interface DataCache {
   hash: string;
   category: string;
@@ -38,7 +39,7 @@ export interface Player {
   injuryHistory: List;
   transferHistory: List_4;
   isInjured: boolean;
-  nationality: string;
+  nationality: CountryId;
   retirementDate: bigint;
   valueHistory: List_5;
   shirtNumber: number;
@@ -53,7 +54,7 @@ export interface PlayerDTO {
   id: number;
   value: bigint;
   dateOfBirth: bigint;
-  nationality: string;
+  nationality: CountryId;
   shirtNumber: number;
   totalPoints: number;
   teamId: number;
@@ -69,7 +70,7 @@ export interface PlayerDetailDTO {
   seasonId: SeasonId;
   isInjured: boolean;
   gameweeks: Array<PlayerGameweekDTO>;
-  nationality: string;
+  nationality: CountryId;
   retirementDate: bigint;
   valueHistory: Array<ValueHistory>;
   shirtNumber: number;
@@ -111,6 +112,8 @@ export interface PlayerPointsDTO {
 export interface PlayerScoreDTO {
   id: number;
   assists: number;
+  dateOfBirth: bigint;
+  nationality: CountryId;
   goalsScored: number;
   saves: number;
   goalsConceded: number;
@@ -142,7 +145,7 @@ export interface ValueHistory {
 export interface _SERVICE {
   calculatePlayerScores: ActorMethod<[number, number, Fixture], Fixture>;
   createPlayer: ActorMethod<
-    [TeamId, number, string, string, number, bigint, bigint, string],
+    [TeamId, number, string, string, number, bigint, bigint, CountryId],
     undefined
   >;
   getActivePlayers: ActorMethod<[], Array<PlayerDTO>>;
@@ -183,7 +186,7 @@ export interface _SERVICE {
   unretirePlayer: ActorMethod<[PlayerId], undefined>;
   updateHashForCategory: ActorMethod<[string], undefined>;
   updatePlayer: ActorMethod<
-    [PlayerId, number, string, string, number, bigint, string],
+    [PlayerId, number, string, string, number, bigint, CountryId],
     undefined
   >;
   updatePlayerEventDataCache: ActorMethod<[], undefined>;

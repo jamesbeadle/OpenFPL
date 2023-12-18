@@ -11,6 +11,7 @@ import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Int64 "mo:base/Int64";
 import Text "mo:base/Text";
+import Countries "Countries";
 
 module {
   public let eqNat8 = func(a : Nat8, b : Nat8) : Bool {
@@ -110,7 +111,7 @@ module {
   };
 
   public func calculateAgeFromUnix(dobUnix : Int) : Nat {
-     let secondsInADay : Int = 86_400;
+    let secondsInADay : Int = 86_400;
     let currentUnixTime : Int = Time.now();
 
     let currentDays : Int = currentUnixTime / (1_000_000_000 * secondsInADay);
@@ -118,7 +119,7 @@ module {
 
     let currentYear : Int = getYear(currentDays);
     let dobYear : Int = getYear(dobDays);
-   
+
     let currentDayOfYear : Int = getDayOfYear(currentDays, currentYear);
     let dobDayOfYear : Int = getDayOfYear(dobDays, dobYear);
 
@@ -144,19 +145,18 @@ module {
     };
     return years;
   };
-      
-  private func getDayOfYear(days : Int, year : Int) : Int {
-      var dayCounter = days;
-      for (y in Iter.range(1970, year - 1)) {
-          if (y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)) {
-              dayCounter -= 366; // Leap year
-          } else {
-              dayCounter -= 365; // Non-leap year
-          };
-      };
-      return dayCounter;
-  };
 
+  private func getDayOfYear(days : Int, year : Int) : Int {
+    var dayCounter = days;
+    for (y in Iter.range(1970, year - 1)) {
+      if (y % 4 == 0 and (y % 100 != 0 or y % 400 == 0)) {
+        dayCounter -= 366; // Leap year
+      } else {
+        dayCounter -= 365; // Non-leap year
+      };
+    };
+    return dayCounter;
+  };
 
   public func validateHexColor(hex : Text) : Bool {
 

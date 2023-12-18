@@ -110,7 +110,7 @@ module {
           var teamBoostTeamId = Nat16.fromNat(0);
           var safeHandsGameweek = Nat8.fromNat(0);
           var captainFantasticGameweek = Nat8.fromNat(0);
-          
+
           var countrymenGameweek = Nat8.fromNat(0);
           var countrymenCountryId = Nat16.fromNat(0);
           var prospectsGameweek = Nat8.fromNat(0);
@@ -346,12 +346,11 @@ module {
           var teamBoostTeamId = existingTeam.teamBoostTeamId;
           var safeHandsGameweek = existingTeam.safeHandsGameweek;
           var captainFantasticGameweek = existingTeam.captainFantasticGameweek;
-          
+
           var countrymenGameweek = existingTeam.countrymenGameweek;
           var countrymenCountryId = existingTeam.countrymenCountryId;
           var prospectsGameweek = existingTeam.prospectsGameweek;
-          
-          
+
           var braceBonusGameweek = existingTeam.braceBonusGameweek;
           var hatTrickHeroGameweek = existingTeam.hatTrickHeroGameweek;
           var newCaptainId = captainId;
@@ -691,7 +690,7 @@ module {
                       if (foundSnapshot.countrymenGameweek == gameweek and foundSnapshot.countrymenCountryId == player.nationality) {
                         totalScore := totalScore * 2;
                       };
-                      
+
                       // Prospects
                       if (foundSnapshot.prospectsGameweek == gameweek and Utilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
                         totalScore := totalScore * 2;

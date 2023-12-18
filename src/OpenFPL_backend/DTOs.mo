@@ -153,6 +153,12 @@ module DTOs {
     gameweek : T.GameweekNumber;
     kickOff : Int;
     status : Nat8;
-  }
+  };
+
+  public type CountryDTO = {
+    id : T.CountryId;
+    name : Text;
+    code : Text;
+  };
 
 };

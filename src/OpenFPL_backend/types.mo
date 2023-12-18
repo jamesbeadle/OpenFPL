@@ -285,12 +285,10 @@ module Types {
     focusGameweek : GameweekNumber;
   };
 
-
-
   public type Country = {
-      id: CountryId;
-      name: Text;
-      code: Text;
+    id : CountryId;
+    name : Text;
+    code : Text;
   };
 
 };

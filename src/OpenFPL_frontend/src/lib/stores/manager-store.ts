@@ -145,11 +145,11 @@ function createManagerStore() {
       bonusPlayed = 6;
     }
 
-    if(userFantasyTeam.prospectsGameweek === activeGameweek){
+    if (userFantasyTeam.prospectsGameweek === activeGameweek) {
       bonusPlayed = 7;
     }
 
-    if(userFantasyTeam.countrymenGameweek === activeGameweek){
+    if (userFantasyTeam.countrymenGameweek === activeGameweek) {
       bonusPlayed = 8;
     }
 

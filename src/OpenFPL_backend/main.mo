@@ -35,6 +35,7 @@ import Int16 "mo:base/Int16";
 import Int64 "mo:base/Int64";
 import Bool "mo:base/Bool";
 import SHA224 "./SHA224";
+import Countries "./Countries";
 
 actor Self {
 
@@ -43,6 +44,7 @@ actor Self {
   let teamsInstance = Teams.Teams();
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
+  let countriesInstance = Countries.Countries();
 
   private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
     { category = "teams"; hash = "DEFAULT_VALUE" },
@@ -959,9 +961,7 @@ actor Self {
       return #err(#InvalidData);
     };
 
-    //Check if country id in countries array to be sure
-
-    if (not Utilities.isNationalityValid(nationality)) {
+    if (not countriesInstance.isCountryValid(nationality)) {
       return #err(#InvalidData);
     };
 
@@ -991,7 +991,7 @@ actor Self {
       return #err(#InvalidData);
     };
 
-    if (not Utilities.isNationalityValid(nationality)) {
+    if (not countriesInstance.isCountryValid(nationality)) {
       return #err(#InvalidData);
     };
 
@@ -1541,6 +1541,10 @@ actor Self {
 
   public shared query func getDataHashes() : async [T.DataCache] {
     return List.toArray(dataCacheHashes);
+  };
+
+  public shared query func getCountries() : async [DTOs.CountryDTO] {
+    return List.toArray(countriesInstance.countries);
   };
 
   private stable var stable_timers : [T.TimerInfo] = [];

@@ -10,6 +10,7 @@
   import { playerStore } from "$lib/stores/player-store";
   import { BonusType } from "$lib/enums/BonusType";
   import { Modal } from "@dfinity/gix-components";
+    import { countriesStore } from "$lib/stores/country-store";
 
   export let visible: boolean;
   export let fantasyTeam = writable<FantasyTeam | null>(null);
@@ -30,14 +31,14 @@
   let selectedCountry = "";
 
   const getUniqueCountries = () => {
-    if (!$fantasyTeam || !$fantasyTeam.playerIds) {
+    if (!$countriesStore || !$fantasyTeam || !$fantasyTeam.playerIds) {
       return [];
     }
 
     const fantasyTeamPlayerIds = new Set($fantasyTeam.playerIds);
-    const countriesOfFantasyTeamPlayers = $playerStore
-      .filter((player) => fantasyTeamPlayerIds.has(player.id))
-      .map((player) => player.nationality);
+    const countriesOfFantasyTeamPlayers = $countriesStore
+      .filter((country) => fantasyTeamPlayerIds.has(country.id))
+      .map((country) => country.name);
 
     return [...new Set(countriesOfFantasyTeamPlayers)].sort();
   };
@@ -155,23 +156,23 @@
         });
         break;
       case 7:
-        fantasyTeam.update(team => {
+        fantasyTeam.update((team) => {
           if (!team) return team;
           return {
             ...team,
             prospectsGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11)
+            playerIds: team.playerIds || new Uint16Array(11),
           };
         });
         break;
       case 8:
-        fantasyTeam.update(team => {
+        fantasyTeam.update((team) => {
           if (!team) return team;
           return {
             ...team,
             countrymenCountry: selectedCountry,
             countrymenGameweek: activeGameweek,
-            playerIds: team.playerIds || new Uint16Array(11)
+            playerIds: team.playerIds || new Uint16Array(11),
           };
         });
         break;

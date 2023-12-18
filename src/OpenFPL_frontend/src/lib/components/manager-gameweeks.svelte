@@ -15,6 +15,7 @@
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { getFlagComponent } from "$lib/utils/Helpers";
   import { Spinner } from "@dfinity/gix-components";
+    import { countriesStore } from "$lib/stores/country-store";
 
   export let principalId = "";
   export let viewGameweekDetail: (
@@ -32,6 +33,7 @@
     try {
       await systemStore.sync();
       await playerStore.sync();
+      await countriesStore.sync();
 
       selectedSeason = $systemStore?.activeSeason ?? null;
       manager = await managerStore.getManager(
@@ -67,7 +69,7 @@
       return `<img src="prospects.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.countrymenGameweek === snapshot.gameweek) {
       return `<img src="countryment.png" alt="Bonus" class="w-6 md:w-9" />`;
-     } else if (snapshot.braceBonusGameweek === snapshot.gameweek) {
+    } else if (snapshot.braceBonusGameweek === snapshot.gameweek) {
       return `<img src="brace-bonus.png" alt="Bonus" class="w-6 md:w-9" />`;
     } else if (snapshot.hatTrickHeroGameweek === snapshot.gameweek) {
       return `<img src="hat-trick-hero.png" alt="Bonus" class="w-6 md:w-9" />`;
@@ -95,6 +97,7 @@
 
       {#each manager.gameweeks as gameweek}
         {@const captain = $playerStore.find((x) => x.id === gameweek.captainId)}
+        {@const playerCountry = $countriesStore ? $countriesStore.find(x=> x.id === captain?.nationality) : null}
         <button
           class="w-full"
           on:click={() =>
@@ -105,11 +108,13 @@
           >
             <div class="w-2/12">{gameweek.gameweek}</div>
             <div class="w-4/12 flex items-center">
-              <svelte:component
-                this={getFlagComponent(captain?.nationality ?? "")}
+              {#if playerCountry}
+                <svelte:component
+                this={getFlagComponent(playerCountry.name)}
                 class="w-9 h-9 mr-4 hidden md:flex"
                 size="100"
               />
+              {/if}
               <p
                 class="truncate min-w-[40px] max-w-[40px] xxs:min-w-[80px] xxs:max-w-[80px] sm:min-w-[160px] sm:max-w-[160px] md:min-w-none md:max-w-none"
               >

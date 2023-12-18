@@ -2,6 +2,7 @@
   import { page } from "$app/stores";
   import { authStore, type AuthSignInParams } from "$lib/stores/auth.store";
   import { systemStore } from "$lib/stores/system-store";
+  import { countriesStore } from "$lib/stores/country-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
   import { leaderboardStore } from "$lib/stores/leaderboard-store";
@@ -28,6 +29,7 @@
       await userStore.sync();
       await authStore.sync();
       await systemStore.sync();
+      await countriesStore.sync();
       await fixtureStore.sync();
       await teamStore.sync();
       await leaderboardStore.syncWeeklyLeaderboard();

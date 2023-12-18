@@ -135,6 +135,7 @@ export function calculateAgeFromNanoseconds(nanoseconds: number) {
 import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
 import type {
+  CountryDTO,
   FantasyTeam,
   Team,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
