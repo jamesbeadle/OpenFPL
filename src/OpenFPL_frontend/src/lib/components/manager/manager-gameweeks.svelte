@@ -10,7 +10,7 @@
     FantasyTeamSnapshot,
     ManagerDTO,
     Season,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { getFlagComponent } from "$lib/utils/Helpers";

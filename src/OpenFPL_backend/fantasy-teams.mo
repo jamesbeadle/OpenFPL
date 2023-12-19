@@ -205,6 +205,7 @@ module {
             bankBalance = bankBalance;
             playerIds = allPlayerIds;
             transfersAvailable = 3;
+            transferWindowGameweek = 0;
             captainId = newCaptainId;
             goalGetterGameweek = goalGetterGameweek;
             goalGetterPlayerId = goalGetterPlayerId;
@@ -239,7 +240,7 @@ module {
       };
     };
 
-    public func updateFantasyTeam(principalId : Text, newPlayers : [DTOs.PlayerDTO], captainId : Nat16, bonusId : Nat8, bonusPlayerId : Nat16, bonusTeamId : Nat16, gameweek : Nat8, existingPlayers : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+    public func updateFantasyTeam(principalId : Text, newPlayers : [DTOs.PlayerDTO], captainId : Nat16, bonusId : Nat8, bonusPlayerId : Nat16, bonusTeamId : Nat16, gameweek : Nat8, existingPlayers : [DTOs.PlayerDTO], transferWindowGameweek: T.GameweekNumber) : async Result.Result<(), T.Error> {
 
       let existingUserTeam = fantasyTeams.get(principalId);
       switch (existingUserTeam) {
@@ -266,7 +267,7 @@ module {
             },
           );
 
-          if (Nat8.fromNat(Array.size(playersAdded)) > existingTeam.transfersAvailable and gameweek != 1) {
+          if(existingTeam.transferWindowGameweek != gameweek and gameweek != 1 and Nat8.fromNat(Array.size(playersAdded)) > existingTeam.transfersAvailable){
             return #err(#InvalidTeamError);
           };
 
@@ -412,9 +413,20 @@ module {
 
           let natBankBalance : Nat = Nat16.toNat(Int16.toNat16(Int16.fromInt(newBankBalance)));
 
+
+          //check if january transfer window played, only allow if
+            //not already played 
+            //it's for a week which is in january
+            //if valid can skip the transfers available check
+            //ensure that you set that it's been used
+
+
+          //if not played do standard transfer checks
+
+
           var newTransfersAvailable : Nat8 = 3;
 
-          if (gameweek != 1) {
+          if (gameweek != 1 and existingTeam.transferWindowGameweek != gameweek) {
             newTransfersAvailable := existingTeam.transfersAvailable - Nat8.fromNat(Array.size(playersAdded));
           };
 
@@ -447,6 +459,7 @@ module {
             bankBalance = natBankBalance;
             playerIds = allPlayerIds;
             transfersAvailable = newTransfersAvailable;
+            transferWindowGameweek = transferWindowGameweek;
             captainId = newCaptainId;
             goalGetterGameweek = goalGetterGameweek;
             goalGetterPlayerId = goalGetterPlayerId;
@@ -581,7 +594,7 @@ module {
 
       for ((key, value) in fantasyTeams.entries()) {
         let userFantasyTeam = value.fantasyTeam;
-        let updatedTeam = {
+        let updatedTeam : T.FantasyTeam = {
           principalId = userFantasyTeam.principalId;
           transfersAvailable = Nat8.fromNat(3);
           bankBalance = userFantasyTeam.bankBalance;
@@ -606,6 +619,7 @@ module {
           hatTrickHeroGameweek = userFantasyTeam.hatTrickHeroGameweek;
           teamName = userFantasyTeam.teamName;
           favouriteTeamId = userFantasyTeam.favouriteTeamId;
+          transferWindowGameweek = userFantasyTeam.transferWindowGameweek;
         };
 
         let updatedUserTeam : T.UserFantasyTeam = {
@@ -772,6 +786,7 @@ module {
                         favouriteTeamId = snapshot.favouriteTeamId;
                         teamName = snapshot.teamName;
                         points = teamPoints;
+                        transferWindowGameweek = snapshot.transferWindowGameweek;
                       };
 
                       snapshotBuffer.add(updatedSnapshot);
@@ -1137,6 +1152,7 @@ module {
           teamName = userFantasyTeam.fantasyTeam.teamName;
           favouriteTeamId = userFantasyTeam.fantasyTeam.favouriteTeamId;
           points = 0;
+          transferWindowGameweek = userFantasyTeam.fantasyTeam.transferWindowGameweek;
         };
 
         var seasonFound = false;
@@ -1372,6 +1388,7 @@ module {
         points = 0;
         favouriteTeamId = 0;
         teamName = "";
+        transferWindowGameweek = 0;
       };
       let fantasyTeam = fantasyTeams.get(managerId);
       switch (fantasyTeam) {
@@ -1479,6 +1496,7 @@ module {
             prospectsGameweek = foundTeam.fantasyTeam.prospectsGameweek;
             braceBonusGameweek = foundTeam.fantasyTeam.braceBonusGameweek;
             hatTrickHeroGameweek = foundTeam.fantasyTeam.hatTrickHeroGameweek;
+            transferWindowGameweek = foundTeam.fantasyTeam.transferWindowGameweek;
           };
 
           let updatedUserFantasyTeam : T.UserFantasyTeam = {
@@ -1522,6 +1540,7 @@ module {
             prospectsGameweek = foundTeam.fantasyTeam.prospectsGameweek;
             braceBonusGameweek = foundTeam.fantasyTeam.braceBonusGameweek;
             hatTrickHeroGameweek = foundTeam.fantasyTeam.hatTrickHeroGameweek;
+            transferWindowGameweek = foundTeam.fantasyTeam.transferWindowGameweek;
           };
 
           let updatedUserFantasyTeam : T.UserFantasyTeam = {
@@ -1560,6 +1579,7 @@ module {
         hatTrickHeroGameweek = 0;
         teamName = "";
         favouriteTeamId = 0;
+        transferWindowGameweek = 0;
       };
     };
 
@@ -1755,6 +1775,7 @@ module {
           prospectsGameweek = currentTeam.fantasyTeam.prospectsGameweek;
           braceBonusGameweek = currentTeam.fantasyTeam.braceBonusGameweek;
           hatTrickHeroGameweek = currentTeam.fantasyTeam.hatTrickHeroGameweek;
+          transferWindowGameweek = currentTeam.fantasyTeam.transferWindowGameweek;
         };
 
         let updatedFantasyteam : T.UserFantasyTeam = {

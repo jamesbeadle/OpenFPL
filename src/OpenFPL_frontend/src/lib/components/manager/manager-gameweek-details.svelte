@@ -11,15 +11,15 @@
     getFlagComponent,
     getPositionAbbreviation,
   } from "$lib/utils/Helpers";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
+  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
   import type {
     FantasyTeam,
     Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
-  import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
+  import FantasyPlayerDetailModal from "../fantasy-player-detail-modal.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
   import { countriesStore } from "$lib/stores/country-store";
 

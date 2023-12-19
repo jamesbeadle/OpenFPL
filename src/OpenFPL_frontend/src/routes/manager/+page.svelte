@@ -12,8 +12,8 @@
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
-  import ManagerGameweekDetails from "$lib/components/manager-gameweek-details.svelte";
-  import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
+  import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
+  import ManagerGameweeks from "$lib/components/manager/manager-gameweeks.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import { getDateFromBigInt } from "$lib/utils/Helpers";

@@ -151,6 +151,7 @@ module Types {
     prospectsGameweek : GameweekNumber;
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
+    transferWindowGameweek: GameweekNumber;
   };
 
   public type UserFantasyTeam = {
@@ -191,6 +192,7 @@ module Types {
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
     points : Int16;
+    transferWindowGameweek: GameweekNumber;
   };
 
   public type SeasonLeaderboards = {

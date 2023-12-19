@@ -31,21 +31,53 @@ This document provides detailed test cases for the OpenFPL application. Each tes
 - **Status**: 
 - **Remarks**: 
 
-### Test Case 2: Team Selection
 
-- **Test Case ID**: TC_002
-- **Title**: User is able to select and save a football team.
-- **Description**: This test case verifies that the user can select players to form a team and save it.
-- **Preconditions**: User is logged in and has available budget for player selection.
-- **Test Steps**:
-  1. Navigate to the 'Select Team' section.
-  2. Choose 11 players within the given budget.
-  3. Click the 'Save Team' button.
-- **Expected Results**: The team should be saved successfully, and the user should see their selected team in the 'My Team' section.
-- **Actual Results**: 
-- **Status**: 
-- **Remarks**: Ensure that the budget is not exceeded and that the player positions meet the game rules.
+Setup Testing Procedure
+- Auto generate fixtures
+- Setup the system for each scenario
 
----
+	
 
-Remember to update the **Actual Results** and **Status** after performing each test case. Additionally, you can add more test cases by following the structure provided in the template. For automated tests, you can include the test script location and execution commands.
+
+- double gameweek
+- postponed game
+	- result stands
+	- replayed from minute
+	- replayed
+- Bonuses
+- January Transfer Window
+- Unlimited Transfers
+- Captain Scenarios
+- Leaderboards
+	- Weekly
+	- Monthly
+	- Season
+- Changing your favourite teams can only be done before the first gameweek begins
+- Reward distributions
+- Test all proposal types
+    - Retired move to retirement canister
+    - Unretired move back
+    - Move to external club canister
+    - Move back to Live players canister
+    - Transfer a player to another premier league club
+- canisters created
+- canisters topped up
+- Update parent club information effectively setting their transfer status loaned players
+- cannot make more than available changes per week unless first gameweek or jan transfer wildcard played and they can never go below zero
+- local storage data is managed and cleared up
+    - - Ensuse a users cache is cleared when a new season starts by updating the cache hash values 
+- ensuring the sequential order of ids on types that require them
+- ensure that players can only be moved to the retired or former player canisters after they have been removed from all teams
+- a teams bank balance and value accurate changes when players are added or removed
+- The scenario of a new gameweek starting before the prior gameweek is verified (overlapping gameweeks)
+- rolling over of seasons
+    - Need to test season dropdown filters on all views when sesaon rolled over
+- all invalid create fantasy team scenarios
+- governance rewards are distributed in a spread out manner
+- governance rewards are distributed at the correct %
+- Large user volume testing
+    - Calculation cycle usage
+    - Pagination with cahcing
+- All data caches update correctly when required
+
+- Listed security concerns
