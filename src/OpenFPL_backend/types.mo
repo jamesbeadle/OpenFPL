@@ -34,6 +34,28 @@ module Types {
     #Striped;
   };
 
+  public type FixtureStatus = {
+    #Unplayed;
+    #Active;
+    #Completed;
+    #DataFinalised;
+  };
+
+  public type PlayerEventType = {
+    #Appearance;
+    #Goal;
+    #GoalAssisted;
+    #GoalConceded;
+    #KeeperSave;
+    #CleanSheet;
+    #PenaltySaved;
+    #PenaltyMissed;
+    #YellowCard;
+    #RedCard;
+    #OwnGoal;
+    #HighestScoringPlayer;
+  };
+
   public type Manager = {
     principalId : Text;
     displayName : Text;
@@ -107,14 +129,8 @@ module Types {
     id : Nat16;
     name : Text;
     year : Nat16;
-    gameweeks : List.List<Gameweek>;
-    postponedFixtures : List.List<Fixture>;
-  };
-
-  public type Gameweek = {
-    number : GameweekNumber;
-    canisterId : Text;
     fixtures : List.List<Fixture>;
+    postponedFixtures : List.List<Fixture>;
   };
 
   public type Team = {
@@ -129,7 +145,7 @@ module Types {
   };
 
   public type Fixture = {
-    id : Nat32;
+    id : FixtureId;
     seasonId : SeasonId;
     gameweek : GameweekNumber;
     kickOff : Int;
@@ -137,19 +153,18 @@ module Types {
     awayTeamId : TeamId;
     homeGoals : Nat8;
     awayGoals : Nat8;
-    status : Nat8; //0 = Unplayed, 1 = Active, 2 = Completed, 3 = Data Finalised
-    events : List.List<PlayerEventData>;
-    highestScoringPlayerId : Nat16;
+    status : FixtureStatus;
+    highestScoringPlayerId : PlayerId;
   };
 
   public type Player = {
     id : PlayerId;
     teamId : TeamId;
-    position : Nat8; //0 = Goalkeeper //1 = Defender //2 = Midfielder //3 = Forward
+    position : PlayerPosition;
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    value : Nat; //Value in £0.25m units
+    valueQuarterMillions : Nat;
     dateOfBirth : Int;
     nationality : CountryId;
     seasons : List.List<PlayerSeason>;
@@ -160,6 +175,26 @@ module Types {
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;
     retirementDate : Int;
+  };
+
+  public type PlayerSeason = {
+    id : Nat16;
+    gameweeks : List.List<PlayerGameweek>;
+  };
+
+  public type PlayerGameweek = {
+    number : Nat8;
+    events : List.List<PlayerEventData>;
+    points : Int16;
+  };
+
+  public type PlayerEventData = {
+    fixtureId : FixtureId;
+    playerId : Nat16;
+    eventType : PlayerEventType;
+    eventStartMinute : Nat8;
+    eventEndMinute : Nat8;
+    teamId : TeamId;
   };
 
   public type ValueHistory = {
@@ -183,29 +218,11 @@ module Types {
     toTeam : TeamId;
     loanEndDate : Int;
   };
-
-  public type PlayerSeason = {
-    id : Nat16;
-    gameweeks : List.List<PlayerGameweek>;
-  };
-
-  public type PlayerGameweek = {
-    number : Nat8;
-    events : List.List<PlayerEventData>;
-    points : Int16;
-  };
-
-  public type Account = {
-    owner : Principal;
-    subaccount : Blob;
-  };
-
-  public type UserFantasyTeam = {
-    fantasyTeam : FantasyTeam;
-
-  public type SeasonLeaderboards = {
-    seasonLeaderboard : Leaderboard;
-    gameweekLeaderboards : List.List<Leaderboard>;
+  
+  public type WeeklyLeaderboard = {
+    seasonId : SeasonId;
+    gameweek : GameweekNumber;
+    entries : List.List<LeaderboardEntry>;
   };
 
   public type ClubLeaderboard = {
@@ -215,9 +232,8 @@ module Types {
     entries : List.List<LeaderboardEntry>;
   };
 
-  public type Leaderboard = {
+  public type Seasonleaderboard = {
     seasonId : SeasonId;
-    gameweek : GameweekNumber;
     entries : List.List<LeaderboardEntry>;
   };
 
@@ -229,35 +245,9 @@ module Types {
     points : Int16;
   };
 
-  public type PlayerEventData = {
-    fixtureId : FixtureId;
-    playerId : Nat16;
-    //0 = Appearance
-    //1 = Goal Scored
-    //2 = Goal Assisted
-    //3 = Goal Conceded - Inferred
-    //4 = Keeper Save
-    //5 = Clean Sheet - Inferred
-    //6 = Penalty Saved
-    //7 = Penalty Missed
-    //8 = Yellow Card
-    //9 = Red Card
-    //10 = Own Goal
-    //11 = Highest Scoring Player
-    eventType : Nat8;
-    eventStartMinute : Nat8; //use to record event time of all other events
-    eventEndMinute : Nat8; //currently only used for Appearance
-    teamId : TeamId;
-  };
-
-  public type RevaluedPlayer = {
-    playerId : PlayerId;
-    direction : RevaluationDirection;
-  };
-
-  public type RevaluationDirection = {
-    #Increase;
-    #Decrease;
+  public type Account = {
+    owner : Principal;
+    subaccount : Blob;
   };
 
   public type TimerInfo = {
@@ -283,6 +273,7 @@ module Types {
     hash : Text;
   };
 
+  //ENSURE THE CHANGE EVENTS ARE ADDED
   public type SystemState = {
     calculationGameweek: GameweekNumber; //starts at 1 and then after the final game of the gameweek is verified it moves to 2
     calculationMonth: CalendarMonth; //starts at 8 and after the final game of a gameweek is verified it checks the end date of the latest game in the next gameweek and if the follow month then increase the calculationMonth
