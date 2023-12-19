@@ -1,30 +1,51 @@
-# OpenFPL
+# Test Cases for OpenFPL
 
-OpenFPL is a decentralised fantasy football application that runs on the Internet Computer blockchain. Built using Svelte, TypeScript, and Motoko, it offers a unique and engaging experience for fantasy football enthusiasts.
+This document provides detailed test cases for the OpenFPL application. Each test case is designed to verify the functionality and performance of the application under various conditions. Below are examples of test cases that can be used as a template for further testing.
 
-## Features
+## Test Case Template
 
-- **Decentralised Platform**: OpenFPL will operate under the Internet Computer's SNS governance architecture.
-- **User-Friendly Interface**: Developed with Svelte for a responsive and intuitive user experience.
-- **Blockchain Integration**: Powered by Motoko, rewarding players in the Utility token $FPL.
+- **Test Case ID**: TC_unique_number
+- **Title**: Short descriptive name of the functionality to be tested.
+- **Description**: A detailed description of the test case.
+- **Preconditions**: Any prerequisites that must be met before the test can be executed.
+- **Test Steps**: Step-by-step instructions on how to carry out the test.
+- **Expected Results**: The expected outcome of the test.
+- **Actual Results**: The actual outcome of the test (to be filled after the test execution).
+- **Status**: Pass/Fail (to be filled after the test execution).
+- **Remarks**: Any additional comments or observations.
 
-## Getting Started
+## Example Test Cases
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+### Test Case 1: User Registration
 
-### Prerequisites
+- **Test Case ID**: TC_001
+- **Title**: User is able to register a new account.
+- **Description**: This test case ensures that the user can register a new account in the OpenFPL application.
+- **Preconditions**: The application is installed and opened to the registration screen.
+- **Test Steps**:
+  1. Navigate to the registration screen.
+  2. Enter a valid username, email, and password.
+  3. Click the 'Register' button.
+- **Expected Results**: The user should receive a confirmation message and be taken to the login screen.
+- **Actual Results**: 
+- **Status**: 
+- **Remarks**: 
 
-- Node.js
-- DFX
+### Test Case 2: Team Selection
 
-### Installation
+- **Test Case ID**: TC_002
+- **Title**: User is able to select and save a football team.
+- **Description**: This test case verifies that the user can select players to form a team and save it.
+- **Preconditions**: User is logged in and has available budget for player selection.
+- **Test Steps**:
+  1. Navigate to the 'Select Team' section.
+  2. Choose 11 players within the given budget.
+  3. Click the 'Save Team' button.
+- **Expected Results**: The team should be saved successfully, and the user should see their selected team in the 'My Team' section.
+- **Actual Results**: 
+- **Status**: 
+- **Remarks**: Ensure that the budget is not exceeded and that the player positions meet the game rules.
 
-1. Clone the repo:
-git clone https://github.com/your_username/OpenFPL.git
+---
 
-2. Install NPM packages:
-npm install
-
-## Testing
-
-To ensure the highest quality and reliability of OpenFPL, comprehensive testing has been conducted. Detailed test cases and outcomes can be found in the [Test Cases Document](TESTCASES.md).
+Remember to update the **Actual Results** and **Status** after performing each test case. Additionally, you can add more test cases by following the structure provided in the template. For automated tests, you can include the test script location and execution commands.
