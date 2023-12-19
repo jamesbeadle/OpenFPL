@@ -55,12 +55,8 @@ type ProfileDTO = record {
   createDate : int;
   displayName : text;
   favouriteTeamId : nat16;
-  fplDepositAddress : blob;
-  icpDepositAddress : blob;
-  membershipType : nat8;
   principalId : text;
   profilePicture : blob;
-  reputation : nat32;
 };
 type PlayerId = nat16;
 type PlayerEventData = record {
@@ -214,10 +210,6 @@ type DataCache = record {
   category : text;
   hash : text;
 };
-type AccountBalanceDTO = record {
-  fplBalance : nat64;
-  icpBalance : nat64;
-};
 service : {
   createProfile : () -> ();
   executeAddInitialFixtures : (SeasonId, vec Fixture) -> (Result);
@@ -241,7 +233,6 @@ service : {
   executeUnretirePlayer : (PlayerId) -> (Result);
   executeUpdatePlayer : (PlayerId, nat8, text, text, nat8, int, text) -> (Result);
   executeUpdateTeam : (TeamId, text, text, text, text, text, text, nat8) -> (Result);
-  getAccountBalanceDTO : () -> (AccountBalanceDTO);
   getActiveFixtures : () -> (vec Fixture) query;
   getClubLeaderboard : (nat16, nat8, TeamId, nat, nat) -> (PaginatedClubLeaderboard) query;
   getClubLeaderboardsCache : (nat16, nat8) -> (vec PaginatedClubLeaderboard) query;
@@ -265,7 +256,6 @@ service : {
   getWeeklyLeaderboard : (nat16, nat8, nat, nat) -> (PaginatedLeaderboard) query;
   getWeeklyLeaderboardCache : (nat16, nat8) -> (PaginatedLeaderboard) query;
   isDisplayNameValid : (text) -> (bool) query;
-  movePostponedFixture : () -> ();
   saveFantasyTeam : (vec nat16, nat16, nat8, nat16, nat16) -> (Result);
   savePlayerEvents : (FixtureId, vec PlayerEventData) -> (Result);
   snapshotFantasyTeams : () -> ();
@@ -297,5 +287,4 @@ service : {
   validateUnretirePlayer : (PlayerId) -> (Result);
   validateUpdatePlayer : (PlayerId, nat8, text, text, nat8, int, text) -> (Result);
   validateUpdateTeam : (TeamId, text, text, text, text, text, text) -> (Result);
-  withdrawICP : (float64, text) -> (Result);
 };

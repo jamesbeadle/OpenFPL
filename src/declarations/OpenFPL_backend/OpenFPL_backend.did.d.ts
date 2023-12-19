@@ -1,9 +1,5 @@
 import type { ActorMethod } from "@dfinity/agent";
 
-export interface AccountBalanceDTO {
-  icpBalance: bigint;
-  fplBalance: bigint;
-}
 export interface DataCache {
   hash: string;
   category: string;
@@ -147,15 +143,11 @@ export interface PlayerEventData {
 }
 export type PlayerId = number;
 export interface ProfileDTO {
-  icpDepositAddress: Uint8Array | number[];
   favouriteTeamId: number;
   displayName: string;
-  fplDepositAddress: Uint8Array | number[];
   createDate: bigint;
   canUpdateFavouriteTeam: boolean;
-  reputation: number;
   profilePicture: Uint8Array | number[];
-  membershipType: number;
   principalId: string;
 }
 export type Result = { ok: null } | { err: Error };
@@ -246,7 +238,6 @@ export interface _SERVICE {
     [TeamId, string, string, string, string, string, string, number],
     Result
   >;
-  getAccountBalanceDTO: ActorMethod<[], AccountBalanceDTO>;
   getActiveFixtures: ActorMethod<[], Array<Fixture>>;
   getClubLeaderboard: ActorMethod<
     [number, number, TeamId, bigint, bigint],
@@ -288,7 +279,6 @@ export interface _SERVICE {
     PaginatedLeaderboard
   >;
   isDisplayNameValid: ActorMethod<[string], boolean>;
-  movePostponedFixture: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<
     [Uint16Array | number[], number, number, number, number],
     Result
@@ -336,5 +326,4 @@ export interface _SERVICE {
     [TeamId, string, string, string, string, string, string],
     Result
   >;
-  withdrawICP: ActorMethod<[number, string], Result>;
 }

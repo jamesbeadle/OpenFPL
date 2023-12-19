@@ -39,10 +39,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error });
   const PlayerId = IDL.Nat16;
-  const AccountBalanceDTO = IDL.Record({
-    icpBalance: IDL.Nat64,
-    fplBalance: IDL.Nat64,
-  });
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
     positionText: IDL.Text,
@@ -137,15 +133,11 @@ export const idlFactory = ({ IDL }) => {
     seasonPositionText: IDL.Text,
   });
   const ProfileDTO = IDL.Record({
-    icpDepositAddress: IDL.Vec(IDL.Nat8),
     favouriteTeamId: IDL.Nat16,
     displayName: IDL.Text,
-    fplDepositAddress: IDL.Vec(IDL.Nat8),
     createDate: IDL.Int,
     canUpdateFavouriteTeam: IDL.Bool,
-    reputation: IDL.Nat32,
     profilePicture: IDL.Vec(IDL.Nat8),
-    membershipType: IDL.Nat8,
     principalId: IDL.Text,
   });
   const PaginatedLeaderboard = IDL.Record({
@@ -279,7 +271,6 @@ export const idlFactory = ({ IDL }) => {
       [Result],
       []
     ),
-    getAccountBalanceDTO: IDL.Func([], [AccountBalanceDTO], []),
     getActiveFixtures: IDL.Func([], [IDL.Vec(Fixture)], ["query"]),
     getClubLeaderboard: IDL.Func(
       [IDL.Nat16, IDL.Nat8, TeamId, IDL.Nat, IDL.Nat],
@@ -335,7 +326,6 @@ export const idlFactory = ({ IDL }) => {
       ["query"]
     ),
     isDisplayNameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
-    movePostponedFixture: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func(
       [IDL.Vec(IDL.Nat16), IDL.Nat16, IDL.Nat8, IDL.Nat16, IDL.Nat16],
       [Result],
@@ -411,7 +401,6 @@ export const idlFactory = ({ IDL }) => {
       [Result],
       []
     ),
-    withdrawICP: IDL.Func([IDL.Float64, IDL.Text], [Result], []),
   });
 };
 export const init = ({ IDL }) => {

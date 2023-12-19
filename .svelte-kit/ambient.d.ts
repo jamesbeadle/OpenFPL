@@ -28,6 +28,13 @@
 declare module '$env/static/private' {
 	export const DFX_VERSION: string;
 	export const DFX_NETWORK: string;
+	export const CANISTER_CANDID_PATH_OpenFPL_backend: string;
+	export const CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
+	export const CANISTER_CANDID_PATH_player_canister: string;
+	export const CANISTER_CANDID_PATH_PLAYER_CANISTER: string;
+	export const PLAYER_CANISTER_CANISTER_ID: string;
+	export const CANISTER_ID_PLAYER_CANISTER: string;
+	export const CANISTER_ID_player_canister: string;
 	export const NNS_SNS_WASM_CANISTER_ID: string;
 	export const CANISTER_ID_NNS_SNS_WASM: string;
 	export const CANISTER_ID_nns_sns_wasm: string;
@@ -40,6 +47,9 @@ declare module '$env/static/private' {
 	export const NNS_LIFELINE_CANISTER_ID: string;
 	export const CANISTER_ID_NNS_LIFELINE: string;
 	export const CANISTER_ID_nns_lifeline: string;
+	export const NNS_LEDGER_CANISTER_ID: string;
+	export const CANISTER_ID_NNS_LEDGER: string;
+	export const CANISTER_ID_nns_ledger: string;
 	export const NNS_GOVERNANCE_CANISTER_ID: string;
 	export const CANISTER_ID_NNS_GOVERNANCE: string;
 	export const CANISTER_ID_nns_governance: string;
@@ -55,15 +65,6 @@ declare module '$env/static/private' {
 	export const OPENFPL_FRONTEND_CANISTER_ID: string;
 	export const CANISTER_ID_OPENFPL_FRONTEND: string;
 	export const CANISTER_ID_OpenFPL_frontend: string;
-	export const PLAYER_CANISTER_CANISTER_ID: string;
-	export const CANISTER_ID_PLAYER_CANISTER: string;
-	export const CANISTER_ID_player_canister: string;
-	export const NNS_LEDGER_CANISTER_ID: string;
-	export const CANISTER_ID_NNS_LEDGER: string;
-	export const CANISTER_ID_nns_ledger: string;
-	export const TOKEN_CANISTER_CANISTER_ID: string;
-	export const CANISTER_ID_TOKEN_CANISTER: string;
-	export const CANISTER_ID_token_canister: string;
 	export const OPENFPL_BACKEND_CANISTER_ID: string;
 	export const CANISTER_ID_OPENFPL_BACKEND: string;
 	export const CANISTER_ID_OpenFPL_backend: string;
@@ -77,6 +78,7 @@ declare module '$env/static/private' {
 	export const npm_node_execpath: string;
 	export const SHLVL: string;
 	export const npm_config_noproxy: string;
+	export const MOTD_SHOWN: string;
 	export const HOME: string;
 	export const TERM_PROGRAM_VERSION: string;
 	export const NVM_BIN: string;
@@ -162,6 +164,13 @@ declare module '$env/dynamic/private' {
 	export const env: {
 		DFX_VERSION: string;
 		DFX_NETWORK: string;
+		CANISTER_CANDID_PATH_OpenFPL_backend: string;
+		CANISTER_CANDID_PATH_OPENFPL_BACKEND: string;
+		CANISTER_CANDID_PATH_player_canister: string;
+		CANISTER_CANDID_PATH_PLAYER_CANISTER: string;
+		PLAYER_CANISTER_CANISTER_ID: string;
+		CANISTER_ID_PLAYER_CANISTER: string;
+		CANISTER_ID_player_canister: string;
 		NNS_SNS_WASM_CANISTER_ID: string;
 		CANISTER_ID_NNS_SNS_WASM: string;
 		CANISTER_ID_nns_sns_wasm: string;
@@ -174,6 +183,9 @@ declare module '$env/dynamic/private' {
 		NNS_LIFELINE_CANISTER_ID: string;
 		CANISTER_ID_NNS_LIFELINE: string;
 		CANISTER_ID_nns_lifeline: string;
+		NNS_LEDGER_CANISTER_ID: string;
+		CANISTER_ID_NNS_LEDGER: string;
+		CANISTER_ID_nns_ledger: string;
 		NNS_GOVERNANCE_CANISTER_ID: string;
 		CANISTER_ID_NNS_GOVERNANCE: string;
 		CANISTER_ID_nns_governance: string;
@@ -189,15 +201,6 @@ declare module '$env/dynamic/private' {
 		OPENFPL_FRONTEND_CANISTER_ID: string;
 		CANISTER_ID_OPENFPL_FRONTEND: string;
 		CANISTER_ID_OpenFPL_frontend: string;
-		PLAYER_CANISTER_CANISTER_ID: string;
-		CANISTER_ID_PLAYER_CANISTER: string;
-		CANISTER_ID_player_canister: string;
-		NNS_LEDGER_CANISTER_ID: string;
-		CANISTER_ID_NNS_LEDGER: string;
-		CANISTER_ID_nns_ledger: string;
-		TOKEN_CANISTER_CANISTER_ID: string;
-		CANISTER_ID_TOKEN_CANISTER: string;
-		CANISTER_ID_token_canister: string;
 		OPENFPL_BACKEND_CANISTER_ID: string;
 		CANISTER_ID_OPENFPL_BACKEND: string;
 		CANISTER_ID_OpenFPL_backend: string;
@@ -211,6 +214,7 @@ declare module '$env/dynamic/private' {
 		npm_node_execpath: string;
 		SHLVL: string;
 		npm_config_noproxy: string;
+		MOTD_SHOWN: string;
 		HOME: string;
 		TERM_PROGRAM_VERSION: string;
 		NVM_BIN: string;

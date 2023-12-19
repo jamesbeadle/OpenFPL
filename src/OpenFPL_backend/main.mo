@@ -251,15 +251,15 @@ actor Self {
     switch (profile) {
       case (null) {};
       case (?p) {
-        
+
         let existingProfilePicture = profilesInstance.getProfilePicture(principalId);
-        switch(existingProfilePicture){
+        switch (existingProfilePicture) {
           case (null) {};
-          case (?foundPicture){
+          case (?foundPicture) {
             profilePicture := foundPicture;
-          }
+          };
         };
-        
+
         displayName := p.displayName;
         favouriteTeamId := p.favouriteTeamId;
       };
@@ -1392,13 +1392,12 @@ actor Self {
       case (?foundProfile) {
 
         let existingProfilePicture = profilesInstance.getProfilePicture(managerId);
-        switch(existingProfilePicture){
+        switch (existingProfilePicture) {
           case (null) {};
-          case (?foundPicture){
+          case (?foundPicture) {
             profilePicture := foundPicture;
-          }
+          };
         };
-
 
         displayName := foundProfile.displayName;
         favouriteTeamId := foundProfile.favouriteTeamId;
