@@ -31,11 +31,12 @@ export const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
     awayGoals: IDL.Nat8,
   });
+  const CountryId = IDL.Nat16;
   const PlayerDTO = IDL.Record({
     id: IDL.Nat16,
     value: IDL.Nat,
     dateOfBirth: IDL.Int,
-    nationality: IDL.Text,
+    nationality: CountryId,
     shirtNumber: IDL.Nat8,
     totalPoints: IDL.Int16,
     teamId: IDL.Nat16,
@@ -46,6 +47,8 @@ export const idlFactory = ({ IDL }) => {
   const PlayerScoreDTO = IDL.Record({
     id: IDL.Nat16,
     assists: IDL.Int16,
+    dateOfBirth: IDL.Int,
+    nationality: CountryId,
     goalsScored: IDL.Int16,
     saves: IDL.Int16,
     goalsConceded: IDL.Int16,
@@ -94,7 +97,7 @@ export const idlFactory = ({ IDL }) => {
     injuryHistory: List,
     transferHistory: List_4,
     isInjured: IDL.Bool,
-    nationality: IDL.Text,
+    nationality: CountryId,
     retirementDate: IDL.Int,
     valueHistory: List_5,
     shirtNumber: IDL.Nat8,
@@ -119,7 +122,7 @@ export const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     isInjured: IDL.Bool,
     gameweeks: IDL.Vec(PlayerGameweekDTO),
-    nationality: IDL.Text,
+    nationality: CountryId,
     retirementDate: IDL.Int,
     valueHistory: IDL.Vec(ValueHistory),
     shirtNumber: IDL.Nat8,
@@ -153,7 +156,7 @@ export const idlFactory = ({ IDL }) => {
         IDL.Nat8,
         IDL.Nat,
         IDL.Int,
-        IDL.Text,
+        CountryId,
       ],
       [],
       []
@@ -206,7 +209,7 @@ export const idlFactory = ({ IDL }) => {
     unretirePlayer: IDL.Func([PlayerId], [], []),
     updateHashForCategory: IDL.Func([IDL.Text], [], []),
     updatePlayer: IDL.Func(
-      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, IDL.Text],
+      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, CountryId],
       [],
       []
     ),

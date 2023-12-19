@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "3go7yo"
+  version_hash: "1ji9jgz"
 };
 function get_hooks() {
   return {};
@@ -3506,6 +3506,7 @@ const idlFactory$1 = ({ IDL }) => {
     InvalidTeamError: IDL.Null
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error2 });
+  const CountryId = IDL.Nat16;
   const PlayerId = IDL.Nat16;
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
@@ -3521,10 +3522,16 @@ const idlFactory$1 = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry)
   });
+  const CountryDTO = IDL.Record({
+    id: CountryId,
+    code: IDL.Text,
+    name: IDL.Text
+  });
   const DataCache = IDL.Record({ hash: IDL.Text, category: IDL.Text });
   const FantasyTeam = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     teamName: IDL.Text,
+    countrymenCountryId: CountryId,
     goalGetterPlayerId: PlayerId,
     favouriteTeamId: TeamId,
     hatTrickHeroGameweek: GameweekNumber,
@@ -3532,6 +3539,7 @@ const idlFactory$1 = ({ IDL }) => {
     teamBoostGameweek: GameweekNumber,
     captainFantasticGameweek: GameweekNumber,
     teamBoostTeamId: TeamId,
+    countrymenGameweek: GameweekNumber,
     noEntryPlayerId: PlayerId,
     safeHandsPlayerId: PlayerId,
     braceBonusGameweek: GameweekNumber,
@@ -3540,6 +3548,7 @@ const idlFactory$1 = ({ IDL }) => {
     bankBalance: IDL.Nat,
     captainFantasticPlayerId: PlayerId,
     noEntryGameweek: GameweekNumber,
+    prospectsGameweek: GameweekNumber,
     safeHandsGameweek: GameweekNumber,
     principalId: IDL.Text,
     passMasterPlayerId: PlayerId,
@@ -3548,6 +3557,7 @@ const idlFactory$1 = ({ IDL }) => {
   const FantasyTeamSnapshot = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     teamName: IDL.Text,
+    countrymenCountryId: CountryId,
     goalGetterPlayerId: PlayerId,
     favouriteTeamId: TeamId,
     hatTrickHeroGameweek: GameweekNumber,
@@ -3555,6 +3565,7 @@ const idlFactory$1 = ({ IDL }) => {
     teamBoostGameweek: GameweekNumber,
     captainFantasticGameweek: GameweekNumber,
     teamBoostTeamId: TeamId,
+    countrymenGameweek: GameweekNumber,
     noEntryPlayerId: PlayerId,
     safeHandsPlayerId: PlayerId,
     braceBonusGameweek: GameweekNumber,
@@ -3564,6 +3575,7 @@ const idlFactory$1 = ({ IDL }) => {
     captainFantasticPlayerId: PlayerId,
     gameweek: GameweekNumber,
     noEntryGameweek: GameweekNumber,
+    prospectsGameweek: GameweekNumber,
     safeHandsGameweek: GameweekNumber,
     principalId: IDL.Text,
     passMasterPlayerId: PlayerId,
@@ -3683,7 +3695,7 @@ const idlFactory$1 = ({ IDL }) => {
         IDL.Nat8,
         IDL.Nat,
         IDL.Int,
-        IDL.Text
+        CountryId
       ],
       [Result],
       []
@@ -3721,7 +3733,7 @@ const idlFactory$1 = ({ IDL }) => {
     executeTransferPlayer: IDL.Func([PlayerId, TeamId], [Result], []),
     executeUnretirePlayer: IDL.Func([PlayerId], [Result], []),
     executeUpdatePlayer: IDL.Func(
-      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, IDL.Text],
+      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, CountryId],
       [Result],
       []
     ),
@@ -3750,6 +3762,7 @@ const idlFactory$1 = ({ IDL }) => {
       [IDL.Vec(PaginatedClubLeaderboard)],
       ["query"]
     ),
+    getCountries: IDL.Func([], [IDL.Vec(CountryDTO)], ["query"]),
     getDataHashes: IDL.Func([], [IDL.Vec(DataCache)], ["query"]),
     getFantasyTeam: IDL.Func([], [FantasyTeam], ["query"]),
     getFantasyTeamForGameweek: IDL.Func(
@@ -3826,7 +3839,7 @@ const idlFactory$1 = ({ IDL }) => {
         IDL.Nat8,
         IDL.Nat,
         IDL.Int,
-        IDL.Text
+        CountryId
       ],
       [Result],
       []
@@ -3860,7 +3873,7 @@ const idlFactory$1 = ({ IDL }) => {
     validateTransferPlayer: IDL.Func([PlayerId, TeamId], [Result], []),
     validateUnretirePlayer: IDL.Func([PlayerId], [Result], []),
     validateUpdatePlayer: IDL.Func(
-      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, IDL.Text],
+      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, CountryId],
       [Result],
       []
     ),
@@ -3904,11 +3917,12 @@ const idlFactory = ({ IDL }) => {
     gameweek: GameweekNumber,
     awayGoals: IDL.Nat8
   });
+  const CountryId = IDL.Nat16;
   const PlayerDTO = IDL.Record({
     id: IDL.Nat16,
     value: IDL.Nat,
     dateOfBirth: IDL.Int,
-    nationality: IDL.Text,
+    nationality: CountryId,
     shirtNumber: IDL.Nat8,
     totalPoints: IDL.Int16,
     teamId: IDL.Nat16,
@@ -3919,6 +3933,8 @@ const idlFactory = ({ IDL }) => {
   const PlayerScoreDTO = IDL.Record({
     id: IDL.Nat16,
     assists: IDL.Int16,
+    dateOfBirth: IDL.Int,
+    nationality: CountryId,
     goalsScored: IDL.Int16,
     saves: IDL.Int16,
     goalsConceded: IDL.Int16,
@@ -3967,7 +3983,7 @@ const idlFactory = ({ IDL }) => {
     injuryHistory: List,
     transferHistory: List_4,
     isInjured: IDL.Bool,
-    nationality: IDL.Text,
+    nationality: CountryId,
     retirementDate: IDL.Int,
     valueHistory: List_5,
     shirtNumber: IDL.Nat8,
@@ -3992,7 +4008,7 @@ const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     isInjured: IDL.Bool,
     gameweeks: IDL.Vec(PlayerGameweekDTO),
-    nationality: IDL.Text,
+    nationality: CountryId,
     retirementDate: IDL.Int,
     valueHistory: IDL.Vec(ValueHistory),
     shirtNumber: IDL.Nat8,
@@ -4026,7 +4042,7 @@ const idlFactory = ({ IDL }) => {
         IDL.Nat8,
         IDL.Nat,
         IDL.Int,
-        IDL.Text
+        CountryId
       ],
       [],
       []
@@ -4079,7 +4095,7 @@ const idlFactory = ({ IDL }) => {
     unretirePlayer: IDL.Func([PlayerId], [], []),
     updateHashForCategory: IDL.Func([IDL.Text], [], []),
     updatePlayer: IDL.Func(
-      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, IDL.Text],
+      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, CountryId],
       [],
       []
     ),
@@ -4140,6 +4156,17 @@ function replacer(key2, value) {
   } else {
     return value;
   }
+}
+function calculateAgeFromNanoseconds(nanoseconds) {
+  const milliseconds = nanoseconds / 1e6;
+  const birthDate = new Date(milliseconds);
+  const today = /* @__PURE__ */ new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+  if (monthDifference < 0 || monthDifference === 0 && today.getDate() < birthDate.getDate()) {
+    age--;
+  }
+  return age;
 }
 function updateTableData(fixtures, teams, selectedGameweek) {
   let tempTable = {};
@@ -5094,11 +5121,17 @@ function createManagerStore() {
     if (userFantasyTeam.captainFantasticGameweek === activeGameweek) {
       bonusPlayed = 6;
     }
-    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+    if (userFantasyTeam.prospectsGameweek === activeGameweek) {
       bonusPlayed = 7;
     }
-    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+    if (userFantasyTeam.countrymenGameweek === activeGameweek) {
       bonusPlayed = 8;
+    }
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+      bonusPlayed = 9;
+    }
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+      bonusPlayed = 10;
     }
     return bonusPlayed;
   }
@@ -5151,6 +5184,42 @@ function createManagerStore() {
   };
 }
 createManagerStore();
+function createCountriesStore() {
+  const { subscribe: subscribe2, set } = writable(null);
+  let actor = ActorFactory.createActor(
+    idlFactory$1,
+    { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+  );
+  async function sync() {
+    let category = "countries";
+    const newHashValues = await actor.getDataHashes();
+    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
+    const localHash = localStorage.getItem(category);
+    if (liveHash?.hash != localHash) {
+      let updatedCountriesData = await actor.getCountries();
+      localStorage.setItem(
+        "countries_data",
+        JSON.stringify(updatedCountriesData, replacer)
+      );
+      localStorage.setItem(category, liveHash?.hash ?? "");
+      set(updatedCountriesData);
+    } else {
+      const cachedCountriesData = localStorage.getItem("countries_data");
+      let cachedCountries = null;
+      try {
+        cachedCountries = JSON.parse(cachedCountriesData || "[]");
+      } catch (e) {
+        cachedCountries = null;
+      }
+      set(cachedCountries);
+    }
+  }
+  return {
+    subscribe: subscribe2,
+    sync
+  };
+}
+const countriesStore = createCountriesStore();
 function createPlayerStore() {
   const { subscribe: subscribe2, set } = writable([]);
   systemStore.subscribe((value) => {
@@ -5380,7 +5449,9 @@ function createPlayerEventsStore() {
       cleanSheetPoints,
       gameweek: playerPointsDTO.gameweek,
       bonusPoints: 0,
-      totalPoints: 0
+      totalPoints: 0,
+      isCaptain: false,
+      nationality: ""
     };
     return playerGameweekDetails;
   }
@@ -5504,6 +5575,12 @@ function createPlayerEventsStore() {
     }
     if (fantasyTeam.captainFantasticGameweek === gameweekData.gameweek && fantasyTeam.captainId === gameweekData.player.id && gameweekData.goals > 0) {
       bonusPoints = points;
+    }
+    if (fantasyTeam.countrymenGameweek === gameweekData.gameweek && fantasyTeam.countrymenCountryId === gameweekData.player.nationality) {
+      bonusPoints = points * 2;
+    }
+    if (fantasyTeam.prospectsGameweek === gameweekData.gameweek && calculateAgeFromNanoseconds(Number(gameweekData.player.dateOfBirth)) < 21) {
+      bonusPoints = points * 2;
     }
     if (fantasyTeam.braceBonusGameweek === gameweekData.gameweek && gameweekData.goals >= 2) {
       bonusPoints = points;
@@ -6105,7 +6182,9 @@ function isBonusConditionMet(team) {
     team.passMasterGameweek,
     team.goalGetterGameweek,
     team.noEntryGameweek,
-    team.safeHandsGameweek
+    team.safeHandsGameweek,
+    team.countrymenGameweek,
+    team.prospectsGameweek
   ];
   for (const gw of bonusGameweeks) {
     if (gw !== 0) {
@@ -6126,9 +6205,11 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_newCaptain;
   let $$unsubscribe_availableFormations;
+  let $$unsubscribe_countriesStore;
   let $$unsubscribe_teamStore;
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => $playerStore = value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_countriesStore = subscribe(countriesStore, (value) => value);
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   const formations = {
     "3-4-3": {
@@ -6290,6 +6371,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_systemStore();
   $$unsubscribe_newCaptain();
   $$unsubscribe_availableFormations();
+  $$unsubscribe_countriesStore();
   $$unsubscribe_teamStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {

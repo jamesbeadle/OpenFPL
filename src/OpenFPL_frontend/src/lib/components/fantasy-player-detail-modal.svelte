@@ -11,7 +11,6 @@
   export let playerTeam: Team;
   export let opponentTeam: Team;
   export let seasonName: string;
-  export let isCaptain: boolean;
 </script>
 
 <Modal {visible} on:nnsClose={closeDetailModal}>
@@ -23,7 +22,7 @@
 
     <div class="flex justify-start items-center w-full">
       <svelte:component
-        this={getFlagComponent(gameweekData.player.nationality)}
+        this={getFlagComponent(gameweekData.nationality)}
         class="h-20 w-20"
       />
       <div class="ml-4">
@@ -203,7 +202,7 @@
       </div>
     </div>
 
-    {#if isCaptain}
+    {#if gameweekData.isCaptain}
       <div class="mt-2">
         <div
           class="flex justify-between items-center bg-light-gray p-2 border-t border-b border-gray-600"

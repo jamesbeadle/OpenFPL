@@ -35,6 +35,7 @@ import Int16 "mo:base/Int16";
 import Int64 "mo:base/Int64";
 import Bool "mo:base/Bool";
 import SHA224 "./SHA224";
+import Countries "./Countries";
 
 actor Self {
 
@@ -43,6 +44,7 @@ actor Self {
   let teamsInstance = Teams.Teams();
   let rewardsInstance = Rewards.Rewards();
   let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
+  let countriesInstance = Countries.Countries();
 
   private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
     { category = "teams"; hash = "DEFAULT_VALUE" },
@@ -88,8 +90,8 @@ actor Self {
     transferPlayer : (playerId : T.PlayerId, newTeamId : T.TeamId, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) -> async ();
     loanPlayer : (playerId : T.PlayerId, loanTeamId : T.TeamId, loanEndDate : Int, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) -> async ();
     recallPlayer : (playerId : T.PlayerId) -> async ();
-    createPlayer : (teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : Text) -> async ();
-    updatePlayer : (playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : Text) -> async ();
+    createPlayer : (teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) -> async ();
+    updatePlayer : (playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : T.CountryId) -> async ();
     setPlayerInjury : (playerId : T.PlayerId, description : Text, expectedEndDate : Int) -> async ();
     retirePlayer : (playerId : T.PlayerId, retirementDate : Int) -> async ();
     unretirePlayer : (playerId : T.PlayerId) -> async ();
@@ -470,6 +472,9 @@ actor Self {
           safeHandsPlayerId = 0;
           captainFantasticGameweek = 0;
           captainFantasticPlayerId = 0;
+          countrymenGameweek = 0;
+          countrymenCountryId = 0;
+          prospectsGameweek = 0;
           braceBonusGameweek = 0;
           hatTrickHeroGameweek = 0;
           favouriteTeamId = 0;
@@ -886,8 +891,7 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateCreatePlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : Text) : async Result.Result<(), T.Error> {
-
+  public shared func validateCreatePlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) : async Result.Result<(), T.Error> {
     switch (teamsInstance.getTeam(teamId)) {
       case (null) {
         return #err(#InvalidData);
@@ -907,7 +911,7 @@ actor Self {
       return #err(#InvalidData);
     };
 
-    if (not Utilities.isNationalityValid(nationality)) {
+    if (not countriesInstance.isCountryValid(nationality)) {
       return #err(#InvalidData);
     };
 
@@ -918,8 +922,7 @@ actor Self {
     return #ok();
   };
 
-  public shared func validateUpdatePlayer(playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : Text) : async Result.Result<(), T.Error> {
-
+  public shared func validateUpdatePlayer(playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : T.CountryId) : async Result.Result<(), T.Error> {
     let player = await playerCanister.getPlayer(playerId);
     if (player.id == 0) {
       return #err(#InvalidData);
@@ -937,7 +940,7 @@ actor Self {
       return #err(#InvalidData);
     };
 
-    if (not Utilities.isNationalityValid(nationality)) {
+    if (not countriesInstance.isCountryValid(nationality)) {
       return #err(#InvalidData);
     };
 
@@ -1279,12 +1282,12 @@ actor Self {
     return #ok();
   };
 
-  public shared func executeCreatePlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : Text) : async Result.Result<(), T.Error> {
+  public shared func executeCreatePlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) : async Result.Result<(), T.Error> {
     await playerCanister.createPlayer(teamId, position, firstName, lastName, shirtNumber, value, dateOfBirth, nationality);
     return #ok();
   };
 
-  public shared func executeUpdatePlayer(playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : Text) : async Result.Result<(), T.Error> {
+  public shared func executeUpdatePlayer(playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : T.CountryId) : async Result.Result<(), T.Error> {
     await playerCanister.updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality);
     return #ok();
   };
@@ -1495,6 +1498,10 @@ actor Self {
 
   public shared query func getDataHashes() : async [T.DataCache] {
     return List.toArray(dataCacheHashes);
+  };
+
+  public shared query func getCountries() : async [DTOs.CountryDTO] {
+    return List.toArray(countriesInstance.countries);
   };
 
   private stable var stable_timers : [T.TimerInfo] = [];

@@ -155,6 +155,8 @@ type FantasyTeamSnapshot = record {
   captainFantasticGameweek : GameweekNumber;
   captainFantasticPlayerId : PlayerId;
   captainId : nat16;
+  countrymenCountryId : CountryId;
+  countrymenGameweek : GameweekNumber;
   favouriteTeamId : TeamId;
   gameweek : GameweekNumber;
   goalGetterGameweek : GameweekNumber;
@@ -167,6 +169,7 @@ type FantasyTeamSnapshot = record {
   playerIds : vec PlayerId;
   points : int16;
   principalId : text;
+  prospectsGameweek : GameweekNumber;
   safeHandsGameweek : GameweekNumber;
   safeHandsPlayerId : PlayerId;
   teamBoostGameweek : GameweekNumber;
@@ -180,6 +183,8 @@ type FantasyTeam = record {
   captainFantasticGameweek : GameweekNumber;
   captainFantasticPlayerId : PlayerId;
   captainId : PlayerId;
+  countrymenCountryId : CountryId;
+  countrymenGameweek : GameweekNumber;
   favouriteTeamId : TeamId;
   goalGetterGameweek : GameweekNumber;
   goalGetterPlayerId : PlayerId;
@@ -190,6 +195,7 @@ type FantasyTeam = record {
   passMasterPlayerId : PlayerId;
   playerIds : vec PlayerId;
   principalId : text;
+  prospectsGameweek : GameweekNumber;
   safeHandsGameweek : GameweekNumber;
   safeHandsPlayerId : PlayerId;
   teamBoostGameweek : GameweekNumber;
@@ -210,10 +216,25 @@ type DataCache = record {
   category : text;
   hash : text;
 };
+type CountryId = nat16;
+type CountryDTO = record {
+  code : text;
+  id : CountryId;
+  name : text;
+};
 service : {
   createProfile : () -> ();
   executeAddInitialFixtures : (SeasonId, vec Fixture) -> (Result);
-  executeCreatePlayer : (TeamId, nat8, text, text, nat8, nat, int, text) -> (Result);
+  executeCreatePlayer : (
+    TeamId,
+    nat8,
+    text,
+    text,
+    nat8,
+    nat,
+    int,
+    CountryId,
+  ) -> (Result);
   executeLoanPlayer : (PlayerId, TeamId, int) -> (Result);
   executePromoteFormerTeam : (TeamId) -> (Result);
   executePromoteNewTeam : (text, text, text, text, text, text, nat8) -> (Result);
@@ -231,11 +252,12 @@ service : {
   executeSubmitFixtureData : (FixtureId, vec PlayerEventData) -> (Result);
   executeTransferPlayer : (PlayerId, TeamId) -> (Result);
   executeUnretirePlayer : (PlayerId) -> (Result);
-  executeUpdatePlayer : (PlayerId, nat8, text, text, nat8, int, text) -> (Result);
+  executeUpdatePlayer : (PlayerId, nat8, text, text, nat8, int, CountryId) -> (Result);
   executeUpdateTeam : (TeamId, text, text, text, text, text, text, nat8) -> (Result);
   getActiveFixtures : () -> (vec Fixture) query;
   getClubLeaderboard : (nat16, nat8, TeamId, nat, nat) -> (PaginatedClubLeaderboard) query;
   getClubLeaderboardsCache : (nat16, nat8) -> (vec PaginatedClubLeaderboard) query;
+  getCountries : () -> (vec CountryDTO) query;
   getDataHashes : () -> (vec DataCache) query;
   getFantasyTeam : () -> (FantasyTeam) query;
   getFantasyTeamForGameweek : (text, nat16, nat8) -> (FantasyTeamSnapshot) query;
@@ -267,7 +289,16 @@ service : {
   updateSystemState : (UpdateSystemStateDTO) -> (Result);
   updateTeamValueInfo : () -> ();
   validateAddInitialFixtures : (SeasonId, vec Fixture) -> (Result);
-  validateCreatePlayer : (TeamId, nat8, text, text, nat8, nat, int, text) -> (Result);
+  validateCreatePlayer : (
+    TeamId,
+    nat8,
+    text,
+    text,
+    nat8,
+    nat,
+    int,
+    CountryId,
+  ) -> (Result);
   validateLoanPlayer : (PlayerId, TeamId, int) -> (Result);
   validatePromoteFormerTeam : (TeamId) -> (Result);
   validatePromoteNewTeam : (text, text, text, text, text, text) -> (Result);
@@ -285,6 +316,6 @@ service : {
   validateSubmitFixtureData : (FixtureId, vec PlayerEventData) -> (Result);
   validateTransferPlayer : (PlayerId, TeamId) -> (Result);
   validateUnretirePlayer : (PlayerId) -> (Result);
-  validateUpdatePlayer : (PlayerId, nat8, text, text, nat8, int, text) -> (Result);
+  validateUpdatePlayer : (PlayerId, nat8, text, text, nat8, int, CountryId) -> (Result);
   validateUpdateTeam : (TeamId, text, text, text, text, text, text) -> (Result);
 };
