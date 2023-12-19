@@ -50,14 +50,6 @@ actor Self {
   let rewardsInstance = Rewards.Rewards();
   let countriesInstance = Countries.Countries();
 
-  let systemState: T.SystemState = {
-    calculationGameweek = 1;
-    calculationMonth = 8;
-    calculationSeason = 1;
-    pickTeamGameweek = 1;
-    homepageFixturesGameweek = 1;
-    homepageManagerGameweek = 0;
-  };
 
   private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
     { category = "teams"; hash = "DEFAULT_VALUE" },

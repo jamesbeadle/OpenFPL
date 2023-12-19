@@ -29,9 +29,42 @@ module {
     updatePlayerEventDataCache : () -> async (),
   ) {
 
-    private var activeSeasonId : T.SeasonId = 1;
-    private var activeGameweek : T.GameweekNumber = 1;
-    private var interestingGameweek : T.GameweekNumber = 1;
+    let systemState: T.SystemState = {
+      calculationGameweek = 1;
+      calculationMonth = 8;
+      calculationSeason = 1;
+      pickTeamGameweek = 1;
+      homepageFixturesGameweek = 1;
+      homepageManagerGameweek = 0;
+    };
+
+
+
+    //FantasyTeams combine with //Profiles
+    private var manager: HashMap.HashMap<Text, T.Manager> = HashMap.HashMap<Text, T.Manager>(100, Text.equal, Text.hash);
+    
+    //Players
+    
+    
+    private var userProfiles : HashMap.HashMap<Text, T.Profile> = HashMap.HashMap<Text, T.Profile>(100, Text.equal, Text.hash);
+    private var userProfilePictures : HashMap.HashMap<Text, Blob> = HashMap.HashMap<Text, Blob>(100, Text.equal, Text.hash);
+    private var fantasyTeams : HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
+  
+    private var players = List.fromArray<T.Player>([]);
+    //seasons and gameweek tree structure recording high level figures
+
+
+    private var nextPlayerId : Nat = 2;
+
+    //functions
+
+  
+
+
+
+
+
+
 
     //child modules
     private let seasonsInstance = Seasons.Seasons();

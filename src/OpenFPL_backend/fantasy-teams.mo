@@ -25,7 +25,6 @@ module {
     getPlayers : () -> async [DTOs.PlayerDTO],
   ) {
 
-    private var fantasyTeams : HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
     private var seasonLeaderboards : HashMap.HashMap<Nat16, T.SeasonLeaderboards> = HashMap.HashMap<Nat16, T.SeasonLeaderboards>(100, Utilities.eqNat16, Utilities.hashNat16);
     private var monthlyLeaderboards : HashMap.HashMap<T.SeasonId, List.List<T.ClubLeaderboard>> = HashMap.HashMap<T.SeasonId, List.List<T.ClubLeaderboard>>(100, Utilities.eqNat16, Utilities.hashNat16);
 

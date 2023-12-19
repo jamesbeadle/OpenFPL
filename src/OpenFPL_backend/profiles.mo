@@ -11,9 +11,7 @@ import Debug "mo:base/Debug";
 module {
   public class Profiles() {
 
-    private var userProfiles : HashMap.HashMap<Text, T.Profile> = HashMap.HashMap<Text, T.Profile>(100, Text.equal, Text.hash);
-    private var userProfilePictures : HashMap.HashMap<Text, Blob> = HashMap.HashMap<Text, Blob>(100, Text.equal, Text.hash);
-
+    
     public func setData(stable_profiles : [(Text, T.Profile)]) {
       userProfiles := HashMap.fromIter<Text, T.Profile>(
         stable_profiles.vals(),

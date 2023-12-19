@@ -29,13 +29,78 @@ module Types {
     #Forward;
   };
 
-  public type Profile = {
-    principalName : Text;
+  public type ShirtType = {
+    #Filled;
+    #Striped;
+  };
+
+  public type Manager = {
+    principalId : Text;
     displayName : Text;
     termsAccepted : Bool;
     profilePictureCanisterId : Text;
     favouriteTeamId : TeamId;
     createDate : Int;
+    transfersAvailable : Nat8;
+    bankQuarterMillions : Nat;
+    playerIds : [PlayerId];
+    captainId : PlayerId;
+    goalGetterGameweek : GameweekNumber;
+    goalGetterPlayerId : PlayerId;
+    passMasterGameweek : GameweekNumber;
+    passMasterPlayerId : PlayerId;
+    noEntryGameweek : GameweekNumber;
+    noEntryPlayerId : PlayerId;
+    teamBoostGameweek : GameweekNumber;
+    teamBoostTeamId : TeamId;
+    safeHandsGameweek : GameweekNumber;
+    safeHandsPlayerId : PlayerId;
+    captainFantasticGameweek : GameweekNumber;
+    captainFantasticPlayerId : PlayerId;
+    countrymenGameweek : GameweekNumber;
+    countrymenCountryId : CountryId;
+    prospectsGameweek : GameweekNumber;
+    braceBonusGameweek : GameweekNumber;
+    hatTrickHeroGameweek : GameweekNumber;
+    transferWindowGameweek: GameweekNumber;
+    history : List.List<FantasyTeamSeason>;
+  };
+
+  public type FantasyTeamSeason = {
+    seasonId : SeasonId;
+    totalPoints : Int16;
+    gameweeks : List.List<FantasyTeamSnapshot>;
+  };
+
+  public type FantasyTeamSnapshot = {
+    principalId : Text;
+    teamName : Text;
+    favouriteTeamId : TeamId;
+    transfersAvailable : Nat8;
+    bankQuarterMillions : Nat;
+    teamValueQuarterMillions : Nat;
+    playerIds : [PlayerId];
+    captainId : Nat16;
+    gameweek : GameweekNumber;
+    goalGetterGameweek : GameweekNumber;
+    goalGetterPlayerId : PlayerId;
+    passMasterGameweek : GameweekNumber;
+    passMasterPlayerId : PlayerId;
+    noEntryGameweek : GameweekNumber;
+    noEntryPlayerId : PlayerId;
+    teamBoostGameweek : GameweekNumber;
+    teamBoostTeamId : TeamId;
+    safeHandsGameweek : GameweekNumber;
+    safeHandsPlayerId : PlayerId;
+    captainFantasticGameweek : GameweekNumber;
+    captainFantasticPlayerId : PlayerId;
+    countrymenGameweek : GameweekNumber;
+    countrymenCountryId : CountryId;
+    prospectsGameweek : GameweekNumber;
+    braceBonusGameweek : GameweekNumber;
+    hatTrickHeroGameweek : GameweekNumber;
+    points : Int16;
+    transferWindowGameweek: GameweekNumber;
   };
 
   public type Season = {
@@ -60,7 +125,7 @@ module Types {
     secondaryColourHex : Text;
     thirdColourHex : Text;
     abbreviatedName : Text;
-    shirtType : Nat8; //0 = Filled, 1 = Striped, Can add more later.
+    shirtType : ShirtType;
   };
 
   public type Fixture = {
@@ -135,74 +200,8 @@ module Types {
     subaccount : Blob;
   };
 
-  public type FantasyTeam = {
-    principalId : Text;
-    teamName : Text;
-    favouriteTeamId : TeamId;
-    transfersAvailable : Nat8;
-    bankBalance : Nat; //Value in £0.25m units
-    playerIds : [PlayerId];
-    captainId : PlayerId;
-    goalGetterGameweek : GameweekNumber;
-    goalGetterPlayerId : PlayerId;
-    passMasterGameweek : GameweekNumber;
-    passMasterPlayerId : PlayerId;
-    noEntryGameweek : GameweekNumber;
-    noEntryPlayerId : PlayerId;
-    teamBoostGameweek : GameweekNumber;
-    teamBoostTeamId : TeamId;
-    safeHandsGameweek : GameweekNumber;
-    safeHandsPlayerId : PlayerId;
-    captainFantasticGameweek : GameweekNumber;
-    captainFantasticPlayerId : PlayerId;
-    countrymenGameweek : GameweekNumber;
-    countrymenCountryId : CountryId;
-    prospectsGameweek : GameweekNumber;
-    braceBonusGameweek : GameweekNumber;
-    hatTrickHeroGameweek : GameweekNumber;
-    transferWindowGameweek: GameweekNumber;
-  };
-
   public type UserFantasyTeam = {
     fantasyTeam : FantasyTeam;
-    history : List.List<FantasyTeamSeason>;
-  };
-
-  public type FantasyTeamSeason = {
-    seasonId : SeasonId;
-    totalPoints : Int16;
-    gameweeks : List.List<FantasyTeamSnapshot>;
-  };
-
-  public type FantasyTeamSnapshot = {
-    principalId : Text;
-    teamName : Text;
-    favouriteTeamId : TeamId;
-    transfersAvailable : Nat8;
-    bankBalance : Nat; //Value in £0.25m units
-    playerIds : [PlayerId];
-    captainId : Nat16;
-    gameweek : GameweekNumber;
-    goalGetterGameweek : GameweekNumber;
-    goalGetterPlayerId : PlayerId;
-    passMasterGameweek : GameweekNumber;
-    passMasterPlayerId : PlayerId;
-    noEntryGameweek : GameweekNumber;
-    noEntryPlayerId : PlayerId;
-    teamBoostGameweek : GameweekNumber;
-    teamBoostTeamId : TeamId;
-    safeHandsGameweek : GameweekNumber;
-    safeHandsPlayerId : PlayerId;
-    captainFantasticGameweek : GameweekNumber;
-    captainFantasticPlayerId : PlayerId;
-    countrymenGameweek : GameweekNumber;
-    countrymenCountryId : CountryId;
-    prospectsGameweek : GameweekNumber;
-    braceBonusGameweek : GameweekNumber;
-    hatTrickHeroGameweek : GameweekNumber;
-    points : Int16;
-    transferWindowGameweek: GameweekNumber;
-  };
 
   public type SeasonLeaderboards = {
     seasonLeaderboard : Leaderboard;

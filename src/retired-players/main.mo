@@ -24,16 +24,8 @@ import SHA224 "../OpenFPL_backend/SHA224";
 
 actor Self {
 
-  private var players = List.fromArray<T.Player>([]);
-  private var nextPlayerId : Nat = 560;
   private var retiredPlayers = List.fromArray<T.Player>([]);
   private var formerPlayers = List.fromArray<T.Player>([]);
-
-  private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
-    { category = "players"; hash = "DEFAULT_VALUE" },
-    { category = "playerEventData"; hash = "DEFAULT_VALUE" },
-  ]);
-
   public shared query ({ caller }) func getPlayers() : async [DTOs.PlayerDTO] {
 
     func compare(player1 : T.Player, player2 : T.Player) : Bool {
