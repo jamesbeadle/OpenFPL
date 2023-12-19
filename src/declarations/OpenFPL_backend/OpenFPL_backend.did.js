@@ -38,6 +38,7 @@ export const idlFactory = ({ IDL }) => {
     InvalidTeamError: IDL.Null,
   });
   const Result = IDL.Variant({ ok: IDL.Null, err: Error });
+  const CountryId = IDL.Nat16;
   const PlayerId = IDL.Nat16;
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
@@ -53,10 +54,16 @@ export const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry),
   });
+  const CountryDTO = IDL.Record({
+    id: CountryId,
+    code: IDL.Text,
+    name: IDL.Text,
+  });
   const DataCache = IDL.Record({ hash: IDL.Text, category: IDL.Text });
   const FantasyTeam = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     teamName: IDL.Text,
+    countrymenCountryId: CountryId,
     goalGetterPlayerId: PlayerId,
     favouriteTeamId: TeamId,
     hatTrickHeroGameweek: GameweekNumber,
@@ -64,6 +71,7 @@ export const idlFactory = ({ IDL }) => {
     teamBoostGameweek: GameweekNumber,
     captainFantasticGameweek: GameweekNumber,
     teamBoostTeamId: TeamId,
+    countrymenGameweek: GameweekNumber,
     noEntryPlayerId: PlayerId,
     safeHandsPlayerId: PlayerId,
     braceBonusGameweek: GameweekNumber,
@@ -72,6 +80,7 @@ export const idlFactory = ({ IDL }) => {
     bankBalance: IDL.Nat,
     captainFantasticPlayerId: PlayerId,
     noEntryGameweek: GameweekNumber,
+    prospectsGameweek: GameweekNumber,
     safeHandsGameweek: GameweekNumber,
     principalId: IDL.Text,
     passMasterPlayerId: PlayerId,
@@ -80,6 +89,7 @@ export const idlFactory = ({ IDL }) => {
   const FantasyTeamSnapshot = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     teamName: IDL.Text,
+    countrymenCountryId: CountryId,
     goalGetterPlayerId: PlayerId,
     favouriteTeamId: TeamId,
     hatTrickHeroGameweek: GameweekNumber,
@@ -87,6 +97,7 @@ export const idlFactory = ({ IDL }) => {
     teamBoostGameweek: GameweekNumber,
     captainFantasticGameweek: GameweekNumber,
     teamBoostTeamId: TeamId,
+    countrymenGameweek: GameweekNumber,
     noEntryPlayerId: PlayerId,
     safeHandsPlayerId: PlayerId,
     braceBonusGameweek: GameweekNumber,
@@ -96,6 +107,7 @@ export const idlFactory = ({ IDL }) => {
     captainFantasticPlayerId: PlayerId,
     gameweek: GameweekNumber,
     noEntryGameweek: GameweekNumber,
+    prospectsGameweek: GameweekNumber,
     safeHandsGameweek: GameweekNumber,
     principalId: IDL.Text,
     passMasterPlayerId: PlayerId,
@@ -215,7 +227,7 @@ export const idlFactory = ({ IDL }) => {
         IDL.Nat8,
         IDL.Nat,
         IDL.Int,
-        IDL.Text,
+        CountryId,
       ],
       [Result],
       []
@@ -253,7 +265,7 @@ export const idlFactory = ({ IDL }) => {
     executeTransferPlayer: IDL.Func([PlayerId, TeamId], [Result], []),
     executeUnretirePlayer: IDL.Func([PlayerId], [Result], []),
     executeUpdatePlayer: IDL.Func(
-      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, IDL.Text],
+      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, CountryId],
       [Result],
       []
     ),
@@ -282,6 +294,7 @@ export const idlFactory = ({ IDL }) => {
       [IDL.Vec(PaginatedClubLeaderboard)],
       ["query"]
     ),
+    getCountries: IDL.Func([], [IDL.Vec(CountryDTO)], ["query"]),
     getDataHashes: IDL.Func([], [IDL.Vec(DataCache)], ["query"]),
     getFantasyTeam: IDL.Func([], [FantasyTeam], ["query"]),
     getFantasyTeamForGameweek: IDL.Func(
@@ -358,7 +371,7 @@ export const idlFactory = ({ IDL }) => {
         IDL.Nat8,
         IDL.Nat,
         IDL.Int,
-        IDL.Text,
+        CountryId,
       ],
       [Result],
       []
@@ -392,7 +405,7 @@ export const idlFactory = ({ IDL }) => {
     validateTransferPlayer: IDL.Func([PlayerId, TeamId], [Result], []),
     validateUnretirePlayer: IDL.Func([PlayerId], [Result], []),
     validateUpdatePlayer: IDL.Func(
-      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, IDL.Text],
+      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, CountryId],
       [Result],
       []
     ),

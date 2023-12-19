@@ -16,7 +16,7 @@ import type {
   PlayerPointsDTO,
 } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../utils/Helpers";
+import { calculateAgeFromNanoseconds, replacer } from "../utils/Helpers";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
@@ -256,6 +256,8 @@ function createPlayerEventsStore() {
       gameweek: playerPointsDTO.gameweek,
       bonusPoints: 0,
       totalPoints: 0,
+      isCaptain: false,
+      nationality: "",
     };
 
     return playerGameweekDetails;
@@ -439,6 +441,20 @@ function createPlayerEventsStore() {
       gameweekData.goals > 0
     ) {
       bonusPoints = points;
+    }
+
+    if (
+      fantasyTeam.countrymenGameweek === gameweekData.gameweek &&
+      fantasyTeam.countrymenCountryId === gameweekData.player.nationality
+    ) {
+      bonusPoints = points * 2;
+    }
+
+    if (
+      fantasyTeam.prospectsGameweek === gameweekData.gameweek &&
+      calculateAgeFromNanoseconds(Number(gameweekData.player.dateOfBirth)) < 21
+    ) {
+      bonusPoints = points * 2;
     }
 
     if (
