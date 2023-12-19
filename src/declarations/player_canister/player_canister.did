@@ -20,10 +20,12 @@ type PlayerSeason = record {
 };
 type PlayerScoreDTO = record {
   assists : int16;
+  dateOfBirth : int;
   events : List_3;
   goalsConceded : int16;
   goalsScored : int16;
   id : nat16;
+  nationality : CountryId;
   points : int16;
   position : nat8;
   saves : int16;
@@ -65,7 +67,7 @@ type PlayerDetailDTO = record {
   injuryHistory : vec InjuryHistory;
   isInjured : bool;
   lastName : text;
-  nationality : text;
+  nationality : CountryId;
   onLoan : bool;
   parentTeamId : nat16;
   position : nat8;
@@ -81,7 +83,7 @@ type PlayerDTO = record {
   firstName : text;
   id : nat16;
   lastName : text;
-  nationality : text;
+  nationality : CountryId;
   position : nat8;
   shirtNumber : nat8;
   teamId : nat16;
@@ -95,7 +97,7 @@ type Player = record {
   injuryHistory : List;
   isInjured : bool;
   lastName : text;
-  nationality : text;
+  nationality : CountryId;
   onLoan : bool;
   parentTeamId : nat16;
   position : nat8;
@@ -155,9 +157,10 @@ type DataCache = record {
   category : text;
   hash : text;
 };
+type CountryId = nat16;
 service : {
   calculatePlayerScores : (nat16, nat8, Fixture) -> (Fixture);
-  createPlayer : (TeamId, nat8, text, text, nat8, nat, int, text) -> ();
+  createPlayer : (TeamId, nat8, text, text, nat8, nat, int, CountryId) -> ();
   getActivePlayers : () -> (vec PlayerDTO) query;
   getAllPlayers : () -> (vec PlayerDTO) query;
   getAllPlayersMap : (nat16, nat8) -> (
@@ -182,6 +185,6 @@ service : {
   transferPlayer : (PlayerId, TeamId, SeasonId, GameweekNumber) -> ();
   unretirePlayer : (PlayerId) -> ();
   updateHashForCategory : (text) -> ();
-  updatePlayer : (PlayerId, nat8, text, text, nat8, int, text) -> ();
+  updatePlayer : (PlayerId, nat8, text, text, nat8, int, CountryId) -> ();
   updatePlayerEventDataCache : () -> ();
 };

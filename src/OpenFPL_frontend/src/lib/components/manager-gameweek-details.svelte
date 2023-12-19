@@ -21,6 +21,7 @@
   import { Spinner } from "@dfinity/gix-components";
   import FantasyPlayerDetailModal from "./fantasy-player-detail-modal.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
+  import { countriesStore } from "$lib/stores/country-store";
 
   let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from(
@@ -31,6 +32,7 @@
   export let selectedGameweek = writable<number | null>(null);
   export let fantasyTeam = writable<FantasyTeam | null>(null);
   export let loadingGameweek: Writable<boolean>;
+
   let isLoading = false;
   let showModal = false;
   let selectedTeam: Team;
@@ -114,6 +116,7 @@
   async function showDetailModal(gameweekData: GameweekData) {
     try {
       selectedGameweekData = gameweekData;
+
       let playerTeamId = gameweekData.player.teamId;
       selectedTeam = $teamStore.find((x) => x.id === playerTeamId)!;
 
@@ -153,7 +156,6 @@
       visible={showModal}
       {closeDetailModal}
       gameweekData={selectedGameweekData}
-      isCaptain={selectedGameweekData.player.id === $fantasyTeam?.captainId}
     />
   {/if}
   <div>
@@ -224,6 +226,9 @@
           {#each $gameweekPlayers as data}
             {@const playerDTO = getPlayerDTO(data.player.id)}
             {@const playerTeam = getPlayerTeam(data.player.teamId)}
+            {@const playerCountry = $countriesStore
+              ? $countriesStore.find((x) => x.id === playerDTO?.nationality)
+              : null}
             <button
               class="w-full"
               on:click={() => {
@@ -247,7 +252,9 @@
                 </div>
                 <div class="w-2/12 flex items-center">
                   <svelte:component
-                    this={getFlagComponent(playerDTO?.nationality ?? "")}
+                    this={getFlagComponent(
+                      playerCountry ? playerCountry.name : ""
+                    )}
                     class="w-4 h-4 mr-1 hidden md:flex"
                     size="100"
                   />

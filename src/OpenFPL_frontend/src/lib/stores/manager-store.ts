@@ -145,22 +145,20 @@ function createManagerStore() {
       bonusPlayed = 6;
     }
 
-    /* Coming soon
-    if(userFantasyTeam.prospectsGameweek === activeGameweek){
+    if (userFantasyTeam.prospectsGameweek === activeGameweek) {
       bonusPlayed = 7;
     }
 
-    if(userFantasyTeam.countrymenGameweek === activeGameweek){
+    if (userFantasyTeam.countrymenGameweek === activeGameweek) {
       bonusPlayed = 8;
-    }
-    */
-
-    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
-      bonusPlayed = 7;
     }
 
     if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
-      bonusPlayed = 8;
+      bonusPlayed = 9;
+    }
+
+    if (userFantasyTeam.hatTrickHeroGameweek === activeGameweek) {
+      bonusPlayed = 10;
     }
 
     return bonusPlayed;

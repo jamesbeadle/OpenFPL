@@ -218,6 +218,7 @@ actor Self {
       var goalsConceded : Int16 = 0;
       var saves : Int16 = 0;
       var assists : Int16 = 0;
+      var dateOfBirth : Int = player.dateOfBirth;
 
       for (season in Iter.fromList(player.seasons)) {
         if (season.id == seasonId) {
@@ -251,6 +252,8 @@ actor Self {
         goalsConceded = goalsConceded;
         saves = saves;
         assists = assists;
+        dateOfBirth = dateOfBirth;
+        nationality = player.nationality;
       };
       playersMap.put(player.id, scoreDTO);
     };
@@ -276,7 +279,7 @@ actor Self {
           shirtNumber = 0;
           value = 0;
           dateOfBirth = 0;
-          nationality = "";
+          nationality = 0;
           seasons = List.nil<T.PlayerSeason>();
           valueHistory = List.nil<T.ValueHistory>();
           onLoan = false;
@@ -300,7 +303,7 @@ actor Self {
     var shirtNumber : Nat8 = 0;
     var value : Nat = 0;
     var dateOfBirth : Int = 0;
-    var nationality = "";
+    var nationality : T.CountryId = 0;
     var valueHistory : [T.ValueHistory] = [];
     var onLoan = false;
     var parentTeamId : T.TeamId = 0;
@@ -1079,7 +1082,7 @@ actor Self {
     };
   };
 
-  public shared func createPlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : Text) : async () {
+  public shared func createPlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) : async () {
     let newPlayer : T.Player = {
       id = Nat16.fromNat(nextPlayerId + 1);
       teamId = teamId;
@@ -1103,7 +1106,7 @@ actor Self {
     nextPlayerId += 1;
   };
 
-  public shared func updatePlayer(playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : Text) : async () {
+  public shared func updatePlayer(playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : T.CountryId) : async () {
     players := List.map<T.Player, T.Player>(
       players,
       func(currentPlayer : T.Player) : T.Player {
