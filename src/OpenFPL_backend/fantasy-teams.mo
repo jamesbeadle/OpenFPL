@@ -19,10 +19,10 @@ import Nat "mo:base/Nat";
 
 module {
   public class FantasyTeams(
-    getAllPlayersMap : (seasonId : Nat16, gameweek : Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
+    getPlayersMap : (seasonId : Nat16, gameweek : Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)],
     getPlayer : (playerId : Nat16) -> async T.Player,
     getProfiles : () -> [(Text, T.Profile)],
-    getAllPlayers : () -> async [DTOs.PlayerDTO],
+    getPlayers : () -> async [DTOs.PlayerDTO],
   ) {
 
     private var fantasyTeams : HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
@@ -632,7 +632,7 @@ module {
     };
 
     public func calculateFantasyTeamScores(seasonId : Nat16, gameweek : Nat8) : async () {
-      let allPlayersList = await getAllPlayersMap(seasonId, gameweek);
+      let allPlayersList = await getPlayersMap(seasonId, gameweek);
       var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
       for ((key, value) in Iter.fromArray(allPlayersList)) {
         allPlayers.put(key, value);
@@ -1692,7 +1692,7 @@ module {
     };
 
     public func getTeamValueInfo() : async [Text] {
-      let allPlayers = await getAllPlayers();
+      let allPlayers = await getPlayers();
       let teamDetailsBuffer = Buffer.fromArray<Text>([]);
       for (fantasyTeam in fantasyTeams.entries()) {
 
@@ -1725,7 +1725,7 @@ module {
 
     public func updateTeamValueInfo() : async () {
       let updatedFantasyTeams : HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
-      let allPlayers = await getAllPlayers();
+      let allPlayers = await getPlayers();
       for (fantasyTeam in fantasyTeams.entries()) {
 
         let currentTeam : T.UserFantasyTeam = fantasyTeam.1;

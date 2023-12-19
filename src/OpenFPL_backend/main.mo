@@ -50,6 +50,15 @@ actor Self {
   let rewardsInstance = Rewards.Rewards();
   let countriesInstance = Countries.Countries();
 
+  let systemState: T.SystemState = {
+    calculationGameweek = 1;
+    calculationMonth = 8;
+    calculationSeason = 1;
+    pickTeamGameweek = 1;
+    homepageFixturesGameweek = 1;
+    homepageManagerGameweek = 0;
+  };
+
   private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
     { category = "teams"; hash = "DEFAULT_VALUE" },
     { category = "fixtures"; hash = "DEFAULT_VALUE" },
@@ -62,118 +71,61 @@ actor Self {
     { category = "player_events"; hash = "DEFAULT_VALUE" }
   ]);
 
-
   let tokenCanister = actor (CANISTER_IDS.token_canister) : actor {
     icrc1_name : () -> async Text;
     icrc1_total_supply : () -> async Nat;
     icrc1_balance_of : (T.Account) -> async Nat;
   };
 
-  //Player Canister
-
   let playerCanister = actor (CANISTER_IDS.player_canister) : actor {
-    getAllPlayers : () -> async [DTOs.PlayerDTO];
-    getAllPlayersMap : (seasonId : Nat16, gameweek : Nat8) -> async [(Nat16, DTOs.PlayerScoreDTO)];
+    getPlayer : (playerId : T.PlayerId) -> async T.Player;
+    getPlayers : () -> async [DTOs.PlayerDTO];
+    getPlayersMap : (seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
+    calculatePlayerScores(seasonId : T.SeasonId, gameweek : Nat8, fixture : T.Fixture) : async T.Fixture;
     revaluePlayerUp : (playerId : T.PlayerId, activeSeasonId : T.SeasonId, activeGameweek : T.GameweekNumber) -> async ();
     revaluePlayerDown : (playerId : T.PlayerId, activeSeasonId : T.SeasonId, activeGameweek : T.GameweekNumber) -> async ();
-    getPlayer : (playerId : Nat16) -> async T.Player;
-    calculatePlayerScores(seasonId : Nat16, gameweek : Nat8, fixture : T.Fixture) : async T.Fixture;
     transferPlayer : (playerId : T.PlayerId, newTeamId : T.TeamId, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) -> async ();
     loanPlayer : (playerId : T.PlayerId, loanTeamId : T.TeamId, loanEndDate : Int, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) -> async ();
     recallPlayer : (playerId : T.PlayerId) -> async ();
-    createPlayer : (teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) -> async ();
+    createPlayer : (teamId : T.TeamId, position : T.PlayerPosition, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) -> async ();
     updatePlayer : (playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : T.CountryId) -> async ();
     setPlayerInjury : (playerId : T.PlayerId, description : Text, expectedEndDate : Int) -> async ();
     retirePlayer : (playerId : T.PlayerId, retirementDate : Int) -> async ();
     unretirePlayer : (playerId : T.PlayerId) -> async ();
-    recalculatePlayerScores : (fixture : T.Fixture, seasonId : Nat16, gameweek : Nat8) -> async ();
-    updatePlayerEventDataCache : () -> async ();
+    recalculatePlayerScores : (fixture : T.Fixture, seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async ();
   };
 
-  private func getAllPlayersMap(seasonId : Nat16, gameweek : Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
-    return await playerCanister.getAllPlayersMap(seasonId, gameweek);
+  private func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [(T.PlayerId, DTOs.PlayerScoreDTO)] {
+    return await playerCanister.getPlayersMap(seasonId, gameweek);
   };
 
-  private func getAllPlayers() : async [DTOs.PlayerDTO] {
-    return await playerCanister.getAllPlayers();
+  private func getPlayers() : async [DTOs.PlayerDTO] {
+    return await playerCanister.getPlayers();
   };
 
-  private func getPlayer(playerId : Nat16) : async T.Player {
+  private func getPlayer(playerId : T.PlayerId) : async T.Player {
     return await playerCanister.getPlayer(playerId);
   };
 
-  private func getProfiles() : [(Text, T.Profile)] {
+  private func getProfiles() : [(T.PrincipalId, T.ProfileDTO)] {
     return profilesInstance.getProfiles();
   };
 
-  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer, getProfiles, getAllPlayers);
-
-
-
-
-  public query func getActiveFixtures() : async [T.Fixture] {
-    let fixtures = seasonManager.getActiveGameweekFixtures();
-  };
+  let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getPlayersMap, getPlayer, getProfiles, getPlayers);
 
   public query func getSystemState() : async T.SystemState {
-    let fixtures = seasonManager.getActiveGameweekFixtures();
-
-    var earliestFixtureTime = fixtures[0].kickOff;
-    var latestFixtureTime = fixtures[0].kickOff;
-
-    for (fixture in Iter.fromArray<T.Fixture>(fixtures)) {
-      if (fixture.kickOff > latestFixtureTime) {
-        latestFixtureTime := fixture.kickOff;
-      };
-      if (fixture.kickOff < earliestFixtureTime) {
-        earliestFixtureTime := fixture.kickOff;
-      };
-    };
-    var activeGameweek = seasonManager.getActiveGameweek();
-    var focusGameweek = seasonManager.getInterestingGameweek();
-
-    return {
-      activeSeason = seasonManager.getActiveSeason();
-      activeGameweek = activeGameweek;
-      activeMonth = Utilities.unixTimeToMonth(latestFixtureTime);
-      focusGameweek = focusGameweek;
-    };
+    return systemState;
   };
 
   public query func getTeams() : async [T.Team] {
     return teamsInstance.getTeams();
   };
 
-  public query ({ caller }) func getFixtures() : async [T.Fixture] {
+  public query ({ caller }) func getFixtures() : async [T.FixtureDTO] {
     return seasonManager.getFixtures();
   };
 
-  public query ({ caller }) func getFixtureDTOs() : async [DTOs.FixtureDTO] {
-    return Array.map<T.Fixture, DTOs.FixtureDTO>(
-      seasonManager.getFixtures(),
-      func(fixture : T.Fixture) : DTOs.FixtureDTO {
-        return {
-          id = fixture.id;
-          seasonId = fixture.seasonId;
-          gameweek = fixture.gameweek;
-          kickOff = fixture.kickOff;
-          homeTeamId = fixture.homeTeamId;
-          awayTeamId = fixture.awayTeamId;
-          homeGoals = fixture.homeGoals;
-          awayGoals = fixture.awayGoals;
-          status = fixture.status;
-          highestScoringPlayerId = fixture.highestScoringPlayerId;
-          events = [];
-        };
-      },
-    );
-  };
-
-  public query ({ caller }) func getFixturesForSeason(seasonId : T.SeasonId) : async [T.Fixture] {
-    return seasonManager.getFixturesForSeason(seasonId);
-  };
-
-  public shared query ({ caller }) func getProfileDTO() : async ?DTOs.ProfileDTO {
+  public shared query ({ caller }) func getProfile() : async ?DTOs.ProfileDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
 
@@ -484,7 +436,7 @@ actor Self {
     let principalId = Principal.toText(caller);
     let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(principalId);
 
-    let allPlayers = await playerCanister.getAllPlayers();
+    let allPlayers = await playerCanister.getPlayers();
 
     let newPlayers = Array.filter<DTOs.PlayerDTO>(
       allPlayers,
@@ -1099,7 +1051,7 @@ actor Self {
     let activeSeasonId = seasonManager.getActiveSeasonId();
     let activeGameweek = seasonManager.getActiveGameweek();
     let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
-    let allPlayers = await playerCanister.getAllPlayers();
+    let allPlayers = await playerCanister.getPlayers();
 
     let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
     let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
@@ -1556,7 +1508,6 @@ actor Self {
     stable_active_season_id := seasonManager.getActiveSeasonId();
     stable_active_gameweek := seasonManager.getActiveGameweek();
     stable_interesting_gameweek := seasonManager.getInterestingGameweek();
-    stable_active_fixtures := seasonManager.getActiveFixtures();
     stable_next_fixture_id := seasonManager.getNextFixtureId();
     stable_next_season_id := seasonManager.getNextSeasonId();
     stable_seasons := seasonManager.getSeasons();
@@ -1631,7 +1582,7 @@ actor Self {
 
     let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(allPlayerEvents);
 
-    let allPlayers = await playerCanister.getAllPlayers();
+    let allPlayers = await playerCanister.getPlayers();
 
     let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
     let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);

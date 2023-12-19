@@ -35,7 +35,7 @@ function createPlayerStore() {
     const localHash = localStorage.getItem(category);
 
     if (livePlayersHash?.hash != localHash) {
-      let updatedPlayersData = await actor.getAllPlayers();
+      let updatedPlayersData = await actor.getPlayers();
       localStorage.setItem(
         "players_data",
         JSON.stringify(updatedPlayersData, replacer)

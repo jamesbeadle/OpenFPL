@@ -34,7 +34,7 @@ actor Self {
     { category = "playerEventData"; hash = "DEFAULT_VALUE" },
   ]);
 
-  public shared query ({ caller }) func getAllPlayers() : async [DTOs.PlayerDTO] {
+  public shared query ({ caller }) func getPlayers() : async [DTOs.PlayerDTO] {
 
     func compare(player1 : T.Player, player2 : T.Player) : Bool {
       return player1.value >= player2.value;
@@ -205,7 +205,7 @@ actor Self {
     return Buffer.toArray(playerDetailsBuffer);
   };
 
-  public query ({ caller }) func getAllPlayersMap(seasonId : Nat16, gameweek : Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
+  public query ({ caller }) func getPlayersMap(seasonId : Nat16, gameweek : Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
     var playersMap : HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
     label playerMapLoop for (player in Iter.fromList(players)) {
       if (player.onLoan) {

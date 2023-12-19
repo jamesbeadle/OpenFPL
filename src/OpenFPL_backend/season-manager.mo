@@ -64,11 +64,6 @@ module {
       return false;
     };
 
-    public func getActiveFixtures() : [T.Fixture] {
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-      return activeFixtures;
-    };
-
     public func getNextFixtureId() : Nat32 {
       return seasonsInstance.getNextFixtureId();
     };

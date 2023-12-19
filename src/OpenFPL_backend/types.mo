@@ -10,6 +10,7 @@ module Types {
   public type TeamId = Nat16;
   public type ProposalId = Nat;
   public type CountryId = Nat16;
+  public type PrincipalId = Text;
 
   public type Error = {
     #NotFound;
@@ -19,6 +20,13 @@ module Types {
     #DecodeError;
     #InvalidTeamError;
     #InvalidData;
+  };
+
+  public type PlayerPosition = {
+    #Goalkeeper;
+    #Defender;
+    #Midfielder;
+    #Forward;
   };
 
   public type Profile = {
