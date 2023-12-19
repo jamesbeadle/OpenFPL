@@ -5,6 +5,7 @@ module Types {
   public type FixtureId = Nat32;
   public type SeasonId = Nat16;
   public type GameweekNumber = Nat8;
+  public type CalendarMonth = Nat8;
   public type PlayerId = Nat16;
   public type TeamId = Nat16;
   public type ProposalId = Nat;
@@ -276,10 +277,12 @@ module Types {
   };
 
   public type SystemState = {
-    activeSeason : Season;
-    activeGameweek : GameweekNumber;
-    activeMonth : Nat8;
-    focusGameweek : GameweekNumber;
+    calculationGameweek: GameweekNumber; //starts at 1 and then after the final game of the gameweek is verified it moves to 2
+    calculationMonth: CalendarMonth; //starts at 8 and after the final game of a gameweek is verified it checks the end date of the latest game in the next gameweek and if the follow month then increase the calculationMonth
+    calculationSeason: SeasonId; //after final game of season is verified and rewards paid 
+    pickTeamGameweek: GameweekNumber; //starts at 1 and 1 hour before the first kick off it turns to 2
+    homepageFixturesGameweek: GameweekNumber; //the fixtures up until the morning after the last game
+    homepageManagerGameweek: GameweekNumber; //the leaderboard and gameweek points from the prior gameweek until the first game of the calculation gameweek is verified and a leaderboard is produced
   };
 
   public type Country = {

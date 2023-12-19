@@ -13,6 +13,9 @@ import Int64 "mo:base/Int64";
 import Text "mo:base/Text";
 
 module {
+  
+  public let getHour = func()  : Int { return 1_000_000_000 * 60 * 60 };
+
   public let eqNat8 = func(a : Nat8, b : Nat8) : Bool {
     a == b;
   };

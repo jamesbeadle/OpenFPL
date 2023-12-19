@@ -1,63 +1,36 @@
-import Principal "mo:base/Principal";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
-import DTOs "DTOs";
-import Profiles "profiles";
-import Account "Account";
-import Book "book";
-import Teams "teams";
-import FantasyTeams "fantasy-teams";
+import Buffer "mo:base/Buffer";
+import Hash "mo:base/Hash";
+import Int "mo:base/Int";
+import Iter "mo:base/Iter";
+import List "mo:base/List";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
 import Nat32 "mo:base/Nat32";
-import Nat64 "mo:base/Nat64";
-import Result "mo:base/Result";
 import Option "mo:base/Option";
-import PlayerCanister "canister:player_canister";
-import T "types";
-import SeasonManager "season-manager";
-import Rewards "rewards";
-import PrivateLeagues "private-leagues-manager";
-import List "mo:base/List";
-import Timer "mo:base/Timer";
-import Time "mo:base/Time";
-import Buffer "mo:base/Buffer";
-import Iter "mo:base/Iter";
-import Int "mo:base/Int";
-import TrieMap "mo:base/TrieMap";
-import Nat "mo:base/Nat";
-import Hash "mo:base/Hash";
-import Utilities "utilities";
-import Debug "mo:base/Debug";
-import HashMap "mo:base/HashMap";
+import Principal "mo:base/Principal";
+import Result "mo:base/Result";
 import Text "mo:base/Text";
-import Int16 "mo:base/Int16";
-import Int64 "mo:base/Int64";
-import Bool "mo:base/Bool";
-import SHA224 "./SHA224";
-import Countries "./Countries";
+import Time "mo:base/Time";
+import Timer "mo:base/Timer";
+import TrieMap "mo:base/TrieMap";
+
+import Account "Account";
+import Book "book";
+import Countries "Countries";
+import FantasyTeams "fantasy-teams";
+import Teams "teams";
+import Profiles "profiles";
+import Rewards "rewards";
+import SeasonManager "season-manager";
+import SHA224 "SHA224";
+import Utilities "utilities";
+
+import T "types";
+import DTOs "DTOs";
 
 actor Self {
-
-  let profilesInstance = Profiles.Profiles();
-  let bookInstance = Book.Book();
-  let teamsInstance = Teams.Teams();
-  let rewardsInstance = Rewards.Rewards();
-  let privateLeaguesInstance = PrivateLeagues.PrivateLeagues();
-  let countriesInstance = Countries.Countries();
-
-  private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
-    { category = "teams"; hash = "DEFAULT_VALUE" },
-    { category = "fixtures"; hash = "DEFAULT_VALUE" },
-    { category = "seasons"; hash = "DEFAULT_VALUE" },
-    { category = "system_state"; hash = "DEFAULT_VALUE" },
-    { category = "weekly_leaderboard"; hash = "DEFAULT_VALUE" },
-    { category = "monthly_leaderboards"; hash = "DEFAULT_VALUE" },
-    { category = "season_leaderboard"; hash = "DEFAULT_VALUE" },
-  ]);
-
-  private let oneHour = 1_000_000_000 * 60 * 60;
-
   /*
   //LOCALDEVONLY
   let CANISTER_IDS = {
@@ -71,6 +44,24 @@ actor Self {
     token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
     governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
   };
+
+  let profilesInstance = Profiles.Profiles();
+  let teamsInstance = Teams.Teams();
+  let rewardsInstance = Rewards.Rewards();
+  let countriesInstance = Countries.Countries();
+
+  private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
+    { category = "teams"; hash = "DEFAULT_VALUE" },
+    { category = "fixtures"; hash = "DEFAULT_VALUE" },
+    { category = "seasons"; hash = "DEFAULT_VALUE" },
+    { category = "system_state"; hash = "DEFAULT_VALUE" },
+    { category = "weekly_leaderboard"; hash = "DEFAULT_VALUE" },
+    { category = "monthly_leaderboards"; hash = "DEFAULT_VALUE" },
+    { category = "season_leaderboard"; hash = "DEFAULT_VALUE" },
+    { category = "players"; hash = "DEFAULT_VALUE" },
+    { category = "player_events"; hash = "DEFAULT_VALUE" }
+  ]);
+
 
   let tokenCanister = actor (CANISTER_IDS.token_canister) : actor {
     icrc1_name : () -> async Text;
@@ -111,15 +102,14 @@ actor Self {
     return await playerCanister.getPlayer(playerId);
   };
 
-  //Profile Canister
-
-  //Whatever Canister - This is where I'll put all the entry points when the multicanister architecture is implemented
-
   private func getProfiles() : [(Text, T.Profile)] {
     return profilesInstance.getProfiles();
   };
 
   let fantasyTeamsInstance = FantasyTeams.FantasyTeams(getAllPlayersMap, getPlayer, getProfiles, getAllPlayers);
+
+
+
 
   public query func getActiveFixtures() : async [T.Fixture] {
     let fixtures = seasonManager.getActiveGameweekFixtures();
@@ -479,6 +469,7 @@ actor Self {
           hatTrickHeroGameweek = 0;
           favouriteTeamId = 0;
           teamName = "";
+          transferWindowGameweek = 0;
         };
       };
       case (?team) {
@@ -487,7 +478,7 @@ actor Self {
     };
   };
 
-  public shared ({ caller }) func saveFantasyTeam(newPlayerIds : [Nat16], captainId : Nat16, bonusId : Nat8, bonusPlayerId : Nat16, bonusTeamId : Nat16) : async Result.Result<(), T.Error> {
+  public shared ({ caller }) func saveFantasyTeam(newPlayerIds : [Nat16], captainId : Nat16, bonusId : Nat8, bonusPlayerId : Nat16, bonusTeamId : Nat16, transferWindowGameweek: T.GameweekNumber) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
 
     let principalId = Principal.toText(caller);
@@ -520,6 +511,24 @@ actor Self {
       return #err(#InvalidTeamError);
     };
 
+    var updateTransferWindowGameweek: T.GameweekNumber = 0;
+    let transferWindowActive = false;
+    
+    if(not transferWindowActive and transferWindowGameweek > 0){
+
+      let transferWindowPlayed = false;
+      if(transferWindowPlayed){
+        return #err(#InvalidTeamError);
+      };
+
+      let activeGameweek = seasonManager.getActiveGameweek();
+
+      if(transferWindowGameweek != activeGameweek){
+        return #err(#InvalidTeamError);
+      };
+      updateTransferWindowGameweek := activeGameweek;
+    };
+
     var teamName = principalId;
     var favouriteTeamId : T.TeamId = 0;
 
@@ -550,6 +559,10 @@ actor Self {
       };
       case (?team) {
 
+        if(team.fantasyTeam.transferWindowGameweek > 0){
+          updateTransferWindowGameweek := team.fantasyTeam.transferWindowGameweek;
+        };
+
         let existingPlayers = Array.filter<DTOs.PlayerDTO>(
           allPlayers,
           func(player : DTOs.PlayerDTO) : Bool {
@@ -564,7 +577,7 @@ actor Self {
           },
         );
 
-        return await fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, seasonManager.getActiveGameweek(), existingPlayers);
+        return await fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, seasonManager.getActiveGameweek(), existingPlayers, updateTransferWindowGameweek);
       };
     };
   };
@@ -1336,10 +1349,6 @@ actor Self {
     await rewardsInstance.distributeRewards();
   };
 
-  private func settleUserBets() : async () {
-    await privateLeaguesInstance.settleUserBets();
-  };
-
   private func snapshotGameweek(seasonId : Nat16, gameweek : Nat8) : async () {
     await fantasyTeamsInstance.snapshotGameweek(seasonId, gameweek);
   };
@@ -1511,10 +1520,8 @@ actor Self {
     resetTransfers,
     calculatePlayerScores,
     distributeRewards,
-    settleUserBets,
     snapshotGameweek,
     calculateFantasyTeamScores,
-    getAllPlayersMap,
     resetFantasyTeams,
     updateCacheHash,
     stable_timers,
