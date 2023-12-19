@@ -31,6 +31,15 @@ import T "types";
 import DTOs "DTOs";
 
 actor Self {
+
+  let seasonManager = SeasonManager.SeasonManager();  
+  
+  let closeGameweekTimer: ?Timer = null;
+  let janTransferWindowStart: ?Timer = null;
+  let activeGameTimers: [Timer] = [];
+
+
+
   /*
   //LOCALDEVONLY
   let CANISTER_IDS = {
@@ -1546,6 +1555,15 @@ actor Self {
         };
       };
     };
+
+    //recreate close gameweek timer to be 1 hour before the first fixture of the gameweek you are picking your team for
+
+    //recreate the jan transfer window timer to the next January 1st
+
+    //recreate the close jan transfer window timer for midnight on the 31st Jan
+
+    //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
+
   };
 
   /* Admin only functions to be removed after the SNS sale.*/

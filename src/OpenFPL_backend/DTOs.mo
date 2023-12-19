@@ -3,6 +3,22 @@ import List "mo:base/List";
 
 module DTOs {
 
+
+  //Now define the DTOs for the transferring of data
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
   public type ProfileDTO = {
     principalId : Text;
     displayName : Text;
