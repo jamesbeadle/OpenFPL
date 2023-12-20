@@ -270,6 +270,12 @@ module DTOs {
     totalEntries : Nat;
   };
 
+  public type SeasonLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    entries : [LeaderboardEntryDTO];
+    totalEntries : Nat;
+  };
+
   public type UpdateFantasyTeamDTO = {
 
   };

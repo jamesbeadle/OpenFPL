@@ -520,8 +520,8 @@ module {
         case (null) {
           return #err(#NotFound);
         };
-        case (?foundMonthlyCanisterIds){
-          let monthCanisterIds = foundMonthlyCanisterIds.get(month);
+        case (?foundSeasonMonthsCanisterIds){
+          let monthCanisterIds = foundSeasonMonthsCanisterIds.get(month);
           switch(monthCanisterIds){
             case null {
               return #err(#NotFound);
@@ -532,8 +532,8 @@ module {
                 case null {
                   return #err(#NotFound);
                 };
-                case (?foundMonthCanisterIds){
-                  let monthly_leaderboard_canister = actor (foundMonthCanisterIds) : actor {
+                case (?foundMonthClubCanisterId){
+                  let monthly_leaderboard_canister = actor (foundMonthClubCanisterId) : actor {
                     getEntries : () -> async DTOs.MonthlyLeaderboardDTO;
                   };
               
@@ -547,8 +547,21 @@ module {
       };
     };
 
-    public func getSeasonLeaderboard(seasonId: T.SeasonId){
+    public func getSeasonLeaderboard(seasonId: T.SeasonId) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
+      let seasonCanisterId = seasonLeaderboardCanisterIds.get(seasonId);
+      switch(seasonCanisterId){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundSeasonCanisterId){
+          let season_leaderboard_canister = actor (foundSeasonCanisterId) : actor {
+            getEntries : () -> async DTOs.SeasonLeaderboardDTO;
+          };
 
+          let leaderboardEntries = await season_leaderboard_canister.getEntries();
+          return #ok(leaderboardEntries);
+        };
+      };
     };
     
     public func getProfile(principalId: Text){
