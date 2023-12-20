@@ -1,6 +1,6 @@
 module {
 
-  public class SnapshotManager() {
+  public class ManagerProfileManager() {
 
    //include all profile info for caller
     //include all manager info
@@ -11,7 +11,6 @@ module {
 
     /*
     
-    //ManagerProfileManager //what 
     manager-profile-manager.mo
 Purpose: Handles operations related to the user profiles of the football managers.
 Contents:
@@ -404,15 +403,6 @@ Integration points for authentication and authorization if needed.
   };
 
 
-
-
-
-
-
-
-
-    */
-
 public func updateProfilePicture(principalName : Text, profilePicture : Blob) : Result.Result<(), T.Error> {
       let existingProfile = userProfiles.get(principalName);
       switch (existingProfile) {
@@ -422,7 +412,7 @@ public func updateProfilePicture(principalName : Text, profilePicture : Blob) : 
         case (?foundProfile) {
           userProfilePictures.put(principalName, profilePicture);
 
-          /*
+          
           let updatedProfile : T.Profile = {
             principalName = foundProfile.principalName;
             displayName = foundProfile.displayName;
@@ -431,9 +421,7 @@ public func updateProfilePicture(principalName : Text, profilePicture : Blob) : 
             favouriteTeamId = foundProfile.favouriteTeamId;
             createDate = foundProfile.createDate;
           };
-          */
-
-          userProfilePictures.put(principalName, profilePicture);
+              userProfilePictures.put(principalName, profilePicture);
           return #ok(());
         };
       };
@@ -575,6 +563,69 @@ public func updateProfilePicture(principalName : Text, profilePicture : Blob) : 
         };
       };
     };
+
+    
+    public func createProfile(principalId: Text){
+      var existingProfile = profilesInstance.getProfile(Principal.toText(caller));
+      switch (existingProfile) {
+        case (null) {
+          profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
+        };
+        case (_) {};
+      };
+    };
+    
+    public func updateUsername(principalId: Text, username: Text){
+
+      assert not Principal.isAnonymous(caller);
+      let invalidName = not profilesInstance.isDisplayNameValid(displayName);
+      assert not invalidName;
+
+      var profile = profilesInstance.getProfile(Principal.toText(caller));
+      switch (profile) {
+        case (null) {
+          profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
+          profile := profilesInstance.getProfile(Principal.toText(caller));
+        };
+        case (?foundProfile) {};
+      };
+
+      fantasyTeamsInstance.updateDisplayName(Principal.toText(caller), displayName);
+      return profilesInstance.updateDisplayName(Principal.toText(caller), displayName);
+
+    };
+    
+    public func updateFavouriteClub(principalId: Text, favouriteClubId: T.ClubId){
+
+
+      var profile = profilesInstance.getProfile(Principal.toText(caller));
+      switch (profile) {
+        case (null) {
+          profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
+          profile := profilesInstance.getProfile(Principal.toText(caller));
+        };
+        case (?foundProfile) {
+          if (foundProfile.favouriteTeamId > 0) {
+            assert not seasonManager.seasonActive();
+          };
+        };
+      };
+
+      fantasyTeamsInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
+      return profilesInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
+    };
+    
+    public func updateProfilePicture(principalId: Text, profilePicture: Blob){
+
+      let sizeInKB = Array.size(Blob.toArray(profilePicture)) / 1024;
+      if (sizeInKB > 4000) {
+        return #err(#NotAllowed);
+      };
+
+      return profilesInstance.updateProfilePicture(Principal.toText(caller), profilePicture);
+    };
+          */
+
 
     
 

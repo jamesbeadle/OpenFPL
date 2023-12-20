@@ -1,6 +1,6 @@
 module {
 
-  public class SnapshotManager() {
+  public class ClubComposite() {
     /*
     
     //ClubComposite //implements composite allows changes to players clubs

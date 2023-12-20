@@ -20,7 +20,6 @@ import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
 import Text "mo:base/Text";
 import Bool "mo:base/Bool";
-import SHA224 "../OpenFPL_backend/SHA224";
 
 actor Self {
 

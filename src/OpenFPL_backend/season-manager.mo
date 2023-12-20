@@ -12,6 +12,9 @@ import Nat8 "mo:base/Nat8";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Result "mo:base/Result";
+import SnapshotManager "patterns/snapshot-manager";
+import SnapshotFactory "patterns/snapshot-factory";
+import PlayerComposite "patterns/player-composite";
 import ClubComposite "patterns/club-composite";
 import StrategyManager "patterns/strategy-manager";
 import ManagerProfileManager "patterns/manager-profile-manager";
@@ -44,8 +47,17 @@ module {
       icrc1_balance_of : (T.Account) -> async Nat;
     };
 
-    let former_players_canister = actor (CANISTER_IDS.former_players_canister) : T.PlayerCanister;
-    let retired_players_canister = actor (CANISTER_IDS.retired_players_canister) : T.PlayerCanister;
+    let former_players_canister = actor (CANISTER_IDS.former_players_canister) : actor {
+      getFormerPlayer : (playerId: T.PlayerId) -> async ();
+      addFormerPlayer : (playerDTO: DTOs.PlayerDTO) -> async ();
+      reinstateFormerPlayer : (playerId: T.PlayerId) -> async ();
+    };
+
+    let retired_players_canister = actor (CANISTER_IDS.retired_players_canister) : actor {
+      getRetiredPlayer : (playerId: T.PlayerId) -> async ();
+      retirePlayer : (playerDTO: DTOs.PlayerDTO) -> async ();
+      unretirePlayer : (playerId: T.PlayerId) -> async ();
+    };
 
     let systemState: T.SystemState = {
       calculationGameweek = 1;
@@ -295,65 +307,19 @@ module {
     public func isUsernameAvailable(username: Text){
 
     };
-    
-    public func createProfile(principalId: Text){
-      var existingProfile = profilesInstance.getProfile(Principal.toText(caller));
-      switch (existingProfile) {
-        case (null) {
-          profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
-        };
-        case (_) {};
-      };
-    };
-    
-    public func updateUsername(principalId: Text, username: Text){
 
-      assert not Principal.isAnonymous(caller);
-      let invalidName = not profilesInstance.isDisplayNameValid(displayName);
-      assert not invalidName;
+    public func seasonActive() : Bool {
 
-      var profile = profilesInstance.getProfile(Principal.toText(caller));
-      switch (profile) {
-        case (null) {
-          profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
-          profile := profilesInstance.getProfile(Principal.toText(caller));
-        };
-        case (?foundProfile) {};
+      if (activeGameweek > 1) {
+        return true;
       };
 
-      fantasyTeamsInstance.updateDisplayName(Principal.toText(caller), displayName);
-      return profilesInstance.updateDisplayName(Principal.toText(caller), displayName);
-
-    };
-    
-    public func updateFavouriteClub(principalId: Text, favouriteClubId: T.ClubId){
-
-
-      var profile = profilesInstance.getProfile(Principal.toText(caller));
-      switch (profile) {
-        case (null) {
-          profilesInstance.createProfile(Principal.toText(caller), Principal.toText(caller));
-          profile := profilesInstance.getProfile(Principal.toText(caller));
-        };
-        case (?foundProfile) {
-          if (foundProfile.favouriteTeamId > 0) {
-            assert not seasonManager.seasonActive();
-          };
-        };
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+      if (List.some(List.fromArray(activeFixtures), func(fixture : T.Fixture) : Bool { return fixture.status > 0 })) {
+        return true;
       };
 
-      fantasyTeamsInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
-      return profilesInstance.updateFavouriteTeam(Principal.toText(caller), favouriteTeamId);
-    };
-    
-    public func updateProfilePicture(principalId: Text, profilePicture: Blob){
-
-      let sizeInKB = Array.size(Blob.toArray(profilePicture)) / 1024;
-      if (sizeInKB > 4000) {
-        return #err(#NotAllowed);
-      };
-
-      return profilesInstance.updateProfilePicture(Principal.toText(caller), profilePicture);
+      return false;
     };
 
     /* Incorporate all this with the save fantasy team function as I should only need 1

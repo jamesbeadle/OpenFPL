@@ -1,6 +1,6 @@
 module {
 
-  public class SnapshotManager() {
+  public class StrategyManager() {
 
 /*
 

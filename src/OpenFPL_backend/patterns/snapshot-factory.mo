@@ -1,6 +1,6 @@
 module {
 
-  public class SnapshotManager() {
+  public class SnapshotFactory() {
     /*
     
     //SnapshotFactory //Implements factory to instantiate snapshots
