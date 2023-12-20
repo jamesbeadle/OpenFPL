@@ -364,6 +364,782 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
       };
     };
 
+    
+    public func getSeasonFixtures(seasonId : Nat16) : [T.Fixture] {
+
+      var seasonFixtures = List.nil<T.Fixture>();
+
+      let foundSeason = List.find<T.Season>(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
+
+      switch (foundSeason) {
+        case (null) { return [] };
+        case (?season) {
+          for (gameweek in List.toIter(season.gameweeks)) {
+            seasonFixtures := List.append(seasonFixtures, gameweek.fixtures);
+          };
+        };
+      };
+
+      let sortedArray = Array.sort(
+        List.toArray(seasonFixtures),
+        func(a : T.Fixture, b : T.Fixture) : Order.Order {
+          if (a.kickOff < b.kickOff) { return #less };
+          if (a.kickOff == b.kickOff) { return #equal };
+          return #greater;
+        },
+      );
+      let sortedFixtures = List.fromArray(sortedArray);
+      return sortedArray;
+    };
+
+    public func getGameweekFixtures(seasonId : Nat16, gameweekNumber : Nat8) : [T.Fixture] {
+
+      let foundSeason = List.find<T.Season>(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
+
+      switch (foundSeason) {
+        case (null) { return [] };
+        case (?season) {
+          let foundGameweek = List.find<T.Gameweek>(
+            season.gameweeks,
+            func(gameweek : T.Gameweek) : Bool {
+              return gameweek.number == gameweekNumber;
+            },
+          );
+          switch (foundGameweek) {
+            case (null) { return [] };
+            case (?g) {
+              let sortedArray = Array.sort(
+                List.toArray(g.fixtures),
+                func(a : T.Fixture, b : T.Fixture) : Order.Order {
+                  if (a.kickOff < b.kickOff) { return #less };
+                  if (a.kickOff == b.kickOff) { return #equal };
+                  return #greater;
+                },
+              );
+              let sortedFixtures = List.fromArray(sortedArray);
+              return sortedArray;
+            };
+          };
+        };
+      };
+    };
+
+    public func getNextSeasonId() : Nat16 {
+      return nextSeasonId;
+    };
+
+    public func getNextFixtureId() : Nat32 {
+      return nextFixtureId;
+    };
+
+    public func setNextSeasonId(stable_next_season_id : Nat16) : () {
+      nextSeasonId := stable_next_season_id;
+    };
+
+    public func setNextFixtureId(stable_next_fixture_id : Nat32) : () {
+      nextFixtureId := stable_next_fixture_id;
+    };
+
+
+    public func getSeason(seasonId : Nat16) : T.Season {
+      let season = List.find<T.Season>(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
+      switch (season) {
+        case (null) {
+          return {
+            gameweeks = List.nil<T.Gameweek>();
+            id = 0;
+            name = "";
+            postponedFixtures = List.nil<T.Fixture>();
+            year = 0;
+          };
+        };
+        case (?foundSeason) {
+          return {
+            id = foundSeason.id;
+            name = foundSeason.name;
+            year = foundSeason.year;
+            gameweeks = List.nil<T.Gameweek>();
+            postponedFixtures = List.nil<T.Fixture>();
+          };
+        };
+      };
+    };
+
+    public func getFixture(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId) : async T.Fixture {
+      let emptyFixture : T.Fixture = {
+        id = 0;
+        seasonId = 0;
+        gameweek = 0;
+        kickOff = 0;
+        homeTeamId = 0;
+        awayTeamId = 0;
+        homeGoals = 0;
+        awayGoals = 0;
+        status = 0;
+        events = List.nil();
+        highestScoringPlayerId = 0;
+      };
+
+      let season = List.find<T.Season>(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
+      switch (season) {
+        case (null) { return emptyFixture };
+        case (?foundSeason) {
+          let gameweek = List.find<T.Gameweek>(
+            foundSeason.gameweeks,
+            func(gameweek : T.Gameweek) : Bool {
+              return gameweek.number == gameweekNumber;
+            },
+          );
+
+          switch (gameweek) {
+            case (null) { return emptyFixture };
+            case (?foundGameweek) {
+              let fixture = List.find<T.Fixture>(
+                foundGameweek.fixtures,
+                func(fixture : T.Fixture) : Bool {
+                  return fixture.id == fixtureId;
+                },
+              );
+              switch (fixture) {
+                case (null) { return emptyFixture };
+                case (?foundFixture) { return foundFixture };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    public func updateStatus(seasonId : Nat16, gameweek : Nat8, fixtureId : Nat32, status : Nat8) : async T.Fixture {
+
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(season : T.Season) : T.Season {
+          if (season.id == seasonId) {
+
+            let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(
+              season.gameweeks,
+              func(gw : T.Gameweek) : T.Gameweek {
+                if (gw.number == gameweek) {
+                  let updatedFixtures = List.map<T.Fixture, T.Fixture>(
+                    gw.fixtures,
+                    func(fixture : T.Fixture) : T.Fixture {
+                      if (fixture.id == fixtureId) {
+                        return {
+                          id = fixture.id;
+                          seasonId = fixture.seasonId;
+                          gameweek = fixture.gameweek;
+                          kickOff = fixture.kickOff;
+                          homeTeamId = fixture.homeTeamId;
+                          awayTeamId = fixture.awayTeamId;
+                          homeGoals = fixture.homeGoals;
+                          awayGoals = fixture.awayGoals;
+                          status = status;
+                          events = fixture.events;
+                          highestScoringPlayerId = fixture.highestScoringPlayerId;
+                        };
+                      } else {
+                        return fixture;
+                      };
+                    },
+                  );
+                  return {
+                    number = gw.number;
+                    canisterId = gw.canisterId;
+                    fixtures = updatedFixtures;
+                  };
+                } else {
+                  return gw;
+                };
+              },
+            );
+
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+              gameweeks = updatedGameweeks;
+              postponedFixtures = season.postponedFixtures;
+            };
+          } else {
+            return season;
+          };
+        },
+      );
+
+      let modifiedSeason = List.find<T.Season>(
+        seasons,
+        func(s : T.Season) : Bool {
+          return s.id == seasonId;
+        },
+      );
+
+      switch (modifiedSeason) {
+        case (null) {
+          return {
+            id = 0;
+            seasonId = 0;
+            gameweek = 0;
+            kickOff = 0;
+            awayTeamId = 0;
+            homeTeamId = 0;
+            homeGoals = 0;
+            awayGoals = 0;
+            status = 0;
+            events = List.nil<T.PlayerEventData>();
+            highestScoringPlayerId = 0;
+          };
+        };
+        case (?s) {
+          let modifiedGameweek = List.find<T.Gameweek>(
+            s.gameweeks,
+            func(gw : T.Gameweek) : Bool {
+              return gw.number == gameweek;
+            },
+          );
+
+          switch (modifiedGameweek) {
+            case (null) {
+              return {
+                id = 0;
+                seasonId = 0;
+                gameweek = 0;
+                kickOff = 0;
+                awayTeamId = 0;
+                homeTeamId = 0;
+                homeGoals = 0;
+                awayGoals = 0;
+                status = 0;
+                events = List.nil<T.PlayerEventData>();
+                highestScoringPlayerId = 0;
+              };
+            };
+            case (?gw) {
+              let modifiedFixture = List.find<T.Fixture>(
+                gw.fixtures,
+                func(f : T.Fixture) : Bool {
+                  return f.id == fixtureId;
+                },
+              );
+
+              switch (modifiedFixture) {
+                case (null) {
+                  return {
+                    id = 0;
+                    seasonId = 0;
+                    gameweek = 0;
+                    kickOff = 0;
+                    awayTeamId = 0;
+                    homeTeamId = 0;
+                    homeGoals = 0;
+                    awayGoals = 0;
+                    status = 0;
+                    events = List.nil<T.PlayerEventData>();
+                    highestScoringPlayerId = 0;
+                  };
+                };
+                case (?f) { return f };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    public func savePlayerEventData(seasonId : Nat16, gameweek : Nat8, fixtureId : Nat32, playerEventData : List.List<T.PlayerEventData>) : async T.Fixture {
+
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(season : T.Season) : T.Season {
+          if (season.id == seasonId) {
+            let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(
+              season.gameweeks,
+              func(gw : T.Gameweek) : T.Gameweek {
+                if (gw.number == gameweek) {
+                  let updatedFixtures = List.map<T.Fixture, T.Fixture>(
+                    gw.fixtures,
+                    func(fixture : T.Fixture) : T.Fixture {
+                      if (fixture.id == fixtureId) {
+                        return {
+                          id = fixture.id;
+                          seasonId = fixture.seasonId;
+                          gameweek = fixture.gameweek;
+                          kickOff = fixture.kickOff;
+                          homeTeamId = fixture.homeTeamId;
+                          awayTeamId = fixture.awayTeamId;
+                          homeGoals = fixture.homeGoals;
+                          awayGoals = fixture.awayGoals;
+                          status = 3;
+                          events = playerEventData;
+                          highestScoringPlayerId = fixture.highestScoringPlayerId;
+                        };
+                      } else {
+                        return fixture;
+                      };
+                    },
+                  );
+                  return {
+                    number = gw.number;
+                    canisterId = gw.canisterId;
+                    fixtures = updatedFixtures;
+                  };
+                } else {
+                  return gw;
+                };
+              },
+            );
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+              gameweeks = updatedGameweeks;
+              postponedFixtures = season.postponedFixtures;
+            };
+          } else {
+            return season;
+          };
+        },
+      );
+
+      let modifiedSeason = List.find<T.Season>(
+        seasons,
+        func(s : T.Season) : Bool {
+          return s.id == seasonId;
+        },
+      );
+
+      switch (modifiedSeason) {
+        case (null) {
+          return {
+            id = 0;
+            seasonId = 0;
+            gameweek = 0;
+            kickOff = 0;
+            awayTeamId = 0;
+            homeTeamId = 0;
+            homeGoals = 0;
+            awayGoals = 0;
+            status = 0;
+            events = List.nil<T.PlayerEventData>();
+            highestScoringPlayerId = 0;
+          };
+        };
+        case (?s) {
+          let modifiedGameweek = List.find<T.Gameweek>(
+            s.gameweeks,
+            func(gw : T.Gameweek) : Bool {
+              return gw.number == gameweek;
+            },
+          );
+
+          switch (modifiedGameweek) {
+            case (null) {
+              return {
+                id = 0;
+                seasonId = 0;
+                gameweek = 0;
+                kickOff = 0;
+                awayTeamId = 0;
+                homeTeamId = 0;
+                homeGoals = 0;
+                awayGoals = 0;
+                status = 0;
+                events = List.nil<T.PlayerEventData>();
+                highestScoringPlayerId = 0;
+              };
+            };
+            case (?gw) {
+              let modifiedFixture = List.find<T.Fixture>(
+                gw.fixtures,
+                func(f : T.Fixture) : Bool {
+                  return f.id == fixtureId;
+                },
+              );
+
+              switch (modifiedFixture) {
+                case (null) {
+                  return {
+                    id = 0;
+                    seasonId = 0;
+                    gameweek = 0;
+                    kickOff = 0;
+                    awayTeamId = 0;
+                    homeTeamId = 0;
+                    homeGoals = 0;
+                    awayGoals = 0;
+                    status = 0;
+                    events = List.nil<T.PlayerEventData>();
+                    highestScoringPlayerId = 0;
+                  };
+                };
+                case (?f) { return f };
+              };
+            };
+          };
+        };
+      };
+    };
+
+    public func updateHighestPlayerId(seasonId : Nat16, gameweek : Nat8, updatedFixture : T.Fixture) : async () {
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(season : T.Season) : T.Season {
+          if (season.id == seasonId) {
+            let updatedGameweeks = List.map<T.Gameweek, T.Gameweek>(
+              season.gameweeks,
+              func(gw : T.Gameweek) : T.Gameweek {
+                if (gw.number == gameweek) {
+                  let updatedFixtures = List.map<T.Fixture, T.Fixture>(
+                    gw.fixtures,
+                    func(fixture : T.Fixture) : T.Fixture {
+                      if (fixture.id == updatedFixture.id) {
+                        return updatedFixture;
+                      } else { return fixture };
+                    },
+                  );
+                  return {
+                    number = gw.number;
+                    canisterId = gw.canisterId;
+                    fixtures = updatedFixtures;
+                  };
+                } else {
+                  return gw;
+                };
+              },
+            );
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+              gameweeks = updatedGameweeks;
+              postponedFixtures = season.postponedFixtures;
+            };
+          } else {
+            return season;
+          };
+        },
+      );
+    };
+
+    private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {
+      if (indexStart == 0 and indexEnd >= value.size()) {
+        return value;
+      } else if (indexStart >= value.size()) {
+        return "";
+      };
+
+      var indexEndValid = indexEnd;
+      if (indexEnd > value.size()) {
+        indexEndValid := value.size();
+      };
+
+      var result : Text = "";
+      var iter = Iter.toArray<Char>(Text.toIter(value));
+      for (index in Iter.range(indexStart, indexEndValid - 1)) {
+        result := result # Char.toText(iter[index]);
+      };
+
+      return result;
+    };
+
+private func resetTransfers() : async () {
+    await fantasyTeamsInstance.resetTransfers();
+  };
+
+  private func calculatePlayerScores(activeSeason : T.SeasonId, activeGameweek : T.GameweekNumber, fixture : T.Fixture) : async T.Fixture {
+    let adjFixtures = await playerCanister.calculatePlayerScores(activeSeason, activeGameweek, fixture);
+    return adjFixtures;
+  };
+
+  private func distributeRewards() : async () {
+    await rewardsInstance.distributeRewards();
+  };
+
+  private func snapshotGameweek(seasonId : Nat16, gameweek : Nat8) : async () {
+    await fantasyTeamsInstance.snapshotGameweek(seasonId, gameweek);
+  };
+
+  private func calculateFantasyTeamScores(seasonId : Nat16, gameweek : Nat8) : async () {
+    return await fantasyTeamsInstance.calculateFantasyTeamScores(seasonId, gameweek);
+  };
+
+  private func resetFantasyTeams() : async () {
+    await fantasyTeamsInstance.resetFantasyTeams();
+  };
+
+
+
+  private func updatePlayerEventDataCache() : async () {
+    await playerCanister.updatePlayerEventDataCache();
+  };
+
+
+  public shared ({ caller }) func savePlayerEvents(fixtureId : T.FixtureId, allPlayerEvents : [T.PlayerEventData]) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
+
+    let validPlayerEvents = validatePlayerEvents(allPlayerEvents);
+
+    if (not validPlayerEvents) {
+      return #err(#InvalidData);
+    };
+
+    let activeSeasonId = seasonManager.getActiveSeasonId();
+    let activeGameweek = seasonManager.getActiveGameweek();
+
+    let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
+
+    if (fixture.status != 2) {
+      return #err(#NotAllowed);
+    };
+
+    let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(allPlayerEvents);
+
+    let allPlayers = await playerCanister.getPlayers();
+
+    let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+    let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+
+    for (event in Iter.fromArray(allPlayerEvents)) {
+      if (event.teamId == fixture.homeTeamId) {
+        homeTeamPlayerIdsBuffer.add(event.playerId);
+      } else if (event.teamId == fixture.awayTeamId) {
+        awayTeamPlayerIdsBuffer.add(event.playerId);
+      };
+    };
+
+    let homeTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+    let awayTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+
+    for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(homeTeamPlayerIdsBuffer))) {
+      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+      switch (player) {
+        case (null) {  };
+        case (?actualPlayer) {
+          if (actualPlayer.position == 0 or actualPlayer.position == 1) {
+            if (Array.find<Nat16>(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
+              homeTeamDefensivePlayerIdsBuffer.add(playerId);
+            };
+          };
+        };
+      };
+    };
+
+    for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(awayTeamPlayerIdsBuffer))) {
+      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+      switch (player) {
+        case (null) {  };
+        case (?actualPlayer) {
+          if (actualPlayer.position == 0 or actualPlayer.position == 1) {
+            if (Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
+              awayTeamDefensivePlayerIdsBuffer.add(playerId);
+            };
+          };
+        };
+      };
+    };
+
+    // Get goals for each team
+    let homeTeamGoals = Array.filter<T.PlayerEventData>(
+      allPlayerEvents,
+      func(event : T.PlayerEventData) : Bool {
+        return event.teamId == fixture.homeTeamId and event.eventType == 1;
+      },
+    );
+
+    let awayTeamGoals = Array.filter<T.PlayerEventData>(
+      allPlayerEvents,
+      func(event : T.PlayerEventData) : Bool {
+        return event.teamId == fixture.awayTeamId and event.eventType == 1;
+      },
+    );
+
+    let homeTeamOwnGoals = Array.filter<T.PlayerEventData>(
+      allPlayerEvents,
+      func(event : T.PlayerEventData) : Bool {
+        return event.teamId == fixture.homeTeamId and event.eventType == 10;
+      },
+    );
+
+    let awayTeamOwnGoals = Array.filter<T.PlayerEventData>(
+      allPlayerEvents,
+      func(event : T.PlayerEventData) : Bool {
+        return event.teamId == fixture.awayTeamId and event.eventType == 10;
+      },
+    );
+
+    let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
+    let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
+
+    if (totalHomeScored == 0) {
+      //add away team clean sheets
+      for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
+        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+        switch (player) {
+          case (null) {};
+          case (?actualPlayer) {
+            let cleanSheetEvent : T.PlayerEventData = {
+              fixtureId = fixtureId;
+              playerId = playerId;
+              eventType = 5;
+              eventStartMinute = 90;
+              eventEndMinute = 90;
+              teamId = actualPlayer.teamId;
+              position = actualPlayer.position;
+            };
+            allPlayerEventsBuffer.add(cleanSheetEvent);
+          };
+        };
+      };
+    } else {
+      //add away team conceded events
+      for (goal in Iter.fromArray(homeTeamGoals)) {
+        for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
+          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+          switch (player) {
+            case (null) {};
+            case (?actualPlayer) {
+              let concededEvent : T.PlayerEventData = {
+                fixtureId = fixtureId;
+                playerId = actualPlayer.id;
+                eventType = 3;
+                eventStartMinute = goal.eventStartMinute;
+                eventEndMinute = goal.eventStartMinute;
+                teamId = actualPlayer.teamId;
+                position = actualPlayer.position;
+              };
+              allPlayerEventsBuffer.add(concededEvent);
+            };
+          };
+        };
+      };
+    };
+
+    if (totalAwayScored == 0) {
+      //add home team clean sheets
+      for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
+        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+        switch (player) {
+          case (null) {};
+          case (?actualPlayer) {
+            let cleanSheetEvent : T.PlayerEventData = {
+              fixtureId = fixtureId;
+              playerId = playerId;
+              eventType = 5;
+              eventStartMinute = 90;
+              eventEndMinute = 90;
+              teamId = actualPlayer.teamId;
+              position = actualPlayer.position;
+            };
+            allPlayerEventsBuffer.add(cleanSheetEvent);
+          };
+        };
+      };
+    } else {
+      //add home team conceded events
+      for (goal in Iter.fromArray(awayTeamGoals)) {
+        for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
+          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+          switch (player) {
+            case (null) {};
+            case (?actualPlayer) {
+              let concededEvent : T.PlayerEventData = {
+                fixtureId = goal.fixtureId;
+                playerId = actualPlayer.id;
+                eventType = 3;
+                eventStartMinute = goal.eventStartMinute;
+                eventEndMinute = goal.eventStartMinute;
+                teamId = actualPlayer.teamId;
+                position = actualPlayer.position;
+              };
+              allPlayerEventsBuffer.add(concededEvent);
+            };
+          };
+        };
+      };
+    };
+
+    await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
+    return #ok();
+  };
+
+  private func finaliseFixture(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, events : [T.PlayerEventData]) : async () {
+    await seasonManager.fixtureConsensusReached(seasonId, gameweekNumber, fixtureId, events);
+  };
+
+  public shared ({ caller }) func updateSystemState(systemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
+    let result = await seasonManager.updateSystemState(systemState);
+    await updateCacheHash("system_state");
+    return result;
+  };
+
+  public shared ({ caller }) func updateTeamValueInfo() : async () {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
+
+    await fantasyTeamsInstance.updateTeamValueInfo();
+  };
+
+  public func getTeamValueInfo() : async [Text] {
+    await fantasyTeamsInstance.getTeamValueInfo();
+  };
+
+  public func getTimers() : async [T.TimerInfo] {
+    return stable_timers;
+  };
+
+  public shared ({ caller }) func updateHashForCategory(category : Text) : async () {
+    assert not Principal.isAnonymous(caller);
+
+    let hashBuffer = Buffer.fromArray<T.DataCache>([]);
+
+    for (hashObj in Iter.fromList(dataCacheHashes)) {
+      if (hashObj.category == category) {
+        let randomHash = await SHA224.getRandomHash();
+        hashBuffer.add({ category = hashObj.category; hash = randomHash });
+      } else { hashBuffer.add(hashObj) };
+    };
+
+    dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+  };
+
+  public shared ({ caller }) func snapshotFantasyTeams() : async () {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
+    await seasonManager.gameweekBegin();
+  };
+
+  public shared ({ caller }) func updateFixture(updatedFixture : DTOs.UpdateFixtureDTO) : async () {
+    assert not Principal.isAnonymous(caller);
+    assert Principal.toText(caller) == adminPrincipal;
+
+    await seasonManager.updateFixture(updatedFixture);
+    await updateHashForCategory("fixtures");
+  };
+
+
 */
 
 

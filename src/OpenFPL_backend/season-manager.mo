@@ -12,6 +12,7 @@ import Nat8 "mo:base/Nat8";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Result "mo:base/Result";
+import HashMap "mo:base/HashMap";
 import SnapshotManager "patterns/snapshot-manager";
 import SnapshotFactory "patterns/snapshot-factory";
 import PlayerComposite "patterns/player-composite";
@@ -29,10 +30,6 @@ module {
     let clubComposite = ClubComposite.ClubComposite();
     let strategyManager = StrategyManager.StrategyManager();
     let managerProfileManager = ManagerProfileManager.ManagerProfileManager();
-
-
-
-
 
     let CANISTER_IDS = {
       retired_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
@@ -78,23 +75,79 @@ module {
       { category = "player_events"; hash = "DEFAULT_VALUE" }
     ]);
 
+    private var nextClubId : Nat = 1;
+    private var nextPlayerId : Nat = 1;
+    private var nextSeasonId : Nat16 = 1;
+    private var nextFixtureId : Nat32 = 1;
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var players = List.fromArray<T.Player>([]);
     private var seasons = List.fromArray<T.Season>([]);
-
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);    
     private var seasonLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, Text> = HashMap.HashMap<T.SeasonId, T.SeasonLeaderboards>(100, Utilities.eqNat16, Utilities.hashNat16);
     private var monthlyLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.CalendarMonth, HashMap.HashMap<T.ClubId, Text>>> = HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.CalendarMonth, HashMap.HashMap<T.ClubId, Text>>>(100, Utilities.eqNat16, Utilities.hashNat16);
     private var weeklyLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, Text>> = HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, Text>>(100, Utilities.eqNat16, Utilities.hashNat16);
     
-    private var nextPlayerId : Nat = 1;
-    private var nextSeasonId : Nat16 = 1;
-    private var nextFixtureId : Nat32 = 1;
 
-    public func setStableData(stable_fantasy_teams : [(Text, T.UserFantasyTeam)]) {
+    public func setStableData(
+      stable_system_state : T.SystemState,
+      stable_data_cache_hashes: [T.DataCache],
+      stable_next_club_id: T.ClubId,
+      stable_next_player_id: T.PlayerId,
+      stable_next_season_id: T.SeasonId,
+      stable_next_fixture_id: T.FixtureId,
+      stable_managers: [(T.PrincipalId, T.Manager)],
+      stable_players: [T.Player],
+      stable_seasons: [T.Season],
+      stable_profile_picture_canister_ids:  [(T.PrincipalId, Text)],
+      stable_season_leaderboard_canister_ids:  [(T.SeasonId, Text)],
+      stable_monthly_leaderboard_canister_ids:  [(T.SeasonId, [(T.CalendarMonth, [(T.ClubId, Text)])])],
+      stable_weekly_leaderboard_canister_ids:  [(T.SeasonId, [(T.GameweekNumber, Text)])]) {
+
+      systemState := stable_system_state;
+      dataCacheHashes := stable_data_cache_hashes;
+      nextClubId := stable_next_club_id;
+      nextPlayerId := stable_next_player_id;
+      nextSeasonId := stable_next_season_id;
+      nextFixtureId := stable_next_fixture_id;
+      managers := stable_managers;
+      players := stable_players;
+      seasons := stable_seasons;
+
+      profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
+        stable_profile_picture_canister_ids.vals(),
+        stable_profile_picture_canister_ids.size(),
+        Text.equal,
+        Text.hash,
+      );
+
+      seasonLeaderboardCanisterIds := HashMap.fromIter<T.SeasonId, Text>(
+        stable_season_leaderboard_canister_ids.vals(),
+        stable_season_leaderboard_canister_ids.size(),
+        Utilities.eqNat16, 
+        Utilities.hashNat16
+      );
+
+      monthlyLeaderboardCanisterIds := HashMap.fromIter<T.SeasonId, [(T.CalendarMonth, [(T.ClubId, Text)])]>(
+        stable_monthly_leaderboard_canister_ids.vals(),
+        stable_monthly_leaderboard_canister_ids.size(),
+        Utilities.eqNat16, 
+        Utilities.hashNat16
+      );
+
+      weeklyLeaderboardCanisterIds := HashMap.fromIter<T.SeasonId, [(T.GameweekNumber, Text)]>(
+        stable_weekly_leaderboard_canister_ids.vals(),
+        stable_weekly_leaderboard_canister_ids.size(),
+        Utilities.eqNat16, 
+        Utilities.hashNat16
+      );
+
+
+
+    };
 
       /* Set for
-      
+    public func setStableData(stable_fantasy_teams : [(Text, T.UserFantasyTeam)]) {
+  
     public func getStableSystemState(){};
     public func getStableDataCacheHashes(){};
     public func getStableManagers(){};
@@ -107,8 +160,7 @@ module {
     public func getStableNextPlayerId(){};
     public func getStableNextSeasonId(){};
     public func getStableNextFixtureId(){};
-      */
-
+    
 
       fantasyTeams := HashMap.fromIter<Text, T.UserFantasyTeam>(
         stable_fantasy_teams.vals(),
@@ -137,6 +189,238 @@ module {
     public func getStableNextSeasonId(){};
     public func getStableNextFixtureId(){};
 
+
+
+
+
+
+
+
+
+    public func fixtureConsensusReached(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, consensusPlayerEventData : [T.PlayerEventData]) : async () {
+      var getSeasonId = seasonId;
+      if (getSeasonId == 0) {
+        getSeasonId := activeSeasonId;
+      };
+
+      var getGameweekNumber = gameweekNumber;
+      if (getGameweekNumber == 0) {
+        getGameweekNumber := activeGameweek;
+      };
+
+      if (interestingGameweek < activeGameweek) {
+        interestingGameweek := activeGameweek;
+      };
+
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+
+      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
+        let fixture = activeFixtures[i];
+        if (fixture.id == fixtureId and fixture.status == 2) {
+          let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
+          await finaliseFixture(updatedFixture);
+        };
+      };
+
+      await checkGameweekFinished();
+      await updateCacheHash("fixtures");
+      await updateCacheHash("weekly_leaderboard");
+      await updateCacheHash("monthly_leaderboards");
+      await updateCacheHash("season_leaderboard");
+      await updateCacheHash("system_state");
+      await updatePlayerEventDataCache();
+    };
+
+
+
+
+
+    public func finaliseFixture(fixture : T.Fixture) : async () {
+      let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
+      await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
+      await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
+    };
+
+    private func checkGameweekFinished() : async () {
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+      let remainingFixtures = Array.find(
+        activeFixtures,
+        func(fixture : T.Fixture) : Bool {
+          return fixture.status < 3;
+        },
+      );
+
+      if (Option.isNull(remainingFixtures)) {
+        await gameweekVerified();
+        await setNextGameweek();
+      };
+    };
+
+    private func gameweekVerified() : async () {
+      //await distributeRewards(); //IMPLEMENT POST SNS
+    };
+
+    public func setNextGameweek() : async () {
+      if (activeGameweek == 38) {
+        await seasonsInstance.createNewSeason(activeSeasonId);
+        await resetFantasyTeams();
+        await updateCacheHash("system_state");
+        await updateCacheHash("weekly_leaderboard");
+        await updateCacheHash("monthly_leaderboards");
+        await updateCacheHash("season_leaderboard");
+        return;
+      };
+
+      activeGameweek += 1;
+
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+
+      let gameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
+      switch (setAndBackupTimer) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(gameweekBeginDuration, "gameweekBeginExpired", 0);
+        };
+      };
+    };
+
+    public func intialFixturesConfirmed() : async () {
+      activeGameweek := 1;
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+
+      let initialGameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
+      switch (setAndBackupTimer) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(initialGameweekBeginDuration, "gameweekBeginExpired", 0);
+        };
+      };
+    };
+
+    public func getSeason(seasonId : T.SeasonId) : T.Season {
+      return seasonsInstance.getSeason(seasonId);
+    };
+
+    public func getActiveSeason() : T.Season {
+      return seasonsInstance.getSeason(activeSeasonId);
+    };
+
+    public func getActiveSeasonId() : Nat16 {
+      return activeSeasonId;
+    };
+
+    public func getActiveGameweek() : Nat8 {
+      return activeGameweek;
+    };
+
+    public func getInterestingGameweek() : Nat8 {
+      return interestingGameweek;
+    };
+
+    public func getFixtures() : [T.Fixture] {
+      return seasonsInstance.getSeasonFixtures(activeSeasonId);
+    };
+
+    public func getFixturesForSeason(seasonId : T.SeasonId) : [T.Fixture] {
+      return seasonsInstance.getSeasonFixtures(seasonId);
+    };
+
+    public func getGameweekFixtures(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [T.Fixture] {
+      return seasonsInstance.getGameweekFixtures(seasonId, gameweek);
+    };
+
+    public func getActiveGameweekFixtures() : [T.Fixture] {
+      return seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+    };
+
+    public func getSeasons() : [T.Season] {
+      return seasonsInstance.getSeasons();
+    };
+
+    public func addInitialFixtures(seasonId : T.SeasonId, fixtures : [T.Fixture]) : async () {
+      seasonsInstance.addInitialFixtures(seasonId, fixtures);
+    };
+
+    public func rescheduleFixture(fixtureId : T.FixtureId, currentFixtureGameweek : T.GameweekNumber, updatedFixtureGameweek : T.GameweekNumber, updatedFixtureDate : Int) : async () {
+
+      var allSeasons = List.fromArray(seasonsInstance.getSeasons());
+      allSeasons := List.map<T.Season, T.Season>(
+        allSeasons,
+        func(currentSeason : T.Season) : T.Season {
+          if (currentSeason.id == activeSeasonId) {
+            var updatedGameweeks : List.List<T.Gameweek> = List.nil();
+            var postponedFixtures : List.List<T.Fixture> = List.nil();
+
+            for (gameweek in Iter.fromList(currentSeason.gameweeks)) {
+              let postponedFixture = List.find<T.Fixture>(
+                gameweek.fixtures,
+                func(fixture : T.Fixture) : Bool {
+                  return fixture.id == fixtureId;
+                },
+              );
+
+              switch (postponedFixture) {
+                case (null) {};
+                case (?foundPostponedFixture) {
+                  postponedFixtures := List.push(foundPostponedFixture, currentSeason.postponedFixtures);
+                };
+              };
+            };
+
+            updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(
+              currentSeason.gameweeks,
+              func(gw : T.Gameweek) : T.Gameweek {
+                if (gw.number == currentFixtureGameweek) {
+                  return {
+                    canisterId = gw.canisterId;
+                    number = gw.number;
+                    fixtures = List.filter<T.Fixture>(
+                      gw.fixtures,
+                      func(fixture : T.Fixture) : Bool {
+                        return fixture.id != fixtureId;
+                      },
+                    );
+                  };
+                } else { return gw };
+              },
+            );
+
+            let updatedSeason : T.Season = {
+              id = currentSeason.id;
+              name = currentSeason.name;
+              year = currentSeason.year;
+              gameweeks = updatedGameweeks;
+              postponedFixtures = postponedFixtures;
+            };
+
+            return updatedSeason;
+          } else {
+            return currentSeason;
+          };
+        },
+      );
+      seasonsInstance.setSeasons(List.toArray(allSeasons));
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      */
 
 
 
@@ -257,11 +541,11 @@ module {
       //END THE JAN TRANSFER WINDOW
     };
     
-    public func getSystemState() : async T.SystemStateDTO {
+    public func getSystemState() : async DTOs.SystemStateDTO {
       return systemState;
     };
     
-    public func getDataHashes() : async T.DataCacheDTO {
+    public func getDataHashes() : async DTOs.DataCacheDTO {
       return dataCacheDTO;
     };
     
@@ -835,6 +1119,46 @@ module {
 
       return true;
     };
+
+    
+    public func createNewSeason(activeSeasonId : Nat16) : async () {
+      let activeSeason = List.find<T.Season>(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == activeSeasonId;
+        },
+      );
+
+      var newSeasonsList = List.nil<T.Season>();
+      switch (activeSeason) {
+        case (null) {};
+        case (?season) {
+          let newYear = season.year + 1;
+          let gameweeks : [T.Gameweek] = Array.tabulate<T.Gameweek>(
+            38,
+            func(index : Nat) : T.Gameweek {
+              return {
+                number = Nat8.fromNat(index + 1);
+                canisterId = "";
+                fixtures = List.nil<T.Fixture>();
+              };
+            },
+          );
+
+          let newSeason : T.Season = {
+            id = nextSeasonId;
+            name = Nat16.toText(newYear) # subText(Nat16.toText(newYear + 1), 2, 3);
+            year = newYear;
+            gameweeks = List.nil();
+            postponedFixtures = List.nil();
+          };
+
+          newSeasonsList := List.push(newSeason, newSeasonsList);
+          seasons := List.append(seasons, newSeasonsList);
+          nextSeasonId += 1;
+        };
+      };
+    };
     
     */
 
@@ -1349,6 +1673,55 @@ module {
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
+
+seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(currentSeason : T.Season) : T.Season {
+          if (currentSeason.id == seasonId) {
+
+            var seasonGameweeks = List.nil<T.Gameweek>();
+
+            for (i in Iter.range(1, 38)) {
+              let fixturesForCurrentGameweek = Array.filter<T.Fixture>(
+                fixtures,
+                func(fixture : T.Fixture) : Bool {
+                  return Nat8.fromNat(i) == fixture.gameweek;
+                },
+              );
+
+              let newGameweek : T.Gameweek = {
+                id = i;
+                number = Nat8.fromNat(i);
+                canisterId = "";
+                fixtures = List.fromArray(fixturesForCurrentGameweek);
+              };
+
+              seasonGameweeks := List.push(newGameweek, seasonGameweeks);
+            };
+
+            return {
+              id = currentSeason.id;
+              name = currentSeason.name;
+              year = currentSeason.year;
+              gameweeks = seasonGameweeks;
+              postponedFixtures = currentSeason.postponedFixtures;
+            };
+          } else { return currentSeason };
+        },
+      );
+
+
+
+
+
+
+
+
+
+
+
+
+
       await seasonManager.addInitialFixtures(seasonId, seasonFixtures);
     };
 

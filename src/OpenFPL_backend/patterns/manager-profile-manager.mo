@@ -624,6 +624,279 @@ public func updateProfilePicture(principalName : Text, profilePicture : Blob) : 
 
       return profilesInstance.updateProfilePicture(Principal.toText(caller), profilePicture);
     };
+
+
+    
+  public shared query ({ caller }) func getProfile() : async ?DTOs.ProfileDTO {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+
+    var icpDepositAddress = Blob.fromArray([]);
+    var fplDepositAddress = Blob.fromArray([]);
+    var displayName = "";
+    var membershipType = Nat8.fromNat(0);
+    var profilePicture = Blob.fromArray([]);
+    var favouriteTeamId = Nat16.fromNat(0);
+    var createDate : Int = 0;
+    var reputation = Nat32.fromNat(0);
+    var canUpdateFavouriteTeam = true;
+
+    var profile = profilesInstance.getProfile(Principal.toText(caller));
+
+    switch (profile) {
+      case (null) { return null };
+      case (?p) {
+        displayName := p.displayName;
+        favouriteTeamId := p.favouriteTeamId;
+        createDate := p.createDate;
+        canUpdateFavouriteTeam := p.favouriteTeamId == 0 or not seasonManager.seasonActive();
+      };
+    };
+
+    let profileDTO : DTOs.ProfileDTO = {
+      principalId = principalId;
+      icpDepositAddress = icpDepositAddress;
+      fplDepositAddress = fplDepositAddress;
+      displayName = displayName;
+      membershipType = membershipType;
+      profilePicture = profilePicture;
+      favouriteTeamId = favouriteTeamId;
+      createDate = createDate;
+      reputation = reputation;
+      canUpdateFavouriteTeam = canUpdateFavouriteTeam;
+    };
+
+    return ?profileDTO;
+  };
+
+  public shared query ({ caller }) func getPublicProfileDTO(principalId : Text) : async DTOs.ProfileDTO {
+    var icpDepositAddress = Blob.fromArray([]);
+    var fplDepositAddress = Blob.fromArray([]);
+    var displayName = "";
+    var membershipType = Nat8.fromNat(0);
+    var profilePicture = Blob.fromArray([]);
+    var favouriteTeamId = Nat16.fromNat(0);
+    var createDate : Int = 0;
+    var reputation = Nat32.fromNat(0);
+
+    var profile = profilesInstance.getProfile(principalId);
+
+    switch (profile) {
+      case (null) {};
+      case (?p) {
+
+        let existingProfilePicture = profilesInstance.getProfilePicture(principalId);
+        switch (existingProfilePicture) {
+          case (null) {};
+          case (?foundPicture) {
+            profilePicture := foundPicture;
+          };
+        };
+
+        displayName := p.displayName;
+        favouriteTeamId := p.favouriteTeamId;
+      };
+    };
+
+    let profileDTO : DTOs.ProfileDTO = {
+      principalId = principalId;
+      icpDepositAddress = icpDepositAddress;
+      fplDepositAddress = fplDepositAddress;
+      displayName = displayName;
+      membershipType = membershipType;
+      profilePicture = profilePicture;
+      favouriteTeamId = favouriteTeamId;
+      createDate = createDate;
+      reputation = reputation;
+      canUpdateFavouriteTeam = false;
+    };
+
+    return profileDTO;
+  };
+
+  
+  public shared query func getManager(managerId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async DTOs.ManagerDTO {
+
+    var displayName = "";
+    var profilePicture = Blob.fromArray([]);
+    var favouriteTeamId : T.TeamId = 0;
+    var createDate = Time.now();
+    var gameweeks : [T.FantasyTeamSnapshot] = [];
+
+    var weeklyLeaderboardEntry = fantasyTeamsInstance.getWeeklyLeaderboardEntry(managerId, seasonId, gameweek);
+    var seasonLeaderboardEntry = fantasyTeamsInstance.getSeasonLeaderboardEntry(managerId, seasonId);
+    var monthlyLeaderboardEntry : ?T.LeaderboardEntry = null;
+
+    let userProfile = profilesInstance.getProfile(managerId);
+    switch (userProfile) {
+      case (null) {};
+      case (?foundProfile) {
+
+        let existingProfilePicture = profilesInstance.getProfilePicture(managerId);
+        switch (existingProfilePicture) {
+          case (null) {};
+          case (?foundPicture) {
+            profilePicture := foundPicture;
+          };
+        };
+
+        displayName := foundProfile.displayName;
+        favouriteTeamId := foundProfile.favouriteTeamId;
+        createDate := foundProfile.createDate;
+
+        if (foundProfile.favouriteTeamId > 0) {
+          monthlyLeaderboardEntry := fantasyTeamsInstance.getMonthlyLeaderboardEntry(managerId, seasonId, foundProfile.favouriteTeamId);
+        }
+
+      };
+    };
+
+    //get gameweek snapshots
+    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(managerId);
+
+    switch (fantasyTeam) {
+      case (null) {};
+      case (?foundTeam) {
+
+        let season = List.find(
+          foundTeam.history,
+          func(season : T.FantasyTeamSeason) : Bool {
+            return season.seasonId == seasonId;
+          },
+        );
+
+        switch (season) {
+          case (null) {};
+          case (?foundSeason) {
+            gameweeks := List.toArray(foundSeason.gameweeks);
+          };
+        };
+      };
+    };
+
+    var weeklyPosition : Int = 0;
+    var monthlyPosition : Int = 0;
+    var seasonPosition : Int = 0;
+
+    var weeklyPositionText = "N/A";
+    var monthlyPositionText = "N/A";
+    var seasonPositionText = "N/A";
+
+    var weeklyPoints : Int16 = 0;
+    var monthlyPoints : Int16 = 0;
+    var seasonPoints : Int16 = 0;
+
+    switch (weeklyLeaderboardEntry) {
+      case (null) {};
+      case (?foundEntry) {
+        weeklyPosition := foundEntry.position;
+        weeklyPositionText := foundEntry.positionText;
+        weeklyPoints := foundEntry.points;
+      };
+    };
+
+    switch (monthlyLeaderboardEntry) {
+      case (null) {};
+      case (?foundEntry) {
+        monthlyPosition := foundEntry.position;
+        monthlyPositionText := foundEntry.positionText;
+        monthlyPoints := foundEntry.points;
+      };
+    };
+
+    switch (seasonLeaderboardEntry) {
+      case (null) {};
+      case (?foundEntry) {
+        seasonPosition := foundEntry.position;
+        seasonPositionText := foundEntry.positionText;
+        seasonPoints := foundEntry.points;
+      };
+    };
+
+    let managerDTO : DTOs.ManagerDTO = {
+      principalId = managerId;
+      displayName = displayName;
+      profilePicture = profilePicture;
+      favouriteTeamId = favouriteTeamId;
+      createDate = createDate;
+      gameweeks = gameweeks;
+      weeklyPosition = weeklyPosition;
+      monthlyPosition = monthlyPosition;
+      seasonPosition = seasonPosition;
+      weeklyPositionText = weeklyPositionText;
+      monthlyPositionText = monthlyPositionText;
+      seasonPositionText = seasonPositionText;
+      weeklyPoints = weeklyPoints;
+      monthlyPoints = monthlyPoints;
+      seasonPoints = seasonPoints;
+    };
+
+    return managerDTO;
+  };
+
+
+
+
+
+
+
+
+
+  //Fantasy team functions
+  public shared query ({ caller }) func getTotalManagers() : async Nat {
+    return fantasyTeamsInstance.getTotalManagers();
+  };
+
+  public shared query ({ caller }) func getFantasyTeam() : async T.FantasyTeam {
+    assert not Principal.isAnonymous(caller);
+
+    let principalId = Principal.toText(caller);
+    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(principalId);
+
+    switch (fantasyTeam) {
+      case (null) {
+        return {
+          principalId = "";
+          transfersAvailable = 3;
+          bankBalance = 1200;
+          playerIds = [];
+          captainId = 0;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          teamBoostGameweek = 0;
+          teamBoostTeamId = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          countrymenGameweek = 0;
+          countrymenCountryId = 0;
+          prospectsGameweek = 0;
+          braceBonusGameweek = 0;
+          hatTrickHeroGameweek = 0;
+          favouriteTeamId = 0;
+          teamName = "";
+          transferWindowGameweek = 0;
+        };
+      };
+      case (?team) {
+        return team.fantasyTeam;
+      };
+    };
+  };
+
+
+  public shared query ({ caller }) func getFantasyTeamForGameweek(managerId : Text, seasonId : Nat16, gameweek : Nat8) : async T.FantasyTeamSnapshot {
+    return fantasyTeamsInstance.getFantasyTeamForGameweek(managerId, seasonId, gameweek);
+  };
+
+
+
+
           */
 
 
