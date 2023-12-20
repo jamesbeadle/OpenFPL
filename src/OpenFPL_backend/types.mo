@@ -7,7 +7,7 @@ module Types {
   public type GameweekNumber = Nat8;
   public type CalendarMonth = Nat8;
   public type PlayerId = Nat16;
-  public type TeamId = Nat16;
+  public type ClubId = Nat16;
   public type ProposalId = Nat;
   public type CountryId = Nat16;
   public type PrincipalId = Text;
@@ -61,7 +61,7 @@ module Types {
     displayName : Text;
     termsAccepted : Bool;
     profilePictureCanisterId : Text;
-    favouriteTeamId : TeamId;
+    favouriteClubId : ClubId;
     createDate : Int;
     transfersAvailable : Nat8;
     bankQuarterMillions : Nat;
@@ -74,7 +74,7 @@ module Types {
     noEntryGameweek : GameweekNumber;
     noEntryPlayerId : PlayerId;
     teamBoostGameweek : GameweekNumber;
-    teamBoostTeamId : TeamId;
+    teamBoostClubId : ClubId;
     safeHandsGameweek : GameweekNumber;
     safeHandsPlayerId : PlayerId;
     captainFantasticGameweek : GameweekNumber;
@@ -97,7 +97,7 @@ module Types {
   public type FantasyTeamSnapshot = {
     principalId : Text;
     teamName : Text;
-    favouriteTeamId : TeamId;
+    favouriteClubId : ClubId;
     transfersAvailable : Nat8;
     bankQuarterMillions : Nat;
     teamValueQuarterMillions : Nat;
@@ -111,7 +111,7 @@ module Types {
     noEntryGameweek : GameweekNumber;
     noEntryPlayerId : PlayerId;
     teamBoostGameweek : GameweekNumber;
-    teamBoostTeamId : TeamId;
+    teamBoostClubId : ClubId;
     safeHandsGameweek : GameweekNumber;
     safeHandsPlayerId : PlayerId;
     captainFantasticGameweek : GameweekNumber;
@@ -149,8 +149,8 @@ module Types {
     seasonId : SeasonId;
     gameweek : GameweekNumber;
     kickOff : Int;
-    homeTeamId : TeamId;
-    awayTeamId : TeamId;
+    homeClubId : ClubId;
+    awayClubId : ClubId;
     homeGoals : Nat8;
     awayGoals : Nat8;
     status : FixtureStatus;
@@ -159,7 +159,7 @@ module Types {
 
   public type Player = {
     id : PlayerId;
-    teamId : TeamId;
+    clubId : ClubId;
     position : PlayerPosition;
     firstName : Text;
     lastName : Text;
@@ -170,7 +170,7 @@ module Types {
     seasons : List.List<PlayerSeason>;
     valueHistory : List.List<ValueHistory>;
     onLoan : Bool;
-    parentTeamId : Nat16;
+    parentClubId : Nat16;
     isInjured : Bool;
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;
@@ -194,7 +194,7 @@ module Types {
     eventType : PlayerEventType;
     eventStartMinute : Nat8;
     eventEndMinute : Nat8;
-    teamId : TeamId;
+    clubId : ClubId;
   };
 
   public type ValueHistory = {
@@ -214,8 +214,8 @@ module Types {
     transferDate : Int;
     transferGameweek : GameweekNumber;
     transferSeason : SeasonId;
-    fromTeam : TeamId;
-    toTeam : TeamId;
+    fromClub : ClubId;
+    toClub : ClubId;
     loanEndDate : Int;
   };
   
@@ -228,7 +228,7 @@ module Types {
   public type ClubLeaderboard = {
     seasonId : SeasonId;
     month : Nat8;
-    clubId : TeamId;
+    clubId : ClubId;
     entries : List.List<LeaderboardEntry>;
   };
 

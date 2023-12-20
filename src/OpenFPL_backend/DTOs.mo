@@ -8,7 +8,9 @@ module DTOs {
   
 
 
-
+public type UpdateFantasyTeamDTO = {
+   newPlayerIds : [Nat16], captainId : Nat16, bonusId : Nat8, bonusPlayerId : Nat16, bonusTeamId : Nat16, transferWindowGameweek: T.GameweekNumber
+};
 
 
 

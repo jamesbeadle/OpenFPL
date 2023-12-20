@@ -275,7 +275,7 @@ actor Self {
           seasons = List.nil<T.PlayerSeason>();
           valueHistory = List.nil<T.ValueHistory>();
           onLoan = false;
-          parentTeamId = 0;
+          parentclubId = 0;
           isInjured = false;
           injuryHistory = List.nil<T.InjuryHistory>();
           retirementDate = 0;
@@ -288,7 +288,7 @@ actor Self {
 
   public shared query ({ caller }) func getPlayerDetails(playerId : Nat16, seasonId : T.SeasonId) : async DTOs.PlayerDetailDTO {
 
-    var teamId : T.TeamId = 0;
+    var teamId : T.ClubId = 0;
     var position : Nat8 = 0;
     var firstName = "";
     var lastName = "";
@@ -298,7 +298,7 @@ actor Self {
     var nationality : T.CountryId = 0;
     var valueHistory : [T.ValueHistory] = [];
     var onLoan = false;
-    var parentTeamId : T.TeamId = 0;
+    var parentClubId : T.ClubId = 0;
     var isInjured = false;
     var injuryHistory : [T.InjuryHistory] = [];
     var retirementDate : Int = 0;
@@ -325,7 +325,7 @@ actor Self {
         nationality := player.nationality;
         valueHistory := List.toArray<T.ValueHistory>(player.valueHistory);
         onLoan := player.onLoan;
-        parentTeamId := player.parentTeamId;
+        parentClubId := player.parentClubId;
         isInjured := player.isInjured;
         injuryHistory := List.toArray<T.InjuryHistory>(player.injuryHistory);
         retirementDate := player.retirementDate;
@@ -370,7 +370,7 @@ actor Self {
       seasonId = seasonId;
       valueHistory = valueHistory;
       onLoan = onLoan;
-      parentTeamId = parentTeamId;
+      parentClubId = parentClubId;
       isInjured = isInjured;
       injuryHistory = injuryHistory;
       retirementDate = retirementDate;
@@ -406,7 +406,7 @@ actor Self {
             seasons = p.seasons;
             valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
             onLoan = p.onLoan;
-            parentTeamId = p.parentTeamId;
+            parentClubId = p.parentClubId;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
@@ -452,7 +452,7 @@ actor Self {
             seasons = p.seasons;
             valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
             onLoan = p.onLoan;
-            parentTeamId = p.parentTeamId;
+            parentClubId = p.parentClubId;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
@@ -478,16 +478,16 @@ actor Self {
 
       switch (event.eventType) {
         case 1 {
-          if (event.teamId == fixture.homeTeamId) {
+          if (event.teamId == fixture.homeClubId) {
             homeGoalsCount += 1;
-          } else if (event.teamId == fixture.awayTeamId) {
+          } else if (event.teamId == fixture.awayClubId) {
             awayGoalsCount += 1;
           };
         };
         case 10 {
-          if (event.teamId == fixture.homeTeamId) {
+          if (event.teamId == fixture.homeClubId) {
             awayGoalsCount += 1;
-          } else if (event.teamId == fixture.awayTeamId) {
+          } else if (event.teamId == fixture.awayClubId) {
             homeGoalsCount += 1;
           };
         };
@@ -629,7 +629,7 @@ actor Self {
         seasons = updatedSeasons;
         valueHistory = player.valueHistory;
         onLoan = player.onLoan;
-        parentTeamId = player.parentTeamId;
+        parentClubId = player.parentClubId;
         isInjured = player.isInjured;
         injuryHistory = player.injuryHistory;
         retirementDate = player.retirementDate;
@@ -681,8 +681,8 @@ actor Self {
       id = fixture.id;
       seasonId = fixture.seasonId;
       gameweek = fixture.gameweek;
-      homeTeamId = fixture.homeTeamId;
-      awayTeamId = fixture.awayTeamId;
+      homeClubId = fixture.homeClubId;
+      awayClubId = fixture.awayClubId;
       kickOff = fixture.kickOff;
       homeGoals = homeGoalsCount;
       awayGoals = awayGoalsCount;
@@ -748,7 +748,7 @@ actor Self {
             seasons = updatedSeasons;
             valueHistory = p.valueHistory;
             onLoan = p.onLoan;
-            parentTeamId = p.parentTeamId;
+            parentClubId = p.parentClubId;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
@@ -826,7 +826,7 @@ actor Self {
     };
   };
 
-  public shared func transferPlayer(playerId : T.PlayerId, newTeamId : T.TeamId, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) : async () {
+  public shared func transferPlayer(playerId : T.PlayerId, newClubId : T.ClubId, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) : async () {
     let player = List.find<T.Player>(players, func(p : T.Player) { p.id == playerId });
     switch (player) {
       case (null) {};
@@ -837,13 +837,13 @@ actor Self {
           transferGameweek = currentGameweek;
           transferSeason = currentSeasonId;
           fromTeam = p.teamId;
-          toTeam = newTeamId;
+          toTeam = newClubId;
           loanEndDate = 0;
         };
 
         let updatedPlayer : T.Player = {
           id = p.id;
-          teamId = newTeamId;
+          teamId = newClubId;
           position = p.position;
           firstName = p.firstName;
           lastName = p.lastName;
@@ -854,7 +854,7 @@ actor Self {
           seasons = p.seasons;
           valueHistory = p.valueHistory;
           onLoan = p.onLoan;
-          parentTeamId = p.parentTeamId;
+          parentClubId = p.parentClubId;
           isInjured = p.isInjured;
           injuryHistory = p.injuryHistory;
           retirementDate = p.retirementDate;
@@ -874,7 +874,7 @@ actor Self {
     };
   };
 
-  public shared func loanPlayer(playerId : T.PlayerId, loanTeamId : T.TeamId, loanEndDate : Int, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) : async () {
+  public shared func loanPlayer(playerId : T.PlayerId, loanClubId : T.ClubId, loanEndDate : Int, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) : async () {
     let playerToLoan = List.find<T.Player>(players, func(p : T.Player) { p.id == playerId });
     switch (playerToLoan) {
       case (null) {};
@@ -884,14 +884,14 @@ actor Self {
           transferDate = Time.now();
           transferGameweek = currentGameweek;
           transferSeason = currentSeasonId;
-          fromTeam = p.teamId;
-          toTeam = loanTeamId;
+          fromTeam = p.clubId;
+          toTeam = loanClubId;
           loanEndDate = loanEndDate;
         };
 
         let loanedPlayer : T.Player = {
           id = p.id;
-          teamId = loanTeamId;
+          teamId = loanClubId;
           position = p.position;
           firstName = p.firstName;
           lastName = p.lastName;
@@ -902,7 +902,7 @@ actor Self {
           seasons = p.seasons;
           valueHistory = p.valueHistory;
           onLoan = true;
-          parentTeamId = p.teamId;
+          parentClubId = p.clubId;
           isInjured = p.isInjured;
           injuryHistory = p.injuryHistory;
           retirementDate = p.retirementDate;
@@ -968,8 +968,7 @@ actor Self {
         switch (playerToReturn) {
           case (null) {};
           case (?p) {
-            if (p.parentTeamId == 0) {
-              //move player to former players
+            if (p.parentClubId == 0) {
               formerPlayers := List.append(formerPlayers, List.fromArray([p]));
 
               players := List.filter<T.Player>(
@@ -979,14 +978,13 @@ actor Self {
                 },
               );
             } else {
-              //update existing player
               players := List.map<T.Player, T.Player>(
                 players,
                 func(currentPlayer : T.Player) : T.Player {
                   if (currentPlayer.id == p.id) {
                     return {
                       id = p.id;
-                      teamId = p.parentTeamId;
+                      teamId = p.parentClubId;
                       position = p.position;
                       firstName = p.firstName;
                       lastName = p.lastName;
@@ -997,7 +995,7 @@ actor Self {
                       seasons = p.seasons;
                       valueHistory = p.valueHistory;
                       onLoan = false;
-                      parentTeamId = 0;
+                      parentClubId = 0;
                       isInjured = p.isInjured;
                       injuryHistory = p.injuryHistory;
                       retirementDate = p.retirementDate;
@@ -1034,7 +1032,7 @@ actor Self {
         if (p.onLoan) {
           let returnedPlayer : T.Player = {
             id = p.id;
-            teamId = p.parentTeamId;
+            clubId = p.parentClubId;
             position = p.position;
             firstName = p.firstName;
             lastName = p.lastName;
@@ -1045,7 +1043,7 @@ actor Self {
             seasons = p.seasons;
             valueHistory = p.valueHistory;
             onLoan = false;
-            parentTeamId = 0;
+            parentClubId = 0;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
@@ -1074,10 +1072,10 @@ actor Self {
     };
   };
 
-  public shared func createPlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) : async () {
+  public shared func createPlayer(clubId : T.ClubId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) : async () {
     let newPlayer : T.Player = {
       id = Nat16.fromNat(nextPlayerId + 1);
-      teamId = teamId;
+      clubId = clubId;
       position = position;
       firstName = firstName;
       lastName = lastName;
@@ -1088,7 +1086,7 @@ actor Self {
       seasons = List.nil<T.PlayerSeason>();
       valueHistory = List.nil<T.ValueHistory>();
       onLoan = false;
-      parentTeamId = 0;
+      parentClubId = 0;
       isInjured = false;
       injuryHistory = List.nil<T.InjuryHistory>();
       retirementDate = 0;
@@ -1116,7 +1114,7 @@ actor Self {
             seasons = currentPlayer.seasons;
             valueHistory = currentPlayer.valueHistory;
             onLoan = currentPlayer.onLoan;
-            parentTeamId = currentPlayer.parentTeamId;
+            parentClubId = currentPlayer.parentClubId;
             isInjured = currentPlayer.isInjured;
             injuryHistory = currentPlayer.injuryHistory;
             retirementDate = currentPlayer.retirementDate;
@@ -1164,7 +1162,7 @@ actor Self {
               seasons = currentPlayer.seasons;
               valueHistory = currentPlayer.valueHistory;
               onLoan = currentPlayer.onLoan;
-              parentTeamId = currentPlayer.parentTeamId;
+              parentClubId = currentPlayer.parentClubId;
               isInjured = false;
               injuryHistory = updatedInjuryHistory;
               retirementDate = currentPlayer.retirementDate;
@@ -1190,7 +1188,7 @@ actor Self {
               seasons = currentPlayer.seasons;
               valueHistory = currentPlayer.valueHistory;
               onLoan = currentPlayer.onLoan;
-              parentTeamId = currentPlayer.parentTeamId;
+              parentClubId = currentPlayer.parentClubId;
               isInjured = true;
               injuryHistory = List.push(newInjury, currentPlayer.injuryHistory);
               retirementDate = currentPlayer.retirementDate;
@@ -1222,7 +1220,7 @@ actor Self {
           seasons = p.seasons;
           valueHistory = p.valueHistory;
           onLoan = p.onLoan;
-          parentTeamId = p.parentTeamId;
+          parentClubId = p.parentClubId;
           isInjured = p.isInjured;
           injuryHistory = p.injuryHistory;
           retirementDate = retirementDate;
@@ -1259,7 +1257,7 @@ actor Self {
           seasons = p.seasons;
           valueHistory = p.valueHistory;
           onLoan = p.onLoan;
-          parentTeamId = p.parentTeamId;
+          parentClubId = p.parentClubId;
           isInjured = p.isInjured;
           injuryHistory = p.injuryHistory;
           retirementDate = 0;
@@ -1353,461 +1351,5 @@ actor Self {
       { category = "playerEventData"; hash = "DEFAULT_VALUE" },
     ]);
   };
-
-  /*  
-    
-
-  
-  public func addMissingPlayers() : async (){
-      players := List.append(players, List.fromArray<T.Player>([
-          {id = 618; teamId = 10; firstName = "Fodé"; lastName = "Ballo-Touré"; shirtNumber = 12; value = 42; dateOfBirth = 852249600000000000; nationality = "France"; position = 1; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 619; teamId = 16; firstName = "Odysseas"; lastName = "Vlachodimos"; shirtNumber = 23; value = 42; dateOfBirth = 767318400000000000; nationality = "Germany"; position = 0; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 620; teamId = 15; firstName = "Lewis"; lastName = "Miley"; shirtNumber = 67; value = 42; dateOfBirth = 1146441600000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 621; teamId = 15; firstName = "Amadou"; lastName = "Diallo"; shirtNumber = 49; value = 42; dateOfBirth = 1045267200000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 622; teamId = 15; firstName = "Michael"; lastName = "Ndiweni"; shirtNumber = 55; value = 42; dateOfBirth = 1070323200000000000; nationality = "England"; position = 3; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 623; teamId = 15; firstName = "Ben"; lastName = "Parkinson"; shirtNumber = 63; value = 42; dateOfBirth = 1110412800000000000; nationality = "England"; position = 3; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 624; teamId = 11; firstName = "James"; lastName = "McConnell"; shirtNumber = 53; value = 38; dateOfBirth = 1095033600000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 625; teamId = 14; firstName = "Kobbie"; lastName = "Mainoo"; shirtNumber = 37; value = 38; dateOfBirth = 1113868800000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 626; teamId = 4; firstName = "Myles"; lastName = "Peart-Harris"; shirtNumber = 25; value = 38; dateOfBirth = 1032307200000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 627; teamId = 5; firstName = "Benicio"; lastName = "Baker-Boaitey"; shirtNumber = 47; value = 42; dateOfBirth = 1073606400000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 628; teamId = 18; firstName = "Jamie"; lastName = "Donley"; shirtNumber = 63; value = 42; dateOfBirth = 1104710400000000000; nationality = "Northern Ireland"; position = 3; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 629; teamId = 8; firstName = "David"; lastName = "Ozoh"; shirtNumber = 52; value = 42; dateOfBirth = 1115337600000000000; nationality = "Spain"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 630; teamId = 17; firstName = "Sydie"; lastName = "Peck"; shirtNumber = 42; value = 42; dateOfBirth = 1095033600000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 631; teamId = 4; firstName = "Michael"; lastName = "Olakigbe"; shirtNumber = 37; value = 42; dateOfBirth = 1081209600000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 632; teamId = 7; firstName = "Djordje"; lastName = "Petrovic"; shirtNumber = 28; value = 42; dateOfBirth = 939340800000000000; nationality = "Serbia"; position = 0; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()},
-          {id = 633; teamId = 8; firstName = "Dean"; lastName = "Henderson"; shirtNumber = 30; value = 42; dateOfBirth = 858124800000000000; nationality = "England"; position = 0; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>(); transferHistory = List.nil<T.TransferHistory>()}
-      ]));
-      await updateHashForCategory("players");
-  };
-
-    public func adjustPlayerData() : async (){
-
-        //fix incorrect data
-        var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
-
-            switch(p.id){
-                case (291){
-                    let updatedPlayer: T.Player = {
-                        id = p.id;
-                        teamId = 14;
-                        position = p.position;
-                        firstName = p.firstName;
-                        lastName = p.lastName;
-                        shirtNumber = p.shirtNumber;
-                        value = p.value;
-                        dateOfBirth = p.dateOfBirth;
-                        nationality = "Cameroon";
-                        seasons = p.seasons;
-                        valueHistory = p.valueHistory;
-                        onLoan = p.onLoan;
-                        parentTeamId = p.parentTeamId;
-                        isInjured = p.isInjured;
-                        injuryHistory = p.injuryHistory;
-                        retirementDate = p.retirementDate;
-                        transferHistory = p.transferHistory;
-                    };
-                    return updatedPlayer;
-                };
-                case (316){
-                    let updatedPlayer: T.Player = {
-                        id = p.id;
-                        teamId = 14;
-                        position = p.position;
-                        firstName = p.firstName;
-                        lastName = p.lastName;
-                        shirtNumber = p.shirtNumber;
-                        value = p.value;
-                        dateOfBirth = p.dateOfBirth;
-                        nationality = "Ivory Coast";
-                        seasons = p.seasons;
-                        valueHistory = p.valueHistory;
-                        onLoan = p.onLoan;
-                        parentTeamId = p.parentTeamId;
-                        isInjured = p.isInjured;
-                        injuryHistory = p.injuryHistory;
-                        retirementDate = p.retirementDate;
-                        transferHistory = p.transferHistory;
-                    };
-                    return updatedPlayer;
-                };
-                case (354){
-                    let updatedPlayer: T.Player = {
-                        id = p.id;
-                        teamId = 16;
-                        position = p.position;
-                        firstName = p.firstName;
-                        lastName = p.lastName;
-                        shirtNumber = p.shirtNumber;
-                        value = p.value;
-                        dateOfBirth = p.dateOfBirth;
-                        nationality = "Ivory Coast";
-                        seasons = p.seasons;
-                        valueHistory = p.valueHistory;
-                        onLoan = p.onLoan;
-                        parentTeamId = p.parentTeamId;
-                        isInjured = p.isInjured;
-                        injuryHistory = p.injuryHistory;
-                        retirementDate = p.retirementDate;
-                        transferHistory = p.transferHistory;
-                    };
-                    return updatedPlayer;
-                };
-                case (359){
-                    let updatedPlayer: T.Player = {
-                        id = p.id;
-                        teamId = 16;
-                        position = p.position;
-                        firstName = p.firstName;
-                        lastName = p.lastName;
-                        shirtNumber = p.shirtNumber;
-                        value = p.value;
-                        dateOfBirth = p.dateOfBirth;
-                        nationality = "Ivory Coast";
-                        seasons = p.seasons;
-                        valueHistory = p.valueHistory;
-                        onLoan = p.onLoan;
-                        parentTeamId = p.parentTeamId;
-                        isInjured = p.isInjured;
-                        injuryHistory = p.injuryHistory;
-                        retirementDate = p.retirementDate;
-                        transferHistory = p.transferHistory;
-                    };
-                    return updatedPlayer;
-                };
-                case (242){
-                    let updatedPlayer: T.Player = {
-                        id = p.id;
-                        teamId = 11;
-                        position = p.position;
-                        firstName = p.firstName;
-                        lastName = p.lastName;
-                        shirtNumber = p.shirtNumber;
-                        value = p.value;
-                        dateOfBirth = p.dateOfBirth;
-                        nationality = "Brazil";
-                        seasons = p.seasons;
-                        valueHistory = p.valueHistory;
-                        onLoan = p.onLoan;
-                        parentTeamId = p.parentTeamId;
-                        isInjured = p.isInjured;
-                        injuryHistory = p.injuryHistory;
-                        retirementDate = p.retirementDate;
-                        transferHistory = p.transferHistory;
-                    };
-                    return updatedPlayer;
-                };
-                case (424){
-                    let updatedPlayer: T.Player = {
-                        id = p.id;
-                        teamId = 19;
-                        position = p.position;
-                        firstName = p.firstName;
-                        lastName = p.lastName;
-                        shirtNumber = p.shirtNumber;
-                        value = p.value;
-                        dateOfBirth = p.dateOfBirth;
-                        nationality = "Ivory Coast";
-                        seasons = p.seasons;
-                        valueHistory = p.valueHistory;
-                        onLoan = p.onLoan;
-                        parentTeamId = p.parentTeamId;
-                        isInjured = p.isInjured;
-                        injuryHistory = p.injuryHistory;
-                        retirementDate = p.retirementDate;
-                        transferHistory = p.transferHistory;
-                    };
-                    return updatedPlayer;
-                };
-                case (201){
-                    let updatedPlayer: T.Player = {
-                        id = p.id;
-                        teamId = 9;
-                        position = p.position;
-                        firstName = "Jarrad";
-                        lastName = p.lastName;
-                        shirtNumber = p.shirtNumber;
-                        value = p.value;
-                        dateOfBirth = p.dateOfBirth;
-                        nationality = p.nationality;
-                        seasons = p.seasons;
-                        valueHistory = p.valueHistory;
-                        onLoan = p.onLoan;
-                        parentTeamId = p.parentTeamId;
-                        isInjured = p.isInjured;
-                        injuryHistory = p.injuryHistory;
-                        retirementDate = p.retirementDate;
-                        transferHistory = p.transferHistory;
-                    };
-                    return updatedPlayer;
-                };
-                case _{
-                    return p;
-                };
-            };
-        });
-
-        players := updatedPlayers;
-
-        await updateHashForCategory("players");
-    };
-
-    
-    public func addMissingPlayers() : async (){
-        players := List.append(players, List.fromArray<T.Player>([
-            {id = 605; teamId = 4; firstName = "Saman"; lastName = "Ghoddos"; shirtNumber = 14; value = 42; dateOfBirth = 747273600000000000; nationality = "Sweden"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();}
-        ]));
-        await updateHashForCategory("players");
-    };
-
-    public func squadAdjustments() : async (){
-        var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
-
-            if(p.id == 215){
-                let updatedPlayer: T.Player = {
-                    id = p.id;
-                    teamId = 4;
-                    position = p.position;
-                    firstName = p.firstName;
-                    lastName = p.lastName;
-                    shirtNumber = p.shirtNumber;
-                    value = p.value;
-                    dateOfBirth = p.dateOfBirth;
-                    nationality = p.nationality;
-                    seasons = p.seasons;
-                    valueHistory = p.valueHistory;
-                    onLoan = p.onLoan;
-                    parentTeamId = p.parentTeamId;
-                    isInjured = p.isInjured;
-                    injuryHistory = p.injuryHistory;
-                    retirementDate = p.retirementDate;
-                };
-                return updatedPlayer;
-            } else { return p; }
-        });
-
-        players := updatedPlayers;
-        await updateHashForCategory("players");
-    };
-
-
-
-        */
-
-  /*
-
-    public shared func setDefaultHashes(): async () {
-        dataCacheHashes := List.fromArray([
-            { category = "players"; hash = "DEFAULT_VALUE" },
-            { category = "playerEventData"; hash = "DEFAULT_VALUE" }
-        ]);
-    };
-
-
-    public func squadAdjustments() : async (){
-        var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
-
-            if(p.id == 57){
-                let updatedPlayer: T.Player = {
-                    id = p.id;
-                    teamId = 17;
-                    position = p.position;
-                    firstName = p.firstName;
-                    lastName = p.lastName;
-                    shirtNumber = p.shirtNumber;
-                    value = p.value;
-                    dateOfBirth = p.dateOfBirth;
-                    nationality = p.nationality;
-                    seasons = p.seasons;
-                    valueHistory = p.valueHistory;
-                    onLoan = p.onLoan;
-                    parentTeamId = p.parentTeamId;
-                    isInjured = p.isInjured;
-                    injuryHistory = p.injuryHistory;
-                    retirementDate = p.retirementDate;
-                };
-                return updatedPlayer;
-            } else { return p; }
-        });
-
-        players := updatedPlayers;
-    };
-
-
-    public func addMissingPlayers() : async (){
-        
-        var updatedPlayers = players;
-
-        players := List.append(players, List.fromArray<T.Player>([
-            {id = 584; teamId = 17; firstName = "Luke"; lastName = "Thomas"; shirtNumber = 14; value = 22; dateOfBirth = 992131200000000000; nationality = "England"; position = 1; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-        ]));
-    };
-    public func addMissingPlayers() : async (){
-        
-        var updatedPlayers = players;
-
-        players := List.append(players, List.fromArray<T.Player>([
-            {id = 563; teamId = 7; firstName = "Mykhaylo"; lastName = "Mudryk"; shirtNumber = 15; value = 126; dateOfBirth = 978652800000000000; nationality = "Ukraine"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 564; teamId = 11; firstName = "Wataru"; lastName = "Endō"; shirtNumber = 3; value = 84; dateOfBirth = 729216000000000000; nationality = "Japan"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 565; teamId = 15; firstName = "Tino"; lastName = "Livramento"; shirtNumber = 21; value = 42; dateOfBirth = 1037059200000000000; nationality = "England"; position = 1; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 566; teamId = 9; firstName = "Tyler"; lastName = "Onyango"; shirtNumber = 62; value = 42; dateOfBirth = 1046736000000000000; nationality = "England"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 567; teamId = 19; firstName = "Edson"; lastName = "Álvarez"; shirtNumber = 19; value = 64; dateOfBirth = 877651200000000000; nationality = "Mexico"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 568; teamId = 7; firstName = "Mason"; lastName = "Burstow"; shirtNumber = 37; value = 42; dateOfBirth = 1059955200000000000; nationality = "England"; position = 3; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 569; teamId = 7; firstName = "Lesley"; lastName = "Ugochukwu"; shirtNumber = 16; value = 42; dateOfBirth = 1080259200000000000; nationality = "France"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 570; teamId = 11; firstName = "Ben"; lastName = "Doak"; shirtNumber = 50; value = 42; dateOfBirth = 1131667200000000000; nationality = "Scotland"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();},
-            {id = 571; teamId = 6; firstName = "Anass"; lastName = "Zaroury"; shirtNumber = 19; value = 64; dateOfBirth = 973555200000000000; nationality = "Belgium"; position = 2; seasons = List.nil<T.PlayerSeason>(); injuryHistory = List.nil<T.InjuryHistory>(); isInjured = false; onLoan = false; parentTeamId = 0; retirementDate = 0; valueHistory = List.nil<T.ValueHistory>();}
-        ]));
-
-    };
-
-    public func squadAdjustments() : async (){
-        var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
-
-            //Adjust Lawrence Vigourous (460) position to 0 (GK)
-            //Adjust James Trafford (461) position to 0 (GK)
-            if(p.id == 460 or p.id == 461){
-                let updatedPlayer: T.Player = {
-                    id = p.id;
-                    teamId = p.teamId;
-                    position = 0;
-                    firstName = p.firstName;
-                    lastName = p.lastName;
-                    shirtNumber = p.shirtNumber;
-                    value = p.value;
-                    dateOfBirth = p.dateOfBirth;
-                    nationality = p.nationality;
-                    seasons = p.seasons;
-                    valueHistory = p.valueHistory;
-                    onLoan = p.onLoan;
-                    parentTeamId = p.parentTeamId;
-                    isInjured = p.isInjured;
-                    injuryHistory = p.injuryHistory;
-                    retirementDate = p.retirementDate;
-                };
-                return updatedPlayer;
-            };
-
-            return p;
-        });
-
-        players := updatedPlayers;
-    };
-
-    public func dataAdj() : async (){
-        
-        var updatedPlayers = List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
-                
-            let updatedPlayer: T.Player = {
-                id = p.id;
-                teamId = p.teamId;
-                position = p.position;
-                firstName = p.firstName;
-                lastName = p.lastName;
-                shirtNumber = p.shirtNumber;
-                value = p.value;
-                dateOfBirth = p.dateOfBirth;
-                nationality = p.nationality;
-                seasons = List.nil<T.PlayerSeason>();
-                valueHistory = p.valueHistory;
-                onLoan = p.onLoan;
-                parentTeamId = p.parentTeamId;
-                isInjured = p.isInjured;
-                injuryHistory = p.injuryHistory;
-                retirementDate = p.retirementDate;
-            };
-            return updatedPlayer;
-        });
-
-        players := updatedPlayers;
-
-            
-        //Adjust James Trafford Position to 0
-        //Adjust Lawrence Vigourous position to 0
-        //Add AnAss Zaroury to Burnley - CHECK IF IN THERE
-        //move thomas party to defender from midfield 
-        //Move robert sanchez to chelsea from brighton
-        
-
-
-
-    };
-    public shared func recalculatePlayerScores(fixture: T.Fixture, seasonId: Nat16, gameweek: Nat8) : async () {
-        ignore await calculatePlayerScores(seasonId,gameweek,fixture);
-    };
-
-    public shared func adjustDuplicatedEvents(){
-        
-        players := List.map<T.Player, T.Player>(players, func (p: T.Player): T.Player {
-            let updatedSeasons = List.map<T.PlayerSeason, T.PlayerSeason>(p.seasons, func(season: T.PlayerSeason) : T.PlayerSeason {
-                return {
-                    id = season.id;
-                    gameweeks = List.map<T.PlayerGameweek, T.PlayerGameweek>(season.gameweeks, func(playerGameweek: T.PlayerGameweek) : T.PlayerGameweek{
-                        return {
-                            number = playerGameweek.number;
-                            events = List.filter<T.PlayerEventData>(removeDuplicates(playerGameweek.events, p.id), func(event: T.PlayerEventData) : Bool {
-                                return event.playerId == p.id;
-                            });
-                            points = playerGameweek.points;
-                        }    
-                    });
-                };
-            });
-
-            let adjustedPlayer: T.Player = {
-                id = p.id;
-                teamId = p.teamId;
-                position = p.position;
-                firstName = p.firstName;
-                lastName = p.lastName;
-                shirtNumber = p.shirtNumber;
-                value = p.value;
-                dateOfBirth = p.dateOfBirth;
-                nationality = p.nationality;
-                seasons = updatedSeasons;
-                valueHistory = p.valueHistory;
-                onLoan = p.onLoan;
-                parentTeamId = p.parentTeamId;
-                isInjured = p.isInjured;
-                injuryHistory = p.injuryHistory;
-                retirementDate = p.retirementDate;
-            };
-
-            return adjustedPlayer;
-
-        }); 
-    };
-
-    private func removeDuplicates(events: List.List<T.PlayerEventData>, playerId: Nat16): List.List<T.PlayerEventData> {
-    var seenEvents: List.List<(T.PlayerEventData)> = List.nil<(T.PlayerEventData)>();
-        return List.filter<T.PlayerEventData>(events, func(event: T.PlayerEventData): Bool {
-            let uniqueTuple: T.PlayerEventData = {
-                fixtureId = event.fixtureId;
-                playerId = event.playerId;
-                eventType = event.eventType;
-                eventStartMinute = event.eventStartMinute;
-                eventEndMinute = event.eventEndMinute;
-                teamId = event.teamId;
-            };
-            if (isTupleSeen(seenEvents, uniqueTuple)) {
-                return false;
-            } else {
-                seenEvents := List.append<T.PlayerEventData>(seenEvents, List.fromArray<T.PlayerEventData>([uniqueTuple]));
-                return true;
-            }
-        });
-    };
-
-    private func isTupleSeen(seenEvents: List.List<(T.PlayerEventData)>, uniqueTuple: (T.PlayerEventData)): Bool {
-        switch (seenEvents) {
-            case (null) { return false; };
-            case (?(head, tail)) {
-                if (head == uniqueTuple) {
-                    return true;
-                } else {
-                    return isTupleSeen(tail, uniqueTuple);
-                }
-            }
-        }
-    };
-    */
 
 };
