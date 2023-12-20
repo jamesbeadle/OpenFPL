@@ -1,34 +1,4 @@
-import Array "mo:base/Array";
-import Blob "mo:base/Blob";
-import Buffer "mo:base/Buffer";
-import Hash "mo:base/Hash";
-import Int "mo:base/Int";
-import Iter "mo:base/Iter";
-import List "mo:base/List";
-import Nat8 "mo:base/Nat8";
-import Nat16 "mo:base/Nat16";
-import Nat32 "mo:base/Nat32";
-import Option "mo:base/Option";
-import Principal "mo:base/Principal";
-import Result "mo:base/Result";
-import Text "mo:base/Text";
-import Time "mo:base/Time";
-import Timer "mo:base/Timer";
-import TrieMap "mo:base/TrieMap";
-
-import Account "Account";
-import Book "book";
-import Countries "Countries";
-import FantasyTeams "fantasy-teams";
-import Teams "teams";
-import Profiles "profiles";
-import Rewards "rewards";
 import SeasonManager "season-manager";
-import SHA224 "SHA224";
-import Utilities "utilities";
-
-import T "types";
-import DTOs "DTOs";
 
 actor Self {
 
