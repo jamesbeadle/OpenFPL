@@ -358,7 +358,8 @@ module {
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+       await playerCanister.revaluePlayerUp(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+   
     };
 
     public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : Bool {
@@ -366,6 +367,7 @@ module {
     };
 
     public func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error> {
+      await playerCanister.revaluePlayerDown(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
       return #ok();
     };
 
@@ -475,6 +477,178 @@ module {
     };
 
     public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
+        
+      let activeSeasonId = seasonManager.getActiveSeasonId();
+      let activeGameweek = seasonManager.getActiveGameweek();
+      let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
+      let allPlayers = await playerCanister.getPlayers();
+
+      let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+      let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+
+      for (event in Iter.fromArray(playerEventData)) {
+        if (event.teamId == fixture.homeTeamId) {
+          homeTeamPlayerIdsBuffer.add(event.playerId);
+        } else if (event.teamId == fixture.awayTeamId) {
+          awayTeamPlayerIdsBuffer.add(event.playerId);
+        };
+      };
+
+      let homeTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+      let awayTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+
+      for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(homeTeamPlayerIdsBuffer))) {
+        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+        switch (player) {
+          case (null) {};
+          case (?actualPlayer) {
+            if (actualPlayer.position == 0 or actualPlayer.position == 1) {
+              if (Array.find<Nat16>(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
+                homeTeamDefensivePlayerIdsBuffer.add(playerId);
+              };
+            };
+          };
+        };
+      };
+
+      for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(awayTeamPlayerIdsBuffer))) {
+        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+        switch (player) {
+          case (null) {};
+          case (?actualPlayer) {
+            if (actualPlayer.position == 0 or actualPlayer.position == 1) {
+              if (Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
+                awayTeamDefensivePlayerIdsBuffer.add(playerId);
+              };
+            };
+          };
+        };
+      };
+
+      // Get goals for each team
+      let homeTeamGoals = Array.filter<T.PlayerEventData>(
+        playerEventData,
+        func(event : T.PlayerEventData) : Bool {
+          return event.teamId == fixture.homeTeamId and event.eventType == 1;
+        },
+      );
+
+      let awayTeamGoals = Array.filter<T.PlayerEventData>(
+        playerEventData,
+        func(event : T.PlayerEventData) : Bool {
+          return event.teamId == fixture.awayTeamId and event.eventType == 1;
+        },
+      );
+
+      let homeTeamOwnGoals = Array.filter<T.PlayerEventData>(
+        playerEventData,
+        func(event : T.PlayerEventData) : Bool {
+          return event.teamId == fixture.homeTeamId and event.eventType == 10;
+        },
+      );
+
+      let awayTeamOwnGoals = Array.filter<T.PlayerEventData>(
+        playerEventData,
+        func(event : T.PlayerEventData) : Bool {
+          return event.teamId == fixture.awayTeamId and event.eventType == 10;
+        },
+      );
+
+      let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
+      let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
+
+      let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(playerEventData);
+
+      if (totalHomeScored == 0) {
+        //add away team clean sheets
+        for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
+          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+          switch (player) {
+            case (null) {};
+            case (?actualPlayer) {
+              let cleanSheetEvent : T.PlayerEventData = {
+                fixtureId = fixtureId;
+                playerId = playerId;
+                eventType = 5;
+                eventStartMinute = 90;
+                eventEndMinute = 90;
+                teamId = actualPlayer.teamId;
+                position = actualPlayer.position;
+              };
+              allPlayerEventsBuffer.add(cleanSheetEvent);
+            };
+          };
+        };
+      } else {
+        //add away team conceded events
+        for (goal in Iter.fromArray(homeTeamGoals)) {
+          for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
+            let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+            switch (player) {
+              case (null) {};
+              case (?actualPlayer) {
+                let concededEvent : T.PlayerEventData = {
+                  fixtureId = fixtureId;
+                  playerId = actualPlayer.id;
+                  eventType = 3;
+                  eventStartMinute = goal.eventStartMinute;
+                  eventEndMinute = goal.eventStartMinute;
+                  teamId = actualPlayer.teamId;
+                  position = actualPlayer.position;
+                };
+                allPlayerEventsBuffer.add(concededEvent);
+              };
+            };
+          };
+        };
+      };
+
+      if (totalAwayScored == 0) {
+        //add home team clean sheets
+        for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
+          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+          switch (player) {
+            case (null) {};
+            case (?actualPlayer) {
+              let cleanSheetEvent : T.PlayerEventData = {
+                fixtureId = fixtureId;
+                playerId = playerId;
+                eventType = 5;
+                eventStartMinute = 90;
+                eventEndMinute = 90;
+                teamId = actualPlayer.teamId;
+                position = actualPlayer.position;
+              };
+              allPlayerEventsBuffer.add(cleanSheetEvent);
+            };
+          };
+        };
+      } else {
+        //add home team conceded events
+        for (goal in Iter.fromArray(awayTeamGoals)) {
+          for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
+            let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+            switch (player) {
+              case (null) {};
+              case (?actualPlayer) {
+                let concededEvent : T.PlayerEventData = {
+                  fixtureId = goal.fixtureId;
+                  playerId = actualPlayer.id;
+                  eventType = 3;
+                  eventStartMinute = goal.eventStartMinute;
+                  eventEndMinute = goal.eventStartMinute;
+                  teamId = actualPlayer.teamId;
+                  position = actualPlayer.position;
+                };
+                allPlayerEventsBuffer.add(concededEvent);
+              };
+            };
+          };
+        };
+      };
+
+      let fixtureEvents = Buffer.toArray(allPlayerEventsBuffer);
+      await seasonManager.fixtureConsensusReached(fixture.seasonId, fixture.gameweek, fixtureId, fixtureEvents);
       return #ok();
     };
 
@@ -587,7 +761,7 @@ module {
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+      await seasonManager.addInitialFixtures(seasonId, seasonFixtures);
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
@@ -608,7 +782,7 @@ module {
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+      await seasonManager.rescheduleFixture(fixtureId, currentFixtureGameweek, updatedFixtureGameweek, updatedFixtureDate);
     };
 
     public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
@@ -640,7 +814,7 @@ module {
     };
 
     public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+      await playerCanister.loanPlayer(playerId, loanTeamId, loanEndDate, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
     };
 
     public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
@@ -663,7 +837,7 @@ module {
     };
 
     public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+      await playerCanister.transferPlayer(playerId, newTeamId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
     };
 
     public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
@@ -681,7 +855,7 @@ module {
     };
 
     public func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+      await playerCanister.recallPlayer(playerId);
     };
 
     public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
@@ -716,7 +890,7 @@ module {
     };
 
     public func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+      await playerCanister.createPlayer(teamId, position, firstName, lastName, shirtNumber, value, dateOfBirth, nationality);
     };
 
     public func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
@@ -749,7 +923,7 @@ module {
     };
 
     public func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+     await playerCanister.updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality);
     };
 
     public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
@@ -761,7 +935,7 @@ module {
     };
 
     public func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+       await playerCanister.setPlayerInjury(playerId, description, expectedEndDate);
     };
     
     public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
@@ -773,7 +947,7 @@ module {
     };
 
     public func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+     await playerCanister.retirePlayer(playerId, retirementDate);
     };
 
     public func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
@@ -785,7 +959,7 @@ module {
     };
     
     public func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+      await playerCanister.unretirePlayer(playerId);
     };
 
     public func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
@@ -805,7 +979,7 @@ module {
     };
 
     public func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+      await teamsInstance.promoteFormerTeam(teamId);
     };
 
     public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
@@ -849,7 +1023,7 @@ module {
     };
 
     public func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+     await teamsInstance.promoteNewTeam(name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
     };
 
     public func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
@@ -888,7 +1062,7 @@ module {
     };
 
     public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
-      return #ok();
+     await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
     };
 
 
@@ -933,280 +1107,6 @@ module {
     //recreate the close jan transfer window timer for midnight on the 31st Jan
 
     //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
-
-  
-
-
-  //Governance target methods
-
-  public shared func executeRevaluePlayerUp(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-    await playerCanister.revaluePlayerUp(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
-    return #ok();
-  };
-
-  public shared func executeRevaluePlayerDown(seasonId : T.SeasonId, gameweek : T.GameweekNumber, playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-    await playerCanister.revaluePlayerDown(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
-    return #ok();
-  };
-
-  public shared func executeSubmitFixtureData(fixtureId : T.FixtureId, playerEventData : [T.PlayerEventData]) : async Result.Result<(), T.Error> {
-
-    let activeSeasonId = seasonManager.getActiveSeasonId();
-    let activeGameweek = seasonManager.getActiveGameweek();
-    let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
-    let allPlayers = await playerCanister.getPlayers();
-
-    let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
-    let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
-
-    for (event in Iter.fromArray(playerEventData)) {
-      if (event.teamId == fixture.homeTeamId) {
-        homeTeamPlayerIdsBuffer.add(event.playerId);
-      } else if (event.teamId == fixture.awayTeamId) {
-        awayTeamPlayerIdsBuffer.add(event.playerId);
-      };
-    };
-
-    let homeTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
-    let awayTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
-
-    for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(homeTeamPlayerIdsBuffer))) {
-      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-      switch (player) {
-        case (null) {};
-        case (?actualPlayer) {
-          if (actualPlayer.position == 0 or actualPlayer.position == 1) {
-            if (Array.find<Nat16>(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
-              homeTeamDefensivePlayerIdsBuffer.add(playerId);
-            };
-          };
-        };
-      };
-    };
-
-    for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(awayTeamPlayerIdsBuffer))) {
-      let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-      switch (player) {
-        case (null) {};
-        case (?actualPlayer) {
-          if (actualPlayer.position == 0 or actualPlayer.position == 1) {
-            if (Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
-              awayTeamDefensivePlayerIdsBuffer.add(playerId);
-            };
-          };
-        };
-      };
-    };
-
-    // Get goals for each team
-    let homeTeamGoals = Array.filter<T.PlayerEventData>(
-      playerEventData,
-      func(event : T.PlayerEventData) : Bool {
-        return event.teamId == fixture.homeTeamId and event.eventType == 1;
-      },
-    );
-
-    let awayTeamGoals = Array.filter<T.PlayerEventData>(
-      playerEventData,
-      func(event : T.PlayerEventData) : Bool {
-        return event.teamId == fixture.awayTeamId and event.eventType == 1;
-      },
-    );
-
-    let homeTeamOwnGoals = Array.filter<T.PlayerEventData>(
-      playerEventData,
-      func(event : T.PlayerEventData) : Bool {
-        return event.teamId == fixture.homeTeamId and event.eventType == 10;
-      },
-    );
-
-    let awayTeamOwnGoals = Array.filter<T.PlayerEventData>(
-      playerEventData,
-      func(event : T.PlayerEventData) : Bool {
-        return event.teamId == fixture.awayTeamId and event.eventType == 10;
-      },
-    );
-
-    let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
-    let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
-
-    let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(playerEventData);
-
-    if (totalHomeScored == 0) {
-      //add away team clean sheets
-      for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
-        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-        switch (player) {
-          case (null) {};
-          case (?actualPlayer) {
-            let cleanSheetEvent : T.PlayerEventData = {
-              fixtureId = fixtureId;
-              playerId = playerId;
-              eventType = 5;
-              eventStartMinute = 90;
-              eventEndMinute = 90;
-              teamId = actualPlayer.teamId;
-              position = actualPlayer.position;
-            };
-            allPlayerEventsBuffer.add(cleanSheetEvent);
-          };
-        };
-      };
-    } else {
-      //add away team conceded events
-      for (goal in Iter.fromArray(homeTeamGoals)) {
-        for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
-          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-          switch (player) {
-            case (null) {};
-            case (?actualPlayer) {
-              let concededEvent : T.PlayerEventData = {
-                fixtureId = fixtureId;
-                playerId = actualPlayer.id;
-                eventType = 3;
-                eventStartMinute = goal.eventStartMinute;
-                eventEndMinute = goal.eventStartMinute;
-                teamId = actualPlayer.teamId;
-                position = actualPlayer.position;
-              };
-              allPlayerEventsBuffer.add(concededEvent);
-            };
-          };
-        };
-      };
-    };
-
-    if (totalAwayScored == 0) {
-      //add home team clean sheets
-      for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
-        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-        switch (player) {
-          case (null) {};
-          case (?actualPlayer) {
-            let cleanSheetEvent : T.PlayerEventData = {
-              fixtureId = fixtureId;
-              playerId = playerId;
-              eventType = 5;
-              eventStartMinute = 90;
-              eventEndMinute = 90;
-              teamId = actualPlayer.teamId;
-              position = actualPlayer.position;
-            };
-            allPlayerEventsBuffer.add(cleanSheetEvent);
-          };
-        };
-      };
-    } else {
-      //add home team conceded events
-      for (goal in Iter.fromArray(awayTeamGoals)) {
-        for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
-          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-          switch (player) {
-            case (null) {};
-            case (?actualPlayer) {
-              let concededEvent : T.PlayerEventData = {
-                fixtureId = goal.fixtureId;
-                playerId = actualPlayer.id;
-                eventType = 3;
-                eventStartMinute = goal.eventStartMinute;
-                eventEndMinute = goal.eventStartMinute;
-                teamId = actualPlayer.teamId;
-                position = actualPlayer.position;
-              };
-              allPlayerEventsBuffer.add(concededEvent);
-            };
-          };
-        };
-      };
-    };
-
-    let fixtureEvents = Buffer.toArray(allPlayerEventsBuffer);
-    await seasonManager.fixtureConsensusReached(fixture.seasonId, fixture.gameweek, fixtureId, fixtureEvents);
-    return #ok();
-  };
-
-  public shared func executeAddInitialFixtures(seasonId : T.SeasonId, seasonFixtures : [T.Fixture]) : async Result.Result<(), T.Error> {
-    await seasonManager.addInitialFixtures(seasonId, seasonFixtures);
-    return #ok();
-  };
-
-  public shared func executeRescheduleFixture(fixtureId : T.FixtureId, currentFixtureGameweek : T.GameweekNumber, updatedFixtureGameweek : T.GameweekNumber, updatedFixtureDate : Int) : async Result.Result<(), T.Error> {
-    await seasonManager.rescheduleFixture(fixtureId, currentFixtureGameweek, updatedFixtureGameweek, updatedFixtureDate);
-    return #ok();
-  };
-
-  public shared func executeTransferPlayer(playerId : T.PlayerId, newTeamId : T.TeamId) : async Result.Result<(), T.Error> {
-    await playerCanister.transferPlayer(playerId, newTeamId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
-    return #ok();
-  };
-
-  public shared func executeLoanPlayer(playerId : T.PlayerId, loanTeamId : T.TeamId, loanEndDate : Int) : async Result.Result<(), T.Error> {
-    await playerCanister.loanPlayer(playerId, loanTeamId, loanEndDate, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
-    return #ok();
-  };
-
-  public shared func executeRecallPlayer(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-    await playerCanister.recallPlayer(playerId);
-    return #ok();
-  };
-
-  public shared func executeCreatePlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) : async Result.Result<(), T.Error> {
-    await playerCanister.createPlayer(teamId, position, firstName, lastName, shirtNumber, value, dateOfBirth, nationality);
-    return #ok();
-  };
-
-  public shared func executeUpdatePlayer(playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : T.CountryId) : async Result.Result<(), T.Error> {
-    await playerCanister.updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality);
-    return #ok();
-  };
-
-  public shared func executeSetPlayerInjury(playerId : T.PlayerId, description : Text, expectedEndDate : Int) : async Result.Result<(), T.Error> {
-    await playerCanister.setPlayerInjury(playerId, description, expectedEndDate);
-    return #ok();
-  };
-
-  public shared func executeRetirePlayer(playerId : T.PlayerId, retirementDate : Int) : async Result.Result<(), T.Error> {
-    await playerCanister.retirePlayer(playerId, retirementDate);
-    return #ok();
-  };
-
-  public shared func executeUnretirePlayer(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-    await playerCanister.unretirePlayer(playerId);
-    return #ok();
-  };
-
-  public shared func executePromoteFormerTeam(teamId : T.TeamId) : async Result.Result<(), T.Error> {
-    await teamsInstance.promoteFormerTeam(teamId);
-    return #ok();
-  };
-
-  public shared func executePromoteNewTeam(name : Text, friendlyName : Text, abbreviatedName : Text, primaryHexColour : Text, secondaryHexColour : Text, thirdHexColour : Text, shirtType : Nat8) : async Result.Result<(), T.Error> {
-    await teamsInstance.promoteNewTeam(name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
-    return #ok();
-  };
-
-  public shared func executeUpdateTeam(teamId : T.TeamId, name : Text, friendlyName : Text, abbreviatedName : Text, primaryHexColour : Text, secondaryHexColour : Text, thirdHexColour : Text, shirtType : Nat8) : async Result.Result<(), T.Error> {
-    await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
-    return #ok();
-  };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
