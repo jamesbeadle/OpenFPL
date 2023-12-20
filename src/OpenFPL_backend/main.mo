@@ -33,10 +33,6 @@ import DTOs "DTOs";
 actor Self {
 
   let seasonManager = SeasonManager.SeasonManager();  
-  
-  let closeGameweekTimer: ?Timer = null;
-  let janTransferWindowStart: ?Timer = null;
-  let activeGameTimers: [Timer] = [];
 
   public shared func init() : async Result.Result<(), T.Error>  {
     let firstFixture = seasonManager.init();
@@ -70,6 +66,16 @@ actor Self {
     removeExpiredTimers();
   };
 
+  private func transferWindowStartCallback() : async () {
+    await seasonManager.transferWindowStartCallback();
+    removeExpiredTimers();
+  };
+
+  private func transferWindowEndCallback() : async () {
+    await seasonManager.transferWindowEndCallback();
+    removeExpiredTimers();
+  };
+
   private func removeExpiredTimers() : () {
     let currentTime = Time.now();
     stable_timers := Array.filter<T.TimerInfo>(
@@ -92,7 +98,13 @@ actor Self {
         Timer.setTimer(duration, gameCompletedExpiredCallback);
       };
       case "loanExpired" {
-        Timer.setTimer(duration, gameCompletedExpiredCallback);
+        Timer.setTimer(duration, loanExpiredCallback);
+      };
+      case "transferWindowStart" {
+        Timer.setTimer(duration, transferWindowStartCallback);
+      };
+      case "transferWindowEnd" {
+        Timer.setTimer(duration, transferWindowEndCallback);
       };
       case _ { };
     };
@@ -203,171 +215,133 @@ actor Self {
     return await seasonManager.saveFantasyTeam(principalId, fantasyTeam);
   };
     
-
-
-
-
-  
-  //All the governance entry points
-
-  //Governance canister validation
-  public shared func validateRevaluePlayerUp(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-    return seasonManager.validateRevaluePlayerUp(playerId);
+  public shared func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
   };
 
-  public shared func validateRevaluePlayerDown(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-       return seasonManager.validateRevaluePlayerDown(playerId);
+  public shared func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
   };
 
-  public shared func validateSubmitFixtureData(fixtureId : T.FixtureId, playerEventData : [T.PlayerEventData]) : async Result.Result<(), T.Error> {
-    return seasonManager.validateSubmitFixtureData(fixtureId, playerEventData);
+  public shared func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
   };
 
-  public shared func validateAddInitialFixtures(seasonId : T.SeasonId, seasonFixtures : [T.Fixture]) : async Result.Result<(), T.Error> {
-    return seasonManager.validateAddInitialFixtures(seasonId, seasonFixtures);
+  public shared func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
   };
 
-  public shared func validateRescheduleFixtures(fixtureId : T.FixtureId, currentFixtureGameweek : T.GameweekNumber, updatedFixtureGameweek : T.GameweekNumber, updatedFixtureDate : Int) : async Result.Result<(), T.Error> {
-    return seasonManager.validateRescheduleFixtures(fixtureId, currentFixtureGameweek);
+  public shared func validateSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateSubmitFixtureData(submitFixtureData);
   };
 
-  public shared func validateLoanPlayer(playerId : T.PlayerId, loanTeamId : T.TeamId, loanEndDate : Int) : async Result.Result<(), T.Error> {
-   return seasonManager.validateLoanPlayer(fixtureId, currentFixtureGameweek);
- 
+  public shared func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeSubmitFixtureData(submitFixtureData);
   };
 
-  public shared func validateTransferPlayer(playerId : T.PlayerId, newTeamId : T.TeamId) : async Result.Result<(), T.Error> {
-   return seasonManager.validateTransferPlayer(fixtureId, currentFixtureGameweek);
- 
+  public shared func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
+  };
+
+  public shared func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeAddInitialFixtures(addInitialFixturesDTO); 
+  };
+
+  public shared func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
+  };
+
+  public shared func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeRescheduleFixture(rescheduleFixtureDTO);
+  };
+
+  public shared func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateLoanPlayer(loanPlayerDTO);
+  };
+
+  public shared func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeLoanPlayer(loanPlayerDTO);
+  };
+
+  public shared func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateTransferPlayer(transferPlayerDTO);
+  };
+
+  public shared func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeTransferPlayer(transferPlayerDTO);
   };
 
   public shared func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
-   return seasonManager.validateRecallPlayer(recallPlayerDTO);
+    return seasonManager.validateRecallPlayer(recallPlayerDTO);
+  };
+
+  public shared func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeRecallPlayer(recallPlayerDTO);
   };
 
   public shared func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
-      return seasonManager.validateCreatePlayer(createPlayerDTO);
+    return seasonManager.validateCreatePlayer(createPlayerDTO);
+  };
+
+  public shared func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeCreatePlayer(createPlayerDTO);
   };
 
   public shared func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
-      return seasonManager.validateUpdatePlayer(fixtureId, currentFixtureGameweek);
- 
+    return seasonManager.validateUpdatePlayer(updatePlayerDTO);
   };
 
-  public shared func validateSetPlayerInjury(setPlayerInjuryDTO: SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
-      return seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
+  public shared func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeUpdatePlayer(updatePlayerDTO);
   };
 
-  public shared func validateRetirePlayer(playerId : T.PlayerId, retirementDate : Int) : async Result.Result<(), T.Error> {
-       return seasonManager.validateRetirePlayer(fixtureId, currentFixtureGameweek);
- 
+  public shared func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
   };
 
-  public shared func validateUnretirePlayer(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-      return seasonManager.validateUnretirePlayer(fixtureId, currentFixtureGameweek);
- 
+  public shared func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeSetPlayerInjury(setPlayerInjuryDTO);
+  };
+  
+  public shared func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateRetirePlayer(retirePlayerDTO);
   };
 
-  public shared func validatePromoteFormerTeam(teamId : T.TeamId) : async Result.Result<(), T.Error> {
-   return seasonManager.validatePromoteFormerTeam(fixtureId, currentFixtureGameweek);
- 
+  public shared func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeRetirePlayer(retirePlayerDTO);
   };
 
-  public shared func validatePromoteNewTeam(name : Text, friendlyName : Text, abbreviatedName : Text, primaryHexColour : Text, secondaryHexColour : Text, thirdHexColour : Text) : async Result.Result<(), T.Error> {
-   return seasonManager.validatePromoteNewTeam(fixtureId, currentFixtureGameweek);
- 
+  public shared func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateUnretirePlayer(unretirePlayerDTO);
+  };
+  
+  public shared func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeUnretirePlayer(unretirePlayerDTO);
   };
 
-  public shared func validateUpdateTeam(teamId : T.TeamId, name : Text, friendlyName : Text, abbreviatedName : Text, primaryHexColour : Text, secondaryHexColour : Text, thirdHexColour : Text) : async Result.Result<(), T.Error> {
-
-      return seasonManager.validateUpdateTeam(fixtureId, currentFixtureGameweek);
- 
+  public shared func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
   };
 
-  //Governance target methods
-
-  public shared func executeRevaluePlayerUp(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-      return seasonManager.executeRevaluePlayerUp(fixtureId, currentFixtureGameweek);
- 
+  public shared func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executePromoteFormerClub(promoteFormerClubDTO);
   };
 
-  public shared func executeRevaluePlayerDown(seasonId : T.SeasonId, gameweek : T.GameweekNumber, playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-       return seasonManager.executeRevaluePlayerDown(fixtureId, currentFixtureGameweek);
- 
+  public shared func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validatePromoteNewClub(promoteNewClubDTO);
   };
 
-  public shared func executeSubmitFixtureData(fixtureId : T.FixtureId, playerEventData : [T.PlayerEventData]) : async Result.Result<(), T.Error> {
-   return seasonManager.executeSubmitFixtureData(fixtureId, currentFixtureGameweek);
- 
+  public shared func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executePromoteNewClub(promoteNewClubDTO);
   };
 
-  public shared func executeAddInitialFixtures(seasonId : T.SeasonId, seasonFixtures : [T.Fixture]) : async Result.Result<(), T.Error> {
-      return seasonManager.executeAddInitialFixtures(fixtureId, currentFixtureGameweek);
- 
+  public shared func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.validateUpdateClub(updateClubDTO);
   };
 
-  public shared func executeRescheduleFixture(fixtureId : T.FixtureId, currentFixtureGameweek : T.GameweekNumber, updatedFixtureGameweek : T.GameweekNumber, updatedFixtureDate : Int) : async Result.Result<(), T.Error> {
-       return seasonManager.executeRescheduleFixture(fixtureId, currentFixtureGameweek);
- 
+  public shared func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
+    return seasonManager.executeUpdateClub(updateClubDTO);
   };
-
-  public shared func executeTransferPlayer(playerId : T.PlayerId, newTeamId : T.TeamId) : async Result.Result<(), T.Error> {
-      return seasonManager.executeTransferPlayer(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executeLoanPlayer(playerId : T.PlayerId, loanTeamId : T.TeamId, loanEndDate : Int) : async Result.Result<(), T.Error> {
-      return seasonManager.executeLoanPlayer(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executeRecallPlayer(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-      return seasonManager.executeRecallPlayer(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executeCreatePlayer(teamId : T.TeamId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) : async Result.Result<(), T.Error> {
-      return seasonManager.executeCreatePlayer(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executeUpdatePlayer(playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : T.CountryId) : async Result.Result<(), T.Error> {
-       return seasonManager.executeUpdatePlayer(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executeSetPlayerInjury(playerId : T.PlayerId, description : Text, expectedEndDate : Int) : async Result.Result<(), T.Error> {
-     return seasonManager.executeSetPlayerInjury(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executeRetirePlayer(playerId : T.PlayerId, retirementDate : Int) : async Result.Result<(), T.Error> {
-      return seasonManager.executeRetirePlayer(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executeUnretirePlayer(playerId : T.PlayerId) : async Result.Result<(), T.Error> {
-       return seasonManager.executeUnretirePlayer(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executePromoteFormerClub(teamId : T.TeamId) : async Result.Result<(), T.Error> {
-       return seasonManager.executePromoteFormerTeam(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executePromoteNewTeam(name : Text, friendlyName : Text, abbreviatedName : Text, primaryHexColour : Text, secondaryHexColour : Text, thirdHexColour : Text, shirtType : Nat8) : async Result.Result<(), T.Error> {
-       return seasonManager.executePromoteNewTeam(fixtureId, currentFixtureGameweek);
- 
-  };
-
-  public shared func executeUpdateTeam(teamId : T.TeamId, name : Text, friendlyName : Text, abbreviatedName : Text, primaryHexColour : Text, secondaryHexColour : Text, thirdHexColour : Text, shirtType : Nat8) : async Result.Result<(), T.Error> {
-      return seasonManager.executeUpdateTeam(teamId, name);
- 
-  };
-
-
-
 
 
 
@@ -382,8 +356,8 @@ actor Self {
   private stable var stable_next_fixture_id : Nat32 = 0;
   private stable var stable_next_season_id : Nat16 = 0;
   private stable var stable_seasons : [T.Season] = [];
-  private stable var stable_teams : [T.Team] = [];
-  private stable var stable_relegated_teams : [T.Team] = [];
+  private stable var stable_clubs : [T.Club] = [];
+  private stable var stable_relegated_clubs : [T.Team] = [];
   private stable var stable_next_team_id : Nat16 = 0;
   private stable var stable_max_votes_per_user : Nat64 = 0;
   private stable var stable_season_leaderboards : [(Nat16, T.SeasonLeaderboards)] = [];
@@ -401,9 +375,9 @@ actor Self {
     stable_next_fixture_id := seasonManager.getNextFixtureId();
     stable_next_season_id := seasonManager.getNextSeasonId();
     stable_seasons := seasonManager.getSeasons();
-    stable_teams := teamsInstance.getTeams();
-    stable_relegated_teams := teamsInstance.getRelegatedTeams();
-    stable_next_team_id := teamsInstance.getNextTeamId();
+    stable_clubs := teamsInstance.getTeams();
+    stable_relegated_clubs := teamsInstance.getRelegatedTeams();
+    stable_next_club_id := teamsInstance.getNextTeamId();
     stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
     stable_monthly_leaderboards := fantasyTeamsInstance.getMonthlyLeaderboards();
     stable_data_cache_hashes := List.toArray(dataCacheHashes);

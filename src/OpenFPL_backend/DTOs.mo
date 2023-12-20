@@ -42,15 +42,6 @@ module DTOs {
     playerId : T.PlayerId
   };
 
-  public type UpdateFantasyClubDTO = {
-    newPlayerIds : [Nat16];
-    captainId : Nat16;
-    bonusId : Nat8;
-    bonusPlayerId : Nat16;
-    bonusClubId : Nat16;
-    transferWindowGameweek: T.GameweekNumber;
-  };
-
   public type CreatePlayerDTO = {
     clubId : T.ClubId;
     position : T.PlayerPosition;
