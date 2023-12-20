@@ -119,76 +119,58 @@ actor Self {
     stable_timers := Buffer.toArray(timerBuffer);
   };
 
-
-
-
-
-
-
-
-
-
-
-
-  public shared query func getDataHashes() : async DTOs.DataCacheDTO {
+  public shared query func getDataHashes() : async Result.Result<DTOs.DataCacheDTO, T.Error> {
     return seasonManager.getDataHashes();
   };
 
   public shared query func getFixtures(seasonId: T.SeasonId) : async Result.Result<[DTOs.FixtureDTO], T.Error>  {
-    return #ok();
+    return seasonManager.getFixtures(seasonId);
   };
 
-  public shared query func getWeeklyLeaderboard(gameweek: T.GameweekNumber, seasonId: T.SeasonId) : async Result.Result<[DTOs.WeeklyLeaderboardDTO], T.Error>  {
-    return #ok();
+  public shared query func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<[DTOs.WeeklyLeaderboardDTO], T.Error>  {
+    return seasonManager.getWeeklyLeaderboard(seasonId, gameweek);
   };
 
-  public shared query func getClubLeaderboard(clubId: T.ClubId) : async Result.Result<[DTOs.ClubLeaderboardDTO], T.Error>  {
-    return #ok();
+  public shared query func getClubLeaderboard(seasonId: T.SeasonId, clubId: T.ClubId, month: T.CalendarMonth) : async Result.Result<[DTOs.ClubLeaderboardDTO], T.Error>  {
+    return seasonManager.getClubLeaderboard(seasonId, clubId, month);
   };
 
   public shared query func getSeasonLeaderboard(seasonId: T.SeasonId) : async Result.Result<[DTOs.SeasonLeaderboardDTO], T.Error>  {
-    return #ok();
+    return seasonManager.getSeasonLeaderboard(seasonId);
   };
 
   public shared query ({ caller }) func getProfile() : async Result.Result<[DTOs.ProfileDTO], T.Error>  {
     assert not Principal.isAnonymous(caller);
-    //include all profile info for caller
-    //include all manager info
-    //GetProfile
-      //GetGameweekPoints?? - Replace with GetProfile which includes their season history
-      //Will include their current team and the pick team should copy from this for the in game session changes
-    return #ok();
+    return seasonManager.getProfile(Principal.toText(caller));
   };
 
   public shared query func getManager(principalId: Text) : async Result.Result<[DTOs.ProfileDTO], T.Error>  {
-    //include all manager info
-    return #ok();
+    return seasonManager.getProfile(principalId);
   };
 
   public shared query func getTotalManagers() : async Result.Result<[Nat], T.Error>  {
-    return #ok();
+    return seasonManager.getTotalManagers();
   };
 
   public shared query func getSystemState() : async Result.Result<[DTOs.SystemStateDTO], T.Error>  {
-    return #ok();
+    return seasonManager.getSystemState();
   };
 
   public shared query func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error>  {
-    return #ok();
+    return seasonManager.getPlayers();
   };
 
-  public shared query func getDetailedPlayers(gameweek: T.GameweekNumber) : async Result.Result<[DTOs.PlayerDTO], T.Error>  {
-    //return the players with event details for a specific gameweek
-    return #ok();
+  public shared query func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<[DTOs.PlayerDTO], T.Error>  {
+    return seasonManager.getDetailedPlayers(seasonId, gameweek);
   };
 
-  public shared query func getCountries() : async [DTOs.CountryDTO] {
+  public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error>  {
     return List.toArray(countriesInstance.countries);
   };
 
   public shared query ({ caller }) func isUsernameAvailable(username : Text) : async Bool {
     assert not Principal.isAnonymous(caller);
-    return profilesInstance.isDisplayNameValid(displayName);
+    return seasonManager.isUsernameAvailable(username);
   };
 
   public shared ({ caller }) func createProfile() : async () {

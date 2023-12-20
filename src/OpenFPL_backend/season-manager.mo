@@ -78,7 +78,15 @@ module {
       return #ok();
     };
 
+    public func getProfile(principalId: Text) : ProfileDTO{
 
+    }
+   //include all profile info for caller
+    //include all manager info
+    //GetProfile
+      //GetGameweekPoints?? - Replace with GetProfile which includes their season history
+      //Will include their current team and the pick team should copy from this for the in game session changes
+    return #ok();
 
 
 
