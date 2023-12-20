@@ -38,35 +38,100 @@ actor Self {
   let janTransferWindowStart: ?Timer = null;
   let activeGameTimers: [Timer] = [];
 
-  var gameBegun = false;
-
   public shared func init() : async Result.Result<(), T.Error>  {
-    if(gameBegun){
-      return #err(#NotAllowed);
-    }
-    //Check for fixtures
+    let firstFixture = seasonManager.init();
+    switch(firstFixture){
+      case (null) {
 
-    //if first fixture in past then fail
-
-    //set a timer for 1 hour before the first kick off to begin everything
-
+      };
+      case (?returnedFixture){
+        //set a timer for 1 hour before the first kick off to begin everything
+      };
+    };
   };
 
-  /*
-  //LOCALDEVONLY
-  let CANISTER_IDS = {
-    token_canister = "br5f7-7uaaa-aaaaa-qaaca-cai";
-    player_canister = "be2us-64aaa-aaaaa-qaabq-cai";
+  private func gameweekBeginExpiredCallback() : async () {
+    await seasonManager.gameweekBegin();
+    removeExpiredTimers();
   };
-  */
-  
 
-  //Entry points for all functions
+  private func gameKickOffExpiredCallback() : async () {
+    await seasonManager.gameKickOff();
+    removeExpiredTimers();
+  };
 
-  //All the get functions you need
+  private func gameCompletedExpiredCallback() : async () {
+    await seasonManager.gameCompleted();
+    removeExpiredTimers();
+  };
+
+  private func loanExpiredCallback() : async () {
+    await seasonManager.loanExpiredCallback();
+    removeExpiredTimers();
+  };
+
+  private func removeExpiredTimers() : () {
+    let currentTime = Time.now();
+    stable_timers := Array.filter<T.TimerInfo>(
+      stable_timers,
+      func(timer : T.TimerInfo) : Bool {
+        return timer.triggerTime > currentTime;
+      },
+    );
+  };
+
+  private func setAndBackupTimer(duration : Timer.Duration, callbackName : Text, fixtureId : T.FixtureId) : async () {
+    let jobId : Timer.TimerId = switch (callbackName) {
+      case "gameweekBeginExpired" {
+        Timer.setTimer(duration, gameweekBeginExpiredCallback);
+      };
+      case "gameKickOffExpired" {
+        Timer.setTimer(duration, gameKickOffExpiredCallback);
+      };
+      case "gameCompletedExpired" {
+        Timer.setTimer(duration, gameCompletedExpiredCallback);
+      };
+      case "loanExpired" {
+        Timer.setTimer(duration, gameCompletedExpiredCallback);
+      };
+      case _ { };
+    };
+
+    let triggerTime = switch (duration) {
+      case (#seconds s) {
+        Time.now() + s * 1_000_000_000;
+      };
+      case (#nanoseconds ns) {
+        Time.now() + ns;
+      };
+    };
+
+    let timerInfo : T.TimerInfo = {
+      id = jobId;
+      triggerTime = triggerTime;
+      callbackName = callbackName;
+      playerId = 0;
+      fixtureId = 0;
+    };
+
+    var timerBuffer = Buffer.fromArray<T.TimerInfo>(stable_timers);
+    timerBuffer.add(timerInfo);
+    stable_timers := Buffer.toArray(timerBuffer);
+  };
+
+
+
+
+
+
+
+
+
+
+
 
   public shared query func getDataHashes() : async DTOs.DataCacheDTO {
-    return List.toArray(dataCacheHashes);
+    return seasonManager.getDataHashes();
   };
 
   public shared query func getFixtures(seasonId: T.SeasonId) : async Result.Result<[DTOs.FixtureDTO], T.Error>  {
@@ -121,6 +186,11 @@ actor Self {
     return List.toArray(countriesInstance.countries);
   };
 
+  public shared query ({ caller }) func isUsernameAvailable(username : Text) : async Bool {
+    assert not Principal.isAnonymous(caller);
+    return profilesInstance.isDisplayNameValid(displayName);
+  };
+
   public shared ({ caller }) func createProfile() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -132,11 +202,6 @@ actor Self {
       };
       case (_) {};
     };
-  };
-
-  public shared query ({ caller }) func isUsernameAvailable(username : Text) : async Bool {
-    assert not Principal.isAnonymous(caller);
-    return profilesInstance.isDisplayNameValid(displayName);
   };
 
   public shared ({ caller }) func updateUsername(displayName : Text) : async Result.Result<(), T.Error> {
@@ -292,81 +357,6 @@ actor Self {
     };
   };
     
-  
-
-
-
-
-
-
-
-  //timer execution functions
-
-
-  private func gameweekBeginExpiredCallback() : async () {
-    await seasonManager.gameweekBegin();
-    removeExpiredTimers();
-  };
-
-  private func gameKickOffExpiredCallback() : async () {
-    await seasonManager.gameKickOff();
-    removeExpiredTimers();
-  };
-
-  private func gameCompletedExpiredCallback() : async () {
-    await seasonManager.gameCompleted();
-    removeExpiredTimers();
-  };
-
-  private func removeExpiredTimers() : () {
-    let currentTime = Time.now();
-    stable_timers := Array.filter<T.TimerInfo>(
-      stable_timers,
-      func(timer : T.TimerInfo) : Bool {
-        return timer.triggerTime > currentTime;
-      },
-    );
-  };
-
-  private func defaultCallback() : async () {};
-
-  private func setAndBackupTimer(duration : Timer.Duration, callbackName : Text, fixtureId : T.FixtureId) : async () {
-    let jobId : Timer.TimerId = switch (callbackName) {
-      case "gameweekBeginExpired" {
-        Timer.setTimer(duration, gameweekBeginExpiredCallback);
-      };
-      case "gameKickOffExpired" {
-        Timer.setTimer(duration, gameKickOffExpiredCallback);
-      };
-      case "gameCompletedExpired" {
-        Timer.setTimer(duration, gameCompletedExpiredCallback);
-      };
-      case _ {
-        Timer.setTimer(duration, defaultCallback);
-      };
-    };
-
-    let triggerTime = switch (duration) {
-      case (#seconds s) {
-        Time.now() + s * 1_000_000_000;
-      };
-      case (#nanoseconds ns) {
-        Time.now() + ns;
-      };
-    };
-
-    let timerInfo : T.TimerInfo = {
-      id = jobId;
-      triggerTime = triggerTime;
-      callbackName = callbackName;
-      playerId = 0;
-      fixtureId = 0;
-    };
-
-    var timerBuffer = Buffer.fromArray<T.TimerInfo>(stable_timers);
-    timerBuffer.add(timerInfo);
-    stable_timers := Buffer.toArray(timerBuffer);
-  };
 
 
 
@@ -1133,16 +1123,6 @@ actor Self {
     await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
     return #ok();
   };
-
-
-
-
-
-
-
-
-  //pre and post upgrade
-
 
 
 

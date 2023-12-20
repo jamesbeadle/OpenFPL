@@ -64,7 +64,30 @@ module {
     private var nextSeasonId : Nat16 = 1;
     private var nextFixtureId : Nat32 = 1;
 
-    
+    private var gameBegun = false;
+    public func init() : Result.Result<(), T.Error> {
+      
+      if(gameBegun){
+        return #err(#NotAllowed);
+      }
+
+      //Check for fixtures
+
+      //if first fixture in past then fail
+
+      return #ok();
+    };
+
+
+
+
+
+
+
+
+
+
+
 
     private func updateCacheHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<T.DataCache>([]);
