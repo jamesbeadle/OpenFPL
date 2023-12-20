@@ -489,23 +489,64 @@ module {
       return [];
     };
 
-    public func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async DTOs.WeeklyLeaderboardDTO {
+    public func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+      let seasonGameweekCanisterIds = weeklyLeaderboardCanisterIds.get(seasonId);
+      switch(seasonGameweekCanisterIds){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundGameweekCanisterIds){
+          let gameweekCanisterId = foundGameweekCanisterIds.get(gameweek);
+          switch(gameweekCanisterId){
+            case null {
+              return #err(#NotFound);
+            };
+            case (?foundGameweekCanisterId){
+              let weekly_leaderboard_canister = actor (foundGameweekCanisterId) : actor {
+                getEntries : () -> async DTOs.WeeklyLeaderboardDTO;
+              };
 
-      //get the canister id
-      let canisterId = weeklyLeaderboardCanisterIds.get()
-      weeklyLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, Text>> = HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, Text>>(100, Utilities.eqNat16, Utilities.hashNat16);
-
-      //get the leaderboard from the canister
-
-
-      return Iter.toArray(monthlyLeaderboards.entries());
-
+              let leaderboardEntries = await weekly_leaderboard_canister.getEntries();
+              return #ok(leaderboardEntries);
+            };
+          }
+        };
+      };
     };
     
-    public func getClubLeaderboard(seasonId: T.SeasonId, clubId: T.ClubId, month: T.CalendarMonth){
-
+    public func getMonthlyLeaderboard(seasonId: T.SeasonId, month: T.CalendarMonth, clubId: T.ClubId) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
+      let seasonMonthsCanisterIds = monthlyLeaderboardCanisterIds.get(seasonId);
+      switch(seasonMonthsCanisterIds){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundMonthlyCanisterIds){
+          let monthCanisterIds = foundMonthlyCanisterIds.get(month);
+          switch(monthCanisterIds){
+            case null {
+              return #err(#NotFound);
+            };
+            case (?foundMonthCanisterIds){
+              let monthClubCanisterId = foundMonthCanisterIds.get(clubId);
+              switch(monthClubCanisterId){
+                case null {
+                  return #err(#NotFound);
+                };
+                case (?foundMonthCanisterIds){
+                  let monthly_leaderboard_canister = actor (foundMonthCanisterIds) : actor {
+                    getEntries : () -> async DTOs.MonthlyLeaderboardDTO;
+                  };
+              
+                  let leaderboardEntries = await monthly_leaderboard_canister.getEntries();
+                  return #ok(leaderboardEntries);
+                };
+              };
+            }
+          };
+        };
+      };
     };
-    
+
     public func getSeasonLeaderboard(seasonId: T.SeasonId){
 
     };

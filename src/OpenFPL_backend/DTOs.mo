@@ -185,16 +185,12 @@ module DTOs {
   public type PaginatedLeaderboard = {
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
-    entries : [T.LeaderboardEntry];
+    entries : [LeaderboardEntryDTO];
     totalEntries : Nat;
   };
 
-  public type PaginatedClubLeaderboard = {
-    seasonId : T.SeasonId;
-    month : Nat8;
-    clubId : T.ClubId;
-    entries : [T.LeaderboardEntry];
-    totalEntries : Nat;
+  public type LeaderboardEntryDTO = {
+
   };
 
   public type SeasonDTO = {
@@ -264,6 +260,14 @@ module DTOs {
     gameweek : T.GameweekNumber;
     entries : List.List<T.LeaderboardEntry>;
 
+  };
+
+  public type MonthlyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    month : Nat8;
+    clubId : T.ClubId;
+    entries : [LeaderboardEntryDTO];
+    totalEntries : Nat;
   };
 
   public type UpdateFantasyTeamDTO = {
