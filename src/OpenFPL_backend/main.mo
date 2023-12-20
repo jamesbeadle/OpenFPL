@@ -32,19 +32,7 @@ import DTOs "DTOs";
 
 actor Self {
 
-  let seasonManager = SeasonManager.SeasonManager();  
-
-  public shared func init() : async Result.Result<(), T.Error>  {
-    let firstFixture = seasonManager.init();
-    switch(firstFixture){
-      case (null) {
-
-      };
-      case (?returnedFixture){
-        //set a timer for 1 hour before the first kick off to begin everything
-      };
-    };
-  };
+  let seasonManager = SeasonManager.SeasonManager(setAndBackupTimer);  
 
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBegin();
@@ -86,30 +74,30 @@ actor Self {
     );
   };
 
-  private func setAndBackupTimer(duration : Timer.Duration, callbackName : Text, fixtureId : T.FixtureId) : async () {
-    let jobId : Timer.TimerId = switch (callbackName) {
+  private func setAndBackupTimer(timerInfo: T.TimerInfo) : async () {
+    let jobId : Timer.TimerId = switch (timerInfo.callbackName) {
       case "gameweekBeginExpired" {
-        Timer.setTimer(duration, gameweekBeginExpiredCallback);
+        Timer.setTimer(timerInfo.duration, gameweekBeginExpiredCallback);
       };
       case "gameKickOffExpired" {
-        Timer.setTimer(duration, gameKickOffExpiredCallback);
+        Timer.setTimer(timerInfo.duration, gameKickOffExpiredCallback);
       };
       case "gameCompletedExpired" {
-        Timer.setTimer(duration, gameCompletedExpiredCallback);
+        Timer.setTimer(timerInfo.duration, gameCompletedExpiredCallback);
       };
       case "loanExpired" {
-        Timer.setTimer(duration, loanExpiredCallback);
+        Timer.setTimer(timerInfo.duration, loanExpiredCallback);
       };
       case "transferWindowStart" {
-        Timer.setTimer(duration, transferWindowStartCallback);
+        Timer.setTimer(timerInfo.duration, transferWindowStartCallback);
       };
       case "transferWindowEnd" {
-        Timer.setTimer(duration, transferWindowEndCallback);
+        Timer.setTimer(timerInfo.duration, transferWindowEndCallback);
       };
       case _ { };
     };
 
-    let triggerTime = switch (duration) {
+    let triggerTime = switch (timerInfo.duration) {
       case (#seconds s) {
         Time.now() + s * 1_000_000_000;
       };
@@ -118,16 +106,16 @@ actor Self {
       };
     };
 
-    let timerInfo : T.TimerInfo = {
+    let newTimerInfo : T.TimerInfo = {
       id = jobId;
-      triggerTime = triggerTime;
-      callbackName = callbackName;
-      playerId = 0;
-      fixtureId = 0;
+      triggerTime = timerInfo.triggerTime;
+      callbackName = timerInfo.callbackName;
+      playerId = timerInfo.playerId;
+      fixtureId = timerInfo.fixtureId;
     };
 
     var timerBuffer = Buffer.fromArray<T.TimerInfo>(stable_timers);
-    timerBuffer.add(timerInfo);
+    timerBuffer.add(newTimerInfo);
     stable_timers := Buffer.toArray(timerBuffer);
   };
 
@@ -345,6 +333,7 @@ actor Self {
 
 
 
+  //DO SEASON MANAGER SO I KNOW THE DATA THAT NEEDS BACKING UP!
 
   //stable variable backup
   private stable var stable_profiles : [(Text, T.Profile)] = [];
@@ -366,7 +355,6 @@ actor Self {
   private stable var stable_timers : [T.TimerInfo] = [];
 
   system func preupgrade() {
-
     stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
     stable_profiles := profilesInstance.getProfiles();
     stable_active_season_id := seasonManager.getActiveSeasonId();
@@ -394,7 +382,7 @@ actor Self {
     recreateTimers();
   };
 
-  private func recreateTimers() { //NEED TO MAKE SURE THESE ARE THE CORRECT TIMERS TO USE
+  private func recreateTimers() {
     let currentTime = Time.now();
     for (timerInfo in Iter.fromArray(stable_timers)) {
       let remainingDuration = timerInfo.triggerTime - currentTime;
@@ -412,21 +400,19 @@ actor Self {
           case "gameCompletedExpired" {
             ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
           };
-          case _ {
-            ignore Timer.setTimer(duration, defaultCallback);
+          case "loanExpired" {
+            ignore Timer.setTimer(duration, loanExpiredCallback);
           };
+          case "transferWindowStart" {
+            ignore Timer.setTimer(duration, transferWindowStartCallback);
+          };
+          case "transferWindowEnd" {
+            ignore Timer.setTimer(duration, transferWindowEndCallback);
+          };
+          case _ {};
         };
       };
     };
-
-    //recreate close gameweek timer to be 1 hour before the first fixture of the gameweek you are picking your team for
-
-    //recreate the jan transfer window timer to the next January 1st
-
-    //recreate the close jan transfer window timer for midnight on the 31st Jan
-
-    //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
-
   };
 
 };
