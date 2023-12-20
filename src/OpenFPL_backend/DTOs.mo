@@ -3,6 +3,15 @@ import List "mo:base/List";
 
 module DTOs {
 
+  public type SystemStateDTO = {
+    calculationGameweek: T.GameweekNumber;
+    calculationMonth: T.CalendarMonth;
+    calculationSeason: T.SeasonId;
+    pickTeamGameweek: T.GameweekNumber;
+    homepageFixturesGameweek: T.GameweekNumber;
+    homepageManagerGameweek: T.GameweekNumber;
+  };
+
   public type RevaluePlayerUpDTO = {
     playerId : T.PlayerId
   };
@@ -76,6 +85,10 @@ module DTOs {
 
   public type UnretirePlayerDTO = {
     playerId : T.PlayerId;
+  };
+
+  public type UpdateClubDTO = {
+
   };
 
   public type PromoteFormerClubDTO = {
@@ -239,6 +252,22 @@ module DTOs {
     id : T.CountryId;
     name : Text;
     code : Text;
+  };
+
+  public type DataCacheDTO = {
+    category : Text;
+    hash : Text;
+  };
+
+  public type WeeklyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    gameweek : T.GameweekNumber;
+    entries : List.List<T.LeaderboardEntry>;
+
+  };
+
+  public type UpdateFantasyTeamDTO = {
+
   };
 
 };

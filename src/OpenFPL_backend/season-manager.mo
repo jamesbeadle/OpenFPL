@@ -24,13 +24,6 @@ module {
 
   public class SeasonManager(setAndBackupTimer : (timerInfo: T.TimerInfo) -> async ()) {
 
-    let snapshotManager = SnapshotManager.SnapshotManager();
-    let snapshotFactory = SnapshotFactory.SnapshotFactory();
-    let playerComposite = PlayerComposite.PlayerComposite();
-    let clubComposite = ClubComposite.ClubComposite();
-    let strategyManager = StrategyManager.StrategyManager();
-    let managerProfileManager = ManagerProfileManager.ManagerProfileManager();
-
     let CANISTER_IDS = {
       retired_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
       former_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
@@ -145,56 +138,8 @@ module {
 
     };
 
-      /* Set for
-    public func setStableData(stable_fantasy_teams : [(Text, T.UserFantasyTeam)]) {
-  
-    public func getStableSystemState(){};
-    public func getStableDataCacheHashes(){};
-    public func getStableManagers(){};
-    public func getStablePlayers(){};
-    public func getStableSeasons(){};
-    public func getStableProfilePictureCanisterIds(){};
-    public func getStableSeasonLeaderboardCanisterIds(){};
-    public func getStableMonthlyLeaderboardCanisterIds(){};
-    public func getStableWeeklyLeaderboardCanisterIds(){};
-    public func getStableNextPlayerId(){};
-    public func getStableNextSeasonId(){};
-    public func getStableNextFixtureId(){};
-    
-
-      fantasyTeams := HashMap.fromIter<Text, T.UserFantasyTeam>(
-        stable_fantasy_teams.vals(),
-        stable_fantasy_teams.size(),
-        Text.equal,
-        Text.hash,
-      );
-      monthlyLeaderboards := HashMap.fromIter<T.SeasonId, List.List<T.ClubLeaderboard>>(
-        data.vals(),
-        data.size(),
-        Utilities.eqNat16,
-        Utilities.hashNat16,
-      );
-    };
-
-    public func getStableSystemState(){};
-    public func getStableDataCacheHashes(){};
-    public func getStableManagers(){};
-    public func getStablePlayers(){};
-    public func getStableSeasons(){};
-    public func getStableProfilePictureCanisterIds(){};
-    public func getStableSeasonLeaderboardCanisterIds(){};
-    public func getStableMonthlyLeaderboardCanisterIds(){};
-    public func getStableWeeklyLeaderboardCanisterIds(){};
-    public func getStableNextPlayerId(){};
-    public func getStableNextSeasonId(){};
-    public func getStableNextFixtureId(){};
-
-
-
-
-
-
-
+      /* 
+      
 
 
     public func fixtureConsensusReached(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, consensusPlayerEventData : [T.PlayerEventData]) : async () {
@@ -549,15 +494,15 @@ module {
       return dataCacheDTO;
     };
     
-    public func getFixtures(seasonId: T.SeasonId) : async [T.FixtureDTO] {
+    public func getFixtures(seasonId: T.SeasonId) : async [DTOs.FixtureDTO] {
       return [];
     };
     
-    public func getPlayers() : async [T.PlayerDTO] {
+    public func getPlayers() : async [DTOs.PlayerDTO] {
       return [];
     };
 
-    public func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [T.PlayerDTO] {
+    public func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [DTOs.PlayerDTO] {
       return [];
     };
 
