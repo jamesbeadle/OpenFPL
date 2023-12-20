@@ -1,0 +1,190 @@
+module {
+
+  public class SnapshotManager() {
+
+   //include all profile info for caller
+    //include all manager info
+    //GetProfile
+      //GetGameweekPoints?? - Replace with GetProfile which includes their season history
+      //Will include their current team and the pick team should copy from this for the in game session changes
+   
+
+    /*
+    
+    //ManagerProfileManager //what 
+    manager-profile-manager.mo
+Purpose: Handles operations related to the user profiles of the football managers.
+Contents:
+Methods for updating manager details like updateUsername and updateProfilePicture.
+Functions for managing account settings and preferences.
+Integration points for authentication and authorization if needed.
+    
+    */
+
+public func updateProfilePicture(principalName : Text, profilePicture : Blob) : Result.Result<(), T.Error> {
+      let existingProfile = userProfiles.get(principalName);
+      switch (existingProfile) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundProfile) {
+          userProfilePictures.put(principalName, profilePicture);
+
+          /*
+          let updatedProfile : T.Profile = {
+            principalName = foundProfile.principalName;
+            displayName = foundProfile.displayName;
+            termsAccepted = foundProfile.termsAccepted;
+            profilePictureCanisterId = canisterId;
+            favouriteTeamId = foundProfile.favouriteTeamId;
+            createDate = foundProfile.createDate;
+          };
+          */
+
+          userProfilePictures.put(principalName, profilePicture);
+          return #ok(());
+        };
+      };
+    };
+
+
+
+    
+    public func setData(stable_profiles : [(Text, T.Profile)]) {
+      userProfiles := HashMap.fromIter<Text, T.Profile>(
+        stable_profiles.vals(),
+        stable_profiles.size(),
+        Text.equal,
+        Text.hash,
+      );
+    };
+
+    public func getProfiles() : [(Text, T.Profile)] {
+      return Iter.toArray(userProfiles.entries());
+    };
+
+    public func getProfile(principalName : Text) : ?T.Profile {
+      return userProfiles.get(principalName);
+    };
+
+    public func getProfilePicture(principalName : Text) : ?Blob {
+      return userProfilePictures.get(principalName);
+    };
+
+    public func isWalletValid(walletAddress : Text) : Bool {
+      let account_id = Account.decode(walletAddress);
+      switch account_id {
+        case (#ok array) {
+          if (Account.validateAccountIdentifier(Blob.fromArray(array))) {
+            return true;
+          };
+        };
+        case (#err err) {
+          return false;
+        };
+      };
+
+      return false;
+    };
+
+    public func createProfile(principalName : Text, displayName : Text) : () {
+      if (userProfiles.get(principalName) == null) {
+        let newProfile : T.Profile = {
+          principalName = principalName;
+          displayName = displayName;
+          profilePictureCanisterId = "";
+          termsAccepted = false;
+          favouriteTeamId = 0;
+          createDate = now();
+        };
+
+        userProfiles.put(principalName, newProfile);
+      };
+    };
+
+    public func isDisplayNameValid(displayName : Text) : Bool {
+
+      if (Text.size(displayName) < 3 or Text.size(displayName) > 20) {
+        return false;
+      };
+
+      let isAlphanumeric = func(s : Text) : Bool {
+        let chars = Text.toIter(s);
+        for (c in chars) {
+          if (not ((c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or (c == ' '))) {
+            return false;
+          };
+        };
+        return true;
+      };
+
+      if (not isAlphanumeric(displayName)) {
+        return false;
+      };
+
+      for (profile in userProfiles.vals()) {
+        if (profile.displayName == displayName) {
+          return false;
+        };
+      };
+
+      return true;
+    };
+
+    public func updateDisplayName(principalName : Text, displayName : Text) : Result.Result<(), T.Error> {
+      let existingProfile = userProfiles.get(principalName);
+      switch (existingProfile) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?existingProfile) {
+          if (existingProfile.displayName == displayName) {
+            return #ok(());
+          };
+          let nameValid = isDisplayNameValid(displayName);
+          if (not nameValid) {
+            return #err(#NotAllowed);
+          };
+
+          let updatedProfile : T.Profile = {
+            principalName = existingProfile.principalName;
+            displayName = displayName;
+            profilePictureCanisterId = existingProfile.profilePictureCanisterId;
+            termsAccepted = existingProfile.termsAccepted;
+            favouriteTeamId = existingProfile.favouriteTeamId;
+            createDate = existingProfile.createDate;
+          };
+
+          userProfiles.put(principalName, updatedProfile);
+
+          return #ok(());
+        };
+      };
+    };
+
+    public func updateFavouriteTeam(principalName : Text, favouriteTeamId : Nat16) : Result.Result<(), T.Error> {
+      let existingProfile = userProfiles.get(principalName);
+      switch (existingProfile) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?existingProfile) {
+          let updatedProfile : T.Profile = {
+            principalName = existingProfile.principalName;
+            displayName = existingProfile.displayName;
+            profilePictureCanisterId = existingProfile.profilePictureCanisterId;
+            termsAccepted = existingProfile.termsAccepted;
+            favouriteTeamId = favouriteTeamId;
+            createDate = existingProfile.createDate;
+          };
+
+          userProfiles.put(principalName, updatedProfile);
+          return #ok(());
+        };
+      };
+    };
+
+    
+
+  };
+};

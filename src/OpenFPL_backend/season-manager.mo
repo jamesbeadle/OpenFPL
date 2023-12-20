@@ -3,7 +3,6 @@ import DTOs "DTOs";
 import Timer "mo:base/Timer";
 import { now } = "mo:base/Time";
 import Int "mo:base/Int";
-import FantasyTeams "fantasy-teams";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import List "mo:base/List";
@@ -13,10 +12,32 @@ import Nat8 "mo:base/Nat8";
 import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Result "mo:base/Result";
+import ClubComposite "patterns/club-composite";
+import StrategyManager "patterns/strategy-manager";
+import ManagerProfileManager "patterns/manager-profile-manager";
 
 module {
 
   public class SeasonManager(setAndBackupTimer : (timerInfo: T.TimerInfo) -> async ()) {
+
+    let snapshotManager = SnapshotManager.SnapshotManager();
+    let snapshotFactory = SnapshotFactory.SnapshotFactory();
+    let playerComposite = PlayerComposite.PlayerComposite();
+    let clubComposite = ClubComposite.ClubComposite();
+    let strategyManager = StrategyManager.StrategyManager();
+    let managerProfileManager = ManagerProfileManager.ManagerProfileManager();
+
+
+
+    //recreate close gameweek timer to be 1 hour before the first fixture of the gameweek you are picking your team for
+
+    //recreate the jan transfer window timer to the next January 1st
+
+    //recreate the close jan transfer window timer for midnight on the 31st Jan
+
+    //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
+
+
 
     let systemState: T.SystemState = {
       calculationGameweek = 1;
@@ -61,6 +82,35 @@ module {
     private var nextPlayerId : Nat = 1;
     private var nextSeasonId : Nat16 = 1;
     private var nextFixtureId : Nat32 = 1;
+
+
+
+
+
+
+    private func updateCacheHash(category : Text) : async () {
+      let hashBuffer = Buffer.fromArray<T.DataCache>([]);
+
+      for (hashObj in Iter.fromList(dataCacheHashes)) {
+        if (hashObj.category == category) {
+          let randomHash = await SHA224.getRandomHash();
+          hashBuffer.add({ category = hashObj.category; hash = randomHash });
+        } else { hashBuffer.add(hashObj) };
+      };
+
+      dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+    };
+
+
+
+
+
+
+
+
+
+
+
 
     public func gameweekBegin() : async () {
       await snapshotGameweek(systemState.calculationSeason, systemState.calculationGameweek);

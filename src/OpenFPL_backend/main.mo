@@ -2,8 +2,6 @@ import SeasonManager "season-manager";
 
 actor Self {
 
-  let seasonManager = SeasonManager.SeasonManager(setAndBackupTimer);  
-
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBegin();
     removeExpiredTimers();
@@ -88,6 +86,8 @@ actor Self {
     timerBuffer.add(newTimerInfo);
     stable_timers := Buffer.toArray(timerBuffer);
   };
+
+  let seasonManager = SeasonManager.SeasonManager(setAndBackupTimer);  
 
   public shared query func getDataHashes() : async Result.Result<DTOs.DataCacheDTO, T.Error> {
     return seasonManager.getDataHashes();
@@ -306,6 +306,7 @@ actor Self {
   //DO SEASON MANAGER SO I KNOW THE DATA THAT NEEDS BACKING UP!
 
   //stable variable backup
+  /*
   private stable var stable_profiles : [(Text, T.Profile)] = [];
   private stable var stable_fantasy_teams : [(Text, T.UserFantasyTeam)] = [];
   private stable var stable_active_season_id : Nat16 = 0;
@@ -323,8 +324,9 @@ actor Self {
   private stable var stable_monthly_leaderboards : [(T.SeasonId, List.List<T.ClubLeaderboard>)] = [];
   private stable var stable_data_cache_hashes : [T.DataCache] = [];
   private stable var stable_timers : [T.TimerInfo] = [];
-
+*/
   system func preupgrade() {
+    /*
     stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
     stable_profiles := profilesInstance.getProfiles();
     stable_active_season_id := seasonManager.getActiveSeasonId();
@@ -339,9 +341,11 @@ actor Self {
     stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
     stable_monthly_leaderboards := fantasyTeamsInstance.getMonthlyLeaderboards();
     stable_data_cache_hashes := List.toArray(dataCacheHashes);
+    */
   };
 
   system func postupgrade() {
+    /*
     profilesInstance.setData(stable_profiles);
     fantasyTeamsInstance.setData(stable_fantasy_teams);
     seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id, stable_interesting_gameweek);
@@ -349,6 +353,7 @@ actor Self {
     fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
     fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
     dataCacheHashes := List.fromArray(stable_data_cache_hashes);
+    */
     recreateTimers();
   };
 
