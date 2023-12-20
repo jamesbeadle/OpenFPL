@@ -1,33 +1,113 @@
-import T "./types";
+import T "types";
 import List "mo:base/List";
 
 module DTOs {
 
+  public type RevaluePlayerUpDTO = {
+    playerId : T.PlayerId
+  };
 
-  //Now define the DTOs for the transferring of data
+  public type RevaluePlayerDownDTO = {
+    playerId : T.PlayerId
+  };
+
+  public type SubmitFixtureDataDTO = {
+    fixtureId : T.FixtureId;
+    playerEventData : [T.PlayerEventData];
+  };
   
+  public type AddInitialFixturesDTO = {
+    seasonId : T.SeasonId;
+    seasonFixtures : [T.Fixture];
+  };
+  
+  public type RescheduleFixtureDTO = {
+    fixtureId : T.FixtureId;
+    updatedFixtureGameweek : T.GameweekNumber;
+    updatedFixtureDate : Int
+  };
+  
+  public type LoanPlayerDTO = {
+    playerId : T.PlayerId;
+    loanClubId : T.ClubId;
+    loanEndDate : Int;
+  };
+  
+  public type TransferPlayerDTO = {
+    playerId : T.PlayerId;
+    newClubId : T.ClubId;
+  };
+  
+  public type RecallPlayerDTO = {
+    playerId : T.PlayerId
+  };
 
+  public type UpdateFantasyClubDTO = {
+    newPlayerIds : [Nat16];
+    captainId : Nat16;
+    bonusId : Nat8;
+    bonusPlayerId : Nat16;
+    bonusClubId : Nat16;
+    transferWindowGameweek: T.GameweekNumber;
+  };
 
-public type UpdateFantasyTeamDTO = {
-   newPlayerIds : [Nat16], captainId : Nat16, bonusId : Nat8, bonusPlayerId : Nat16, bonusTeamId : Nat16, transferWindowGameweek: T.GameweekNumber
-};
+  public type CreatePlayerDTO = {
+    clubId : T.ClubId;
+    position : T.PlayerPosition;
+    firstName : Text;
+    lastName : Text;
+    shirtNumber : Nat8;
+    value : Nat;
+    dateOfBirth : Int;
+    nationality : T.CountryId;
+  };
 
+  public type UpdatePlayerDTO = {
+    playerId : T.PlayerId;
+    position : Nat8;
+    firstName : Text;
+    lastName : Text;
+    shirtNumber : Nat8;
+    dateOfBirth : Int;
+    nationality : T.CountryId;
+  };
 
+  public type SetPlayerInjuryDTO = {
+    playerId : T.PlayerId;
+    description : Text;
+    expectedEndDate : Int;
+  };
 
+  public type RetirePlayerDTO = {
+    playerId : T.PlayerId;
+    retirementDate : Int;
+  };
 
+  public type UnretirePlayerDTO = {
+    playerId : T.PlayerId;
+  };
 
+  public type PromoteFormerClubDTO = {
+    clubId : T.ClubId
+  };
 
-
-
+  public type PromoteNewClubDTO = {
+    name : Text;
+    friendlyName : Text;
+    abbreviatedName : Text;
+    primaryHexColour : Text;
+    secondaryHexColour : Text;
+    thirdHexColour : Text;
+  };
 
 
   public type ProfileDTO = {
     principalId : Text;
     displayName : Text;
     profilePicture : Blob;
-    favouriteTeamId : Nat16;
+    favouriteClubId : Nat16;
     createDate : Int;
-    canUpdateFavouriteTeam : Bool;
+    canUpdateFavouriteClub : Bool;
   };
 
   public type PlayerRatingsDTO = {
@@ -37,8 +117,8 @@ public type UpdateFantasyTeamDTO = {
 
   public type PlayerDTO = {
     id : Nat16;
-    teamId : Nat16;
-    position : Nat8; //0 = Goalkeeper //1 = Defender //2 = Midfielder //3 = Forward
+    clubId : T.ClubId;
+    position : T.PlayerPosition;
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
@@ -51,7 +131,7 @@ public type UpdateFantasyTeamDTO = {
   public type PlayerScoreDTO = {
     id : Nat16;
     points : Int16;
-    teamId : Nat16;
+    clubId : T.ClubId;
     goalsScored : Int16;
     goalsConceded : Int16;
     position : Nat8;
@@ -66,14 +146,14 @@ public type UpdateFantasyTeamDTO = {
     id : Nat16;
     gameweek : T.GameweekNumber;
     points : Int16;
-    teamId : Nat16;
+    clubId : T.ClubId;
     position : Nat8;
     events : [T.PlayerEventData];
   };
 
   public type PlayerDetailDTO = {
     id : T.PlayerId;
-    teamId : T.TeamId;
+    clubId : T.ClubId;
     position : Nat8;
     firstName : Text;
     lastName : Text;
@@ -85,7 +165,7 @@ public type UpdateFantasyTeamDTO = {
     gameweeks : [PlayerGameweekDTO];
     valueHistory : [T.ValueHistory];
     onLoan : Bool;
-    parentTeamId : Nat16;
+    parentClubId : Nat16;
     isInjured : Bool;
     injuryHistory : [T.InjuryHistory];
     retirementDate : Int;
@@ -108,7 +188,7 @@ public type UpdateFantasyTeamDTO = {
   public type PaginatedClubLeaderboard = {
     seasonId : T.SeasonId;
     month : Nat8;
-    clubId : T.TeamId;
+    clubId : T.ClubId;
     entries : [T.LeaderboardEntry];
     totalEntries : Nat;
   };
@@ -124,8 +204,8 @@ public type UpdateFantasyTeamDTO = {
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
     kickOff : Int;
-    homeTeamId : T.TeamId;
-    awayTeamId : T.TeamId;
+    homeClubId : T.ClubId;
+    awayClubId : T.ClubId;
     homeGoals : Nat8;
     awayGoals : Nat8;
     status : Nat8;
@@ -137,7 +217,7 @@ public type UpdateFantasyTeamDTO = {
     principalId : Text;
     displayName : Text;
     profilePicture : Blob;
-    favouriteTeamId : T.TeamId;
+    favouriteClubId : T.ClubId;
     createDate : Int;
     gameweeks : [T.FantasyTeamSnapshot];
     weeklyPosition : Int;

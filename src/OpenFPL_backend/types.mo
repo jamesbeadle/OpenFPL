@@ -1,5 +1,4 @@
 import List "mo:base/List";
-import DTOs "DTOs";
 
 module Types {
 
