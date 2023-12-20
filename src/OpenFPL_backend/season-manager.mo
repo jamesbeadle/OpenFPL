@@ -354,26 +354,6 @@ module {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-      */
-
-
-
-
-
-
-
-
     private func updateCacheHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<T.DataCache>([]);
 
@@ -386,6 +366,7 @@ module {
 
       dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
     };
+
 
 
 
@@ -407,25 +388,40 @@ module {
 
 
 
-    public func gameweekBegin() : async () {
-      await snapshotGameweek(systemState.calculationSeason, systemState.calculationGameweek);
-      await resetTransfers();
 
-      let gameweekFixtures = seasonsInstance.getGameweekFixtures(systemState.calculationSeason, systemState.calculationGameweek);
-      var gameKickOffTimers = List.nil<T.TimerInfo>();
-      for (i in Iter.range(0, Array.size(gameweekFixtures) - 1)) {
-        let gameKickOffDuration : Timer.Duration = #nanoseconds(Int.abs(gameweekFixtures[i].kickOff - Time.now()));
-        switch (setAndBackupTimer) {
-          case (null) {};
-          case (?actualFunction) {
-            await actualFunction(gameKickOffDuration, "gameKickOffExpired", gameweekFixtures[i].id);
-          };
-        };
-      };
+
+
+
+
+
+      */
+
+    //Callback functions called by main canister observer:
+
+    public func gameweekBegin() : async () {
+
+      //snapshot manager / snapshot factory create snapshots of the fantasy teams as the current gameweek
+      //manager profile manager resets a users transfers
+
+
+
+
+
+
+      //await snapshotGameweek(systemState.calculationSeason, systemState.calculationGameweek);
+      //await resetTransfers();
+
     };
 
     
     public func gameKickOff() : async () {
+
+      //set fixture status to active (1)
+      
+      //set timers for when each game finishes to call the game completed expired timer
+
+
+      /*
       let activeFixtures = seasonsInstance.getGameweekFixtures(systemState.calculationSeason, systemState.calculationGameweek);
       for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
         if (activeFixtures[i].kickOff <= Time.now() and activeFixtures[i].status == 0) {
@@ -441,40 +437,26 @@ module {
         };
       };
       await updateCacheHash("fixtures");
+      */
     };
 
     
     public func gameCompleted() : async () {
-      //NEED TO CHECK IF JANUARY 1ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMER TO BEGIN THE TRANSFER WINDOW IF IT IS
-      //NEED TO CHECK IF JANUARY 31ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMER TO END THE TRANSFER WINDOW IF IT IS
+      //update fixture status to complete (2) so proposals for the fixture data can be entered
+      //update the cache for the fixtures so users get the updated status about it being completed
 
-      let activeFixtures = seasonsInstance.getGameweekFixtures(systemState.calculationSeason, systemState.calculationGameweek);
-      let timerCreatedTimes = Buffer.fromArray<Int>([]);
+      //    let updatedFixture = await seasonsInstance.updateStatus(systemState.calculationSeason, systemState.calculationGameweek, activeFixtures[i].id, 2);
+      //await updateCacheHash("fixtures");
 
-      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
-        if ((activeFixtures[i].kickOff + (oneHour * 2)) <= Time.now() and activeFixtures[i].status == 1) {
-
-          let updatedFixture = await seasonsInstance.updateStatus(systemState.calculationSeason, systemState.calculationGameweek, activeFixtures[i].id, 2);
-
-          let votingPeriodOverDuration : Timer.Duration = #nanoseconds(Int.abs((Time.now() + EventData_VotingPeriod) - Time.now()));
-
-          if (not Buffer.contains<Int>(timerCreatedTimes, updatedFixture.kickOff, Int.equal)) {
-            switch (setAndBackupTimer) {
-              case (null) {};
-              case (?actualFunction) {
-                await actualFunction(votingPeriodOverDuration, "votingPeriodOverExpired", activeFixtures[i].id);
-                timerCreatedTimes.add(updatedFixture.kickOff);
-              };
-            };
-          };
-        };
-      };
-
-      await updateCacheHash("fixtures");
+      //Check if all games completed, if so:
+        //NEED TO CHECK IF JANUARY 1ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMERS TO BEGIN AND END THE TRANSFER WINDOW IF IT IS
+        
     };
 
     public func loanExpiredCallback() : async () {
-      executeRecallPlayer();
+      //when a player on loan has been on load for their loan duration bring them back
+      
+      //executeRecallPlayer();
     };
 
     
@@ -486,12 +468,13 @@ module {
       //END THE JAN TRANSFER WINDOW
     };
     
+
     public func getSystemState() : async DTOs.SystemStateDTO {
       return systemState;
     };
     
-    public func getDataHashes() : async DTOs.DataCacheDTO {
-      return dataCacheDTO;
+    public func getDataHashes() : async [DTOs.DataCacheDTO] {
+      return List.toArray(dataCacheHashes);
     };
     
     public func getFixtures(seasonId: T.SeasonId) : async [DTOs.FixtureDTO] {
@@ -507,6 +490,14 @@ module {
     };
 
     public func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async DTOs.WeeklyLeaderboardDTO {
+
+      //get the canister id
+      let canisterId = weeklyLeaderboardCanisterIds.get()
+      weeklyLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, Text>> = HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, Text>>(100, Utilities.eqNat16, Utilities.hashNat16);
+
+      //get the leaderboard from the canister
+
+
       return Iter.toArray(monthlyLeaderboards.entries());
 
     };
@@ -1507,6 +1498,14 @@ module {
       let fixtureEvents = Buffer.toArray(allPlayerEventsBuffer);
       await seasonManager.fixtureConsensusReached(fixture.seasonId, fixture.gameweek, fixtureId, fixtureEvents);
       return #ok();
+
+
+      //IN HERE IF THE GAMEWEEK IS COMPLETE CREATE THE CANISTER FOR THE NEXT GAMEWEEK LEADERBOARD
+      //IN HERE IF THE MONTH IS COMPLETE CREATE THE CANISTERS FOR THE NEXT MONTHS CLUB LEADERBOARDS
+      //IN HERE IF THE SEASON IS COMPLETE CRAETE THE CANISTER FOR THE NEXT SEASON LEADERBOARD
+
+
+
     };
 
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
