@@ -17,17 +17,7 @@ import Result "mo:base/Result";
 
 module {
 
-  public class SeasonManager(
-    resetTransfers : () -> async (),
-    calculatePlayerScores : (activeSeason : T.SeasonId, activeGameweek : T.GameweekNumber, fixture : T.Fixture) -> async T.Fixture,
-    distributeRewards : () -> async (),
-    snapshotGameweek : (seasonId : Nat16, gameweek : Nat8) -> async (),
-    calculateFantasyTeamScores : (Nat16, Nat8) -> async (),
-    resetFantasyTeams : () -> async (),
-    updateCacheHash : (category : Text) -> async (),
-    stable_timers : [T.TimerInfo],
-    updatePlayerEventDataCache : () -> async (),
-  ) {
+  public class SeasonManager() {
 
     let systemState: T.SystemState = {
       calculationGameweek = 1;
@@ -38,89 +28,82 @@ module {
       homepageManagerGameweek = 0;
     };
 
-  let profilesInstance = Profiles.Profiles();
-  let teamsInstance = Teams.Teams();
-  let rewardsInstance = Rewards.Rewards();
-  let countriesInstance = Countries.Countries();
-
-  //Live canisters
-  let CANISTER_IDS = {
-    player_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
-    token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-    governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
-  };
-
-  let tokenCanister = actor (CANISTER_IDS.token_canister) : actor {
-    icrc1_name : () -> async Text;
-    icrc1_total_supply : () -> async Nat;
-    icrc1_balance_of : (T.Account) -> async Nat;
-  };
-
-  let playerCanister = actor (CANISTER_IDS.player_canister) : actor {
-    getPlayer : (playerId : T.PlayerId) -> async T.Player;
-    getPlayers : () -> async [DTOs.PlayerDTO];
-    getPlayersMap : (seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async [(T.PlayerId, DTOs.PlayerScoreDTO)];
-    calculatePlayerScores(seasonId : T.SeasonId, gameweek : Nat8, fixture : T.Fixture) : async T.Fixture;
-    revaluePlayerUp : (playerId : T.PlayerId, activeSeasonId : T.SeasonId, activeGameweek : T.GameweekNumber) -> async ();
-    revaluePlayerDown : (playerId : T.PlayerId, activeSeasonId : T.SeasonId, activeGameweek : T.GameweekNumber) -> async ();
-    transferPlayer : (playerId : T.PlayerId, newTeamId : T.TeamId, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) -> async ();
-    loanPlayer : (playerId : T.PlayerId, loanTeamId : T.TeamId, loanEndDate : Int, currentSeasonId : T.SeasonId, currentGameweek : T.GameweekNumber) -> async ();
-    recallPlayer : (playerId : T.PlayerId) -> async ();
-    createPlayer : (teamId : T.TeamId, position : T.PlayerPosition, firstName : Text, lastName : Text, shirtNumber : Nat8, value : Nat, dateOfBirth : Int, nationality : T.CountryId) -> async ();
-    updatePlayer : (playerId : T.PlayerId, position : Nat8, firstName : Text, lastName : Text, shirtNumber : Nat8, dateOfBirth : Int, nationality : T.CountryId) -> async ();
-    setPlayerInjury : (playerId : T.PlayerId, description : Text, expectedEndDate : Int) -> async ();
-    retirePlayer : (playerId : T.PlayerId, retirementDate : Int) -> async ();
-    unretirePlayer : (playerId : T.PlayerId) -> async ();
-    recalculatePlayerScores : (fixture : T.Fixture, seasonId : T.SeasonId, gameweek : T.GameweekNumber) -> async ();
-  };
-
-  private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
-    { category = "clubs"; hash = "DEFAULT_VALUE" },
-    { category = "fixtures"; hash = "DEFAULT_VALUE" },
-    { category = "weekly_leaderboard"; hash = "DEFAULT_VALUE" },
-    { category = "monthly_leaderboards"; hash = "DEFAULT_VALUE" },
-    { category = "season_leaderboard"; hash = "DEFAULT_VALUE" },
-    { category = "players"; hash = "DEFAULT_VALUE" },
-    { category = "player_events"; hash = "DEFAULT_VALUE" }
-  ]);
-    //FantasyTeams combine with //Profiles
-    private var manager: HashMap.HashMap<Text, T.Manager> = HashMap.HashMap<Text, T.Manager>(100, Text.equal, Text.hash);
-    
-    //Players
-    
-    
-    private var userProfiles : HashMap.HashMap<Text, T.Profile> = HashMap.HashMap<Text, T.Profile>(100, Text.equal, Text.hash);
-    private var userProfilePictures : HashMap.HashMap<Text, Blob> = HashMap.HashMap<Text, Blob>(100, Text.equal, Text.hash);
-    private var fantasyTeams : HashMap.HashMap<Text, T.UserFantasyTeam> = HashMap.HashMap<Text, T.UserFantasyTeam>(100, Text.equal, Text.hash);
-  
-    private var players = List.fromArray<T.Player>([]);
-    //seasons and gameweek tree structure recording high level figures
-
-
-    private var nextPlayerId : Nat = 2;
-
-    //functions
-
-  
-
-  private func updateCacheHash(category : Text) : async () {
-    let hashBuffer = Buffer.fromArray<T.DataCache>([]);
-
-    for (hashObj in Iter.fromList(dataCacheHashes)) {
-      if (hashObj.category == category) {
-        let randomHash = await SHA224.getRandomHash();
-        hashBuffer.add({ category = hashObj.category; hash = randomHash });
-      } else { hashBuffer.add(hashObj) };
+    //Live canisters
+    let CANISTER_IDS = {
+      retired_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+      former_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
+      token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
+      governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
     };
 
-    dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
-  };
+    let tokenCanister = actor (CANISTER_IDS.token_canister) : actor {
+      icrc1_name : () -> async Text;
+      icrc1_total_supply : () -> async Nat;
+      icrc1_balance_of : (T.Account) -> async Nat;
+    };
+
+    let former_players_canister = actor (CANISTER_IDS.former_players_canister) : T.PlayerCanister;
+    let retired_players_canister = actor (CANISTER_IDS.retired_players_canister) : T.PlayerCanister;
+
+    private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
+      { category = "clubs"; hash = "DEFAULT_VALUE" },
+      { category = "fixtures"; hash = "DEFAULT_VALUE" },
+      { category = "weekly_leaderboard"; hash = "DEFAULT_VALUE" },
+      { category = "monthly_leaderboards"; hash = "DEFAULT_VALUE" },
+      { category = "season_leaderboard"; hash = "DEFAULT_VALUE" },
+      { category = "players"; hash = "DEFAULT_VALUE" },
+      { category = "player_events"; hash = "DEFAULT_VALUE" }
+    ]);
+
+    private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<PrincipalId, T.Manager>(100, Text.equal, Text.hash);
+    private var profilePictures : HashMap.HashMap<Text, Blob> = HashMap.HashMap<Text, Blob>(100, Text.equal, Text.hash);    
+    private var players = List.fromArray<T.Player>([]);
+    private var seasons = List.fromArray<T.Season>([]);
+
+    private var nextPlayerId : Nat = 1;
+    private var nextSeasonId : Nat16 = 1;
+    private var nextFixtureId : Nat32 = 1;
+
+    
+
+    private func updateCacheHash(category : Text) : async () {
+      let hashBuffer = Buffer.fromArray<T.DataCache>([]);
+
+      for (hashObj in Iter.fromList(dataCacheHashes)) {
+        if (hashObj.category == category) {
+          let randomHash = await SHA224.getRandomHash();
+          hashBuffer.add({ category = hashObj.category; hash = randomHash });
+        } else { hashBuffer.add(hashObj) };
+      };
+
+      dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 
     //child modules
+    let profilesInstance = Profiles.Profiles();
+    let teamsInstance = Teams.Teams();
+    let rewardsInstance = Rewards.Rewards();
+    let countriesInstance = Countries.Countries();
     private let seasonsInstance = Seasons.Seasons();
 
     //definitions
@@ -198,6 +181,13 @@ module {
     };
 
     public func gameCompleted() : async () {
+
+
+    //NEED TO CHECK IF JANUARY 1ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMER TO BEGIN THE TRANSFER WINDOW IF IT IS
+    //NEED TO CHECK IF JANUARY 31ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMER TO END THE TRANSFER WINDOW IF IT IS
+
+
+
       let EventData_VotingPeriod = 0; // NEED TO SET THIS FROM THE GOVERNANCE CANISTER BUT IT NEEDS TO BE THE TIME SPECIFIC TO FIXTURE DATA COLLECTION
 
       let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
@@ -464,6 +454,11 @@ module {
     public func postPoneFixtuure() {
       seasonsInstance.postPoneFixtuure();
     };
+
+
+
+
+
 
   };
 };

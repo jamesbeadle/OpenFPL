@@ -38,6 +38,19 @@ actor Self {
   let janTransferWindowStart: ?Timer = null;
   let activeGameTimers: [Timer] = [];
 
+  var gameBegun = false;
+
+  public shared func init() : async Result.Result<(), T.Error>  {
+    if(gameBegun){
+      return #err(#NotAllowed);
+    }
+    //Check for fixtures
+
+    //if first fixture in past then fail
+
+    //set a timer for 1 hour before the first kick off to begin everything
+
+  };
 
   /*
   //LOCALDEVONLY
@@ -279,7 +292,7 @@ actor Self {
     };
   };
     
-
+  
 
 
 

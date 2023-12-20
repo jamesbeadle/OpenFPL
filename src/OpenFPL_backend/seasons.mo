@@ -16,10 +16,7 @@ import Debug "mo:base/Debug";
 module {
 
   public class Seasons() {
-    private var seasons = List.fromArray<T.Season>([]);
 
-    private var nextFixtureId : Nat32 = 381;
-    private var nextSeasonId : Nat16 = 2;
 
     public func setSeasons(stable_seasons : [T.Season]) {
       if (stable_seasons == []) {
