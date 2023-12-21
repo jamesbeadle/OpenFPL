@@ -150,7 +150,7 @@ module DTOs {
     gameweek : T.GameweekNumber;
     points : Int16;
     clubId : T.ClubId;
-    position : Nat8;
+    position : T.PlayerPosition;
     events : [T.PlayerEventData];
   };
 

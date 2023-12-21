@@ -1,6 +1,8 @@
 import T "../../types";
 import DTOs "../../DTOs";
 import List "mo:base/List";
+import Buffer "mo:base/Buffer";
+import Iter "mo:base/Iter";
 import CanisterIds "../../CanisterIds";
 
 module {
@@ -69,8 +71,43 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getDetailedPlayers(currentSeasonId: T.SeasonId, playerId: T.PlayerId) : [DTOs.PlayerDetailDTO] {
-      return []; 
+    public func getPlayerDetailsForGameweek(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.PlayerPointsDTO] {
+      var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
+
+      label playerDetailsLoop for (player in Iter.fromList(players)) {
+      var points : Int16 = 0;
+      var events : List.List<T.PlayerEventData> = List.nil();
+
+      for (season in Iter.fromList(player.seasons)) {
+        if (season.id == seasonId) {
+          for (gw in Iter.fromList(season.gameweeks)) {
+
+            if (gw.number == gameweek) {
+              points := gw.points;
+              events := List.filter<T.PlayerEventData>(
+                gw.events,
+                func(event : T.PlayerEventData) : Bool {
+                  return event.playerId == player.id;
+                },
+              );
+            };
+          };
+        };
+      };
+
+      let playerGameweek : DTOs.PlayerPointsDTO = {
+        id = player.id;
+        points = points;
+        clubId = player.clubId;
+        position = player.position;
+        events = List.toArray(events);
+        gameweek = gameweek;
+      };
+      playerDetailsBuffer.add(playerGameweek);
+    };
+
+    return Buffer.toArray(playerDetailsBuffer);
+      return [];
     };
 
 

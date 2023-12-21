@@ -200,61 +200,20 @@ module {
       return playerComposite.getPlayers(systemState.calculationSeason);
     };
 
-    public func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.PlayerDetailDTO] {
-      return playerComposite.getDetailedPlayers(seasonId, gameweek);
+    public func getPlayerDetailsForGameweek(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.PlayerPointsDTO] {
+      return playerComposite.getPlayerDetailsForGameweek(seasonId, gameweek);
     };
 
-    public func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      let leaderboardKey: T.WeeklyLeaderboardKey = (seasonId, gameweek);
-      let canisterId = weeklyLeaderboardCanisterIds.get(leaderboardKey);
-      switch(canisterId){
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundCanisterId){
-          let weekly_leaderboard_canister = actor (foundCanisterId) : actor {
-            getEntries : () -> async DTOs.WeeklyLeaderboardDTO;
-          };
-
-          let leaderboardEntries = await weekly_leaderboard_canister.getEntries();
-          return #ok(leaderboardEntries);
-        };
-      };
+    public func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+      return await leaderboardComposite.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
     };
     
-    public func getMonthlyLeaderboard(seasonId: T.SeasonId, month: T.CalendarMonth, clubId: T.ClubId) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
-      let leaderboardKey: T.MonthlyLeaderboardKey = (seasonId, month, clubId);
-      let canisterId = monthlyLeaderboardCanisterIds.get(leaderboardKey);
-      switch(canisterId){
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundCanisterId){
-          let monthly_leaderboard_canister = actor (foundCanisterId) : actor {
-            getEntries : () -> async DTOs.MonthlyLeaderboardDTO;
-          };
-
-          let leaderboardEntries = await monthly_leaderboard_canister.getEntries();
-          return #ok(leaderboardEntries);
-        };
-      };
+    public func getMonthlyLeaderboard(seasonId: T.SeasonId, month: T.CalendarMonth, clubId: T.ClubId, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
+      return await leaderboardComposite.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset);
     };
 
-    public func getSeasonLeaderboard(seasonId: T.SeasonId) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
-      let seasonCanisterId = seasonLeaderboardCanisterIds.get(seasonId);
-      switch(seasonCanisterId){
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundSeasonCanisterId){
-          let season_leaderboard_canister = actor (foundSeasonCanisterId) : actor {
-            getEntries : () -> async DTOs.SeasonLeaderboardDTO;
-          };
-
-          let leaderboardEntries = await season_leaderboard_canister.getEntries();
-          return #ok(leaderboardEntries);
-        };
-      };
+    public func getSeasonLeaderboard(seasonId: T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>{
+      return await leaderboardComposite.getSeasonLeaderboard(seasonId, limit, offset);
     };
     
     public func getProfile(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {

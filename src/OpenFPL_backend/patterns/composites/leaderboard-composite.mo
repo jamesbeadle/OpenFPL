@@ -1,5 +1,7 @@
 import T "../../types";
+import DTOs "../../DTOs";
 import HashMap "mo:base/HashMap";
+import Result "mo:base/Result";
 import Utilities "../../utilities";
 module {
 
@@ -35,6 +37,63 @@ module {
         Utilities.hashWeeklyKey
       );
     };
+
+    public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+      
+      let leaderboardKey: T.WeeklyLeaderboardKey = (seasonId, gameweek);
+      let canisterId = weeklyLeaderboardCanisterIds.get(leaderboardKey);
+      switch(canisterId){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundCanisterId){
+          let weekly_leaderboard_canister = actor (foundCanisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat) -> async DTOs.WeeklyLeaderboardDTO;
+          };
+
+          let leaderboardEntries = await weekly_leaderboard_canister.getEntries(limit, offset);
+          return #ok(leaderboardEntries);
+        };
+      };
+    };
+
+    public func getMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId: T.ClubId, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+      
+      let leaderboardKey: T.MonthlyLeaderboardKey = (seasonId, month, clubId);
+      let canisterId = monthlyLeaderboardCanisterIds.get(leaderboardKey);
+      switch(canisterId){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundCanisterId){
+          let monthly_leaderboard_canister = actor (foundCanisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat) -> async DTOs.MonthlyLeaderboardDTO;
+          };
+
+          let leaderboardEntries = await monthly_leaderboard_canister.getEntries(limit, offset);
+          return #ok(leaderboardEntries);
+        };
+      };
+    };
+
+    public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+      
+      let canisterId = seasonLeaderboardCanisterIds.get(seasonId);
+      switch(canisterId){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundCanisterId){
+          let season_leaderboard_canister = actor (foundCanisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat) -> async DTOs.SeasonLeaderboardDTO;
+          };
+
+          let leaderboardEntries = await season_leaderboard_canister.getEntries(limit, offset);
+          return #ok(leaderboardEntries);
+        };
+      };
+    };
+
 /*
 public func getWeeklyLeaderboard(activeSeasonId : Nat16, activeGameweek : Nat8, limit : Nat, offset : Nat) : DTOs.PaginatedLeaderboard {
       switch (seasonLeaderboards.get(activeSeasonId)) {
