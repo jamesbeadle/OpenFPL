@@ -86,10 +86,24 @@ module {
     private func gameweekBeginExpiredCallback() : async () {
       managerComposite.snapshotFantasyTeams();
       managerComposite.resetTransfers();  
-      //set a timer for the first fixture kicking off
+
+      let fixtures = seasonComposite.getFixtures(systemState.calculationSeason, systemState.calculationGameweek);
+      
+      //for each fixture set a timer but for unique kick off times
+        timerComposite.setTimer(firstFixtureKickOff, "gameKickOffExpired")
+
+      //set the pick team gameweek to the next gameweek if not already 38
+        //if 38 somehow stop people being able to pick players
+
     };
 
     private func gameKickOffExpiredCallback() : async () {
+
+      //set each fixture that has kicked off to active status
+
+      //set a timer for 2 hours from now to set the game to completed
+      
+
       let gameCompleteTimer: T.TimerInfo = seasonComposite.setActiveFixtures();
       await setAndBackupTimer(Utilities.getHour() * 2, gameCompleteTimer);
       setGameCompletedTimers(); //Look for any active game and set completed 2 hours from kickoff
@@ -98,6 +112,11 @@ module {
     };
 
     private func gameCompletedExpiredCallback() : async () {
+
+      //set the game to completed so fixture data can be submitted against it
+
+      //update cache
+
       seasonComposite.updateFixtureStatuses(#Completed); //update any active game that is 2 hours after it's kickoff to completed
       await updateCacheHash("fixtures"); 
       removeExpiredTimers();
@@ -121,6 +140,15 @@ module {
       await transferWindowEndCallback();
       removeExpiredTimers();
     };
+
+    let timerComposite = TimerComposite.TimerComposite(
+      gameweekBeginExpiredCallback,
+      gameKickOffExpiredCallback,
+      gameCompletedExpiredCallback,
+      loanExpiredCallback,
+      transferWindowStartCallback,
+      transferWindowEndCallback
+    );
     
 
     
@@ -263,6 +291,12 @@ module {
       return managerProfileManager.isUsernameAvailable(username);
     };
 
+
+
+
+
+
+
     //Governance validation and execution functions
     public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : Bool {
       return seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
@@ -391,14 +425,5 @@ module {
     public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
       return clubComposite.executeUpdateClub(updateClubDTO);
     };
-
-    let timerComposite = TimerComposite.TimerComposite(
-      gameweekBeginExpiredCallback,
-      gameKickOffExpiredCallback,
-      gameCompletedExpiredCallback,
-      loanExpiredCallback,
-      transferWindowStartCallback,
-      transferWindowEndCallback
-    );
   };
 };

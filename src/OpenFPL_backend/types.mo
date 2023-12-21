@@ -158,6 +158,7 @@ module Types {
     awayGoals : Nat8;
     status : FixtureStatus;
     highestScoringPlayerId : PlayerId;
+    events : List.List<PlayerEventData>;
   };
 
   public type Player = {

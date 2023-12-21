@@ -1,4 +1,5 @@
 import T "../../types";
+import DTOs "../../DTOs";
 import List "mo:base/List";
 
 module {
@@ -18,11 +19,52 @@ module {
       seasons := List.fromArray(stable_seasons);
     };
 
+    public func getFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.FixtureDTO]{
+      let season = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
+      switch(season){
+        case (null) {return []};
+        case (?foundSeason){
+          let fixtures = List.filter<T.Fixture>(
+            foundSeason.fixtures,
+            func(fixture : T.Fixture) : Bool {
+              return fixture.gameweek == gameweek;
+            },
+          );
+
+          let fixtureDTOs = List.map<T.Fixture, DTOs.FixtureDTO>(
+            fixtures, 
+            func(fixture : T.Fixture) : DTOs.FixtureDTO {
+              return {
+                awayClubId = fixture.awayClubId;
+                awayGoals = fixture.awayGoals;
+                gameweek = fixture.gameweek;
+                highestScoringPlayerId = fixture.highestScoringPlayerId;
+                homeClubId = fixture.homeClubId;
+                homeGoals = fixture.homeGoals;
+                id = fixture.id;
+                kickOff = fixture.kickOff;
+                seasonId = fixture.seasonId;
+                status = fixture.status;
+                events = List.toArray(fixture.events);
+              };
+            },
+          );
+          return List.toArray(fixtureDTOs);
+        };
+      }
+    };
+
    
     
     public func updateFixtureStatuses(fixtureStatus: T.FixtureStatus){
       
     };
+    
 
 /*
  public func setActiveFixtures() : T.TimerInfo{

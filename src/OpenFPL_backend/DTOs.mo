@@ -207,7 +207,7 @@ module DTOs {
     awayClubId : T.ClubId;
     homeGoals : Nat8;
     awayGoals : Nat8;
-    status : Nat8;
+    status : T.FixtureStatus;
     highestScoringPlayerId : Nat16;
     events : [T.PlayerEventData];
   };
