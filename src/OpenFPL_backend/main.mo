@@ -158,10 +158,10 @@ actor Self {
     return seasonManager.isUsernameAvailable(username);
   };
 
-  public shared ({ caller }) func createProfile() : async () {
+  public shared ({ caller }) func createProfile(profileDTO: DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.createProfile(principalId);
+    return await seasonManager.createProfile(principalId, profileDTO);
   };
 
   public shared ({ caller }) func updateUsername(username : Text) : async Result.Result<(), T.Error> {
