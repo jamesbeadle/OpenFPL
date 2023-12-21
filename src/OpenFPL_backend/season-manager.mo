@@ -178,16 +178,21 @@ module {
     };
 
     private func gameweekBeginExpiredCallback() : async () {
-      await gameweekBegin();
+      managerComposite.snapshotFantasyTeams();
+      managerComposite.resetTransfers();  
     };
 
     private func gameKickOffExpiredCallback() : async () {
-      await gameKickOff();
+      let gameCompleteTimer: T.TimerInfo = seasonComposite.updateFixtureStatuses(#Active);
+      await setAndBackupTimer(Utilities.getHour() * 2, gameCompleteTimer);
+      setGameCompletedTimers(); //Look for any active game and set completed 2 hours from kickoff
+      await updateCacheHash("fixtures");
       removeExpiredTimers();
     };
 
     private func gameCompletedExpiredCallback() : async () {
-      await gameCompleted();
+      seasonComposite.updateFixtureStatuses(#Completed); //update any active game that is 2 hours after it's kickoff to completed
+      await updateCacheHash("fixtures"); 
       removeExpiredTimers();
     };
 
@@ -209,26 +214,8 @@ module {
       await transferWindowEndCallback();
       removeExpiredTimers();
     };
-
-    public func gameweekBegin() : async () {
-      managerProfileManager.snapshotFantasyTeams();
-      managerProfileManager.resetTransfers();  
-    };
     
-    public func gameKickOff() : async () {
-      seasonComposite.updateFixtureStatuses(#Active);
 
-      let timers = getActiveTimers();
-
-
-      setGameCompletedTimers(); //Look for any active game and set completed 2 hours from kickoff
-      await updateCacheHash("fixtures");
-    };
-
-    public func gameCompleted() : async () {
-      seasonComposite.updateFixtureStatuses(); //update any active game that is 2 hours after it's kickoff to completed
-      await updateCacheHash("fixtures");        
-    };
     
     public func getSystemState() : DTOs.SystemStateDTO {
       return systemState;
