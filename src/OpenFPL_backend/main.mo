@@ -5,6 +5,8 @@ import Timer "mo:base/Timer";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Int "mo:base/Int";
+import Principal "mo:base/Principal";
+import List "mo:base/List";
 import SeasonManager "season-manager";
 import T "types";
 import DTOs "DTOs";
@@ -101,58 +103,58 @@ actor Self {
 
   let seasonManager = SeasonManager.SeasonManager(setAndBackupTimer);  
 
-  public shared query func getDataHashes() : async Result.Result<DTOs.DataCacheDTO, T.Error> {
-    return seasonManager.getDataHashes();
+  public shared query func getDataHashes() : async Result.Result<[DTOs.DataCacheDTO], T.Error> {
+    return #ok(seasonManager.getDataHashes());
   };
 
   public shared query func getFixtures(seasonId: T.SeasonId) : async Result.Result<[DTOs.FixtureDTO], T.Error>  {
-    return seasonManager.getFixtures(seasonId);
+    return #ok(seasonManager.getFixtures(seasonId));
   };
 
-  public shared query func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<[DTOs.WeeklyLeaderboardDTO], T.Error>  {
-    return seasonManager.getWeeklyLeaderboard(seasonId, gameweek);
+  public shared func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>  {
+    return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek);
   };
 
-  public shared query func getMonthlyLeaderboard(seasonId: T.SeasonId, clubId: T.ClubId, month: T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error>  {
-    return seasonManager.getMonthlyLeaderboard(seasonId, clubId, month);
+  public shared func getMonthlyLeaderboard(seasonId: T.SeasonId, clubId: T.ClubId, month: T.CalendarMonth) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>  {
+    return await seasonManager.getMonthlyLeaderboard(seasonId, month, clubId);
   };
 
-  public shared query func getSeasonLeaderboard(seasonId: T.SeasonId) : async Result.Result<[DTOs.SeasonLeaderboardDTO], T.Error>  {
-    return seasonManager.getSeasonLeaderboard(seasonId);
+  public shared func getSeasonLeaderboard(seasonId: T.SeasonId) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>  {
+    return await seasonManager.getSeasonLeaderboard(seasonId);
   };
 
   public shared query ({ caller }) func getProfile() : async Result.Result<[DTOs.ProfileDTO], T.Error>  {
     assert not Principal.isAnonymous(caller);
-    return seasonManager.getProfile(Principal.toText(caller));
+    return #ok(seasonManager.getProfile(Principal.toText(caller)));
   };
 
   public shared query func getManager(principalId: Text) : async Result.Result<[DTOs.ProfileDTO], T.Error>  {
-    return seasonManager.getProfile(principalId);
+    return #ok(seasonManager.getProfile(principalId));
   };
 
   public shared query func getTotalManagers() : async Result.Result<[Nat], T.Error>  {
-    return seasonManager.getTotalManagers();
+    return #ok(seasonManager.getTotalManagers());
   };
 
   public shared query func getSystemState() : async Result.Result<[DTOs.SystemStateDTO], T.Error>  {
-    return seasonManager.getSystemState();
+    return #ok(seasonManager.getSystemState());
   };
 
   public shared query func getPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error>  {
-    return seasonManager.getPlayers();
+    return #ok(seasonManager.getPlayers());
   };
 
   public shared query func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<[DTOs.PlayerDTO], T.Error>  {
-    return seasonManager.getDetailedPlayers(seasonId, gameweek);
+    return #ok(seasonManager.getDetailedPlayers(seasonId, gameweek));
   };
 
   public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error>  {
-    return List.toArray(countriesInstance.countries);
+    return #ok(List.toArray(countriesInstance.countries));
   };
 
   public shared query ({ caller }) func isUsernameAvailable(username : Text) : async Bool {
     assert not Principal.isAnonymous(caller);
-    return seasonManager.isUsernameAvailable(username);
+    return #ok(seasonManager.isUsernameAvailable(username));
   };
 
   public shared ({ caller }) func createProfile() : async () {

@@ -491,19 +491,19 @@ module {
       return systemState;
     };
     
-    public func getDataHashes() : async [DTOs.DataCacheDTO] {
+    public func getDataHashes() : [DTOs.DataCacheDTO] {
       return List.toArray(dataCacheHashes);
     };
     
-    public func getFixtures(seasonId: T.SeasonId) : async [DTOs.FixtureDTO] {
+    public func getFixtures(seasonId: T.SeasonId) : [DTOs.FixtureDTO] {
       return [];
     };
     
-    public func getPlayers() : async [DTOs.PlayerDTO] {
+    public func getPlayers() : [DTOs.PlayerDTO] {
       return [];
     };
 
-    public func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async [DTOs.PlayerDTO] {
+    public func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.PlayerDTO] {
       return [];
     };
 
