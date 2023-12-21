@@ -14,95 +14,7 @@ import Countries "Countries";
 
 actor Self {
 
-  private func gameweekBeginExpiredCallback() : async () {
-    await seasonManager.gameweekBegin();
-    removeExpiredTimers();
-  };
-
-  private func gameKickOffExpiredCallback() : async () {
-    await seasonManager.gameKickOff();
-    removeExpiredTimers();
-  };
-
-  private func gameCompletedExpiredCallback() : async () {
-    await seasonManager.gameCompleted();
-    removeExpiredTimers();
-  };
-
-  private func loanExpiredCallback() : async () {
-    await seasonManager.loanExpiredCallback();
-    removeExpiredTimers();
-  };
-
-  private func transferWindowStartCallback() : async () {
-    await seasonManager.transferWindowStartCallback();
-    removeExpiredTimers();
-  };
-
-  private func transferWindowEndCallback() : async () {
-    await seasonManager.transferWindowEndCallback();
-    removeExpiredTimers();
-  };
-
-  private func removeExpiredTimers() : () {
-    let currentTime = Time.now();
-    stable_timers := Array.filter<T.TimerInfo>(
-      stable_timers,
-      func(timer : T.TimerInfo) : Bool {
-        return timer.triggerTime > currentTime;
-      },
-    );
-  };
-
-  private func setAndBackupTimer(duration : Timer.Duration, timerInfo: T.TimerInfo) : async () {
-    let jobId : Timer.TimerId = switch (timerInfo.callbackName) {
-      case "gameweekBeginExpired" {
-        Timer.setTimer(duration, gameweekBeginExpiredCallback);
-      };
-      case "gameKickOffExpired" {
-        Timer.setTimer(duration, gameKickOffExpiredCallback);
-      };
-      case "gameCompletedExpired" {
-        Timer.setTimer(duration, gameCompletedExpiredCallback);
-      };
-      case "loanExpired" {
-        Timer.setTimer(duration, loanExpiredCallback);
-      };
-      case "transferWindowStart" {
-        Timer.setTimer(duration, transferWindowStartCallback);
-      };
-      case "transferWindowEnd" {
-        Timer.setTimer(duration, transferWindowEndCallback);
-      };
-      case _ { 
-        Timer.setTimer(duration, defaultCallback);
-      };
-    };
-
-    let triggerTime = switch (duration) {
-      case (#seconds s) {
-        Time.now() + s * 1_000_000_000;
-      };
-      case (#nanoseconds ns) {
-        Time.now() + ns;
-      };
-    };
-
-    let newTimerInfo : T.TimerInfo = {
-      id = jobId;
-      triggerTime = timerInfo.triggerTime;
-      callbackName = timerInfo.callbackName;
-      playerId = timerInfo.playerId;
-      fixtureId = timerInfo.fixtureId;
-    };
-
-    var timerBuffer = Buffer.fromArray<T.TimerInfo>(stable_timers);
-    timerBuffer.add(newTimerInfo);
-    stable_timers := Buffer.toArray(timerBuffer);
-  };
-  private func defaultCallback() : async () {};
-
-  let seasonManager = SeasonManager.SeasonManager(setAndBackupTimer);  
+  let seasonManager = SeasonManager.SeasonManager();  
 
   public shared query func getDataHashes() : async Result.Result<[DTOs.DataCacheDTO], T.Error> {
     return #ok(seasonManager.getDataHashes());
@@ -342,6 +254,7 @@ actor Self {
   private stable var stable_timers : [T.TimerInfo] = [];
 
   system func preupgrade() {
+    stable_timers := seasonManager.getTimers();
     /*
     stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
     stable_profiles := profilesInstance.getProfiles();
@@ -370,40 +283,7 @@ actor Self {
     fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
     dataCacheHashes := List.fromArray(stable_data_cache_hashes);
     */
-    recreateTimers();
-  };
-
-  private func recreateTimers() {
-    let currentTime = Time.now();
-    for (timerInfo in Iter.fromArray(stable_timers)) {
-      let remainingDuration = timerInfo.triggerTime - currentTime;
-
-      if (remainingDuration > 0) {
-        let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
-
-        switch (timerInfo.callbackName) {
-          case "gameweekBeginExpired" {
-            ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
-          };
-          case "gameKickOffExpired" {
-            ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
-          };
-          case "gameCompletedExpired" {
-            ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
-          };
-          case "loanExpired" {
-            ignore Timer.setTimer(duration, loanExpiredCallback);
-          };
-          case "transferWindowStart" {
-            ignore Timer.setTimer(duration, transferWindowStartCallback);
-          };
-          case "transferWindowEnd" {
-            ignore Timer.setTimer(duration, transferWindowEndCallback);
-          };
-          case _ {};
-        };
-      };
-    };
+    seasonManager.recreateTimers();
   };
 
 };

@@ -17,23 +17,23 @@ import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Blob "mo:base/Blob";
-import SnapshotManager "patterns/snapshot-manager";
 import SnapshotFactory "patterns/snapshot-factory";
-import PlayerComposite "patterns/player-composite";
-import ClubComposite "patterns/club-composite";
+import PlayerComposite "patterns/composites/player-composite";
+import ClubComposite "patterns/composites/club-composite";
 import StrategyManager "patterns/strategy-manager";
 import ManagerProfileManager "patterns/manager-profile-manager";
-import SeasonComposite "patterns/season-composite";
+import SeasonComposite "patterns/composites/season-composite";
 import Utilities "utilities";
 
 module {
 
-  public class SeasonManager(setAndBackupTimer : (duration : Timer.Duration, timerInfo: T.TimerInfo) -> async ()) {
+  public class SeasonManager() {
 
     let strategyManager = StrategyManager.StrategyManager();
     let managerProfileManager = ManagerProfileManager.ManagerProfileManager();
     let playerComposite = PlayerComposite.PlayerComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
+    var timers: [T.TimerInfo] = [];
     
     let CANISTER_IDS = {
       retired_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
@@ -151,24 +151,25 @@ module {
         Utilities.eqWeeklyKey, 
         Utilities.hashWeeklyKey
       );
-      
     };
 
     public func gameweekBegin() : async () {
-      snapshotManager.snapshotFantasyTeams();
-      managerProfileManager.resetFantasyTeams();  
+      managerProfileManager.snapshotFantasyTeams();
+      managerProfileManager.resetTransfers();  
     };
-
     
     public func gameKickOff() : async () {
-      updateFixtureStatuses();
+      seasonComposite.updateFixtureStatuses(#Active);
+
+      let timers = getActiveTimers();
+
+
       setGameCompletedTimers(); //Look for any active game and set completed 2 hours from kickoff
       await updateCacheHash("fixtures");
     };
 
-    
     public func gameCompleted() : async () {
-      updateFixtureStatuses(); //update any active game that is 2 hours after it's kickoff to completed
+      seasonComposite.updateFixtureStatuses(); //update any active game that is 2 hours after it's kickoff to completed
       await updateCacheHash("fixtures");        
     };
 
@@ -176,8 +177,7 @@ module {
       playerComposite.loanExpired();//go through all players and check if any have their loan expired and recall them to their team if so
       await updateCacheHash("players");        
     };
-
-    
+  
     public func transferWindowStartCallback() : async () {
       //Set a flag to allow the january transfer window when submitting teams but also check for it
       //SETUP THE JAN TRANSFER WINDOW
@@ -327,6 +327,30 @@ module {
       return managerProfileManager.isUsernameAvailable(username);
     };
 
+    public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : Bool {
+      return seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
+    };
+
+    public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
+      return seasonComposite.executeSubmitFixtureData(submitFixtureData);
+    };
+     
+    public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : Bool {
+      return seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO);
+    };
+
+    public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> { 
+      return seasonComposite.executeAddInitialFixtures(addInitialFixturesDTO);
+    };
+
+    public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : Bool {
+      return seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO);
+    };
+
+    public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
+      return seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO);
+    };
+
     public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : Bool {
       return playerComposite.validateRevaluePlayerUp(revaluePlayerUpDTO);
     };
@@ -343,32 +367,7 @@ module {
       return playerComposite.executeRevaluePlayerDown(revaluePlayerDownDTO);
     };
 
-    public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : Bool {
-      return seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
-    };
-
-    public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
-      return seasonComposite.executeSubmitFixtureData(submitFixtureData);
-    };
-     
-    public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
-      return seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO);
-    };
-
-    public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> { 
-      return seasonComposite.executeAddInitialFixtures(addInitialFixturesDTO);
-    };
-
-    public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
-      return seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO);
-      return #ok();
-    };
-
-    public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
-      return seasonComposite.executeRescheduleFixture(rescheduleFixtureDTO);
-    };
-
-    public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
+    public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : Bool {
       return playerComposite.validateLoanPlayer(loanPlayerDTO);
     };
 
@@ -376,7 +375,7 @@ module {
       return playerComposite.executeLoanPlayer(loanPlayerDTO);
     };
 
-    public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
+    public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : Bool {
       return playerComposite.validateTransferPlayer(transferPlayerDTO);
     };
 
@@ -384,16 +383,15 @@ module {
       return playerComposite.executeTransferPlayer(transferPlayerDTO);
     };
 
-    public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
+    public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : Bool {
       return playerComposite.validateRecallPlayer(recallPlayerDTO);
-      return #ok();
     };
 
     public func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
       return playerComposite.executeRecallPlayer(recallPlayerDTO);
     };
 
-    public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
+    public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : Bool {
       return playerComposite.validateCreatePlayer(createPlayerDTO);
     };
 
@@ -401,7 +399,7 @@ module {
       return playerComposite.executeCreatePlayer(createPlayerDTO);
     };
 
-    public func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
+    public func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : Bool {
       return playerComposite.validateUpdatePlayer(updatePlayerDTO);
     };
 
@@ -409,7 +407,7 @@ module {
       return playerComposite.executeUpdatePlayer(updatePlayerDTO);
     };
 
-    public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
+    public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : Bool {
       return playerComposite.validateSetPlayerInjury(setPlayerInjuryDTO);
     };
 
@@ -417,7 +415,7 @@ module {
       return playerComposite.executeSetPlayerInjury(setPlayerInjuryDTO);
     };
     
-    public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
+    public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : Bool {
       return playerComposite.validateRetirePlayer(retirePlayerDTO);
     };
 
@@ -425,7 +423,7 @@ module {
       return playerComposite.executeRetirePlayer(retirePlayerDTO);
     };
 
-    public func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
+    public func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : Bool {
       return playerComposite.validateUnretirePlayer(unretirePlayerDTO);
     };
     
@@ -456,6 +454,140 @@ module {
     public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
       return clubComposite.executeUpdateClub(updateClubDTO);
     };
+
+
+
+
+
+
+
+  private func removeExpiredTimers() : () {
+    let currentTime = Time.now();
+    timers := Array.filter<T.TimerInfo>(
+      timers,
+      func(timer : T.TimerInfo) : Bool {
+        return timer.triggerTime > currentTime;
+      },
+    );
+  };
+
+  private func setAndBackupTimer(duration : Timer.Duration, timerInfo: T.TimerInfo) : async () {
+    let jobId : Timer.TimerId = switch (timerInfo.callbackName) {
+      case "gameweekBeginExpired" {
+        Timer.setTimer(duration, gameweekBeginExpiredCallback);
+      };
+      case "gameKickOffExpired" {
+        Timer.setTimer(duration, gameKickOffExpiredCallback);
+      };
+      case "gameCompletedExpired" {
+        Timer.setTimer(duration, gameCompletedExpiredCallback);
+      };
+      case "loanExpired" {
+        Timer.setTimer(duration, loanExpiredCallback);
+      };
+      case "transferWindowStart" {
+        Timer.setTimer(duration, transferWindowStartCallback);
+      };
+      case "transferWindowEnd" {
+        Timer.setTimer(duration, transferWindowEndCallback);
+      };
+      case _ { 
+        Timer.setTimer(duration, defaultCallback);
+      };
+    };
+
+    let triggerTime = switch (duration) {
+      case (#seconds s) {
+        Time.now() + s * 1_000_000_000;
+      };
+      case (#nanoseconds ns) {
+        Time.now() + ns;
+      };
+    };
+
+    let newTimerInfo : T.TimerInfo = {
+      id = jobId;
+      triggerTime = timerInfo.triggerTime;
+      callbackName = timerInfo.callbackName;
+      playerId = timerInfo.playerId;
+      fixtureId = timerInfo.fixtureId;
+    };
+
+    var timerBuffer = Buffer.fromArray<T.TimerInfo>(timers);
+    timerBuffer.add(newTimerInfo);
+    timers := Buffer.toArray(timerBuffer);
+  };
+  private func defaultCallback() : async () {};
+
+
+
+  private func recreateTimers() {
+    let currentTime = Time.now();
+    for (timerInfo in Iter.fromArray(timers)) {
+      let remainingDuration = timerInfo.triggerTime - currentTime;
+
+      if (remainingDuration > 0) {
+        let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
+
+        switch (timerInfo.callbackName) {
+          case "gameweekBeginExpired" {
+            ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
+          };
+          case "gameKickOffExpired" {
+            ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
+          };
+          case "gameCompletedExpired" {
+            ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
+          };
+          case "loanExpired" {
+            ignore Timer.setTimer(duration, loanExpiredCallback);
+          };
+          case "transferWindowStart" {
+            ignore Timer.setTimer(duration, transferWindowStartCallback);
+          };
+          case "transferWindowEnd" {
+            ignore Timer.setTimer(duration, transferWindowEndCallback);
+          };
+          case _ {};
+        };
+      };
+    };
+  };
+
+
+
+
+
+  private func gameweekBeginExpiredCallback() : async () {
+    await seasonManager.gameweekBegin();
+  };
+
+  private func gameKickOffExpiredCallback() : async () {
+    await seasonManager.gameKickOff();
+    seasonManager.removeExpiredTimers();
+  };
+
+  private func gameCompletedExpiredCallback() : async () {
+    await seasonManager.gameCompleted();
+    seasonManager.removeExpiredTimers();
+  };
+
+  private func loanExpiredCallback() : async () {
+    await seasonManager.loanExpiredCallback();
+    seasonManager.removeExpiredTimers();
+  };
+
+  private func transferWindowStartCallback() : async () {
+    await seasonManager.transferWindowStartCallback();
+    seasonManager.removeExpiredTimers();
+  };
+
+  private func transferWindowEndCallback() : async () {
+    await seasonManager.transferWindowEndCallback();
+    seasonManager.removeExpiredTimers();
+  };
+
+
 
 
   };

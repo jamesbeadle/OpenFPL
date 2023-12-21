@@ -218,6 +218,14 @@ module {
     return "false";
   };
 
+  public func snapshotFantasyTeams() : (){
+
+  };
+
+  public func resetTransfers() : (){
+
+  };
+
    //include all profile info for caller
     //include all manager info
     //GetProfile

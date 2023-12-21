@@ -94,50 +94,6 @@ Potentially multiple factory methods if different types of snapshots are needed 
 
     
 
-    
-
-    private func createLeaderboardEntry(principalId : Text, username : Text, team : T.UserFantasyTeam, points : Int16) : T.LeaderboardEntry {
-      return {
-        position = 0;
-        positionText = "";
-        username = username;
-        principalId = principalId;
-        points = points;
-      };
-    };
-
-    private func assignPositionText(sortedEntries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
-      var position = 1;
-      var previousScore : ?Int16 = null;
-      var currentPosition = 1;
-
-      func updatePosition(entry : T.LeaderboardEntry) : T.LeaderboardEntry {
-        if (previousScore == null) {
-          previousScore := ?entry.points;
-          let updatedEntry = {
-            entry with position = position;
-            positionText = Int.toText(position);
-          };
-          currentPosition += 1;
-          return updatedEntry;
-        } else if (previousScore == ?entry.points) {
-          currentPosition += 1;
-          return { entry with position = position; positionText = "-" };
-        } else {
-          position := currentPosition;
-          previousScore := ?entry.points;
-          let updatedEntry = {
-            entry with position = position;
-            positionText = Int.toText(position);
-          };
-          currentPosition += 1;
-          return updatedEntry;
-        };
-      };
-
-      return List.map(sortedEntries, updatePosition);
-    };
-
     private func groupByTeam(fantasyTeams : HashMap.HashMap<Text, T.UserFantasyTeam>, allProfiles : HashMap.HashMap<Text, T.Profile>) : HashMap.HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]> {
       let groupedTeams : HashMap.HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]> = HashMap.HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]>(10, Utilities.eqNat16, Utilities.hashNat16);
 

@@ -1,18 +1,8 @@
 module {
 
-  public class SnapshotManager() {
-    /*
-    
-    //SnapshotManager//Implements memento to create snapshots
-    snapshot-manager.mo
-Purpose: Implements the Memento pattern to manage the snapshots of the game state.
-Contents:
-Functions to save, retrieve, and manage snapshots over time.
-Methods such as getSnapshot for a specific game week, and restoreFromSnapshot to revert to a previous state if necessary.
-
-    //await snapshotGameweek(systemState.calculationSeason, systemState.calculationGameweek);
-      //await resetTransfers();
-    public func getWeeklyLeaderboard(activeSeasonId : Nat16, activeGameweek : Nat8, limit : Nat, offset : Nat) : DTOs.PaginatedLeaderboard {
+  public class SeasonComposite() {
+/*
+public func getWeeklyLeaderboard(activeSeasonId : Nat16, activeGameweek : Nat8, limit : Nat, offset : Nat) : DTOs.PaginatedLeaderboard {
       switch (seasonLeaderboards.get(activeSeasonId)) {
         case (null) {
           return {
@@ -188,6 +178,66 @@ Methods such as getSnapshot for a specific game week, and restoreFromSnapshot to
       calculateLeaderboards(1, 9);
       calculateMonthlyLeaderboards(1, 9);
     };
-    */
+
+
+
+
+
+
+
+
+
+
+    
+
+    private func createLeaderboardEntry(principalId : Text, username : Text, team : T.UserFantasyTeam, points : Int16) : T.LeaderboardEntry {
+      return {
+        position = 0;
+        positionText = "";
+        username = username;
+        principalId = principalId;
+        points = points;
+      };
+    };
+
+    private func assignPositionText(sortedEntries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
+      var position = 1;
+      var previousScore : ?Int16 = null;
+      var currentPosition = 1;
+
+      func updatePosition(entry : T.LeaderboardEntry) : T.LeaderboardEntry {
+        if (previousScore == null) {
+          previousScore := ?entry.points;
+          let updatedEntry = {
+            entry with position = position;
+            positionText = Int.toText(position);
+          };
+          currentPosition += 1;
+          return updatedEntry;
+        } else if (previousScore == ?entry.points) {
+          currentPosition += 1;
+          return { entry with position = position; positionText = "-" };
+        } else {
+          position := currentPosition;
+          previousScore := ?entry.points;
+          let updatedEntry = {
+            entry with position = position;
+            positionText = Int.toText(position);
+          };
+          currentPosition += 1;
+          return updatedEntry;
+        };
+      };
+
+      return List.map(sortedEntries, updatePosition);
+    };
+
+
+
+
+
+*/
+
+      
   };
 };

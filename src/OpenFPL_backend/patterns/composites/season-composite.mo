@@ -1,6 +1,13 @@
+import T "../../types";
+
 module {
 
   public class SeasonComposite() {
+
+    public func updateFixtureStatuses(fixtureStatus: T.FixtureStatus){
+
+    };
+
 /*
 
     //PlayerComposite //implements composite allows changes to seasons and fixtures
