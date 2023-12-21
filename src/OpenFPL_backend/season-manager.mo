@@ -1,15 +1,9 @@
 import T "types";
 import DTOs "DTOs";
-import Timer "mo:base/Timer";
-import { now } = "mo:base/Time";
-import Int "mo:base/Int";
-import Iter "mo:base/Iter";
-import Array "mo:base/Array";
 import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Option "mo:base/Option";
 import Nat8 "mo:base/Nat8";
-import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
@@ -24,6 +18,7 @@ import PlayerComposite "patterns/composites/player-composite";
 import ClubComposite "patterns/composites/club-composite";
 import ManagerComposite "patterns/composites/manager-composite";
 import LeaderboardComposite "patterns/composites/leaderboard-composite";
+import TimerComposite "patterns/composites/timer-composite";
 import Utilities "utilities";
 import CanisterIds "CanisterIds";
 
@@ -37,7 +32,6 @@ module {
     let clubComposite = ClubComposite.ClubComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
     let leaderboardComposite = LeaderboardComposite.LeaderboardComposite();
-    var timers: [T.TimerInfo] = [];
     
     private var systemState: T.SystemState = {
       calculationGameweek = 1;
@@ -60,6 +54,7 @@ module {
    
     public func setStableData(
       stable_system_state : T.SystemState,
+      stable_timers: [T.TimerInfo],
       stable_data_cache_hashes: [T.DataCache],
       stable_next_club_id: T.ClubId,
       stable_next_player_id: T.PlayerId,
@@ -75,6 +70,7 @@ module {
       stable_weekly_leaderboard_canister_ids:  [(T.WeeklyLeaderboardKey, Text)]) {
 
       systemState := stable_system_state;
+      timerComposite.setStableData(stable_timers);
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
       clubComposite.setStableData(stable_next_club_id, stable_clubs);
       playerComposite.setStableData(stable_next_player_id, stable_players);
@@ -86,104 +82,15 @@ module {
         stable_weekly_leaderboard_canister_ids);      
     };
 
-    private func removeExpiredTimers() : () {
-      let currentTime = Time.now();
-      timers := Array.filter<T.TimerInfo>(
-        timers,
-        func(timer : T.TimerInfo) : Bool {
-          return timer.triggerTime > currentTime;
-        },
-      );
-    };
-
-    private func setAndBackupTimer(duration : Timer.Duration, timerInfo: T.TimerInfo) : async () {
-      let jobId : Timer.TimerId = switch (timerInfo.callbackName) {
-        case "gameweekBeginExpired" {
-          Timer.setTimer(duration, gameweekBeginExpiredCallback);
-        };
-        case "gameKickOffExpired" {
-          Timer.setTimer(duration, gameKickOffExpiredCallback);
-        };
-        case "gameCompletedExpired" {
-          Timer.setTimer(duration, gameCompletedExpiredCallback);
-        };
-        case "loanExpired" {
-          Timer.setTimer(duration, loanExpiredCallback);
-        };
-        case "transferWindowStart" {
-          Timer.setTimer(duration, transferWindowStartCallback);
-        };
-        case "transferWindowEnd" {
-          Timer.setTimer(duration, transferWindowEndCallback);
-        };
-        case _ { 
-          Timer.setTimer(duration, defaultCallback);
-        };
-      };
-
-      let triggerTime = switch (duration) {
-        case (#seconds s) {
-          Time.now() + s * 1_000_000_000;
-        };
-        case (#nanoseconds ns) {
-          Time.now() + ns;
-        };
-      };
-
-      let newTimerInfo : T.TimerInfo = {
-        id = jobId;
-        triggerTime = timerInfo.triggerTime;
-        callbackName = timerInfo.callbackName;
-        playerId = timerInfo.playerId;
-        fixtureId = timerInfo.fixtureId;
-      };
-
-      var timerBuffer = Buffer.fromArray<T.TimerInfo>(timers);
-      timerBuffer.add(newTimerInfo);
-      timers := Buffer.toArray(timerBuffer);
-    };
-    private func defaultCallback() : async () {};
-
-    private func recreateTimers() {
-      let currentTime = Time.now();
-      for (timerInfo in Iter.fromArray(timers)) {
-        let remainingDuration = timerInfo.triggerTime - currentTime;
-
-        if (remainingDuration > 0) {
-          let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
-
-          switch (timerInfo.callbackName) {
-            case "gameweekBeginExpired" {
-              ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
-            };
-            case "gameKickOffExpired" {
-              ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
-            };
-            case "gameCompletedExpired" {
-              ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
-            };
-            case "loanExpired" {
-              ignore Timer.setTimer(duration, loanExpiredCallback);
-            };
-            case "transferWindowStart" {
-              ignore Timer.setTimer(duration, transferWindowStartCallback);
-            };
-            case "transferWindowEnd" {
-              ignore Timer.setTimer(duration, transferWindowEndCallback);
-            };
-            case _ {};
-          };
-        };
-      };
-    };
 
     private func gameweekBeginExpiredCallback() : async () {
       managerComposite.snapshotFantasyTeams();
       managerComposite.resetTransfers();  
+      //set a timer for the first fixture kicking off
     };
 
     private func gameKickOffExpiredCallback() : async () {
-      let gameCompleteTimer: T.TimerInfo = seasonComposite.updateFixtureStatuses(#Active);
+      let gameCompleteTimer: T.TimerInfo = seasonComposite.setActiveFixtures();
       await setAndBackupTimer(Utilities.getHour() * 2, gameCompleteTimer);
       setGameCompletedTimers(); //Look for any active game and set completed 2 hours from kickoff
       await updateCacheHash("fixtures");
@@ -485,5 +392,13 @@ module {
       return clubComposite.executeUpdateClub(updateClubDTO);
     };
 
+    let timerComposite = TimerComposite.TimerComposite(
+      gameweekBeginExpiredCallback,
+      gameKickOffExpiredCallback,
+      gameCompletedExpiredCallback,
+      loanExpiredCallback,
+      transferWindowStartCallback,
+      transferWindowEndCallback
+    );
   };
 };

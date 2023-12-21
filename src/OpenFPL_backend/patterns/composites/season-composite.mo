@@ -17,13 +17,18 @@ module {
       nextFixtureId := stable_next_fixture_id; 
       seasons := List.fromArray(stable_seasons);
     };
+
+   
     
     public func updateFixtureStatuses(fixtureStatus: T.FixtureStatus){
-
+      
     };
 
 /*
-
+ public func setActiveFixtures() : T.TimerInfo{
+      //update fixture status 
+      //return timer for 2 hours after games finish
+    };
     //PlayerComposite //implements composite allows changes to seasons and fixtures
     
 */
