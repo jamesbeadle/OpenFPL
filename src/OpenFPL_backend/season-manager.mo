@@ -217,15 +217,12 @@ module {
     };
     
     public func getProfile(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-      let manager = managers.get(principalId);
-      return await managerProfileManager.getProfile(manager);
+      return await managerComposite.getProfile(principalId);
     };
     
-    /* Will need when profile DTO isn't enough
-    public func getManager(principalId: Text){
-      
+    public func getManager(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error>{
+      return await managerComposite.getManager(principalId);
     };
-    */
     
     public func getTotalManagers() : Nat{
       let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
@@ -281,12 +278,6 @@ module {
     public func isUsernameAvailable(username: Text) : Bool{
       return managerProfileManager.isUsernameAvailable(username);
     };
-
-
-
-
-
-
 
     //Governance validation and execution functions
     public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : Bool {

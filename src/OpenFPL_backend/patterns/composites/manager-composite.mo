@@ -112,8 +112,10 @@ module {
         };
     };
 
-    public func getProfile(manager: ?T.Manager) : async Result.Result<DTOs.ProfileDTO, T.Error>{
+    public func getProfile(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error>{
         
+        let manager = managers.get(principalId);
+
         switch(manager){
             case (null) {
             return #err(#NotFound);
@@ -140,6 +142,45 @@ module {
             return #ok(profileDTO);
             };
         }
+    };
+
+    public func getManager(principalId: Text) : async Result.Result<DTOs.ManagerDTO, T.Error>{
+      let manager = managers.get(principalId);
+
+      switch(manager){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundManager){
+        
+          var profilePicture = Blob.fromArray([]);
+          if(Text.size(foundManager.profilePictureCanisterId) > 0){
+              let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
+              getProfilePicture : (principalId: Text) -> async Blob;
+              };
+              profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+          };
+          
+          let managerDTO: DTOs.ManagerDTO = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            profilePicture = profilePicture;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            gameweeks = [];
+            weeklyPosition = 0;
+            monthlyPosition = 0;
+            seasonPosition = 0;
+            weeklyPositionText = "";
+            monthlyPositionText = "";
+            seasonPositionText = "";
+            weeklyPoints = 0;
+            monthlyPoints = 0;
+            seasonPoints = 0;
+          };
+          return #ok(managerDTO);
+        };
+      }
     };
 
     public func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
