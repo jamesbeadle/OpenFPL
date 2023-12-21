@@ -18,16 +18,16 @@ actor Self {
   let seasonManager = SeasonManager.SeasonManager(); 
 
   //Functions containing inter-canister calls that cannot be query functions:
-  public shared func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>  {
-    return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek);
+  public shared func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>  {
+    return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
   };
 
-  public shared func getMonthlyLeaderboard(seasonId: T.SeasonId, clubId: T.ClubId, month: T.CalendarMonth) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>  {
-    return await seasonManager.getMonthlyLeaderboard(seasonId, month, clubId);
+  public shared func getMonthlyLeaderboard(seasonId: T.SeasonId, clubId: T.ClubId, month: T.CalendarMonth, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>  {
+    return await seasonManager.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset);
   };
 
-  public shared func getSeasonLeaderboard(seasonId: T.SeasonId) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>  {
-    return await seasonManager.getSeasonLeaderboard(seasonId);
+  public shared func getSeasonLeaderboard(seasonId: T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error>  {
+    return await seasonManager.getSeasonLeaderboard(seasonId, limit, offset);
   };
 
   public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error>  {

@@ -40,6 +40,10 @@ module {
 
     public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
       
+      if(limit > 100){
+        return #err(#NotAllowed);
+      };
+      
       let leaderboardKey: T.WeeklyLeaderboardKey = (seasonId, gameweek);
       let canisterId = weeklyLeaderboardCanisterIds.get(leaderboardKey);
       switch(canisterId){
@@ -59,6 +63,10 @@ module {
 
     public func getMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId: T.ClubId, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
       
+      if(limit > 100){
+        return #err(#NotAllowed);
+      };
+      
       let leaderboardKey: T.MonthlyLeaderboardKey = (seasonId, month, clubId);
       let canisterId = monthlyLeaderboardCanisterIds.get(leaderboardKey);
       switch(canisterId){
@@ -77,6 +85,10 @@ module {
     };
 
     public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+      
+      if(limit > 100){
+        return #err(#NotAllowed);
+      };
       
       let canisterId = seasonLeaderboardCanisterIds.get(seasonId);
       switch(canisterId){
