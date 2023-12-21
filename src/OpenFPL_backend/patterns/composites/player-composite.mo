@@ -8,6 +8,11 @@ module {
     
     private var nextPlayerId : T.PlayerId = 1;
     private var players = List.fromArray<T.Player>([]);
+   
+    public func setStableData(stable_next_player_id: T.PlayerId, stable_players: [T.Player]) {
+      nextPlayerId := stable_next_player_id;
+      players := List.fromArray(stable_players);
+    };
 
     let former_players_canister = actor (CanisterIds.FORMER_PLAYERS_CANISTER_ID) : actor {
       getFormerPlayer : (playerId: T.PlayerId) -> async ();

@@ -7,6 +7,16 @@ module {
     private var seasons = List.fromArray<T.Season>([]);
     private var nextSeasonId : T.SeasonId = 1;
     private var nextFixtureId : T.FixtureId = 1;
+
+    public func setStableData(
+      stable_next_season_id: T.SeasonId,
+      stable_next_fixture_id: T.FixtureId,
+      stable_seasons: [T.Season]) {
+
+      nextSeasonId := stable_next_season_id;
+      nextFixtureId := stable_next_fixture_id; 
+      seasons := List.fromArray(stable_seasons);
+    };
     
     public func updateFixtureStatuses(fixtureStatus: T.FixtureStatus){
 

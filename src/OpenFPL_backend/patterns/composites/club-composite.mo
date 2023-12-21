@@ -7,6 +7,15 @@ module {
       private var nextClubId : T.ClubId = 1;
       private var clubs = List.fromArray<T.Club>([]);
     
+   
+    public func setStableData(
+      stable_next_club_id: T.ClubId,
+      stable_clubs: [T.Club]) {
+
+      nextClubId := stable_next_club_id;
+      clubs := List.fromArray(stable_clubs);
+
+    };
     /*
     
     //ClubComposite //implements composite allows changes to players clubs

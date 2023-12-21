@@ -3,11 +3,38 @@ import HashMap "mo:base/HashMap";
 import Utilities "../../utilities";
 module {
 
-  public class LeadeerboardComposite() {
+  public class LeaderboardComposite() {
     private var seasonLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, Text> = HashMap.HashMap<T.SeasonId, Text>(100, Utilities.eqNat16, Utilities.hashNat16);
     private var monthlyLeaderboardCanisterIds : HashMap.HashMap<T.MonthlyLeaderboardKey, Text> = HashMap.HashMap<T.MonthlyLeaderboardKey, Text>(100, Utilities.eqMonthlyKey, Utilities.hashMonthlyKey);
     private var weeklyLeaderboardCanisterIds : HashMap.HashMap<T.WeeklyLeaderboardKey, Text> = HashMap.HashMap<T.WeeklyLeaderboardKey, Text>(100, Utilities.eqWeeklyKey, Utilities.hashWeeklyKey);
 
+   
+    public func setStableData(
+      stable_season_leaderboard_canister_ids:  [(T.SeasonId, Text)],
+      stable_monthly_leaderboard_canister_ids:  [(T.MonthlyLeaderboardKey, Text)],
+      stable_weekly_leaderboard_canister_ids:  [(T.WeeklyLeaderboardKey, Text)]) {
+
+      seasonLeaderboardCanisterIds := HashMap.fromIter<T.SeasonId, Text>(
+        stable_season_leaderboard_canister_ids.vals(),
+        stable_season_leaderboard_canister_ids.size(),
+        Utilities.eqNat16, 
+        Utilities.hashNat16
+      );
+
+      monthlyLeaderboardCanisterIds := HashMap.fromIter<T.MonthlyLeaderboardKey, Text>(
+        stable_monthly_leaderboard_canister_ids.vals(),
+        stable_monthly_leaderboard_canister_ids.size(),
+        Utilities.eqMonthlyKey, 
+        Utilities.hashMonthlyKey
+      );
+
+      weeklyLeaderboardCanisterIds := HashMap.fromIter<T.WeeklyLeaderboardKey, Text>(
+        stable_weekly_leaderboard_canister_ids.vals(),
+        stable_weekly_leaderboard_canister_ids.size(),
+        Utilities.eqWeeklyKey, 
+        Utilities.hashWeeklyKey
+      );
+    };
 /*
 public func getWeeklyLeaderboard(activeSeasonId : Nat16, activeGameweek : Nat8, limit : Nat, offset : Nat) : DTOs.PaginatedLeaderboard {
       switch (seasonLeaderboards.get(activeSeasonId)) {

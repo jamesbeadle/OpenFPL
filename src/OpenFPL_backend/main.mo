@@ -17,7 +17,7 @@ actor Self {
 
   let seasonManager = SeasonManager.SeasonManager(); 
 
-  //Functions containing inter canister calls that cannot be query functions:
+  //Functions containing inter-canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>  {
     return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek);
   };

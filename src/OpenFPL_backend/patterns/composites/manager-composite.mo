@@ -13,6 +13,22 @@ module {
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);    
 
+   
+    public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 
+      managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
+        stable_managers.vals(),
+        stable_managers.size(),
+        Text.equal,
+        Text.hash
+      );
+      profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
+        stable_profile_picture_canister_ids.vals(),
+        stable_profile_picture_canister_ids.size(),
+        Text.equal,
+        Text.hash
+      );
+    };
+    
     public func updateManager(principalId: Text, manager: ?T.Manager, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : T.Manager {
         
         switch(manager){

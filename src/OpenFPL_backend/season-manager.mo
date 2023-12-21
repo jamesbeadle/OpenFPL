@@ -23,6 +23,7 @@ import SeasonComposite "patterns/composites/season-composite";
 import PlayerComposite "patterns/composites/player-composite";
 import ClubComposite "patterns/composites/club-composite";
 import ManagerComposite "patterns/composites/manager-composite";
+import LeaderboardComposite "patterns/composites/leaderboard-composite";
 import Utilities "utilities";
 import CanisterIds "CanisterIds";
 
@@ -33,16 +34,11 @@ module {
     let strategyManager = StrategyManager.StrategyManager();
     let managerComposite = ManagerComposite.ManagerComposite();
     let playerComposite = PlayerComposite.PlayerComposite();
+    let clubComposite = ClubComposite.ClubComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
+    let leaderboardComposite = LeaderboardComposite.LeaderboardComposite();
     var timers: [T.TimerInfo] = [];
     
-
-    let tokenCanister = actor (CanisterIds.TOKEN_CANISTER_ID) : actor {
-      icrc1_name : () -> async Text;
-      icrc1_total_supply : () -> async Nat;
-      icrc1_balance_of : (T.Account) -> async Nat;
-    };
-
     private var systemState: T.SystemState = {
       calculationGameweek = 1;
       calculationMonth = 8;
@@ -70,6 +66,7 @@ module {
       stable_next_season_id: T.SeasonId,
       stable_next_fixture_id: T.FixtureId,
       stable_managers: [(T.PrincipalId, T.Manager)],
+      stable_clubs: [T.Club],
       stable_players: [T.Player],
       stable_seasons: [T.Season],
       stable_profile_picture_canister_ids:  [(T.PrincipalId, Text)],
@@ -79,48 +76,14 @@ module {
 
       systemState := stable_system_state;
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
-      nextClubId := stable_next_club_id;
-      nextPlayerId := stable_next_player_id;
-      nextSeasonId := stable_next_season_id;
-      nextFixtureId := stable_next_fixture_id;
-       
-      managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
-        stable_managers.vals(),
-        stable_managers.size(),
-        Text.equal,
-        Text.hash,
-      );
-
-      players := List.fromArray(stable_players);
-      seasons := List.fromArray(stable_seasons);
-
-      profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
-        stable_profile_picture_canister_ids.vals(),
-        stable_profile_picture_canister_ids.size(),
-        Text.equal,
-        Text.hash,
-      );
-
-      seasonLeaderboardCanisterIds := HashMap.fromIter<T.SeasonId, Text>(
-        stable_season_leaderboard_canister_ids.vals(),
-        stable_season_leaderboard_canister_ids.size(),
-        Utilities.eqNat16, 
-        Utilities.hashNat16
-      );
-
-      monthlyLeaderboardCanisterIds := HashMap.fromIter<T.MonthlyLeaderboardKey, Text>(
-        stable_monthly_leaderboard_canister_ids.vals(),
-        stable_monthly_leaderboard_canister_ids.size(),
-        Utilities.eqMonthlyKey, 
-        Utilities.hashMonthlyKey
-      );
-
-      weeklyLeaderboardCanisterIds := HashMap.fromIter<T.WeeklyLeaderboardKey, Text>(
-        stable_weekly_leaderboard_canister_ids.vals(),
-        stable_weekly_leaderboard_canister_ids.size(),
-        Utilities.eqWeeklyKey, 
-        Utilities.hashWeeklyKey
-      );
+      clubComposite.setStableData(stable_next_club_id, stable_clubs);
+      playerComposite.setStableData(stable_next_player_id, stable_players);
+      seasonComposite.setStableData(stable_next_season_id, stable_next_fixture_id, stable_seasons);
+      managerComposite.setStableData(stable_managers, stable_profile_picture_canister_ids);
+      leaderboardComposite.setStableData(
+        stable_season_leaderboard_canister_ids,
+        stable_monthly_leaderboard_canister_ids,
+        stable_weekly_leaderboard_canister_ids);      
     };
 
     public func gameweekBegin() : async () {
