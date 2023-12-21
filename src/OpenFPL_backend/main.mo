@@ -1,16 +1,17 @@
+import Array "mo:base/Array";
+import Buffer "mo:base/Buffer";
+import Int "mo:base/Int";
+import Iter "mo:base/Iter";
+import List "mo:base/List";
+import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
-import Array "mo:base/Array";
 import Timer "mo:base/Timer";
-import Buffer "mo:base/Buffer";
-import Iter "mo:base/Iter";
-import Int "mo:base/Int";
-import Principal "mo:base/Principal";
-import List "mo:base/List";
+
+import Countries "Countries";
+import DTOs "DTOs";
 import SeasonManager "season-manager";
 import T "types";
-import DTOs "DTOs";
-import Countries "Countries";
 
 actor Self {
 
