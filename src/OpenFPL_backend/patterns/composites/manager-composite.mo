@@ -41,20 +41,6 @@ module {
       let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
       managers.put(principalId, newManager);
       return #ok();
-
-      
-      if (userProfiles.get(principalName) == null) {
-        let newProfile : T.Profile = {
-          principalName = principalName;
-          displayName = displayName;
-          profilePictureCanisterId = "";
-          termsAccepted = false;
-          favouriteTeamId = 0;
-          createDate = now();
-        };
-
-        userProfiles.put(principalName, newProfile);
-      };
     };
 
 
@@ -170,7 +156,7 @@ module {
         return newManager;
     };
     
-    public func updateManager(principalId: Text, manager: ?T.Manager, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
+    public func updateManager(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
         
         let manager = managers.get(principalId);
         switch(manager){
@@ -256,47 +242,58 @@ module {
         };
     };
 
-    public func updateUsername(principalId: Text, manager: ?T.Manager, updatedUsername: Text) : ?T.Manager {
+    public func updateUsername(principalId: Text, updatedUsername: Text) : async Result.Result<(), T.Error> {
         
-        switch(manager){
-            case (null){
-            return null;
-            };
-            case (?foundManager){
+      if(not isUsernameValid(updatedUsername)){
+        return #err(#InvalidData);
+      };
+
+      if(not isUsernameAvailable(updatedUsername)){
+        return #err(#NotAllowed);
+      };
+
+      let manager = managers.get(principalId);
+
+      switch(manager){
+          case (null){
+            return #err(#NotFound);
+          };
+          case (?foundManager){
             let updatedManager: T.Manager = {
-                principalId = foundManager.principalId;
-                username = foundManager.username;
-                favouriteClubId = foundManager.favouriteClubId;
-                createDate = foundManager.createDate;
-                termsAccepted = foundManager.termsAccepted;
-                profilePictureCanisterId = foundManager.profilePictureCanisterId;
-                transfersAvailable = foundManager.transfersAvailable;
-                bankQuarterMillions = foundManager.bankQuarterMillions;
-                playerIds = foundManager.playerIds;
-                captainId = foundManager.captainId;
-                goalGetterGameweek = foundManager.goalGetterGameweek;
-                goalGetterPlayerId = foundManager.goalGetterPlayerId;
-                passMasterGameweek = foundManager.passMasterGameweek;
-                passMasterPlayerId = foundManager.passMasterPlayerId;
-                noEntryGameweek = foundManager.noEntryGameweek;
-                noEntryPlayerId = foundManager.noEntryPlayerId;
-                teamBoostGameweek = foundManager.teamBoostGameweek;
-                teamBoostClubId = foundManager.teamBoostClubId;
-                safeHandsGameweek = foundManager.safeHandsGameweek;
-                safeHandsPlayerId = foundManager.safeHandsPlayerId;
-                captainFantasticGameweek = foundManager.captainFantasticGameweek;
-                captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
-                countrymenGameweek = foundManager.countrymenGameweek;
-                countrymenCountryId = foundManager.countrymenCountryId;
-                prospectsGameweek = foundManager.prospectsGameweek;
-                braceBonusGameweek = foundManager.braceBonusGameweek;
-                hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
-                transferWindowGameweek = foundManager.transferWindowGameweek;
-                history = foundManager.history;
+              principalId = foundManager.principalId;
+              username = updatedUsername;
+              favouriteClubId = foundManager.favouriteClubId;
+              createDate = foundManager.createDate;
+              termsAccepted = foundManager.termsAccepted;
+              profilePictureCanisterId = foundManager.profilePictureCanisterId;
+              transfersAvailable = foundManager.transfersAvailable;
+              bankQuarterMillions = foundManager.bankQuarterMillions;
+              playerIds = foundManager.playerIds;
+              captainId = foundManager.captainId;
+              goalGetterGameweek = foundManager.goalGetterGameweek;
+              goalGetterPlayerId = foundManager.goalGetterPlayerId;
+              passMasterGameweek = foundManager.passMasterGameweek;
+              passMasterPlayerId = foundManager.passMasterPlayerId;
+              noEntryGameweek = foundManager.noEntryGameweek;
+              noEntryPlayerId = foundManager.noEntryPlayerId;
+              teamBoostGameweek = foundManager.teamBoostGameweek;
+              teamBoostClubId = foundManager.teamBoostClubId;
+              safeHandsGameweek = foundManager.safeHandsGameweek;
+              safeHandsPlayerId = foundManager.safeHandsPlayerId;
+              captainFantasticGameweek = foundManager.captainFantasticGameweek;
+              captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+              countrymenGameweek = foundManager.countrymenGameweek;
+              countrymenCountryId = foundManager.countrymenCountryId;
+              prospectsGameweek = foundManager.prospectsGameweek;
+              braceBonusGameweek = foundManager.braceBonusGameweek;
+              hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+              transferWindowGameweek = foundManager.transferWindowGameweek;
+              history = foundManager.history;
             };
-            return ?updatedManager;
-            };
-        };
+            managers.put(principalId, updatedManager);
+            return #ok();
+          };
+      };
     };
         
     public func isUsernameAvailable(username: Text) : Bool{

@@ -229,7 +229,7 @@ module {
     };
 
     public func createProfile(principalId: Text, createProfileDTO: DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
-      return managerComposite.createProfile(principalId, createProfileDTO);
+      return await managerComposite.createProfile(principalId, createProfileDTO);
     };
 
     public func saveFantasyTeam(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error>{
@@ -238,29 +238,11 @@ module {
         return #err(#InvalidTeamError);
       };
 
-      return managerProfileManager.updateManager(principalId, managers.get(principalId), updatedFantasyTeam);
+      return await managerComposite.updateManager(principalId, updatedFantasyTeam);
     };
 
     public func updateUsername(principalId: Text, updatedUsername: Text) : async Result.Result<(), T.Error>{
-      
-      if(not managerProfileManager.isUsernameValid(updatedUsername)){
-        return #err(#InvalidData);
-      };
-
-      if(not managerProfileManager.isUsernameAvailable(updatedUsername)){
-        return #err(#NotAllowed);
-      };
-
-      let updatedManager = managerProfileManager.updateUsername(principalId, managers.get(principalId), updatedUsername);
-      switch(updatedManager){
-        case (null){
-          return #err(#NotFound);
-        };
-        case(?foundUpdatedManager){
-          managers.put(principalId, foundUpdatedManager);
-          return #ok();
-        };
-      }
+      return await managerComposite.updateUsername(principalId, updatedUsername);
     };
     
     public func isUsernameAvailable(username: Text) : Bool{
