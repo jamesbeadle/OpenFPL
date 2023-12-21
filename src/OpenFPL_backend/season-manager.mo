@@ -11,6 +11,8 @@ import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Blob "mo:base/Blob";
 import Iter "mo:base/Iter";
+import Buffer "mo:base/Buffer";
+import SHA224 "./lib/SHA224";
 import SnapshotFactory "patterns/snapshot-factory";
 import StrategyManager "patterns/strategy-manager";
 import SeasonComposite "patterns/composites/season-composite";
@@ -144,6 +146,21 @@ module {
       transferWindowStartCallback,
       transferWindowEndCallback
     );
+
+      
+    private func updateCacheHash(category : Text) : async () {
+      let hashBuffer = Buffer.fromArray<T.DataCache>([]);
+
+      for (hashObj in Iter.fromList(dataCacheHashes)) {
+        if (hashObj.category == category) {
+          let randomHash = await SHA224.getRandomHash();
+          hashBuffer.add({ category = hashObj.category; hash = randomHash });
+        } else { hashBuffer.add(hashObj) };
+      };
+
+      dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
+    };
+
     
 
     

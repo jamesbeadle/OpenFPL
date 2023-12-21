@@ -3,6 +3,7 @@ import DTOs "../../DTOs";
 import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
+import Time "mo:base/Time";
 
 module {
 
@@ -61,7 +62,7 @@ module {
       }
     };
 
-    public func getGameweekKickOffTimes(seasonId: T.SeasonId, gamweek: T.GameweekNumber) : [Int]{
+    public func getGameweekKickOffTimes(seasonId: T.SeasonId, gamweek: T.GameweekNumber) : [Int] {
 
       let fixtures = getFixtures(seasonId, gamweek);
 
@@ -82,10 +83,71 @@ module {
       return Buffer.toArray(uniqueKickOffTimes);
     };
 
-   
-    
-    public func updateFixtureStatuses(fixtureStatus: T.FixtureStatus){
+    public func setFixturesToActive(seasonId: T.SeasonId, gamweek: T.GameweekNumber) : [T.Fixture]{
       
+      let currentSeason = List.find<T.Season>(
+          seasons,
+          func(season : T.Season) : Bool {
+            return season.id == seasonId;
+          },
+        );
+
+      switch(currentSeason){
+        case (null) { return [] };
+        case (?foundSeason){
+
+          let fixturesToActivate = List.filter<T.Fixture>(
+            foundSeason.fixtures,
+            func(fixture : T.Fixture) : Bool {
+              return fixture.status == #Unplayed and fixture.kickOff < Time.now();
+            },
+          );
+          
+          seasons := List.map<T.Season, T.Season>(
+            seasons,
+            func(season : T.Season) : T.Season {
+              if (season.id == seasonId) {
+                let updatedFixtures = List.map<T.Fixture, T.Fixture>(
+                  season.fixtures,
+                  func(fixture : T.Fixture) : T.Fixture {
+                    if (List.some(fixturesToActivate, func(activatedFixture : T.Fixture) : Bool { return activatedFixture.id == fixture.id })) {
+                      return {
+                        id = fixture.id;
+                        seasonId = fixture.seasonId;
+                        gameweek = fixture.gameweek;
+                        kickOff = fixture.kickOff;
+                        homeClubId = fixture.homeClubId;
+                        awayClubId = fixture.awayClubId;
+                        homeGoals = fixture.homeGoals;
+                        awayGoals = fixture.awayGoals;
+                        status = #Active;
+                        events = fixture.events;
+                        highestScoringPlayerId = fixture.highestScoringPlayerId;
+                      };
+                    }
+                    else
+                    { return fixture; };
+                  },
+                );
+
+                return {
+                  id = season.id;
+                  name = season.name;
+                  year = season.year;
+                  fixtures = updatedFixtures;
+                  postponedFixtures = season.postponedFixtures;
+                };
+              } else {
+                return season;
+              };
+            },
+          );
+
+          return List.toArray(fixturesToActivate);
+
+        };
+      };
+
     };
     
 
