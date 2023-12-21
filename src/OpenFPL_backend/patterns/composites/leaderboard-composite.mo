@@ -278,6 +278,79 @@ public func getWeeklyLeaderboard(activeSeasonId : Nat16, activeGameweek : Nat8, 
 
 
 
+    public func getWeeklyLeaderboardEntry(managerId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : ?T.LeaderboardEntry {
+
+      for ((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()) {
+        if (seasonId == seasonId) {
+          let weeklyLeaderboard = List.find<T.Leaderboard>(
+            seasonLeaderboards.gameweekLeaderboards,
+            func(gameweekLeaderboard : T.Leaderboard) : Bool {
+              return gameweekLeaderboard.gameweek == gameweek;
+            },
+          );
+          switch (weeklyLeaderboard) {
+            case (null) {};
+            case (?foundWeeklyLeaderboard) {
+
+              return List.find<T.LeaderboardEntry>(
+                foundWeeklyLeaderboard.entries,
+                func(entry : T.LeaderboardEntry) : Bool {
+                  return entry.principalId == managerId;
+                },
+              );
+            };
+          };
+        };
+      };
+
+      return null;
+    };
+
+    public func getMonthlyLeaderboardEntry(managerId : Text, seasonId : T.SeasonId, clubId : T.TeamId) : ?T.LeaderboardEntry {
+
+      for ((seasonId, clubLeaderboards) in monthlyLeaderboards.entries()) {
+        if (seasonId == seasonId) {
+
+          let clubLeaderboard = List.find<T.ClubLeaderboard>(
+            clubLeaderboards,
+            func(leaderboard : T.ClubLeaderboard) : Bool {
+              return leaderboard.clubId == clubId;
+            },
+          );
+
+          switch (clubLeaderboard) {
+            case (null) {};
+            case (?foundClubLeaderboard) {
+              return List.find<T.LeaderboardEntry>(
+                foundClubLeaderboard.entries,
+                func(entry : T.LeaderboardEntry) : Bool {
+                  return entry.principalId == managerId;
+                },
+              );
+            };
+          };
+        };
+      };
+
+      return null;
+    };
+
+    public func getSeasonLeaderboardEntry(managerId : Text, seasonId : T.SeasonId) : ?T.LeaderboardEntry {
+
+      for ((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()) {
+        if (seasonId == seasonId) {
+          return List.find<T.LeaderboardEntry>(
+            seasonLeaderboards.seasonLeaderboard.entries,
+            func(entry : T.LeaderboardEntry) : Bool {
+              return entry.principalId == managerId;
+            },
+          );
+        };
+      };
+
+      return null;
+    };
+
 
 
 

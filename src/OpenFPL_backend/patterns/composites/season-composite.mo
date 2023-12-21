@@ -4,6 +4,7 @@ import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Time "mo:base/Time";
+import Result "mo:base/Result";
 import Utilities "../../utilities";
 
 module {
@@ -248,7 +249,9 @@ module {
 
     };
 
-
+    public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async Result.Result<Text,Text> {
+      return #ok("test");
+    };
 
         /*
       let activeSeasonId = seasonManager.getActiveSeasonId();

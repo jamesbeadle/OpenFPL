@@ -296,6 +296,10 @@ module {
       };
     };
         
+
+
+
+
     public func isUsernameAvailable(username: Text) : Bool{
         return false;
     };
@@ -319,6 +323,10 @@ module {
     public func resetTransfers() : (){
 
     };
+
+
+
+
 
    //include all profile info for caller
     //include all manager info
@@ -422,52 +430,6 @@ Integration points for authentication and authorization if needed.
       };
     };
 
-    public func updateDisplayName(principalName : Text, displayName : Text) : () {
-      let existingTeam = fantasyTeams.get(principalName);
-      switch (existingTeam) {
-        case (null) {};
-        case (?foundTeam) {
-          if (foundTeam.fantasyTeam.teamName == displayName) {
-            return;
-          };
-
-          let updatedFantasyTeam : T.FantasyTeam = {
-            principalId = foundTeam.fantasyTeam.principalId;
-            teamName = displayName;
-            favouriteTeamId = foundTeam.fantasyTeam.favouriteTeamId;
-            transfersAvailable = foundTeam.fantasyTeam.transfersAvailable;
-            bankBalance = foundTeam.fantasyTeam.bankBalance;
-            playerIds = foundTeam.fantasyTeam.playerIds;
-            captainId = foundTeam.fantasyTeam.captainId;
-            goalGetterGameweek = foundTeam.fantasyTeam.goalGetterGameweek;
-            goalGetterPlayerId = foundTeam.fantasyTeam.goalGetterPlayerId;
-            passMasterGameweek = foundTeam.fantasyTeam.passMasterGameweek;
-            passMasterPlayerId = foundTeam.fantasyTeam.passMasterPlayerId;
-            noEntryGameweek = foundTeam.fantasyTeam.noEntryGameweek;
-            noEntryPlayerId = foundTeam.fantasyTeam.noEntryPlayerId;
-            teamBoostGameweek = foundTeam.fantasyTeam.teamBoostGameweek;
-            teamBoostTeamId = foundTeam.fantasyTeam.teamBoostTeamId;
-            safeHandsGameweek = foundTeam.fantasyTeam.safeHandsGameweek;
-            safeHandsPlayerId = foundTeam.fantasyTeam.safeHandsPlayerId;
-            captainFantasticGameweek = foundTeam.fantasyTeam.captainFantasticGameweek;
-            captainFantasticPlayerId = foundTeam.fantasyTeam.captainFantasticPlayerId;
-            countrymenGameweek = foundTeam.fantasyTeam.countrymenGameweek;
-            countrymenCountryId = foundTeam.fantasyTeam.countrymenCountryId;
-            prospectsGameweek = foundTeam.fantasyTeam.prospectsGameweek;
-            braceBonusGameweek = foundTeam.fantasyTeam.braceBonusGameweek;
-            hatTrickHeroGameweek = foundTeam.fantasyTeam.hatTrickHeroGameweek;
-            transferWindowGameweek = foundTeam.fantasyTeam.transferWindowGameweek;
-          };
-
-          let updatedUserFantasyTeam : T.UserFantasyTeam = {
-            fantasyTeam = updatedFantasyTeam;
-            history = foundTeam.history;
-          };
-
-          fantasyTeams.put(principalName, updatedUserFantasyTeam);
-        };
-      };
-    };
 
     public func updateFavouriteTeam(principalName : Text, favouriteTeamId : Nat16) : () {
       let existingTeam = fantasyTeams.get(principalName);
@@ -544,79 +506,6 @@ Integration points for authentication and authorization if needed.
     };
 
     
-
-    public func getWeeklyLeaderboardEntry(managerId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : ?T.LeaderboardEntry {
-
-      for ((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()) {
-        if (seasonId == seasonId) {
-          let weeklyLeaderboard = List.find<T.Leaderboard>(
-            seasonLeaderboards.gameweekLeaderboards,
-            func(gameweekLeaderboard : T.Leaderboard) : Bool {
-              return gameweekLeaderboard.gameweek == gameweek;
-            },
-          );
-          switch (weeklyLeaderboard) {
-            case (null) {};
-            case (?foundWeeklyLeaderboard) {
-
-              return List.find<T.LeaderboardEntry>(
-                foundWeeklyLeaderboard.entries,
-                func(entry : T.LeaderboardEntry) : Bool {
-                  return entry.principalId == managerId;
-                },
-              );
-            };
-          };
-        };
-      };
-
-      return null;
-    };
-
-    public func getMonthlyLeaderboardEntry(managerId : Text, seasonId : T.SeasonId, clubId : T.TeamId) : ?T.LeaderboardEntry {
-
-      for ((seasonId, clubLeaderboards) in monthlyLeaderboards.entries()) {
-        if (seasonId == seasonId) {
-
-          let clubLeaderboard = List.find<T.ClubLeaderboard>(
-            clubLeaderboards,
-            func(leaderboard : T.ClubLeaderboard) : Bool {
-              return leaderboard.clubId == clubId;
-            },
-          );
-
-          switch (clubLeaderboard) {
-            case (null) {};
-            case (?foundClubLeaderboard) {
-              return List.find<T.LeaderboardEntry>(
-                foundClubLeaderboard.entries,
-                func(entry : T.LeaderboardEntry) : Bool {
-                  return entry.principalId == managerId;
-                },
-              );
-            };
-          };
-        };
-      };
-
-      return null;
-    };
-
-    public func getSeasonLeaderboardEntry(managerId : Text, seasonId : T.SeasonId) : ?T.LeaderboardEntry {
-
-      for ((seasonId, seasonLeaderboards) in seasonLeaderboards.entries()) {
-        if (seasonId == seasonId) {
-          return List.find<T.LeaderboardEntry>(
-            seasonLeaderboards.seasonLeaderboard.entries,
-            func(entry : T.LeaderboardEntry) : Bool {
-              return entry.principalId == managerId;
-            },
-          );
-        };
-      };
-
-      return null;
-    };
 
 
 
