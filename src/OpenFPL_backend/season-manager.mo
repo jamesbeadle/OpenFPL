@@ -200,7 +200,7 @@ module {
       return playerComposite.getPlayers(systemState.calculationSeason);
     };
 
-    public func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.PlayerDTO] {
+    public func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.PlayerDetailDTO] {
       return playerComposite.getDetailedPlayers(seasonId, gameweek);
     };
 

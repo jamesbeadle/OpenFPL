@@ -32,7 +32,6 @@ module {
 
     public func getPlayers(currentSeasonId: T.SeasonId) : [DTOs.PlayerDTO] {
 
-
       let playerDTOs = List.map<T.Player, DTOs.PlayerDTO>(
         players, 
         func(player : T.Player) : DTOs.PlayerDTO {
@@ -70,7 +69,9 @@ module {
       return List.toArray(playerDTOs);
     };
 
-
+    public func getDetailedPlayers(currentSeasonId: T.SeasonId, playerId: T.PlayerId) : [DTOs.PlayerDetailDTO] {
+      return []; 
+    };
 
 
 
