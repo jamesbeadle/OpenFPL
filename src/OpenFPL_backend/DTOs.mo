@@ -107,7 +107,7 @@ module DTOs {
 
   public type ProfileDTO = {
     principalId : Text;
-    displayName : Text;
+    username : Text;
     profilePicture : Blob;
     favouriteClubId : Nat16;
     createDate : Int;
@@ -215,7 +215,7 @@ module DTOs {
 
   public type ManagerDTO = {
     principalId : Text;
-    displayName : Text;
+    username : Text;
     profilePicture : Blob;
     favouriteClubId : T.ClubId;
     createDate : Int;

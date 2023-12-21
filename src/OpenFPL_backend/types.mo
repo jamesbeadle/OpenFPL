@@ -61,7 +61,7 @@ module Types {
 
   public type Manager = {
     principalId : Text;
-    displayName : Text;
+    username : Text;
     termsAccepted : Bool;
     profilePictureCanisterId : Text;
     favouriteClubId : ClubId;

@@ -16,6 +16,7 @@ import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
+import Blob "mo:base/Blob";
 import SnapshotManager "patterns/snapshot-manager";
 import SnapshotFactory "patterns/snapshot-factory";
 import PlayerComposite "patterns/player-composite";
@@ -560,8 +561,38 @@ module {
       };
     };
     
-    public func getProfile(principalId: Text){
+    public func getProfile(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
+      let manager = managers.get(principalId);
+      switch(manager){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundManager){
+          
+          var profilePicture = Blob.fromArray([]);
+          var canUpdateFavouriteClub = true;
 
+          if(Text.size(foundManager.profilePictureCanisterId) > 0){
+            let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
+              getProfilePicture : (principalId: Text) -> async Blob;
+            };
+            profilePicture := await profile_picture_canister.getProfilePicture(principalId);
+          };
+          
+          canUpdateFavouriteClub := foundManager.favouriteClubId == 0 or not seasonActive();
+
+          let profileDTO: DTOs.ProfileDTO = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            profilePicture = profilePicture;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            canUpdateFavouriteClub = canUpdateFavouriteClub;
+          };
+
+          return #ok(profileDTO);
+        };
+      }
     };
     
     public func getManager(principalId: Text){
@@ -578,7 +609,9 @@ module {
 
     };
 
-    public func seasonActive() : Bool {
+    //Private functions used above
+
+    private func seasonActive() : Bool {
 /*
       if (activeGameweek > 1) {
         return true;
