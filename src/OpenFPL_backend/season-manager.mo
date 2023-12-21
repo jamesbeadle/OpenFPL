@@ -225,20 +225,11 @@ module {
     };
     
     public func getTotalManagers() : Nat{
-      let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
-      return Iter.size(managersWithTeams);
+      return managerComposite.getTotalManagers();
     };
 
     public func createProfile(principalId: Text, createProfileDTO: DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
-      
-      var profilePictureCanisterId = "";
-      if(createProfileDTO.profilePicture.size() > 0){
-        profilePictureCanisterId := managerProfileManager.updateProfilePicture(principalId, createProfileDTO.profilePicture);
-      };
-
-      let newManager = managerProfileManager.buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
-      managers.put(principalId, newManager);
-      return #ok();
+      return managerComposite.createProfile(principalId, createProfileDTO);
     };
 
     public func saveFantasyTeam(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error>{
@@ -247,10 +238,7 @@ module {
         return #err(#InvalidTeamError);
       };
 
-      let updatedManager = managerProfileManager.updateManager(principalId, managers.get(principalId), updatedFantasyTeam);
-      managers.put(principalId, updatedManager);
-
-      return #ok();
+      return managerProfileManager.updateManager(principalId, managers.get(principalId), updatedFantasyTeam);
     };
 
     public func updateUsername(principalId: Text, updatedUsername: Text) : async Result.Result<(), T.Error>{
