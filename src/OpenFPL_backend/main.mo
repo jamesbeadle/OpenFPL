@@ -10,6 +10,7 @@ import List "mo:base/List";
 import SeasonManager "season-manager";
 import T "types";
 import DTOs "DTOs";
+import Countries "Countries";
 
 actor Self {
 
@@ -123,20 +124,20 @@ actor Self {
     return await seasonManager.getSeasonLeaderboard(seasonId);
   };
 
-  public shared query ({ caller }) func getProfile() : async Result.Result<[DTOs.ProfileDTO], T.Error>  {
+  public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error>  {
     assert not Principal.isAnonymous(caller);
-    return #ok(seasonManager.getProfile(Principal.toText(caller)));
+    return await seasonManager.getProfile(Principal.toText(caller));
   };
 
-  public shared query func getManager(principalId: Text) : async Result.Result<[DTOs.ProfileDTO], T.Error>  {
-    return #ok(seasonManager.getProfile(principalId));
+  public shared func getManager(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error>  {
+    return await seasonManager.getProfile(principalId);
   };
 
-  public shared query func getTotalManagers() : async Result.Result<[Nat], T.Error>  {
+  public shared query func getTotalManagers() : async Result.Result<Nat, T.Error>  {
     return #ok(seasonManager.getTotalManagers());
   };
 
-  public shared query func getSystemState() : async Result.Result<[DTOs.SystemStateDTO], T.Error>  {
+  public shared query func getSystemState() : async Result.Result<DTOs.SystemStateDTO, T.Error>  {
     return #ok(seasonManager.getSystemState());
   };
 
@@ -149,7 +150,7 @@ actor Self {
   };
 
   public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error>  {
-    return #ok(List.toArray(countriesInstance.countries));
+    return #ok(Countries.countries);
   };
 
   public shared query ({ caller }) func isUsernameAvailable(username : Text) : async Bool {

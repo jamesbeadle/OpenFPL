@@ -488,7 +488,7 @@ module {
     };
     
 
-    public func getSystemState() : async DTOs.SystemStateDTO {
+    public func getSystemState() : DTOs.SystemStateDTO {
       return systemState;
     };
     
@@ -595,14 +595,14 @@ module {
       }
     };
     
+    /* Will need when profile DTO isn't enough
     public func getManager(principalId: Text){
-
+      
     };
+    */
     
-    public func getTotalManagers(){
-
-      //fantasyTeams.size();
-
+    public func getTotalManagers() : Nat{
+      let totalManagers = managers.size();
     };
     
     public func isUsernameAvailable(username: Text){
