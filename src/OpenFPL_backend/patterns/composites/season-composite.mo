@@ -4,6 +4,7 @@ import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Time "mo:base/Time";
+import Utilities "../../utilities";
 
 module {
 
@@ -150,15 +151,69 @@ module {
 
     };
     
+    public func setFixturesToCompleted(seasonId: T.SeasonId, gamweek: T.GameweekNumber){
+      let currentSeason = List.find<T.Season>(
+          seasons,
+          func(season : T.Season) : Bool {
+            return season.id == seasonId;
+          },
+        );
 
-/*
- public func setActiveFixtures() : T.TimerInfo{
-      //update fixture status 
-      //return timer for 2 hours after games finish
+      switch(currentSeason){
+        case (null) { };
+        case (?foundSeason){
+
+          let fixturesToComplete = List.filter<T.Fixture>(
+            foundSeason.fixtures,
+            func(fixture : T.Fixture) : Bool {
+              return fixture.status == #Active and (fixture.kickOff + (Utilities.getHour() * 2)) < Time.now();
+            },
+          );
+          
+          seasons := List.map<T.Season, T.Season>(
+            seasons,
+            func(season : T.Season) : T.Season {
+              if (season.id == seasonId) {
+                let updatedFixtures = List.map<T.Fixture, T.Fixture>(
+                  season.fixtures,
+                  func(fixture : T.Fixture) : T.Fixture {
+                    if (List.some(fixturesToComplete, func(completedFixture : T.Fixture) : Bool { return completedFixture.id == fixture.id })) {
+                      return {
+                        id = fixture.id;
+                        seasonId = fixture.seasonId;
+                        gameweek = fixture.gameweek;
+                        kickOff = fixture.kickOff;
+                        homeClubId = fixture.homeClubId;
+                        awayClubId = fixture.awayClubId;
+                        homeGoals = fixture.homeGoals;
+                        awayGoals = fixture.awayGoals;
+                        status = #Complete;
+                        events = fixture.events;
+                        highestScoringPlayerId = fixture.highestScoringPlayerId;
+                      };
+                    }
+                    else
+                    { return fixture; };
+                  },
+                );
+
+                return {
+                  id = season.id;
+                  name = season.name;
+                  year = season.year;
+                  fixtures = updatedFixtures;
+                  postponedFixtures = season.postponedFixtures;
+                };
+              } else {
+                return season;
+              };
+            },
+          );
+        };
+      };
+
     };
-    //PlayerComposite //implements composite allows changes to seasons and fixtures
-    
-*/
+
 
 
         /*

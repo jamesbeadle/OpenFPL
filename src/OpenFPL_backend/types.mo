@@ -40,8 +40,8 @@ module Types {
   public type FixtureStatus = {
     #Unplayed;
     #Active;
-    #Completed;
-    #DataFinalised;
+    #Complete;
+    #Finalised;
   };
 
   public type PlayerEventType = {
