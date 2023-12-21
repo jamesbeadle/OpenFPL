@@ -151,328 +151,22 @@ module {
       
     };
 
-
-
-
-
-
-
-
-
-
-      /* 
-      
-
-
-    public func fixtureConsensusReached(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, consensusPlayerEventData : [T.PlayerEventData]) : async () {
-      var getSeasonId = seasonId;
-      if (getSeasonId == 0) {
-        getSeasonId := activeSeasonId;
-      };
-
-      var getGameweekNumber = gameweekNumber;
-      if (getGameweekNumber == 0) {
-        getGameweekNumber := activeGameweek;
-      };
-
-      if (interestingGameweek < activeGameweek) {
-        interestingGameweek := activeGameweek;
-      };
-
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-
-      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
-        let fixture = activeFixtures[i];
-        if (fixture.id == fixtureId and fixture.status == 2) {
-          let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
-          await finaliseFixture(updatedFixture);
-        };
-      };
-
-      await checkGameweekFinished();
-      await updateCacheHash("fixtures");
-      await updateCacheHash("weekly_leaderboard");
-      await updateCacheHash("monthly_leaderboards");
-      await updateCacheHash("season_leaderboard");
-      await updateCacheHash("system_state");
-      await updatePlayerEventDataCache();
-    };
-
-
-
-
-
-    public func finaliseFixture(fixture : T.Fixture) : async () {
-      let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
-      await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
-      await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
-    };
-
-    private func checkGameweekFinished() : async () {
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-      let remainingFixtures = Array.find(
-        activeFixtures,
-        func(fixture : T.Fixture) : Bool {
-          return fixture.status < 3;
-        },
-      );
-
-      if (Option.isNull(remainingFixtures)) {
-        await gameweekVerified();
-        await setNextGameweek();
-      };
-    };
-
-    private func gameweekVerified() : async () {
-      //await distributeRewards(); //IMPLEMENT POST SNS
-    };
-
-    public func setNextGameweek() : async () {
-      if (activeGameweek == 38) {
-        await seasonsInstance.createNewSeason(activeSeasonId);
-        await resetFantasyTeams();
-        await updateCacheHash("system_state");
-        await updateCacheHash("weekly_leaderboard");
-        await updateCacheHash("monthly_leaderboards");
-        await updateCacheHash("season_leaderboard");
-        return;
-      };
-
-      activeGameweek += 1;
-
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-
-      let gameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
-      switch (setAndBackupTimer) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(gameweekBeginDuration, "gameweekBeginExpired", 0);
-        };
-      };
-    };
-
-    public func intialFixturesConfirmed() : async () {
-      activeGameweek := 1;
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-
-      let initialGameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
-      switch (setAndBackupTimer) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(initialGameweekBeginDuration, "gameweekBeginExpired", 0);
-        };
-      };
-    };
-
-    public func getSeason(seasonId : T.SeasonId) : T.Season {
-      return seasonsInstance.getSeason(seasonId);
-    };
-
-    public func getActiveSeason() : T.Season {
-      return seasonsInstance.getSeason(activeSeasonId);
-    };
-
-    public func getActiveSeasonId() : Nat16 {
-      return activeSeasonId;
-    };
-
-    public func getActiveGameweek() : Nat8 {
-      return activeGameweek;
-    };
-
-    public func getInterestingGameweek() : Nat8 {
-      return interestingGameweek;
-    };
-
-    public func getFixtures() : [T.Fixture] {
-      return seasonsInstance.getSeasonFixtures(activeSeasonId);
-    };
-
-    public func getFixturesForSeason(seasonId : T.SeasonId) : [T.Fixture] {
-      return seasonsInstance.getSeasonFixtures(seasonId);
-    };
-
-    public func getGameweekFixtures(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [T.Fixture] {
-      return seasonsInstance.getGameweekFixtures(seasonId, gameweek);
-    };
-
-    public func getActiveGameweekFixtures() : [T.Fixture] {
-      return seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-    };
-
-    public func getSeasons() : [T.Season] {
-      return seasonsInstance.getSeasons();
-    };
-
-    public func addInitialFixtures(seasonId : T.SeasonId, fixtures : [T.Fixture]) : async () {
-      seasonsInstance.addInitialFixtures(seasonId, fixtures);
-    };
-
-    public func rescheduleFixture(fixtureId : T.FixtureId, currentFixtureGameweek : T.GameweekNumber, updatedFixtureGameweek : T.GameweekNumber, updatedFixtureDate : Int) : async () {
-
-      var allSeasons = List.fromArray(seasonsInstance.getSeasons());
-      allSeasons := List.map<T.Season, T.Season>(
-        allSeasons,
-        func(currentSeason : T.Season) : T.Season {
-          if (currentSeason.id == activeSeasonId) {
-            var updatedGameweeks : List.List<T.Gameweek> = List.nil();
-            var postponedFixtures : List.List<T.Fixture> = List.nil();
-
-            for (gameweek in Iter.fromList(currentSeason.gameweeks)) {
-              let postponedFixture = List.find<T.Fixture>(
-                gameweek.fixtures,
-                func(fixture : T.Fixture) : Bool {
-                  return fixture.id == fixtureId;
-                },
-              );
-
-              switch (postponedFixture) {
-                case (null) {};
-                case (?foundPostponedFixture) {
-                  postponedFixtures := List.push(foundPostponedFixture, currentSeason.postponedFixtures);
-                };
-              };
-            };
-
-            updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(
-              currentSeason.gameweeks,
-              func(gw : T.Gameweek) : T.Gameweek {
-                if (gw.number == currentFixtureGameweek) {
-                  return {
-                    canisterId = gw.canisterId;
-                    number = gw.number;
-                    fixtures = List.filter<T.Fixture>(
-                      gw.fixtures,
-                      func(fixture : T.Fixture) : Bool {
-                        return fixture.id != fixtureId;
-                      },
-                    );
-                  };
-                } else { return gw };
-              },
-            );
-
-            let updatedSeason : T.Season = {
-              id = currentSeason.id;
-              name = currentSeason.name;
-              year = currentSeason.year;
-              gameweeks = updatedGameweeks;
-              postponedFixtures = postponedFixtures;
-            };
-
-            return updatedSeason;
-          } else {
-            return currentSeason;
-          };
-        },
-      );
-      seasonsInstance.setSeasons(List.toArray(allSeasons));
-    };
-
-
-
-
-
-
-
-
-    private func updateCacheHash(category : Text) : async () {
-      let hashBuffer = Buffer.fromArray<T.DataCache>([]);
-
-      for (hashObj in Iter.fromList(dataCacheHashes)) {
-        if (hashObj.category == category) {
-          let randomHash = await SHA224.getRandomHash();
-          hashBuffer.add({ category = hashObj.category; hash = randomHash });
-        } else { hashBuffer.add(hashObj) };
-      };
-
-      dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
-    };
-
-
-
-
-
-
-    //recreate close gameweek timer to be 1 hour before the first fixture of the gameweek you are picking your team for
-
-    //recreate the jan transfer window timer to the next January 1st
-
-    //recreate the close jan transfer window timer for midnight on the 31st Jan
-
-    //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      */
-
-    //Callback functions called by main canister observer:
-
     public func gameweekBegin() : async () {
-
-      //snapshot manager / snapshot factory create snapshots of the fantasy teams as the current gameweek
-      //manager profile manager resets a users transfers
-
-
-
-
-
-
-      //await snapshotGameweek(systemState.calculationSeason, systemState.calculationGameweek);
-      //await resetTransfers();
-
+      snapshotManager.snapshotFantasyTeams();
+      managerProfileManager.resetFantasyTeams();  
     };
 
     
     public func gameKickOff() : async () {
-
-      //set fixture status to active (1)
-      
-      //set timers for when each game finishes to call the game completed expired timer
-
-
-      /*
-      let activeFixtures = seasonsInstance.getGameweekFixtures(systemState.calculationSeason, systemState.calculationGameweek);
-      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
-        if (activeFixtures[i].kickOff <= Time.now() and activeFixtures[i].status == 0) {
-
-          let updatedFixture = await seasonsInstance.updateStatus(systemState.calculationSeason, systemState.calculationGameweek, activeFixtures[i].id, 1);
-          let gameCompletedDuration : Timer.Duration = #nanoseconds(Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
-          switch (setAndBackupTimer) {
-            case (null) {};
-            case (?actualFunction) {
-              await actualFunction(gameCompletedDuration, "gameCompletedExpired", activeFixtures[i].id);
-            };
-          };
-        };
-      };
+      updateFixtureStatuses();
+      setGameCompletedTimers(); //Look for any active game and set completed 2 hours from kickoff
       await updateCacheHash("fixtures");
-      */
     };
 
     
     public func gameCompleted() : async () {
-      //update fixture status to complete (2) so proposals for the fixture data can be entered
-      //update the cache for the fixtures so users get the updated status about it being completed
-
-      //    let updatedFixture = await seasonsInstance.updateStatus(systemState.calculationSeason, systemState.calculationGameweek, activeFixtures[i].id, 2);
-      //await updateCacheHash("fixtures");
-
-      //Check if all games completed, if so:
-        //NEED TO CHECK IF JANUARY 1ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMERS TO BEGIN AND END THE TRANSFER WINDOW IF IT IS
-        
+      updateFixtureStatuses(); //update any active game that is 2 hours after it's kickoff to completed
+      await updateCacheHash("fixtures");        
     };
 
     public func loanExpiredCallback() : async () {
@@ -579,16 +273,12 @@ module {
       let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
       return Iter.size(managersWithTeams);
     };
-    
-    public func isUsernameAvailable(username: Text) : Bool{
-      return false;
-    };
 
     public func createProfile(principalId: Text, createProfileDTO: DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
       
       var profilePictureCanisterId = "";
       if(createProfileDTO.profilePicture.size() > 0){
-        profilePictureCanisterId := uploadProfilePicture(createProfileDTO.profilePicture);
+        profilePictureCanisterId := managerProfileManager.updateProfilePicture(principalId, createProfileDTO.profilePicture);
       };
 
       let newManager = managerProfileManager.buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
@@ -608,35 +298,31 @@ module {
       return #ok();
     };
 
-    private func uploadProfilePicture(picture: Blob) : Text {
-
-      //CHECK CURRENT CANISTER 
-      //IF IMAGE LIMIT REACHED CREATE NEW
-      //STORE IMAGE
-      //RETURN CANISTER ID
-
-      return "";
-    };
-
-    //Private functions used above
-
-    private func seasonActive() : Bool {
-/*
-      if (activeGameweek > 1) {
-        return true;
+    public func updateUsername(principalId: Text, updatedUsername: Text) : async Result.Result<(), T.Error>{
+      
+      if(not managerProfileManager.isUsernameValid(updatedUsername)){
+        return #err(#InvalidData);
       };
 
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-      if (List.some(List.fromArray(activeFixtures), func(fixture : T.Fixture) : Bool { return fixture.status > 0 })) {
-        return true;
-      };*/
+      if(not managerProfileManager.isUsernameAvailable(updatedUsername)){
+        return #err(#NotAllowed);
+      };
 
-      return false;
+      let updatedManager = managerProfileManager.updateUsername(principalId, managers.get(principalId), updatedUsername);
+      switch(updatedManager){
+        case (null){
+          return #err(#NotFound);
+        };
+        case(?foundUpdatedManager){
+          managers.put(principalId, foundUpdatedManager);
+          return #ok();
+        };
+      }
     };
-
-
-
-
+    
+    public func isUsernameAvailable(username: Text) : Bool{
+      return managerProfileManager.isUsernameAvailable(username);
+    };
 
     public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : Bool {
       return false;// #ok();

@@ -10,7 +10,8 @@ Contents:
 Functions to save, retrieve, and manage snapshots over time.
 Methods such as getSnapshot for a specific game week, and restoreFromSnapshot to revert to a previous state if necessary.
 
-    
+    //await snapshotGameweek(systemState.calculationSeason, systemState.calculationGameweek);
+      //await resetTransfers();
     public func getWeeklyLeaderboard(activeSeasonId : Nat16, activeGameweek : Nat8, limit : Nat, offset : Nat) : DTOs.PaginatedLeaderboard {
       switch (seasonLeaderboards.get(activeSeasonId)) {
         case (null) {

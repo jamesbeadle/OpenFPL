@@ -123,43 +123,100 @@ module {
       }
   };
 
-  
-
-    public func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
-      let newManager: T.Manager = {
-        principalId = principalId;
-        username = createProfileDTO.username;
-        favouriteClubId = createProfileDTO.favouriteClubId;
-        createDate = createProfileDTO.createDate;
-        termsAccepted = false;
-        profilePictureCanisterId = profilePictureCanisterId;
-        transfersAvailable = 3;
-        bankQuarterMillions = 1200;
-        playerIds = [];
-        captainId = 0;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        teamBoostGameweek = 0;
-        teamBoostClubId = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        countrymenGameweek = 0;
-        countrymenCountryId = 0;
-        prospectsGameweek = 0;
-        braceBonusGameweek = 0;
-        hatTrickHeroGameweek = 0;
-        transferWindowGameweek = 0;
-        history = List.nil<T.FantasyTeamSeason>();
-      };
-
-      return newManager;
+  public func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
+    let newManager: T.Manager = {
+      principalId = principalId;
+      username = createProfileDTO.username;
+      favouriteClubId = createProfileDTO.favouriteClubId;
+      createDate = createProfileDTO.createDate;
+      termsAccepted = false;
+      profilePictureCanisterId = profilePictureCanisterId;
+      transfersAvailable = 3;
+      bankQuarterMillions = 1200;
+      playerIds = [];
+      captainId = 0;
+      goalGetterGameweek = 0;
+      goalGetterPlayerId = 0;
+      passMasterGameweek = 0;
+      passMasterPlayerId = 0;
+      noEntryGameweek = 0;
+      noEntryPlayerId = 0;
+      teamBoostGameweek = 0;
+      teamBoostClubId = 0;
+      safeHandsGameweek = 0;
+      safeHandsPlayerId = 0;
+      captainFantasticGameweek = 0;
+      captainFantasticPlayerId = 0;
+      countrymenGameweek = 0;
+      countrymenCountryId = 0;
+      prospectsGameweek = 0;
+      braceBonusGameweek = 0;
+      hatTrickHeroGameweek = 0;
+      transferWindowGameweek = 0;
+      history = List.nil<T.FantasyTeamSeason>();
     };
+
+    return newManager;
+  };
+
+  public func updateUsername(principalId: Text, manager: ?T.Manager, updatedUsername: Text) : ?T.Manager {
+    
+      switch(manager){
+        case (null){
+          return null;
+        };
+        case (?foundManager){
+          let updatedManager: T.Manager = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            termsAccepted = foundManager.termsAccepted;
+            profilePictureCanisterId = foundManager.profilePictureCanisterId;
+            transfersAvailable = foundManager.transfersAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = foundManager.playerIds;
+            captainId = foundManager.captainId;
+            goalGetterGameweek = foundManager.goalGetterGameweek;
+            goalGetterPlayerId = foundManager.goalGetterPlayerId;
+            passMasterGameweek = foundManager.passMasterGameweek;
+            passMasterPlayerId = foundManager.passMasterPlayerId;
+            noEntryGameweek = foundManager.noEntryGameweek;
+            noEntryPlayerId = foundManager.noEntryPlayerId;
+            teamBoostGameweek = foundManager.teamBoostGameweek;
+            teamBoostClubId = foundManager.teamBoostClubId;
+            safeHandsGameweek = foundManager.safeHandsGameweek;
+            safeHandsPlayerId = foundManager.safeHandsPlayerId;
+            captainFantasticGameweek = foundManager.captainFantasticGameweek;
+            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+            countrymenGameweek = foundManager.countrymenGameweek;
+            countrymenCountryId = foundManager.countrymenCountryId;
+            prospectsGameweek = foundManager.prospectsGameweek;
+            braceBonusGameweek = foundManager.braceBonusGameweek;
+            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+            transferWindowGameweek = foundManager.transferWindowGameweek;
+            history = foundManager.history;
+          };
+          return ?updatedManager;
+        };
+      };
+  };
+    
+  public func isUsernameAvailable(username: Text) : Bool{
+    return false;
+  };
+    
+  public func isUsernameValid(username: Text) : Bool{
+    return false;
+  };
+
+  public func isValidProfilePicture(profilePicture: Blob) : Bool{
+    return false;
+  };
+
+  public func updateProfilePicture(principalId: Text, profilePicture: Blob) : Text{
+    return "false";
+  };
 
    //include all profile info for caller
     //include all manager info
