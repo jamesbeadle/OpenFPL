@@ -27,10 +27,48 @@ module {
     };
 
     public func loanExpired(){
-//go through all players and check if any have their loan expired and recall them to their team if so
+      //go through all players and check if any have their loan expired and recall them to their team if so
     };
 
+    public func getPlayers(currentSeasonId: T.SeasonId) : [DTOs.PlayerDTO] {
 
+
+      let playerDTOs = List.map<T.Player, DTOs.PlayerDTO>(
+        players, 
+        func(player : T.Player) : DTOs.PlayerDTO {
+
+          let season = List.find<T.PlayerSeason>(
+            player.seasons,
+            func(playerSeason: T.PlayerSeason){
+              return playerSeason.id == currentSeasonId;
+            }
+          );
+
+          var totalSeasonPoints: Int16 = 0;
+
+          switch(season){
+            case (null){};
+            case (?foundSeason){
+              totalSeasonPoints := List.foldLeft<T.PlayerGameweek, Int16>(foundSeason.gameweeks, 0, func (acc, n) { acc + n.points });
+            };
+          };
+          
+          return {
+            id = player.id;
+            clubId = player.clubId;
+            position = player.position;
+            firstName = player.firstName;
+            lastName = player.lastName;
+            shirtNumber = player.shirtNumber;
+            valueQuarterMillions = player.valueQuarterMillions;
+            dateOfBirth = player.dateOfBirth;
+            nationality = player.nationality;
+            totalPoints = totalSeasonPoints;
+          };
+        },
+      );
+      return List.toArray(playerDTOs);
+    };
 
 
 

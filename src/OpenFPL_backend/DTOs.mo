@@ -125,7 +125,7 @@ module DTOs {
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    value : Nat;
+    valueQuarterMillions : Nat;
     dateOfBirth : Int;
     nationality : T.CountryId;
     totalPoints : Int16;

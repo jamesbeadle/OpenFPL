@@ -183,9 +183,6 @@ module {
 
       dataCacheHashes := List.fromArray(Buffer.toArray<T.DataCache>(hashBuffer));
     };
-
-    
-
     
     public func getSystemState() : DTOs.SystemStateDTO {
       return systemState;
@@ -196,15 +193,15 @@ module {
     };
     
     public func getFixtures(seasonId: T.SeasonId) : [DTOs.FixtureDTO] {
-      return [];
+      return seasonComposite.getFixtures(seasonId);
     };
     
     public func getPlayers() : [DTOs.PlayerDTO] {
-      return [];
+      return playerComposite.getPlayers(systemState.calculationSeason);
     };
 
     public func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.PlayerDTO] {
-      return [];
+      return playerComposite.getDetailedPlayers(seasonId, gameweek);
     };
 
     public func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {

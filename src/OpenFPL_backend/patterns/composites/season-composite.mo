@@ -23,7 +23,41 @@ module {
       seasons := List.fromArray(stable_seasons);
     };
 
-    public func getFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.FixtureDTO]{
+    public func getFixtures(seasonId: T.SeasonId) : [DTOs.FixtureDTO]{
+      let season = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
+      switch(season){
+        case (null) {return []};
+        case (?foundSeason){
+          
+          let fixtureDTOs = List.map<T.Fixture, DTOs.FixtureDTO>(
+            foundSeason.fixtures, 
+            func(fixture : T.Fixture) : DTOs.FixtureDTO {
+              return {
+                awayClubId = fixture.awayClubId;
+                awayGoals = fixture.awayGoals;
+                gameweek = fixture.gameweek;
+                highestScoringPlayerId = fixture.highestScoringPlayerId;
+                homeClubId = fixture.homeClubId;
+                homeGoals = fixture.homeGoals;
+                id = fixture.id;
+                kickOff = fixture.kickOff;
+                seasonId = fixture.seasonId;
+                status = fixture.status;
+                events = List.toArray(fixture.events);
+              };
+            },
+          );
+          return List.toArray(fixtureDTOs);
+        };
+      }
+    };
+
+    public func getFixturesForGameweek(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.FixtureDTO]{
       let season = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -65,7 +99,7 @@ module {
 
     public func getGameweekKickOffTimes(seasonId: T.SeasonId, gamweek: T.GameweekNumber) : [Int] {
 
-      let fixtures = getFixtures(seasonId, gamweek);
+      let fixtures = getFixturesForGameweek(seasonId, gamweek);
 
       let kickOffTimes = Buffer.fromArray<Int>([]);
 
