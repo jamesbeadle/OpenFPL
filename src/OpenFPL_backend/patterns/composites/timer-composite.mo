@@ -34,6 +34,7 @@ module {
         callbackName = callbackName;
       };  
       setAndBackupTimer(duration, timerInfo);
+      removeExpiredTimers();
     };
 
     private func removeExpiredTimers() : () {

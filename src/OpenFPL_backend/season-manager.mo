@@ -89,7 +89,7 @@ module {
 
       let uniqueKickOffTimes = seasonComposite.getGameweekKickOffTimes(systemState.calculationSeason, systemState.calculationGameweek);
       for(kickOffTime in Iter.fromArray(uniqueKickOffTimes)){
-        timerComposite.setTimer(kickOffTime, "gameKickOffExpired")
+        timerComposite.setTimer(kickOffTime, "gameKickOffExpired");
       };
         
       let updatedSystemState: T.SystemState = {
@@ -104,16 +104,11 @@ module {
 
     private func gameKickOffExpiredCallback() : async () {
 
-      //set each fixture that has kicked off to active status
-
-      //set a timer for 2 hours from now to set the game to completed
-      
-
-      let gameCompleteTimer: T.TimerInfo = seasonComposite.setActiveFixtures();
-      await setAndBackupTimer(Utilities.getHour() * 2, gameCompleteTimer);
-      setGameCompletedTimers(); //Look for any active game and set completed 2 hours from kickoff
+      let activatedFixtures: [T.Fixture] = seasonComposite.setFixturesToActive(systemState.calculationSeason, systemState.calculationGameweek);
+      for(fixture in Iter.fromArray(activatedFixtures)){
+        timerComposite.setTimer(fixture.kickOff + (Utilities.getHour() * 2), "gameCompletedExpired");
+      };
       await updateCacheHash("fixtures");
-      removeExpiredTimers();
     };
 
     private func gameCompletedExpiredCallback() : async () {
