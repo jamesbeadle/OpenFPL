@@ -239,60 +239,60 @@ actor Self {
   private stable var stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)] = [];
   private stable var stable_monthly_leaderboard_canister_ids : [(T.MonthlyLeaderboardKey, Text)] = [];
   private stable var stable_weekly_leaderboard_canister_ids : [(T.WeeklyLeaderboardKey, Text)] = [];
-
-
-  //DO SEASON MANAGER SO I KNOW THE DATA THAT NEEDS BACKING UP!
-
-  //stable variable backup
-  /*
-  private stable var stable_fantasy_teams : [(Text, T.UserFantasyTeam)] = [];
-
-  private stable var stable_active_season_id : Nat16 = 0;
-  private stable var stable_active_gameweek : Nat8 = 0;
-  private stable var stable_interesting_gameweek : Nat8 = 0;
-  
-  private stable var stable_next_fixture_id : Nat32 = 0;
-  private stable var stable_next_season_id : Nat16 = 0;
-
-  private stable var stable_seasons : [T.Season] = [];
   private stable var stable_clubs : [T.Club] = [];
-  private stable var stable_relegated_clubs : [T.Team] = [];
-
-  private stable var stable_next_team_id : Nat16 = 0;
-  private stable var stable_max_votes_per_user : Nat64 = 0;
+  private stable var stable_relegated_clubs : [T.Club] = [];
+  private stable var stable_next_club_id = 1;
+  private stable var stable_players : [T.Player] = [];
+  private stable var stable_next_player_id = 1;
+  private stable var stable_seasons : [T.Season] = [];
+  private stable var stable_next_season_id = 1;
+  private stable var stable_next_fixture_id = 1;
   private stable var stable_data_cache_hashes : [T.DataCache] = [];
-*/
+  private stable var stable_system_state : T.SystemState = {
+    calculationGameweek = 1;
+    calculationMonth = 8;
+    calculationSeason = 1;
+    pickTeamGameweek = 1;
+    homepageFixturesGameweek = 1;
+    homepageManagerGameweek = 1;
+  };
 
   system func preupgrade() {
     stable_timers := seasonManager.getTimers();
-    /*
-    stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();
-    stable_profiles := profilesInstance.getProfiles();
-    stable_active_season_id := seasonManager.getActiveSeasonId();
-    stable_active_gameweek := seasonManager.getActiveGameweek();
-    stable_interesting_gameweek := seasonManager.getInterestingGameweek();
-    stable_next_fixture_id := seasonManager.getNextFixtureId();
-    stable_next_season_id := seasonManager.getNextSeasonId();
+    stable_managers := seasonManager.getManagers();
+    stable_profile_picture_canister_ids := seasonManager.getProfilePictureCanisterIds();
+    stable_season_leaderboard_canister_ids := seasonManager.getSeasonLeaderboardCanisterIds();
+    stable_monthly_leaderboard_canister_ids := seasonManager.getMonthlyLeaderboardCanisterIds();
+    stable_weekly_leaderboard_canister_ids := seasonManager.getWeeklyLeaderboardCanisterIds();
+    stable_clubs := seasonManager.getStableClubs();
+    stable_relegated_clubs := seasonManager.getRelegatedClubs();
+    stable_next_club_id := seasonManager.getNextClubId();
+    stable_players := seasonManager.getPlayers();
+    stable_next_player_id := seasonManager.getNextPlayerId();
     stable_seasons := seasonManager.getSeasons();
-    stable_clubs := teamsInstance.getTeams();
-    stable_relegated_clubs := teamsInstance.getRelegatedTeams();
-    stable_next_club_id := teamsInstance.getNextTeamId();
-    stable_season_leaderboards := fantasyTeamsInstance.getSeasonLeaderboards();
-    stable_monthly_leaderboards := fantasyTeamsInstance.getMonthlyLeaderboards();
-    stable_data_cache_hashes := List.toArray(dataCacheHashes);
-    */
+    stable_next_season_id := seasonManager.getNextSeasonId();
+    stable_next_fixture_id := seasonManager.getNextFixtureId();
+    stable_data_cache_hashes := seasonManager.getDataCacheHashes();
+    stable_system_state := seasonManager.getSystemState();
   };
 
   system func postupgrade() {
-    /*
-    profilesInstance.setData(stable_profiles);
-    fantasyTeamsInstance.setData(stable_fantasy_teams);
-    seasonManager.setData(stable_seasons, stable_active_season_id, stable_active_gameweek, stable_active_fixtures, stable_next_fixture_id, stable_next_season_id, stable_interesting_gameweek);
-    teamsInstance.setData(stable_teams, stable_next_team_id, stable_relegated_teams);
-    fantasyTeamsInstance.setDataForSeasonLeaderboards(stable_season_leaderboards);
-    fantasyTeamsInstance.setDataForMonthlyLeaderboards(stable_monthly_leaderboards);
-    dataCacheHashes := List.fromArray(stable_data_cache_hashes);
-    */
+    seasonManager.setTimers(stable_timers);
+    seasonManager.setManagers(stable_managers);
+    seasonManager.setProfilePictureCanisterIds(stable_profile_picture_canister_ids);
+    seasonManager.setSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
+    seasonManager.setMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
+    seasonManager.setWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
+    seasonManager.setStableClubs(stable_clubs);
+    seasonManager.setRelegatedClubs(stable_relegated_clubs);
+    seasonManager.setNextClubId(stable_next_club_id);
+    seasonManager.setPlayers(stable_players);
+    seasonManager.setNextPlayerId(stable_next_player_id);
+    seasonManager.setSeasons(stable_seasons);
+    seasonManager.setNextSeasonId(stable_next_season_id);
+    seasonManager.setNextFixtureId(stable_next_fixture_id);
+    seasonManager.setDataCacheHashes(stable_data_cache_hashes);
+    seasonManager.setSystemState(stable_system_state);
     seasonManager.recreateTimers();
   };
 
