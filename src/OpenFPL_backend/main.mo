@@ -3,6 +3,8 @@ import Time "mo:base/Time";
 import Array "mo:base/Array";
 import Timer "mo:base/Timer";
 import Buffer "mo:base/Buffer";
+import Iter "mo:base/Iter";
+import Int "mo:base/Int";
 import SeasonManager "season-manager";
 import T "types";
 import DTOs "DTOs";
@@ -69,7 +71,9 @@ actor Self {
       case "transferWindowEnd" {
         Timer.setTimer(duration, transferWindowEndCallback);
       };
-      case _ { };
+      case _ { 
+        Timer.setTimer(duration, defaultCallback);
+      };
     };
 
     let triggerTime = switch (duration) {
@@ -93,6 +97,7 @@ actor Self {
     timerBuffer.add(newTimerInfo);
     stable_timers := Buffer.toArray(timerBuffer);
   };
+  private func defaultCallback() : async () {};
 
   let seasonManager = SeasonManager.SeasonManager(setAndBackupTimer);  
 
