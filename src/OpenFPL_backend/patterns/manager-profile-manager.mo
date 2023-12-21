@@ -1,6 +1,93 @@
+import DTOs "../DTOs";
+
 module {
 
   public class ManagerProfileManager() {
+
+   public func updateManager(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : T.Manager {
+
+      let manager = managers.get(principalId);
+      switch(manager){
+        case (null){
+          let createProfileDTO: DTOs.ProfileDTO = {
+            principalId = principalId;
+            username = "";
+            profilePicture = Blob.fromArray([]);
+            favouriteClubId = 0;
+            createDate = now();
+            canUpdateFavouriteClub = true;
+          };
+          let newManager = buildNewManager(principalId, createProfileDTO, "");
+          let updatedManager: T.Manager = {
+            principalId = newManager.principalId;
+            username = newManager.username;
+            favouriteClubId = newManager.favouriteClubId;
+            createDate = newManager.createDate;
+            termsAccepted = newManager.termsAccepted;
+            profilePictureCanisterId = newManager.profilePictureCanisterId;
+            transfersAvailable = newManager.transfersAvailable;
+            bankQuarterMillions = newManager.bankQuarterMillions;
+            playerIds = updatedFantasyTeam.playerIds;
+            captainId = updatedFantasyTeam.captainId;
+            goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
+            goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
+            passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
+            passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
+            noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
+            noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
+            teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
+            teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
+            safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
+            safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
+            captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
+            captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
+            countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
+            countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
+            prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
+            braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
+            hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
+            transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
+            history = List.nil<T.FantasyTeamSeason>();
+          };
+          managers.put(principalId, updatedManager);
+        };
+        case (?foundManager){
+          let updatedManager: T.Manager = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            termsAccepted = foundManager.termsAccepted;
+            profilePictureCanisterId = foundManager.profilePictureCanisterId;
+            transfersAvailable = foundManager.transfersAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = updatedFantasyTeam.playerIds;
+            captainId = updatedFantasyTeam.captainId;
+            goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
+            goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
+            passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
+            passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
+            noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
+            noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
+            teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
+            teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
+            safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
+            safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
+            captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
+            captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
+            countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
+            countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
+            prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
+            braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
+            hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
+            transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
+            history = foundManager.history;
+          };
+          managers.put(principalId, updatedManager);
+        };
+      };
+   };
+
 
    //include all profile info for caller
     //include all manager info

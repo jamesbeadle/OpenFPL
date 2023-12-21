@@ -1,7 +1,14 @@
+import DTOs "../DTOs";
+
 module {
 
   public class StrategyManager() {
-
+    
+    public func isFantasyTeamValid(fantasyTeamDTO: DTOs.UpdateFantasyTeamDTO) : Bool {
+      
+      return false;
+    }
+    
 /*
 
     //StrategyManager //implements strategy pattern for managing fantasy teams
