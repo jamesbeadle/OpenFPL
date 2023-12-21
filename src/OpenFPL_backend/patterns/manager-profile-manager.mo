@@ -1,12 +1,17 @@
 import DTOs "../DTOs";
+import T "../types";
+import Result "mo:base/Result";
+import Blob "mo:base/Blob";
+import Text "mo:base/Text";
+import List "mo:base/List";
+import { now } = "mo:base/Time";
 
 module {
 
   public class ManagerProfileManager() {
 
-   public func updateManager(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : T.Manager {
-
-      let manager = managers.get(principalId);
+   public func updateManager(principalId: Text, manager: ?T.Manager, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : T.Manager {
+      
       switch(manager){
         case (null){
           let createProfileDTO: DTOs.ProfileDTO = {
@@ -49,7 +54,7 @@ module {
             transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
             history = List.nil<T.FantasyTeamSeason>();
           };
-          managers.put(principalId, updatedManager);
+          return updatedManager;
         };
         case (?foundManager){
           let updatedManager: T.Manager = {
@@ -83,11 +88,78 @@ module {
             transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
             history = foundManager.history;
           };
-          managers.put(principalId, updatedManager);
+          return updatedManager;
         };
       };
    };
 
+  public func getProfile(manager: ?T.Manager) : async Result.Result<DTOs.ProfileDTO, T.Error>{
+    
+      switch(manager){
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundManager){
+          
+          var profilePicture = Blob.fromArray([]);
+          
+          if(Text.size(foundManager.profilePictureCanisterId) > 0){
+            let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
+              getProfilePicture : (principalId: Text) -> async Blob;
+            };
+            profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+          };
+          
+          let profileDTO: DTOs.ProfileDTO = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            profilePicture = profilePicture;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+          };
+
+          return #ok(profileDTO);
+        };
+      }
+  };
+
+  
+
+    public func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
+      let newManager: T.Manager = {
+        principalId = principalId;
+        username = createProfileDTO.username;
+        favouriteClubId = createProfileDTO.favouriteClubId;
+        createDate = createProfileDTO.createDate;
+        termsAccepted = false;
+        profilePictureCanisterId = profilePictureCanisterId;
+        transfersAvailable = 3;
+        bankQuarterMillions = 1200;
+        playerIds = [];
+        captainId = 0;
+        goalGetterGameweek = 0;
+        goalGetterPlayerId = 0;
+        passMasterGameweek = 0;
+        passMasterPlayerId = 0;
+        noEntryGameweek = 0;
+        noEntryPlayerId = 0;
+        teamBoostGameweek = 0;
+        teamBoostClubId = 0;
+        safeHandsGameweek = 0;
+        safeHandsPlayerId = 0;
+        captainFantasticGameweek = 0;
+        captainFantasticPlayerId = 0;
+        countrymenGameweek = 0;
+        countrymenCountryId = 0;
+        prospectsGameweek = 0;
+        braceBonusGameweek = 0;
+        hatTrickHeroGameweek = 0;
+        transferWindowGameweek = 0;
+        history = List.nil<T.FantasyTeamSeason>();
+      };
+
+      return newManager;
+    };
 
    //include all profile info for caller
     //include all manager info

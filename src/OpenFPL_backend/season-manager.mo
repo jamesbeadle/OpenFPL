@@ -566,36 +566,7 @@ module {
     
     public func getProfile(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
       let manager = managers.get(principalId);
-      switch(manager){
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundManager){
-          
-          var profilePicture = Blob.fromArray([]);
-          var canUpdateFavouriteClub = true;
-
-          if(Text.size(foundManager.profilePictureCanisterId) > 0){
-            let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-              getProfilePicture : (principalId: Text) -> async Blob;
-            };
-            profilePicture := await profile_picture_canister.getProfilePicture(principalId);
-          };
-          
-          canUpdateFavouriteClub := foundManager.favouriteClubId == 0 or not seasonActive();
-
-          let profileDTO: DTOs.ProfileDTO = {
-            principalId = foundManager.principalId;
-            username = foundManager.username;
-            profilePicture = profilePicture;
-            favouriteClubId = foundManager.favouriteClubId;
-            createDate = foundManager.createDate;
-            canUpdateFavouriteClub = canUpdateFavouriteClub;
-          };
-
-          return #ok(profileDTO);
-        };
-      }
+      return await managerProfileManager.getProfile(manager);
     };
     
     /* Will need when profile DTO isn't enough
@@ -605,7 +576,8 @@ module {
     */
     
     public func getTotalManagers() : Nat{
-      return Iter.size(Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 }));
+      let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
+      return Iter.size(managersWithTeams);
     };
     
     public func isUsernameAvailable(username: Text) : Bool{
@@ -614,12 +586,12 @@ module {
 
     public func createProfile(principalId: Text, createProfileDTO: DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
       
-      let profilePictureCanisterId = "";
+      var profilePictureCanisterId = "";
       if(createProfileDTO.profilePicture.size() > 0){
         profilePictureCanisterId := uploadProfilePicture(createProfileDTO.profilePicture);
       };
 
-      let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
+      let newManager = managerProfileManager.buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
       managers.put(principalId, newManager);
       return #ok();
     };
@@ -629,51 +601,24 @@ module {
       if(not strategyManager.isFantasyTeamValid(updatedFantasyTeam)){
         return #err(#InvalidTeamError);
       };
-      
-      let updatedManager = managerProfileManager.updateManager(principalId, updatedFantasyTeam);
-      managers.put(updatedManager);
+
+      let updatedManager = managerProfileManager.updateManager(principalId, managers.get(principalId), updatedFantasyTeam);
+      managers.put(principalId, updatedManager);
 
       return #ok();
     };
 
-    //Private functions used above
+    private func uploadProfilePicture(picture: Blob) : Text {
 
-    private func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
-      let newManager: T.Manager = {
-        principalId = principalId;
-        username = createProfileDTO.username;
-        favouriteClubId = createProfileDTO.favouriteClubId;
-        createDate = createProfileDTO.createDate;
-        canUpdateFavouriteClub = createProfileDTO.canUpdateFavouriteClub;
-        termsAccepted = false;
-        profilePictureCanisterId = profilePictureCanisterId;
-        transfersAvailable = 3;
-        bankQuarterMillions = 1200;
-        playerIds = [];
-        captainId = 0;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        teamBoostGameweek = 0;
-        teamBoostClubId = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        countrymenGameweek = 0;
-        countrymenCountryId = 0;
-        prospectsGameweek = 0;
-        braceBonusGameweek = 0;
-        hatTrickHeroGameweek = 0;
-        transferWindowGameweek = 0;
-        history = List.nil<T.FantasyTeamSeason>();
-      };
+      //CHECK CURRENT CANISTER 
+      //IF IMAGE LIMIT REACHED CREATE NEW
+      //STORE IMAGE
+      //RETURN CANISTER ID
 
-      return newManager;
+      return "";
     };
+
+    //Private functions used above
 
     private func seasonActive() : Bool {
 /*

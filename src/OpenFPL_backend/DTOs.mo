@@ -111,7 +111,6 @@ module DTOs {
     profilePicture : Blob;
     favouriteClubId : Nat16;
     createDate : Int;
-    canUpdateFavouriteClub : Bool;
   };
 
   public type PlayerRatingsDTO = {
