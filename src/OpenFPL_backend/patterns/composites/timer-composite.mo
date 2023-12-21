@@ -34,10 +34,9 @@ module {
         callbackName = callbackName;
       };  
       setAndBackupTimer(duration, timerInfo);
-      removeExpiredTimers();
     };
 
-    private func removeExpiredTimers() : () {
+    public func removeExpiredTimers() : () {
       let currentTime = Time.now();
       timers := Array.filter<T.TimerInfo>(
         timers,

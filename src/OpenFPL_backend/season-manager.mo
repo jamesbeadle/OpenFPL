@@ -100,45 +100,40 @@ module {
         calculationMonth = systemState.calculationMonth;
         calculationSeason = systemState.calculationSeason;        
       };
+      timerComposite.removeExpiredTimers();
     };
 
     private func gameKickOffExpiredCallback() : async () {
-
       let activatedFixtures: [T.Fixture] = seasonComposite.setFixturesToActive(systemState.calculationSeason, systemState.calculationGameweek);
       for(fixture in Iter.fromArray(activatedFixtures)){
         timerComposite.setTimer(fixture.kickOff + (Utilities.getHour() * 2), "gameCompletedExpired");
       };
       await updateCacheHash("fixtures");
+      timerComposite.removeExpiredTimers();
     };
 
     private func gameCompletedExpiredCallback() : async () {
-
-      //set the game to completed so fixture data can be submitted against it
-
-      //update cache
-
-      seasonComposite.updateFixtureStatuses(#Completed); //update any active game that is 2 hours after it's kickoff to completed
-      await updateCacheHash("fixtures"); 
-      removeExpiredTimers();
+      seasonComposite.setFixturesToCompleted(systemState.calculationSeason, systemState.calculationGameweek);
+      await updateCacheHash("fixtures");
+      timerComposite.removeExpiredTimers();
     };
 
     private func loanExpiredCallback() : async () {
       playerComposite.loanExpired();//go through all players and check if any have their loan expired and recall them to their team if so
-      await updateCacheHash("players");        
-      removeExpiredTimers();
+      await updateCacheHash("players"); 
+      timerComposite.removeExpiredTimers();    
     };
 
     private func transferWindowStartCallback() : async () {
   //Set a flag to allow the january transfer window when submitting teams but also check for it
         //SETUP THE JAN TRANSFER WINDOW
       await transferWindowStartCallback();
-      removeExpiredTimers();
     };
 
     private func transferWindowEndCallback() : async () {
       //end transfer window
       await transferWindowEndCallback();
-      removeExpiredTimers();
+      timerComposite.removeExpiredTimers();
     };
 
     let timerComposite = TimerComposite.TimerComposite(
