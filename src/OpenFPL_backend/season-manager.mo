@@ -42,6 +42,7 @@ module {
       pickTeamGameweek = 1;
       homepageFixturesGameweek = 1;
       homepageManagerGameweek = 0;
+      transferWindowActive = false;
     };
 
     private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
@@ -101,7 +102,10 @@ module {
         calculationGameweek = systemState.calculationGameweek;
         calculationMonth = systemState.calculationMonth;
         calculationSeason = systemState.calculationSeason;        
+        transferWindowActive = systemState.transferWindowActive;
       };
+      systemState := updatedSystemState;
+      
       timerComposite.removeExpiredTimers();
     };
 
@@ -121,20 +125,40 @@ module {
     };
 
     private func loanExpiredCallback() : async () {
-      playerComposite.loanExpired();//go through all players and check if any have their loan expired and recall them to their team if so
+      playerComposite.loanExpired();
       await updateCacheHash("players"); 
       timerComposite.removeExpiredTimers();    
     };
 
     private func transferWindowStartCallback() : async () {
-  //Set a flag to allow the january transfer window when submitting teams but also check for it
-        //SETUP THE JAN TRANSFER WINDOW
-      await transferWindowStartCallback();
+      let updatedSystemState: T.SystemState = {
+        pickTeamGameweek = systemState.pickTeamGameweek + 1;
+        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
+        homepageManagerGameweek = systemState.homepageManagerGameweek;
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeason = systemState.calculationSeason;        
+        transferWindowActive = true;
+      };
+      systemState := updatedSystemState;
+      
+      let nextJan31stTime = Utilities.nextJanuary31stUnixTime();
+      timerComposite.setTimer(nextJan31stTime, "transferWindowEnd");
+      timerComposite.removeExpiredTimers();
     };
 
     private func transferWindowEndCallback() : async () {
-      //end transfer window
-      await transferWindowEndCallback();
+      let updatedSystemState: T.SystemState = {
+        pickTeamGameweek = systemState.pickTeamGameweek + 1;
+        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
+        homepageManagerGameweek = systemState.homepageManagerGameweek;
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeason = systemState.calculationSeason;        
+        transferWindowActive = false;
+      };
+      systemState := updatedSystemState;
+
       timerComposite.removeExpiredTimers();
     };
 
@@ -146,7 +170,6 @@ module {
       transferWindowStartCallback,
       transferWindowEndCallback
     );
-
       
     private func updateCacheHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<T.DataCache>([]);

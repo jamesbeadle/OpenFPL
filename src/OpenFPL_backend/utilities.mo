@@ -180,6 +180,66 @@ module {
     return dayCounter;
   };
 
+  public func nextJanuary31stUnixTime() : Int {
+    let currentUnixTime : Int = Time.now();
+    let secondsInADay = 86400;
+    let seconds = currentUnixTime / 1000000000;
+    var days = seconds / secondsInADay;
+
+    var years = 1970;
+    var dayCounter = days;
+    while (dayCounter > 365) {
+      if (years % 4 == 0 and (years % 100 != 0 or years % 400 == 0) and dayCounter > 366) {
+        dayCounter -= 366;
+      } else {
+        dayCounter -= 365;
+      };
+      years += 1;
+    };
+
+    var currentDayOfYear : Int = dayCounter + 1;
+    if (currentDayOfYear == 366) {
+      currentDayOfYear := 1;
+    };
+
+    var isCurrentYearLeap = false;
+    if (years % 4 == 0) {
+      if (years % 100 != 0) {
+        isCurrentYearLeap := true;
+      } else if (years % 400 == 0) {
+        isCurrentYearLeap := true;
+      };
+    };
+
+    let jan31stDayOfYear : Int = 31;
+
+    var daysTillNextJan31st : Int = 0;
+    if (currentDayOfYear > jan31stDayOfYear) {
+        let nextYear : Int = years + 1;
+        var isNextYearLeap = false;
+        if (nextYear % 4 == 0) {
+          if (nextYear % 100 != 0) {
+            isNextYearLeap := true;
+          } else if (nextYear % 400 == 0) {
+            isNextYearLeap := true;
+          };
+        };
+        if(isCurrentYearLeap){
+          daysTillNextJan31st := 366 - currentDayOfYear + jan31stDayOfYear;
+        }
+        else{
+          daysTillNextJan31st := 365 - currentDayOfYear + jan31stDayOfYear;
+        };
+    } else {
+        daysTillNextJan31st := jan31stDayOfYear - currentDayOfYear;
+    };
+
+    let nextJan31stUnixTime : Int = currentUnixTime + daysTillNextJan31st * 1_000_000_000 * secondsInADay;
+    return nextJan31stUnixTime;
+  };
+
+
+
   public func validateHexColor(hex : Text) : Bool {
 
     if (Text.size(hex) != 7 or not Text.startsWith(hex, #text "#")) {

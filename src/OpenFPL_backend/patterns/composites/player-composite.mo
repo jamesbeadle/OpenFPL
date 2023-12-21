@@ -25,6 +25,17 @@ module {
       retirePlayer : (playerDTO: DTOs.PlayerDTO) -> async ();
       unretirePlayer : (playerId: T.PlayerId) -> async ();
     };
+
+    public func loanExpired(){
+//go through all players and check if any have their loan expired and recall them to their team if so
+    };
+
+
+
+
+
+
+
   
 /*
 
