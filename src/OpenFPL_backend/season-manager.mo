@@ -1,7 +1,6 @@
 import T "types";
 import DTOs "DTOs";
 import List "mo:base/List";
-import Buffer "mo:base/Buffer";
 import Option "mo:base/Option";
 import Nat8 "mo:base/Nat8";
 import Debug "mo:base/Debug";
@@ -11,6 +10,7 @@ import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Blob "mo:base/Blob";
+import Iter "mo:base/Iter";
 import SnapshotFactory "patterns/snapshot-factory";
 import StrategyManager "patterns/strategy-manager";
 import SeasonComposite "patterns/composites/season-composite";
@@ -84,17 +84,23 @@ module {
 
 
     private func gameweekBeginExpiredCallback() : async () {
+
       managerComposite.snapshotFantasyTeams();
       managerComposite.resetTransfers();  
 
-      let fixtures = seasonComposite.getFixtures(systemState.calculationSeason, systemState.calculationGameweek);
-      
-      //for each fixture set a timer but for unique kick off times
-        timerComposite.setTimer(firstFixtureKickOff, "gameKickOffExpired")
-
-      //set the pick team gameweek to the next gameweek if not already 38
-        //if 38 somehow stop people being able to pick players
-
+      let uniqueKickOffTimes = seasonComposite.getGameweekKickOffTimes(systemState.calculationSeason, systemState.calculationGameweek);
+      for(kickOffTime in Iter.fromArray(uniqueKickOffTimes)){
+        timerComposite.setTimer(kickOffTime, "gameKickOffExpired")
+      };
+        
+      let updatedSystemState: T.SystemState = {
+        pickTeamGameweek = systemState.pickTeamGameweek + 1;
+        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
+        homepageManagerGameweek = systemState.homepageManagerGameweek;
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeason = systemState.calculationSeason;        
+      };
     };
 
     private func gameKickOffExpiredCallback() : async () {

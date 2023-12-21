@@ -1,6 +1,8 @@
 import T "../../types";
 import DTOs "../../DTOs";
 import List "mo:base/List";
+import Buffer "mo:base/Buffer";
+import Iter "mo:base/Iter";
 
 module {
 
@@ -57,6 +59,27 @@ module {
           return List.toArray(fixtureDTOs);
         };
       }
+    };
+
+    public func getGameweekKickOffTimes(seasonId: T.SeasonId, gamweek: T.GameweekNumber) : [Int]{
+
+      let fixtures = getFixtures(seasonId, gamweek);
+
+      let kickOffTimes = Buffer.fromArray<Int>([]);
+
+      for(fixture in Iter.fromArray<DTOs.FixtureDTO>(fixtures)){
+        kickOffTimes.add(fixture.kickOff);
+      };
+
+      let uniqueKickOffTimes = Buffer.fromArray<Int>([]);
+      
+      for (kickOffTime in Iter.fromArray(Buffer.toArray(kickOffTimes))) {
+        if (not Buffer.contains<Int>(uniqueKickOffTimes, kickOffTime, func(a : Int, b : Int) : Bool { a == b })) {
+          uniqueKickOffTimes.add(kickOffTime);
+        };
+      };
+
+      return Buffer.toArray(uniqueKickOffTimes);
     };
 
    
