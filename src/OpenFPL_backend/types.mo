@@ -136,7 +136,7 @@ module Types {
     postponedFixtures : List.List<Fixture>;
   };
 
-  public type Team = {
+  public type Club = {
     id : Nat16;
     name : Text;
     friendlyName : Text;

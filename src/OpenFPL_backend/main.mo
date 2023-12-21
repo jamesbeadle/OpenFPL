@@ -14,16 +14,9 @@ import Countries "Countries";
 
 actor Self {
 
-  let seasonManager = SeasonManager.SeasonManager();  
+  let seasonManager = SeasonManager.SeasonManager(); 
 
-  public shared query func getDataHashes() : async Result.Result<[DTOs.DataCacheDTO], T.Error> {
-    return #ok(seasonManager.getDataHashes());
-  };
-
-  public shared query func getFixtures(seasonId: T.SeasonId) : async Result.Result<[DTOs.FixtureDTO], T.Error>  {
-    return #ok(seasonManager.getFixtures(seasonId));
-  };
-
+  //Functions containing inter canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>  {
     return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek);
   };
@@ -39,6 +32,15 @@ actor Self {
   public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error>  {
     assert not Principal.isAnonymous(caller);
     return await seasonManager.getProfile(Principal.toText(caller));
+  }; 
+
+  //Query functions:
+  public shared query func getDataHashes() : async Result.Result<[DTOs.DataCacheDTO], T.Error> {
+    return #ok(seasonManager.getDataHashes());
+  };
+
+  public shared query func getFixtures(seasonId: T.SeasonId) : async Result.Result<[DTOs.FixtureDTO], T.Error>  {
+    return #ok(seasonManager.getFixtures(seasonId));
   };
 
   public shared func getManager(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error>  {
@@ -70,6 +72,7 @@ actor Self {
     return seasonManager.isUsernameAvailable(username);
   };
 
+  //Update functions:
   public shared ({ caller }) func createProfile(profileDTO: DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
@@ -100,6 +103,7 @@ actor Self {
     return await seasonManager.saveFantasyTeam(principalId, fantasyTeam);
   };
     
+  //Governance canister validation and execution functions:
   public shared func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
     return seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
   };
@@ -228,7 +232,7 @@ actor Self {
     return seasonManager.executeUpdateClub(updateClubDTO);
   };
 
-
+  //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_managers : [(Text, T.Manager)] = [];
   private stable var stable_profile_picture_canister_ids : [(T.PrincipalId, Text)] = [];
@@ -253,7 +257,7 @@ actor Self {
   private stable var stable_seasons : [T.Season] = [];
   private stable var stable_clubs : [T.Club] = [];
   private stable var stable_relegated_clubs : [T.Team] = [];
-  
+
   private stable var stable_next_team_id : Nat16 = 0;
   private stable var stable_max_votes_per_user : Nat64 = 0;
   private stable var stable_data_cache_hashes : [T.DataCache] = [];

@@ -18,46 +18,29 @@ import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Blob "mo:base/Blob";
 import SnapshotFactory "patterns/snapshot-factory";
+import StrategyManager "patterns/strategy-manager";
+import SeasonComposite "patterns/composites/season-composite";
 import PlayerComposite "patterns/composites/player-composite";
 import ClubComposite "patterns/composites/club-composite";
-import StrategyManager "patterns/strategy-manager";
-import ManagerProfileManager "patterns/manager-profile-manager";
-import SeasonComposite "patterns/composites/season-composite";
+import ManagerComposite "patterns/composites/manager-composite";
 import Utilities "utilities";
+import CanisterIds "CanisterIds";
 
 module {
 
   public class SeasonManager() {
 
     let strategyManager = StrategyManager.StrategyManager();
-    let managerProfileManager = ManagerProfileManager.ManagerProfileManager();
+    let managerComposite = ManagerComposite.ManagerComposite();
     let playerComposite = PlayerComposite.PlayerComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
     var timers: [T.TimerInfo] = [];
     
-    let CANISTER_IDS = {
-      retired_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
-      former_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
-      token_canister = "hwd4h-eyaaa-aaaal-qb6ra-cai";
-      governance_canister = "rrkah-fqaaa-aaaaa-aaaaq-cai";
-    };
 
-    let tokenCanister = actor (CANISTER_IDS.token_canister) : actor {
+    let tokenCanister = actor (CanisterIds.TOKEN_CANISTER_ID) : actor {
       icrc1_name : () -> async Text;
       icrc1_total_supply : () -> async Nat;
       icrc1_balance_of : (T.Account) -> async Nat;
-    };
-
-    let former_players_canister = actor (CANISTER_IDS.former_players_canister) : actor {
-      getFormerPlayer : (playerId: T.PlayerId) -> async ();
-      addFormerPlayer : (playerDTO: DTOs.PlayerDTO) -> async ();
-      reinstateFormerPlayer : (playerId: T.PlayerId) -> async ();
-    };
-
-    let retired_players_canister = actor (CANISTER_IDS.retired_players_canister) : actor {
-      getRetiredPlayer : (playerId: T.PlayerId) -> async ();
-      retirePlayer : (playerDTO: DTOs.PlayerDTO) -> async ();
-      unretirePlayer : (playerId: T.PlayerId) -> async ();
     };
 
     private var systemState: T.SystemState = {
@@ -78,20 +61,7 @@ module {
       { category = "players"; hash = "DEFAULT_VALUE" },
       { category = "player_events"; hash = "DEFAULT_VALUE" }
     ]);
-
-    private var nextClubId : T.ClubId = 1;
-    private var nextPlayerId : T.PlayerId = 1;
-    private var nextSeasonId : T.SeasonId = 1;
-    private var nextFixtureId : T.FixtureId = 1;
-    private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
-    private var players = List.fromArray<T.Player>([]);
-    private var seasons = List.fromArray<T.Season>([]);
-    private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);    
-
-    private var seasonLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, Text> = HashMap.HashMap<T.SeasonId, Text>(100, Utilities.eqNat16, Utilities.hashNat16);
-    private var monthlyLeaderboardCanisterIds : HashMap.HashMap<T.MonthlyLeaderboardKey, Text> = HashMap.HashMap<T.MonthlyLeaderboardKey, Text>(100, Utilities.eqMonthlyKey, Utilities.hashMonthlyKey);
-    private var weeklyLeaderboardCanisterIds : HashMap.HashMap<T.WeeklyLeaderboardKey, Text> = HashMap.HashMap<T.WeeklyLeaderboardKey, Text>(100, Utilities.eqWeeklyKey, Utilities.hashWeeklyKey);
-
+   
     public func setStableData(
       stable_system_state : T.SystemState,
       stable_data_cache_hashes: [T.DataCache],
@@ -171,20 +141,6 @@ module {
     public func gameCompleted() : async () {
       seasonComposite.updateFixtureStatuses(); //update any active game that is 2 hours after it's kickoff to completed
       await updateCacheHash("fixtures");        
-    };
-
-    public func loanExpiredCallback() : async () {
-      playerComposite.loanExpired();//go through all players and check if any have their loan expired and recall them to their team if so
-      await updateCacheHash("players");        
-    };
-  
-    public func transferWindowStartCallback() : async () {
-      //Set a flag to allow the january transfer window when submitting teams but also check for it
-      //SETUP THE JAN TRANSFER WINDOW
-    };
-    
-    public func transferWindowEndCallback() : async () {
-      //END THE JAN TRANSFER WINDOW
     };
     
 
@@ -573,16 +529,20 @@ module {
   };
 
   private func loanExpiredCallback() : async () {
-    await seasonManager.loanExpiredCallback();
-    seasonManager.removeExpiredTimers();
+    playerComposite.loanExpired();//go through all players and check if any have their loan expired and recall them to their team if so
+    await updateCacheHash("players");        
+    removeExpiredTimers();
   };
 
   private func transferWindowStartCallback() : async () {
+//Set a flag to allow the january transfer window when submitting teams but also check for it
+      //SETUP THE JAN TRANSFER WINDOW
     await seasonManager.transferWindowStartCallback();
     seasonManager.removeExpiredTimers();
   };
 
   private func transferWindowEndCallback() : async () {
+    //end transfer window
     await seasonManager.transferWindowEndCallback();
     seasonManager.removeExpiredTimers();
   };

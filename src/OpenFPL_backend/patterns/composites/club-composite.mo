@@ -1,6 +1,12 @@
+import T "../../types";
+import List "mo:base/List";
+
 module {
 
   public class ClubComposite() {
+      private var nextClubId : T.ClubId = 1;
+      private var clubs = List.fromArray<T.Club>([]);
+    
     /*
     
     //ClubComposite //implements composite allows changes to players clubs

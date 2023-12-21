@@ -2,11 +2,11 @@
 
 This document details the design patterns utilised in the development of the OpenFPL fantasy football application on the Internet Computer blockchain. These patterns are selected to ensure the application is scalable, maintainable & focused on efficient data management.
 
-## Snapshot Manager: Memento Pattern
+## Manager Management: Composite Pattern
 
-- **Purpose**: To capture and store the state of fantasy football teams at specific times, in line with the season's progression.
-- **Integration**: Incorporated within the Season Manager to streamline snapshot creation each gameweek.
-- **Reasoning**: Enhances cohesion and simplifies the process, ensuring that snapshots are directly linked to and triggered by key moments in the season.
+- **Purpose**: To uniformly manage a collection of managers, applying operations to either individual managers or a group as a whole.
+- **Integration**: This pattern simplifies the operations on collections of manager entities, which is particularly useful for bulk actions like resetting points for all managers, updating status, or sending notifications.
+- **Reasoning**: Can be integrated within the SeasonManager or ManagerProfileManager to handle operations that affect all managers, such as season rollovers, bulk notifications, or data aggregation for analytics.
 
 ## Club & Player Management: Composite Pattern
 

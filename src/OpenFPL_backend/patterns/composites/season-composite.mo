@@ -1,9 +1,13 @@
 import T "../../types";
+import List "mo:base/List";
 
 module {
 
   public class SeasonComposite() {
-
+    private var seasons = List.fromArray<T.Season>([]);
+    private var nextSeasonId : T.SeasonId = 1;
+    private var nextFixtureId : T.FixtureId = 1;
+    
     public func updateFixtureStatuses(fixtureStatus: T.FixtureStatus){
 
     };

@@ -1,6 +1,26 @@
-module {
+import T "../../types";
+import DTOs "../../DTOs";
+import List "mo:base/List";
+import CanisterIds "../../CanisterIds";
 
+module {
   public class PlayerComposite() {
+    
+    private var nextPlayerId : T.PlayerId = 1;
+    private var players = List.fromArray<T.Player>([]);
+
+    let former_players_canister = actor (CanisterIds.FORMER_PLAYERS_CANISTER_ID) : actor {
+      getFormerPlayer : (playerId: T.PlayerId) -> async ();
+      addFormerPlayer : (playerDTO: DTOs.PlayerDTO) -> async ();
+      reinstateFormerPlayer : (playerId: T.PlayerId) -> async ();
+    };
+
+    let retired_players_canister = actor (CanisterIds.RETIRED_PLAYERS_CANISTER_ID) : actor {
+      getRetiredPlayer : (playerId: T.PlayerId) -> async ();
+      retirePlayer : (playerDTO: DTOs.PlayerDTO) -> async ();
+      unretirePlayer : (playerId: T.PlayerId) -> async ();
+    };
+  
 /*
 
     //PlayerComposite //implements composite allows changes to players
