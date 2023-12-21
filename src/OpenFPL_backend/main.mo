@@ -155,7 +155,7 @@ actor Self {
 
   public shared query ({ caller }) func isUsernameAvailable(username : Text) : async Bool {
     assert not Principal.isAnonymous(caller);
-    return #ok(seasonManager.isUsernameAvailable(username));
+    return seasonManager.isUsernameAvailable(username);
   };
 
   public shared ({ caller }) func createProfile() : async () {

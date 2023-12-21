@@ -602,12 +602,17 @@ module {
     */
     
     public func getTotalManagers() : Nat{
-      let totalManagers = managers.size();
+      return Iter.size(Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 }));
     };
     
-    public func isUsernameAvailable(username: Text){
-
+    public func isUsernameAvailable(username: Text) : Bool{
+      return false;
     };
+
+    //When going to the app you may click on profile and create profile
+      //Need to differentiate ne
+
+
 
     //Private functions used above
 
@@ -1180,6 +1185,9 @@ module {
     };
     
     */
+
+
+
 
     public func saveFantasyTeam(principalId: Text, fantasyTeam: DTOs.UpdateFantasyTeamDTO){
 /*
