@@ -1,5 +1,7 @@
 import T "../../types";
+import DTOs "../../DTOs";
 import List "mo:base/List";
+import Result "mo:base/Result";
 
 module {
 
@@ -16,6 +18,47 @@ module {
       clubs := List.fromArray(stable_clubs);
 
     };
+
+
+
+
+
+
+    public func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async () {
+    };
+
+    public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async () {
+    };
+
+    public func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async () {
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*
     
     //ClubComposite //implements composite allows changes to players clubs

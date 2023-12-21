@@ -3,6 +3,7 @@ import DTOs "../../DTOs";
 import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
+import Result "mo:base/Result";
 import CanisterIds "../../CanisterIds";
 
 module {
@@ -112,6 +113,75 @@ module {
 
 
 
+    public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async () {
+    };
+
+    public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async () {
+    };
+
+    public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async () {
+    };
+
+    public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async () {
+    };
+
+    public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async () {
+    };
+
+    public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async () {
+    };
+
+    public func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async () {
+    };
+
+    public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async () {
+    };
+    
+    public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async () {
+    };
+
+    public func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+    
+    public func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async () {
+    };
   
 /*
 

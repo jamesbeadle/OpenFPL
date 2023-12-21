@@ -250,7 +250,26 @@ module {
     };
 
     public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async Result.Result<Text,Text> {
-      return #ok("test");
+      
+      return #ok("Valid");
+    };
+
+    public func executeSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async () {
+      
+    };
+
+    public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
+    };
+
+    public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
+      return #ok("Valid");
+    };
+
+    public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async () {
     };
 
         /*

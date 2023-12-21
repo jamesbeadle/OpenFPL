@@ -60,8 +60,8 @@ actor Self {
     return #ok(seasonManager.getPlayers());
   };
 
-  public shared query func getDetailedPlayers(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<[DTOs.PlayerDTO], T.Error>  {
-    return #ok(seasonManager.getDetailedPlayers(seasonId, gameweek));
+  public shared query func getPlayerDetailsForGameweek(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error>  {
+    return #ok(seasonManager.getPlayerDetailsForGameweek(seasonId, gameweek));
   };
 
   public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error>  {
@@ -95,7 +95,8 @@ actor Self {
   public shared ({ caller }) func updateProfilePicture(profilePicture : Blob) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    return await seasonManager.updateProfilePicture(principalId, profilePicture);
+    //return await seasonManager.updateProfilePicture(principalId, profilePicture);
+    return #ok();
   };
 
   public shared ({ caller }) func saveFantasyTeam(fantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
@@ -105,132 +106,132 @@ actor Self {
   };
     
   //Governance canister validation and execution functions:
-  public shared func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
+  public shared func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
   };
 
-  public shared func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
+  public shared func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async () {
+    return await seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
   };
 
-  public shared func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
+  public shared func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
   };
 
-  public shared func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
+  public shared func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async () {
+    return await seasonManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
   };
 
-  public shared func validateSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateSubmitFixtureData(submitFixtureData);
+  public shared func validateSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateSubmitFixtureData(submitFixtureData);
   };
 
-  public shared func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeSubmitFixtureData(submitFixtureData);
+  public shared func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async () {
+    return await seasonManager.executeSubmitFixtureData(submitFixtureData);
   };
 
-  public shared func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
+  public shared func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
   };
 
-  public shared func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeAddInitialFixtures(addInitialFixturesDTO); 
+  public shared func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () {
+    return await seasonManager.executeAddInitialFixtures(addInitialFixturesDTO); 
   };
 
-  public shared func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
+  public shared func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
   };
 
-  public shared func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeRescheduleFixture(rescheduleFixtureDTO);
+  public shared func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async () {
+    return await seasonManager.executeRescheduleFixture(rescheduleFixtureDTO);
   };
 
-  public shared func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateLoanPlayer(loanPlayerDTO);
+  public shared func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateLoanPlayer(loanPlayerDTO);
   };
 
-  public shared func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeLoanPlayer(loanPlayerDTO);
+  public shared func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async () {
+    return await seasonManager.executeLoanPlayer(loanPlayerDTO);
   };
 
-  public shared func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateTransferPlayer(transferPlayerDTO);
+  public shared func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateTransferPlayer(transferPlayerDTO);
   };
 
-  public shared func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeTransferPlayer(transferPlayerDTO);
+  public shared func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async () {
+    return await seasonManager.executeTransferPlayer(transferPlayerDTO);
   };
 
-  public shared func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateRecallPlayer(recallPlayerDTO);
+  public shared func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateRecallPlayer(recallPlayerDTO);
   };
 
-  public shared func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeRecallPlayer(recallPlayerDTO);
+  public shared func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async () {
+    return await seasonManager.executeRecallPlayer(recallPlayerDTO);
   };
 
-  public shared func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateCreatePlayer(createPlayerDTO);
+  public shared func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateCreatePlayer(createPlayerDTO);
   };
 
-  public shared func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeCreatePlayer(createPlayerDTO);
+  public shared func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async () {
+    return await seasonManager.executeCreatePlayer(createPlayerDTO);
   };
 
-  public shared func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateUpdatePlayer(updatePlayerDTO);
+  public shared func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateUpdatePlayer(updatePlayerDTO);
   };
 
-  public shared func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeUpdatePlayer(updatePlayerDTO);
+  public shared func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async () {
+    return await seasonManager.executeUpdatePlayer(updatePlayerDTO);
   };
 
-  public shared func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
+  public shared func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
   };
 
-  public shared func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeSetPlayerInjury(setPlayerInjuryDTO);
+  public shared func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async () {
+    return await seasonManager.executeSetPlayerInjury(setPlayerInjuryDTO);
   };
   
-  public shared func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateRetirePlayer(retirePlayerDTO);
+  public shared func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateRetirePlayer(retirePlayerDTO);
   };
 
-  public shared func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeRetirePlayer(retirePlayerDTO);
+  public shared func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async () {
+    return await seasonManager.executeRetirePlayer(retirePlayerDTO);
   };
 
-  public shared func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateUnretirePlayer(unretirePlayerDTO);
+  public shared func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateUnretirePlayer(unretirePlayerDTO);
   };
   
-  public shared func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeUnretirePlayer(unretirePlayerDTO);
+  public shared func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async () {
+    return await seasonManager.executeUnretirePlayer(unretirePlayerDTO);
   };
 
-  public shared func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
+  public shared func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
   };
 
-  public shared func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executePromoteFormerClub(promoteFormerClubDTO);
+  public shared func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async () {
+    return await seasonManager.executePromoteFormerClub(promoteFormerClubDTO);
   };
 
-  public shared func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validatePromoteNewClub(promoteNewClubDTO);
+  public shared func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validatePromoteNewClub(promoteNewClubDTO);
   };
 
-  public shared func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executePromoteNewClub(promoteNewClubDTO);
+  public shared func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async () {
+    return await seasonManager.executePromoteNewClub(promoteNewClubDTO);
   };
 
-  public shared func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.validateUpdateClub(updateClubDTO);
+  public shared func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<Text,Text> {
+    return await seasonManager.validateUpdateClub(updateClubDTO);
   };
 
-  public shared func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
-    return seasonManager.executeUpdateClub(updateClubDTO);
+  public shared func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async () {
+    return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
   //Stable backup:
@@ -256,6 +257,7 @@ actor Self {
     pickTeamGameweek = 1;
     homepageFixturesGameweek = 1;
     homepageManagerGameweek = 1;
+    transferWindowActive = false;
   };
 
   system func preupgrade() {

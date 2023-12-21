@@ -35,7 +35,16 @@ module {
       
       var profilePictureCanisterId = "";
       if(createProfileDTO.profilePicture.size() > 0){
-        profilePictureCanisterId := updateProfilePicture(principalId, createProfileDTO.profilePicture);
+
+
+
+
+//same profile code
+
+
+
+
+        //profilePictureCanisterId := updateProfilePicture(principalId, createProfileDTO.profilePicture);
       };
 
       let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
@@ -157,93 +166,91 @@ module {
     };
     
     public func updateManager(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
-        
-        let manager = managers.get(principalId);
-        switch(manager){
-          case (null){
-            let createProfileDTO: DTOs.ProfileDTO = {
-                principalId = principalId;
-                username = "";
-                profilePicture = Blob.fromArray([]);
-                favouriteClubId = 0;
-                createDate = now();
-                canUpdateFavouriteClub = true;
-            };
-            let newManager = buildNewManager(principalId, createProfileDTO, "");
-            let updatedManager: T.Manager = {
-                principalId = newManager.principalId;
-                username = newManager.username;
-                favouriteClubId = newManager.favouriteClubId;
-                createDate = newManager.createDate;
-                termsAccepted = newManager.termsAccepted;
-                profilePictureCanisterId = newManager.profilePictureCanisterId;
-                transfersAvailable = newManager.transfersAvailable;
-                bankQuarterMillions = newManager.bankQuarterMillions;
-                playerIds = updatedFantasyTeam.playerIds;
-                captainId = updatedFantasyTeam.captainId;
-                goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
-                goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
-                passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
-                passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
-                noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
-                noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
-                teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
-                teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
-                safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
-                safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
-                captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
-                captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
-                countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
-                countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
-                prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
-                braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
-                hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
-                transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
-                history = List.nil<T.FantasyTeamSeason>();
-            };
-            managers.put(principalId, updatedManager);
-            return #ok();
+      let manager = managers.get(principalId);
+      switch(manager){
+        case (null){
+          let createProfileDTO: DTOs.ProfileDTO = {
+              principalId = principalId;
+              username = "";
+              profilePicture = Blob.fromArray([]);
+              favouriteClubId = 0;
+              createDate = now();
+              canUpdateFavouriteClub = true;
           };
-          case (?foundManager){
-            let updatedManager: T.Manager = {
-                principalId = foundManager.principalId;
-                username = foundManager.username;
-                favouriteClubId = foundManager.favouriteClubId;
-                createDate = foundManager.createDate;
-                termsAccepted = foundManager.termsAccepted;
-                profilePictureCanisterId = foundManager.profilePictureCanisterId;
-                transfersAvailable = foundManager.transfersAvailable;
-                bankQuarterMillions = foundManager.bankQuarterMillions;
-                playerIds = updatedFantasyTeam.playerIds;
-                captainId = updatedFantasyTeam.captainId;
-                goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
-                goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
-                passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
-                passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
-                noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
-                noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
-                teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
-                teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
-                safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
-                safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
-                captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
-                captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
-                countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
-                countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
-                prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
-                braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
-                hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
-                transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
-                history = foundManager.history;
-            };
-            managers.put(principalId, updatedManager);
-            return #ok();
+          let newManager = buildNewManager(principalId, createProfileDTO, "");
+          let updatedManager: T.Manager = {
+              principalId = newManager.principalId;
+              username = newManager.username;
+              favouriteClubId = newManager.favouriteClubId;
+              createDate = newManager.createDate;
+              termsAccepted = newManager.termsAccepted;
+              profilePictureCanisterId = newManager.profilePictureCanisterId;
+              transfersAvailable = newManager.transfersAvailable;
+              bankQuarterMillions = newManager.bankQuarterMillions;
+              playerIds = updatedFantasyTeam.playerIds;
+              captainId = updatedFantasyTeam.captainId;
+              goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
+              goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
+              passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
+              passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
+              noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
+              noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
+              teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
+              teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
+              safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
+              safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
+              captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
+              captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
+              countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
+              countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
+              prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
+              braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
+              hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
+              transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
+              history = List.nil<T.FantasyTeamSeason>();
           };
+          managers.put(principalId, updatedManager);
+          return #ok();
         };
+        case (?foundManager){
+          let updatedManager: T.Manager = {
+              principalId = foundManager.principalId;
+              username = foundManager.username;
+              favouriteClubId = foundManager.favouriteClubId;
+              createDate = foundManager.createDate;
+              termsAccepted = foundManager.termsAccepted;
+              profilePictureCanisterId = foundManager.profilePictureCanisterId;
+              transfersAvailable = foundManager.transfersAvailable;
+              bankQuarterMillions = foundManager.bankQuarterMillions;
+              playerIds = updatedFantasyTeam.playerIds;
+              captainId = updatedFantasyTeam.captainId;
+              goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
+              goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
+              passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
+              passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
+              noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
+              noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
+              teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
+              teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
+              safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
+              safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
+              captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
+              captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
+              countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
+              countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
+              prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
+              braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
+              hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
+              transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
+              history = foundManager.history;
+          };
+          managers.put(principalId, updatedManager);
+          return #ok();
+        };
+      };
     };
 
-    public func updateUsername(principalId: Text, updatedUsername: Text) : async Result.Result<(), T.Error> {
-        
+    public func updateUsername(principalId: T.PrincipalId, updatedUsername: Text) : async Result.Result<(), T.Error> {
       if(not isUsernameValid(updatedUsername)){
         return #err(#InvalidData);
       };
@@ -255,50 +262,173 @@ module {
       let manager = managers.get(principalId);
 
       switch(manager){
-          case (null){
-            return #err(#NotFound);
+        case (null){
+          return #err(#NotFound);
+        };
+        case (?foundManager){
+          let updatedManager: T.Manager = {
+            principalId = foundManager.principalId;
+            username = updatedUsername;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            termsAccepted = foundManager.termsAccepted;
+            profilePictureCanisterId = foundManager.profilePictureCanisterId;
+            transfersAvailable = foundManager.transfersAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = foundManager.playerIds;
+            captainId = foundManager.captainId;
+            goalGetterGameweek = foundManager.goalGetterGameweek;
+            goalGetterPlayerId = foundManager.goalGetterPlayerId;
+            passMasterGameweek = foundManager.passMasterGameweek;
+            passMasterPlayerId = foundManager.passMasterPlayerId;
+            noEntryGameweek = foundManager.noEntryGameweek;
+            noEntryPlayerId = foundManager.noEntryPlayerId;
+            teamBoostGameweek = foundManager.teamBoostGameweek;
+            teamBoostClubId = foundManager.teamBoostClubId;
+            safeHandsGameweek = foundManager.safeHandsGameweek;
+            safeHandsPlayerId = foundManager.safeHandsPlayerId;
+            captainFantasticGameweek = foundManager.captainFantasticGameweek;
+            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+            countrymenGameweek = foundManager.countrymenGameweek;
+            countrymenCountryId = foundManager.countrymenCountryId;
+            prospectsGameweek = foundManager.prospectsGameweek;
+            braceBonusGameweek = foundManager.braceBonusGameweek;
+            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+            transferWindowGameweek = foundManager.transferWindowGameweek;
+            history = foundManager.history;
           };
-          case (?foundManager){
-            let updatedManager: T.Manager = {
-              principalId = foundManager.principalId;
-              username = updatedUsername;
-              favouriteClubId = foundManager.favouriteClubId;
-              createDate = foundManager.createDate;
-              termsAccepted = foundManager.termsAccepted;
-              profilePictureCanisterId = foundManager.profilePictureCanisterId;
-              transfersAvailable = foundManager.transfersAvailable;
-              bankQuarterMillions = foundManager.bankQuarterMillions;
-              playerIds = foundManager.playerIds;
-              captainId = foundManager.captainId;
-              goalGetterGameweek = foundManager.goalGetterGameweek;
-              goalGetterPlayerId = foundManager.goalGetterPlayerId;
-              passMasterGameweek = foundManager.passMasterGameweek;
-              passMasterPlayerId = foundManager.passMasterPlayerId;
-              noEntryGameweek = foundManager.noEntryGameweek;
-              noEntryPlayerId = foundManager.noEntryPlayerId;
-              teamBoostGameweek = foundManager.teamBoostGameweek;
-              teamBoostClubId = foundManager.teamBoostClubId;
-              safeHandsGameweek = foundManager.safeHandsGameweek;
-              safeHandsPlayerId = foundManager.safeHandsPlayerId;
-              captainFantasticGameweek = foundManager.captainFantasticGameweek;
-              captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
-              countrymenGameweek = foundManager.countrymenGameweek;
-              countrymenCountryId = foundManager.countrymenCountryId;
-              prospectsGameweek = foundManager.prospectsGameweek;
-              braceBonusGameweek = foundManager.braceBonusGameweek;
-              hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
-              transferWindowGameweek = foundManager.transferWindowGameweek;
-              history = foundManager.history;
-            };
-            managers.put(principalId, updatedManager);
-            return #ok();
-          };
+          managers.put(principalId, updatedManager);
+          return #ok();
+        };
       };
     };
-        
+
+    public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId) : async Result.Result<(), T.Error> {
+      
+      let manager = managers.get(principalId);
+
+      switch(manager){
+        case (null){
+          return #err(#NotFound);
+        };
+        case (?foundManager){
+          let updatedManager: T.Manager = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            favouriteClubId = favouriteClubId;
+            createDate = foundManager.createDate;
+            termsAccepted = foundManager.termsAccepted;
+            profilePictureCanisterId = foundManager.profilePictureCanisterId;
+            transfersAvailable = foundManager.transfersAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = foundManager.playerIds;
+            captainId = foundManager.captainId;
+            goalGetterGameweek = foundManager.goalGetterGameweek;
+            goalGetterPlayerId = foundManager.goalGetterPlayerId;
+            passMasterGameweek = foundManager.passMasterGameweek;
+            passMasterPlayerId = foundManager.passMasterPlayerId;
+            noEntryGameweek = foundManager.noEntryGameweek;
+            noEntryPlayerId = foundManager.noEntryPlayerId;
+            teamBoostGameweek = foundManager.teamBoostGameweek;
+            teamBoostClubId = foundManager.teamBoostClubId;
+            safeHandsGameweek = foundManager.safeHandsGameweek;
+            safeHandsPlayerId = foundManager.safeHandsPlayerId;
+            captainFantasticGameweek = foundManager.captainFantasticGameweek;
+            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+            countrymenGameweek = foundManager.countrymenGameweek;
+            countrymenCountryId = foundManager.countrymenCountryId;
+            prospectsGameweek = foundManager.prospectsGameweek;
+            braceBonusGameweek = foundManager.braceBonusGameweek;
+            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+            transferWindowGameweek = foundManager.transferWindowGameweek;
+            history = foundManager.history;
+          };
+          managers.put(principalId, updatedManager);
+          return #ok();
+        };
+      };
+    };
+
+    public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async Result.Result<(), T.Error> {
+      let existingManager = managers.get(principalId);
+      switch (existingManager) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundManager) {
+          
+          var profilePictureCanisterId = foundManager.profilePictureCanisterId;
+          if(Text.size(profilePictureCanisterId) > 0){
+            //replace the existing profile picture and the canister id will remain the same so return
+
+            //create canister and call update function
+              //Ensure only this canister can call the profile canister
+                //I guess when it's created set the allowed principal to this canister?
+              
 
 
 
+            return #ok();
+          };
+
+
+
+
+
+
+
+          //no current profile picture
+
+          //check if current canister has space
+
+            //if not add new profile picture canister and add
+              profilePictureCanisterId := ""; //this is where you set to the next canister
+            //if existing canister has space set to that and pu in there
+
+
+
+
+
+
+
+          
+          let updatedManager: T.Manager = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            termsAccepted = foundManager.termsAccepted;
+            profilePictureCanisterId = profilePictureCanisterId;
+            transfersAvailable = foundManager.transfersAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = foundManager.playerIds;
+            captainId = foundManager.captainId;
+            goalGetterGameweek = foundManager.goalGetterGameweek;
+            goalGetterPlayerId = foundManager.goalGetterPlayerId;
+            passMasterGameweek = foundManager.passMasterGameweek;
+            passMasterPlayerId = foundManager.passMasterPlayerId;
+            noEntryGameweek = foundManager.noEntryGameweek;
+            noEntryPlayerId = foundManager.noEntryPlayerId;
+            teamBoostGameweek = foundManager.teamBoostGameweek;
+            teamBoostClubId = foundManager.teamBoostClubId;
+            safeHandsGameweek = foundManager.safeHandsGameweek;
+            safeHandsPlayerId = foundManager.safeHandsPlayerId;
+            captainFantasticGameweek = foundManager.captainFantasticGameweek;
+            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+            countrymenGameweek = foundManager.countrymenGameweek;
+            countrymenCountryId = foundManager.countrymenCountryId;
+            prospectsGameweek = foundManager.prospectsGameweek;
+            braceBonusGameweek = foundManager.braceBonusGameweek;
+            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+            transferWindowGameweek = foundManager.transferWindowGameweek;
+            history = foundManager.history;
+          };
+          
+          managers.put(principalId, updatedManager);
+          return #ok();
+        };
+      };
+    };
 
     public func isUsernameAvailable(username: Text) : Bool{
         return false;
@@ -312,9 +442,6 @@ module {
         return false;
     };
 
-    public func updateProfilePicture(principalId: Text, profilePicture: Blob) : Text{
-        return "false";
-    };
 
     public func snapshotFantasyTeams() : (){
 
@@ -431,49 +558,6 @@ Integration points for authentication and authorization if needed.
     };
 
 
-    public func updateFavouriteTeam(principalName : Text, favouriteTeamId : Nat16) : () {
-      let existingTeam = fantasyTeams.get(principalName);
-      switch (existingTeam) {
-        case (null) {};
-        case (?foundTeam) {
-
-          let updatedFantasyTeam : T.FantasyTeam = {
-            principalId = foundTeam.fantasyTeam.principalId;
-            teamName = foundTeam.fantasyTeam.teamName;
-            favouriteTeamId = favouriteTeamId;
-            transfersAvailable = foundTeam.fantasyTeam.transfersAvailable;
-            bankBalance = foundTeam.fantasyTeam.bankBalance;
-            playerIds = foundTeam.fantasyTeam.playerIds;
-            captainId = foundTeam.fantasyTeam.captainId;
-            goalGetterGameweek = foundTeam.fantasyTeam.goalGetterGameweek;
-            goalGetterPlayerId = foundTeam.fantasyTeam.goalGetterPlayerId;
-            passMasterGameweek = foundTeam.fantasyTeam.passMasterGameweek;
-            passMasterPlayerId = foundTeam.fantasyTeam.passMasterPlayerId;
-            noEntryGameweek = foundTeam.fantasyTeam.noEntryGameweek;
-            noEntryPlayerId = foundTeam.fantasyTeam.noEntryPlayerId;
-            teamBoostGameweek = foundTeam.fantasyTeam.teamBoostGameweek;
-            teamBoostTeamId = foundTeam.fantasyTeam.teamBoostTeamId;
-            safeHandsGameweek = foundTeam.fantasyTeam.safeHandsGameweek;
-            safeHandsPlayerId = foundTeam.fantasyTeam.safeHandsPlayerId;
-            captainFantasticGameweek = foundTeam.fantasyTeam.captainFantasticGameweek;
-            captainFantasticPlayerId = foundTeam.fantasyTeam.captainFantasticPlayerId;
-            countrymenGameweek = foundTeam.fantasyTeam.countrymenGameweek;
-            countrymenCountryId = foundTeam.fantasyTeam.countrymenCountryId;
-            prospectsGameweek = foundTeam.fantasyTeam.prospectsGameweek;
-            braceBonusGameweek = foundTeam.fantasyTeam.braceBonusGameweek;
-            hatTrickHeroGameweek = foundTeam.fantasyTeam.hatTrickHeroGameweek;
-            transferWindowGameweek = foundTeam.fantasyTeam.transferWindowGameweek;
-          };
-
-          let updatedUserFantasyTeam : T.UserFantasyTeam = {
-            fantasyTeam = updatedFantasyTeam;
-            history = foundTeam.history;
-          };
-
-          fantasyTeams.put(principalName, updatedUserFantasyTeam);
-        };
-      };
-    };
 
     private func clearFantasyTeam(principalId : Text) : T.FantasyTeam {
       return {
@@ -609,30 +693,6 @@ Integration points for authentication and authorization if needed.
     };
   };
 
-
-public func updateProfilePicture(principalName : Text, profilePicture : Blob) : Result.Result<(), T.Error> {
-      let existingProfile = userProfiles.get(principalName);
-      switch (existingProfile) {
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundProfile) {
-          userProfilePictures.put(principalName, profilePicture);
-
-          
-          let updatedProfile : T.Profile = {
-            principalName = foundProfile.principalName;
-            displayName = foundProfile.displayName;
-            termsAccepted = foundProfile.termsAccepted;
-            profilePictureCanisterId = canisterId;
-            favouriteTeamId = foundProfile.favouriteTeamId;
-            createDate = foundProfile.createDate;
-          };
-              userProfilePictures.put(principalName, profilePicture);
-          return #ok(());
-        };
-      };
-    };
 
 
 
