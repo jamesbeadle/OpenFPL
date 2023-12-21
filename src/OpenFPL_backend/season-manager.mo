@@ -86,6 +86,130 @@ module {
         stable_weekly_leaderboard_canister_ids);      
     };
 
+    private func removeExpiredTimers() : () {
+      let currentTime = Time.now();
+      timers := Array.filter<T.TimerInfo>(
+        timers,
+        func(timer : T.TimerInfo) : Bool {
+          return timer.triggerTime > currentTime;
+        },
+      );
+    };
+
+    private func setAndBackupTimer(duration : Timer.Duration, timerInfo: T.TimerInfo) : async () {
+      let jobId : Timer.TimerId = switch (timerInfo.callbackName) {
+        case "gameweekBeginExpired" {
+          Timer.setTimer(duration, gameweekBeginExpiredCallback);
+        };
+        case "gameKickOffExpired" {
+          Timer.setTimer(duration, gameKickOffExpiredCallback);
+        };
+        case "gameCompletedExpired" {
+          Timer.setTimer(duration, gameCompletedExpiredCallback);
+        };
+        case "loanExpired" {
+          Timer.setTimer(duration, loanExpiredCallback);
+        };
+        case "transferWindowStart" {
+          Timer.setTimer(duration, transferWindowStartCallback);
+        };
+        case "transferWindowEnd" {
+          Timer.setTimer(duration, transferWindowEndCallback);
+        };
+        case _ { 
+          Timer.setTimer(duration, defaultCallback);
+        };
+      };
+
+      let triggerTime = switch (duration) {
+        case (#seconds s) {
+          Time.now() + s * 1_000_000_000;
+        };
+        case (#nanoseconds ns) {
+          Time.now() + ns;
+        };
+      };
+
+      let newTimerInfo : T.TimerInfo = {
+        id = jobId;
+        triggerTime = timerInfo.triggerTime;
+        callbackName = timerInfo.callbackName;
+        playerId = timerInfo.playerId;
+        fixtureId = timerInfo.fixtureId;
+      };
+
+      var timerBuffer = Buffer.fromArray<T.TimerInfo>(timers);
+      timerBuffer.add(newTimerInfo);
+      timers := Buffer.toArray(timerBuffer);
+    };
+    private func defaultCallback() : async () {};
+
+    private func recreateTimers() {
+      let currentTime = Time.now();
+      for (timerInfo in Iter.fromArray(timers)) {
+        let remainingDuration = timerInfo.triggerTime - currentTime;
+
+        if (remainingDuration > 0) {
+          let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
+
+          switch (timerInfo.callbackName) {
+            case "gameweekBeginExpired" {
+              ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
+            };
+            case "gameKickOffExpired" {
+              ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
+            };
+            case "gameCompletedExpired" {
+              ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
+            };
+            case "loanExpired" {
+              ignore Timer.setTimer(duration, loanExpiredCallback);
+            };
+            case "transferWindowStart" {
+              ignore Timer.setTimer(duration, transferWindowStartCallback);
+            };
+            case "transferWindowEnd" {
+              ignore Timer.setTimer(duration, transferWindowEndCallback);
+            };
+            case _ {};
+          };
+        };
+      };
+    };
+
+    private func gameweekBeginExpiredCallback() : async () {
+      await gameweekBegin();
+    };
+
+    private func gameKickOffExpiredCallback() : async () {
+      await gameKickOff();
+      removeExpiredTimers();
+    };
+
+    private func gameCompletedExpiredCallback() : async () {
+      await gameCompleted();
+      removeExpiredTimers();
+    };
+
+    private func loanExpiredCallback() : async () {
+      playerComposite.loanExpired();//go through all players and check if any have their loan expired and recall them to their team if so
+      await updateCacheHash("players");        
+      removeExpiredTimers();
+    };
+
+    private func transferWindowStartCallback() : async () {
+  //Set a flag to allow the january transfer window when submitting teams but also check for it
+        //SETUP THE JAN TRANSFER WINDOW
+      await transferWindowStartCallback();
+      removeExpiredTimers();
+    };
+
+    private func transferWindowEndCallback() : async () {
+      //end transfer window
+      await transferWindowEndCallback();
+      removeExpiredTimers();
+    };
+
     public func gameweekBegin() : async () {
       managerProfileManager.snapshotFantasyTeams();
       managerProfileManager.resetTransfers();  
@@ -106,7 +230,6 @@ module {
       await updateCacheHash("fixtures");        
     };
     
-
     public func getSystemState() : DTOs.SystemStateDTO {
       return systemState;
     };
@@ -246,6 +369,7 @@ module {
       return managerProfileManager.isUsernameAvailable(username);
     };
 
+    //Governance validation and execution functions
     public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : Bool {
       return seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
     };
@@ -373,145 +497,6 @@ module {
     public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
       return clubComposite.executeUpdateClub(updateClubDTO);
     };
-
-
-
-
-
-
-
-  private func removeExpiredTimers() : () {
-    let currentTime = Time.now();
-    timers := Array.filter<T.TimerInfo>(
-      timers,
-      func(timer : T.TimerInfo) : Bool {
-        return timer.triggerTime > currentTime;
-      },
-    );
-  };
-
-  private func setAndBackupTimer(duration : Timer.Duration, timerInfo: T.TimerInfo) : async () {
-    let jobId : Timer.TimerId = switch (timerInfo.callbackName) {
-      case "gameweekBeginExpired" {
-        Timer.setTimer(duration, gameweekBeginExpiredCallback);
-      };
-      case "gameKickOffExpired" {
-        Timer.setTimer(duration, gameKickOffExpiredCallback);
-      };
-      case "gameCompletedExpired" {
-        Timer.setTimer(duration, gameCompletedExpiredCallback);
-      };
-      case "loanExpired" {
-        Timer.setTimer(duration, loanExpiredCallback);
-      };
-      case "transferWindowStart" {
-        Timer.setTimer(duration, transferWindowStartCallback);
-      };
-      case "transferWindowEnd" {
-        Timer.setTimer(duration, transferWindowEndCallback);
-      };
-      case _ { 
-        Timer.setTimer(duration, defaultCallback);
-      };
-    };
-
-    let triggerTime = switch (duration) {
-      case (#seconds s) {
-        Time.now() + s * 1_000_000_000;
-      };
-      case (#nanoseconds ns) {
-        Time.now() + ns;
-      };
-    };
-
-    let newTimerInfo : T.TimerInfo = {
-      id = jobId;
-      triggerTime = timerInfo.triggerTime;
-      callbackName = timerInfo.callbackName;
-      playerId = timerInfo.playerId;
-      fixtureId = timerInfo.fixtureId;
-    };
-
-    var timerBuffer = Buffer.fromArray<T.TimerInfo>(timers);
-    timerBuffer.add(newTimerInfo);
-    timers := Buffer.toArray(timerBuffer);
-  };
-  private func defaultCallback() : async () {};
-
-
-
-  private func recreateTimers() {
-    let currentTime = Time.now();
-    for (timerInfo in Iter.fromArray(timers)) {
-      let remainingDuration = timerInfo.triggerTime - currentTime;
-
-      if (remainingDuration > 0) {
-        let duration : Timer.Duration = #nanoseconds(Int.abs(remainingDuration));
-
-        switch (timerInfo.callbackName) {
-          case "gameweekBeginExpired" {
-            ignore Timer.setTimer(duration, gameweekBeginExpiredCallback);
-          };
-          case "gameKickOffExpired" {
-            ignore Timer.setTimer(duration, gameKickOffExpiredCallback);
-          };
-          case "gameCompletedExpired" {
-            ignore Timer.setTimer(duration, gameCompletedExpiredCallback);
-          };
-          case "loanExpired" {
-            ignore Timer.setTimer(duration, loanExpiredCallback);
-          };
-          case "transferWindowStart" {
-            ignore Timer.setTimer(duration, transferWindowStartCallback);
-          };
-          case "transferWindowEnd" {
-            ignore Timer.setTimer(duration, transferWindowEndCallback);
-          };
-          case _ {};
-        };
-      };
-    };
-  };
-
-
-
-
-
-  private func gameweekBeginExpiredCallback() : async () {
-    await seasonManager.gameweekBegin();
-  };
-
-  private func gameKickOffExpiredCallback() : async () {
-    await seasonManager.gameKickOff();
-    seasonManager.removeExpiredTimers();
-  };
-
-  private func gameCompletedExpiredCallback() : async () {
-    await seasonManager.gameCompleted();
-    seasonManager.removeExpiredTimers();
-  };
-
-  private func loanExpiredCallback() : async () {
-    playerComposite.loanExpired();//go through all players and check if any have their loan expired and recall them to their team if so
-    await updateCacheHash("players");        
-    removeExpiredTimers();
-  };
-
-  private func transferWindowStartCallback() : async () {
-//Set a flag to allow the january transfer window when submitting teams but also check for it
-      //SETUP THE JAN TRANSFER WINDOW
-    await seasonManager.transferWindowStartCallback();
-    seasonManager.removeExpiredTimers();
-  };
-
-  private func transferWindowEndCallback() : async () {
-    //end transfer window
-    await seasonManager.transferWindowEndCallback();
-    seasonManager.removeExpiredTimers();
-  };
-
-
-
 
   };
 };
