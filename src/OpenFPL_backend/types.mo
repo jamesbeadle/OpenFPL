@@ -12,6 +12,9 @@ module Types {
   public type CountryId = Nat16;
   public type PrincipalId = Text;
 
+  public type WeeklyLeaderboardKey = (SeasonId, GameweekNumber);
+  public type MonthlyLeaderboardKey = (SeasonId, CalendarMonth, ClubId);
+
   public type Error = {
     #NotFound;
     #AlreadyExists;
@@ -232,7 +235,7 @@ module Types {
     entries : List.List<LeaderboardEntry>;
   };
 
-  public type Seasonleaderboard = {
+  public type SeasonLeaderboard = {
     seasonId : SeasonId;
     entries : List.List<LeaderboardEntry>;
   };

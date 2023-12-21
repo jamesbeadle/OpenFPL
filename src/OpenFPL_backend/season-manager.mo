@@ -13,12 +13,16 @@ import Time "mo:base/Time";
 import Debug "mo:base/Debug";
 import Result "mo:base/Result";
 import HashMap "mo:base/HashMap";
+import Text "mo:base/Text";
+import Nat "mo:base/Nat";
+import Principal "mo:base/Principal";
 import SnapshotManager "patterns/snapshot-manager";
 import SnapshotFactory "patterns/snapshot-factory";
 import PlayerComposite "patterns/player-composite";
 import ClubComposite "patterns/club-composite";
 import StrategyManager "patterns/strategy-manager";
 import ManagerProfileManager "patterns/manager-profile-manager";
+import Utilities "utilities";
 
 module {
 
@@ -49,7 +53,7 @@ module {
       unretirePlayer : (playerId: T.PlayerId) -> async ();
     };
 
-    let systemState: T.SystemState = {
+    private var systemState: T.SystemState = {
       calculationGameweek = 1;
       calculationMonth = 8;
       calculationSeason = 1;
@@ -68,18 +72,18 @@ module {
       { category = "player_events"; hash = "DEFAULT_VALUE" }
     ]);
 
-    private var nextClubId : Nat = 1;
-    private var nextPlayerId : Nat = 1;
-    private var nextSeasonId : Nat16 = 1;
-    private var nextFixtureId : Nat32 = 1;
-    private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<PrincipalId, T.Manager>(100, Text.equal, Text.hash);
+    private var nextClubId : T.ClubId = 1;
+    private var nextPlayerId : T.PlayerId = 1;
+    private var nextSeasonId : T.SeasonId = 1;
+    private var nextFixtureId : T.FixtureId = 1;
+    private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var players = List.fromArray<T.Player>([]);
     private var seasons = List.fromArray<T.Season>([]);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);    
-    private var seasonLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, Text> = HashMap.HashMap<T.SeasonId, T.SeasonLeaderboards>(100, Utilities.eqNat16, Utilities.hashNat16);
-    private var monthlyLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.CalendarMonth, HashMap.HashMap<T.ClubId, Text>>> = HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.CalendarMonth, HashMap.HashMap<T.ClubId, Text>>>(100, Utilities.eqNat16, Utilities.hashNat16);
-    private var weeklyLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, Text>> = HashMap.HashMap<T.SeasonId, HashMap.HashMap<T.GameweekNumber, Text>>(100, Utilities.eqNat16, Utilities.hashNat16);
-    
+
+    private var seasonLeaderboardCanisterIds : HashMap.HashMap<T.SeasonId, Text> = HashMap.HashMap<T.SeasonId, Text>(100, Utilities.eqNat16, Utilities.hashNat16);
+    private var monthlyLeaderboardCanisterIds : HashMap.HashMap<T.MonthlyLeaderboardKey, Text> = HashMap.HashMap<T.MonthlyLeaderboardKey, Text>(100, Utilities.eqMonthlyKey, Utilities.hashMonthlyKey);
+    private var weeklyLeaderboardCanisterIds : HashMap.HashMap<T.WeeklyLeaderboardKey, Text> = HashMap.HashMap<T.WeeklyLeaderboardKey, Text>(100, Utilities.eqWeeklyKey, Utilities.hashWeeklyKey);
 
     public func setStableData(
       stable_system_state : T.SystemState,
@@ -93,18 +97,25 @@ module {
       stable_seasons: [T.Season],
       stable_profile_picture_canister_ids:  [(T.PrincipalId, Text)],
       stable_season_leaderboard_canister_ids:  [(T.SeasonId, Text)],
-      stable_monthly_leaderboard_canister_ids:  [(T.SeasonId, [(T.CalendarMonth, [(T.ClubId, Text)])])],
-      stable_weekly_leaderboard_canister_ids:  [(T.SeasonId, [(T.GameweekNumber, Text)])]) {
+      stable_monthly_leaderboard_canister_ids:  [(T.MonthlyLeaderboardKey, Text)],
+      stable_weekly_leaderboard_canister_ids:  [(T.WeeklyLeaderboardKey, Text)]) {
 
       systemState := stable_system_state;
-      dataCacheHashes := stable_data_cache_hashes;
+      dataCacheHashes := List.fromArray(stable_data_cache_hashes);
       nextClubId := stable_next_club_id;
       nextPlayerId := stable_next_player_id;
       nextSeasonId := stable_next_season_id;
       nextFixtureId := stable_next_fixture_id;
-      managers := stable_managers;
-      players := stable_players;
-      seasons := stable_seasons;
+       
+      managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
+        stable_managers.vals(),
+        stable_managers.size(),
+        Text.equal,
+        Text.hash,
+      );
+
+      players := List.fromArray(stable_players);
+      seasons := List.fromArray(stable_seasons);
 
       profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
         stable_profile_picture_canister_ids.vals(),
@@ -120,22 +131,20 @@ module {
         Utilities.hashNat16
       );
 
-      monthlyLeaderboardCanisterIds := HashMap.fromIter<T.SeasonId, [(T.CalendarMonth, [(T.ClubId, Text)])]>(
+      monthlyLeaderboardCanisterIds := HashMap.fromIter<T.MonthlyLeaderboardKey, Text>(
         stable_monthly_leaderboard_canister_ids.vals(),
         stable_monthly_leaderboard_canister_ids.size(),
-        Utilities.eqNat16, 
-        Utilities.hashNat16
+        Utilities.eqMonthlyKey, 
+        Utilities.hashMonthlyKey
       );
 
-      weeklyLeaderboardCanisterIds := HashMap.fromIter<T.SeasonId, [(T.GameweekNumber, Text)]>(
+      weeklyLeaderboardCanisterIds := HashMap.fromIter<T.WeeklyLeaderboardKey, Text>(
         stable_weekly_leaderboard_canister_ids.vals(),
         stable_weekly_leaderboard_canister_ids.size(),
-        Utilities.eqNat16, 
-        Utilities.hashNat16
+        Utilities.eqWeeklyKey, 
+        Utilities.hashWeeklyKey
       );
-
-
-
+      
     };
 
       /* 
@@ -490,59 +499,37 @@ module {
     };
 
     public func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      let seasonGameweekCanisterIds = weeklyLeaderboardCanisterIds.get(seasonId);
-      switch(seasonGameweekCanisterIds){
+      let leaderboardKey: T.WeeklyLeaderboardKey = (seasonId, gameweek);
+      let canisterId = weeklyLeaderboardCanisterIds.get(leaderboardKey);
+      switch(canisterId){
         case (null) {
           return #err(#NotFound);
         };
-        case (?foundGameweekCanisterIds){
-          let gameweekCanisterId = foundGameweekCanisterIds.get(gameweek);
-          switch(gameweekCanisterId){
-            case null {
-              return #err(#NotFound);
-            };
-            case (?foundGameweekCanisterId){
-              let weekly_leaderboard_canister = actor (foundGameweekCanisterId) : actor {
-                getEntries : () -> async DTOs.WeeklyLeaderboardDTO;
-              };
+        case (?foundCanisterId){
+          let weekly_leaderboard_canister = actor (foundCanisterId) : actor {
+            getEntries : () -> async DTOs.WeeklyLeaderboardDTO;
+          };
 
-              let leaderboardEntries = await weekly_leaderboard_canister.getEntries();
-              return #ok(leaderboardEntries);
-            };
-          }
+          let leaderboardEntries = await weekly_leaderboard_canister.getEntries();
+          return #ok(leaderboardEntries);
         };
       };
     };
     
     public func getMonthlyLeaderboard(seasonId: T.SeasonId, month: T.CalendarMonth, clubId: T.ClubId) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error>{
-      let seasonMonthsCanisterIds = monthlyLeaderboardCanisterIds.get(seasonId);
-      switch(seasonMonthsCanisterIds){
+      let leaderboardKey: T.MonthlyLeaderboardKey = (seasonId, month, clubId);
+      let canisterId = monthlyLeaderboardCanisterIds.get(leaderboardKey);
+      switch(canisterId){
         case (null) {
           return #err(#NotFound);
         };
-        case (?foundSeasonMonthsCanisterIds){
-          let monthCanisterIds = foundSeasonMonthsCanisterIds.get(month);
-          switch(monthCanisterIds){
-            case null {
-              return #err(#NotFound);
-            };
-            case (?foundMonthCanisterIds){
-              let monthClubCanisterId = foundMonthCanisterIds.get(clubId);
-              switch(monthClubCanisterId){
-                case null {
-                  return #err(#NotFound);
-                };
-                case (?foundMonthClubCanisterId){
-                  let monthly_leaderboard_canister = actor (foundMonthClubCanisterId) : actor {
-                    getEntries : () -> async DTOs.MonthlyLeaderboardDTO;
-                  };
-              
-                  let leaderboardEntries = await monthly_leaderboard_canister.getEntries();
-                  return #ok(leaderboardEntries);
-                };
-              };
-            }
+        case (?foundCanisterId){
+          let monthly_leaderboard_canister = actor (foundCanisterId) : actor {
+            getEntries : () -> async DTOs.MonthlyLeaderboardDTO;
           };
+
+          let leaderboardEntries = await monthly_leaderboard_canister.getEntries();
+          return #ok(leaderboardEntries);
         };
       };
     };
@@ -572,9 +559,9 @@ module {
 
     };
     
-    public func getTotalManagers(principalId: Text){
+    public func getTotalManagers(){
 
-      fantasyTeams.size();
+      //fantasyTeams.size();
 
     };
     
@@ -583,7 +570,7 @@ module {
     };
 
     public func seasonActive() : Bool {
-
+/*
       if (activeGameweek > 1) {
         return true;
       };
@@ -591,7 +578,7 @@ module {
       let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
       if (List.some(List.fromArray(activeFixtures), func(fixture : T.Fixture) : Bool { return fixture.status > 0 })) {
         return true;
-      };
+      };*/
 
       return false;
     };
@@ -1153,7 +1140,7 @@ module {
     */
 
     public func saveFantasyTeam(principalId: Text, fantasyTeam: DTOs.UpdateFantasyTeamDTO){
-
+/*
       let principalId = Principal.toText(caller);
       let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(principalId);
 
@@ -1253,27 +1240,29 @@ module {
           return await fantasyTeamsInstance.updateFantasyTeam(principalId, newPlayers, captainId, bonusId, bonusPlayerId, bonusTeamId, seasonManager.getActiveGameweek(), existingPlayers, updateTransferWindowGameweek);
         };
       };
+      */
     };
 
     public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : Bool {
-      return #ok();
+      return false;// #ok();
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<(), T.Error> {
-       await playerCanister.revaluePlayerUp(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
-   
-    };
-
-    public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : Bool {
+       //await playerCanister.revaluePlayerUp(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
       return #ok();
     };
 
+    public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : Bool {
+      return false;// #ok();
+    };
+
     public func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<(), T.Error> {
-      await playerCanister.revaluePlayerDown(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+      //await playerCanister.revaluePlayerDown(playerId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
       return #ok();
     };
 
     public func validateSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : Bool {
+      /*
       let eventsBelow0 = Array.filter<T.PlayerEventData>(
       playerEvents,
       func(event : T.PlayerEventData) : Bool {
@@ -1374,12 +1363,12 @@ module {
           };
         };
       };
-
+*/
       return true;
     };
 
     public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async Result.Result<(), T.Error> {
-        
+        /*
       let activeSeasonId = seasonManager.getActiveSeasonId();
       let activeGameweek = seasonManager.getActiveGameweek();
       let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
@@ -1547,9 +1536,7 @@ module {
             };
           };
         };
-      };
-
-      let fixtureEvents = Buffer.toArray(allPlayerEventsBuffer);
+         let fixtureEvents = Buffer.toArray(allPlayerEventsBuffer);
       await seasonManager.fixtureConsensusReached(fixture.seasonId, fixture.gameweek, fixtureId, fixtureEvents);
       return #ok();
 
@@ -1559,10 +1546,13 @@ module {
       //IN HERE IF THE SEASON IS COMPLETE CRAETE THE CANISTER FOR THE NEXT SEASON LEADERBOARD
 
 
-
+*/return #ok();
     };
+     
+     
 
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
+      /*
       let findIndex = func(arr : [T.TeamId], value : T.TeamId) : ?Nat {
         for (i in Array.keys(arr)) {
           if (arr[i] == value) {
@@ -1667,11 +1657,12 @@ module {
         };
       };
 
+      */
       return #ok();
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<(), T.Error> {
-
+      /*
 seasons := List.map<T.Season, T.Season>(
         seasons,
         func(currentSeason : T.Season) : T.Season {
@@ -1721,9 +1712,12 @@ seasons := List.map<T.Season, T.Season>(
 
 
       await seasonManager.addInitialFixtures(seasonId, seasonFixtures);
+      */
+      return #ok();
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
+      /*
       if (updatedFixtureDate <= Time.now()) {
         return #err(#InvalidData);
       };
@@ -1736,15 +1730,17 @@ seasons := List.map<T.Season, T.Season>(
       if (fixture.id == 0 or fixture.status == 3) {
         return #err(#InvalidData);
       };
-
+      */
       return #ok();
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<(), T.Error> {
-      await seasonManager.rescheduleFixture(fixtureId, currentFixtureGameweek, updatedFixtureGameweek, updatedFixtureDate);
+      //await seasonManager.rescheduleFixture(fixtureId, currentFixtureGameweek, updatedFixtureGameweek, updatedFixtureDate);
+      return #ok();
     };
 
     public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
+      /*
       if (loanEndDate <= Time.now()) {
         return #err(#InvalidData);
       };
@@ -1768,15 +1764,17 @@ seasons := List.map<T.Season, T.Season>(
           case (?foundTeam) {};
         };
       };
-
+      */
       return #ok();
     };
 
     public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<(), T.Error> {
-      await playerCanister.loanPlayer(playerId, loanTeamId, loanEndDate, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+      //await playerCanister.loanPlayer(playerId, loanTeamId, loanEndDate, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+      return #ok();
     };
 
     public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
+      /*
       let player = await playerCanister.getPlayer(playerId);
       if (player.id == 0) {
         return #err(#InvalidData);
@@ -1791,15 +1789,17 @@ seasons := List.map<T.Season, T.Season>(
           case (?foundTeam) {};
         };
       };
-
+      */
       return #ok();
     };
 
     public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<(), T.Error> {
-      await playerCanister.transferPlayer(playerId, newTeamId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+      //await playerCanister.transferPlayer(playerId, newTeamId, seasonManager.getActiveSeason().id, seasonManager.getActiveGameweek());
+      return #ok();
     };
 
     public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
+      /*
       let player = await playerCanister.getPlayer(playerId);
       if (player.id == 0) {
         return #err(#InvalidData);
@@ -1809,15 +1809,17 @@ seasons := List.map<T.Season, T.Season>(
       if (not player.onLoan) {
         return #err(#InvalidData);
       };
-
+      */
       return #ok();
     };
 
     public func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<(), T.Error> {
-      await playerCanister.recallPlayer(playerId);
+      //await playerCanister.recallPlayer(playerId);
+      return #ok();
     };
 
     public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
+      /*
       switch (teamsInstance.getTeam(teamId)) {
         case (null) {
           return #err(#InvalidData);
@@ -1844,15 +1846,17 @@ seasons := List.map<T.Season, T.Season>(
       if (Utilities.calculateAgeFromUnix(dateOfBirth) < 16) {
         return #err(#InvalidData);
       };
-
+      */
       return #ok();
     };
 
     public func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<(), T.Error> {
-      await playerCanister.createPlayer(teamId, position, firstName, lastName, shirtNumber, value, dateOfBirth, nationality);
+      //await playerCanister.createPlayer(teamId, position, firstName, lastName, shirtNumber, value, dateOfBirth, nationality);
+      return #ok();
     };
 
     public func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
+      /*
       let player = await playerCanister.getPlayer(playerId);
       if (player.id == 0) {
         return #err(#InvalidData);
@@ -1877,51 +1881,62 @@ seasons := List.map<T.Season, T.Season>(
       if (Utilities.calculateAgeFromUnix(dateOfBirth) < 16) {
         return #err(#InvalidData);
       };
-
+      */
       return #ok();
     };
 
     public func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<(), T.Error> {
-     await playerCanister.updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality);
+     //await playerCanister.updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality);
+      return #ok();
     };
 
     public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
+      /*
       let player = await playerCanister.getPlayer(playerId);
       if (player.id == 0 or player.isInjured) {
         return #err(#InvalidData);
       };
+      */
       return #ok();
     };
 
     public func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<(), T.Error> {
-       await playerCanister.setPlayerInjury(playerId, description, expectedEndDate);
+       //await playerCanister.setPlayerInjury(playerId, description, expectedEndDate);
+      return #ok();
     };
     
     public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
+      /*
       let player = await playerCanister.getPlayer(playerId);
       if (player.id == 0 or player.retirementDate > 0) {
         return #err(#InvalidData);
       };
+      */
       return #ok();
     };
 
     public func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<(), T.Error> {
-     await playerCanister.retirePlayer(playerId, retirementDate);
+     //await playerCanister.retirePlayer(playerId, retirementDate);
+      return #ok();
     };
 
     public func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
+      /*
       let player = await playerCanister.getPlayer(playerId);
       if (player.id == 0 or player.retirementDate == 0) {
         return #err(#InvalidData);
       };
+      */
       return #ok();
     };
     
     public func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<(), T.Error> {
-      await playerCanister.unretirePlayer(playerId);
+      //await playerCanister.unretirePlayer(playerId);
+      return #ok();
     };
 
     public func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
+      /*
       let allTeams = teamsInstance.getTeams();
 
       if (Array.size(allTeams) >= 20) {
@@ -1933,15 +1948,17 @@ seasons := List.map<T.Season, T.Season>(
       if (Array.size(seasonFixtures) > 0) {
         return #err(#InvalidData);
       };
-
+      */
       return #ok();
     };
 
     public func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<(), T.Error> {
-      await teamsInstance.promoteFormerTeam(teamId);
+      //await teamsInstance.promoteFormerTeam(teamId);
+      return #ok();
     };
 
     public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
+      /*
       let allTeams = teamsInstance.getTeams();
 
       if (Array.size(allTeams) >= 20) {
@@ -1977,15 +1994,17 @@ seasons := List.map<T.Season, T.Season>(
       if (not Utilities.validateHexColor(thirdHexColour)) {
         return #err(#InvalidData);
       };
-
+      */
       return #ok();
     };
 
     public func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<(), T.Error> {
-     await teamsInstance.promoteNewTeam(name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
+     //await teamsInstance.promoteNewTeam(name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
+      return #ok();
     };
 
     public func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
+      /*
       switch (teamsInstance.getTeam(teamId)) {
         case (null) {
           return #err(#InvalidData);
@@ -2016,12 +2035,13 @@ seasons := List.map<T.Season, T.Season>(
       if (not Utilities.validateHexColor(thirdHexColour)) {
         return #err(#InvalidData);
       };
-
+      */
       return #ok();
     };
 
     public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<(), T.Error> {
-     await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
+     //await teamsInstance.updateTeam(teamId, name, friendlyName, abbreviatedName, primaryHexColour, secondaryHexColour, thirdHexColour, shirtType);
+      return #ok();
     };
 
 
