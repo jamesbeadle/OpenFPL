@@ -229,29 +229,35 @@ actor Self {
   };
 
 
+  private stable var stable_timers : [T.TimerInfo] = [];
+  private stable var stable_managers : [(Text, T.Manager)] = [];
+  private stable var stable_profile_picture_canister_ids : [(T.PrincipalId, Text)] = [];
+  private stable var stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)] = [];
+  private stable var stable_monthly_leaderboard_canister_ids : [(T.MonthlyLeaderboardKey, Text)] = [];
+  private stable var stable_weekly_leaderboard_canister_ids : [(T.WeeklyLeaderboardKey, Text)] = [];
+
 
   //DO SEASON MANAGER SO I KNOW THE DATA THAT NEEDS BACKING UP!
 
   //stable variable backup
   /*
-  private stable var stable_profiles : [(Text, T.Profile)] = [];
   private stable var stable_fantasy_teams : [(Text, T.UserFantasyTeam)] = [];
+
   private stable var stable_active_season_id : Nat16 = 0;
   private stable var stable_active_gameweek : Nat8 = 0;
   private stable var stable_interesting_gameweek : Nat8 = 0;
-  private stable var stable_active_fixtures : [T.Fixture] = [];
+  
   private stable var stable_next_fixture_id : Nat32 = 0;
   private stable var stable_next_season_id : Nat16 = 0;
+
   private stable var stable_seasons : [T.Season] = [];
   private stable var stable_clubs : [T.Club] = [];
   private stable var stable_relegated_clubs : [T.Team] = [];
+  
   private stable var stable_next_team_id : Nat16 = 0;
   private stable var stable_max_votes_per_user : Nat64 = 0;
-  private stable var stable_season_leaderboards : [(Nat16, T.SeasonLeaderboards)] = [];
-  private stable var stable_monthly_leaderboards : [(T.SeasonId, List.List<T.ClubLeaderboard>)] = [];
   private stable var stable_data_cache_hashes : [T.DataCache] = [];
 */
-  private stable var stable_timers : [T.TimerInfo] = [];
 
   system func preupgrade() {
     stable_timers := seasonManager.getTimers();
