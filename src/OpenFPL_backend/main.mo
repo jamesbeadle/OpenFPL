@@ -1,4 +1,11 @@
+import Result "mo:base/Result";
+import Time "mo:base/Time";
+import Array "mo:base/Array";
+import Timer "mo:base/Timer";
+import Buffer "mo:base/Buffer";
 import SeasonManager "season-manager";
+import T "types";
+import DTOs "DTOs";
 
 actor Self {
 
@@ -42,30 +49,30 @@ actor Self {
     );
   };
 
-  private func setAndBackupTimer(timerInfo: T.TimerInfo) : async () {
+  private func setAndBackupTimer(duration : Timer.Duration, timerInfo: T.TimerInfo) : async () {
     let jobId : Timer.TimerId = switch (timerInfo.callbackName) {
       case "gameweekBeginExpired" {
-        Timer.setTimer(timerInfo.duration, gameweekBeginExpiredCallback);
+        Timer.setTimer(duration, gameweekBeginExpiredCallback);
       };
       case "gameKickOffExpired" {
-        Timer.setTimer(timerInfo.duration, gameKickOffExpiredCallback);
+        Timer.setTimer(duration, gameKickOffExpiredCallback);
       };
       case "gameCompletedExpired" {
-        Timer.setTimer(timerInfo.duration, gameCompletedExpiredCallback);
+        Timer.setTimer(duration, gameCompletedExpiredCallback);
       };
       case "loanExpired" {
-        Timer.setTimer(timerInfo.duration, loanExpiredCallback);
+        Timer.setTimer(duration, loanExpiredCallback);
       };
       case "transferWindowStart" {
-        Timer.setTimer(timerInfo.duration, transferWindowStartCallback);
+        Timer.setTimer(duration, transferWindowStartCallback);
       };
       case "transferWindowEnd" {
-        Timer.setTimer(timerInfo.duration, transferWindowEndCallback);
+        Timer.setTimer(duration, transferWindowEndCallback);
       };
       case _ { };
     };
 
-    let triggerTime = switch (timerInfo.duration) {
+    let triggerTime = switch (duration) {
       case (#seconds s) {
         Time.now() + s * 1_000_000_000;
       };
@@ -101,8 +108,8 @@ actor Self {
     return seasonManager.getWeeklyLeaderboard(seasonId, gameweek);
   };
 
-  public shared query func getClubLeaderboard(seasonId: T.SeasonId, clubId: T.ClubId, month: T.CalendarMonth) : async Result.Result<[DTOs.ClubLeaderboardDTO], T.Error>  {
-    return seasonManager.getClubLeaderboard(seasonId, clubId, month);
+  public shared query func getMonthlyLeaderboard(seasonId: T.SeasonId, clubId: T.ClubId, month: T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error>  {
+    return seasonManager.getMonthlyLeaderboard(seasonId, clubId, month);
   };
 
   public shared query func getSeasonLeaderboard(seasonId: T.SeasonId) : async Result.Result<[DTOs.SeasonLeaderboardDTO], T.Error>  {
@@ -323,8 +330,9 @@ actor Self {
   private stable var stable_season_leaderboards : [(Nat16, T.SeasonLeaderboards)] = [];
   private stable var stable_monthly_leaderboards : [(T.SeasonId, List.List<T.ClubLeaderboard>)] = [];
   private stable var stable_data_cache_hashes : [T.DataCache] = [];
-  private stable var stable_timers : [T.TimerInfo] = [];
 */
+  private stable var stable_timers : [T.TimerInfo] = [];
+
   system func preupgrade() {
     /*
     stable_fantasy_teams := fantasyTeamsInstance.getFantasyTeams();

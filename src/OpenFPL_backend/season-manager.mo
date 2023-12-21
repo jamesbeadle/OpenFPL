@@ -26,7 +26,7 @@ import Utilities "utilities";
 
 module {
 
-  public class SeasonManager(setAndBackupTimer : (timerInfo: T.TimerInfo) -> async ()) {
+  public class SeasonManager(setAndBackupTimer : (duration : Timer.Duration, timerInfo: T.TimerInfo) -> async ()) {
 
     let CANISTER_IDS = {
       retired_players_canister = "pec6o-uqaaa-aaaal-qb7eq-cai";
@@ -146,6 +146,15 @@ module {
       );
       
     };
+
+
+
+
+
+
+
+
+
 
       /* 
       
