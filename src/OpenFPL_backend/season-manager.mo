@@ -82,7 +82,6 @@ module {
         stable_weekly_leaderboard_canister_ids);      
     };
 
-
     private func gameweekBeginExpiredCallback() : async () {
 
       managerComposite.snapshotFantasyTeams();

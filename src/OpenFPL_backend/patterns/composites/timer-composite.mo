@@ -8,6 +8,7 @@ import Array "mo:base/Array";
 import Timer "mo:base/Timer";
 import Int "mo:base/Int";
 import Buffer "mo:base/Buffer";
+import Utilities "../../utilities";
 
 module {
   public class TimerComposite(
@@ -25,6 +26,16 @@ module {
       timers := stable_timers;
     };
 
+    public func setTimer(time: Int, callbackName: Text){
+      let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
+      let timerInfo: T.TimerInfo = {
+        id = 0;
+        triggerTime = time;
+        callbackName = callbackName;
+      };  
+      setAndBackupTimer(duration, timerInfo);
+    };
+
     private func removeExpiredTimers() : () {
       let currentTime = Time.now();
       timers := Array.filter<T.TimerInfo>(
@@ -35,7 +46,7 @@ module {
       );
     };
 
-    private func setAndBackupTimer(duration : Timer.Duration, timerInfo: T.TimerInfo) : async () {
+    private func setAndBackupTimer(duration : Timer.Duration, timerInfo: T.TimerInfo) {
       let jobId : Timer.TimerId = switch (timerInfo.callbackName) {
         case "gameweekBeginExpired" {
           Timer.setTimer(duration, gameweekBeginExpiredCallback);
@@ -73,8 +84,6 @@ module {
         id = jobId;
         triggerTime = timerInfo.triggerTime;
         callbackName = timerInfo.callbackName;
-        playerId = timerInfo.playerId;
-        fixtureId = timerInfo.fixtureId;
       };
 
       var timerBuffer = Buffer.fromArray<T.TimerInfo>(timers);

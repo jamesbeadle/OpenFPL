@@ -258,8 +258,6 @@ module Types {
     id : Int;
     triggerTime : Int;
     callbackName : Text;
-    playerId : PlayerId;
-    fixtureId : FixtureId;
   };
 
   public type ProposalTimer = {
