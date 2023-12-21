@@ -30,5 +30,190 @@ getPlayer : (playerId : PlayerId) -> async Player;
 
 
 */
+
+
+      /* reschedule fixture
+      if (updatedFixtureDate <= Time.now()) {
+        return #err(#InvalidData);
+      };
+
+      if (updatedFixtureGameweek <= seasonManager.getActiveGameweek()) {
+        return #err(#InvalidData);
+      };
+
+      let fixture = await seasonManager.getFixture(seasonManager.getActiveSeason().id, currentFixtureGameweek, fixtureId);
+      if (fixture.id == 0 or fixture.status == 3) {
+        return #err(#InvalidData);
+      };
+      */
+
+      
+      /* calidate loan plaer
+      if (loanEndDate <= Time.now()) {
+        return #err(#InvalidData);
+      };
+
+      let player = await playerCanister.getPlayer(playerId);
+      if (player.id == 0) {
+        return #err(#InvalidData);
+      };
+
+      //player is not already on loan
+      if (player.onLoan) {
+        return #err(#InvalidData);
+      };
+
+      //loan team exists unless 0
+      if (loanTeamId > 0) {
+        switch (teamsInstance.getTeam(loanTeamId)) {
+          case (null) {
+            return #err(#InvalidData);
+          };
+          case (?foundTeam) {};
+        };
+      };
+      */
+
+      /* transfer player
+      let player = await playerCanister.getPlayer(playerId);
+      if (player.id == 0) {
+        return #err(#InvalidData);
+      };
+
+      //new club is premier league team
+      if (newTeamId > 0) {
+        switch (teamsInstance.getTeam(newTeamId)) {
+          case (null) {
+            return #err(#InvalidData);
+          };
+          case (?foundTeam) {};
+        };
+      };
+      */
+
+      
+      /* validate recall player
+      let player = await playerCanister.getPlayer(playerId);
+      if (player.id == 0) {
+        return #err(#InvalidData);
+      };
+
+      //player is on loan
+      if (not player.onLoan) {
+        return #err(#InvalidData);
+      };
+      */
+
+      
+      /* validate craeste player
+      switch (teamsInstance.getTeam(teamId)) {
+        case (null) {
+          return #err(#InvalidData);
+        };
+        case (?foundTeam) {};
+      };
+
+      if (Text.size(firstName) > 50) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(lastName) > 50) {
+        return #err(#InvalidData);
+      };
+
+      if (position > 3) {
+        return #err(#InvalidData);
+      };
+
+      if (not countriesInstance.isCountryValid(nationality)) {
+        return #err(#InvalidData);
+      };
+
+      if (Utilities.calculateAgeFromUnix(dateOfBirth) < 16) {
+        return #err(#InvalidData);
+      };
+      */
+
+      
+      /* validate update player
+      let player = await playerCanister.getPlayer(playerId);
+      if (player.id == 0) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(firstName) > 50) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(lastName) > 50) {
+        return #err(#InvalidData);
+      };
+
+      if (position > 3) {
+        return #err(#InvalidData);
+      };
+
+      if (not countriesInstance.isCountryValid(nationality)) {
+        return #err(#InvalidData);
+      };
+
+      if (Utilities.calculateAgeFromUnix(dateOfBirth) < 16) {
+        return #err(#InvalidData);
+      };
+      */
+
+      
+      /* set player injury
+      let player = await playerCanister.getPlayer(playerId);
+      if (player.id == 0 or player.isInjured) {
+        return #err(#InvalidData);
+      };
+      */
+      
+      /* retire player
+      let player = await playerCanister.getPlayer(playerId);
+      if (player.id == 0 or player.retirementDate > 0) {
+        return #err(#InvalidData);
+      };
+      */
+
+      
+      /* Promote new club
+      let allTeams = teamsInstance.getTeams();
+
+      if (Array.size(allTeams) >= 20) {
+        return #err(#InvalidData);
+      };
+
+      let activeSeason = seasonManager.getActiveSeason();
+      let seasonFixtures = seasonManager.getFixturesForSeason(activeSeason.id);
+      if (Array.size(seasonFixtures) > 0) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(name) > 100) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(friendlyName) > 50) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(abbreviatedName) != 3) {
+        return #err(#InvalidData);
+      };
+
+      if (not Utilities.validateHexColor(primaryHexColour)) {
+        return #err(#InvalidData);
+      };
+
+      if (not Utilities.validateHexColor(secondaryHexColour)) {
+        return #err(#InvalidData);
+      };
+
+      if (not Utilities.validateHexColor(thirdHexColour)) {
+        return #err(#InvalidData);
+      };
+      */
   };
 };
