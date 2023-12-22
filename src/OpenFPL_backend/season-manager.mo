@@ -150,8 +150,11 @@ module {
     public func getManager(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error>{
 
       //TODO: Get the leaderboard entry information to pass in
+      let weeklyLeaderboardEntry = leaderboardComposite.getWeeklyLeaderboardEntry(principalId, seasonId, calculationGameweek);
+      let monthlyLeaderboardEntry = leaderboardComposite.getMonthlyLeaderboardEntry(principalId, seasonId, calculationMonth);
+      let seasonLeaderboardEntry = leaderboardComposite.getSeasonLeaderboardEntry(principalId, seasonId);
 
-      return await managerComposite.getManager(principalId, systemState.calculationSeason, null, null, null);
+      return await managerComposite.getManager(principalId, systemState.calculationSeason, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
     
     public func getManagerGameweek(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error>{

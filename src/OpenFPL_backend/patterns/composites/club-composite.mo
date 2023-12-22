@@ -48,7 +48,7 @@ module {
         };
         case (?foundClub) {};
       };
-      
+
       return #ok("Valid");
     };
 
@@ -69,46 +69,34 @@ module {
     };
 
     public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<Text,Text> {
-
-/*
-      //TODO: Need to validate
-      let allTeams = teamsInstance.getTeams();
-
-      if (Array.size(allTeams) >= 20) {
-        return #err(#InvalidData);
+      
+      if (List.size(clubs) >= 20) {
+        return #err("Invalid: League cannot contain more than 20 teams.");
       };
 
-      let activeSeason = seasonManager.getActiveSeason();
-      let seasonFixtures = seasonManager.getFixturesForSeason(activeSeason.id);
-      if (Array.size(seasonFixtures) > 0) {
-        return #err(#InvalidData);
+      if (Text.size(promoteNewClubDTO.name) > 100) {
+        return #err("Invalid: Club name cannot be greater than 100 characters.");
       };
 
-      if (Text.size(name) > 100) {
-        return #err(#InvalidData);
+      if (Text.size(promoteNewClubDTO.friendlyName) > 50) {
+        return #err("Invalid: Club friendly name cannot be greater than 50 characters.");
       };
 
-      if (Text.size(friendlyName) > 50) {
-        return #err(#InvalidData);
+      if (Text.size(promoteNewClubDTO.abbreviatedName) != 3) {
+        return #err("Invalid: Club abbreviated name must be 3 characters.");
       };
 
-      if (Text.size(abbreviatedName) != 3) {
-        return #err(#InvalidData);
+      if (not Utilities.validateHexColor(promoteNewClubDTO.primaryColourHex)) {
+        return #err("Invalid: Invalid primary hex colour.");
       };
 
-      if (not Utilities.validateHexColor(primaryHexColour)) {
-        return #err(#InvalidData);
+      if (not Utilities.validateHexColor(promoteNewClubDTO.secondaryColourHex)) {
+        return #err("Invalid: Invalid secondary hex colour.");
       };
 
-      if (not Utilities.validateHexColor(secondaryHexColour)) {
-        return #err(#InvalidData);
+      if (not Utilities.validateHexColor(promoteNewClubDTO.thirdColourHex)) {
+        return #err("Invalid: Invalid third hex colour.");
       };
-
-      if (not Utilities.validateHexColor(thirdHexColour)) {
-        return #err(#InvalidData);
-      };
-      */
-
 
       return #ok("Valid");
     };
