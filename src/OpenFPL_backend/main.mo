@@ -317,22 +317,22 @@ actor Self {
   };
 
   system func postupgrade() {
-    timerComposite.setTimers(stable_timers);
-    seasonManager.setManagers(stable_managers);
-    seasonManager.setProfilePictureCanisterIds(stable_profile_picture_canister_ids);
-    seasonManager.setSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
-    seasonManager.setMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
-    seasonManager.setWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
+    timerComposite.setStableTimers(stable_timers);
+    seasonManager.setStableManagers(stable_managers);
+    seasonManager.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);
+    seasonManager.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
+    seasonManager.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
+    seasonManager.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
     seasonManager.setStableClubs(stable_clubs);
-    seasonManager.setRelegatedClubs(stable_relegated_clubs);
-    seasonManager.setNextClubId(stable_next_club_id);
-    seasonManager.setPlayers(stable_players);
-    seasonManager.setNextPlayerId(stable_next_player_id);
-    seasonManager.setSeasons(stable_seasons);
-    seasonManager.setNextSeasonId(stable_next_season_id);
-    seasonManager.setNextFixtureId(stable_next_fixture_id);
-    seasonManager.setDataCacheHashes(stable_data_cache_hashes);
-    seasonManager.setSystemState(stable_system_state);
+    seasonManager.setStableRelegatedClubs(stable_relegated_clubs);
+    seasonManager.setStableNextClubId(stable_next_club_id);
+    seasonManager.setStablePlayers(stable_players);
+    seasonManager.setStableNextPlayerId(stable_next_player_id);
+    seasonManager.setStableSeasons(stable_seasons);
+    seasonManager.setStableNextSeasonId(stable_next_season_id);
+    seasonManager.setStableNextFixtureId(stable_next_fixture_id);
+    seasonManager.setStableDataCacheHashes(stable_data_cache_hashes);
+    seasonManager.setStableSystemState(stable_system_state);
     seasonManager.recreateTimers();
   };
   

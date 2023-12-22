@@ -452,12 +452,30 @@ module {
 
 
 
-    public func getStableManagers(): [(Text, T.Manager)] {
+    public func getStableManagers(): [(T.PrincipalId, T.Manager)] {
       return Iter.toArray(managers.entries());
+    };
+
+    public func setStableManagers(stable_managers: [(T.PrincipalId, T.Manager)]) {
+       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
+        stable_managers.vals(),
+        stable_managers.size(),
+        Text.equal,
+        Text.hash
+      );
     };
 
     public func getStableProfilePictureCanisterIds(): [(T.PrincipalId, Text)] {
       return Iter.toArray(profilePictureCanisterIds.entries());
+    };
+
+    public func setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids: [(T.PrincipalId, Text)])  {
+      profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
+        stable_profile_picture_canister_ids.vals(),
+        stable_profile_picture_canister_ids.size(),
+        Text.equal,
+        Text.hash
+      );
     };
 
 

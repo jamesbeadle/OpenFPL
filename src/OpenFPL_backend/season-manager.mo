@@ -331,60 +331,117 @@ module {
       return await clubComposite.executeUpdateClub(updateClubDTO);
     };
     
+    //Stable data getters and setters:
     public func getStableManagers(): [(Text, T.Manager)] {
       return managerComposite.getStableManagers();
+    };
+
+    public func setStableManagers(stable_managers: [(Text, T.Manager)]){
+      managerComposite.setStableManagers(stable_managers);
     };
 
     public func getStableProfilePictureCanisterIds(): [(T.PrincipalId, Text)] {
       return managerComposite.getStableProfilePictureCanisterIds();
     };
 
+    public func setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]){
+      managerComposite.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);
+    };
+
     public func getStableSeasonLeaderboardCanisterIds(): [(T.SeasonId, Text)] {
       return leaderboardComposite.getStableSeasonLeaderboardCanisterIds();
+    };
+
+    public func setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids: [(T.SeasonId, Text)]) {
+      leaderboardComposite.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
     };
 
     public func getStableMonthlyLeaderboardCanisterIds(): [(T.MonthlyLeaderboardKey, Text)] {
       return leaderboardComposite.getStableMonthlyLeaderboardCanisterIds();
     };
 
+    public func setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids: [(T.MonthlyLeaderboardKey, Text)]) {
+      leaderboardComposite.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
+    };
+
     public func getStableWeeklyLeaderboardCanisterIds(): [(T.WeeklyLeaderboardKey, Text)] {
       return leaderboardComposite.getStableWeeklyLeaderboardCanisterIds();
+    };
+
+    public func setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids: [(T.WeeklyLeaderboardKey, Text)]) {
+      leaderboardComposite.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
     };
 
     public func getStableClubs(): [T.Club] {
       return clubComposite.getStableClubs();
     };
 
+    public func setStableClubs(stable_clubs: [T.Club]) {
+      clubComposite.setStableClubs(stable_clubs);
+    };
+
     public func getStableRelegatedClubs(): [T.Club] {
       return clubComposite.getStableRelegatedClubs();
+    };
+
+    public func setStableRelegatedClubs(stable_relegated_clubs: [T.Club]) {
+      clubComposite.setStableRelegatedClubs(stable_relegated_clubs);
     };
 
     public func getStableNextClubId(): T.ClubId {
       return clubComposite.getStableNextClubId();
     };
 
+    public func setStableNextClubId(stable_next_club_id: T.ClubId) {
+      clubComposite.setStableNextClubId(stable_next_club_id);
+    };
+
     public func getStablePlayers(): [T.Player] {
       return playerComposite.getStablePlayers();
+    };
+
+    public func setStablePlayers(stable_players: [T.Player]) {
+      playerComposite.setStablePlayers(stable_players);
     };
 
     public func getStableNextPlayerId() : T.PlayerId {
       return playerComposite.getStableNextPlayerId();
     };
 
+    public func setStableNextPlayerId(stable_next_player_id: T.PlayerId) {
+      playerComposite.setStableNextPlayerId(stable_next_player_id);
+    };
+
     public func getStableSeasons() : [T.Season] {
       return seasonComposite.getStableSeasons();
+    };
+
+    public func setStableSeasons(stable_seasons: [T.Season]) {
+      seasonComposite.setStableSeasons(stable_seasons);
     };
 
     public func getStableNextSeasonId() : T.SeasonId {
       return seasonComposite.getStableNextSeasonId();
     };
 
+    public func setStableNextSeasonId(stable_next_season_id: T.SeasonId) {
+      seasonComposite.setStableNextSeasonId(stable_next_season_id);
+    };
+
     public func getStableNextFixtureId() : T.FixtureId {
       return seasonComposite.getStableNextFixtureId();
     };
 
+    public func setStableNextFixtureId(stable_next_fixture_id: T.FixtureId) {
+      seasonComposite.setStableNextFixtureId(stable_next_fixture_id);
+    };
+
     public func getStableDataHashes() : [T.DataCache] {
       return List.toArray(dataCacheHashes);
+    };
+
+    public func setStableDataHashes(stable_data_cache_hashes: [T.DataCache]) {
+      dataCacheHashes := List.fromArray(stable_data_cache_hashes);
     };
 
     public func getStableSystemState()  : T.SystemState {
