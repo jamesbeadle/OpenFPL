@@ -371,14 +371,13 @@ module {
       };
     };
 
-    public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId) : async Result.Result<(), T.Error> {
-      
-      //TODO: ENSURE YOU CAN ONLY SET IF NOT ALREADY SET OR GAMEWEEK > 0 
-
+    public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId, systemState: T.SystemState) : async Result.Result<(), T.Error> {
+                 
       let manager = managers.get(principalId);
 
       switch(manager){
         case (null){
+
           let createProfileDTO: DTOs.ProfileDTO = {
               principalId = principalId;
               username = "";
@@ -392,6 +391,9 @@ module {
           return #ok();
         };
         case (?foundManager){
+          if((systemState.pickTeamGameweek > 1 and foundManager.favouriteClubId > 0 and List.size(foundManager.history) > 0)){
+            return #err(#InvalidData);
+          };
           let updatedManager: T.Manager = {
             principalId = foundManager.principalId;
             username = foundManager.username;
