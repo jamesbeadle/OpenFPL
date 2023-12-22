@@ -442,9 +442,9 @@ module {
       let existingManager = managers.get(principalId);
       switch (existingManager) {
         case (null) {
-          setManagerProfileImage(principalId, profilePicture);
 
-          //SET THE CANISTER ID FOR THE MANAGERS PROFILE TO THE CURRENT ACTIVE ONE
+          let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
+
           let createProfileDTO: DTOs.ProfileDTO = {
               principalId = principalId;
               username = "";
@@ -453,43 +453,92 @@ module {
               createDate = now();
               canUpdateFavouriteClub = true;
           };
-          let newManager = buildNewManager(principalId, createProfileDTO, "");
+
+          let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
           managers.put(principalId, newManager);
+
           return #ok();
         };
         case (?foundManager) {
-
+          var profilePictureCanisterId = "";
           if(foundManager.profilePictureCanisterId == ""){
-            setManagerProfileImage(principalId, profilePicture);
-            //SET THE CANISTER ID FOR THE MANAGERS PROFILE TO THE CURRENT ACTIVE ONE
-            
+            profilePictureCanisterId := await setManagerProfileImage(principalId, profilePicture);
+
+            let updatedManager: T.Manager = {
+              principalId = foundManager.principalId;
+              username = foundManager.username;
+              favouriteClubId = foundManager.favouriteClubId;
+              createDate = foundManager.createDate;
+              termsAccepted = foundManager.termsAccepted;
+              profilePictureCanisterId = profilePictureCanisterId;
+              transfersAvailable = foundManager.transfersAvailable;
+              monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
+              bankQuarterMillions = foundManager.bankQuarterMillions;
+              playerIds = foundManager.playerIds;
+              captainId = foundManager.captainId;
+              goalGetterGameweek = foundManager.goalGetterGameweek;
+              goalGetterPlayerId = foundManager.goalGetterPlayerId;
+              passMasterGameweek = foundManager.passMasterGameweek;
+              passMasterPlayerId = foundManager.passMasterPlayerId;
+              noEntryGameweek = foundManager.noEntryGameweek;
+              noEntryPlayerId = foundManager.noEntryPlayerId;
+              teamBoostGameweek = foundManager.teamBoostGameweek;
+              teamBoostClubId = foundManager.teamBoostClubId;
+              safeHandsGameweek = foundManager.safeHandsGameweek;
+              safeHandsPlayerId = foundManager.safeHandsPlayerId;
+              captainFantasticGameweek = foundManager.captainFantasticGameweek;
+              captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+              countrymenGameweek = foundManager.countrymenGameweek;
+              countrymenCountryId = foundManager.countrymenCountryId;
+              prospectsGameweek = foundManager.prospectsGameweek;
+              braceBonusGameweek = foundManager.braceBonusGameweek;
+              hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+              transferWindowGameweek = foundManager.transferWindowGameweek;
+              history = foundManager.history;
+            };
+            managers.put(principalId, updatedManager);
           }
           else{
-            profilePictureCanister.updateProfilePicture(principal, profilePicture);
-            //No need to update the manager object because the path is still the same
+            let profilePictureCanister = actor (activeProfileCanisterId) : actor {
+              hasSpaceAvailable : () -> async Bool;
+              addProfilePicture : (principalId: T.PrincipalId, profilePicture: Blob) -> async ();
+            };
+            await profilePictureCanister.addProfilePicture(principalId, profilePicture);
           };
-
           return #ok();
         };
       };
     };
 
-    private func setManagerProfileImage(principalId: Text, profilePicture: Blob){
+    private func setManagerProfileImage(principalId: Text, profilePicture: Blob) : async Text{
 
       if(activeProfileCanisterId == ""){
-        activeProfileCanisterId := createProfileCanister(principalId, profilePicture);
+        return createProfileCanister(principalId, profilePicture);
       }
       else{
-        //TODO: instantitate canister from current
-        let hasSpaceAvailable = profilePictureCanister.hasSpaceAvailable();
+        let profilePictureCanister = actor (activeProfileCanisterId) : actor {
+          hasSpaceAvailable : () -> async Bool;
+          addProfilePicture : (principalId: T.PrincipalId, profilePicture: Blob) -> async ();
+        };
+        let hasSpaceAvailable = await profilePictureCanister.hasSpaceAvailable();
 
         if(hasSpaceAvailable){
-          profilePictureCanister.addProfilePicture(principalId, profilePicture);
+          await profilePictureCanister.addProfilePicture(principalId, profilePicture);
+          return activeProfileCanisterId;
         }
         else{
-          activeProfileCanisterId := createProfileCanister(principalId, profilePicture);
+          return createProfileCanister(principalId, profilePicture);
         };
       };
+    };
+
+    private func createProfileCanister(principalId: Text, profilePicture: Blob) : Text {
+
+      //Create a new profile picture canister
+      //Record the canister for the cycles watcher to watch
+      //add the profile picture
+      //return the canister id
+      return "";
     };
 
     public func isUsernameValid(username: Text, principalId: Text) : Bool{
