@@ -198,7 +198,11 @@ module DTOs {
   };
 
   public type LeaderboardEntryDTO = {
-
+    position : Int;
+    positionText : Text;
+    username : Text;
+    principalId : Text;
+    points : Int16;
   };
 
   public type SeasonDTO = {

@@ -77,7 +77,7 @@ module {
         }
     };
 
-    public func getManager(principalId: Text, seasonId: T.SeasonId, weeklyLeaderboardEntry: ?T.LeaderboardEntry, monthlyLeaderboardEntry: ?T.LeaderboardEntry, seasonLeaderboardEntry: ?T.LeaderboardEntry) : async Result.Result<DTOs.ManagerDTO, T.Error>{
+    public func getManager(principalId: Text, seasonId: T.SeasonId, weeklyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry: ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error>{
 
       var weeklyPosition : Int = 0;
       var monthlyPosition : Int = 0;
@@ -603,6 +603,16 @@ module {
       };
 
       return true;
+    };
+
+    public func getFavouriteClub(principalId: Text) : T.ClubId {
+      let manager = managers.get(principalId);
+      switch(manager){
+        case (null) {return 0};
+        case (?foundManager){
+          return foundManager.favouriteClubId;
+        }
+      }
     };
 
     private func invalidBonuses(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : Bool {

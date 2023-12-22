@@ -106,6 +106,65 @@ module {
         };
       };
     };
+
+    public func getWeeklyLeaderboardEntry(principalId: Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async ?DTOs.LeaderboardEntryDTO {
+      
+      let leaderboardKey: T.WeeklyLeaderboardKey = (seasonId, gameweek);
+      let canisterId = weeklyLeaderboardCanisterIds.get(leaderboardKey);
+      switch(canisterId){
+        case (null) {
+          return null;
+        };
+        case (?foundCanisterId){
+          let weekly_leaderboard_canister = actor (foundCanisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat) -> async DTOs.WeeklyLeaderboardDTO;
+            getEntry : (principalId: Text) -> async DTOs.LeaderboardEntryDTO;
+          };
+
+          let leaderboardEntry = await weekly_leaderboard_canister.getEntry(principalId);
+          return ?leaderboardEntry;
+        };
+      };
+    };
+
+    public func getMonthlyLeaderboardEntry(principalId: Text, seasonId : T.SeasonId, month : T.CalendarMonth, clubId: T.ClubId) : async ?DTOs.LeaderboardEntryDTO {
+      
+      let leaderboardKey: T.MonthlyLeaderboardKey = (seasonId, month, clubId);
+      let canisterId = monthlyLeaderboardCanisterIds.get(leaderboardKey);
+      switch(canisterId){
+        case (null) {
+          return null;
+        };
+        case (?foundCanisterId){
+          let monthly_leaderboard_canister = actor (foundCanisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat) -> async DTOs.MonthlyLeaderboardDTO;
+            getEntry : (principalId: Text) -> async DTOs.LeaderboardEntryDTO;
+          };
+
+          let leaderboardEntry = await monthly_leaderboard_canister.getEntry(principalId);
+          return ?leaderboardEntry;
+        };
+      };
+    };
+
+    public func getSeasonLeaderboardEntry(principalId: Text, seasonId : T.SeasonId) : async ?DTOs.LeaderboardEntryDTO {
+      
+      let canisterId = seasonLeaderboardCanisterIds.get(seasonId);
+      switch(canisterId){
+        case (null) {
+          return null;
+        };
+        case (?foundCanisterId){
+          let season_leaderboard_canister = actor (foundCanisterId) : actor {
+            getEntries : (limit : Nat, offset : Nat) -> async DTOs.SeasonLeaderboardDTO;
+            getEntry : (principalId: Text) -> async DTOs.LeaderboardEntryDTO;
+          };
+
+          let leaderboardEntry = await season_leaderboard_canister.getEntry(principalId);
+          return ?leaderboardEntry;
+        };
+      };
+    };
     
     public func getStableSeasonLeaderboardCanisterIds(): [(T.SeasonId, Text)] {
       return Iter.toArray(seasonLeaderboardCanisterIds.entries());
