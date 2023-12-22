@@ -159,14 +159,14 @@ module {
       if(invalidBonuses(updatedFantasyTeam, manager, systemState, players)){
         return #err(#InvalidData);
       };
+      
+      if(invalidTransfers(updatedFantasyTeam, manager, systemState, players)){
+        return #err(#InvalidTeamError);
+      };  
 
       if(invalidTeamComposition(updatedFantasyTeam, manager)){
         return #err(#InvalidTeamError);
       };
-      
-      if(invalidTransfers(updatedFantasyTeam, manager)){
-        return #err(#InvalidTeamError);
-      };  
       
       switch(manager){
         case (null){
@@ -255,41 +255,15 @@ module {
       
 
 
-    private func invalidTransfers(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager) : Bool {
+    private func invalidTransfers(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : Bool {
       
-      //new team have as many transfers as you want
-      //existing team check transfers not less than 3 if not transfer window or their first week still
-
-      //new team check it doesn't cost more than 300m
-      //existing team check any transfers made doesn't reduce bank to below 300m
-
-      //if transfer window gameweek is current gameweek and already used in existing team then error
-        //also error if the date now isn't january
-
-
-
-      var newTransfersAvailable = foundTeam.transfersAvailable;
-      if(not systemState.transferWindowActive){
-        //TODO:update transfers available that they have not made more than 3 changes
-        newTransfersAvailable := newTransfersAvailable - Nat8.fromNat(Array.size(playersBought));
+      if(updatedFantasyTeam.transferWindowGameweek == systemState.pickTeamGameweek and not systemState.transferWindowActive){
+        return true;
       };
 
-      if(newTransfersAvailable < 0){
-        return false;
-      };
-
-
-
-
-
-
-
-
-      let updatedPlayerIds: [T.PlayerId] = fantasyTeamDTO.playerIds;
-      
       switch(existingFantasyTeam){
         case (null){
-          let spend = Array.foldLeft(updatedPlayerIds, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
+          let spend = Array.foldLeft(updatedFantasyTeam.playerIds, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
             let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
             switch(player){
               case (null){
@@ -302,29 +276,27 @@ module {
           });
           
           if(spend > 1200){
-            return false;
+            return true;
           };
         };
         case (?foundTeam){
-      
           let existingPlayerIds: [T.PlayerId] = foundTeam.playerIds;
 
-          let playersBought = Array.filter(updatedPlayerIds, func(playerId : T.PlayerId) : Bool {
+          let playersBought = Array.filter(updatedFantasyTeam.playerIds, func(playerId : T.PlayerId) : Bool {
             Array.find(existingPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
           });
 
           var newTransfersAvailable = foundTeam.transfersAvailable;
           if(not systemState.transferWindowActive){
-            //TODO:check that they have not made more than 3 changes
             newTransfersAvailable := newTransfersAvailable - Nat8.fromNat(Array.size(playersBought));
           };
 
           if(newTransfersAvailable < 0){
-            return false;
+            return true;
           };
 
           let playersSold = Array.filter(existingPlayerIds, func(playerId : T.PlayerId) : Bool {
-            Array.find(updatedPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
+            Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
           });
 
           let spend = Array.foldLeft(playersBought, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
@@ -353,11 +325,12 @@ module {
 
           let remainingBank: Nat = foundTeam.bankQuarterMillions - spend + sold;
           if(remainingBank < 0){
-            return false;
+            return true;
           };
+
         };
       };
-      
+    
       return false;
     };
     
