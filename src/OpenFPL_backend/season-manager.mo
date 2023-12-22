@@ -162,14 +162,8 @@ module {
     };
 
     public func saveFantasyTeam(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error>{
-
       let players = playerComposite.getPlayers(systemState.calculationSeason);
-
-      if(not strategyManager.isFantasyTeamValid(updatedFantasyTeam, systemState.pickTeamGameweek, players)){
-        return #err(#InvalidTeamError);
-      };
-
-      return await managerComposite.updateManager(principalId, updatedFantasyTeam);
+      return await managerComposite.updateManager(principalId, updatedFantasyTeam, systemState, players);
     };
 
     public func updateUsername(principalId: Text, updatedUsername: Text) : async Result.Result<(), T.Error>{
