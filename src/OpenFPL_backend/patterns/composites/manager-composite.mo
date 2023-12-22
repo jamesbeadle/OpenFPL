@@ -164,7 +164,7 @@ module {
         return #err(#InvalidTeamError);
       };  
 
-      if(invalidTeamComposition(updatedFantasyTeam, manager, players)){
+      if(invalidTeamComposition(updatedFantasyTeam, players)){
         return #err(#InvalidTeamError);
       };
       
@@ -256,91 +256,6 @@ module {
 
 
     
-    private func invalidTeamComposition(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager, players: [DTOs.PlayerDTO]) : Bool {
-      
-      //Check 11 players
-      //Check valid formation
-      //Check valid captain
-      
-      //NOT ALL PLAYERS?!!?!?!
-      let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(players, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
-
-      let playerCount = playerPositions.size();
-      if (playerCount != 11) {
-        return false;
-      };
-
-      var teamPlayerCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
-      var playerIdCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
-      var goalkeeperCount = 0;
-      var defenderCount = 0;
-      var midfielderCount = 0;
-      var forwardCount = 0;
-      var captainInTeam = false;
-
-      for (i in Iter.range(0, playerCount -1)) {
-        let count = teamPlayerCounts.get(Nat16.toText(players[i].clubId));
-        switch (count) {
-          case (null) {
-            teamPlayerCounts.put(Nat16.toText(players[i].clubId), 1);
-          };
-          case (?count) {
-            teamPlayerCounts.put(Nat16.toText(players[i].clubId), count + 1);
-          };
-        };
-
-        let playerIdCount = playerIdCounts.get(Nat16.toText(players[i].id));
-        switch (playerIdCount) {
-          case (null) { playerIdCounts.put(Nat16.toText(players[i].id), 1) };
-          case (?count) {
-            return false;
-          };
-        };
-
-        if (players[i].position == #Goalkeeper) {
-          goalkeeperCount += 1;
-        };
-
-        if (players[i].position == #Defender) {
-          defenderCount += 1;
-        };
-
-        if (players[i].position == #Midfielder) {
-          midfielderCount += 1;
-        };
-
-        if (players[i].position == #Forward) {
-          forwardCount += 1;
-        };
-
-        if(players[i].id == fantasyTeamDTO.captainId){
-          captainInTeam := true;
-        }
-
-      };
-
-      for ((key, value) in teamPlayerCounts.entries()) {
-        if (value > 2) {
-          return false;
-        };
-      };
-
-      if (
-        goalkeeperCount != 1 or defenderCount < 3 or defenderCount > 5 or midfielderCount < 3 or midfielderCount > 5 or forwardCount < 1 or forwardCount > 3,
-      ) {
-        return false;
-      };
-
-      if(not captainInTeam){
-        return false;
-      };
-
-      
-
-
-
-      return true;
-    };
 
 
 
@@ -557,15 +472,15 @@ module {
       };
     };
 
+
+
+
+
+
     public func isValidProfilePicture(profilePicture: Blob) : Bool{
         //TODO: implement
         return false;
     };
-
-
-
-
-
 
 
     //TODO: move the private validator functions here
@@ -778,6 +693,87 @@ module {
         };
       };
     
+      return false;
+    };
+    
+    private func invalidTeamComposition(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, players: [DTOs.PlayerDTO]) : Bool {
+      
+      let newTeamPlayers = Array.filter(players, func(player : DTOs.PlayerDTO) : Bool {
+        Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != player.id }) == null
+      });
+
+      let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(newTeamPlayers, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
+      
+      let playerCount = playerPositions.size();
+      if (playerCount != 11) {
+        return false;
+      };
+
+      var teamPlayerCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
+      var playerIdCounts = HashMap.HashMap<Text, Nat8>(0, Text.equal, Text.hash);
+      var goalkeeperCount = 0;
+      var defenderCount = 0;
+      var midfielderCount = 0;
+      var forwardCount = 0;
+      var captainInTeam = false;
+
+      for (i in Iter.range(0, playerCount -1)) {
+        let count = teamPlayerCounts.get(Nat16.toText(players[i].clubId));
+        switch (count) {
+          case (null) {
+            teamPlayerCounts.put(Nat16.toText(players[i].clubId), 1);
+          };
+          case (?count) {
+            teamPlayerCounts.put(Nat16.toText(players[i].clubId), count + 1);
+          };
+        };
+
+        let playerIdCount = playerIdCounts.get(Nat16.toText(players[i].id));
+        switch (playerIdCount) {
+          case (null) { playerIdCounts.put(Nat16.toText(players[i].id), 1) };
+          case (?count) {
+            return true;
+          };
+        };
+
+        if (players[i].position == #Goalkeeper) {
+          goalkeeperCount += 1;
+        };
+
+        if (players[i].position == #Defender) {
+          defenderCount += 1;
+        };
+
+        if (players[i].position == #Midfielder) {
+          midfielderCount += 1;
+        };
+
+        if (players[i].position == #Forward) {
+          forwardCount += 1;
+        };
+
+        if(players[i].id == updatedFantasyTeam.captainId){
+          captainInTeam := true;
+        }
+
+      };
+
+      for ((key, value) in teamPlayerCounts.entries()) {
+        if (value > 2) {
+          return true;
+        };
+      };
+
+      if (
+        goalkeeperCount != 1 or defenderCount < 3 or defenderCount > 5 or midfielderCount < 3 or midfielderCount > 5 or forwardCount < 1 or forwardCount > 3,
+      ) {
+        return true;
+      };
+
+      if(not captainInTeam){
+        return true;
+      };
+
       return false;
     };
 
