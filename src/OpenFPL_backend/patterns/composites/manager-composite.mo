@@ -31,24 +31,6 @@ module {
       );
     };
     
-    public func createProfile(principalId : Text, createProfileDTO : DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
-      
-      var profilePictureCanisterId = "";
-      if(createProfileDTO.profilePicture.size() > 0){
-        //TODO: Need to implement multicanister profile architechture
-          //Need to check if the current profile canister has room for this user
-            //If it does then add the profile picture to the current profile picture canister and return the canister id
-            //If it doesn't then add the profile picture to a new canister and set this as the current live one, returning the canister id
-            
-        //profilePictureCanisterId := updateProfilePicture(principalId, createProfileDTO.profilePicture);
-      };
-
-      let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
-      managers.put(principalId, newManager);
-      return #ok();
-    };
-
-
     public func getProfile(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error>{
         
         let manager = managers.get(principalId);
@@ -162,9 +144,8 @@ module {
       let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
       return Iter.size(managersWithTeams);
     };
-
     
-    public func updateManager(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+    public func saveFantasyTeam(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
       
       let manager = managers.get(principalId);
       
@@ -268,7 +249,14 @@ module {
 
       switch(manager){
         case (null){
-          return #err(#NotFound);
+          
+          //TODO: CREATE NEW USER WITH USERNAME
+
+
+
+
+          return #ok();
+
         };
         case (?foundManager){
           let updatedManager: T.Manager = {
@@ -366,7 +354,15 @@ module {
             createDate = 0;
           };
 
-          let profilePictureCanisterId = "";
+          var profilePictureCanisterId = "";
+          if(createProfileDTO.profilePicture.size() > 0){
+            //TODO: Need to implement multicanister profile architechture
+              //Need to check if the current profile canister has room for this user
+                //If it does then add the profile picture to the current profile picture canister and return the canister id
+                //If it doesn't then add the profile picture to a new canister and set this as the current live one, returning the canister id
+                
+            //profilePictureCanisterId := updateProfilePicture(principalId, createProfileDTO.profilePicture);
+          };
 
 
 
@@ -451,14 +447,17 @@ module {
     };
 
     public func isUsernameAvailable(username: Text) : Bool{
+      //TODO: implement
         return false;
     };
         
     public func isUsernameValid(username: Text) : Bool{
+        //TODO: implement
         return false;
     };
 
     public func isValidProfilePicture(profilePicture: Blob) : Bool{
+        //TODO: implement
         return false;
     };
 

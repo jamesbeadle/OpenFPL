@@ -159,7 +159,7 @@ module {
 
     public func saveFantasyTeam(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error>{
       let players = playerComposite.getPlayers(systemState.calculationSeason);
-      return await managerComposite.updateManager(principalId, updatedFantasyTeam, systemState, players);
+      return await managerComposite.saveFantasyTeam(principalId, updatedFantasyTeam, systemState, players);
     };
 
     public func updateUsername(principalId: Text, updatedUsername: Text) : async Result.Result<(), T.Error>{
