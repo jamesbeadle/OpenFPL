@@ -459,7 +459,7 @@ module {
                 switch (player) {
                   case (null) {  };
                   case (?actualPlayer) {
-                    if (actualPlayer.position == 0 or actualPlayer.position == 1) {
+                    if (actualPlayer.position == #Goalkeeper or actualPlayer.position == #Defender) {
                       if (Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
                         awayTeamDefensivePlayerIdsBuffer.add(playerId);
                       };
@@ -588,12 +588,15 @@ module {
                 };
               };
 
+              //TODO: Need to link up the finalisation here
+
               //await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
               //Function above calls functions below
+              /*
               let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
               await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
               await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
-
+              */
             }
           }
         }
