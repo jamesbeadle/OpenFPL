@@ -253,16 +253,6 @@ module {
       };
     };
       
-
-
-    
-
-
-
-
-
-
-
     public func updateUsername(principalId: T.PrincipalId, updatedUsername: Text) : async Result.Result<(), T.Error> {
       if(not isUsernameValid(updatedUsername, principalId)){
         return #err(#InvalidData);
@@ -272,14 +262,17 @@ module {
 
       switch(manager){
         case (null){
-          
-          //TODO: CREATE NEW USER WITH USERNAME
-
-
-
-
+          let createProfileDTO: DTOs.ProfileDTO = {
+              principalId = principalId;
+              username = updatedUsername;
+              profilePicture = Blob.fromArray([]);
+              favouriteClubId = 0;
+              createDate = now();
+              canUpdateFavouriteClub = true;
+          };
+          let newManager = buildNewManager(principalId, createProfileDTO, "");
+          managers.put(principalId, newManager);
           return #ok();
-
         };
         case (?foundManager){
           let updatedManager: T.Manager = {
@@ -322,11 +315,23 @@ module {
 
     public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId) : async Result.Result<(), T.Error> {
       
+      //TODO: ENSURE YOU CAN ONLY SET IF NOT ALREADY SET OR GAMEWEEK > 0 
+
       let manager = managers.get(principalId);
 
       switch(manager){
         case (null){
-          return #err(#NotFound);
+          let createProfileDTO: DTOs.ProfileDTO = {
+              principalId = principalId;
+              username = "";
+              profilePicture = Blob.fromArray([]);
+              favouriteClubId = favouriteClubId;
+              createDate = now();
+              canUpdateFavouriteClub = true;
+          };
+          let newManager = buildNewManager(principalId, createProfileDTO, "");
+          managers.put(principalId, newManager);
+          return #ok();
         };
         case (?foundManager){
           let updatedManager: T.Manager = {
@@ -372,111 +377,22 @@ module {
       switch (existingManager) {
         case (null) {
           let createProfileDTO: DTOs.ProfileDTO = {
-            principalId = principalId;
-            username = "";
-            profilePicture = "";
-            favouriteClubId = 0;
-            createDate = 0;
+              principalId = principalId;
+              username = "";
+              profilePicture = profilePicture;
+              favouriteClubId = 0;
+              createDate = now();
+              canUpdateFavouriteClub = true;
           };
-
-          var profilePictureCanisterId = "";
-          if(createProfileDTO.profilePicture.size() > 0){
-            //TODO: Need to implement multicanister profile architechture
-              //Need to check if the current profile canister has room for this user
-                //If it does then add the profile picture to the current profile picture canister and return the canister id
-                //If it doesn't then add the profile picture to a new canister and set this as the current live one, returning the canister id
-                
-            //profilePictureCanisterId := updateProfilePicture(principalId, createProfileDTO.profilePicture);
-          };
-
-
-
-          let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
+          let newManager = buildNewManager(principalId, createProfileDTO, "");
           managers.put(principalId, newManager);
           return #ok();
         };
         case (?foundManager) {
-          
-          var profilePictureCanisterId = foundManager.profilePictureCanisterId;
-          if(Text.size(profilePictureCanisterId) > 0){
-            //TODO: replace the existing profile picture and the canister id will remain the same so return
-
-
-            //create canister and call update function
-              //Ensure only this canister can call the profile canister
-                //I guess when it's created set the allowed principal to this canister?
-              
-
-
-
-            return #ok();
-          };
-
-
-
-
-
-
-
-          //no current profile picture
-
-          //check if current canister has space
-
-            //if not add new profile picture canister and add
-              profilePictureCanisterId := ""; //this is where you set to the next canister
-            //if existing canister has space set to that and pu in there
-
-
-
-
-
-
-
-          
-          let updatedManager: T.Manager = {
-            principalId = foundManager.principalId;
-            username = foundManager.username;
-            favouriteClubId = foundManager.favouriteClubId;
-            createDate = foundManager.createDate;
-            termsAccepted = foundManager.termsAccepted;
-            profilePictureCanisterId = profilePictureCanisterId;
-            transfersAvailable = foundManager.transfersAvailable;
-            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
-            bankQuarterMillions = foundManager.bankQuarterMillions;
-            playerIds = foundManager.playerIds;
-            captainId = foundManager.captainId;
-            goalGetterGameweek = foundManager.goalGetterGameweek;
-            goalGetterPlayerId = foundManager.goalGetterPlayerId;
-            passMasterGameweek = foundManager.passMasterGameweek;
-            passMasterPlayerId = foundManager.passMasterPlayerId;
-            noEntryGameweek = foundManager.noEntryGameweek;
-            noEntryPlayerId = foundManager.noEntryPlayerId;
-            teamBoostGameweek = foundManager.teamBoostGameweek;
-            teamBoostClubId = foundManager.teamBoostClubId;
-            safeHandsGameweek = foundManager.safeHandsGameweek;
-            safeHandsPlayerId = foundManager.safeHandsPlayerId;
-            captainFantasticGameweek = foundManager.captainFantasticGameweek;
-            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
-            countrymenGameweek = foundManager.countrymenGameweek;
-            countrymenCountryId = foundManager.countrymenCountryId;
-            prospectsGameweek = foundManager.prospectsGameweek;
-            braceBonusGameweek = foundManager.braceBonusGameweek;
-            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
-            transferWindowGameweek = foundManager.transferWindowGameweek;
-            history = foundManager.history;
-          };
-          
-          managers.put(principalId, updatedManager);
           return #ok();
         };
       };
     };
-
-
-
-
-
-
 
     public func isUsernameValid(username: Text, principalId: Text) : Bool{
         if (Text.size(username) < 3 or Text.size(username) > 20) {
