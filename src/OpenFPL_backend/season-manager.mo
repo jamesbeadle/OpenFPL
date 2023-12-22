@@ -234,7 +234,7 @@ module {
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
-      return await seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO);
+      return await seasonComposite.validateRescheduleFixture(rescheduleFixtureDTO, systemState);
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async () {

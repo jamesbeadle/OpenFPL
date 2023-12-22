@@ -40,7 +40,7 @@ module {
       if (List.size(clubs) >= 20) {
         return #err("Invalid: League cannot contain more than 20 teams.");
       };
-      //TODO: not already in the clubs, check properties against existing clubs
+      //TODO: Check club exists in former clubs array
       return #ok("Valid");
     };
 
