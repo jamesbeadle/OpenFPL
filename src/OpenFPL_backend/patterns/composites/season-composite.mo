@@ -696,6 +696,21 @@ module {
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
+
+      if (updatedFixtureDate <= Time.now()) {
+        return #err(#InvalidData);
+      };
+
+      if (updatedFixtureGameweek <= seasonManager.getActiveGameweek()) {
+        return #err(#InvalidData);
+      };
+
+      let fixture = await seasonManager.getFixture(seasonManager.getActiveSeason().id, currentFixtureGameweek, fixtureId);
+      if (fixture.id == 0 or fixture.status == 3) {
+        return #err(#InvalidData);
+      };
+
+      
       return #ok("Valid");
     };
 

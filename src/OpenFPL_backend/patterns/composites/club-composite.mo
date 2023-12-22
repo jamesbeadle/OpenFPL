@@ -63,7 +63,41 @@ module {
     public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<Text,Text> {
 
       //TODO: Need to validate
+let allTeams = teamsInstance.getTeams();
 
+      if (Array.size(allTeams) >= 20) {
+        return #err(#InvalidData);
+      };
+
+      let activeSeason = seasonManager.getActiveSeason();
+      let seasonFixtures = seasonManager.getFixturesForSeason(activeSeason.id);
+      if (Array.size(seasonFixtures) > 0) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(name) > 100) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(friendlyName) > 50) {
+        return #err(#InvalidData);
+      };
+
+      if (Text.size(abbreviatedName) != 3) {
+        return #err(#InvalidData);
+      };
+
+      if (not Utilities.validateHexColor(primaryHexColour)) {
+        return #err(#InvalidData);
+      };
+
+      if (not Utilities.validateHexColor(secondaryHexColour)) {
+        return #err(#InvalidData);
+      };
+
+      if (not Utilities.validateHexColor(thirdHexColour)) {
+        return #err(#InvalidData);
+      };
 
 
       return #ok("Valid");
