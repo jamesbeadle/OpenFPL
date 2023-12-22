@@ -188,5 +188,10 @@ module {
     public func getStableTimers(): [T.TimerInfo] {
       return timers;
     };
+
+    public func setStableTimers(stable_timers: [T.TimerInfo]) {
+      timers := stable_timers;
+      recreateTimers();
+    };
   };
 };

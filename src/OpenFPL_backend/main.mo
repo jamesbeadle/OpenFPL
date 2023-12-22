@@ -317,7 +317,6 @@ actor Self {
   };
 
   system func postupgrade() {
-    timerComposite.setStableTimers(stable_timers);
     seasonManager.setStableManagers(stable_managers);
     seasonManager.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);
     seasonManager.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
@@ -333,7 +332,7 @@ actor Self {
     seasonManager.setStableNextFixtureId(stable_next_fixture_id);
     seasonManager.setStableDataHashes(stable_data_cache_hashes);
     seasonManager.setStableSystemState(stable_system_state);
-    seasonManager.recreateTimers();
+    timerComposite.setStableTimers(stable_timers);
   };
   
 };
