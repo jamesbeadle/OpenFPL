@@ -465,12 +465,10 @@ module {
 
     public func isFantasyTeamValid(existingFantasyTeam: ?T.Manager, fantasyTeamDTO: DTOs.UpdateFantasyTeamDTO, gameweek: T.GameweekNumber, players: [DTOs.PlayerDTO]) : Bool {
 
-//ALL OF THIS MIGHT NEED TO MOVE INTO A DIFFERENT FUNCTION?!
       let updatedPlayerIds: [T.PlayerId] = fantasyTeamDTO.playerIds;
 
       switch(existingFantasyTeam){
         case (null){
-          //team not more than 300m
           let spend = Array.foldLeft(updatedPlayerIds, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
             let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
             switch(player){
@@ -527,13 +525,104 @@ module {
             return false;
           };
 
+          if(fantasyTeamDTO.goalGetterGameweek == gameweek and foundTeam.goalGetterGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.passMasterGameweek == gameweek and foundTeam.passMasterGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.noEntryGameweek == gameweek and foundTeam.noEntryGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.teamBoostGameweek == gameweek and foundTeam.teamBoostGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.safeHandsGameweek == gameweek and foundTeam.safeHandsGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.captainFantasticGameweek == gameweek and foundTeam.captainFantasticGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.countrymenGameweek == gameweek and foundTeam.countrymenGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.prospectsGameweek == gameweek and foundTeam.prospectsGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.braceBonusGameweek == gameweek and foundTeam.braceBonusGameweek != 0){
+            return false;
+          };
+          if(fantasyTeamDTO.hatTrickHeroGameweek == gameweek and foundTeam.hatTrickHeroGameweek != 0){
+            return false;
+          };
+
+          var bonusesPlayed = 0;
+          if(fantasyTeamDTO.goalGetterGameweek == gameweek){
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.passMasterGameweek == gameweek){
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.noEntryGameweek == gameweek){
+            let bonusPlayer = List.find<DTOs.PlayerDTO>(
+              List.fromArray(players),
+              func(player : DTOs.PlayerDTO) : Bool {
+                return player.id == fantasyTeamDTO.noEntryPlayerId;
+              },
+            );
+            switch (bonusPlayer) {
+              case (null) { return false };
+              case (?player) {
+                if (player.position != #Goalkeeper and player.position != #Defender) { return false };
+              };
+            };
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.teamBoostGameweek == gameweek){
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.safeHandsGameweek == gameweek){
+            let bonusPlayer = List.find<DTOs.PlayerDTO>(
+              List.fromArray(players),
+              func(player : DTOs.PlayerDTO) : Bool {
+                return player.id == fantasyTeamDTO.noEntryPlayerId;
+              },
+            );
+            switch (bonusPlayer) {
+              case (null) { return false };
+              case (?player) {
+                if (player.position != #Goalkeeper) { return false };
+              };
+            };
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.captainFantasticGameweek == gameweek){
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.countrymenGameweek == gameweek){
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.prospectsGameweek == gameweek){
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.braceBonusGameweek == gameweek){
+            bonusesPlayed += 1;
+          };
+          if(fantasyTeamDTO.hatTrickHeroGameweek == gameweek){
+            bonusesPlayed += 1;
+          };
+
+          if(bonusesPlayed > 1){
+            return false;
+          };
         };
       };
 
 
       //TODO:check that they have not made more than 3 changes
 
-      //TODO: CHECK THEY ARE NOT ALREADY PLAYING A BONUS THEY'VE ALREADY PLAYED
+      
+      
 
       //CHECK THE NUMBER OF TRANSFERS MADE IS NOT > 3 UNLESS JAN TRANSFER WINDOW OR PLAYERS FIRST GAMEWEEK
 
@@ -610,65 +699,9 @@ module {
         return false;
       };
 
-      var bonusesPlayed = 0;
-      if(fantasyTeamDTO.goalGetterGameweek == gameweek){
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.passMasterGameweek == gameweek){
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.noEntryGameweek == gameweek){
-        let bonusPlayer = List.find<DTOs.PlayerDTO>(
-          List.fromArray(players),
-          func(player : DTOs.PlayerDTO) : Bool {
-            return player.id == fantasyTeamDTO.noEntryPlayerId;
-          },
-        );
-        switch (bonusPlayer) {
-          case (null) { return false };
-          case (?player) {
-            if (player.position != #Goalkeeper and player.position != #Defender) { return false };
-          };
-        };
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.teamBoostGameweek == gameweek){
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.safeHandsGameweek == gameweek){
-        let bonusPlayer = List.find<DTOs.PlayerDTO>(
-          List.fromArray(players),
-          func(player : DTOs.PlayerDTO) : Bool {
-            return player.id == fantasyTeamDTO.noEntryPlayerId;
-          },
-        );
-        switch (bonusPlayer) {
-          case (null) { return false };
-          case (?player) {
-            if (player.position != #Goalkeeper) { return false };
-          };
-        };
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.captainFantasticGameweek == gameweek){
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.countrymenGameweek == gameweek){
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.prospectsGameweek == gameweek){
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.braceBonusGameweek == gameweek){
-        bonusesPlayed += 1;
-      };
-      if(fantasyTeamDTO.hatTrickHeroGameweek == gameweek){
-        bonusesPlayed += 1;
-      };
+      
 
-      if(bonusesPlayed > 1){
-        return false;
-      };
+
 
       return true;
     };
