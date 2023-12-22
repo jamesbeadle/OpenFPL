@@ -15,6 +15,26 @@ module {
     
 /*
 
+
+    //recreate close gameweek timer to be 1 hour before the first fixture of the gameweek you are picking your team for
+
+    //recreate the jan transfer window timer to the next January 1st
+
+    //recreate the close jan transfer window timer for midnight on the 31st Jan
+
+    //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
+
+	  //update the cache for the fixtures so users get the updated status about it being completed
+
+      //    let updatedFixture = await seasonsInstance.updateStatus(systemState.calculationSeason, systemState.calculationGameweek, activeFixtures[i].id, 2);
+      
+      //Check if all games completed, if so:
+        //NEED TO CHECK IF JANUARY 1ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMERS TO BEGIN AND END THE TRANSFER WINDOW IF IT IS
+      
+//where do I need to know if the season is active?
+
+
+
     //StrategyManager //implements strategy pattern for managing fantasy teams
 strategy-manager.mo
 Purpose: Implements the Strategy pattern to manage various strategies related to game mechanics and validation rules.
@@ -24,6 +44,160 @@ Methods to switch between strategies and apply them to the current game state or
 Integration with the PlayerComposite and ClubComposite for applying these strategies to teams and clubs.
 
 
+
+      */
+//ensure you are going between gameweeks in all scenarios as you want
+
+      //set fixture status to active (1)
+      
+      //set timers for when each game finishes to call the game completed expired timer
+
+
+      /*
+      let activeFixtures = seasonsInstance.getGameweekFixtures(systemState.calculationSeason, systemState.calculationGameweek);
+      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
+        if (activeFixtures[i].kickOff <= Time.now() and activeFixtures[i].status == 0) {
+
+          let updatedFixture = await seasonsInstance.updateStatus(systemState.calculationSeason, systemState.calculationGameweek, activeFixtures[i].id, 1);
+          let gameCompletedDuration : Timer.Duration = #nanoseconds(Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
+          switch (setAndBackupTimer) {
+            case (null) {};
+            case (?actualFunction) {
+              await actualFunction(gameCompletedDuration, "gameCompletedExpired", activeFixtures[i].id);
+            };
+          };
+        };
+      };
+      
+      
+    public func fixtureConsensusReached(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, consensusPlayerEventData : [T.PlayerEventData]) : async () {
+      var getSeasonId = seasonId;
+      if (getSeasonId == 0) {
+        getSeasonId := activeSeasonId;
+      };
+
+      var getGameweekNumber = gameweekNumber;
+      if (getGameweekNumber == 0) {
+        getGameweekNumber := activeGameweek;
+      };
+
+      if (interestingGameweek < activeGameweek) {
+        interestingGameweek := activeGameweek;
+      };
+
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+
+      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
+        let fixture = activeFixtures[i];
+        if (fixture.id == fixtureId and fixture.status == 2) {
+          let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
+          await finaliseFixture(updatedFixture);
+        };
+      };
+
+      await checkGameweekFinished();
+      await updateCacheHash("fixtures");
+      await updateCacheHash("weekly_leaderboard");
+      await updateCacheHash("monthly_leaderboards");
+      await updateCacheHash("season_leaderboard");
+      await updateCacheHash("system_state");
+      await updatePlayerEventDataCache();
+    };
+
+
+
+
+
+    public func finaliseFixture(fixture : T.Fixture) : async () {
+      let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
+      await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
+      await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
+    };
+
+    private func checkGameweekFinished() : async () {
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+      let remainingFixtures = Array.find(
+        activeFixtures,
+        func(fixture : T.Fixture) : Bool {
+          return fixture.status < 3;
+        },
+      );
+
+      if (Option.isNull(remainingFixtures)) {
+        await gameweekVerified();
+        await setNextGameweek();
+      };
+    };
+
+    private func gameweekVerified() : async () {
+      //await distributeRewards(); //IMPLEMENT POST SNS
+    };
+
+    public func setNextGameweek() : async () {
+      if (activeGameweek == 38) {
+        await seasonsInstance.createNewSeason(activeSeasonId);
+        await resetFantasyTeams();
+        await updateCacheHash("system_state");
+        await updateCacheHash("weekly_leaderboard");
+        await updateCacheHash("monthly_leaderboards");
+        await updateCacheHash("season_leaderboard");
+        return;
+      };
+
+      activeGameweek += 1;
+
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+
+      let gameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
+      switch (setAndBackupTimer) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(gameweekBeginDuration, "gameweekBeginExpired", 0);
+        };
+      };
+    };
+
+    public func intialFixturesConfirmed() : async () {
+      activeGameweek := 1;
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+
+      let initialGameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
+      switch (setAndBackupTimer) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(initialGameweekBeginDuration, "gameweekBeginExpired", 0);
+        };
+      };
+    };
+
+
+
+
+
+
+
+
+
+
+
+	  
+	  
+    //Private functions used above
+
+    private func seasonActive() : Bool {
+
+      if (activeGameweek > 1) {
+        return true;
+      };
+
+      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
+      if (List.some(List.fromArray(activeFixtures), func(fixture : T.Fixture) : Bool { return fixture.status > 0 })) {
+        return true;
+      };
+
+      return false;
+    };
+	  
     public func resetTransfers() : async () {
 
       for ((key, value) in fantasyTeams.entries()) {

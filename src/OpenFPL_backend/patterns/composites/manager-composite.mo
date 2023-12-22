@@ -66,134 +66,46 @@ module {
         }
     };
 
-    public func getManager(principalId: Text) : async Result.Result<DTOs.ManagerDTO, T.Error>{
+    public func getManager(principalId: Text, seasonId: T.SeasonId, weeklyLeaderboardEntry: ?T.LeaderboardEntry, monthlyLeaderboardEntry: ?T.LeaderboardEntry, seasonLeaderboardEntry: ?T.LeaderboardEntry) : async Result.Result<DTOs.ManagerDTO, T.Error>{
 
-      //TODO: Include this
+      var weeklyPosition : Int = 0;
+      var monthlyPosition : Int = 0;
+      var seasonPosition : Int = 0;
 
-      /*
-      
-      public shared query func getManager(managerId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async DTOs.ManagerDTO {
+      var weeklyPositionText = "N/A";
+      var monthlyPositionText = "N/A";
+      var seasonPositionText = "N/A";
 
-    var displayName = "";
-    var profilePicture = Blob.fromArray([]);
-    var favouriteTeamId : T.TeamId = 0;
-    var createDate = Time.now();
-    var gameweeks : [T.FantasyTeamSnapshot] = [];
+      var weeklyPoints : Int16 = 0;
+      var monthlyPoints : Int16 = 0;
+      var seasonPoints : Int16 = 0;
 
-    var weeklyLeaderboardEntry = fantasyTeamsInstance.getWeeklyLeaderboardEntry(managerId, seasonId, gameweek);
-    var seasonLeaderboardEntry = fantasyTeamsInstance.getSeasonLeaderboardEntry(managerId, seasonId);
-    var monthlyLeaderboardEntry : ?T.LeaderboardEntry = null;
-
-    let userProfile = profilesInstance.getProfile(managerId);
-    switch (userProfile) {
-      case (null) {};
-      case (?foundProfile) {
-
-        let existingProfilePicture = profilesInstance.getProfilePicture(managerId);
-        switch (existingProfilePicture) {
-          case (null) {};
-          case (?foundPicture) {
-            profilePicture := foundPicture;
-          };
-        };
-
-        displayName := foundProfile.displayName;
-        favouriteTeamId := foundProfile.favouriteTeamId;
-        createDate := foundProfile.createDate;
-
-        if (foundProfile.favouriteTeamId > 0) {
-          monthlyLeaderboardEntry := fantasyTeamsInstance.getMonthlyLeaderboardEntry(managerId, seasonId, foundProfile.favouriteTeamId);
-        }
-
-      };
-    };
-
-    //get gameweek snapshots
-    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(managerId);
-
-    switch (fantasyTeam) {
-      case (null) {};
-      case (?foundTeam) {
-
-        let season = List.find(
-          foundTeam.history,
-          func(season : T.FantasyTeamSeason) : Bool {
-            return season.seasonId == seasonId;
-          },
-        );
-
-        switch (season) {
-          case (null) {};
-          case (?foundSeason) {
-            gameweeks := List.toArray(foundSeason.gameweeks);
-          };
+      switch (weeklyLeaderboardEntry) {
+        case (null) {};
+        case (?foundEntry) {
+          weeklyPosition := foundEntry.position;
+          weeklyPositionText := foundEntry.positionText;
+          weeklyPoints := foundEntry.points;
         };
       };
-    };
 
-    var weeklyPosition : Int = 0;
-    var monthlyPosition : Int = 0;
-    var seasonPosition : Int = 0;
-
-    var weeklyPositionText = "N/A";
-    var monthlyPositionText = "N/A";
-    var seasonPositionText = "N/A";
-
-    var weeklyPoints : Int16 = 0;
-    var monthlyPoints : Int16 = 0;
-    var seasonPoints : Int16 = 0;
-
-    switch (weeklyLeaderboardEntry) {
-      case (null) {};
-      case (?foundEntry) {
-        weeklyPosition := foundEntry.position;
-        weeklyPositionText := foundEntry.positionText;
-        weeklyPoints := foundEntry.points;
+      switch (monthlyLeaderboardEntry) {
+        case (null) {};
+        case (?foundEntry) {
+          monthlyPosition := foundEntry.position;
+          monthlyPositionText := foundEntry.positionText;
+          monthlyPoints := foundEntry.points;
+        };
       };
-    };
 
-    switch (monthlyLeaderboardEntry) {
-      case (null) {};
-      case (?foundEntry) {
-        monthlyPosition := foundEntry.position;
-        monthlyPositionText := foundEntry.positionText;
-        monthlyPoints := foundEntry.points;
+      switch (seasonLeaderboardEntry) {
+        case (null) {};
+        case (?foundEntry) {
+          seasonPosition := foundEntry.position;
+          seasonPositionText := foundEntry.positionText;
+          seasonPoints := foundEntry.points;
+        };
       };
-    };
-
-    switch (seasonLeaderboardEntry) {
-      case (null) {};
-      case (?foundEntry) {
-        seasonPosition := foundEntry.position;
-        seasonPositionText := foundEntry.positionText;
-        seasonPoints := foundEntry.points;
-      };
-    };
-
-    let managerDTO : DTOs.ManagerDTO = {
-      principalId = managerId;
-      displayName = displayName;
-      profilePicture = profilePicture;
-      favouriteTeamId = favouriteTeamId;
-      createDate = createDate;
-      gameweeks = gameweeks;
-      weeklyPosition = weeklyPosition;
-      monthlyPosition = monthlyPosition;
-      seasonPosition = seasonPosition;
-      weeklyPositionText = weeklyPositionText;
-      monthlyPositionText = monthlyPositionText;
-      seasonPositionText = seasonPositionText;
-      weeklyPoints = weeklyPoints;
-      monthlyPoints = monthlyPoints;
-      seasonPoints = seasonPoints;
-    };
-
-    return managerDTO;
-  };
-
-      
-      */
-
 
       let manager = managers.get(principalId);
 
@@ -202,6 +114,24 @@ module {
           return #err(#NotFound);
         };
         case (?foundManager){
+
+          
+          var gameweeks : [T.FantasyTeamSnapshot] = [];
+
+          let season = List.find(
+            foundManager.history,
+            func(season : T.FantasyTeamSeason) : Bool {
+              return season.seasonId == seasonId;
+            },
+          );
+
+          switch (season) {
+            case (null) {};
+            case (?foundSeason) {
+              gameweeks := List.toArray(foundSeason.gameweeks);
+            };
+          };
+          
         
           var profilePicture = Blob.fromArray([]);
           if(Text.size(foundManager.profilePictureCanisterId) > 0){
@@ -217,16 +147,16 @@ module {
             profilePicture = profilePicture;
             favouriteClubId = foundManager.favouriteClubId;
             createDate = foundManager.createDate;
-            gameweeks = [];
-            weeklyPosition = 0;
-            monthlyPosition = 0;
-            seasonPosition = 0;
-            weeklyPositionText = "";
-            monthlyPositionText = "";
-            seasonPositionText = "";
-            weeklyPoints = 0;
-            monthlyPoints = 0;
-            seasonPoints = 0;
+            gameweeks = gameweeks;
+            weeklyPosition = weeklyPosition;
+            monthlyPosition = monthlyPosition;
+            seasonPosition = seasonPosition;
+            weeklyPositionText = weeklyPositionText;
+            monthlyPositionText = monthlyPositionText;
+            seasonPositionText = seasonPositionText;
+            weeklyPoints = weeklyPoints;
+            monthlyPoints = monthlyPoints;
+            seasonPoints = seasonPoints;
           };
           return #ok(managerDTO);
         };

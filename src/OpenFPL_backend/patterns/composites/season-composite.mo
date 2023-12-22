@@ -710,11 +710,69 @@ module {
         return #err(#InvalidData);
       };
 
-      
+
       return #ok("Valid");
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async () {
+      
+      var allSeasons = List.fromArray(seasonsInstance.getSeasons());
+      allSeasons := List.map<T.Season, T.Season>(
+        allSeasons,
+        func(currentSeason : T.Season) : T.Season {
+          if (currentSeason.id == activeSeasonId) {
+            var updatedGameweeks : List.List<T.Gameweek> = List.nil();
+            var postponedFixtures : List.List<T.Fixture> = List.nil();
+
+            for (gameweek in Iter.fromList(currentSeason.gameweeks)) {
+              let postponedFixture = List.find<T.Fixture>(
+                gameweek.fixtures,
+                func(fixture : T.Fixture) : Bool {
+                  return fixture.id == fixtureId;
+                },
+              );
+
+              switch (postponedFixture) {
+                case (null) {};
+                case (?foundPostponedFixture) {
+                  postponedFixtures := List.push(foundPostponedFixture, currentSeason.postponedFixtures);
+                };
+              };
+            };
+
+            updatedGameweeks := List.map<T.Gameweek, T.Gameweek>(
+              currentSeason.gameweeks,
+              func(gw : T.Gameweek) : T.Gameweek {
+                if (gw.number == currentFixtureGameweek) {
+                  return {
+                    canisterId = gw.canisterId;
+                    number = gw.number;
+                    fixtures = List.filter<T.Fixture>(
+                      gw.fixtures,
+                      func(fixture : T.Fixture) : Bool {
+                        return fixture.id != fixtureId;
+                      },
+                    );
+                  };
+                } else { return gw };
+              },
+            );
+
+            let updatedSeason : T.Season = {
+              id = currentSeason.id;
+              name = currentSeason.name;
+              year = currentSeason.year;
+              gameweeks = updatedGameweeks;
+              postponedFixtures = postponedFixtures;
+            };
+
+            return updatedSeason;
+          } else {
+            return currentSeason;
+          };
+        },
+      );
+      seasonsInstance.setSeasons(List.toArray(allSeasons));
     };
 
 
