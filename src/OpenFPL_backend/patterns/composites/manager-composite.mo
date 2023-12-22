@@ -258,11 +258,13 @@ module {
     private func invalidTransfers(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager) : Bool {
       
       //new team have as many transfers as you want
-      //existing team check transfers if not transfer window or their first week still
+      //existing team check transfers not less than 3 if not transfer window or their first week still
 
       //new team check it doesn't cost more than 300m
       //existing team check any transfers made doesn't reduce bank to below 300m
 
+      //if transfer window gameweek is current gameweek and already used in existing team then error
+        //also error if the date now isn't january
 
 
 
