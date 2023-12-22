@@ -67,6 +67,7 @@ module Types {
     favouriteClubId : ClubId;
     createDate : Int;
     transfersAvailable : Nat8;
+    monthlyBonusesAvailable : Nat8;
     bankQuarterMillions : Nat;
     playerIds : [PlayerId];
     captainId : PlayerId;
@@ -101,6 +102,7 @@ module Types {
     principalId : Text;
     teamName : Text;
     favouriteClubId : ClubId;
+    monthlyBonusesAvailable : Nat8;
     transfersAvailable : Nat8;
     bankQuarterMillions : Nat;
     teamValueQuarterMillions : Nat;

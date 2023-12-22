@@ -312,6 +312,7 @@ module DTOs {
     teamName : Text;
     favouriteClubId : T.ClubId;
     transfersAvailable : Nat8;
+    monthlyBonusesAvailable : Nat8;
     bankQuarterMillions : Nat;
     teamValueQuarterMillions : Nat;
     playerIds : [T.PlayerId];
