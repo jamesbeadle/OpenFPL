@@ -111,7 +111,13 @@ module {
       return [];
     };
 
+    public func getStablePlayers(): [T.Player] {
+      return List.toArray(players);
+    };
 
+    public func getStableNextPlayerId() : T.PlayerId {
+      return nextPlayerId;
+    };
 
     public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<Text,Text> {
       return #ok("Valid");

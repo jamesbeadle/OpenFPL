@@ -280,12 +280,12 @@ actor Self {
   private stable var stable_weekly_leaderboard_canister_ids : [(T.WeeklyLeaderboardKey, Text)] = [];
   private stable var stable_clubs : [T.Club] = [];
   private stable var stable_relegated_clubs : [T.Club] = [];
-  private stable var stable_next_club_id = 1;
+  private stable var stable_next_club_id: T.ClubId = 1;
   private stable var stable_players : [T.Player] = [];
-  private stable var stable_next_player_id = 1;
+  private stable var stable_next_player_id: T.PlayerId = 1;
   private stable var stable_seasons : [T.Season] = [];
-  private stable var stable_next_season_id = 1;
-  private stable var stable_next_fixture_id = 1;
+  private stable var stable_next_season_id: T.SeasonId = 1;
+  private stable var stable_next_fixture_id: T.FixtureId = 1;
   private stable var stable_data_cache_hashes : [T.DataCache] = [];
   private stable var stable_system_state : T.SystemState = {
     calculationGameweek = 1;

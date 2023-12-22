@@ -2,6 +2,7 @@ import T "../../types";
 import DTOs "../../DTOs";
 import HashMap "mo:base/HashMap";
 import Result "mo:base/Result";
+import Iter "mo:base/Iter";
 import Utilities "../../utilities";
 module {
 
@@ -104,6 +105,18 @@ module {
           return #ok(leaderboardEntries);
         };
       };
+    };
+    
+    public func getStableSeasonLeaderboardCanisterIds(): [(T.SeasonId, Text)] {
+      return Iter.toArray(seasonLeaderboardCanisterIds.entries());
+    };
+    
+    public func getStableMonthlyLeaderboardCanisterIds(): [(T.MonthlyLeaderboardKey, Text)] {
+      return Iter.toArray(monthlyLeaderboardCanisterIds.entries());
+    };
+    
+    public func getStableWeeklyLeaderboardCanisterIds(): [(T.WeeklyLeaderboardKey, Text)] {
+      return Iter.toArray(weeklyLeaderboardCanisterIds.entries());
     };
 
 /*

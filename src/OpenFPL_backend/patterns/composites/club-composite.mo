@@ -10,6 +10,7 @@ module {
   public class ClubComposite() {
       private var nextClubId : T.ClubId = 1;
       private var clubs = List.fromArray<T.Club>([]);
+      private var relegatedClubs = List.fromArray<T.Club>([]);
     
    
     public func setStableData(
@@ -65,7 +66,18 @@ module {
 
 
 
+    public func getStableClubs(): [T.Club] {
+      return List.toArray(clubs);
+    };
 
+
+    public func getStableRelegatedClubs(): [T.Club] {
+      return List.toArray(relegatedClubs);
+    };
+
+    public func getStableNextClubId(): T.ClubId {
+      return nextClubId;
+    };
 
 
 

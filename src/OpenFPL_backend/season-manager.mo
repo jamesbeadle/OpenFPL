@@ -359,11 +359,11 @@ module {
       return clubComposite.getStableRelegatedClubs();
     };
 
-    public func getStableNextClubId(): [T.Player] {
+    public func getStableNextClubId(): T.ClubId {
       return clubComposite.getStableNextClubId();
     };
 
-    public func getStablePlayers(): [T.Season] {
+    public func getStablePlayers(): [T.Player] {
       return playerComposite.getStablePlayers();
     };
 
@@ -371,15 +371,15 @@ module {
       return playerComposite.getStableNextPlayerId();
     };
 
-    public func getStableSeasons() {
+    public func getStableSeasons() : [T.Season] {
       return seasonComposite.getStableSeasons();
     };
 
-    public func getStableNextSeasonId() {
+    public func getStableNextSeasonId() : T.SeasonId {
       return seasonComposite.getStableNextSeasonId();
     };
 
-    public func getStableNextFixtureId() {
+    public func getStableNextFixtureId() : T.FixtureId {
       return seasonComposite.getStableNextFixtureId();
     };
 

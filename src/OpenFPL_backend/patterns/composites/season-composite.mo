@@ -389,6 +389,26 @@ module {
     public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async () {
     };
 
+
+
+
+
+
+    public func getStableSeasons() : [T.Season] {
+      return List.toArray(seasons);
+    };
+
+    public func getStableNextSeasonId() : T.SeasonId {
+      return nextSeasonId;
+    };
+
+    public func getStableNextFixtureId() : T.FixtureId {
+      return nextFixtureId;
+    };
+
+
+
+
         /*
       let activeSeasonId = seasonManager.getActiveSeasonId();
       let activeGameweek = seasonManager.getActiveGameweek();
