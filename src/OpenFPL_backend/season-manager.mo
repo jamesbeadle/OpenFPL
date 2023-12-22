@@ -157,10 +157,6 @@ module {
       return managerComposite.getTotalManagers();
     };
 
-    public func createProfile(principalId: Text, createProfileDTO: DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
-      return await managerComposite.createProfile(principalId, createProfileDTO);
-    };
-
     public func saveFantasyTeam(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error>{
       let players = playerComposite.getPlayers(systemState.calculationSeason);
       return await managerComposite.updateManager(principalId, updatedFantasyTeam, systemState, players);
@@ -176,6 +172,10 @@ module {
 
     public func updateFavouriteClub(principalId: Text, clubId: T.ClubId) : async Result.Result<(), T.Error>{
       return await managerComposite.updateFavouriteClub(principalId, clubId);
+    };
+
+    public func updateProfilePicture(principalId: Text, profilePicture: Blob) : async Result.Result<(), T.Error>{
+      return await managerComposite.updateProfilePicture(principalId, profilePicture);
     };
 
     //Governance validation and execution functions

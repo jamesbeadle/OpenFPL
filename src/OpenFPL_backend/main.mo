@@ -79,11 +79,6 @@ actor Self {
   };
 
   //Update functions:
-  public shared ({ caller }) func createProfile(profileDTO: DTOs.ProfileDTO) : async Result.Result<(), T.Error> {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    return await seasonManager.createProfile(principalId, profileDTO);
-  };
 
   public shared ({ caller }) func updateUsername(username : Text) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
@@ -100,8 +95,7 @@ actor Self {
   public shared ({ caller }) func updateProfilePicture(profilePicture : Blob) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    //return await seasonManager.updateProfilePicture(principalId, profilePicture);
-    return #ok();
+    return await seasonManager.updateProfilePicture(principalId, profilePicture);
   };
 
   public shared ({ caller }) func saveFantasyTeam(fantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {

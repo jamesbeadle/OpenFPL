@@ -163,41 +163,6 @@ module {
       return Iter.size(managersWithTeams);
     };
 
-    public func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
-        let newManager: T.Manager = {
-          principalId = principalId;
-          username = createProfileDTO.username;
-          favouriteClubId = createProfileDTO.favouriteClubId;
-          createDate = createProfileDTO.createDate;
-          termsAccepted = false;
-          profilePictureCanisterId = profilePictureCanisterId;
-          transfersAvailable = 3;
-          bankQuarterMillions = 1200;
-          playerIds = [];
-          captainId = 0;
-          goalGetterGameweek = 0;
-          goalGetterPlayerId = 0;
-          passMasterGameweek = 0;
-          passMasterPlayerId = 0;
-          noEntryGameweek = 0;
-          noEntryPlayerId = 0;
-          teamBoostGameweek = 0;
-          teamBoostClubId = 0;
-          safeHandsGameweek = 0;
-          safeHandsPlayerId = 0;
-          captainFantasticGameweek = 0;
-          captainFantasticPlayerId = 0;
-          countrymenGameweek = 0;
-          countrymenCountryId = 0;
-          prospectsGameweek = 0;
-          braceBonusGameweek = 0;
-          hatTrickHeroGameweek = 0;
-          transferWindowGameweek = 0;
-          history = List.nil<T.FantasyTeamSeason>();
-        };
-
-        return newManager;
-    };
     
     public func updateManager(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
       
@@ -393,7 +358,21 @@ module {
       let existingManager = managers.get(principalId);
       switch (existingManager) {
         case (null) {
-          return #err(#NotFound);
+          let createProfileDTO: DTOs.ProfileDTO = {
+            principalId = principalId;
+            username = "";
+            profilePicture = "";
+            favouriteClubId = 0;
+            createDate = 0;
+          };
+
+          let profilePictureCanisterId = "";
+
+
+
+          let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
+          managers.put(principalId, newManager);
+          return #ok();
         };
         case (?foundManager) {
           
@@ -487,23 +466,78 @@ module {
 
     public func isFantasyTeamValid(existingFantasyTeam: ?T.Manager, fantasyTeamDTO: DTOs.UpdateFantasyTeamDTO, gameweek: T.GameweekNumber, players: [DTOs.PlayerDTO]) : Bool {
 
-      //TODO: check the change in players based on their current values wouldn't put the managers bank balance below zero
-/*
-let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(newPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.value });
+//ALL OF THIS MIGHT NEED TO MOVE INTO A DIFFERENT FUNCTION?!
+      let updatedPlayerIds: [T.PlayerId] = fantasyTeamDTO.playerIds;
 
-          if (not isTeamValid(newPlayers, bonusId, bonusPlayerId)) {
-            return #err(#InvalidTeamError);
+      switch(existingFantasyTeam){
+        case (null){
+          //team not more than 300m
+          let spend = Array.foldLeft(updatedPlayerIds, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
+            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+            switch(player){
+              case (null){
+                sum
+              };
+              case (?foundPlayer){
+                sum + foundPlayer.valueQuarterMillions
+              }
+            }
+          });
+          
+          if(spend > 1200){
+            return false;
+          };
+        };
+        case (?foundTeam){
+          let existingPlayerIds: [T.PlayerId] = foundTeam.playerIds;
+
+          let playersBought = Array.filter(updatedPlayerIds, func(playerId : T.PlayerId) : Bool {
+            Array.find(existingPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
+          });
+
+          let playersSold = Array.filter(existingPlayerIds, func(playerId : T.PlayerId) : Bool {
+            Array.find(updatedPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
+          });
+
+          let spend = Array.foldLeft(playersBought, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
+            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+            switch(player){
+              case (null){
+                sum
+              };
+              case (?foundPlayer){
+                sum + foundPlayer.valueQuarterMillions
+              }
+            }
+          });
+
+          let sold = Array.foldLeft(playersSold, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
+            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+            switch(player){
+              case (null){
+                sum
+              };
+              case (?foundPlayer){
+                sum + foundPlayer.valueQuarterMillions
+              }
+            }
+          });
+
+          let remainingBank: Nat = foundTeam.bankQuarterMillions - spend + sold;
+          if(remainingBank < 0){
+            return false;
           };
 
-          let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+        };
+      };
 
-          if (totalTeamValue > 1200) {
-            return #err(#InvalidTeamError);
-          };
 
-          let bank : Nat = 1200 - totalTeamValue;
+      //TODO:check that they have not made more than 3 changes
 
-*/
+      //TODO: CHECK THEY ARE NOT ALREADY PLAYING A BONUS THEY'VE ALREADY PLAYED
+
+      //CHECK THE NUMBER OF TRANSFERS MADE IS NOT > 3 UNLESS JAN TRANSFER WINDOW OR PLAYERS FIRST GAMEWEEK
+
 
       let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(players, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
 
@@ -675,6 +709,43 @@ let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(newPlayers, func(player : D
         Text.hash
       );
     };
+
+    private func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
+        let newManager: T.Manager = {
+          principalId = principalId;
+          username = createProfileDTO.username;
+          favouriteClubId = createProfileDTO.favouriteClubId;
+          createDate = createProfileDTO.createDate;
+          termsAccepted = false;
+          profilePictureCanisterId = profilePictureCanisterId;
+          transfersAvailable = 3;
+          bankQuarterMillions = 1200;
+          playerIds = [];
+          captainId = 0;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          teamBoostGameweek = 0;
+          teamBoostClubId = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          countrymenGameweek = 0;
+          countrymenCountryId = 0;
+          prospectsGameweek = 0;
+          braceBonusGameweek = 0;
+          hatTrickHeroGameweek = 0;
+          transferWindowGameweek = 0;
+          history = List.nil<T.FantasyTeamSeason>();
+        };
+
+        return newManager;
+    };
+    
 
     /*
     
