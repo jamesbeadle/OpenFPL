@@ -199,6 +199,11 @@ module {
     };
     
     public func updateManager(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
+      
+      if (not isTeamValid(updatedFantasyTeam)) {
+        return #err(#InvalidTeamError);
+      };
+
       let manager = managers.get(principalId);
       switch(manager){
         case (null){
