@@ -11,7 +11,25 @@ module {
 
   public class StrategyManager() {
     
-    public func isFantasyTeamValid(fantasyTeamDTO: DTOs.UpdateFantasyTeamDTO, gameweek: T.GameweekNumber, players: [DTOs.PlayerDTO]) : Bool {
+    public func isFantasyTeamValid(existingFantasyTeamDTO: DTOs.ManagerDTO, fantasyTeamDTO: DTOs.UpdateFantasyTeamDTO, gameweek: T.GameweekNumber, players: [DTOs.PlayerDTO]) : Bool {
+
+      //TODO: check the change in players based on their current values wouldn't put the managers bank balance below zero
+/*
+let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(newPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.value });
+
+          if (not isTeamValid(newPlayers, bonusId, bonusPlayerId)) {
+            return #err(#InvalidTeamError);
+          };
+
+          let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+
+          if (totalTeamValue > 1200) {
+            return #err(#InvalidTeamError);
+          };
+
+          let bank : Nat = 1200 - totalTeamValue;
+
+*/
 
       let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(players, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
 
