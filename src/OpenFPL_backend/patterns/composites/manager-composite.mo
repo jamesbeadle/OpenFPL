@@ -14,9 +14,9 @@ import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
 import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
-import LeaderboardCanister "../../leaderboard-canister";
 import Management "../../modules/Management";
 import ENV "../../utils/Env";
+import ProfileCanister "../../profile-canister";
 
 module {
 
@@ -518,6 +518,15 @@ module {
     private func setManagerProfileImage(principalId: Text, profilePicture: Blob) : async Text{
 
       if(activeProfileCanisterId == ""){
+        let profileCanisterId = createProfileCanister();
+
+
+
+      //Create a new profile picture canister
+      //Record the canister for the cycles watcher to watch
+      //add the profile picture
+      
+
         return createProfileCanister(principalId, profilePicture);
       }
       else{
@@ -547,23 +556,18 @@ module {
                     controllers = ?[backendCanisterController];
                     compute_allocation = null;
                     memory_allocation = null;
-                    freezing_threshold = ?31_540_000; //WHAT SHOULD I SET THIS TO?
+                    freezing_threshold = ?31_540_000; //TODO: WHAT SHOULD I SET THIS TO?
                 };
             })
         );
     };
 
-    private func createProfileCanister(principalId: Text, profilePicture: Blob) : async Text {
-        Cycles.add(2000000000000);
-        let canister = await LeaderboardCanister.LeaderboardCanister();
-        let _ = await updateCanister_(canister); // update canister permissions and settings
-        let canister_id = Principal.fromActor(canister);
-        return Principal.toText(canister_id);
-      //Create a new profile picture canister
-      //Record the canister for the cycles watcher to watch
-      //add the profile picture
-      
-      return "";
+    private func createProfileCanister() : async Text {
+      Cycles.add(2000000000000);
+      let canister = await ProfileCanister.ProfileCanister();
+      let _ = await updateCanister_(canister);
+      let canister_id = Principal.fromActor(canister);
+      return Principal.toText(canister_id);
     };
 
     public func isUsernameValid(username: Text, principalId: Text) : Bool{
