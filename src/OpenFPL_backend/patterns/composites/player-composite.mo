@@ -6,14 +6,17 @@ import Iter "mo:base/Iter";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Text "mo:base/Text";
+import Array "mo:base/Array";
 import CanisterIds "../../CanisterIds";
+import Countries "../../Countries";
+import Utilities "../../utilities";
 
 module {
   public class PlayerComposite() {
     
     private var nextPlayerId : T.PlayerId = 1;
     private var players = List.fromArray<T.Player>([]);
-   
+
     public func setStableData(stable_next_player_id: T.PlayerId, stable_players: [T.Player]) {
       nextPlayerId := stable_next_player_id;
       players := List.fromArray(stable_players);
@@ -266,14 +269,17 @@ module {
         return #err("Invalid: Player last name greater than 50 characters.");
       };
 
-      if (not countriesInstance.isCountryValid(nationality)) {
-        return #err(#InvalidData);
+      let playerCountry = Array.find<T.Country>(Countries.countries, func(country : T.Country) : Bool { return country.id == createPlayerDTO.nationality });
+      switch(playerCountry){
+        case (null){
+          return #err("Invalid: Country not found.")
+        };
+        case (?foundCountry){};
       };
 
-      if (Utilities.calculateAgeFromUnix(dateOfBirth) < 16) {
-        return #err(#InvalidData);
+      if (Utilities.calculateAgeFromUnix(createPlayerDTO.dateOfBirth) < 16) {
+        return #err("Invalid: Player under 16 years of age.");
       };
-
 
       return #ok("Valid");
     };
@@ -283,35 +289,47 @@ module {
 
     public func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<Text,Text> {
 
-      let player = await playerCanister.getPlayer(playerId);
-      if (player.id == 0) {
-        return #err(#InvalidData);
+      let player = List.find<T.Player>(
+        players,
+        func(p : T.Player) : Bool {
+          return p.id == updatePlayerDTO.playerId;
+        },
+      );
+      
+      switch(player){
+        case (null){
+          return #err("Invalid: Cannot find player to update.");
+        };
+        case (?foundPlayer){ };
       };
 
-      if (Text.size(firstName) > 50) {
-        return #err(#InvalidData);
+
+
+      if (Text.size(updatePlayerDTO.firstName) > 50) {
+        return #err("Invalid: Player first name greater than 50 characters.");
       };
 
-      if (Text.size(lastName) > 50) {
-        return #err(#InvalidData);
+      if (Text.size(updatePlayerDTO.lastName) > 50) {
+        return #err("Invalid: Player last name greater than 50 characters.");
       };
 
-      if (position > 3) {
-        return #err(#InvalidData);
+      let playerCountry = Array.find<T.Country>(Countries.countries, func(country : T.Country) : Bool { return country.id == updatePlayerDTO.nationality });
+      switch(playerCountry){
+        case (null){
+          return #err("Invalid: Country not found.")
+        };
+        case (?foundCountry){};
       };
 
-      if (not countriesInstance.isCountryValid(nationality)) {
-        return #err(#InvalidData);
-      };
-
-      if (Utilities.calculateAgeFromUnix(dateOfBirth) < 16) {
-        return #err(#InvalidData);
+      if (Utilities.calculateAgeFromUnix(updatePlayerDTO.dateOfBirth) < 16) {
+        return #err("Invalid: Player under 16 years of age.");
       };
 
       return #ok("Valid");
     };
 
     public func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async () {
+      //TODO
     };
 
     public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<Text,Text> {
@@ -324,6 +342,7 @@ module {
     };
 
     public func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async () {
+      //TODO
     };
     
     public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<Text,Text> {
