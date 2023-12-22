@@ -695,22 +695,46 @@ module {
       return result;
     };
 
-    public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
+    public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO, systemState: T.SystemState) : async Result.Result<Text,Text> {
 
-/* //TODO
-      if (updatedFixtureDate <= Time.now()) {
-        return #err(#InvalidData);
-      };
+      let currentSeason = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == rescheduleFixtureDTO.seasonId;
+        },
+      );
+      switch(currentSeason){
+        case (null) {
+          return #err("Invalid: Season does not exist.");
+        };
+        case (?foundSeason){
+          if (rescheduleFixtureDTO.updatedFixtureDate <= Time.now()) {
+            return #err("Invalid: Fixture date in the past.");
+          };
 
-      if (updatedFixtureGameweek <= seasonManager.getActiveGameweek()) {
-        return #err(#InvalidData);
-      };
+          if (rescheduleFixtureDTO.updatedFixtureGameweek < systemState.pickTeamGameweek) {
+            return #err("Invalid: Fixture gameweek in the past.");
+          };
 
-      let fixture = await seasonManager.getFixture(seasonManager.getActiveSeason().id, currentFixtureGameweek, fixtureId);
-      if (fixture.id == 0 or fixture.status == 3) {
-        return #err(#InvalidData);
+          let fixture = List.find(
+            foundSeason.fixtures,
+            func(f : T.Fixture) : Bool {
+              return f.id == rescheduleFixtureDTO.fixtureId;
+            },
+          );
+
+          switch(fixture){
+            case (null){
+              return #err("Invalid: Cannot find fixture.");
+            };
+            case (?foundFixture){
+              if (foundFixture.status == #Finalised) {
+                return #err("Invalid: Cannot reschedule finalised fixture.");
+              };  
+            };
+          };
+        };
       };
-*/
 
       return #ok("Valid");
     };

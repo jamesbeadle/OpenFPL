@@ -15,7 +15,7 @@ import T "types";
 import TimerComposite "patterns/composites/timer-composite";
 
 actor Self {
-
+  //TODO: NEED TO PASS SELF
   private func OpenFPLBackendCanisterId() : Principal = Principal.fromActor(Self);
   let seasonManager = SeasonManager.SeasonManager(); 
   //seasonManager.setBackendCanisterController(Principal.fromActor(Self));

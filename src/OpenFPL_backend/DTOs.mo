@@ -31,6 +31,7 @@ module DTOs {
   };
   
   public type RescheduleFixtureDTO = {
+    seasonId: T.SeasonId;
     fixtureId : T.FixtureId;
     updatedFixtureGameweek : T.GameweekNumber;
     updatedFixtureDate : Int
