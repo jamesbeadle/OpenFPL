@@ -2,6 +2,8 @@ import T "../../types";
 import DTOs "../../DTOs";
 import List "mo:base/List";
 import Result "mo:base/Result";
+import Array "mo:base/Array";
+import Order "mo:base/Order";
 
 module {
 
@@ -17,6 +19,20 @@ module {
       nextClubId := stable_next_club_id;
       clubs := List.fromArray(stable_clubs);
 
+    };
+
+    public func getClubs() : [T.Club] {
+      let clubsArray = List.toArray(clubs);
+      let sortedArray = Array.sort(
+        clubsArray,
+        func(a : T.Club, b : T.Club) : Order.Order {
+          if (a.name < b.name) { return #less };
+          if (a.name == b.name) { return #equal };
+          return #greater;
+        },
+      );
+      let sortedClubs = List.fromArray(sortedArray);
+      return sortedArray;
     };
 
 
@@ -80,20 +96,6 @@ private var teams = List.fromArray<T.Team>([]);
       teams := List.fromArray(stable_teams);
       nextTeamId := stable_teamId;
       relegatedTeams := List.fromArray(stable_relegated_teams);
-    };
-
-    public func getTeams() : [T.Team] {
-      let teamsArray = List.toArray(teams);
-      let sortedArray = Array.sort(
-        teamsArray,
-        func(a : T.Team, b : T.Team) : Order.Order {
-          if (a.name < b.name) { return #less };
-          if (a.name == b.name) { return #equal };
-          return #greater;
-        },
-      );
-      let sortedTeams = List.fromArray(sortedArray);
-      return sortedArray;
     };
 
     public func getTeam(teamId : T.TeamId) : ?T.Team {

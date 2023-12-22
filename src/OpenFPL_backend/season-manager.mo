@@ -12,6 +12,11 @@ import Principal "mo:base/Principal";
 import Blob "mo:base/Blob";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
+import Timer "mo:base/Timer";
+import Array "mo:base/Array";
+import Order "mo:base/Order";
+import Int "mo:base/Int";
+import Time "mo:base/Time";
 import SnapshotFactory "patterns/snapshot-factory";
 import StrategyManager "patterns/strategy-manager";
 import SeasonComposite "patterns/composites/season-composite";
@@ -28,6 +33,8 @@ module {
 
   public class SeasonManager() {
 
+    private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
+    
     let strategyManager = StrategyManager.StrategyManager();
     let managerComposite = ManagerComposite.ManagerComposite();
     let playerComposite = PlayerComposite.PlayerComposite();
@@ -84,85 +91,11 @@ module {
         stable_monthly_leaderboard_canister_ids,
         stable_weekly_leaderboard_canister_ids);      
     };
-
-/*
-    private func gameweekBeginExpiredCallback() : async () {
-
-      managerComposite.snapshotFantasyTeams();
-      managerComposite.resetTransfers();  
-
-      let uniqueKickOffTimes = seasonComposite.getGameweekKickOffTimes(systemState.calculationSeason, systemState.calculationGameweek);
-      for(kickOffTime in Iter.fromArray(uniqueKickOffTimes)){
-        timerComposite.setTimer(kickOffTime, "gameKickOffExpired");
-      };
-        
-      let updatedSystemState: T.SystemState = {
-        pickTeamGameweek = systemState.pickTeamGameweek + 1;
-        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
-        homepageManagerGameweek = systemState.homepageManagerGameweek;
-        calculationGameweek = systemState.calculationGameweek;
-        calculationMonth = systemState.calculationMonth;
-        calculationSeason = systemState.calculationSeason;        
-        transferWindowActive = systemState.transferWindowActive;
-      };
-      systemState := updatedSystemState;
-      
-      timerComposite.removeExpiredTimers();
+    
+    public func setTimerBackupFunction(_setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> ()) {
+      setAndBackupTimer := ?_setAndBackupTimer;
     };
 
-    private func gameKickOffExpiredCallback() : async () {
-      let activatedFixtures: [T.Fixture] = seasonComposite.setFixturesToActive(systemState.calculationSeason, systemState.calculationGameweek);
-      for(fixture in Iter.fromArray(activatedFixtures)){
-        timerComposite.setTimer(fixture.kickOff + (Utilities.getHour() * 2), "gameCompletedExpired");
-      };
-      await updateCacheHash("fixtures");
-      timerComposite.removeExpiredTimers();
-    };
-
-    private func gameCompletedExpiredCallback() : async () {
-      seasonComposite.setFixturesToCompleted(systemState.calculationSeason, systemState.calculationGameweek);
-      await updateCacheHash("fixtures");
-      timerComposite.removeExpiredTimers();
-    };
-
-    private func loanExpiredCallback() : async () {
-      playerComposite.loanExpired();
-      await updateCacheHash("players"); 
-      timerComposite.removeExpiredTimers();    
-    };
-
-    private func transferWindowStartCallback() : async () {
-      let updatedSystemState: T.SystemState = {
-        pickTeamGameweek = systemState.pickTeamGameweek + 1;
-        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
-        homepageManagerGameweek = systemState.homepageManagerGameweek;
-        calculationGameweek = systemState.calculationGameweek;
-        calculationMonth = systemState.calculationMonth;
-        calculationSeason = systemState.calculationSeason;        
-        transferWindowActive = true;
-      };
-      systemState := updatedSystemState;
-      
-      let nextJan31stTime = Utilities.nextJanuary31stUnixTime();
-      timerComposite.setTimer(nextJan31stTime, "transferWindowEnd");
-      timerComposite.removeExpiredTimers();
-    };
-
-    private func transferWindowEndCallback() : async () {
-      let updatedSystemState: T.SystemState = {
-        pickTeamGameweek = systemState.pickTeamGameweek + 1;
-        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
-        homepageManagerGameweek = systemState.homepageManagerGameweek;
-        calculationGameweek = systemState.calculationGameweek;
-        calculationMonth = systemState.calculationMonth;
-        calculationSeason = systemState.calculationSeason;        
-        transferWindowActive = false;
-      };
-      systemState := updatedSystemState;
-
-      timerComposite.removeExpiredTimers();
-    };
-      */
     private func updateCacheHash(category : Text) : async () {
       let hashBuffer = Buffer.fromArray<T.DataCache>([]);
 
@@ -255,11 +188,35 @@ module {
     };
      
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
-      return await seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO);
+      let clubs = clubComposite.getClubs();
+      return await seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO, systemState.calculationSeason, clubs);
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
-      return await seasonComposite.executeAddInitialFixtures(addInitialFixturesDTO);
+      
+      await seasonComposite.executeAddInitialFixtures(addInitialFixturesDTO);
+      
+      let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
+      if(Array.size(fixtures) == 0){
+        return;
+      };
+      
+      let sortedArray = Array.sort(fixtures,
+        func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
+          if (a.kickOff < b.kickOff) { return #less };
+          if (a.kickOff == b.kickOff) { return #equal };
+          return #greater;
+        },
+      );
+      
+      let firstFixture = sortedArray[0];
+      let durationToHourBeforeFirstFixture : Timer.Duration = #nanoseconds(Int.abs(firstFixture.kickOff - Utilities.getHour() - Time.now()));
+      switch (setAndBackupTimer) {
+        case (null) {};
+        case (?actualFunction) {
+          actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
+        };
+      };
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
@@ -382,14 +339,7 @@ module {
     //transfer window end timer
 
   /*
-    let timerComposite = TimerComposite.TimerComposite(
-      gameweekBeginExpiredCallback,
-      gameKickOffExpiredCallback,
-      gameCompletedExpiredCallback,
-      loanExpiredCallback,
-      transferWindowStartCallback,
-      transferWindowEndCallback
-    );
+    
     */
 
     

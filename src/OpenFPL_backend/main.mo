@@ -12,6 +12,7 @@ import Countries "Countries";
 import DTOs "DTOs";
 import SeasonManager "season-manager";
 import T "types";
+import TimerComposite "patterns/composites/timer-composite";
 
 actor Self {
 
@@ -234,6 +235,41 @@ actor Self {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
+
+  private func gameweekBeginExpiredCallback() : async () {
+    timerComposite.removeExpiredTimers();
+  };
+
+  private func gameKickOffExpiredCallback() : async () {
+    timerComposite.removeExpiredTimers();
+  };
+
+  private func gameCompletedExpiredCallback() : async () {
+    timerComposite.removeExpiredTimers();
+  };
+
+  private func loanExpiredCallback() : async () {
+    timerComposite.removeExpiredTimers();
+  };
+
+  private func transferWindowStartCallback() : async () {
+    timerComposite.removeExpiredTimers();
+  };
+
+  private func transferWindowEndCallback() : async () {
+    timerComposite.removeExpiredTimers();
+  };
+
+  let timerComposite = TimerComposite.TimerComposite();
+  timerComposite.setCallbackFunctions(
+    gameweekBeginExpiredCallback,
+    gameKickOffExpiredCallback,
+    gameCompletedExpiredCallback,
+    loanExpiredCallback,
+    transferWindowStartCallback,
+    transferWindowEndCallback);
+    
+  seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer);
 /*
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
