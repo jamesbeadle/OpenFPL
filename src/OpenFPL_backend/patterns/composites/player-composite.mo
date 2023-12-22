@@ -76,47 +76,38 @@ module {
       var playerDetailsBuffer = Buffer.fromArray<DTOs.PlayerPointsDTO>([]);
 
       label playerDetailsLoop for (player in Iter.fromList(players)) {
-      var points : Int16 = 0;
-      var events : List.List<T.PlayerEventData> = List.nil();
+        var points : Int16 = 0;
+        var events : List.List<T.PlayerEventData> = List.nil();
 
-      for (season in Iter.fromList(player.seasons)) {
-        if (season.id == seasonId) {
-          for (gw in Iter.fromList(season.gameweeks)) {
+        for (season in Iter.fromList(player.seasons)) {
+          if (season.id == seasonId) {
+            for (gw in Iter.fromList(season.gameweeks)) {
 
-            if (gw.number == gameweek) {
-              points := gw.points;
-              events := List.filter<T.PlayerEventData>(
-                gw.events,
-                func(event : T.PlayerEventData) : Bool {
-                  return event.playerId == player.id;
-                },
-              );
+              if (gw.number == gameweek) {
+                points := gw.points;
+                events := List.filter<T.PlayerEventData>(
+                  gw.events,
+                  func(event : T.PlayerEventData) : Bool {
+                    return event.playerId == player.id;
+                  },
+                );
+              };
             };
           };
         };
+
+        let playerGameweek : DTOs.PlayerPointsDTO = {
+          id = player.id;
+          points = points;
+          clubId = player.clubId;
+          position = player.position;
+          events = List.toArray(events);
+          gameweek = gameweek;
+        };
+        playerDetailsBuffer.add(playerGameweek);
       };
 
-      let playerGameweek : DTOs.PlayerPointsDTO = {
-        id = player.id;
-        points = points;
-        clubId = player.clubId;
-        position = player.position;
-        events = List.toArray(events);
-        gameweek = gameweek;
-      };
-      playerDetailsBuffer.add(playerGameweek);
-    };
-
-    return Buffer.toArray(playerDetailsBuffer);
-      return [];
-    };
-
-    public func getStablePlayers(): [T.Player] {
-      return List.toArray(players);
-    };
-
-    public func getStableNextPlayerId() : T.PlayerId {
-      return nextPlayerId;
+      return Buffer.toArray(playerDetailsBuffer);
     };
 
     public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<Text,Text> {
@@ -187,6 +178,24 @@ module {
     };
     
     public func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async () {
+    };
+
+    
+
+    public func getStablePlayers(): [T.Player] {
+      return List.toArray(players);
+    };
+
+    public func setStablePlayers(stable_players: [T.Player]) {
+      players := List.fromArray(stable_players);
+    };
+
+    public func getStableNextPlayerId() : T.PlayerId {
+      return nextPlayerId;
+    };
+
+    public func setStableNextPlayerId(stable_next_player_id: T.PlayerId) {
+      nextPlayerId := stable_next_player_id;
     };
   
 /*

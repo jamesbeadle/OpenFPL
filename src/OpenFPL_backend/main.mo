@@ -331,7 +331,7 @@ actor Self {
     seasonManager.setStableSeasons(stable_seasons);
     seasonManager.setStableNextSeasonId(stable_next_season_id);
     seasonManager.setStableNextFixtureId(stable_next_fixture_id);
-    seasonManager.setStableDataCacheHashes(stable_data_cache_hashes);
+    seasonManager.setStableDataHashes(stable_data_cache_hashes);
     seasonManager.setStableSystemState(stable_system_state);
     seasonManager.recreateTimers();
   };

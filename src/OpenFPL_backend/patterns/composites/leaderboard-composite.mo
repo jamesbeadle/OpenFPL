@@ -110,13 +110,40 @@ module {
     public func getStableSeasonLeaderboardCanisterIds(): [(T.SeasonId, Text)] {
       return Iter.toArray(seasonLeaderboardCanisterIds.entries());
     };
+
+    public func setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids: [(T.SeasonId, Text)])  {
+      seasonLeaderboardCanisterIds := HashMap.fromIter<T.SeasonId, Text>(
+        stable_season_leaderboard_canister_ids.vals(),
+        stable_season_leaderboard_canister_ids.size(),
+        Utilities.eqNat16,
+        Utilities.hashNat16
+      );
+    };
     
     public func getStableMonthlyLeaderboardCanisterIds(): [(T.MonthlyLeaderboardKey, Text)] {
       return Iter.toArray(monthlyLeaderboardCanisterIds.entries());
     };
+
+    public func setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids: [(T.MonthlyLeaderboardKey, Text)])  {
+      monthlyLeaderboardCanisterIds := HashMap.fromIter<T.MonthlyLeaderboardKey, Text>(
+        stable_monthly_leaderboard_canister_ids.vals(),
+        stable_monthly_leaderboard_canister_ids.size(),
+        Utilities.eqMonthlyKey,
+        Utilities.hashMonthlyKey
+      );
+    };
     
     public func getStableWeeklyLeaderboardCanisterIds(): [(T.WeeklyLeaderboardKey, Text)] {
       return Iter.toArray(weeklyLeaderboardCanisterIds.entries());
+    };
+
+    public func setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids: [(T.WeeklyLeaderboardKey, Text)])  {
+      weeklyLeaderboardCanisterIds := HashMap.fromIter<T.WeeklyLeaderboardKey, Text>(
+        stable_weekly_leaderboard_canister_ids.vals(),
+        stable_weekly_leaderboard_canister_ids.size(),
+        Utilities.eqWeeklyKey,
+        Utilities.hashWeeklyKey
+      );
     };
 
 /*

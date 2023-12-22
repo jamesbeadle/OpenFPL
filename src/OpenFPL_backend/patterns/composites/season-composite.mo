@@ -398,12 +398,24 @@ module {
       return List.toArray(seasons);
     };
 
+    public func setStableSeasons(stable_seasons: [T.Season]) {
+      seasons := List.fromArray(stable_seasons);
+    };
+
     public func getStableNextSeasonId() : T.SeasonId {
       return nextSeasonId;
     };
 
+    public func setStableNextSeasonId(stable_next_season_id: T.SeasonId) {
+      nextSeasonId := stable_next_season_id;
+    };
+
     public func getStableNextFixtureId() : T.FixtureId {
       return nextFixtureId;
+    };
+
+    public func setStableNextFixtureId(stable_next_fixture_id: T.FixtureId) {
+      nextFixtureId := stable_next_fixture_id;
     };
 
 

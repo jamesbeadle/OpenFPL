@@ -447,5 +447,9 @@ module {
     public func getStableSystemState()  : T.SystemState {
       return systemState;
     };
+
+    public func setStableSystemState(stable_system_state: T.SystemState) {
+      systemState := stable_system_state;
+    };
   };
 };

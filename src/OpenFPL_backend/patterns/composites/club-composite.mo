@@ -70,13 +70,24 @@ module {
       return List.toArray(clubs);
     };
 
+    public func setStableClubs(stable_clubs: [T.Club]) {
+      clubs := List.fromArray(stable_clubs);
+    };
 
     public func getStableRelegatedClubs(): [T.Club] {
       return List.toArray(relegatedClubs);
     };
 
+    public func setStableRelegatedClubs(stable_relegated_clubs: [T.Club]) {
+      relegatedClubs := List.fromArray(stable_relegated_clubs);
+    };
+
     public func getStableNextClubId(): T.ClubId {
       return nextClubId;
+    };
+
+    public func setStableNextClubId(stable_next_club_id: T.ClubId){
+      nextClubId := stable_next_club_id;
     };
 
 
