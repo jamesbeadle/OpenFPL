@@ -5,6 +5,7 @@ import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
+import Text "mo:base/Text";
 import CanisterIds "../../CanisterIds";
 
 module {
@@ -241,25 +242,28 @@ module {
       //TODO
     };
 
-    public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<Text,Text> {
+    public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO, clubs: List.List<T.Club>) : async Result.Result<Text,Text> {
 
-      switch (teamsInstance.getTeam(teamId)) {
+      let newClub = List.find<T.Club>(
+        clubs,
+        func(club : T.Club) : Bool {
+          return club.id == createPlayerDTO.clubId;
+        },
+      );
+
+      switch (newClub) {
         case (null) {
-          return #err(#InvalidData);
+          return #err("Invalid: Player club does not exist.");
         };
         case (?foundTeam) {};
       };
 
-      if (Text.size(firstName) > 50) {
-        return #err(#InvalidData);
+      if (Text.size(createPlayerDTO.firstName) > 50) {
+        return #err("Invalid: Player first name greater than 50 characters.");
       };
 
-      if (Text.size(lastName) > 50) {
-        return #err(#InvalidData);
-      };
-
-      if (position > 3) {
-        return #err(#InvalidData);
+      if (Text.size(createPlayerDTO.lastName) > 50) {
+        return #err("Invalid: Player last name greater than 50 characters.");
       };
 
       if (not countriesInstance.isCountryValid(nationality)) {
