@@ -12,14 +12,19 @@ import Nat16 "mo:base/Nat16";
 import Nat8 "mo:base/Nat8";
 import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
+import Cycles "mo:base/ExperimentalCycles";
+import Principal "mo:base/Principal";
+import LeaderboardCanister "../../leaderboard-canister";
+import Management "../../modules/Management";
+import ENV "../../utils/Env";
 
 module {
 
-  public class ManagerComposite() {
+  public class ManagerComposite(backendCanisterController: Principal) {
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
     private var activeProfileCanisterId = ""; 
-   
+    
     public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 
       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
         stable_managers.vals(),
@@ -531,13 +536,33 @@ module {
         };
       };
     };
+    
+    private func updateCanister_(a : actor {}) : async () {
+        let cid = { canister_id = Principal.fromActor(a) };
+        let IC : Management.Management = actor (ENV.Default);
+        await (
+            IC.update_settings({
+                canister_id = cid.canister_id;
+                settings = {
+                    controllers = ?[backendCanisterController];
+                    compute_allocation = null;
+                    memory_allocation = null;
+                    freezing_threshold = ?31_540_000; //WHAT SHOULD I SET THIS TO?
+                };
+            })
+        );
+    };
 
-    private func createProfileCanister(principalId: Text, profilePicture: Blob) : Text {
-
+    private func createProfileCanister(principalId: Text, profilePicture: Blob) : async Text {
+        Cycles.add(2000000000000);
+        let canister = await LeaderboardCanister.LeaderboardCanister();
+        let _ = await updateCanister_(canister); // update canister permissions and settings
+        let canister_id = Principal.fromActor(canister);
+        return Principal.toText(canister_id);
       //Create a new profile picture canister
       //Record the canister for the cycles watcher to watch
       //add the profile picture
-      //return the canister id
+      
       return "";
     };
 
@@ -836,7 +861,7 @@ module {
 
     private func invalidProfilePicture(profilePicture: Blob) : Bool{
       let sizeInKB = Array.size(Blob.toArray(profilePicture)) / 1024;
-      return (sizeInKB <= 0 or sizeInKB > 4000);
+      return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
     private func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {

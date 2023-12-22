@@ -16,7 +16,8 @@ import TimerComposite "patterns/composites/timer-composite";
 
 actor Self {
 
-  let seasonManager = SeasonManager.SeasonManager(); 
+  private func OpenFPLBackendCanisterId() : Principal = Principal.fromActor(Self);
+  let seasonManager = SeasonManager.SeasonManager(OpenFPLBackendCanisterId()); 
 
   //Functions containing inter-canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>  {

@@ -30,12 +30,12 @@ import CanisterIds "CanisterIds";
 
 module {
 
-  public class SeasonManager() {
+  public class SeasonManager(backendCanisterController: Principal) {
 
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
     
     let strategyManager = StrategyManager.StrategyManager();
-    let managerComposite = ManagerComposite.ManagerComposite();
+    let managerComposite = ManagerComposite.ManagerComposite(backendCanisterController);
     let playerComposite = PlayerComposite.PlayerComposite();
     let clubComposite = ClubComposite.ClubComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
