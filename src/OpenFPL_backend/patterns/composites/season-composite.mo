@@ -7,6 +7,9 @@ import Time "mo:base/Time";
 import Result "mo:base/Result";
 import Array "mo:base/Array";
 import Nat8 "mo:base/Nat8";
+import Nat16 "mo:base/Nat16";
+import Text "mo:base/Text";
+import Char "mo:base/Char";
 import Utilities "../../utilities";
 
 module {
@@ -544,16 +547,7 @@ module {
     };
 
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, seasonId: T.SeasonId, clubs: [T.Club]) : async Result.Result<Text,Text> {
-
-       let findIndex = func(arr : [T.ClubId], value : T.ClubId) : ?Nat {
-        for (i in Array.keys(arr)) {
-          if (arr[i] == value) {
-            return ?(i);
-          };
-        };
-        return null;
-      };
-
+        
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
@@ -565,13 +559,34 @@ module {
           return #err("Invalid: Season does not exist.");
         };
         case (?foundSeason){
-          if (List.size(foundSeason.fixtures) > 0) {
-            return #err("Invalid: Fixtures for season already exist.");
+          if(addInitialFixturesDTO.seasonStartYear - 1 != foundSeason.year){
+            return #err("Invalid: Incorrect season start year.");
           };
         };
       };
 
-      //there are 380 fixtures
+      let newSeason = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.year == addInitialFixturesDTO.seasonStartYear;
+        },
+      );
+      switch(newSeason){
+        case (null) { };
+        case (?foundSeason){
+          return #err("Invalid: Season already exists.");
+        };
+      };
+
+      let findIndex = func(arr : [T.ClubId], value : T.ClubId) : ?Nat {
+        for (i in Array.keys(arr)) {
+          if (arr[i] == value) {
+            return ?(i);
+          };
+        };
+        return null;
+      };
+
       if (Array.size(addInitialFixturesDTO.seasonFixtures) != 380) {
         return #err("Invalid: There must be 380 fixtures for a season.");
       };
@@ -586,7 +601,6 @@ module {
         };
       };
 
-      //there are 20 teams
       let uniqueClubIds = Buffer.toArray<T.ClubId>(uniqueClubIdsBuffer);
       if (Array.size(uniqueClubIds) != 20) {
         return #err("Invalid: There must be exactly 20 teams for a season.");
@@ -648,20 +662,37 @@ module {
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
-       seasons := List.map<T.Season, T.Season>(
-        seasons,
-        func(currentSeason : T.Season) : T.Season {
-          if (currentSeason.id == addInitialFixturesDTO.seasonId) {
-            return {
-              id = currentSeason.id;
-              name = currentSeason.name;
-              year = currentSeason.year;
-              fixtures = List.fromArray(addInitialFixturesDTO.seasonFixtures);
-              postponedFixtures = currentSeason.postponedFixtures;
-            };
-          } else { return currentSeason };
-        },
-      );
+      let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(Nat16.toText(addInitialFixturesDTO.seasonStartYear + 1), 2, 3);
+      let newSeason: T.Season = {
+        id = nextSeasonId;
+        name = seasonName;
+        year = addInitialFixturesDTO.seasonStartYear;
+        fixtures = List.fromArray(addInitialFixturesDTO.seasonFixtures);
+        postponedFixtures = List.nil<T.Fixture>();
+      };      
+       seasons := List.append<T.Season>(seasons, List.make(newSeason));       
+    };
+
+    
+    private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {
+      if (indexStart == 0 and indexEnd >= value.size()) {
+        return value;
+      } else if (indexStart >= value.size()) {
+        return "";
+      };
+
+      var indexEndValid = indexEnd;
+      if (indexEnd > value.size()) {
+        indexEndValid := value.size();
+      };
+
+      var result : Text = "";
+      var iter = Iter.toArray<Char>(Text.toIter(value));
+      for (index in Iter.range(indexStart, indexEndValid - 1)) {
+        result := result # Char.toText(iter[index]);
+      };
+
+      return result;
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {

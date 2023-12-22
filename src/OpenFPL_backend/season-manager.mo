@@ -198,7 +198,6 @@ module {
       //IN HERE IF THE SEASON IS COMPLETE CRAETE THE CANISTER FOR THE NEXT SEASON LEADERBOARD
       
       //TODO: If completing this fixture data completes gameweek 38 then
-        //create and set season to the next season
         //reset the fantasy teams
         //Ensure you still show historic data on prior screen
     };
