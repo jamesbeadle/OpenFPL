@@ -62,8 +62,9 @@ module {
 
     public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<Text,Text> {
 
+/*
       //TODO: Need to validate
-let allTeams = teamsInstance.getTeams();
+      let allTeams = teamsInstance.getTeams();
 
       if (Array.size(allTeams) >= 20) {
         return #err(#InvalidData);
@@ -98,6 +99,7 @@ let allTeams = teamsInstance.getTeams();
       if (not Utilities.validateHexColor(thirdHexColour)) {
         return #err(#InvalidData);
       };
+      */
 
 
       return #ok("Valid");

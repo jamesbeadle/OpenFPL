@@ -697,6 +697,7 @@ module {
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
 
+/* //TODO
       if (updatedFixtureDate <= Time.now()) {
         return #err(#InvalidData);
       };
@@ -709,13 +710,13 @@ module {
       if (fixture.id == 0 or fixture.status == 3) {
         return #err(#InvalidData);
       };
-
+*/
 
       return #ok("Valid");
     };
 
     public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async () {
-      
+      /* TODO
       var allSeasons = List.fromArray(seasonsInstance.getSeasons());
       allSeasons := List.map<T.Season, T.Season>(
         allSeasons,
@@ -773,6 +774,7 @@ module {
         },
       );
       seasonsInstance.setSeasons(List.toArray(allSeasons));
+      */
     };
 
     public func getStableSeasons() : [T.Season] {

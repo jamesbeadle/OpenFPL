@@ -144,7 +144,10 @@ module {
     };
     
     public func getManager(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error>{
-      return await managerComposite.getManager(principalId);
+
+      //TODO: Get the leaderboard entry information to pass in
+
+      return await managerComposite.getManager(principalId, systemState.calculationSeason, null, null, null);
     };
     
     public func getManagerGameweek(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error>{
@@ -169,7 +172,7 @@ module {
     };
 
     public func updateFavouriteClub(principalId: Text, clubId: T.ClubId) : async Result.Result<(), T.Error>{
-      return await managerComposite.updateFavouriteClub(principalId, clubId);
+      return await managerComposite.updateFavouriteClub(principalId, clubId, systemState);
     };
 
     public func updateProfilePicture(principalId: Text, profilePicture: Blob) : async Result.Result<(), T.Error>{
@@ -251,7 +254,8 @@ module {
     };
 
     public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<Text,Text> {
-      return await playerComposite.validateLoanPlayer(loanPlayerDTO);
+      let clubs = clubComposite.getClubs();
+      return await playerComposite.validateLoanPlayer(loanPlayerDTO, List.fromArray(clubs));
     };
 
     public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async () {
@@ -259,7 +263,8 @@ module {
     };
 
     public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<Text,Text> {
-      return await playerComposite.validateTransferPlayer(transferPlayerDTO);
+      let clubs = clubComposite.getClubs();
+      return await playerComposite.validateTransferPlayer(transferPlayerDTO, List.fromArray(clubs));
     };
 
     public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async () {
@@ -283,7 +288,8 @@ module {
     };
 
     public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<Text,Text> {
-      return await playerComposite.validateCreatePlayer(createPlayerDTO);
+      let clubs = clubComposite.getClubs();
+      return await playerComposite.validateCreatePlayer(createPlayerDTO, List.fromArray(clubs));
     };
 
     public func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async () {

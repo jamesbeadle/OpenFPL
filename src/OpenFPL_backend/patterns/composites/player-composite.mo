@@ -333,9 +333,18 @@ module {
     };
 
     public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<Text,Text> {
-      let player = await playerCanister.getPlayer(playerId);
-      if (player.id == 0 or player.isInjured) {
-        return #err(#InvalidData);
+      let player = List.find<T.Player>(
+        players,
+        func(p : T.Player) : Bool {
+          return p.id == setPlayerInjuryDTO.playerId;
+        },
+      );
+      
+      switch(player){
+        case (null){
+          return #err("Invalid: Cannot find player.");
+        };
+        case (?foundPlayer){ };
       };
 
       return #ok("Valid");
@@ -346,9 +355,18 @@ module {
     };
     
     public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<Text,Text> {
-      let player = await playerCanister.getPlayer(playerId);
-      if (player.id == 0 or player.retirementDate > 0) {
-        return #err(#InvalidData);
+      let player = List.find<T.Player>(
+        players,
+        func(p : T.Player) : Bool {
+          return p.id == retirePlayerDTO.playerId;
+        },
+      );
+      
+      switch(player){
+        case (null){
+          return #err("Invalid: Cannot find player to retire.");
+        };
+        case (?foundPlayer){ };
       };
       
 
@@ -356,6 +374,7 @@ module {
     };
 
     public func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async () {
+      //TODO
     };
 
     public func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<Text,Text> {
@@ -363,9 +382,8 @@ module {
     };
     
     public func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async () {
+      //TODO
     };
-
-    
 
     public func getStablePlayers(): [T.Player] {
       return List.toArray(players);
