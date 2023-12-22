@@ -88,7 +88,14 @@ module DTOs {
   };
 
   public type UpdateClubDTO = {
-
+    clubId : T.ClubId;
+    name : Text;
+    friendlyName : Text;
+    primaryColourHex : Text;
+    secondaryColourHex : Text;
+    thirdColourHex : Text;
+    abbreviatedName : Text;
+    shirtType : T.ShirtType;
   };
 
   public type PromoteFormerClubDTO = {
@@ -98,10 +105,11 @@ module DTOs {
   public type PromoteNewClubDTO = {
     name : Text;
     friendlyName : Text;
+    primaryColourHex : Text;
+    secondaryColourHex : Text;
+    thirdColourHex : Text;
     abbreviatedName : Text;
-    primaryHexColour : Text;
-    secondaryHexColour : Text;
-    thirdHexColour : Text;
+    shirtType : T.ShirtType;
   };
 
 
