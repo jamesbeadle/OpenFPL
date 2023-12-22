@@ -283,7 +283,7 @@ module Types {
     pickTeamGameweek: GameweekNumber; //starts at 1 and 1 hour before the first kick off it turns to 2
     homepageFixturesGameweek: GameweekNumber; //the fixtures up until the morning after the last game
     homepageManagerGameweek: GameweekNumber; //the leaderboard and gameweek points from the prior gameweek until the first game of the calculation gameweek is verified and a leaderboard is produced
-    transferWindowActive: Bool;
+    transferWindowActive: Bool; //NEED TO MAKE SURE THIS IS SET
   };
 
   public type Country = {
