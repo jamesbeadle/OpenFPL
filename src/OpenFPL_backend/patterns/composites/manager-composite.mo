@@ -477,13 +477,7 @@ module {
 
 
 
-    public func isValidProfilePicture(profilePicture: Blob) : Bool{
-        //TODO: implement
-        return false;
-    };
 
-
-    //TODO: move the private validator functions here
     public func isUsernameValid(username: Text, principalId: Text) : Bool{
         if (Text.size(username) < 3 or Text.size(username) > 20) {
         return false;
@@ -695,7 +689,7 @@ module {
     
       return false;
     };
-    
+
     private func invalidTeamComposition(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, players: [DTOs.PlayerDTO]) : Bool {
       
       let newTeamPlayers = Array.filter(players, func(player : DTOs.PlayerDTO) : Bool {
@@ -777,6 +771,10 @@ module {
       return false;
     };
 
+    private func isValidProfilePicture(profilePicture: Blob) : Bool{
+        //TODO: implement
+        return false;
+    };
 
 
 

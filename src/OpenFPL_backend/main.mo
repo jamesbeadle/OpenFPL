@@ -73,9 +73,9 @@ actor Self {
     return #ok(Countries.countries);
   };
 
-  public shared query ({ caller }) func isUsernameAvailable(username : Text) : async Bool {
+  public shared query ({ caller }) func isUsernameValid(username : Text) : async Bool {
     assert not Principal.isAnonymous(caller);
-    return seasonManager.isUsernameAvailable(username);
+    return seasonManager.isUsernameValid(username, Principal.toText(caller));
   };
 
   //Update functions:

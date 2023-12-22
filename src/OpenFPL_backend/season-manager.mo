@@ -166,8 +166,8 @@ module {
       return await managerComposite.updateUsername(principalId, updatedUsername);
     };
     
-    public func isUsernameAvailable(username: Text) : Bool{
-      return managerComposite.isUsernameAvailable(username);
+    public func isUsernameValid(username: Text, principalId: Text) : Bool{
+      return managerComposite.isUsernameValid(username, principalId);
     };
 
     public func updateFavouriteClub(principalId: Text, clubId: T.ClubId) : async Result.Result<(), T.Error>{
