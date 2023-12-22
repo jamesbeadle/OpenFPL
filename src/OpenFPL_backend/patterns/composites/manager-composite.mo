@@ -164,7 +164,7 @@ module {
         return #err(#InvalidTeamError);
       };  
 
-      if(invalidTeamComposition(updatedFantasyTeam, manager)){
+      if(invalidTeamComposition(updatedFantasyTeam, manager, players)){
         return #err(#InvalidTeamError);
       };
       
@@ -255,88 +255,14 @@ module {
       
 
 
-    private func invalidTransfers(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : Bool {
-      
-      if(updatedFantasyTeam.transferWindowGameweek == systemState.pickTeamGameweek and not systemState.transferWindowActive){
-        return true;
-      };
-
-      switch(existingFantasyTeam){
-        case (null){
-          let spend = Array.foldLeft(updatedFantasyTeam.playerIds, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
-            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-            switch(player){
-              case (null){
-                sum
-              };
-              case (?foundPlayer){
-                sum + foundPlayer.valueQuarterMillions
-              }
-            }
-          });
-          
-          if(spend > 1200){
-            return true;
-          };
-        };
-        case (?foundTeam){
-          let existingPlayerIds: [T.PlayerId] = foundTeam.playerIds;
-
-          let playersBought = Array.filter(updatedFantasyTeam.playerIds, func(playerId : T.PlayerId) : Bool {
-            Array.find(existingPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
-          });
-
-          var newTransfersAvailable = foundTeam.transfersAvailable;
-          if(not systemState.transferWindowActive){
-            newTransfersAvailable := newTransfersAvailable - Nat8.fromNat(Array.size(playersBought));
-          };
-
-          if(newTransfersAvailable < 0){
-            return true;
-          };
-
-          let playersSold = Array.filter(existingPlayerIds, func(playerId : T.PlayerId) : Bool {
-            Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
-          });
-
-          let spend = Array.foldLeft(playersBought, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
-            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-            switch(player){
-              case (null){
-                sum
-              };
-              case (?foundPlayer){
-                sum + foundPlayer.valueQuarterMillions
-              }
-            }
-          });
-
-          let sold = Array.foldLeft(playersSold, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
-            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-            switch(player){
-              case (null){
-                sum
-              };
-              case (?foundPlayer){
-                sum + foundPlayer.valueQuarterMillions
-              }
-            }
-          });
-
-          let remainingBank: Nat = foundTeam.bankQuarterMillions - spend + sold;
-          if(remainingBank < 0){
-            return true;
-          };
-
-        };
-      };
     
-      return false;
-    };
-    
-    private func invalidTeamComposition(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager) : Bool {
+    private func invalidTeamComposition(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager, players: [DTOs.PlayerDTO]) : Bool {
       
-
+      //Check 11 players
+      //Check valid formation
+      //Check valid captain
+      
+      //NOT ALL PLAYERS?!!?!?!
       let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(players, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
 
       let playerCount = playerPositions.size();
@@ -773,6 +699,85 @@ module {
         };
       };
 
+      return false;
+    };
+    
+    private func invalidTransfers(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : Bool {
+      
+      if(updatedFantasyTeam.transferWindowGameweek == systemState.pickTeamGameweek and not systemState.transferWindowActive){
+        return true;
+      };
+
+      switch(existingFantasyTeam){
+        case (null){
+          let spend = Array.foldLeft(updatedFantasyTeam.playerIds, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
+            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+            switch(player){
+              case (null){
+                sum
+              };
+              case (?foundPlayer){
+                sum + foundPlayer.valueQuarterMillions
+              }
+            }
+          });
+          
+          if(spend > 1200){
+            return true;
+          };
+        };
+        case (?foundTeam){
+          let existingPlayerIds: [T.PlayerId] = foundTeam.playerIds;
+
+          let playersBought = Array.filter(updatedFantasyTeam.playerIds, func(playerId : T.PlayerId) : Bool {
+            Array.find(existingPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
+          });
+
+          var newTransfersAvailable = foundTeam.transfersAvailable;
+          if(not systemState.transferWindowActive){
+            newTransfersAvailable := newTransfersAvailable - Nat8.fromNat(Array.size(playersBought));
+          };
+
+          if(newTransfersAvailable < 0){
+            return true;
+          };
+
+          let playersSold = Array.filter(existingPlayerIds, func(playerId : T.PlayerId) : Bool {
+            Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
+          });
+
+          let spend = Array.foldLeft(playersBought, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
+            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+            switch(player){
+              case (null){
+                sum
+              };
+              case (?foundPlayer){
+                sum + foundPlayer.valueQuarterMillions
+              }
+            }
+          });
+
+          let sold = Array.foldLeft(playersSold, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
+            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+            switch(player){
+              case (null){
+                sum
+              };
+              case (?foundPlayer){
+                sum + foundPlayer.valueQuarterMillions
+              }
+            }
+          });
+
+          let remainingBank: Nat = foundTeam.bankQuarterMillions - spend + sold;
+          if(remainingBank < 0){
+            return true;
+          };
+
+        };
+      };
+    
       return false;
     };
 
