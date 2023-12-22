@@ -16,7 +16,7 @@ import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
 import Management "../../modules/Management";
 import ENV "../../utils/Env";
-import ProfileCanister "../../profile-canister";
+import ProfilePictureCanister "../../profile-picture-canister";
 
 module {
 
@@ -556,7 +556,7 @@ module {
                     controllers = ?[backendCanisterController];
                     compute_allocation = null;
                     memory_allocation = null;
-                    freezing_threshold = ?31_540_000; //TODO: WHAT SHOULD I SET THIS TO?
+                    freezing_threshold = ?31_540_000;
                 };
             })
         );
@@ -564,7 +564,7 @@ module {
 
     private func createProfileCanister() : async Text {
       Cycles.add(2000000000000);
-      let canister = await ProfileCanister.ProfileCanister();
+      let canister = await ProfilePictureCanister.ProfilePictureCanister();
       let _ = await updateCanister_(canister);
       let canister_id = Principal.fromActor(canister);
       return Principal.toText(canister_id);
