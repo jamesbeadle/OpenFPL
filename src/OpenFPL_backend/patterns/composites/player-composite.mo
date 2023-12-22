@@ -4,6 +4,7 @@ import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
 import Result "mo:base/Result";
+import Time "mo:base/Time";
 import CanisterIds "../../CanisterIds";
 
 module {
@@ -30,6 +31,7 @@ module {
     };
 
     public func loanExpired(){
+      //TODO
       //go through all players and check if any have their loan expired and recall them to their team if so
     };
 
@@ -82,7 +84,6 @@ module {
         for (season in Iter.fromList(player.seasons)) {
           if (season.id == seasonId) {
             for (gw in Iter.fromList(season.gameweeks)) {
-
               if (gw.number == gameweek) {
                 points := gw.points;
                 events := List.filter<T.PlayerEventData>(
@@ -111,39 +112,58 @@ module {
     };
 
     public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<Text,Text> {
+      //TODO
       return #ok("Valid");
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async () {
+      //TODO
     };
 
     public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<Text,Text> {
+      //TODO
       return #ok("Valid");
     };
 
     public func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async () {
+      //TODO
     };
 
-    public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<Text,Text> {
-      if (loanEndDate <= Time.now()) {
-        return #err(#InvalidData);
+    public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO, clubs: List.List<T.Club>) : async Result.Result<Text,Text> {
+      if (loanPlayerDTO.loanEndDate <= Time.now()) {
+        return #err("Invalid: Loan end date must be in the future.");
       };
 
-      let player = await playerCanister.getPlayer(playerId);
-      if (player.id == 0) {
-        return #err(#InvalidData);
+      let player = List.find<T.Player>(
+        players,
+        func(p : T.Player) : Bool {
+          return p.id == loanPlayerDTO.playerId;
+        },
+      );
+
+      switch(player){
+        case (null){
+          return #err("Invalid: Cannot find player to loan.");
+        };
+        case (?foundPlayer){
+          if(foundPlayer.onLoan){
+            return #err("Invalid: Player already on loan.")
+          };
+        };
       };
 
-      //player is not already on loan
-      if (player.onLoan) {
-        return #err(#InvalidData);
-      };
+      if (loanPlayerDTO.loanClubId > 0) {
+        
+        let loanClub = List.find<T.Club>(
+          clubs,
+          func(club : T.Club) : Bool {
+            return club.id == loanPlayerDTO.loanClubId;
+          },
+        );
 
-      //loan team exists unless 0
-      if (loanTeamId > 0) {
-        switch (teamsInstance.getTeam(loanTeamId)) {
+        switch (loanClub) {
           case (null) {
-            return #err(#InvalidData);
+            return #err("Invalid: Loan club does not exist.");
           };
           case (?foundTeam) {};
         };
@@ -153,19 +173,36 @@ module {
     };
 
     public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async () {
+      //TODO
     };
 
-    public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<Text,Text> {
-      let player = await playerCanister.getPlayer(playerId);
-      if (player.id == 0) {
-        return #err(#InvalidData);
+    public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO, clubs: List.List<T.Club>) : async Result.Result<Text,Text> {
+      let player = List.find<T.Player>(
+        players,
+        func(p : T.Player) : Bool {
+          return p.id == transferPlayerDTO.playerId;
+        },
+      );
+      
+      switch(player){
+        case (null){
+          return #err("Invalid: Cannot find player to transfer.");
+        };
+        case (?foundPlayer){ };
       };
 
-      //new club is premier league team
-      if (newTeamId > 0) {
-        switch (teamsInstance.getTeam(newTeamId)) {
+      if (transferPlayerDTO.newClubId > 0) {
+        
+        let newClub = List.find<T.Club>(
+          clubs,
+          func(club : T.Club) : Bool {
+            return club.id == transferPlayerDTO.newClubId;
+          },
+        );
+
+        switch (newClub) {
           case (null) {
-            return #err(#InvalidData);
+            return #err("Invalid: New club does not exist.");
           };
           case (?foundTeam) {};
         };
@@ -175,23 +212,33 @@ module {
     };
 
     public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async () {
+      //TODO
     };
 
     public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<Text,Text> {
-      let player = await playerCanister.getPlayer(playerId);
-      if (player.id == 0) {
-        return #err(#InvalidData);
-      };
-
-      //player is on loan
-      if (not player.onLoan) {
-        return #err(#InvalidData);
+      let player = List.find<T.Player>(
+        players,
+        func(p : T.Player) : Bool {
+          return p.id == recallPlayerDTO.playerId;
+        },
+      );
+      
+      switch(player){
+        case (null){
+          return #err("Invalid: Cannot find player to recall.");
+        };
+        case (?foundPlayer){ 
+          if (not foundPlayer.onLoan) {
+            return #err("Invalid: Player is not on loan to recall.");
+          };
+        };
       };
 
       return #ok("Valid");
     };
 
     public func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async () {
+      //TODO
     };
 
     public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<Text,Text> {

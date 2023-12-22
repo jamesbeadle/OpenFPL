@@ -127,11 +127,11 @@ module {
     public func setFixturesToActive(seasonId: T.SeasonId, gamweek: T.GameweekNumber) : [T.Fixture]{
       
       let currentSeason = List.find<T.Season>(
-          seasons,
-          func(season : T.Season) : Bool {
-            return season.id == seasonId;
-          },
-        );
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
 
       switch(currentSeason){
         case (null) { return [] };
