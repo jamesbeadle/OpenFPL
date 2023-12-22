@@ -30,16 +30,20 @@ import CanisterIds "CanisterIds";
 
 module {
 
-  public class SeasonManager(backendCanisterController: Principal) {
+  public class SeasonManager() {
 
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
     
     let strategyManager = StrategyManager.StrategyManager();
-    let managerComposite = ManagerComposite.ManagerComposite(backendCanisterController);
+    let managerComposite = ManagerComposite.ManagerComposite();
     let playerComposite = PlayerComposite.PlayerComposite();
     let clubComposite = ClubComposite.ClubComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
     let leaderboardComposite = LeaderboardComposite.LeaderboardComposite();
+
+    public func setBackendCanisterController(controller: Principal){
+      managerComposite.setBackendCanisterController(controller);
+    };
     
     private var systemState: T.SystemState = {
       calculationGameweek = 1;

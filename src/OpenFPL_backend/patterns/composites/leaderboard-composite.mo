@@ -3,6 +3,7 @@ import DTOs "../../DTOs";
 import HashMap "mo:base/HashMap";
 import Result "mo:base/Result";
 import Iter "mo:base/Iter";
+import List "mo:base/List";
 import Utilities "../../utilities";
 module {
 
@@ -144,5 +145,206 @@ module {
         Utilities.hashWeeklyKey
       );
     };     
+
+
+/*
+    private func calculateLeaderboards(seasonId : Nat16, gameweek : Nat8) : () {
+
+      let seasonEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
+        Iter.toArray(fantasyTeams.entries()),
+        func(pair) {
+          return createLeaderboardEntry(pair.0, pair.1.fantasyTeam.teamName, pair.1, totalPointsForSeason(pair.1, seasonId));
+        }
+
+      );
+
+      let gameweekEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
+        Iter.toArray(fantasyTeams.entries()),
+        func(pair) {
+          return createLeaderboardEntry(pair.0, pair.1.fantasyTeam.teamName, pair.1, totalPointsForGameweek(pair.1, seasonId, gameweek));
+        },
+      );
+
+      let sortedGameweekEntries = List.reverse(mergeSort(List.fromArray(gameweekEntries)));
+      let sortedSeasonEntries = List.reverse(mergeSort(List.fromArray(seasonEntries)));
+
+      let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
+      let positionedSeasonEntries = assignPositionText(sortedSeasonEntries);
+
+      let existingSeasonLeaderboard = seasonLeaderboards.get(seasonId);
+
+      let currentGameweekLeaderboard : T.Leaderboard = {
+        seasonId = seasonId;
+        gameweek = gameweek;
+        entries = positionedGameweekEntries;
+      };
+
+      var updatedGameweekLeaderboards = List.fromArray<T.Leaderboard>([]);
+
+      switch (existingSeasonLeaderboard) {
+        case (null) {
+          updatedGameweekLeaderboards := List.fromArray([currentGameweekLeaderboard]);
+        };
+        case (?foundLeaderboard) {
+          var gameweekLeaderboardExists = false;
+          updatedGameweekLeaderboards := List.map<T.Leaderboard, T.Leaderboard>(
+            foundLeaderboard.gameweekLeaderboards,
+            func(leaderboard : T.Leaderboard) : T.Leaderboard {
+              if (leaderboard.gameweek == gameweek) {
+                gameweekLeaderboardExists := true;
+                return currentGameweekLeaderboard;
+              } else { return leaderboard };
+            },
+          );
+
+          if (not gameweekLeaderboardExists) {
+            updatedGameweekLeaderboards := List.append(updatedGameweekLeaderboards, List.fromArray([currentGameweekLeaderboard]));
+          };
+
+        };
+      };
+
+      let updatedSeasonLeaderboard : T.SeasonLeaderboards = {
+        seasonLeaderboard = {
+          seasonId = seasonId;
+          gameweek = gameweek;
+          entries = positionedSeasonEntries;
+        };
+        gameweekLeaderboards = updatedGameweekLeaderboards;
+      };
+
+      seasonLeaderboards.put(seasonId, updatedSeasonLeaderboard);
+
+    };
+
+    private func calculateMonthlyLeaderboards(seasonId : Nat16, gameweek : Nat8) : () {
+
+      var monthGameweeks : List.List<Nat8> = List.nil();
+      var gameweekMonth : Nat8 = 0;
+
+      func getLatestFixtureTime(fixtures : [T.Fixture]) : Int {
+        return Array.foldLeft(
+          fixtures,
+          fixtures[0].kickOff,
+          func(acc : Int, fixture : T.Fixture) : Int {
+            if (fixture.kickOff > acc) {
+              return fixture.kickOff;
+            } else {
+              return acc;
+            };
+          },
+        );
+      };
+
+      switch (getGameweekFixtures) {
+        case (null) {};
+        case (?actualFunction) {
+          let activeGameweekFixtures = actualFunction(seasonId, gameweek);
+          if (activeGameweekFixtures.size() > 0) {
+            gameweekMonth := Utilities.unixTimeToMonth(getLatestFixtureTime(activeGameweekFixtures));
+            monthGameweeks := List.append(monthGameweeks, List.fromArray([gameweek]));
+
+            var currentGameweek = gameweek;
+            label gwLoop while (currentGameweek > 1) {
+              currentGameweek -= 1;
+              let currentFixtures = actualFunction(seasonId, currentGameweek);
+              let currentMonth = Utilities.unixTimeToMonth(getLatestFixtureTime(currentFixtures));
+              if (currentMonth == gameweekMonth) {
+                monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
+              } else {
+                break gwLoop;
+              };
+            };
+          };
+
+        };
+      };
+
+      let allUserProfiles = getProfiles();
+      let profilesMap = HashMap.fromIter<Text, T.Profile>(allUserProfiles.vals(), allUserProfiles.size(), Text.equal, Text.hash);
+      let clubGroup = groupByTeam(fantasyTeams, profilesMap);
+      var updatedLeaderboards = List.nil<T.ClubLeaderboard>();
+
+      for ((clubId, userTeams) : (T.TeamId, [(Text, T.UserFantasyTeam)]) in clubGroup.entries()) {
+
+        let filteredTeams = List.filter<(Text, T.UserFantasyTeam)>(
+          List.fromArray(userTeams),
+          func(team : (Text, T.UserFantasyTeam)) : Bool {
+            return team.1.fantasyTeam.favouriteTeamId != 0;
+          },
+        );
+
+        let monthEntries = List.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
+          filteredTeams,
+          func(pair : (Text, T.UserFantasyTeam)) : T.LeaderboardEntry {
+            return createLeaderboardEntry(pair.0, pair.1.fantasyTeam.teamName, pair.1, totalPointsForMonth(pair.1, seasonId, monthGameweeks));
+          },
+        );
+
+        let sortedMonthEntries = List.reverse(mergeSort(monthEntries));
+        let positionedGameweekEntries = assignPositionText(sortedMonthEntries);
+
+        let clubMonthlyLeaderboard : T.ClubLeaderboard = {
+          seasonId = seasonId;
+          month = gameweekMonth;
+          clubId = clubId;
+          entries = positionedGameweekEntries;
+        };
+
+        updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([clubMonthlyLeaderboard]));
+      };
+
+      var seasonMonthlyLeaderboards = List.nil<T.ClubLeaderboard>();
+
+      switch (monthlyLeaderboards.get(seasonId)) {
+        case (null) {};
+        case (?value) { seasonMonthlyLeaderboards := value };
+      };
+
+      for (leaderboard in Iter.fromList(seasonMonthlyLeaderboards)) {
+        if (not (leaderboard.month == gameweekMonth)) {
+          updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([leaderboard]));
+        };
+      };
+
+      monthlyLeaderboards.put(seasonId, updatedLeaderboards);
+    };
+
+
+    func calculateGoalPoints(position : Nat8, goalsScored : Int16) : Int16 {
+      switch (position) {
+        case 0 { return 40 * goalsScored };
+        case 1 { return 40 * goalsScored };
+        case 2 { return 30 * goalsScored };
+        case 3 { return 20 * goalsScored };
+        case _ { return 0 };
+      };
+    };
+
+    func calculateAssistPoints(position : Nat8, assists : Int16) : Int16 {
+      switch (position) {
+        case 0 { return 30 * assists };
+        case 1 { return 30 * assists };
+        case 2 { return 20 * assists };
+        case 3 { return 20 * assists };
+        case _ { return 0 };
+      };
+    };
+
+    
+    private func compare(entry1 : T.LeaderboardEntry, entry2 : T.LeaderboardEntry) : Bool {
+      return entry1.points <= entry2.points;
+    };
+
+    func mergeSort(entries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
+      let len = List.size(entries);
+      if (len <= 1) {
+        return entries;
+      } else {
+        let (firstHalf, secondHalf) = List.split(len / 2, entries);
+        return List.merge(mergeSort(firstHalf), mergeSort(secondHalf), compare);
+      };
+    };
+*/
   };
 };

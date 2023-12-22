@@ -20,11 +20,16 @@ import ProfilePictureCanister "../../profile-picture-canister";
 
 module {
 
-  public class ManagerComposite(backendCanisterController: Principal) {
+  public class ManagerComposite() {
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
     private var activeProfilePictureCanisterId = ""; 
+    var backendCanisterController: ?Principal = null;
     
+    public func setBackendCanisterController(controller: Principal){
+      backendCanisterController := ?controller;
+    };
+
     public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 
       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
         stable_managers.vals(),
@@ -540,21 +545,28 @@ module {
     private func updateCanister_(a : actor {}) : async () {
         let cid = { canister_id = Principal.fromActor(a) };
         let IC : Management.Management = actor (ENV.Default);
-        await (
-            IC.update_settings({
-                canister_id = cid.canister_id;
-                settings = {
-                    controllers = ?[backendCanisterController];
-                    compute_allocation = null;
-                    memory_allocation = null;
-                    freezing_threshold = ?31_540_000;
-                };
-            })
-        );
+        switch(backendCanisterController){
+          case (null){};
+          case (?controller){
+            await (
+                IC.update_settings({
+                    canister_id = cid.canister_id;
+                    settings = {
+                        controllers = ?[controller];
+                        compute_allocation = null;
+                        memory_allocation = null;
+                        freezing_threshold = ?31_540_000;
+                    };
+                })
+            );
+          }
+        };
     };
 
     private func createProfileCanister(principalId: Text, profilePicture: Blob) : async Text {
-
+      if(backendCanisterController == null){
+        return "";
+      };
       //TODO:Record the canister for the cycles watcher to watch
 
       Cycles.add(2000000000000);
