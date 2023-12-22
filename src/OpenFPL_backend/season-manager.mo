@@ -340,20 +340,55 @@ module {
     };
 
     public func getStableSeasonLeaderboardCanisterIds(): [(T.SeasonId, Text)] {
-
+      return leaderboardComposite.getStableSeasonLeaderboardCanisterIds();
     };
-    
-    public func getStableMonthlyLeaderboardCanisterIds(): [(T.MonthlyLeaderboardKey, Text)] {};
-    public func getStableWeeklyLeaderboardCanisterIds(): [(T.WeeklyLeaderboardKey, Text)] {};
-    public func getStableClubs(): [T.Club] {};
-    public func getStableRelegatedClubs(): [T.Club] {};
-    public func getStableNextClubId(): [T.Player] {};
-    public func getStablePlayers(): [T.Season] {};
-    public func getStableNextPlayerId() : T.PlayerId {};
-    public func getStableSeasons() {};
-    public func getStableNextSeasonId() {};
-    public func getStableNextFixtureId() {};
-    public func getStableDataHashes() : [T.DataCache] {};
-    public func getStableSystemState()  : T.SystemState {};
+
+    public func getStableMonthlyLeaderboardCanisterIds(): [(T.MonthlyLeaderboardKey, Text)] {
+      return leaderboardComposite.getStableMonthlyLeaderboardCanisterIds();
+    };
+
+    public func getStableWeeklyLeaderboardCanisterIds(): [(T.WeeklyLeaderboardKey, Text)] {
+      return leaderboardComposite.getStableWeeklyLeaderboardCanisterIds();
+    };
+
+    public func getStableClubs(): [T.Club] {
+      return clubComposite.getStableClubs();
+    };
+
+    public func getStableRelegatedClubs(): [T.Club] {
+      return clubComposite.getStableRelegatedClubs();
+    };
+
+    public func getStableNextClubId(): [T.Player] {
+      return clubComposite.getStableNextClubId();
+    };
+
+    public func getStablePlayers(): [T.Season] {
+      return playerComposite.getStablePlayers();
+    };
+
+    public func getStableNextPlayerId() : T.PlayerId {
+      return playerComposite.getStableNextPlayerId();
+    };
+
+    public func getStableSeasons() {
+      return seasonComposite.getStableSeasons();
+    };
+
+    public func getStableNextSeasonId() {
+      return seasonComposite.getStableNextSeasonId();
+    };
+
+    public func getStableNextFixtureId() {
+      return seasonComposite.getStableNextFixtureId();
+    };
+
+    public func getStableDataHashes() : [T.DataCache] {
+      return List.toArray(dataCacheHashes);
+    };
+
+    public func getStableSystemState()  : T.SystemState {
+      return systemState;
+    };
   };
 };
