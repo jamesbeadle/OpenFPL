@@ -253,7 +253,7 @@ module {
 
     public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async Result.Result<Text,Text> {
       
-      let findIndex = func(arr : [T.TeamId], value : T.TeamId) : ?Nat {
+      let findIndex = func(arr : [T.ClubId], value : T.ClubId) : ?Nat {
         for (i in Array.keys(arr)) {
           if (arr[i] == value) {
             return ?(i);
@@ -262,8 +262,9 @@ module {
         return null;
       };
 
+/*
       //there should be no fixtures for the season currently
-      let currentSeason = seasonManager.getSeason(seasonId);
+      let currentSeason = getSeason(seasonId);
       if (currentSeason.id == 0) {
         return #err(#InvalidData);
       };
@@ -356,12 +357,13 @@ module {
           return #err(#InvalidData);
         };
       };
+      */
       
       return #ok("Valid");
     };
 
     public func executeSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async () {
-      
+      /*
       let activeSeasonId = seasonManager.getActiveSeasonId();
       let activeGameweek = seasonManager.getActiveGameweek();
       let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
@@ -637,8 +639,8 @@ module {
           return #err("Invlid: Each team must have 19 home and 19 away games.");
         };
       };
-
       return #ok("Valid");
+*/
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
