@@ -105,7 +105,7 @@ module Types {
     bankQuarterMillions : Nat;
     teamValueQuarterMillions : Nat;
     playerIds : [PlayerId];
-    captainId : Nat16;
+    captainId : PlayerId;
     gameweek : GameweekNumber;
     goalGetterGameweek : GameweekNumber;
     goalGetterPlayerId : PlayerId;

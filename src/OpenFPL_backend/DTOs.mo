@@ -306,4 +306,35 @@ module DTOs {
     transferWindowGameweek: T.GameweekNumber;
   };
 
+  public type ManagerGameweekDTO = {
+    principalId : Text;
+    teamName : Text;
+    favouriteClubId : T.ClubId;
+    transfersAvailable : Nat8;
+    bankQuarterMillions : Nat;
+    teamValueQuarterMillions : Nat;
+    playerIds : [T.PlayerId];
+    captainId : T.PlayerId;
+    gameweek : T.GameweekNumber;
+    goalGetterGameweek : T.GameweekNumber;
+    goalGetterPlayerId : T.PlayerId;
+    passMasterGameweek : T.GameweekNumber;
+    passMasterPlayerId : T.PlayerId;
+    noEntryGameweek : T.GameweekNumber;
+    noEntryPlayerId : T.PlayerId;
+    teamBoostGameweek : T.GameweekNumber;
+    teamBoostClubId : T.ClubId;
+    safeHandsGameweek : T.GameweekNumber;
+    safeHandsPlayerId : T.PlayerId;
+    captainFantasticGameweek : T.GameweekNumber;
+    captainFantasticPlayerId : T.PlayerId;
+    countrymenGameweek : T.GameweekNumber;
+    countrymenCountryId : T.CountryId;
+    prospectsGameweek : T.GameweekNumber;
+    braceBonusGameweek : T.GameweekNumber;
+    hatTrickHeroGameweek : T.GameweekNumber;
+    points : Int16;
+    transferWindowGameweek: T.GameweekNumber;
+  };
+
 };

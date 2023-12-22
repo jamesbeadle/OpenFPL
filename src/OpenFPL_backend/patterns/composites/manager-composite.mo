@@ -14,7 +14,6 @@ module {
   public class ManagerComposite() {
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);    
-
    
     public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 
       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
@@ -35,15 +34,11 @@ module {
       
       var profilePictureCanisterId = "";
       if(createProfileDTO.profilePicture.size() > 0){
-
-
-
-
-//same profile code
-
-
-
-
+        //TODO: Need to implement multicanister profile architechture
+          //Need to check if the current profile canister has room for this user
+            //If it does then add the profile picture to the current profile picture canister and return the canister id
+            //If it doesn't then add the profile picture to a new canister and set this as the current live one, returning the canister id
+            
         //profilePictureCanisterId := updateProfilePicture(principalId, createProfileDTO.profilePicture);
       };
 
@@ -123,6 +118,44 @@ module {
         };
       }
     };
+    
+    public func getManagerGameweek(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error>{
+      
+      let manager = managers.get(principalId);
+      switch (manager) {
+        case (null) { return #err(#NotFound) };
+        case (?foundTeam) {
+
+          let teamHistory = foundTeam.history;
+          switch (teamHistory) {
+            case (null) { return #err(#NotFound) };
+            case (foundHistory) {
+              let foundSeason = List.find<T.FantasyTeamSeason>(
+                foundHistory,
+                func(season : T.FantasyTeamSeason) : Bool {
+                  return season.seasonId == seasonId;
+                },
+              );
+              switch (foundSeason) {
+                case (null) { return #err(#NotFound) };
+                case (?fs) {
+                  let foundGameweek = List.find<T.FantasyTeamSnapshot>(
+                    fs.gameweeks,
+                    func(gw : T.FantasyTeamSnapshot) : Bool {
+                      return gw.gameweek == gameweek;
+                    },
+                  );
+                  switch (foundGameweek) {
+                    case (null) { return #err(#NotFound) };
+                    case (?fgw) { return #ok(fgw) };
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
 
     public func getTotalManagers() : Nat {
       let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
@@ -131,35 +164,35 @@ module {
 
     public func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
         let newManager: T.Manager = {
-        principalId = principalId;
-        username = createProfileDTO.username;
-        favouriteClubId = createProfileDTO.favouriteClubId;
-        createDate = createProfileDTO.createDate;
-        termsAccepted = false;
-        profilePictureCanisterId = profilePictureCanisterId;
-        transfersAvailable = 3;
-        bankQuarterMillions = 1200;
-        playerIds = [];
-        captainId = 0;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        teamBoostGameweek = 0;
-        teamBoostClubId = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        countrymenGameweek = 0;
-        countrymenCountryId = 0;
-        prospectsGameweek = 0;
-        braceBonusGameweek = 0;
-        hatTrickHeroGameweek = 0;
-        transferWindowGameweek = 0;
-        history = List.nil<T.FantasyTeamSeason>();
+          principalId = principalId;
+          username = createProfileDTO.username;
+          favouriteClubId = createProfileDTO.favouriteClubId;
+          createDate = createProfileDTO.createDate;
+          termsAccepted = false;
+          profilePictureCanisterId = profilePictureCanisterId;
+          transfersAvailable = 3;
+          bankQuarterMillions = 1200;
+          playerIds = [];
+          captainId = 0;
+          goalGetterGameweek = 0;
+          goalGetterPlayerId = 0;
+          passMasterGameweek = 0;
+          passMasterPlayerId = 0;
+          noEntryGameweek = 0;
+          noEntryPlayerId = 0;
+          teamBoostGameweek = 0;
+          teamBoostClubId = 0;
+          safeHandsGameweek = 0;
+          safeHandsPlayerId = 0;
+          captainFantasticGameweek = 0;
+          captainFantasticPlayerId = 0;
+          countrymenGameweek = 0;
+          countrymenCountryId = 0;
+          prospectsGameweek = 0;
+          braceBonusGameweek = 0;
+          hatTrickHeroGameweek = 0;
+          transferWindowGameweek = 0;
+          history = List.nil<T.FantasyTeamSeason>();
         };
 
         return newManager;
@@ -359,7 +392,8 @@ module {
           
           var profilePictureCanisterId = foundManager.profilePictureCanisterId;
           if(Text.size(profilePictureCanisterId) > 0){
-            //replace the existing profile picture and the canister id will remain the same so return
+            //TODO: replace the existing profile picture and the canister id will remain the same so return
+
 
             //create canister and call update function
               //Ensure only this canister can call the profile canister
@@ -478,94 +512,8 @@ module {
       );
     };
 
-
-   //include all profile info for caller
-    //include all manager info
-    //GetProfile
-      //GetGameweekPoints?? - Replace with GetProfile which includes their season history
-      //Will include their current team and the pick team should copy from this for the in game session changes
-   
-
     /*
     
-    manager-profile-manager.mo
-Purpose: Handles operations related to the user profiles of the football managers.
-Contents:
-Methods for updating manager details like updateUsername and updateProfilePicture.
-Functions for managing account settings and preferences.
-Integration points for authentication and authorization if needed.
-    
-
-
-
-
-    public func getFantasyTeamForGameweek(managerId : Text, seasonId : Nat16, gameweek : Nat8) : T.FantasyTeamSnapshot {
-      let emptySnapshot : T.FantasyTeamSnapshot = {
-        principalId = "";
-        transfersAvailable = 0;
-        bankBalance = 0;
-        playerIds = [];
-        captainId = 0;
-        gameweek = 0;
-        goalGetterGameweek = 0;
-        goalGetterPlayerId = 0;
-        passMasterGameweek = 0;
-        passMasterPlayerId = 0;
-        noEntryGameweek = 0;
-        noEntryPlayerId = 0;
-        teamBoostGameweek = 0;
-        teamBoostTeamId = 0;
-        safeHandsGameweek = 0;
-        safeHandsPlayerId = 0;
-        captainFantasticGameweek = 0;
-        captainFantasticPlayerId = 0;
-        countrymenGameweek = 0;
-        countrymenCountryId = 0;
-        prospectsGameweek = 0;
-        braceBonusGameweek = 0;
-        hatTrickHeroGameweek = 0;
-        points = 0;
-        favouriteTeamId = 0;
-        teamName = "";
-        transferWindowGameweek = 0;
-      };
-      let fantasyTeam = fantasyTeams.get(managerId);
-      switch (fantasyTeam) {
-        case (null) { return emptySnapshot };
-        case (?foundTeam) {
-
-          let teamHistory = foundTeam.history;
-          switch (teamHistory) {
-            case (null) { return emptySnapshot };
-            case (foundHistory) {
-              let foundSeason = List.find<T.FantasyTeamSeason>(
-                foundHistory,
-                func(season : T.FantasyTeamSeason) : Bool {
-                  return season.seasonId == seasonId;
-                },
-              );
-              switch (foundSeason) {
-                case (null) { return emptySnapshot };
-                case (?fs) {
-                  let foundGameweek = List.find<T.FantasyTeamSnapshot>(
-                    fs.gameweeks,
-                    func(gw : T.FantasyTeamSnapshot) : Bool {
-                      return gw.gameweek == gameweek;
-                    },
-                  );
-                  switch (foundGameweek) {
-                    case (null) { return emptySnapshot };
-                    case (?fgw) { return fgw };
-                  };
-                };
-              };
-
-            };
-
-          };
-        };
-      };
-    };
 
     public func resetFantasyTeams() : async () {
       for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {

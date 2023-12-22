@@ -149,6 +149,10 @@ module {
       return await managerComposite.getManager(principalId);
     };
     
+    public func getManagerGameweek(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error>{
+      return await managerComposite.getManagerGameweek(principalId, seasonId, gameweek);
+    };
+
     public func getTotalManagers() : Nat{
       return managerComposite.getTotalManagers();
     };
@@ -184,7 +188,17 @@ module {
     };
 
     public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async () {
-      return await seasonComposite.executeSubmitFixtureData(submitFixtureData);
+      await seasonComposite.executeSubmitFixtureData(submitFixtureData);
+      
+
+      //IN HERE IF THE GAMEWEEK IS COMPLETE CREATE THE CANISTER FOR THE NEXT GAMEWEEK LEADERBOARD
+      //IN HERE IF THE MONTH IS COMPLETE CREATE THE CANISTERS FOR THE NEXT MONTHS CLUB LEADERBOARDS
+      //IN HERE IF THE SEASON IS COMPLETE CRAETE THE CANISTER FOR THE NEXT SEASON LEADERBOARD
+      
+      //TODO: If completing this fixture data completes gameweek 38 then
+        //create and set season to the next season
+        //reset the fantasy teams
+        //Ensure you still show historic data on prior screen
     };
      
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
@@ -256,6 +270,14 @@ module {
     };
 
     public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async () {
+
+      //TODO: WHEN A PLAYER IS BEING TRANSFERRED FROM ONE TEAM TO ANOTHER A CHECK IS MADE ON EACH TEAM WITH THAT PLAYER
+        //IF MOVING THE PLAYER WOULD MEAN YOUR TEAM IS VALID THEN THE PLAYER WILL REMAIN IN YOUR TEAM
+        //IF MOVING THE PLAYER WOULD INVALIDATE YOUR TEAM THEN THE PLAYER IS REMOVED FROM YOUR TEAM AND REPLACED WITH THE HIGHEST VALUE PLAYER POSSIBLE IN THE SAME POSITION THAT IS VALID
+        //ADD TO GAMEPLAY RULES
+        //ALSO DO FOR ANY OTHER PLAYER MOVEMENTS FROM SOMEONES TEAM
+
+
       return await playerComposite.executeTransferPlayer(transferPlayerDTO);
     };
 

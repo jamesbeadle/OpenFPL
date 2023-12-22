@@ -49,6 +49,10 @@ actor Self {
     return await seasonManager.getProfile(principalId);
   };
 
+  public shared func getManagerGameweek(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error>  {
+    return await seasonManager.getManagerGameweek(principalId, seasonId, gameweek);
+  };
+
   public shared query func getTotalManagers() : async Result.Result<Nat, T.Error>  {
     return #ok(seasonManager.getTotalManagers());
   };
