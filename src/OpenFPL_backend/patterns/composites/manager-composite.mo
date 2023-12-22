@@ -841,9 +841,8 @@ module {
     };
 
     private func invalidProfilePicture(profilePicture: Blob) : Bool{
-        //TODO: implement
-
-        return false;
+      let sizeInKB = Array.size(Blob.toArray(profilePicture)) / 1024;
+      return (sizeInKB <= 0 or sizeInKB > 4000);
     };
 
     private func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
