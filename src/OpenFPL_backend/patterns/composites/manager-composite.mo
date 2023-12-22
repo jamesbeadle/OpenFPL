@@ -17,7 +17,8 @@ module {
 
   public class ManagerComposite() {
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
-    private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);    
+    private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
+    private var activeProfileCanisterId = ""; 
    
     public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 
       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
@@ -441,16 +442,9 @@ module {
       let existingManager = managers.get(principalId);
       switch (existingManager) {
         case (null) {
+          setManagerProfileImage(principalId, profilePicture);
 
-          //TODO: check for room in current profile picture canister
-            //if room then upload to current profile picture canister and return canister id
-            //if no room then upload to new profile picture canister and return canister id
-              //set this new canister id to the current profile picture canister
-
-
-
-
-
+          //SET THE CANISTER ID FOR THE MANAGERS PROFILE TO THE CURRENT ACTIVE ONE
           let createProfileDTO: DTOs.ProfileDTO = {
               principalId = principalId;
               username = "";
@@ -465,16 +459,35 @@ module {
         };
         case (?foundManager) {
 
-          //check for existing profile picture canister id
-            //if exists just replace the existing profile picture 
-            //if doesn't exist 
-              //check for room in current profile picture canister
-                //if room then upload to current profile picture canister and return canister id
-                //if no room then upload to new profile picture canister and return canister id
-                  //set this new canister id to the current profile picture canister
-
+          if(foundManager.profilePictureCanisterId == ""){
+            setManagerProfileImage(principalId, profilePicture);
+            //SET THE CANISTER ID FOR THE MANAGERS PROFILE TO THE CURRENT ACTIVE ONE
+            
+          }
+          else{
+            profilePictureCanister.updateProfilePicture(principal, profilePicture);
+            //No need to update the manager object because the path is still the same
+          };
 
           return #ok();
+        };
+      };
+    };
+
+    private func setManagerProfileImage(principalId: Text, profilePicture: Blob){
+
+      if(activeProfileCanisterId == ""){
+        activeProfileCanisterId := createProfileCanister(principalId, profilePicture);
+      }
+      else{
+        //TODO: instantitate canister from current
+        let hasSpaceAvailable = profilePictureCanister.hasSpaceAvailable();
+
+        if(hasSpaceAvailable){
+          profilePictureCanister.addProfilePicture(principalId, profilePicture);
+        }
+        else{
+          activeProfileCanisterId := createProfileCanister(principalId, profilePicture);
         };
       };
     };

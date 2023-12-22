@@ -775,11 +775,6 @@ module {
       seasonsInstance.setSeasons(List.toArray(allSeasons));
     };
 
-
-
-
-
-
     public func getStableSeasons() : [T.Season] {
       return List.toArray(seasons);
     };

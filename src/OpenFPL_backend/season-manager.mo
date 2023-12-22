@@ -24,7 +24,6 @@ import PlayerComposite "patterns/composites/player-composite";
 import ClubComposite "patterns/composites/club-composite";
 import ManagerComposite "patterns/composites/manager-composite";
 import LeaderboardComposite "patterns/composites/leaderboard-composite";
-import TimerComposite "patterns/composites/timer-composite";
 import SHA224 "./lib/SHA224";
 import Utilities "utilities";
 import CanisterIds "CanisterIds";
@@ -80,7 +79,6 @@ module {
       stable_weekly_leaderboard_canister_ids:  [(T.WeeklyLeaderboardKey, Text)]) {
 
       systemState := stable_system_state;
-      //timerComposite.setStableData(stable_timers);
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
       clubComposite.setStableData(stable_next_club_id, stable_clubs);
       playerComposite.setStableData(stable_next_player_id, stable_players);
