@@ -557,12 +557,8 @@ module {
     };
 
     public func updateUsername(principalId: T.PrincipalId, updatedUsername: Text) : async Result.Result<(), T.Error> {
-      if(not isUsernameValid(updatedUsername)){
+      if(not isUsernameValid(updatedUsername, principalId)){
         return #err(#InvalidData);
-      };
-
-      if(not isUsernameAvailable(updatedUsername)){
-        return #err(#NotAllowed);
       };
 
       let manager = managers.get(principalId);
@@ -764,11 +760,6 @@ module {
           return #ok();
         };
       };
-    };
-
-    public func isUsernameAvailable(username: Text) : Bool{
-      //TODO: implement
-        return false;
     };
 
     public func isValidProfilePicture(profilePicture: Blob) : Bool{
