@@ -12,83 +12,86 @@ module {
       private var clubs = List.fromArray<T.Club>([]);
       private var relegatedClubs = List.fromArray<T.Club>([]);
     
-   
-    public func setStableData(
-      stable_next_club_id: T.ClubId,
-      stable_clubs: [T.Club]) {
+      public func setStableData(
+        stable_next_club_id: T.ClubId,
+        stable_clubs: [T.Club]) {
 
-      nextClubId := stable_next_club_id;
-      clubs := List.fromArray(stable_clubs);
+        nextClubId := stable_next_club_id;
+        clubs := List.fromArray(stable_clubs);
+      };
 
-    };
+      public func getClubs() : [T.Club] {
+        let clubsArray = List.toArray(clubs);
+        let sortedArray = Array.sort(
+          clubsArray,
+          func(a : T.Club, b : T.Club) : Order.Order {
+            if (a.name < b.name) { return #less };
+            if (a.name == b.name) { return #equal };
+            return #greater;
+          },
+        );
+        let sortedClubs = List.fromArray(sortedArray);
+        return sortedArray;
+      };
 
-    public func getClubs() : [T.Club] {
-      let clubsArray = List.toArray(clubs);
-      let sortedArray = Array.sort(
-        clubsArray,
-        func(a : T.Club, b : T.Club) : Order.Order {
-          if (a.name < b.name) { return #less };
-          if (a.name == b.name) { return #equal };
-          return #greater;
-        },
-      );
-      let sortedClubs = List.fromArray(sortedArray);
-      return sortedArray;
-    };
+      public func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<Text,Text> {
+        //not already in the clubs 
+        return #ok("Valid");
+      };
 
+      public func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async () {
+        let clubToPromote = List.find<T.Club>(relegatedClubs, func(c : T.Club) { c.id == promoteFormerClubDTO.clubId });
+        switch (clubToPromote) {
+          case (null) {};
+          case (?club) {
+            clubs := List.push(club, clubs);
+            relegatedClubs := List.filter<T.Club>(
+              relegatedClubs,
+              func(currentClub : T.Club) : Bool {
+                return currentClub.id != promoteFormerClubDTO.clubId;
+              },
+            );
+          };
+        };
+      };
 
+      public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<Text,Text> {
+        return #ok("Valid");
+      };
 
+      public func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async () {
+      };
 
+      public func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<Text,Text> {
+        return #ok("Valid");
+      };
 
+      public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async () {
+      };
 
-    public func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<Text,Text> {
-      return #ok("Valid");
-    };
+      public func getStableClubs(): [T.Club] {
+        return List.toArray(clubs);
+      };
 
-    public func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async () {
-    };
+      public func setStableClubs(stable_clubs: [T.Club]) {
+        clubs := List.fromArray(stable_clubs);
+      };
 
-    public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<Text,Text> {
-      return #ok("Valid");
-    };
+      public func getStableRelegatedClubs(): [T.Club] {
+        return List.toArray(relegatedClubs);
+      };
 
-    public func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async () {
-    };
+      public func setStableRelegatedClubs(stable_relegated_clubs: [T.Club]) {
+        relegatedClubs := List.fromArray(stable_relegated_clubs);
+      };
 
-    public func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<Text,Text> {
-      return #ok("Valid");
-    };
+      public func getStableNextClubId(): T.ClubId {
+        return nextClubId;
+      };
 
-    public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async () {
-    };
-
-
-
-
-
-    public func getStableClubs(): [T.Club] {
-      return List.toArray(clubs);
-    };
-
-    public func setStableClubs(stable_clubs: [T.Club]) {
-      clubs := List.fromArray(stable_clubs);
-    };
-
-    public func getStableRelegatedClubs(): [T.Club] {
-      return List.toArray(relegatedClubs);
-    };
-
-    public func setStableRelegatedClubs(stable_relegated_clubs: [T.Club]) {
-      relegatedClubs := List.fromArray(stable_relegated_clubs);
-    };
-
-    public func getStableNextClubId(): T.ClubId {
-      return nextClubId;
-    };
-
-    public func setStableNextClubId(stable_next_club_id: T.ClubId){
-      nextClubId := stable_next_club_id;
-    };
+      public func setStableNextClubId(stable_next_club_id: T.ClubId){
+        nextClubId := stable_next_club_id;
+      };
 
 
 
@@ -111,15 +114,6 @@ Methods for adding, updating, and removing clubs, as well as aggregating club st
 private var teams = List.fromArray<T.Team>([]);
     private var nextTeamId : Nat16 = 21;
     private var relegatedTeams = List.fromArray<T.Team>([]);
-
-    public func setData(stable_teams : [T.Team], stable_teamId : Nat16, stable_relegated_teams : [T.Team]) {
-      if (stable_teams == []) {
-        return;
-      };
-      teams := List.fromArray(stable_teams);
-      nextTeamId := stable_teamId;
-      relegatedTeams := List.fromArray(stable_relegated_teams);
-    };
 
     public func getTeam(teamId : T.TeamId) : ?T.Team {
       for (team in Iter.fromList(teams)) {
@@ -152,22 +146,6 @@ private var teams = List.fromArray<T.Team>([]);
 
     public func getNextTeamId() : Nat16 {
       return nextTeamId;
-    };
-
-    public func promoteFormerTeam(teamId : T.TeamId) : async () {
-      let teamToPromote = List.find<T.Team>(relegatedTeams, func(t : T.Team) { t.id == teamId });
-      switch (teamToPromote) {
-        case (null) {};
-        case (?team) {
-          teams := List.push(team, teams);
-          relegatedTeams := List.filter<T.Team>(
-            relegatedTeams,
-            func(currentTeam : T.Team) : Bool {
-              return currentTeam.id != teamId;
-            },
-          );
-        };
-      };
     };
 
     public func promoteNewTeam(name : Text, friendlyName : Text, abbreviatedName : Text, primaryHexColour : Text, secondaryHexColour : Text, thirdHexColour : Text, shirtType : Nat8) : async () {
