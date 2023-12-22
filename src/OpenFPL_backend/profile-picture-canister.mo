@@ -118,9 +118,25 @@ actor class ProfilePictureCanister() {
   };
 
   public shared func hasSpaceAvailable() : async Bool {
-    // Check if the current bucket still has space
-    return getBucketSize(currentBucketIndex) < maxPicturesPerBucket;
+    let spaceInBucket1 = bucket1.size() < maxPicturesPerBucket;
+    let spaceInBucket2 = bucket2.size() < maxPicturesPerBucket;
+    let spaceInBucket3 = bucket3.size() < maxPicturesPerBucket;
+    let spaceInBucket4 = bucket4.size() < maxPicturesPerBucket;
+    let spaceInBucket5 = bucket5.size() < maxPicturesPerBucket;
+    let spaceInBucket6 = bucket6.size() < maxPicturesPerBucket;
+    let spaceInBucket7 = bucket7.size() < maxPicturesPerBucket;
+    let spaceInBucket8 = bucket8.size() < maxPicturesPerBucket;
+    let spaceInBucket9 = bucket9.size() < maxPicturesPerBucket;
+    let spaceInBucket10 = bucket10.size() < maxPicturesPerBucket;
+    let spaceInBucket11 = bucket11.size() < maxPicturesPerBucket;
+    let spaceInBucket12 = bucket12.size() < maxPicturesPerBucket;
+
+    return spaceInBucket1 or spaceInBucket2 or spaceInBucket3 or
+      spaceInBucket4 or spaceInBucket5 or spaceInBucket6 or spaceInBucket7 or
+      spaceInBucket8 or spaceInBucket9 or spaceInBucket10 or spaceInBucket11 or
+      spaceInBucket12;
   };
+
 
   private func getBucketSize(index : Nat) : Nat {
     switch (index) {
