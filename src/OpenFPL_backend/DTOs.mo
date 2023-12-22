@@ -304,6 +304,7 @@ module DTOs {
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek: T.GameweekNumber;
+    username: Text;
   };
 
   public type ManagerGameweekDTO = {
