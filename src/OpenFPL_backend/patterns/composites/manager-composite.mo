@@ -23,7 +23,7 @@ module {
   public class ManagerComposite(backendCanisterController: Principal) {
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
-    private var activeProfileCanisterId = ""; 
+    private var activeProfilePictureCanisterId = ""; 
     
     public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 
       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
@@ -504,7 +504,7 @@ module {
             managers.put(principalId, updatedManager);
           }
           else{
-            let profilePictureCanister = actor (activeProfileCanisterId) : actor {
+            let profilePictureCanister = actor (activeProfilePictureCanisterId) : actor {
               hasSpaceAvailable : () -> async Bool;
               addProfilePicture : (principalId: T.PrincipalId, profilePicture: Blob) -> async ();
             };
@@ -517,31 +517,22 @@ module {
 
     private func setManagerProfileImage(principalId: Text, profilePicture: Blob) : async Text{
 
-      if(activeProfileCanisterId == ""){
-        let profileCanisterId = createProfileCanister();
-
-
-
-      //Create a new profile picture canister
-      //Record the canister for the cycles watcher to watch
-      //add the profile picture
-      
-
-        return createProfileCanister(principalId, profilePicture);
+      if(activeProfilePictureCanisterId == ""){
+        return await createProfileCanister(principalId, profilePicture);
       }
       else{
-        let profilePictureCanister = actor (activeProfileCanisterId) : actor {
+        let profilePictureCanister = actor (activeProfilePictureCanisterId) : actor {
           hasSpaceAvailable : () -> async Bool;
           addProfilePicture : (principalId: T.PrincipalId, profilePicture: Blob) -> async ();
         };
-        let hasSpaceAvailable = await profilePictureCanister.hasSpaceAvailable();
 
+        let hasSpaceAvailable = await profilePictureCanister.hasSpaceAvailable();
         if(hasSpaceAvailable){
           await profilePictureCanister.addProfilePicture(principalId, profilePicture);
-          return activeProfileCanisterId;
-        }
+          return activeProfilePictureCanisterId;
+        }      
         else{
-          return createProfileCanister(principalId, profilePicture);
+          return await createProfileCanister(principalId, profilePicture);
         };
       };
     };
@@ -562,11 +553,15 @@ module {
         );
     };
 
-    private func createProfileCanister() : async Text {
+    private func createProfileCanister(principalId: Text, profilePicture: Blob) : async Text {
+
+      //TODO:Record the canister for the cycles watcher to watch
+
       Cycles.add(2000000000000);
       let canister = await ProfilePictureCanister.ProfilePictureCanister();
       let _ = await updateCanister_(canister);
       let canister_id = Principal.fromActor(canister);
+      await canister.addProfilePicture(principalId, profilePicture);
       return Principal.toText(canister_id);
     };
 
