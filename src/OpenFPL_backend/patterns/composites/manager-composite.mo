@@ -67,6 +67,134 @@ module {
     };
 
     public func getManager(principalId: Text) : async Result.Result<DTOs.ManagerDTO, T.Error>{
+
+      //TODO: Include this
+
+      /*
+      
+      public shared query func getManager(managerId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async DTOs.ManagerDTO {
+
+    var displayName = "";
+    var profilePicture = Blob.fromArray([]);
+    var favouriteTeamId : T.TeamId = 0;
+    var createDate = Time.now();
+    var gameweeks : [T.FantasyTeamSnapshot] = [];
+
+    var weeklyLeaderboardEntry = fantasyTeamsInstance.getWeeklyLeaderboardEntry(managerId, seasonId, gameweek);
+    var seasonLeaderboardEntry = fantasyTeamsInstance.getSeasonLeaderboardEntry(managerId, seasonId);
+    var monthlyLeaderboardEntry : ?T.LeaderboardEntry = null;
+
+    let userProfile = profilesInstance.getProfile(managerId);
+    switch (userProfile) {
+      case (null) {};
+      case (?foundProfile) {
+
+        let existingProfilePicture = profilesInstance.getProfilePicture(managerId);
+        switch (existingProfilePicture) {
+          case (null) {};
+          case (?foundPicture) {
+            profilePicture := foundPicture;
+          };
+        };
+
+        displayName := foundProfile.displayName;
+        favouriteTeamId := foundProfile.favouriteTeamId;
+        createDate := foundProfile.createDate;
+
+        if (foundProfile.favouriteTeamId > 0) {
+          monthlyLeaderboardEntry := fantasyTeamsInstance.getMonthlyLeaderboardEntry(managerId, seasonId, foundProfile.favouriteTeamId);
+        }
+
+      };
+    };
+
+    //get gameweek snapshots
+    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(managerId);
+
+    switch (fantasyTeam) {
+      case (null) {};
+      case (?foundTeam) {
+
+        let season = List.find(
+          foundTeam.history,
+          func(season : T.FantasyTeamSeason) : Bool {
+            return season.seasonId == seasonId;
+          },
+        );
+
+        switch (season) {
+          case (null) {};
+          case (?foundSeason) {
+            gameweeks := List.toArray(foundSeason.gameweeks);
+          };
+        };
+      };
+    };
+
+    var weeklyPosition : Int = 0;
+    var monthlyPosition : Int = 0;
+    var seasonPosition : Int = 0;
+
+    var weeklyPositionText = "N/A";
+    var monthlyPositionText = "N/A";
+    var seasonPositionText = "N/A";
+
+    var weeklyPoints : Int16 = 0;
+    var monthlyPoints : Int16 = 0;
+    var seasonPoints : Int16 = 0;
+
+    switch (weeklyLeaderboardEntry) {
+      case (null) {};
+      case (?foundEntry) {
+        weeklyPosition := foundEntry.position;
+        weeklyPositionText := foundEntry.positionText;
+        weeklyPoints := foundEntry.points;
+      };
+    };
+
+    switch (monthlyLeaderboardEntry) {
+      case (null) {};
+      case (?foundEntry) {
+        monthlyPosition := foundEntry.position;
+        monthlyPositionText := foundEntry.positionText;
+        monthlyPoints := foundEntry.points;
+      };
+    };
+
+    switch (seasonLeaderboardEntry) {
+      case (null) {};
+      case (?foundEntry) {
+        seasonPosition := foundEntry.position;
+        seasonPositionText := foundEntry.positionText;
+        seasonPoints := foundEntry.points;
+      };
+    };
+
+    let managerDTO : DTOs.ManagerDTO = {
+      principalId = managerId;
+      displayName = displayName;
+      profilePicture = profilePicture;
+      favouriteTeamId = favouriteTeamId;
+      createDate = createDate;
+      gameweeks = gameweeks;
+      weeklyPosition = weeklyPosition;
+      monthlyPosition = monthlyPosition;
+      seasonPosition = seasonPosition;
+      weeklyPositionText = weeklyPositionText;
+      monthlyPositionText = monthlyPositionText;
+      seasonPositionText = seasonPositionText;
+      weeklyPoints = weeklyPoints;
+      monthlyPoints = monthlyPoints;
+      seasonPoints = seasonPoints;
+    };
+
+    return managerDTO;
+  };
+
+      
+      */
+
+
       let manager = managers.get(principalId);
 
       switch(manager){
@@ -382,7 +510,7 @@ module {
       switch (existingManager) {
         case (null) {
 
-          //check for room in current profile picture canister
+          //TODO: check for room in current profile picture canister
             //if room then upload to current profile picture canister and return canister id
             //if no room then upload to new profile picture canister and return canister id
               //set this new canister id to the current profile picture canister
@@ -715,65 +843,7 @@ module {
     private func invalidProfilePicture(profilePicture: Blob) : Bool{
         //TODO: implement
 
-
-
-
-
-
         return false;
-    };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public func snapshotFantasyTeams() : (){
-
-    };
-
-    public func resetTransfers() : (){
-      //reset transfers available for gameweek AND reset the bonuses that can be played within a calendar month
-
-      //if last game of the upcoming gameweek falls in the following month, reset the number of transfers available to 2
-
-
-    };
-
-    public func getStableManagers(): [(T.PrincipalId, T.Manager)] {
-      return Iter.toArray(managers.entries());
-    };
-
-    public func setStableManagers(stable_managers: [(T.PrincipalId, T.Manager)]) {
-       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
-        stable_managers.vals(),
-        stable_managers.size(),
-        Text.equal,
-        Text.hash
-      );
-    };
-
-    public func getStableProfilePictureCanisterIds(): [(T.PrincipalId, Text)] {
-      return Iter.toArray(profilePictureCanisterIds.entries());
-    };
-
-    public func setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids: [(T.PrincipalId, Text)])  {
-      profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
-        stable_profile_picture_canister_ids.vals(),
-        stable_profile_picture_canister_ids.size(),
-        Text.equal,
-        Text.hash
-      );
     };
 
     private func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
@@ -812,10 +882,19 @@ module {
 
         return newManager;
     };
-    
 
-    /*
-    
+    //TODO: CHECK THE IMPLEMENTATION OF THE FOLLOWING
+
+    public func snapshotFantasyTeams() : (){
+
+    };
+
+    public func resetTransfers() : (){
+      //reset transfers available for gameweek AND reset the bonuses that can be played within a calendar month
+
+      //if last game of the upcoming gameweek falls in the following month, reset the number of transfers available to 2
+
+/*
 
     public func resetFantasyTeams() : async () {
       for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {
@@ -831,8 +910,7 @@ module {
       };
     };
 
-
-
+    
     private func clearFantasyTeam(principalId : Text) : T.FantasyTeam {
       return {
         principalId = principalId;
@@ -863,142 +941,34 @@ module {
       };
     };
 
-    
+*/
 
-
-
-  
-  public shared query func getManager(managerId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async DTOs.ManagerDTO {
-
-    var displayName = "";
-    var profilePicture = Blob.fromArray([]);
-    var favouriteTeamId : T.TeamId = 0;
-    var createDate = Time.now();
-    var gameweeks : [T.FantasyTeamSnapshot] = [];
-
-    var weeklyLeaderboardEntry = fantasyTeamsInstance.getWeeklyLeaderboardEntry(managerId, seasonId, gameweek);
-    var seasonLeaderboardEntry = fantasyTeamsInstance.getSeasonLeaderboardEntry(managerId, seasonId);
-    var monthlyLeaderboardEntry : ?T.LeaderboardEntry = null;
-
-    let userProfile = profilesInstance.getProfile(managerId);
-    switch (userProfile) {
-      case (null) {};
-      case (?foundProfile) {
-
-        let existingProfilePicture = profilesInstance.getProfilePicture(managerId);
-        switch (existingProfilePicture) {
-          case (null) {};
-          case (?foundPicture) {
-            profilePicture := foundPicture;
-          };
-        };
-
-        displayName := foundProfile.displayName;
-        favouriteTeamId := foundProfile.favouriteTeamId;
-        createDate := foundProfile.createDate;
-
-        if (foundProfile.favouriteTeamId > 0) {
-          monthlyLeaderboardEntry := fantasyTeamsInstance.getMonthlyLeaderboardEntry(managerId, seasonId, foundProfile.favouriteTeamId);
-        }
-
-      };
     };
 
-    //get gameweek snapshots
-    let fantasyTeam = fantasyTeamsInstance.getFantasyTeam(managerId);
-
-    switch (fantasyTeam) {
-      case (null) {};
-      case (?foundTeam) {
-
-        let season = List.find(
-          foundTeam.history,
-          func(season : T.FantasyTeamSeason) : Bool {
-            return season.seasonId == seasonId;
-          },
-        );
-
-        switch (season) {
-          case (null) {};
-          case (?foundSeason) {
-            gameweeks := List.toArray(foundSeason.gameweeks);
-          };
-        };
-      };
+    public func getStableManagers(): [(T.PrincipalId, T.Manager)] {
+      return Iter.toArray(managers.entries());
     };
 
-    var weeklyPosition : Int = 0;
-    var monthlyPosition : Int = 0;
-    var seasonPosition : Int = 0;
-
-    var weeklyPositionText = "N/A";
-    var monthlyPositionText = "N/A";
-    var seasonPositionText = "N/A";
-
-    var weeklyPoints : Int16 = 0;
-    var monthlyPoints : Int16 = 0;
-    var seasonPoints : Int16 = 0;
-
-    switch (weeklyLeaderboardEntry) {
-      case (null) {};
-      case (?foundEntry) {
-        weeklyPosition := foundEntry.position;
-        weeklyPositionText := foundEntry.positionText;
-        weeklyPoints := foundEntry.points;
-      };
+    public func setStableManagers(stable_managers: [(T.PrincipalId, T.Manager)]) {
+       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
+        stable_managers.vals(),
+        stable_managers.size(),
+        Text.equal,
+        Text.hash
+      );
     };
 
-    switch (monthlyLeaderboardEntry) {
-      case (null) {};
-      case (?foundEntry) {
-        monthlyPosition := foundEntry.position;
-        monthlyPositionText := foundEntry.positionText;
-        monthlyPoints := foundEntry.points;
-      };
+    public func getStableProfilePictureCanisterIds(): [(T.PrincipalId, Text)] {
+      return Iter.toArray(profilePictureCanisterIds.entries());
     };
 
-    switch (seasonLeaderboardEntry) {
-      case (null) {};
-      case (?foundEntry) {
-        seasonPosition := foundEntry.position;
-        seasonPositionText := foundEntry.positionText;
-        seasonPoints := foundEntry.points;
-      };
+    public func setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids: [(T.PrincipalId, Text)])  {
+      profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
+        stable_profile_picture_canister_ids.vals(),
+        stable_profile_picture_canister_ids.size(),
+        Text.equal,
+        Text.hash
+      );
     };
-
-    let managerDTO : DTOs.ManagerDTO = {
-      principalId = managerId;
-      displayName = displayName;
-      profilePicture = profilePicture;
-      favouriteTeamId = favouriteTeamId;
-      createDate = createDate;
-      gameweeks = gameweeks;
-      weeklyPosition = weeklyPosition;
-      monthlyPosition = monthlyPosition;
-      seasonPosition = seasonPosition;
-      weeklyPositionText = weeklyPositionText;
-      monthlyPositionText = monthlyPositionText;
-      seasonPositionText = seasonPositionText;
-      weeklyPoints = weeklyPoints;
-      monthlyPoints = monthlyPoints;
-      seasonPoints = seasonPoints;
-    };
-
-    return managerDTO;
-  };
-
-
-
-
-
-
-
-
-
-          */
-
-
-    
-
   };
 };
