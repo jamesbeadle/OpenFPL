@@ -40,7 +40,15 @@ module {
       if (List.size(clubs) >= 20) {
         return #err("Invalid: League cannot contain more than 20 teams.");
       };
-      //TODO: Check club exists in former clubs array
+
+      let clubToPromote = List.find<T.Club>(relegatedClubs, func(c : T.Club) { c.id == promoteFormerClubDTO.clubId });
+      switch(clubToPromote){
+        case (null){
+          return #err("Invalid: Cannot find relegated club.");
+        };
+        case (?foundClub) {};
+      };
+      
       return #ok("Valid");
     };
 
