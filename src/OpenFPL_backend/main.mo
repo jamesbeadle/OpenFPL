@@ -234,6 +234,7 @@ actor Self {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
+/*
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_managers : [(Text, T.Manager)] = [];
@@ -298,5 +299,5 @@ actor Self {
     seasonManager.setSystemState(stable_system_state);
     seasonManager.recreateTimers();
   };
-
+*/
 };
