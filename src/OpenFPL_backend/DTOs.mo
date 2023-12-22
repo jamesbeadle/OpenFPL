@@ -21,6 +21,8 @@ module DTOs {
   };
 
   public type SubmitFixtureDataDTO = {
+    seasonId: T.SeasonId;
+    gameweek: T.GameweekNumber;
     fixtureId : T.FixtureId;
     playerEventData : [T.PlayerEventData];
   };

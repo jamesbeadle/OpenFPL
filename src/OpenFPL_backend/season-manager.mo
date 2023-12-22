@@ -200,14 +200,14 @@ module {
     public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async () {
       await seasonComposite.executeSubmitFixtureData(submitFixtureData);
       
-
+//TODO: If completing this fixture data completes gameweek 38 then
+        //reset the fantasy teams
+        //Ensure you still show historic data on prior screen
       //IN HERE IF THE GAMEWEEK IS COMPLETE CREATE THE CANISTER FOR THE NEXT GAMEWEEK LEADERBOARD
       //IN HERE IF THE MONTH IS COMPLETE CREATE THE CANISTERS FOR THE NEXT MONTHS CLUB LEADERBOARDS
       //IN HERE IF THE SEASON IS COMPLETE CRAETE THE CANISTER FOR THE NEXT SEASON LEADERBOARD
       
-      //TODO: If completing this fixture data completes gameweek 38 then
-        //reset the fantasy teams
-        //Ensure you still show historic data on prior screen
+      
     };
      
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
