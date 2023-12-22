@@ -108,12 +108,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
 
 
 
-    public func finaliseFixture(fixture : T.Fixture) : async () {
-      let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
-      await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
-      await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
-    };
-
     private func checkGameweekFinished() : async () {
       let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
       let remainingFixtures = Array.find(

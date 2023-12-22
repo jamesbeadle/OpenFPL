@@ -402,185 +402,202 @@ module {
       return true;
     };
 
-    public func executeSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async () {
-      /*
-      let activeSeasonId = seasonManager.getActiveSeasonId();
-      let activeGameweek = seasonManager.getActiveGameweek();
-      let fixture = await seasonManager.getFixture(activeSeasonId, activeGameweek, fixtureId);
-      let allPlayers = await playerCanister.getPlayers();
+    public func executeSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO, allPlayers: [DTOs.PlayerDTO]) : async () {
+
+      let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(submitFixtureDataDTO.playerEventData);
 
       let homeTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
       let awayTeamPlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
 
-      for (event in Iter.fromArray(playerEventData)) {
-        if (event.teamId == fixture.homeTeamId) {
-          homeTeamPlayerIdsBuffer.add(event.playerId);
-        } else if (event.teamId == fixture.awayTeamId) {
-          awayTeamPlayerIdsBuffer.add(event.playerId);
-        };
-      };
-
-      let homeTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
-      let awayTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
-
-      for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(homeTeamPlayerIdsBuffer))) {
-        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-        switch (player) {
-          case (null) {};
-          case (?actualPlayer) {
-            if (actualPlayer.position == 0 or actualPlayer.position == 1) {
-              if (Array.find<Nat16>(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
-                homeTeamDefensivePlayerIdsBuffer.add(playerId);
-              };
-            };
-          };
-        };
-      };
-
-      for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(awayTeamPlayerIdsBuffer))) {
-        let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-        switch (player) {
-          case (null) {};
-          case (?actualPlayer) {
-            if (actualPlayer.position == 0 or actualPlayer.position == 1) {
-              if (Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
-                awayTeamDefensivePlayerIdsBuffer.add(playerId);
-              };
-            };
-          };
-        };
-      };
-
-      // Get goals for each team
-      let homeTeamGoals = Array.filter<T.PlayerEventData>(
-        playerEventData,
-        func(event : T.PlayerEventData) : Bool {
-          return event.teamId == fixture.homeTeamId and event.eventType == 1;
+      let currentSeason = List.find<T.Season>(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == submitFixtureDataDTO.seasonId;
         },
       );
 
-      let awayTeamGoals = Array.filter<T.PlayerEventData>(
-        playerEventData,
-        func(event : T.PlayerEventData) : Bool {
-          return event.teamId == fixture.awayTeamId and event.eventType == 1;
-        },
-      );
+      switch(currentSeason){
+        case (null){ };
+        case (?foundSeason){
+          let fixture = List.find<T.Fixture>(
+          foundSeason.fixtures,
+            func(f : T.Fixture) : Bool {
+              return f.id == submitFixtureDataDTO.fixtureId;
+            }
+          );
+          switch(fixture){
+            case (null){ };
+            case (?foundFixture){
 
-      let homeTeamOwnGoals = Array.filter<T.PlayerEventData>(
-        playerEventData,
-        func(event : T.PlayerEventData) : Bool {
-          return event.teamId == fixture.homeTeamId and event.eventType == 10;
-        },
-      );
-
-      let awayTeamOwnGoals = Array.filter<T.PlayerEventData>(
-        playerEventData,
-        func(event : T.PlayerEventData) : Bool {
-          return event.teamId == fixture.awayTeamId and event.eventType == 10;
-        },
-      );
-
-      let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
-      let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
-
-      let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(playerEventData);
-
-      if (totalHomeScored == 0) {
-        //add away team clean sheets
-        for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
-          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-          switch (player) {
-            case (null) {};
-            case (?actualPlayer) {
-              let cleanSheetEvent : T.PlayerEventData = {
-                fixtureId = fixtureId;
-                playerId = playerId;
-                eventType = 5;
-                eventStartMinute = 90;
-                eventEndMinute = 90;
-                teamId = actualPlayer.teamId;
-                position = actualPlayer.position;
-              };
-              allPlayerEventsBuffer.add(cleanSheetEvent);
-            };
-          };
-        };
-      } else {
-        //add away team conceded events
-        for (goal in Iter.fromArray(homeTeamGoals)) {
-          for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
-            let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-            switch (player) {
-              case (null) {};
-              case (?actualPlayer) {
-                let concededEvent : T.PlayerEventData = {
-                  fixtureId = fixtureId;
-                  playerId = actualPlayer.id;
-                  eventType = 3;
-                  eventStartMinute = goal.eventStartMinute;
-                  eventEndMinute = goal.eventStartMinute;
-                  teamId = actualPlayer.teamId;
-                  position = actualPlayer.position;
+              for (event in Iter.fromArray(submitFixtureDataDTO.playerEventData)) {
+                if (event.clubId == foundFixture.homeClubId) {
+                  homeTeamPlayerIdsBuffer.add(event.playerId);
+                } else if (event.clubId == foundFixture.awayClubId) {
+                  awayTeamPlayerIdsBuffer.add(event.playerId);
                 };
-                allPlayerEventsBuffer.add(concededEvent);
               };
-            };
-          };
-        };
-      };
 
-      if (totalAwayScored == 0) {
-        //add home team clean sheets
-        for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
-          let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-          switch (player) {
-            case (null) {};
-            case (?actualPlayer) {
-              let cleanSheetEvent : T.PlayerEventData = {
-                fixtureId = fixtureId;
-                playerId = playerId;
-                eventType = 5;
-                eventStartMinute = 90;
-                eventEndMinute = 90;
-                teamId = actualPlayer.teamId;
-                position = actualPlayer.position;
-              };
-              allPlayerEventsBuffer.add(cleanSheetEvent);
-            };
-          };
-        };
-      } else {
-        //add home team conceded events
-        for (goal in Iter.fromArray(awayTeamGoals)) {
-          for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
-            let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-            switch (player) {
-              case (null) {};
-              case (?actualPlayer) {
-                let concededEvent : T.PlayerEventData = {
-                  fixtureId = goal.fixtureId;
-                  playerId = actualPlayer.id;
-                  eventType = 3;
-                  eventStartMinute = goal.eventStartMinute;
-                  eventEndMinute = goal.eventStartMinute;
-                  teamId = actualPlayer.teamId;
-                  position = actualPlayer.position;
+              let homeTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+              let awayTeamDefensivePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
+
+              for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(homeTeamPlayerIdsBuffer))) {
+                let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+                switch (player) {
+                  case (null) {  };
+                  case (?actualPlayer) {
+                    if (actualPlayer.position == #Goalkeeper or actualPlayer.position == #Defender) {
+                      if (Array.find<Nat16>(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
+                        homeTeamDefensivePlayerIdsBuffer.add(playerId);
+                      };
+                    };
+                  };
                 };
-                allPlayerEventsBuffer.add(concededEvent);
               };
-            };
-          };
-        };
 
-        let fixtureEvents = Buffer.toArray(allPlayerEventsBuffer);
-        await seasonManager.fixtureConsensusReached(fixture.seasonId, fixture.gameweek, fixtureId, fixtureEvents);
-        return #ok();
+              for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(awayTeamPlayerIdsBuffer))) {
+                let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+                switch (player) {
+                  case (null) {  };
+                  case (?actualPlayer) {
+                    if (actualPlayer.position == 0 or actualPlayer.position == 1) {
+                      if (Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
+                        awayTeamDefensivePlayerIdsBuffer.add(playerId);
+                      };
+                    };
+                  };
+                };
+              };
+
+              // Get goals for each team
+              let homeTeamGoals = Array.filter<T.PlayerEventData>(
+                submitFixtureDataDTO.playerEventData,
+                func(event : T.PlayerEventData) : Bool {
+                  return event.clubId == foundFixture.homeClubId and event.eventType == #Goal;
+                },
+              );
+
+              let awayTeamGoals = Array.filter<T.PlayerEventData>(
+                submitFixtureDataDTO.playerEventData,
+                func(event : T.PlayerEventData) : Bool {
+                  return event.clubId == foundFixture.awayClubId and event.eventType == #Goal;
+                },
+              );
+
+              let homeTeamOwnGoals = Array.filter<T.PlayerEventData>(
+                submitFixtureDataDTO.playerEventData,
+                func(event : T.PlayerEventData) : Bool {
+                  return event.clubId == foundFixture.homeClubId and event.eventType == #OwnGoal;
+                },
+              );
+
+              let awayTeamOwnGoals = Array.filter<T.PlayerEventData>(
+                submitFixtureDataDTO.playerEventData,
+                func(event : T.PlayerEventData) : Bool {
+                  return event.clubId == foundFixture.awayClubId and event.eventType == #OwnGoal;
+                },
+              );
+
+              let totalHomeScored = Array.size(homeTeamGoals) + Array.size(awayTeamOwnGoals);
+              let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
+
+              if (totalHomeScored == 0) {
+                //add away team clean sheets
+                for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
+                  let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+                  switch (player) {
+                    case (null) {};
+                    case (?actualPlayer) {
+                      let cleanSheetEvent : T.PlayerEventData = {
+                        fixtureId = submitFixtureDataDTO.fixtureId;
+                        playerId = playerId;
+                        eventType = #CleanSheet;
+                        eventStartMinute = 90;
+                        eventEndMinute = 90;
+                        clubId = actualPlayer.clubId;
+                        position = actualPlayer.position;
+                      };
+                      allPlayerEventsBuffer.add(cleanSheetEvent);
+                    };
+                  };
+                };
+              } else {
+                //add away team conceded events
+                for (goal in Iter.fromArray(homeTeamGoals)) {
+                  for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
+                    let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+                    switch (player) {
+                      case (null) {};
+                      case (?actualPlayer) {
+                        let concededEvent : T.PlayerEventData = {
+                          fixtureId = submitFixtureDataDTO.fixtureId;
+                          playerId = actualPlayer.id;
+                          eventType = #GoalConceded;
+                          eventStartMinute = goal.eventStartMinute;
+                          eventEndMinute = goal.eventStartMinute;
+                          clubId = actualPlayer.clubId;
+                          position = actualPlayer.position;
+                        };
+                        allPlayerEventsBuffer.add(concededEvent);
+                      };
+                    };
+                  };
+                };
+              };
+
+              if (totalAwayScored == 0) {
+                //add home team clean sheets
+                for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
+                  let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+                  switch (player) {
+                    case (null) {};
+                    case (?actualPlayer) {
+                      let cleanSheetEvent : T.PlayerEventData = {
+                        fixtureId = submitFixtureDataDTO.fixtureId;
+                        playerId = playerId;
+                        eventType = #CleanSheet;
+                        eventStartMinute = 90;
+                        eventEndMinute = 90;
+                        clubId = actualPlayer.clubId;
+                        position = actualPlayer.position;
+                      };
+                      allPlayerEventsBuffer.add(cleanSheetEvent);
+                    };
+                  };
+                };
+              } else {
+                //add home team conceded events
+                for (goal in Iter.fromArray(awayTeamGoals)) {
+                  for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
+                    let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+                    switch (player) {
+                      case (null) {};
+                      case (?actualPlayer) {
+                        let concededEvent : T.PlayerEventData = {
+                          fixtureId = goal.fixtureId;
+                          playerId = actualPlayer.id;
+                          eventType = #GoalConceded;
+                          eventStartMinute = goal.eventStartMinute;
+                          eventEndMinute = goal.eventStartMinute;
+                          clubId = actualPlayer.clubId;
+                          position = actualPlayer.position;
+                        };
+                        allPlayerEventsBuffer.add(concededEvent);
+                      };
+                    };
+                  };
+                };
+              };
+
+              //await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
+              //Function above calls functions below
+              let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
+              await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
+              await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
+
+            }
+          }
+        }
       };
-
-*/
-
-
-
     };
 
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, seasonId: T.SeasonId, clubs: [T.Club]) : async Result.Result<Text,Text> {
