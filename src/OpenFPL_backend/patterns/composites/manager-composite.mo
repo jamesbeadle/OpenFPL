@@ -373,9 +373,24 @@ module {
     };
 
     public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async Result.Result<(), T.Error> {
+
+      if(invalidProfilePicture(profilePicture)){
+        return #err(#InvalidData);
+      };
+
       let existingManager = managers.get(principalId);
       switch (existingManager) {
         case (null) {
+
+          //check for room in current profile picture canister
+            //if room then upload to current profile picture canister and return canister id
+            //if no room then upload to new profile picture canister and return canister id
+              //set this new canister id to the current profile picture canister
+
+
+
+
+
           let createProfileDTO: DTOs.ProfileDTO = {
               principalId = principalId;
               username = "";
@@ -389,6 +404,16 @@ module {
           return #ok();
         };
         case (?foundManager) {
+
+          //check for existing profile picture canister id
+            //if exists just replace the existing profile picture 
+            //if doesn't exist 
+              //check for room in current profile picture canister
+                //if room then upload to current profile picture canister and return canister id
+                //if no room then upload to new profile picture canister and return canister id
+                  //set this new canister id to the current profile picture canister
+
+
           return #ok();
         };
       };
@@ -687,8 +712,14 @@ module {
       return false;
     };
 
-    private func isValidProfilePicture(profilePicture: Blob) : Bool{
+    private func invalidProfilePicture(profilePicture: Blob) : Bool{
         //TODO: implement
+
+
+
+
+
+
         return false;
     };
 
