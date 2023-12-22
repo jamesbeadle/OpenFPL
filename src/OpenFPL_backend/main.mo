@@ -268,9 +268,9 @@ actor Self {
     loanExpiredCallback,
     transferWindowStartCallback,
     transferWindowEndCallback);
-    
+
   seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer);
-/*
+  
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
   private stable var stable_managers : [(Text, T.Manager)] = [];
@@ -298,26 +298,26 @@ actor Self {
   };
 
   system func preupgrade() {
-    stable_timers := seasonManager.getTimers();
-    stable_managers := seasonManager.getManagers();
-    stable_profile_picture_canister_ids := seasonManager.getProfilePictureCanisterIds();
-    stable_season_leaderboard_canister_ids := seasonManager.getSeasonLeaderboardCanisterIds();
-    stable_monthly_leaderboard_canister_ids := seasonManager.getMonthlyLeaderboardCanisterIds();
-    stable_weekly_leaderboard_canister_ids := seasonManager.getWeeklyLeaderboardCanisterIds();
+    stable_timers := timerComposite.getStableTimers();
+    stable_managers := seasonManager.getStableManagers();
+    stable_profile_picture_canister_ids := seasonManager.getStableProfilePictureCanisterIds();
+    stable_season_leaderboard_canister_ids := seasonManager.getStableSeasonLeaderboardCanisterIds();
+    stable_monthly_leaderboard_canister_ids := seasonManager.getStableMonthlyLeaderboardCanisterIds();
+    stable_weekly_leaderboard_canister_ids := seasonManager.getStableWeeklyLeaderboardCanisterIds();
     stable_clubs := seasonManager.getStableClubs();
-    stable_relegated_clubs := seasonManager.getRelegatedClubs();
-    stable_next_club_id := seasonManager.getNextClubId();
-    stable_players := seasonManager.getPlayers();
-    stable_next_player_id := seasonManager.getNextPlayerId();
-    stable_seasons := seasonManager.getSeasons();
-    stable_next_season_id := seasonManager.getNextSeasonId();
-    stable_next_fixture_id := seasonManager.getNextFixtureId();
-    stable_data_cache_hashes := seasonManager.getDataCacheHashes();
-    stable_system_state := seasonManager.getSystemState();
+    stable_relegated_clubs := seasonManager.getStableRelegatedClubs();
+    stable_next_club_id := seasonManager.getStableNextClubId();
+    stable_players := seasonManager.getStablePlayers();
+    stable_next_player_id := seasonManager.getStableNextPlayerId();
+    stable_seasons := seasonManager.getStableSeasons();
+    stable_next_season_id := seasonManager.getStableNextSeasonId();
+    stable_next_fixture_id := seasonManager.getStableNextFixtureId();
+    stable_data_cache_hashes := seasonManager.getStableDataHashes();
+    stable_system_state := seasonManager.getStableSystemState();
   };
 
   system func postupgrade() {
-    seasonManager.setTimers(stable_timers);
+    timerComposite.setTimers(stable_timers);
     seasonManager.setManagers(stable_managers);
     seasonManager.setProfilePictureCanisterIds(stable_profile_picture_canister_ids);
     seasonManager.setSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
@@ -335,5 +335,5 @@ actor Self {
     seasonManager.setSystemState(stable_system_state);
     seasonManager.recreateTimers();
   };
-*/
+  
 };

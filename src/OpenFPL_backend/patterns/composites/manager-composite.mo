@@ -442,7 +442,6 @@ module {
         return false;
     };
 
-
     public func snapshotFantasyTeams() : (){
 
     };
@@ -453,6 +452,13 @@ module {
 
 
 
+    public func getStableManagers(): [(Text, T.Manager)] {
+      return Iter.toArray(managers.entries());
+    };
+
+    public func getStableProfilePictureCanisterIds(): [(T.PrincipalId, Text)] {
+      return Iter.toArray(profilePictureCanisterIds.entries());
+    };
 
 
    //include all profile info for caller

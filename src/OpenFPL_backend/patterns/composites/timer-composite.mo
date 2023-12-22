@@ -185,5 +185,8 @@ module {
 
     private func defaultCallback() : async () {};
 
+    public func getStableTimers(): [T.TimerInfo] {
+      return timers;
+    };
   };
 };

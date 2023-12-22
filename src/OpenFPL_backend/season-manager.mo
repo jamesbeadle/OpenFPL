@@ -331,18 +331,29 @@ module {
       return await clubComposite.executeUpdateClub(updateClubDTO);
     };
     
-    //gameweek begin timers
-    //game kickoff timers
-    //game completed timers
-    //recall loan timers
-    //transfer window start timer
-    //transfer window end timer
+    public func getStableManagers(): [(Text, T.Manager)] {
+      return managerComposite.getStableManagers();
+    };
 
-  /*
+    public func getStableProfilePictureCanisterIds(): [(T.PrincipalId, Text)] {
+      return managerComposite.getStableProfilePictureCanisterIds();
+    };
+
+    public func getStableSeasonLeaderboardCanisterIds(): [(T.SeasonId, Text)] {
+
+    };
     
-    */
-
-    
-
+    public func getStableMonthlyLeaderboardCanisterIds(): [(T.MonthlyLeaderboardKey, Text)] {};
+    public func getStableWeeklyLeaderboardCanisterIds(): [(T.WeeklyLeaderboardKey, Text)] {};
+    public func getStableClubs(): [T.Club] {};
+    public func getStableRelegatedClubs(): [T.Club] {};
+    public func getStableNextClubId(): [T.Player] {};
+    public func getStablePlayers(): [T.Season] {};
+    public func getStableNextPlayerId() : T.PlayerId {};
+    public func getStableSeasons() {};
+    public func getStableNextSeasonId() {};
+    public func getStableNextFixtureId() {};
+    public func getStableDataHashes() : [T.DataCache] {};
+    public func getStableSystemState()  : T.SystemState {};
   };
 };
