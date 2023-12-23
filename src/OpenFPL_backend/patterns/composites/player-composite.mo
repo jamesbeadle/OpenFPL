@@ -18,12 +18,16 @@ module {
     
     private var nextPlayerId : T.PlayerId = 1;
     private var players = List.fromArray<T.Player>([]);
+    private var retiredPlayers = List.fromArray<T.Player>([]);
+    private var formerPlayers = List.fromArray<T.Player>([]);
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
     private var removeExpiredTimers : ?(() -> ()) = null;
 
-    public func setStableData(stable_next_player_id: T.PlayerId, stable_players: [T.Player]) {
+    public func setStableData(stable_next_player_id: T.PlayerId, stable_players: [T.Player], stable_retired_players: [T.Player], stable_former_players: [T.Player]) {
       nextPlayerId := stable_next_player_id;
       players := List.fromArray(stable_players);
+      retiredPlayers := List.fromArray(stable_retired_players);
+      formerPlayers := List.fromArray(stable_former_players);
     };
     
     public func setTimerBackupFunction(
@@ -535,25 +539,24 @@ module {
     };
     
     public func executeUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async () {
-      //TODO
-      let playerToUnretire = List.find<T.Player>(retiredPlayers, func(p : T.Player) { p.id == playerId });
+      let playerToUnretire = List.find<T.Player>(retiredPlayers, func(p : T.Player) { p.id == unretirePlayerDTO.playerId });
       switch (playerToUnretire) {
         case (null) {};
         case (?p) {
           let activePlayer : T.Player = {
             id = p.id;
-            teamId = p.teamId;
+            clubId = p.clubId;
             position = p.position;
             firstName = p.firstName;
             lastName = p.lastName;
             shirtNumber = p.shirtNumber;
-            value = p.value;
+            valueQuarterMillions = p.valueQuarterMillions;
             dateOfBirth = p.dateOfBirth;
             nationality = p.nationality;
             seasons = p.seasons;
             valueHistory = p.valueHistory;
             onLoan = p.onLoan;
-            parentTeamId = p.parentTeamId;
+            parentClubId = p.parentClubId;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
             retirementDate = 0;
@@ -564,7 +567,7 @@ module {
           retiredPlayers := List.filter<T.Player>(
             retiredPlayers,
             func(currentPlayer : T.Player) : Bool {
-              return currentPlayer.id != playerId;
+              return currentPlayer.id != unretirePlayerDTO.playerId;
             },
           );
         };
@@ -577,6 +580,22 @@ module {
 
     public func setStablePlayers(stable_players: [T.Player]) {
       players := List.fromArray(stable_players);
+    };
+
+    public func getStableRetiredPlayers(): [T.Player] {
+      return List.toArray(retiredPlayers);
+    };
+
+    public func setStableRetiredPlayers(stable_retired_players: [T.Player]) {
+      retiredPlayers := List.fromArray(stable_retired_players);
+    };
+
+    public func getStableFormerPlayers(): [T.Player] {
+      return List.toArray(formerPlayers);
+    };
+
+    public func setStableFormerPlayers(stable_former_players: [T.Player]) {
+      players := List.fromArray(stable_former_players);
     };
 
     public func getStableNextPlayerId() : T.PlayerId {
