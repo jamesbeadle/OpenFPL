@@ -76,6 +76,8 @@ module {
       stable_managers: [(T.PrincipalId, T.Manager)],
       stable_clubs: [T.Club],
       stable_players: [T.Player],
+      stable_retired_players: [T.Player],
+      stable_former_players: [T.Player],
       stable_seasons: [T.Season],
       stable_profile_picture_canister_ids:  [(T.PrincipalId, Text)],
       stable_season_leaderboard_canister_ids:  [(T.SeasonId, Text)],
@@ -85,7 +87,7 @@ module {
       systemState := stable_system_state;
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
       clubComposite.setStableData(stable_next_club_id, stable_clubs);
-      playerComposite.setStableData(stable_next_player_id, stable_players);
+      playerComposite.setStableData(stable_next_player_id, stable_players, stable_retired_players, stable_former_players);
       seasonComposite.setStableData(stable_next_season_id, stable_next_fixture_id, stable_seasons);
       managerComposite.setStableData(stable_managers, stable_profile_picture_canister_ids);
       leaderboardComposite.setStableData(
@@ -201,12 +203,15 @@ module {
     };
 
     public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async () {
-      let calculatedPlayerEvents = await seasonComposite.executeSubmitFixtureData(submitFixtureData);
+      let players = playerComposite.getPlayers(systemState.calculationSeason);
+      let calculatedPlayerEvents = await seasonComposite.executeSubmitFixtureData(submitFixtureData, players);
+      /*
       await playerComposite.calculatePlayerScores(eventData);
       await playerComposite.calculateHighestScoringPlayers();
       await seasonComposite.addEventDataToFixtures();
       await seasonComposite.calculateFantasyTeamScores();
       await leaderboardComposite.calculateLeaderboards();
+      */
  //need to store the event data with the players and with the fixtures
                 //need highest scoring player id
 
@@ -218,14 +223,14 @@ module {
 
 
               //TODO: Need to link up the finalisation here
-          
+          /*
               for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
                 let fixture = activeFixtures[i];
                 if (fixture.id == fixtureId and fixture.status == 2) {
                   await finaliseFixture(updatedFixture);
                 };
               };
-
+*/
               
               //await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
               //Function above calls functions below
@@ -234,7 +239,7 @@ module {
               await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
               await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
               */
-              
+              /*
               savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
               await checkGameweekFinished();
               await updateCacheHash("fixtures");
@@ -248,7 +253,7 @@ module {
       if(gameweekFinalised){
         seasonComposite.createGameweekLeaderboardCanister();
       };
-      
+      */
 //TODO: If completing this fixture data completes gameweek 38 then
         //reset the fantasy teams
         //Ensure you still show historic data on prior screen
@@ -321,7 +326,7 @@ module {
     };
 
     public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async () {
-      return await playerComposite.executeLoanPlayer(loanPlayerDTO);
+      return await playerComposite.executeLoanPlayer(loanPlayerDTO, systemState);
     };
 
     public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<Text,Text> {
@@ -338,7 +343,7 @@ module {
         //ALSO DO FOR ANY OTHER PLAYER MOVEMENTS FROM SOMEONES TEAM
 
 
-      return await playerComposite.executeTransferPlayer(transferPlayerDTO);
+      return await playerComposite.executeTransferPlayer(transferPlayerDTO, systemState);
     };
 
     public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<Text,Text> {
@@ -485,6 +490,22 @@ module {
 
     public func setStablePlayers(stable_players: [T.Player]) {
       playerComposite.setStablePlayers(stable_players);
+    };
+
+    public func getStableRetiredPlayers(): [T.Player] {
+      return playerComposite.getStableRetiredPlayers();
+    };
+
+    public func setStableRetiredPlayers(stable_retired_players: [T.Player]) {
+      playerComposite.setStableRetiredPlayers(stable_retired_players);
+    };
+
+    public func getStableFormerPlayers(): [T.Player] {
+      return playerComposite.getStableFormerPlayers();
+    };
+
+    public func setStableFormerPlayers(stable_former_players: [T.Player]) {
+      playerComposite.setStableFormerPlayers(stable_former_players);
     };
 
     public func getStableNextPlayerId() : T.PlayerId {
