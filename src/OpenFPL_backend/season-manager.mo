@@ -227,6 +227,7 @@ module {
         //TODO:check if season complete and update differently
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);
+          await seasonComposite.resetFantasyTeams();
         };
 
         let updatedSystemState: T.SystemState = {
