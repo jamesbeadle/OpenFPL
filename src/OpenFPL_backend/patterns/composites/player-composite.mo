@@ -7,6 +7,7 @@ import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Text "mo:base/Text";
 import Array "mo:base/Array";
+import Int "mo:base/Int";
 import CanisterIds "../../CanisterIds";
 import Countries "../../Countries";
 import Utilities "../../utilities";
@@ -178,6 +179,55 @@ module {
 
     public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async () {
       //TODO
+      let playerToLoan = List.find<T.Player>(players, func(p : T.Player) { p.id == loanPlayerDTO.playerId });
+      switch (playerToLoan) {
+        case (null) {};
+        case (?p) {
+
+          let newTransferHistoryEntry : T.TransferHistory = {
+            transferDate = Time.now();
+            transferGameweek = currentGameweek;
+            transferSeason = currentSeasonId;
+            fromTeam = p.teamId;
+            toTeam = loanTeamId;
+            loanEndDate = loanEndDate;
+          };
+
+          let loanedPlayer : T.Player = {
+            id = p.id;
+            teamId = loanTeamId;
+            position = p.position;
+            firstName = p.firstName;
+            lastName = p.lastName;
+            shirtNumber = p.shirtNumber;
+            value = p.value;
+            dateOfBirth = p.dateOfBirth;
+            nationality = p.nationality;
+            seasons = p.seasons;
+            valueHistory = p.valueHistory;
+            onLoan = true;
+            parentTeamId = p.teamId;
+            isInjured = p.isInjured;
+            injuryHistory = p.injuryHistory;
+            retirementDate = p.retirementDate;
+            transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
+          };
+
+          players := List.map<T.Player, T.Player>(
+            players,
+            func(currentPlayer : T.Player) : T.Player {
+              if (currentPlayer.id == loanedPlayer.id) {
+                return loanedPlayer;
+              } else {
+                return currentPlayer;
+              };
+            },
+          );
+
+          let loanTimerDuration = #nanoseconds(Int.abs((loanPlayerDTO.loanEndDate - Time.now())));
+          await setAndBackupTimer(loanTimerDuration, "loanExpired", playerId); //TODO NEED FUNCTION
+        };
+      };
     };
 
     public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO, clubs: List.List<T.Club>) : async Result.Result<Text,Text> {
@@ -215,8 +265,53 @@ module {
       return #ok("Valid");
     };
 
-    public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async () {
+    public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO, systemState: T.SystemState) : async () {
       //TODO
+      let player = List.find<T.Player>(players, func(p : T.Player) { p.id == transferPlayerDTO.playerId });
+      switch (player) {
+        case (null) {};
+        case (?p) {
+
+          let newTransferHistoryEntry : T.TransferHistory = {
+            transferDate = Time.now();
+            transferGameweek = systemState.pickTeamGameweek;
+            transferSeason = systemState.calculationSeason;
+            fromClub = p.clubId;
+            toClub = transferPlayerDTO.newClubId;
+            loanEndDate = 0;
+          };
+
+          let updatedPlayer : T.Player = {
+            id = p.id;
+            clubId = transferPlayerDTO.newClubId;
+            position = p.position;
+            firstName = p.firstName;
+            lastName = p.lastName;
+            shirtNumber = p.shirtNumber;
+            value = p.value;
+            dateOfBirth = p.dateOfBirth;
+            nationality = p.nationality;
+            seasons = p.seasons;
+            valueHistory = p.valueHistory;
+            onLoan = p.onLoan;
+            parentTeamId = p.parentTeamId;
+            isInjured = p.isInjured;
+            injuryHistory = p.injuryHistory;
+            retirementDate = p.retirementDate;
+            transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
+          };
+          players := List.map<T.Player, T.Player>(
+            players,
+            func(currentPlayer : T.Player) : T.Player {
+              if (currentPlayer.id == updatedPlayer.id) {
+                return updatedPlayer;
+              } else {
+                return currentPlayer;
+              };
+            },
+          );
+        };
+      };
     };
 
     public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<Text,Text> {

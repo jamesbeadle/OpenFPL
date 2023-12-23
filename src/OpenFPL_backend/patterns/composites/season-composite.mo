@@ -588,8 +588,14 @@ module {
                 };
               };
 
-              //TODO: Need to link up the finalisation here
+              //need to store the event data with the players and with the fixtures
+                //need highest scoring player id
+              
+              //need to update the fantasy team score calculation
 
+
+              //TODO: Need to link up the finalisation here
+              await fixtureConsensusReached(foundFixture.seasonId, foundFixture.gameweek, foundFixture.id, Buffer.toArray(allPlayerEventsBuffer));
               //await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
               //Function above calls functions below
               /*
@@ -838,6 +844,66 @@ module {
         },
       );
     };
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public func fixtureConsensusReached(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, consensusPlayerEventData : [T.PlayerEventData]) : async () {
+      var getSeasonId = seasonId;
+      if (getSeasonId == 0) {
+        getSeasonId := activeSeasonId;
+      };
+
+      var getGameweekNumber = gameweekNumber;
+      if (getGameweekNumber == 0) {
+        getGameweekNumber := activeGameweek;
+      };
+
+      if (interestingGameweek < activeGameweek) {
+        interestingGameweek := activeGameweek;
+      };
+
+      let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
+          
+      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
+        let fixture = activeFixtures[i];
+        if (fixture.id == fixtureId and fixture.status == 2) {
+          await finaliseFixture(updatedFixture);
+        };
+      };
+
+      await checkGameweekFinished();
+      await updateCacheHash("fixtures");
+      await updateCacheHash("weekly_leaderboard");
+      await updateCacheHash("monthly_leaderboards");
+      await updateCacheHash("season_leaderboard");
+      await updateCacheHash("system_state");
+      await updatePlayerEventDataCache();
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public func getStableSeasons() : [T.Season] {
       return List.toArray(seasons);
