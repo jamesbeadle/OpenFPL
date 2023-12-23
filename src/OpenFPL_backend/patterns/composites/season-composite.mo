@@ -586,7 +586,7 @@ module {
 
               let playerEvents = Buffer.toArray<T.PlayerEventData>(allPlayerEventsBuffer);
               let eventsWithHighestScoringPlayer = populateHighestScoringPlayer(playerEvents, foundFixture, allPlayers);
-              return null;
+              return ?eventsWithHighestScoringPlayer;
             }
           }
         }
@@ -722,7 +722,7 @@ module {
     };
 
 
-    func calculateAggregatePlayerEvents(events : [T.PlayerEventData], playerPosition : T.PlayerPosition) : Int16 {
+    private func calculateAggregatePlayerEvents(events : [T.PlayerEventData], playerPosition : T.PlayerPosition) : Int16 {
       var totalScore : Int16 = 0;
 
       if (playerPosition == #Goalkeeper or playerPosition == #Defender) {
@@ -749,7 +749,7 @@ module {
       return totalScore;
     };
 
-    func calculateIndividualScoreForEvent(event : T.PlayerEventData, playerPosition : T.PlayerPosition) : Int16 {
+    private func calculateIndividualScoreForEvent(event : T.PlayerEventData, playerPosition : T.PlayerPosition) : Int16 {
       switch (event.eventType) {
         case (#Appearance) { return 5 };
         case (#Goal) {
@@ -785,6 +785,10 @@ module {
     };
 
 
+
+    public func addEventsToFixture(playerEventData: [T.PlayerEventData], fixtureId: T.FixtureId) : async (){
+      //TODO: Imeplement adding the events for a game to the fixture
+    };
 
 
    

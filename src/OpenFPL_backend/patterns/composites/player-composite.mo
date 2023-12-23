@@ -865,6 +865,10 @@ module {
       };
     };
 
+    public func addEventsToPlayers(playerEventData: [T.PlayerEventData]) : async (){
+      //TODO: Imeplement adding the events for a game to the players
+    };
+
     public func getStablePlayers(): [T.Player] {
       return List.toArray(players);
     };

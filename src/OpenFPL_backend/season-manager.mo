@@ -205,43 +205,21 @@ module {
     public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async () {
       let players = playerComposite.getPlayers(systemState.calculationSeason);
       let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
+      switch(populatedPlayerEvents){
+        case (null){};
+        case (?events){
+          await playerComposite.addEventsToPlayers(events);
+          await seasonComposite.addEventsToFixture(events, submitFixtureData.fixtureId);
+        };
+      };
+      
+    
+      await managerComposite.calculateFantasyTeamScores();
+      await leaderboardComposite.calculateLeaderboards();      
 
+      //check if gameweek finished
 
-      /*
-      await playerComposite.calculatePlayerScores(eventData);
-      await playerComposite.calculateHighestScoringPlayers();
-      await seasonComposite.addEventDataToFixtures();
-      await seasonComposite.calculateFantasyTeamScores();
-      await leaderboardComposite.calculateLeaderboards();
-      */
- //need to store the event data with the players and with the fixtures
-                //need highest scoring player id
-
-                
-
-
-             
-              //need to update the fantasy team score calculation
-
-
-              //TODO: Need to link up the finalisation here
-          /*
-              for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
-                let fixture = activeFixtures[i];
-                if (fixture.id == fixtureId and fixture.status == 2) {
-                  await finaliseFixture(updatedFixture);
-                };
-              };
-*/
-              
-              //await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
-              //Function above calls functions below
-              /*
-              let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
-              await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
-              await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
-              */
-              /*
+        /*
               savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
               await checkGameweekFinished();
               await updateCacheHash("fixtures");
