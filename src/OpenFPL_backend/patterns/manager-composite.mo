@@ -1,5 +1,5 @@
-import DTOs "../../DTOs";
-import T "../../types";
+import DTOs "../DTOs";
+import T "../types";
 import Result "mo:base/Result";
 import Blob "mo:base/Blob";
 import Text "mo:base/Text";
@@ -14,9 +14,9 @@ import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
 import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
-import Management "../../modules/Management";
-import ENV "../../utils/Env";
-import ProfilePictureCanister "../../profile-picture-canister";
+import Management "../modules/Management";
+import ENV "../utils/Env";
+import ProfilePictureCanister "../profile-picture-canister";
 
 module {
 

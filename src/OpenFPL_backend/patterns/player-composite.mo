@@ -1,5 +1,5 @@
-import T "../../types";
-import DTOs "../../DTOs";
+import T "../types";
+import DTOs "../DTOs";
 import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
@@ -10,9 +10,9 @@ import Array "mo:base/Array";
 import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 import Nat16 "mo:base/Nat16";
-import CanisterIds "../../CanisterIds";
-import Countries "../../Countries";
-import Utilities "../../utilities";
+import CanisterIds "../CanisterIds";
+import Countries "../Countries";
+import Utilities "../utilities";
 
 module {
   public class PlayerComposite() {

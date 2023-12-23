@@ -1,14 +1,14 @@
-import T "../../types";
-import DTOs "../../DTOs";
+import T "../types";
+import DTOs "../DTOs";
 import List "mo:base/List";
-import CanisterIds "../../CanisterIds";
+import CanisterIds "../CanisterIds";
 import Time "mo:base/Time";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
 import Timer "mo:base/Timer";
 import Int "mo:base/Int";
 import Buffer "mo:base/Buffer";
-import Utilities "../../utilities";
+import Utilities "../utilities";
 
 module {
   public class TimerComposite(

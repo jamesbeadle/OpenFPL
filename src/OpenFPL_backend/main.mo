@@ -12,7 +12,7 @@ import Countries "Countries";
 import DTOs "DTOs";
 import SeasonManager "season-manager";
 import T "types";
-import TimerComposite "patterns/composites/timer-composite";
+import TimerComposite "patterns/timer-composite";
 
 actor Self {
   //TODO: NEED TO PASS SELF

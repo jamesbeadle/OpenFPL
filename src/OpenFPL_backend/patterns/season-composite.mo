@@ -1,5 +1,5 @@
-import T "../../types";
-import DTOs "../../DTOs";
+import T "../types";
+import DTOs "../DTOs";
 import List "mo:base/List";
 import Buffer "mo:base/Buffer";
 import Iter "mo:base/Iter";
@@ -14,7 +14,7 @@ import Char "mo:base/Char";
 import TrieMap "mo:base/TrieMap";
 import HashMap "mo:base/HashMap";
 import Bool "mo:base/Bool";
-import Utilities "../../utilities";
+import Utilities "../utilities";
 
 module {
 
