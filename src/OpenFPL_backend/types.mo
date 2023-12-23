@@ -177,6 +177,7 @@ module Types {
     valueHistory : List.List<ValueHistory>;
     onLoan : Bool;
     parentClubId : Nat16;
+    loanEndDate: Int;
     isInjured : Bool;
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;

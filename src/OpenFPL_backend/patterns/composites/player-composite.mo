@@ -49,9 +49,23 @@ module {
       unretirePlayer : (playerId: T.PlayerId) -> async ();
     };
 
-    public func loanExpired(){
-      //TODO
-      //go through all players and check if any have their loan expired and recall them to their team if so
+    public func loanExpired() : async (){
+
+      let playersToRecall = List.filter<T.Player>(
+        players,
+        func(currentPlayer : T.Player) : Bool {
+          return currentPlayer.onLoan and currentPlayer.loanEndDate <= Time.now();
+        },
+      );
+      
+      for (player in Iter.fromList(playersToRecall)){
+        let recallPlayerDTO: DTOs.RecallPlayerDTO = {
+          playerId = player.id;
+        };
+        
+        await executeRecallPlayer(recallPlayerDTO);
+      };
+
     };
 
     public func getPlayers(currentSeasonId: T.SeasonId) : [DTOs.PlayerDTO] {
@@ -220,6 +234,7 @@ module {
             valueHistory = p.valueHistory;
             onLoan = true;
             parentClubId = p.clubId;
+            loanEndDate = loanPlayerDTO.loanEndDate;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
@@ -310,8 +325,9 @@ module {
             nationality = p.nationality;
             seasons = p.seasons;
             valueHistory = p.valueHistory;
-            onLoan = p.onLoan;
-            parentClubId = p.parentClubId;
+            onLoan = false;
+            loanEndDate = 0;
+            parentClubId = 0;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
@@ -373,6 +389,7 @@ module {
               valueHistory = p.valueHistory;
               onLoan = false;
               parentClubId = 0;
+              loanEndDate = 0;
               isInjured = p.isInjured;
               injuryHistory = p.injuryHistory;
               retirementDate = p.retirementDate;
@@ -555,6 +572,7 @@ module {
             seasons = p.seasons;
             valueHistory = p.valueHistory;
             onLoan = p.onLoan;
+            loanEndDate = p.loanEndDate;
             parentClubId = p.parentClubId;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
