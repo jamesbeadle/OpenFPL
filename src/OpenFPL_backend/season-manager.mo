@@ -218,34 +218,28 @@ module {
       await leaderboardComposite.calculateLeaderboards();      
 
       await updateCacheHash("players");
+      await updateCacheHash("player_events");
       await updateCacheHash("fixtures");
       await updateCacheHash("weekly_leaderboard");
       await updateCacheHash("monthly_leaderboards");
       await updateCacheHash("season_leaderboard");
       await updateCacheHash("system_state");
 
-      //check if gameweek finished
-        //create next week month season leaderboard canister
+      let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
+      if(gameweekComplete){
+        if(systemState.calculationGameweek == 38){
+          //TODO: roll over and create new season
+        };
 
+        let nextGameweekCalculationMonth: T.CalendarMonth = 1;
+        //TODO: check if the last game of the next gameweek is the next month if so roll month over
 
-        /*
-              savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
-              await checkGameweekFinished();
-              await updatePlayerEventDataCache();
-      let gameweekFinalised = seasonComposite.checkGameweekFinalised();
-      
-      if(gameweekFinalised){
-        seasonComposite.createGameweekLeaderboardCanister();
+        if(nextGameweekCalculationMonth > systemState.calculationMonth){
+          //TODO: roll over to the next month
+        };
       };
-      */
-//TODO: If completing this fixture data completes gameweek 38 then
-        //reset the fantasy teams
-        //Ensure you still show historic data on prior screen
-      
-      
+
     };
-
-
 
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
       let clubs = clubComposite.getClubs();

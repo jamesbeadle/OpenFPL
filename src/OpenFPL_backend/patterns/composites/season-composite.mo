@@ -13,6 +13,7 @@ import Text "mo:base/Text";
 import Char "mo:base/Char";
 import TrieMap "mo:base/TrieMap";
 import HashMap "mo:base/HashMap";
+import Bool "mo:base/Bool";
 import Utilities "../../utilities";
 
 module {
@@ -790,6 +791,10 @@ module {
       //TODO: Imeplement adding the events for a game to the fixture
     };
 
+    public func checkGameweekComplete(systemState: T.SystemState) : Bool {
+      //TODO: check if gameweek complete
+      return false;
+    };
 
    
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, seasonId: T.SeasonId, clubs: [T.Club]) : async Result.Result<Text,Text> {
