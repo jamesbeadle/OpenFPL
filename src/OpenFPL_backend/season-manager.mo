@@ -18,7 +18,6 @@ import Order "mo:base/Order";
 import Int "mo:base/Int";
 import Time "mo:base/Time";
 import SnapshotFactory "patterns/snapshot-factory";
-import StrategyManager "patterns/strategy-manager";
 import SeasonComposite "patterns/composites/season-composite";
 import PlayerComposite "patterns/composites/player-composite";
 import ClubComposite "patterns/composites/club-composite";
@@ -34,7 +33,6 @@ module {
 
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
     
-    let strategyManager = StrategyManager.StrategyManager();
     let managerComposite = ManagerComposite.ManagerComposite();
     let playerComposite = PlayerComposite.PlayerComposite();
     let clubComposite = ClubComposite.ClubComposite();
@@ -226,7 +224,7 @@ module {
 
         //TODO:check if season complete and update differently
         if(systemState.calculationGameweek == 38){
-          seasonComposite.createNewSeason(systemState);
+          await seasonComposite.createNewSeason(systemState);
         };
 
         let updatedSystemState: T.SystemState = {
@@ -254,14 +252,14 @@ module {
 
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
       let clubs = clubComposite.getClubs();
-      return await seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO, systemState.calculationSeason, clubs);
+      return await seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO, clubs);
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
       
       await seasonComposite.executeAddInitialFixtures(addInitialFixturesDTO);
 
-      let sortedArray = Array.sort(addInitialFixturesDTO.fixtures,
+      let sortedArray = Array.sort(addInitialFixturesDTO.seasonFixtures,
         func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
           if (a.kickOff < b.kickOff) { return #less };
           if (a.kickOff == b.kickOff) { return #equal };
