@@ -384,6 +384,7 @@ module {
 
     public func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async () {
       return await playerComposite.executeRetirePlayer(retirePlayerDTO);
+      //TODO: await updateHashForCategory("players");
     };
 
     public func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<Text,Text> {

@@ -146,7 +146,19 @@ module {
     };
 
     public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<Text,Text> {
-      //TODO
+      let player = List.find<T.Player>(
+        players,
+        func(p : T.Player) : Bool {
+          return p.id == revaluePlayerUpDTO.playerId;
+        },
+      );
+      
+      switch(player){
+        case (null){
+          return #err("Invalid: Cannot find player.");
+        };
+        case (?foundPlayer){ };
+      };
       return #ok("Valid");
     };
 
@@ -196,7 +208,19 @@ module {
     };
 
     public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<Text,Text> {
-      //TODO
+      let player = List.find<T.Player>(
+        players,
+        func(p : T.Player) : Bool {
+          return p.id == revaluePlayerDownDTO.playerId;
+        },
+      );
+      
+      switch(player){
+        case (null){
+          return #err("Invalid: Cannot find player.");
+        };
+        case (?foundPlayer){ };
+      };
       return #ok("Valid");
     };
 
@@ -755,10 +779,52 @@ module {
     };
 
     public func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async () {
-      //TODO
+      let playerToRetire = List.find<T.Player>(players, func(p : T.Player) { p.id == retirePlayerDTO.playerId });
+      switch (playerToRetire) {
+        case (null) {};
+        case (?p) {
+          let retiredPlayer : T.Player = {
+            id = p.id;
+            clubId = p.clubId;
+            position = p.position;
+            firstName = p.firstName;
+            lastName = p.lastName;
+            shirtNumber = p.shirtNumber;
+            valueQuarterMillions = p.valueQuarterMillions;
+            dateOfBirth = p.dateOfBirth;
+            nationality = p.nationality;
+            seasons = p.seasons;
+            valueHistory = p.valueHistory;
+            onLoan = p.onLoan;
+            parentClubId = p.parentClubId;
+            loanEndDate = p.loanEndDate;
+            isInjured = p.isInjured;
+            injuryHistory = p.injuryHistory;
+            retirementDate = retirePlayerDTO.retirementDate;
+            transferHistory = p.transferHistory;
+          };
+
+          retiredPlayers := List.push(retiredPlayer, retiredPlayers);
+          players := List.filter<T.Player>(
+            players,
+            func(currentPlayer : T.Player) : Bool {
+              return currentPlayer.id != retirePlayerDTO.playerId;
+            },
+          );
+        };
+      };
     };
 
     public func validateUnretirePlayer(unretirePlayerDTO: DTOs.UnretirePlayerDTO) : async Result.Result<Text,Text> {
+      
+      let playerToUnretire = List.find<T.Player>(retiredPlayers, func(p : T.Player) { p.id == unretirePlayerDTO.playerId });
+      switch(playerToUnretire){
+        case (null){
+          return #err("Invalid: Cannot find player");
+        };
+        case (?foundPlayer){ };
+      };
+
       return #ok("Valid");
     };
     
