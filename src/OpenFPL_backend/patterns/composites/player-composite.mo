@@ -171,13 +171,14 @@ module {
               firstName = p.firstName;
               lastName = p.lastName;
               shirtNumber = p.shirtNumber;
-              value = newValue;
+              valueQuarterMillions = p.valueQuarterMillions;
               dateOfBirth = p.dateOfBirth;
               nationality = p.nationality;
               seasons = p.seasons;
               valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
               onLoan = p.onLoan;
-              parentTeamId = p.parentTeamId;
+              parentClubId = p.parentClubId;
+              loanEndDate = p.loanEndDate;
               isInjured = p.isInjured;
               injuryHistory = p.injuryHistory;
               retirementDate = p.retirementDate;
@@ -198,8 +199,51 @@ module {
       return #ok("Valid");
     };
 
-    public func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async () {
-      //TODO
+    public func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO, systemState: T.SystemState) : async () {
+      var updatedPlayers = List.map<T.Player, T.Player>(
+        players,
+        func(p : T.Player) : T.Player {
+          if (p.id == revaluePlayerDownDTO.playerId) {
+            var newValue = p.valueQuarterMillions;
+            if (newValue >= 1) {
+              newValue -= 1;
+            };
+
+            let historyEntry : T.ValueHistory = {
+              seasonId = systemState.calculationSeason;
+              gameweek = systemState.pickTeamGameweek;
+              oldValue = p.valueQuarterMillions;
+              newValue = newValue;
+            };
+
+            let updatedPlayer : T.Player = {
+              id = p.id;
+              clubId = p.clubId;
+              position = p.position;
+              firstName = p.firstName;
+              lastName = p.lastName;
+              shirtNumber = p.shirtNumber;
+              valueQuarterMillions = newValue;
+              dateOfBirth = p.dateOfBirth;
+              nationality = p.nationality;
+              seasons = p.seasons;
+              valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
+              onLoan = p.onLoan;
+              parentClubId = p.parentClubId;
+              loanEndDate = p.loanEndDate;
+              isInjured = p.isInjured;
+              injuryHistory = p.injuryHistory;
+              retirementDate = p.retirementDate;
+              transferHistory = p.transferHistory;
+            };
+
+            return updatedPlayer;
+          };
+          return p;
+        },
+      );
+
+      players := updatedPlayers;
     };
 
     public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO, clubs: List.List<T.Club>) : async Result.Result<Text,Text> {
