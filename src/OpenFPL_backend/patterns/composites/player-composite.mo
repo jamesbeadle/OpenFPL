@@ -149,8 +149,48 @@ module {
       return #ok("Valid");
     };
 
-    public func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async () {
-      //TODO
+    public func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO, systemState: T.SystemState) : async () {
+      var updatedPlayers = List.map<T.Player, T.Player>(
+        players,
+        func(p : T.Player) : T.Player {
+          if (p.id == revaluePlayerUpDTO.playerId) {
+            var newValue = p.valueQuarterMillions;
+            newValue += 1;
+
+            let historyEntry : T.ValueHistory = {
+              seasonId = systemState.calculationSeason;
+              gameweek = systemState.pickTeamGameweek;
+              oldValue = p.valueQuarterMillions;
+              newValue = newValue;
+            };
+
+            let updatedPlayer : T.Player = {
+              id = p.id;
+              clubId = p.clubId;
+              position = p.position;
+              firstName = p.firstName;
+              lastName = p.lastName;
+              shirtNumber = p.shirtNumber;
+              value = newValue;
+              dateOfBirth = p.dateOfBirth;
+              nationality = p.nationality;
+              seasons = p.seasons;
+              valueHistory = List.append<T.ValueHistory>(p.valueHistory, List.make(historyEntry));
+              onLoan = p.onLoan;
+              parentTeamId = p.parentTeamId;
+              isInjured = p.isInjured;
+              injuryHistory = p.injuryHistory;
+              retirementDate = p.retirementDate;
+              transferHistory = p.transferHistory;
+            };
+
+            return updatedPlayer;
+          };
+          return p;
+        },
+      );
+
+      players := updatedPlayers;
     };
 
     public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<Text,Text> {
