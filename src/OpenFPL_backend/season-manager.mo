@@ -95,6 +95,7 @@ module {
     };
     
     public func setTimerBackupFunction(_setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> ()) {
+      playerComposite.setTimerBackupFunction(_setAndBackupTimer);
       setAndBackupTimer := ?_setAndBackupTimer;
     };
 
