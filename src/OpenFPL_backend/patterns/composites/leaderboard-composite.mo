@@ -167,7 +167,10 @@ module {
     };
 
     public func calculateLeaderboards() : async (){
+      //TODO: Create the leaderboard canisters for the leaderboards you are about to calculate
+      //TODO: Add the leadeboard canister ids to the cycle watcher
       //TODO: Implement the calculation logic
+      
     };
     
     public func getStableSeasonLeaderboardCanisterIds(): [(T.SeasonId, Text)] {

@@ -227,16 +227,9 @@ module {
 
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if(gameweekComplete){
-        if(systemState.calculationGameweek == 38){
-          //TODO: roll over and create new season
-        };
-
-        let nextGameweekCalculationMonth: T.CalendarMonth = 1;
-        //TODO: check if the last game of the next gameweek is the next month if so roll month over
-
-        if(nextGameweekCalculationMonth > systemState.calculationMonth){
-          //TODO: roll over to the next month
-        };
+        managerComposite.distributeWeeklyRewards(); //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
+        managerComposite.distributeMonthlyRewards(); //TODO: Should check all months where the rewards have not been distributed, keep a record
+        managerComposite.distributeSeasonRewards(); //TODO: Should check all seasons where the rewards have not been distributed, keep a record
       };
 
     };
