@@ -5,13 +5,20 @@ import List "mo:base/List";
 actor class LeaderboardCanister() {
   private stable var entries : List.List<T.LeaderboardEntry> = List.nil();
 
-  //TODO: add in functions defined in leaderboard composite
   public shared query func getEntries(limit : Nat, offset : Nat) : async [DTOs.LeaderboardEntryDTO] {
-    return [];
+    let droppedEntries = List.drop<T.LeaderboardEntry>(entries, offset);
+    let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+    return List.toArray(paginatedEntries);
   };
 
   public shared query func getEntry(principalId: Text) : async ?DTOs.LeaderboardEntryDTO {
-    return null;
+    let entry = List.find(
+      entries,
+      func(entry : T.LeaderboardEntry) : Bool {
+        return entry.principalId == principalId;
+      },
+    );
+    return entry;
   };
 
   system func preupgrade() { };
