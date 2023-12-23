@@ -294,7 +294,6 @@ module {
 
       return #ok("Valid");
     };
-
     
     private func validatePlayerEvents(playerEvents : [T.PlayerEventData]) : Bool {
 
@@ -402,7 +401,7 @@ module {
       return true;
     };
 
-    public func executeSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO, allPlayers: [DTOs.PlayerDTO]) : async () {
+    public func executeSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO, allPlayers: [DTOs.PlayerDTO]) : async ?[T.PlayerEventData] {
 
       let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(submitFixtureDataDTO.playerEventData);
 
@@ -417,7 +416,7 @@ module {
       );
 
       switch(currentSeason){
-        case (null){ };
+        case (null){ return null; };
         case (?foundSeason){
           let fixture = List.find<T.Fixture>(
           foundSeason.fixtures,
@@ -426,7 +425,7 @@ module {
             }
           );
           switch(fixture){
-            case (null){ };
+            case (null){ return null; };
             case (?foundFixture){
 
               for (event in Iter.fromArray(submitFixtureDataDTO.playerEventData)) {
@@ -588,23 +587,7 @@ module {
                 };
               };
 
-              
-
-              //need to store the event data with the players and with the fixtures
-                //need highest scoring player id
-              
-              //need to update the fantasy team score calculation
-
-
-              //TODO: Need to link up the finalisation here
-              await fixtureConsensusReached(foundFixture.seasonId, foundFixture.gameweek, foundFixture.id, Buffer.toArray(allPlayerEventsBuffer));
-              //await finaliseFixture(fixture.seasonId, fixture.gameweek, fixture.id, Buffer.toArray(allPlayerEventsBuffer));
-              //Function above calls functions below
-              /*
-              let fixtureWithHighestPlayerId = await calculatePlayerScores(activeSeasonId, activeGameweek, fixture);
-              await seasonsInstance.updateHighestPlayerId(activeSeasonId, activeGameweek, fixtureWithHighestPlayerId);
-              await calculateFantasyTeamScores(activeSeasonId, activeGameweek);
-              */
+              return ?Buffer.toArray(allPlayerEventsBuffer);
             }
           }
         }
@@ -737,7 +720,6 @@ module {
       };      
        seasons := List.append<T.Season>(seasons, List.make(newSeason));       
     };
-
     
     private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {
       if (indexStart == 0 and indexEnd >= value.size()) {
@@ -847,50 +829,6 @@ module {
       );
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
-    public func fixtureConsensusReached(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, consensusPlayerEventData : [T.PlayerEventData]) : async () {
-      var getSeasonId = seasonId;
-      if (getSeasonId == 0) {
-        getSeasonId := activeSeasonId;
-      };
-
-      var getGameweekNumber = gameweekNumber;
-      if (getGameweekNumber == 0) {
-        getGameweekNumber := activeGameweek;
-      };
-
-      if (interestingGameweek < activeGameweek) {
-        interestingGameweek := activeGameweek;
-      };
-
-      let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
-          
-      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
-        let fixture = activeFixtures[i];
-        if (fixture.id == fixtureId and fixture.status == 2) {
-          await finaliseFixture(updatedFixture);
-        };
-      };
-
-      await checkGameweekFinished();
-      await updateCacheHash("fixtures");
-      await updateCacheHash("weekly_leaderboard");
-      await updateCacheHash("monthly_leaderboards");
-      await updateCacheHash("season_leaderboard");
-      await updateCacheHash("system_state");
-      await updatePlayerEventDataCache();
-    };
 
 
 
