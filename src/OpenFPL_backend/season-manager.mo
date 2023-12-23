@@ -240,7 +240,7 @@ module {
         };
 
         systemState := updatedSystemState;
-        await setGameweekBeginTimer();
+        await setGameweekTimers();
       };
 
       await updateCacheHash("players");
@@ -282,11 +282,11 @@ module {
 
       systemState := updatedSystemState;
       
-      await setGameweekBeginTimer();
+      await setGameweekTimers();
       await updateCacheHash("fixtures");
     };
 
-    private func setGameweekBeginTimer() : async () {
+    private func setGameweekTimers() : async () {
       let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
       let filteredFilters = Array.filter<DTOs.FixtureDTO>(
         fixtures,
@@ -311,6 +311,9 @@ module {
           actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
         };
       };
+      
+      await setKickOffTimers();
+
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
