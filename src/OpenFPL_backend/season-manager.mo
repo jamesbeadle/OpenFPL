@@ -94,8 +94,10 @@ module {
         stable_weekly_leaderboard_canister_ids);      
     };
     
-    public func setTimerBackupFunction(_setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> ()) {
-      playerComposite.setTimerBackupFunction(_setAndBackupTimer);
+    public func setTimerBackupFunction(
+      _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> (),
+      _removeExpiredTimers : () -> ()) {
+      playerComposite.setTimerBackupFunction(_setAndBackupTimer, _removeExpiredTimers);
       setAndBackupTimer := ?_setAndBackupTimer;
     };
 

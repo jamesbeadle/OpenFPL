@@ -269,7 +269,7 @@ actor Self {
     transferWindowStartCallback,
     transferWindowEndCallback);
 
-  seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer);
+  seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
   
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];

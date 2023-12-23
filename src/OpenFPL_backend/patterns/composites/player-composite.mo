@@ -19,14 +19,18 @@ module {
     private var nextPlayerId : T.PlayerId = 1;
     private var players = List.fromArray<T.Player>([]);
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
+    private var removeExpiredTimers : ?(() -> ()) = null;
 
     public func setStableData(stable_next_player_id: T.PlayerId, stable_players: [T.Player]) {
       nextPlayerId := stable_next_player_id;
       players := List.fromArray(stable_players);
     };
     
-    public func setTimerBackupFunction(_setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> ()) {
+    public func setTimerBackupFunction(
+      _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> (),
+      _removeExpiredTimers : () -> ()) {
       setAndBackupTimer := ?_setAndBackupTimer;
+      removeExpiredTimers := ?_removeExpiredTimers;
     };
 
     let former_players_canister = actor (CanisterIds.FORMER_PLAYERS_CANISTER_ID) : actor {
@@ -298,13 +302,13 @@ module {
             firstName = p.firstName;
             lastName = p.lastName;
             shirtNumber = p.shirtNumber;
-            value = p.value;
+            valueQuarterMillions = p.valueQuarterMillions;
             dateOfBirth = p.dateOfBirth;
             nationality = p.nationality;
             seasons = p.seasons;
             valueHistory = p.valueHistory;
             onLoan = p.onLoan;
-            parentTeamId = p.parentTeamId;
+            parentClubId = p.parentClubId;
             isInjured = p.isInjured;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
@@ -383,13 +387,12 @@ module {
               },
             );
 
-            //TODO: Need to remove loan timer when recalled
-            stable_timers := Array.filter<T.TimerInfo>(
-              stable_timers,
-              func(timer : T.TimerInfo) : Bool {
-                return timer.playerId != returnedPlayer.id;
-              },
-            );
+            switch (removeExpiredTimers) {
+              case (null) {};
+              case (?actualFunction) {
+                actualFunction();
+              };
+            };
           };
         };
       };
