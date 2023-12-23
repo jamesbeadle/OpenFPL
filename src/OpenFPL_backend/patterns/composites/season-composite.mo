@@ -898,16 +898,40 @@ module {
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
-      //TODO: Need to just update the season by adding the fixtures
-      let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(Nat16.toText(addInitialFixturesDTO.seasonStartYear + 1), 2, 3);
-      let newSeason: T.Season = {
-        id = nextSeasonId;
-        name = seasonName;
-        year = addInitialFixturesDTO.seasonStartYear;
-        fixtures = List.fromArray(addInitialFixturesDTO.seasonFixtures);
-        postponedFixtures = List.nil<T.Fixture>();
-      };      
-       seasons := List.append<T.Season>(seasons, List.make(newSeason));       
+           
+      seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(season : T.Season) : T.Season {
+          if (season.id == addInitialFixturesDTO.seasonId) {
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+              fixtures = List.map<DTOs.FixtureDTO, T.Fixture>(
+                List.fromArray(addInitialFixturesDTO.seasonFixtures),
+                func(fixture : DTOs.FixtureDTO) : T.Fixture {
+                  return {
+                    id = fixture.id;
+                    seasonId = fixture.seasonId;
+                    gameweek = fixture.gameweek;
+                    kickOff = fixture.kickOff;
+                    homeClubId = fixture.homeClubId;
+                    awayClubId = fixture.awayClubId;
+                    homeGoals = fixture.homeGoals;
+                    awayGoals = fixture.awayGoals;
+                    status = fixture.status;
+                    events = List.fromArray(fixture.events);
+                    highestScoringPlayerId = fixture.highestScoringPlayerId;
+                  };
+              },
+            );
+              postponedFixtures = season.postponedFixtures;
+            };
+          } else {
+            return season;
+          };
+        },
+      ); 
     };
     
     private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {

@@ -111,20 +111,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
 	  
     //Private functions used above
 
-    private func seasonActive() : Bool {
-
-      if (activeGameweek > 1) {
-        return true;
-      };
-
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-      if (List.some(List.fromArray(activeFixtures), func(fixture : T.Fixture) : Bool { return fixture.status > 0 })) {
-        return true;
-      };
-
-      return false;
-    };
-	  
     public func resetTransfers() : async () {
 
       for ((key, value) in fantasyTeams.entries()) {

@@ -29,7 +29,7 @@ module DTOs {
   
   public type AddInitialFixturesDTO = {
     seasonId: T.SeasonId;
-    seasonFixtures : [T.Fixture];
+    seasonFixtures : [DTOs.FixtureDTO];
   };
   
   public type RescheduleFixtureDTO = {
