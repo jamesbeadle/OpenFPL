@@ -60,14 +60,14 @@ module DTOs {
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    value : Nat;
+    valueQuarterMillions : Nat;
     dateOfBirth : Int;
     nationality : T.CountryId;
   };
 
   public type UpdatePlayerDTO = {
     playerId : T.PlayerId;
-    position : Nat8;
+    position : T.PlayerPosition;
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;

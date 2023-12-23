@@ -9,6 +9,7 @@ import Text "mo:base/Text";
 import Array "mo:base/Array";
 import Int "mo:base/Int";
 import Timer "mo:base/Timer";
+import Nat16 "mo:base/Nat16";
 import CanisterIds "../../CanisterIds";
 import Countries "../../Countries";
 import Utilities "../../utilities";
@@ -542,6 +543,28 @@ module {
     };
 
     public func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async () {
+        let newPlayer : T.Player = {
+          id = nextPlayerId + 1;
+          clubId = createPlayerDTO.clubId;
+          position = createPlayerDTO.position;
+          firstName = createPlayerDTO.firstName;
+          lastName = createPlayerDTO.lastName;
+          shirtNumber = createPlayerDTO.shirtNumber;
+          valueQuarterMillions = createPlayerDTO.valueQuarterMillions;
+          dateOfBirth = createPlayerDTO.dateOfBirth;
+          nationality = createPlayerDTO.nationality;
+          seasons = List.nil<T.PlayerSeason>();
+          valueHistory = List.nil<T.ValueHistory>();
+          onLoan = false;
+          parentClubId = 0;
+          loanEndDate = 0;
+          isInjured = false;
+          injuryHistory = List.nil<T.InjuryHistory>();
+          retirementDate = 0;
+          transferHistory = List.nil<T.TransferHistory>();
+        };
+        players := List.push(newPlayer, players);
+        nextPlayerId += 1;
     };
 
     public func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<Text,Text> {
@@ -586,7 +609,35 @@ module {
     };
 
     public func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async () {
-      //TODO
+        players := List.map<T.Player, T.Player>(
+          players,
+          func(currentPlayer : T.Player) : T.Player {
+            if (currentPlayer.id == updatePlayerDTO.playerId) {
+              return {
+                id = currentPlayer.id;
+                clubId = currentPlayer.clubId;
+                position = updatePlayerDTO.position;
+                firstName = updatePlayerDTO.firstName;
+                lastName = updatePlayerDTO.lastName;
+                shirtNumber = updatePlayerDTO.shirtNumber;
+                valueQuarterMillions = currentPlayer.valueQuarterMillions;
+                dateOfBirth = updatePlayerDTO.dateOfBirth;
+                nationality = updatePlayerDTO.nationality;
+                seasons = currentPlayer.seasons;
+                valueHistory = currentPlayer.valueHistory;
+                onLoan = currentPlayer.onLoan;
+                parentClubId = currentPlayer.parentClubId;
+                loanEndDate = currentPlayer.loanEndDate;
+                isInjured = currentPlayer.isInjured;
+                injuryHistory = currentPlayer.injuryHistory;
+                retirementDate = currentPlayer.retirementDate;
+                transferHistory = currentPlayer.transferHistory;
+              };
+            } else {
+              return currentPlayer;
+            };
+          },
+        );
     };
 
     public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<Text,Text> {
@@ -608,7 +659,80 @@ module {
     };
 
     public func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async () {
-      //TODO
+       players := List.map<T.Player, T.Player>(
+      players,
+      func(currentPlayer : T.Player) : T.Player {
+        if (currentPlayer.id == setPlayerInjuryDTO.playerId) {
+
+          if (setPlayerInjuryDTO.expectedEndDate <= Time.now()) {
+            let updatedInjuryHistory = List.map<T.InjuryHistory, T.InjuryHistory>(
+              currentPlayer.injuryHistory,
+              func(injury : T.InjuryHistory) : T.InjuryHistory {
+                if (injury.expectedEndDate > Time.now()) {
+                  return {
+                    description = injury.description;
+                    injuryStartDate = injury.injuryStartDate;
+                    expectedEndDate = Time.now();
+                  };
+                } else {
+                  return injury;
+                };
+              },
+            );
+
+            return {
+              id = currentPlayer.id;
+              clubId = currentPlayer.clubId;
+              position = currentPlayer.position;
+              firstName = currentPlayer.firstName;
+              lastName = currentPlayer.lastName;
+              shirtNumber = currentPlayer.shirtNumber;
+              valueQuarterMillions = currentPlayer.valueQuarterMillions;
+              dateOfBirth = currentPlayer.dateOfBirth;
+              nationality = currentPlayer.nationality;
+              seasons = currentPlayer.seasons;
+              valueHistory = currentPlayer.valueHistory;
+              onLoan = currentPlayer.onLoan;
+              parentClubId = currentPlayer.parentClubId;
+              loanEndDate = currentPlayer.loanEndDate;
+              isInjured = false;
+              injuryHistory = updatedInjuryHistory;
+              retirementDate = currentPlayer.retirementDate;
+              transferHistory = currentPlayer.transferHistory;
+            };
+          } else {
+            let newInjury : T.InjuryHistory = {
+              description = setPlayerInjuryDTO.description;
+              expectedEndDate = setPlayerInjuryDTO.expectedEndDate;
+              injuryStartDate = Time.now();
+            };
+
+            return {
+              id = currentPlayer.id;
+              clubId = currentPlayer.clubId;
+              position = currentPlayer.position;
+              firstName = currentPlayer.firstName;
+              lastName = currentPlayer.lastName;
+              shirtNumber = currentPlayer.shirtNumber;
+              valueQuarterMillions = currentPlayer.valueQuarterMillions;
+              dateOfBirth = currentPlayer.dateOfBirth;
+              nationality = currentPlayer.nationality;
+              seasons = currentPlayer.seasons;
+              valueHistory = currentPlayer.valueHistory;
+              onLoan = currentPlayer.onLoan;
+              parentClubId = currentPlayer.parentClubId;
+              loanEndDate = currentPlayer.loanEndDate;
+              isInjured = true;
+              injuryHistory = List.push(newInjury, currentPlayer.injuryHistory);
+              retirementDate = currentPlayer.retirementDate;
+              transferHistory = currentPlayer.transferHistory;
+            };
+          };
+        } else {
+          return currentPlayer;
+        };
+      },
+    );
     };
     
     public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<Text,Text> {
