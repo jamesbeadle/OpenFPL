@@ -593,7 +593,7 @@ module {
       };
     };
 
-    private func populateHighestScoringPlayer(playerEvents: [T.PlayerEventData], fixture: T.Fixture, players: [DTOs.PlayerDTO]) : ?[T.PlayerEventData]{
+    private func populateHighestScoringPlayer(playerEvents: [T.PlayerEventData], fixture: T.Fixture, players: [DTOs.PlayerDTO]) : [T.PlayerEventData]{
      
       var homeGoalsCount : Nat8 = 0;
       var awayGoalsCount : Nat8 = 0;
@@ -632,34 +632,93 @@ module {
         };
       };
 
-      let playerScoresMap : HashMap.HashMap<T.PlayerId, Int16> = HashMap.HashMap<T.PlayerId, Int16>(200, Utilities.eqNat16, Utilities.hashNat16);
+      let playerScoresMap : HashMap.HashMap<Nat16, Int16> = HashMap.HashMap<Nat16, Int16>(200, Utilities.eqNat16, Utilities.hashNat16);
       for ((playerId, events) in playerEventsMap.entries()) {
+        let currentPlayer = Array.find<DTOs.PlayerDTO>(
+          players,
+          func(player : DTOs.PlayerDTO) : Bool {
+            return player.id == playerId;
+          },
+        );
 
-
-        let currentPlayer = Array.find<DTOs.PlayerDTO>(players, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
-        switch (currentPlayer) {
-          case (null) {  };
-          case (?actualPlayer) {
-
-            
-
+        switch(currentPlayer){
+          case (null){};
+          case (?foundPlayer){
             let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
               events,
               0,
               func(acc : Int16, event : T.PlayerEventData) : Int16 {
-                return acc + calculateIndividualScoreForEvent(event, actualPlayer.position);
+                return acc + calculateIndividualScoreForEvent(event, foundPlayer.position);
               },
             );
 
-            let aggregateScore = calculateAggregatePlayerEvents(events, actualPlayer.position);
+            let aggregateScore = calculateAggregatePlayerEvents(events, foundPlayer.position);
             playerScoresMap.put(playerId, totalScore + aggregateScore);
-           
+          };
+        }
+      };
+    
+      var highestScore : Int16 = 0;
+      var highestScoringPlayerId : T.PlayerId = 0;
+      var isUniqueHighScore : Bool = true;
+      let uniquePlayerIdsBuffer = Buffer.fromArray<T.PlayerId>([]);
+
+      for (event in Iter.fromArray(playerEvents)) {
+        if (not Buffer.contains<T.PlayerId>(uniquePlayerIdsBuffer, event.playerId, func(a : T.PlayerId, b : T.PlayerId) : Bool { a == b })) {
+          uniquePlayerIdsBuffer.add(event.playerId);
+        };
+      };
+
+      let uniquePlayerIds = Buffer.toArray<Nat16>(uniquePlayerIdsBuffer);
+
+      for (j in Iter.range(0, Array.size(uniquePlayerIds) -1)) {
+        let playerId = uniquePlayerIds[j];
+        switch (playerScoresMap.get(playerId)) {
+          case (?playerScore) {
+            if (playerScore > highestScore) {
+              highestScore := playerScore;
+              highestScoringPlayerId := playerId;
+              isUniqueHighScore := true;
+            } else if (playerScore == highestScore) {
+              isUniqueHighScore := false;
+            };
+          };
+          case null {};
+        };
+      };
+
+      if (isUniqueHighScore) {
+        let highestScoringPlayer = Array.find<DTOs.PlayerDTO>(players, func(p : DTOs.PlayerDTO) : Bool { return p.id == highestScoringPlayerId });
+        switch(highestScoringPlayer){
+          case (null){};
+          case (?foundPlayer){
+            let newEvent : T.PlayerEventData = {
+              fixtureId = fixture.id;
+              playerId = highestScoringPlayerId;
+              eventType = #HighestScoringPlayer;
+              eventStartMinute = 90;
+              eventEndMinute = 90;
+              clubId = foundPlayer.clubId;
+            };
+            let existingEvents = playerEventsMap.get(highestScoringPlayerId);
+            switch(existingEvents){
+              case (null){};
+              case (?foundEvents){
+                let existingEventsBuffer = Buffer.fromArray<T.PlayerEventData>(foundEvents);
+                existingEventsBuffer.add(newEvent);
+                playerEventsMap.put(highestScoringPlayerId, Buffer.toArray(existingEventsBuffer));
+              };
+            };
           };
         };
       };
 
+      let allEventsBuffer = Buffer.fromArray<T.PlayerEventData>([]);
+      for((playerId, playerEventArray) in playerEventsMap.entries()){
+        allEventsBuffer.append(Buffer.fromArray(playerEventArray));
+      };
 
-      return null;
+      return Buffer.toArray(allEventsBuffer);
     };
 
 
