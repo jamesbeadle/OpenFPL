@@ -847,7 +847,7 @@ module {
 
           for (f in Iter.fromArray(addInitialFixturesDTO.seasonFixtures)) {
             if (
-              f.homeGoals != 0 or f.awayGoals != 0 or f.status != #Unplayed or not List.isNil(f.events) or f.highestScoringPlayerId != 0,
+              f.homeGoals != 0 or f.awayGoals != 0 or f.status != #Unplayed or Array.size(f.events) > 0 or f.highestScoringPlayerId != 0,
             ) {
               return #err("Invalid: Incorrect default values.");
             };

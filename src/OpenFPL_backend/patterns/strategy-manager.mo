@@ -1,21 +1,5 @@
-import DTOs "../DTOs";
-import T "../types";
-import Array "mo:base/Array";
-import HashMap "mo:base/HashMap";
-import Text "mo:base/Text";
-import Iter "mo:base/Iter";
-import Nat16 "mo:base/Nat16";
-import List "mo:base/List";
-
-module {
-
-  public class StrategyManager() {
-    
-    
-    
 /*
-
-    //recreate the jan transfer window timer to the next January 1st
+  //recreate the jan transfer window timer to the next January 1st
 
     //recreate the close jan transfer window timer for midnight on the 31st Jan
 
@@ -29,18 +13,6 @@ module {
         //NEED TO CHECK IF JANUARY 1ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMERS TO BEGIN AND END THE TRANSFER WINDOW IF IT IS
       
 //where do I need to know if the season is active?
-
-
-
-    //StrategyManager //implements strategy pattern for managing fantasy teams
-strategy-manager.mo
-Purpose: Implements the Strategy pattern to manage various strategies related to game mechanics and validation rules.
-Contents:
-Classes or interfaces for different strategies such as TeamValidationStrategy or PointsCalculationStrategy.
-Methods to switch between strategies and apply them to the current game state or user actions.
-Integration with the PlayerComposite and ClubComposite for applying these strategies to teams and clubs.
-
-
 
 //ensure you are going between gameweeks in all scenarios as you want
 
@@ -92,22 +64,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
         };
       };
     };
-
-    public func intialFixturesConfirmed() : async () {
-      activeGameweek := 1;
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-
-      let initialGameweekBeginDuration : Timer.Duration = #nanoseconds(Int.abs(activeFixtures[0].kickOff - Time.now() - oneHour));
-      switch (setAndBackupTimer) {
-        case (null) {};
-        case (?actualFunction) {
-          await actualFunction(initialGameweekBeginDuration, "gameweekBeginExpired", 0);
-        };
-      };
-    };
-
-
-
 	  
     //Private functions used above
 
@@ -217,7 +173,3 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
     };
 
 */
-
-
-  };
-};
