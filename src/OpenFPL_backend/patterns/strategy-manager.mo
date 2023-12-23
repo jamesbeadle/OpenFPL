@@ -45,7 +45,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
 
 
 
-      */
 //ensure you are going between gameweeks in all scenarios as you want
 
       //set fixture status to active (1)
@@ -53,56 +52,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
       //set timers for when each game finishes to call the game completed expired timer
 
 
-      /*
-      let activeFixtures = seasonsInstance.getGameweekFixtures(systemState.calculationSeason, systemState.calculationGameweek);
-      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
-        if (activeFixtures[i].kickOff <= Time.now() and activeFixtures[i].status == 0) {
-
-          let updatedFixture = await seasonsInstance.updateStatus(systemState.calculationSeason, systemState.calculationGameweek, activeFixtures[i].id, 1);
-          let gameCompletedDuration : Timer.Duration = #nanoseconds(Int.abs((Time.now() + (oneHour * 2)) - Time.now()));
-          switch (setAndBackupTimer) {
-            case (null) {};
-            case (?actualFunction) {
-              await actualFunction(gameCompletedDuration, "gameCompletedExpired", activeFixtures[i].id);
-            };
-          };
-        };
-      };
-      
-      
-    public func fixtureConsensusReached(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, consensusPlayerEventData : [T.PlayerEventData]) : async () {
-      var getSeasonId = seasonId;
-      if (getSeasonId == 0) {
-        getSeasonId := activeSeasonId;
-      };
-
-      var getGameweekNumber = gameweekNumber;
-      if (getGameweekNumber == 0) {
-        getGameweekNumber := activeGameweek;
-      };
-
-      if (interestingGameweek < activeGameweek) {
-        interestingGameweek := activeGameweek;
-      };
-
-      let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
-
-      for (i in Iter.range(0, Array.size(activeFixtures) -1)) {
-        let fixture = activeFixtures[i];
-        if (fixture.id == fixtureId and fixture.status == 2) {
-          let updatedFixture = await seasonsInstance.savePlayerEventData(getSeasonId, getGameweekNumber, activeFixtures[i].id, List.fromArray(consensusPlayerEventData));
-          await finaliseFixture(updatedFixture);
-        };
-      };
-
-      await checkGameweekFinished();
-      await updateCacheHash("fixtures");
-      await updateCacheHash("weekly_leaderboard");
-      await updateCacheHash("monthly_leaderboards");
-      await updateCacheHash("season_leaderboard");
-      await updateCacheHash("system_state");
-      await updatePlayerEventDataCache();
-    };
 
 
 
@@ -121,10 +70,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
         await gameweekVerified();
         await setNextGameweek();
       };
-    };
-
-    private func gameweekVerified() : async () {
-      //await distributeRewards(); //IMPLEMENT POST SNS
     };
 
     public func setNextGameweek() : async () {
@@ -166,15 +111,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
 
 
 
-
-
-
-
-
-
-
-
-	  
 	  
     //Private functions used above
 
@@ -234,115 +170,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
     };
 
     
-    public func calculateFantasyTeamScores(seasonId : Nat16, gameweek : Nat8) : async () {
-      let allPlayersList = await getPlayersMap(seasonId, gameweek);
-      var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
-      for ((key, value) in Iter.fromArray(allPlayersList)) {
-        allPlayers.put(key, value);
-      };
-
-      for ((key, value) in fantasyTeams.entries()) {
-
-        let currentSeason = List.find<T.FantasyTeamSeason>(
-          value.history,
-          func(teamSeason : T.FantasyTeamSeason) : Bool {
-            return teamSeason.seasonId == seasonId;
-          },
-        );
-
-        switch (currentSeason) {
-          case (null) {};
-          case (?foundSeason) {
-            let currentSnapshot = List.find<T.FantasyTeamSnapshot>(
-              foundSeason.gameweeks,
-              func(snapshot : T.FantasyTeamSnapshot) : Bool {
-                return snapshot.gameweek == gameweek;
-              },
-            );
-            switch (currentSnapshot) {
-              case (null) {};
-              case (?foundSnapshot) {
-
-                var totalTeamPoints : Int16 = 0;
-                for (i in Iter.range(0, Array.size(foundSnapshot.playerIds) -1)) {
-                  let playerId = foundSnapshot.playerIds[i];
-                  let playerData = allPlayers.get(playerId);
-                  switch (playerData) {
-                    case (null) {};
-                    case (?player) {
-
-                      var totalScore : Int16 = player.points;
-
-                      // Goal Getter
-                      if (foundSnapshot.goalGetterGameweek == gameweek and foundSnapshot.goalGetterPlayerId == playerId) {
-                        totalScore += calculateGoalPoints(player.position, player.goalsScored);
-                      };
-
-                      // Pass Master
-                      if (foundSnapshot.passMasterGameweek == gameweek and foundSnapshot.passMasterPlayerId == playerId) {
-                        totalScore += calculateAssistPoints(player.position, player.assists);
-                      };
-
-                      // No Entry
-                      if (foundSnapshot.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
-                        totalScore := totalScore * 3;
-                      };
-
-                      // Team Boost
-                      if (foundSnapshot.teamBoostGameweek == gameweek and player.teamId == foundSnapshot.teamBoostTeamId) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Safe Hands
-                      if (foundSnapshot.safeHandsGameweek == gameweek and player.position == 0 and player.saves > 4) {
-                        totalScore := totalScore * 3;
-                      };
-
-                      // Captain Fantastic
-                      if (foundSnapshot.captainFantasticGameweek == gameweek and foundSnapshot.captainId == playerId and player.goalsScored > 0) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Countrymen
-                      if (foundSnapshot.countrymenGameweek == gameweek and foundSnapshot.countrymenCountryId == player.nationality) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Prospects
-                      if (foundSnapshot.prospectsGameweek == gameweek and Utilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Brace Bonus
-                      if (foundSnapshot.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      // Hat Trick Hero
-                      if (foundSnapshot.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
-                        totalScore := totalScore * 3;
-                      };
-
-                      // Handle captain bonus
-                      if (playerId == foundSnapshot.captainId) {
-                        totalScore := totalScore * 2;
-                      };
-
-                      totalTeamPoints += totalScore;
-                    };
-                  };
-                };
-                updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
-              };
-            }
-
-          };
-        };
-      };
-      calculateLeaderboards(seasonId, gameweek);
-      calculateMonthlyLeaderboards(seasonId, gameweek);
-    };
-
 
     public func updateHighestPlayerId(seasonId : Nat16, gameweek : Nat8, updatedFixture : T.Fixture) : async () {
       seasons := List.map<T.Season, T.Season>(
@@ -405,33 +232,6 @@ Integration with the PlayerComposite and ClubComposite for applying these strate
 
       return result;
     };
-
-
-  private func calculatePlayerScores(activeSeason : T.SeasonId, activeGameweek : T.GameweekNumber, fixture : T.Fixture) : async T.Fixture {
-    let adjFixtures = await playerCanister.calculatePlayerScores(activeSeason, activeGameweek, fixture);
-    return adjFixtures;
-  };
-
-
-
-  private func finaliseFixture(seasonId : T.SeasonId, gameweekNumber : T.GameweekNumber, fixtureId : T.FixtureId, events : [T.PlayerEventData]) : async () {
-    await seasonManager.fixtureConsensusReached(seasonId, gameweekNumber, fixtureId, events);
-  };
-
-  public shared ({ caller }) func updateSystemState(systemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
-    assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == adminPrincipal;
-    let result = await seasonManager.updateSystemState(systemState);
-    await updateCacheHash("system_state");
-    return result;
-  };
-
-  public shared ({ caller }) func updateTeamValueInfo() : async () {
-    assert not Principal.isAnonymous(caller);
-    assert Principal.toText(caller) == adminPrincipal;
-
-    await fantasyTeamsInstance.updateTeamValueInfo();
-  };
 
 */
 

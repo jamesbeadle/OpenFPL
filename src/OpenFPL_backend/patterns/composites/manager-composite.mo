@@ -924,6 +924,112 @@ module {
 
     public func calculateFantasyTeamScores() : async (){
       //TODO: Implement the calculation logic
+      /*
+      let allPlayersList = await getPlayersMap(seasonId, gameweek);
+      var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
+      for ((key, value) in Iter.fromArray(allPlayersList)) {
+        allPlayers.put(key, value);
+      };
+
+      for ((key, value) in fantasyTeams.entries()) {
+
+        let currentSeason = List.find<T.FantasyTeamSeason>(
+          value.history,
+          func(teamSeason : T.FantasyTeamSeason) : Bool {
+            return teamSeason.seasonId == seasonId;
+          },
+        );
+
+        switch (currentSeason) {
+          case (null) {};
+          case (?foundSeason) {
+            let currentSnapshot = List.find<T.FantasyTeamSnapshot>(
+              foundSeason.gameweeks,
+              func(snapshot : T.FantasyTeamSnapshot) : Bool {
+                return snapshot.gameweek == gameweek;
+              },
+            );
+            switch (currentSnapshot) {
+              case (null) {};
+              case (?foundSnapshot) {
+
+                var totalTeamPoints : Int16 = 0;
+                for (i in Iter.range(0, Array.size(foundSnapshot.playerIds) -1)) {
+                  let playerId = foundSnapshot.playerIds[i];
+                  let playerData = allPlayers.get(playerId);
+                  switch (playerData) {
+                    case (null) {};
+                    case (?player) {
+
+                      var totalScore : Int16 = player.points;
+
+                      // Goal Getter
+                      if (foundSnapshot.goalGetterGameweek == gameweek and foundSnapshot.goalGetterPlayerId == playerId) {
+                        totalScore += calculateGoalPoints(player.position, player.goalsScored);
+                      };
+
+                      // Pass Master
+                      if (foundSnapshot.passMasterGameweek == gameweek and foundSnapshot.passMasterPlayerId == playerId) {
+                        totalScore += calculateAssistPoints(player.position, player.assists);
+                      };
+
+                      // No Entry
+                      if (foundSnapshot.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
+                        totalScore := totalScore * 3;
+                      };
+
+                      // Team Boost
+                      if (foundSnapshot.teamBoostGameweek == gameweek and player.teamId == foundSnapshot.teamBoostTeamId) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Safe Hands
+                      if (foundSnapshot.safeHandsGameweek == gameweek and player.position == 0 and player.saves > 4) {
+                        totalScore := totalScore * 3;
+                      };
+
+                      // Captain Fantastic
+                      if (foundSnapshot.captainFantasticGameweek == gameweek and foundSnapshot.captainId == playerId and player.goalsScored > 0) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Countrymen
+                      if (foundSnapshot.countrymenGameweek == gameweek and foundSnapshot.countrymenCountryId == player.nationality) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Prospects
+                      if (foundSnapshot.prospectsGameweek == gameweek and Utilities.calculateAgeFromUnix(player.dateOfBirth) < 21) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Brace Bonus
+                      if (foundSnapshot.braceBonusGameweek == gameweek and player.goalsScored >= 2) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      // Hat Trick Hero
+                      if (foundSnapshot.hatTrickHeroGameweek == gameweek and player.goalsScored >= 3) {
+                        totalScore := totalScore * 3;
+                      };
+
+                      // Handle captain bonus
+                      if (playerId == foundSnapshot.captainId) {
+                        totalScore := totalScore * 2;
+                      };
+
+                      totalTeamPoints += totalScore;
+                    };
+                  };
+                };
+                updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
+              };
+            }
+
+          };
+        };
+      };
+      */
     };
 
     public func removePlayerFromTeams(playerId: T.PlayerId) : async (){
