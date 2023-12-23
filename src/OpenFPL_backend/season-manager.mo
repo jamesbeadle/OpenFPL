@@ -222,6 +222,8 @@ module {
         await managerComposite.distributeMonthlyRewards();
         await managerComposite.distributeSeasonRewards();
 
+        seasonComposite.checkJanTransferWindow(systemState);
+
         //TODO:check if season complete and update differently
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);

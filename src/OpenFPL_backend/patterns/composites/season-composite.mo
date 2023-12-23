@@ -1072,7 +1072,9 @@ let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(N
       */
     };
 
-
+    public func checkJanTransferWindow(systemState: T.SystemState){
+      //TODO: Implement jan transfer window check for start and end based on current weeks fixtures
+    };
 
 
 

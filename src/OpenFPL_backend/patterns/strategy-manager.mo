@@ -1,30 +1,8 @@
 /*
-  //recreate the jan transfer window timer to the next January 1st
-
-    //recreate the close jan transfer window timer for midnight on the 31st Jan
-
-    //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
-
-	  //update the cache for the fixtures so users get the updated status about it being completed
-
-      //    let updatedFixture = await seasonsInstance.updateStatus(systemState.calculationSeason, systemState.calculationGameweek, activeFixtures[i].id, 2);
-      
-      //Check if all games completed, if so:
-        //NEED TO CHECK IF JANUARY 1ST IS IN THE UPCOMING GAMEWEEK THEN SET A TIMERS TO BEGIN AND END THE TRANSFER WINDOW IF IT IS
-      
-//where do I need to know if the season is active?
-
-//ensure you are going between gameweeks in all scenarios as you want
-
-      //set fixture status to active (1)
-      
+  //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
+  //update the cache for the fixtures so users get the updated status about it being completed
+  //set fixture status to active (1)      
       //set timers for when each game finishes to call the game completed expired timer
-
-
-
-
-
-
 
     private func checkGameweekFinished() : async () {
       let activeFixtures = seasonsInstance.getGameweekFixtures(activeSeasonId, activeGameweek);
