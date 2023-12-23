@@ -797,12 +797,12 @@ module {
     };
 
    
-    public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, seasonId: T.SeasonId, clubs: [T.Club]) : async Result.Result<Text,Text> {
+    public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, clubs: [T.Club]) : async Result.Result<Text,Text> {
         
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.id == seasonId;
+          return season.id == addInitialFixturesDTO.seasonId;
         },
       );
       switch(currentSeason){
@@ -810,109 +810,95 @@ module {
           return #err("Invalid: Season does not exist.");
         };
         case (?foundSeason){
-          if(addInitialFixturesDTO.seasonStartYear - 1 != foundSeason.year){
-            return #err("Invalid: Incorrect season start year.");
+          let findIndex = func(arr : [T.ClubId], value : T.ClubId) : ?Nat {
+            for (i in Array.keys(arr)) {
+              if (arr[i] == value) {
+                return ?(i);
+              };
+            };
+            return null;
           };
-        };
-      };
 
-      let newSeason = List.find(
-        seasons,
-        func(season : T.Season) : Bool {
-          return season.year == addInitialFixturesDTO.seasonStartYear;
-        },
-      );
-      switch(newSeason){
-        case (null) { };
-        case (?foundSeason){
-          return #err("Invalid: Season already exists.");
-        };
-      };
-
-      let findIndex = func(arr : [T.ClubId], value : T.ClubId) : ?Nat {
-        for (i in Array.keys(arr)) {
-          if (arr[i] == value) {
-            return ?(i);
+          if (Array.size(addInitialFixturesDTO.seasonFixtures) != 380) {
+            return #err("Invalid: There must be 380 fixtures for a season.");
           };
-        };
-        return null;
-      };
 
-      if (Array.size(addInitialFixturesDTO.seasonFixtures) != 380) {
-        return #err("Invalid: There must be 380 fixtures for a season.");
-      };
+          let clubIds = Array.map<T.Club, T.ClubId>(clubs, func(c : T.Club) : T.ClubId { return c.id });
 
-      let clubIds = Array.map<T.Club, T.ClubId>(clubs, func(c : T.Club) : T.ClubId { return c.id });
+          let uniqueClubIdsBuffer = Buffer.fromArray<T.ClubId>([]);
 
-      let uniqueClubIdsBuffer = Buffer.fromArray<T.ClubId>([]);
-
-      for (clubId in Iter.fromArray(clubIds)) {
-        if (not Buffer.contains<T.ClubId>(uniqueClubIdsBuffer, clubId, func(a : T.ClubId, b : T.ClubId) : Bool { a == b })) {
-          uniqueClubIdsBuffer.add(clubId);
-        };
-      };
-
-      let uniqueClubIds = Buffer.toArray<T.ClubId>(uniqueClubIdsBuffer);
-      if (Array.size(uniqueClubIds) != 20) {
-        return #err("Invalid: There must be exactly 20 teams for a season.");
-      };
-
-      //19 home games and 19 away games for each team
-      let homeGamesCount = Array.tabulate<Nat>(Array.size(uniqueClubIds), func(_ : Nat) { return 0 });
-      let awayGamesCount = Array.tabulate<Nat>(Array.size(uniqueClubIds), func(_ : Nat) { return 0 });
-
-      let homeGamesBuffer = Buffer.fromArray<Nat>(homeGamesCount);
-      let awayGamesBuffer = Buffer.fromArray<Nat>(awayGamesCount);
-
-      for (f in Iter.fromArray(addInitialFixturesDTO.seasonFixtures)) {
-        if (
-          f.homeGoals != 0 or f.awayGoals != 0 or f.status != #Unplayed or not List.isNil(f.events) or f.highestScoringPlayerId != 0,
-        ) {
-          return #err("Invalid: Incorrect default values.");
-        };
-
-        //all team ids exist
-        let homeTeam = Array.find<T.ClubId>(clubIds, func(clubId : T.ClubId) : Bool { return clubId == f.homeClubId });
-        let awayTeam = Array.find<T.ClubId>(clubIds, func(clubId : T.ClubId) : Bool { return clubId == f.awayClubId });
-        if (homeTeam == null or awayTeam == null) {
-          return #err("Invalid: Incorrect default values.");
-        };
-
-        let homeTeamIndexOpt = findIndex(uniqueClubIds, f.homeClubId);
-        let awayTeamIndexOpt = findIndex(uniqueClubIds, f.awayClubId);
-
-        label check switch (homeTeamIndexOpt, awayTeamIndexOpt) {
-          case (?(homeTeamIndex), ?(awayTeamIndex)) {
-            let currentHomeGames = homeGamesBuffer.get(homeTeamIndex);
-            let currentAwayGames = awayGamesBuffer.get(awayTeamIndex);
-            homeGamesBuffer.put(homeTeamIndex, currentHomeGames + 1);
-            awayGamesBuffer.put(awayTeamIndex, currentAwayGames + 1);
-            break check;
+          for (clubId in Iter.fromArray(clubIds)) {
+            if (not Buffer.contains<T.ClubId>(uniqueClubIdsBuffer, clubId, func(a : T.ClubId, b : T.ClubId) : Bool { a == b })) {
+              uniqueClubIdsBuffer.add(clubId);
+            };
           };
-          case _ {
-            return #err("Invalid: Incorrect fixture data.");
+
+          let uniqueClubIds = Buffer.toArray<T.ClubId>(uniqueClubIdsBuffer);
+          if (Array.size(uniqueClubIds) != 20) {
+            return #err("Invalid: There must be exactly 20 teams for a season.");
           };
+
+          //19 home games and 19 away games for each team
+          let homeGamesCount = Array.tabulate<Nat>(Array.size(uniqueClubIds), func(_ : Nat) { return 0 });
+          let awayGamesCount = Array.tabulate<Nat>(Array.size(uniqueClubIds), func(_ : Nat) { return 0 });
+
+          let homeGamesBuffer = Buffer.fromArray<Nat>(homeGamesCount);
+          let awayGamesBuffer = Buffer.fromArray<Nat>(awayGamesCount);
+
+          for (f in Iter.fromArray(addInitialFixturesDTO.seasonFixtures)) {
+            if (
+              f.homeGoals != 0 or f.awayGoals != 0 or f.status != #Unplayed or not List.isNil(f.events) or f.highestScoringPlayerId != 0,
+            ) {
+              return #err("Invalid: Incorrect default values.");
+            };
+
+            //all team ids exist
+            let homeTeam = Array.find<T.ClubId>(clubIds, func(clubId : T.ClubId) : Bool { return clubId == f.homeClubId });
+            let awayTeam = Array.find<T.ClubId>(clubIds, func(clubId : T.ClubId) : Bool { return clubId == f.awayClubId });
+            if (homeTeam == null or awayTeam == null) {
+              return #err("Invalid: Incorrect default values.");
+            };
+
+            let homeTeamIndexOpt = findIndex(uniqueClubIds, f.homeClubId);
+            let awayTeamIndexOpt = findIndex(uniqueClubIds, f.awayClubId);
+
+            label check switch (homeTeamIndexOpt, awayTeamIndexOpt) {
+              case (?(homeTeamIndex), ?(awayTeamIndex)) {
+                let currentHomeGames = homeGamesBuffer.get(homeTeamIndex);
+                let currentAwayGames = awayGamesBuffer.get(awayTeamIndex);
+                homeGamesBuffer.put(homeTeamIndex, currentHomeGames + 1);
+                awayGamesBuffer.put(awayTeamIndex, currentAwayGames + 1);
+                break check;
+              };
+              case _ {
+                return #err("Invalid: Incorrect fixture data.");
+              };
+            };
+
+          };
+
+          let gameweekFixturesBuffer = Buffer.fromArray<Nat>(Array.tabulate<Nat>(38, func(_ : Nat) { return 0 }));
+
+          for (f in Iter.fromArray(addInitialFixturesDTO.seasonFixtures)) {
+            let gameweekIndex = f.gameweek - 1;
+            let currentCount = gameweekFixturesBuffer.get(Nat8.toNat(gameweekIndex));
+            gameweekFixturesBuffer.put(Nat8.toNat(gameweekIndex), currentCount + 1);
+          };
+
+          for (i in Iter.fromArray(Buffer.toArray(homeGamesBuffer))) {
+            if (homeGamesBuffer.get(i) != 19 or awayGamesBuffer.get(i) != 19) {
+              return #err("Invlid: Each team must have 19 home and 19 away games.");
+            };
+          };
+          
         };
-
       };
-
-      let gameweekFixturesBuffer = Buffer.fromArray<Nat>(Array.tabulate<Nat>(38, func(_ : Nat) { return 0 }));
-
-      for (f in Iter.fromArray(addInitialFixturesDTO.seasonFixtures)) {
-        let gameweekIndex = f.gameweek - 1;
-        let currentCount = gameweekFixturesBuffer.get(Nat8.toNat(gameweekIndex));
-        gameweekFixturesBuffer.put(Nat8.toNat(gameweekIndex), currentCount + 1);
-      };
-
-      for (i in Iter.fromArray(Buffer.toArray(homeGamesBuffer))) {
-        if (homeGamesBuffer.get(i) != 19 or awayGamesBuffer.get(i) != 19) {
-          return #err("Invlid: Each team must have 19 home and 19 away games.");
-        };
-      };
+      
       return #ok("Valid");
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
+      //TODO: Need to just update the season by adding the fixtures
       let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(Nat16.toText(addInitialFixturesDTO.seasonStartYear + 1), 2, 3);
       let newSeason: T.Season = {
         id = nextSeasonId;
@@ -1032,7 +1018,35 @@ module {
       );
     };
 
+    public func createNewSeason(systemState: T.SystemState) : async () {
+      /*
+      let newSeason = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.year == addInitialFixturesDTO.seasonStartYear;
+        },
+      );
+      switch(newSeason){
+        case (null) { };
+        case (?foundSeason){
+          return #err("Invalid: Season already exists.");
+        };
+      };
 
+let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(Nat16.toText(addInitialFixturesDTO.seasonStartYear + 1), 2, 3);
+      let newSeason: T.Season = {
+        id = nextSeasonId;
+        name = seasonName;
+        year = addInitialFixturesDTO.seasonStartYear;
+        fixtures = List.fromArray(addInitialFixturesDTO.seasonFixtures);
+        postponedFixtures = List.nil<T.Fixture>();
+      };      
+       seasons := List.append<T.Season>(seasons, List.make(newSeason)); 
+
+
+
+      */
+    };
 
 
 

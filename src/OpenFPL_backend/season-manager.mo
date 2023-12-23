@@ -225,6 +225,9 @@ module {
         await managerComposite.distributeSeasonRewards();
 
         //TODO:check if season complete and update differently
+        if(systemState.calculationGameweek == 38){
+          seasonComposite.createNewSeason(systemState);
+        };
 
         let updatedSystemState: T.SystemState = {
           calculationGameweek = systemState.calculationGameweek + 1;
