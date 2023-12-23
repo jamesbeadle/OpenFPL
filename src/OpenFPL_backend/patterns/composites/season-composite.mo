@@ -585,8 +585,8 @@ module {
               };
 
               let playerEvents = Buffer.toArray<T.PlayerEventData>(allPlayerEventsBuffer);
-
-              return populateHighestScoringPlayer(playerEvents);
+              let eventsWithHighestScoringPlayer = populateHighestScoringPlayer(playerEvents, foundFixture, allPlayers);
+              return null;
             }
           }
         }
@@ -740,7 +740,7 @@ module {
       if (playerPosition == #Goalkeeper) {
         let savesCount = Array.filter<T.PlayerEventData>(
           events,
-          func(event : T.PlayerEventData) : Bool { event.eventType == 4 },
+          func(event : T.PlayerEventData) : Bool { event.eventType == #KeeperSave },
         ).size();
 
         totalScore += (Int16.fromNat16(Nat16.fromNat(savesCount)) / 3) * 5;
