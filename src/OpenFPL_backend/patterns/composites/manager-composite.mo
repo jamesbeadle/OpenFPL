@@ -926,6 +926,11 @@ module {
       //TODO: Implement the calculation logic
     };
 
+    public func removePlayerFromTeams(playerId: T.PlayerId) : async (){
+      //TODO:remove the player from each users team and replace with a 0
+     
+    };
+
     //TODO: CHECK THE IMPLEMENTATION OF THE FOLLOWING
 
     public func snapshotFantasyTeams() : (){

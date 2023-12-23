@@ -293,7 +293,8 @@ module {
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async () {
-       return await playerComposite.executeRevaluePlayerUp(revaluePlayerUpDTO, systemState);
+      await playerComposite.executeRevaluePlayerUp(revaluePlayerUpDTO, systemState);
+      await updateCacheHash("players");
     };
 
     public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<Text,Text> {
@@ -301,7 +302,8 @@ module {
     };
 
     public func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async () {
-      return await playerComposite.executeRevaluePlayerDown(revaluePlayerDownDTO, systemState);
+      await playerComposite.executeRevaluePlayerDown(revaluePlayerDownDTO, systemState);
+      await updateCacheHash("players");
     };
 
     public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<Text,Text> {
@@ -310,7 +312,9 @@ module {
     };
 
     public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async () {
-      return await playerComposite.executeLoanPlayer(loanPlayerDTO, systemState);
+      await managerComposite.removePlayerFromTeams(loanPlayerDTO.playerId);
+      await playerComposite.executeLoanPlayer(loanPlayerDTO, systemState);
+      await updateCacheHash("players");
     };
 
     public func validateTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async Result.Result<Text,Text> {
@@ -319,14 +323,9 @@ module {
     };
 
     public func executeTransferPlayer(transferPlayerDTO: DTOs.TransferPlayerDTO) : async () {
-
-      //TODO:remove the player from each users team and replace with a 0
-      
-        //ADD TO GAMEPLAY RULES
-        //ALSO DO FOR ANY OTHER PLAYER MOVEMENTS FROM SOMEONES TEAM
-
-
-      return await playerComposite.executeTransferPlayer(transferPlayerDTO, systemState);
+      await managerComposite.removePlayerFromTeams(transferPlayerDTO.playerId);
+      await playerComposite.executeTransferPlayer(transferPlayerDTO, systemState);
+      await updateCacheHash("players");
     };
 
     public func validateRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async Result.Result<Text,Text> {
@@ -334,7 +333,9 @@ module {
     };
 
     public func executeRecallPlayer(recallPlayerDTO: DTOs.RecallPlayerDTO) : async () {
-      return await playerComposite.executeRecallPlayer(recallPlayerDTO);
+      await managerComposite.removePlayerFromTeams(recallPlayerDTO.playerId);
+      await playerComposite.executeRecallPlayer(recallPlayerDTO);
+      await updateCacheHash("players");
     };
 
     public func validateCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async Result.Result<Text,Text> {
@@ -343,7 +344,8 @@ module {
     };
 
     public func executeCreatePlayer(createPlayerDTO: DTOs.CreatePlayerDTO) : async () {
-      return await playerComposite.executeCreatePlayer(createPlayerDTO);
+      await playerComposite.executeCreatePlayer(createPlayerDTO);
+      await updateCacheHash("players");
     };
 
     public func validateUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async Result.Result<Text,Text> {
@@ -351,7 +353,8 @@ module {
     };
 
     public func executeUpdatePlayer(updatePlayerDTO: DTOs.UpdatePlayerDTO) : async () {
-      return await playerComposite.executeUpdatePlayer(updatePlayerDTO);
+      await playerComposite.executeUpdatePlayer(updatePlayerDTO);
+      await updateCacheHash("players");
     };
 
     public func validateSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async Result.Result<Text,Text> {
@@ -359,7 +362,8 @@ module {
     };
 
     public func executeSetPlayerInjury(setPlayerInjuryDTO: DTOs.SetPlayerInjuryDTO) : async () {
-      return await playerComposite.executeSetPlayerInjury(setPlayerInjuryDTO);
+      await playerComposite.executeSetPlayerInjury(setPlayerInjuryDTO);
+      await updateCacheHash("players");
     };
     
     public func validateRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async Result.Result<Text,Text> {
@@ -367,7 +371,8 @@ module {
     };
 
     public func executeRetirePlayer(retirePlayerDTO: DTOs.RetirePlayerDTO) : async () {
-      return await playerComposite.executeRetirePlayer(retirePlayerDTO);
+      await managerComposite.removePlayerFromTeams(retirePlayerDTO.playerId);
+      await playerComposite.executeRetirePlayer(retirePlayerDTO);
       await updateCacheHash("players");
     };
 
