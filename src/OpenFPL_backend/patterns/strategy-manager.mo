@@ -1,5 +1,4 @@
 /*
-  //recreate timers for active games that are counting down to move a game from inactive to active or active to completed
   //update the cache for the fixtures so users get the updated status about it being completed
   //set fixture status to active (1)      
       //set timers for when each game finishes to call the game completed expired timer

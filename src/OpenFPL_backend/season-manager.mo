@@ -312,8 +312,12 @@ module {
         };
       };
       
-      await setKickOffTimers();
-
+      setKickOffTimers();
+    };
+    
+    private func setKickOffTimers(){
+      //Set the kickoff timers for the gameweek to set the fixtures to active
+      //also set timers 2 hours on from these to set the fixture to completed from active
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
