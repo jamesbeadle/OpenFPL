@@ -309,7 +309,7 @@ module {
     };
 
     public func executeRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async () {
-       return await playerComposite.executeRevaluePlayerUp(revaluePlayerUpDTO);
+       return await playerComposite.executeRevaluePlayerUp(revaluePlayerUpDTO, systemState);
     };
 
     public func validateRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async Result.Result<Text,Text> {
@@ -317,7 +317,7 @@ module {
     };
 
     public func executeRevaluePlayerDown(revaluePlayerDownDTO: DTOs.RevaluePlayerDownDTO) : async () {
-      return await playerComposite.executeRevaluePlayerDown(revaluePlayerDownDTO);
+      return await playerComposite.executeRevaluePlayerDown(revaluePlayerDownDTO, systemState);
     };
 
     public func validateLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO) : async Result.Result<Text,Text> {
