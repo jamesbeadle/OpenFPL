@@ -588,6 +588,8 @@ module {
                 };
               };
 
+              
+
               //need to store the event data with the players and with the fixtures
                 //need highest scoring player id
               

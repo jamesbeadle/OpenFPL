@@ -202,6 +202,17 @@ module {
 
     public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async () {
       await seasonComposite.executeSubmitFixtureData(submitFixtureData);
+      await playerComposite.calculatePlayerScores(eventData);
+      await playerComposite.calculateHighestScoringPlayers();
+      await seasonComposite.addEventDataToFixtures()
+      await seasonComposite.calculateFantasyTeamScores();
+      await leaderboardComposite.calculateLeaderboards();
+
+      let gameweekFinalised = seasonComposite.checkGameweekFinalised();
+      
+      if(gameweekFinalised){
+        seasonComposite.createGameweekLeaderboardCanister();
+      };
       
 //TODO: If completing this fixture data completes gameweek 38 then
         //reset the fantasy teams

@@ -192,7 +192,6 @@ module {
     };
 
     public func executeLoanPlayer(loanPlayerDTO: DTOs.LoanPlayerDTO, systemState: T.SystemState) : async () {
-      //TODO
       let playerToLoan = List.find<T.Player>(players, func(p : T.Player) { p.id == loanPlayerDTO.playerId });
       switch (playerToLoan) {
         case (null) {};
