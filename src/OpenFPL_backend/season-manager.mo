@@ -204,7 +204,9 @@ module {
 
     public func executeSubmitFixtureData(submitFixtureData: DTOs.SubmitFixtureDataDTO) : async () {
       let players = playerComposite.getPlayers(systemState.calculationSeason);
-      let calculatedPlayerEvents = await seasonComposite.executeSubmitFixtureData(submitFixtureData, players);
+      let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
+
+
       /*
       await playerComposite.calculatePlayerScores(eventData);
       await playerComposite.calculateHighestScoringPlayers();
@@ -263,7 +265,9 @@ module {
       
       
     };
-     
+
+
+
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
       let clubs = clubComposite.getClubs();
       return await seasonComposite.validateAddInitialFixtures(addInitialFixturesDTO, systemState.calculationSeason, clubs);

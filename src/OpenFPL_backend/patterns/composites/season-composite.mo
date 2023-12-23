@@ -8,9 +8,11 @@ import Result "mo:base/Result";
 import Array "mo:base/Array";
 import Nat8 "mo:base/Nat8";
 import Nat16 "mo:base/Nat16";
+import Int16 "mo:base/Int16";
 import Text "mo:base/Text";
 import Char "mo:base/Char";
 import TrieMap "mo:base/TrieMap";
+import HashMap "mo:base/HashMap";
 import Utilities "../../utilities";
 
 module {
@@ -401,7 +403,7 @@ module {
       return true;
     };
 
-    public func executeSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO, allPlayers: [DTOs.PlayerDTO]) : async ?[T.PlayerEventData] {
+    public func populatePlayerEventData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO, allPlayers: [DTOs.PlayerDTO]) : async ?[T.PlayerEventData] {
 
       let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(submitFixtureDataDTO.playerEventData);
 
@@ -467,7 +469,6 @@ module {
                 };
               };
 
-              // Get goals for each team
               let homeTeamGoals = Array.filter<T.PlayerEventData>(
                 submitFixtureDataDTO.playerEventData,
                 func(event : T.PlayerEventData) : Bool {
@@ -500,7 +501,6 @@ module {
               let totalAwayScored = Array.size(awayTeamGoals) + Array.size(homeTeamOwnGoals);
 
               if (totalHomeScored == 0) {
-                //add away team clean sheets
                 for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
                   let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
                   switch (player) {
@@ -520,7 +520,6 @@ module {
                   };
                 };
               } else {
-                //add away team conceded events
                 for (goal in Iter.fromArray(homeTeamGoals)) {
                   for (playerId in Iter.fromArray(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer))) {
                     let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
@@ -544,7 +543,6 @@ module {
               };
 
               if (totalAwayScored == 0) {
-                //add home team clean sheets
                 for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
                   let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
                   switch (player) {
@@ -564,7 +562,6 @@ module {
                   };
                 };
               } else {
-                //add home team conceded events
                 for (goal in Iter.fromArray(awayTeamGoals)) {
                   for (playerId in Iter.fromArray(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer))) {
                     let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
@@ -587,13 +584,151 @@ module {
                 };
               };
 
-              return ?Buffer.toArray(allPlayerEventsBuffer);
+              let playerEvents = Buffer.toArray<T.PlayerEventData>(allPlayerEventsBuffer);
+
+              return populateHighestScoringPlayer(playerEvents);
             }
           }
         }
       };
     };
 
+    private func populateHighestScoringPlayer(playerEvents: [T.PlayerEventData], fixture: T.Fixture, players: [DTOs.PlayerDTO]) : ?[T.PlayerEventData]{
+     
+      var homeGoalsCount : Nat8 = 0;
+      var awayGoalsCount : Nat8 = 0;
+
+      let playerEventsMap : HashMap.HashMap<T.PlayerId, [T.PlayerEventData]> = HashMap.HashMap<T.PlayerId, [T.PlayerEventData]>(200, Utilities.eqNat16, Utilities.hashNat16);
+
+      for (event in Iter.fromArray(playerEvents)) {
+        switch (event.eventType) {
+          case (#Goal) {
+            if (event.clubId == fixture.homeClubId) {
+              homeGoalsCount += 1;
+            } else if (event.clubId == fixture.awayClubId) {
+              awayGoalsCount += 1;
+            };
+          };
+          case (#OwnGoal) {
+            if (event.clubId == fixture.homeClubId) {
+              awayGoalsCount += 1;
+            } else if (event.clubId == fixture.awayClubId) {
+              homeGoalsCount += 1;
+            };
+          };
+          case _ {};
+        };
+
+        let playerId : T.PlayerId = event.playerId;
+        switch (playerEventsMap.get(playerId)) {
+          case (null) {
+            playerEventsMap.put(playerId, [event]);
+          };
+          case (?existingEvents) {
+            let existingEventsBuffer = Buffer.fromArray<T.PlayerEventData>(existingEvents);
+            existingEventsBuffer.add(event);
+            playerEventsMap.put(playerId, Buffer.toArray(existingEventsBuffer));
+          };
+        };
+      };
+
+      let playerScoresMap : HashMap.HashMap<T.PlayerId, Int16> = HashMap.HashMap<T.PlayerId, Int16>(200, Utilities.eqNat16, Utilities.hashNat16);
+      for ((playerId, events) in playerEventsMap.entries()) {
+
+
+        let currentPlayer = Array.find<DTOs.PlayerDTO>(players, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
+        switch (currentPlayer) {
+          case (null) {  };
+          case (?actualPlayer) {
+
+            
+
+            let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
+              events,
+              0,
+              func(acc : Int16, event : T.PlayerEventData) : Int16 {
+                return acc + calculateIndividualScoreForEvent(event, actualPlayer.position);
+              },
+            );
+
+            let aggregateScore = calculateAggregatePlayerEvents(events, actualPlayer.position);
+            playerScoresMap.put(playerId, totalScore + aggregateScore);
+           
+          };
+        };
+      };
+
+
+      return null;
+    };
+
+
+    func calculateAggregatePlayerEvents(events : [T.PlayerEventData], playerPosition : T.PlayerPosition) : Int16 {
+      var totalScore : Int16 = 0;
+
+      if (playerPosition == #Goalkeeper or playerPosition == #Defender) {
+        let goalsConcededCount = Array.filter<T.PlayerEventData>(
+          events,
+          func(event : T.PlayerEventData) : Bool { event.eventType == #GoalConceded },
+        ).size();
+
+        if (goalsConcededCount >= 2) {
+
+          totalScore += (Int16.fromNat16(Nat16.fromNat(goalsConcededCount)) / 2) * -15;
+        };
+      };
+
+      if (playerPosition == #Goalkeeper) {
+        let savesCount = Array.filter<T.PlayerEventData>(
+          events,
+          func(event : T.PlayerEventData) : Bool { event.eventType == 4 },
+        ).size();
+
+        totalScore += (Int16.fromNat16(Nat16.fromNat(savesCount)) / 3) * 5;
+      };
+
+      return totalScore;
+    };
+
+    func calculateIndividualScoreForEvent(event : T.PlayerEventData, playerPosition : T.PlayerPosition) : Int16 {
+      switch (event.eventType) {
+        case (#Appearance) { return 5 };
+        case (#Goal) {
+          switch (playerPosition) {
+            case (#Forward) { return 10 };
+            case (#Midfielder) { return 15 };
+            case _ { return 20 };
+          };
+        };
+        case (#GoalAssisted) {
+          switch (playerPosition) {
+            case (#Forward) { return 10 };
+            case (#Midfielder) { return 10 };
+            case _ { return 15 };
+          };
+        };
+        case (#KeeperSave) { return 0 };
+        case (#CleanSheet) {
+          switch (playerPosition) {
+            case (#Goalkeeper) { return 10 };
+            case (#Defender) { return 10 };
+            case _ { return 0 };
+          };
+        };
+        case (#PenaltySaved) { return 20 };
+        case (#PenaltyMissed) { return -15 };
+        case (#YellowCard) { return -5 };
+        case (#RedCard) { return -20 };
+        case (#OwnGoal) { return -10 };
+        case (#HighestScoringPlayer) { return 0 };
+        case _ { return 0 };
+      };
+    };
+
+
+
+
+   
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, seasonId: T.SeasonId, clubs: [T.Club]) : async Result.Result<Text,Text> {
         
       let currentSeason = List.find(
