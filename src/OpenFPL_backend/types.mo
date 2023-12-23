@@ -280,13 +280,13 @@ module Types {
 
   //ENSURE THE CHANGE EVENTS ARE ADDED
   public type SystemState = {
-    calculationGameweek: GameweekNumber; //starts at 1 and then after the final game of the gameweek is verified it moves to 2
-    calculationMonth: CalendarMonth; //starts at 8 and after the final game of a gameweek is verified it checks the end date of the latest game in the next gameweek and if the follow month then increase the calculationMonth
-    calculationSeason: SeasonId; //after final game of season is verified and rewards paid 
-    pickTeamGameweek: GameweekNumber; //starts at 1 and 1 hour before the first kick off it turns to 2
-    homepageFixturesGameweek: GameweekNumber; //the fixtures up until the morning after the last game
-    homepageManagerGameweek: GameweekNumber; //the leaderboard and gameweek points from the prior gameweek until the first game of the calculation gameweek is verified and a leaderboard is produced
-    transferWindowActive: Bool; //NEED TO MAKE SURE THIS IS SET
+    calculationGameweek: GameweekNumber; //TODO: starts at 1 and then after the final game of the gameweek is verified it moves to 2
+    calculationMonth: CalendarMonth; //TODO: starts at 8 and after the final game of a gameweek is verified it checks the end date of the latest game in the next gameweek and if the follow month then increase the calculationMonth
+    calculationSeason: SeasonId; //TODO: after final game of season is verified and rewards paid 
+    pickTeamGameweek: GameweekNumber; //TODO: starts at 1 and 1 hour before the first kick off it turns to 2
+    homepageFixturesGameweek: GameweekNumber; //TODO: the fixtures up until the morning after the last game
+    homepageManagerGameweek: GameweekNumber; //TODO: the leaderboard and gameweek points from the prior gameweek until the first game of the calculation gameweek is verified and a leaderboard is produced
+    transferWindowActive: Bool; //TODO: NEED TO MAKE SURE THIS IS SET
   };
 
   public type Country = {

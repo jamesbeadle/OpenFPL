@@ -217,6 +217,29 @@ module {
       await managerComposite.calculateFantasyTeamScores();
       await leaderboardComposite.calculateLeaderboards();      
 
+
+      let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
+      if(gameweekComplete){
+        managerComposite.distributeWeeklyRewards(); //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
+        managerComposite.distributeMonthlyRewards(); //TODO: Should check all months where the rewards have not been distributed, keep a record
+        managerComposite.distributeSeasonRewards(); //TODO: Should check all seasons where the rewards have not been distributed, keep a record
+
+        //TODO:check if season complete and update differently
+
+        let updatedSystemState: T.SystemState = {
+          calculationGameweek = systemState.calculationGameweek + 1;
+          calculationMonth = systemState.calculationMonth;
+          calculationSeason = systemState.calculationSeason;
+          pickTeamGameweek = systemState.pickTeamGameweek;
+          homepageFixturesGameweek = systemState.homepageFixturesGameweek;
+          homepageManagerGameweek = systemState.homepageManagerGameweek;
+          transferWindowActive = systemState.transferWindowActive;
+        };
+
+        systemState := updatedSystemState;
+
+      };
+
       await updateCacheHash("players");
       await updateCacheHash("player_events");
       await updateCacheHash("fixtures");
@@ -224,14 +247,6 @@ module {
       await updateCacheHash("monthly_leaderboards");
       await updateCacheHash("season_leaderboard");
       await updateCacheHash("system_state");
-
-      let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
-      if(gameweekComplete){
-        managerComposite.distributeWeeklyRewards(); //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
-        managerComposite.distributeMonthlyRewards(); //TODO: Should check all months where the rewards have not been distributed, keep a record
-        managerComposite.distributeSeasonRewards(); //TODO: Should check all seasons where the rewards have not been distributed, keep a record
-      };
-
     };
 
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {
