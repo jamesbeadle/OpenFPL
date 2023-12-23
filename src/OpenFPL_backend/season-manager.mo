@@ -237,7 +237,7 @@ module {
         };
 
         systemState := updatedSystemState;
-
+        await setGameweekBeginTimer();
       };
 
       await updateCacheHash("players");
@@ -257,13 +257,42 @@ module {
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
       
       await seasonComposite.executeAddInitialFixtures(addInitialFixturesDTO);
-      
-      let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
-      if(Array.size(fixtures) == 0){
-        return;
+
+      let sortedArray = Array.sort(addInitialFixturesDTO.fixtures,
+        func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
+          if (a.kickOff < b.kickOff) { return #less };
+          if (a.kickOff == b.kickOff) { return #equal };
+          return #greater;
+        },
+      );
+      let firstFixture = sortedArray[0];
+
+      let updatedSystemState: T.SystemState = {
+        calculationGameweek = 1;
+        calculationMonth = Utilities.unixTimeToMonth(firstFixture.kickOff);
+        calculationSeason = addInitialFixturesDTO.seasonId;
+        pickTeamGameweek = 1;
+        homepageFixturesGameweek = 1;
+        homepageManagerGameweek = 1;
+        transferWindowActive = true; //TODO: set this when gameweek is 1 until 2 to remove gameweek check!
       };
+
+      systemState := updatedSystemState;
       
-      let sortedArray = Array.sort(fixtures,
+      await setGameweekBeginTimer();
+      await updateCacheHash("fixtures");
+    };
+
+    private func setGameweekBeginTimer() : async () {
+      let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
+      let filteredFilters = Array.filter<DTOs.FixtureDTO>(
+        fixtures,
+        func(fixture : DTOs.FixtureDTO) : Bool {
+          return fixture.gameweek == systemState.pickTeamGameweek;
+        },
+      );
+      
+      let sortedArray = Array.sort(filteredFilters,
         func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
           if (a.kickOff < b.kickOff) { return #less };
           if (a.kickOff == b.kickOff) { return #equal };
@@ -279,7 +308,6 @@ module {
           actualFunction(durationToHourBeforeFirstFixture, "gameweekBeginExpired");
         };
       };
-      await updateCacheHash("fixtures");
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {

@@ -28,7 +28,7 @@ module DTOs {
   };
   
   public type AddInitialFixturesDTO = {
-    seasonStartYear : Nat16;
+    seasonId: T.SeasonId;
     seasonFixtures : [T.Fixture];
   };
   

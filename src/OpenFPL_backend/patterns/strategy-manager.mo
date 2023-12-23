@@ -15,9 +15,6 @@ module {
     
 /*
 
-
-    //recreate close gameweek timer to be 1 hour before the first fixture of the gameweek you are picking your team for
-
     //recreate the jan transfer window timer to the next January 1st
 
     //recreate the close jan transfer window timer for midnight on the 31st Jan
