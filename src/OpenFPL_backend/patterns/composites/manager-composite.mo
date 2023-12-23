@@ -993,6 +993,18 @@ module {
 
     };
 
+    public func distributeWeeklyRewards() : async (){
+ //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
+    };
+
+    public func distributeMonthlyRewards() : async (){
+ //TODO: Should check all months where the rewards have not been distributed, keep a record
+    };
+
+    public func distributeSeasonRewards() : async (){
+ //TODO: Should check all seasons where the rewards have not been distributed, keep a record
+    };
+
     public func getStableManagers(): [(T.PrincipalId, T.Manager)] {
       return Iter.toArray(managers.entries());
     };

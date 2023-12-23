@@ -220,9 +220,9 @@ module {
 
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if(gameweekComplete){
-        managerComposite.distributeWeeklyRewards(); //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
-        managerComposite.distributeMonthlyRewards(); //TODO: Should check all months where the rewards have not been distributed, keep a record
-        managerComposite.distributeSeasonRewards(); //TODO: Should check all seasons where the rewards have not been distributed, keep a record
+        await managerComposite.distributeWeeklyRewards();
+        await managerComposite.distributeMonthlyRewards();
+        await managerComposite.distributeSeasonRewards();
 
         //TODO:check if season complete and update differently
 
