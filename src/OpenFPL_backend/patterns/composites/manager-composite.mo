@@ -922,6 +922,10 @@ module {
         return newManager;
     };
 
+    public func calculateFantasyTeamScores() : async (){
+      //TODO: Implement the calculation logic
+    };
+
     //TODO: CHECK THE IMPLEMENTATION OF THE FOLLOWING
 
     public func snapshotFantasyTeams() : (){

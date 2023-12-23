@@ -165,6 +165,10 @@ module {
         };
       };
     };
+
+    public func calculateLeaderboards() : async (){
+      //TODO: Implement the calculation logic
+    };
     
     public func getStableSeasonLeaderboardCanisterIds(): [(T.SeasonId, Text)] {
       return Iter.toArray(seasonLeaderboardCanisterIds.entries());
