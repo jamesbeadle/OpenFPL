@@ -1118,7 +1118,7 @@ let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(N
       };
       
       */
-    }
+    };
 
 
 
