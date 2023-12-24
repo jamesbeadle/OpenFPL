@@ -47,8 +47,6 @@ module {
       calculationMonth = 8;
       calculationSeason = 1;
       pickTeamGameweek = 1;
-      homepageFixturesGameweek = 1;
-      homepageManagerGameweek = 0;
       transferWindowActive = false;
     };
 
@@ -207,8 +205,6 @@ module {
         calculationMonth = systemState.calculationMonth;
         calculationSeason = systemState.calculationSeason;
         pickTeamGameweek = pickTeamGameweek;
-        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
-        homepageManagerGameweek = systemState.homepageManagerGameweek;
         transferWindowActive = systemState.transferWindowActive;
       };
 
@@ -238,8 +234,6 @@ module {
         calculationMonth = systemState.calculationMonth;
         calculationSeason = systemState.calculationSeason;
         pickTeamGameweek = systemState.pickTeamGameweek;
-        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
-        homepageManagerGameweek = systemState.homepageManagerGameweek;
         transferWindowActive = true;
       };
 
@@ -253,8 +247,6 @@ module {
         calculationMonth = systemState.calculationMonth;
         calculationSeason = systemState.calculationSeason;
         pickTeamGameweek = systemState.pickTeamGameweek;
-        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
-        homepageManagerGameweek = systemState.homepageManagerGameweek;
         transferWindowActive = false;
       };
 
@@ -338,8 +330,6 @@ module {
           calculationMonth = calculationMonth; 
           calculationSeason = calculationSeason;
           pickTeamGameweek = systemState.pickTeamGameweek;
-          homepageFixturesGameweek = systemState.homepageFixturesGameweek; //TODO: When this change?
-          homepageManagerGameweek = systemState.homepageManagerGameweek; //TODO: When this change?
           transferWindowActive = systemState.transferWindowActive;
         };
 
@@ -381,8 +371,6 @@ module {
         calculationMonth = Utilities.unixTimeToMonth(firstFixture.kickOff);
         calculationSeason = addInitialFixturesDTO.seasonId;
         pickTeamGameweek = 1;
-        homepageFixturesGameweek = 1;
-        homepageManagerGameweek = 1;
         transferWindowActive = true;
       };
 

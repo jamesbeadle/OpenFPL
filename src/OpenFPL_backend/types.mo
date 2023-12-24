@@ -331,8 +331,6 @@ module Types {
     calculationMonth: CalendarMonth;
     calculationSeason: SeasonId; 
     pickTeamGameweek: GameweekNumber; 
-    homepageFixturesGameweek: GameweekNumber; //TODO: the fixtures up until the morning after the last game
-    homepageManagerGameweek: GameweekNumber; //TODO: the leaderboard and gameweek points from the prior gameweek until the first game of the calculation gameweek is verified and a leaderboard is produced
     transferWindowActive: Bool;
   };
 
