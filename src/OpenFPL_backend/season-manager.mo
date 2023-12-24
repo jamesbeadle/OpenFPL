@@ -34,6 +34,7 @@ module {
   public class SeasonManager() {
 
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
+    private var setAndWatchCanister : ?((canisterId: Text) -> ()) = null;
     
     let managerComposite = ManagerComposite.ManagerComposite();
     let playerComposite = PlayerComposite.PlayerComposite();
@@ -106,9 +107,15 @@ module {
     
     public func setTimerBackupFunction(
       _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> (),
-      _removeExpiredTimers : () -> ()) {
+      _removeExpiredTimers : () -> ()) 
+    {
       playerComposite.setTimerBackupFunction(_setAndBackupTimer, _removeExpiredTimers);
       setAndBackupTimer := ?_setAndBackupTimer;
+    };
+    
+    public func setCanisterWatcherFunction(_setAndWatchCanister : (canisterId : Text) -> ()) 
+    {
+        setAndWatchCanister := ?_setAndWatchCanister;
     };
 
     private func updateCacheHash(category : Text) : async () {
