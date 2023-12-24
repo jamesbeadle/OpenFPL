@@ -12,23 +12,24 @@ module {
     let canisterCheckInterval = Utilities.getHour() * 24;
     let canisterCheckTimerId: ?Timer.TimerId = null;
 
-    public func setAndWatchCanister(canisterId: Text) : (){
+    public func setAndWatchCanister(canisterId: Text) : async (){
       if(canisterCheckTimerId != null){
-        //cancel current timer
+        //TODO:cancel current timer
       };
-      //Chcek canister balances now
-      //Check canister balances in timer duration
+      //TODO:Chcek canister balances now
+      await checkCanisterCycles();
+      //TODO:Check canister balances in timer duration
     };
 
 
     public func distributeRewards() : async () {
-      //distribute rewards
+      //TODO:distribute rewards
       //IMPLEMENT
     };
 
-    public func topUpCanisters() : async () {
+    public func checkCanisterCycles() : async () {
 
-    //for each canister check if the balance is low and top it up if it is
+    //TODO:for each canister check if the balance is low and top it up if it is
         //what should I topup to?
 
 

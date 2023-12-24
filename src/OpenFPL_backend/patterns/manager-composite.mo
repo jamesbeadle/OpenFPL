@@ -25,8 +25,8 @@ module {
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
     private var activeProfilePictureCanisterId = ""; 
     
-    private var setAndWatchCanister : ?((canisterId : Text) -> ()) = null;
-    
+    private var setAndWatchCanister : ?((canisterId : Text) -> async ()) = null;
+
     var backendCanisterController: ?Principal = null;
 
     var seasonRewards: List.List<T.SeasonRewards> = List.nil();
@@ -49,7 +49,7 @@ module {
     };
     
     public func setCanisterWatcherFunction(
-      _setAndWatchCanister : (canisterId : Text) -> ()) {
+      _setAndWatchCanister : (canisterId : Text) -> async ()) {
       setAndWatchCanister := ?_setAndWatchCanister;
     };
 
@@ -590,14 +590,22 @@ module {
       if(backendCanisterController == null){
         return "";
       };
-      //TODO:Record the canister for the cycles watcher to watch
-
-      Cycles.add(2000000000000);
+      
+      Cycles.add(2000000000000); //TODO: WHY, Need a number I understand and how does it know which canister it is topping up?
       let canister = await ProfilePictureCanister.ProfilePictureCanister();
       let _ = await updateCanister_(canister);
-      let canister_id = Principal.fromActor(canister);
+      let canister_principal = Principal.fromActor(canister);
       await canister.addProfilePicture(principalId, profilePicture);
-      return Principal.toText(canister_id);
+      let canisterId = Principal.toText(canister_principal);
+
+      switch (setAndWatchCanister) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(canisterId);
+        };
+      };
+
+      return canisterId;
     };
 
     public func isUsernameValid(username: Text, principalId: Text) : Bool{

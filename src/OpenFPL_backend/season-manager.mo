@@ -34,7 +34,7 @@ module {
   public class SeasonManager() {
 
     private var setAndBackupTimer : ?((duration : Timer.Duration, callbackName : Text) -> ()) = null;
-    private var setAndWatchCanister : ?((canisterId: Text) -> ()) = null;
+    private var setAndWatchCanister : ?((canisterId: Text) -> async ()) = null;
     
     let managerComposite = ManagerComposite.ManagerComposite();
     let playerComposite = PlayerComposite.PlayerComposite();
@@ -113,7 +113,7 @@ module {
       setAndBackupTimer := ?_setAndBackupTimer;
     };
     
-    public func setCanisterWatcherFunction(_setAndWatchCanister : (canisterId : Text) -> ()) 
+    public func setCanisterWatcherFunction(_setAndWatchCanister : (canisterId : Text) -> async ()) 
     {
       managerComposite.setCanisterWatcherFunction(_setAndWatchCanister);
       leaderboardComposite.setCanisterWatcherFunction(_setAndWatchCanister);
