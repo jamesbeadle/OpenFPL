@@ -303,6 +303,7 @@ actor Self {
     calculationMonth = 8;
     calculationSeason = 1;
     pickTeamGameweek = 1;
+    pickTeamSeason = 1;
     homepageFixturesGameweek = 1;
     homepageManagerGameweek = 1;
     transferWindowActive = false;
