@@ -257,8 +257,6 @@ module {
 
     public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async Result.Result<Text,Text> {
 
-      //TODO: ENSURE THAT ALL GAMEWEEKS ARE THE SAME FOR EACH EVENT
-
       let validPlayerEvents = validatePlayerEvents(submitFixtureDataDTO.playerEventData);
       if (not validPlayerEvents) {
         return #err("Invalid: Player events are not valid.");
@@ -723,67 +721,6 @@ module {
     };
 
 
-    private func calculateAggregatePlayerEvents(events : [T.PlayerEventData], playerPosition : T.PlayerPosition) : Int16 {
-      var totalScore : Int16 = 0;
-
-      if (playerPosition == #Goalkeeper or playerPosition == #Defender) {
-        let goalsConcededCount = Array.filter<T.PlayerEventData>(
-          events,
-          func(event : T.PlayerEventData) : Bool { event.eventType == #GoalConceded },
-        ).size();
-
-        if (goalsConcededCount >= 2) {
-
-          totalScore += (Int16.fromNat16(Nat16.fromNat(goalsConcededCount)) / 2) * -15;
-        };
-      };
-
-      if (playerPosition == #Goalkeeper) {
-        let savesCount = Array.filter<T.PlayerEventData>(
-          events,
-          func(event : T.PlayerEventData) : Bool { event.eventType == #KeeperSave },
-        ).size();
-
-        totalScore += (Int16.fromNat16(Nat16.fromNat(savesCount)) / 3) * 5;
-      };
-
-      return totalScore;
-    };
-
-    private func calculateIndividualScoreForEvent(event : T.PlayerEventData, playerPosition : T.PlayerPosition) : Int16 {
-      switch (event.eventType) {
-        case (#Appearance) { return 5 };
-        case (#Goal) {
-          switch (playerPosition) {
-            case (#Forward) { return 10 };
-            case (#Midfielder) { return 15 };
-            case _ { return 20 };
-          };
-        };
-        case (#GoalAssisted) {
-          switch (playerPosition) {
-            case (#Forward) { return 10 };
-            case (#Midfielder) { return 10 };
-            case _ { return 15 };
-          };
-        };
-        case (#KeeperSave) { return 0 };
-        case (#CleanSheet) {
-          switch (playerPosition) {
-            case (#Goalkeeper) { return 10 };
-            case (#Defender) { return 10 };
-            case _ { return 0 };
-          };
-        };
-        case (#PenaltySaved) { return 20 };
-        case (#PenaltyMissed) { return -15 };
-        case (#YellowCard) { return -5 };
-        case (#RedCard) { return -20 };
-        case (#OwnGoal) { return -10 };
-        case (#HighestScoringPlayer) { return 0 };
-        case _ { return 0 };
-      };
-    };
 
     public func addEventsToFixture(playerEventData: [T.PlayerEventData], seasonId: T.SeasonId, fixtureId: T.FixtureId) : async (){
        seasons := List.map<T.Season, T.Season>(
