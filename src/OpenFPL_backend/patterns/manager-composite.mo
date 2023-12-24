@@ -25,6 +25,10 @@ module {
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
     private var activeProfilePictureCanisterId = ""; 
     var backendCanisterController: ?Principal = null;
+
+    //TODO: Some kind of structure to record when a gameweek has been paid, really when a season is created you want to record the reward payment information in that season object
+
+
     
     public func setBackendCanisterController(controller: Principal){
       backendCanisterController := ?controller;
@@ -1097,6 +1101,19 @@ module {
 
 */
 
+    };
+
+
+    public func checkGameweekVerification() : async (){
+      
+      //TODO: Check whether all the games for the gameweek are verified to pay rewards for a gameweek
+      //check all the gameweeks in a month are verified to pay monthly rewards
+      //check all the gameweeks in a season are verified to pay season rewards
+      
+      
+      await distributeWeeklyRewards();
+      await distributeMonthlyRewards();
+      await distributeSeasonRewards();
     };
 
     public func distributeWeeklyRewards() : async (){

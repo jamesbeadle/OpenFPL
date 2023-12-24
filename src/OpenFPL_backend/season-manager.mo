@@ -266,9 +266,6 @@ module {
 
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if(gameweekComplete){
-        await managerComposite.distributeWeeklyRewards();
-        await managerComposite.distributeMonthlyRewards();
-        await managerComposite.distributeSeasonRewards();
 
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);
@@ -290,6 +287,8 @@ module {
         await setGameweekTimers();
       };
 
+      await managerComposite.checkGameweekVerification();
+      
       await updateCacheHash("players");
       await updateCacheHash("player_events");
       await updateCacheHash("fixtures");

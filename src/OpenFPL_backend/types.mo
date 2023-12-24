@@ -59,6 +59,11 @@ module Types {
     #HighestScoringPlayer;
   };
 
+  public type RewardType = {
+    #Leaderboard;
+    #HighestScoringPlayer;
+  };
+
   public type Manager = {
     principalId : Text;
     username : Text;
@@ -136,6 +141,30 @@ module Types {
     year : Nat16;
     fixtures : List.List<Fixture>;
     postponedFixtures : List.List<Fixture>;
+    weeklyRewards: List.List<WeeklyRewards>;
+    monthlyRewards: List.List<MonthlyRewards>;
+    seasonRewards: SeasonRewards;
+  };
+
+  public type WeeklyRewards = {
+    gameweek: GameweekNumber;
+    rewards: List.List<RewardEntry>;
+  };
+
+  public type MonthlyRewards = {
+    month: CalendarMonth;
+    rewards: List.List<RewardEntry>;
+  };
+
+  public type SeasonRewards = {
+    rewards: List.List<RewardEntry>;
+  };
+
+  public type RewardEntry = {
+    principalId: Text;
+    rewardType: RewardType;
+    position: Nat;
+    amount: Nat64;
   };
 
   public type Club = {

@@ -822,9 +822,36 @@ module {
 
     public func checkGameweekComplete(systemState: T.SystemState) : Bool {
       //TODO: check if gameweek complete
+      let season = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == systemState.calculationSeason;
+        },
+      );
+      switch(season){
+        case (null) {return false};
+        case (?foundSeason){
+          let fixtures = List.filter<T.Fixture>(
+            foundSeason.fixtures,
+            func(fixture : T.Fixture) : Bool {
+              return fixture.gameweek == systemState.calculationGameweek;
+            },
+          );
+
+          //check all completed //TODO
+          let completedFixtures = List.filter<T.Fixture>(
+            fixtures,
+            func(fixture : T.Fixture) : Bool {
+              return fixture.status == #Complete;
+            },
+          );
+
+
+
+        };
+      };
       return false;
     };
-
    
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, clubs: [T.Club]) : async Result.Result<Text,Text> {
         
