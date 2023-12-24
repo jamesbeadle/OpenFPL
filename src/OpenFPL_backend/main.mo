@@ -275,6 +275,7 @@ actor Self {
     transferWindowEndCallback);
 
   seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
+  seasonManager.setCanisterWatcherFunction(canisterWatcher.setAndWatchCanister);
   
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
