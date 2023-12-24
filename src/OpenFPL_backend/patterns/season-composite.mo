@@ -647,11 +647,11 @@ module {
               events,
               0,
               func(acc : Int16, event : T.PlayerEventData) : Int16 {
-                return acc + calculateIndividualScoreForEvent(event, foundPlayer.position);
+                return acc + Utilities.calculateIndividualScoreForEvent(event, foundPlayer.position);
               },
             );
 
-            let aggregateScore = calculateAggregatePlayerEvents(events, foundPlayer.position);
+            let aggregateScore = Utilities.calculateAggregatePlayerEvents(events, foundPlayer.position);
             playerScoresMap.put(playerId, totalScore + aggregateScore);
           };
         }
