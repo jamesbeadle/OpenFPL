@@ -194,6 +194,31 @@ module {
       return await managerComposite.updateProfilePicture(principalId, profilePicture);
     };
 
+    //Timer call back events
+    public func gameweekBeginExpired(){
+
+    };
+
+    public func gameKickOffExpiredCallback(){
+      //TODO: setFixture to active
+    };
+    
+    public func gameCompletedExpiredCallback(){
+      //TODO: set fixture to complete
+    };
+    
+    public func loanExpiredCallback(){
+      //Todo: recall player loan
+    };
+    
+    public func transferWindowStartCallback(){
+      //TODO: update transfer window flag
+    };
+    
+    public func transferWindowEndCallback(){
+      //TODO: update transfer window flag
+    };
+
     //Governance validation and execution functions
     public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async Result.Result<Text,Text> {
       return await seasonComposite.validateSubmitFixtureData(submitFixtureDataDTO);
@@ -312,10 +337,21 @@ module {
         };
       };
       
-      setKickOffTimers();
+      setKickOffTimers(fixtures);
     };
     
-    private func setKickOffTimers(){
+    private func setKickOffTimers(gameweekFixtures: [DTOs.FixtureDTO]){
+      for(fixture in Iter.fromArray(gameweekFixtures)){
+        switch (setAndBackupTimer) {
+          case (null) {};
+          case (?actualFunction) {
+            let durationToKickOff : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff - Time.now()));
+            let durationToGameOver : Timer.Duration = #nanoseconds(Int.abs(fixture.kickOff + (Utilities.getHour() * 2) - Time.now()));
+            actualFunction(durationToKickOff, "gameKickOffExpired");
+            actualFunction(durationToKickOff, "gameCompletedExpired");
+          };
+        };
+      };
       //TODO: Set the kickoff timers for the gameweek to set the fixtures to active
       //also set timers 2 hours on from these to set the fixture to completed from active
     };

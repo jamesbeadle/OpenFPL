@@ -235,8 +235,8 @@ actor Self {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
-
   private func gameweekBeginExpiredCallback() : async () {
+    seasonManager.gameweekBeginExpired();
     timerComposite.removeExpiredTimers();
   };
 
