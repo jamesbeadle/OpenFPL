@@ -821,7 +821,6 @@ module {
     };
 
     public func checkGameweekComplete(systemState: T.SystemState) : Bool {
-      //TODO: check if gameweek complete
       let season = List.find(
         seasons,
         func(season : T.Season) : Bool {

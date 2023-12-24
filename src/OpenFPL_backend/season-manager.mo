@@ -306,18 +306,32 @@ module {
             };
           };
           calculationSeason := systemState.calculationSeason + 1;
+          calculationGameweek := systemState.calculationGameweek + 1;
+          calculationMonth := 8;
+        }
+        else{
+          calculationGameweek := systemState.calculationGameweek + 1;
+
+          let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
+          let filteredFilters = Array.filter<DTOs.FixtureDTO>(
+            fixtures,
+            func(fixture : DTOs.FixtureDTO) : Bool {
+              return fixture.gameweek == systemState.calculationGameweek;
+            },
+          );
+          
+          let sortedArray = Array.sort(filteredFilters,
+            func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
+              if (a.kickOff < b.kickOff) { return #greater };
+              if (a.kickOff == b.kickOff) { return #equal };
+              return #less;
+            },
+          );
+
+          let latestFixture = sortedArray[0];
+          calculationMonth := Utilities.unixTimeToMonth(latestFixture.kickOff);
         };
-
         
-        calculationGameweek := systemState.calculationGameweek + 1;
-
-        ////TODO check the calculation month : When this change?
-        //For the gaemweek you have just changed to check what the calendar month of the latest fixture is
-        
-
-
-
-
         let updatedSystemState: T.SystemState = {
           calculationGameweek = calculationGameweek;
           calculationMonth = calculationMonth; 
