@@ -241,27 +241,27 @@ actor Self {
   };
 
   private func gameKickOffExpiredCallback() : async () {
-    seasonManager.gameKickOffExpiredCallback();
+    await seasonManager.gameKickOffExpiredCallback();
     timerComposite.removeExpiredTimers();
   };
 
   private func gameCompletedExpiredCallback() : async () {
-    seasonManager.gameCompletedExpiredCallback();
+    await seasonManager.gameCompletedExpiredCallback();
     timerComposite.removeExpiredTimers();
   };
 
   private func loanExpiredCallback() : async () {
-    seasonManager.loanExpiredCallback();
+    await seasonManager.loanExpiredCallback();
     timerComposite.removeExpiredTimers();
   };
 
   private func transferWindowStartCallback() : async () {
-    seasonManager.transferWindowStartCallback();
+    await seasonManager.transferWindowStartCallback();
     timerComposite.removeExpiredTimers();
   };
 
   private func transferWindowEndCallback() : async () {
-    seasonManager.transferWindowEndCallback();
+    await seasonManager.transferWindowEndCallback();
     timerComposite.removeExpiredTimers();
   };
 
