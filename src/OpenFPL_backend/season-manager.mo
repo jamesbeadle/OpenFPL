@@ -277,15 +277,17 @@ module {
           await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId);
         };
       };
-      
     
       await managerComposite.calculateFantasyTeamScores();
       await leaderboardComposite.calculateLeaderboards();      
 
-
+      var calculationGameweek = systemState.calculationGameweek;
+      var calculationMonth = systemState.calculationMonth;
+      var calculationSeason = systemState.calculationSeason;
+      
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if(gameweekComplete){
-
+        
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);
           await seasonComposite.resetFantasyTeams();
@@ -303,12 +305,23 @@ module {
               actualFunction(transferWindowEndDate, "transferWindowEnd");
             };
           };
+          calculationSeason := systemState.calculationSeason + 1;
         };
 
+        
+        calculationGameweek := systemState.calculationGameweek + 1;
+
+        ////TODO check the calculation month : When this change?
+        //For the gaemweek you have just changed to check what the calendar month of the latest fixture is
+        
+
+
+
+
         let updatedSystemState: T.SystemState = {
-          calculationGameweek = systemState.calculationGameweek + 1;
-          calculationMonth = systemState.calculationMonth; //TODO: When this change?
-          calculationSeason = systemState.calculationSeason; //TODO: When this change?
+          calculationGameweek = calculationGameweek;
+          calculationMonth = calculationMonth; 
+          calculationSeason = calculationSeason;
           pickTeamGameweek = systemState.pickTeamGameweek;
           homepageFixturesGameweek = systemState.homepageFixturesGameweek; //TODO: When this change?
           homepageManagerGameweek = systemState.homepageManagerGameweek; //TODO: When this change?
