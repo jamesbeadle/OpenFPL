@@ -22,12 +22,6 @@ module {
       //TODO:Check canister balances in timer duration
     };
 
-
-    public func distributeRewards() : async () {
-      //TODO:distribute rewards
-      //IMPLEMENT
-    };
-
     public func checkCanisterCycles() : async () {
 
       for(canisterId in Iter.fromList(canisterIds)){
