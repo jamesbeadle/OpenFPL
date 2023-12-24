@@ -162,13 +162,12 @@ actor class ProfilePictureCanister() {
 
   system func postupgrade() {};
 
-  public func checkCanisterCycles() : () {
+  public func getCyclesBalance() : async Nat {
+    return Cycles.available();
+  };
+
+  public func topupCanister() : async (){
     let amount = Cycles.available();
-    let limit : Nat = 0;//capacity - 20; //TODO: AGAIN WHAT IS THIS?
-    let acceptable =
-      if (amount <= limit) amount
-      else limit;
-    let accepted = Cycles.accept(acceptable);
-    assert (accepted == acceptable);
+    let accepted = Cycles.accept(amount);
   };
 };

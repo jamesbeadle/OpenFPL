@@ -25,7 +25,7 @@ module {
 
       for(canisterId in Iter.fromList(canisterIds)){
         let canister_actor = actor (canisterId) : actor {
-          getCyclesBalance : () -> async Nat64;
+          getCyclesBalance : () -> async Nat;
           topupCanister : () -> async ();
         };
         
