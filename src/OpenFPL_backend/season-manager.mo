@@ -286,7 +286,6 @@ module {
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);
           await seasonComposite.resetFantasyTeams();
-          await calculateRewardPool();
           
           let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
           let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
@@ -302,6 +301,8 @@ module {
             };
           };
           calculationSeason := systemState.calculationSeason + 1;
+          await calculateRewardPool(systemState.calculationSeason);
+          
           calculationGameweek := systemState.calculationGameweek + 1;
           calculationMonth := 8;
         }
@@ -426,18 +427,22 @@ module {
       };
     };
 
-    private func calculateRewardPool() : async (){
+    private func calculateRewardPool(seasonId: T.SeasonId) : async (){
 
       let totalSupply: Nat64 = 0;
 
-      let seasonLeaderboardPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.3));
-      let monthlyLeaderboardPool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.2;
-      let weeklyLeaderboardPool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.15;
-      let mostValuableTeamPool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.1;
-      let highestScoringMatchPlayerPool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.1;
-      let allTimeWeeklyHighScorePool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05;
-      let allTimeMonthlyHighScorePool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05;
-      let allTimeSeasonHighScorePool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05;
+      let rewardPool: T.RewardPool = {
+        seasonId = seasonId;
+        seasonLeaderboardPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.3));
+        monthlyLeaderboardPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.2));
+        weeklyLeaderboardPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.15));
+        mostValuableTeamPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.1));
+        highestScoringMatchPlayerPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.1));
+        allTimeWeeklyHighScorePool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05));
+        allTimeMonthlyHighScorePool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05));
+        allTimeSeasonHighScorePool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05));
+      };
+      
 
       //TODO: Record this info so you know how much to mint when things are verified
 
