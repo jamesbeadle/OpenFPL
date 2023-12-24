@@ -1063,38 +1063,38 @@ module {
 
       //if last game of the upcoming gameweek falls in the following month, reset the number of transfers available to 2
 
-/*
+    };
+
 
     public func resetFantasyTeams() : async () {
-      for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {
-
-        let clearTeam = clearFantasyTeam(principalId);
-
-        let updatedUserTeam : T.UserFantasyTeam = {
-          fantasyTeam = clearTeam;
-          history = userFantasyTeam.history;
-        };
-
-        fantasyTeams.put(principalId, updatedUserTeam);
+      for ((principalId, manager) in managers.entries()) {
+        let clearedTeam = clearFantasyTeam(manager);
+        managers.put(principalId, clearedTeam);
       };
     };
 
     
-    private func clearFantasyTeam(principalId : Text) : T.FantasyTeam {
+    private func clearFantasyTeam(manager: T.Manager) : T.Manager {
       return {
-        principalId = principalId;
+        principalId = manager.principalId;
+        username = manager.username;
+        termsAccepted = manager.termsAccepted;
+        profilePictureCanisterId = manager.profilePictureCanisterId;
+        favouriteClubId = manager.favouriteClubId;
+        createDate = manager.createDate;
         transfersAvailable = 3;
-        bankBalance = 1200;
+        monthlyBonusesAvailable = 2;
+        bankQuarterMillions = 1200;
         playerIds = [];
         captainId = 0;
         goalGetterGameweek = 0;
         goalGetterPlayerId = 0;
-        passMasterGameweek = 0;
+        passMasterGameweek  = 0;
         passMasterPlayerId = 0;
         noEntryGameweek = 0;
         noEntryPlayerId = 0;
         teamBoostGameweek = 0;
-        teamBoostTeamId = 0;
+        teamBoostClubId = 0;
         safeHandsGameweek = 0;
         safeHandsPlayerId = 0;
         captainFantasticGameweek = 0;
@@ -1104,16 +1104,10 @@ module {
         prospectsGameweek = 0;
         braceBonusGameweek = 0;
         hatTrickHeroGameweek = 0;
-        teamName = "";
-        favouriteTeamId = 0;
         transferWindowGameweek = 0;
+        history = manager.history;
       };
     };
-
-*/
-
-    };
-
 
     public func payRewards(rewardPool: T.RewardPool) : async (){
       

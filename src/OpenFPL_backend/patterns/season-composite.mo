@@ -1066,61 +1066,6 @@ let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(N
       */
     };
 
-    public func resetFantasyTeams() : async (){
-      /*
-      
-      for ((key, value) in fantasyTeams.entries()) {
-        let userFantasyTeam = value.fantasyTeam;
-        let updatedTeam : T.FantasyTeam = {
-          principalId = userFantasyTeam.principalId;
-          transfersAvailable = Nat8.fromNat(3);
-          bankBalance = userFantasyTeam.bankBalance;
-          playerIds = userFantasyTeam.playerIds;
-          captainId = userFantasyTeam.captainId;
-          goalGetterGameweek = userFantasyTeam.goalGetterGameweek;
-          goalGetterPlayerId = userFantasyTeam.goalGetterPlayerId;
-          passMasterGameweek = userFantasyTeam.passMasterGameweek;
-          passMasterPlayerId = userFantasyTeam.passMasterPlayerId;
-          noEntryGameweek = userFantasyTeam.noEntryGameweek;
-          noEntryPlayerId = userFantasyTeam.noEntryPlayerId;
-          teamBoostGameweek = userFantasyTeam.teamBoostGameweek;
-          teamBoostTeamId = userFantasyTeam.teamBoostTeamId;
-          safeHandsGameweek = userFantasyTeam.safeHandsGameweek;
-          safeHandsPlayerId = userFantasyTeam.safeHandsPlayerId;
-          captainFantasticGameweek = userFantasyTeam.captainFantasticGameweek;
-          captainFantasticPlayerId = userFantasyTeam.captainFantasticPlayerId;
-          countrymenGameweek = userFantasyTeam.countrymenGameweek;
-          countrymenCountryId = userFantasyTeam.countrymenCountryId;
-          prospectsGameweek = userFantasyTeam.prospectsGameweek;
-          braceBonusGameweek = userFantasyTeam.braceBonusGameweek;
-          hatTrickHeroGameweek = userFantasyTeam.hatTrickHeroGameweek;
-          teamName = userFantasyTeam.teamName;
-          favouriteTeamId = userFantasyTeam.favouriteTeamId;
-          transferWindowGameweek = userFantasyTeam.transferWindowGameweek;
-        };
-
-        let updatedUserTeam : T.UserFantasyTeam = {
-          fantasyTeam = updatedTeam;
-          history = value.history;
-        };
-
-        fantasyTeams.put(key, updatedUserTeam);
-      };
-      
-      */
-    };
-
-
-
-
-
-
-
-
-
-
-
-
     public func getStableSeasons() : [T.Season] {
       return List.toArray(seasons);
     };

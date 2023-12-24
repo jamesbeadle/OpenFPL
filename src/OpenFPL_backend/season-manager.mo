@@ -45,7 +45,6 @@ module {
       managerComposite.setBackendCanisterController(controller);
     };
     
-    //TODO: ADD TO BACKUP MAKE SURE EVERY VARIABLE BACKED UP
     var rewardPools: HashMap.HashMap<T.SeasonId, T.RewardPool> = HashMap.HashMap<T.SeasonId, T.RewardPool>(100, Utilities.eqNat16, Utilities.hashNat16);
 
     private var systemState: T.SystemState = {
