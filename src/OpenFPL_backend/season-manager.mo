@@ -255,7 +255,7 @@ module {
         case (null){};
         case (?events){
           await playerComposite.addEventsToPlayers(events);
-          await seasonComposite.addEventsToFixture(events, submitFixtureData.fixtureId);
+          await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId);
         };
       };
       

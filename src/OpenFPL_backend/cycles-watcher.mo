@@ -14,7 +14,7 @@ shared(msg) actor class CyclesWatcher(
         //what should I topup to?
 
 
-
+/*
     let amount = Cycles.available();
     let limit : Nat = capacity - /;
     let acceptable =
@@ -22,6 +22,7 @@ shared(msg) actor class CyclesWatcher(
       else limit;
     let accepted = Cycles.accept(acceptable);
     assert (accepted == acceptable);
+ */
   };
 
 }
