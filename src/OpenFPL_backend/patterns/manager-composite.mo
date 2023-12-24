@@ -591,7 +591,7 @@ module {
         return "";
       };
       
-      Cycles.add(2000000000000); //TODO: WHY, Need a number I understand and how does it know which canister it is topping up?
+      Cycles.add(2000000000000);
       let canister = await ProfilePictureCanister.ProfilePictureCanister();
       let _ = await updateCanister_(canister);
       let canister_principal = Principal.fromActor(canister);
