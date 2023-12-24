@@ -1125,20 +1125,31 @@ module {
       };
     };
 
-    public func payRewards(rewardPool: T.RewardPool) : async (){
+    public func payWeeklyRewards(rewardPool: T.RewardPool) : async (){
       
-      //TODO: Check whether all the games for the gameweek are verified to pay rewards for a gameweek
-      //check all the gameweeks in a month are verified to pay monthly rewards
-      //check all the gameweeks in a season are verified to pay season rewards
-      
+      //gameweek is complete so pay rewards
+
+      //check if all gameweek month gameweeks are complete
+        //if they are pay monthly rewards
       
       await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool);
       await distributeMonthlyRewards(rewardPool.monthlyLeaderboardPool);
+      await distributeHighestScoringPlayerRewards();
+      await distributeWeeklyATHScoreRewards();
+      await distributeMonthlyATHScoreRewards();
+      
+    };
+    
+    public func paySeasonRewards(rewardPool: T.RewardPool) : async (){
+      
+      //gameweek is complete so pay rewards
+
+      //check if all gameweek month gameweeks are complete
+        //if they are pay monthly rewards
+      
       await distributeSeasonRewards();
       await distributeMostValuableTeamRewards();
-      await distributeHighestScoringPlayerRewards();
-      await distributeAllTimeHighScoreRewards();
-      
+      await distributeMonthlyATHScoreRewards();
     };
 
     public func distributeWeeklyRewards(seasonRewardPool: Nat64) : async (){
@@ -1170,7 +1181,17 @@ module {
       //TODO
     };
 
-    public func distributeAllTimeHighScoreRewards() : async (){
+    public func distributeWeeklyATHScoreRewards() : async (){
+      //TODO
+
+    };
+
+    public func distributeMonthlyATHScoreRewards() : async (){
+      //TODO
+
+    };
+
+    public func distributeSeasonATHScoreRewards() : async (){
       //TODO
 
     };

@@ -178,6 +178,7 @@ module {
       //TODO: Create the leaderboard canisters for the leaderboards you are about to calculate
       //TODO: Add the leadeboard canister ids to the cycle watcher
       //TODO: Implement the calculation logic
+      //TODO: Add the leaderboard data to the canister
       
     };
     

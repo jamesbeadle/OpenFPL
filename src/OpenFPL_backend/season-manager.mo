@@ -308,7 +308,7 @@ module {
         switch(rewardPool){
           case (null){};
           case (?foundRewardPool){
-            await managerComposite.payRewards(foundRewardPool);
+            await managerComposite.payWeeklyRewards(foundRewardPool);
           }
         };
         
@@ -334,6 +334,13 @@ module {
       };
 
       if(gameweekComplete and systemState.calculationGameweek > 38){
+        let rewardPool = rewardPools.get(systemState.calculationSeason);
+        switch(rewardPool){
+          case (null){};
+          case (?foundRewardPool){
+            await managerComposite.paySeasonRewards(foundRewardPool);
+          }
+        };
         await seasonComposite.createNewSeason(systemState);
         await managerComposite.resetFantasyTeams();
           
