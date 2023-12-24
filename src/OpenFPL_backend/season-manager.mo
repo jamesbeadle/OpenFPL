@@ -326,7 +326,7 @@ module {
 
       if(gameweekComplete and systemState.calculationGameweek > 38){
         await seasonComposite.createNewSeason(systemState);
-        await seasonComposite.resetFantasyTeams();
+        await managerComposite.resetFantasyTeams();
           
         let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
         let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
