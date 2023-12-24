@@ -10,6 +10,7 @@ import Array "mo:base/Array";
 import Int "mo:base/Int";
 import Timer "mo:base/Timer";
 import Nat16 "mo:base/Nat16";
+import HashMap "mo:base/HashMap";
 import CanisterIds "../CanisterIds";
 import Countries "../Countries";
 import Utilities "../utilities";
@@ -865,8 +866,154 @@ module {
       };
     };
 
-    public func addEventsToPlayers(playerEventData: [T.PlayerEventData]) : async (){
-      //TODO: Imeplement adding the events for a game to the players
+    public func addEventsToPlayers(playerEventData: [T.PlayerEventData], seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async (){
+      
+      var updatedSeasons : List.List<T.PlayerSeason> = List.nil<T.PlayerSeason>();
+      let playerEventsMap : HashMap.HashMap<Nat16, [T.PlayerEventData]> = HashMap.HashMap<Nat16, [T.PlayerEventData]>(200, Utilities.eqNat16, Utilities.hashNat16);
+
+      for (event in Iter.fromArray(playerEventData)) {
+        let playerId : Nat16 = event.playerId;
+        switch (playerEventsMap.get(playerId)) {
+          case (null) {
+            playerEventsMap.put(playerId, [event]);
+          };
+          case (?existingEvents) {
+            let existingEventsBuffer = Buffer.fromArray<T.PlayerEventData>(existingEvents);
+            existingEventsBuffer.add(event);
+            playerEventsMap.put(playerId, Buffer.toArray(existingEventsBuffer));
+          };
+        };
+      };
+
+      for(playerEventMap in playerEventsMap.entries()){
+        let player = List.find<T.Player>(
+          players,
+          func(p : T.Player) : Bool {
+            return p.id == playerEventMap.0;
+          },
+        );
+        switch(player){
+          case (null){};
+          case (?foundPlayer){
+
+            if (foundPlayer.seasons == null) {
+              let newGameweek : T.PlayerGameweek = {
+                number = gameweek;
+                events = List.fromArray<T.PlayerEventData>(playerEventData);
+                points = 0; //TODO: Check where this gets set
+              };
+              let newSeason : T.PlayerSeason = {
+                id = seasonId;
+                gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
+              };
+              updatedSeasons := List.fromArray<T.PlayerSeason>([newSeason]);
+            } else {
+              let currentSeason = List.find<T.PlayerSeason>(
+                foundPlayer.seasons,
+                func(s : T.PlayerSeason) : Bool {
+                  s.id == seasonId;
+                },
+              );
+
+              if (currentSeason == null) {
+                let newGameweek : T.PlayerGameweek = {
+                  number = gameweek;
+                  events = List.fromArray<T.PlayerEventData>(playerEventData);
+                  points = 0; //TODO: Check where this gets set
+                };
+                let newSeason : T.PlayerSeason = {
+                  id = seasonId;
+                  gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
+                };
+                updatedSeasons := List.append<T.PlayerSeason>(foundPlayer.seasons, List.fromArray<T.PlayerSeason>([newSeason]));
+
+              } else {
+                updatedSeasons := List.map<T.PlayerSeason, T.PlayerSeason>(
+                  foundPlayer.seasons,
+                  func(season : T.PlayerSeason) : T.PlayerSeason {
+
+                    if (season.id != seasonId) {
+                      return season;
+                    };
+
+                    let currentGameweek = List.find<T.PlayerGameweek>(
+                      season.gameweeks,
+                      func(gw : T.PlayerGameweek) : Bool {
+                        gw.number == gameweek;
+                      },
+                    );
+
+                    if (currentGameweek == null) {
+                      let newGameweek : T.PlayerGameweek = {
+                        number = gameweek;
+                        events = List.fromArray<T.PlayerEventData>(playerEventData);
+                        points = 0; //TODO: Check where this gets set
+                      };
+                      let updatedGameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
+                      let updatedSeason : T.PlayerSeason = {
+                        id = season.id;
+                        gameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
+                      };
+                      return updatedSeason;
+                    } else {
+                      let updatedGameweeks = List.map<T.PlayerGameweek, T.PlayerGameweek>(
+                        season.gameweeks,
+                        func(gw : T.PlayerGameweek) : T.PlayerGameweek {
+                          if (gw.number != gameweek) {
+                            return gw;
+                          };
+                          return {
+                            number = gw.number;
+                            events = List.append<T.PlayerEventData>(gw.events, List.fromArray(playerEventData));
+                            points = 0; //TODO: Check where this gets set
+                          };
+                        },
+                      );
+                      return {
+                        id = season.id;
+                        gameweeks = updatedGameweeks;
+                      };
+                    };
+                  },
+                );
+              };
+            };
+
+            let updatedPlayer = {
+              id = foundPlayer.id;
+              clubId = foundPlayer.clubId;
+              position = foundPlayer.position;
+              firstName = foundPlayer.firstName;
+              lastName = foundPlayer.lastName;
+              shirtNumber = foundPlayer.shirtNumber;
+              valueQuarterMillions = foundPlayer.valueQuarterMillions;
+              dateOfBirth = foundPlayer.dateOfBirth;
+              nationality = foundPlayer.nationality;
+              seasons = updatedSeasons;
+              valueHistory = foundPlayer.valueHistory;
+              onLoan = foundPlayer.onLoan;
+              parentClubId = foundPlayer.parentClubId;
+              loanEndDate = foundPlayer.loanEndDate;
+              isInjured = foundPlayer.isInjured;
+              injuryHistory = foundPlayer.injuryHistory;
+              retirementDate = foundPlayer.retirementDate;
+              transferHistory = foundPlayer.transferHistory;
+            };
+
+            players := List.map<T.Player, T.Player>(
+              players,
+              func(p : T.Player) : T.Player {
+                if (p.id == updatedPlayer.id) { updatedPlayer } else { p };
+              },
+            );
+          };
+        }
+        
+      };
+
+      
+
+
     };
 
     public func getStablePlayers(): [T.Player] {

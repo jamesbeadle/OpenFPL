@@ -256,6 +256,9 @@ module {
     };
 
     public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async Result.Result<Text,Text> {
+
+      //TODO: ENSURE THAT ALL GAMEWEEKS ARE THE SAME FOR EACH EVENT
+
       let validPlayerEvents = validatePlayerEvents(submitFixtureDataDTO.playerEventData);
       if (not validPlayerEvents) {
         return #err("Invalid: Player events are not valid.");

@@ -265,7 +265,7 @@ module {
       switch(populatedPlayerEvents){
         case (null){};
         case (?events){
-          await playerComposite.addEventsToPlayers(events);
+          await playerComposite.addEventsToPlayers(events, submitFixtureData.seasonId, submitFixtureData.gameweek);
           await seasonComposite.addEventsToFixture(events, submitFixtureData.seasonId, submitFixtureData.fixtureId);
         };
       };
