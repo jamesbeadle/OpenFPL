@@ -368,7 +368,7 @@ module {
         pickTeamGameweek = 1;
         homepageFixturesGameweek = 1;
         homepageManagerGameweek = 1;
-        transferWindowActive = true; //TODO: set this when gameweek is 1 until 2 to remove gameweek check!
+        transferWindowActive = true;
       };
 
       systemState := updatedSystemState;

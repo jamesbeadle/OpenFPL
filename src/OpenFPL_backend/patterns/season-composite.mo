@@ -838,7 +838,6 @@ module {
             },
           );
 
-          //check all completed //TODO
           let completedFixtures = List.filter<T.Fixture>(
             fixtures,
             func(fixture : T.Fixture) : Bool {
@@ -846,7 +845,7 @@ module {
             },
           );
 
-
+          return List.size(completedFixtures) == List.size(fixtures);
 
         };
       };
