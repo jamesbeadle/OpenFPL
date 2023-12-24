@@ -27,6 +27,7 @@ import LeaderboardComposite "patterns/leaderboard-composite";
 import SHA224 "./lib/SHA224";
 import Utilities "utilities";
 import CanisterIds "CanisterIds";
+import Token "token";
 
 module {
 
@@ -39,12 +40,14 @@ module {
     let clubComposite = ClubComposite.ClubComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
     let leaderboardComposite = LeaderboardComposite.LeaderboardComposite();
-    let rewardPool: HashMap.HashMap<T.SeasonId, T.RewardPool> = HashMap.HashMap<T.SeasonId, T.RewardPool>(100, Utilities.eqNat16, Utilities.hashNat16);
-   
+    
     public func setBackendCanisterController(controller: Principal){
       managerComposite.setBackendCanisterController(controller);
     };
     
+    //TODO: ADD TO BACKUP MAKE SURE EVERY VARIABLE BACKED UP
+    var rewardPools: HashMap.HashMap<T.SeasonId, T.RewardPool> = HashMap.HashMap<T.SeasonId, T.RewardPool>(100, Utilities.eqNat16, Utilities.hashNat16);
+
     private var systemState: T.SystemState = {
       calculationGameweek = 1;
       calculationMonth = 8;
@@ -302,7 +305,7 @@ module {
           };
           calculationSeason := systemState.calculationSeason + 1;
           await calculateRewardPool(systemState.calculationSeason);
-          
+
           calculationGameweek := systemState.calculationGameweek + 1;
           calculationMonth := 8;
         }
@@ -429,7 +432,8 @@ module {
 
     private func calculateRewardPool(seasonId: T.SeasonId) : async (){
 
-      let totalSupply: Nat64 = 0;
+      let tokenCanisterInstance = Token.Token();
+      let totalSupply: Nat64 = await tokenCanisterInstance.getTotalSupply();
 
       let rewardPool: T.RewardPool = {
         seasonId = seasonId;
@@ -443,10 +447,7 @@ module {
         allTimeSeasonHighScorePool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05));
       };
       
-
-      //TODO: Record this info so you know how much to mint when things are verified
-
-
+      rewardPools.put(seasonId, rewardPool);
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
