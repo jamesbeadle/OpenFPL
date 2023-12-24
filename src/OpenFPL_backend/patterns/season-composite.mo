@@ -782,10 +782,42 @@ module {
       };
     };
 
-
-
-    public func addEventsToFixture(playerEventData: [T.PlayerEventData], fixtureId: T.FixtureId) : async (){
-      //TODO: Imeplement adding the events for a game to the fixture
+    public func addEventsToFixture(playerEventData: [T.PlayerEventData], seasonId: T.SeasonId, fixtureId: T.FixtureId) : async (){
+       seasons := List.map<T.Season, T.Season>(
+        seasons,
+        func(season : T.Season) : T.Season {
+          if (season.id == seasonId) {
+            return {
+              id = season.id;
+              name = season.name;
+              year = season.year;
+              fixtures = List.map<T.Fixture, T.Fixture>(
+                season.fixtures,
+                func(fixture : T.Fixture) : T.Fixture {
+                  if(fixture.id == fixtureId){
+                    return {
+                      id = fixture.id;
+                      seasonId = fixture.seasonId;
+                      gameweek = fixture.gameweek;
+                      kickOff = fixture.kickOff;
+                      homeClubId = fixture.homeClubId;
+                      awayClubId = fixture.awayClubId;
+                      homeGoals = fixture.homeGoals;
+                      awayGoals = fixture.awayGoals;
+                      status = fixture.status;
+                      events = List.fromArray(playerEventData);
+                      highestScoringPlayerId = fixture.highestScoringPlayerId;
+                    };
+                  } else { return fixture; };
+              },
+            );
+              postponedFixtures = season.postponedFixtures;
+            };
+          } else {
+            return season;
+          };
+        },
+      ); 
     };
 
     public func checkGameweekComplete(systemState: T.SystemState) : Bool {
@@ -1067,10 +1099,6 @@ let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(N
 
 
       */
-    };
-
-    public func checkJanTransferWindow(systemState: T.SystemState){
-      //TODO: Implement jan transfer window check for start and end based on current weeks fixtures
     };
 
     public func resetFantasyTeams() : async (){

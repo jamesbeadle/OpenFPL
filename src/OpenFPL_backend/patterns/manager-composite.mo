@@ -1040,7 +1040,7 @@ module {
     //TODO: CHECK THE IMPLEMENTATION OF THE FOLLOWING
 
     public func snapshotFantasyTeams() : (){
-
+      //TODO: Add back code to snapshot
     };
 
     public func resetTransfers() : (){

@@ -215,8 +215,6 @@ module {
       systemState := updatedSystemState;
       managerComposite.snapshotFantasyTeams();
       await updateCacheHash("system_state");
-
-      //TODO: What goes here?
     };
 
     public func gameKickOffExpiredCallback() : async (){
@@ -229,16 +227,20 @@ module {
       await updateCacheHash("fixtures");
     };
     
-    public func loanExpiredCallback(){
-      //Todo: recall player loan
+    public func loanExpiredCallback() : async (){
+      await playerComposite.loanExpired();
+      await updateCacheHash("players");
     };
     
-    public func transferWindowStartCallback(){
+    public func transferWindowStartCallback() : async (){
+      
       //TODO: update transfer window flag
+      await updateCacheHash("players");
     };
     
-    public func transferWindowEndCallback(){
+    public func transferWindowEndCallback() : async () {
       //TODO: update transfer window flag
+      await updateCacheHash("players");
     };
 
     //Governance validation and execution functions
@@ -268,21 +270,19 @@ module {
         await managerComposite.distributeMonthlyRewards();
         await managerComposite.distributeSeasonRewards();
 
-        seasonComposite.checkJanTransferWindow(systemState);
-
-        //TODO:check if season complete and update differently
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);
           await seasonComposite.resetFantasyTeams();
+          //TODO: set jan transfer window start and end timer for season
         };
 
         let updatedSystemState: T.SystemState = {
           calculationGameweek = systemState.calculationGameweek + 1;
           calculationMonth = systemState.calculationMonth; //TODO: When this change?
-          calculationSeason = systemState.calculationSeason;
+          calculationSeason = systemState.calculationSeason; //TODO: When this change?
           pickTeamGameweek = systemState.pickTeamGameweek;
-          homepageFixturesGameweek = systemState.homepageFixturesGameweek;
-          homepageManagerGameweek = systemState.homepageManagerGameweek;
+          homepageFixturesGameweek = systemState.homepageFixturesGameweek; //TODO: When this change?
+          homepageManagerGameweek = systemState.homepageManagerGameweek; //TODO: When this change?
           transferWindowActive = systemState.transferWindowActive;
         };
 
