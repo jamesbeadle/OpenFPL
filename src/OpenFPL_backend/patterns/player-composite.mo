@@ -896,7 +896,7 @@ module {
           case (null){};
           case (?foundPlayer){
 
-            let score: Int16 = calculatePlayerScore(); //getPlayerScore(playerEventData); //TODO: Add back in 
+            let score: Int16 = calculatePlayerScore(foundPlayer.position, playerEventMap.1);
 
             if (foundPlayer.seasons == null) {
               let newGameweek : T.PlayerGameweek = {
@@ -1015,216 +1015,17 @@ module {
     };
 
     
-    private func calculatePlayerScore(events: [T.PlayerEventData]) : Int16 {
-      
-      var homeGoalsCount : Nat8 = 0;
-      var awayGoalsCount : Nat8 = 0;
+    private func calculatePlayerScore(playerPosition: T.PlayerPosition, events: [T.PlayerEventData]) : Int16 {
+      let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
+        events,
+        0,
+        func(acc : Int16, event : T.PlayerEventData) : Int16 {
+          return acc + Utilities.calculateIndividualScoreForEvent(event, playerPosition);
+        },
+      );
 
-      let playerEventsMap : HashMap.HashMap<Nat16, [T.PlayerEventData]> = HashMap.HashMap<Nat16, [T.PlayerEventData]>(200, Utilities.eqNat16, Utilities.hashNat16);
-
-      for (event in Iter.fromList(fixture.events)) {
-
-        switch (event.eventType) {
-          case 1 {
-            if (event.teamId == fixture.homeClubId) {
-              homeGoalsCount += 1;
-            } else if (event.teamId == fixture.awayClubId) {
-              awayGoalsCount += 1;
-            };
-          };
-          case 10 {
-            if (event.teamId == fixture.homeClubId) {
-              awayGoalsCount += 1;
-            } else if (event.teamId == fixture.awayClubId) {
-              homeGoalsCount += 1;
-            };
-          };
-          case _ {};
-        };
-
-        let playerId : Nat16 = event.playerId;
-        switch (playerEventsMap.get(playerId)) {
-          case (null) {
-            playerEventsMap.put(playerId, [event]);
-          };
-          case (?existingEvents) {
-            let existingEventsBuffer = Buffer.fromArray<T.PlayerEventData>(existingEvents);
-            existingEventsBuffer.add(event);
-            playerEventsMap.put(playerId, Buffer.toArray(existingEventsBuffer));
-          };
-        };
-      };
-
-      let playerScoresMap : HashMap.HashMap<Nat16, Int16> = HashMap.HashMap<Nat16, Int16>(200, Utilities.eqNat16, Utilities.hashNat16);
-      for ((playerId, events) in playerEventsMap.entries()) {
-        var currentPlayer = await getPlayer(playerId);
-
-        let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
-          events,
-          0,
-          func(acc : Int16, event : T.PlayerEventData) : Int16 {
-            return acc + calculateIndividualScoreForEvent(event, currentPlayer.position);
-          },
-        );
-
-        let aggregateScore = Utilities.calculateAggregatePlayerEvents(events, currentPlayer.position);
-        playerScoresMap.put(playerId, totalScore + aggregateScore);
-      };
-
-      for ((playerId, score) in playerScoresMap.entries()) {
-
-        let player = await getPlayer(playerId);
-        var updatedSeasons : List.List<T.PlayerSeason> = List.nil<T.PlayerSeason>();
-        let playerSpecificEvents = playerEventsMap.get(playerId);
-        switch (playerSpecificEvents) {
-          case (null) {};
-          case (?foundEvents) {
-            if (player.seasons == null) {
-              let newGameweek : T.PlayerGameweek = {
-                number = gameweek;
-                events = List.fromArray<T.PlayerEventData>(foundEvents);
-                points = score;
-              };
-              let newSeason : T.PlayerSeason = {
-                id = seasonId;
-                gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
-              };
-              updatedSeasons := List.fromArray<T.PlayerSeason>([newSeason]);
-            } else {
-              let currentSeason = List.find<T.PlayerSeason>(
-                player.seasons,
-                func(s : T.PlayerSeason) : Bool {
-                  s.id == seasonId;
-                },
-              );
-
-              if (currentSeason == null) {
-                let newGameweek : T.PlayerGameweek = {
-                  number = gameweek;
-                  events = List.fromArray<T.PlayerEventData>(foundEvents);
-                  points = score;
-                };
-                let newSeason : T.PlayerSeason = {
-                  id = seasonId;
-                  gameweeks = List.fromArray<T.PlayerGameweek>([newGameweek]);
-                };
-                updatedSeasons := List.append<T.PlayerSeason>(player.seasons, List.fromArray<T.PlayerSeason>([newSeason]));
-
-              } else {
-                updatedSeasons := List.map<T.PlayerSeason, T.PlayerSeason>(
-                  player.seasons,
-                  func(season : T.PlayerSeason) : T.PlayerSeason {
-
-                    if (season.id != seasonId) {
-                      return season;
-                    };
-
-                    let currentGameweek = List.find<T.PlayerGameweek>(
-                      season.gameweeks,
-                      func(gw : T.PlayerGameweek) : Bool {
-                        gw.number == gameweek;
-                      },
-                    );
-
-                    if (currentGameweek == null) {
-                      let newGameweek : T.PlayerGameweek = {
-                        number = gameweek;
-                        events = List.fromArray<T.PlayerEventData>(foundEvents);
-                        points = score;
-                      };
-                      let updatedGameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
-                      let updatedSeason : T.PlayerSeason = {
-                        id = season.id;
-                        gameweeks = List.append<T.PlayerGameweek>(season.gameweeks, List.fromArray<T.PlayerGameweek>([newGameweek]));
-                      };
-                      return updatedSeason;
-                    } else {
-                      let updatedGameweeks = List.map<T.PlayerGameweek, T.PlayerGameweek>(
-                        season.gameweeks,
-                        func(gw : T.PlayerGameweek) : T.PlayerGameweek {
-                          if (gw.number != gameweek) {
-                            return gw;
-                          };
-                          return {
-                            number = gw.number;
-                            events = List.append<T.PlayerEventData>(gw.events, List.fromArray(foundEvents));
-                            points = score;
-                          };
-                        },
-                      );
-                      return {
-                        id = season.id;
-                        gameweeks = updatedGameweeks;
-                      };
-                    };
-                  },
-                );
-              };
-            };
-          };
-        };
-
-        let updatedPlayer = {
-          id = player.id;
-          teamId = player.teamId;
-          position = player.position;
-          firstName = player.firstName;
-          lastName = player.lastName;
-          shirtNumber = player.shirtNumber;
-          value = player.value;
-          dateOfBirth = player.dateOfBirth;
-          nationality = player.nationality;
-          seasons = updatedSeasons;
-          valueHistory = player.valueHistory;
-          onLoan = player.onLoan;
-          parentClubId = player.parentClubId;
-          isInjured = player.isInjured;
-          injuryHistory = player.injuryHistory;
-          retirementDate = player.retirementDate;
-          transferHistory = player.transferHistory;
-        };
-
-        players := List.map<T.Player, T.Player>(
-          players,
-          func(p : T.Player) : T.Player {
-            if (p.id == updatedPlayer.id) { updatedPlayer } else { p };
-          },
-        );
-      };
-
-      var highestScore : Int16 = 0;
-      var highestScoringPlayerId : Nat16 = 0;
-      var isUniqueHighScore : Bool = true;
-      let uniquePlayerIdsBuffer = Buffer.fromArray<Nat16>([]);
-
-      for (event in List.toIter(fixture.events)) {
-        if (not Buffer.contains<Nat16>(uniquePlayerIdsBuffer, event.playerId, func(a : Nat16, b : Nat16) : Bool { a == b })) {
-          uniquePlayerIdsBuffer.add(event.playerId);
-        };
-      };
-
-      let uniquePlayerIds = Buffer.toArray<Nat16>(uniquePlayerIdsBuffer);
-
-      for (j in Iter.range(0, Array.size(uniquePlayerIds) -1)) {
-        let playerId = uniquePlayerIds[j];
-        switch (playerScoresMap.get(playerId)) {
-          case (?playerScore) {
-            if (playerScore > highestScore) {
-              highestScore := playerScore;
-              highestScoringPlayerId := playerId;
-              isUniqueHighScore := true;
-            } else if (playerScore == highestScore) {
-              isUniqueHighScore := false;
-            };
-          };
-          case null {};
-        };
-      };
-
-
-
-      return playerGameweek.points + 25;
-
+      let aggregateScore = Utilities.calculateAggregatePlayerEvents(events, playerPosition);
+      return totalScore + aggregateScore;
     };
 
     public func getStablePlayers(): [T.Player] {
