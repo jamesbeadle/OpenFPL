@@ -233,18 +233,33 @@ module {
     };
     
     public func transferWindowStartCallback() : async (){
-      
+      let updatedSystemState: T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeason = systemState.calculationSeason;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
+        homepageManagerGameweek = systemState.homepageManagerGameweek;
+        transferWindowActive = true;
+      };
 
-
-
-
-      //TODO: update transfer window flag
-      await updateCacheHash("players");
+      systemState := updatedSystemState;
+      await updateCacheHash("system_state");
     };
     
     public func transferWindowEndCallback() : async () {
-      //TODO: update transfer window flag
-      await updateCacheHash("players");
+      let updatedSystemState: T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeason = systemState.calculationSeason;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
+        homepageManagerGameweek = systemState.homepageManagerGameweek;
+        transferWindowActive = false;
+      };
+
+      systemState := updatedSystemState;
+      await updateCacheHash("system_state");
     };
 
     //Governance validation and execution functions
@@ -390,8 +405,6 @@ module {
           };
         };
       };
-      //TODO: Set the kickoff timers for the gameweek to set the fixtures to active
-      //also set timers 2 hours on from these to set the fixture to completed from active
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
