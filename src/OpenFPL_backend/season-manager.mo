@@ -234,6 +234,10 @@ module {
     
     public func transferWindowStartCallback() : async (){
       
+
+
+
+
       //TODO: update transfer window flag
       await updateCacheHash("players");
     };
@@ -270,7 +274,20 @@ module {
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);
           await seasonComposite.resetFantasyTeams();
-          //TODO: set jan transfer window start and end timer for season
+          
+          let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
+          let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
+
+          let transferWindowStartDate : Timer.Duration = #nanoseconds(Int.abs(jan1Date - Time.now()));
+          let transferWindowEndDate : Timer.Duration = #nanoseconds(Int.abs(jan31Date - Time.now()));
+
+          switch (setAndBackupTimer) {
+            case (null) {};
+            case (?actualFunction) {
+              actualFunction(transferWindowStartDate, "transferWindowStart");
+              actualFunction(transferWindowEndDate, "transferWindowEnd");
+            };
+          };
         };
 
         let updatedSystemState: T.SystemState = {
