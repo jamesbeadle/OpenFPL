@@ -340,4 +340,16 @@ module Types {
     code : Text;
   };
 
+  public type RewardPool = {
+    seasonId: SeasonId;
+    seasonLeaderboardPool: Nat64;
+    monthlyLeaderboardPool: Nat64;
+    weeklyLeaderboardPool: Nat64;
+    mostValuableTeamPool: Nat64;
+    highestScoringMatchPlayerPool: Nat64;
+    allTimeWeeklyHighScorePool: Nat64;
+    allTimeMonthlyHighScorePool: Nat64;
+    allTimeSeasonHighScorePool: Nat64;
+  }
+
 };

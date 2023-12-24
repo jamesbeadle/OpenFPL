@@ -1013,7 +1013,6 @@ module {
         
       };
     };
-
     
     private func calculatePlayerScore(playerPosition: T.PlayerPosition, events: [T.PlayerEventData]) : Int16 {
       let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(

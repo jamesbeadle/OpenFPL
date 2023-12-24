@@ -17,6 +17,8 @@ import Array "mo:base/Array";
 import Order "mo:base/Order";
 import Int "mo:base/Int";
 import Time "mo:base/Time";
+import Float "mo:base/Float";
+import Int64 "mo:base/Int64";
 import SeasonComposite "patterns/season-composite";
 import PlayerComposite "patterns/player-composite";
 import ClubComposite "patterns/club-composite";
@@ -37,7 +39,8 @@ module {
     let clubComposite = ClubComposite.ClubComposite();
     let seasonComposite = SeasonComposite.SeasonComposite();
     let leaderboardComposite = LeaderboardComposite.LeaderboardComposite();
-
+    let rewardPool: HashMap.HashMap<T.SeasonId, T.RewardPool> = HashMap.HashMap<T.SeasonId, T.RewardPool>(100, Utilities.eqNat16, Utilities.hashNat16);
+   
     public func setBackendCanisterController(controller: Principal){
       managerComposite.setBackendCanisterController(controller);
     };
@@ -424,16 +427,21 @@ module {
     };
 
     private func calculateRewardPool() : async (){
-      //TODO: Calculate from the total supply of tokens the reward pool for the season that has just been created
-      //total supply x 2.5%
-      //Season leaderboard reward amount = reward pool x 30%
-      //Monthly leaderboard reward amount = reward pool x 20%
-      //Weekly leaderboard reward amount = reward pool x 15%
-      //Most Valuable Team reward amount = reward pool x 10%
-      //Highest scoring match player rewards amount = reward pool x 10%
-      //Amount rolled over if anyone breaks ATH weekly score = 5%
-      //Amount rolled over if anyone breaks ATH monthly score = 5%
-      //Amount rolled over if anyone breaks ATH season score = 5%
+
+      let totalSupply: Nat64 = 0;
+
+      let seasonLeaderboardPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.3));
+      let monthlyLeaderboardPool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.2;
+      let weeklyLeaderboardPool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.15;
+      let mostValuableTeamPool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.1;
+      let highestScoringMatchPlayerPool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.1;
+      let allTimeWeeklyHighScorePool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05;
+      let allTimeMonthlyHighScorePool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05;
+      let allTimeSeasonHighScorePool = Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05;
+
+      //TODO: Record this info so you know how much to mint when things are verified
+
+
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {
