@@ -291,6 +291,7 @@ module {
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);
           await seasonComposite.resetFantasyTeams();
+          await calculateRewardPool();
           
           let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
           let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
@@ -432,6 +433,19 @@ module {
           };
         };
       };
+    };
+
+    private func calculateRewardPool() : async (){
+      //TODO: Calculate from the total supply of tokens the reward pool for the season that has just been created
+      //total supply x 2.5%
+      //Season leaderboard reward amount = reward pool x 30%
+      //Monthly leaderboard reward amount = reward pool x 20%
+      //Weekly leaderboard reward amount = reward pool x 15%
+      //Most Valuable Team reward amount = reward pool x 10%
+      //Highest scoring match player rewards amount = reward pool x 10%
+      //Amount rolled over if anyone breaks ATH weekly score = 5%
+      //Amount rolled over if anyone breaks ATH monthly score = 5%
+      //Amount rolled over if anyone breaks ATH season score = 5%
     };
 
     public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async Result.Result<Text,Text> {

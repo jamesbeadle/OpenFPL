@@ -328,7 +328,7 @@ module Types {
 
   public type SystemState = {
     calculationGameweek: GameweekNumber; 
-    calculationMonth: CalendarMonth; //TODO: starts at 8 and after the final game of a gameweek is verified it checks the end date of the latest game in the next gameweek and if the follow month then increase the calculationMonth
+    calculationMonth: CalendarMonth;
     calculationSeason: SeasonId; 
     pickTeamGameweek: GameweekNumber; 
     homepageFixturesGameweek: GameweekNumber; //TODO: the fixtures up until the morning after the last game
