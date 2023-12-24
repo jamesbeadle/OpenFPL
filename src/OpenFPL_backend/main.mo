@@ -13,6 +13,7 @@ import DTOs "DTOs";
 import SeasonManager "season-manager";
 import T "types";
 import TimerComposite "patterns/timer-composite";
+import CanisterWatcher "canister-watcher";
 
 actor Self {
   //TODO: NEED TO PASS SELF
@@ -273,6 +274,8 @@ actor Self {
     loanExpiredCallback,
     transferWindowStartCallback,
     transferWindowEndCallback);
+
+  let canisterWatcher = CanisterWatcher.CanisterWatcher();
 
   seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
   seasonManager.setCanisterWatcherFunction(canisterWatcher.setAndWatchCanister);
