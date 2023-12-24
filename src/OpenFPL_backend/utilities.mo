@@ -12,6 +12,7 @@ import Nat64 "mo:base/Nat64";
 import Int64 "mo:base/Int64";
 import Text "mo:base/Text";
 import Int16 "mo:base/Int16";
+import Float "mo:base/Float";
 
 module {
   
@@ -324,6 +325,10 @@ module {
       case (#HighestScoringPlayer) { return 25 };
       case _ { return 0 };
     };
+  };
+
+  public func nat64Percentage(amount: Nat64, percentage: Float) : Nat64 {
+    return Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(amount)) * percentage));
   };
 
 };

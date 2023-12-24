@@ -435,16 +435,18 @@ module {
       let tokenCanisterInstance = Token.Token();
       let totalSupply: Nat64 = await tokenCanisterInstance.getTotalSupply();
 
+      let seasonTokensMinted = Utilities.nat64Percentage(totalSupply, 0.025);
+
       let rewardPool: T.RewardPool = {
         seasonId = seasonId;
-        seasonLeaderboardPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.3));
-        monthlyLeaderboardPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.2));
-        weeklyLeaderboardPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.15));
-        mostValuableTeamPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.1));
-        highestScoringMatchPlayerPool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.1));
-        allTimeWeeklyHighScorePool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05));
-        allTimeMonthlyHighScorePool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05));
-        allTimeSeasonHighScorePool = Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(totalSupply)) * 0.05));
+        seasonLeaderboardPool = Utilities.nat64Percentage(seasonTokensMinted, 0.3);
+        monthlyLeaderboardPool = Utilities.nat64Percentage(seasonTokensMinted, 0.2);
+        weeklyLeaderboardPool = Utilities.nat64Percentage(seasonTokensMinted, 0.15);
+        mostValuableTeamPool = Utilities.nat64Percentage(seasonTokensMinted, 0.1);
+        highestScoringMatchPlayerPool = Utilities.nat64Percentage(seasonTokensMinted, 0.1);
+        allTimeWeeklyHighScorePool = Utilities.nat64Percentage(seasonTokensMinted, 0.05);
+        allTimeMonthlyHighScorePool = Utilities.nat64Percentage(seasonTokensMinted, 0.05);
+        allTimeSeasonHighScorePool = Utilities.nat64Percentage(seasonTokensMinted, 0.05);
       };
       
       rewardPools.put(seasonId, rewardPool);
