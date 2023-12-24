@@ -83,10 +83,17 @@ module {
       stable_profile_picture_canister_ids:  [(T.PrincipalId, Text)],
       stable_season_leaderboard_canister_ids:  [(T.SeasonId, Text)],
       stable_monthly_leaderboard_canister_ids:  [(T.MonthlyLeaderboardKey, Text)],
-      stable_weekly_leaderboard_canister_ids:  [(T.WeeklyLeaderboardKey, Text)]) {
+      stable_weekly_leaderboard_canister_ids:  [(T.WeeklyLeaderboardKey, Text)],
+      stable_reward_pools: [(T.SeasonId, T.RewardPool)]) {
 
       systemState := stable_system_state;
       dataCacheHashes := List.fromArray(stable_data_cache_hashes);
+      rewardPools := HashMap.fromIter<T.SeasonId, T.RewardPool>(
+        stable_reward_pools.vals(),
+        stable_reward_pools.size(),
+        Utilities.eqNat16, 
+        Utilities.hashNat16
+      );
       clubComposite.setStableData(stable_next_club_id, stable_clubs);
       playerComposite.setStableData(stable_next_player_id, stable_players, stable_retired_players, stable_former_players);
       seasonComposite.setStableData(stable_next_season_id, stable_next_fixture_id, stable_seasons);
@@ -286,6 +293,7 @@ module {
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if(gameweekComplete){
         
+        //TODO: Maybe add pick team season and ensure these checks are done differently so we ensure the correct rewards pool is used
         if(systemState.calculationGameweek == 38){
           await seasonComposite.createNewSeason(systemState);
           await seasonComposite.resetFantasyTeams();
@@ -306,7 +314,7 @@ module {
           calculationSeason := systemState.calculationSeason + 1;
           await calculateRewardPool(systemState.calculationSeason);
 
-          calculationGameweek := systemState.calculationGameweek + 1;
+          calculationGameweek := 1;
           calculationMonth := 8;
         }
         else{
@@ -343,6 +351,8 @@ module {
         systemState := updatedSystemState;
         await setGameweekTimers();
       };
+
+      let rewardPool = rewardPools.get(seasonId);
 
       await managerComposite.checkGameweekVerification();
       

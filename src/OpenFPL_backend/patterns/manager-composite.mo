@@ -1115,15 +1115,15 @@ module {
     };
 
 
-    public func checkGameweekVerification() : async (){
+    public func checkGameweekVerification(rewardPool: T.RewardPool) : async (){
       
       //TODO: Check whether all the games for the gameweek are verified to pay rewards for a gameweek
       //check all the gameweeks in a month are verified to pay monthly rewards
       //check all the gameweeks in a season are verified to pay season rewards
       
       
-      await distributeWeeklyRewards();
-      await distributeMonthlyRewards();
+      await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool);
+      await distributeMonthlyRewards(rewardPool.monthlyLeaderboardPool);
       await distributeSeasonRewards();
       await distributeMostValuableTeamRewards();
       await distributeHighestScoringPlayerRewards();
@@ -1131,12 +1131,18 @@ module {
       
     };
 
-    public func distributeWeeklyRewards() : async (){
+    public func distributeWeeklyRewards(seasonRewardPool: Nat64) : async (){
+      let weeklyRewardAmount = seasonRewardPool / 38;
       //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
       //Record any rewards in the data structures defined at start
     };
 
-    public func distributeMonthlyRewards() : async (){
+    public func distributeMonthlyRewards(seasonRewardPool: Nat64) : async (){
+      let monthlyRewardAmount = seasonRewardPool / 12;
+
+      //rewards are proportional to the number of entries in each club leaderboard
+      //so it's not a straight divide by 20
+
       //TODO: Should check all months where the rewards have not been distributed, keep a record
       //Record any rewards in the data structures defined at start
     };
@@ -1156,6 +1162,7 @@ module {
 
     public func distributeAllTimeHighScoreRewards() : async (){
       //TODO
+
     };
 
 
