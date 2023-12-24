@@ -1,6 +1,7 @@
 import Cycles "mo:base/ExperimentalCycles";
 import List "mo:base/List";
 import Timer "mo:base/Timer";
+import Iter "mo:base/Iter";
 import Utilities "utilities";
 import CanisterIds "CanisterIds";
 
@@ -8,7 +9,7 @@ module {
 
   public class CanisterWatcher() {
 
-    let canisters: List.List<Text> = List.fromArray<Text>([CanisterIds.MAIN_CANISTER_ID]);
+    let canisterIds: List.List<Text> = List.fromArray<Text>([CanisterIds.MAIN_CANISTER_ID]);
     let canisterCheckInterval = Utilities.getHour() * 24;
     let canisterCheckTimerId: ?Timer.TimerId = null;
 
@@ -29,23 +30,13 @@ module {
 
     public func checkCanisterCycles() : async () {
 
-    //TODO:for each canister check if the balance is low and top it up if it is
-        //what should I topup to?
-
-
-/*
-    let amount = Cycles.available();
-    let limit : Nat = capacity - /;
-    let acceptable =
-      if (amount <= limit) amount
-      else limit;
-    let accepted = Cycles.accept(acceptable);
-    assert (accepted == acceptable);
- */
-
-    //TODO: Again check canister balances at this point too
-
-  };
+      for(canisterId in Iter.fromList(canisterIds)){
+        let canister_actor = actor (canisterId) : actor {
+          checkCanisterCycles : () -> ();
+        };
+        canister_actor.checkCanisterCycles();
+      };
+    };
 
   };
 };

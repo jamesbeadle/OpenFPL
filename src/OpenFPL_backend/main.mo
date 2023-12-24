@@ -1,5 +1,6 @@
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
+import Cycles "mo:base/ExperimentalCycles";
 import Int "mo:base/Int";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
@@ -347,6 +348,16 @@ actor Self {
     seasonManager.setStableDataHashes(stable_data_cache_hashes);
     seasonManager.setStableSystemState(stable_system_state);
     timerComposite.setStableTimers(stable_timers);
+  };
+
+  public func checkCanisterCycles() {
+    let amount = Cycles.available();
+    let limit : Nat = 0;//capacity - 20; //TODO: AGAIN WHAT IS THIS?
+    let acceptable =
+      if (amount <= limit) amount
+      else limit;
+    let accepted = Cycles.accept(acceptable);
+    assert (accepted == acceptable);
   };
   
 };

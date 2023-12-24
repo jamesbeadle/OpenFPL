@@ -4,6 +4,7 @@ import HashMap "mo:base/HashMap";
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
+import Cycles "mo:base/ExperimentalCycles";
 
 actor class ProfilePictureCanister() {  
   private stable var bucket1 : [(T.PrincipalId, Blob)] = [];
@@ -160,4 +161,14 @@ actor class ProfilePictureCanister() {
   system func preupgrade() { };
 
   system func postupgrade() {};
+
+  public func checkCanisterCycles() : () {
+    let amount = Cycles.available();
+    let limit : Nat = 0;//capacity - 20; //TODO: AGAIN WHAT IS THIS?
+    let acceptable =
+      if (amount <= limit) amount
+      else limit;
+    let accepted = Cycles.accept(acceptable);
+    assert (accepted == acceptable);
+  };
 };
