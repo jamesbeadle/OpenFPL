@@ -236,7 +236,7 @@ actor Self {
   };
 
   private func gameweekBeginExpiredCallback() : async () {
-    seasonManager.gameweekBeginExpired();
+    await seasonManager.gameweekBeginExpired();
     timerComposite.removeExpiredTimers();
   };
 

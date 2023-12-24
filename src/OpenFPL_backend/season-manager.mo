@@ -195,7 +195,27 @@ module {
     };
 
     //Timer call back events
-    public func gameweekBeginExpired(){
+    public func gameweekBeginExpired() : async (){
+
+      var pickTeamGameweek: T.GameweekNumber = 1;
+      if(systemState.pickTeamGameweek < 38){
+        pickTeamGameweek := systemState.pickTeamGameweek + 1;
+      };
+
+      let updatedSystemState: T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeason = systemState.calculationSeason;
+        pickTeamGameweek = pickTeamGameweek;
+        homepageFixturesGameweek = systemState.homepageFixturesGameweek;
+        homepageManagerGameweek = systemState.homepageManagerGameweek;
+        transferWindowActive = systemState.transferWindowActive;
+      };
+
+      systemState := updatedSystemState;
+      managerComposite.snapshotFantasyTeams();
+      await updateCacheHash("system_state");
+
       //TODO: What goes here?
     };
 
@@ -258,7 +278,7 @@ module {
 
         let updatedSystemState: T.SystemState = {
           calculationGameweek = systemState.calculationGameweek + 1;
-          calculationMonth = systemState.calculationMonth;
+          calculationMonth = systemState.calculationMonth; //TODO: When this change?
           calculationSeason = systemState.calculationSeason;
           pickTeamGameweek = systemState.pickTeamGameweek;
           homepageFixturesGameweek = systemState.homepageFixturesGameweek;
