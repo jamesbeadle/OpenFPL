@@ -40,11 +40,6 @@ module {
     var weeklyATHPrizePool: Nat64 = 0;
     var monthlyATHPrizePool: Nat64 = 0;
     var seasonATHPrizePool: Nat64 = 0;
-
-
-    //TODO: Some kind of structure to record when a gameweek has been paid, really when a season is created you want to record the reward payment information in that season object
-
-
     
     public func setBackendCanisterController(controller: Principal){
       backendCanisterController := ?controller;
@@ -1130,19 +1125,39 @@ module {
       await distributeWeeklyRewards();
       await distributeMonthlyRewards();
       await distributeSeasonRewards();
+      await distributeMostValuableTeamRewards();
+      await distributeHighestScoringPlayerRewards();
+      await distributeAllTimeHighScoreRewards();
+      
     };
 
     public func distributeWeeklyRewards() : async (){
  //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
+ //Record any rewards in the data structures defined at start
     };
 
     public func distributeMonthlyRewards() : async (){
  //TODO: Should check all months where the rewards have not been distributed, keep a record
+ //Record any rewards in the data structures defined at start
     };
 
     public func distributeSeasonRewards() : async (){
  //TODO: Should check all seasons where the rewards have not been distributed, keep a record
+ //Record any rewards in the data structures defined at start
     };
+
+    public func distributeMostValuableTeamRewards() : async (){
+      //TODO
+    };
+
+    public func distributeHighestScoringPlayerRewards() : async (){
+      //TODO
+    };
+
+    public func distributeAllTimeHighScoreRewards() : async (){
+      //TODO
+    };
+
 
     public func getStableManagers(): [(T.PrincipalId, T.Manager)] {
       return Iter.toArray(managers.entries());
