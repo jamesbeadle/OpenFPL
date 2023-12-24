@@ -17,7 +17,6 @@ module {
       if(canisterCheckTimerId != null){
         //TODO:cancel current timer
       };
-      //TODO:Chcek canister balances now
       await checkCanisterCycles();
       //TODO:Check canister balances in timer duration
     };
