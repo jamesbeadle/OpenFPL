@@ -1115,7 +1115,7 @@ module {
     };
 
 
-    public func checkGameweekVerification(rewardPool: T.RewardPool) : async (){
+    public func payRewards(rewardPool: T.RewardPool) : async (){
       
       //TODO: Check whether all the games for the gameweek are verified to pay rewards for a gameweek
       //check all the gameweeks in a month are verified to pay monthly rewards

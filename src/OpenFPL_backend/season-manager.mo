@@ -53,6 +53,7 @@ module {
       calculationMonth = 8;
       calculationSeason = 1;
       pickTeamGameweek = 1;
+      pickTeamSeason = 1;
       transferWindowActive = false;
     };
 
@@ -292,74 +293,78 @@ module {
       var calculationGameweek = systemState.calculationGameweek;
       var calculationMonth = systemState.calculationMonth;
       var calculationSeason = systemState.calculationSeason;
-      
+
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if(gameweekComplete){
-        
-        //TODO: Maybe add pick team season and ensure these checks are done differently so we ensure the correct rewards pool is used
-        if(systemState.calculationGameweek == 38){
-          await seasonComposite.createNewSeason(systemState);
-          await seasonComposite.resetFantasyTeams();
-          
-          let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
-          let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
-
-          let transferWindowStartDate : Timer.Duration = #nanoseconds(Int.abs(jan1Date - Time.now()));
-          let transferWindowEndDate : Timer.Duration = #nanoseconds(Int.abs(jan31Date - Time.now()));
-
-          switch (setAndBackupTimer) {
-            case (null) {};
-            case (?actualFunction) {
-              actualFunction(transferWindowStartDate, "transferWindowStart");
-              actualFunction(transferWindowEndDate, "transferWindowEnd");
-            };
-          };
-          calculationSeason := systemState.calculationSeason + 1;
-          await calculateRewardPool(systemState.calculationSeason);
-
-          calculationGameweek := 1;
-          calculationMonth := 8;
-        }
-        else{
-          calculationGameweek := systemState.calculationGameweek + 1;
-
-          let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
-          let filteredFilters = Array.filter<DTOs.FixtureDTO>(
-            fixtures,
-            func(fixture : DTOs.FixtureDTO) : Bool {
-              return fixture.gameweek == systemState.calculationGameweek;
-            },
-          );
-          
-          let sortedArray = Array.sort(filteredFilters,
-            func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
-              if (a.kickOff < b.kickOff) { return #greater };
-              if (a.kickOff == b.kickOff) { return #equal };
-              return #less;
-            },
-          );
-
-          let latestFixture = sortedArray[0];
-          calculationMonth := Utilities.unixTimeToMonth(latestFixture.kickOff);
+        let rewardPool = rewardPools.get(systemState.calculationSeason);
+        switch(rewardPool){
+          case (null){};
+          case (?foundRewardPool){
+            await managerComposite.payRewards(foundRewardPool);
+          }
         };
         
-        let updatedSystemState: T.SystemState = {
-          calculationGameweek = calculationGameweek;
-          calculationMonth = calculationMonth; 
-          calculationSeason = calculationSeason;
-          pickTeamGameweek = systemState.pickTeamGameweek;
-          pickTeamSeason = systemState.pickTeamSeason;
-          transferWindowActive = systemState.transferWindowActive;
-        };
+        calculationGameweek := systemState.calculationGameweek + 1;
+        let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
+        let filteredFilters = Array.filter<DTOs.FixtureDTO>(
+          fixtures,
+          func(fixture : DTOs.FixtureDTO) : Bool {
+            return fixture.gameweek == systemState.calculationGameweek;
+          },
+        );
+          
+        let sortedArray = Array.sort(filteredFilters,
+          func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
+            if (a.kickOff < b.kickOff) { return #greater };
+            if (a.kickOff == b.kickOff) { return #equal };
+            return #less;
+          },
+        );
 
-        systemState := updatedSystemState;
-        await setGameweekTimers();
+        let latestFixture = sortedArray[0];
+        calculationMonth := Utilities.unixTimeToMonth(latestFixture.kickOff);
       };
 
-      let rewardPool = rewardPools.get(seasonId);
+      if(gameweekComplete and systemState.calculationGameweek > 38){
+        await seasonComposite.createNewSeason(systemState);
+        await seasonComposite.resetFantasyTeams();
+          
+        let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
+        let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
 
-      await managerComposite.checkGameweekVerification();
-      
+        let transferWindowStartDate : Timer.Duration = #nanoseconds(Int.abs(jan1Date - Time.now()));
+        let transferWindowEndDate : Timer.Duration = #nanoseconds(Int.abs(jan31Date - Time.now()));
+
+        switch (setAndBackupTimer) {
+          case (null) {};
+          case (?actualFunction) {
+            actualFunction(transferWindowStartDate, "transferWindowStart");
+            actualFunction(transferWindowEndDate, "transferWindowEnd");
+          };
+        };
+        calculationSeason := systemState.calculationSeason + 1;
+        await calculateRewardPool(systemState.calculationSeason);
+
+        calculationGameweek := 1;
+        calculationMonth := 8;
+      };
+
+      let updatedSystemState: T.SystemState = {
+        calculationGameweek = calculationGameweek;
+        calculationMonth = calculationMonth; 
+        calculationSeason = calculationSeason;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamSeason = systemState.pickTeamSeason;
+        transferWindowActive = systemState.transferWindowActive;
+      };
+
+      systemState := updatedSystemState;
+      await setGameweekTimers();
+
+
+
+
+
       await updateCacheHash("players");
       await updateCacheHash("player_events");
       await updateCacheHash("fixtures");
