@@ -25,9 +25,17 @@ module {
 
       for(canisterId in Iter.fromList(canisterIds)){
         let canister_actor = actor (canisterId) : actor {
-          checkCanisterCycles : () -> ();
+          getCyclesBalance : () -> async Nat64;
+          topupCanister : () -> async ();
         };
-        canister_actor.checkCanisterCycles();
+        
+        let balance = await canister_actor.getCyclesBalance();
+
+        if(balance < 500000000000){
+          Cycles.add(2000000000000);
+          await canister_actor.topupCanister();
+        };
+
       };
     };
 
