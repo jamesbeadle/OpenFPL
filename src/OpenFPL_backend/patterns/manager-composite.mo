@@ -24,6 +24,9 @@ module {
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
     private var activeProfilePictureCanisterId = ""; 
+    
+    private var setAndWatchCanister : ?((canisterId : Text) -> ()) = null;
+    
     var backendCanisterController: ?Principal = null;
 
     var seasonRewards: List.List<T.SeasonRewards> = List.nil();
@@ -43,6 +46,11 @@ module {
     
     public func setBackendCanisterController(controller: Principal){
       backendCanisterController := ?controller;
+    };
+    
+    public func setCanisterWatcherFunction(
+      _setAndWatchCanister : (canisterId : Text) -> ()) {
+      setAndWatchCanister := ?_setAndWatchCanister;
     };
 
     public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 

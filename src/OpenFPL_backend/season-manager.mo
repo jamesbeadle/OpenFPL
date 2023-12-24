@@ -115,7 +115,9 @@ module {
     
     public func setCanisterWatcherFunction(_setAndWatchCanister : (canisterId : Text) -> ()) 
     {
-        setAndWatchCanister := ?_setAndWatchCanister;
+      managerComposite.setCanisterWatcherFunction(_setAndWatchCanister);
+      leaderboardComposite.setCanisterWatcherFunction(_setAndWatchCanister);
+      setAndWatchCanister := ?_setAndWatchCanister;
     };
 
     private func updateCacheHash(category : Text) : async () {
