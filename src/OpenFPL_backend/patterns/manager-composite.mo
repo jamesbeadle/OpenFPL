@@ -26,6 +26,22 @@ module {
     private var activeProfilePictureCanisterId = ""; 
     var backendCanisterController: ?Principal = null;
 
+    var seasonRewards: List.List<T.SeasonRewards> = List.nil();
+    var monthlyRewards: List.List<T.MonthlyRewards> = List.nil();
+    var weeklyRewards: List.List<T.WeeklyRewards> = List.nil();
+    var mostValuableTeamRewards: List.List<T.RewardsList> = List.nil();
+    var highScoringPlayerRewards: List.List<T.RewardsList> = List.nil();
+    var allTimeHighScoreRewards: List.List<T.RewardsList> = List.nil();
+
+    var weeklyAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
+    var monthlyAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
+    var sesasonAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
+
+    var weeklyATHPrizePool: Nat64 = 0;
+    var monthlyATHPrizePool: Nat64 = 0;
+    var seasonATHPrizePool: Nat64 = 0;
+
+
     //TODO: Some kind of structure to record when a gameweek has been paid, really when a season is created you want to record the reward payment information in that season object
 
 

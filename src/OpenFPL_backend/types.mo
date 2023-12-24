@@ -60,8 +60,20 @@ module Types {
   };
 
   public type RewardType = {
-    #Leaderboard;
+    #SeasonLeaderboard;
+    #MonthlyLeaderboard;
+    #WeeklyLeaderboard;
+    #MostValuableTeam;
     #HighestScoringPlayer;
+    #WeeklyATHScore;
+    #MonthlyATHScore;
+    #SeasonATHScore;
+  };
+
+  public type RecordType = {
+    #WeeklyHighScore;
+    #MonthlyHighScore;
+    #SeasonHighScore;
   };
 
   public type Manager = {
@@ -141,9 +153,6 @@ module Types {
     year : Nat16;
     fixtures : List.List<Fixture>;
     postponedFixtures : List.List<Fixture>;
-    weeklyRewards: List.List<WeeklyRewards>;
-    monthlyRewards: List.List<MonthlyRewards>;
-    seasonRewards: SeasonRewards;
   };
 
   public type WeeklyRewards = {
@@ -157,6 +166,11 @@ module Types {
   };
 
   public type SeasonRewards = {
+    season: SeasonId;
+    rewards: List.List<RewardEntry>;
+  };
+
+  public type RewardsList = {
     rewards: List.List<RewardEntry>;
   };
 
@@ -165,6 +179,11 @@ module Types {
     rewardType: RewardType;
     position: Nat;
     amount: Nat64;
+  };
+
+  public type HighScoreRecord = {
+    recordType: RecordType;
+    points: Int16;
   };
 
   public type Club = {
