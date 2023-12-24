@@ -218,6 +218,7 @@ module {
         calculationMonth = systemState.calculationMonth;
         calculationSeason = systemState.calculationSeason;
         pickTeamGameweek = pickTeamGameweek;
+        pickTeamSeason = systemState.pickTeamSeason;
         transferWindowActive = systemState.transferWindowActive;
       };
 
@@ -247,6 +248,7 @@ module {
         calculationMonth = systemState.calculationMonth;
         calculationSeason = systemState.calculationSeason;
         pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamSeason = systemState.pickTeamSeason;
         transferWindowActive = true;
       };
 
@@ -260,6 +262,7 @@ module {
         calculationMonth = systemState.calculationMonth;
         calculationSeason = systemState.calculationSeason;
         pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamSeason = systemState.pickTeamSeason;
         transferWindowActive = false;
       };
 
@@ -345,6 +348,7 @@ module {
           calculationMonth = calculationMonth; 
           calculationSeason = calculationSeason;
           pickTeamGameweek = systemState.pickTeamGameweek;
+          pickTeamSeason = systemState.pickTeamSeason;
           transferWindowActive = systemState.transferWindowActive;
         };
 
@@ -387,6 +391,7 @@ module {
         calculationGameweek = 1;
         calculationMonth = Utilities.unixTimeToMonth(firstFixture.kickOff);
         calculationSeason = addInitialFixturesDTO.seasonId;
+        pickTeamSeason = addInitialFixturesDTO.seasonId;
         pickTeamGameweek = 1;
         transferWindowActive = true;
       };

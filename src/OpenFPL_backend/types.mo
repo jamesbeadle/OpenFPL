@@ -327,10 +327,11 @@ module Types {
   };
 
   public type SystemState = {
+    pickTeamSeason: SeasonId; 
+    pickTeamGameweek: GameweekNumber; 
     calculationGameweek: GameweekNumber; 
     calculationMonth: CalendarMonth;
     calculationSeason: SeasonId; 
-    pickTeamGameweek: GameweekNumber; 
     transferWindowActive: Bool;
   };
 
