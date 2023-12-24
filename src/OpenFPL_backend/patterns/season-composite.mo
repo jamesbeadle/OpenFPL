@@ -128,7 +128,7 @@ module {
       return Buffer.toArray(uniqueKickOffTimes);
     };
 
-    public func setFixturesToActive(seasonId: T.SeasonId, gamweek: T.GameweekNumber) : [T.Fixture]{
+    public func setFixturesToActive(seasonId: T.SeasonId, gamweek: T.GameweekNumber){
       
       let currentSeason = List.find<T.Season>(
         seasons,
@@ -138,7 +138,7 @@ module {
       );
 
       switch(currentSeason){
-        case (null) { return [] };
+        case (null) { };
         case (?foundSeason){
 
           let fixturesToActivate = List.filter<T.Fixture>(
@@ -187,9 +187,6 @@ module {
               };
             },
           );
-
-          return List.toArray(fixturesToActivate);
-
         };
       };
 

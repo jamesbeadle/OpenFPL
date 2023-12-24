@@ -196,15 +196,17 @@ module {
 
     //Timer call back events
     public func gameweekBeginExpired(){
-
+      //TODO: What goes here?
     };
 
-    public func gameKickOffExpiredCallback(){
-      //TODO: setFixture to active
+    public func gameKickOffExpiredCallback() : async (){
+      seasonComposite.setFixturesToActive(systemState.calculationSeason, systemState.calculationGameweek);
+      await updateCacheHash("fixtures");
     };
     
-    public func gameCompletedExpiredCallback(){
-      //TODO: set fixture to complete
+    public func gameCompletedExpiredCallback() : async (){
+      seasonComposite.setFixturesToCompleted(systemState.calculationSeason, systemState.calculationGameweek);
+      await updateCacheHash("fixtures");
     };
     
     public func loanExpiredCallback(){
