@@ -278,6 +278,7 @@ module Types {
     seasonId : SeasonId;
     gameweek : GameweekNumber;
     entries : List.List<LeaderboardEntry>;
+    totalEntries : Nat;
   };
 
   public type ClubLeaderboard = {
@@ -285,11 +286,13 @@ module Types {
     month : Nat8;
     clubId : ClubId;
     entries : List.List<LeaderboardEntry>;
+    totalEntries : Nat;
   };
 
   public type SeasonLeaderboard = {
     seasonId : SeasonId;
     entries : List.List<LeaderboardEntry>;
+    totalEntries : Nat;
   };
 
   public type LeaderboardEntry = {

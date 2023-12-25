@@ -14,9 +14,11 @@ import Int64 "mo:base/Int64";
 import Nat64 "mo:base/Nat64";
 import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
+import Buffer "mo:base/Buffer";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import ProfilePictureCanister "../profile-picture-canister";
+import RewardPercentages "../utils/RewardPercentages";
 
 module {
 
@@ -1154,12 +1156,65 @@ module {
 
     public func distributeWeeklyRewards(seasonRewardPool: Nat64, weeklyLeaderboard: T.WeeklyLeaderboard) : async (){
       let weeklyRewardAmount = seasonRewardPool / 38;
-
       
+      if(weeklyLeaderboard.totalEntries < 100){
+        let scaledPercentrages = scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries);
+
+        var payouts: [Float] = Array.init<Float>(weeklyLeaderboard.totalEntries, 0.0);
+
+        var i: Nat = 0;
+        while (i < weeklyLeaderboard.totalEntries) {
+            if (isTied(weeklyLeaderboard, i)) {
+                let tieRange = findTieRange(weeklyLeaderboard, i);
+                let tiePayout = sumPercentages(scaledPercentages, tieRange);
+                distributeTiePayout(payouts, tieRange, tiePayout);
+                i = endOf(tieRange) + 1; // Skip ahead past the tie
+            } else {
+                payouts[i] = scaledPercentages[positionOf(weeklyLeaderboard.entries[i])];
+                i += 1;
+            }
+        };
+
+        /*
+      
+          payouts = new Array(length(leaderboard))
+              
+          for i in 0 to length(leaderboard) - 1:
+            if isTied(leaderboard, i):
+              tieRange = findTieRange(leaderboard, i)
+              tiePayout = sumPercentages(fixedPercentages, tieRange)
+              distributeTiePayout(payouts, tieRange, tiePayout)
+              i = endOf(tieRange) // Skip ahead past the tie
+
+        */
+      } else {
+        /*
+            payouts[i] = fixedPercentages[positionOf(leaderboard[i])]
+        */
+      };
+
 
       //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
       //Record any rewards in the data structures defined at start
     };
+
+    public func scalePercentages(fixedPercentages: [Float], numParticipants: Nat) : [Float] {
+      var totalPercentage: Float = 0.0;
+      for (i in Iter.range(0, numParticipants)) {
+        totalPercentage += fixedPercentages[i];
+      };
+
+      let scalingFactor: Float = 100.0 / totalPercentage;
+
+      var scaledPercentagesBuffer = Buffer.fromArray<Float>([]);
+      for (i in Iter.range(0, numParticipants)) {
+          let scaledValue = fixedPercentages[i] * scalingFactor;
+          scaledPercentagesBuffer.add(scaledValue);
+      };
+
+      return Buffer.toArray(scaledPercentagesBuffer);
+    };
+
 
     public func distributeMonthlyRewards(seasonRewardPool: Nat64) : async (){
       let monthlyRewardAmount = seasonRewardPool / 12;
