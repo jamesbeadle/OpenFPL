@@ -1156,8 +1156,6 @@ module {
     };
 
     public func distributeWeeklyRewards(seasonRewardPool: Nat64, weeklyLeaderboard: T.WeeklyLeaderboard) : async (){
-
-
       let weeklyRewardAmount = seasonRewardPool / 38;
       var payouts = List.nil<Float>();
       var currentEntries = weeklyLeaderboard.entries;
@@ -1187,8 +1185,23 @@ module {
                         let startPosition = foundEntry.position;
                         let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
                         payouts := List.append(payouts, tiePayouts);
+
                         // Skip past the tied entries
-                        //currentEntries := // Adjust to point after the last tied entry
+                        var skipEntries = rest;
+                        label skipLoop while (not List.isNil(skipEntries)) {
+                            let (skipEntry, nextRest) = List.pop(skipEntries);
+                            skipEntries := nextRest;
+
+                            switch(skipEntry) {
+                                case (null) { break skipLoop; };
+                                case (?entry) {
+                                    if (entry.points != foundEntry.points) {
+                                        currentEntries := skipEntries;
+                                        break skipLoop;
+                                    }
+                                };
+                            };
+                        };
                     } else {
                         // No tie, assign payout based on position
                         let payout = scaledPercentages[foundEntry.position - 1];
@@ -1228,20 +1241,22 @@ module {
       return List.reverse(tiedEntries);
     };
 
-
     public func calculateTiePayouts(tiedEntries: List.List<T.LeaderboardEntry>, scaledPercentages: [Float], startPosition: Nat) : List.List<Float> {
-      let numTiedEntries = List.size(tiedEntries);
-      var totalPayout: Float = 0.0;
+        let numTiedEntries = List.size(tiedEntries);
+        var totalPayout: Float = 0.0;
+        let endPosition: Int = startPosition + numTiedEntries - 1;
 
-      // Sum up the percentages for the tied positions
-      for (i in Iter.range(0, numTiedEntries)) {
-          totalPayout += scaledPercentages[startPosition + i - 1];
-      };
+          label posLoop for (i in Iter.range(startPosition, endPosition)) {
+            if (i > 100) {
+                break posLoop;
+            };
+            totalPayout += scaledPercentages[i - 1];
+        };
 
-      let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
-      let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
+        let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
+        let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
 
-      return payouts;
+        return payouts;
     };
 
 
