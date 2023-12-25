@@ -1168,25 +1168,29 @@ module {
           switch(currentEntry){
             case (null){};
             case (?foundEntry){
-              if (not List.isNil(rest) and foundEntry.points == List.head(rest).points) {
-                  // Tie detected
-                  let tiedEntries = // Logic to identify all tied entries
-                  let startPosition = currentEntry.0.position;
+                let (nextEntry, _) = List.pop(rest);
+                switch(nextEntry){
+                  case (null){
+                    let payout = scaledPercentages[currentEntry.0.position - 1];
+                    payouts := List.push(payout, payouts);
+                  };
+                  case (?foundNextEntry){
+                    if (foundEntry.points == foundNextEntry.points) {
+                      // Tie detected
+                      let tiedEntries = // Logic to identify all tied entries
+                      let startPosition = foundEntry.position;
 
-                  let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
-                  payouts := List.append(payouts, tiePayouts);
+                      let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                      payouts := List.append(payouts, tiePayouts);
 
-              } else {
-                  // No tie, assign payout based on position
-                  let payout = scaledPercentages[currentEntry.0.position - 1];
-                  payouts := List.push(payout, payouts);
-              }
+                    } else {
+                          // No tie, assign payout based on position
+                    }
+                  }
+                };
+                
             };
           };
-          if (currentEntry != null) {
-              // Check for ties
-            
-          }
       };
 
       // Reverse payouts list as they were added in reverse order
