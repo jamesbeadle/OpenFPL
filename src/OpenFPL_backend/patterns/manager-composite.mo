@@ -15,6 +15,7 @@ import Nat64 "mo:base/Nat64";
 import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
+import Float "mo:base/Float";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import ProfilePictureCanister "../profile-picture-canister";
@@ -1127,14 +1128,14 @@ module {
       };
     };
 
-    public func payWeeklyRewards(rewardPool: T.RewardPool) : async (){
+    public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: T.WeeklyLeaderboard) : async (){
       
       //TODO: gameweek is complete so pay rewards
 
       //check if all gameweek month gameweeks are complete
         //if they are pay monthly rewards
       
-      await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool);
+      await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
       await distributeMonthlyRewards(rewardPool.monthlyLeaderboardPool);
       await distributeHighestScoringPlayerRewards();
       await distributeWeeklyATHScoreRewards();
@@ -1155,48 +1156,58 @@ module {
     };
 
     public func distributeWeeklyRewards(seasonRewardPool: Nat64, weeklyLeaderboard: T.WeeklyLeaderboard) : async (){
+
+
       let weeklyRewardAmount = seasonRewardPool / 38;
-      
-      if(weeklyLeaderboard.totalEntries < 100){
-        let scaledPercentrages = scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries);
+      var payouts = List.nil<Float>();
+      var currentEntries = weeklyLeaderboard.entries;
 
-        var payouts: [Float] = Array.init<Float>(weeklyLeaderboard.totalEntries, 0.0);
+      while (not List.isNil(currentEntries)) {
+          let (currentEntry, rest) = List.pop(currentEntries);
+          currentEntries := rest;
+          switch(currentEntry){
+            case (null){};
+            case (?foundEntry){
+              if (not List.isNil(rest) and foundEntry.points == List.head(rest).points) {
+                  // Tie detected
+                  let tiedEntries = // Logic to identify all tied entries
+                  let startPosition = currentEntry.0.position;
 
-        var i: Nat = 0;
-        while (i < weeklyLeaderboard.totalEntries) {
-            if (isTied(weeklyLeaderboard, i)) {
-                let tieRange = findTieRange(weeklyLeaderboard, i);
-                let tiePayout = sumPercentages(scaledPercentages, tieRange);
-                distributeTiePayout(payouts, tieRange, tiePayout);
-                i = endOf(tieRange) + 1; // Skip ahead past the tie
-            } else {
-                payouts[i] = scaledPercentages[positionOf(weeklyLeaderboard.entries[i])];
-                i += 1;
-            }
-        };
+                  let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  payouts := List.append(payouts, tiePayouts);
 
-        /*
-      
-          payouts = new Array(length(leaderboard))
-              
-          for i in 0 to length(leaderboard) - 1:
-            if isTied(leaderboard, i):
-              tieRange = findTieRange(leaderboard, i)
-              tiePayout = sumPercentages(fixedPercentages, tieRange)
-              distributeTiePayout(payouts, tieRange, tiePayout)
-              i = endOf(tieRange) // Skip ahead past the tie
-
-        */
-      } else {
-        /*
-            payouts[i] = fixedPercentages[positionOf(leaderboard[i])]
-        */
+              } else {
+                  // No tie, assign payout based on position
+                  let payout = scaledPercentages[currentEntry.0.position - 1];
+                  payouts := List.push(payout, payouts);
+              }
+            };
+          };
+          if (currentEntry != null) {
+              // Check for ties
+            
+          }
       };
 
-
-      //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
-      //Record any rewards in the data structures defined at start
+      // Reverse payouts list as they were added in reverse order
+      payouts := List.reverse(payouts);
     };
+
+    public func calculateTiePayouts(tiedEntries: List.List<T.LeaderboardEntry>, scaledPercentages: [Float], startPosition: Nat) : List.List<Float> {
+      let numTiedEntries = List.size(tiedEntries);
+      var totalPayout: Float = 0.0;
+
+      // Sum up the percentages for the tied positions
+      for (i in Iter.range(0, numTiedEntries)) {
+          totalPayout += scaledPercentages[startPosition + i - 1];
+      };
+
+      let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
+      let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
+
+      return payouts;
+    };
+
 
     public func scalePercentages(fixedPercentages: [Float], numParticipants: Nat) : [Float] {
       var totalPercentage: Float = 0.0;
