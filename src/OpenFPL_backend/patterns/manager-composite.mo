@@ -1180,13 +1180,11 @@ module {
                   };
                   case (?foundNextEntry){
                     if (foundEntry.points == foundNextEntry.points) {
-                        // Tie detected
                         let tiedEntries = findTiedEntries(rest, foundEntry.points);
                         let startPosition = foundEntry.position;
                         let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
                         payouts := List.append(payouts, tiePayouts);
 
-                        // Skip past the tied entries
                         var skipEntries = rest;
                         label skipLoop while (not List.isNil(skipEntries)) {
                             let (skipEntry, nextRest) = List.pop(skipEntries);
@@ -1203,7 +1201,6 @@ module {
                             };
                         };
                     } else {
-                        // No tie, assign payout based on position
                         let payout = scaledPercentages[foundEntry.position - 1];
                         payouts := List.push(payout, payouts);
                     }
@@ -1214,7 +1211,6 @@ module {
           };
       };
 
-      // Reverse payouts list as they were added in reverse order
       payouts := List.reverse(payouts);
     };
 
@@ -1241,7 +1237,7 @@ module {
       return List.reverse(tiedEntries);
     };
 
-    public func calculateTiePayouts(tiedEntries: List.List<T.LeaderboardEntry>, scaledPercentages: [Float], startPosition: Nat) : List.List<Float> {
+    private func calculateTiePayouts(tiedEntries: List.List<T.LeaderboardEntry>, scaledPercentages: [Float], startPosition: Nat) : List.List<Float> {
         let numTiedEntries = List.size(tiedEntries);
         var totalPayout: Float = 0.0;
         let endPosition: Int = startPosition + numTiedEntries - 1;
@@ -1259,8 +1255,7 @@ module {
         return payouts;
     };
 
-
-    public func scalePercentages(fixedPercentages: [Float], numParticipants: Nat) : [Float] {
+    private func scalePercentages(fixedPercentages: [Float], numParticipants: Nat) : [Float] {
       var totalPercentage: Float = 0.0;
       for (i in Iter.range(0, numParticipants)) {
         totalPercentage += fixedPercentages[i];
