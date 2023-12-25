@@ -1127,7 +1127,7 @@ module {
 
     public func payWeeklyRewards(rewardPool: T.RewardPool) : async (){
       
-      //gameweek is complete so pay rewards
+      //TODO: gameweek is complete so pay rewards
 
       //check if all gameweek month gameweeks are complete
         //if they are pay monthly rewards
@@ -1142,7 +1142,7 @@ module {
     
     public func paySeasonRewards(rewardPool: T.RewardPool) : async (){
       
-      //gameweek is complete so pay rewards
+      //TODO: gameweek is complete so pay rewards
 
       //check if all gameweek month gameweeks are complete
         //if they are pay monthly rewards
@@ -1152,8 +1152,11 @@ module {
       await distributeMonthlyATHScoreRewards();
     };
 
-    public func distributeWeeklyRewards(seasonRewardPool: Nat64) : async (){
+    public func distributeWeeklyRewards(seasonRewardPool: Nat64, weeklyLeaderboard: T.WeeklyLeaderboard) : async (){
       let weeklyRewardAmount = seasonRewardPool / 38;
+
+      
+
       //TODO: Should check all gameweeks where the rewards have not been distributed, keep a record
       //Record any rewards in the data structures defined at start
     };

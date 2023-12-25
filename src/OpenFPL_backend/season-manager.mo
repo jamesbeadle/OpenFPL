@@ -470,7 +470,7 @@ module {
       let tokenCanisterInstance = Token.Token();
       let totalSupply: Nat64 = await tokenCanisterInstance.getTotalSupply();
 
-      let seasonTokensMinted = Utilities.nat64Percentage(totalSupply, 0.025);
+      let seasonTokensMinted = Utilities.nat64Percentage(Utilities.nat64Percentage(totalSupply, 0.025), 0.75);
 
       let rewardPool: T.RewardPool = {
         seasonId = seasonId;
