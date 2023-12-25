@@ -296,7 +296,7 @@ module Types {
   };
 
   public type LeaderboardEntry = {
-    position : Int;
+    position : Nat;
     positionText : Text;
     username : Text;
     principalId : Text;

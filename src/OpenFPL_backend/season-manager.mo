@@ -308,7 +308,19 @@ module {
         switch(rewardPool){
           case (null){};
           case (?foundRewardPool){
-            await managerComposite.payWeeklyRewards(foundRewardPool);
+
+            let weeklyLeaderboardCanisterId = leaderboardComposite.getCanisterId(systemState.calculationSeason);
+            switch(weeklyLeaderboardCanisterId){
+              case (null){};
+              case (?canisterId){
+                let weekly_leaderboard_canister = actor (foundCanisterId) : actor {
+                  getRewardLeaderboard : () -> async DTOs.WeeklyLeaderboardDTO;
+                };
+                
+                let weeklyLeaderboard = weekly_leaderboard_canister.getRewardLeaderboard();
+                await managerComposite.payWeeklyRewards(foundRewardPool, weeklyLeaderboard);
+              };
+            }
           }
         };
         

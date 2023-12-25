@@ -1162,6 +1162,12 @@ module {
       var payouts = List.nil<Float>();
       var currentEntries = weeklyLeaderboard.entries;
 
+      let scaledPercentages = if (weeklyLeaderboard.totalEntries < 100) {
+          scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries)
+      } else {
+          RewardPercentages.percentages
+      };
+
       while (not List.isNil(currentEntries)) {
           let (currentEntry, rest) = List.pop(currentEntries);
           currentEntries := rest;
@@ -1171,20 +1177,22 @@ module {
                 let (nextEntry, _) = List.pop(rest);
                 switch(nextEntry){
                   case (null){
-                    let payout = scaledPercentages[currentEntry.0.position - 1];
+                    let payout = scaledPercentages[foundEntry.position - 1];
                     payouts := List.push(payout, payouts);
                   };
                   case (?foundNextEntry){
                     if (foundEntry.points == foundNextEntry.points) {
-                      // Tie detected
-                      let tiedEntries = // Logic to identify all tied entries
-                      let startPosition = foundEntry.position;
-
-                      let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
-                      payouts := List.append(payouts, tiePayouts);
-
+                        // Tie detected
+                        let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                        let startPosition = foundEntry.position;
+                        let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                        payouts := List.append(payouts, tiePayouts);
+                        // Skip past the tied entries
+                        //currentEntries := // Adjust to point after the last tied entry
                     } else {
-                          // No tie, assign payout based on position
+                        // No tie, assign payout based on position
+                        let payout = scaledPercentages[foundEntry.position - 1];
+                        payouts := List.push(payout, payouts);
                     }
                   }
                 };
@@ -1196,6 +1204,30 @@ module {
       // Reverse payouts list as they were added in reverse order
       payouts := List.reverse(payouts);
     };
+
+    func findTiedEntries(entries: List.List<T.LeaderboardEntry>, points: Int16): List.List<T.LeaderboardEntry> {
+      var tiedEntries = List.nil<T.LeaderboardEntry>();
+      var currentEntries = entries;
+
+      label currentLoop while (not List.isNil(currentEntries)) {
+          let (currentEntry, rest) = List.pop(currentEntries);
+          currentEntries := rest;
+
+          switch(currentEntry) {
+              case (null) {};
+              case (?entry) {
+                  if (entry.points == points) {
+                      tiedEntries := List.push(entry, tiedEntries);
+                  } else {
+                      break currentLoop;
+                  }
+              };
+          };
+      };
+
+      return List.reverse(tiedEntries);
+    };
+
 
     public func calculateTiePayouts(tiedEntries: List.List<T.LeaderboardEntry>, scaledPercentages: [Float], startPosition: Nat) : List.List<Float> {
       let numTiedEntries = List.size(tiedEntries);
