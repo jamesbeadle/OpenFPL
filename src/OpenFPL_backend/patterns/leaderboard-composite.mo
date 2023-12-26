@@ -219,7 +219,14 @@ module {
         Utilities.eqWeeklyKey,
         Utilities.hashWeeklyKey
       );
-    };     
+    };    
+
+    public func getCanisterId(seasonId: T.SeasonId, month: T.GameweekNumber) : ?Text{
+      let weeklyLeaderboardKey = (seasonId, month);
+      return weeklyLeaderboardCanisterIds.get(weeklyLeaderboardKey);
+    };
+
+
 
  /*
     

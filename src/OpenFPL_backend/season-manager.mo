@@ -295,7 +295,7 @@ module {
         };
       };
     
-      await managerComposite.calculateFantasyTeamScores();
+      //await managerComposite.calculateFantasyTeamScores(players, systemState.calculationSeason, systemState.calculationGameweek); //TODO: Need to pass the player score map
       await leaderboardComposite.calculateLeaderboards();      
 
       var calculationGameweek = systemState.calculationGameweek;
@@ -309,15 +309,15 @@ module {
           case (null){};
           case (?foundRewardPool){
 
-            let weeklyLeaderboardCanisterId = leaderboardComposite.getCanisterId(systemState.calculationSeason);
+            let weeklyLeaderboardCanisterId = leaderboardComposite.getCanisterId(systemState.calculationSeason, systemState.calculationGameweek);
             switch(weeklyLeaderboardCanisterId){
               case (null){};
               case (?canisterId){
-                let weekly_leaderboard_canister = actor (foundCanisterId) : actor {
+                let weekly_leaderboard_canister = actor (canisterId) : actor {
                   getRewardLeaderboard : () -> async DTOs.WeeklyLeaderboardDTO;
                 };
                 
-                let weeklyLeaderboard = weekly_leaderboard_canister.getRewardLeaderboard();
+                let weeklyLeaderboard = await weekly_leaderboard_canister.getRewardLeaderboard();
                 await managerComposite.payWeeklyRewards(foundRewardPool, weeklyLeaderboard);
               };
             }
