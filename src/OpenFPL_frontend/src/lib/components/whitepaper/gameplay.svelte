@@ -249,6 +249,28 @@
     will automatically be set to the most valuable player in your team.
   </p>
 
+  
+  <h2 class="default-header mt-4">Abandonded Fixtures</h2>
+  <p class="my-2">
+    When a fixture is abandonded it will remain in the fixtures list for a gameweek, marked as abandonded. 
+    Rewards for gameweeks where a fixture is abandonded will be witheld until 
+    the Premier League decide whether one of the follow scenarios occur:
+  </p>
+
+  <ul class="list-disc ml-4">
+    <li>Result Stands at Abandoned Time: The game be completed with the events as at abandoned time and will trigger the gameweek to complete 
+      and the rewards pool to be paid.</li>
+    <li>Fixture Replayed from Abandonded Time: The game will remain in its initial gameweek, apon completion it will 
+      trigger the gameweek to complete and the rewards pool to be paid.</li>
+    <li>Fixture Rescheduled to New Gameweek: The game will move into a new gameweek, 
+      the events will be removed from all players and no points from the fixture will be awarded.</li>
+    
+  </ul>
+  <p class="my-2">
+    Each January, users can overhaul their team completely once, adding another
+    strategic layer to the game reflecting the January transfer window.
+  </p>
+
   <p class="my-4">
     OpenFPL's gameplay combines strategic team management, a dynamic scoring
     system, and diverse bonuses, offering a unique and competitive fantasy

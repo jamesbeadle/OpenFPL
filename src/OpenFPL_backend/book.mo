@@ -1,5 +1,5 @@
-import Account "Account";
-import ICPLedger "Ledger";
+import Account "./lib/Account";
+import ICPLedger "./def/Ledger";
 import Float "mo:base/Float";
 import Int "mo:base/Int";
 import Int64 "mo:base/Int64";

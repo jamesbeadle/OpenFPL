@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import ManagerGameweeks from "$lib/components/manager-gameweeks.svelte";
   import ProfileDetail from "$lib/components/profile/profile-detail.svelte";
   import Layout from "../Layout.svelte";
   import { Spinner } from "@dfinity/gix-components";
@@ -13,10 +12,6 @@
   });
   function setActiveTab(tab: string): void {
     activeTab = tab;
-  }
-
-  function viewGameweekDetail(principalId: string, selectedGameweek: number) {
-    goto(`/manager?id=${principalId}&gw=${selectedGameweek}`);
   }
 </script>
 

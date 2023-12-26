@@ -1,4 +1,3 @@
-#OpenFPL
 OpenFPL is a decentralised fantasy football application, pioneering the integration of blockchain technology into the world of fantasy sports. This project is built using Svelte, TypeScript, and Motoko, delivering a unique and engaging experience for fantasy football enthusiasts.
 
 Features

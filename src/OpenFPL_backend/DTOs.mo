@@ -1,15 +1,125 @@
-import T "./types";
+import T "types";
 import List "mo:base/List";
 
 module DTOs {
 
+  public type SystemStateDTO = {
+    calculationGameweek: T.GameweekNumber;
+    calculationMonth: T.CalendarMonth;
+    calculationSeason: T.SeasonId;
+    pickTeamGameweek: T.GameweekNumber;
+  };
+
+  public type RevaluePlayerUpDTO = {
+    playerId : T.PlayerId
+  };
+
+  public type RevaluePlayerDownDTO = {
+    playerId : T.PlayerId
+  };
+
+  public type SubmitFixtureDataDTO = {
+    seasonId: T.SeasonId;
+    gameweek: T.GameweekNumber;
+    fixtureId : T.FixtureId;
+    playerEventData : [T.PlayerEventData];
+  };
+  
+  public type AddInitialFixturesDTO = {
+    seasonId: T.SeasonId;
+    seasonFixtures : [DTOs.FixtureDTO];
+  };
+  
+  public type RescheduleFixtureDTO = {
+    seasonId: T.SeasonId;
+    fixtureId : T.FixtureId;
+    updatedFixtureGameweek : T.GameweekNumber;
+    updatedFixtureDate : Int
+  };
+  
+  public type LoanPlayerDTO = {
+    playerId : T.PlayerId;
+    loanClubId : T.ClubId;
+    loanEndDate : Int;
+  };
+  
+  public type TransferPlayerDTO = {
+    playerId : T.PlayerId;
+    newClubId : T.ClubId;
+  };
+  
+  public type RecallPlayerDTO = {
+    playerId : T.PlayerId
+  };
+
+  public type CreatePlayerDTO = {
+    clubId : T.ClubId;
+    position : T.PlayerPosition;
+    firstName : Text;
+    lastName : Text;
+    shirtNumber : Nat8;
+    valueQuarterMillions : Nat;
+    dateOfBirth : Int;
+    nationality : T.CountryId;
+  };
+
+  public type UpdatePlayerDTO = {
+    playerId : T.PlayerId;
+    position : T.PlayerPosition;
+    firstName : Text;
+    lastName : Text;
+    shirtNumber : Nat8;
+    dateOfBirth : Int;
+    nationality : T.CountryId;
+  };
+
+  public type SetPlayerInjuryDTO = {
+    playerId : T.PlayerId;
+    description : Text;
+    expectedEndDate : Int;
+  };
+
+  public type RetirePlayerDTO = {
+    playerId : T.PlayerId;
+    retirementDate : Int;
+  };
+
+  public type UnretirePlayerDTO = {
+    playerId : T.PlayerId;
+  };
+
+  public type UpdateClubDTO = {
+    clubId : T.ClubId;
+    name : Text;
+    friendlyName : Text;
+    primaryColourHex : Text;
+    secondaryColourHex : Text;
+    thirdColourHex : Text;
+    abbreviatedName : Text;
+    shirtType : T.ShirtType;
+  };
+
+  public type PromoteFormerClubDTO = {
+    clubId : T.ClubId
+  };
+
+  public type PromoteNewClubDTO = {
+    name : Text;
+    friendlyName : Text;
+    primaryColourHex : Text;
+    secondaryColourHex : Text;
+    thirdColourHex : Text;
+    abbreviatedName : Text;
+    shirtType : T.ShirtType;
+  };
+
+
   public type ProfileDTO = {
     principalId : Text;
-    displayName : Text;
+    username : Text;
     profilePicture : Blob;
-    favouriteTeamId : Nat16;
+    favouriteClubId : Nat16;
     createDate : Int;
-    canUpdateFavouriteTeam : Bool;
   };
 
   public type PlayerRatingsDTO = {
@@ -19,12 +129,12 @@ module DTOs {
 
   public type PlayerDTO = {
     id : Nat16;
-    teamId : Nat16;
-    position : Nat8; //0 = Goalkeeper //1 = Defender //2 = Midfielder //3 = Forward
+    clubId : T.ClubId;
+    position : T.PlayerPosition;
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    value : Nat;
+    valueQuarterMillions : Nat;
     dateOfBirth : Int;
     nationality : T.CountryId;
     totalPoints : Int16;
@@ -33,10 +143,10 @@ module DTOs {
   public type PlayerScoreDTO = {
     id : Nat16;
     points : Int16;
-    teamId : Nat16;
+    clubId : T.ClubId;
     goalsScored : Int16;
     goalsConceded : Int16;
-    position : Nat8;
+    position : T.PlayerPosition;
     nationality : T.CountryId;
     dateOfBirth : Int;
     saves : Int16;
@@ -48,14 +158,14 @@ module DTOs {
     id : Nat16;
     gameweek : T.GameweekNumber;
     points : Int16;
-    teamId : Nat16;
-    position : Nat8;
+    clubId : T.ClubId;
+    position : T.PlayerPosition;
     events : [T.PlayerEventData];
   };
 
   public type PlayerDetailDTO = {
     id : T.PlayerId;
-    teamId : T.TeamId;
+    clubId : T.ClubId;
     position : Nat8;
     firstName : Text;
     lastName : Text;
@@ -67,7 +177,7 @@ module DTOs {
     gameweeks : [PlayerGameweekDTO];
     valueHistory : [T.ValueHistory];
     onLoan : Bool;
-    parentTeamId : Nat16;
+    parentClubId : Nat16;
     isInjured : Bool;
     injuryHistory : [T.InjuryHistory];
     retirementDate : Int;
@@ -83,16 +193,16 @@ module DTOs {
   public type PaginatedLeaderboard = {
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
-    entries : [T.LeaderboardEntry];
+    entries : [LeaderboardEntryDTO];
     totalEntries : Nat;
   };
 
-  public type PaginatedClubLeaderboard = {
-    seasonId : T.SeasonId;
-    month : Nat8;
-    clubId : T.TeamId;
-    entries : [T.LeaderboardEntry];
-    totalEntries : Nat;
+  public type LeaderboardEntryDTO = {
+    position : Int;
+    positionText : Text;
+    username : Text;
+    principalId : Text;
+    points : Int16;
   };
 
   public type SeasonDTO = {
@@ -106,20 +216,20 @@ module DTOs {
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
     kickOff : Int;
-    homeTeamId : T.TeamId;
-    awayTeamId : T.TeamId;
+    homeClubId : T.ClubId;
+    awayClubId : T.ClubId;
     homeGoals : Nat8;
     awayGoals : Nat8;
-    status : Nat8;
+    status : T.FixtureStatus;
     highestScoringPlayerId : Nat16;
     events : [T.PlayerEventData];
   };
 
   public type ManagerDTO = {
     principalId : Text;
-    displayName : Text;
+    username : Text;
     profilePicture : Blob;
-    favouriteTeamId : T.TeamId;
+    favouriteClubId : T.ClubId;
     createDate : Int;
     gameweeks : [T.FantasyTeamSnapshot];
     weeklyPosition : Int;
@@ -150,6 +260,88 @@ module DTOs {
     id : T.CountryId;
     name : Text;
     code : Text;
+  };
+
+  public type DataCacheDTO = {
+    category : Text;
+    hash : Text;
+  };
+
+  public type WeeklyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    gameweek : T.GameweekNumber;
+    entries : List.List<T.LeaderboardEntry>;
+    totalEntries: Nat;
+  };
+
+  public type MonthlyLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    month : Nat8;
+    clubId : T.ClubId;
+    entries : [LeaderboardEntryDTO];
+    totalEntries : Nat;
+  };
+
+  public type SeasonLeaderboardDTO = {
+    seasonId : T.SeasonId;
+    entries : [LeaderboardEntryDTO];
+    totalEntries : Nat;
+  };
+
+  public type UpdateFantasyTeamDTO = {
+    playerIds : [T.PlayerId];
+    captainId : T.PlayerId;
+    goalGetterGameweek : T.GameweekNumber;
+    goalGetterPlayerId : T.PlayerId;
+    passMasterGameweek : T.GameweekNumber;
+    passMasterPlayerId : T.PlayerId;
+    noEntryGameweek : T.GameweekNumber;
+    noEntryPlayerId : T.PlayerId;
+    teamBoostGameweek : T.GameweekNumber;
+    teamBoostClubId : T.ClubId;
+    safeHandsGameweek : T.GameweekNumber;
+    safeHandsPlayerId : T.PlayerId;
+    captainFantasticGameweek : T.GameweekNumber;
+    captainFantasticPlayerId : T.PlayerId;
+    countrymenGameweek : T.GameweekNumber;
+    countrymenCountryId : T.CountryId;
+    prospectsGameweek : T.GameweekNumber;
+    braceBonusGameweek : T.GameweekNumber;
+    hatTrickHeroGameweek : T.GameweekNumber;
+    transferWindowGameweek: T.GameweekNumber;
+    username: Text;
+  };
+
+  public type ManagerGameweekDTO = {
+    principalId : Text;
+    teamName : Text;
+    favouriteClubId : T.ClubId;
+    transfersAvailable : Nat8;
+    monthlyBonusesAvailable : Nat8;
+    bankQuarterMillions : Nat;
+    teamValueQuarterMillions : Nat;
+    playerIds : [T.PlayerId];
+    captainId : T.PlayerId;
+    gameweek : T.GameweekNumber;
+    goalGetterGameweek : T.GameweekNumber;
+    goalGetterPlayerId : T.PlayerId;
+    passMasterGameweek : T.GameweekNumber;
+    passMasterPlayerId : T.PlayerId;
+    noEntryGameweek : T.GameweekNumber;
+    noEntryPlayerId : T.PlayerId;
+    teamBoostGameweek : T.GameweekNumber;
+    teamBoostClubId : T.ClubId;
+    safeHandsGameweek : T.GameweekNumber;
+    safeHandsPlayerId : T.PlayerId;
+    captainFantasticGameweek : T.GameweekNumber;
+    captainFantasticPlayerId : T.PlayerId;
+    countrymenGameweek : T.GameweekNumber;
+    countrymenCountryId : T.CountryId;
+    prospectsGameweek : T.GameweekNumber;
+    braceBonusGameweek : T.GameweekNumber;
+    hatTrickHeroGameweek : T.GameweekNumber;
+    points : Int16;
+    transferWindowGameweek: T.GameweekNumber;
   };
 
 };

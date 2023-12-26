@@ -11,8 +11,13 @@ import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Int64 "mo:base/Int64";
 import Text "mo:base/Text";
+import Int16 "mo:base/Int16";
+import Float "mo:base/Float";
 
 module {
+  
+  public let getHour = func()  : Nat { return 1_000_000_000 * 60 * 60 };
+
   public let eqNat8 = func(a : Nat8, b : Nat8) : Bool {
     a == b;
   };
@@ -35,6 +40,26 @@ module {
 
   public let hashNat32 = func(key : Nat32) : Hash.Hash {
     Nat32.fromNat(Nat32.toNat(key) % (2 ** 32 -1));
+  };
+
+  public let eqWeeklyKey = func(a : T.WeeklyLeaderboardKey, b : T.WeeklyLeaderboardKey) : Bool {
+    a.0 == b.0 and a.1 == b.1;
+  };
+
+  public let hashWeeklyKey = func(key : T.WeeklyLeaderboardKey) : Hash.Hash {
+    combineHashes(hashNat32(Nat32.fromNat(Nat16.toNat(key.0))), hashNat32(Nat32.fromNat(Nat8.toNat(key.1))));
+  };
+
+  public let combineHashes = func(hash1 : Hash.Hash, hash2 : Hash.Hash) : Hash.Hash {
+    (hash1 + hash2) % (2 ** 32);
+  };
+
+  public let eqMonthlyKey = func(a : T.MonthlyLeaderboardKey, b : T.MonthlyLeaderboardKey) : Bool {
+    a.0 == b.0 and a.1 == b.1 and a.2 == b.2;
+  };
+
+  public let hashMonthlyKey = func(key : T.MonthlyLeaderboardKey) : Hash.Hash {
+    combineHashes(hashNat32(Nat32.fromNat(Nat16.toNat(key.0))), combineHashes(hashNat32(Nat32.fromNat(Nat8.toNat(key.1))), hashNat32(Nat32.fromNat(Nat16.toNat(key.2)))));
   };
 
   public let hashNat = func(key : Nat) : Hash.Hash {
@@ -157,6 +182,67 @@ module {
     return dayCounter;
   };
 
+  public func nextUnixTimeForDayOfYear(dayOfYear: Int) : Int {
+    let currentUnixTime : Int = Time.now();
+    let secondsInADay = 86400;
+    let seconds = currentUnixTime / 1000000000;
+    var days = seconds / secondsInADay;
+
+    var years = 1970;
+    var dayCounter = days;
+    while (dayCounter > 365) {
+      if (years % 4 == 0 and (years % 100 != 0 or years % 400 == 0) and dayCounter >= 366) {
+        dayCounter -= 366;
+      } else {
+        dayCounter -= 365;
+      };
+      years += 1;
+    };
+
+    var currentDayOfYear : Int = dayCounter + 1;
+
+    var isCurrentYearLeap = false;
+    if (years % 4 == 0) {
+      if (years % 100 != 0) {
+        isCurrentYearLeap := true;
+      } else if (years % 400 == 0) {
+        isCurrentYearLeap := true;
+      };
+    };
+
+    var daysTillNextInstance : Int = 0;
+
+    if (currentDayOfYear == dayOfYear) {
+        if (isCurrentYearLeap) {
+          daysTillNextInstance := 366;
+        } else {
+          daysTillNextInstance := 365;
+        }
+    } else if (currentDayOfYear > dayOfYear) {
+        let nextYear : Int = years + 1;
+        var isNextYearLeap = false;
+        if (nextYear % 4 == 0) {
+          if (nextYear % 100 != 0) {
+            isNextYearLeap := true;
+          } else if (nextYear % 400 == 0) {
+            isNextYearLeap := true;
+          };
+        };
+        if (isNextYearLeap) {
+          daysTillNextInstance := 366 - currentDayOfYear + dayOfYear;
+        } else {
+          daysTillNextInstance := 365 - currentDayOfYear + dayOfYear;
+        };
+    } else {
+        daysTillNextInstance := dayOfYear - currentDayOfYear;
+    };
+
+    let nextInstanceUnixTime : Int = currentUnixTime + daysTillNextInstance * 1_000_000_000 * secondsInADay;
+    return nextInstanceUnixTime;
+  };
+
+
+
   public func validateHexColor(hex : Text) : Bool {
 
     if (Text.size(hex) != 7 or not Text.startsWith(hex, #text "#")) {
@@ -176,6 +262,73 @@ module {
     };
 
     return true;
+  };
+
+  
+  public func calculateAggregatePlayerEvents(events : [T.PlayerEventData], playerPosition : T.PlayerPosition) : Int16 {
+    var totalScore : Int16 = 0;
+
+    if (playerPosition == #Goalkeeper or playerPosition == #Defender) {
+      let goalsConcededCount = Array.filter<T.PlayerEventData>(
+        events,
+        func(event : T.PlayerEventData) : Bool { event.eventType == #GoalConceded },
+      ).size();
+
+      if (goalsConcededCount >= 2) {
+
+        totalScore += (Int16.fromNat16(Nat16.fromNat(goalsConcededCount)) / 2) * -15;
+      };
+    };
+
+    if (playerPosition == #Goalkeeper) {
+      let savesCount = Array.filter<T.PlayerEventData>(
+        events,
+        func(event : T.PlayerEventData) : Bool { event.eventType == #KeeperSave },
+      ).size();
+
+      totalScore += (Int16.fromNat16(Nat16.fromNat(savesCount)) / 3) * 5;
+    };
+
+    return totalScore;
+  };
+
+  public func calculateIndividualScoreForEvent(event : T.PlayerEventData, playerPosition : T.PlayerPosition) : Int16 {
+    switch (event.eventType) {
+      case (#Appearance) { return 5 };
+      case (#Goal) {
+        switch (playerPosition) {
+          case (#Forward) { return 10 };
+          case (#Midfielder) { return 15 };
+          case _ { return 20 };
+        };
+      };
+      case (#GoalAssisted) {
+        switch (playerPosition) {
+          case (#Forward) { return 10 };
+          case (#Midfielder) { return 10 };
+          case _ { return 15 };
+        };
+      };
+      case (#KeeperSave) { return 0 };
+      case (#CleanSheet) {
+        switch (playerPosition) {
+          case (#Goalkeeper) { return 10 };
+          case (#Defender) { return 10 };
+          case _ { return 0 };
+        };
+      };
+      case (#PenaltySaved) { return 20 };
+      case (#PenaltyMissed) { return -15 };
+      case (#YellowCard) { return -5 };
+      case (#RedCard) { return -20 };
+      case (#OwnGoal) { return -10 };
+      case (#HighestScoringPlayer) { return 25 };
+      case _ { return 0 };
+    };
+  };
+
+  public func nat64Percentage(amount: Nat64, percentage: Float) : Nat64 {
+    return Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(amount)) * percentage));
   };
 
 };

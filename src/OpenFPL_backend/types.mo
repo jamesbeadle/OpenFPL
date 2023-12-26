@@ -5,10 +5,15 @@ module Types {
   public type FixtureId = Nat32;
   public type SeasonId = Nat16;
   public type GameweekNumber = Nat8;
+  public type CalendarMonth = Nat8;
   public type PlayerId = Nat16;
-  public type TeamId = Nat16;
+  public type ClubId = Nat16;
   public type ProposalId = Nat;
   public type CountryId = Nat16;
+  public type PrincipalId = Text;
+
+  public type WeeklyLeaderboardKey = (SeasonId, GameweekNumber);
+  public type MonthlyLeaderboardKey = (SeasonId, CalendarMonth, ClubId);
 
   public type Error = {
     #NotFound;
@@ -20,30 +25,168 @@ module Types {
     #InvalidData;
   };
 
-  public type Profile = {
-    principalName : Text;
-    displayName : Text;
+  public type PlayerPosition = {
+    #Goalkeeper;
+    #Defender;
+    #Midfielder;
+    #Forward;
+  };
+
+  public type ShirtType = {
+    #Filled;
+    #Striped;
+  };
+
+  public type FixtureStatus = {
+    #Unplayed;
+    #Active;
+    #Complete;
+    #Finalised;
+  };
+
+  public type PlayerEventType = {
+    #Appearance;
+    #Goal;
+    #GoalAssisted;
+    #GoalConceded;
+    #KeeperSave;
+    #CleanSheet;
+    #PenaltySaved;
+    #PenaltyMissed;
+    #YellowCard;
+    #RedCard;
+    #OwnGoal;
+    #HighestScoringPlayer;
+  };
+
+  public type RewardType = {
+    #SeasonLeaderboard;
+    #MonthlyLeaderboard;
+    #WeeklyLeaderboard;
+    #MostValuableTeam;
+    #HighestScoringPlayer;
+    #WeeklyATHScore;
+    #MonthlyATHScore;
+    #SeasonATHScore;
+  };
+
+  public type RecordType = {
+    #WeeklyHighScore;
+    #MonthlyHighScore;
+    #SeasonHighScore;
+  };
+
+  public type Manager = {
+    principalId : Text;
+    username : Text;
     termsAccepted : Bool;
     profilePictureCanisterId : Text;
-    favouriteTeamId : TeamId;
+    favouriteClubId : ClubId;
     createDate : Int;
+    transfersAvailable : Nat8;
+    monthlyBonusesAvailable : Nat8;
+    bankQuarterMillions : Nat;
+    playerIds : [PlayerId];
+    captainId : PlayerId;
+    goalGetterGameweek : GameweekNumber;
+    goalGetterPlayerId : PlayerId;
+    passMasterGameweek : GameweekNumber;
+    passMasterPlayerId : PlayerId;
+    noEntryGameweek : GameweekNumber;
+    noEntryPlayerId : PlayerId;
+    teamBoostGameweek : GameweekNumber;
+    teamBoostClubId : ClubId;
+    safeHandsGameweek : GameweekNumber;
+    safeHandsPlayerId : PlayerId;
+    captainFantasticGameweek : GameweekNumber;
+    captainFantasticPlayerId : PlayerId;
+    countrymenGameweek : GameweekNumber;
+    countrymenCountryId : CountryId;
+    prospectsGameweek : GameweekNumber;
+    braceBonusGameweek : GameweekNumber;
+    hatTrickHeroGameweek : GameweekNumber;
+    transferWindowGameweek: GameweekNumber;
+    history : List.List<FantasyTeamSeason>;
+  };
+
+  public type FantasyTeamSeason = {
+    seasonId : SeasonId;
+    totalPoints : Int16;
+    gameweeks : List.List<FantasyTeamSnapshot>;
+  };
+
+  public type FantasyTeamSnapshot = {
+    principalId : Text;
+    teamName : Text;
+    favouriteClubId : ClubId;
+    monthlyBonusesAvailable : Nat8;
+    transfersAvailable : Nat8;
+    bankQuarterMillions : Nat;
+    teamValueQuarterMillions : Nat;
+    playerIds : [PlayerId];
+    captainId : PlayerId;
+    gameweek : GameweekNumber;
+    goalGetterGameweek : GameweekNumber;
+    goalGetterPlayerId : PlayerId;
+    passMasterGameweek : GameweekNumber;
+    passMasterPlayerId : PlayerId;
+    noEntryGameweek : GameweekNumber;
+    noEntryPlayerId : PlayerId;
+    teamBoostGameweek : GameweekNumber;
+    teamBoostClubId : ClubId;
+    safeHandsGameweek : GameweekNumber;
+    safeHandsPlayerId : PlayerId;
+    captainFantasticGameweek : GameweekNumber;
+    captainFantasticPlayerId : PlayerId;
+    countrymenGameweek : GameweekNumber;
+    countrymenCountryId : CountryId;
+    prospectsGameweek : GameweekNumber;
+    braceBonusGameweek : GameweekNumber;
+    hatTrickHeroGameweek : GameweekNumber;
+    points : Int16;
+    transferWindowGameweek: GameweekNumber;
   };
 
   public type Season = {
     id : Nat16;
     name : Text;
     year : Nat16;
-    gameweeks : List.List<Gameweek>;
+    fixtures : List.List<Fixture>;
     postponedFixtures : List.List<Fixture>;
   };
 
-  public type Gameweek = {
-    number : GameweekNumber;
-    canisterId : Text;
-    fixtures : List.List<Fixture>;
+  public type WeeklyRewards = {
+    gameweek: GameweekNumber;
+    rewards: List.List<RewardEntry>;
   };
 
-  public type Team = {
+  public type MonthlyRewards = {
+    month: CalendarMonth;
+    rewards: List.List<RewardEntry>;
+  };
+
+  public type SeasonRewards = {
+    season: SeasonId;
+    rewards: List.List<RewardEntry>;
+  };
+
+  public type RewardsList = {
+    rewards: List.List<RewardEntry>;
+  };
+
+  public type RewardEntry = {
+    principalId: Text;
+    rewardType: RewardType;
+    position: Nat;
+    amount: Nat64;
+  };
+
+  public type HighScoreRecord = {
+    recordType: RecordType;
+    points: Int16;
+  };
+
+  public type Club = {
     id : Nat16;
     name : Text;
     friendlyName : Text;
@@ -51,41 +194,62 @@ module Types {
     secondaryColourHex : Text;
     thirdColourHex : Text;
     abbreviatedName : Text;
-    shirtType : Nat8; //0 = Filled, 1 = Striped, Can add more later.
+    shirtType : ShirtType;
   };
 
   public type Fixture = {
-    id : Nat32;
+    id : FixtureId;
     seasonId : SeasonId;
     gameweek : GameweekNumber;
     kickOff : Int;
-    homeTeamId : TeamId;
-    awayTeamId : TeamId;
+    homeClubId : ClubId;
+    awayClubId : ClubId;
     homeGoals : Nat8;
     awayGoals : Nat8;
-    status : Nat8; //0 = Unplayed, 1 = Active, 2 = Completed, 3 = Data Finalised
+    status : FixtureStatus;
+    highestScoringPlayerId : PlayerId;
     events : List.List<PlayerEventData>;
-    highestScoringPlayerId : Nat16;
   };
 
   public type Player = {
     id : PlayerId;
-    teamId : TeamId;
-    position : Nat8; //0 = Goalkeeper //1 = Defender //2 = Midfielder //3 = Forward
+    clubId : ClubId;
+    position : PlayerPosition;
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    value : Nat; //Value in £0.25m units
+    valueQuarterMillions : Nat;
     dateOfBirth : Int;
     nationality : CountryId;
     seasons : List.List<PlayerSeason>;
     valueHistory : List.List<ValueHistory>;
     onLoan : Bool;
-    parentTeamId : Nat16;
+    parentClubId : Nat16;
+    loanEndDate: Int;
     isInjured : Bool;
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;
     retirementDate : Int;
+  };
+
+  public type PlayerSeason = {
+    id : Nat16;
+    gameweeks : List.List<PlayerGameweek>;
+  };
+
+  public type PlayerGameweek = {
+    number : Nat8;
+    events : List.List<PlayerEventData>;
+    points : Int16;
+  };
+
+  public type PlayerEventData = {
+    fixtureId : FixtureId;
+    playerId : Nat16;
+    eventType : PlayerEventType;
+    eventStartMinute : Nat8;
+    eventEndMinute : Nat8;
+    clubId : ClubId;
   };
 
   public type ValueHistory = {
@@ -105,19 +269,37 @@ module Types {
     transferDate : Int;
     transferGameweek : GameweekNumber;
     transferSeason : SeasonId;
-    fromTeam : TeamId;
-    toTeam : TeamId;
+    fromClub : ClubId;
+    toClub : ClubId;
     loanEndDate : Int;
   };
-
-  public type PlayerSeason = {
-    id : Nat16;
-    gameweeks : List.List<PlayerGameweek>;
+  
+  public type WeeklyLeaderboard = {
+    seasonId : SeasonId;
+    gameweek : GameweekNumber;
+    entries : List.List<LeaderboardEntry>;
+    totalEntries : Nat;
   };
 
-  public type PlayerGameweek = {
-    number : Nat8;
-    events : List.List<PlayerEventData>;
+  public type ClubLeaderboard = {
+    seasonId : SeasonId;
+    month : Nat8;
+    clubId : ClubId;
+    entries : List.List<LeaderboardEntry>;
+    totalEntries : Nat;
+  };
+
+  public type SeasonLeaderboard = {
+    seasonId : SeasonId;
+    entries : List.List<LeaderboardEntry>;
+    totalEntries : Nat;
+  };
+
+  public type LeaderboardEntry = {
+    position : Nat;
+    positionText : Text;
+    username : Text;
+    principalId : Text;
     points : Int16;
   };
 
@@ -126,136 +308,10 @@ module Types {
     subaccount : Blob;
   };
 
-  public type FantasyTeam = {
-    principalId : Text;
-    teamName : Text;
-    favouriteTeamId : TeamId;
-    transfersAvailable : Nat8;
-    bankBalance : Nat; //Value in £0.25m units
-    playerIds : [PlayerId];
-    captainId : PlayerId;
-    goalGetterGameweek : GameweekNumber;
-    goalGetterPlayerId : PlayerId;
-    passMasterGameweek : GameweekNumber;
-    passMasterPlayerId : PlayerId;
-    noEntryGameweek : GameweekNumber;
-    noEntryPlayerId : PlayerId;
-    teamBoostGameweek : GameweekNumber;
-    teamBoostTeamId : TeamId;
-    safeHandsGameweek : GameweekNumber;
-    safeHandsPlayerId : PlayerId;
-    captainFantasticGameweek : GameweekNumber;
-    captainFantasticPlayerId : PlayerId;
-    countrymenGameweek : GameweekNumber;
-    countrymenCountryId : CountryId;
-    prospectsGameweek : GameweekNumber;
-    braceBonusGameweek : GameweekNumber;
-    hatTrickHeroGameweek : GameweekNumber;
-  };
-
-  public type UserFantasyTeam = {
-    fantasyTeam : FantasyTeam;
-    history : List.List<FantasyTeamSeason>;
-  };
-
-  public type FantasyTeamSeason = {
-    seasonId : SeasonId;
-    totalPoints : Int16;
-    gameweeks : List.List<FantasyTeamSnapshot>;
-  };
-
-  public type FantasyTeamSnapshot = {
-    principalId : Text;
-    teamName : Text;
-    favouriteTeamId : TeamId;
-    transfersAvailable : Nat8;
-    bankBalance : Nat; //Value in £0.25m units
-    playerIds : [PlayerId];
-    captainId : Nat16;
-    gameweek : GameweekNumber;
-    goalGetterGameweek : GameweekNumber;
-    goalGetterPlayerId : PlayerId;
-    passMasterGameweek : GameweekNumber;
-    passMasterPlayerId : PlayerId;
-    noEntryGameweek : GameweekNumber;
-    noEntryPlayerId : PlayerId;
-    teamBoostGameweek : GameweekNumber;
-    teamBoostTeamId : TeamId;
-    safeHandsGameweek : GameweekNumber;
-    safeHandsPlayerId : PlayerId;
-    captainFantasticGameweek : GameweekNumber;
-    captainFantasticPlayerId : PlayerId;
-    countrymenGameweek : GameweekNumber;
-    countrymenCountryId : CountryId;
-    prospectsGameweek : GameweekNumber;
-    braceBonusGameweek : GameweekNumber;
-    hatTrickHeroGameweek : GameweekNumber;
-    points : Int16;
-  };
-
-  public type SeasonLeaderboards = {
-    seasonLeaderboard : Leaderboard;
-    gameweekLeaderboards : List.List<Leaderboard>;
-  };
-
-  public type ClubLeaderboard = {
-    seasonId : SeasonId;
-    month : Nat8;
-    clubId : TeamId;
-    entries : List.List<LeaderboardEntry>;
-  };
-
-  public type Leaderboard = {
-    seasonId : SeasonId;
-    gameweek : GameweekNumber;
-    entries : List.List<LeaderboardEntry>;
-  };
-
-  public type LeaderboardEntry = {
-    position : Int;
-    positionText : Text;
-    username : Text;
-    principalId : Text;
-    points : Int16;
-  };
-
-  public type PlayerEventData = {
-    fixtureId : FixtureId;
-    playerId : Nat16;
-    //0 = Appearance
-    //1 = Goal Scored
-    //2 = Goal Assisted
-    //3 = Goal Conceded - Inferred
-    //4 = Keeper Save
-    //5 = Clean Sheet - Inferred
-    //6 = Penalty Saved
-    //7 = Penalty Missed
-    //8 = Yellow Card
-    //9 = Red Card
-    //10 = Own Goal
-    //11 = Highest Scoring Player
-    eventType : Nat8;
-    eventStartMinute : Nat8; //use to record event time of all other events
-    eventEndMinute : Nat8; //currently only used for Appearance
-    teamId : TeamId;
-  };
-
-  public type RevaluedPlayer = {
-    playerId : PlayerId;
-    direction : RevaluationDirection;
-  };
-
-  public type RevaluationDirection = {
-    #Increase;
-    #Decrease;
-  };
-
   public type TimerInfo = {
     id : Int;
     triggerTime : Int;
     callbackName : Text;
-    playerId : PlayerId;
-    fixtureId : FixtureId;
   };
 
   public type ProposalTimer = {
@@ -274,10 +330,12 @@ module Types {
   };
 
   public type SystemState = {
-    activeSeason : Season;
-    activeGameweek : GameweekNumber;
-    activeMonth : Nat8;
-    focusGameweek : GameweekNumber;
+    pickTeamSeason: SeasonId; 
+    pickTeamGameweek: GameweekNumber; 
+    calculationGameweek: GameweekNumber; 
+    calculationMonth: CalendarMonth;
+    calculationSeason: SeasonId; 
+    transferWindowActive: Bool;
   };
 
   public type Country = {
@@ -285,5 +343,17 @@ module Types {
     name : Text;
     code : Text;
   };
+
+  public type RewardPool = {
+    seasonId: SeasonId;
+    seasonLeaderboardPool: Nat64;
+    monthlyLeaderboardPool: Nat64;
+    weeklyLeaderboardPool: Nat64;
+    mostValuableTeamPool: Nat64;
+    highestScoringMatchPlayerPool: Nat64;
+    allTimeWeeklyHighScorePool: Nat64;
+    allTimeMonthlyHighScorePool: Nat64;
+    allTimeSeasonHighScorePool: Nat64;
+  }
 
 };

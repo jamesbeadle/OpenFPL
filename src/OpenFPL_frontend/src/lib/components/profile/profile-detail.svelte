@@ -98,8 +98,8 @@
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      if (file.size > 1000 * 1024) {
-        alert("File size exceeds 1000KB");
+      if (file.size > 500 * 1024) {
+        alert("File size exceeds 500KB");
         return;
       }
 

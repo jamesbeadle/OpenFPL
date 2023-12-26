@@ -1,10 +1,9 @@
 import List "mo:base/List";
 import T "types";
 
-module {
-  public class Countries() {
+module Countries {
 
-    public let countries : List.List<T.Country> = List.fromArray<T.Country>([
+    public let countries : [T.Country] = [
       { id = 1; name = "Afghanistan"; code = "AF" },
       { id = 2; name = "Albania"; code = "AL" },
       { id = 3; name = "Algeria"; code = "DZ" },
@@ -201,28 +200,5 @@ module {
       { id = 194; name = "Yemen"; code = "YE" },
       { id = 195; name = "Zambia"; code = "ZM" },
       { id = 196; name = "Zimbabwe"; code = "ZW" }
-
-    ]);
-
-    public func getCountry(countryId : T.CountryId) : ?T.Country {
-      let country = List.find(
-        countries,
-        func(country : T.Country) : Bool {
-          return country.id == countryId;
-        },
-      );
-      return country;
-    };
-
-    public func isCountryValid(countryId : T.CountryId) : Bool {
-      let country = List.find(
-        countries,
-        func(country : T.Country) : Bool {
-          return country.id == countryId;
-        },
-      );
-      return country == null;
-    };
-  }
-
+    ];
 };
