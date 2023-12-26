@@ -647,25 +647,7 @@ module {
     };
 
 
-    func calculateGoalPoints(position : Nat8, goalsScored : Int16) : Int16 {
-      switch (position) {
-        case 0 { return 40 * goalsScored };
-        case 1 { return 40 * goalsScored };
-        case 2 { return 30 * goalsScored };
-        case 3 { return 20 * goalsScored };
-        case _ { return 0 };
-      };
-    };
-
-    func calculateAssistPoints(position : Nat8, assists : Int16) : Int16 {
-      switch (position) {
-        case 0 { return 30 * assists };
-        case 1 { return 30 * assists };
-        case 2 { return 20 * assists };
-        case 3 { return 20 * assists };
-        case _ { return 0 };
-      };
-    };
+    
 
     
     private func compare(entry1 : T.LeaderboardEntry, entry2 : T.LeaderboardEntry) : Bool {

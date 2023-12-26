@@ -146,7 +146,7 @@ module DTOs {
     clubId : T.ClubId;
     goalsScored : Int16;
     goalsConceded : Int16;
-    position : Nat8;
+    position : T.PlayerPosition;
     nationality : T.CountryId;
     dateOfBirth : Int;
     saves : Int16;

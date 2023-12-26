@@ -146,6 +146,63 @@ module {
       return Buffer.toArray(playerDetailsBuffer);
     };
 
+    
+    public query ({ caller }) func getPlayersMap(seasonId : Nat16, gameweek : Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
+      var playersMap : HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
+      label playerMapLoop for (player in Iter.fromList(players)) {
+        if (player.onLoan) {
+          continue playerMapLoop;
+        };
+
+        var points : Int16 = 0;
+        var events : List.List<T.PlayerEventData> = List.nil();
+        var goalsScored : Int16 = 0;
+        var goalsConceded : Int16 = 0;
+        var saves : Int16 = 0;
+        var assists : Int16 = 0;
+        var dateOfBirth : Int = player.dateOfBirth;
+
+        for (season in Iter.fromList(player.seasons)) {
+          if (season.id == seasonId) {
+            for (gw in Iter.fromList(season.gameweeks)) {
+
+              if (gw.number == gameweek) {
+                points := gw.points;
+                events := gw.events;
+
+                for (event in Iter.fromList(gw.events)) {
+                  switch (event.eventType) {
+                    case (#Goal) { goalsScored += 1 };
+                    case (#GoalAssisted) { assists += 1 };
+                    case (#GoalConceded) { goalsConceded += 1 };
+                    case (#KeeperSave) { saves += 1 };
+                    case _ {};
+                  };
+                };
+              };
+            };
+          };
+        };
+
+        let scoreDTO : DTOs.PlayerScoreDTO = {
+          id = player.id;
+          points = points;
+          events = events;
+          clubId = player.clubId;
+          position = player.position;
+          goalsScored = goalsScored;
+          goalsConceded = goalsConceded;
+          saves = saves;
+          assists = assists;
+          dateOfBirth = dateOfBirth;
+          nationality = player.nationality;
+        };
+        playersMap.put(player.id, scoreDTO);
+      };
+      return Iter.toArray(playersMap.entries());
+    };
+
+
     public func validateRevaluePlayerUp(revaluePlayerUpDTO: DTOs.RevaluePlayerUpDTO) : async Result.Result<Text,Text> {
       let player = List.find<T.Player>(
         players,

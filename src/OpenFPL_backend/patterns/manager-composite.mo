@@ -20,6 +20,7 @@ import Management "../modules/Management";
 import ENV "../utils/Env";
 import ProfilePictureCanister "../profile-picture-canister";
 import RewardPercentages "../utils/RewardPercentages";
+import Utilities "../utilities";
 
 module {
 
@@ -956,16 +957,13 @@ module {
         return newManager;
     };
 
-    public func calculateFantasyTeamScores() : async (){
-      //TODO: Implement the calculation logic
-      /*
-      let allPlayersList = await getPlayersMap(seasonId, gameweek);
-      var allPlayers = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
+    public func calculateFantasyTeamScores(allPlayersList: [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async (){
+      var allPlayers = HashMap.HashMap<T.PlayerId, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
       for ((key, value) in Iter.fromArray(allPlayersList)) {
         allPlayers.put(key, value);
       };
 
-      for ((key, value) in fantasyTeams.entries()) {
+      for ((key, value) in managers.entries()) {
 
         let currentSeason = List.find<T.FantasyTeamSeason>(
           value.history,
@@ -1008,17 +1006,17 @@ module {
                       };
 
                       // No Entry
-                      if (foundSnapshot.noEntryGameweek == gameweek and (player.position < 2) and player.goalsConceded == 0) {
+                      if (foundSnapshot.noEntryGameweek == gameweek and (player.position == #Goalkeeper or player.position == #Defender) and player.goalsConceded == 0) {
                         totalScore := totalScore * 3;
                       };
 
                       // Team Boost
-                      if (foundSnapshot.teamBoostGameweek == gameweek and player.teamId == foundSnapshot.teamBoostTeamId) {
+                      if (foundSnapshot.teamBoostGameweek == gameweek and player.clubId == foundSnapshot.teamBoostClubId) {
                         totalScore := totalScore * 2;
                       };
 
                       // Safe Hands
-                      if (foundSnapshot.safeHandsGameweek == gameweek and player.position == 0 and player.saves > 4) {
+                      if (foundSnapshot.safeHandsGameweek == gameweek and player.position == #Goalkeeper and player.saves > 4) {
                         totalScore := totalScore * 3;
                       };
 
@@ -1056,14 +1054,31 @@ module {
                     };
                   };
                 };
-                updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
+                //updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
               };
             }
 
           };
         };
       };
-      */
+    };
+
+    private func calculateGoalPoints(position : T.PlayerPosition, goalsScored : Int16) : Int16 {
+      switch (position) {
+        case (#Goalkeeper) { return 40 * goalsScored };
+        case (#Defender) { return 40 * goalsScored };
+        case (#Midfielder) { return 30 * goalsScored };
+        case (#Forward) { return 20 * goalsScored };
+      };
+    };
+
+    private func calculateAssistPoints(position : T.PlayerPosition, assists : Int16) : Int16 {
+      switch (position) {
+        case (#Goalkeeper) { return 30 * assists };
+        case (#Defender) { return 30 * assists };
+        case (#Midfielder) { return 20 * assists };
+        case (#Forward) { return 20 * assists };
+      };
     };
 
     public func removePlayerFromTeams(playerId: T.PlayerId) : async (){
