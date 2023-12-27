@@ -178,16 +178,16 @@ module {
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : () {
       calculateWeeklyLeaderboards(seasonId, gameweek, managers);
-      calculateSeasonLeaderboard(seasonId);
+      calculateSeasonLeaderboard(seasonId, managers);
 
     };
 
     private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>){
-      let seasonEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
+      let gameweekEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
         Iter.toArray(managers.entries()),
         func(pair) {
-          return createLeaderboardEntry(pair.0, pair.1.username, totalPointsForSeason(pair.1, seasonId));
-        }
+          return createLeaderboardEntry(pair.0, pair.1.username, totalPointsForGameweek(pair.1, seasonId, gameweek));
+        },
       );
     //TODO: Create the leaderboard canisters for the leaderboards you are about to calculate
     //TODO: Add the leadeboard canister ids to the cycle watcher
@@ -195,8 +195,13 @@ module {
     //TODO: Add the leaderboard data to the canister
     };
 
-    private func calculateSeasonLeaderboard(seasonId : T.SeasonId){
-
+    private func calculateSeasonLeaderboard(seasonId : T.SeasonId, managers: HashMap.HashMap<T.PrincipalId, T.Manager>){
+      let seasonEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
+        Iter.toArray(managers.entries()),
+        func(pair) {
+          return createLeaderboardEntry(pair.0, pair.1.username, totalPointsForSeason(pair.1, seasonId));
+        }
+      );
     };
     
     private func totalPointsForSeason(manager : T.Manager, seasonId : T.SeasonId) : Int16 {
@@ -220,8 +225,34 @@ module {
         };
       };
     };
-    
 
+    
+    private func totalPointsForGameweek(team : T.Manager, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : Int16 {
+
+      let season = List.find(
+        team.history,
+        func(season : T.FantasyTeamSeason) : Bool {
+          return season.seasonId == seasonId;
+        },
+      );
+      switch (season) {
+        case (null) { return 0 };
+        case (?foundSeason) {
+          let seasonGameweek = List.find(
+            foundSeason.gameweeks,
+            func(gw : T.FantasyTeamSnapshot) : Bool {
+              return gw.gameweek == gameweek;
+            },
+          );
+          switch (seasonGameweek) {
+            case null { return 0 };
+            case (?foundSeasonGameweek) {
+              return foundSeasonGameweek.points;
+            };
+          };
+        };
+      };
+    };
     
     private func createLeaderboardEntry(principalId : Text, username : Text, points : Int16) : T.LeaderboardEntry {
       return {
