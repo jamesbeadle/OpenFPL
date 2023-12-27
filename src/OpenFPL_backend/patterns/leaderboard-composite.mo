@@ -13,7 +13,7 @@ module {
     private var monthlyLeaderboardCanisterIds : HashMap.HashMap<T.MonthlyLeaderboardKey, Text> = HashMap.HashMap<T.MonthlyLeaderboardKey, Text>(100, Utilities.eqMonthlyKey, Utilities.hashMonthlyKey);
     private var weeklyLeaderboardCanisterIds : HashMap.HashMap<T.WeeklyLeaderboardKey, Text> = HashMap.HashMap<T.WeeklyLeaderboardKey, Text>(100, Utilities.eqWeeklyKey, Utilities.hashWeeklyKey);
    
-    private var setAndWatchCanister : ?((canisterId : Text) -> async ()) = null;
+    private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
 
     public func setStableData(
       stable_season_leaderboard_canister_ids:  [(T.SeasonId, Text)],
@@ -42,9 +42,9 @@ module {
       );
     };
     
-    public func setCanisterWatcherFunction(
-      _setAndWatchCanister : (canisterId : Text) -> async ()) {
-      setAndWatchCanister := ?_setAndWatchCanister;
+    public func setStoreCanisterIdFunction(
+      _storeCanisterId : (canisterId : Text) -> async ()) {
+      storeCanisterId := ?_storeCanisterId;
     };
 
     public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {

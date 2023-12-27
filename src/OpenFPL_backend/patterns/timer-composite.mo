@@ -1,7 +1,6 @@
 import T "../types";
 import DTOs "../DTOs";
 import List "mo:base/List";
-import CanisterIds "../CanisterIds";
 import Time "mo:base/Time";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";

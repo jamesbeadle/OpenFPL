@@ -29,7 +29,7 @@ module {
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
     private var activeProfilePictureCanisterId = ""; 
     
-    private var setAndWatchCanister : ?((canisterId : Text) -> async ()) = null;
+    private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
 
     var backendCanisterController: ?Principal = null;
 
@@ -52,9 +52,9 @@ module {
       backendCanisterController := ?controller;
     };
     
-    public func setCanisterWatcherFunction(
-      _setAndWatchCanister : (canisterId : Text) -> async ()) {
-      setAndWatchCanister := ?_setAndWatchCanister;
+    public func setStoreCanisterIdFunction(
+      _storeCanisterId : (canisterId : Text) -> async ()) {
+      storeCanisterId := ?_storeCanisterId;
     };
 
     public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 
@@ -602,7 +602,7 @@ module {
       await canister.addProfilePicture(principalId, profilePicture);
       let canisterId = Principal.toText(canister_principal);
 
-      switch (setAndWatchCanister) {
+      switch (storeCanisterId) {
         case (null) {};
         case (?actualFunction) {
           await actualFunction(canisterId);

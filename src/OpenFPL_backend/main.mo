@@ -14,12 +14,13 @@ import DTOs "DTOs";
 import SeasonManager "season-manager";
 import T "types";
 import TimerComposite "patterns/timer-composite";
-import CanisterWatcher "canister-watcher";
+import CyclesDispenser "cycles-dispenser";
 
 actor Self {
   //TODO: NEED TO PASS SELF
   private func OpenFPLBackendCanisterId() : Principal = Principal.fromActor(Self);
   let seasonManager = SeasonManager.SeasonManager(); 
+  let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   //seasonManager.setBackendCanisterController(Principal.fromActor(Self));
 
   //Functions containing inter-canister calls that cannot be query functions:
@@ -276,10 +277,8 @@ actor Self {
     transferWindowStartCallback,
     transferWindowEndCallback);
 
-  let canisterWatcher = CanisterWatcher.CanisterWatcher();
-
   seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
-  seasonManager.setCanisterWatcherFunction(canisterWatcher.setAndWatchCanister);
+  seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
   
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
@@ -348,6 +347,14 @@ actor Self {
     seasonManager.setStableDataHashes(stable_data_cache_hashes);
     seasonManager.setStableSystemState(stable_system_state);
     timerComposite.setStableTimers(stable_timers);
+  };
+
+  //what happens when a canister calls back
+
+  public shared ({ caller }) func requestCanisterTopup() : async () {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    await cyclesDispenser.requestCanisterTopup(principalId);
   };
   
   public func getCyclesBalance() : async Nat {

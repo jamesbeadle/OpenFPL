@@ -5,6 +5,7 @@ import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Cycles "mo:base/ExperimentalCycles";
+import CanisterIds "CanisterIds";
 
 actor class ProfilePictureCanister() {  
   private stable var bucket1 : [(T.PrincipalId, Blob)] = [];
@@ -156,6 +157,21 @@ actor class ProfilePictureCanister() {
       case _ { 0 };
     };
   };
+
+  //TODO: NEED TO TRIGGER THIS WITH TIMER 
+
+  private func checkCycleBalance() : async () {
+
+      let balance = Cycles.balance();
+
+      if(balance < 500000000000){
+        let openfpl_backend_canister = actor (CanisterIds.MAIN_CANISTER_ID) : actor {
+          requestCanisterTopup : () -> async ();
+        };
+        await openfpl_backend_canister.requestCanisterTopup();
+      };
+  };
+
 
 
   system func preupgrade() { };

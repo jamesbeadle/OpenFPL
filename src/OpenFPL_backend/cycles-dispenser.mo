@@ -9,13 +9,17 @@ import CanisterIds "CanisterIds";
 
 module {
 
-  public class CanisterWatcher() {
+  public class CyclesDispenser() {
 
     let canisterIds: List.List<Text> = List.fromArray<Text>([CanisterIds.MAIN_CANISTER_ID]);
     let canisterCheckInterval: Nat = Utilities.getHour() * 24;
     var canisterCheckTimerId: ?Timer.TimerId = null;
 
-    public func setAndWatchCanister(canisterId: Text) : async (){
+    public func requestCanisterTopup(canisterPrincipal: Text) : async () {
+
+    };
+
+    public func storeCanisterId(canisterId: Text) : async (){
       switch(canisterCheckTimerId){
         case (null){};
         case (?id){
