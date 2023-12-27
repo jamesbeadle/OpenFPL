@@ -9,9 +9,11 @@ import Int "mo:base/Int";
 import Principal "mo:base/Principal";
 import Utilities "../utilities";
 import Management "../modules/Management";
-import LeaderboardCanister "../leaderboard-canister";
 import ENV "../utils/Env";
 import Cycles "mo:base/ExperimentalCycles";
+import WeeklyLeaderboardCanister "../../leaderboard-canisters/weekly-leaderboard";
+import MonthlyLeaderboardCanister "../../leaderboard-canisters/monthly-leaderboard";
+import SeasonLeaderboardCanister "../../leaderboard-canisters/season-leaderboard";
 
 module {
 
@@ -249,11 +251,11 @@ module {
       };
       
       Cycles.add(2_000_000_000_000);
-      let canister = await LeaderboardCanister.LeaderboardCanister();
+      let canister = await WeeklyLeaderboardCanister.WeeklyLeaderboardCanister();
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
-      await canister.addWeeklyLeaderboard(seasonId, gameweek, weeklyLeaderboard);
+      await canister.addWeeklyLeaderboard(seasonId, gameweek, weeklyLeaderboard); //TODO
       let canisterId = Principal.toText(canister_principal);
 
       switch (storeCanisterId) {
@@ -288,7 +290,6 @@ module {
       };
     };
 
-    
     private func totalPointsForGameweek(team : T.Manager, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : Int16 {
 
       let season = List.find(
@@ -358,9 +359,6 @@ module {
       return List.map(sortedEntries, updatePosition);
     };
 
-    
-
-    
     private func compare(entry1 : T.LeaderboardEntry, entry2 : T.LeaderboardEntry) : Bool {
       return entry1.points <= entry2.points;
     };
