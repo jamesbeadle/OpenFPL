@@ -20,6 +20,7 @@ module {
   public class Book() {
 
     let icp_fee : Nat64 = 10_000;
+    let memo_txt_tpup: Nat64 = 0x50555054;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
     
 
@@ -47,32 +48,24 @@ module {
         return #err(#NotAllowed);
       };
 
-      let account_id = Account.accountIdentifier(CanisterIds.CYCLES_MINTING_CANISTER, Account.principalToSubaccount(CanisterIds.MAIN_CANISTER_ID));
+      let target_account = Account.accountIdentifier(Principal.fromText(CanisterIds.CYCLES_MINTING_CANISTER), Account.principalToSubaccount(Principal.fromText(CanisterIds.MAIN_CANISTER_ID)));
 
-      switch account_id {
-        case (#ok array) {
-
-          if (not Account.validateAccountIdentifier(Blob.fromArray(array))) {
-            return #err(#NotAllowed);
-          };
-
-          let result = await ledger.transfer({
-            memo : Text = "TPUP " # CanisterIds.MAIN_CANISTER_ID;
-            from_subaccount = null;
-            to = Blob.fromArray(array);
-            amount = { e8s = amount };
-            fee = { e8s = icp_fee };
-            created_at_time = ?{
-              timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));
-            };
-          });
-
-          return #ok(());
-        };
-        case (#err err) {
-          return #err(#NotAllowed);
-        };
+      if (not Account.validateAccountIdentifier(target_account)) {
+        return #err(#NotAllowed);
       };
+
+      let result = await ledger.transfer({
+        memo = memo_txt_tpup;
+        from_subaccount = null;
+        to = target_account;
+        amount = { e8s = amount };
+        fee = { e8s = icp_fee };
+        created_at_time = ?{
+          timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));
+        };
+      });
+
+      return #ok(());
     };
 
   };
