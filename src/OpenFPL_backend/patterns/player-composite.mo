@@ -147,7 +147,7 @@ module {
     };
 
     
-    public query ({ caller }) func getPlayersMap(seasonId : Nat16, gameweek : Nat8) : async [(Nat16, DTOs.PlayerScoreDTO)] {
+    public query ({ caller }) func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async [(Nat16, DTOs.PlayerScoreDTO)] {
       var playersMap : HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO> = HashMap.HashMap<Nat16, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
       label playerMapLoop for (player in Iter.fromList(players)) {
         if (player.onLoan) {

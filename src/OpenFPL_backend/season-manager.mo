@@ -295,7 +295,9 @@ module {
         };
       };
     
-      await managerComposite.calculateFantasyTeamScores(players, systemState.calculationSeason, systemState.calculationGameweek);
+      let playerPointsMap = await playerComposite.getPlayersMap(systemState.calculationSeason, systemState.calculationGameweek);
+
+      await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeason, systemState.calculationGameweek);
       await leaderboardComposite.calculateLeaderboards();      
 
       var calculationGameweek = systemState.calculationGameweek;
