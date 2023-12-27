@@ -16,7 +16,23 @@ module {
     var canisterCheckTimerId: ?Timer.TimerId = null;
 
     public func requestCanisterTopup(canisterPrincipal: Text) : async () {
+      let canisterId = List.find<Text>(
+        canisterIds,
+        func(text: Text) : Bool {
+          return text == canisterPrincipal;
+        },
+      );
 
+      switch(canisterId){
+        case (null){};
+        case(?foundId){
+          let canister_actor = actor (foundId) : actor {
+            topupCanister : () -> async ();
+          };
+          Cycles.add(2000000000000);
+          await canister_actor.topupCanister();
+        };
+      }
     };
 
     public func storeCanisterId(canisterId: Text) : async (){
