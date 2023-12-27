@@ -180,7 +180,7 @@ module {
     //TODO: Implement the calculation logic
     //TODO: Add the leaderboard data to the canister
 
-    private func calculateLeaderboards(seasonId : Nat16, gameweek : Nat8) : () {
+    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : () {
 
       /* //TODO: Leaderboard type doesn't exist
       let seasonEntries = Array.map<(Text, T.UserFantasyTeam), T.LeaderboardEntry>(
