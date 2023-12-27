@@ -15,13 +15,16 @@ import SeasonManager "season-manager";
 import T "types";
 import TimerComposite "patterns/timer-composite";
 import CyclesDispenser "cycles-dispenser";
+import Utilities "utilities";
 
 actor Self {
   //TODO: NEED TO PASS SELF
   private func OpenFPLBackendCanisterId() : Principal = Principal.fromActor(Self);
   let seasonManager = SeasonManager.SeasonManager(); 
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
-  //seasonManager.setBackendCanisterController(Principal.fromActor(Self));
+  private let cyclesCheckInterval: Nat = Utilities.getHour() * 24;
+  private var cyclesCheckTimerId: ?Timer.TimerId = null;
+  //seasonManager.setBackendCanisterController(Principal.fromActor(Self)); //TODO
 
   //Functions containing inter-canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>  {
@@ -349,21 +352,37 @@ actor Self {
     timerComposite.setStableTimers(stable_timers);
   };
 
-  //what happens when a canister calls back
-
   public shared ({ caller }) func requestCanisterTopup() : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     await cyclesDispenser.requestCanisterTopup(principalId);
   };
-  
-  public func getCyclesBalance() : async Nat {
-    return Cycles.available();
-  };
 
   public func topupCanister() : async (){
     let amount = Cycles.available();
     let accepted = Cycles.accept(amount);
+  };
+
+  
+  private func checkCanisterCycles() : async () {
+
+      let balance = Cycles.balance();
+
+      if(balance < 500000000000){
+        await requestCanisterTopup();
+      };
+      setCheckCyclesTimer();
+  };
+
+  private func setCheckCyclesTimer(){
+    switch(cyclesCheckTimerId){
+        case (null){};
+        case (?id){
+          Timer.cancelTimer(id);
+          cyclesCheckTimerId := null;
+        };
+      };
+      cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
   
 };
