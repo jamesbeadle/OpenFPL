@@ -1,10 +1,5 @@
 import Cycles "mo:base/ExperimentalCycles";
 import List "mo:base/List";
-import Timer "mo:base/Timer";
-import Iter "mo:base/Iter";
-import Time "mo:base/Time";
-import Int "mo:base/Int";
-import Utilities "utilities";
 import CanisterIds "CanisterIds";
 
 module {

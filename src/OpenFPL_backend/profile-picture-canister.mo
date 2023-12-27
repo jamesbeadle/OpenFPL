@@ -5,6 +5,7 @@ import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Buffer "mo:base/Buffer";
 import Cycles "mo:base/ExperimentalCycles";
+import Timer "mo:base/Timer";
 import CanisterIds "CanisterIds";
 
 actor class ProfilePictureCanister() {  
@@ -24,8 +25,8 @@ actor class ProfilePictureCanister() {
   private var currentBucketIndex = 0;
   private var maxPicturesPerBucket = 15000;
   private let totalBuckets : Nat = 12;
-    let canisterCheckInterval: Nat = Utilities.getHour() * 24;
-    var canisterCheckTimerId: ?Timer.TimerId = null;
+  let cuclesCheckInterval: Nat = Utilities.getHour() * 24;
+  var cyclesCheckTimer: ?Timer.TimerId = null;
 
   public shared func addProfilePicture(principalId: T.PrincipalId, profilePicture: Blob) : async () {
     switch (currentBucketIndex) {
