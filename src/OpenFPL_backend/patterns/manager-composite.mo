@@ -827,7 +827,6 @@ module {
           if(remainingBank < 0){
             return true;
           };
-
         };
       };
     
