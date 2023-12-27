@@ -17,7 +17,7 @@ import CanisterIds "CanisterIds";
 
 module {
 
-  public class Book() {
+  public class TreasuryManager() {
 
     let icp_fee : Nat64 = 10_000;
     let memo_txt_tpup: Nat64 = 0x50555054;
@@ -30,28 +30,28 @@ module {
       return balance.e8s;
     };
 
-    public func sendICPForCycles(treasuryAccount: Account.AccountIdentifier, amount : Nat64) : async Result.Result<(), Types.Error> {
+    public func sendICPForCycles(treasuryAccount: Account.AccountIdentifier, amount : Nat64) : async () {
 
       if (amount <= 0) {
-        return #err(#NotAllowed);
+        return;
       };
 
       let balance = await ledger.account_balance({ account = treasuryAccount });
 
       if (balance.e8s < icp_fee) {
-        return #err(#NotAllowed);
+        return;
       };
 
       let withdrawable = balance.e8s - icp_fee;
 
       if (amount >= withdrawable) {
-        return #err(#NotAllowed);
+        return;
       };
 
       let target_account = Account.accountIdentifier(Principal.fromText(CanisterIds.CYCLES_MINTING_CANISTER), Account.principalToSubaccount(Principal.fromText(CanisterIds.MAIN_CANISTER_ID)));
 
       if (not Account.validateAccountIdentifier(target_account)) {
-        return #err(#NotAllowed);
+        return;
       };
 
       let result = await ledger.transfer({
@@ -64,8 +64,6 @@ module {
           timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));
         };
       });
-
-      return #ok(());
     };
 
   };

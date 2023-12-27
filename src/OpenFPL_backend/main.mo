@@ -15,6 +15,7 @@ import SeasonManager "season-manager";
 import T "types";
 import TimerComposite "patterns/timer-composite";
 import CyclesDispenser "cycles-dispenser";
+import TreasuryManager "treasury-manager";
 import Utilities "utilities";
 import Account "lib/Account";
 
@@ -23,6 +24,7 @@ actor Self {
   private func OpenFPLBackendCanisterId() : Principal = Principal.fromActor(Self);
   let seasonManager = SeasonManager.SeasonManager(); 
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
+  let treasuryManager = TreasuryManager.TreasuryManager();
   private let cyclesCheckInterval: Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId: ?Timer.TimerId = null;
   private let cyclesCheckWalletInterval: Nat = Utilities.getHour() * 24;
@@ -398,40 +400,18 @@ actor Self {
       cyclesCheckWalletTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
   };
 
-  private func burnICPToCycles(requestedCycles: Nat){
-    
-    //need to get cycles into the cycles wallet
-    
-    /*
-    amount: state.data.icp_burn_amount ? need this somehow?
-    this_canister_id: //get from canister id file
-    ledger: //get from canister id file
-    cmc: //get from canister id file
-    now: just time now 
-    
-    */
-    
-  //where do i send this to get cycles
-  //call the transfer function on the NNS ICP cycles minting canister
-  /*
-      memo: MEMO_TOP_UP_CANISTER, //this canister
-            amount: burn_details.amount, //the amount of ICP maybe this means I need to change the topup logic as per hamishes //TODO
-            fee: ic_ledger_types::DEFAULT_FEE,
-            from_subaccount: None,
-            to: AccountIdentifier::new(&burn_details.cmc, &Subaccount::from(burn_details.this_canister_id)),
-            created_at_time: Some(Timestamp {
-                timestamp_nanos: burn_details.now * 1_000_000,
-            }),
-*/
+  private func burnICPToCycles(requestedCycles: Nat64) : async (){
+    let treasuryAccount = getTreasuryAccount();
+    await treasuryManager.sendICPForCycles(treasuryAccount, requestedCycles);
   };
   
   private func checkCanisterWalletBalance() : async () {
-      let topupThreshold = 750_000_000_000_000;
-      let targetBalance = 1_000_000_000_000_000;
+      let topupThreshold: Nat64 = 750_000_000_000_000;
+      let targetBalance: Nat64 = 1_000_000_000_000_000;
       let available = Cycles.available();
 
       if(available < topupThreshold){
-        burnICPToCycles(targetBalance - available);
+        await burnICPToCycles(targetBalance - available);
       };
       setCheckCyclesTimer();
   };
