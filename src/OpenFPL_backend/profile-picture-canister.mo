@@ -24,7 +24,9 @@ actor class ProfilePictureCanister() {
   private var currentBucketIndex = 0;
   private var maxPicturesPerBucket = 15000;
   private let totalBuckets : Nat = 12;
-  
+    let canisterCheckInterval: Nat = Utilities.getHour() * 24;
+    var canisterCheckTimerId: ?Timer.TimerId = null;
+
   public shared func addProfilePicture(principalId: T.PrincipalId, profilePicture: Blob) : async () {
     switch (currentBucketIndex) {
       case 0 {
@@ -172,6 +174,18 @@ actor class ProfilePictureCanister() {
       };
   };
 
+    public func storeCanisterId(canisterId: Text) : async (){
+      switch(canisterCheckTimerId){
+        case (null){};
+        case (?id){
+          Timer.cancelTimer(id);
+          canisterCheckTimerId := null;
+        };
+      };
+      await checkCanisterCycles();
+      
+      canisterCheckTimerId := ?Timer.setTimer(#nanoseconds(canisterCheckInterval), checkCanisterCycles);
+    };
 
 
   system func preupgrade() { };
