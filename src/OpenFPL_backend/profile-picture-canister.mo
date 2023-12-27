@@ -7,6 +7,7 @@ import Buffer "mo:base/Buffer";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import CanisterIds "CanisterIds";
+import Utilities "utilities";
 
 actor class ProfilePictureCanister() {  
   private stable var bucket1 : [(T.PrincipalId, Blob)] = [];
@@ -25,8 +26,8 @@ actor class ProfilePictureCanister() {
   private var currentBucketIndex = 0;
   private var maxPicturesPerBucket = 15000;
   private let totalBuckets : Nat = 12;
-  let cuclesCheckInterval: Nat = Utilities.getHour() * 24;
-  var cyclesCheckTimer: ?Timer.TimerId = null;
+  private let cyclesCheckInterval: Nat = Utilities.getHour() * 24;
+  private var cyclesCheckTimerId: ?Timer.TimerId = null;
 
   public shared func addProfilePicture(principalId: T.PrincipalId, profilePicture: Blob) : async () {
     switch (currentBucketIndex) {
@@ -161,9 +162,7 @@ actor class ProfilePictureCanister() {
     };
   };
 
-  //TODO: NEED TO TRIGGER THIS WITH TIMER 
-
-  private func checkCycleBalance() : async () {
+  private func checkCanisterCycles() : async () {
 
       let balance = Cycles.balance();
 
@@ -173,21 +172,19 @@ actor class ProfilePictureCanister() {
         };
         await openfpl_backend_canister.requestCanisterTopup();
       };
+      setCheckCyclesTimer();
   };
 
-    public func storeCanisterId(canisterId: Text) : async (){
-      switch(canisterCheckTimerId){
+  private func setCheckCyclesTimer(){
+    switch(cyclesCheckTimerId){
         case (null){};
         case (?id){
           Timer.cancelTimer(id);
-          canisterCheckTimerId := null;
+          cyclesCheckTimerId := null;
         };
       };
-      await checkCanisterCycles();
-      
-      canisterCheckTimerId := ?Timer.setTimer(#nanoseconds(canisterCheckInterval), checkCanisterCycles);
-    };
-
+      cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+  };
 
   system func preupgrade() { };
 
@@ -201,4 +198,7 @@ actor class ProfilePictureCanister() {
     let amount = Cycles.available();
     let accepted = Cycles.accept(amount);
   };
+
+  setCheckCyclesTimer();
+  
 };
