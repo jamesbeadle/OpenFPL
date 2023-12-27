@@ -8,6 +8,7 @@ import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
+import Nat64 "mo:base/Nat64";
 
 import Countries "Countries";
 import DTOs "DTOs";
@@ -406,12 +407,12 @@ actor Self {
   };
   
   private func checkCanisterWalletBalance() : async () {
-      let topupThreshold: Nat64 = 750_000_000_000_000;
-      let targetBalance: Nat64 = 1_000_000_000_000_000;
+      let topupThreshold: Nat = 750_000_000_000_000;
+      let targetBalance: Nat = 1_000_000_000_000_000;
       let available = Cycles.available();
 
       if(available < topupThreshold){
-        await burnICPToCycles(targetBalance - available);
+        await burnICPToCycles(Nat64.fromNat(targetBalance - available));
       };
       setCheckCyclesTimer();
   };
