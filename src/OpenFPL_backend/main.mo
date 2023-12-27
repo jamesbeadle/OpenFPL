@@ -22,7 +22,6 @@ import Account "lib/Account";
 
 actor Self {
   //TODO: NEED TO PASS SELF
-  private func OpenFPLBackendCanisterId() : Principal = Principal.fromActor(Self);
   let seasonManager = SeasonManager.SeasonManager(); 
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   let treasuryManager = TreasuryManager.TreasuryManager();
@@ -31,8 +30,10 @@ actor Self {
   private let cyclesCheckWalletInterval: Nat = Utilities.getHour() * 24;
   private var cyclesCheckWalletTimerId: ?Timer.TimerId = null;
   
-  private func getTreasuryAccount() : Account.AccountIdentifier {
-    Account.accountIdentifier(Principal.fromActor(Self), Account.defaultSubaccount())
+  public shared ({caller}) func getTreasuryAccount() : async Account.AccountIdentifier {
+    let actorPrincipal : Principal = Principal.fromActor(Self);
+
+    Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount())
   };
 
   //seasonManager.setBackendCanisterController(Principal.fromActor(Self)); //TODO
@@ -401,8 +402,8 @@ actor Self {
       cyclesCheckWalletTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
   };
 
-  private func burnICPToCycles(requestedCycles: Nat64) : async (){
-    let treasuryAccount = getTreasuryAccount();
+  public shared func burnICPToCycles(requestedCycles: Nat64) : async (){
+    let treasuryAccount = await getTreasuryAccount();
     await treasuryManager.sendICPForCycles(treasuryAccount, requestedCycles);
   };
   
