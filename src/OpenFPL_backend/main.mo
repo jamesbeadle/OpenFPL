@@ -414,7 +414,23 @@ actor Self {
       };
       setCheckCyclesTimer();
   };
+
+  public shared func initCycleCheckFunctions() : async () {
+    
+    switch(cyclesCheckTimerId){
+      case (null){
+        setCheckCyclesTimer();
+      };
+      case (?id){};
+    };
+    
+    switch(cyclesCheckWalletTimerId){
+      case (null){
+        setCheckCyclesWalletTimer();
+      };
+      case (?id){};
+    };
   
-  setCheckCyclesTimer();
-  setCheckCyclesWalletTimer();
+  };
+  
 };
