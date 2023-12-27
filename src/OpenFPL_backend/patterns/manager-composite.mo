@@ -1054,7 +1054,7 @@ module {
                     };
                   };
                 };
-                //updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
+                updateSnapshotPoints(key, seasonId, gameweek, totalTeamPoints);
               };
             }
 
@@ -1081,6 +1081,116 @@ module {
       };
     };
 
+    private func updateSnapshotPoints(principalId : Text, seasonId : Nat16, gameweek : Nat8, teamPoints : Int16) : () {
+      let manager = managers.get(principalId);
+
+      switch (manager) {
+        case (null) {};
+        case (?foundManager) {
+
+          let teamHistoryBuffer = Buffer.fromArray<T.FantasyTeamSeason>([]);
+
+          switch (foundManager.history) {
+            case (null) {};
+            case (existingHistory) {
+              for (season in List.toIter<T.FantasyTeamSeason>(existingHistory)) {
+                if (season.seasonId == seasonId) {
+                  let snapshotBuffer = Buffer.fromArray<T.FantasyTeamSnapshot>([]);
+
+                  for (snapshot in List.toIter<T.FantasyTeamSnapshot>(season.gameweeks)) {
+                    if (snapshot.gameweek == gameweek) {
+
+                      let updatedSnapshot : T.FantasyTeamSnapshot = {
+                        principalId = snapshot.principalId;
+                        gameweek = snapshot.gameweek;
+                        transfersAvailable = snapshot.transfersAvailable;
+                        bankQuarterMillions = snapshot.bankQuarterMillions;
+                        playerIds = snapshot.playerIds;
+                        captainId = snapshot.captainId;
+                        goalGetterGameweek = snapshot.goalGetterGameweek;
+                        goalGetterPlayerId = snapshot.goalGetterPlayerId;
+                        passMasterGameweek = snapshot.passMasterGameweek;
+                        passMasterPlayerId = snapshot.passMasterPlayerId;
+                        noEntryGameweek = snapshot.noEntryGameweek;
+                        noEntryPlayerId = snapshot.noEntryPlayerId;
+                        teamBoostGameweek = snapshot.teamBoostGameweek;
+                        teamBoostClubId = snapshot.teamBoostClubId;
+                        safeHandsGameweek = snapshot.safeHandsGameweek;
+                        safeHandsPlayerId = snapshot.safeHandsPlayerId;
+                        captainFantasticGameweek = snapshot.captainFantasticGameweek;
+                        captainFantasticPlayerId = snapshot.captainFantasticPlayerId;
+                        countrymenGameweek = snapshot.countrymenGameweek;
+                        countrymenCountryId = snapshot.countrymenCountryId;
+                        prospectsGameweek = snapshot.prospectsGameweek;
+                        braceBonusGameweek = snapshot.braceBonusGameweek;
+                        hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
+                        favouriteClubId = snapshot.favouriteClubId;
+                        teamName = snapshot.teamName;
+                        points = teamPoints;
+                        transferWindowGameweek = snapshot.transferWindowGameweek;
+                        monthlyBonusesAvailable = snapshot.monthlyBonusesAvailable;
+                        teamValueQuarterMillions = snapshot.teamValueQuarterMillions;
+                      };
+
+                      snapshotBuffer.add(updatedSnapshot);
+
+                    } else { snapshotBuffer.add(snapshot) };
+                  };
+
+                  let gameweekSnapshots = Buffer.toArray<T.FantasyTeamSnapshot>(snapshotBuffer);
+
+                  let totalSeasonPoints = Array.foldLeft<T.FantasyTeamSnapshot, Int16>(gameweekSnapshots, 0, func(sumSoFar, x) = sumSoFar + x.points);
+
+                  let updatedSeason : T.FantasyTeamSeason = {
+                    gameweeks = List.fromArray(gameweekSnapshots);
+                    seasonId = season.seasonId;
+                    totalPoints = totalSeasonPoints;
+                  };
+
+                  teamHistoryBuffer.add(updatedSeason);
+
+                } else { teamHistoryBuffer.add(season) };
+              };
+            };
+          };
+
+          let updatedManager : T.Manager = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            termsAccepted = foundManager.termsAccepted;
+            profilePictureCanisterId = foundManager.profilePictureCanisterId;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            transfersAvailable = foundManager.transfersAvailable;
+            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = foundManager.playerIds;
+            captainId = foundManager.captainId;
+            goalGetterGameweek = foundManager.goalGetterGameweek;
+            goalGetterPlayerId = foundManager.goalGetterPlayerId;
+            passMasterGameweek = foundManager.passMasterGameweek;
+            passMasterPlayerId = foundManager.passMasterPlayerId;
+            noEntryGameweek = foundManager.noEntryGameweek;
+            noEntryPlayerId = foundManager.noEntryPlayerId;
+            teamBoostGameweek = foundManager.teamBoostGameweek;
+            teamBoostClubId = foundManager.teamBoostClubId;
+            safeHandsGameweek = foundManager.safeHandsGameweek;
+            safeHandsPlayerId = foundManager.safeHandsPlayerId;
+            captainFantasticGameweek = foundManager.captainFantasticGameweek;
+            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+            countrymenGameweek = foundManager.countrymenGameweek;
+            countrymenCountryId = foundManager.countrymenCountryId;
+            prospectsGameweek = foundManager.prospectsGameweek;
+            braceBonusGameweek = foundManager.braceBonusGameweek;
+            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+            transferWindowGameweek = foundManager.transferWindowGameweek;
+            history = List.fromArray(Buffer.toArray<T.FantasyTeamSeason>(teamHistoryBuffer));
+          };
+          managers.put(principalId, updatedManager);
+        };
+      };
+    };
+
     public func removePlayerFromTeams(playerId: T.PlayerId) : async (){
       //TODO:remove the player from each users team and replace with a 0
      
@@ -1093,7 +1203,7 @@ module {
     };
 
     public func resetTransfers() : (){
-      //reset transfers available for gameweek AND reset the bonuses that can be played within a calendar month
+      //TODO://reset transfers available for gameweek AND reset the bonuses that can be played within a calendar month
 
       //if last game of the upcoming gameweek falls in the following month, reset the number of transfers available to 2
 

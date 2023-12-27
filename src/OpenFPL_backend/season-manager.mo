@@ -295,7 +295,7 @@ module {
         };
       };
     
-      //await managerComposite.calculateFantasyTeamScores(players, systemState.calculationSeason, systemState.calculationGameweek); //TODO: Need to pass the player score map
+      await managerComposite.calculateFantasyTeamScores(players, systemState.calculationSeason, systemState.calculationGameweek);
       await leaderboardComposite.calculateLeaderboards();      
 
       var calculationGameweek = systemState.calculationGameweek;
