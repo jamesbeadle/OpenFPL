@@ -21,7 +21,6 @@ import Utilities "utilities";
 import Account "lib/Account";
 
 actor Self {
-  //TODO: NEED TO PASS SELF
   let seasonManager = SeasonManager.SeasonManager(); 
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   let treasuryManager = TreasuryManager.TreasuryManager();
@@ -35,8 +34,6 @@ actor Self {
 
     Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount())
   };
-
-  //seasonManager.setBackendCanisterController(Principal.fromActor(Self)); //TODO
 
   //Functions containing inter-canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId: T.SeasonId, gameweek: T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error>  {
