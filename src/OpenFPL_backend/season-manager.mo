@@ -44,6 +44,7 @@ module {
     
     public func setBackendCanisterController(controller: Principal){
       managerComposite.setBackendCanisterController(controller);
+      leaderboardComposite.setBackendCanisterController(controller);
     };
     
     var rewardPools: HashMap.HashMap<T.SeasonId, T.RewardPool> = HashMap.HashMap<T.SeasonId, T.RewardPool>(100, Utilities.eqNat16, Utilities.hashNat16);

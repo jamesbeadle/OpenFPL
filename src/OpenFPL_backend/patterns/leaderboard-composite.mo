@@ -6,7 +6,12 @@ import Iter "mo:base/Iter";
 import List "mo:base/List";
 import Array "mo:base/Array";
 import Int "mo:base/Int";
+import Principal "mo:base/Principal";
 import Utilities "../utilities";
+import Management "../modules/Management";
+import LeaderboardCanister "../leaderboard-canister";
+import ENV "../utils/Env";
+import Cycles "mo:base/ExperimentalCycles";
 
 module {
 
@@ -16,6 +21,8 @@ module {
     private var weeklyLeaderboardCanisterIds : HashMap.HashMap<T.WeeklyLeaderboardKey, Text> = HashMap.HashMap<T.WeeklyLeaderboardKey, Text>(100, Utilities.eqWeeklyKey, Utilities.hashWeeklyKey);
    
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
+    
+    var backendCanisterController: ?Principal = null;
 
     public func setStableData(
       stable_season_leaderboard_canister_ids:  [(T.SeasonId, Text)],
@@ -47,6 +54,10 @@ module {
     public func setStoreCanisterIdFunction(
       _storeCanisterId : (canisterId : Text) -> async ()) {
       storeCanisterId := ?_storeCanisterId;
+    };
+    
+    public func setBackendCanisterController(controller: Principal){
+      backendCanisterController := ?controller;
     };
 
     public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
@@ -178,13 +189,7 @@ module {
 
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : () {
-      calculateWeeklyLeaderboards(seasonId, gameweek, managers);
-      calculateMonthlyLeaderboards(seasonId, gameweek, managers);
-      calculateSeasonLeaderboard(seasonId, managers);
 
-    };
-
-    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>){
       let gameweekEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
         Iter.toArray(managers.entries()),
         func(pair) {
@@ -194,7 +199,15 @@ module {
 
       let sortedGameweekEntries = List.reverse(mergeSort(List.fromArray(gameweekEntries)));
       let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
-   
+
+      calculateWeeklyLeaderboards(seasonId, gameweek, positionedGameweekEntries);
+      calculateMonthlyLeaderboards(seasonId, gameweek, positionedGameweekEntries);
+      calculateSeasonLeaderboard(seasonId, managers);
+
+    };
+
+    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>)){
+      
       let currentGameweekLeaderboard : T.WeeklyLeaderboard = {
         seasonId = seasonId;
         gameweek = gameweek;
@@ -203,17 +216,22 @@ module {
       };
 
 
+
     //TODO: Create the leaderboard canisters for the leaderboards you are about to calculate
+      let gameweekLeaderboardCanisterId = ""; //TODO: Update when set
+    
     //TODO: Add the leaderboard data to the canister
     
-
     //TODO: Add the leadeboard canister ids to the cycle watcher
-      //weeklyLeaderboardCanisterIds
+    
+
+      weeklyLeaderboardCanisterIds.put((seasonId, gameweek), gameweekLeaderboardCanisterId);
 
     };
 
-    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>){
+    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>)){
       //TODO: Implement using the functions at the bottom
+      
     };
 
     private func calculateSeasonLeaderboard(seasonId : T.SeasonId, managers: HashMap.HashMap<T.PrincipalId, T.Manager>){
@@ -223,6 +241,29 @@ module {
           return createLeaderboardEntry(pair.0, pair.1.username, totalPointsForSeason(pair.1, seasonId));
         }
       );
+    };
+
+    private func createWeeklyLeaderboardCanister(seasonId: T.SeasonId, gamweek: T.GameweekNumber, weeklyLeaderboard: T.WeeklyLeaderboard) : async Text {
+      if(backendCanisterController == null){
+        return "";
+      };
+      
+      Cycles.add(2_000_000_000_000);
+      let canister = await LeaderboardCanister.LeaderboardCanister();
+      let IC : Management.Management = actor (ENV.Default);
+      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+      let canister_principal = Principal.fromActor(canister);
+      await canister.addWeeklyLeaderboard(seasonId, gameweek, weeklyLeaderboard);
+      let canisterId = Principal.toText(canister_principal);
+
+      switch (storeCanisterId) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(canisterId);
+        };
+      };
+
+      return canisterId;
     };
     
     private func totalPointsForSeason(manager : T.Manager, seasonId : T.SeasonId) : Int16 {
@@ -377,7 +418,6 @@ module {
       let weeklyLeaderboardKey = (seasonId, month);
       return weeklyLeaderboardCanisterIds.get(weeklyLeaderboardKey);
     };
-
 
 
  /*

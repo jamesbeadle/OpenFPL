@@ -178,7 +178,7 @@ module {
           var profilePicture = Blob.fromArray([]);
           if(Text.size(foundManager.profilePictureCanisterId) > 0){
               let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-              getProfilePicture : (principalId: Text) -> async Blob;
+                getProfilePicture : (principalId: Text) -> async Blob;
               };
               profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
           };
@@ -601,7 +601,8 @@ module {
       
       Cycles.add(2000000000000);
       let canister = await ProfilePictureCanister.ProfilePictureCanister();
-      let _ = await updateCanister_(canister);
+      let IC : Management.Management = actor (ENV.Default);
+      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
       await canister.addProfilePicture(principalId, profilePicture);
       let canisterId = Principal.toText(canister_principal);

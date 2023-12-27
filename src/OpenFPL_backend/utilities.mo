@@ -13,6 +13,8 @@ import Int64 "mo:base/Int64";
 import Text "mo:base/Text";
 import Int16 "mo:base/Int16";
 import Float "mo:base/Float";
+import Principal "mo:base/Principal";
+import Management "./modules/Management";
 
 module {
   
@@ -329,6 +331,26 @@ module {
 
   public func nat64Percentage(amount: Nat64, percentage: Float) : Nat64 {
     return Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(amount)) * percentage));
+  };
+    
+  public func updateCanister_(a : actor {}, backendCanisterController: ?Principal, IC: Management.Management) : async () {
+      let cid = { canister_id = Principal.fromActor(a) };
+      switch(backendCanisterController){
+        case (null){};
+        case (?controller){
+          await (
+              IC.update_settings({
+                  canister_id = cid.canister_id;
+                  settings = {
+                      controllers = ?[controller];
+                      compute_allocation = null;
+                      memory_allocation = null;
+                      freezing_threshold = ?31_540_000;
+                  };
+              })
+          );
+        }
+      };
   };
 
 };

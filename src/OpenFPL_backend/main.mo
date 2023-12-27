@@ -415,7 +415,7 @@ actor Self {
       setCheckCyclesTimer();
   };
 
-  public shared func initCycleCheckFunctions() : async () {
+  public shared func init() : async () {
     
     switch(cyclesCheckTimerId){
       case (null){
@@ -430,6 +430,8 @@ actor Self {
       };
       case (?id){};
     };
+
+    seasonManager.setBackendCanisterController(Principal.fromActor(Self));
   
   };
   
