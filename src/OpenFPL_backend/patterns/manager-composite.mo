@@ -104,6 +104,10 @@ module {
         }
     };
 
+    public func getManagers() : HashMap.HashMap<T.PrincipalId, T.Manager>{
+      return managers;
+    };
+
     public func getManager(principalId: Text, seasonId: T.SeasonId, weeklyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry: ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error>{
 
       var weeklyPosition : Int = 0;
