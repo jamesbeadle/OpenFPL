@@ -13,6 +13,7 @@ import Buffer "mo:base/Buffer";
 import Text "mo:base/Text";
 import Blob "mo:base/Blob";
 import DTOs "DTOs";
+import CanisterIds "CanisterIds";
 
 module {
 
@@ -20,6 +21,7 @@ module {
 
     let icp_fee : Nat64 = 10_000;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
+    
 
     public func getUserAccountBalance(defaultAccount : Principal, user : Principal) : async Nat64 {
       let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(user));
@@ -27,15 +29,13 @@ module {
       return balance.e8s;
     };
 
-    public func withdrawICP(defaultAccount : Principal, user : Principal, amount : Float, walletAddress : Text) : async Result.Result<(), Types.Error> {
+    public func sendICPForCycles(treasuryAccount: Account.AccountIdentifier, amount : Nat64) : async Result.Result<(), Types.Error> {
 
       if (amount <= 0) {
         return #err(#NotAllowed);
       };
 
-      let e8Amount = Int64.toNat64(Float.toInt64(amount * 1e8));
-      let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(user));
-      let balance = await ledger.account_balance({ account = source_account });
+      let balance = await ledger.account_balance({ account = treasuryAccount });
 
       if (balance.e8s < icp_fee) {
         return #err(#NotAllowed);
@@ -43,11 +43,12 @@ module {
 
       let withdrawable = balance.e8s - icp_fee;
 
-      if (e8Amount >= withdrawable) {
+      if (amount >= withdrawable) {
         return #err(#NotAllowed);
       };
 
-      let account_id = Account.decode(walletAddress);
+      let account_id = Account.accountIdentifier(CanisterIds.CYCLES_MINTING_CANISTER, Account.principalToSubaccount(CanisterIds.MAIN_CANISTER_ID));
+
       switch account_id {
         case (#ok array) {
 
@@ -56,10 +57,10 @@ module {
           };
 
           let result = await ledger.transfer({
-            memo : Nat64 = 0;
-            from_subaccount = ?Account.principalToSubaccount(user);
+            memo : Text = "TPUP " # CanisterIds.MAIN_CANISTER_ID;
+            from_subaccount = null;
             to = Blob.fromArray(array);
-            amount = { e8s = e8Amount };
+            amount = { e8s = amount };
             fee = { e8s = icp_fee };
             created_at_time = ?{
               timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));

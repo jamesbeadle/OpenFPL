@@ -7,4 +7,5 @@ module CanisterIds {
     public let GOVERNANCE_CANISTER_ID = "rrkah-fqaaa-aaaaa-aaaaq-cai";
     public let RETIRED_PLAYERS_CANISTER_ID = "pec6o-uqaaa-aaaal-qb7eq-cai";
     public let FORMER_PLAYERS_CANISTER_ID = "pec6o-uqaaa-aaaal-qb7eq-cai";
+    public let CYCLES_MINTING_CANISTER = "gonut-hqaaa-aaaaf-aby7a-cai";
 };
