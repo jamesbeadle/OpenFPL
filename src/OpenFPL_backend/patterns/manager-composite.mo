@@ -1203,6 +1203,84 @@ module {
 
     public func snapshotFantasyTeams() : (){
       //TODO: Add back code to snapshot
+      /*
+      for ((principalId, userFantasyTeam) in managers.entries()) {
+        let newSnapshot : T.FantasyTeamSnapshot = {
+          principalId = userFantasyTeam.fantasyTeam.principalId;
+          gameweek = gameweek;
+          transfersAvailable = userFantasyTeam.fantasyTeam.transfersAvailable;
+          bankBalance = userFantasyTeam.fantasyTeam.bankBalance;
+          playerIds = userFantasyTeam.fantasyTeam.playerIds;
+          captainId = userFantasyTeam.fantasyTeam.captainId;
+          goalGetterGameweek = userFantasyTeam.fantasyTeam.goalGetterGameweek;
+          goalGetterPlayerId = userFantasyTeam.fantasyTeam.goalGetterPlayerId;
+          passMasterGameweek = userFantasyTeam.fantasyTeam.passMasterGameweek;
+          passMasterPlayerId = userFantasyTeam.fantasyTeam.passMasterPlayerId;
+          noEntryGameweek = userFantasyTeam.fantasyTeam.noEntryGameweek;
+          noEntryPlayerId = userFantasyTeam.fantasyTeam.noEntryPlayerId;
+          teamBoostGameweek = userFantasyTeam.fantasyTeam.teamBoostGameweek;
+          teamBoostTeamId = userFantasyTeam.fantasyTeam.teamBoostTeamId;
+          safeHandsGameweek = userFantasyTeam.fantasyTeam.safeHandsGameweek;
+          safeHandsPlayerId = userFantasyTeam.fantasyTeam.safeHandsPlayerId;
+          captainFantasticGameweek = userFantasyTeam.fantasyTeam.captainFantasticGameweek;
+          captainFantasticPlayerId = userFantasyTeam.fantasyTeam.captainFantasticPlayerId;
+          countrymenGameweek = userFantasyTeam.fantasyTeam.countrymenGameweek;
+          countrymenCountryId = userFantasyTeam.fantasyTeam.countrymenCountryId;
+          prospectsGameweek = userFantasyTeam.fantasyTeam.prospectsGameweek;
+          braceBonusGameweek = userFantasyTeam.fantasyTeam.braceBonusGameweek;
+          hatTrickHeroGameweek = userFantasyTeam.fantasyTeam.hatTrickHeroGameweek;
+          teamName = userFantasyTeam.fantasyTeam.teamName;
+          favouriteTeamId = userFantasyTeam.fantasyTeam.favouriteTeamId;
+          points = 0;
+          transferWindowGameweek = userFantasyTeam.fantasyTeam.transferWindowGameweek;
+        };
+
+        var seasonFound = false;
+
+        var updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(
+          userFantasyTeam.history,
+          func(season : T.FantasyTeamSeason) : T.FantasyTeamSeason {
+            if (season.seasonId == seasonId) {
+              seasonFound := true;
+
+              let otherSeasonGameweeks = List.filter<T.FantasyTeamSnapshot>(
+                season.gameweeks,
+                func(snapshot : T.FantasyTeamSnapshot) : Bool {
+                  return snapshot.gameweek != gameweek;
+                },
+              );
+
+              let updatedGameweeks = List.push(newSnapshot, otherSeasonGameweeks);
+
+              return {
+                seasonId = season.seasonId;
+                totalPoints = season.totalPoints;
+                gameweeks = updatedGameweeks;
+              };
+            };
+            return season;
+          },
+        );
+
+        if (not seasonFound) {
+          let newSeason : T.FantasyTeamSeason = {
+            seasonId = seasonId;
+            totalPoints = 0;
+            gameweeks = List.push(newSnapshot, List.nil());
+          };
+
+          updatedSeasons := List.push(newSeason, updatedSeasons);
+        };
+
+        let updatedUserTeam : T.UserFantasyTeam = {
+          fantasyTeam = userFantasyTeam.fantasyTeam;
+          history = updatedSeasons;
+        };
+
+        fantasyTeams.put(principalId, updatedUserTeam);
+        
+      };*/
+
     };
 
     public func resetTransfers() : (){

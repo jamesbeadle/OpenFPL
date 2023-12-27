@@ -5,6 +5,7 @@ import Result "mo:base/Result";
 import Iter "mo:base/Iter";
 import List "mo:base/List";
 import Array "mo:base/Array";
+import Int "mo:base/Int";
 import Utilities "../utilities";
 
 module {
@@ -178,6 +179,7 @@ module {
 
     public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : () {
       calculateWeeklyLeaderboards(seasonId, gameweek, managers);
+      calculateMonthlyLeaderboards(seasonId, gameweek, managers);
       calculateSeasonLeaderboard(seasonId, managers);
 
     };
@@ -189,10 +191,29 @@ module {
           return createLeaderboardEntry(pair.0, pair.1.username, totalPointsForGameweek(pair.1, seasonId, gameweek));
         },
       );
+
+      let sortedGameweekEntries = List.reverse(mergeSort(List.fromArray(gameweekEntries)));
+      let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
+   
+      let currentGameweekLeaderboard : T.WeeklyLeaderboard = {
+        seasonId = seasonId;
+        gameweek = gameweek;
+        entries = positionedGameweekEntries;
+        totalEntries = List.size(positionedGameweekEntries);
+      };
+
+
     //TODO: Create the leaderboard canisters for the leaderboards you are about to calculate
-    //TODO: Add the leadeboard canister ids to the cycle watcher
-    //TODO: Implement the calculation logic
     //TODO: Add the leaderboard data to the canister
+    
+
+    //TODO: Add the leadeboard canister ids to the cycle watcher
+      //weeklyLeaderboardCanisterIds
+
+    };
+
+    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>){
+      //TODO: Implement using the functions at the bottom
     };
 
     private func calculateSeasonLeaderboard(seasonId : T.SeasonId, managers: HashMap.HashMap<T.PrincipalId, T.Manager>){
@@ -264,7 +285,37 @@ module {
       };
     };
 
+    private func assignPositionText(sortedEntries : List.List<T.LeaderboardEntry>) : List.List<T.LeaderboardEntry> {
+      var position = 1;
+      var previousScore : ?Int16 = null;
+      var currentPosition = 1;
 
+      func updatePosition(entry : T.LeaderboardEntry) : T.LeaderboardEntry {
+        if (previousScore == null) {
+          previousScore := ?entry.points;
+          let updatedEntry = {
+            entry with position = position;
+            positionText = Int.toText(position);
+          };
+          currentPosition += 1;
+          return updatedEntry;
+        } else if (previousScore == ?entry.points) {
+          currentPosition += 1;
+          return { entry with position = position; positionText = "-" };
+        } else {
+          position := currentPosition;
+          previousScore := ?entry.points;
+          let updatedEntry = {
+            entry with position = position;
+            positionText = Int.toText(position);
+          };
+          currentPosition += 1;
+          return updatedEntry;
+        };
+      };
+
+      return List.map(sortedEntries, updatePosition);
+    };
 
     
 
@@ -361,55 +412,6 @@ module {
       return groupedTeams;
     };
 
-    private func totalPointsForGameweek(team : T.UserFantasyTeam, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : Int16 {
-
-      let season = List.find(
-        team.history,
-        func(season : T.FantasyTeamSeason) : Bool {
-          return season.seasonId == seasonId;
-        },
-      );
-      switch (season) {
-        case (null) { return 0 };
-        case (?foundSeason) {
-          let seasonGameweek = List.find(
-            foundSeason.gameweeks,
-            func(gw : T.FantasyTeamSnapshot) : Bool {
-              return gw.gameweek == gameweek;
-            },
-          );
-          switch (seasonGameweek) {
-            case null { return 0 };
-            case (?foundSeasonGameweek) {
-              return foundSeasonGameweek.points;
-            };
-          };
-        };
-      };
-    };
-
-    private func totalPointsForSeason(team : T.UserFantasyTeam, seasonId : T.SeasonId) : Int16 {
-
-      var totalPoints : Int16 = 0;
-
-      let season = List.find(
-        team.history,
-        func(season : T.FantasyTeamSeason) : Bool {
-          return season.seasonId == seasonId;
-        },
-      );
-
-      switch (season) {
-        case (null) { return 0 };
-        case (?foundSeason) {
-          for (gameweek in Iter.fromList(foundSeason.gameweeks)) {
-            totalPoints += gameweek.points;
-          };
-          return totalPoints;
-        };
-      };
-    };
-
     private func totalPointsForMonth(team : T.UserFantasyTeam, seasonId : T.SeasonId, monthGameweeks : List.List<Nat8>) : Int16 {
 
       var totalPoints : Int16 = 0;
@@ -431,84 +433,6 @@ module {
           };
           return totalPoints;
         };
-      };
-    };
-
-    public func snapshotGameweek(seasonId : Nat16, gameweek : T.GameweekNumber) : async () {
-      for ((principalId, userFantasyTeam) in fantasyTeams.entries()) {
-        let newSnapshot : T.FantasyTeamSnapshot = {
-          principalId = userFantasyTeam.fantasyTeam.principalId;
-          gameweek = gameweek;
-          transfersAvailable = userFantasyTeam.fantasyTeam.transfersAvailable;
-          bankBalance = userFantasyTeam.fantasyTeam.bankBalance;
-          playerIds = userFantasyTeam.fantasyTeam.playerIds;
-          captainId = userFantasyTeam.fantasyTeam.captainId;
-          goalGetterGameweek = userFantasyTeam.fantasyTeam.goalGetterGameweek;
-          goalGetterPlayerId = userFantasyTeam.fantasyTeam.goalGetterPlayerId;
-          passMasterGameweek = userFantasyTeam.fantasyTeam.passMasterGameweek;
-          passMasterPlayerId = userFantasyTeam.fantasyTeam.passMasterPlayerId;
-          noEntryGameweek = userFantasyTeam.fantasyTeam.noEntryGameweek;
-          noEntryPlayerId = userFantasyTeam.fantasyTeam.noEntryPlayerId;
-          teamBoostGameweek = userFantasyTeam.fantasyTeam.teamBoostGameweek;
-          teamBoostTeamId = userFantasyTeam.fantasyTeam.teamBoostTeamId;
-          safeHandsGameweek = userFantasyTeam.fantasyTeam.safeHandsGameweek;
-          safeHandsPlayerId = userFantasyTeam.fantasyTeam.safeHandsPlayerId;
-          captainFantasticGameweek = userFantasyTeam.fantasyTeam.captainFantasticGameweek;
-          captainFantasticPlayerId = userFantasyTeam.fantasyTeam.captainFantasticPlayerId;
-          countrymenGameweek = userFantasyTeam.fantasyTeam.countrymenGameweek;
-          countrymenCountryId = userFantasyTeam.fantasyTeam.countrymenCountryId;
-          prospectsGameweek = userFantasyTeam.fantasyTeam.prospectsGameweek;
-          braceBonusGameweek = userFantasyTeam.fantasyTeam.braceBonusGameweek;
-          hatTrickHeroGameweek = userFantasyTeam.fantasyTeam.hatTrickHeroGameweek;
-          teamName = userFantasyTeam.fantasyTeam.teamName;
-          favouriteTeamId = userFantasyTeam.fantasyTeam.favouriteTeamId;
-          points = 0;
-          transferWindowGameweek = userFantasyTeam.fantasyTeam.transferWindowGameweek;
-        };
-
-        var seasonFound = false;
-
-        var updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(
-          userFantasyTeam.history,
-          func(season : T.FantasyTeamSeason) : T.FantasyTeamSeason {
-            if (season.seasonId == seasonId) {
-              seasonFound := true;
-
-              let otherSeasonGameweeks = List.filter<T.FantasyTeamSnapshot>(
-                season.gameweeks,
-                func(snapshot : T.FantasyTeamSnapshot) : Bool {
-                  return snapshot.gameweek != gameweek;
-                },
-              );
-
-              let updatedGameweeks = List.push(newSnapshot, otherSeasonGameweeks);
-
-              return {
-                seasonId = season.seasonId;
-                totalPoints = season.totalPoints;
-                gameweeks = updatedGameweeks;
-              };
-            };
-            return season;
-          },
-        );
-
-        if (not seasonFound) {
-          let newSeason : T.FantasyTeamSeason = {
-            seasonId = seasonId;
-            totalPoints = 0;
-            gameweeks = List.push(newSnapshot, List.nil());
-          };
-
-          updatedSeasons := List.push(newSeason, updatedSeasons);
-        };
-
-        let updatedUserTeam : T.UserFantasyTeam = {
-          fantasyTeam = userFantasyTeam.fantasyTeam;
-          history = updatedSeasons;
-        };
-
-        fantasyTeams.put(principalId, updatedUserTeam);
       };
     };
     
