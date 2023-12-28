@@ -190,7 +190,7 @@ module {
     };
 
 
-    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : async () {
+    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, month: T.CalendarMonth, managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : async () {
 
       let gameweekEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
         Iter.toArray(managers.entries()),
@@ -203,7 +203,7 @@ module {
       let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
 
       await calculateWeeklyLeaderboards(seasonId, gameweek, positionedGameweekEntries);
-      await calculateMonthlyLeaderboards(seasonId, gameweek, positionedGameweekEntries, managers);
+      await calculateMonthlyLeaderboards(seasonId, gameweek, month, positionedGameweekEntries, managers);
       await calculateSeasonLeaderboard(seasonId, managers);
 
     };
@@ -221,7 +221,7 @@ module {
       weeklyLeaderboardCanisterIds.put((seasonId, gameweek), gameweekLeaderboardCanisterId);
     };
 
-    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek: T.GameweekNumber, month : T.CalendarMonth, clubId: T.ClubId, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>), managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : async (){
+    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek: T.GameweekNumber, month : T.CalendarMonth, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>), managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : async (){
       //TODO: Implement using the functions at the bottom
       let clubGroup = groupByTeam(managers);
 
@@ -283,8 +283,8 @@ module {
       var monthlyLeaderboards = List.nil<T.ClubLeaderboard>();
     
       for(leaderboard in Iter.fromList(updatedLeaderboards)){
-        let monthlyLeaderboardCanisterId = await createMonthlyLeaderboardCanister(seasonId, month, clubId, leaderboard);
-        monthlyLeaderboardCanisterIds.put((seasonId, gameweek, clubId), monthlyLeaderboardCanisterId);
+        let monthlyLeaderboardCanisterId = await createMonthlyLeaderboardCanister(seasonId, gameweek, month, leaderboard.clubId, leaderboard);
+        monthlyLeaderboardCanisterIds.put((seasonId, gameweek, leaderboard.clubId), monthlyLeaderboardCanisterId);
       };
     };
     
@@ -365,7 +365,7 @@ module {
       return canisterId;
     };
 
-    private func createMonthlyLeaderboardCanister(seasonId: T.SeasonId, month: T.CalendarMonth, clubId: T.ClubId, montlyLeaderboard: T.WeeklyLeaderboard) : async Text {
+    private func createMonthlyLeaderboardCanister(seasonId: T.SeasonId, gameweek: T.GameweekNumber, month: T.CalendarMonth, clubId: T.ClubId, monthlyLeaderboard: T.ClubLeaderboard) : async Text {
     
       if(backendCanisterController == null){
         return "";
@@ -376,7 +376,7 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
-      await canister.addWeeklyLeaderboard(seasonId, gameweek, weeklyLeaderboard); //TODO
+      await canister.addMonthlyLeaderboard(seasonId, gameweek, clubId, monthlyLeaderboard);
       let canisterId = Principal.toText(canister_principal);
 
       switch (storeCanisterId) {
