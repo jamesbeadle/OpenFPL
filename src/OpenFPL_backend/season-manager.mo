@@ -307,8 +307,7 @@ module {
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeason, systemState.calculationGameweek, systemState.calculationMonth, managers);
 
       await payRewards();
-
-      incrementSystemState();
+      await incrementSystemState();
 
       await updateCacheHash("players");
       await updateCacheHash("player_events");
@@ -319,7 +318,7 @@ module {
       await updateCacheHash("system_state");
     };
 
-    private func incrementSystemState() {
+    private func incrementSystemState() : async () {
 
       var currentGameweek = systemState.calculationGameweek;
       var currentMonth = systemState.calculationMonth;
@@ -327,7 +326,7 @@ module {
 
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if (gameweekComplete) {
-
+        managerComposite.resetTransfers();
         let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
         if (seasonComplete) {
 
@@ -335,10 +334,14 @@ module {
           currentSeasonId := seasonComposite.getStableNextSeasonId();
           currentMonth := 8;
           currentGameweek := 1;
+          setTransferWindowTimers();
+          managerComposite.resetFantasyTeams();
+          await calculateRewardPool(currentSeasonId);
         };
 
         let monthComplete = seasonComposite.checkMonthComplete(systemState);
         if (monthComplete) {
+          managerComposite.resetBonusesAvailable();
           if (currentMonth == 12) {
             currentMonth := 1;
           } else {
@@ -358,6 +361,23 @@ module {
       };
 
       systemState := updatedSystemState;
+    };
+
+    private func setTransferWindowTimers(){
+      switch (setAndBackupTimer) {
+        case (null) {};
+        case (?actualFunction) {
+          
+          let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
+          let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
+
+          let transferWindowStartDate : Timer.Duration = #nanoseconds(Int.abs(jan1Date - Time.now()));
+          let transferWindowEndDate : Timer.Duration = #nanoseconds(Int.abs(jan31Date - Time.now()));
+
+          actualFunction(transferWindowStartDate, "transferWindowStart");
+          actualFunction(transferWindowEndDate, "transferWindowEnd");
+        };
+      };
     };
 
     private func payRewards() : async () {

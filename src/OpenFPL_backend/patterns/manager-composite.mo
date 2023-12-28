@@ -1402,15 +1402,9 @@ module {
       };
     };
 
-    public func resetTransfers(isNewMonth : Bool) : () {
+    public func resetTransfers() : () {
 
       for ((principalId, manager) in managers.entries()) {
-
-        var bonusesAvailable = manager.monthlyBonusesAvailable;
-
-        if (isNewMonth) {
-          bonusesAvailable := 2;
-        };
 
         let updatedManager : T.Manager = {
           principalId = manager.principalId;
@@ -1420,7 +1414,7 @@ module {
           termsAccepted = manager.termsAccepted;
           profilePictureCanisterId = manager.profilePictureCanisterId;
           transfersAvailable = 3;
-          monthlyBonusesAvailable = bonusesAvailable;
+          monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
           bankQuarterMillions = manager.bankQuarterMillions;
           playerIds = manager.playerIds;
           captainId = manager.captainId;
@@ -1449,7 +1443,48 @@ module {
       };
     };
 
-    public func resetFantasyTeams() : async () {
+    public func resetBonusesAvailable() : () {
+
+      for ((principalId, manager) in managers.entries()) {
+
+        let updatedManager : T.Manager = {
+          principalId = manager.principalId;
+          username = manager.username;
+          favouriteClubId = manager.favouriteClubId;
+          createDate = manager.createDate;
+          termsAccepted = manager.termsAccepted;
+          profilePictureCanisterId = manager.profilePictureCanisterId;
+          transfersAvailable = manager.transfersAvailable;
+          monthlyBonusesAvailable = 2;
+          bankQuarterMillions = manager.bankQuarterMillions;
+          playerIds = manager.playerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = manager.goalGetterGameweek;
+          goalGetterPlayerId = manager.goalGetterPlayerId;
+          passMasterGameweek = manager.passMasterGameweek;
+          passMasterPlayerId = manager.passMasterPlayerId;
+          noEntryGameweek = manager.noEntryGameweek;
+          noEntryPlayerId = manager.noEntryPlayerId;
+          teamBoostGameweek = manager.teamBoostGameweek;
+          teamBoostClubId = manager.teamBoostClubId;
+          safeHandsGameweek = manager.safeHandsGameweek;
+          safeHandsPlayerId = manager.safeHandsPlayerId;
+          captainFantasticGameweek = manager.captainFantasticGameweek;
+          captainFantasticPlayerId = manager.captainFantasticPlayerId;
+          countrymenGameweek = manager.countrymenGameweek;
+          countrymenCountryId = manager.countrymenCountryId;
+          prospectsGameweek = manager.prospectsGameweek;
+          braceBonusGameweek = manager.braceBonusGameweek;
+          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+          transferWindowGameweek = manager.transferWindowGameweek;
+          history = manager.history;
+        };
+
+        managers.put(principalId, updatedManager);
+      };
+    };
+
+    public func resetFantasyTeams(){
       for ((principalId, manager) in managers.entries()) {
         let clearedTeam = clearFantasyTeam(manager);
         managers.put(principalId, clearedTeam);
