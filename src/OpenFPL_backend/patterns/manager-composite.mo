@@ -34,7 +34,8 @@ module {
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
     private var activeProfilePictureCanisterId = ""; 
-    
+    private var teamValueLeaderboards: HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard> = HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard>(100, Utilities.eqNat16, Utilities.hashNat16);
+     
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
 
     var backendCanisterController: ?Principal = null;
@@ -1485,10 +1486,10 @@ module {
       await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);
     };
     
-    public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO, players: [DTOs.PlayerDTO]) : async (){
+    public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO, players: [DTOs.PlayerDTO], seasonId: T.SeasonId) : async (){
       await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard);
       await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
-      await distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players);
+      await distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players, seasonId);
     };
 
     public func distributeWeeklyRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
@@ -1851,13 +1852,13 @@ module {
       
       let rewardEntriesArray = List.toArray(rewardEntries);
 
-      let teamValueLeaderboard = {
+      let teamValueLeaderboard: T.TeamValueLeaderboard = {
         seasonId = currentSeason;
         entries = rewardEntries;
         totalEntries = List.size(rewardEntries);
       };
 
-      //TODO: Save the team value leaderboard
+      teamValueLeaderboards.put(currentSeason, teamValueLeaderboard);
 
       for (index in Iter.range(0, Array.size(rewardEntriesArray) - 1)) {
         let entry = rewardEntriesArray[index];
