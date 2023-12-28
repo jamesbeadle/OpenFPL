@@ -184,6 +184,7 @@ module Types {
   public type HighScoreRecord = {
     recordType: RecordType;
     points: Int16;
+    createDate: Int;
   };
 
   public type Club = {

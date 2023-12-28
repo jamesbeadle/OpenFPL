@@ -459,7 +459,7 @@ module {
           };
           let players = playerComposite.getPlayers(systemState.calculationSeason);
           let seasonLeaderboard = await season_leaderboard_canister.getRewardLeaderboard();
-          await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard, players);
+          await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard, players, systemState.calculationSeason);
         };
       };
     };

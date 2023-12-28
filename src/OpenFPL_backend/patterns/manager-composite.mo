@@ -1911,17 +1911,54 @@ module {
     };
 
     public func distributeMonthlyATHScoreRewards(monthlyRewardPool: Nat64, monthlyLeaderboards: [DTOs.MonthlyLeaderboardDTO]) : async (){
-      //TODO:
-      //get the highest monthly score from all the monthly leaderboards
-      //ensure ties are split
+      let monthlyATHReward = monthlyRewardPool / 9;
 
-      //check it aagainst the current highest monthly score
+      let maybeLastHighScore = List.last<T.HighScoreRecord>(monthlyAllTimeHighScores);
+      var highestMonthlyScore: Int16 = 0;
+      switch (maybeLastHighScore) {
+        case (null) {
+          highestMonthlyScore := 0;
+        };
+        case (?lastHighScore) {
+          highestMonthlyScore := lastHighScore.points;
+        };
+      };
 
-      //if highest beaten pay the cumulative total 
+      var winnersBuffer = Buffer.fromArray<T.LeaderboardEntry>([]);
+      var newRecordSet = false;
 
-      //if not add to the cumulative total for breaking the ATH monthly score
+      var winners = Buffer.toArray(winnersBuffer);
+      for (monthlyLeaderboard in Iter.fromArray(monthlyLeaderboards)) {
+        let leaderboardEntries = monthlyLeaderboard.entries;
+        if (leaderboardEntries.size() > 0) {
+          let topScore = leaderboardEntries[0].points;
+          if (topScore > highestMonthlyScore) {
+            highestMonthlyScore := topScore; 
+            winnersBuffer.clear();
+            winnersBuffer.add(leaderboardEntries[0]);
+            newRecordSet := true;
 
-      //mint the tokens but send to the treasury
+            winners := Buffer.toArray(winnersBuffer);
+            for (entry in leaderboardEntries.vals()) {
+              if (entry.points == topScore and entry.principalId != winners[0].principalId) {
+                winnersBuffer.add(entry);
+              }
+            };
+          }
+        }
+      };
+
+      winners := Buffer.toArray(winnersBuffer);
+      if (newRecordSet) {
+        let totalPayout = monthlyATHReward * Nat64.fromNat(winners.size());
+        for (winner in Iter.fromArray(winners)) {
+          await payReward(winner.principalId, totalPayout / Nat64.fromNat(winners.size()));
+          monthlyAllTimeHighScores := List.append(monthlyAllTimeHighScores, List.make({ recordType = #MonthlyHighScore; points = winner.points; createDate = Time.now() }));
+          monthlyATHPrizePool := 0; 
+        };
+      } else {
+        monthlyATHPrizePool := monthlyATHPrizePool + monthlyATHReward;
+      }
     };
 
     public func distributeSeasonATHScoreRewards(seasonRewardPool: Nat64, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
