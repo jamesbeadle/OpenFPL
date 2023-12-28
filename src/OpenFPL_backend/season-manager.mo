@@ -301,7 +301,7 @@ module {
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeason, systemState.calculationGameweek);
 
       let managers = managerComposite.getManagers();
-      leaderboardComposite.calculateLeaderboards(systemState.calculationSeason, systemState.calculationGameweek, managers);      
+      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeason, systemState.calculationGameweek, managers);      
 
       var calculationGameweek = systemState.calculationGameweek;
       var calculationMonth = systemState.calculationMonth;

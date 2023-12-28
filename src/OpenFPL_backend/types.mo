@@ -283,7 +283,7 @@ module Types {
 
   public type ClubLeaderboard = {
     seasonId : SeasonId;
-    month : Nat8;
+    month : CalendarMonth;
     clubId : ClubId;
     entries : List.List<LeaderboardEntry>;
     totalEntries : Nat;

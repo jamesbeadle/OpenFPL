@@ -11,9 +11,7 @@ import Utilities "../utilities";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import Cycles "mo:base/ExperimentalCycles";
-import WeeklyLeaderboardCanister "../../leaderboard-canisters/weekly-leaderboard";
-import MonthlyLeaderboardCanister "../../leaderboard-canisters/monthly-leaderboard";
-import SeasonLeaderboardCanister "../../leaderboard-canisters/season-leaderboard";
+import WeeklyLeaderboardCanister "../weekly-leaderboard";
 
 module {
 
@@ -190,7 +188,7 @@ module {
     };
 
 
-    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : () {
+    public func calculateLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : async () {
 
       let gameweekEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
         Iter.toArray(managers.entries()),
@@ -202,13 +200,13 @@ module {
       let sortedGameweekEntries = List.reverse(mergeSort(List.fromArray(gameweekEntries)));
       let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
 
-      calculateWeeklyLeaderboards(seasonId, gameweek, positionedGameweekEntries);
+      await calculateWeeklyLeaderboards(seasonId, gameweek, positionedGameweekEntries);
       calculateMonthlyLeaderboards(seasonId, gameweek, positionedGameweekEntries);
       calculateSeasonLeaderboard(seasonId, managers);
 
     };
 
-    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>)){
+    private func calculateWeeklyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>)) : async (){
       
       let currentGameweekLeaderboard : T.WeeklyLeaderboard = {
         seasonId = seasonId;
@@ -216,15 +214,9 @@ module {
         entries = positionedGameweekEntries;
         totalEntries = List.size(positionedGameweekEntries);
       };
-
-
-
-    //TODO: Create the leaderboard canisters for the leaderboards you are about to calculate
-      let gameweekLeaderboardCanisterId = ""; //TODO: Update when set
-    
-    //TODO: Add the leaderboard data to the canister
-    
-    //TODO: Add the leadeboard canister ids to the cycle watcher
+      
+      let gameweekLeaderboardCanisterId = await createWeeklyLeaderboardCanister(seasonId, gameweek, currentGameweekLeaderboard);
+      //TODO: Add the leadeboard canister ids to the cycle watcher
     
 
       weeklyLeaderboardCanisterIds.put((seasonId, gameweek), gameweekLeaderboardCanisterId);
@@ -245,7 +237,7 @@ module {
       );
     };
 
-    private func createWeeklyLeaderboardCanister(seasonId: T.SeasonId, gamweek: T.GameweekNumber, weeklyLeaderboard: T.WeeklyLeaderboard) : async Text {
+    private func createWeeklyLeaderboardCanister(seasonId: T.SeasonId, gameweek: T.GameweekNumber, weeklyLeaderboard: T.WeeklyLeaderboard) : async Text {
       if(backendCanisterController == null){
         return "";
       };
