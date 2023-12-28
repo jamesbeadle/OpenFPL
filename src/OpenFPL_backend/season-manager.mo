@@ -307,7 +307,7 @@ module {
 
       await payRewards();
 
-
+      //TODO Increment system state
 
       await updateCacheHash("players");
       await updateCacheHash("player_events");

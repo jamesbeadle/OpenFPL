@@ -14,6 +14,7 @@ import Char "mo:base/Char";
 import TrieMap "mo:base/TrieMap";
 import HashMap "mo:base/HashMap";
 import Bool "mo:base/Bool";
+import Order "mo:base/Order";
 import Utilities "../utilities";
 
 module {
@@ -792,7 +793,74 @@ module {
     };
 
     public func checkMonthComplete(systemState: T.SystemState) : Bool {
-      //TODO: Implement
+
+      let currentSeason = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == systemState.calculationSeason;
+        },
+      );
+      
+      switch(currentSeason){
+        case (null) {
+          return false;
+        };
+        case (?foundSeason){
+          
+          let gameweekFixtures = List.toArray(List.filter<T.Fixture>(
+            foundSeason.fixtures,
+            func(fixture: T.Fixture) : Bool {
+              return fixture.gameweek == systemState.calculationGameweek;
+            },
+          ));
+
+          let completedGameweekFixtures = Array.filter<T.Fixture>(
+            gameweekFixtures,
+            func(fixture: T.Fixture) : Bool {
+              return fixture.status == #Finalised;
+            },
+          );
+
+          if(Array.size(gameweekFixtures) != Array.size(completedGameweekFixtures)){
+            return false;
+          };
+
+          let sortedFixtures = Array.sort(gameweekFixtures,
+            func(a : T.Fixture, b : T.Fixture) : Order.Order {
+              if (a.kickOff < b.kickOff) { return #greater };
+              if (a.kickOff == b.kickOff) { return #equal };
+              return #less;
+            },
+          );
+
+          let latestCompletedFixture = sortedFixtures[0];
+          
+          if(systemState.calculationGameweek >= 38){
+            return true;
+          };
+
+          let nextGameweekFixtures = List.toArray(List.filter<T.Fixture>(
+            foundSeason.fixtures,
+            func(fixture: T.Fixture) : Bool {
+              return fixture.gameweek == systemState.calculationGameweek + 1;
+            },
+          ));
+
+          let sortedNextFixtures = Array.sort(nextGameweekFixtures,
+            func(a : T.Fixture, b : T.Fixture) : Order.Order {
+              if (a.kickOff < b.kickOff) { return #greater };
+              if (a.kickOff == b.kickOff) { return #equal };
+              return #less;
+            },
+          );
+
+          let latestNextFixture = sortedNextFixtures[0];
+          let fixtureMonth = Utilities.unixTimeToMonth(latestNextFixture.kickOff);
+
+          return fixtureMonth > systemState.calculationMonth;
+        }
+      };
+      
       return false;
     };
 
