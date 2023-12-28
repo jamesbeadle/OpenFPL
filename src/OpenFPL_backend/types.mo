@@ -303,6 +303,12 @@ module Types {
     points : Int16;
   };
 
+  public type TeamValueLeaderboard = {
+    seasonId : SeasonId;
+    entries : List.List<LeaderboardEntry>;
+    totalEntries : Nat;
+  };
+
   public type Account = {
     owner : Principal;
     subaccount : Blob;

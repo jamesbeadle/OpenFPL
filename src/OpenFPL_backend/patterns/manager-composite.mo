@@ -1484,10 +1484,10 @@ module {
       await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);
     };
     
-    public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
+    public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO, players: [DTOs.PlayerDTO]) : async (){
       await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard);
       await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
-      await distributeMostValuableTeamRewards();
+      await distributeMostValuableTeamRewards(players);
     };
 
     public func distributeWeeklyRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
@@ -1759,7 +1759,6 @@ module {
     };
 
     public func distributeMostValuableTeamRewards(players: [DTOs.PlayerDTO]) : async (){
-      //TODO
       let allFinalGameweekSnapshots = HashMap.mapFilter<T.PrincipalId, T.Manager, T.FantasyTeamSnapshot>(
         managers,
         Text.equal,
@@ -1818,11 +1817,12 @@ module {
 
       let sortedTeamValuesArray = Array.sort(teamValuesArray, compare);
         
-
-      //create leaderboard for them
-      //distribute leaderboard as per the others
-      //store the info in this canister as it's simple data
-
+      //TODO:
+      //loop through and add the top 100 entries to the leaderboard
+        //keep going if tied at 100-101onwards
+      //get scaled percentages
+      //pay everyone on the leaderboard
+      //record the season team value leaderboard in this canister as only once a year
       
     };
 
