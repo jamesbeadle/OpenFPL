@@ -86,5 +86,23 @@ module {
       };
       let result = await token_canister_actor.icrc1_transfer(transferArgs);
     };
+
+    public func mintToTreasury(amount: Nat) : async (){
+
+      let tokenMintingAccount = Account.accountIdentifier(Principal.fromText(CanisterIds.TOKEN_CANISTER_ID), Blob.fromArrayMut(Array.init(32, 0 : Nat8)));
+
+      let transferArgs: TransferArg =  {
+        from_subaccount = tokenMintingAccount;
+        to = {
+          owner =  Principal.fromText(CanisterIds.MAIN_CANISTER_ID); 
+          subaccount = null
+        };
+        amount = amount;
+        fee = await token_canister_actor.icrc1_fee();
+        memo = Blob.fromArray([]);
+        created_at_time = Int64.toNat64(Int64.fromInt(Time.now()));
+      };
+      let result = await token_canister_actor.icrc1_transfer(transferArgs);
+    };
   };
 };

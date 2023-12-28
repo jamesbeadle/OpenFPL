@@ -49,7 +49,7 @@ module {
 
     var weeklyAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
     var monthlyAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
-    var sesasonAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
+    var seasonAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
 
     var weeklyATHPrizePool: Nat64 = 0;
     var monthlyATHPrizePool: Nat64 = 0;
@@ -1903,11 +1903,47 @@ module {
     };
 
     public func distributeWeeklyATHScoreRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
-      //TODO
-      //check for ties
-      //check to see if the first entry has broken the all time high score for a gameweek
-        //if they have pay the gameweek all time high score pot
+      let weeklyATHReward = weeklyRewardPool / 38;
+      let maybeLastHighScore = List.last<T.HighScoreRecord>(weeklyAllTimeHighScores);
+      var highestWeeklyScore: Int16 = 0;
+      switch (maybeLastHighScore) {
+        case (null) {
+          highestWeeklyScore := 0;
+        };
+        case (?lastHighScore) {
+          highestWeeklyScore := lastHighScore.points;
+        };
+      };
 
+      let leaderboardEntries = weeklyLeaderboard.entries;
+      let topScore: Int16 = if (leaderboardEntries.size() > 0) {
+        leaderboardEntries[0].points
+      } else {
+        0
+      };
+
+      if (topScore > highestWeeklyScore) {
+        weeklyAllTimeHighScores := List.append(weeklyAllTimeHighScores, List.make({ recordType = #WeeklyHighScore; points = topScore; createDate = Time.now() }));
+        await payReward(leaderboardEntries[0].principalId, weeklyRewardPool);
+        weeklyATHPrizePool := 0; 
+      };
+
+      var tiedWinners = Array.filter<T.LeaderboardEntry>(
+        leaderboardEntries,
+        func (entry): Bool { entry.points == topScore }
+      );
+
+      if (tiedWinners.size() > 1 and topScore > highestWeeklyScore) {
+        let payoutPerWinner = weeklyRewardPool / Nat64.fromNat(tiedWinners.size());
+        for (winner in Iter.fromArray(tiedWinners)) {
+          await payReward(winner.principalId, payoutPerWinner);
+          weeklyAllTimeHighScores := List.append(weeklyAllTimeHighScores, List.make({ recordType = #WeeklyHighScore; points = winner.points; createDate = Time.now() }));
+          weeklyATHPrizePool := 0; 
+        }
+      } else {
+        await mintToTreasury(weeklyATHReward);
+        weeklyATHPrizePool := weeklyATHPrizePool + weeklyATHReward;
+      }
     };
 
     public func distributeMonthlyATHScoreRewards(monthlyRewardPool: Nat64, monthlyLeaderboards: [DTOs.MonthlyLeaderboardDTO]) : async (){
@@ -1957,20 +1993,60 @@ module {
           monthlyATHPrizePool := 0; 
         };
       } else {
+        await mintToTreasury(monthlyATHReward);
         monthlyATHPrizePool := monthlyATHPrizePool + monthlyATHReward;
       }
     };
 
     public func distributeSeasonATHScoreRewards(seasonRewardPool: Nat64, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
-      //TODO
-      //check to see if the first entry has broken the all time high score for a season
-        //if they have pay the season all time high score pot
-      //check for ties
+      let maybeLastHighScore = List.last<T.HighScoreRecord>(seasonAllTimeHighScores);
+      var highestSeasonScore: Int16 = 0;
+      switch (maybeLastHighScore) {
+        case (null) {
+          highestSeasonScore := 0;
+        };
+        case (?lastHighScore) {
+          highestSeasonScore := lastHighScore.points;
+        };
+      };
 
+      let leaderboardEntries = seasonLeaderboard.entries;
+      let topScore: Int16 = if (leaderboardEntries.size() > 0) {
+        leaderboardEntries[0].points
+      } else {
+        0
+      };
+
+      if (topScore > highestSeasonScore) {
+        seasonAllTimeHighScores := List.append(seasonAllTimeHighScores, List.make({ recordType = #SeasonHighScore; points = topScore; createDate = Time.now() }));
+        await payReward(leaderboardEntries[0].principalId, seasonRewardPool);
+        seasonATHPrizePool := 0; 
+      };
+
+      var tiedWinners = Array.filter<T.LeaderboardEntry>(
+        leaderboardEntries,
+        func (entry): Bool { entry.points == topScore }
+      );
+
+      if (tiedWinners.size() > 1 and topScore > highestSeasonScore) {
+        let payoutPerWinner = seasonRewardPool / Nat64.fromNat(tiedWinners.size());
+        for (winner in Iter.fromArray(tiedWinners)) {
+          await payReward(winner.principalId, payoutPerWinner);
+          seasonAllTimeHighScores := List.append(seasonAllTimeHighScores, List.make({ recordType = #SeasonHighScore; points = winner.points; createDate = Time.now() }));
+          seasonATHPrizePool := 0; 
+        }
+      } else {
+        await mintToTreasury(seasonRewardPool);
+        weeklyATHPrizePool := weeklyATHPrizePool + seasonRewardPool;
+      }
     };
 
     private func payReward(principalId: T.PrincipalId, fpl: Nat64) : async (){
       return await tokenCanister.transferToken(principalId, Nat64.toNat(fpl));
+    };
+
+    private func mintToTreasury(fpl: Nat64) : async (){
+      return await tokenCanister.mintToTreasury(Nat64.toNat(fpl));
     };
 
     public func getStableManagers(): [(T.PrincipalId, T.Manager)] {
