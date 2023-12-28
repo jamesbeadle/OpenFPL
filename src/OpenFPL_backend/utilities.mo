@@ -64,10 +64,6 @@ module {
     combineHashes(hashNat32(Nat32.fromNat(Nat16.toNat(key.0))), combineHashes(hashNat32(Nat32.fromNat(Nat8.toNat(key.1))), hashNat32(Nat32.fromNat(Nat16.toNat(key.2)))));
   };
 
-  public let hashNat = func(key : Nat) : Hash.Hash {
-    Nat32.fromNat(key % (2 ** 32 -1));
-  };
-
   public func eqPlayerEventData(event1 : T.PlayerEventData, event2 : T.PlayerEventData) : Bool {
     event1.fixtureId == event2.fixtureId and event1.playerId == event2.playerId and event1.eventType == event2.eventType and event1.eventStartMinute == event2.eventStartMinute and event1.eventEndMinute == event2.eventEndMinute
   };

@@ -18,6 +18,7 @@ import Buffer "mo:base/Buffer";
 import Float "mo:base/Float";
 import Option "mo:base/Option";
 import Time "mo:base/Time";
+import Order "mo:base/Order";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import ProfilePictureCanister "../profile-picture-canister";
@@ -1757,16 +1758,72 @@ module {
       };
     };
 
-    public func distributeMostValuableTeamRewards() : async (){
+    public func distributeMostValuableTeamRewards(players: [DTOs.PlayerDTO]) : async (){
       //TODO
+      let allFinalGameweekSnapshots = HashMap.mapFilter<T.PrincipalId, T.Manager, T.FantasyTeamSnapshot>(
+        managers,
+        Text.equal,
+        Text.hash,
+        func (k, v) : ?T.FantasyTeamSnapshot {
+          let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
+            v.history,
+            null,
+            func (acc: ?T.FantasyTeamSnapshot, season: T.FantasyTeamSeason) : ?T.FantasyTeamSnapshot {
+              switch (acc) {
+                case (?_) { acc };
+                case null {
+                  List.find<T.FantasyTeamSnapshot>(
+                      season.gameweeks,
+                      func (snapshot) : Bool {
+                          snapshot.gameweek == 38
+                      }
+                  )
+                };
+              }
+            }
+          );
+          return gameweek38Snapshot;
+        }
+      );
 
+      var teamValues: HashMap.HashMap<T.PrincipalId, Nat> = HashMap.HashMap<T.PrincipalId, Nat>(100, Text.equal, Text.hash);
+  
+      for(snapshot in allFinalGameweekSnapshots.entries()){
+        let allPlayers = Array.filter<DTOs.PlayerDTO>(
+          players,
+          func(player : DTOs.PlayerDTO) : Bool {
+            let playerId = player.id;
+            let isPlayerIdInNewTeam = Array.find(
+              snapshot.1.playerIds,
+              func(id : Nat16) : Bool {
+                return id == playerId;
+              },
+            );
+            return Option.isSome(isPlayerIdInNewTeam);
+          },
+        );
+        
+        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(allPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.valueQuarterMillions });
+        let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+        teamValues.put(snapshot.0, totalTeamValue);        
+      };
+      
+      let teamValuesArray : [(T.PrincipalId, Nat)] = Iter.toArray(teamValues.entries());
 
-      //get all gameweek 38 snapshots
-      //value all teams
-      //order by descending
+      let compare = func(a: (T.PrincipalId, Nat), b: (T.PrincipalId, Nat)): Order.Order {
+        if (a.1 > b.1) { return #greater };
+        if (a.1 < b.1) { return #less };
+        return #equal;
+      };
+
+      let sortedTeamValuesArray = Array.sort(teamValuesArray, compare);
+        
+
       //create leaderboard for them
       //distribute leaderboard as per the others
       //store the info in this canister as it's simple data
+
+      
     };
 
     public func distributeHighestScoringPlayerRewards(highestScoringPlayerRewardPool: Nat64, fixtures: List.List<DTOs.FixtureDTO>) : async (){
