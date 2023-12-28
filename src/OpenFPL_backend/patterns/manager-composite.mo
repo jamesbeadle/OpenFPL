@@ -1468,7 +1468,7 @@ module {
 
     public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO, fixtures: List.List<DTOs.FixtureDTO>) : async (){
       await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);     
-      await distributeHighestScoringPlayerRewards(fixtures); //TODO
+      await distributeHighestScoringPlayerRewards(rewardPool.highestScoringMatchPlayerPool, fixtures); //TODO
       await distributeWeeklyATHScoreRewards(rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
     };
 
