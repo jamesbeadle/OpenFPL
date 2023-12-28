@@ -5,9 +5,6 @@
   "OpenFPL_frontend": {
     "ic": "bgpwv-eqaaa-aaaal-qb6eq-cai"
   },
-  "player_canister": {
-    "ic": "pec6o-uqaaa-aaaal-qb7eq-cai"
-  },
   "token_canister": {
     "ic": "hwd4h-eyaaa-aaaal-qb6ra-cai"
   }
