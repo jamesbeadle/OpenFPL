@@ -1206,8 +1206,46 @@ module {
           func (k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == playerId }) == null) { null } else { ?v }
       );
 
-      for ((key, value) in managersWithPlayer.entries()) {
-//TODO:remove the player from each users team and replace with a 0
+      for ((principalId, manager) in managersWithPlayer.entries()) {
+        let newPlayerIds = Array.map<T.PlayerId, T.PlayerId>(
+            manager.playerIds, 
+            func (id) : T.PlayerId { if (id == playerId) { 0 } else { id } }
+        );
+
+        let updatedManager: T.Manager = {
+          principalId = manager.principalId;
+          username = manager.username;
+          favouriteClubId = manager.favouriteClubId;
+          createDate = manager.createDate;
+          termsAccepted = manager.termsAccepted;
+          profilePictureCanisterId = manager.profilePictureCanisterId;
+          transfersAvailable = manager.transfersAvailable;
+          monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+          bankQuarterMillions = manager.bankQuarterMillions;
+          playerIds = newPlayerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = manager.goalGetterGameweek;
+          goalGetterPlayerId = manager.goalGetterPlayerId;
+          passMasterGameweek = manager.passMasterGameweek;
+          passMasterPlayerId = manager.passMasterPlayerId;
+          noEntryGameweek = manager.noEntryGameweek;
+          noEntryPlayerId = manager.noEntryPlayerId;
+          teamBoostGameweek = manager.teamBoostGameweek;
+          teamBoostClubId = manager.teamBoostClubId;
+          safeHandsGameweek = manager.safeHandsGameweek;
+          safeHandsPlayerId = manager.safeHandsPlayerId;
+          captainFantasticGameweek = manager.captainFantasticGameweek;
+          captainFantasticPlayerId = manager.captainFantasticPlayerId;
+          countrymenGameweek = manager.countrymenGameweek;
+          countrymenCountryId = manager.countrymenCountryId;
+          prospectsGameweek = manager.prospectsGameweek;
+          braceBonusGameweek = manager.braceBonusGameweek;
+          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+          transferWindowGameweek = manager.transferWindowGameweek;
+          history = manager.history;
+        };
+
+        managers.put(principalId, updatedManager);
       };
 
 
