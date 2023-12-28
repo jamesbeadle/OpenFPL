@@ -1036,6 +1036,11 @@ module {
           };
         },
       ); 
+
+      //TODO: Update the system state calculation season from the prior to current now this has been set
+      //gameweek should be run and the calculation month should be set from the month of the first fixture 
+
+
     };
     
     private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {

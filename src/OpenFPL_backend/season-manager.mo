@@ -320,15 +320,46 @@ module {
 
     private func incrementSystemState(){
       
-      //TODO Increment system state      
+      var currentGameweek = systemState.calculationGameweek;
+      var currentMonth = systemState.calculationGameweek;
+      var currentSeasonId = systemState.calculationGameweek;
       
-      if(systemState.calculationGameweek == 38){
-        //new season
-          //set month to 8
-          //set gameweek to 1
-          //return
+      let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
+      if(gameweekComplete){
+        
+        let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
+        if(seasonComplete){
+          //TODO: CREATE THE NEW SEASON HERE! MAYBE
+          currentSeasonId := seasonComposite.createSeason();
+          currentMonth := 8;
+          currentGameweek := 1;
+        };  
+        
+        let monthComplete = seasonComposite.checkMonthComplete(systemState);
+        if(monthComplete){
+          if(currentMonth == 12){
+            currentMonth := 1;
+          } else{
+            currentMonth := currentMonth + 1;
+          };
+        };
+        currentGameweek := currentGameweek + 1;
       };
 
+      let updatedSystemState: T.SystemState = {
+        calculationGameweek = currentGameweek;
+        calculationMonth = currentMonth;
+        calculationSeason = currentSeasonId;
+        pickTeamSeason = systemState.pickTeamSeason;
+        pickTeamGameweek = 1;
+        transferWindowActive = true;
+      };
+
+      systemState := updatedSystemState;
+      
+
+      
+      //TODO Increment system state    
       //check if month has rolled over if so set that
 
       //finally increment the gameweek
