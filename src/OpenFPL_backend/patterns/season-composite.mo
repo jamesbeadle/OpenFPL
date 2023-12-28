@@ -800,7 +800,7 @@ module {
           return season.id == systemState.calculationSeason;
         },
       );
-      
+
       switch(currentSeason){
         case (null) {
           return false;
@@ -865,7 +865,39 @@ module {
     };
 
     public func checkSeasonComplete(systemState: T.SystemState) : Bool {
-      //TODO: Implement
+      
+      if(systemState.calculationGameweek != 38){
+        return false;
+      };
+      
+      let currentSeason = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == systemState.calculationSeason;
+        },
+      );
+      
+      switch(currentSeason){
+        case (null) {
+          return false;
+        };
+        case (?foundSeason){
+
+          if(List.size(foundSeason.fixtures) == 0){
+            return false;
+          };
+          
+          let completedFixtures = List.filter<T.Fixture>(
+            foundSeason.fixtures,
+            func(fixture: T.Fixture) : Bool {
+              return fixture.status == #Finalised;
+            },
+          );
+
+          return List.size(completedFixtures) == List.size(foundSeason.fixtures);
+        }
+      };
+      
       return false;
     };
    
