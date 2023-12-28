@@ -1467,44 +1467,24 @@ module {
     };
 
     public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
-      
-      //TODO: gameweek is complete so pay rewards
-
-      //check if all gameweek month gameweeks are complete
-        //if they are pay monthly rewards
-      
-      await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
-      await distributeHighestScoringPlayerRewards();
-      await distributeWeeklyATHScoreRewards();
-      
+      await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);     
+      await distributeHighestScoringPlayerRewards(); //TODO
+      await distributeWeeklyATHScoreRewards(); //TODO      
     };
 
     public func payMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboard: DTOs.MonthlyLeaderboardDTO) : async (){
-      await distributeMonthlyRewards(rewardPool.monthlyLeaderboardPool);
-      await distributeMonthlyATHScoreRewards();
-      
-      //TODO: gameweek is complete so pay rewards
-
-      //check if all gameweek month gameweeks are complete
-        //if they are pay monthly rewards
-      
-      
+      await distributeMonthlyRewards(rewardPool, monthlyLeaderboard);
+      await distributeMonthlyATHScoreRewards();//TODO
     };
     
     public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
-      
-      //TODO: gameweek is complete so pay rewards
-
-      //check if all gameweek month gameweeks are complete
-        //if they are pay monthly rewards
-      
-      await distributeSeasonRewards();
-      await distributeMostValuableTeamRewards();
-      await distributeMonthlyATHScoreRewards();
+      await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard);
+      await distributeMostValuableTeamRewards(); //TODO
+      await distributeSeasonATHScoreRewards(); //TODO
     };
 
-    public func distributeWeeklyRewards(seasonRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
-      let weeklyRewardAmount = seasonRewardPool / 38;
+    public func distributeWeeklyRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
+      let weeklyRewardAmount = weeklyRewardPool / 38;
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(weeklyLeaderboard.entries);
 
@@ -1564,7 +1544,7 @@ module {
 
       for (key in weeklyLeaderboard.entries.keys()) {
         let winner = weeklyLeaderboard.entries[key];      
-        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key]));    
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;    
         payReward(winner, prize);
       };
     };
@@ -1632,27 +1612,166 @@ module {
     };
 
 
-    public func distributeMonthlyRewards(seasonRewardPool: Nat64) : async (){
-      let monthlyRewardAmount = seasonRewardPool / 12;
+    public func distributeMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboard: DTOs.MonthlyLeaderboardDTO) : async (){
+      let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 9;
 
-      //rewards are proportional to the number of entries in each club leaderboard
-      //so it's not a straight divide by 20
+      let clubManagers = HashMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, 
+        func (principal: Text, manager : T.Manager) = if (manager.favouriteClubId == monthlyLeaderboard.clubId) {?manager} else {null});
+      let otherClubManagers = HashMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, 
+        func (principal: Text, manager : T.Manager) = if (manager.favouriteClubId > 0 and manager.favouriteClubId != monthlyLeaderboard.clubId) {?manager} else {null});
+      
+      let clubManagerCount = Iter.size(clubManagers.entries());
+      let totalClubManagers = clubManagerCount + Iter.size(otherClubManagers.entries());
 
-      //TODO: Should check all months where the rewards have not been distributed, keep a record
-      //Record any rewards in the data structures defined at start
+      let clubShare = clubManagerCount / totalClubManagers; 
+
+      let clubManagerMonthlyRewardAmount = Nat64.toNat(monthlyRewardAmount) * clubShare;
+
+      var payouts = List.nil<Float>();
+      var currentEntries = List.fromArray(monthlyLeaderboard.entries);
+
+      let scaledPercentages = if (monthlyLeaderboard.totalEntries < 100) {
+          scalePercentages(RewardPercentages.percentages, monthlyLeaderboard.totalEntries)
+      } else {
+          RewardPercentages.percentages
+      };
+
+      while (not List.isNil(currentEntries)) {
+          let (currentEntry, rest) = List.pop(currentEntries);
+          currentEntries := rest;
+          switch(currentEntry){
+            case (null){};
+            case (?foundEntry){
+                let (nextEntry, _) = List.pop(rest);
+                switch(nextEntry){
+                  case (null){
+                    let payout = scaledPercentages[foundEntry.position - 1];
+                    payouts := List.push(payout, payouts);
+                  };
+                  case (?foundNextEntry){
+                    if (foundEntry.points == foundNextEntry.points) {
+                        let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                        let startPosition = foundEntry.position;
+                        let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                        payouts := List.append(payouts, tiePayouts);
+
+                        var skipEntries = rest;
+                        label skipLoop while (not List.isNil(skipEntries)) {
+                            let (skipEntry, nextRest) = List.pop(skipEntries);
+                            skipEntries := nextRest;
+
+                            switch(skipEntry) {
+                                case (null) { break skipLoop; };
+                                case (?entry) {
+                                    if (entry.points != foundEntry.points) {
+                                        currentEntries := skipEntries;
+                                        break skipLoop;
+                                    }
+                                };
+                            };
+                        };
+                    } else {
+                        let payout = scaledPercentages[foundEntry.position - 1];
+                        payouts := List.push(payout, payouts);
+                    }
+                  }
+                };
+                
+            };
+          };
+      };
+
+      payouts := List.reverse(payouts);
+      let payoutsArray = List.toArray(payouts);
+
+      for (key in monthlyLeaderboard.entries.keys()) {
+        let winner = monthlyLeaderboard.entries[key];      
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * Nat64.fromNat(clubManagerMonthlyRewardAmount);    
+        payReward(winner, prize);
+      };
     };
 
-    public func distributeSeasonRewards() : async (){
-      //TODO: Should check all seasons where the rewards have not been distributed, keep a record
-      //Record any rewards in the data structures defined at start
+    public func distributeSeasonRewards(seasonRewardPool: Nat64, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
+      var payouts = List.nil<Float>();
+      var currentEntries = List.fromArray(seasonLeaderboard.entries);
+
+      let scaledPercentages = if (seasonLeaderboard.totalEntries < 100) {
+          scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries)
+      } else {
+          RewardPercentages.percentages
+      };
+
+      while (not List.isNil(currentEntries)) {
+          let (currentEntry, rest) = List.pop(currentEntries);
+          currentEntries := rest;
+          switch(currentEntry){
+            case (null){};
+            case (?foundEntry){
+                let (nextEntry, _) = List.pop(rest);
+                switch(nextEntry){
+                  case (null){
+                    let payout = scaledPercentages[foundEntry.position - 1];
+                    payouts := List.push(payout, payouts);
+                  };
+                  case (?foundNextEntry){
+                    if (foundEntry.points == foundNextEntry.points) {
+                        let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                        let startPosition = foundEntry.position;
+                        let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                        payouts := List.append(payouts, tiePayouts);
+
+                        var skipEntries = rest;
+                        label skipLoop while (not List.isNil(skipEntries)) {
+                            let (skipEntry, nextRest) = List.pop(skipEntries);
+                            skipEntries := nextRest;
+
+                            switch(skipEntry) {
+                                case (null) { break skipLoop; };
+                                case (?entry) {
+                                    if (entry.points != foundEntry.points) {
+                                        currentEntries := skipEntries;
+                                        break skipLoop;
+                                    }
+                                };
+                            };
+                        };
+                    } else {
+                        let payout = scaledPercentages[foundEntry.position - 1];
+                        payouts := List.push(payout, payouts);
+                    }
+                  }
+                };
+                
+            };
+          };
+      };
+
+      payouts := List.reverse(payouts);
+      let payoutsArray = List.toArray(payouts);
+
+      for (key in seasonLeaderboard.entries.keys()) {
+        let winner = seasonLeaderboard.entries[key];      
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;    
+        payReward(winner, prize);
+      };
     };
 
     public func distributeMostValuableTeamRewards() : async (){
-      //TODO
+      //Order by snapshots for teams at gameweek 38
     };
 
     public func distributeHighestScoringPlayerRewards() : async (){
-      //TODO
+      //Go through gameweek fixtures and find games where the highest scoring player is > 0
+      //get the rewards pool for the highest scoring players
+        //divide by 38 to get the weekly amount
+        //divide by the number of highest scoring players to get the per player amount
+        
+
+      //loop through these players and find managers who have them in their fantasy team
+      
+      //Divide the per player amount by the number of managers who have this player
+        //pay them manager the FPL for having them in their team
+
     };
 
     public func distributeWeeklyATHScoreRewards() : async (){
