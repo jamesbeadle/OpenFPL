@@ -1545,7 +1545,7 @@ module {
       for (key in weeklyLeaderboard.entries.keys()) {
         let winner = weeklyLeaderboard.entries[key];      
         let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;    
-        payReward(winner, prize);
+        payReward(winner.principalId, prize);
       };
     };
 
@@ -1607,7 +1607,7 @@ module {
       return Buffer.toArray(scaledPercentagesBuffer);
     };
 
-    private func payReward(winner: T.LeaderboardEntry, fpl: Nat64){
+    private func payReward(principal: T.PrincipalId, fpl: Nat64){
       //TODO: SEND FPL!
     };
 
@@ -1687,7 +1687,7 @@ module {
       for (key in monthlyLeaderboard.entries.keys()) {
         let winner = monthlyLeaderboard.entries[key];      
         let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * Nat64.fromNat(clubManagerMonthlyRewardAmount);    
-        payReward(winner, prize);
+        payReward(winner.principalId, prize);
       };
     };
 
@@ -1752,7 +1752,7 @@ module {
       for (key in seasonLeaderboard.entries.keys()) {
         let winner = seasonLeaderboard.entries[key];      
         let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;    
-        payReward(winner, prize);
+        payReward(winner.principalId, prize);
       };
     };
 
@@ -1762,21 +1762,34 @@ module {
 
     public func distributeHighestScoringPlayerRewards(highestScoringPlayerRewardPool: Nat64, fixtures: List.List<DTOs.FixtureDTO>) : async (){
       
-      let highestScoringPlayerIds: [T.PlayerId] = [];
+      let highestScoringPlayerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
 
       for(fixture in Iter.fromList(fixtures)){
         if(fixture.highestScoringPlayerId > 0){
-          //TODO: add them to the highest scoring players list
+          highestScoringPlayerIdBuffer.add(fixture.highestScoringPlayerId);
         };
       };
+
+      let highestScoringPlayerIds = Buffer.toArray(highestScoringPlayerIdBuffer);
 
       let gameweekRewardAmount = highestScoringPlayerRewardPool / 38;
 
       let playerRewardShare = Nat64.toNat(gameweekRewardAmount) / Array.size(highestScoringPlayerIds);
 
       for(highestScoringPlayerId in Iter.fromArray(highestScoringPlayerIds)){
-        //find all managers who had this player in their snapshot for the gameweek in question
-            //pay the rewards for having the player
+
+          let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
+            managers,
+            Text.equal,
+            Text.hash,
+            func (k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == highestScoringPlayerId }) == null) { null } else { ?v }
+          );
+
+          let prize = Nat64.fromNat(Nat64.toNat(gameweekRewardAmount) / managersWithPlayer.size());
+
+          for ((principalId, manager) in managersWithPlayer.entries()) { 
+            payReward(principalId, prize);
+          };
       };
     };
 
