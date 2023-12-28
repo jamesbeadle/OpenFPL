@@ -1151,34 +1151,39 @@ module {
       );
     };
 
-    public func createNewSeason(systemState: T.SystemState) : async () {
-      /*
-      let newSeason = List.find(
+    public func createNewSeason(systemState: T.SystemState) {
+      let existingSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.year == addInitialFixturesDTO.seasonStartYear;
+          return season.year == systemState.calculationSeason + 1;
         },
       );
-      switch(newSeason){
+      switch(existingSeason){
         case (null) { };
-        case (?foundSeason){
-          return #err("Invalid: Season already exists.");
-        };
+        case (?foundSeason){ };
       };
 
-let seasonName = Nat16.toText(addInitialFixturesDTO.seasonStartYear) # subText(Nat16.toText(addInitialFixturesDTO.seasonStartYear + 1), 2, 3);
-      let newSeason: T.Season = {
-        id = nextSeasonId;
-        name = seasonName;
-        year = addInitialFixturesDTO.seasonStartYear;
-        fixtures = List.fromArray(addInitialFixturesDTO.seasonFixtures);
-        postponedFixtures = List.nil<T.Fixture>();
-      };      
-       seasons := List.append<T.Season>(seasons, List.make(newSeason)); 
-
-
-
-      */
+      let currentSeason = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.year == systemState.calculationSeason;
+        },
+      );
+      switch(existingSeason){
+        case (null) { };
+        case (?foundSeason){
+          let seasonName = Nat16.toText(foundSeason.year) # subText(Nat16.toText(foundSeason.year + 1), 2, 3);
+          let newSeason: T.Season = {
+            id = nextSeasonId;
+            name = seasonName;
+            year = foundSeason.year + 1;
+            fixtures = List.fromArray([]);
+            postponedFixtures = List.nil<T.Fixture>();
+          };      
+          seasons := List.append<T.Season>(seasons, List.make(newSeason)); 
+          nextSeasonId := nextSeasonId + 1;
+        };
+      };
     };
 
     public func getStableSeasons() : [T.Season] {

@@ -321,16 +321,17 @@ module {
     private func incrementSystemState(){
       
       var currentGameweek = systemState.calculationGameweek;
-      var currentMonth = systemState.calculationGameweek;
-      var currentSeasonId = systemState.calculationGameweek;
+      var currentMonth = systemState.calculationMonth;
+      var currentSeasonId = systemState.calculationSeason;
       
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if(gameweekComplete){
         
         let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
         if(seasonComplete){
-          //TODO: CREATE THE NEW SEASON HERE! MAYBE
-          currentSeasonId := seasonComposite.createSeason();
+
+          seasonComposite.createNewSeason(systemState);
+          currentSeasonId := seasonComposite.getStableNextSeasonId();
           currentMonth := 8;
           currentGameweek := 1;
         };  
@@ -356,20 +357,6 @@ module {
       };
 
       systemState := updatedSystemState;
-      
-
-      
-      //TODO Increment system state    
-      //check if month has rolled over if so set that
-
-      //finally increment the gameweek
-
-      //update the system state object
-      
-      //update the system state on the current state of the fixtures etc
-
-      //increase gameweek
-
     };
 
     private func payRewards() : async (){
