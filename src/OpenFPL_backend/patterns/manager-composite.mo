@@ -420,6 +420,10 @@ module {
     };
 
     public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId, systemState : T.SystemState) : async Result.Result<(), T.Error> {
+      
+      if(systemState.onHold){
+        return #err(#SystemOnHold);
+      };
 
       let manager = managers.get(principalId);
 

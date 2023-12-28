@@ -23,6 +23,7 @@ module Types {
     #DecodeError;
     #InvalidTeamError;
     #InvalidData;
+    #SystemOnHold;
   };
 
   public type PlayerPosition = {
@@ -343,6 +344,7 @@ module Types {
     calculationMonth : CalendarMonth;
     calculationSeason : SeasonId;
     transferWindowActive : Bool;
+    onHold : Bool;
   };
 
   public type Country = {

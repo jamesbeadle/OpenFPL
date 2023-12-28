@@ -56,6 +56,7 @@ module {
       pickTeamGameweek = 1;
       pickTeamSeason = 1;
       transferWindowActive = false;
+      onHold = false;
     };
 
     private var dataCacheHashes : List.List<T.DataCache> = List.fromArray([
@@ -231,6 +232,7 @@ module {
         pickTeamGameweek = pickTeamGameweek;
         pickTeamSeason = systemState.pickTeamSeason;
         transferWindowActive = systemState.transferWindowActive;
+        onHold = systemState.onHold;
       };
 
       systemState := updatedSystemState;
@@ -263,6 +265,7 @@ module {
         pickTeamGameweek = systemState.pickTeamGameweek;
         pickTeamSeason = systemState.pickTeamSeason;
         transferWindowActive = true;
+        onHold = systemState.onHold;
       };
 
       systemState := updatedSystemState;
@@ -277,6 +280,7 @@ module {
         pickTeamGameweek = systemState.pickTeamGameweek;
         pickTeamSeason = systemState.pickTeamSeason;
         transferWindowActive = false;
+        onHold = systemState.onHold;
       };
 
       systemState := updatedSystemState;
@@ -358,6 +362,7 @@ module {
         pickTeamSeason = systemState.pickTeamSeason;
         pickTeamGameweek = 1;
         transferWindowActive = true;
+        onHold = systemState.onHold;
       };
 
       systemState := updatedSystemState;
@@ -396,11 +401,13 @@ module {
 
           let monthComplete = seasonComposite.checkMonthComplete(systemState);
           if (monthComplete) {
+            pauseFavouriteClubUpdates();
             let clubs = clubComposite.getClubs();
             for (club in Iter.fromArray(clubs)) {
               await payMonthlyRewards(foundRewardPool, club.id);
             };
             await payATHMonthlyRewards(foundRewardPool, clubs);
+            resumeFavouriteClubUpdates();
           };
 
           let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
@@ -410,6 +417,36 @@ module {
         };
       };
 
+    };
+
+    private func pauseFavouriteClubUpdates(){
+
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeason = systemState.calculationSeason;
+        pickTeamSeason = systemState.pickTeamSeason;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        transferWindowActive = systemState.transferWindowActive;
+        onHold = true;
+      };
+
+      systemState := updatedSystemState;
+    };
+
+    private func resumeFavouriteClubUpdates(){
+
+      let updatedSystemState : T.SystemState = {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeason = systemState.calculationSeason;
+        pickTeamSeason = systemState.pickTeamSeason;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        transferWindowActive = systemState.transferWindowActive;
+        onHold = false;
+      };
+
+      systemState := updatedSystemState;
     };
 
     private func payWeeklyRewards(rewardPool : T.RewardPool) : async () {
@@ -511,6 +548,7 @@ module {
         pickTeamSeason = addInitialFixturesDTO.seasonId;
         pickTeamGameweek = 1;
         transferWindowActive = true;
+        onHold = systemState.onHold;
       };
 
       systemState := updatedSystemState;

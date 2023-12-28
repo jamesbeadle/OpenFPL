@@ -318,6 +318,7 @@ actor Self {
     homepageFixturesGameweek = 1;
     homepageManagerGameweek = 1;
     transferWindowActive = false;
+    onHold = false;
   };
 
   system func preupgrade() {
