@@ -914,6 +914,19 @@ module {
           return #err("Invalid: Season does not exist.");
         };
         case (?foundSeason){
+
+          //ensure all fixtures have the current seasons id
+          let filteredFixtures = List.filter<DTOs.FixtureDTO>(
+            List.fromArray(addInitialFixturesDTO.seasonFixtures),
+            func(fixture : DTOs.FixtureDTO) : Bool {
+              return fixture.seasonId != foundSeason.id;
+            },
+          );
+          
+          if(List.size(filteredFixtures) > 0){
+            return #err("Invalid: Fixtures not for current season.");
+          };
+
           let findIndex = func(arr : [T.ClubId], value : T.ClubId) : ?Nat {
             for (i in Array.keys(arr)) {
               if (arr[i] == value) {
@@ -1002,7 +1015,7 @@ module {
     };
 
     public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
-           
+      
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(season : T.Season) : T.Season {
@@ -1036,11 +1049,6 @@ module {
           };
         },
       ); 
-
-      //TODO: Update the system state calculation season from the prior to current now this has been set
-      //gameweek should be run and the calculation month should be set from the month of the first fixture 
-
-
     };
     
     private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {
