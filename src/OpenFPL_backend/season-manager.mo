@@ -307,7 +307,7 @@ module {
 
       await payRewards();
 
-      //TODO Increment system state
+      incrementSystemState();
 
       await updateCacheHash("players");
       await updateCacheHash("player_events");
@@ -316,6 +316,29 @@ module {
       await updateCacheHash("monthly_leaderboards");
       await updateCacheHash("season_leaderboard");
       await updateCacheHash("system_state");
+    };
+
+    private func incrementSystemState(){
+      
+      //TODO Increment system state      
+      
+      if(systemState.calculationGameweek == 38){
+        //new season
+          //set month to 8
+          //set gameweek to 1
+          //return
+      };
+
+      //check if month has rolled over if so set that
+
+      //finally increment the gameweek
+
+      //update the system state object
+      
+      //update the system state on the current state of the fixtures etc
+
+      //increase gameweek
+
     };
 
     private func payRewards() : async (){
