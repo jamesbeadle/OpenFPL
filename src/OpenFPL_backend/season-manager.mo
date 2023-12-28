@@ -404,7 +404,7 @@ module {
           };
         };
 
-        await managerComposite.payMonthlyATHRewards(rewardPool, Buffer.toArray(allMonthlyLeaderboards));
+        await managerComposite.payATHMonthlyRewards(rewardPool, Buffer.toArray(allMonthlyLeaderboards));
       };
     };
 
