@@ -19,6 +19,7 @@ import Float "mo:base/Float";
 import Option "mo:base/Option";
 import Time "mo:base/Time";
 import Order "mo:base/Order";
+import Int16 "mo:base/Int16";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import ProfilePictureCanister "../profile-picture-canister";
@@ -1487,7 +1488,7 @@ module {
     public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO, players: [DTOs.PlayerDTO]) : async (){
       await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard);
       await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
-      await distributeMostValuableTeamRewards(players);
+      await distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players);
     };
 
     public func distributeWeeklyRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
@@ -1758,7 +1759,7 @@ module {
       };
     };
 
-    public func distributeMostValuableTeamRewards(players: [DTOs.PlayerDTO]) : async (){
+    public func distributeMostValuableTeamRewards(mostValuableTeamPool: Nat64, players: [DTOs.PlayerDTO], currentSeason: T.SeasonId) : async (){
       let allFinalGameweekSnapshots = HashMap.mapFilter<T.PrincipalId, T.Manager, T.FantasyTeamSnapshot>(
         managers,
         Text.equal,
@@ -1816,14 +1817,55 @@ module {
       };
 
       let sortedTeamValuesArray = Array.sort(teamValuesArray, compare);
-        
-      //TODO:
-      //loop through and add the top 100 entries to the leaderboard
-        //keep going if tied at 100-101onwards
-      //get scaled percentages
-      //pay everyone on the leaderboard
-      //record the season team value leaderboard in this canister as only once a year
+
+      var leaderboardEntries = Array.mapEntries<(T.PrincipalId, Nat), T.LeaderboardEntry>(
+        sortedTeamValuesArray,
+        func (team, index) : T.LeaderboardEntry {
+          return { principalId = team.0; position = index + 1; points = Int16.fromNat16(Nat16.fromNat(team.1)); username = ""; positionText = ""; };
+        }
+      );
+
+      var totalRewardEntries = 100;
+      if(Array.size(leaderboardEntries) < 100){
+         totalRewardEntries := Array.size(leaderboardEntries);
+      };
+      var rewardEntries = List.take(List.fromArray(leaderboardEntries), totalRewardEntries);
+
+      var rewardEntriesBuffer = Buffer.fromArray<T.LeaderboardEntry>(List.toArray(rewardEntries));
+
+      if (totalRewardEntries == 100) {
+        let lastEntry = List.toArray(rewardEntries)[99];
+        let tiedEntries = Array.filter<T.LeaderboardEntry>(
+          leaderboardEntries,
+          func (entry) : Bool { entry.points == lastEntry.points and entry.position > 100 }
+        );
+        rewardEntriesBuffer.append(Buffer.fromArray(tiedEntries));
+      };
+      rewardEntries := List.fromArray(Buffer.toArray(rewardEntriesBuffer));
+
+      var scaledPercentages = RewardPercentages.percentages;
+
+      if(List.size(rewardEntries) < 100){
+        scaledPercentages := scalePercentages(RewardPercentages.percentages, List.size(rewardEntries));
+      };
       
+      let rewardEntriesArray = List.toArray(rewardEntries);
+
+      let teamValueLeaderboard = {
+        seasonId = currentSeason;
+        entries = rewardEntries;
+        totalEntries = List.size(rewardEntries);
+      };
+
+      //TODO: Save the team value leaderboard
+
+      for (index in Iter.range(0, Array.size(rewardEntriesArray) - 1)) {
+        let entry = rewardEntriesArray[index];
+        let payoutPercentage = scaledPercentages[entry.position - 1];
+        
+        let prize = Float.fromInt64(Int64.fromNat64(mostValuableTeamPool)) * payoutPercentage;
+        await payReward(entry.principalId, Int64.toNat64(Float.toInt64(prize)));
+      };
     };
 
     public func distributeHighestScoringPlayerRewards(highestScoringPlayerRewardPool: Nat64, fixtures: List.List<DTOs.FixtureDTO>) : async (){

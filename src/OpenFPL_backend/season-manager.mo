@@ -457,9 +457,9 @@ module {
           let season_leaderboard_canister = actor (canisterId) : actor {
             getRewardLeaderboard : () -> async DTOs.SeasonLeaderboardDTO;
           };
-          
+          let players = playerComposite.getPlayers(systemState.calculationSeason);
           let seasonLeaderboard = await season_leaderboard_canister.getRewardLeaderboard();
-          await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard);
+          await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard, players);
         };
       };
     };
