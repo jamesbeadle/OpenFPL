@@ -108,8 +108,19 @@ actor class SeasonLeaderboardCanister() {
   };
 
   public shared query func getEntry (principalId: Text) : async ?DTOs.LeaderboardEntryDTO {
-    //TODO: Implement
-    return null;
+     switch(leaderboard){
+      case (null){
+        return null;
+      };
+      case (?foundLeaderboard){
+        let foundEntry = List.find<T.LeaderboardEntry>(
+          foundLeaderboard.entries,
+          func(entry : DTOs.LeaderboardEntryDTO) : Bool {
+            return entry.principalId == principalId;
+          },
+        );
+      };
+    }
   };
 
   system func preupgrade() { };
