@@ -338,6 +338,7 @@ module {
             for(club in Iter.fromArray(clubs)){
               await payMonthlyRewards(foundRewardPool, club.id);
             };
+            await payATHMonthlyRewards(foundRewardPool, clubs);
           };
 
           let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
@@ -376,6 +377,27 @@ module {
           let monthlyLeaderboard = await monthly_leaderboard_canister.getRewardLeaderboard();
           await managerComposite.payMonthlyRewards(rewardPool, monthlyLeaderboard);
         };
+      };
+    };
+
+    private func payATHMonthlyRewards(rewardPool: T.RewardPool, clubs: [DTOs.ClubDTO]) : async (){
+      let allMonthlyLeaderboards = Buffer.fromArray<DTOs.MonthlyLeaderboardDTO>([]);
+
+      for(club in Iter.fromArray(clubs)){
+        let monthlyLeaderboardCanisterId = leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeason, systemState.calculationMonth, club.id);
+        switch(monthlyLeaderboardCanisterId){
+          case (null){};
+          case (?canisterId){
+            let monthly_leaderboard_canister = actor (canisterId) : actor {
+              getRewardLeaderboard : () -> async DTOs.MonthlyLeaderboardDTO;
+            };
+            
+            let monthlyLeaderboard = await monthly_leaderboard_canister.getRewardLeaderboard();
+            allMonthlyLeaderboards.add(monthlyLeaderboard);
+          };
+        };
+
+        await managerComposite.payMonthlyATHRewards(rewardPool, Buffer.toArray(allMonthlyLeaderboards));
       };
     };
 

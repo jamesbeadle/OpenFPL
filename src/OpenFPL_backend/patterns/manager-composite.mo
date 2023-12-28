@@ -1468,13 +1468,16 @@ module {
 
     public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO, fixtures: List.List<DTOs.FixtureDTO>) : async (){
       await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);     
-      await distributeHighestScoringPlayerRewards(rewardPool.highestScoringMatchPlayerPool, fixtures); //TODO
+      await distributeHighestScoringPlayerRewards(rewardPool.highestScoringMatchPlayerPool, fixtures);
       await distributeWeeklyATHScoreRewards(rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
     };
 
     public func payMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboard: DTOs.MonthlyLeaderboardDTO) : async (){
       await distributeMonthlyRewards(rewardPool, monthlyLeaderboard);
-      await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboard);//TODO
+    };
+
+    public func payATHMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboards: [DTOs.MonthlyLeaderboardDTO]) : async (){
+      await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);//TODO
     };
     
     public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
@@ -1793,17 +1796,17 @@ module {
       };
     };
 
-    public func distributeWeeklyATHScoreRewards() : async (){
+    public func distributeWeeklyATHScoreRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
       //TODO
 
     };
 
-    public func distributeMonthlyATHScoreRewards() : async (){
+    public func distributeMonthlyATHScoreRewards(monthlyRewardPool: Nat64, monthlyLeaderboards: [DTOs.MonthlyLeaderboardDTO]) : async (){
       //TODO
 
     };
 
-    public func distributeSeasonATHScoreRewards() : async (){
+    public func distributeSeasonATHScoreRewards(seasonRewardPool: Nat64, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
       //TODO
 
     };
