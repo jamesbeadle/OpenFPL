@@ -10,8 +10,9 @@ actor class SeasonLeaderboardCanister() {
   private stable var entries : List.List<T.LeaderboardEntry> = List.nil();
 
   public func addSeasonLeaderboard(seasonId: T.SeasonId, seasonLeaderboard: T.SeasonLeaderboard) : async () {
-
+//TODO
   };
+//TODO: Check others
 
   system func preupgrade() { };
 

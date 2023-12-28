@@ -360,7 +360,7 @@ module {
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
-      await canister.addWeeklyLeaderboard(seasonId, gameweek, weeklyLeaderboard); //TODO
+      await canister.addWeeklyLeaderboard(seasonId, gameweek, weeklyLeaderboard);
       let canisterId = Principal.toText(canister_principal);
 
       switch (storeCanisterId) {
