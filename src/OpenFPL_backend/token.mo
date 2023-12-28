@@ -1,4 +1,7 @@
 import Nat64 "mo:base/Nat64";
+import Principal "mo:base/Principal";
+import Account "lib/Account";
+import CanisterIds "CanisterIds";
 
 module {
 
@@ -43,7 +46,9 @@ module {
       icrc1_name : () -> async Text;
       icrc1_total_supply : () -> async Nat;
       icrc1_balance_of : (account : Account) -> async Nat;
-      icrc1_transfer : (args: TransferArg) -> async (TransferResult);
+      icrc1_minting_account : () -> async Account;
+      icrc1_transfer : (args: TransferArg) -> async TransferResult;
+      icrc1_fee : () -> async Tokens;
     };
 
     public func getAccountBalance(owner : Principal) : async Nat64 {
@@ -59,15 +64,19 @@ module {
     };
 
     public func transferToken(principalId: Text, amount: Nat64) : async TransferResult{
+      //TODO:
+      let mintingAccount = await token_canister_actor.icrc1_minting_account();
 
-      //Todo: populate transfer args
       let transferArgs: TransferArg =  {
-        from_subaccount = Subaccount;
-        to = Account;
+        from_subaccount = mintingAccount;
+        to = {
+          owner =  Principal.fromText(CanisterIds.MAIN_CANISTER_ID); 
+          subaccount = Account.principalToSubaccount(Principal.fromText(principalId))
+        };
         amount = amount;
-        fee = Tokens;
-        memo = Blob;
-        created_at_time = Timestamp;
+        fee = await token_canister_actor.icrc1_fee();
+        memo = 0;
+        created_at_time = Time.now();
       };
       return await token_canister_actor.icrc1_transfer(transferArgs);
     };
