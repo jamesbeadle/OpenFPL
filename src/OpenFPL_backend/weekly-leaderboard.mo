@@ -21,7 +21,7 @@ actor class WeeklyLeaderboardCanister() {
     seasonId := ?_seasonId;
     gameweek := ?_gameweek;
   };
-//TODO: Check others
+//TODO: Must be functions to get the leaderboard somewhere?!
 
   system func preupgrade() { };
 
