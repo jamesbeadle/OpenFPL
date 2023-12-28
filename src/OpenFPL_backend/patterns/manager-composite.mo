@@ -1550,9 +1550,19 @@ module {
       };
 
       payouts := List.reverse(payouts);
+      let payoutsArray = List.toArray(payouts);
+
+      for (key in weeklyLeaderboard.entries.keys()) {
+        let winner = weeklyLeaderboard.entries[key];      
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key]));    
+
+        payReward(winner, prize);
+
+      };
+
     };
 
-    func findTiedEntries(entries: List.List<T.LeaderboardEntry>, points: Int16): List.List<T.LeaderboardEntry> {
+    private func findTiedEntries(entries: List.List<T.LeaderboardEntry>, points: Int16): List.List<T.LeaderboardEntry> {
       var tiedEntries = List.nil<T.LeaderboardEntry>();
       var currentEntries = entries;
 
@@ -1608,6 +1618,10 @@ module {
       };
 
       return Buffer.toArray(scaledPercentagesBuffer);
+    };
+
+    private func payReward(winner: T.LeaderboardEntry, fpl: Nat64){
+
     };
 
 
