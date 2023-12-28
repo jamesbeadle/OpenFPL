@@ -1474,14 +1474,24 @@ module {
         //if they are pay monthly rewards
       
       await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
-      await distributeMonthlyRewards(rewardPool.monthlyLeaderboardPool);
       await distributeHighestScoringPlayerRewards();
       await distributeWeeklyATHScoreRewards();
+      
+    };
+
+    public func payMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboard: DTOs.MonthlyLeaderboardDTO) : async (){
+      await distributeMonthlyRewards(rewardPool.monthlyLeaderboardPool);
       await distributeMonthlyATHScoreRewards();
+      
+      //TODO: gameweek is complete so pay rewards
+
+      //check if all gameweek month gameweeks are complete
+        //if they are pay monthly rewards
+      
       
     };
     
-    public func paySeasonRewards(rewardPool: T.RewardPool) : async (){
+    public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
       
       //TODO: gameweek is complete so pay rewards
 
@@ -1555,11 +1565,8 @@ module {
       for (key in weeklyLeaderboard.entries.keys()) {
         let winner = weeklyLeaderboard.entries[key];      
         let prize = Int64.toNat64(Float.toInt64(payoutsArray[key]));    
-
         payReward(winner, prize);
-
       };
-
     };
 
     private func findTiedEntries(entries: List.List<T.LeaderboardEntry>, points: Int16): List.List<T.LeaderboardEntry> {
@@ -1621,7 +1628,7 @@ module {
     };
 
     private func payReward(winner: T.LeaderboardEntry, fpl: Nat64){
-
+      //TODO: SEND FPL!
     };
 
 

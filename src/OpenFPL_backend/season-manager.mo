@@ -305,104 +305,7 @@ module {
       let managers = managerComposite.getManagers();
       await leaderboardComposite.calculateLeaderboards(systemState.calculationSeason, systemState.calculationGameweek, systemState.calculationMonth, managers);      
 
-      var calculationGameweek = systemState.calculationGameweek;
-      var calculationMonth = systemState.calculationMonth;
-      var calculationSeason = systemState.calculationSeason;
-      var beginningNewMonth = false;
-
-      let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
-      if(gameweekComplete){
-        let rewardPool = rewardPools.get(systemState.calculationSeason);
-        switch(rewardPool){
-          case (null){};
-          case (?foundRewardPool){
-
-            let weeklyLeaderboardCanisterId = leaderboardComposite.getCanisterId(systemState.calculationSeason, systemState.calculationGameweek);
-            switch(weeklyLeaderboardCanisterId){
-              case (null){};
-              case (?canisterId){
-                let weekly_leaderboard_canister = actor (canisterId) : actor {
-                  getRewardLeaderboard : () -> async DTOs.WeeklyLeaderboardDTO;
-                };
-                
-                let weeklyLeaderboard = await weekly_leaderboard_canister.getRewardLeaderboard();
-                await managerComposite.payWeeklyRewards(foundRewardPool, weeklyLeaderboard);
-              };
-            }
-          }
-        };
-        
-        calculationGameweek := systemState.calculationGameweek + 1;
-        let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
-        let filteredFilters = Array.filter<DTOs.FixtureDTO>(
-          fixtures,
-          func(fixture : DTOs.FixtureDTO) : Bool {
-            return fixture.gameweek == systemState.calculationGameweek;
-          },
-        );
-          
-        let sortedArray = Array.sort(filteredFilters,
-          func(a : DTOs.FixtureDTO, b : DTOs.FixtureDTO) : Order.Order {
-            if (a.kickOff < b.kickOff) { return #greater };
-            if (a.kickOff == b.kickOff) { return #equal };
-            return #less;
-          },
-        );
-
-        let latestFixture = sortedArray[0];
-        let newMonth = Utilities.unixTimeToMonth(latestFixture.kickOff);
-        if(newMonth == calculationMonth + 1){
-          beginningNewMonth := true;
-        };
-        calculationMonth := Utilities.unixTimeToMonth(latestFixture.kickOff);
-      };
-
-      if(gameweekComplete and systemState.calculationGameweek > 38){
-        let rewardPool = rewardPools.get(systemState.calculationSeason);
-        switch(rewardPool){
-          case (null){};
-          case (?foundRewardPool){
-            await managerComposite.paySeasonRewards(foundRewardPool);
-          }
-        };
-        await seasonComposite.createNewSeason(systemState);
-        await managerComposite.resetFantasyTeams();
-          
-        let jan1Date = Utilities.nextUnixTimeForDayOfYear(1);
-        let jan31Date = Utilities.nextUnixTimeForDayOfYear(31);
-
-        let transferWindowStartDate : Timer.Duration = #nanoseconds(Int.abs(jan1Date - Time.now()));
-        let transferWindowEndDate : Timer.Duration = #nanoseconds(Int.abs(jan31Date - Time.now()));
-
-        switch (setAndBackupTimer) {
-          case (null) {};
-          case (?actualFunction) {
-            actualFunction(transferWindowStartDate, "transferWindowStart");
-            actualFunction(transferWindowEndDate, "transferWindowEnd");
-          };
-        };
-        calculationSeason := systemState.calculationSeason + 1;
-        await calculateRewardPool(systemState.calculationSeason);
-
-        calculationGameweek := 1;
-        calculationMonth := 8;
-      };
-
-      managerComposite.resetTransfers(beginningNewMonth);
-
-      let updatedSystemState: T.SystemState = {
-        calculationGameweek = calculationGameweek;
-        calculationMonth = calculationMonth; 
-        calculationSeason = calculationSeason;
-        pickTeamGameweek = systemState.pickTeamGameweek;
-        pickTeamSeason = systemState.pickTeamSeason;
-        transferWindowActive = systemState.transferWindowActive;
-      };
-
-      systemState := updatedSystemState;
-      await setGameweekTimers();
-
-
+      await payRewards();
 
 
 
@@ -413,6 +316,82 @@ module {
       await updateCacheHash("monthly_leaderboards");
       await updateCacheHash("season_leaderboard");
       await updateCacheHash("system_state");
+    };
+
+    private func payRewards() : async (){
+      let rewardPool = rewardPools.get(systemState.calculationSeason);
+      switch(rewardPool){
+        case (null){};
+        case (?foundRewardPool){
+          var calculationGameweek = systemState.calculationGameweek;
+          var calculationMonth = systemState.calculationMonth;
+          var calculationSeason = systemState.calculationSeason;
+
+          let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
+          if(gameweekComplete){
+            await payWeeklyRewards(foundRewardPool);
+          };
+
+          let monthComplete = seasonComposite.checkMonthComplete(systemState);
+          if(monthComplete){
+            let clubs = clubComposite.getClubs();
+            for(club in Iter.fromArray(clubs)){
+              await payMonthlyRewards(foundRewardPool, club.id);
+            };
+          };
+
+          let seasonComplete = seasonComposite.checkSeasonComplete(systemState);
+          if(seasonComplete){
+            await paySeasonRewards(foundRewardPool);
+          };
+        }
+      };
+
+    };
+
+    private func payWeeklyRewards(rewardPool: T.RewardPool) : async (){
+      let weeklyLeaderboardCanisterId = leaderboardComposite.getWeeklyCanisterId(systemState.calculationSeason, systemState.calculationGameweek);
+      switch(weeklyLeaderboardCanisterId){
+        case (null){};
+        case (?canisterId){
+          let weekly_leaderboard_canister = actor (canisterId) : actor {
+            getRewardLeaderboard : () -> async DTOs.WeeklyLeaderboardDTO;
+          };
+          
+          let weeklyLeaderboard = await weekly_leaderboard_canister.getRewardLeaderboard();
+          await managerComposite.payWeeklyRewards(rewardPool, weeklyLeaderboard);
+        };
+      };
+    };
+
+    private func payMonthlyRewards(rewardPool: T.RewardPool, clubId: T.ClubId) : async (){
+      let monthlyLeaderboardCanisterId = leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeason, systemState.calculationMonth, clubId);
+      switch(monthlyLeaderboardCanisterId){
+        case (null){};
+        case (?canisterId){
+          let monthly_leaderboard_canister = actor (canisterId) : actor {
+            getRewardLeaderboard : () -> async DTOs.MonthlyLeaderboardDTO;
+          };
+          
+          let monthlyLeaderboard = await monthly_leaderboard_canister.getRewardLeaderboard();
+          await managerComposite.payMonthlyRewards(rewardPool, monthlyLeaderboard);
+        };
+      };
+    };
+
+    private func paySeasonRewards(rewardPool: T.RewardPool) : async (){
+      let seasonLeaderboardCanisterId = leaderboardComposite.getSeasonCanisterId(systemState.calculationSeason);
+      switch(seasonLeaderboardCanisterId){
+        case (null){};
+        case (?canisterId){
+          let season_leaderboard_canister = actor (canisterId) : actor {
+            getRewardLeaderboard : () -> async DTOs.SeasonLeaderboardDTO;
+          };
+          
+          let seasonLeaderboard = await season_leaderboard_canister.getRewardLeaderboard();
+          await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard);
+        };
+      };
     };
 
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async Result.Result<Text,Text> {

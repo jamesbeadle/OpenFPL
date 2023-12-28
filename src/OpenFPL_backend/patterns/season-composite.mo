@@ -790,6 +790,16 @@ module {
       };
       return false;
     };
+
+    public func checkMonthComplete(systemState: T.SystemState) : Bool {
+      //TODO: Implement
+      return false;
+    };
+
+    public func checkSeasonComplete(systemState: T.SystemState) : Bool {
+      //TODO: Implement
+      return false;
+    };
    
     public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, clubs: [T.Club]) : async Result.Result<Text,Text> {
         

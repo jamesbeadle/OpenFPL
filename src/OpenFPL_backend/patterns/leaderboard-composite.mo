@@ -583,10 +583,20 @@ module {
       );
     };    
 
-    public func getCanisterId(seasonId: T.SeasonId, month: T.GameweekNumber) : ?Text{
-      let weeklyLeaderboardKey = (seasonId, month);
+    public func getWeeklyCanisterId(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : ?Text{
+      let weeklyLeaderboardKey = (seasonId, gameweek);
       return weeklyLeaderboardCanisterIds.get(weeklyLeaderboardKey);
     };
+
+    public func getMonthlyCanisterId(seasonId: T.SeasonId, month: T.CalendarMonth, club: T.ClubId) : ?Text{
+      let monthlyLeaderboardKey = (seasonId, month, club);
+      return monthlyLeaderboardCanisterIds.get(monthlyLeaderboardKey);
+    };
+
+    public func getSeasonCanisterId(seasonId: T.SeasonId) : ?Text{
+      return seasonLeaderboardCanisterIds.get(seasonId);
+    };
+
 
 
   };
