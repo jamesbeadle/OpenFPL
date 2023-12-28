@@ -1201,11 +1201,7 @@ module {
      
     };
 
-    //TODO: CHECK THE IMPLEMENTATION OF THE FOLLOWING
-
     public func snapshotFantasyTeams(seasonId: T.SeasonId, gameweek: T.GameweekNumber, players: [DTOs.PlayerDTO]) : (){
-
-     
       for ((principalId, manager) in managers.entries()) {
 
         let allPlayers = Array.filter<DTOs.PlayerDTO>(
@@ -1340,14 +1336,12 @@ module {
 
     };
 
-
     public func resetFantasyTeams() : async () {
       for ((principalId, manager) in managers.entries()) {
         let clearedTeam = clearFantasyTeam(manager);
         managers.put(principalId, clearedTeam);
       };
     };
-
     
     private func clearFantasyTeam(manager: T.Manager) : T.Manager {
       return {

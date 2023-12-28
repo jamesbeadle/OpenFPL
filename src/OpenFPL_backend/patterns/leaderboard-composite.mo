@@ -14,6 +14,7 @@ import Cycles "mo:base/ExperimentalCycles";
 import Buffer "mo:base/Buffer";
 import WeeklyLeaderboardCanister "../weekly-leaderboard";
 import MonthlyLeaderboardCanister "../monthly-leaderboard";
+import SeasonLeaderboardCanister "../season-leaderboard";
 
 module {
 
@@ -336,8 +337,17 @@ module {
           return createLeaderboardEntry(pair.0, pair.1.username, totalPointsForSeason(pair.1, seasonId));
         }
       );
+      let sortedSeasonEntries = List.reverse(mergeSort(List.fromArray(seasonEntries)));
+      let positionedSeasonEntries = assignPositionText(sortedSeasonEntries);
 
-      //TODO
+      let currentSeasonLeaderboard : T.SeasonLeaderboard = {
+        seasonId = seasonId;
+        entries = positionedSeasonEntries;
+        totalEntries = List.size(positionedSeasonEntries);
+      };
+      
+      let seasonLeaderboardCanisterId = await createSeasonLeaderboardCanister(seasonId, currentSeasonLeaderboard);
+      seasonLeaderboardCanisterIds.put(seasonId, seasonLeaderboardCanisterId);
     };
 
     private func createWeeklyLeaderboardCanister(seasonId: T.SeasonId, gameweek: T.GameweekNumber, weeklyLeaderboard: T.WeeklyLeaderboard) : async Text {
@@ -375,6 +385,30 @@ module {
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
       await canister.addMonthlyLeaderboard(seasonId, gameweek, clubId, monthlyLeaderboard);
+      let canisterId = Principal.toText(canister_principal);
+
+      switch (storeCanisterId) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(canisterId);
+        };
+      };
+
+      return canisterId;
+    };
+
+    private func createSeasonLeaderboardCanister(seasonId: T.SeasonId, seasonLeaderboard: T.SeasonLeaderboard) : async Text {
+    
+      if(backendCanisterController == null){
+        return "";
+      };
+      
+      Cycles.add(2_000_000_000_000);
+      let canister = await SeasonLeaderboardCanister.SeasonLeaderboardCanister();
+      let IC : Management.Management = actor (ENV.Default);
+      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+      let canister_principal = Principal.fromActor(canister);
+      await canister.addSeasonLeaderboard(seasonId, seasonLeaderboard);
       let canisterId = Principal.toText(canister_principal);
 
       switch (storeCanisterId) {
