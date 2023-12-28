@@ -17,15 +17,18 @@ import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import Float "mo:base/Float";
 import Option "mo:base/Option";
+import Time "mo:base/Time";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import ProfilePictureCanister "../profile-picture-canister";
 import RewardPercentages "../utils/RewardPercentages";
 import Utilities "../utilities";
+import Token "../token";
 
 module {
 
   public class ManagerComposite() {
+    let tokenCanister = Token.Token(); 
     private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
     private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
     private var activeProfilePictureCanisterId = ""; 
@@ -1477,13 +1480,13 @@ module {
     };
 
     public func payATHMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboards: [DTOs.MonthlyLeaderboardDTO]) : async (){
-      await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);//TODO
+      await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);
     };
     
     public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
       await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard);
-      await distributeMostValuableTeamRewards(); //TODO
-      await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard); //TODO
+      await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
+      await distributeMostValuableTeamRewards();
     };
 
     public func distributeWeeklyRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
@@ -1609,11 +1612,6 @@ module {
 
       return Buffer.toArray(scaledPercentagesBuffer);
     };
-
-    private func payReward(principal: T.PrincipalId, fpl: Nat64){
-      //TODO: SEND FPL!
-    };
-
 
     public func distributeMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboard: DTOs.MonthlyLeaderboardDTO) : async (){
       let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 9;
@@ -1760,7 +1758,15 @@ module {
     };
 
     public func distributeMostValuableTeamRewards() : async (){
-      //Order by snapshots for teams at gameweek 38
+      //TODO
+
+
+      //get all gameweek 38 snapshots
+      //value all teams
+      //order by descending
+      //create leaderboard for them
+      //distribute leaderboard as per the others
+      //store the info in this canister as it's simple data
     };
 
     public func distributeHighestScoringPlayerRewards(highestScoringPlayerRewardPool: Nat64, fixtures: List.List<DTOs.FixtureDTO>) : async (){
@@ -1798,6 +1804,9 @@ module {
 
     public func distributeWeeklyATHScoreRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
       //TODO
+      //check for ties
+      //check to see if the first entry has broken the all time high score for a gameweek
+        //if they have pay the gameweek all time high score pot
 
     };
 
@@ -1817,9 +1826,15 @@ module {
 
     public func distributeSeasonATHScoreRewards(seasonRewardPool: Nat64, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
       //TODO
+      //check to see if the first entry has broken the all time high score for a season
+        //if they have pay the season all time high score pot
+      //check for ties
 
     };
 
+    private func payReward(principal: T.PrincipalId, fpl: Nat64){
+      tokenCanister.transferToken(principalId, fpl);
+    };
 
     public func getStableManagers(): [(T.PrincipalId, T.Manager)] {
       return Iter.toArray(managers.entries());
