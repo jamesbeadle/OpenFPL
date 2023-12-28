@@ -1422,11 +1422,6 @@ module {
 
         managers.put(principalId, updatedManager);
       };
-
-      //TODO://reset the bonuses that can be played within a calendar month
-
-      //if last game of the upcoming gameweek falls in the following month, reset the number of bonuses available to 2
-
     };
 
     public func resetFantasyTeams() : async () {
