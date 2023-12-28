@@ -783,7 +783,7 @@ module {
                   sum;
                 };
                 case (?foundPlayer) {
-                  sum + foundPlayer.valueQuarterMillions;
+                  sum + Nat16.toNat(foundPlayer.valueQuarterMillions);
                 };
               };
             },
@@ -829,7 +829,7 @@ module {
                   sum;
                 };
                 case (?foundPlayer) {
-                  sum + foundPlayer.valueQuarterMillions;
+                  sum + Nat16.toNat(foundPlayer.valueQuarterMillions);
                 };
               };
             },
@@ -845,13 +845,13 @@ module {
                   sum;
                 };
                 case (?foundPlayer) {
-                  sum + foundPlayer.valueQuarterMillions;
+                  sum + Nat16.toNat(foundPlayer.valueQuarterMillions);
                 };
               };
             },
           );
 
-          let remainingBank : Nat = foundTeam.bankQuarterMillions - spend + sold;
+          let remainingBank : Nat16 = foundTeam.bankQuarterMillions - Nat16.fromNat(spend) + Nat16.fromNat(sold);
           if (remainingBank < 0) {
             return true;
           };
@@ -1292,8 +1292,8 @@ module {
           },
         );
 
-        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(allPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.valueQuarterMillions });
-        let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+        let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
 
         let newSnapshot : T.FantasyTeamSnapshot = {
           principalId = manager.principalId;
@@ -1804,7 +1804,7 @@ module {
         },
       );
 
-      var teamValues : HashMap.HashMap<T.PrincipalId, Nat> = HashMap.HashMap<T.PrincipalId, Nat>(100, Text.equal, Text.hash);
+      var teamValues : HashMap.HashMap<T.PrincipalId, Nat16> = HashMap.HashMap<T.PrincipalId, Nat16>(100, Text.equal, Text.hash);
 
       for (snapshot in allFinalGameweekSnapshots.entries()) {
         let allPlayers = Array.filter<DTOs.PlayerDTO>(
@@ -1821,14 +1821,14 @@ module {
           },
         );
 
-        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(allPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.valueQuarterMillions });
-        let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat16>(allPlayers, func(player : DTOs.PlayerDTO) : Nat16 { return player.valueQuarterMillions });
+        let totalTeamValue = Array.foldLeft<Nat16, Nat16>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
         teamValues.put(snapshot.0, totalTeamValue);
       };
 
-      let teamValuesArray : [(T.PrincipalId, Nat)] = Iter.toArray(teamValues.entries());
+      let teamValuesArray : [(T.PrincipalId, Nat16)] = Iter.toArray(teamValues.entries());
 
-      let compare = func(a : (T.PrincipalId, Nat), b : (T.PrincipalId, Nat)) : Order.Order {
+      let compare = func(a : (T.PrincipalId, Nat16), b : (T.PrincipalId, Nat16)) : Order.Order {
         if (a.1 > b.1) { return #greater };
         if (a.1 < b.1) { return #less };
         return #equal;
@@ -1836,13 +1836,13 @@ module {
 
       let sortedTeamValuesArray = Array.sort(teamValuesArray, compare);
 
-      var leaderboardEntries = Array.mapEntries<(T.PrincipalId, Nat), T.LeaderboardEntry>(
+      var leaderboardEntries = Array.mapEntries<(T.PrincipalId, Nat16), T.LeaderboardEntry>(
         sortedTeamValuesArray,
         func(team, index) : T.LeaderboardEntry {
           return {
             principalId = team.0;
             position = index + 1;
-            points = Int16.fromNat16(Nat16.fromNat(team.1));
+            points = Int16.fromNat16(team.1);
             username = "";
             positionText = "";
           };

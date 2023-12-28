@@ -85,7 +85,7 @@ module Types {
     createDate : Int;
     transfersAvailable : Nat8;
     monthlyBonusesAvailable : Nat8;
-    bankQuarterMillions : Nat;
+    bankQuarterMillions : Nat16;
     playerIds : [PlayerId];
     captainId : PlayerId;
     goalGetterGameweek : GameweekNumber;
@@ -121,8 +121,8 @@ module Types {
     favouriteClubId : ClubId;
     monthlyBonusesAvailable : Nat8;
     transfersAvailable : Nat8;
-    bankQuarterMillions : Nat;
-    teamValueQuarterMillions : Nat;
+    bankQuarterMillions : Nat16;
+    teamValueQuarterMillions : Nat16;
     playerIds : [PlayerId];
     captainId : PlayerId;
     gameweek : GameweekNumber;
@@ -219,7 +219,7 @@ module Types {
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    valueQuarterMillions : Nat;
+    valueQuarterMillions : Nat16;
     dateOfBirth : Int;
     nationality : CountryId;
     seasons : List.List<PlayerSeason>;
@@ -256,8 +256,8 @@ module Types {
   public type ValueHistory = {
     seasonId : Nat16;
     gameweek : Nat8;
-    oldValue : Nat;
-    newValue : Nat;
+    oldValue : Nat16;
+    newValue : Nat16;
   };
 
   public type InjuryHistory = {

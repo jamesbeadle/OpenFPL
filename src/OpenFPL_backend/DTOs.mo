@@ -58,7 +58,7 @@ module DTOs {
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    valueQuarterMillions : Nat;
+    valueQuarterMillions : Nat16;
     dateOfBirth : Int;
     nationality : T.CountryId;
   };
@@ -133,7 +133,7 @@ module DTOs {
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    valueQuarterMillions : Nat;
+    valueQuarterMillions : Nat16;
     dateOfBirth : Int;
     nationality : T.CountryId;
     totalPoints : Int16;
@@ -323,8 +323,8 @@ module DTOs {
     favouriteClubId : T.ClubId;
     transfersAvailable : Nat8;
     monthlyBonusesAvailable : Nat8;
-    bankQuarterMillions : Nat;
-    teamValueQuarterMillions : Nat;
+    bankQuarterMillions : Nat16;
+    teamValueQuarterMillions : Nat16;
     playerIds : [T.PlayerId];
     captainId : T.PlayerId;
     gameweek : T.GameweekNumber;
