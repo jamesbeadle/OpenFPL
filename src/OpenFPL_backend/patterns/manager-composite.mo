@@ -1197,7 +1197,21 @@ module {
     };
 
     public func removePlayerFromTeams(playerId: T.PlayerId) : async (){
-      //TODO:remove the player from each users team and replace with a 0
+   
+      let managersWithPlayer =
+        HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
+          managers,
+          Text.equal,
+          Text.hash,
+          func (k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == playerId }) == null) { null } else { ?v }
+      );
+
+      for ((key, value) in managersWithPlayer.entries()) {
+//TODO:remove the player from each users team and replace with a 0
+      };
+
+
+      
      
     };
 

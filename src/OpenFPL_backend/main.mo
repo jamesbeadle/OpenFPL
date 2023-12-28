@@ -31,7 +31,6 @@ actor Self {
   
   public shared ({caller}) func getTreasuryAccount() : async Account.AccountIdentifier {
     let actorPrincipal : Principal = Principal.fromActor(Self);
-
     Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount())
   };
 
@@ -96,7 +95,6 @@ actor Self {
   };
 
   //Update functions:
-
   public shared ({ caller }) func updateUsername(username : Text) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
