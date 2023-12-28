@@ -308,6 +308,7 @@ module {
       var calculationGameweek = systemState.calculationGameweek;
       var calculationMonth = systemState.calculationMonth;
       var calculationSeason = systemState.calculationSeason;
+      var beginningNewMonth = false;
 
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if(gameweekComplete){
@@ -349,6 +350,10 @@ module {
         );
 
         let latestFixture = sortedArray[0];
+        let newMonth = Utilities.unixTimeToMonth(latestFixture.kickOff);
+        if(newMonth == calculationMonth + 1){
+          beginningNewMonth := true;
+        };
         calculationMonth := Utilities.unixTimeToMonth(latestFixture.kickOff);
       };
 
@@ -382,6 +387,8 @@ module {
         calculationGameweek := 1;
         calculationMonth := 8;
       };
+
+      managerComposite.resetTransfers(beginningNewMonth);
 
       let updatedSystemState: T.SystemState = {
         calculationGameweek = calculationGameweek;

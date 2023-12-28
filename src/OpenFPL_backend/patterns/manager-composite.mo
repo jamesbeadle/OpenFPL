@@ -1246,11 +1246,7 @@ module {
         };
 
         managers.put(principalId, updatedManager);
-      };
-
-
-      
-     
+      };     
     };
 
     public func snapshotFantasyTeams(seasonId: T.SeasonId, gameweek: T.GameweekNumber, players: [DTOs.PlayerDTO]) : (){
@@ -1381,10 +1377,55 @@ module {
       };
     };
 
-    public func resetTransfers() : (){
-      //TODO://reset transfers available for gameweek AND reset the bonuses that can be played within a calendar month
+    public func resetTransfers(isNewMonth: Bool) : (){
+      
+      for ((principalId, manager) in managers.entries()) {
+        
+        var bonusesAvailable = manager.monthlyBonusesAvailable;
 
-      //if last game of the upcoming gameweek falls in the following month, reset the number of transfers available to 2
+        if(isNewMonth){
+          bonusesAvailable := 2;
+        };      
+        
+        let updatedManager: T.Manager = {
+          principalId = manager.principalId;
+          username = manager.username;
+          favouriteClubId = manager.favouriteClubId;
+          createDate = manager.createDate;
+          termsAccepted = manager.termsAccepted;
+          profilePictureCanisterId = manager.profilePictureCanisterId;
+          transfersAvailable = 3;
+          monthlyBonusesAvailable = bonusesAvailable;
+          bankQuarterMillions = manager.bankQuarterMillions;
+          playerIds = manager.playerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = manager.goalGetterGameweek;
+          goalGetterPlayerId = manager.goalGetterPlayerId;
+          passMasterGameweek = manager.passMasterGameweek;
+          passMasterPlayerId = manager.passMasterPlayerId;
+          noEntryGameweek = manager.noEntryGameweek;
+          noEntryPlayerId = manager.noEntryPlayerId;
+          teamBoostGameweek = manager.teamBoostGameweek;
+          teamBoostClubId = manager.teamBoostClubId;
+          safeHandsGameweek = manager.safeHandsGameweek;
+          safeHandsPlayerId = manager.safeHandsPlayerId;
+          captainFantasticGameweek = manager.captainFantasticGameweek;
+          captainFantasticPlayerId = manager.captainFantasticPlayerId;
+          countrymenGameweek = manager.countrymenGameweek;
+          countrymenCountryId = manager.countrymenCountryId;
+          prospectsGameweek = manager.prospectsGameweek;
+          braceBonusGameweek = manager.braceBonusGameweek;
+          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+          transferWindowGameweek = manager.transferWindowGameweek;
+          history = manager.history;
+        };
+
+        managers.put(principalId, updatedManager);
+      };
+
+      //TODO://reset the bonuses that can be played within a calendar month
+
+      //if last game of the upcoming gameweek falls in the following month, reset the number of bonuses available to 2
 
     };
 
