@@ -1802,8 +1802,17 @@ module {
     };
 
     public func distributeMonthlyATHScoreRewards(monthlyRewardPool: Nat64, monthlyLeaderboards: [DTOs.MonthlyLeaderboardDTO]) : async (){
-      //TODO
+      //TODO:
+      //get the highest monthly score from all the monthly leaderboards
+      //ensure ties are split
 
+      //check it aagainst the current highest monthly score
+
+      //if highest beaten pay the cumulative total 
+
+      //if not add to the cumulative total for breaking the ATH monthly score
+
+      //mint the tokens but send to the treasury
     };
 
     public func distributeSeasonATHScoreRewards(seasonRewardPool: Nat64, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){

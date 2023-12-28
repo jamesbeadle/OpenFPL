@@ -360,7 +360,14 @@ module {
           };
           
           let weeklyLeaderboard = await weekly_leaderboard_canister.getRewardLeaderboard();
-          await managerComposite.payWeeklyRewards(rewardPool, weeklyLeaderboard);
+          let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
+          let gameweekFixtures = Array.filter<DTOs.FixtureDTO>(
+            fixtures,
+            func(fixture: DTOs.FixtureDTO) : Bool {
+              return fixture.gameweek == weeklyLeaderboard.gameweek;
+            },
+          );
+          await managerComposite.payWeeklyRewards(rewardPool, weeklyLeaderboard, List.fromArray(gameweekFixtures));
         };
       };
     };
@@ -380,7 +387,7 @@ module {
       };
     };
 
-    private func payATHMonthlyRewards(rewardPool: T.RewardPool, clubs: [DTOs.ClubDTO]) : async (){
+    private func payATHMonthlyRewards(rewardPool: T.RewardPool, clubs: [T.Club]) : async (){
       let allMonthlyLeaderboards = Buffer.fromArray<DTOs.MonthlyLeaderboardDTO>([]);
 
       for(club in Iter.fromArray(clubs)){
