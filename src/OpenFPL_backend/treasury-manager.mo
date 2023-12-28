@@ -20,9 +20,8 @@ module {
   public class TreasuryManager() {
 
     let icp_fee : Nat64 = 10_000;
-    let memo_txt_tpup: Nat64 = 0x50555054;
+    let memo_txt_tpup : Nat64 = 0x50555054;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
-    
 
     public func getUserAccountBalance(defaultAccount : Principal, user : Principal) : async Nat64 {
       let source_account = Account.accountIdentifier(defaultAccount, Account.principalToSubaccount(user));
@@ -30,7 +29,7 @@ module {
       return balance.e8s;
     };
 
-    public func sendICPForCycles(treasuryAccount: Account.AccountIdentifier, amount : Nat64) : async () {
+    public func sendICPForCycles(treasuryAccount : Account.AccountIdentifier, amount : Nat64) : async () {
 
       if (amount <= 0) {
         return;

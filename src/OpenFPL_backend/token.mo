@@ -21,7 +21,7 @@ module {
       owner : Principal;
       subaccount : ?Subaccount;
     };
-    
+
     type TransferArg = {
       from_subaccount : Subaccount;
       to : Account;
@@ -31,7 +31,7 @@ module {
       created_at_time : Timestamp;
     };
 
-    type TransferResult ={
+    type TransferResult = {
       Ok : BlockIndex;
       Err : TransferError;
     };
@@ -53,7 +53,7 @@ module {
       icrc1_total_supply : () -> async Nat;
       icrc1_balance_of : (account : Account) -> async Nat;
       icrc1_minting_account : () -> async Account;
-      icrc1_transfer : (args: TransferArg) -> async TransferResult;
+      icrc1_transfer : (args : TransferArg) -> async TransferResult;
       icrc1_fee : () -> async Tokens;
     };
 
@@ -69,15 +69,15 @@ module {
       return Nat64.fromNat(await token_canister_actor.icrc1_total_supply());
     };
 
-    public func transferToken(principalId: Text, amount: Nat) : async (){
+    public func transferToken(principalId : Text, amount : Nat) : async () {
 
       let tokenMintingAccount = Account.accountIdentifier(Principal.fromText(CanisterIds.TOKEN_CANISTER_ID), Blob.fromArrayMut(Array.init(32, 0 : Nat8)));
 
-      let transferArgs: TransferArg =  {
+      let transferArgs : TransferArg = {
         from_subaccount = tokenMintingAccount;
         to = {
-          owner =  Principal.fromText(principalId); 
-          subaccount = null
+          owner = Principal.fromText(principalId);
+          subaccount = null;
         };
         amount = amount;
         fee = await token_canister_actor.icrc1_fee();
@@ -87,15 +87,15 @@ module {
       let result = await token_canister_actor.icrc1_transfer(transferArgs);
     };
 
-    public func mintToTreasury(amount: Nat) : async (){
+    public func mintToTreasury(amount : Nat) : async () {
 
       let tokenMintingAccount = Account.accountIdentifier(Principal.fromText(CanisterIds.TOKEN_CANISTER_ID), Blob.fromArrayMut(Array.init(32, 0 : Nat8)));
 
-      let transferArgs: TransferArg =  {
+      let transferArgs : TransferArg = {
         from_subaccount = tokenMintingAccount;
         to = {
-          owner =  Principal.fromText(CanisterIds.MAIN_CANISTER_ID); 
-          subaccount = null
+          owner = Principal.fromText(CanisterIds.MAIN_CANISTER_ID);
+          subaccount = null;
         };
         amount = amount;
         fee = await token_canister_actor.icrc1_fee();

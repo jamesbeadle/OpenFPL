@@ -10,10 +10,9 @@ import Buffer "mo:base/Buffer";
 import Utilities "../utilities";
 
 module {
-  public class TimerComposite(
-  ) {
-   
-    var timers: [T.TimerInfo] = [];
+  public class TimerComposite() {
+
+    var timers : [T.TimerInfo] = [];
 
     private var gameweekBeginExpiredCallback : ?(() -> async ()) = null;
     private var gameKickOffExpiredCallback : ?(() -> async ()) = null;
@@ -22,26 +21,27 @@ module {
     private var transferWindowStartCallback : ?(() -> async ()) = null;
     private var transferWindowEndCallback : ?(() -> async ()) = null;
 
-     public func setCallbackFunctions(      
+    public func setCallbackFunctions(
       _gameweekBeginExpiredCallback : () -> async (),
       _gameKickOffExpiredCallback : () -> async (),
       _gameCompletedExpiredCallback : () -> async (),
       _loanExpiredCallback : () -> async (),
       _transferWindowStartCallback : () -> async (),
-      _transferWindowEndCallback : () -> async ()){
-        gameweekBeginExpiredCallback := ?_gameweekBeginExpiredCallback;
-        gameKickOffExpiredCallback := ?_gameKickOffExpiredCallback;
-        gameCompletedExpiredCallback := ?_gameCompletedExpiredCallback;
-        loanExpiredCallback := ?_loanExpiredCallback;
-        transferWindowStartCallback := ?_transferWindowStartCallback;
-        transferWindowEndCallback := ?_transferWindowEndCallback;
-      };
-  
-    public func setStableData(stable_timers: [T.TimerInfo]) {
+      _transferWindowEndCallback : () -> async (),
+    ) {
+      gameweekBeginExpiredCallback := ?_gameweekBeginExpiredCallback;
+      gameKickOffExpiredCallback := ?_gameKickOffExpiredCallback;
+      gameCompletedExpiredCallback := ?_gameCompletedExpiredCallback;
+      loanExpiredCallback := ?_loanExpiredCallback;
+      transferWindowStartCallback := ?_transferWindowStartCallback;
+      transferWindowEndCallback := ?_transferWindowEndCallback;
+    };
+
+    public func setStableData(stable_timers : [T.TimerInfo]) {
       timers := stable_timers;
     };
 
-    public func setTimer(time: Int, callbackName: Text){
+    public func setTimer(time : Int, callbackName : Text) {
       let duration : Timer.Duration = #seconds(Int.abs(time - Time.now()));
       setAndBackupTimer(duration, callbackName);
     };
@@ -56,45 +56,45 @@ module {
       );
     };
 
-    public func setAndBackupTimer(duration : Timer.Duration, callbackName: Text) {
+    public func setAndBackupTimer(duration : Timer.Duration, callbackName : Text) {
       let jobId : Timer.TimerId = switch (callbackName) {
         case "gameweekBeginExpired" {
           switch (gameweekBeginExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback); };
-            case (?callback) { Timer.setTimer(duration, callback); };
+            case null { Timer.setTimer(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer(duration, callback) };
           };
         };
         case "gameKickOffExpired" {
           switch (gameKickOffExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback); };
-            case (?callback) { Timer.setTimer(duration, callback); };
+            case null { Timer.setTimer(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer(duration, callback) };
           };
         };
         case "gameCompletedExpired" {
           switch (gameCompletedExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback); };
-            case (?callback) { Timer.setTimer(duration, callback); };
+            case null { Timer.setTimer(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer(duration, callback) };
           };
         };
         case "loanExpired" {
           switch (loanExpiredCallback) {
-            case null { Timer.setTimer(duration, defaultCallback); };
-            case (?callback) { Timer.setTimer(duration, callback); };
+            case null { Timer.setTimer(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer(duration, callback) };
           };
         };
         case "transferWindowStart" {
           switch (transferWindowStartCallback) {
-            case null { Timer.setTimer(duration, defaultCallback); };
-            case (?callback) { Timer.setTimer(duration, callback); };
+            case null { Timer.setTimer(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer(duration, callback) };
           };
         };
         case "transferWindowEnd" {
           switch (transferWindowEndCallback) {
-            case null { Timer.setTimer(duration, defaultCallback); };
-            case (?callback) { Timer.setTimer(duration, callback); };
+            case null { Timer.setTimer(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer(duration, callback) };
           };
         };
-        case _ { 
+        case _ {
           Timer.setTimer(duration, defaultCallback);
         };
       };
@@ -130,50 +130,38 @@ module {
           switch (timerInfo.callbackName) {
             case "gameweekBeginExpired" {
               switch (gameweekBeginExpiredCallback) {
-                case null {  };
-                case (?callback) { 
-                  ignore Timer.setTimer(duration, callback); 
-                };
+                case null {};
+                case (?callback) { ignore Timer.setTimer(duration, callback) };
               };
             };
             case "gameKickOffExpired" {
               switch (gameKickOffExpiredCallback) {
-                case null {  };
-                case (?callback) { 
-                  ignore Timer.setTimer(duration, callback); 
-                };
+                case null {};
+                case (?callback) { ignore Timer.setTimer(duration, callback) };
               };
             };
             case "gameCompletedExpired" {
               switch (gameCompletedExpiredCallback) {
-                case null {  };
-                case (?callback) { 
-                  ignore Timer.setTimer(duration, callback); 
-                };
+                case null {};
+                case (?callback) { ignore Timer.setTimer(duration, callback) };
               };
             };
             case "loanExpired" {
               switch (loanExpiredCallback) {
-                case null {  };
-                case (?callback) { 
-                  ignore Timer.setTimer(duration, callback); 
-                };
+                case null {};
+                case (?callback) { ignore Timer.setTimer(duration, callback) };
               };
             };
             case "transferWindowStart" {
               switch (transferWindowStartCallback) {
-                case null {  };
-                case (?callback) { 
-                  ignore Timer.setTimer(duration, callback); 
-                };
+                case null {};
+                case (?callback) { ignore Timer.setTimer(duration, callback) };
               };
             };
             case "transferWindowEnd" {
               switch (transferWindowEndCallback) {
-                case null {  };
-                case (?callback) { 
-                  ignore Timer.setTimer(duration, callback); 
-                };
+                case null {};
+                case (?callback) { ignore Timer.setTimer(duration, callback) };
               };
             };
             case _ {};
@@ -184,11 +172,11 @@ module {
 
     private func defaultCallback() : async () {};
 
-    public func getStableTimers(): [T.TimerInfo] {
+    public func getStableTimers() : [T.TimerInfo] {
       return timers;
     };
 
-    public func setStableTimers(stable_timers: [T.TimerInfo]) {
+    public func setStableTimers(stable_timers : [T.TimerInfo]) {
       timers := stable_timers;
       recreateTimers();
     };

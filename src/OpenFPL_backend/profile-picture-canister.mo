@@ -9,7 +9,7 @@ import Timer "mo:base/Timer";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
 
-actor class ProfilePictureCanister() {  
+actor class ProfilePictureCanister() {
   private stable var bucket1 : [(T.PrincipalId, Blob)] = [];
   private stable var bucket2 : [(T.PrincipalId, Blob)] = [];
   private stable var bucket3 : [(T.PrincipalId, Blob)] = [];
@@ -26,101 +26,101 @@ actor class ProfilePictureCanister() {
   private var currentBucketIndex = 0;
   private var maxPicturesPerBucket = 15000;
   private let totalBuckets : Nat = 12;
-  private let cyclesCheckInterval: Nat = Utilities.getHour() * 24;
-  private var cyclesCheckTimerId: ?Timer.TimerId = null;
+  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
+  private var cyclesCheckTimerId : ?Timer.TimerId = null;
 
-  public shared func addProfilePicture(principalId: T.PrincipalId, profilePicture: Blob) : async () {
+  public shared func addProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async () {
     switch (currentBucketIndex) {
       case 0 {
         if (bucket1.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket1);
           bucketBuffer.add((principalId, profilePicture));
           bucket1 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 1 {
         if (bucket2.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket2);
           bucketBuffer.add((principalId, profilePicture));
           bucket2 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 2 {
         if (bucket3.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket3);
           bucketBuffer.add((principalId, profilePicture));
           bucket3 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 3 {
         if (bucket4.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket4);
           bucketBuffer.add((principalId, profilePicture));
           bucket4 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 4 {
         if (bucket5.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket5);
           bucketBuffer.add((principalId, profilePicture));
           bucket5 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 5 {
         if (bucket6.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket6);
           bucketBuffer.add((principalId, profilePicture));
           bucket6 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 6 {
         if (bucket7.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket7);
           bucketBuffer.add((principalId, profilePicture));
           bucket7 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 7 {
         if (bucket8.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket8);
           bucketBuffer.add((principalId, profilePicture));
           bucket8 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 8 {
         if (bucket9.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket9);
           bucketBuffer.add((principalId, profilePicture));
           bucket9 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 9 {
         if (bucket10.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket10);
           bucketBuffer.add((principalId, profilePicture));
           bucket10 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 10 {
         if (bucket11.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket11);
           bucketBuffer.add((principalId, profilePicture));
           bucket11 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
       case 11 {
         if (bucket12.size() < maxPicturesPerBucket) {
           let bucketBuffer = Buffer.fromArray<(T.PrincipalId, Blob)>(bucket12);
           bucketBuffer.add((principalId, profilePicture));
           bucket12 := Buffer.toArray(bucketBuffer);
-        }
+        };
       };
-      case _ {  };
+      case _ {};
     };
 
     if (getBucketSize(currentBucketIndex) >= maxPicturesPerBucket) {
       currentBucketIndex := (currentBucketIndex + 1) % totalBuckets;
-    }
+    };
   };
 
   public shared func hasSpaceAvailable() : async Bool {
@@ -137,12 +137,8 @@ actor class ProfilePictureCanister() {
     let spaceInBucket11 = bucket11.size() < maxPicturesPerBucket;
     let spaceInBucket12 = bucket12.size() < maxPicturesPerBucket;
 
-    return spaceInBucket1 or spaceInBucket2 or spaceInBucket3 or
-      spaceInBucket4 or spaceInBucket5 or spaceInBucket6 or spaceInBucket7 or
-      spaceInBucket8 or spaceInBucket9 or spaceInBucket10 or spaceInBucket11 or
-      spaceInBucket12;
+    return spaceInBucket1 or spaceInBucket2 or spaceInBucket3 or spaceInBucket4 or spaceInBucket5 or spaceInBucket6 or spaceInBucket7 or spaceInBucket8 or spaceInBucket9 or spaceInBucket10 or spaceInBucket11 or spaceInBucket12;
   };
-
 
   private func getBucketSize(index : Nat) : Nat {
     switch (index) {
@@ -164,29 +160,29 @@ actor class ProfilePictureCanister() {
 
   private func checkCanisterCycles() : async () {
 
-      let balance = Cycles.balance();
+    let balance = Cycles.balance();
 
-      if(balance < 500000000000){
-        let openfpl_backend_canister = actor (CanisterIds.MAIN_CANISTER_ID) : actor {
-          requestCanisterTopup : () -> async ();
-        };
-        await openfpl_backend_canister.requestCanisterTopup();
+    if (balance < 500000000000) {
+      let openfpl_backend_canister = actor (CanisterIds.MAIN_CANISTER_ID) : actor {
+        requestCanisterTopup : () -> async ();
       };
-      setCheckCyclesTimer();
+      await openfpl_backend_canister.requestCanisterTopup();
+    };
+    setCheckCyclesTimer();
   };
 
-  private func setCheckCyclesTimer(){
-    switch(cyclesCheckTimerId){
-        case (null){};
-        case (?id){
-          Timer.cancelTimer(id);
-          cyclesCheckTimerId := null;
-        };
+  private func setCheckCyclesTimer() {
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckTimerId := null;
       };
-      cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+    };
+    cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
-  system func preupgrade() { };
+  system func preupgrade() {};
 
   system func postupgrade() {};
 
@@ -194,11 +190,11 @@ actor class ProfilePictureCanister() {
     return Cycles.available();
   };
 
-  public func topupCanister() : async (){
+  public func topupCanister() : async () {
     let amount = Cycles.available();
     let accepted = Cycles.accept(amount);
   };
 
   setCheckCyclesTimer();
-  
+
 };

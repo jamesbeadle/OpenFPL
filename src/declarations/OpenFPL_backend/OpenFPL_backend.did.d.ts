@@ -1,12 +1,29 @@
 import type { ActorMethod } from "@dfinity/agent";
 
+export type AccountIdentifier = Uint8Array | number[];
+export interface AddInitialFixturesDTO {
+  seasonId: SeasonId;
+  seasonFixtures: Array<FixtureDTO>;
+}
+export type CalendarMonth = number;
+export type ClubId = number;
 export interface CountryDTO {
   id: CountryId;
   code: string;
   name: string;
 }
 export type CountryId = number;
-export interface DataCache {
+export interface CreatePlayerDTO {
+  clubId: ClubId;
+  valueQuarterMillions: bigint;
+  dateOfBirth: bigint;
+  nationality: CountryId;
+  shirtNumber: number;
+  position: PlayerPosition;
+  lastName: string;
+  firstName: string;
+}
+export interface DataCacheDTO {
   hash: string;
   category: string;
 }
@@ -18,92 +35,25 @@ export type Error =
   | { InvalidData: null }
   | { AlreadyExists: null }
   | { InvalidTeamError: null };
-export interface FantasyTeam {
-  playerIds: Uint16Array | number[];
-  teamName: string;
-  countrymenCountryId: CountryId;
-  goalGetterPlayerId: PlayerId;
-  favouriteTeamId: TeamId;
-  hatTrickHeroGameweek: GameweekNumber;
-  transfersAvailable: number;
-  teamBoostGameweek: GameweekNumber;
-  captainFantasticGameweek: GameweekNumber;
-  teamBoostTeamId: TeamId;
-  countrymenGameweek: GameweekNumber;
-  noEntryPlayerId: PlayerId;
-  safeHandsPlayerId: PlayerId;
-  braceBonusGameweek: GameweekNumber;
-  passMasterGameweek: GameweekNumber;
-  goalGetterGameweek: GameweekNumber;
-  bankBalance: bigint;
-  captainFantasticPlayerId: PlayerId;
-  noEntryGameweek: GameweekNumber;
-  prospectsGameweek: GameweekNumber;
-  safeHandsGameweek: GameweekNumber;
-  principalId: string;
-  passMasterPlayerId: PlayerId;
-  captainId: PlayerId;
-}
-export interface FantasyTeamSnapshot {
-  playerIds: Uint16Array | number[];
-  teamName: string;
-  countrymenCountryId: CountryId;
-  goalGetterPlayerId: PlayerId;
-  favouriteTeamId: TeamId;
-  hatTrickHeroGameweek: GameweekNumber;
-  transfersAvailable: number;
-  teamBoostGameweek: GameweekNumber;
-  captainFantasticGameweek: GameweekNumber;
-  teamBoostTeamId: TeamId;
-  countrymenGameweek: GameweekNumber;
-  noEntryPlayerId: PlayerId;
-  safeHandsPlayerId: PlayerId;
-  braceBonusGameweek: GameweekNumber;
-  passMasterGameweek: GameweekNumber;
-  goalGetterGameweek: GameweekNumber;
-  bankBalance: bigint;
-  captainFantasticPlayerId: PlayerId;
-  gameweek: GameweekNumber;
-  noEntryGameweek: GameweekNumber;
-  prospectsGameweek: GameweekNumber;
-  safeHandsGameweek: GameweekNumber;
-  principalId: string;
-  passMasterPlayerId: PlayerId;
-  captainId: number;
-  points: number;
-}
-export interface Fixture {
-  id: number;
-  status: number;
-  awayTeamId: TeamId;
-  highestScoringPlayerId: number;
-  homeTeamId: TeamId;
-  seasonId: SeasonId;
-  events: List;
-  kickOff: bigint;
-  homeGoals: number;
-  gameweek: GameweekNumber;
-  awayGoals: number;
-}
 export interface FixtureDTO {
   id: number;
-  status: number;
-  awayTeamId: TeamId;
+  status: FixtureStatus;
   highestScoringPlayerId: number;
-  homeTeamId: TeamId;
   seasonId: SeasonId;
+  awayClubId: ClubId;
   events: Array<PlayerEventData>;
+  homeClubId: ClubId;
   kickOff: bigint;
   homeGoals: number;
   gameweek: GameweekNumber;
   awayGoals: number;
 }
 export type FixtureId = number;
-export interface Gameweek {
-  number: GameweekNumber;
-  fixtures: List_2;
-  canisterId: string;
-}
+export type FixtureStatus =
+  | { Unplayed: null }
+  | { Finalised: null }
+  | { Active: null }
+  | { Complete: null };
 export type GameweekNumber = number;
 export interface LeaderboardEntry {
   username: string;
@@ -112,231 +62,292 @@ export interface LeaderboardEntry {
   principalId: string;
   points: number;
 }
-export type List = [] | [[PlayerEventData, List]];
-export type List_1 = [] | [[Gameweek, List_1]];
-export type List_2 = [] | [[Fixture, List_2]];
-export interface ManagerDTO {
-  favouriteTeamId: TeamId;
-  displayName: string;
-  weeklyPosition: bigint;
-  createDate: bigint;
-  monthlyPoints: number;
-  weeklyPoints: number;
-  weeklyPositionText: string;
-  gameweeks: Array<FantasyTeamSnapshot>;
-  monthlyPosition: bigint;
-  seasonPosition: bigint;
-  monthlyPositionText: string;
-  profilePicture: Uint8Array | number[];
-  seasonPoints: number;
-  principalId: string;
-  seasonPositionText: string;
+export interface LoanPlayerDTO {
+  loanEndDate: bigint;
+  playerId: PlayerId;
+  loanClubId: ClubId;
 }
-export interface PaginatedClubLeaderboard {
-  month: number;
-  clubId: TeamId;
-  totalEntries: bigint;
-  seasonId: SeasonId;
-  entries: Array<LeaderboardEntry>;
-}
-export interface PaginatedLeaderboard {
-  totalEntries: bigint;
-  seasonId: SeasonId;
-  entries: Array<LeaderboardEntry>;
+export interface ManagerGameweekDTO {
+  playerIds: Uint16Array | number[];
+  teamValueQuarterMillions: bigint;
+  countrymenCountryId: CountryId;
+  username: string;
+  goalGetterPlayerId: PlayerId;
+  hatTrickHeroGameweek: GameweekNumber;
+  transfersAvailable: number;
+  teamBoostGameweek: GameweekNumber;
+  captainFantasticGameweek: GameweekNumber;
+  countrymenGameweek: GameweekNumber;
+  bankQuarterMillions: bigint;
+  noEntryPlayerId: PlayerId;
+  safeHandsPlayerId: PlayerId;
+  braceBonusGameweek: GameweekNumber;
+  favouriteClubId: ClubId;
+  passMasterGameweek: GameweekNumber;
+  teamBoostClubId: ClubId;
+  goalGetterGameweek: GameweekNumber;
+  captainFantasticPlayerId: PlayerId;
   gameweek: GameweekNumber;
+  transferWindowGameweek: GameweekNumber;
+  noEntryGameweek: GameweekNumber;
+  prospectsGameweek: GameweekNumber;
+  safeHandsGameweek: GameweekNumber;
+  principalId: string;
+  passMasterPlayerId: PlayerId;
+  captainId: PlayerId;
+  points: number;
+  monthlyBonusesAvailable: number;
+}
+export interface MonthlyLeaderboardDTO {
+  month: number;
+  clubId: ClubId;
+  totalEntries: bigint;
+  seasonId: SeasonId;
+  entries: Array<LeaderboardEntry>;
+}
+export interface PlayerDTO {
+  id: number;
+  clubId: ClubId;
+  valueQuarterMillions: bigint;
+  dateOfBirth: bigint;
+  nationality: CountryId;
+  shirtNumber: number;
+  totalPoints: number;
+  position: PlayerPosition;
+  lastName: string;
+  firstName: string;
 }
 export interface PlayerEventData {
   fixtureId: FixtureId;
+  clubId: ClubId;
   playerId: number;
   eventStartMinute: number;
   eventEndMinute: number;
-  teamId: TeamId;
-  eventType: number;
+  eventType: PlayerEventType;
 }
+export type PlayerEventType =
+  | { PenaltyMissed: null }
+  | { Goal: null }
+  | { GoalConceded: null }
+  | { Appearance: null }
+  | { PenaltySaved: null }
+  | { RedCard: null }
+  | { KeeperSave: null }
+  | { CleanSheet: null }
+  | { YellowCard: null }
+  | { GoalAssisted: null }
+  | { OwnGoal: null }
+  | { HighestScoringPlayer: null };
 export type PlayerId = number;
+export interface PlayerPointsDTO {
+  id: number;
+  clubId: ClubId;
+  events: Array<PlayerEventData>;
+  position: PlayerPosition;
+  gameweek: GameweekNumber;
+  points: number;
+}
+export type PlayerPosition =
+  | { Goalkeeper: null }
+  | { Midfielder: null }
+  | { Forward: null }
+  | { Defender: null };
 export interface ProfileDTO {
-  favouriteTeamId: number;
-  displayName: string;
+  username: string;
   createDate: bigint;
-  canUpdateFavouriteTeam: boolean;
+  favouriteClubId: number;
   profilePicture: Uint8Array | number[];
   principalId: string;
 }
-export type Result = { ok: null } | { err: Error };
-export interface Season {
-  id: number;
-  postponedFixtures: List_2;
-  name: string;
-  year: number;
-  gameweeks: List_1;
+export interface PromoteFormerClubDTO {
+  clubId: ClubId;
 }
-export interface SeasonDTO {
-  id: SeasonId;
-  name: string;
-  year: number;
-}
-export type SeasonId = number;
-export interface SystemState {
-  activeMonth: number;
-  focusGameweek: GameweekNumber;
-  activeSeason: Season;
-  activeGameweek: GameweekNumber;
-}
-export interface Team {
-  id: number;
+export interface PromoteNewClubDTO {
   secondaryColourHex: string;
   name: string;
   friendlyName: string;
   thirdColourHex: string;
   abbreviatedName: string;
-  shirtType: number;
+  shirtType: ShirtType;
   primaryColourHex: string;
 }
-export type TeamId = number;
-export interface TimerInfo {
-  id: bigint;
-  fixtureId: FixtureId;
+export interface RecallPlayerDTO {
   playerId: PlayerId;
-  callbackName: string;
-  triggerTime: bigint;
 }
-export interface UpdateFixtureDTO {
-  status: number;
+export interface RescheduleFixtureDTO {
+  fixtureId: FixtureId;
+  updatedFixtureGameweek: GameweekNumber;
+  updatedFixtureDate: bigint;
+  seasonId: SeasonId;
+}
+export type Result = { ok: string } | { err: string };
+export type Result_1 = { ok: null } | { err: Error };
+export type Result_10 = { ok: ManagerGameweekDTO } | { err: Error };
+export type Result_11 = { ok: Array<FixtureDTO> } | { err: Error };
+export type Result_12 = { ok: Array<DataCacheDTO> } | { err: Error };
+export type Result_13 = { ok: Array<CountryDTO> } | { err: Error };
+export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
+export type Result_3 = { ok: bigint } | { err: Error };
+export type Result_4 = { ok: SystemStateDTO } | { err: Error };
+export type Result_5 = { ok: SeasonLeaderboardDTO } | { err: Error };
+export type Result_6 = { ok: ProfileDTO } | { err: Error };
+export type Result_7 = { ok: Array<PlayerDTO> } | { err: Error };
+export type Result_8 = { ok: Array<PlayerPointsDTO> } | { err: Error };
+export type Result_9 = { ok: MonthlyLeaderboardDTO } | { err: Error };
+export interface RetirePlayerDTO {
+  playerId: PlayerId;
+  retirementDate: bigint;
+}
+export interface RevaluePlayerDownDTO {
+  playerId: PlayerId;
+}
+export interface RevaluePlayerUpDTO {
+  playerId: PlayerId;
+}
+export type SeasonId = number;
+export interface SeasonLeaderboardDTO {
+  totalEntries: bigint;
+  seasonId: SeasonId;
+  entries: Array<LeaderboardEntry>;
+}
+export interface SetPlayerInjuryDTO {
+  playerId: PlayerId;
+  description: string;
+  expectedEndDate: bigint;
+}
+export type ShirtType = { Filled: null } | { Striped: null };
+export interface SubmitFixtureDataDTO {
   fixtureId: FixtureId;
   seasonId: SeasonId;
-  kickOff: bigint;
+  gameweek: GameweekNumber;
+  playerEventData: Array<PlayerEventData>;
+}
+export interface SystemStateDTO {
+  calculationGameweek: GameweekNumber;
+  pickTeamGameweek: GameweekNumber;
+  calculationMonth: CalendarMonth;
+  calculationSeason: SeasonId;
+}
+export interface TransferPlayerDTO {
+  playerId: PlayerId;
+  newClubId: ClubId;
+}
+export interface UnretirePlayerDTO {
+  playerId: PlayerId;
+}
+export interface UpdateClubDTO {
+  clubId: ClubId;
+  secondaryColourHex: string;
+  name: string;
+  friendlyName: string;
+  thirdColourHex: string;
+  abbreviatedName: string;
+  shirtType: ShirtType;
+  primaryColourHex: string;
+}
+export interface UpdateFantasyTeamDTO {
+  playerIds: Uint16Array | number[];
+  countrymenCountryId: CountryId;
+  username: string;
+  goalGetterPlayerId: PlayerId;
+  hatTrickHeroGameweek: GameweekNumber;
+  teamBoostGameweek: GameweekNumber;
+  captainFantasticGameweek: GameweekNumber;
+  countrymenGameweek: GameweekNumber;
+  noEntryPlayerId: PlayerId;
+  safeHandsPlayerId: PlayerId;
+  braceBonusGameweek: GameweekNumber;
+  passMasterGameweek: GameweekNumber;
+  teamBoostClubId: ClubId;
+  goalGetterGameweek: GameweekNumber;
+  captainFantasticPlayerId: PlayerId;
+  transferWindowGameweek: GameweekNumber;
+  noEntryGameweek: GameweekNumber;
+  prospectsGameweek: GameweekNumber;
+  safeHandsGameweek: GameweekNumber;
+  passMasterPlayerId: PlayerId;
+  captainId: PlayerId;
+}
+export interface UpdatePlayerDTO {
+  dateOfBirth: bigint;
+  playerId: PlayerId;
+  nationality: CountryId;
+  shirtNumber: number;
+  position: PlayerPosition;
+  lastName: string;
+  firstName: string;
+}
+export interface WeeklyLeaderboardDTO {
+  totalEntries: bigint;
+  seasonId: SeasonId;
+  entries: Array<LeaderboardEntry>;
   gameweek: GameweekNumber;
 }
-export interface UpdateSystemStateDTO {
-  focusGameweek: GameweekNumber;
-  activeGameweek: GameweekNumber;
-}
 export interface _SERVICE {
-  createProfile: ActorMethod<[], undefined>;
-  executeAddInitialFixtures: ActorMethod<[SeasonId, Array<Fixture>], Result>;
-  executeCreatePlayer: ActorMethod<
-    [TeamId, number, string, string, number, bigint, bigint, CountryId],
-    Result
+  burnICPToCycles: ActorMethod<[bigint], undefined>;
+  executeAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], undefined>;
+  executeCreatePlayer: ActorMethod<[CreatePlayerDTO], undefined>;
+  executeLoanPlayer: ActorMethod<[LoanPlayerDTO], undefined>;
+  executePromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], undefined>;
+  executePromoteNewClub: ActorMethod<[PromoteNewClubDTO], undefined>;
+  executeRecallPlayer: ActorMethod<[RecallPlayerDTO], undefined>;
+  executeRescheduleFixture: ActorMethod<[RescheduleFixtureDTO], undefined>;
+  executeRetirePlayer: ActorMethod<[RetirePlayerDTO], undefined>;
+  executeRevaluePlayerDown: ActorMethod<[RevaluePlayerDownDTO], undefined>;
+  executeRevaluePlayerUp: ActorMethod<[RevaluePlayerUpDTO], undefined>;
+  executeSetPlayerInjury: ActorMethod<[SetPlayerInjuryDTO], undefined>;
+  executeSubmitFixtureData: ActorMethod<[SubmitFixtureDataDTO], undefined>;
+  executeTransferPlayer: ActorMethod<[TransferPlayerDTO], undefined>;
+  executeUnretirePlayer: ActorMethod<[UnretirePlayerDTO], undefined>;
+  executeUpdateClub: ActorMethod<[UpdateClubDTO], undefined>;
+  executeUpdatePlayer: ActorMethod<[UpdatePlayerDTO], undefined>;
+  getCountries: ActorMethod<[], Result_13>;
+  getDataHashes: ActorMethod<[], Result_12>;
+  getFixtures: ActorMethod<[SeasonId], Result_11>;
+  getManager: ActorMethod<[string], Result_6>;
+  getManagerGameweek: ActorMethod<
+    [string, SeasonId, GameweekNumber],
+    Result_10
   >;
-  executeLoanPlayer: ActorMethod<[PlayerId, TeamId, bigint], Result>;
-  executePromoteFormerTeam: ActorMethod<[TeamId], Result>;
-  executePromoteNewTeam: ActorMethod<
-    [string, string, string, string, string, string, number],
-    Result
+  getMonthlyLeaderboard: ActorMethod<
+    [SeasonId, ClubId, CalendarMonth, bigint, bigint],
+    Result_9
   >;
-  executeRecallPlayer: ActorMethod<[PlayerId], Result>;
-  executeRescheduleFixture: ActorMethod<
-    [FixtureId, GameweekNumber, GameweekNumber, bigint],
-    Result
+  getPlayerDetailsForGameweek: ActorMethod<
+    [SeasonId, GameweekNumber],
+    Result_8
   >;
-  executeRetirePlayer: ActorMethod<[PlayerId, bigint], Result>;
-  executeRevaluePlayerDown: ActorMethod<
-    [SeasonId, GameweekNumber, PlayerId],
-    Result
-  >;
-  executeRevaluePlayerUp: ActorMethod<[PlayerId], Result>;
-  executeSetPlayerInjury: ActorMethod<[PlayerId, string, bigint], Result>;
-  executeSubmitFixtureData: ActorMethod<
-    [FixtureId, Array<PlayerEventData>],
-    Result
-  >;
-  executeTransferPlayer: ActorMethod<[PlayerId, TeamId], Result>;
-  executeUnretirePlayer: ActorMethod<[PlayerId], Result>;
-  executeUpdatePlayer: ActorMethod<
-    [PlayerId, number, string, string, number, bigint, CountryId],
-    Result
-  >;
-  executeUpdateTeam: ActorMethod<
-    [TeamId, string, string, string, string, string, string, number],
-    Result
-  >;
-  getActiveFixtures: ActorMethod<[], Array<Fixture>>;
-  getClubLeaderboard: ActorMethod<
-    [number, number, TeamId, bigint, bigint],
-    PaginatedClubLeaderboard
-  >;
-  getClubLeaderboardsCache: ActorMethod<
-    [number, number],
-    Array<PaginatedClubLeaderboard>
-  >;
-  getCountries: ActorMethod<[], Array<CountryDTO>>;
-  getDataHashes: ActorMethod<[], Array<DataCache>>;
-  getFantasyTeam: ActorMethod<[], FantasyTeam>;
-  getFantasyTeamForGameweek: ActorMethod<
-    [string, number, number],
-    FantasyTeamSnapshot
-  >;
-  getFixtureDTOs: ActorMethod<[], Array<FixtureDTO>>;
-  getFixtures: ActorMethod<[], Array<Fixture>>;
-  getFixturesForSeason: ActorMethod<[SeasonId], Array<Fixture>>;
-  getManager: ActorMethod<[string, SeasonId, GameweekNumber], ManagerDTO>;
-  getProfileDTO: ActorMethod<[], [] | [ProfileDTO]>;
-  getPublicProfileDTO: ActorMethod<[string], ProfileDTO>;
-  getSeasonLeaderboard: ActorMethod<
-    [number, bigint, bigint],
-    PaginatedLeaderboard
-  >;
-  getSeasonLeaderboardCache: ActorMethod<[number], PaginatedLeaderboard>;
-  getSeasons: ActorMethod<[], Array<SeasonDTO>>;
-  getSystemState: ActorMethod<[], SystemState>;
-  getTeamValueInfo: ActorMethod<[], Array<string>>;
-  getTeams: ActorMethod<[], Array<Team>>;
-  getTimers: ActorMethod<[], Array<TimerInfo>>;
-  getTotalManagers: ActorMethod<[], bigint>;
+  getPlayers: ActorMethod<[], Result_7>;
+  getProfile: ActorMethod<[], Result_6>;
+  getSeasonLeaderboard: ActorMethod<[SeasonId, bigint, bigint], Result_5>;
+  getSystemState: ActorMethod<[], Result_4>;
+  getTotalManagers: ActorMethod<[], Result_3>;
+  getTreasuryAccount: ActorMethod<[], AccountIdentifier>;
   getWeeklyLeaderboard: ActorMethod<
-    [number, number, bigint, bigint],
-    PaginatedLeaderboard
+    [SeasonId, GameweekNumber, bigint, bigint],
+    Result_2
   >;
-  getWeeklyLeaderboardCache: ActorMethod<
-    [number, number],
-    PaginatedLeaderboard
-  >;
-  isDisplayNameValid: ActorMethod<[string], boolean>;
-  saveFantasyTeam: ActorMethod<
-    [Uint16Array | number[], number, number, number, number],
-    Result
-  >;
-  savePlayerEvents: ActorMethod<[FixtureId, Array<PlayerEventData>], Result>;
-  snapshotFantasyTeams: ActorMethod<[], undefined>;
-  updateDisplayName: ActorMethod<[string], Result>;
-  updateFavouriteTeam: ActorMethod<[number], Result>;
-  updateFixture: ActorMethod<[UpdateFixtureDTO], undefined>;
-  updateHashForCategory: ActorMethod<[string], undefined>;
-  updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result>;
-  updateSystemState: ActorMethod<[UpdateSystemStateDTO], Result>;
-  updateTeamValueInfo: ActorMethod<[], undefined>;
-  validateAddInitialFixtures: ActorMethod<[SeasonId, Array<Fixture>], Result>;
-  validateCreatePlayer: ActorMethod<
-    [TeamId, number, string, string, number, bigint, bigint, CountryId],
-    Result
-  >;
-  validateLoanPlayer: ActorMethod<[PlayerId, TeamId, bigint], Result>;
-  validatePromoteFormerTeam: ActorMethod<[TeamId], Result>;
-  validatePromoteNewTeam: ActorMethod<
-    [string, string, string, string, string, string],
-    Result
-  >;
-  validateRecallPlayer: ActorMethod<[PlayerId], Result>;
-  validateRescheduleFixtures: ActorMethod<
-    [FixtureId, GameweekNumber, GameweekNumber, bigint],
-    Result
-  >;
-  validateRetirePlayer: ActorMethod<[PlayerId, bigint], Result>;
-  validateRevaluePlayerDown: ActorMethod<[PlayerId], Result>;
-  validateRevaluePlayerUp: ActorMethod<[PlayerId], Result>;
-  validateSetPlayerInjury: ActorMethod<[PlayerId, string, bigint], Result>;
-  validateSubmitFixtureData: ActorMethod<
-    [FixtureId, Array<PlayerEventData>],
-    Result
-  >;
-  validateTransferPlayer: ActorMethod<[PlayerId, TeamId], Result>;
-  validateUnretirePlayer: ActorMethod<[PlayerId], Result>;
-  validateUpdatePlayer: ActorMethod<
-    [PlayerId, number, string, string, number, bigint, CountryId],
-    Result
-  >;
-  validateUpdateTeam: ActorMethod<
-    [TeamId, string, string, string, string, string, string],
-    Result
-  >;
+  init: ActorMethod<[], undefined>;
+  isUsernameValid: ActorMethod<[string], boolean>;
+  requestCanisterTopup: ActorMethod<[], undefined>;
+  saveFantasyTeam: ActorMethod<[UpdateFantasyTeamDTO], Result_1>;
+  updateFavouriteClub: ActorMethod<[ClubId], Result_1>;
+  updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result_1>;
+  updateUsername: ActorMethod<[string], Result_1>;
+  validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
+  validateCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
+  validateLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
+  validatePromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], Result>;
+  validatePromoteNewClub: ActorMethod<[PromoteNewClubDTO], Result>;
+  validateRecallPlayer: ActorMethod<[RecallPlayerDTO], Result>;
+  validateRescheduleFixture: ActorMethod<[RescheduleFixtureDTO], Result>;
+  validateRetirePlayer: ActorMethod<[RetirePlayerDTO], Result>;
+  validateRevaluePlayerDown: ActorMethod<[RevaluePlayerDownDTO], Result>;
+  validateRevaluePlayerUp: ActorMethod<[RevaluePlayerUpDTO], Result>;
+  validateSetPlayerInjury: ActorMethod<[SetPlayerInjuryDTO], Result>;
+  validateSubmitFixtureData: ActorMethod<[SubmitFixtureDataDTO], Result>;
+  validateTransferPlayer: ActorMethod<[TransferPlayerDTO], Result>;
+  validateUnretirePlayer: ActorMethod<[UnretirePlayerDTO], Result>;
+  validateUpdateClub: ActorMethod<[UpdateClubDTO], Result>;
+  validateUpdatePlayer: ActorMethod<[UpdatePlayerDTO], Result>;
 }

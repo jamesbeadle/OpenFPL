@@ -29,19 +29,21 @@ module {
 
     while (int > 0) {
       let rem = int % base;
-      text := (switch (rem) {
-        case 0 { "0" };
-        case 1 { "1" };
-        case 2 { "2" };
-        case 3 { "3" };
-        case 4 { "4" };
-        case 5 { "5" };
-        case 6 { "6" };
-        case 7 { "7" };
-        case 8 { "8" };
-        case 9 { "9" };
-        case _ { Prelude.unreachable() };
-      }) # text;
+      text := (
+        switch (rem) {
+          case 0 { "0" };
+          case 1 { "1" };
+          case 2 { "2" };
+          case 3 { "3" };
+          case 4 { "4" };
+          case 5 { "5" };
+          case 6 { "6" };
+          case 7 { "7" };
+          case 8 { "8" };
+          case 9 { "9" };
+          case _ { Prelude.unreachable() };
+        },
+      ) # text;
       int := int / base;
     };
 
@@ -62,12 +64,12 @@ module {
   public func hash(i : Int) : Hash.Hash {
     // CAUTION: This removes the high bits!
     let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
-    Hash.hashNat8(
-      [j & (255 << 0),
-       j & (255 << 8),
-       j & (255 << 16),
-       j & (255 << 24)
-      ]);
+    Hash.hashNat8([
+      j & (255 << 0),
+      j & (255 << 8),
+      j & (255 << 16),
+      j & (255 << 24),
+    ]);
   };
 
   // TODO: (re)move me?
@@ -75,13 +77,13 @@ module {
   public func hashAcc(h1 : Hash.Hash, i : Int) : Hash.Hash {
     // CAUTION: This removes the high bits!
     let j = Prim.int32ToNat32(Prim.intToInt32Wrap(i));
-    Hash.hashNat8(
-      [h1,
-       j & (255 << 0),
-       j & (255 << 8),
-       j & (255 << 16),
-       j & (255 << 24)
-      ]);
+    Hash.hashNat8([
+      h1,
+      j & (255 << 0),
+      j & (255 << 8),
+      j & (255 << 16),
+      j & (255 << 24),
+    ]);
   };
 
   /// Returns `x == y`.
@@ -104,13 +106,11 @@ module {
 
   /// Returns the order of `x` and `y`.
   public func compare(x : Int, y : Int) : { #less; #equal; #greater } {
-    if (x < y) { #less }
-    else if (x == y) { #equal }
-    else { #greater }
+    if (x < y) { #less } else if (x == y) { #equal } else { #greater };
   };
 
   /// Returns the negation of `x`, `-x` .
-  public func neq(x : Int) : Int { -x; };
+  public func neq(x : Int) : Int { -x };
 
   /// Returns the sum of `x` and `y`, `x + y`.
   public func add(x : Int, y : Int) : Int { x + y };
@@ -132,5 +132,4 @@ module {
   /// Returns `x` to the power of `y`, `x ** y`.
   public func pow(x : Int, y : Int) : Int { x ** y };
 
-}
-
+};

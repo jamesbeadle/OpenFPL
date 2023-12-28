@@ -4,52 +4,52 @@ import List "mo:base/List";
 module DTOs {
 
   public type SystemStateDTO = {
-    calculationGameweek: T.GameweekNumber;
-    calculationMonth: T.CalendarMonth;
-    calculationSeason: T.SeasonId;
-    pickTeamGameweek: T.GameweekNumber;
+    calculationGameweek : T.GameweekNumber;
+    calculationMonth : T.CalendarMonth;
+    calculationSeason : T.SeasonId;
+    pickTeamGameweek : T.GameweekNumber;
   };
 
   public type RevaluePlayerUpDTO = {
-    playerId : T.PlayerId
+    playerId : T.PlayerId;
   };
 
   public type RevaluePlayerDownDTO = {
-    playerId : T.PlayerId
+    playerId : T.PlayerId;
   };
 
   public type SubmitFixtureDataDTO = {
-    seasonId: T.SeasonId;
-    gameweek: T.GameweekNumber;
+    seasonId : T.SeasonId;
+    gameweek : T.GameweekNumber;
     fixtureId : T.FixtureId;
     playerEventData : [T.PlayerEventData];
   };
-  
+
   public type AddInitialFixturesDTO = {
-    seasonId: T.SeasonId;
+    seasonId : T.SeasonId;
     seasonFixtures : [DTOs.FixtureDTO];
   };
-  
+
   public type RescheduleFixtureDTO = {
-    seasonId: T.SeasonId;
+    seasonId : T.SeasonId;
     fixtureId : T.FixtureId;
     updatedFixtureGameweek : T.GameweekNumber;
-    updatedFixtureDate : Int
+    updatedFixtureDate : Int;
   };
-  
+
   public type LoanPlayerDTO = {
     playerId : T.PlayerId;
     loanClubId : T.ClubId;
     loanEndDate : Int;
   };
-  
+
   public type TransferPlayerDTO = {
     playerId : T.PlayerId;
     newClubId : T.ClubId;
   };
-  
+
   public type RecallPlayerDTO = {
-    playerId : T.PlayerId
+    playerId : T.PlayerId;
   };
 
   public type CreatePlayerDTO = {
@@ -100,7 +100,7 @@ module DTOs {
   };
 
   public type PromoteFormerClubDTO = {
-    clubId : T.ClubId
+    clubId : T.ClubId;
   };
 
   public type PromoteNewClubDTO = {
@@ -112,7 +112,6 @@ module DTOs {
     abbreviatedName : Text;
     shirtType : T.ShirtType;
   };
-
 
   public type ProfileDTO = {
     principalId : Text;
@@ -271,7 +270,7 @@ module DTOs {
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
     entries : [T.LeaderboardEntry];
-    totalEntries: Nat;
+    totalEntries : Nat;
   };
 
   public type MonthlyLeaderboardDTO = {
@@ -314,8 +313,8 @@ module DTOs {
     prospectsGameweek : T.GameweekNumber;
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
-    transferWindowGameweek: T.GameweekNumber;
-    username: Text;
+    transferWindowGameweek : T.GameweekNumber;
+    username : Text;
   };
 
   public type ManagerGameweekDTO = {
@@ -347,7 +346,7 @@ module DTOs {
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
     points : Int16;
-    transferWindowGameweek: T.GameweekNumber;
+    transferWindowGameweek : T.GameweekNumber;
   };
 
 };

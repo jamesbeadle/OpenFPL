@@ -17,8 +17,8 @@ import Principal "mo:base/Principal";
 import Management "./modules/Management";
 
 module {
-  
-  public let getHour = func()  : Nat { return 1_000_000_000 * 60 * 60 };
+
+  public let getHour = func() : Nat { return 1_000_000_000 * 60 * 60 };
 
   public let eqNat8 = func(a : Nat8, b : Nat8) : Bool {
     a == b;
@@ -180,7 +180,7 @@ module {
     return dayCounter;
   };
 
-  public func nextUnixTimeForDayOfYear(dayOfYear: Int) : Int {
+  public func nextUnixTimeForDayOfYear(dayOfYear : Int) : Int {
     let currentUnixTime : Int = Time.now();
     let secondsInADay = 86400;
     let seconds = currentUnixTime / 1000000000;
@@ -211,35 +211,33 @@ module {
     var daysTillNextInstance : Int = 0;
 
     if (currentDayOfYear == dayOfYear) {
-        if (isCurrentYearLeap) {
-          daysTillNextInstance := 366;
-        } else {
-          daysTillNextInstance := 365;
-        }
+      if (isCurrentYearLeap) {
+        daysTillNextInstance := 366;
+      } else {
+        daysTillNextInstance := 365;
+      };
     } else if (currentDayOfYear > dayOfYear) {
-        let nextYear : Int = years + 1;
-        var isNextYearLeap = false;
-        if (nextYear % 4 == 0) {
-          if (nextYear % 100 != 0) {
-            isNextYearLeap := true;
-          } else if (nextYear % 400 == 0) {
-            isNextYearLeap := true;
-          };
+      let nextYear : Int = years + 1;
+      var isNextYearLeap = false;
+      if (nextYear % 4 == 0) {
+        if (nextYear % 100 != 0) {
+          isNextYearLeap := true;
+        } else if (nextYear % 400 == 0) {
+          isNextYearLeap := true;
         };
-        if (isNextYearLeap) {
-          daysTillNextInstance := 366 - currentDayOfYear + dayOfYear;
-        } else {
-          daysTillNextInstance := 365 - currentDayOfYear + dayOfYear;
-        };
+      };
+      if (isNextYearLeap) {
+        daysTillNextInstance := 366 - currentDayOfYear + dayOfYear;
+      } else {
+        daysTillNextInstance := 365 - currentDayOfYear + dayOfYear;
+      };
     } else {
-        daysTillNextInstance := dayOfYear - currentDayOfYear;
+      daysTillNextInstance := dayOfYear - currentDayOfYear;
     };
 
     let nextInstanceUnixTime : Int = currentUnixTime + daysTillNextInstance * 1_000_000_000 * secondsInADay;
     return nextInstanceUnixTime;
   };
-
-
 
   public func validateHexColor(hex : Text) : Bool {
 
@@ -262,14 +260,15 @@ module {
     return true;
   };
 
-  
   public func calculateAggregatePlayerEvents(events : [T.PlayerEventData], playerPosition : T.PlayerPosition) : Int16 {
     var totalScore : Int16 = 0;
 
     if (playerPosition == #Goalkeeper or playerPosition == #Defender) {
       let goalsConcededCount = Array.filter<T.PlayerEventData>(
         events,
-        func(event : T.PlayerEventData) : Bool { event.eventType == #GoalConceded },
+        func(event : T.PlayerEventData) : Bool {
+          event.eventType == #GoalConceded;
+        },
       ).size();
 
       if (goalsConcededCount >= 2) {
@@ -281,7 +280,9 @@ module {
     if (playerPosition == #Goalkeeper) {
       let savesCount = Array.filter<T.PlayerEventData>(
         events,
-        func(event : T.PlayerEventData) : Bool { event.eventType == #KeeperSave },
+        func(event : T.PlayerEventData) : Bool {
+          event.eventType == #KeeperSave;
+        },
       ).size();
 
       totalScore += (Int16.fromNat16(Nat16.fromNat(savesCount)) / 3) * 5;
@@ -325,28 +326,28 @@ module {
     };
   };
 
-  public func nat64Percentage(amount: Nat64, percentage: Float) : Nat64 {
+  public func nat64Percentage(amount : Nat64, percentage : Float) : Nat64 {
     return Int64.toNat64(Float.toInt64(Float.fromInt64(Int64.fromNat64(amount)) * percentage));
   };
-    
-  public func updateCanister_(a : actor {}, backendCanisterController: ?Principal, IC: Management.Management) : async () {
-      let cid = { canister_id = Principal.fromActor(a) };
-      switch(backendCanisterController){
-        case (null){};
-        case (?controller){
-          await (
-              IC.update_settings({
-                  canister_id = cid.canister_id;
-                  settings = {
-                      controllers = ?[controller];
-                      compute_allocation = null;
-                      memory_allocation = null;
-                      freezing_threshold = ?31_540_000;
-                  };
-              })
-          );
-        }
+
+  public func updateCanister_(a : actor {}, backendCanisterController : ?Principal, IC : Management.Management) : async () {
+    let cid = { canister_id = Principal.fromActor(a) };
+    switch (backendCanisterController) {
+      case (null) {};
+      case (?controller) {
+        await (
+          IC.update_settings({
+            canister_id = cid.canister_id;
+            settings = {
+              controllers = ?[controller];
+              compute_allocation = null;
+              memory_allocation = null;
+              freezing_threshold = ?31_540_000;
+            };
+          }),
+        );
       };
+    };
   };
 
   public func getLatestFixtureTime(fixtures : [T.Fixture]) : Int {

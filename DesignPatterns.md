@@ -18,7 +18,7 @@ This document details the design patterns utilised in the development of the Ope
 - **Purpose**: To define and implement a variety of algorithms for different season-specific rules and validation strategies.
 - **Reasoning**: Provides flexibility in managing varying season-specific rules and team validation criteria, enhancing the adaptability of the application.
 
-## Real-Time Season Updates: Observer Pattern 
+## Real-Time Season Updates: Observer Pattern
 
 - **Purpose**: Specifically designed to manage and propagate real-time updates throughout the application in response to season-related events..
 - **Reasoning**: This pattern is employed to notify and update various components such as leaderboards and fantasy team interfaces when a season-related event occurs.
@@ -27,7 +27,6 @@ This document details the design patterns utilised in the development of the Ope
 
 - **Purpose**: To manage and disseminate updates across the application in response to external governance decisions.
 - **Reasoning**: This integration is crucial for ensuring that the application reflects governance-driven changes accurately and promptly across all relevant components, such as player statistics, club and fantasy team, thereby maintaining data consistency and a seamless user experience.
-
 
 ## Factory Method Pattern within Season Management for Snapshot Creation
 
@@ -39,14 +38,6 @@ This document details the design patterns utilised in the development of the Ope
 - **Purpose**: To act as the central coordinator and the primary interface for the application, especially for managing timers and events, triggering actions across components like the Season Manager.
 - **Reasoning**: Enables the Singleton to effectively manage and coordinate the apps scheduled events and interactions.
 
-
 ## Summary
 
-
 OpenFPL fantasy football application has carefully chosen design patterns to enhance the scalability and maintainability of the system.
-
-
-
-
-
-

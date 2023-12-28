@@ -25,28 +25,29 @@ module {
     private var nextFixtureId : T.FixtureId = 1;
 
     public func setStableData(
-      stable_next_season_id: T.SeasonId,
-      stable_next_fixture_id: T.FixtureId,
-      stable_seasons: [T.Season]) {
+      stable_next_season_id : T.SeasonId,
+      stable_next_fixture_id : T.FixtureId,
+      stable_seasons : [T.Season],
+    ) {
 
       nextSeasonId := stable_next_season_id;
-      nextFixtureId := stable_next_fixture_id; 
+      nextFixtureId := stable_next_fixture_id;
       seasons := List.fromArray(stable_seasons);
     };
 
-    public func getFixtures(seasonId: T.SeasonId) : [DTOs.FixtureDTO]{
+    public func getFixtures(seasonId : T.SeasonId) : [DTOs.FixtureDTO] {
       let season = List.find(
         seasons,
         func(season : T.Season) : Bool {
           return season.id == seasonId;
         },
       );
-      switch(season){
-        case (null) {return []};
-        case (?foundSeason){
-          
+      switch (season) {
+        case (null) { return [] };
+        case (?foundSeason) {
+
           let fixtureDTOs = List.map<T.Fixture, DTOs.FixtureDTO>(
-            foundSeason.fixtures, 
+            foundSeason.fixtures,
             func(fixture : T.Fixture) : DTOs.FixtureDTO {
               return {
                 awayClubId = fixture.awayClubId;
@@ -65,19 +66,19 @@ module {
           );
           return List.toArray(fixtureDTOs);
         };
-      }
+      };
     };
 
-    public func getFixturesForGameweek(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : [DTOs.FixtureDTO]{
+    public func getFixturesForGameweek(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [DTOs.FixtureDTO] {
       let season = List.find(
         seasons,
         func(season : T.Season) : Bool {
           return season.id == seasonId;
         },
       );
-      switch(season){
-        case (null) {return []};
-        case (?foundSeason){
+      switch (season) {
+        case (null) { return [] };
+        case (?foundSeason) {
           let fixtures = List.filter<T.Fixture>(
             foundSeason.fixtures,
             func(fixture : T.Fixture) : Bool {
@@ -86,7 +87,7 @@ module {
           );
 
           let fixtureDTOs = List.map<T.Fixture, DTOs.FixtureDTO>(
-            fixtures, 
+            fixtures,
             func(fixture : T.Fixture) : DTOs.FixtureDTO {
               return {
                 awayClubId = fixture.awayClubId;
@@ -105,21 +106,21 @@ module {
           );
           return List.toArray(fixtureDTOs);
         };
-      }
+      };
     };
 
-    public func getGameweekKickOffTimes(seasonId: T.SeasonId, gamweek: T.GameweekNumber) : [Int] {
+    public func getGameweekKickOffTimes(seasonId : T.SeasonId, gamweek : T.GameweekNumber) : [Int] {
 
       let fixtures = getFixturesForGameweek(seasonId, gamweek);
 
       let kickOffTimes = Buffer.fromArray<Int>([]);
 
-      for(fixture in Iter.fromArray<DTOs.FixtureDTO>(fixtures)){
+      for (fixture in Iter.fromArray<DTOs.FixtureDTO>(fixtures)) {
         kickOffTimes.add(fixture.kickOff);
       };
 
       let uniqueKickOffTimes = Buffer.fromArray<Int>([]);
-      
+
       for (kickOffTime in Iter.fromArray(Buffer.toArray(kickOffTimes))) {
         if (not Buffer.contains<Int>(uniqueKickOffTimes, kickOffTime, func(a : Int, b : Int) : Bool { a == b })) {
           uniqueKickOffTimes.add(kickOffTime);
@@ -129,8 +130,8 @@ module {
       return Buffer.toArray(uniqueKickOffTimes);
     };
 
-    public func setFixturesToActive(seasonId: T.SeasonId, gamweek: T.GameweekNumber){
-      
+    public func setFixturesToActive(seasonId : T.SeasonId, gamweek : T.GameweekNumber) {
+
       let currentSeason = List.find<T.Season>(
         seasons,
         func(season : T.Season) : Bool {
@@ -138,9 +139,9 @@ module {
         },
       );
 
-      switch(currentSeason){
-        case (null) { };
-        case (?foundSeason){
+      switch (currentSeason) {
+        case (null) {};
+        case (?foundSeason) {
 
           let fixturesToActivate = List.filter<T.Fixture>(
             foundSeason.fixtures,
@@ -148,7 +149,7 @@ module {
               return fixture.status == #Unplayed and fixture.kickOff < Time.now();
             },
           );
-          
+
           seasons := List.map<T.Season, T.Season>(
             seasons,
             func(season : T.Season) : T.Season {
@@ -170,9 +171,7 @@ module {
                         events = fixture.events;
                         highestScoringPlayerId = fixture.highestScoringPlayerId;
                       };
-                    }
-                    else
-                    { return fixture; };
+                    } else { return fixture };
                   },
                 );
 
@@ -192,18 +191,18 @@ module {
       };
 
     };
-    
-    public func setFixturesToCompleted(seasonId: T.SeasonId, gamweek: T.GameweekNumber){
-      let currentSeason = List.find<T.Season>(
-          seasons,
-          func(season : T.Season) : Bool {
-            return season.id == seasonId;
-          },
-        );
 
-      switch(currentSeason){
-        case (null) { };
-        case (?foundSeason){
+    public func setFixturesToCompleted(seasonId : T.SeasonId, gamweek : T.GameweekNumber) {
+      let currentSeason = List.find<T.Season>(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
+
+      switch (currentSeason) {
+        case (null) {};
+        case (?foundSeason) {
 
           let fixturesToComplete = List.filter<T.Fixture>(
             foundSeason.fixtures,
@@ -211,7 +210,7 @@ module {
               return fixture.status == #Active and (fixture.kickOff + (Utilities.getHour() * 2)) < Time.now();
             },
           );
-          
+
           seasons := List.map<T.Season, T.Season>(
             seasons,
             func(season : T.Season) : T.Season {
@@ -233,9 +232,7 @@ module {
                         events = fixture.events;
                         highestScoringPlayerId = fixture.highestScoringPlayerId;
                       };
-                    }
-                    else
-                    { return fixture; };
+                    } else { return fixture };
                   },
                 );
 
@@ -256,7 +253,7 @@ module {
 
     };
 
-    public func validateSubmitFixtureData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO) : async Result.Result<Text,Text> {
+    public func validateSubmitFixtureData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
 
       let validPlayerEvents = validatePlayerEvents(submitFixtureDataDTO.playerEventData);
       if (not validPlayerEvents) {
@@ -270,33 +267,33 @@ module {
         },
       );
 
-      switch(currentSeason){
-        case (null){
-          return #err("Invalid: Cannot find season.")
+      switch (currentSeason) {
+        case (null) {
+          return #err("Invalid: Cannot find season.");
         };
-        case (?foundSeason){
+        case (?foundSeason) {
           let fixture = List.find<T.Fixture>(
-          foundSeason.fixtures,
+            foundSeason.fixtures,
             func(f : T.Fixture) : Bool {
               return f.id == submitFixtureDataDTO.fixtureId;
-            }
+            },
           );
-          switch(fixture){
-            case (null){
-              return #err("Invalid: Cannot find fixture.")
+          switch (fixture) {
+            case (null) {
+              return #err("Invalid: Cannot find fixture.");
             };
-            case (?foundFixture){
+            case (?foundFixture) {
               if (foundFixture.status != #Complete) {
                 return #err("Invalid: Fixture status is not set to complete.");
               };
-            }
-          }
-        }
+            };
+          };
+        };
       };
 
       return #ok("Valid");
     };
-    
+
     private func validatePlayerEvents(playerEvents : [T.PlayerEventData]) : Bool {
 
       let eventsBelow0 = Array.filter<T.PlayerEventData>(
@@ -403,7 +400,7 @@ module {
       return true;
     };
 
-    public func populatePlayerEventData(submitFixtureDataDTO: DTOs.SubmitFixtureDataDTO, allPlayers: [DTOs.PlayerDTO]) : async ?[T.PlayerEventData] {
+    public func populatePlayerEventData(submitFixtureDataDTO : DTOs.SubmitFixtureDataDTO, allPlayers : [DTOs.PlayerDTO]) : async ?[T.PlayerEventData] {
 
       let allPlayerEventsBuffer = Buffer.fromArray<T.PlayerEventData>(submitFixtureDataDTO.playerEventData);
 
@@ -417,18 +414,18 @@ module {
         },
       );
 
-      switch(currentSeason){
-        case (null){ return null; };
-        case (?foundSeason){
+      switch (currentSeason) {
+        case (null) { return null };
+        case (?foundSeason) {
           let fixture = List.find<T.Fixture>(
-          foundSeason.fixtures,
+            foundSeason.fixtures,
             func(f : T.Fixture) : Bool {
               return f.id == submitFixtureDataDTO.fixtureId;
-            }
+            },
           );
-          switch(fixture){
-            case (null){ return null; };
-            case (?foundFixture){
+          switch (fixture) {
+            case (null) { return null };
+            case (?foundFixture) {
 
               for (event in Iter.fromArray(submitFixtureDataDTO.playerEventData)) {
                 if (event.clubId == foundFixture.homeClubId) {
@@ -444,7 +441,7 @@ module {
               for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(homeTeamPlayerIdsBuffer))) {
                 let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
                 switch (player) {
-                  case (null) {  };
+                  case (null) {};
                   case (?actualPlayer) {
                     if (actualPlayer.position == #Goalkeeper or actualPlayer.position == #Defender) {
                       if (Array.find<Nat16>(Buffer.toArray(homeTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
@@ -458,7 +455,7 @@ module {
               for (playerId in Iter.fromArray<Nat16>(Buffer.toArray(awayTeamPlayerIdsBuffer))) {
                 let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p : DTOs.PlayerDTO) : Bool { return p.id == playerId });
                 switch (player) {
-                  case (null) {  };
+                  case (null) {};
                   case (?actualPlayer) {
                     if (actualPlayer.position == #Goalkeeper or actualPlayer.position == #Defender) {
                       if (Array.find<Nat16>(Buffer.toArray(awayTeamDefensivePlayerIdsBuffer), func(x : Nat16) : Bool { return x == playerId }) == null) {
@@ -587,14 +584,14 @@ module {
               let playerEvents = Buffer.toArray<T.PlayerEventData>(allPlayerEventsBuffer);
               let eventsWithHighestScoringPlayer = populateHighestScoringPlayer(playerEvents, foundFixture, allPlayers);
               return ?eventsWithHighestScoringPlayer;
-            }
-          }
-        }
+            };
+          };
+        };
       };
     };
 
-    private func populateHighestScoringPlayer(playerEvents: [T.PlayerEventData], fixture: T.Fixture, players: [DTOs.PlayerDTO]) : [T.PlayerEventData]{
-     
+    private func populateHighestScoringPlayer(playerEvents : [T.PlayerEventData], fixture : T.Fixture, players : [DTOs.PlayerDTO]) : [T.PlayerEventData] {
+
       var homeGoalsCount : Nat8 = 0;
       var awayGoalsCount : Nat8 = 0;
 
@@ -641,9 +638,9 @@ module {
           },
         );
 
-        switch(currentPlayer){
-          case (null){};
-          case (?foundPlayer){
+        switch (currentPlayer) {
+          case (null) {};
+          case (?foundPlayer) {
             let totalScore = Array.foldLeft<T.PlayerEventData, Int16>(
               events,
               0,
@@ -655,9 +652,9 @@ module {
             let aggregateScore = Utilities.calculateAggregatePlayerEvents(events, foundPlayer.position);
             playerScoresMap.put(playerId, totalScore + aggregateScore);
           };
-        }
+        };
       };
-    
+
       var highestScore : Int16 = 0;
       var highestScoringPlayerId : T.PlayerId = 0;
       var isUniqueHighScore : Bool = true;
@@ -689,9 +686,9 @@ module {
 
       if (isUniqueHighScore) {
         let highestScoringPlayer = Array.find<DTOs.PlayerDTO>(players, func(p : DTOs.PlayerDTO) : Bool { return p.id == highestScoringPlayerId });
-        switch(highestScoringPlayer){
-          case (null){};
-          case (?foundPlayer){
+        switch (highestScoringPlayer) {
+          case (null) {};
+          case (?foundPlayer) {
             let newEvent : T.PlayerEventData = {
               fixtureId = fixture.id;
               playerId = highestScoringPlayerId;
@@ -701,9 +698,9 @@ module {
               clubId = foundPlayer.clubId;
             };
             let existingEvents = playerEventsMap.get(highestScoringPlayerId);
-            switch(existingEvents){
-              case (null){};
-              case (?foundEvents){
+            switch (existingEvents) {
+              case (null) {};
+              case (?foundEvents) {
                 let existingEventsBuffer = Buffer.fromArray<T.PlayerEventData>(foundEvents);
                 existingEventsBuffer.add(newEvent);
                 playerEventsMap.put(highestScoringPlayerId, Buffer.toArray(existingEventsBuffer));
@@ -714,17 +711,15 @@ module {
       };
 
       let allEventsBuffer = Buffer.fromArray<T.PlayerEventData>([]);
-      for((playerId, playerEventArray) in playerEventsMap.entries()){
+      for ((playerId, playerEventArray) in playerEventsMap.entries()) {
         allEventsBuffer.append(Buffer.fromArray(playerEventArray));
       };
 
       return Buffer.toArray(allEventsBuffer);
     };
 
-
-
-    public func addEventsToFixture(playerEventData: [T.PlayerEventData], seasonId: T.SeasonId, fixtureId: T.FixtureId) : async (){
-       seasons := List.map<T.Season, T.Season>(
+    public func addEventsToFixture(playerEventData : [T.PlayerEventData], seasonId : T.SeasonId, fixtureId : T.FixtureId) : async () {
+      seasons := List.map<T.Season, T.Season>(
         seasons,
         func(season : T.Season) : T.Season {
           if (season.id == seasonId) {
@@ -735,7 +730,7 @@ module {
               fixtures = List.map<T.Fixture, T.Fixture>(
                 season.fixtures,
                 func(fixture : T.Fixture) : T.Fixture {
-                  if(fixture.id == fixtureId){
+                  if (fixture.id == fixtureId) {
                     return {
                       id = fixture.id;
                       seasonId = fixture.seasonId;
@@ -749,28 +744,28 @@ module {
                       events = List.fromArray(playerEventData);
                       highestScoringPlayerId = fixture.highestScoringPlayerId;
                     };
-                  } else { return fixture; };
-              },
-            );
+                  } else { return fixture };
+                },
+              );
               postponedFixtures = season.postponedFixtures;
             };
           } else {
             return season;
           };
         },
-      ); 
+      );
     };
 
-    public func checkGameweekComplete(systemState: T.SystemState) : Bool {
+    public func checkGameweekComplete(systemState : T.SystemState) : Bool {
       let season = List.find(
         seasons,
         func(season : T.Season) : Bool {
           return season.id == systemState.calculationSeason;
         },
       );
-      switch(season){
-        case (null) {return false};
-        case (?foundSeason){
+      switch (season) {
+        case (null) { return false };
+        case (?foundSeason) {
           let fixtures = List.filter<T.Fixture>(
             foundSeason.fixtures,
             func(fixture : T.Fixture) : Bool {
@@ -792,7 +787,7 @@ module {
       return false;
     };
 
-    public func checkMonthComplete(systemState: T.SystemState) : Bool {
+    public func checkMonthComplete(systemState : T.SystemState) : Bool {
 
       let currentSeason = List.find(
         seasons,
@@ -801,31 +796,34 @@ module {
         },
       );
 
-      switch(currentSeason){
+      switch (currentSeason) {
         case (null) {
           return false;
         };
-        case (?foundSeason){
-          
-          let gameweekFixtures = List.toArray(List.filter<T.Fixture>(
-            foundSeason.fixtures,
-            func(fixture: T.Fixture) : Bool {
-              return fixture.gameweek == systemState.calculationGameweek;
-            },
-          ));
+        case (?foundSeason) {
+
+          let gameweekFixtures = List.toArray(
+            List.filter<T.Fixture>(
+              foundSeason.fixtures,
+              func(fixture : T.Fixture) : Bool {
+                return fixture.gameweek == systemState.calculationGameweek;
+              },
+            ),
+          );
 
           let completedGameweekFixtures = Array.filter<T.Fixture>(
             gameweekFixtures,
-            func(fixture: T.Fixture) : Bool {
+            func(fixture : T.Fixture) : Bool {
               return fixture.status == #Finalised;
             },
           );
 
-          if(Array.size(gameweekFixtures) != Array.size(completedGameweekFixtures)){
+          if (Array.size(gameweekFixtures) != Array.size(completedGameweekFixtures)) {
             return false;
           };
 
-          let sortedFixtures = Array.sort(gameweekFixtures,
+          let sortedFixtures = Array.sort(
+            gameweekFixtures,
             func(a : T.Fixture, b : T.Fixture) : Order.Order {
               if (a.kickOff < b.kickOff) { return #greater };
               if (a.kickOff == b.kickOff) { return #equal };
@@ -834,19 +832,22 @@ module {
           );
 
           let latestCompletedFixture = sortedFixtures[0];
-          
-          if(systemState.calculationGameweek >= 38){
+
+          if (systemState.calculationGameweek >= 38) {
             return true;
           };
 
-          let nextGameweekFixtures = List.toArray(List.filter<T.Fixture>(
-            foundSeason.fixtures,
-            func(fixture: T.Fixture) : Bool {
-              return fixture.gameweek == systemState.calculationGameweek + 1;
-            },
-          ));
+          let nextGameweekFixtures = List.toArray(
+            List.filter<T.Fixture>(
+              foundSeason.fixtures,
+              func(fixture : T.Fixture) : Bool {
+                return fixture.gameweek == systemState.calculationGameweek + 1;
+              },
+            ),
+          );
 
-          let sortedNextFixtures = Array.sort(nextGameweekFixtures,
+          let sortedNextFixtures = Array.sort(
+            nextGameweekFixtures,
             func(a : T.Fixture, b : T.Fixture) : Order.Order {
               if (a.kickOff < b.kickOff) { return #greater };
               if (a.kickOff == b.kickOff) { return #equal };
@@ -858,62 +859,62 @@ module {
           let fixtureMonth = Utilities.unixTimeToMonth(latestNextFixture.kickOff);
 
           return fixtureMonth > systemState.calculationMonth;
-        }
+        };
       };
-      
+
       return false;
     };
 
-    public func checkSeasonComplete(systemState: T.SystemState) : Bool {
-      
-      if(systemState.calculationGameweek != 38){
+    public func checkSeasonComplete(systemState : T.SystemState) : Bool {
+
+      if (systemState.calculationGameweek != 38) {
         return false;
       };
-      
+
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
           return season.id == systemState.calculationSeason;
         },
       );
-      
-      switch(currentSeason){
+
+      switch (currentSeason) {
         case (null) {
           return false;
         };
-        case (?foundSeason){
+        case (?foundSeason) {
 
-          if(List.size(foundSeason.fixtures) == 0){
+          if (List.size(foundSeason.fixtures) == 0) {
             return false;
           };
-          
+
           let completedFixtures = List.filter<T.Fixture>(
             foundSeason.fixtures,
-            func(fixture: T.Fixture) : Bool {
+            func(fixture : T.Fixture) : Bool {
               return fixture.status == #Finalised;
             },
           );
 
           return List.size(completedFixtures) == List.size(foundSeason.fixtures);
-        }
+        };
       };
-      
+
       return false;
     };
-   
-    public func validateAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO, clubs: [T.Club]) : async Result.Result<Text,Text> {
-        
+
+    public func validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO, clubs : [T.Club]) : async Result.Result<Text, Text> {
+
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
           return season.id == addInitialFixturesDTO.seasonId;
         },
       );
-      switch(currentSeason){
+      switch (currentSeason) {
         case (null) {
           return #err("Invalid: Season does not exist.");
         };
-        case (?foundSeason){
+        case (?foundSeason) {
 
           //ensure all fixtures have the current seasons id
           let filteredFixtures = List.filter<DTOs.FixtureDTO>(
@@ -922,8 +923,8 @@ module {
               return fixture.seasonId != foundSeason.id;
             },
           );
-          
-          if(List.size(filteredFixtures) > 0){
+
+          if (List.size(filteredFixtures) > 0) {
             return #err("Invalid: Fixtures not for current season.");
           };
 
@@ -1007,15 +1008,15 @@ module {
               return #err("Invlid: Each team must have 19 home and 19 away games.");
             };
           };
-          
+
         };
       };
-      
+
       return #ok("Valid");
     };
 
-    public func executeAddInitialFixtures(addInitialFixturesDTO: DTOs.AddInitialFixturesDTO) : async () { 
-      
+    public func executeAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async () {
+
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(season : T.Season) : T.Season {
@@ -1040,17 +1041,17 @@ module {
                     events = List.fromArray(fixture.events);
                     highestScoringPlayerId = fixture.highestScoringPlayerId;
                   };
-              },
-            );
+                },
+              );
               postponedFixtures = season.postponedFixtures;
             };
           } else {
             return season;
           };
         },
-      ); 
+      );
     };
-    
+
     private func subText(value : Text, indexStart : Nat, indexEnd : Nat) : Text {
       if (indexStart == 0 and indexEnd >= value.size()) {
         return value;
@@ -1072,7 +1073,7 @@ module {
       return result;
     };
 
-    public func validateRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO, systemState: T.SystemState) : async Result.Result<Text,Text> {
+    public func validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO, systemState : T.SystemState) : async Result.Result<Text, Text> {
 
       let currentSeason = List.find(
         seasons,
@@ -1080,11 +1081,11 @@ module {
           return season.id == rescheduleFixtureDTO.seasonId;
         },
       );
-      switch(currentSeason){
+      switch (currentSeason) {
         case (null) {
           return #err("Invalid: Season does not exist.");
         };
-        case (?foundSeason){
+        case (?foundSeason) {
           if (rescheduleFixtureDTO.updatedFixtureDate <= Time.now()) {
             return #err("Invalid: Fixture date in the past.");
           };
@@ -1100,14 +1101,14 @@ module {
             },
           );
 
-          switch(fixture){
-            case (null){
+          switch (fixture) {
+            case (null) {
               return #err("Invalid: Cannot find fixture.");
             };
-            case (?foundFixture){
+            case (?foundFixture) {
               if (foundFixture.status == #Finalised) {
                 return #err("Invalid: Cannot reschedule finalised fixture.");
-              };  
+              };
             };
           };
         };
@@ -1116,12 +1117,12 @@ module {
       return #ok("Valid");
     };
 
-    public func executeRescheduleFixture(rescheduleFixtureDTO: DTOs.RescheduleFixtureDTO) : async () {
+    public func executeRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async () {
       seasons := List.map<T.Season, T.Season>(
         seasons,
         func(currentSeason : T.Season) : T.Season {
           if (currentSeason.id == rescheduleFixtureDTO.seasonId) {
-            
+
             var postponedFixtures = currentSeason.postponedFixtures;
             let postponedFixture = List.find<T.Fixture>(
               currentSeason.fixtures,
@@ -1129,21 +1130,21 @@ module {
                 return fixture.id == rescheduleFixtureDTO.fixtureId;
               },
             );
-            
+
             switch (postponedFixture) {
               case (null) {};
               case (?foundPostponedFixture) {
                 postponedFixtures := List.push(foundPostponedFixture, currentSeason.postponedFixtures);
               };
             };
-          
+
             let updatedFixtures = List.filter<T.Fixture>(
               currentSeason.fixtures,
               func(fixture : T.Fixture) : Bool {
                 return fixture.id != rescheduleFixtureDTO.fixtureId;
-              }    
+              },
             );
-          
+
             let updatedSeason : T.Season = {
               id = currentSeason.id;
               name = currentSeason.name;
@@ -1159,16 +1160,16 @@ module {
       );
     };
 
-    public func createNewSeason(systemState: T.SystemState) {
+    public func createNewSeason(systemState : T.SystemState) {
       let existingSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
           return season.year == systemState.calculationSeason + 1;
         },
       );
-      switch(existingSeason){
-        case (null) { };
-        case (?foundSeason){ };
+      switch (existingSeason) {
+        case (null) {};
+        case (?foundSeason) {};
       };
 
       let currentSeason = List.find(
@@ -1177,18 +1178,18 @@ module {
           return season.year == systemState.calculationSeason;
         },
       );
-      switch(existingSeason){
-        case (null) { };
-        case (?foundSeason){
+      switch (existingSeason) {
+        case (null) {};
+        case (?foundSeason) {
           let seasonName = Nat16.toText(foundSeason.year) # subText(Nat16.toText(foundSeason.year + 1), 2, 3);
-          let newSeason: T.Season = {
+          let newSeason : T.Season = {
             id = nextSeasonId;
             name = seasonName;
             year = foundSeason.year + 1;
             fixtures = List.fromArray([]);
             postponedFixtures = List.nil<T.Fixture>();
-          };      
-          seasons := List.append<T.Season>(seasons, List.make(newSeason)); 
+          };
+          seasons := List.append<T.Season>(seasons, List.make(newSeason));
           nextSeasonId := nextSeasonId + 1;
         };
       };
@@ -1198,7 +1199,7 @@ module {
       return List.toArray(seasons);
     };
 
-    public func setStableSeasons(stable_seasons: [T.Season]) {
+    public func setStableSeasons(stable_seasons : [T.Season]) {
       seasons := List.fromArray(stable_seasons);
     };
 
@@ -1206,7 +1207,7 @@ module {
       return nextSeasonId;
     };
 
-    public func setStableNextSeasonId(stable_next_season_id: T.SeasonId) {
+    public func setStableNextSeasonId(stable_next_season_id : T.SeasonId) {
       nextSeasonId := stable_next_season_id;
     };
 
@@ -1214,8 +1215,8 @@ module {
       return nextFixtureId;
     };
 
-    public func setStableNextFixtureId(stable_next_fixture_id: T.FixtureId) {
+    public func setStableNextFixtureId(stable_next_fixture_id : T.FixtureId) {
       nextFixtureId := stable_next_fixture_id;
-    };      
+    };
   };
 };

@@ -105,7 +105,7 @@ module Types {
     prospectsGameweek : GameweekNumber;
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
-    transferWindowGameweek: GameweekNumber;
+    transferWindowGameweek : GameweekNumber;
     history : List.List<FantasyTeamSeason>;
   };
 
@@ -144,7 +144,7 @@ module Types {
     braceBonusGameweek : GameweekNumber;
     hatTrickHeroGameweek : GameweekNumber;
     points : Int16;
-    transferWindowGameweek: GameweekNumber;
+    transferWindowGameweek : GameweekNumber;
   };
 
   public type Season = {
@@ -156,35 +156,35 @@ module Types {
   };
 
   public type WeeklyRewards = {
-    gameweek: GameweekNumber;
-    rewards: List.List<RewardEntry>;
+    gameweek : GameweekNumber;
+    rewards : List.List<RewardEntry>;
   };
 
   public type MonthlyRewards = {
-    month: CalendarMonth;
-    rewards: List.List<RewardEntry>;
+    month : CalendarMonth;
+    rewards : List.List<RewardEntry>;
   };
 
   public type SeasonRewards = {
-    season: SeasonId;
-    rewards: List.List<RewardEntry>;
+    season : SeasonId;
+    rewards : List.List<RewardEntry>;
   };
 
   public type RewardsList = {
-    rewards: List.List<RewardEntry>;
+    rewards : List.List<RewardEntry>;
   };
 
   public type RewardEntry = {
-    principalId: Text;
-    rewardType: RewardType;
-    position: Nat;
-    amount: Nat64;
+    principalId : Text;
+    rewardType : RewardType;
+    position : Nat;
+    amount : Nat64;
   };
 
   public type HighScoreRecord = {
-    recordType: RecordType;
-    points: Int16;
-    createDate: Int;
+    recordType : RecordType;
+    points : Int16;
+    createDate : Int;
   };
 
   public type Club = {
@@ -226,7 +226,7 @@ module Types {
     valueHistory : List.List<ValueHistory>;
     onLoan : Bool;
     parentClubId : Nat16;
-    loanEndDate: Int;
+    loanEndDate : Int;
     isInjured : Bool;
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;
@@ -274,7 +274,7 @@ module Types {
     toClub : ClubId;
     loanEndDate : Int;
   };
-  
+
   public type WeeklyLeaderboard = {
     seasonId : SeasonId;
     gameweek : GameweekNumber;
@@ -337,12 +337,12 @@ module Types {
   };
 
   public type SystemState = {
-    pickTeamSeason: SeasonId; 
-    pickTeamGameweek: GameweekNumber; 
-    calculationGameweek: GameweekNumber; 
-    calculationMonth: CalendarMonth;
-    calculationSeason: SeasonId; 
-    transferWindowActive: Bool;
+    pickTeamSeason : SeasonId;
+    pickTeamGameweek : GameweekNumber;
+    calculationGameweek : GameweekNumber;
+    calculationMonth : CalendarMonth;
+    calculationSeason : SeasonId;
+    transferWindowActive : Bool;
   };
 
   public type Country = {
@@ -352,15 +352,15 @@ module Types {
   };
 
   public type RewardPool = {
-    seasonId: SeasonId;
-    seasonLeaderboardPool: Nat64;
-    monthlyLeaderboardPool: Nat64;
-    weeklyLeaderboardPool: Nat64;
-    mostValuableTeamPool: Nat64;
-    highestScoringMatchPlayerPool: Nat64;
-    allTimeWeeklyHighScorePool: Nat64;
-    allTimeMonthlyHighScorePool: Nat64;
-    allTimeSeasonHighScorePool: Nat64;
+    seasonId : SeasonId;
+    seasonLeaderboardPool : Nat64;
+    monthlyLeaderboardPool : Nat64;
+    weeklyLeaderboardPool : Nat64;
+    mostValuableTeamPool : Nat64;
+    highestScoringMatchPlayerPool : Nat64;
+    allTimeWeeklyHighScorePool : Nat64;
+    allTimeMonthlyHighScorePool : Nat64;
+    allTimeSeasonHighScorePool : Nat64;
   }
 
 };

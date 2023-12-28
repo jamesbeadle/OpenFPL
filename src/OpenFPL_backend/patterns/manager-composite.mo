@@ -30,92 +30,93 @@ import Token "../token";
 module {
 
   public class ManagerComposite() {
-    let tokenCanister = Token.Token(); 
-    private var managers: HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
-    private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);   
-    private var activeProfilePictureCanisterId = ""; 
-    private var teamValueLeaderboards: HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard> = HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard>(100, Utilities.eqNat16, Utilities.hashNat16);
-     
+    let tokenCanister = Token.Token();
+    private var managers : HashMap.HashMap<T.PrincipalId, T.Manager> = HashMap.HashMap<T.PrincipalId, T.Manager>(100, Text.equal, Text.hash);
+    private var profilePictureCanisterIds : HashMap.HashMap<T.PrincipalId, Text> = HashMap.HashMap<T.PrincipalId, Text>(100, Text.equal, Text.hash);
+    private var activeProfilePictureCanisterId = "";
+    private var teamValueLeaderboards : HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard> = HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard>(100, Utilities.eqNat16, Utilities.hashNat16);
+
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
 
-    var backendCanisterController: ?Principal = null;
+    var backendCanisterController : ?Principal = null;
 
-    var seasonRewards: List.List<T.SeasonRewards> = List.nil();
-    var monthlyRewards: List.List<T.MonthlyRewards> = List.nil();
-    var weeklyRewards: List.List<T.WeeklyRewards> = List.nil();
-    var mostValuableTeamRewards: List.List<T.RewardsList> = List.nil();
-    var highScoringPlayerRewards: List.List<T.RewardsList> = List.nil();
-    var allTimeHighScoreRewards: List.List<T.RewardsList> = List.nil();
+    var seasonRewards : List.List<T.SeasonRewards> = List.nil();
+    var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
+    var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
+    var mostValuableTeamRewards : List.List<T.RewardsList> = List.nil();
+    var highScoringPlayerRewards : List.List<T.RewardsList> = List.nil();
+    var allTimeHighScoreRewards : List.List<T.RewardsList> = List.nil();
 
-    var weeklyAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
-    var monthlyAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
-    var seasonAllTimeHighScores: List.List<T.HighScoreRecord> = List.nil();
+    var weeklyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
+    var monthlyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
+    var seasonAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
 
-    var weeklyATHPrizePool: Nat64 = 0;
-    var monthlyATHPrizePool: Nat64 = 0;
-    var seasonATHPrizePool: Nat64 = 0;
-    
-    public func setBackendCanisterController(controller: Principal){
+    var weeklyATHPrizePool : Nat64 = 0;
+    var monthlyATHPrizePool : Nat64 = 0;
+    var seasonATHPrizePool : Nat64 = 0;
+
+    public func setBackendCanisterController(controller : Principal) {
       backendCanisterController := ?controller;
     };
-    
+
     public func setStoreCanisterIdFunction(
-      _storeCanisterId : (canisterId : Text) -> async ()) {
+      _storeCanisterId : (canisterId : Text) -> async (),
+    ) {
       storeCanisterId := ?_storeCanisterId;
     };
 
-    public func setStableData(stable_managers: [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids: [(T.PrincipalId, Text)]) { 
+    public func setStableData(stable_managers : [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids : [(T.PrincipalId, Text)]) {
       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
         stable_managers.vals(),
         stable_managers.size(),
         Text.equal,
-        Text.hash
+        Text.hash,
       );
       profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
         stable_profile_picture_canister_ids.vals(),
         stable_profile_picture_canister_ids.size(),
         Text.equal,
-        Text.hash
+        Text.hash,
       );
     };
-    
-    public func getProfile(principalId: Text) : async Result.Result<DTOs.ProfileDTO, T.Error>{
-        
-        let manager = managers.get(principalId);
 
-        switch(manager){
-            case (null) {
-            return #err(#NotFound);
-            };
-            case (?foundManager){
-            
-            var profilePicture = Blob.fromArray([]);
-            
-            if(Text.size(foundManager.profilePictureCanisterId) > 0){
-                let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-                getProfilePicture : (principalId: Text) -> async Blob;
-                };
-                profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
-            };
-            
-            let profileDTO: DTOs.ProfileDTO = {
-                principalId = foundManager.principalId;
-                username = foundManager.username;
-                profilePicture = profilePicture;
-                favouriteClubId = foundManager.favouriteClubId;
-                createDate = foundManager.createDate;
-            };
+    public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
 
-            return #ok(profileDTO);
+      let manager = managers.get(principalId);
+
+      switch (manager) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundManager) {
+
+          var profilePicture = Blob.fromArray([]);
+
+          if (Text.size(foundManager.profilePictureCanisterId) > 0) {
+            let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
+              getProfilePicture : (principalId : Text) -> async Blob;
             };
-        }
+            profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+          };
+
+          let profileDTO : DTOs.ProfileDTO = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            profilePicture = profilePicture;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+          };
+
+          return #ok(profileDTO);
+        };
+      };
     };
 
-    public func getManagers() : HashMap.HashMap<T.PrincipalId, T.Manager>{
+    public func getManagers() : HashMap.HashMap<T.PrincipalId, T.Manager> {
       return managers;
     };
 
-    public func getManager(principalId: Text, seasonId: T.SeasonId, weeklyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry: ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry: ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error>{
+    public func getManager(principalId : Text, seasonId : T.SeasonId, weeklyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO, seasonLeaderboardEntry : ?DTOs.LeaderboardEntryDTO) : async Result.Result<DTOs.ManagerDTO, T.Error> {
 
       var weeklyPosition : Int = 0;
       var monthlyPosition : Int = 0;
@@ -158,13 +159,12 @@ module {
 
       let manager = managers.get(principalId);
 
-      switch(manager){
+      switch (manager) {
         case (null) {
           return #err(#NotFound);
         };
-        case (?foundManager){
+        case (?foundManager) {
 
-          
           var gameweeks : [T.FantasyTeamSnapshot] = [];
 
           let season = List.find(
@@ -180,17 +180,16 @@ module {
               gameweeks := List.toArray(foundSeason.gameweeks);
             };
           };
-          
-        
+
           var profilePicture = Blob.fromArray([]);
-          if(Text.size(foundManager.profilePictureCanisterId) > 0){
-              let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-                getProfilePicture : (principalId: Text) -> async Blob;
-              };
-              profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+          if (Text.size(foundManager.profilePictureCanisterId) > 0) {
+            let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
+              getProfilePicture : (principalId : Text) -> async Blob;
+            };
+            profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
           };
-          
-          let managerDTO: DTOs.ManagerDTO = {
+
+          let managerDTO : DTOs.ManagerDTO = {
             principalId = foundManager.principalId;
             username = foundManager.username;
             profilePicture = profilePicture;
@@ -209,11 +208,11 @@ module {
           };
           return #ok(managerDTO);
         };
-      }
+      };
     };
-    
-    public func getManagerGameweek(principalId: Text, seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error>{
-      
+
+    public func getManagerGameweek(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
+
       let manager = managers.get(principalId);
       switch (manager) {
         case (null) { return #err(#NotFound) };
@@ -251,138 +250,138 @@ module {
     };
 
     public func getTotalManagers() : Nat {
-      let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func (manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
+      let managersWithTeams = Iter.filter<T.Manager>(managers.vals(), func(manager : T.Manager) : Bool { Array.size(manager.playerIds) == 11 });
       return Iter.size(managersWithTeams);
     };
-    
-    public func saveFantasyTeam(principalId: Text, updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
-      
+
+    public func saveFantasyTeam(principalId : Text, updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : async Result.Result<(), T.Error> {
+
       let manager = managers.get(principalId);
-      
-      if(not isUsernameValid(updatedFantasyTeam.username, principalId)){
+
+      if (not isUsernameValid(updatedFantasyTeam.username, principalId)) {
         return #err(#InvalidData);
       };
 
-      if(invalidBonuses(updatedFantasyTeam, manager, systemState, players)){
+      if (invalidBonuses(updatedFantasyTeam, manager, systemState, players)) {
         return #err(#InvalidData);
       };
-      
-      if(invalidTransfers(updatedFantasyTeam, manager, systemState, players)){
-        return #err(#InvalidTeamError);
-      };  
 
-      if(invalidTeamComposition(updatedFantasyTeam, players)){
+      if (invalidTransfers(updatedFantasyTeam, manager, systemState, players)) {
         return #err(#InvalidTeamError);
       };
-      
-      switch(manager){
-        case (null){
-          let createProfileDTO: DTOs.ProfileDTO = {
-              principalId = principalId;
-              username = updatedFantasyTeam.username;
-              profilePicture = Blob.fromArray([]);
-              favouriteClubId = 0;
-              createDate = now();
-              canUpdateFavouriteClub = true;
+
+      if (invalidTeamComposition(updatedFantasyTeam, players)) {
+        return #err(#InvalidTeamError);
+      };
+
+      switch (manager) {
+        case (null) {
+          let createProfileDTO : DTOs.ProfileDTO = {
+            principalId = principalId;
+            username = updatedFantasyTeam.username;
+            profilePicture = Blob.fromArray([]);
+            favouriteClubId = 0;
+            createDate = now();
+            canUpdateFavouriteClub = true;
           };
           let newManager = buildNewManager(principalId, createProfileDTO, "");
-          let updatedManager: T.Manager = {
-              principalId = newManager.principalId;
-              username = newManager.username;
-              favouriteClubId = newManager.favouriteClubId;
-              createDate = newManager.createDate;
-              termsAccepted = newManager.termsAccepted;
-              profilePictureCanisterId = newManager.profilePictureCanisterId;
-              transfersAvailable = newManager.transfersAvailable;
-              monthlyBonusesAvailable = newManager.monthlyBonusesAvailable;
-              bankQuarterMillions = newManager.bankQuarterMillions;
-              playerIds = updatedFantasyTeam.playerIds;
-              captainId = updatedFantasyTeam.captainId;
-              goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
-              goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
-              passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
-              passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
-              noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
-              noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
-              teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
-              teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
-              safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
-              safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
-              captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
-              captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
-              countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
-              countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
-              prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
-              braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
-              hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
-              transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
-              history = List.nil<T.FantasyTeamSeason>();
+          let updatedManager : T.Manager = {
+            principalId = newManager.principalId;
+            username = newManager.username;
+            favouriteClubId = newManager.favouriteClubId;
+            createDate = newManager.createDate;
+            termsAccepted = newManager.termsAccepted;
+            profilePictureCanisterId = newManager.profilePictureCanisterId;
+            transfersAvailable = newManager.transfersAvailable;
+            monthlyBonusesAvailable = newManager.monthlyBonusesAvailable;
+            bankQuarterMillions = newManager.bankQuarterMillions;
+            playerIds = updatedFantasyTeam.playerIds;
+            captainId = updatedFantasyTeam.captainId;
+            goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
+            goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
+            passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
+            passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
+            noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
+            noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
+            teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
+            teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
+            safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
+            safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
+            captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
+            captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
+            countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
+            countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
+            prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
+            braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
+            hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
+            transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
+            history = List.nil<T.FantasyTeamSeason>();
           };
           managers.put(principalId, updatedManager);
           return #ok();
         };
-        case (?foundManager){
-          let updatedManager: T.Manager = {
-              principalId = foundManager.principalId;
-              username = foundManager.username;
-              favouriteClubId = foundManager.favouriteClubId;
-              createDate = foundManager.createDate;
-              termsAccepted = foundManager.termsAccepted;
-              profilePictureCanisterId = foundManager.profilePictureCanisterId;
-              transfersAvailable = foundManager.transfersAvailable;
-              monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
-              bankQuarterMillions = foundManager.bankQuarterMillions;
-              playerIds = updatedFantasyTeam.playerIds;
-              captainId = updatedFantasyTeam.captainId;
-              goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
-              goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
-              passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
-              passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
-              noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
-              noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
-              teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
-              teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
-              safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
-              safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
-              captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
-              captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
-              countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
-              countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
-              prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
-              braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
-              hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
-              transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
-              history = foundManager.history;
+        case (?foundManager) {
+          let updatedManager : T.Manager = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            termsAccepted = foundManager.termsAccepted;
+            profilePictureCanisterId = foundManager.profilePictureCanisterId;
+            transfersAvailable = foundManager.transfersAvailable;
+            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = updatedFantasyTeam.playerIds;
+            captainId = updatedFantasyTeam.captainId;
+            goalGetterGameweek = updatedFantasyTeam.goalGetterGameweek;
+            goalGetterPlayerId = updatedFantasyTeam.goalGetterPlayerId;
+            passMasterGameweek = updatedFantasyTeam.passMasterGameweek;
+            passMasterPlayerId = updatedFantasyTeam.passMasterPlayerId;
+            noEntryGameweek = updatedFantasyTeam.noEntryGameweek;
+            noEntryPlayerId = updatedFantasyTeam.noEntryPlayerId;
+            teamBoostGameweek = updatedFantasyTeam.teamBoostGameweek;
+            teamBoostClubId = updatedFantasyTeam.teamBoostClubId;
+            safeHandsGameweek = updatedFantasyTeam.safeHandsGameweek;
+            safeHandsPlayerId = updatedFantasyTeam.safeHandsPlayerId;
+            captainFantasticGameweek = updatedFantasyTeam.captainFantasticGameweek;
+            captainFantasticPlayerId = updatedFantasyTeam.captainFantasticPlayerId;
+            countrymenGameweek = updatedFantasyTeam.countrymenGameweek;
+            countrymenCountryId = updatedFantasyTeam.countrymenCountryId;
+            prospectsGameweek = updatedFantasyTeam.prospectsGameweek;
+            braceBonusGameweek = updatedFantasyTeam.braceBonusGameweek;
+            hatTrickHeroGameweek = updatedFantasyTeam.hatTrickHeroGameweek;
+            transferWindowGameweek = updatedFantasyTeam.transferWindowGameweek;
+            history = foundManager.history;
           };
           managers.put(principalId, updatedManager);
           return #ok();
         };
       };
     };
-      
-    public func updateUsername(principalId: T.PrincipalId, updatedUsername: Text) : async Result.Result<(), T.Error> {
-      if(not isUsernameValid(updatedUsername, principalId)){
+
+    public func updateUsername(principalId : T.PrincipalId, updatedUsername : Text) : async Result.Result<(), T.Error> {
+      if (not isUsernameValid(updatedUsername, principalId)) {
         return #err(#InvalidData);
       };
 
       let manager = managers.get(principalId);
 
-      switch(manager){
-        case (null){
-          let createProfileDTO: DTOs.ProfileDTO = {
-              principalId = principalId;
-              username = updatedUsername;
-              profilePicture = Blob.fromArray([]);
-              favouriteClubId = 0;
-              createDate = now();
-              canUpdateFavouriteClub = true;
+      switch (manager) {
+        case (null) {
+          let createProfileDTO : DTOs.ProfileDTO = {
+            principalId = principalId;
+            username = updatedUsername;
+            profilePicture = Blob.fromArray([]);
+            favouriteClubId = 0;
+            createDate = now();
+            canUpdateFavouriteClub = true;
           };
           let newManager = buildNewManager(principalId, createProfileDTO, "");
           managers.put(principalId, newManager);
           return #ok();
         };
-        case (?foundManager){
-          let updatedManager: T.Manager = {
+        case (?foundManager) {
+          let updatedManager : T.Manager = {
             principalId = foundManager.principalId;
             username = updatedUsername;
             favouriteClubId = foundManager.favouriteClubId;
@@ -420,30 +419,30 @@ module {
       };
     };
 
-    public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId, systemState: T.SystemState) : async Result.Result<(), T.Error> {
-                 
+    public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId, systemState : T.SystemState) : async Result.Result<(), T.Error> {
+
       let manager = managers.get(principalId);
 
-      switch(manager){
-        case (null){
+      switch (manager) {
+        case (null) {
 
-          let createProfileDTO: DTOs.ProfileDTO = {
-              principalId = principalId;
-              username = "";
-              profilePicture = Blob.fromArray([]);
-              favouriteClubId = favouriteClubId;
-              createDate = now();
-              canUpdateFavouriteClub = true;
+          let createProfileDTO : DTOs.ProfileDTO = {
+            principalId = principalId;
+            username = "";
+            profilePicture = Blob.fromArray([]);
+            favouriteClubId = favouriteClubId;
+            createDate = now();
+            canUpdateFavouriteClub = true;
           };
           let newManager = buildNewManager(principalId, createProfileDTO, "");
           managers.put(principalId, newManager);
           return #ok();
         };
-        case (?foundManager){
-          if((systemState.pickTeamGameweek > 1 and foundManager.favouriteClubId > 0 and List.size(foundManager.history) > 0)){
+        case (?foundManager) {
+          if ((systemState.pickTeamGameweek > 1 and foundManager.favouriteClubId > 0 and List.size(foundManager.history) > 0)) {
             return #err(#InvalidData);
           };
-          let updatedManager: T.Manager = {
+          let updatedManager : T.Manager = {
             principalId = foundManager.principalId;
             username = foundManager.username;
             favouriteClubId = favouriteClubId;
@@ -483,7 +482,7 @@ module {
 
     public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async Result.Result<(), T.Error> {
 
-      if(invalidProfilePicture(profilePicture)){
+      if (invalidProfilePicture(profilePicture)) {
         return #err(#InvalidData);
       };
 
@@ -493,13 +492,13 @@ module {
 
           let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
 
-          let createProfileDTO: DTOs.ProfileDTO = {
-              principalId = principalId;
-              username = "";
-              profilePicture = profilePicture;
-              favouriteClubId = 0;
-              createDate = now();
-              canUpdateFavouriteClub = true;
+          let createProfileDTO : DTOs.ProfileDTO = {
+            principalId = principalId;
+            username = "";
+            profilePicture = profilePicture;
+            favouriteClubId = 0;
+            createDate = now();
+            canUpdateFavouriteClub = true;
           };
 
           let newManager = buildNewManager(principalId, createProfileDTO, profilePictureCanisterId);
@@ -509,10 +508,10 @@ module {
         };
         case (?foundManager) {
           var profilePictureCanisterId = "";
-          if(foundManager.profilePictureCanisterId == ""){
+          if (foundManager.profilePictureCanisterId == "") {
             profilePictureCanisterId := await setManagerProfileImage(principalId, profilePicture);
 
-            let updatedManager: T.Manager = {
+            let updatedManager : T.Manager = {
               principalId = foundManager.principalId;
               username = foundManager.username;
               favouriteClubId = foundManager.favouriteClubId;
@@ -545,11 +544,10 @@ module {
               history = foundManager.history;
             };
             managers.put(principalId, updatedManager);
-          }
-          else{
+          } else {
             let profilePictureCanister = actor (activeProfilePictureCanisterId) : actor {
               hasSpaceAvailable : () -> async Bool;
-              addProfilePicture : (principalId: T.PrincipalId, profilePicture: Blob) -> async ();
+              addProfilePicture : (principalId : T.PrincipalId, profilePicture : Blob) -> async ();
             };
             await profilePictureCanister.addProfilePicture(principalId, profilePicture);
           };
@@ -558,54 +556,52 @@ module {
       };
     };
 
-    private func setManagerProfileImage(principalId: Text, profilePicture: Blob) : async Text{
+    private func setManagerProfileImage(principalId : Text, profilePicture : Blob) : async Text {
 
-      if(activeProfilePictureCanisterId == ""){
+      if (activeProfilePictureCanisterId == "") {
         return await createProfileCanister(principalId, profilePicture);
-      }
-      else{
+      } else {
         let profilePictureCanister = actor (activeProfilePictureCanisterId) : actor {
           hasSpaceAvailable : () -> async Bool;
-          addProfilePicture : (principalId: T.PrincipalId, profilePicture: Blob) -> async ();
+          addProfilePicture : (principalId : T.PrincipalId, profilePicture : Blob) -> async ();
         };
 
         let hasSpaceAvailable = await profilePictureCanister.hasSpaceAvailable();
-        if(hasSpaceAvailable){
+        if (hasSpaceAvailable) {
           await profilePictureCanister.addProfilePicture(principalId, profilePicture);
           return activeProfilePictureCanisterId;
-        }      
-        else{
+        } else {
           return await createProfileCanister(principalId, profilePicture);
         };
       };
     };
-    
+
     private func updateCanister_(a : actor {}) : async () {
-        let cid = { canister_id = Principal.fromActor(a) };
-        let IC : Management.Management = actor (ENV.Default);
-        switch(backendCanisterController){
-          case (null){};
-          case (?controller){
-            await (
-                IC.update_settings({
-                    canister_id = cid.canister_id;
-                    settings = {
-                        controllers = ?[controller];
-                        compute_allocation = null;
-                        memory_allocation = null;
-                        freezing_threshold = ?31_540_000;
-                    };
-                })
-            );
-          }
+      let cid = { canister_id = Principal.fromActor(a) };
+      let IC : Management.Management = actor (ENV.Default);
+      switch (backendCanisterController) {
+        case (null) {};
+        case (?controller) {
+          await (
+            IC.update_settings({
+              canister_id = cid.canister_id;
+              settings = {
+                controllers = ?[controller];
+                compute_allocation = null;
+                memory_allocation = null;
+                freezing_threshold = ?31_540_000;
+              };
+            }),
+          );
         };
+      };
     };
 
-    private func createProfileCanister(principalId: Text, profilePicture: Blob) : async Text {
-      if(backendCanisterController == null){
+    private func createProfileCanister(principalId : Text, profilePicture : Blob) : async Text {
+      if (backendCanisterController == null) {
         return "";
       };
-      
+
       Cycles.add(2000000000000);
       let canister = await ProfilePictureCanister.ProfilePictureCanister();
       let IC : Management.Management = actor (ENV.Default);
@@ -624,8 +620,8 @@ module {
       return canisterId;
     };
 
-    public func isUsernameValid(username: Text, principalId: Text) : Bool{
-        if (Text.size(username) < 3 or Text.size(username) > 20) {
+    public func isUsernameValid(username : Text, principalId : Text) : Bool {
+      if (Text.size(username) < 3 or Text.size(username) > 20) {
         return false;
       };
 
@@ -652,26 +648,26 @@ module {
       return true;
     };
 
-    public func getFavouriteClub(principalId: Text) : T.ClubId {
+    public func getFavouriteClub(principalId : Text) : T.ClubId {
       let manager = managers.get(principalId);
-      switch(manager){
-        case (null) {return 0};
-        case (?foundManager){
+      switch (manager) {
+        case (null) { return 0 };
+        case (?foundManager) {
           return foundManager.favouriteClubId;
-        }
-      }
+        };
+      };
     };
 
-    private func invalidBonuses(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : Bool {
-      
+    private func invalidBonuses(updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO, existingFantasyTeam : ?T.Manager, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
+
       var bonusesPlayed = 0;
-      if(updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek) {
         let bonusPlayer = List.find<DTOs.PlayerDTO>(
           List.fromArray(players),
           func(player : DTOs.PlayerDTO) : Bool {
@@ -681,15 +677,17 @@ module {
         switch (bonusPlayer) {
           case (null) { return false };
           case (?player) {
-            if (player.position != #Goalkeeper and player.position != #Defender) { return false };
+            if (player.position != #Goalkeeper and player.position != #Defender) {
+              return false;
+            };
           };
         };
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek) {
         let bonusPlayer = List.find<DTOs.PlayerDTO>(
           List.fromArray(players),
           func(player : DTOs.PlayerDTO) : Bool {
@@ -704,61 +702,61 @@ module {
         };
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
       };
-      if(updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek){
+      if (updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek) {
         bonusesPlayed += 1;
       };
 
-      if(bonusesPlayed > 1){
+      if (bonusesPlayed > 1) {
         return true;
       };
 
-      switch(existingFantasyTeam){
-        case (null){ };
-        case (?foundTeam){
-          if(updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek and foundTeam.goalGetterGameweek != 0){  
+      switch (existingFantasyTeam) {
+        case (null) {};
+        case (?foundTeam) {
+          if (updatedFantasyTeam.goalGetterGameweek == systemState.pickTeamGameweek and foundTeam.goalGetterGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek and foundTeam.passMasterGameweek != 0){
+          if (updatedFantasyTeam.passMasterGameweek == systemState.pickTeamGameweek and foundTeam.passMasterGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek and foundTeam.noEntryGameweek != 0){
+          if (updatedFantasyTeam.noEntryGameweek == systemState.pickTeamGameweek and foundTeam.noEntryGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek and foundTeam.teamBoostGameweek != 0){
+          if (updatedFantasyTeam.teamBoostGameweek == systemState.pickTeamGameweek and foundTeam.teamBoostGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek and foundTeam.safeHandsGameweek != 0){
+          if (updatedFantasyTeam.safeHandsGameweek == systemState.pickTeamGameweek and foundTeam.safeHandsGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek and foundTeam.captainFantasticGameweek != 0){
+          if (updatedFantasyTeam.captainFantasticGameweek == systemState.pickTeamGameweek and foundTeam.captainFantasticGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek and foundTeam.countrymenGameweek != 0){
+          if (updatedFantasyTeam.countrymenGameweek == systemState.pickTeamGameweek and foundTeam.countrymenGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek and foundTeam.prospectsGameweek != 0){
+          if (updatedFantasyTeam.prospectsGameweek == systemState.pickTeamGameweek and foundTeam.prospectsGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek and foundTeam.braceBonusGameweek != 0){
+          if (updatedFantasyTeam.braceBonusGameweek == systemState.pickTeamGameweek and foundTeam.braceBonusGameweek != 0) {
             return true;
           };
-          if(updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek and foundTeam.hatTrickHeroGameweek != 0){
+          if (updatedFantasyTeam.hatTrickHeroGameweek == systemState.pickTeamGameweek and foundTeam.hatTrickHeroGameweek != 0) {
             return true;
           };
 
-          if(Int64.fromNat64(Nat64.fromNat(Nat8.toNat(foundTeam.monthlyBonusesAvailable) - bonusesPlayed)) < 0){
+          if (Int64.fromNat64(Nat64.fromNat(Nat8.toNat(foundTeam.monthlyBonusesAvailable) - bonusesPlayed)) < 0) {
             return true;
           };
         };
@@ -766,93 +764,114 @@ module {
 
       return false;
     };
-    
-    private func invalidTransfers(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, existingFantasyTeam: ?T.Manager, systemState: T.SystemState, players: [DTOs.PlayerDTO]) : Bool {
-      
-      if(updatedFantasyTeam.transferWindowGameweek == systemState.pickTeamGameweek and not systemState.transferWindowActive){
+
+    private func invalidTransfers(updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO, existingFantasyTeam : ?T.Manager, systemState : T.SystemState, players : [DTOs.PlayerDTO]) : Bool {
+
+      if (updatedFantasyTeam.transferWindowGameweek == systemState.pickTeamGameweek and not systemState.transferWindowActive) {
         return true;
       };
 
-      switch(existingFantasyTeam){
-        case (null){
-          let spend = Array.foldLeft(updatedFantasyTeam.playerIds, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
-            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-            switch(player){
-              case (null){
-                sum
+      switch (existingFantasyTeam) {
+        case (null) {
+          let spend = Array.foldLeft(
+            updatedFantasyTeam.playerIds,
+            0,
+            func(sum : Nat, playerId : T.PlayerId) : Nat {
+              let player : ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+              switch (player) {
+                case (null) {
+                  sum;
+                };
+                case (?foundPlayer) {
+                  sum + foundPlayer.valueQuarterMillions;
+                };
               };
-              case (?foundPlayer){
-                sum + foundPlayer.valueQuarterMillions
-              }
-            }
-          });
-          
-          if(spend > 1200){
+            },
+          );
+
+          if (spend > 1200) {
             return true;
           };
         };
-        case (?foundTeam){
-          let existingPlayerIds: [T.PlayerId] = foundTeam.playerIds;
+        case (?foundTeam) {
+          let existingPlayerIds : [T.PlayerId] = foundTeam.playerIds;
 
-          let playersBought = Array.filter(updatedFantasyTeam.playerIds, func(playerId : T.PlayerId) : Bool {
-            Array.find(existingPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
-          });
+          let playersBought = Array.filter(
+            updatedFantasyTeam.playerIds,
+            func(playerId : T.PlayerId) : Bool {
+              Array.find(existingPlayerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null;
+            },
+          );
 
           var newTransfersAvailable = foundTeam.transfersAvailable;
-          if(not systemState.transferWindowActive){
+          if (not systemState.transferWindowActive) {
             newTransfersAvailable := newTransfersAvailable - Nat8.fromNat(Array.size(playersBought));
           };
 
-          if(newTransfersAvailable < 0){
+          if (newTransfersAvailable < 0) {
             return true;
           };
 
-          let playersSold = Array.filter(existingPlayerIds, func(playerId : T.PlayerId) : Bool {
-            Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null
-          });
+          let playersSold = Array.filter(
+            existingPlayerIds,
+            func(playerId : T.PlayerId) : Bool {
+              Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != playerId }) == null;
+            },
+          );
 
-          let spend = Array.foldLeft(playersBought, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
-            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-            switch(player){
-              case (null){
-                sum
+          let spend = Array.foldLeft(
+            playersBought,
+            0,
+            func(sum : Nat, playerId : T.PlayerId) : Nat {
+              let player : ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+              switch (player) {
+                case (null) {
+                  sum;
+                };
+                case (?foundPlayer) {
+                  sum + foundPlayer.valueQuarterMillions;
+                };
               };
-              case (?foundPlayer){
-                sum + foundPlayer.valueQuarterMillions
-              }
-            }
-          });
+            },
+          );
 
-          let sold = Array.foldLeft(playersSold, 0, func(sum : Nat, playerId : T.PlayerId) : Nat {
-            let player: ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
-            switch(player){
-              case (null){
-                sum
+          let sold = Array.foldLeft(
+            playersSold,
+            0,
+            func(sum : Nat, playerId : T.PlayerId) : Nat {
+              let player : ?DTOs.PlayerDTO = Array.find<DTOs.PlayerDTO>(players, func(p) { p.id == playerId });
+              switch (player) {
+                case (null) {
+                  sum;
+                };
+                case (?foundPlayer) {
+                  sum + foundPlayer.valueQuarterMillions;
+                };
               };
-              case (?foundPlayer){
-                sum + foundPlayer.valueQuarterMillions
-              }
-            }
-          });
+            },
+          );
 
-          let remainingBank: Nat = foundTeam.bankQuarterMillions - spend + sold;
-          if(remainingBank < 0){
+          let remainingBank : Nat = foundTeam.bankQuarterMillions - spend + sold;
+          if (remainingBank < 0) {
             return true;
           };
         };
       };
-    
+
       return false;
     };
 
-    private func invalidTeamComposition(updatedFantasyTeam: DTOs.UpdateFantasyTeamDTO, players: [DTOs.PlayerDTO]) : Bool {
-      
-      let newTeamPlayers = Array.filter(players, func(player : DTOs.PlayerDTO) : Bool {
-        Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != player.id }) == null
-      });
+    private func invalidTeamComposition(updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO, players : [DTOs.PlayerDTO]) : Bool {
+
+      let newTeamPlayers = Array.filter(
+        players,
+        func(player : DTOs.PlayerDTO) : Bool {
+          Array.find(updatedFantasyTeam.playerIds, func(id : T.PlayerId) : Bool { id != player.id }) == null;
+        },
+      );
 
       let playerPositions = Array.map<DTOs.PlayerDTO, T.PlayerPosition>(newTeamPlayers, func(player : DTOs.PlayerDTO) : T.PlayerPosition { return player.position });
-      
+
       let playerCount = playerPositions.size();
       if (playerCount != 11) {
         return false;
@@ -901,7 +920,7 @@ module {
           forwardCount += 1;
         };
 
-        if(players[i].id == updatedFantasyTeam.captainId){
+        if (players[i].id == updatedFantasyTeam.captainId) {
           captainInTeam := true;
         }
 
@@ -919,56 +938,56 @@ module {
         return true;
       };
 
-      if(not captainInTeam){
+      if (not captainInTeam) {
         return true;
       };
 
       return false;
     };
 
-    private func invalidProfilePicture(profilePicture: Blob) : Bool{
+    private func invalidProfilePicture(profilePicture : Blob) : Bool {
       let sizeInKB = Array.size(Blob.toArray(profilePicture)) / 1024;
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    private func buildNewManager(principalId: Text, createProfileDTO: DTOs.ProfileDTO, profilePictureCanisterId: Text) : T.Manager {
-        let newManager: T.Manager = {
-          principalId = principalId;
-          username = createProfileDTO.username;
-          favouriteClubId = createProfileDTO.favouriteClubId;
-          createDate = createProfileDTO.createDate;
-          termsAccepted = false;
-          profilePictureCanisterId = profilePictureCanisterId;
-          transfersAvailable = 3;
-          monthlyBonusesAvailable = 2;
-          bankQuarterMillions = 1200;
-          playerIds = [];
-          captainId = 0;
-          goalGetterGameweek = 0;
-          goalGetterPlayerId = 0;
-          passMasterGameweek = 0;
-          passMasterPlayerId = 0;
-          noEntryGameweek = 0;
-          noEntryPlayerId = 0;
-          teamBoostGameweek = 0;
-          teamBoostClubId = 0;
-          safeHandsGameweek = 0;
-          safeHandsPlayerId = 0;
-          captainFantasticGameweek = 0;
-          captainFantasticPlayerId = 0;
-          countrymenGameweek = 0;
-          countrymenCountryId = 0;
-          prospectsGameweek = 0;
-          braceBonusGameweek = 0;
-          hatTrickHeroGameweek = 0;
-          transferWindowGameweek = 0;
-          history = List.nil<T.FantasyTeamSeason>();
-        };
+    private func buildNewManager(principalId : Text, createProfileDTO : DTOs.ProfileDTO, profilePictureCanisterId : Text) : T.Manager {
+      let newManager : T.Manager = {
+        principalId = principalId;
+        username = createProfileDTO.username;
+        favouriteClubId = createProfileDTO.favouriteClubId;
+        createDate = createProfileDTO.createDate;
+        termsAccepted = false;
+        profilePictureCanisterId = profilePictureCanisterId;
+        transfersAvailable = 3;
+        monthlyBonusesAvailable = 2;
+        bankQuarterMillions = 1200;
+        playerIds = [];
+        captainId = 0;
+        goalGetterGameweek = 0;
+        goalGetterPlayerId = 0;
+        passMasterGameweek = 0;
+        passMasterPlayerId = 0;
+        noEntryGameweek = 0;
+        noEntryPlayerId = 0;
+        teamBoostGameweek = 0;
+        teamBoostClubId = 0;
+        safeHandsGameweek = 0;
+        safeHandsPlayerId = 0;
+        captainFantasticGameweek = 0;
+        captainFantasticPlayerId = 0;
+        countrymenGameweek = 0;
+        countrymenCountryId = 0;
+        prospectsGameweek = 0;
+        braceBonusGameweek = 0;
+        hatTrickHeroGameweek = 0;
+        transferWindowGameweek = 0;
+        history = List.nil<T.FantasyTeamSeason>();
+      };
 
-        return newManager;
+      return newManager;
     };
 
-    public func calculateFantasyTeamScores(allPlayersList: [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async (){
+    public func calculateFantasyTeamScores(allPlayersList : [(T.PlayerId, DTOs.PlayerScoreDTO)], seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async () {
       var allPlayers = HashMap.HashMap<T.PlayerId, DTOs.PlayerScoreDTO>(500, Utilities.eqNat16, Utilities.hashNat16);
       for ((key, value) in Iter.fromArray(allPlayersList)) {
         allPlayers.put(key, value);
@@ -1202,23 +1221,24 @@ module {
       };
     };
 
-    public func removePlayerFromTeams(playerId: T.PlayerId) : async (){
-   
-      let managersWithPlayer =
-        HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
-          managers,
-          Text.equal,
-          Text.hash,
-          func (k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == playerId }) == null) { null } else { ?v }
+    public func removePlayerFromTeams(playerId : T.PlayerId) : async () {
+
+      let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
+        managers,
+        Text.equal,
+        Text.hash,
+        func(k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == playerId }) == null) {
+          null;
+        } else { ?v },
       );
 
       for ((principalId, manager) in managersWithPlayer.entries()) {
         let newPlayerIds = Array.map<T.PlayerId, T.PlayerId>(
-            manager.playerIds, 
-            func (id) : T.PlayerId { if (id == playerId) { 0 } else { id } }
+          manager.playerIds,
+          func(id) : T.PlayerId { if (id == playerId) { 0 } else { id } },
         );
 
-        let updatedManager: T.Manager = {
+        let updatedManager : T.Manager = {
           principalId = manager.principalId;
           username = manager.username;
           favouriteClubId = manager.favouriteClubId;
@@ -1252,10 +1272,10 @@ module {
         };
 
         managers.put(principalId, updatedManager);
-      };     
+      };
     };
 
-    public func snapshotFantasyTeams(seasonId: T.SeasonId, gameweek: T.GameweekNumber, players: [DTOs.PlayerDTO]) : (){
+    public func snapshotFantasyTeams(seasonId : T.SeasonId, gameweek : T.GameweekNumber, players : [DTOs.PlayerDTO]) : () {
       for ((principalId, manager) in managers.entries()) {
 
         let allPlayers = Array.filter<DTOs.PlayerDTO>(
@@ -1274,7 +1294,7 @@ module {
 
         let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(allPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.valueQuarterMillions });
         let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
-        
+
         let newSnapshot : T.FantasyTeamSnapshot = {
           principalId = manager.principalId;
           gameweek = gameweek;
@@ -1343,8 +1363,8 @@ module {
 
           updatedSeasons := List.push(newSeason, updatedSeasons);
         };
-          
-        let updatedManager: T.Manager = {
+
+        let updatedManager : T.Manager = {
           principalId = manager.principalId;
           username = manager.username;
           favouriteClubId = manager.favouriteClubId;
@@ -1378,22 +1398,21 @@ module {
         };
 
         managers.put(principalId, updatedManager);
-        
 
       };
     };
 
-    public func resetTransfers(isNewMonth: Bool) : (){
-      
+    public func resetTransfers(isNewMonth : Bool) : () {
+
       for ((principalId, manager) in managers.entries()) {
-        
+
         var bonusesAvailable = manager.monthlyBonusesAvailable;
 
-        if(isNewMonth){
+        if (isNewMonth) {
           bonusesAvailable := 2;
-        };      
-        
-        let updatedManager: T.Manager = {
+        };
+
+        let updatedManager : T.Manager = {
           principalId = manager.principalId;
           username = manager.username;
           favouriteClubId = manager.favouriteClubId;
@@ -1436,8 +1455,8 @@ module {
         managers.put(principalId, clearedTeam);
       };
     };
-    
-    private func clearFantasyTeam(manager: T.Manager) : T.Manager {
+
+    private func clearFantasyTeam(manager : T.Manager) : T.Manager {
       return {
         principalId = manager.principalId;
         username = manager.username;
@@ -1452,7 +1471,7 @@ module {
         captainId = 0;
         goalGetterGameweek = 0;
         goalGetterPlayerId = 0;
-        passMasterGameweek  = 0;
+        passMasterGameweek = 0;
         passMasterPlayerId = 0;
         noEntryGameweek = 0;
         noEntryPlayerId = 0;
@@ -1472,162 +1491,160 @@ module {
       };
     };
 
-    public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO, fixtures: List.List<DTOs.FixtureDTO>) : async (){
-      await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);     
+    public func payWeeklyRewards(rewardPool : T.RewardPool, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO, fixtures : List.List<DTOs.FixtureDTO>) : async () {
+      await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);
       await distributeHighestScoringPlayerRewards(rewardPool.highestScoringMatchPlayerPool, fixtures);
       await distributeWeeklyATHScoreRewards(rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
     };
 
-    public func payMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboard: DTOs.MonthlyLeaderboardDTO) : async (){
+    public func payMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO) : async () {
       await distributeMonthlyRewards(rewardPool, monthlyLeaderboard);
     };
 
-    public func payATHMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboards: [DTOs.MonthlyLeaderboardDTO]) : async (){
+    public func payATHMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
       await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboards);
     };
-    
-    public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO, players: [DTOs.PlayerDTO], seasonId: T.SeasonId) : async (){
+
+    public func paySeasonRewards(rewardPool : T.RewardPool, seasonLeaderboard : DTOs.SeasonLeaderboardDTO, players : [DTOs.PlayerDTO], seasonId : T.SeasonId) : async () {
       await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard);
       await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard);
       await distributeMostValuableTeamRewards(rewardPool.mostValuableTeamPool, players, seasonId);
     };
 
-    public func distributeWeeklyRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
+    public func distributeWeeklyRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
       let weeklyRewardAmount = weeklyRewardPool / 38;
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(weeklyLeaderboard.entries);
 
       let scaledPercentages = if (weeklyLeaderboard.totalEntries < 100) {
-          scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries)
+        scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries);
       } else {
-          RewardPercentages.percentages
+        RewardPercentages.percentages;
       };
 
       while (not List.isNil(currentEntries)) {
-          let (currentEntry, rest) = List.pop(currentEntries);
-          currentEntries := rest;
-          switch(currentEntry){
-            case (null){};
-            case (?foundEntry){
-                let (nextEntry, _) = List.pop(rest);
-                switch(nextEntry){
-                  case (null){
-                    let payout = scaledPercentages[foundEntry.position - 1];
-                    payouts := List.push(payout, payouts);
-                  };
-                  case (?foundNextEntry){
-                    if (foundEntry.points == foundNextEntry.points) {
-                        let tiedEntries = findTiedEntries(rest, foundEntry.points);
-                        let startPosition = foundEntry.position;
-                        let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
-                        payouts := List.append(payouts, tiePayouts);
+        let (currentEntry, rest) = List.pop(currentEntries);
+        currentEntries := rest;
+        switch (currentEntry) {
+          case (null) {};
+          case (?foundEntry) {
+            let (nextEntry, _) = List.pop(rest);
+            switch (nextEntry) {
+              case (null) {
+                let payout = scaledPercentages[foundEntry.position - 1];
+                payouts := List.push(payout, payouts);
+              };
+              case (?foundNextEntry) {
+                if (foundEntry.points == foundNextEntry.points) {
+                  let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                  let startPosition = foundEntry.position;
+                  let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  payouts := List.append(payouts, tiePayouts);
 
-                        var skipEntries = rest;
-                        label skipLoop while (not List.isNil(skipEntries)) {
-                            let (skipEntry, nextRest) = List.pop(skipEntries);
-                            skipEntries := nextRest;
+                  var skipEntries = rest;
+                  label skipLoop while (not List.isNil(skipEntries)) {
+                    let (skipEntry, nextRest) = List.pop(skipEntries);
+                    skipEntries := nextRest;
 
-                            switch(skipEntry) {
-                                case (null) { break skipLoop; };
-                                case (?entry) {
-                                    if (entry.points != foundEntry.points) {
-                                        currentEntries := skipEntries;
-                                        break skipLoop;
-                                    }
-                                };
-                            };
+                    switch (skipEntry) {
+                      case (null) { break skipLoop };
+                      case (?entry) {
+                        if (entry.points != foundEntry.points) {
+                          currentEntries := skipEntries;
+                          break skipLoop;
                         };
-                    } else {
-                        let payout = scaledPercentages[foundEntry.position - 1];
-                        payouts := List.push(payout, payouts);
-                    }
-                  }
+                      };
+                    };
+                  };
+                } else {
+                  let payout = scaledPercentages[foundEntry.position - 1];
+                  payouts := List.push(payout, payouts);
                 };
-                
+              };
             };
+
           };
+        };
       };
 
       payouts := List.reverse(payouts);
       let payoutsArray = List.toArray(payouts);
 
       for (key in weeklyLeaderboard.entries.keys()) {
-        let winner = weeklyLeaderboard.entries[key];      
-        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;    
+        let winner = weeklyLeaderboard.entries[key];
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;
         await payReward(winner.principalId, prize);
       };
     };
 
-    private func findTiedEntries(entries: List.List<T.LeaderboardEntry>, points: Int16): List.List<T.LeaderboardEntry> {
+    private func findTiedEntries(entries : List.List<T.LeaderboardEntry>, points : Int16) : List.List<T.LeaderboardEntry> {
       var tiedEntries = List.nil<T.LeaderboardEntry>();
       var currentEntries = entries;
 
       label currentLoop while (not List.isNil(currentEntries)) {
-          let (currentEntry, rest) = List.pop(currentEntries);
-          currentEntries := rest;
+        let (currentEntry, rest) = List.pop(currentEntries);
+        currentEntries := rest;
 
-          switch(currentEntry) {
-              case (null) {};
-              case (?entry) {
-                  if (entry.points == points) {
-                      tiedEntries := List.push(entry, tiedEntries);
-                  } else {
-                      break currentLoop;
-                  }
-              };
+        switch (currentEntry) {
+          case (null) {};
+          case (?entry) {
+            if (entry.points == points) {
+              tiedEntries := List.push(entry, tiedEntries);
+            } else {
+              break currentLoop;
+            };
           };
+        };
       };
 
       return List.reverse(tiedEntries);
     };
 
-    private func calculateTiePayouts(tiedEntries: List.List<T.LeaderboardEntry>, scaledPercentages: [Float], startPosition: Nat) : List.List<Float> {
-        let numTiedEntries = List.size(tiedEntries);
-        var totalPayout: Float = 0.0;
-        let endPosition: Int = startPosition + numTiedEntries - 1;
+    private func calculateTiePayouts(tiedEntries : List.List<T.LeaderboardEntry>, scaledPercentages : [Float], startPosition : Nat) : List.List<Float> {
+      let numTiedEntries = List.size(tiedEntries);
+      var totalPayout : Float = 0.0;
+      let endPosition : Int = startPosition + numTiedEntries - 1;
 
-          label posLoop for (i in Iter.range(startPosition, endPosition)) {
-            if (i > 100) {
-                break posLoop;
-            };
-            totalPayout += scaledPercentages[i - 1];
+      label posLoop for (i in Iter.range(startPosition, endPosition)) {
+        if (i > 100) {
+          break posLoop;
         };
+        totalPayout += scaledPercentages[i - 1];
+      };
 
-        let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
-        let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
+      let equalPayout = totalPayout / Float.fromInt(numTiedEntries);
+      let payouts = List.replicate<Float>(numTiedEntries, equalPayout);
 
-        return payouts;
+      return payouts;
     };
 
-    private func scalePercentages(fixedPercentages: [Float], numParticipants: Nat) : [Float] {
-      var totalPercentage: Float = 0.0;
+    private func scalePercentages(fixedPercentages : [Float], numParticipants : Nat) : [Float] {
+      var totalPercentage : Float = 0.0;
       for (i in Iter.range(0, numParticipants)) {
         totalPercentage += fixedPercentages[i];
       };
 
-      let scalingFactor: Float = 100.0 / totalPercentage;
+      let scalingFactor : Float = 100.0 / totalPercentage;
 
       var scaledPercentagesBuffer = Buffer.fromArray<Float>([]);
       for (i in Iter.range(0, numParticipants)) {
-          let scaledValue = fixedPercentages[i] * scalingFactor;
-          scaledPercentagesBuffer.add(scaledValue);
+        let scaledValue = fixedPercentages[i] * scalingFactor;
+        scaledPercentagesBuffer.add(scaledValue);
       };
 
       return Buffer.toArray(scaledPercentagesBuffer);
     };
 
-    public func distributeMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboard: DTOs.MonthlyLeaderboardDTO) : async (){
+    public func distributeMonthlyRewards(rewardPool : T.RewardPool, monthlyLeaderboard : DTOs.MonthlyLeaderboardDTO) : async () {
       let monthlyRewardAmount = rewardPool.monthlyLeaderboardPool / 9;
 
-      let clubManagers = HashMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, 
-        func (principal: Text, manager : T.Manager) = if (manager.favouriteClubId == monthlyLeaderboard.clubId) {?manager} else {null});
-      let otherClubManagers = HashMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, 
-        func (principal: Text, manager : T.Manager) = if (manager.favouriteClubId > 0 and manager.favouriteClubId != monthlyLeaderboard.clubId) {?manager} else {null});
-      
+      let clubManagers = HashMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, func(principal : Text, manager : T.Manager) = if (manager.favouriteClubId == monthlyLeaderboard.clubId) { ?manager } else { null });
+      let otherClubManagers = HashMap.mapFilter<Text, T.Manager, T.Manager>(managers, Text.equal, Text.hash, func(principal : Text, manager : T.Manager) = if (manager.favouriteClubId > 0 and manager.favouriteClubId != monthlyLeaderboard.clubId) { ?manager } else { null });
+
       let clubManagerCount = Iter.size(clubManagers.entries());
       let totalClubManagers = clubManagerCount + Iter.size(otherClubManagers.entries());
 
-      let clubShare = clubManagerCount / totalClubManagers; 
+      let clubShare = clubManagerCount / totalClubManagers;
 
       let clubManagerMonthlyRewardAmount = Nat64.toNat(monthlyRewardAmount) * clubShare;
 
@@ -1635,161 +1652,161 @@ module {
       var currentEntries = List.fromArray(monthlyLeaderboard.entries);
 
       let scaledPercentages = if (monthlyLeaderboard.totalEntries < 100) {
-          scalePercentages(RewardPercentages.percentages, monthlyLeaderboard.totalEntries)
+        scalePercentages(RewardPercentages.percentages, monthlyLeaderboard.totalEntries);
       } else {
-          RewardPercentages.percentages
+        RewardPercentages.percentages;
       };
 
       while (not List.isNil(currentEntries)) {
-          let (currentEntry, rest) = List.pop(currentEntries);
-          currentEntries := rest;
-          switch(currentEntry){
-            case (null){};
-            case (?foundEntry){
-                let (nextEntry, _) = List.pop(rest);
-                switch(nextEntry){
-                  case (null){
-                    let payout = scaledPercentages[foundEntry.position - 1];
-                    payouts := List.push(payout, payouts);
-                  };
-                  case (?foundNextEntry){
-                    if (foundEntry.points == foundNextEntry.points) {
-                        let tiedEntries = findTiedEntries(rest, foundEntry.points);
-                        let startPosition = foundEntry.position;
-                        let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
-                        payouts := List.append(payouts, tiePayouts);
+        let (currentEntry, rest) = List.pop(currentEntries);
+        currentEntries := rest;
+        switch (currentEntry) {
+          case (null) {};
+          case (?foundEntry) {
+            let (nextEntry, _) = List.pop(rest);
+            switch (nextEntry) {
+              case (null) {
+                let payout = scaledPercentages[foundEntry.position - 1];
+                payouts := List.push(payout, payouts);
+              };
+              case (?foundNextEntry) {
+                if (foundEntry.points == foundNextEntry.points) {
+                  let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                  let startPosition = foundEntry.position;
+                  let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  payouts := List.append(payouts, tiePayouts);
 
-                        var skipEntries = rest;
-                        label skipLoop while (not List.isNil(skipEntries)) {
-                            let (skipEntry, nextRest) = List.pop(skipEntries);
-                            skipEntries := nextRest;
+                  var skipEntries = rest;
+                  label skipLoop while (not List.isNil(skipEntries)) {
+                    let (skipEntry, nextRest) = List.pop(skipEntries);
+                    skipEntries := nextRest;
 
-                            switch(skipEntry) {
-                                case (null) { break skipLoop; };
-                                case (?entry) {
-                                    if (entry.points != foundEntry.points) {
-                                        currentEntries := skipEntries;
-                                        break skipLoop;
-                                    }
-                                };
-                            };
+                    switch (skipEntry) {
+                      case (null) { break skipLoop };
+                      case (?entry) {
+                        if (entry.points != foundEntry.points) {
+                          currentEntries := skipEntries;
+                          break skipLoop;
                         };
-                    } else {
-                        let payout = scaledPercentages[foundEntry.position - 1];
-                        payouts := List.push(payout, payouts);
-                    }
-                  }
+                      };
+                    };
+                  };
+                } else {
+                  let payout = scaledPercentages[foundEntry.position - 1];
+                  payouts := List.push(payout, payouts);
                 };
-                
+              };
             };
+
           };
+        };
       };
 
       payouts := List.reverse(payouts);
       let payoutsArray = List.toArray(payouts);
 
       for (key in monthlyLeaderboard.entries.keys()) {
-        let winner = monthlyLeaderboard.entries[key];      
-        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * Nat64.fromNat(clubManagerMonthlyRewardAmount);    
+        let winner = monthlyLeaderboard.entries[key];
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * Nat64.fromNat(clubManagerMonthlyRewardAmount);
         await payReward(winner.principalId, prize);
       };
     };
 
-    public func distributeSeasonRewards(seasonRewardPool: Nat64, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
+    public func distributeSeasonRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
       var payouts = List.nil<Float>();
       var currentEntries = List.fromArray(seasonLeaderboard.entries);
 
       let scaledPercentages = if (seasonLeaderboard.totalEntries < 100) {
-          scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries)
+        scalePercentages(RewardPercentages.percentages, seasonLeaderboard.totalEntries);
       } else {
-          RewardPercentages.percentages
+        RewardPercentages.percentages;
       };
 
       while (not List.isNil(currentEntries)) {
-          let (currentEntry, rest) = List.pop(currentEntries);
-          currentEntries := rest;
-          switch(currentEntry){
-            case (null){};
-            case (?foundEntry){
-                let (nextEntry, _) = List.pop(rest);
-                switch(nextEntry){
-                  case (null){
-                    let payout = scaledPercentages[foundEntry.position - 1];
-                    payouts := List.push(payout, payouts);
-                  };
-                  case (?foundNextEntry){
-                    if (foundEntry.points == foundNextEntry.points) {
-                        let tiedEntries = findTiedEntries(rest, foundEntry.points);
-                        let startPosition = foundEntry.position;
-                        let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
-                        payouts := List.append(payouts, tiePayouts);
+        let (currentEntry, rest) = List.pop(currentEntries);
+        currentEntries := rest;
+        switch (currentEntry) {
+          case (null) {};
+          case (?foundEntry) {
+            let (nextEntry, _) = List.pop(rest);
+            switch (nextEntry) {
+              case (null) {
+                let payout = scaledPercentages[foundEntry.position - 1];
+                payouts := List.push(payout, payouts);
+              };
+              case (?foundNextEntry) {
+                if (foundEntry.points == foundNextEntry.points) {
+                  let tiedEntries = findTiedEntries(rest, foundEntry.points);
+                  let startPosition = foundEntry.position;
+                  let tiePayouts = calculateTiePayouts(tiedEntries, scaledPercentages, startPosition);
+                  payouts := List.append(payouts, tiePayouts);
 
-                        var skipEntries = rest;
-                        label skipLoop while (not List.isNil(skipEntries)) {
-                            let (skipEntry, nextRest) = List.pop(skipEntries);
-                            skipEntries := nextRest;
+                  var skipEntries = rest;
+                  label skipLoop while (not List.isNil(skipEntries)) {
+                    let (skipEntry, nextRest) = List.pop(skipEntries);
+                    skipEntries := nextRest;
 
-                            switch(skipEntry) {
-                                case (null) { break skipLoop; };
-                                case (?entry) {
-                                    if (entry.points != foundEntry.points) {
-                                        currentEntries := skipEntries;
-                                        break skipLoop;
-                                    }
-                                };
-                            };
+                    switch (skipEntry) {
+                      case (null) { break skipLoop };
+                      case (?entry) {
+                        if (entry.points != foundEntry.points) {
+                          currentEntries := skipEntries;
+                          break skipLoop;
                         };
-                    } else {
-                        let payout = scaledPercentages[foundEntry.position - 1];
-                        payouts := List.push(payout, payouts);
-                    }
-                  }
+                      };
+                    };
+                  };
+                } else {
+                  let payout = scaledPercentages[foundEntry.position - 1];
+                  payouts := List.push(payout, payouts);
                 };
-                
+              };
             };
+
           };
+        };
       };
 
       payouts := List.reverse(payouts);
       let payoutsArray = List.toArray(payouts);
 
       for (key in seasonLeaderboard.entries.keys()) {
-        let winner = seasonLeaderboard.entries[key];      
-        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;    
+        let winner = seasonLeaderboard.entries[key];
+        let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;
         await payReward(winner.principalId, prize);
       };
     };
 
-    public func distributeMostValuableTeamRewards(mostValuableTeamPool: Nat64, players: [DTOs.PlayerDTO], currentSeason: T.SeasonId) : async (){
+    public func distributeMostValuableTeamRewards(mostValuableTeamPool : Nat64, players : [DTOs.PlayerDTO], currentSeason : T.SeasonId) : async () {
       let allFinalGameweekSnapshots = HashMap.mapFilter<T.PrincipalId, T.Manager, T.FantasyTeamSnapshot>(
         managers,
         Text.equal,
         Text.hash,
-        func (k, v) : ?T.FantasyTeamSnapshot {
+        func(k, v) : ?T.FantasyTeamSnapshot {
           let gameweek38Snapshot = List.foldLeft<T.FantasyTeamSeason, ?T.FantasyTeamSnapshot>(
             v.history,
             null,
-            func (acc: ?T.FantasyTeamSnapshot, season: T.FantasyTeamSeason) : ?T.FantasyTeamSnapshot {
+            func(acc : ?T.FantasyTeamSnapshot, season : T.FantasyTeamSeason) : ?T.FantasyTeamSnapshot {
               switch (acc) {
                 case (?_) { acc };
                 case null {
                   List.find<T.FantasyTeamSnapshot>(
-                      season.gameweeks,
-                      func (snapshot) : Bool {
-                          snapshot.gameweek == 38
-                      }
-                  )
+                    season.gameweeks,
+                    func(snapshot) : Bool {
+                      snapshot.gameweek == 38;
+                    },
+                  );
                 };
-              }
-            }
+              };
+            },
           );
           return gameweek38Snapshot;
-        }
+        },
       );
 
-      var teamValues: HashMap.HashMap<T.PrincipalId, Nat> = HashMap.HashMap<T.PrincipalId, Nat>(100, Text.equal, Text.hash);
-  
-      for(snapshot in allFinalGameweekSnapshots.entries()){
+      var teamValues : HashMap.HashMap<T.PrincipalId, Nat> = HashMap.HashMap<T.PrincipalId, Nat>(100, Text.equal, Text.hash);
+
+      for (snapshot in allFinalGameweekSnapshots.entries()) {
         let allPlayers = Array.filter<DTOs.PlayerDTO>(
           players,
           func(player : DTOs.PlayerDTO) : Bool {
@@ -1803,15 +1820,15 @@ module {
             return Option.isSome(isPlayerIdInNewTeam);
           },
         );
-        
+
         let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(allPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.valueQuarterMillions });
         let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
-        teamValues.put(snapshot.0, totalTeamValue);        
+        teamValues.put(snapshot.0, totalTeamValue);
       };
-      
+
       let teamValuesArray : [(T.PrincipalId, Nat)] = Iter.toArray(teamValues.entries());
 
-      let compare = func(a: (T.PrincipalId, Nat), b: (T.PrincipalId, Nat)): Order.Order {
+      let compare = func(a : (T.PrincipalId, Nat), b : (T.PrincipalId, Nat)) : Order.Order {
         if (a.1 > b.1) { return #greater };
         if (a.1 < b.1) { return #less };
         return #equal;
@@ -1821,14 +1838,20 @@ module {
 
       var leaderboardEntries = Array.mapEntries<(T.PrincipalId, Nat), T.LeaderboardEntry>(
         sortedTeamValuesArray,
-        func (team, index) : T.LeaderboardEntry {
-          return { principalId = team.0; position = index + 1; points = Int16.fromNat16(Nat16.fromNat(team.1)); username = ""; positionText = ""; };
-        }
+        func(team, index) : T.LeaderboardEntry {
+          return {
+            principalId = team.0;
+            position = index + 1;
+            points = Int16.fromNat16(Nat16.fromNat(team.1));
+            username = "";
+            positionText = "";
+          };
+        },
       );
 
       var totalRewardEntries = 100;
-      if(Array.size(leaderboardEntries) < 100){
-         totalRewardEntries := Array.size(leaderboardEntries);
+      if (Array.size(leaderboardEntries) < 100) {
+        totalRewardEntries := Array.size(leaderboardEntries);
       };
       var rewardEntries = List.take(List.fromArray(leaderboardEntries), totalRewardEntries);
 
@@ -1838,7 +1861,9 @@ module {
         let lastEntry = List.toArray(rewardEntries)[99];
         let tiedEntries = Array.filter<T.LeaderboardEntry>(
           leaderboardEntries,
-          func (entry) : Bool { entry.points == lastEntry.points and entry.position > 100 }
+          func(entry) : Bool {
+            entry.points == lastEntry.points and entry.position > 100
+          },
         );
         rewardEntriesBuffer.append(Buffer.fromArray(tiedEntries));
       };
@@ -1846,13 +1871,13 @@ module {
 
       var scaledPercentages = RewardPercentages.percentages;
 
-      if(List.size(rewardEntries) < 100){
+      if (List.size(rewardEntries) < 100) {
         scaledPercentages := scalePercentages(RewardPercentages.percentages, List.size(rewardEntries));
       };
-      
+
       let rewardEntriesArray = List.toArray(rewardEntries);
 
-      let teamValueLeaderboard: T.TeamValueLeaderboard = {
+      let teamValueLeaderboard : T.TeamValueLeaderboard = {
         seasonId = currentSeason;
         entries = rewardEntries;
         totalEntries = List.size(rewardEntries);
@@ -1863,18 +1888,18 @@ module {
       for (index in Iter.range(0, Array.size(rewardEntriesArray) - 1)) {
         let entry = rewardEntriesArray[index];
         let payoutPercentage = scaledPercentages[entry.position - 1];
-        
+
         let prize = Float.fromInt64(Int64.fromNat64(mostValuableTeamPool)) * payoutPercentage;
         await payReward(entry.principalId, Int64.toNat64(Float.toInt64(prize)));
       };
     };
 
-    public func distributeHighestScoringPlayerRewards(highestScoringPlayerRewardPool: Nat64, fixtures: List.List<DTOs.FixtureDTO>) : async (){
-      
+    public func distributeHighestScoringPlayerRewards(highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>) : async () {
+
       let highestScoringPlayerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
 
-      for(fixture in Iter.fromList(fixtures)){
-        if(fixture.highestScoringPlayerId > 0){
+      for (fixture in Iter.fromList(fixtures)) {
+        if (fixture.highestScoringPlayerId > 0) {
           highestScoringPlayerIdBuffer.add(fixture.highestScoringPlayerId);
         };
       };
@@ -1885,27 +1910,29 @@ module {
 
       let playerRewardShare = Nat64.toNat(gameweekRewardAmount) / Array.size(highestScoringPlayerIds);
 
-      for(highestScoringPlayerId in Iter.fromArray(highestScoringPlayerIds)){
+      for (highestScoringPlayerId in Iter.fromArray(highestScoringPlayerIds)) {
 
-          let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
-            managers,
-            Text.equal,
-            Text.hash,
-            func (k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == highestScoringPlayerId }) == null) { null } else { ?v }
-          );
+        let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
+          managers,
+          Text.equal,
+          Text.hash,
+          func(k, v) = if (Array.find<T.PlayerId>(v.playerIds, func(id) { id == highestScoringPlayerId }) == null) {
+            null;
+          } else { ?v },
+        );
 
-          let prize = Nat64.fromNat(Nat64.toNat(gameweekRewardAmount) / managersWithPlayer.size());
+        let prize = Nat64.fromNat(Nat64.toNat(gameweekRewardAmount) / managersWithPlayer.size());
 
-          for ((principalId, manager) in managersWithPlayer.entries()) { 
-            await payReward(principalId, prize);
-          };
+        for ((principalId, manager) in managersWithPlayer.entries()) {
+          await payReward(principalId, prize);
+        };
       };
     };
 
-    public func distributeWeeklyATHScoreRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
+    public func distributeWeeklyATHScoreRewards(weeklyRewardPool : Nat64, weeklyLeaderboard : DTOs.WeeklyLeaderboardDTO) : async () {
       let weeklyATHReward = weeklyRewardPool / 38;
       let maybeLastHighScore = List.last<T.HighScoreRecord>(weeklyAllTimeHighScores);
-      var highestWeeklyScore: Int16 = 0;
+      var highestWeeklyScore : Int16 = 0;
       switch (maybeLastHighScore) {
         case (null) {
           highestWeeklyScore := 0;
@@ -1916,21 +1943,21 @@ module {
       };
 
       let leaderboardEntries = weeklyLeaderboard.entries;
-      let topScore: Int16 = if (leaderboardEntries.size() > 0) {
-        leaderboardEntries[0].points
+      let topScore : Int16 = if (leaderboardEntries.size() > 0) {
+        leaderboardEntries[0].points;
       } else {
-        0
+        0;
       };
 
       if (topScore > highestWeeklyScore) {
         weeklyAllTimeHighScores := List.append(weeklyAllTimeHighScores, List.make({ recordType = #WeeklyHighScore; points = topScore; createDate = Time.now() }));
         await payReward(leaderboardEntries[0].principalId, weeklyRewardPool);
-        weeklyATHPrizePool := 0; 
+        weeklyATHPrizePool := 0;
       };
 
       var tiedWinners = Array.filter<T.LeaderboardEntry>(
         leaderboardEntries,
-        func (entry): Bool { entry.points == topScore }
+        func(entry) : Bool { entry.points == topScore },
       );
 
       if (tiedWinners.size() > 1 and topScore > highestWeeklyScore) {
@@ -1938,19 +1965,19 @@ module {
         for (winner in Iter.fromArray(tiedWinners)) {
           await payReward(winner.principalId, payoutPerWinner);
           weeklyAllTimeHighScores := List.append(weeklyAllTimeHighScores, List.make({ recordType = #WeeklyHighScore; points = winner.points; createDate = Time.now() }));
-          weeklyATHPrizePool := 0; 
-        }
+          weeklyATHPrizePool := 0;
+        };
       } else {
         await mintToTreasury(weeklyATHReward);
         weeklyATHPrizePool := weeklyATHPrizePool + weeklyATHReward;
-      }
+      };
     };
 
-    public func distributeMonthlyATHScoreRewards(monthlyRewardPool: Nat64, monthlyLeaderboards: [DTOs.MonthlyLeaderboardDTO]) : async (){
+    public func distributeMonthlyATHScoreRewards(monthlyRewardPool : Nat64, monthlyLeaderboards : [DTOs.MonthlyLeaderboardDTO]) : async () {
       let monthlyATHReward = monthlyRewardPool / 9;
 
       let maybeLastHighScore = List.last<T.HighScoreRecord>(monthlyAllTimeHighScores);
-      var highestMonthlyScore: Int16 = 0;
+      var highestMonthlyScore : Int16 = 0;
       switch (maybeLastHighScore) {
         case (null) {
           highestMonthlyScore := 0;
@@ -1969,7 +1996,7 @@ module {
         if (leaderboardEntries.size() > 0) {
           let topScore = leaderboardEntries[0].points;
           if (topScore > highestMonthlyScore) {
-            highestMonthlyScore := topScore; 
+            highestMonthlyScore := topScore;
             winnersBuffer.clear();
             winnersBuffer.add(leaderboardEntries[0]);
             newRecordSet := true;
@@ -1978,10 +2005,10 @@ module {
             for (entry in leaderboardEntries.vals()) {
               if (entry.points == topScore and entry.principalId != winners[0].principalId) {
                 winnersBuffer.add(entry);
-              }
+              };
             };
-          }
-        }
+          };
+        };
       };
 
       winners := Buffer.toArray(winnersBuffer);
@@ -1990,17 +2017,17 @@ module {
         for (winner in Iter.fromArray(winners)) {
           await payReward(winner.principalId, totalPayout / Nat64.fromNat(winners.size()));
           monthlyAllTimeHighScores := List.append(monthlyAllTimeHighScores, List.make({ recordType = #MonthlyHighScore; points = winner.points; createDate = Time.now() }));
-          monthlyATHPrizePool := 0; 
+          monthlyATHPrizePool := 0;
         };
       } else {
         await mintToTreasury(monthlyATHReward);
         monthlyATHPrizePool := monthlyATHPrizePool + monthlyATHReward;
-      }
+      };
     };
 
-    public func distributeSeasonATHScoreRewards(seasonRewardPool: Nat64, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
+    public func distributeSeasonATHScoreRewards(seasonRewardPool : Nat64, seasonLeaderboard : DTOs.SeasonLeaderboardDTO) : async () {
       let maybeLastHighScore = List.last<T.HighScoreRecord>(seasonAllTimeHighScores);
-      var highestSeasonScore: Int16 = 0;
+      var highestSeasonScore : Int16 = 0;
       switch (maybeLastHighScore) {
         case (null) {
           highestSeasonScore := 0;
@@ -2011,21 +2038,21 @@ module {
       };
 
       let leaderboardEntries = seasonLeaderboard.entries;
-      let topScore: Int16 = if (leaderboardEntries.size() > 0) {
-        leaderboardEntries[0].points
+      let topScore : Int16 = if (leaderboardEntries.size() > 0) {
+        leaderboardEntries[0].points;
       } else {
-        0
+        0;
       };
 
       if (topScore > highestSeasonScore) {
         seasonAllTimeHighScores := List.append(seasonAllTimeHighScores, List.make({ recordType = #SeasonHighScore; points = topScore; createDate = Time.now() }));
         await payReward(leaderboardEntries[0].principalId, seasonRewardPool);
-        seasonATHPrizePool := 0; 
+        seasonATHPrizePool := 0;
       };
 
       var tiedWinners = Array.filter<T.LeaderboardEntry>(
         leaderboardEntries,
-        func (entry): Bool { entry.points == topScore }
+        func(entry) : Bool { entry.points == topScore },
       );
 
       if (tiedWinners.size() > 1 and topScore > highestSeasonScore) {
@@ -2033,45 +2060,45 @@ module {
         for (winner in Iter.fromArray(tiedWinners)) {
           await payReward(winner.principalId, payoutPerWinner);
           seasonAllTimeHighScores := List.append(seasonAllTimeHighScores, List.make({ recordType = #SeasonHighScore; points = winner.points; createDate = Time.now() }));
-          seasonATHPrizePool := 0; 
-        }
+          seasonATHPrizePool := 0;
+        };
       } else {
         await mintToTreasury(seasonRewardPool);
         weeklyATHPrizePool := weeklyATHPrizePool + seasonRewardPool;
-      }
+      };
     };
 
-    private func payReward(principalId: T.PrincipalId, fpl: Nat64) : async (){
+    private func payReward(principalId : T.PrincipalId, fpl : Nat64) : async () {
       return await tokenCanister.transferToken(principalId, Nat64.toNat(fpl));
     };
 
-    private func mintToTreasury(fpl: Nat64) : async (){
+    private func mintToTreasury(fpl : Nat64) : async () {
       return await tokenCanister.mintToTreasury(Nat64.toNat(fpl));
     };
 
-    public func getStableManagers(): [(T.PrincipalId, T.Manager)] {
+    public func getStableManagers() : [(T.PrincipalId, T.Manager)] {
       return Iter.toArray(managers.entries());
     };
 
-    public func setStableManagers(stable_managers: [(T.PrincipalId, T.Manager)]) {
-       managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
+    public func setStableManagers(stable_managers : [(T.PrincipalId, T.Manager)]) {
+      managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
         stable_managers.vals(),
         stable_managers.size(),
         Text.equal,
-        Text.hash
+        Text.hash,
       );
     };
 
-    public func getStableProfilePictureCanisterIds(): [(T.PrincipalId, Text)] {
+    public func getStableProfilePictureCanisterIds() : [(T.PrincipalId, Text)] {
       return Iter.toArray(profilePictureCanisterIds.entries());
     };
 
-    public func setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids: [(T.PrincipalId, Text)])  {
+    public func setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids : [(T.PrincipalId, Text)]) {
       profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
         stable_profile_picture_canister_ids.vals(),
         stable_profile_picture_canister_ids.size(),
         Text.equal,
-        Text.hash
+        Text.hash,
       );
     };
   };

@@ -13,10 +13,11 @@ module {
     private var nextClubId : T.ClubId = 1;
     private var clubs = List.fromArray<T.Club>([]);
     private var relegatedClubs = List.fromArray<T.Club>([]);
-  
+
     public func setStableData(
-      stable_next_club_id: T.ClubId,
-      stable_clubs: [T.Club]) {
+      stable_next_club_id : T.ClubId,
+      stable_clubs : [T.Club],
+    ) {
 
       nextClubId := stable_next_club_id;
       clubs := List.fromArray(stable_clubs);
@@ -36,14 +37,14 @@ module {
       return sortedArray;
     };
 
-    public func validatePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async Result.Result<Text,Text> {  
+    public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
       if (List.size(clubs) >= 20) {
         return #err("Invalid: League cannot contain more than 20 teams.");
       };
 
       let clubToPromote = List.find<T.Club>(relegatedClubs, func(c : T.Club) { c.id == promoteFormerClubDTO.clubId });
-      switch(clubToPromote){
-        case (null){
+      switch (clubToPromote) {
+        case (null) {
           return #err("Invalid: Cannot find relegated club.");
         };
         case (?foundClub) {};
@@ -52,7 +53,7 @@ module {
       return #ok("Valid");
     };
 
-    public func executePromoteFormerClub(promoteFormerClubDTO: DTOs.PromoteFormerClubDTO) : async () {
+    public func executePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async () {
       let clubToPromote = List.find<T.Club>(relegatedClubs, func(c : T.Club) { c.id == promoteFormerClubDTO.clubId });
       switch (clubToPromote) {
         case (null) {};
@@ -68,8 +69,8 @@ module {
       };
     };
 
-    public func validatePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async Result.Result<Text,Text> {
-      
+    public func validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
+
       if (List.size(clubs) >= 20) {
         return #err("Invalid: League cannot contain more than 20 teams.");
       };
@@ -101,7 +102,7 @@ module {
       return #ok("Valid");
     };
 
-    public func executePromoteNewClub(promoteNewClubDTO: DTOs.PromoteNewClubDTO) : async () {
+    public func executePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async () {
       let newClub : T.Club = {
         id = nextClubId;
         name = promoteNewClubDTO.name;
@@ -116,7 +117,7 @@ module {
       nextClubId += 1;
     };
 
-    public func validateUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async Result.Result<Text,Text> {
+    public func validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
       let club = List.find(
         clubs,
         func(c : T.Club) : Bool {
@@ -155,52 +156,53 @@ module {
           };
         };
       };
-      
+
       return #ok("Valid");
     };
 
-    public func executeUpdateClub(updateClubDTO: DTOs.UpdateClubDTO) : async () {
+    public func executeUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async () {
       clubs := List.map<T.Club, T.Club>(
-      clubs,
-      func(currentClub : T.Club) : T.Club {
-        if (currentClub.id == updateClubDTO.clubId) {
-          return {
-            id = currentClub.id;
-            name = updateClubDTO.name;
-            friendlyName = updateClubDTO.friendlyName;
-            primaryColourHex = updateClubDTO.primaryColourHex;
-            secondaryColourHex = updateClubDTO.secondaryColourHex;
-            thirdColourHex = updateClubDTO.thirdColourHex;
-            abbreviatedName = updateClubDTO.abbreviatedName;
-            shirtType = updateClubDTO.shirtType;
+        clubs,
+        func(currentClub : T.Club) : T.Club {
+          if (currentClub.id == updateClubDTO.clubId) {
+            return {
+              id = currentClub.id;
+              name = updateClubDTO.name;
+              friendlyName = updateClubDTO.friendlyName;
+              primaryColourHex = updateClubDTO.primaryColourHex;
+              secondaryColourHex = updateClubDTO.secondaryColourHex;
+              thirdColourHex = updateClubDTO.thirdColourHex;
+              abbreviatedName = updateClubDTO.abbreviatedName;
+              shirtType = updateClubDTO.shirtType;
+            };
+          } else {
+            return currentClub;
           };
-        } else {
-          return currentClub;
-        };
-      });
+        },
+      );
     };
 
-    public func getStableClubs(): [T.Club] {
+    public func getStableClubs() : [T.Club] {
       return List.toArray(clubs);
     };
 
-    public func setStableClubs(stable_clubs: [T.Club]) {
+    public func setStableClubs(stable_clubs : [T.Club]) {
       clubs := List.fromArray(stable_clubs);
     };
 
-    public func getStableRelegatedClubs(): [T.Club] {
+    public func getStableRelegatedClubs() : [T.Club] {
       return List.toArray(relegatedClubs);
     };
 
-    public func setStableRelegatedClubs(stable_relegated_clubs: [T.Club]) {
+    public func setStableRelegatedClubs(stable_relegated_clubs : [T.Club]) {
       relegatedClubs := List.fromArray(stable_relegated_clubs);
     };
 
-    public func getStableNextClubId(): T.ClubId {
+    public func getStableNextClubId() : T.ClubId {
       return nextClubId;
     };
 
-    public func setStableNextClubId(stable_next_club_id: T.ClubId){
+    public func setStableNextClubId(stable_next_club_id : T.ClubId) {
       nextClubId := stable_next_club_id;
     };
   };

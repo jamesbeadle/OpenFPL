@@ -27,57 +27,54 @@ This document provides detailed test cases for the OpenFPL application. Each tes
   2. Enter a valid username, email, and password.
   3. Click the 'Register' button.
 - **Expected Results**: The user should receive a confirmation message and be taken to the login screen.
-- **Actual Results**: 
-- **Status**: 
-- **Remarks**: 
-
+- **Actual Results**:
+- **Status**:
+- **Remarks**:
 
 Setup Testing Procedure
+
 - Auto generate fixtures
 - Setup the system for each scenario
 
-	
-
-
 - double gameweek
 - postponed game
-	- result stands
-	- replayed from minute
-	- replayed
+  - result stands
+  - replayed from minute
+  - replayed
 - Bonuses
 - January Transfer Window
 - Unlimited Transfers
 - Captain Scenarios
 - Leaderboards
-	- Weekly
-	- Monthly
-	- Season
+  - Weekly
+  - Monthly
+  - Season
 - Changing your favourite teams can only be done before the first gameweek begins
 - Reward distributions
 - Test all proposal types
-    - Retired move to retirement canister
-    - Unretired move back
-    - Move to external club canister
-    - Move back to Live players canister
-    - Transfer a player to another premier league club
+  - Retired move to retirement canister
+  - Unretired move back
+  - Move to external club canister
+  - Move back to Live players canister
+  - Transfer a player to another premier league club
 - canisters created
 - canisters topped up
 - Update parent club information effectively setting their transfer status loaned players
 - cannot make more than available changes per week unless first gameweek or jan transfer wildcard played and they can never go below zero
 - local storage data is managed and cleared up
-    - - Ensuse a users cache is cleared when a new season starts by updating the cache hash values 
+  - - Ensuse a users cache is cleared when a new season starts by updating the cache hash values
 - ensuring the sequential order of ids on types that require them
 - ensure that players can only be moved to the retired or former player canisters after they have been removed from all teams
 - a teams bank balance and value accurate changes when players are added or removed
 - The scenario of a new gameweek starting before the prior gameweek is verified (overlapping gameweeks)
 - rolling over of seasons
-    - Need to test season dropdown filters on all views when sesaon rolled over
+  - Need to test season dropdown filters on all views when sesaon rolled over
 - all invalid create fantasy team scenarios
 - governance rewards are distributed in a spread out manner
 - governance rewards are distributed at the correct %
 - Large user volume testing
-    - Calculation cycle usage
-    - Pagination with cahcing
+  - Calculation cycle usage
+  - Pagination with cahcing
 - All data caches update correctly when required
 
 - Listed security concerns
