@@ -353,4 +353,18 @@ module {
       };
   };
 
+  public func getLatestFixtureTime(fixtures : [T.Fixture]) : Int {
+    return Array.foldLeft(
+      fixtures,
+      fixtures[0].kickOff,
+      func(acc : Int, fixture : T.Fixture) : Int {
+        if (fixture.kickOff > acc) {
+          return fixture.kickOff;
+        } else {
+          return acc;
+        };
+      },
+    );
+  };
+
 };

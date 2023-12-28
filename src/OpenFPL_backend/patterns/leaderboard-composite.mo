@@ -11,7 +11,9 @@ import Utilities "../utilities";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import Cycles "mo:base/ExperimentalCycles";
+import Buffer "mo:base/Buffer";
 import WeeklyLeaderboardCanister "../weekly-leaderboard";
+import MonthlyLeaderboardCanister "../monthly-leaderboard";
 
 module {
 
@@ -201,8 +203,8 @@ module {
       let positionedGameweekEntries = assignPositionText(sortedGameweekEntries);
 
       await calculateWeeklyLeaderboards(seasonId, gameweek, positionedGameweekEntries);
-      calculateMonthlyLeaderboards(seasonId, gameweek, positionedGameweekEntries);
-      calculateSeasonLeaderboard(seasonId, managers);
+      await calculateMonthlyLeaderboards(seasonId, gameweek, positionedGameweekEntries, managers);
+      await calculateSeasonLeaderboard(seasonId, managers);
 
     };
 
@@ -216,19 +218,122 @@ module {
       };
       
       let gameweekLeaderboardCanisterId = await createWeeklyLeaderboardCanister(seasonId, gameweek, currentGameweekLeaderboard);
-      //TODO: Add the leadeboard canister ids to the cycle watcher
-    
-
       weeklyLeaderboardCanisterIds.put((seasonId, gameweek), gameweekLeaderboardCanisterId);
-
     };
 
-    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>)){
+    private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek: T.GameweekNumber, month : T.CalendarMonth, clubId: T.ClubId, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>), managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : async (){
       //TODO: Implement using the functions at the bottom
-      
+      let clubGroup = groupByTeam(managers);
+
+    
+      var monthGameweeks : List.List<Nat8> = List.nil();
+      var gameweekMonth : Nat8 = 0;
+      let gameweekFixtures: [T.Fixture] = [];
+
+      if (gameweekFixtures.size() > 0) {
+        gameweekMonth := Utilities.unixTimeToMonth(Utilities.getLatestFixtureTime(gameweekFixtures));
+        monthGameweeks := List.append(monthGameweeks, List.fromArray([gameweek]));
+
+        var currentGameweek = gameweek;
+        label gwLoop while (currentGameweek > 1) {
+          currentGameweek -= 1;
+          let currentMonth = Utilities.unixTimeToMonth(Utilities.getLatestFixtureTime(gameweekFixtures));
+          if (currentMonth == gameweekMonth) {
+            monthGameweeks := List.append(monthGameweeks, List.fromArray([currentGameweek]));
+          } else {
+            break gwLoop;
+          };
+        };
+      };
+
+      var updatedLeaderboards = List.nil<T.ClubLeaderboard>();
+
+
+
+      for ((clubId, userTeams) : (T.ClubId, [(Text, T.Manager)]) in clubGroup.entries()) {
+
+        let filteredTeams = List.filter<(Text, T.Manager)>(
+          List.fromArray(userTeams),
+          func(team : (Text, T.Manager)) : Bool {
+            return team.1.favouriteClubId != 0;
+          },
+        );
+
+        let monthEntries = List.map<(Text, T.Manager), T.LeaderboardEntry>(
+          filteredTeams,
+          func(pair : (Text, T.Manager)) : T.LeaderboardEntry {
+            return createLeaderboardEntry(pair.0, pair.1.username, totalPointsForMonth(pair.1, seasonId, monthGameweeks));
+          },
+        );
+
+        let sortedMonthEntries = List.reverse(mergeSort(monthEntries));
+        let positionedMonthlyEntries = assignPositionText(sortedMonthEntries);
+
+        let clubMonthlyLeaderboard : T.ClubLeaderboard = {
+          seasonId = seasonId;
+          month = gameweekMonth;
+          clubId = clubId;
+          entries = positionedGameweekEntries;
+          totalEntries = List.size(positionedMonthlyEntries);
+        };
+
+        updatedLeaderboards := List.append<T.ClubLeaderboard>(updatedLeaderboards, List.fromArray([clubMonthlyLeaderboard]));
+      };
+
+      var monthlyLeaderboards = List.nil<T.ClubLeaderboard>();
+    
+      for(leaderboard in Iter.fromList(updatedLeaderboards)){
+        let monthlyLeaderboardCanisterId = await createMonthlyLeaderboardCanister(seasonId, month, clubId, leaderboard);
+        monthlyLeaderboardCanisterIds.put((seasonId, gameweek, clubId), monthlyLeaderboardCanisterId);
+      };
+    };
+    
+    private func groupByTeam(managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : HashMap.HashMap<T.ClubId, [(Text, T.Manager)]> {
+      let groupedTeams : HashMap.HashMap<T.ClubId, [(Text, T.Manager)]> = HashMap.HashMap<T.ClubId, [(Text, T.Manager)]>(10, Utilities.eqNat16, Utilities.hashNat16);
+
+      for ((principalId, fantasyTeam) in managers.entries()) {
+        let teamId = fantasyTeam.favouriteClubId;
+        switch (groupedTeams.get(teamId)) {
+          case null {
+            groupedTeams.put(teamId, [(principalId, fantasyTeam)]);
+          };
+          case (?existingEntries) {
+            let updatedEntries = Buffer.fromArray<(Text, T.Manager)>(existingEntries);
+            updatedEntries.add((principalId, fantasyTeam));
+            groupedTeams.put(teamId, Buffer.toArray(updatedEntries));
+          };
+        };
+      };
+
+      return groupedTeams;
     };
 
-    private func calculateSeasonLeaderboard(seasonId : T.SeasonId, managers: HashMap.HashMap<T.PrincipalId, T.Manager>){
+    
+    private func totalPointsForMonth(team : T.Manager, seasonId : T.SeasonId, monthGameweeks : List.List<Nat8>) : Int16 {
+
+      var totalPoints : Int16 = 0;
+
+      let season = List.find(
+        team.history,
+        func(season : T.FantasyTeamSeason) : Bool {
+          return season.seasonId == seasonId;
+        },
+      );
+
+      switch (season) {
+        case (null) { return 0 };
+        case (?foundSeason) {
+          for (gameweek in Iter.fromList(foundSeason.gameweeks)) {
+            if (List.some(monthGameweeks, func(mw : Nat8) : Bool { return mw == gameweek.gameweek })) {
+              totalPoints += gameweek.points;
+            };
+          };
+          return totalPoints;
+        };
+      };
+    };
+
+    private func calculateSeasonLeaderboard(seasonId : T.SeasonId, managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : async (){
       let seasonEntries = Array.map<(Text, T.Manager), T.LeaderboardEntry>(
         Iter.toArray(managers.entries()),
         func(pair) {
@@ -244,6 +349,30 @@ module {
       
       Cycles.add(2_000_000_000_000);
       let canister = await WeeklyLeaderboardCanister.WeeklyLeaderboardCanister();
+      let IC : Management.Management = actor (ENV.Default);
+      let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
+      let canister_principal = Principal.fromActor(canister);
+      await canister.addWeeklyLeaderboard(seasonId, gameweek, weeklyLeaderboard); //TODO
+      let canisterId = Principal.toText(canister_principal);
+
+      switch (storeCanisterId) {
+        case (null) {};
+        case (?actualFunction) {
+          await actualFunction(canisterId);
+        };
+      };
+
+      return canisterId;
+    };
+
+    private func createMonthlyLeaderboardCanister(seasonId: T.SeasonId, month: T.CalendarMonth, clubId: T.ClubId, montlyLeaderboard: T.WeeklyLeaderboard) : async Text {
+    
+      if(backendCanisterController == null){
+        return "";
+      };
+      
+      Cycles.add(2_000_000_000_000);
+      let canister = await MonthlyLeaderboardCanister.MonthlyLeaderboardCanister();
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);
       let canister_principal = Principal.fromActor(canister);
@@ -410,65 +539,5 @@ module {
     };
 
 
- /*
-    
-    
-
-    
-
-    private func groupByTeam(fantasyTeams : HashMap.HashMap<Text, T.UserFantasyTeam>, allProfiles : HashMap.HashMap<Text, T.Profile>) : HashMap.HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]> {
-      let groupedTeams : HashMap.HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]> = HashMap.HashMap<T.TeamId, [(Text, T.UserFantasyTeam)]>(10, Utilities.eqNat16, Utilities.hashNat16);
-
-      for ((principalId, fantasyTeam) in fantasyTeams.entries()) {
-        let profile = allProfiles.get(principalId);
-        switch (profile) {
-          case (null) {};
-          case (?foundProfile) {
-            let teamId = foundProfile.favouriteTeamId;
-            switch (groupedTeams.get(teamId)) {
-              case null {
-                groupedTeams.put(teamId, [(principalId, fantasyTeam)]);
-              };
-              case (?existingEntries) {
-                let updatedEntries = Buffer.fromArray<(Text, T.UserFantasyTeam)>(existingEntries);
-                updatedEntries.add((principalId, fantasyTeam));
-                groupedTeams.put(teamId, Buffer.toArray(updatedEntries));
-              };
-            };
-          };
-        };
-      };
-
-      return groupedTeams;
-    };
-
-    private func totalPointsForMonth(team : T.UserFantasyTeam, seasonId : T.SeasonId, monthGameweeks : List.List<Nat8>) : Int16 {
-
-      var totalPoints : Int16 = 0;
-
-      let season = List.find(
-        team.history,
-        func(season : T.FantasyTeamSeason) : Bool {
-          return season.seasonId == seasonId;
-        },
-      );
-
-      switch (season) {
-        case (null) { return 0 };
-        case (?foundSeason) {
-          for (gameweek in Iter.fromList(foundSeason.gameweeks)) {
-            if (List.some(monthGameweeks, func(mw : Nat8) : Bool { return mw == gameweek.gameweek })) {
-              totalPoints += gameweek.points;
-            };
-          };
-          return totalPoints;
-        };
-      };
-    };
-    
-    */
-/*
-    
-*/
   };
 };
