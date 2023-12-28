@@ -86,7 +86,31 @@ actor class SeasonLeaderboardCanister() {
     }
   };
   
-//TODO: Check others neeed client functions
+  public shared query func getEntries (limit : Nat, offset : Nat) : async ?DTOs.SeasonLeaderboardDTO {
+    
+    switch(leaderboard){
+      case (null){
+        return null;
+      };
+      case (?foundLeaderboard){
+        let droppedEntries = List.drop<T.LeaderboardEntry>(foundLeaderboard.entries, offset);
+        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+
+        let leaderboardDTO: DTOs.SeasonLeaderboardDTO = {
+          seasonId = foundLeaderboard.seasonId;
+          entries = List.toArray(paginatedEntries);
+          totalEntries = List.size(foundLeaderboard.entries);
+        };
+
+        return ?leaderboardDTO;
+      };
+    }
+  };
+
+  public shared query func getEntry (principalId: Text) : async ?DTOs.LeaderboardEntryDTO {
+    //TODO: Implement
+    return null;
+  };
 
   system func preupgrade() { };
 

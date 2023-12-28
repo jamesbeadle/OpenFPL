@@ -77,11 +77,18 @@ module {
         };
         case (?foundCanisterId){
           let weekly_leaderboard_canister = actor (foundCanisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async DTOs.WeeklyLeaderboardDTO;
+            getEntries : (limit : Nat, offset : Nat) -> async ?DTOs.WeeklyLeaderboardDTO;
           };
 
           let leaderboardEntries = await weekly_leaderboard_canister.getEntries(limit, offset);
-          return #ok(leaderboardEntries);
+          switch(leaderboardEntries){
+            case (null){
+              return #err(#NotFound);
+            };
+            case (?foundLeaderboard){
+              return #ok(foundLeaderboard);
+            }
+          }
         };
       };
     };
@@ -100,11 +107,18 @@ module {
         };
         case (?foundCanisterId){
           let monthly_leaderboard_canister = actor (foundCanisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async DTOs.MonthlyLeaderboardDTO;
+            getEntries : (limit : Nat, offset : Nat) -> async ?DTOs.MonthlyLeaderboardDTO;
           };
 
           let leaderboardEntries = await monthly_leaderboard_canister.getEntries(limit, offset);
-          return #ok(leaderboardEntries);
+          switch(leaderboardEntries){
+            case (null){
+              return #err(#NotFound);
+            };
+            case (?foundLeaderboard){
+              return #ok(foundLeaderboard);
+            }
+          }
         };
       };
     };
@@ -122,11 +136,18 @@ module {
         };
         case (?foundCanisterId){
           let season_leaderboard_canister = actor (foundCanisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async DTOs.SeasonLeaderboardDTO;
+            getEntries : (limit : Nat, offset : Nat) -> async ?DTOs.SeasonLeaderboardDTO;
           };
 
           let leaderboardEntries = await season_leaderboard_canister.getEntries(limit, offset);
-          return #ok(leaderboardEntries);
+          switch(leaderboardEntries){
+            case (null){
+              return #err(#NotFound);
+            };
+            case (?foundLeaderboard){
+              return #ok(foundLeaderboard);
+            }
+          }
         };
       };
     };
@@ -141,12 +162,11 @@ module {
         };
         case (?foundCanisterId){
           let weekly_leaderboard_canister = actor (foundCanisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async DTOs.WeeklyLeaderboardDTO;
-            getEntry : (principalId: Text) -> async DTOs.LeaderboardEntryDTO;
+            getEntry : (principalId: Text) -> async ?DTOs.LeaderboardEntryDTO;
           };
 
           let leaderboardEntry = await weekly_leaderboard_canister.getEntry(principalId);
-          return ?leaderboardEntry;
+          return leaderboardEntry;
         };
       };
     };
@@ -161,12 +181,11 @@ module {
         };
         case (?foundCanisterId){
           let monthly_leaderboard_canister = actor (foundCanisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async DTOs.MonthlyLeaderboardDTO;
-            getEntry : (principalId: Text) -> async DTOs.LeaderboardEntryDTO;
+            getEntry : (principalId: Text) -> async ?DTOs.LeaderboardEntryDTO;
           };
 
           let leaderboardEntry = await monthly_leaderboard_canister.getEntry(principalId);
-          return ?leaderboardEntry;
+          return leaderboardEntry;
         };
       };
     };
@@ -180,12 +199,11 @@ module {
         };
         case (?foundCanisterId){
           let season_leaderboard_canister = actor (foundCanisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async DTOs.SeasonLeaderboardDTO;
-            getEntry : (principalId: Text) -> async DTOs.LeaderboardEntryDTO;
+            getEntry : (principalId: Text) -> async ?DTOs.LeaderboardEntryDTO;
           };
 
           let leaderboardEntry = await season_leaderboard_canister.getEntry(principalId);
-          return ?leaderboardEntry;
+          return leaderboardEntry;
         };
       };
     };

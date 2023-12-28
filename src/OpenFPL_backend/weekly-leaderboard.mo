@@ -21,7 +21,33 @@ actor class WeeklyLeaderboardCanister() {
     seasonId := ?_seasonId;
     gameweek := ?_gameweek;
   };
-//TODO: Must be functions to get the leaderboard somewhere?!
+  
+  public shared query func getEntries (limit : Nat, offset : Nat) : async ?DTOs.WeeklyLeaderboardDTO {
+    
+    switch(leaderboard){
+      case (null){
+        return null;
+      };
+      case (?foundLeaderboard){
+        let droppedEntries = List.drop<T.LeaderboardEntry>(foundLeaderboard.entries, offset);
+        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+
+        let leaderboardDTO: DTOs.WeeklyLeaderboardDTO = {
+          seasonId = foundLeaderboard.seasonId;
+          gameweek = foundLeaderboard.gameweek;
+          entries = List.toArray(paginatedEntries);
+          totalEntries = List.size(foundLeaderboard.entries);
+        };
+
+        return ?leaderboardDTO;
+      };
+    }
+  };
+
+  public shared query func getEntry (principalId: Text) : async ?DTOs.LeaderboardEntryDTO {
+    //TODO: Implement
+    return null;
+  };
 
   system func preupgrade() { };
 

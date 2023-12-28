@@ -1466,7 +1466,7 @@ module {
       };
     };
 
-    public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: T.WeeklyLeaderboard) : async (){
+    public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
       
       //TODO: gameweek is complete so pay rewards
 
@@ -1493,10 +1493,10 @@ module {
       await distributeMonthlyATHScoreRewards();
     };
 
-    public func distributeWeeklyRewards(seasonRewardPool: Nat64, weeklyLeaderboard: T.WeeklyLeaderboard) : async (){
+    public func distributeWeeklyRewards(seasonRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
       let weeklyRewardAmount = seasonRewardPool / 38;
       var payouts = List.nil<Float>();
-      var currentEntries = weeklyLeaderboard.entries;
+      var currentEntries = List.fromArray(weeklyLeaderboard.entries);
 
       let scaledPercentages = if (weeklyLeaderboard.totalEntries < 100) {
           scalePercentages(RewardPercentages.percentages, weeklyLeaderboard.totalEntries)

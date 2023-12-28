@@ -270,7 +270,7 @@ module DTOs {
   public type WeeklyLeaderboardDTO = {
     seasonId : T.SeasonId;
     gameweek : T.GameweekNumber;
-    entries : List.List<T.LeaderboardEntry>;
+    entries : [T.LeaderboardEntry];
     totalEntries: Nat;
   };
 
