@@ -314,7 +314,7 @@ module DTOs {
 
   public type ManagerGameweekDTO = {
     principalId : Text;
-    teamName : Text;
+    username : Text;
     favouriteClubId : T.ClubId;
     transfersAvailable : Nat8;
     monthlyBonusesAvailable : Nat8;

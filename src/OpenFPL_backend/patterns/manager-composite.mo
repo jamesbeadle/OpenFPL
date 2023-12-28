@@ -16,6 +16,7 @@ import Cycles "mo:base/ExperimentalCycles";
 import Principal "mo:base/Principal";
 import Buffer "mo:base/Buffer";
 import Float "mo:base/Float";
+import Option "mo:base/Option";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import ProfilePictureCanister "../profile-picture-canister";
@@ -1129,7 +1130,7 @@ module {
                         braceBonusGameweek = snapshot.braceBonusGameweek;
                         hatTrickHeroGameweek = snapshot.hatTrickHeroGameweek;
                         favouriteClubId = snapshot.favouriteClubId;
-                        teamName = snapshot.teamName;
+                        username = snapshot.username;
                         points = teamPoints;
                         transferWindowGameweek = snapshot.transferWindowGameweek;
                         monthlyBonusesAvailable = snapshot.monthlyBonusesAvailable;
@@ -1202,44 +1203,64 @@ module {
 
     //TODO: CHECK THE IMPLEMENTATION OF THE FOLLOWING
 
-    public func snapshotFantasyTeams() : (){
-      //TODO: Add back code to snapshot
-      /*
-      for ((principalId, userFantasyTeam) in managers.entries()) {
+    public func snapshotFantasyTeams(seasonId: T.SeasonId, gameweek: T.GameweekNumber, players: [DTOs.PlayerDTO]) : (){
+
+     
+      for ((principalId, manager) in managers.entries()) {
+
+        let allPlayers = Array.filter<DTOs.PlayerDTO>(
+          players,
+          func(player : DTOs.PlayerDTO) : Bool {
+            let playerId = player.id;
+            let isPlayerIdInNewTeam = Array.find(
+              manager.playerIds,
+              func(id : Nat16) : Bool {
+                return id == playerId;
+              },
+            );
+            return Option.isSome(isPlayerIdInNewTeam);
+          },
+        );
+
+        let allPlayerValues = Array.map<DTOs.PlayerDTO, Nat>(allPlayers, func(player : DTOs.PlayerDTO) : Nat { return player.valueQuarterMillions });
+        let totalTeamValue = Array.foldLeft<Nat, Nat>(allPlayerValues, 0, func(sumSoFar, x) = sumSoFar + x);
+        
         let newSnapshot : T.FantasyTeamSnapshot = {
-          principalId = userFantasyTeam.fantasyTeam.principalId;
+          principalId = manager.principalId;
           gameweek = gameweek;
-          transfersAvailable = userFantasyTeam.fantasyTeam.transfersAvailable;
-          bankBalance = userFantasyTeam.fantasyTeam.bankBalance;
-          playerIds = userFantasyTeam.fantasyTeam.playerIds;
-          captainId = userFantasyTeam.fantasyTeam.captainId;
-          goalGetterGameweek = userFantasyTeam.fantasyTeam.goalGetterGameweek;
-          goalGetterPlayerId = userFantasyTeam.fantasyTeam.goalGetterPlayerId;
-          passMasterGameweek = userFantasyTeam.fantasyTeam.passMasterGameweek;
-          passMasterPlayerId = userFantasyTeam.fantasyTeam.passMasterPlayerId;
-          noEntryGameweek = userFantasyTeam.fantasyTeam.noEntryGameweek;
-          noEntryPlayerId = userFantasyTeam.fantasyTeam.noEntryPlayerId;
-          teamBoostGameweek = userFantasyTeam.fantasyTeam.teamBoostGameweek;
-          teamBoostTeamId = userFantasyTeam.fantasyTeam.teamBoostTeamId;
-          safeHandsGameweek = userFantasyTeam.fantasyTeam.safeHandsGameweek;
-          safeHandsPlayerId = userFantasyTeam.fantasyTeam.safeHandsPlayerId;
-          captainFantasticGameweek = userFantasyTeam.fantasyTeam.captainFantasticGameweek;
-          captainFantasticPlayerId = userFantasyTeam.fantasyTeam.captainFantasticPlayerId;
-          countrymenGameweek = userFantasyTeam.fantasyTeam.countrymenGameweek;
-          countrymenCountryId = userFantasyTeam.fantasyTeam.countrymenCountryId;
-          prospectsGameweek = userFantasyTeam.fantasyTeam.prospectsGameweek;
-          braceBonusGameweek = userFantasyTeam.fantasyTeam.braceBonusGameweek;
-          hatTrickHeroGameweek = userFantasyTeam.fantasyTeam.hatTrickHeroGameweek;
-          teamName = userFantasyTeam.fantasyTeam.teamName;
-          favouriteTeamId = userFantasyTeam.fantasyTeam.favouriteTeamId;
+          transfersAvailable = manager.transfersAvailable;
+          bankQuarterMillions = manager.bankQuarterMillions;
+          playerIds = manager.playerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = manager.goalGetterGameweek;
+          goalGetterPlayerId = manager.goalGetterPlayerId;
+          passMasterGameweek = manager.passMasterGameweek;
+          passMasterPlayerId = manager.passMasterPlayerId;
+          noEntryGameweek = manager.noEntryGameweek;
+          noEntryPlayerId = manager.noEntryPlayerId;
+          teamBoostGameweek = manager.teamBoostGameweek;
+          teamBoostClubId = manager.teamBoostClubId;
+          safeHandsGameweek = manager.safeHandsGameweek;
+          safeHandsPlayerId = manager.safeHandsPlayerId;
+          captainFantasticGameweek = manager.captainFantasticGameweek;
+          captainFantasticPlayerId = manager.captainFantasticPlayerId;
+          countrymenGameweek = manager.countrymenGameweek;
+          countrymenCountryId = manager.countrymenCountryId;
+          prospectsGameweek = manager.prospectsGameweek;
+          braceBonusGameweek = manager.braceBonusGameweek;
+          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+          username = manager.username;
+          favouriteClubId = manager.favouriteClubId;
           points = 0;
-          transferWindowGameweek = userFantasyTeam.fantasyTeam.transferWindowGameweek;
+          transferWindowGameweek = manager.transferWindowGameweek;
+          monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+          teamValueQuarterMillions = totalTeamValue;
         };
 
         var seasonFound = false;
 
         var updatedSeasons = List.map<T.FantasyTeamSeason, T.FantasyTeamSeason>(
-          userFantasyTeam.history,
+          manager.history,
           func(season : T.FantasyTeamSeason) : T.FantasyTeamSeason {
             if (season.seasonId == seasonId) {
               seasonFound := true;
@@ -1272,16 +1293,44 @@ module {
 
           updatedSeasons := List.push(newSeason, updatedSeasons);
         };
-
-        let updatedUserTeam : T.UserFantasyTeam = {
-          fantasyTeam = userFantasyTeam.fantasyTeam;
+          
+        let updatedManager: T.Manager = {
+          principalId = manager.principalId;
+          username = manager.username;
+          favouriteClubId = manager.favouriteClubId;
+          createDate = manager.createDate;
+          termsAccepted = manager.termsAccepted;
+          profilePictureCanisterId = manager.profilePictureCanisterId;
+          transfersAvailable = manager.transfersAvailable;
+          monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
+          bankQuarterMillions = manager.bankQuarterMillions;
+          playerIds = manager.playerIds;
+          captainId = manager.captainId;
+          goalGetterGameweek = manager.goalGetterGameweek;
+          goalGetterPlayerId = manager.goalGetterPlayerId;
+          passMasterGameweek = manager.passMasterGameweek;
+          passMasterPlayerId = manager.passMasterPlayerId;
+          noEntryGameweek = manager.noEntryGameweek;
+          noEntryPlayerId = manager.noEntryPlayerId;
+          teamBoostGameweek = manager.teamBoostGameweek;
+          teamBoostClubId = manager.teamBoostClubId;
+          safeHandsGameweek = manager.safeHandsGameweek;
+          safeHandsPlayerId = manager.safeHandsPlayerId;
+          captainFantasticGameweek = manager.captainFantasticGameweek;
+          captainFantasticPlayerId = manager.captainFantasticPlayerId;
+          countrymenGameweek = manager.countrymenGameweek;
+          countrymenCountryId = manager.countrymenCountryId;
+          prospectsGameweek = manager.prospectsGameweek;
+          braceBonusGameweek = manager.braceBonusGameweek;
+          hatTrickHeroGameweek = manager.hatTrickHeroGameweek;
+          transferWindowGameweek = manager.transferWindowGameweek;
           history = updatedSeasons;
         };
 
-        fantasyTeams.put(principalId, updatedUserTeam);
+        managers.put(principalId, updatedManager);
         
-      };*/
 
+      };
     };
 
     public func resetTransfers() : (){

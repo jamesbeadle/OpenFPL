@@ -222,10 +222,8 @@ module {
     };
 
     private func calculateMonthlyLeaderboards(seasonId : T.SeasonId, gameweek: T.GameweekNumber, month : T.CalendarMonth, positionedGameweekEntries: ?(T.LeaderboardEntry, List.List<T.LeaderboardEntry>), managers: HashMap.HashMap<T.PrincipalId, T.Manager>) : async (){
-      //TODO: Implement using the functions at the bottom
       let clubGroup = groupByTeam(managers);
 
-    
       var monthGameweeks : List.List<Nat8> = List.nil();
       var gameweekMonth : Nat8 = 0;
       let gameweekFixtures: [T.Fixture] = [];
@@ -247,8 +245,6 @@ module {
       };
 
       var updatedLeaderboards = List.nil<T.ClubLeaderboard>();
-
-
 
       for ((clubId, userTeams) : (T.ClubId, [(Text, T.Manager)]) in clubGroup.entries()) {
 
@@ -340,6 +336,8 @@ module {
           return createLeaderboardEntry(pair.0, pair.1.username, totalPointsForSeason(pair.1, seasonId));
         }
       );
+
+      //TODO
     };
 
     private func createWeeklyLeaderboardCanister(seasonId: T.SeasonId, gameweek: T.GameweekNumber, weeklyLeaderboard: T.WeeklyLeaderboard) : async Text {

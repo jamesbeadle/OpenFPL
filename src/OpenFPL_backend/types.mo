@@ -117,7 +117,7 @@ module Types {
 
   public type FantasyTeamSnapshot = {
     principalId : Text;
-    teamName : Text;
+    username : Text;
     favouriteClubId : ClubId;
     monthlyBonusesAvailable : Nat8;
     transfersAvailable : Nat8;

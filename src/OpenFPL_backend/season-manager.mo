@@ -233,7 +233,9 @@ module {
       };
 
       systemState := updatedSystemState;
-      managerComposite.snapshotFantasyTeams();
+      
+      let players = playerComposite.getPlayers(systemState.calculationSeason);
+      managerComposite.snapshotFantasyTeams(systemState.calculationSeason, systemState.calculationGameweek, players);
       await updateCacheHash("system_state");
     };
 
@@ -301,7 +303,7 @@ module {
       await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeason, systemState.calculationGameweek);
 
       let managers = managerComposite.getManagers();
-      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeason, systemState.calculationGameweek, managers);      
+      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeason, systemState.calculationGameweek, systemState.calculationMonth, managers);      
 
       var calculationGameweek = systemState.calculationGameweek;
       var calculationMonth = systemState.calculationMonth;
