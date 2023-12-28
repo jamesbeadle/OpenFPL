@@ -1466,21 +1466,21 @@ module {
       };
     };
 
-    public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
+    public func payWeeklyRewards(rewardPool: T.RewardPool, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO, fixtures: List.List<DTOs.FixtureDTO>) : async (){
       await distributeWeeklyRewards(rewardPool.weeklyLeaderboardPool, weeklyLeaderboard);     
-      await distributeHighestScoringPlayerRewards(); //TODO
-      await distributeWeeklyATHScoreRewards(); //TODO      
+      await distributeHighestScoringPlayerRewards(fixtures); //TODO
+      await distributeWeeklyATHScoreRewards(rewardPool.allTimeWeeklyHighScorePool, weeklyLeaderboard);
     };
 
     public func payMonthlyRewards(rewardPool: T.RewardPool, monthlyLeaderboard: DTOs.MonthlyLeaderboardDTO) : async (){
       await distributeMonthlyRewards(rewardPool, monthlyLeaderboard);
-      await distributeMonthlyATHScoreRewards();//TODO
+      await distributeMonthlyATHScoreRewards(rewardPool.allTimeMonthlyHighScorePool, monthlyLeaderboard);//TODO
     };
     
     public func paySeasonRewards(rewardPool: T.RewardPool, seasonLeaderboard: DTOs.SeasonLeaderboardDTO) : async (){
       await distributeSeasonRewards(rewardPool.seasonLeaderboardPool, seasonLeaderboard);
       await distributeMostValuableTeamRewards(); //TODO
-      await distributeSeasonATHScoreRewards(); //TODO
+      await distributeSeasonATHScoreRewards(rewardPool.allTimeSeasonHighScorePool, seasonLeaderboard); //TODO
     };
 
     public func distributeWeeklyRewards(weeklyRewardPool: Nat64, weeklyLeaderboard: DTOs.WeeklyLeaderboardDTO) : async (){
@@ -1760,18 +1760,24 @@ module {
       //Order by snapshots for teams at gameweek 38
     };
 
-    public func distributeHighestScoringPlayerRewards() : async (){
-      //Go through gameweek fixtures and find games where the highest scoring player is > 0
-      //get the rewards pool for the highest scoring players
-        //divide by 38 to get the weekly amount
-        //divide by the number of highest scoring players to get the per player amount
-        
-
-      //loop through these players and find managers who have them in their fantasy team
+    public func distributeHighestScoringPlayerRewards(highestScoringPlayerRewardPool: Nat64, fixtures: List.List<DTOs.FixtureDTO>) : async (){
       
-      //Divide the per player amount by the number of managers who have this player
-        //pay them manager the FPL for having them in their team
+      let highestScoringPlayerIds: [T.PlayerId] = [];
 
+      for(fixture in Iter.fromList(fixtures)){
+        if(fixture.highestScoringPlayerId > 0){
+          //TODO: add them to the highest scoring players list
+        };
+      };
+
+      let gameweekRewardAmount = highestScoringPlayerRewardPool / 38;
+
+      let playerRewardShare = Nat64.toNat(gameweekRewardAmount) / Array.size(highestScoringPlayerIds);
+
+      for(highestScoringPlayerId in Iter.fromArray(highestScoringPlayerIds)){
+        //find all managers who had this player in their snapshot for the gameweek in question
+            //pay the rewards for having the player
+      };
     };
 
     public func distributeWeeklyATHScoreRewards() : async (){
