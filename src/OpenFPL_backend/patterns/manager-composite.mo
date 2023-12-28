@@ -1551,7 +1551,7 @@ module {
       for (key in weeklyLeaderboard.entries.keys()) {
         let winner = weeklyLeaderboard.entries[key];      
         let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * weeklyRewardAmount;    
-        payReward(winner.principalId, prize);
+        await payReward(winner.principalId, prize);
       };
     };
 
@@ -1688,7 +1688,7 @@ module {
       for (key in monthlyLeaderboard.entries.keys()) {
         let winner = monthlyLeaderboard.entries[key];      
         let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * Nat64.fromNat(clubManagerMonthlyRewardAmount);    
-        payReward(winner.principalId, prize);
+        await payReward(winner.principalId, prize);
       };
     };
 
@@ -1753,7 +1753,7 @@ module {
       for (key in seasonLeaderboard.entries.keys()) {
         let winner = seasonLeaderboard.entries[key];      
         let prize = Int64.toNat64(Float.toInt64(payoutsArray[key])) * seasonRewardPool;    
-        payReward(winner.principalId, prize);
+        await payReward(winner.principalId, prize);
       };
     };
 
@@ -1797,7 +1797,7 @@ module {
           let prize = Nat64.fromNat(Nat64.toNat(gameweekRewardAmount) / managersWithPlayer.size());
 
           for ((principalId, manager) in managersWithPlayer.entries()) { 
-            payReward(principalId, prize);
+            await payReward(principalId, prize);
           };
       };
     };
@@ -1832,8 +1832,8 @@ module {
 
     };
 
-    private func payReward(principal: T.PrincipalId, fpl: Nat64){
-      tokenCanister.transferToken(principalId, fpl);
+    private func payReward(principalId: T.PrincipalId, fpl: Nat64) : async (){
+      return await tokenCanister.transferToken(principalId, Nat64.toNat(fpl));
     };
 
     public func getStableManagers(): [(T.PrincipalId, T.Manager)] {

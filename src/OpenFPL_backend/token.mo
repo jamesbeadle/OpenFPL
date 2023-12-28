@@ -3,8 +3,11 @@ import Principal "mo:base/Principal";
 import Blob "mo:base/Blob";
 import Time "mo:base/Time";
 import Int64 "mo:base/Int64";
+import Array "mo:base/Array";
+import Result "mo:base/Result";
 import Account "lib/Account";
 import CanisterIds "CanisterIds";
+import T "types";
 
 module {
 
@@ -66,9 +69,12 @@ module {
       return Nat64.fromNat(await token_canister_actor.icrc1_total_supply());
     };
 
-    public func transferToken(principalId: Text, amount: Nat) : async TransferResult{
+    public func transferToken(principalId: Text, amount: Nat) : async (){
+
+      let tokenMintingAccount = Account.accountIdentifier(Principal.fromText(CanisterIds.TOKEN_CANISTER_ID), Blob.fromArrayMut(Array.init(32, 0 : Nat8)));
+
       let transferArgs: TransferArg =  {
-        from_subaccount = Blob.fromArray([]);
+        from_subaccount = tokenMintingAccount;
         to = {
           owner =  Principal.fromText(principalId); 
           subaccount = null
@@ -78,7 +84,7 @@ module {
         memo = Blob.fromArray([]);
         created_at_time = Int64.toNat64(Int64.fromInt(Time.now()));
       };
-      return await token_canister_actor.icrc1_transfer(transferArgs);
+      let result = await token_canister_actor.icrc1_transfer(transferArgs);
     };
   };
 };
