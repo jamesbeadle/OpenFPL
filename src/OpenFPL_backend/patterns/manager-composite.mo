@@ -38,23 +38,21 @@ module {
     private var teamValueLeaderboards : HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard> = HashMap.HashMap<T.SeasonId, T.TeamValueLeaderboard>(100, Utilities.eqNat16, Utilities.hashNat16);
 
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
+    private var backendCanisterController : ?Principal = null;
 
-    var backendCanisterController : ?Principal = null;
+    private var seasonRewards : List.List<T.SeasonRewards> = List.nil();
+    private var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
+    private var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
+    private var mostValuableTeamRewards : List.List<T.RewardsList> = List.nil();
+    private var highScoringPlayerRewards : List.List<T.RewardsList> = List.nil();
+    
+    private var weeklyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
+    private var monthlyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
+    private var seasonAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
 
-    var seasonRewards : List.List<T.SeasonRewards> = List.nil();
-    var monthlyRewards : List.List<T.MonthlyRewards> = List.nil();
-    var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
-    var mostValuableTeamRewards : List.List<T.RewardsList> = List.nil();
-    var highScoringPlayerRewards : List.List<T.RewardsList> = List.nil();
-    var allTimeHighScoreRewards : List.List<T.RewardsList> = List.nil();
-
-    var weeklyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
-    var monthlyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
-    var seasonAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
-
-    var weeklyATHPrizePool : Nat64 = 0;
-    var monthlyATHPrizePool : Nat64 = 0;
-    var seasonATHPrizePool : Nat64 = 0;
+    private var weeklyATHPrizePool : Nat64 = 0;
+    private var monthlyATHPrizePool : Nat64 = 0;
+    private var seasonATHPrizePool : Nat64 = 0;
 
     public func setBackendCanisterController(controller : Principal) {
       backendCanisterController := ?controller;

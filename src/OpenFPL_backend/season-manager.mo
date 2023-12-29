@@ -741,6 +741,58 @@ module {
       managerComposite.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);
     };
 
+    public func getStableActiveProfilePictureCanisterId() : Text {
+      return managerComposite.getStableActiveProfilePictureCanisterId();
+    };
+
+    public func getStableTeamValueLeaderboards(): [(T.SeasonId, T.TeamValueLeaderboard)]{
+      return managerComposite.getStableTeamValueLeaderboards();
+    };
+
+    public func getStableSeasonRewards() : [T.SeasonRewards]{
+      return managerComposite.getStableSeasonRewards();
+    };
+
+    public func getStableMonthlyRewards() : [T.MonthlyRewards]{
+      return managerComposite.getStableMonthlyRewards();
+    };
+
+    public func getStableWeeklyRewards() : [T.WeeklyRewards]{
+      return managerComposite.getStableWeeklyRewards();
+    };
+
+    public func getStableMostValuableTeamRewards() : [T.RewardsList]{
+      return managerComposite.getStableMostValuableTeamRewards();
+    };
+
+    public func getStableHighestScoringPlayerRewards(): [T.RewardsList]{
+      return managerComposite.getStableHighestScoringPlayerRewards();
+    };
+
+    public func getStableWeeklyATHScores(): [T.HighScoreRecord]{
+      return managerComposite.getStableWeeklyATHScores();
+    };
+
+    public func getStableMonthlyATHScores(): [T.HighScoreRecord]{
+      return managerComposite.getStableMonthlyATHScores();
+    };
+
+    public func getStableSeasonATHScores(): [T.HighScoreRecord]{
+      return managerComposite.getStableSeasonATHScores();
+    };
+
+    public func getStableWeeklyATHPrizePool(): Nat64{
+      return managerComposite.getStableWeeklyATHPrizePool();
+    };
+
+    public func getStableMonthlyATHPrizePool(): Nat64{
+      return managerComposite.getStableMonthlyATHPrizePool();
+    };
+
+    public func getSeasonATHPrizePool: Nat64{
+      return managerComposite.getSeasonATHPrizePool();
+    };
+
     public func getStableSeasonLeaderboardCanisterIds() : [(T.SeasonId, Text)] {
       return leaderboardComposite.getStableSeasonLeaderboardCanisterIds();
     };

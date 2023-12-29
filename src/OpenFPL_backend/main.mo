@@ -296,6 +296,19 @@ actor Self {
   private stable var stable_reward_pools: [(T.SeasonId, T.RewardPool)] =  [];
   private stable var stable_managers : [(Text, T.Manager)] = [];
   private stable var stable_profile_picture_canister_ids : [(T.PrincipalId, Text)] = [];
+  private stable var stable_active_profile_picture_canister_id: Text = "";
+  private stable var stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
+  private stable var stable_season_rewards: [T.SeasonRewards] = [];
+  private stable var stable_monthly_rewards: [T.MonthlyRewards] = [];
+  private stable var stable_weekly_rewards: [T.WeeklyRewards] = [];
+  private stable var stable_most_valuable_team_rewards: [T.RewardsList] = [];
+  private stable var stable_highest_scoring_player_rewards: [T.RewardsList] = [];
+  private stable var stable_weekly_ath_scores: [T.HighScoreRecord] = [];
+  private stable var stable_monthly_ath_scores: [T.HighScoreRecord] = [];
+  private stable var stable_season_ath_scores: [T.HighScoreRecord] = [];
+  private stable var stable_weekly_ath_prize_pool: Nat64 = 0;
+  private stable var stable_monthly_ath_prize_pool: Nat64 = 0;
+  private stable var stable_season_ath_prize_pool: Nat64 = 0;
   private stable var stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)] = [];
   private stable var stable_monthly_leaderboard_canister_ids : [(T.MonthlyLeaderboardKey, Text)] = [];
   private stable var stable_weekly_leaderboard_canister_ids : [(T.WeeklyLeaderboardKey, Text)] = [];
@@ -327,6 +340,19 @@ actor Self {
     stable_reward_pools := seasonManager.getStableRewardPools();
     stable_managers := seasonManager.getStableManagers();
     stable_profile_picture_canister_ids := seasonManager.getStableProfilePictureCanisterIds();
+    stable_active_profile_picture_canister_id := seasonManager.getStableActiveProfilePictureCanisterId();
+    stable_team_value_leaderboard := seasonManager.getStableTeamValueLeaderboards();
+    stable_season_rewards := seasonManager.getStableSeasonRewards();
+    stable_monthly_rewards := seasonManager.getStableMonthlyRewards();
+    stable_weekly_rewards := seasonManager.getStableWeeklyRewards();
+    stable_most_valuable_team_rewards := seasonManager.getStableMostValuableTeamRewards();
+    stable_highest_scoring_player_rewards := seasonManager.getStableHighestScoringPlayerRewards();
+    stable_weekly_ath_scores := seasonManager.getStableWeeklyATHScores();
+    stable_monthly_ath_scores := seasonManager.getStableMonthlyATHScores();
+    stable_season_ath_scores := seasonManager.getStableSeasonATHScores();
+    stable_weekly_ath_prize_pool := seasonManager.getStableWeeklyATHPrizePool();
+    stable_monthly_ath_prize_pool := seasonManager.getStableMonthlyATHPrizePool();
+    stable_season_ath_prize_pool := seasonManager.getSeasonATHPrizePool();
     stable_season_leaderboard_canister_ids := seasonManager.getStableSeasonLeaderboardCanisterIds();
     stable_monthly_leaderboard_canister_ids := seasonManager.getStableMonthlyLeaderboardCanisterIds();
     stable_weekly_leaderboard_canister_ids := seasonManager.getStableWeeklyLeaderboardCanisterIds();
@@ -342,6 +368,8 @@ actor Self {
     stable_next_fixture_id := seasonManager.getStableNextFixtureId();
     stable_data_cache_hashes := seasonManager.getStableDataHashes();
     stable_system_state := seasonManager.getStableSystemState();
+
+
   };
 
   system func postupgrade() {
@@ -423,7 +451,7 @@ actor Self {
     setCheckCyclesTimer();
   };
 
-  public shared func init() : async () {
+  public func init() : async () {
 
     switch (cyclesCheckTimerId) {
       case (null) {

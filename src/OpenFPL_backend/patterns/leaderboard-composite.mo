@@ -24,8 +24,7 @@ module {
     private var weeklyLeaderboardCanisterIds : HashMap.HashMap<T.WeeklyLeaderboardKey, Text> = HashMap.HashMap<T.WeeklyLeaderboardKey, Text>(100, Utilities.eqWeeklyKey, Utilities.hashWeeklyKey);
 
     private var storeCanisterId : ?((canisterId : Text) -> async ()) = null;
-
-    var backendCanisterController : ?Principal = null;
+    private var backendCanisterController : ?Principal = null;
 
     public func setStableData(
       stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)],
