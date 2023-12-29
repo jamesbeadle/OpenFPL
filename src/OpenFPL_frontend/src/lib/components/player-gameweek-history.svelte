@@ -8,7 +8,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
-  import type { ClubId } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, ClubId } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { Spinner } from "@dfinity/gix-components";
@@ -18,8 +18,8 @@
   let selectedSeason: Season | null = null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let playerDetails: PlayerDeta;
-  let selectedOpponent: Team | null = null;
-  let opponentCache = new Map<number, Team>();
+  let selectedOpponent: ClubDTO | null = null;
+  let opponentCache = new Map<number, ClubDTO>();
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
   let showModal: boolean = false;
 
@@ -31,8 +31,8 @@
       await fixtureStore.sync();
       await systemStore.sync();
       await playerEventsStore.sync;
-      selectedGameweek = $systemStore?.activeGameweek ?? 1;
-      selectedSeason = $systemStore?.activeSeason ?? null;
+      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
+      selectedSeason = $systemStore?.calculationSeasonId ?? null;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
@@ -42,7 +42,7 @@
 
       playerDetails = await playerEventsStore.getPlayerDetails(
         id,
-        $systemStore?.activeSeason.id ?? 0
+        $systemStore?.calculationSeasonId ?? 0
       );
     } catch (error) {
       toastsError({
@@ -55,11 +55,11 @@
     }
   });
 
-  function getTeamFromId(teamId: number): Team | undefined {
+  function getTeamFromId(teamId: number): ClubDTO | undefined {
     return $teamStore.find((team) => team.id === teamId);
   }
 
-  function getOpponentFromFixtureId(fixtureId: number): Team {
+  function getOpponentFromFixtureId(fixtureId: number): ClubDTO {
     if (opponentCache.has(fixtureId)) {
       return opponentCache.get(fixtureId)!;
     }

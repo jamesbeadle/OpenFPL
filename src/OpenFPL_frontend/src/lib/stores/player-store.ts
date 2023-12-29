@@ -9,6 +9,7 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 
 function createPlayerStore() {
   const { subscribe, set } = writable<PlayerDTO[]>([]);

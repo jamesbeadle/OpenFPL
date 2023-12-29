@@ -13,7 +13,7 @@
     PlayerDTO,
     PlayerEventData,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { replacer } from "$lib/utils/Helpers";
+  import { replacer, convertEvent, convertPlayerPosition } from "$lib/utils/Helpers";
   import Layout from "../Layout.svelte";
   import PlayerEventsModal from "$lib/components/fixture-validation/player-events-modal.svelte";
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
@@ -46,7 +46,7 @@
   let isSubmitDisabled: boolean = true;
   $: isSubmitDisabled =
     $playerEventData.length == 0 ||
-    $playerEventData.filter((x) => x.eventType == 0).length !=
+    $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length !=
       $selectedPlayers.length;
 
   let isLoading = true;
@@ -263,10 +263,10 @@
                       : ""
                   } ${player.lastName}`}
                 </div>
-                {#if player.position == 0}<div class="w-1/6 px-4">GK</div>{/if}
-                {#if player.position == 1}<div class="w-1/6 px-4">DF</div>{/if}
-                {#if player.position == 2}<div class="w-1/6 px-4">MF</div>{/if}
-                {#if player.position == 3}<div class="w-1/6 px-4">FW</div>{/if}
+                {#if convertPlayerPosition(player.position) == 0}<div class="w-1/6 px-4">GK</div>{/if}
+                {#if convertPlayerPosition(player.position) == 1}<div class="w-1/6 px-4">DF</div>{/if}
+                {#if convertPlayerPosition(player.position) == 2}<div class="w-1/6 px-4">MF</div>{/if}
+                {#if convertPlayerPosition(player.position) == 3}<div class="w-1/6 px-4">FW</div>{/if}
                 <div class="w-1/6 px-4">
                   Events:
                   {$playerEventData?.length > 0 &&
@@ -280,10 +280,10 @@
                   {$playerEventData &&
                   $playerEventData?.length > 0 &&
                   $playerEventData?.find(
-                    (e) => e.playerId === player.id && e.eventType == 0
+                    (e) => e.playerId === player.id && convertEvent(e.eventType) == 0
                   )
                     ? $playerEventData?.find(
-                        (e) => e.playerId === player.id && e.eventType == 0
+                        (e) => e.playerId === player.id && convertEvent(e.eventType) == 0
                       )?.eventStartMinute
                     : "-"}
                 </div>
@@ -291,10 +291,10 @@
                   {$playerEventData &&
                   $playerEventData?.length > 0 &&
                   $playerEventData?.find(
-                    (e) => e.playerId === player.id && e.eventType == 0
+                    (e) => e.playerId === player.id && convertEvent(e.eventType) == 0
                   )
                     ? $playerEventData?.find(
-                        (e) => e.playerId === player.id && e.eventType == 0
+                        (e) => e.playerId === player.id && convertEvent(e.eventType) == 0
                       )?.eventEndMinute
                     : "-"}
                 </div>
@@ -321,10 +321,10 @@
                       : ""
                   } ${player.lastName}`}
                 </div>
-                {#if player.position == 0}<div class="w-1/6 px-4">GK</div>{/if}
-                {#if player.position == 1}<div class="w-1/6 px-4">DF</div>{/if}
-                {#if player.position == 2}<div class="w-1/6 px-4">MF</div>{/if}
-                {#if player.position == 3}<div class="w-1/6 px-4">FW</div>{/if}
+                {#if convertPlayerPosition(player.position) == 0}<div class="w-1/6 px-4">GK</div>{/if}
+                {#if convertPlayerPosition(player.position) == 1}<div class="w-1/6 px-4">DF</div>{/if}
+                {#if convertPlayerPosition(player.position) == 2}<div class="w-1/6 px-4">MF</div>{/if}
+                {#if convertPlayerPosition(player.position) == 3}<div class="w-1/6 px-4">FW</div>{/if}
                 <div class="w-1/6 px-4">
                   Events:
                   {$playerEventData?.length > 0 &&
@@ -338,7 +338,7 @@
                   {$playerEventData &&
                   $playerEventData?.length > 0 &&
                   $playerEventData?.find(
-                    (e) => e.playerId === player.id && e.eventType == 0
+                    (e) => e.playerId === player.id && convertEvent(e.eventType) == 0
                   )
                     ? $playerEventData?.find((e) => e.playerId === player.id)
                         ?.eventStartMinute
@@ -348,7 +348,7 @@
                   {$playerEventData &&
                   $playerEventData?.length > 0 &&
                   $playerEventData?.find(
-                    (e) => e.playerId === player.id && e.eventType == 0
+                    (e) => e.playerId === player.id && convertEvent(e.eventType) == 0
                   )
                     ? $playerEventData?.find((e) => e.playerId === player.id)
                         ?.eventEndMinute
@@ -371,36 +371,36 @@
         </div>
         <div class="flex flex-row w-full m-4">
           <div class="flex-grow">
-            Appearances: {$playerEventData.filter((x) => x.eventType == 0)
+            Appearances: {$playerEventData.filter((x) => convertEvent(x.eventType) == 0)
               .length}
           </div>
           <div class="flex-grow">
-            Goals: {$playerEventData.filter((x) => x.eventType == 1).length}
+            Goals: {$playerEventData.filter((x) => convertEvent(x.eventType) == 1).length}
           </div>
           <div class="flex-grow">
-            Own Goals: {$playerEventData.filter((x) => x.eventType == 10)
+            Own Goals: {$playerEventData.filter((x) => convertEvent(x.eventType) == 10)
               .length}
           </div>
           <div class="flex-grow">
-            Assists: {$playerEventData.filter((x) => x.eventType == 2).length}
+            Assists: {$playerEventData.filter((x) => convertEvent(x.eventType) == 2).length}
           </div>
           <div class="flex-grow">
-            Keeper Saves: {$playerEventData.filter((x) => x.eventType == 4)
+            Keeper Saves: {$playerEventData.filter((x) => convertEvent(x.eventType) == 4)
               .length}
           </div>
           <div class="flex-grow">
-            Yellow Cards: {$playerEventData.filter((x) => x.eventType == 8)
+            Yellow Cards: {$playerEventData.filter((x) => convertEvent(x.eventType) == 8)
               .length}
           </div>
           <div class="flex-grow">
-            Red Cards: {$playerEventData.filter((x) => x.eventType == 9).length}
+            Red Cards: {$playerEventData.filter((x) => convertEvent(x.eventType) == 9).length}
           </div>
           <div class="flex-grow">
-            Penalties Saved: {$playerEventData.filter((x) => x.eventType == 6)
+            Penalties Saved: {$playerEventData.filter((x) => convertEvent(x.eventType) == 6)
               .length}
           </div>
           <div class="flex-grow">
-            Penalties Missed: {$playerEventData.filter((x) => x.eventType == 7)
+            Penalties Missed: {$playerEventData.filter((x) => convertEvent(x.eventType) == 7)
               .length}
           </div>
         </div>

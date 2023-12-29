@@ -9,9 +9,9 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { authStore } from "$lib/stores/auth.store";
 
-  import { getPositionAbbreviation } from "$lib/utils/Helpers";
+  import { getPositionAbbreviation, convertPlayerPosition } from "$lib/utils/Helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Principal } from "@dfinity/principal";
 
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
@@ -24,8 +24,8 @@
   let showModal = false;
 
   let gameweekData: GameweekData[] = [];
-  let selectedTeam: Team;
-  let selectedOpponentTeam: Team;
+  let selectedTeam: ClubDTO;
+  let selectedOpponentTeam: ClubDTO;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
 
@@ -37,10 +37,10 @@
       await authStore.sync();
       await playerEventsStore.sync();
 
-      selectedGameweek = $systemStore?.focusGameweek ?? 1;
-      activeSeasonName = $systemStore?.activeSeason.name ?? "-";
+      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
+      activeSeasonName = $systemStore?.calculationSeasonName ?? "-";
       gameweeks = Array.from(
-        { length: $systemStore?.activeGameweek ?? 1 },
+        { length: $systemStore?.calculationGameweek ?? 1 },
         (_, i) => i + 1
       );
       await loadGameweekPoints($authStore?.identity?.getPrincipal());
@@ -150,12 +150,12 @@
 
           <button
             class={`${
-              selectedGameweek === $systemStore?.activeGameweek
+              selectedGameweek === $systemStore?.calculationGameweek
                 ? "bg-gray-500"
                 : "fpl-button"
             } default-button ml-1`}
             on:click={() => changeGameweek(1)}
-            disabled={selectedGameweek === $systemStore?.activeGameweek}
+            disabled={selectedGameweek === $systemStore?.calculationGameweek}
           >
             &gt;
           </button>
@@ -179,7 +179,7 @@
               on:click={() => showDetailModal(playerGameweek)}
             >
               <div class="w-2/12 xs:w-2/12">
-                {getPositionAbbreviation(playerGameweek.player.position)}
+                {getPositionAbbreviation(convertPlayerPosition(playerGameweek.player.position))}
               </div>
               <div class="w-6/12 xs:w-4/12">
                 <a href={`/player?id=${playerGameweek.player.id}`}>

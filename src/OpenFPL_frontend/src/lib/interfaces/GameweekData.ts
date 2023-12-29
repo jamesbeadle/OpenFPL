@@ -1,3 +1,4 @@
+import type { PlayerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export interface GameweekData {
   player: PlayerDTO;

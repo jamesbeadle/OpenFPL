@@ -1,7 +1,7 @@
 <script lang="ts">
   import { writable } from "svelte/store";
   import type { Bonus } from "$lib/types/bonus";
-  import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
@@ -10,7 +10,7 @@
   import { countriesStore } from "$lib/stores/country-store";
 
   export let visible: boolean;
-  export let fantasyTeam = writable<FantasyTeam | null>(null);
+  export let fantasyTeam = writable<ProfileDTO | null>(null);
   export let bonusUsedInSession = writable<boolean>(false);
   export let activeGameweek: number;
   export let closeBonusModal: () => void;

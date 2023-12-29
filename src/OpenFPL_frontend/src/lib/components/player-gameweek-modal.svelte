@@ -2,10 +2,8 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Modal } from "@dfinity/gix-components";
   import type {
+    ClubDTO,
     PlayerEventData,
-    Team,
-    PlayerDetailDTO,
-    PlayerGameweekDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { getFlagComponent } from "../utils/Helpers";
 
@@ -13,8 +11,8 @@
   export let closeDetailModal: () => void;
   export let playerDetail: PlayerDetailDTO;
   export let gameweekDetail: PlayerGameweekDTO | null;
-  export let playerTeam: Team | null;
-  export let opponentTeam: Team | null;
+  export let playerTeam: ClubDTO | null;
+  export let opponentTeam: ClubDTO | null;
   export let gameweek = 0;
   export let seasonName = "";
 

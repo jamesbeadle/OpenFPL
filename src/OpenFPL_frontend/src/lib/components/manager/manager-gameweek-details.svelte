@@ -8,11 +8,14 @@
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import {
+    convertPlayerPosition,
     getFlagComponent,
     getPositionAbbreviation,
   } from "$lib/utils/Helpers";
   import type {
-    ManagerDTO, PlayerDTO
+    ClubDTO,
+    ManagerDTO, PlayerDTO, ProfileDTO
+
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -23,18 +26,18 @@
 
   let gameweekPlayers = writable<GameweekData[] | []>([]);
   let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
+    { length: $systemStore?.pickTeamGameweek ?? 1 },
     (_, i) => i + 1
   );
 
   export let selectedGameweek = writable<number | null>(null);
-  export let fantasyTeam = writable<FantasyTeam | null>(null);
+  export let fantasyTeam = writable<ProfileDTO | null>(null);
   export let loadingGameweek: Writable<boolean>;
 
   let isLoading = false;
   let showModal = false;
-  let selectedTeam: Team;
-  let selectedOpponentTeam: Team;
+  let selectedTeam: ClubDTO;
+  let selectedOpponentTeam: ClubDTO;
   let selectedGameweekData: GameweekData;
   let activeSeasonName: string;
 
@@ -52,7 +55,7 @@
       await playerStore.sync();
       await playerEventsStore.sync();
       await systemStore.sync();
-      activeSeasonName = $systemStore?.activeSeason.name ?? "-";
+      activeSeasonName = $systemStore?.pickTeamSeasonName ?? "-";
       if (!$fantasyTeam) {
         $gameweekPlayers = [];
         return;
@@ -107,7 +110,7 @@
     return $playerStore.find((x) => x.id === playerId) ?? null;
   }
 
-  function getPlayerTeam(teamId: number): Team | null {
+  function getPlayerTeam(teamId: number): ClubDTO | null {
     return $teamStore.find((x) => x.id === teamId) ?? null;
   }
 
@@ -181,12 +184,12 @@
 
           <button
             class={`${
-              $selectedGameweek === $systemStore?.focusGameweek
+              $selectedGameweek === $systemStore?.pickTeamGameweek
                 ? "bg-gray-500"
                 : "fpl-button"
             } default-button ml-1`}
             on:click={() => changeGameweek(1)}
-            disabled={$selectedGameweek === $systemStore?.focusGameweek}
+            disabled={$selectedGameweek === $systemStore?.pickTeamGameweek}
           >
             &gt;
           </button>
@@ -245,7 +248,7 @@
                   {#if $fantasyTeam.captainId == playerDTO?.id}
                     <ActiveCaptainIcon className="w-5 sm:w-6 md:w-7" />
                   {:else}
-                    {getPositionAbbreviation(data.player.position)}
+                    {getPositionAbbreviation(convertPlayerPosition(data.player.position))}
                   {/if}
                 </div>
                 <div class="w-2/12 flex items-center">
@@ -431,7 +434,7 @@
                   {#if $fantasyTeam.captainId == playerDTO?.id}
                     <ActiveCaptainIcon className="w-5" />
                   {:else}
-                    {getPositionAbbreviation(data.player.position)}
+                    {getPositionAbbreviation(convertPlayerPosition(data.player.position))}
                   {/if}
                 </div>
                 <div class="w-2/12 flex items-center">

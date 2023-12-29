@@ -14,7 +14,8 @@ import type {
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { calculateAgeFromNanoseconds, replacer } from "../utils/Helpers";
+import { calculateAgeFromNanoseconds, replacer, convertEvent, convertPlayerPosition } from "../utils/Helpers";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
@@ -27,9 +28,9 @@ function createPlayerEventsStore() {
   let allFixtures: FixtureDTO[];
   fixtureStore.subscribe((value) => (allFixtures = value));
 
-  let actor: any = ActorFactory.createActor(
+  const actor = ActorFactory.createActor(
     idlFactory,
-    process.env.MAIN_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
   async function sync() {
@@ -164,13 +165,13 @@ function createPlayerEventsStore() {
       cleanSheetPoints = 0;
 
     playerPointsDTO.events.forEach((event) => {
-      switch (event.eventType) {
+      switch (convertEvent(event.eventType)) {
         case 0:
           appearance += 1;
           break;
         case 1:
           goals += 1;
-          switch (playerPointsDTO.position) {
+          switch (convertPlayerPosition(playerPointsDTO.position)) {
             case 0:
             case 1:
               goalPoints += 20;
@@ -185,7 +186,7 @@ function createPlayerEventsStore() {
           break;
         case 2:
           assists += 1;
-          switch (playerPointsDTO.position) {
+          switch (convertPlayerPosition(playerPointsDTO.position)) {
             case 0:
             case 1:
               assistPoints += 15;
@@ -198,7 +199,7 @@ function createPlayerEventsStore() {
           break;
         case 3:
           goalsConceded += 1;
-          if (playerPointsDTO.position < 2 && goalsConceded % 2 === 0) {
+          if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded % 2 === 0) {
             goalsConcededPoints += -15;
           }
           break;
@@ -207,7 +208,7 @@ function createPlayerEventsStore() {
           break;
         case 5:
           cleanSheets += 1;
-          if (playerPointsDTO.position < 2 && goalsConceded === 0) {
+          if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded === 0) {
             cleanSheetPoints += 10;
           }
           break;
@@ -263,7 +264,7 @@ function createPlayerEventsStore() {
 
   function calculatePlayerScore(
     gameweekData: GameweekData,
-    fixtures: Fixture[]
+    fixtures: FixtureDTO[]
   ): number {
     if (!gameweekData) {
       console.error("No gameweek data found:", gameweekData);
@@ -305,7 +306,7 @@ function createPlayerEventsStore() {
       score += pointsForYellowCard * gameweekData.yellowCards;
     }
 
-    switch (gameweekData.player.position) {
+    switch (convertPlayerPosition(gameweekData.player.position)) {
       case 0:
         pointsForGoal = 20;
         pointsForAssist = 15;
@@ -354,8 +355,8 @@ function createPlayerEventsStore() {
       : [];
     const playerFixtures = gameweekFixtures.filter(
       (fixture) =>
-        (fixture.homeTeamId === gameweekData.player.clubId ||
-          fixture.awayTeamId === gameweekData.player.clubId) &&
+        (fixture.homeClubId === gameweekData.player.clubId ||
+          fixture.awayClubId === gameweekData.player.clubId) &&
         fixture.highestScoringPlayerId === gameweekData.player.id
     );
 
@@ -371,7 +372,7 @@ function createPlayerEventsStore() {
 
   function calculateBonusPoints(
     gameweekData: GameweekData,
-    fantasyTeam: FantasyTeam,
+    fantasyTeam: ProfileDTO,
     points: number
   ): number {
     if (!gameweekData) {
@@ -382,7 +383,7 @@ function createPlayerEventsStore() {
     let bonusPoints = 0;
     var pointsForGoal = 0;
     var pointsForAssist = 0;
-    switch (gameweekData.player.position) {
+    switch (convertPlayerPosition(gameweekData.player.position)) {
       case 0:
         pointsForGoal = 20;
         pointsForAssist = 15;
@@ -418,8 +419,8 @@ function createPlayerEventsStore() {
     if (
       fantasyTeam.noEntryGameweek === gameweekData.gameweek &&
       fantasyTeam.noEntryPlayerId === gameweekData.player.id &&
-      (gameweekData.player.position === 0 ||
-        gameweekData.player.position === 1) &&
+      (convertPlayerPosition(gameweekData.player.position) === 0 ||
+      convertPlayerPosition(gameweekData.player.position) === 1) &&
       gameweekData.cleanSheets
     ) {
       bonusPoints = points * 2;
@@ -427,7 +428,7 @@ function createPlayerEventsStore() {
 
     if (
       fantasyTeam.safeHandsGameweek === gameweekData.gameweek &&
-      gameweekData.player.position === 0 &&
+      convertPlayerPosition(gameweekData.player.position) === 0 &&
       gameweekData.saves >= 5
     ) {
       bonusPoints = points * 2;

@@ -28,9 +28,10 @@
     getCountdownTime,
     getPositionAbbreviation,
     getAvailableFormations,
+    convertPlayerPosition
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import type { ManagerDTO, ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO, ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Spinner, busyStore } from "@dfinity/gix-components";
 
   interface FormationDetails {
@@ -200,14 +201,14 @@
     return setups;
   }
 
-  function getTeamFormation(team: FantasyTeam): string {
+  function getTeamFormation(team: ProfileDTO): string {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
 
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
 
       if (teamPlayer) {
-        positionCounts[teamPlayer.position]++;
+        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
       }
     });
 
@@ -283,7 +284,7 @@
 
   function canAddPlayerToCurrentFormation(
     player: PlayerDTO,
-    team: FantasyTeam,
+    team: ProfileDTO,
     formation: string
   ): boolean {
     const positionCounts: { [key: number]: number } = {
@@ -295,11 +296,11 @@
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
-        positionCounts[teamPlayer.position]++;
+        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
       }
     });
 
-    positionCounts[player.position]++;
+    positionCounts[convertPlayerPosition(player.position)]++;
 
     const [def, mid, fwd] = formation.split("-").map(Number);
     const minDef = Math.max(0, def - (positionCounts[1] || 0));
@@ -318,11 +319,11 @@
 
   function addPlayerToTeam(
     player: PlayerDTO,
-    team: FantasyTeam,
+    team: ProfileDTO,
     formation: string
   ) {
     const indexToAdd = getAvailablePositionIndex(
-      player.position,
+      convertPlayerPosition(player.position),
       team,
       formation
     );
@@ -350,7 +351,7 @@
 
   function getAvailablePositionIndex(
     position: number,
-    team: FantasyTeam,
+    team: ProfileDTO,
     formation: string
   ): number {
     const formationArray = formations[formation].positions;
@@ -363,7 +364,7 @@
   }
 
   function findValidFormationWithPlayer(
-    team: FantasyTeam,
+    team: ProfileDTO,
     player: PlayerDTO
   ): string {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
@@ -371,11 +372,11 @@
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
-        positionCounts[teamPlayer.position]++;
+        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
       }
     });
 
-    positionCounts[player.position]++;
+    positionCounts[convertPlayerPosition(player.position)]++;
 
     let bestFitFormation: string | null = null;
     let minimumAdditionalPlayersNeeded = Number.MAX_SAFE_INTEGER;
@@ -405,7 +406,7 @@
 
       if (
         additionalPlayersNeeded < minimumAdditionalPlayersNeeded &&
-        formationDetails[player.position] > positionCounts[player.position] - 1
+        formationDetails[convertPlayerPosition(player.position)] > positionCounts[convertPlayerPosition(player.position)] - 1
       ) {
         bestFitFormation = formation;
         minimumAdditionalPlayersNeeded = additionalPlayersNeeded;
@@ -421,7 +422,7 @@
   }
 
   function repositionPlayersForNewFormation(
-    team: FantasyTeam,
+    team: ProfileDTO,
     newFormation: string
   ) {
     const newFormationArray = formations[newFormation].positions;
@@ -432,7 +433,7 @@
       if (player) {
         for (let i = 0; i < newFormationArray.length; i++) {
           if (
-            newFormationArray[i] === player.position &&
+            newFormationArray[i] === convertPlayerPosition(player.position) &&
             newPlayerIds[i] === 0
           ) {
             newPlayerIds[i] = playerId;
@@ -477,7 +478,7 @@
       }
       bankBalance.update(
         (n) =>
-          n + $playerStore.find((x) => x.id === playerId)?.value ?? 0
+          n + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions ?? 0
       );
 
       return { ...currentTeam, playerIds: newPlayerIds };
@@ -493,7 +494,7 @@
     showCaptainModal = true;
   }
 
-  function updateCaptainIfNeeded(currentTeam: FantasyTeam) {
+  function updateCaptainIfNeeded(currentTeam: ProfileDTO) {
     if (
       !currentTeam.captainId ||
       currentTeam.captainId === 0 ||
@@ -504,7 +505,7 @@
     }
   }
 
-  function getHighestValuedPlayerId(team: FantasyTeam): number {
+  function getHighestValuedPlayerId(team: ProfileDTO): number {
     let highestValue = 0;
     let highestValuedPlayerId = 0;
 
@@ -579,7 +580,7 @@
     return true;
   }
 
-  function isBonusConditionMet(team: FantasyTeam | null): boolean {
+  function isBonusConditionMet(team: ProfileDTO | null): boolean {
     if (!team) {
       return false;
     }
@@ -612,14 +613,14 @@
   }
 
   function isValidFormation(
-    team: FantasyTeam,
+    team: ProfileDTO,
     selectedFormation: string
   ): boolean {
     const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
-        positionCounts[teamPlayer.position]++;
+        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
       }
     });
 
@@ -669,7 +670,7 @@
       const availablePlayers = $playerStore
         .filter(
           (player) =>
-            player.position === position &&
+            convertPlayerPosition(player.position) === position &&
             !updatedFantasyTeam.playerIds.includes(player.id) &&
             (teamCounts.get(player.clubId) || 0) < 2
         )
@@ -1118,7 +1119,7 @@
                                 max-w-[60px] xs:max-w-[90px] sm:max-w-[120px]"
                               >
                                 <p class="hidden sm:flex sm:min-w-[15px]">
-                                  {getPositionAbbreviation(player.position)}
+                                  {getPositionAbbreviation(convertPlayerPosition(player.position))}
                                 </p>
                                 {#if playerCountry}
                                   <svelte:component

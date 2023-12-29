@@ -1,11 +1,13 @@
 import { FixtureStatus } from "$lib/enums/FixtureStatus";
 import { Position } from "$lib/enums/Position";
+import { PlayerEvent } from "$lib/enums/PlayerEvent";
 import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
 import type {
   ClubDTO,
   PlayerDTO,
+  PlayerEventType,
   PlayerPosition,
   ProfileDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -404,6 +406,24 @@ export function convertPlayerPosition(
   if ("Midfielder" in playerPosition) return Position.MIDFIELDER;
   if ("Forward" in playerPosition) return Position.FORWARD;
   return Position.GOALKEEPER
+}
+
+export function convertEvent(
+  playerEvent: PlayerEventType
+): PlayerEvent {
+  if ("Appearance" in playerEvent) return PlayerEvent.Appearance;
+  if ("Goal" in playerEvent) return PlayerEvent.Goal;
+  if ("GoalAssisted" in playerEvent) return PlayerEvent.GoalAssisted;
+  if ("GoalConceded" in playerEvent) return PlayerEvent.GoalConceded;
+  if ("KeeperSave" in playerEvent) return PlayerEvent.KeeperSave;
+  if ("CleanSheet" in playerEvent) return PlayerEvent.CleanSheet;
+  if ("PenaltySaved" in playerEvent) return PlayerEvent.PenaltySaved;
+  if ("PenaltyMissed" in playerEvent) return PlayerEvent.PenaltyMissed;
+  if ("YellowCard" in playerEvent) return PlayerEvent.YellowCard;
+  if ("RedCard" in playerEvent) return PlayerEvent.RedCard;
+  if ("OwnGoal" in playerEvent) return PlayerEvent.OwnGoal;
+  if ("HighestScoringPlayer" in playerEvent) return PlayerEvent.HighestScoringPlayer;
+  return PlayerEvent.Appearance;
 }
 
 export function getDateFromBigInt(dateMS: number): string {
