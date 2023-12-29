@@ -506,4 +506,11 @@ actor Self {
     return await seasonManager.updateSystemState(updateSystemState);
   };
 
+  public shared ({ caller }) func updateFixture(updatedFixture : DTOs.UpdateFixtureDTO) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+    return await seasonManager.updateFixture(updatedFixture);
+  };
+
 };

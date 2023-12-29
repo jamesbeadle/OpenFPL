@@ -1237,5 +1237,11 @@ module {
     public func setStableNextFixtureId(stable_next_fixture_id : T.FixtureId) {
       nextFixtureId := stable_next_fixture_id;
     };
+
+    /* Admin Functions to be removed */
+    public func updateFixture(updateFixtureDTO : DTOs.UpdateFixtureDTO) : async Result.Result<(), T.Error> {
+
+      return #ok;
+    };
   };
 };

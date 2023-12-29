@@ -10,24 +10,34 @@
   export let closeModal: () => void;
   export let cancelModal: () => void;
 
-  let activeGameweek: number;
-  let focusGameweek: number;
+  let pickTeamSeasonId: number;
+  let pickTeamGameweek: number;
+  let calculationGameweek: number;
+  let transferWindowActive: boolean;
+  let calculationMonth: number;
+  let calculationSeasonId: number;
+  let onHold: boolean;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 
   let isLoading = true;
 
   onMount(async () => {
     await systemStore.sync();
-    activeGameweek = $systemStore?.activeGameweek ?? 1;
-    focusGameweek = $systemStore?.focusGameweek ?? 1;
+    calculationGameweek = $systemStore?.calculationGameweek ?? 1;
+    pickTeamGameweek = $systemStore?.pickTeamGameweek ?? 1;
   });
 
   async function updateSystemState() {
     isLoading = true;
     try {
       let newSystemState: UpdateSystemStateDTO = {
-        activeGameweek: activeGameweek,
-        focusGameweek: focusGameweek,
+        pickTeamSeasonId: pickTeamSeasonId,
+        calculationGameweek: calculationGameweek,
+        transferWindowActive: transferWindowActive,
+        pickTeamGameweek: pickTeamGameweek,
+        calculationMonth: calculationMonth,
+        calculationSeasonId: calculationSeasonId,
+        onHold: onHold,
       };
       await systemStore.updateSystemState(newSystemState);
       systemStore.sync();
@@ -59,9 +69,9 @@
 
     <form on:submit|preventDefault={updateSystemState}>
       <div class="mt-4 flex flex-col space-y-2">
-        <h5>Active Gameweek</h5>
+        <h5>Calculation Gameweek</h5>
         <select
-          bind:value={activeGameweek}
+          bind:value={calculationGameweek}
           class="w-full p-2 rounded-md fpl-dropdown"
         >
           {#each gameweeks as gameweek}
@@ -69,9 +79,9 @@
           {/each}
         </select>
 
-        <h5>Focus Gameweek</h5>
+        <h5>Pick Team Gameweek</h5>
         <select
-          bind:value={focusGameweek}
+          bind:value={pickTeamGameweek}
           class="w-full p-2 rounded-md fpl-dropdown"
         >
           {#each gameweeks as gameweek}

@@ -385,6 +385,13 @@ export const idlFactory = ({ IDL }) => {
     captainId: PlayerId,
   });
   const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
+  const UpdateFixtureDTO = IDL.Record({
+    status: FixtureStatus,
+    fixtureId: FixtureId,
+    seasonId: SeasonId,
+    kickOff: IDL.Int,
+    gameweek: GameweekNumber,
+  });
   const UpdateSystemStateDTO = IDL.Record({
     pickTeamSeasonId: SeasonId,
     calculationGameweek: GameweekNumber,
@@ -453,6 +460,7 @@ export const idlFactory = ({ IDL }) => {
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateFantasyTeamDTO], [Result_1], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
+    updateFixture: IDL.Func([UpdateFixtureDTO], [Result_1], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result_1], []),
     updateSystemState: IDL.Func([UpdateSystemStateDTO], [Result_1], []),
     updateUsername: IDL.Func([IDL.Text], [Result_1], []),

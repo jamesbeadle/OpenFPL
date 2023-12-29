@@ -988,6 +988,8 @@ module {
       systemState := stable_system_state;
     };
 
+    /* Admin Functions to Remove  */
+
     public func updateSystemState(updatedSystemStateDTO : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
 
       let pickTeamSeason = seasonComposite.getSeason(updatedSystemStateDTO.pickTeamSeasonId);
@@ -1002,6 +1004,10 @@ module {
         onHold = updatedSystemStateDTO.onHold;
       };
       return #ok;
+    };
+
+    public func updateFixture(updateFixtureDTO : DTOs.UpdateFixtureDTO) : async Result.Result<(), T.Error> {
+      return await seasonComposite.updateFixture(updateFixtureDTO);
     };
 
   };

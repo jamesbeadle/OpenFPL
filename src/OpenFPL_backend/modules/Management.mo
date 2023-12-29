@@ -1,5 +1,4 @@
 module {
-  //Types
   public type canister_id = Principal;
   public type canister_settings = {
     freezing_threshold : ?Nat;

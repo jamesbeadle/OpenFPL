@@ -300,7 +300,7 @@ module DTOs {
     fixtureId : T.FixtureId;
     gameweek : T.GameweekNumber;
     kickOff : Int;
-    status : Nat8;
+    status : T.FixtureStatus;
   };
 
   public type ClubDTO = {

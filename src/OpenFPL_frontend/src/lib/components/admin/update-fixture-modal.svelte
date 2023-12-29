@@ -5,7 +5,8 @@
   import { authIsAdmin } from "$lib/derived/auth.derived";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import type {
-    Fixture,
+    FixtureDTO,
+    FixtureStatus,
     UpdateFixtureDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
@@ -18,11 +19,11 @@
   export let visible: boolean;
   export let closeModal: () => void;
   export let cancelModal: () => void;
-  export let fixture: Fixture;
+  export let fixture: FixtureDTO;
 
   let gameweek: number = fixture.gameweek;
   let kickOff: bigint = fixture.kickOff;
-  let status: number = fixture.status;
+  let status: FixtureStatus = fixture.status;
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 

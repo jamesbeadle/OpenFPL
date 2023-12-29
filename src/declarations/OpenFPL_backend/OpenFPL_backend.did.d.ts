@@ -370,6 +370,13 @@ export interface UpdateFantasyTeamDTO {
   passMasterPlayerId: PlayerId;
   captainId: PlayerId;
 }
+export interface UpdateFixtureDTO {
+  status: FixtureStatus;
+  fixtureId: FixtureId;
+  seasonId: SeasonId;
+  kickOff: bigint;
+  gameweek: GameweekNumber;
+}
 export interface UpdatePlayerDTO {
   dateOfBirth: bigint;
   playerId: PlayerId;
@@ -444,6 +451,7 @@ export interface _SERVICE {
   requestCanisterTopup: ActorMethod<[], undefined>;
   saveFantasyTeam: ActorMethod<[UpdateFantasyTeamDTO], Result_1>;
   updateFavouriteClub: ActorMethod<[ClubId], Result_1>;
+  updateFixture: ActorMethod<[UpdateFixtureDTO], Result_1>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result_1>;
   updateSystemState: ActorMethod<[UpdateSystemStateDTO], Result_1>;
   updateUsername: ActorMethod<[string], Result_1>;
