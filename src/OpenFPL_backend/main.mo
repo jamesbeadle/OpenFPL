@@ -293,6 +293,7 @@ actor Self {
 
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
+  private stable var stable_reward_pools: [(T.SeasonId, T.RewardPool)] =  [];
   private stable var stable_managers : [(Text, T.Manager)] = [];
   private stable var stable_profile_picture_canister_ids : [(T.PrincipalId, Text)] = [];
   private stable var stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)] = [];
@@ -323,6 +324,7 @@ actor Self {
 
   system func preupgrade() {
     stable_timers := timerComposite.getStableTimers();
+    stable_reward_pools := seasonManager.getStableRewardPools();
     stable_managers := seasonManager.getStableManagers();
     stable_profile_picture_canister_ids := seasonManager.getStableProfilePictureCanisterIds();
     stable_season_leaderboard_canister_ids := seasonManager.getStableSeasonLeaderboardCanisterIds();
@@ -359,6 +361,9 @@ actor Self {
     seasonManager.setStableDataHashes(stable_data_cache_hashes);
     seasonManager.setStableSystemState(stable_system_state);
     timerComposite.setStableTimers(stable_timers);
+    
+    seasonManager.setBackendCanisterController(Principal.fromActor(Self));
+    //TODO: Set the callback functions
   };
 
   public shared ({ caller }) func requestCanisterTopup() : async () {
@@ -397,6 +402,7 @@ actor Self {
       };
     };
     cyclesCheckWalletTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
+    //TODO: BACKUP AND RECREATE
   };
 
   public shared func burnICPToCycles(requestedCycles : Nat64) : async () {

@@ -69,46 +69,6 @@ module {
       { category = "player_events"; hash = "DEFAULT_VALUE" },
     ]);
 
-    public func setStableData(
-      stable_system_state : T.SystemState,
-      stable_timers : [T.TimerInfo],
-      stable_data_cache_hashes : [T.DataCache],
-      stable_next_club_id : T.ClubId,
-      stable_next_player_id : T.PlayerId,
-      stable_next_season_id : T.SeasonId,
-      stable_next_fixture_id : T.FixtureId,
-      stable_managers : [(T.PrincipalId, T.Manager)],
-      stable_clubs : [T.Club],
-      stable_players : [T.Player],
-      stable_retired_players : [T.Player],
-      stable_former_players : [T.Player],
-      stable_seasons : [T.Season],
-      stable_profile_picture_canister_ids : [(T.PrincipalId, Text)],
-      stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)],
-      stable_monthly_leaderboard_canister_ids : [(T.MonthlyLeaderboardKey, Text)],
-      stable_weekly_leaderboard_canister_ids : [(T.WeeklyLeaderboardKey, Text)],
-      stable_reward_pools : [(T.SeasonId, T.RewardPool)],
-    ) {
-
-      systemState := stable_system_state;
-      dataCacheHashes := List.fromArray(stable_data_cache_hashes);
-      rewardPools := HashMap.fromIter<T.SeasonId, T.RewardPool>(
-        stable_reward_pools.vals(),
-        stable_reward_pools.size(),
-        Utilities.eqNat16,
-        Utilities.hashNat16,
-      );
-      clubComposite.setStableData(stable_next_club_id, stable_clubs);
-      playerComposite.setStableData(stable_next_player_id, stable_players, stable_retired_players, stable_former_players);
-      seasonComposite.setStableData(stable_next_season_id, stable_next_fixture_id, stable_seasons);
-      managerComposite.setStableData(stable_managers, stable_profile_picture_canister_ids);
-      leaderboardComposite.setStableData(
-        stable_season_leaderboard_canister_ids,
-        stable_monthly_leaderboard_canister_ids,
-        stable_weekly_leaderboard_canister_ids,
-      );
-    };
-
     public func setTimerBackupFunction(
       _setAndBackupTimer : (duration : Timer.Duration, callbackName : Text) -> (),
       _removeExpiredTimers : () -> (),
@@ -752,6 +712,19 @@ module {
     };
 
     //Stable data getters and setters:
+    public func getStableRewardPools() : [(T.SeasonId, T.RewardPool)] {
+      Iter.toArray(rewardPools.entries());
+    };
+
+    public func setStableRewardPools(stable_reward_pools : [(T.SeasonId, T.RewardPool)]) {
+      rewardPools := HashMap.fromIter<T.SeasonId, T.RewardPool>(
+        stable_reward_pools.vals(),
+        stable_reward_pools.size(),
+        Utilities.eqNat16,
+        Utilities.hashNat16
+      );
+    };
+
     public func getStableManagers() : [(Text, T.Manager)] {
       return managerComposite.getStableManagers();
     };
