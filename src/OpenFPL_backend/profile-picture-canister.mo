@@ -17,21 +17,21 @@ actor class ProfilePictureCanister() {
   private stable var bucket4 : [(T.PrincipalId, Blob)] = [];
   private stable var bucket5 : [(T.PrincipalId, Blob)] = [];
   private stable var bucket6 : [(T.PrincipalId, Blob)] = [];
-  private stable var stable_bucket_map: [(T.PrincipalId, Nat8)] = [];
+  private stable var stable_bucket_map : [(T.PrincipalId, Nat8)] = [];
 
   private var currentBucketIndex = 0;
   private var maxPicturesPerBucket = 5000;
   private let totalBuckets : Nat = 12;
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
-  
+
   private var bucketMap : HashMap.HashMap<T.PrincipalId, Nat8> = HashMap.HashMap<T.PrincipalId, Nat8>(100, Text.equal, Text.hash);
-   
+
   public shared ({ caller }) func addProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.MAIN_CANISTER_ID;
-    
+
     switch (currentBucketIndex) {
       case 0 {
         if (bucket1.size() < maxPicturesPerBucket) {
@@ -93,7 +93,7 @@ actor class ProfilePictureCanister() {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.MAIN_CANISTER_ID;
-    
+
     let spaceInBucket1 = bucket1.size() < maxPicturesPerBucket;
     let spaceInBucket2 = bucket2.size() < maxPicturesPerBucket;
     let spaceInBucket3 = bucket3.size() < maxPicturesPerBucket;
@@ -104,20 +104,20 @@ actor class ProfilePictureCanister() {
     return spaceInBucket1 or spaceInBucket2 or spaceInBucket3 or spaceInBucket4 or spaceInBucket5 or spaceInBucket6;
   };
 
-  public shared query ({ caller }) func getProfilePicture(userPrincipal: T.PrincipalId) : async ?Blob {
+  public shared query ({ caller }) func getProfilePicture(userPrincipal : T.PrincipalId) : async ?Blob {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.MAIN_CANISTER_ID;
-    
+
     let bucketIndex = bucketMap.get(userPrincipal);
 
-    switch(bucketIndex){
-      case (null){
+    switch (bucketIndex) {
+      case (null) {
         return null;
       };
-      case (?index){
-        switch(index){
-          case 0{
+      case (?index) {
+        switch (index) {
+          case 0 {
             let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
               bucket1.vals(),
               bucket1.size(),
@@ -126,7 +126,7 @@ actor class ProfilePictureCanister() {
             );
             return profilePictures.get(userPrincipal);
           };
-          case 1{
+          case 1 {
             let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
               bucket2.vals(),
               bucket2.size(),
@@ -135,7 +135,7 @@ actor class ProfilePictureCanister() {
             );
             return profilePictures.get(userPrincipal);
           };
-          case 2{
+          case 2 {
             let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
               bucket3.vals(),
               bucket3.size(),
@@ -144,7 +144,7 @@ actor class ProfilePictureCanister() {
             );
             return profilePictures.get(userPrincipal);
           };
-          case 3{
+          case 3 {
             let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
               bucket4.vals(),
               bucket4.size(),
@@ -153,7 +153,7 @@ actor class ProfilePictureCanister() {
             );
             return profilePictures.get(userPrincipal);
           };
-          case 4{
+          case 4 {
             let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
               bucket5.vals(),
               bucket5.size(),
@@ -162,7 +162,7 @@ actor class ProfilePictureCanister() {
             );
             return profilePictures.get(userPrincipal);
           };
-          case 5{
+          case 5 {
             let profilePictures = HashMap.fromIter<T.PrincipalId, Blob>(
               bucket6.vals(),
               bucket6.size(),
@@ -173,11 +173,11 @@ actor class ProfilePictureCanister() {
           };
           case _ {
             return null;
-          }
-        }
-      }
+          };
+        };
+      };
     };
-    
+
   };
 
   private func getBucketSize(index : Nat) : Nat {
@@ -222,11 +222,11 @@ actor class ProfilePictureCanister() {
 
   system func postupgrade() {
     bucketMap := HashMap.fromIter<T.PrincipalId, Nat8>(
-        stable_bucket_map.vals(),
-        stable_bucket_map.size(),
-        Text.equal,
-        Text.hash,
-      );
+      stable_bucket_map.vals(),
+      stable_bucket_map.size(),
+      Text.equal,
+      Text.hash,
+    );
 
     setCheckCyclesTimer();
   };
@@ -239,7 +239,7 @@ actor class ProfilePictureCanister() {
     let amount = Cycles.available();
     let accepted = Cycles.accept(amount);
   };
-  
+
   setCheckCyclesTimer();
 
 };

@@ -165,7 +165,7 @@ module Types {
   public type MonthlyRewards = {
     seasonId : SeasonId;
     month : CalendarMonth;
-    clubId: ClubId;
+    clubId : ClubId;
     rewards : List.List<RewardEntry>;
   };
 

@@ -1,10 +1,7 @@
 <script lang="ts">
   import { writable } from "svelte/store";
   import type { Bonus } from "$lib/types/bonus";
-  import type {
-    FantasyTeam,
-    Team,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { Manager } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";

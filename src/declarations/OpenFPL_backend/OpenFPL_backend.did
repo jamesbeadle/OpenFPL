@@ -211,7 +211,7 @@ type PlayerDTO = record {
   position : PlayerPosition;
   shirtNumber : nat8;
   totalPoints : int16;
-  valueQuarterMillions : nat;
+  valueQuarterMillions : nat16;
 };
 type MonthlyLeaderboardDTO = record {
   clubId : ClubId;
@@ -221,7 +221,7 @@ type MonthlyLeaderboardDTO = record {
   totalEntries : nat;
 };
 type ManagerGameweekDTO = record {
-  bankQuarterMillions : nat;
+  bankQuarterMillions : nat16;
   braceBonusGameweek : GameweekNumber;
   captainFantasticGameweek : GameweekNumber;
   captainFantasticPlayerId : PlayerId;
@@ -246,7 +246,7 @@ type ManagerGameweekDTO = record {
   safeHandsPlayerId : PlayerId;
   teamBoostClubId : ClubId;
   teamBoostGameweek : GameweekNumber;
-  teamValueQuarterMillions : nat;
+  teamValueQuarterMillions : nat16;
   transferWindowGameweek : GameweekNumber;
   transfersAvailable : nat8;
   username : text;
@@ -292,6 +292,7 @@ type Error = variant {
   NotAllowed;
   NotAuthorized;
   NotFound;
+  SystemOnHold;
 };
 type DataCacheDTO = record {
   category : text;
@@ -305,7 +306,7 @@ type CreatePlayerDTO = record {
   nationality : CountryId;
   position : PlayerPosition;
   shirtNumber : nat8;
-  valueQuarterMillions : nat;
+  valueQuarterMillions : nat16;
 };
 type CountryId = nat16;
 type CountryDTO = record {
@@ -319,7 +320,6 @@ type AddInitialFixturesDTO = record {
   seasonFixtures : vec FixtureDTO;
   seasonId : SeasonId;
 };
-type AccountIdentifier = blob;
 service : {
   burnICPToCycles : (nat64) -> ();
   executeAddInitialFixtures : (AddInitialFixturesDTO) -> ();
@@ -350,7 +350,6 @@ service : {
   getSeasonLeaderboard : (SeasonId, nat, nat) -> (Result_5);
   getSystemState : () -> (Result_4) query;
   getTotalManagers : () -> (Result_3) query;
-  getTreasuryAccount : () -> (AccountIdentifier);
   getWeeklyLeaderboard : (SeasonId, GameweekNumber, nat, nat) -> (Result_2);
   init : () -> ();
   isUsernameValid : (text) -> (bool) query;

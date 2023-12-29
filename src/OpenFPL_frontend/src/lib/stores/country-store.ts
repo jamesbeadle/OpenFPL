@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   CountryDTO,
-  DataCache,
+  DataCacheDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
@@ -17,12 +17,13 @@ function createCountriesStore() {
 
   async function sync() {
     let category = "countries";
-    const newHashValues: DataCache[] = await actor.getDataHashes();
+    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
     if (liveHash?.hash != localHash) {
       let updatedCountriesData = await actor.getCountries();
+      console.log(updatedCountriesData);
       localStorage.setItem(
         "countries_data",
         JSON.stringify(updatedCountriesData, replacer)

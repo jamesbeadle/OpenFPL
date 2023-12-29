@@ -45,7 +45,7 @@ module {
     private var weeklyRewards : List.List<T.WeeklyRewards> = List.nil();
     private var mostValuableTeamRewards : List.List<T.RewardsList> = List.nil();
     private var highScoringPlayerRewards : List.List<T.RewardsList> = List.nil();
-    
+
     private var weeklyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
     private var monthlyAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
     private var seasonAllTimeHighScores : List.List<T.HighScoreRecord> = List.nil();
@@ -419,8 +419,8 @@ module {
     };
 
     public func updateFavouriteClub(principalId : T.PrincipalId, favouriteClubId : T.ClubId, systemState : T.SystemState) : async Result.Result<(), T.Error> {
-      
-      if(systemState.onHold){
+
+      if (systemState.onHold) {
         return #err(#SystemOnHold);
       };
 
@@ -1487,7 +1487,7 @@ module {
       };
     };
 
-    public func resetFantasyTeams(){
+    public func resetFantasyTeams() {
       for ((principalId, manager) in managers.entries()) {
         let clearedTeam = clearFantasyTeam(manager);
         managers.put(principalId, clearedTeam);
@@ -1621,7 +1621,7 @@ module {
         });
       };
 
-      let newWeeklyRewards: T.WeeklyRewards = {
+      let newWeeklyRewards : T.WeeklyRewards = {
         seasonId = weeklyLeaderboard.seasonId;
         gameweek = weeklyLeaderboard.gameweek;
         rewards = List.fromArray(Buffer.toArray(rewardBuffer));
@@ -1771,7 +1771,7 @@ module {
         });
       };
 
-      let newMonthlyRewards: T.MonthlyRewards = {
+      let newMonthlyRewards : T.MonthlyRewards = {
         seasonId = monthlyLeaderboard.seasonId;
         month = monthlyLeaderboard.month;
         clubId = monthlyLeaderboard.clubId;
@@ -1851,7 +1851,7 @@ module {
         });
       };
 
-      let newSeasonRewards: T.SeasonRewards = {
+      let newSeasonRewards : T.SeasonRewards = {
         seasonId = seasonLeaderboard.seasonId;
         rewards = List.fromArray(Buffer.toArray(rewardBuffer));
       };
@@ -1981,14 +1981,14 @@ module {
         });
       };
 
-      let newMVTRewards: T.SeasonRewards = {
+      let newMVTRewards : T.SeasonRewards = {
         seasonId = currentSeason;
         rewards = List.fromArray(Buffer.toArray(rewardBuffer));
       };
       mostValuableTeamRewards := List.append(mostValuableTeamRewards, List.make<T.SeasonRewards>(newMVTRewards));
     };
 
-    public func distributeHighestScoringPlayerRewards(seasonId: T.SeasonId, gameweek: T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>) : async () {
+    public func distributeHighestScoringPlayerRewards(seasonId : T.SeasonId, gameweek : T.GameweekNumber, highestScoringPlayerRewardPool : Nat64, fixtures : List.List<DTOs.FixtureDTO>) : async () {
 
       let highestScoringPlayerIdBuffer = Buffer.fromArray<T.PlayerId>([]);
 
@@ -2028,7 +2028,7 @@ module {
           });
         };
 
-        let newHSPRewards: T.WeeklyRewards = {
+        let newHSPRewards : T.WeeklyRewards = {
           seasonId = seasonId;
           gameweek = gameweek;
           rewards = List.fromArray(Buffer.toArray(rewardBuffer));
@@ -2211,8 +2211,6 @@ module {
       );
     };
 
-    
-
     public func getStableActiveProfilePictureCanisterId() : Text {
       return activeProfilePictureCanisterId;
     };
@@ -2221,11 +2219,11 @@ module {
       activeProfilePictureCanisterId := stable_active_profile_picture_canister_id;
     };
 
-    public func getStableTeamValueLeaderboards(): [(T.SeasonId, T.TeamValueLeaderboard)]{
+    public func getStableTeamValueLeaderboards() : [(T.SeasonId, T.TeamValueLeaderboard)] {
       return Iter.toArray(teamValueLeaderboards.entries());
     };
 
-    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards: [(T.SeasonId, T.TeamValueLeaderboard)]){
+    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)]) {
       teamValueLeaderboards := HashMap.fromIter<T.SeasonId, T.TeamValueLeaderboard>(
         stable_team_value_leaderboards.vals(),
         stable_team_value_leaderboards.size(),
@@ -2234,91 +2232,91 @@ module {
       );
     };
 
-    public func getStableSeasonRewards() : [T.SeasonRewards]{
+    public func getStableSeasonRewards() : [T.SeasonRewards] {
       return List.toArray(seasonRewards);
     };
 
-    public func setStableSeasonRewards(stable_season_rewards: [T.SeasonRewards]) {
+    public func setStableSeasonRewards(stable_season_rewards : [T.SeasonRewards]) {
       seasonRewards := List.fromArray(stable_season_rewards);
     };
 
-    public func getStableMonthlyRewards() : [T.MonthlyRewards]{
+    public func getStableMonthlyRewards() : [T.MonthlyRewards] {
       return List.toArray(monthlyRewards);
     };
 
-    public func setStableMonthlyRewards(stable_monthly_rewards : [T.MonthlyRewards]){
+    public func setStableMonthlyRewards(stable_monthly_rewards : [T.MonthlyRewards]) {
       seasonRewards := List.fromArray(stable_monthly_rewards);
     };
 
-    public func getStableWeeklyRewards() : [T.WeeklyRewards]{
+    public func getStableWeeklyRewards() : [T.WeeklyRewards] {
       return List.toArray(weeklyRewards);
     };
 
-    public func setStableWeeklyRewards(stable_weekly_rewards: [T.WeeklyRewards]) {
+    public func setStableWeeklyRewards(stable_weekly_rewards : [T.WeeklyRewards]) {
       seasonRewards := List.fromArray(stable_weekly_rewards);
     };
 
-    public func getStableMostValuableTeamRewards() : [T.RewardsList]{
+    public func getStableMostValuableTeamRewards() : [T.RewardsList] {
       return List.toArray(mostValuableTeamRewards);
     };
 
-    public func setStableMostValuableTeamRewards(stable_most_valuable_team_rewards: [T.RewardsList]) {
+    public func setStableMostValuableTeamRewards(stable_most_valuable_team_rewards : [T.RewardsList]) {
       mostValuableTeamRewards := List.fromArray(stable_most_valuable_team_rewards);
     };
 
-    public func getStableHighestScoringPlayerRewards(): [T.RewardsList]{
+    public func getStableHighestScoringPlayerRewards() : [T.RewardsList] {
       return List.toArray(highScoringPlayerRewards);
     };
 
-    public func setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards: [T.RewardsList]){
+    public func setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards : [T.RewardsList]) {
       highScoringPlayerRewards := List.fromArray(stable_highest_scoring_player_rewards);
     };
 
-    public func getStableWeeklyATHScores(): [T.HighScoreRecord]{
+    public func getStableWeeklyATHScores() : [T.HighScoreRecord] {
       return List.toArray(weeklyAllTimeHighScores);
     };
 
-    public func setStableWeeklyATHScores(stable_weekly_ath_scores: [T.HighScoreRecord]){
+    public func setStableWeeklyATHScores(stable_weekly_ath_scores : [T.HighScoreRecord]) {
       weeklyAllTimeHighScores := List.fromArray(stable_weekly_ath_scores);
     };
 
-    public func getStableMonthlyATHScores(): [T.HighScoreRecord]{
+    public func getStableMonthlyATHScores() : [T.HighScoreRecord] {
       return List.toArray(monthlyAllTimeHighScores);
     };
 
-    public func setStableMonthlyATHScores(stable_monthly_ath_scores: [T.HighScoreRecord]){
+    public func setStableMonthlyATHScores(stable_monthly_ath_scores : [T.HighScoreRecord]) {
       monthlyAllTimeHighScores := List.fromArray(stable_monthly_ath_scores);
     };
 
-    public func getStableSeasonATHScores(): [T.HighScoreRecord]{
+    public func getStableSeasonATHScores() : [T.HighScoreRecord] {
       return List.toArray(seasonAllTimeHighScores);
     };
 
-    public func setStableSeasonATHScores(stable_season_ath_scores: [T.HighScoreRecord]){
+    public func setStableSeasonATHScores(stable_season_ath_scores : [T.HighScoreRecord]) {
       seasonAllTimeHighScores := List.fromArray(stable_season_ath_scores);
     };
 
-    public func getStableWeeklyATHPrizePool(): Nat64{
+    public func getStableWeeklyATHPrizePool() : Nat64 {
       return weeklyATHPrizePool;
     };
 
-    public func setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool: Nat64){
+    public func setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool : Nat64) {
       weeklyATHPrizePool := stable_weekly_ath_prize_pool;
     };
 
-    public func getStableMonthlyATHPrizePool(): Nat64{
+    public func getStableMonthlyATHPrizePool() : Nat64 {
       return monthlyATHPrizePool;
     };
 
-    public func setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool: Nat64){
+    public func setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool : Nat64) {
       monthlyATHPrizePool := stable_monthly_ath_prize_pool;
     };
 
-    public func getSeasonATHPrizePool(): Nat64{
+    public func getSeasonATHPrizePool() : Nat64 {
       return seasonATHPrizePool;
     };
 
-    public func setSeasonATHPrizePool(stable_season_ath_prize_pool: Nat64){
+    public func setSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
       seasonATHPrizePool := stable_season_ath_prize_pool;
     };
   };

@@ -288,22 +288,22 @@ actor Self {
 
   //Stable backup:
   private stable var stable_timers : [T.TimerInfo] = [];
-  private stable var stable_reward_pools: [(T.SeasonId, T.RewardPool)] =  [];
+  private stable var stable_reward_pools : [(T.SeasonId, T.RewardPool)] = [];
   private stable var stable_managers : [(Text, T.Manager)] = [];
   private stable var stable_profile_picture_canister_ids : [(T.PrincipalId, Text)] = [];
-  private stable var stable_active_profile_picture_canister_id: Text = "";
+  private stable var stable_active_profile_picture_canister_id : Text = "";
   private stable var stable_team_value_leaderboards : [(T.SeasonId, T.TeamValueLeaderboard)] = [];
-  private stable var stable_season_rewards: [T.SeasonRewards] = [];
-  private stable var stable_monthly_rewards: [T.MonthlyRewards] = [];
-  private stable var stable_weekly_rewards: [T.WeeklyRewards] = [];
-  private stable var stable_most_valuable_team_rewards: [T.RewardsList] = [];
-  private stable var stable_highest_scoring_player_rewards: [T.RewardsList] = [];
-  private stable var stable_weekly_ath_scores: [T.HighScoreRecord] = [];
-  private stable var stable_monthly_ath_scores: [T.HighScoreRecord] = [];
-  private stable var stable_season_ath_scores: [T.HighScoreRecord] = [];
-  private stable var stable_weekly_ath_prize_pool: Nat64 = 0;
-  private stable var stable_monthly_ath_prize_pool: Nat64 = 0;
-  private stable var stable_season_ath_prize_pool: Nat64 = 0;
+  private stable var stable_season_rewards : [T.SeasonRewards] = [];
+  private stable var stable_monthly_rewards : [T.MonthlyRewards] = [];
+  private stable var stable_weekly_rewards : [T.WeeklyRewards] = [];
+  private stable var stable_most_valuable_team_rewards : [T.RewardsList] = [];
+  private stable var stable_highest_scoring_player_rewards : [T.RewardsList] = [];
+  private stable var stable_weekly_ath_scores : [T.HighScoreRecord] = [];
+  private stable var stable_monthly_ath_scores : [T.HighScoreRecord] = [];
+  private stable var stable_season_ath_scores : [T.HighScoreRecord] = [];
+  private stable var stable_weekly_ath_prize_pool : Nat64 = 0;
+  private stable var stable_monthly_ath_prize_pool : Nat64 = 0;
+  private stable var stable_season_ath_prize_pool : Nat64 = 0;
   private stable var stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)] = [];
   private stable var stable_monthly_leaderboard_canister_ids : [(T.MonthlyLeaderboardKey, Text)] = [];
   private stable var stable_weekly_leaderboard_canister_ids : [(T.WeeklyLeaderboardKey, Text)] = [];
@@ -329,7 +329,7 @@ actor Self {
     transferWindowActive = false;
     onHold = false;
   };
-  private stable var stable_canister_ids: [Text] = [];
+  private stable var stable_canister_ids : [Text] = [];
 
   system func preupgrade() {
     stable_timers := timerComposite.getStableTimers();
@@ -370,7 +370,7 @@ actor Self {
   system func postupgrade() {
     cyclesDispenser.setStableCanisterIds(stable_canister_ids);
     seasonManager.setStableManagers(stable_managers);
-    seasonManager.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);    
+    seasonManager.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);
     seasonManager.setStableActiveProfilePictureCanisterId(stable_active_profile_picture_canister_id);
     seasonManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
     seasonManager.setStableSeasonRewards(stable_season_rewards);
@@ -400,7 +400,7 @@ actor Self {
     seasonManager.setStableDataHashes(stable_data_cache_hashes);
     seasonManager.setStableSystemState(stable_system_state);
     timerComposite.setStableTimers(stable_timers);
-    
+
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);

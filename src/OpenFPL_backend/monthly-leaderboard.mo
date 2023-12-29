@@ -57,7 +57,7 @@ actor class MonthlyLeaderboardCanister() {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == CanisterIds.MAIN_CANISTER_ID;
-    
+
     switch (leaderboard) {
       case (null) {
         return null;

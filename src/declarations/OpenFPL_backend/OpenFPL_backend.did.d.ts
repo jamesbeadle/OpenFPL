@@ -1,6 +1,5 @@
 import type { ActorMethod } from "@dfinity/agent";
 
-export type AccountIdentifier = Uint8Array | number[];
 export interface AddInitialFixturesDTO {
   seasonId: SeasonId;
   seasonFixtures: Array<FixtureDTO>;
@@ -15,7 +14,7 @@ export interface CountryDTO {
 export type CountryId = number;
 export interface CreatePlayerDTO {
   clubId: ClubId;
-  valueQuarterMillions: bigint;
+  valueQuarterMillions: number;
   dateOfBirth: bigint;
   nationality: CountryId;
   shirtNumber: number;
@@ -33,6 +32,7 @@ export type Error =
   | { NotFound: null }
   | { NotAuthorized: null }
   | { InvalidData: null }
+  | { SystemOnHold: null }
   | { AlreadyExists: null }
   | { InvalidTeamError: null };
 export interface FixtureDTO {
@@ -69,7 +69,7 @@ export interface LoanPlayerDTO {
 }
 export interface ManagerGameweekDTO {
   playerIds: Uint16Array | number[];
-  teamValueQuarterMillions: bigint;
+  teamValueQuarterMillions: number;
   countrymenCountryId: CountryId;
   username: string;
   goalGetterPlayerId: PlayerId;
@@ -78,7 +78,7 @@ export interface ManagerGameweekDTO {
   teamBoostGameweek: GameweekNumber;
   captainFantasticGameweek: GameweekNumber;
   countrymenGameweek: GameweekNumber;
-  bankQuarterMillions: bigint;
+  bankQuarterMillions: number;
   noEntryPlayerId: PlayerId;
   safeHandsPlayerId: PlayerId;
   braceBonusGameweek: GameweekNumber;
@@ -108,7 +108,7 @@ export interface MonthlyLeaderboardDTO {
 export interface PlayerDTO {
   id: number;
   clubId: ClubId;
-  valueQuarterMillions: bigint;
+  valueQuarterMillions: number;
   dateOfBirth: bigint;
   nationality: CountryId;
   shirtNumber: number;
@@ -322,7 +322,6 @@ export interface _SERVICE {
   getSeasonLeaderboard: ActorMethod<[SeasonId, bigint, bigint], Result_5>;
   getSystemState: ActorMethod<[], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;
-  getTreasuryAccount: ActorMethod<[], AccountIdentifier>;
   getWeeklyLeaderboard: ActorMethod<
     [SeasonId, GameweekNumber, bigint, bigint],
     Result_2

@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1dvh7ee"
+  version_hash: "7hlesf"
 };
 function get_hooks() {
   return {};
@@ -3525,7 +3525,7 @@ const idlFactory$1 = ({ IDL }) => {
   });
   const CreatePlayerDTO = IDL.Record({
     clubId: ClubId,
-    valueQuarterMillions: IDL.Nat,
+    valueQuarterMillions: IDL.Nat16,
     dateOfBirth: IDL.Int,
     nationality: CountryId,
     shirtNumber: IDL.Nat8,
@@ -3609,6 +3609,7 @@ const idlFactory$1 = ({ IDL }) => {
     NotFound: IDL.Null,
     NotAuthorized: IDL.Null,
     InvalidData: IDL.Null,
+    SystemOnHold: IDL.Null,
     AlreadyExists: IDL.Null,
     InvalidTeamError: IDL.Null
   });
@@ -3629,7 +3630,7 @@ const idlFactory$1 = ({ IDL }) => {
   const Result_6 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
   const ManagerGameweekDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
-    teamValueQuarterMillions: IDL.Nat,
+    teamValueQuarterMillions: IDL.Nat16,
     countrymenCountryId: CountryId,
     username: IDL.Text,
     goalGetterPlayerId: PlayerId,
@@ -3638,7 +3639,7 @@ const idlFactory$1 = ({ IDL }) => {
     teamBoostGameweek: GameweekNumber,
     captainFantasticGameweek: GameweekNumber,
     countrymenGameweek: GameweekNumber,
-    bankQuarterMillions: IDL.Nat,
+    bankQuarterMillions: IDL.Nat16,
     noEntryPlayerId: PlayerId,
     safeHandsPlayerId: PlayerId,
     braceBonusGameweek: GameweekNumber,
@@ -3690,7 +3691,7 @@ const idlFactory$1 = ({ IDL }) => {
   const PlayerDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
-    valueQuarterMillions: IDL.Nat,
+    valueQuarterMillions: IDL.Nat16,
     dateOfBirth: IDL.Int,
     nationality: CountryId,
     shirtNumber: IDL.Nat8,
@@ -3714,7 +3715,6 @@ const idlFactory$1 = ({ IDL }) => {
   });
   const Result_4 = IDL.Variant({ ok: SystemStateDTO, err: Error2 });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error2 });
-  const AccountIdentifier = IDL.Vec(IDL.Nat8);
   const WeeklyLeaderboardDTO = IDL.Record({
     totalEntries: IDL.Nat,
     seasonId: SeasonId,
@@ -3793,7 +3793,6 @@ const idlFactory$1 = ({ IDL }) => {
     ),
     getSystemState: IDL.Func([], [Result_4], ["query"]),
     getTotalManagers: IDL.Func([], [Result_3], ["query"]),
-    getTreasuryAccount: IDL.Func([], [AccountIdentifier], []),
     getWeeklyLeaderboard: IDL.Func(
       [SeasonId, GameweekNumber, IDL.Nat, IDL.Nat],
       [Result_2],
@@ -5137,6 +5136,7 @@ function createCountriesStore() {
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
       let updatedCountriesData = await actor.getCountries();
+      console.log(updatedCountriesData);
       localStorage.setItem(
         "countries_data",
         JSON.stringify(updatedCountriesData, replacer)

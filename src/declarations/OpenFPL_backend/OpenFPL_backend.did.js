@@ -57,7 +57,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const CreatePlayerDTO = IDL.Record({
     clubId: ClubId,
-    valueQuarterMillions: IDL.Nat,
+    valueQuarterMillions: IDL.Nat16,
     dateOfBirth: IDL.Int,
     nationality: CountryId,
     shirtNumber: IDL.Nat8,
@@ -141,6 +141,7 @@ export const idlFactory = ({ IDL }) => {
     NotFound: IDL.Null,
     NotAuthorized: IDL.Null,
     InvalidData: IDL.Null,
+    SystemOnHold: IDL.Null,
     AlreadyExists: IDL.Null,
     InvalidTeamError: IDL.Null,
   });
@@ -161,7 +162,7 @@ export const idlFactory = ({ IDL }) => {
   const Result_6 = IDL.Variant({ ok: ProfileDTO, err: Error });
   const ManagerGameweekDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
-    teamValueQuarterMillions: IDL.Nat,
+    teamValueQuarterMillions: IDL.Nat16,
     countrymenCountryId: CountryId,
     username: IDL.Text,
     goalGetterPlayerId: PlayerId,
@@ -170,7 +171,7 @@ export const idlFactory = ({ IDL }) => {
     teamBoostGameweek: GameweekNumber,
     captainFantasticGameweek: GameweekNumber,
     countrymenGameweek: GameweekNumber,
-    bankQuarterMillions: IDL.Nat,
+    bankQuarterMillions: IDL.Nat16,
     noEntryPlayerId: PlayerId,
     safeHandsPlayerId: PlayerId,
     braceBonusGameweek: GameweekNumber,
@@ -222,7 +223,7 @@ export const idlFactory = ({ IDL }) => {
   const PlayerDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
-    valueQuarterMillions: IDL.Nat,
+    valueQuarterMillions: IDL.Nat16,
     dateOfBirth: IDL.Int,
     nationality: CountryId,
     shirtNumber: IDL.Nat8,
@@ -246,7 +247,6 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_4 = IDL.Variant({ ok: SystemStateDTO, err: Error });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error });
-  const AccountIdentifier = IDL.Vec(IDL.Nat8);
   const WeeklyLeaderboardDTO = IDL.Record({
     totalEntries: IDL.Nat,
     seasonId: SeasonId,
@@ -325,7 +325,6 @@ export const idlFactory = ({ IDL }) => {
     ),
     getSystemState: IDL.Func([], [Result_4], ["query"]),
     getTotalManagers: IDL.Func([], [Result_3], ["query"]),
-    getTreasuryAccount: IDL.Func([], [AccountIdentifier], []),
     getWeeklyLeaderboard: IDL.Func(
       [SeasonId, GameweekNumber, IDL.Nat, IDL.Nat],
       [Result_2],

@@ -11,11 +11,11 @@ module {
     public func getStableCanisterIds() : [Text] {
       return List.toArray(canisterIds);
     };
-    
+
     public func setStableCanisterIds(stable_canister_ids : [Text]) {
       canisterIds := List.fromArray(stable_canister_ids);
     };
-    
+
     public func requestCanisterTopup(canisterPrincipal : Text) : async () {
       let canisterId = List.find<Text>(
         canisterIds,

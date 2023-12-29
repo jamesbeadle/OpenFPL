@@ -30,7 +30,7 @@ module {
     };
 
     public func sendICPForCycles(treasuryAccount : Account.AccountIdentifier, cyclesRequested : Nat64) : async () {
-      
+
       if (cyclesRequested <= 0) {
         return;
       };
@@ -38,13 +38,13 @@ module {
       let cycles_minting_canister = actor (CanisterIds.CYCLES_MINTING_CANISTER) : actor {
         get_icp_xdr_conversion_rate : () -> async Nat64;
       };
-      let converstionRate: Nat64 = await cycles_minting_canister.get_icp_xdr_conversion_rate();
+      let converstionRate : Nat64 = await cycles_minting_canister.get_icp_xdr_conversion_rate();
 
       //TODO:
       //call the cycles minting canister and get the icp xdr conversion rate
       //work out the icp to send the get the required cycles
 
-      let amount: Nat64 = 10_000_000_000;
+      let amount : Nat64 = 10_000_000_000;
 
       let balance = await ledger.account_balance({ account = treasuryAccount });
 
