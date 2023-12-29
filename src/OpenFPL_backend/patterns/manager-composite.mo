@@ -2210,5 +2210,116 @@ module {
         Text.hash,
       );
     };
+
+    
+
+    public func getStableActiveProfilePictureCanisterId() : Text {
+      return activeProfilePictureCanisterId;
+    };
+
+    public func setStableActiveProfilePictureCanisterId(stable_active_profile_picture_canister_id : Text) {
+      activeProfilePictureCanisterId := stable_active_profile_picture_canister_id;
+    };
+
+    public func getStableTeamValueLeaderboards(): [(T.SeasonId, T.TeamValueLeaderboard)]{
+      return Iter.toArray(teamValueLeaderboards.entries());
+    };
+
+    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards: [(T.SeasonId, T.TeamValueLeaderboard)]){
+      teamValueLeaderboards := HashMap.fromIter<T.SeasonId, T.TeamValueLeaderboard>(
+        stable_team_value_leaderboards.vals(),
+        stable_team_value_leaderboards.size(),
+        Utilities.eqNat16,
+        Utilities.hashNat16,
+      );
+    };
+
+    public func getStableSeasonRewards() : [T.SeasonRewards]{
+      return List.toArray(seasonRewards);
+    };
+
+    public func setStableSeasonRewards(stable_season_rewards: [T.SeasonRewards]) {
+      seasonRewards := List.fromArray(stable_season_rewards);
+    };
+
+    public func getStableMonthlyRewards() : [T.MonthlyRewards]{
+      return List.toArray(monthlyRewards);
+    };
+
+    public func setStableMonthlyRewards(stable_monthly_rewards : [T.MonthlyRewards]){
+      seasonRewards := List.fromArray(stable_monthly_rewards);
+    };
+
+    public func getStableWeeklyRewards() : [T.WeeklyRewards]{
+      return List.toArray(weeklyRewards);
+    };
+
+    public func setStableWeeklyRewards(stable_weekly_rewards: [T.WeeklyRewards]) {
+      seasonRewards := List.fromArray(stable_weekly_rewards);
+    };
+
+    public func getStableMostValuableTeamRewards() : [T.RewardsList]{
+      return List.toArray(mostValuableTeamRewards);
+    };
+
+    public func setStableMostValuableTeamRewards(stable_most_valuable_team_rewards: [T.RewardsList]) {
+      mostValuableTeamRewards := List.fromArray(stable_most_valuable_team_rewards);
+    };
+
+    public func getStableHighestScoringPlayerRewards(): [T.RewardsList]{
+      return List.toArray(highScoringPlayerRewards);
+    };
+
+    public func setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards: [T.RewardsList]){
+      highScoringPlayerRewards := List.fromArray(stable_highest_scoring_player_rewards);
+    };
+
+    public func getStableWeeklyATHScores(): [T.HighScoreRecord]{
+      return List.toArray(weeklyAllTimeHighScores);
+    };
+
+    public func setStableWeeklyATHScores(stable_weekly_ath_scores: [T.HighScoreRecord]){
+      weeklyAllTimeHighScores := List.fromArray(stable_weekly_ath_scores);
+    };
+
+    public func getStableMonthlyATHScores(): [T.HighScoreRecord]{
+      return List.toArray(monthlyAllTimeHighScores);
+    };
+
+    public func setStableMonthlyATHScores(stable_monthly_ath_scores: [T.HighScoreRecord]){
+      monthlyAllTimeHighScores := List.fromArray(stable_monthly_ath_scores);
+    };
+
+    public func getStableSeasonATHScores(): [T.HighScoreRecord]{
+      return List.toArray(seasonAllTimeHighScores);
+    };
+
+    public func setStableSeasonATHScores(stable_season_ath_scores: [T.HighScoreRecord]){
+      seasonAllTimeHighScores := List.fromArray(stable_season_ath_scores);
+    };
+
+    public func getStableWeeklyATHPrizePool(): Nat64{
+      return weeklyATHPrizePool;
+    };
+
+    public func setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool: Nat64){
+      weeklyATHPrizePool := stable_weekly_ath_prize_pool;
+    };
+
+    public func getStableMonthlyATHPrizePool(): Nat64{
+      return monthlyATHPrizePool;
+    };
+
+    public func setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool: Nat64){
+      monthlyATHPrizePool := stable_monthly_ath_prize_pool;
+    };
+
+    public func getSeasonATHPrizePool(): Nat64{
+      return seasonATHPrizePool;
+    };
+
+    public func setSeasonATHPrizePool(stable_season_ath_prize_pool: Nat64){
+      seasonATHPrizePool := stable_season_ath_prize_pool;
+    };
   };
 };
