@@ -9,7 +9,6 @@
   import type {
     FantasyTeamSnapshot,
     ManagerDTO,
-    Season,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
@@ -23,8 +22,6 @@
     selectedGameweek: number
   ) => void;
   let manager: ManagerDTO;
-  export let selectedGameweek = writable<number | null>(null);
-  let selectedSeason: Season | null;
   let isLoading = true;
 
   $: id = $page.url.searchParams.get("id") ?? principalId;
@@ -35,12 +32,7 @@
       await playerStore.sync();
       await countriesStore.sync();
 
-      selectedSeason = $systemStore?.activeSeason ?? null;
-      manager = await managerStore.getManager(
-        id ?? "",
-        selectedSeason?.id ?? 1,
-        $selectedGameweek!
-      );
+      manager = await managerStore.getManager();
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching manager gameweeks." },

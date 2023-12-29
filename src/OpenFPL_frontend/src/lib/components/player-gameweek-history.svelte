@@ -8,7 +8,10 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
-  import type { ClubDTO, ClubId } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    ClubDTO,
+    ClubId,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { Spinner } from "@dfinity/gix-components";

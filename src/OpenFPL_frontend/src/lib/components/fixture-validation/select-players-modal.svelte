@@ -1,6 +1,9 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type { ClubDTO, PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    ClubDTO,
+    PlayerDTO,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
   import { convertPlayerPosition } from "$lib/utils/Helpers";
 

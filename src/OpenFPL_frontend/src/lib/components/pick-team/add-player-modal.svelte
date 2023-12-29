@@ -1,13 +1,17 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import type { PlayerDTO, ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    PlayerDTO,
+    ProfileDTO,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { Modal } from "@dfinity/gix-components";
+  import { convertPlayerPosition } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
@@ -28,7 +32,8 @@
   $: filteredPlayers = $playerStore.filter((player) => {
     return (
       (filterTeam === -1 || player.clubId === filterTeam) &&
-      (filterPosition === -1 || player.position === filterPosition) &&
+      (filterPosition === -1 ||
+        convertPlayerPosition(player.position) === filterPosition) &&
       filterColumn > -2 &&
       (minValue === 0 || player.valueQuarterMillions >= minValue) &&
       (maxValue === 0 || player.valueQuarterMillions <= maxValue) &&
@@ -116,11 +121,11 @@
       team.playerIds.forEach((id) => {
         const teamPlayer = $playerStore.find((p) => p.id === id);
         if (teamPlayer) {
-          positionCounts[teamPlayer.position]++;
+          positionCounts[convertPlayerPosition(teamPlayer.position)]++;
         }
       });
 
-    positionCounts[player.position]++;
+    positionCounts[convertPlayerPosition(player.position)]++;
 
     const formations = [
       "3-4-3",

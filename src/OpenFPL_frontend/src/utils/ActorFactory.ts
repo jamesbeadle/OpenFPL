@@ -58,11 +58,7 @@ export class ActorFactory {
       });
     }).then((identity) => {
       unsubscribe();
-      return ActorFactory.createActor(
-        canister,
-        canisterId,
-        identity
-      );
+      return ActorFactory.createActor(canister, canisterId, identity);
     });
   }
 }

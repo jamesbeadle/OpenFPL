@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1mah9mk"
+  version_hash: "uu3g38"
 };
 function get_hooks() {
   return {};
@@ -3466,7 +3466,7 @@ const initAuthStore = () => {
   };
 };
 const authStore = initAuthStore();
-const idlFactory$1 = ({ IDL }) => {
+const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
   const List_1 = IDL.Rec();
   const SeasonId = IDL.Nat16;
@@ -3815,6 +3815,7 @@ const idlFactory$1 = ({ IDL }) => {
   const SystemStateDTO = IDL.Record({
     pickTeamSeasonId: SeasonId,
     pickTeamSeasonName: IDL.Text,
+    calculationSeasonName: IDL.Text,
     calculationGameweek: GameweekNumber,
     pickTeamGameweek: GameweekNumber,
     calculationMonth: CalendarMonth,
@@ -3950,224 +3951,6 @@ const idlFactory$1 = ({ IDL }) => {
     validateUpdatePlayer: IDL.Func([UpdatePlayerDTO], [Result], [])
   });
 };
-const idlFactory = ({ IDL }) => {
-  const List = IDL.Rec();
-  const List_1 = IDL.Rec();
-  const List_2 = IDL.Rec();
-  const List_3 = IDL.Rec();
-  const List_4 = IDL.Rec();
-  const List_5 = IDL.Rec();
-  const TeamId = IDL.Nat16;
-  const SeasonId = IDL.Nat16;
-  const FixtureId = IDL.Nat32;
-  const PlayerEventData = IDL.Record({
-    fixtureId: FixtureId,
-    playerId: IDL.Nat16,
-    eventStartMinute: IDL.Nat8,
-    eventEndMinute: IDL.Nat8,
-    teamId: TeamId,
-    eventType: IDL.Nat8
-  });
-  List_3.fill(IDL.Opt(IDL.Tuple(PlayerEventData, List_3)));
-  const GameweekNumber = IDL.Nat8;
-  const Fixture = IDL.Record({
-    id: IDL.Nat32,
-    status: IDL.Nat8,
-    awayTeamId: TeamId,
-    highestScoringPlayerId: IDL.Nat16,
-    homeTeamId: TeamId,
-    seasonId: SeasonId,
-    events: List_3,
-    kickOff: IDL.Int,
-    homeGoals: IDL.Nat8,
-    gameweek: GameweekNumber,
-    awayGoals: IDL.Nat8
-  });
-  const CountryId = IDL.Nat16;
-  const PlayerDTO = IDL.Record({
-    id: IDL.Nat16,
-    value: IDL.Nat,
-    dateOfBirth: IDL.Int,
-    nationality: CountryId,
-    shirtNumber: IDL.Nat8,
-    totalPoints: IDL.Int16,
-    teamId: IDL.Nat16,
-    position: IDL.Nat8,
-    lastName: IDL.Text,
-    firstName: IDL.Text
-  });
-  const PlayerScoreDTO = IDL.Record({
-    id: IDL.Nat16,
-    assists: IDL.Int16,
-    dateOfBirth: IDL.Int,
-    nationality: CountryId,
-    goalsScored: IDL.Int16,
-    saves: IDL.Int16,
-    goalsConceded: IDL.Int16,
-    events: List_3,
-    teamId: IDL.Nat16,
-    position: IDL.Nat8,
-    points: IDL.Int16
-  });
-  const DataCache = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const PlayerId = IDL.Nat16;
-  const PlayerGameweek = IDL.Record({
-    events: List_3,
-    number: IDL.Nat8,
-    points: IDL.Int16
-  });
-  List_2.fill(IDL.Opt(IDL.Tuple(PlayerGameweek, List_2)));
-  const PlayerSeason = IDL.Record({ id: IDL.Nat16, gameweeks: List_2 });
-  List_1.fill(IDL.Opt(IDL.Tuple(PlayerSeason, List_1)));
-  const InjuryHistory = IDL.Record({
-    description: IDL.Text,
-    injuryStartDate: IDL.Int,
-    expectedEndDate: IDL.Int
-  });
-  List.fill(IDL.Opt(IDL.Tuple(InjuryHistory, List)));
-  const TransferHistory = IDL.Record({
-    transferDate: IDL.Int,
-    loanEndDate: IDL.Int,
-    toTeam: TeamId,
-    transferSeason: SeasonId,
-    fromTeam: TeamId,
-    transferGameweek: GameweekNumber
-  });
-  List_4.fill(IDL.Opt(IDL.Tuple(TransferHistory, List_4)));
-  const ValueHistory = IDL.Record({
-    oldValue: IDL.Nat,
-    newValue: IDL.Nat,
-    seasonId: IDL.Nat16,
-    gameweek: IDL.Nat8
-  });
-  List_5.fill(IDL.Opt(IDL.Tuple(ValueHistory, List_5)));
-  const Player = IDL.Record({
-    id: PlayerId,
-    value: IDL.Nat,
-    seasons: List_1,
-    dateOfBirth: IDL.Int,
-    injuryHistory: List,
-    transferHistory: List_4,
-    isInjured: IDL.Bool,
-    nationality: CountryId,
-    retirementDate: IDL.Int,
-    valueHistory: List_5,
-    shirtNumber: IDL.Nat8,
-    teamId: TeamId,
-    position: IDL.Nat8,
-    parentTeamId: IDL.Nat16,
-    lastName: IDL.Text,
-    onLoan: IDL.Bool,
-    firstName: IDL.Text
-  });
-  const PlayerGameweekDTO = IDL.Record({
-    fixtureId: FixtureId,
-    events: IDL.Vec(PlayerEventData),
-    number: IDL.Nat8,
-    points: IDL.Int16
-  });
-  const PlayerDetailDTO = IDL.Record({
-    id: PlayerId,
-    value: IDL.Nat,
-    dateOfBirth: IDL.Int,
-    injuryHistory: IDL.Vec(InjuryHistory),
-    seasonId: SeasonId,
-    isInjured: IDL.Bool,
-    gameweeks: IDL.Vec(PlayerGameweekDTO),
-    nationality: CountryId,
-    retirementDate: IDL.Int,
-    valueHistory: IDL.Vec(ValueHistory),
-    shirtNumber: IDL.Nat8,
-    teamId: TeamId,
-    position: IDL.Nat8,
-    parentTeamId: IDL.Nat16,
-    lastName: IDL.Text,
-    onLoan: IDL.Bool,
-    firstName: IDL.Text
-  });
-  const PlayerPointsDTO = IDL.Record({
-    id: IDL.Nat16,
-    events: IDL.Vec(PlayerEventData),
-    teamId: IDL.Nat16,
-    position: IDL.Nat8,
-    gameweek: GameweekNumber,
-    points: IDL.Int16
-  });
-  return IDL.Service({
-    calculatePlayerScores: IDL.Func(
-      [IDL.Nat16, IDL.Nat8, Fixture],
-      [Fixture],
-      []
-    ),
-    createPlayer: IDL.Func(
-      [
-        TeamId,
-        IDL.Nat8,
-        IDL.Text,
-        IDL.Text,
-        IDL.Nat8,
-        IDL.Nat,
-        IDL.Int,
-        CountryId
-      ],
-      [],
-      []
-    ),
-    getActivePlayers: IDL.Func([], [IDL.Vec(PlayerDTO)], ["query"]),
-    getAllPlayers: IDL.Func([], [IDL.Vec(PlayerDTO)], ["query"]),
-    getAllPlayersMap: IDL.Func(
-      [IDL.Nat16, IDL.Nat8],
-      [IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO))],
-      ["query"]
-    ),
-    getDataHashes: IDL.Func([], [IDL.Vec(DataCache)], ["query"]),
-    getPlayer: IDL.Func([IDL.Nat16], [Player], ["query"]),
-    getPlayerDetails: IDL.Func(
-      [IDL.Nat16, SeasonId],
-      [PlayerDetailDTO],
-      ["query"]
-    ),
-    getPlayerDetailsForGameweek: IDL.Func(
-      [IDL.Nat16, IDL.Nat8],
-      [IDL.Vec(PlayerPointsDTO)],
-      ["query"]
-    ),
-    getPlayersDetailsForGameweek: IDL.Func(
-      [IDL.Vec(PlayerId), IDL.Nat16, IDL.Nat8],
-      [IDL.Vec(PlayerPointsDTO)],
-      ["query"]
-    ),
-    getRetiredPlayer: IDL.Func([IDL.Text], [IDL.Vec(Player)], ["query"]),
-    loanPlayer: IDL.Func(
-      [PlayerId, TeamId, IDL.Int, SeasonId, GameweekNumber],
-      [],
-      []
-    ),
-    recallPlayer: IDL.Func([PlayerId], [], []),
-    retirePlayer: IDL.Func([PlayerId, IDL.Int], [], []),
-    revaluePlayerDown: IDL.Func(
-      [PlayerId, SeasonId, GameweekNumber],
-      [],
-      ["oneway"]
-    ),
-    revaluePlayerUp: IDL.Func([PlayerId, SeasonId, GameweekNumber], [], []),
-    setDefaultHashes: IDL.Func([], [], []),
-    setPlayerInjury: IDL.Func([PlayerId, IDL.Text, IDL.Int], [], []),
-    transferPlayer: IDL.Func(
-      [PlayerId, TeamId, SeasonId, GameweekNumber],
-      [],
-      []
-    ),
-    unretirePlayer: IDL.Func([PlayerId], [], []),
-    updateHashForCategory: IDL.Func([IDL.Text], [], []),
-    updatePlayer: IDL.Func(
-      [PlayerId, IDL.Nat8, IDL.Text, IDL.Text, IDL.Nat8, IDL.Int, CountryId],
-      [],
-      []
-    ),
-    updatePlayerEventDataCache: IDL.Func([], [], [])
-  });
-};
 class ActorFactory {
   static createActor(idlFactory2, canisterId = "", identity = null, options2 = null) {
     const hostOptions = {
@@ -4208,14 +3991,25 @@ class ActorFactory {
       });
     }).then((identity) => {
       unsubscribe();
-      return ActorFactory.createActor(
-        canisterId === { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ? idlFactory$1 : idlFactory,
-        canisterId,
-        identity
-      );
+      return ActorFactory.createActor(idlFactory, canisterId, identity);
     });
   }
 }
+var PlayerEvent = /* @__PURE__ */ ((PlayerEvent2) => {
+  PlayerEvent2[PlayerEvent2["Appearance"] = 0] = "Appearance";
+  PlayerEvent2[PlayerEvent2["Goal"] = 1] = "Goal";
+  PlayerEvent2[PlayerEvent2["GoalAssisted"] = 2] = "GoalAssisted";
+  PlayerEvent2[PlayerEvent2["GoalConceded"] = 3] = "GoalConceded";
+  PlayerEvent2[PlayerEvent2["KeeperSave"] = 4] = "KeeperSave";
+  PlayerEvent2[PlayerEvent2["CleanSheet"] = 5] = "CleanSheet";
+  PlayerEvent2[PlayerEvent2["PenaltySaved"] = 6] = "PenaltySaved";
+  PlayerEvent2[PlayerEvent2["PenaltyMissed"] = 7] = "PenaltyMissed";
+  PlayerEvent2[PlayerEvent2["YellowCard"] = 8] = "YellowCard";
+  PlayerEvent2[PlayerEvent2["RedCard"] = 9] = "RedCard";
+  PlayerEvent2[PlayerEvent2["OwnGoal"] = 10] = "OwnGoal";
+  PlayerEvent2[PlayerEvent2["HighestScoringPlayer"] = 11] = "HighestScoringPlayer";
+  return PlayerEvent2;
+})(PlayerEvent || {});
 var Position = /* @__PURE__ */ ((Position2) => {
   Position2[Position2["GOALKEEPER"] = 0] = "GOALKEEPER";
   Position2[Position2["DEFENDER"] = 1] = "DEFENDER";
@@ -4344,11 +4138,39 @@ function convertPlayerPosition(playerPosition) {
     return Position.MIDFIELDER;
   if ("Forward" in playerPosition)
     return Position.FORWARD;
+  return Position.GOALKEEPER;
+}
+function convertEvent(playerEvent) {
+  if ("Appearance" in playerEvent)
+    return PlayerEvent.Appearance;
+  if ("Goal" in playerEvent)
+    return PlayerEvent.Goal;
+  if ("GoalAssisted" in playerEvent)
+    return PlayerEvent.GoalAssisted;
+  if ("GoalConceded" in playerEvent)
+    return PlayerEvent.GoalConceded;
+  if ("KeeperSave" in playerEvent)
+    return PlayerEvent.KeeperSave;
+  if ("CleanSheet" in playerEvent)
+    return PlayerEvent.CleanSheet;
+  if ("PenaltySaved" in playerEvent)
+    return PlayerEvent.PenaltySaved;
+  if ("PenaltyMissed" in playerEvent)
+    return PlayerEvent.PenaltyMissed;
+  if ("YellowCard" in playerEvent)
+    return PlayerEvent.YellowCard;
+  if ("RedCard" in playerEvent)
+    return PlayerEvent.RedCard;
+  if ("OwnGoal" in playerEvent)
+    return PlayerEvent.OwnGoal;
+  if ("HighestScoringPlayer" in playerEvent)
+    return PlayerEvent.HighestScoringPlayer;
+  return PlayerEvent.Appearance;
 }
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
-    idlFactory$1,
+    idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
@@ -4407,7 +4229,7 @@ const systemStore = createSystemStore();
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
   const actor = ActorFactory.createActor(
-    idlFactory$1,
+    idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
@@ -4468,7 +4290,7 @@ const fixtureStore = createFixtureStore();
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
   const actor = ActorFactory.createActor(
-    idlFactory$1,
+    idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
@@ -4517,7 +4339,7 @@ function createLeaderboardStore() {
     systemState = value;
   });
   let actor = ActorFactory.createActor(
-    idlFactory$1,
+    idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function syncWeeklyLeaderboard() {
@@ -5107,16 +4929,12 @@ function createManagerStore() {
     systemState = value;
   });
   const actor = ActorFactory.createActor(
-    idlFactory$1,
+    idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
-  async function getManager(managerId, seasonId, gameweek) {
+  async function getManager() {
     try {
-      return await actor.getManager(
-        managerId,
-        seasonId,
-        gameweek
-      );
+      return await actor.getManager();
     } catch (error2) {
       console.error("Error fetching manager for gameweek:", error2);
       throw error2;
@@ -5135,7 +4953,7 @@ function createManagerStore() {
     try {
       const fantasyTeamData = await actor.getFantasyTeamForGameweek(
         managerId,
-        systemState?.activeSeason.id,
+        systemState?.calculationGameweek,
         gameweek
       );
       return fantasyTeamData;
@@ -5240,7 +5058,7 @@ function createManagerStore() {
   function getBonusTeamId(userFantasyTeam, activeGameweek) {
     let bonusTeamId = 0;
     if (userFantasyTeam.teamBoostGameweek === activeGameweek) {
-      bonusTeamId = userFantasyTeam.teamBoostTeamId;
+      bonusTeamId = userFantasyTeam.teamBoostClubId;
     }
     return bonusTeamId;
   }
@@ -5270,7 +5088,7 @@ createManagerStore();
 function createCountriesStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
-    idlFactory$1,
+    idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
@@ -5311,7 +5129,7 @@ function createPlayerStore() {
   fixtureStore.subscribe((value) => value);
   let actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.PLAYER_CANISTER_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.MAIN_CANISTER_ID
   );
   async function sync() {
     let category = "players";
@@ -5351,9 +5169,9 @@ function createPlayerEventsStore() {
   });
   let allFixtures;
   fixtureStore.subscribe((value) => allFixtures = value);
-  let actor = ActorFactory.createActor(
+  const actor = ActorFactory.createActor(
     idlFactory,
-    { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.PLAYER_CANISTER_CANISTER_ID
+    { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "playerEventData";
@@ -5362,8 +5180,8 @@ function createPlayerEventsStore() {
     const localHash = localStorage.getItem(category);
     if (livePlayersHash?.hash != localHash) {
       let updatedPlayerEventsData = await actor.getPlayerDetailsForGameweek(
-        systemState.activeSeason.id,
-        systemState.focusGameweek
+        systemState.calculationSeasonId,
+        systemState.calculationGameweek
       );
       localStorage.setItem(
         "player_events_data",
@@ -5404,12 +5222,12 @@ function createPlayerEventsStore() {
   async function getGameweekPlayers(fantasyTeam, gameweek) {
     await sync();
     let allPlayerEvents = [];
-    if (systemState?.focusGameweek === gameweek) {
+    if (systemState?.calculationGameweek === gameweek) {
       allPlayerEvents = await getPlayerEvents();
     } else {
       allPlayerEvents = await actor.getPlayersDetailsForGameweek(
         fantasyTeam.playerIds,
-        systemState?.activeSeason.id,
+        systemState?.calculationSeasonId,
         gameweek
       );
     }
@@ -5445,13 +5263,13 @@ function createPlayerEventsStore() {
     let goals = 0, assists = 0, redCards = 0, yellowCards = 0, missedPenalties = 0, ownGoals = 0, saves = 0, cleanSheets = 0, penaltySaves = 0, goalsConceded = 0, appearance = 0, highestScoringPlayerId = 0;
     let goalPoints = 0, assistPoints = 0, goalsConcededPoints = 0, cleanSheetPoints = 0;
     playerPointsDTO.events.forEach((event) => {
-      switch (event.eventType) {
+      switch (convertEvent(event.eventType)) {
         case 0:
           appearance += 1;
           break;
         case 1:
           goals += 1;
-          switch (playerPointsDTO.position) {
+          switch (convertPlayerPosition(playerPointsDTO.position)) {
             case 0:
             case 1:
               goalPoints += 20;
@@ -5466,7 +5284,7 @@ function createPlayerEventsStore() {
           break;
         case 2:
           assists += 1;
-          switch (playerPointsDTO.position) {
+          switch (convertPlayerPosition(playerPointsDTO.position)) {
             case 0:
             case 1:
               assistPoints += 15;
@@ -5479,7 +5297,7 @@ function createPlayerEventsStore() {
           break;
         case 3:
           goalsConceded += 1;
-          if (playerPointsDTO.position < 2 && goalsConceded % 2 === 0) {
+          if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded % 2 === 0) {
             goalsConcededPoints += -15;
           }
           break;
@@ -5488,7 +5306,7 @@ function createPlayerEventsStore() {
           break;
         case 5:
           cleanSheets += 1;
-          if (playerPointsDTO.position < 2 && goalsConceded === 0) {
+          if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded === 0) {
             cleanSheetPoints += 10;
           }
           break;
@@ -5572,7 +5390,7 @@ function createPlayerEventsStore() {
     if (gameweekData.yellowCards > 0) {
       score += pointsForYellowCard * gameweekData.yellowCards;
     }
-    switch (gameweekData.player.position) {
+    switch (convertPlayerPosition(gameweekData.player.position)) {
       case 0:
         pointsForGoal = 20;
         pointsForAssist = 15;
@@ -5610,7 +5428,7 @@ function createPlayerEventsStore() {
     }
     const gameweekFixtures = fixtures ? fixtures.filter((fixture) => fixture.gameweek === gameweekData.gameweek) : [];
     const playerFixtures = gameweekFixtures.filter(
-      (fixture) => (fixture.homeTeamId === gameweekData.player.teamId || fixture.awayTeamId === gameweekData.player.teamId) && fixture.highestScoringPlayerId === gameweekData.player.id
+      (fixture) => (fixture.homeClubId === gameweekData.player.clubId || fixture.awayClubId === gameweekData.player.clubId) && fixture.highestScoringPlayerId === gameweekData.player.id
     );
     if (playerFixtures && playerFixtures.length > 0) {
       score += pointsForHighestScore * playerFixtures.length;
@@ -5627,7 +5445,7 @@ function createPlayerEventsStore() {
     let bonusPoints = 0;
     var pointsForGoal = 0;
     var pointsForAssist = 0;
-    switch (gameweekData.player.position) {
+    switch (convertPlayerPosition(gameweekData.player.position)) {
       case 0:
         pointsForGoal = 20;
         pointsForAssist = 15;
@@ -5651,10 +5469,10 @@ function createPlayerEventsStore() {
     if (fantasyTeam.passMasterGameweek === gameweekData.gameweek && fantasyTeam.passMasterPlayerId === gameweekData.player.id) {
       bonusPoints = gameweekData.assists * pointsForAssist * 2;
     }
-    if (fantasyTeam.noEntryGameweek === gameweekData.gameweek && fantasyTeam.noEntryPlayerId === gameweekData.player.id && (gameweekData.player.position === 0 || gameweekData.player.position === 1) && gameweekData.cleanSheets) {
+    if (fantasyTeam.noEntryGameweek === gameweekData.gameweek && fantasyTeam.noEntryPlayerId === gameweekData.player.id && (convertPlayerPosition(gameweekData.player.position) === 0 || convertPlayerPosition(gameweekData.player.position) === 1) && gameweekData.cleanSheets) {
       bonusPoints = points * 2;
     }
-    if (fantasyTeam.safeHandsGameweek === gameweekData.gameweek && gameweekData.player.position === 0 && gameweekData.saves >= 5) {
+    if (fantasyTeam.safeHandsGameweek === gameweekData.gameweek && convertPlayerPosition(gameweekData.player.position) === 0 && gameweekData.saves >= 5) {
       bonusPoints = points * 2;
     }
     if (fantasyTeam.captainFantasticGameweek === gameweekData.gameweek && fantasyTeam.captainId === gameweekData.player.id && gameweekData.goals > 0) {
@@ -5672,7 +5490,7 @@ function createPlayerEventsStore() {
     if (fantasyTeam.hatTrickHeroGameweek === gameweekData.gameweek && gameweekData.goals >= 3) {
       bonusPoints = points * 2;
     }
-    if (fantasyTeam.teamBoostGameweek === gameweekData.gameweek && gameweekData.player.teamId === fantasyTeam.teamBoostTeamId) {
+    if (fantasyTeam.teamBoostGameweek === gameweekData.gameweek && gameweekData.player.clubId === fantasyTeam.teamBoostClubId) {
       bonusPoints = points;
     }
     return bonusPoints;
@@ -6085,7 +5903,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     showConfirmDataModal = false;
   }
   fixtureId = Number($page.url.searchParams.get("id"));
-  $playerEventData.length == 0 || $playerEventData.filter((x) => x.eventType == 0).length != $selectedPlayers.length;
+  $playerEventData.length == 0 || $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length != $selectedPlayers.length;
   $$unsubscribe_playerEventData();
   $$unsubscribe_selectedPlayers();
   $$unsubscribe_page();
@@ -6337,7 +6155,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
-        positionCounts[teamPlayer.position]++;
+        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
       }
     });
     for (const formation of Object.keys(formations)) {
@@ -6377,7 +6195,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       team.playerIds.forEach((id) => {
         const player = $playerStore.find((p) => p.id === id);
         if (player) {
-          totalValue += Number(player.value);
+          totalValue += player.valueQuarterMillions;
         }
       });
     }
@@ -6388,8 +6206,8 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       if (playerId > 0) {
         const player = $playerStore.find((p) => p.id === playerId);
         if (player) {
-          teamCount.set(player.teamId, (teamCount.get(player.teamId) || 0) + 1);
-          if (teamCount.get(player.teamId) > 2) {
+          teamCount.set(player.clubId, (teamCount.get(player.clubId) || 0) + 1);
+          if (teamCount.get(player.clubId) > 2) {
             return false;
           }
         }
@@ -6417,7 +6235,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     team.playerIds.forEach((id) => {
       const teamPlayer = $playerStore.find((p) => p.id === id);
       if (teamPlayer) {
-        positionCounts[teamPlayer.position]++;
+        positionCounts[convertPlayerPosition(teamPlayer.position)]++;
       }
     });
     const [def, mid, fwd] = selectedFormation2.split("-").map(Number);
@@ -6475,7 +6293,7 @@ const Page$3 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_playerStore = subscribe(playerStore, (value) => value);
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
-  let selectedGameweek = $systemStore?.activeGameweek ?? 1;
+  let selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
   let fixturesWithTeams = [];
   Number($page.url.searchParams.get("id"));
   {

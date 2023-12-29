@@ -17,7 +17,11 @@
     ClubDTO,
     PlayerDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
+  import {
+    updateTableData,
+    getPositionText,
+    convertPlayerPosition,
+  } from "../../lib/utils/Helpers";
   import { Spinner } from "@dfinity/gix-components";
 
   let isLoading = true;
@@ -57,7 +61,10 @@
 
       highestScoringPlayer = $playerStore
         .sort((a, b) => a.totalPoints - b.totalPoints)
-        .sort((a, b) => Number(b.valueQuarterMillions) - Number(a.valueQuarterMillions))[0];
+        .sort(
+          (a, b) =>
+            Number(b.valueQuarterMillions) - Number(a.valueQuarterMillions)
+        )[0];
 
       nextFixture =
         teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
@@ -221,7 +228,9 @@
             >
           </p>
           <p class="content-panel-header">
-            {getPositionText(highestScoringPlayer?.position ?? 0)}
+            {getPositionText(
+              convertPlayerPosition(highestScoringPlayer?.position)
+            )}
             ({highestScoringPlayer?.totalPoints})
           </p>
         </div>

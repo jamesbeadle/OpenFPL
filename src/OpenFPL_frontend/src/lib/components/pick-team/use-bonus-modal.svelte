@@ -8,6 +8,7 @@
   import { BonusType } from "$lib/enums/BonusType";
   import { Modal } from "@dfinity/gix-components";
   import { countriesStore } from "$lib/stores/country-store";
+  import { convertPlayerPosition } from "$lib/utils/Helpers";
 
   export let visible: boolean;
   export let fantasyTeam = writable<ProfileDTO | null>(null);
@@ -68,7 +69,7 @@
 
     for (const playerId of $fantasyTeam.playerIds) {
       const player = $playerStore.find((p) => p.id === playerId);
-      if (player && player.position === 0) {
+      if (player && convertPlayerPosition(player.position) === 0) {
         return player.id;
       }
     }

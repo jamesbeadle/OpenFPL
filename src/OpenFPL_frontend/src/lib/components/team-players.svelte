@@ -1,9 +1,10 @@
 <script lang="ts">
   import { Position } from "$lib/enums/Position";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-    import type { PlayerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import {
     calculateAgeFromNanoseconds,
+    convertPlayerPosition,
     getFlagComponent,
     getPositionAbbreviation,
     getPositionText,
@@ -13,7 +14,7 @@
   $: filteredPlayers =
     selectedPosition === -1
       ? players
-      : players.filter((p) => p.position === selectedPosition);
+      : players.filter((p) => convertPlayerPosition(p.position) === selectedPosition);
   let positionValues: number[] = Object.values(Position).filter(
     (value) => typeof value === "number"
   ) as number[];
@@ -60,7 +61,7 @@
             {player.shirtNumber === 0 ? "-" : player.shirtNumber}
           </div>
           <div class="flex items-center w-2/12">
-            {getPositionAbbreviation(player.position)}
+            {getPositionAbbreviation(convertPlayerPosition(player.position))}
           </div>
           <div class="flex items-center w-6/12 sm:w-4/12 lg:w-3/12 xl:w-3/12">
             <svelte:component

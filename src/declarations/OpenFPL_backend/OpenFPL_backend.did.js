@@ -347,6 +347,7 @@ export const idlFactory = ({ IDL }) => {
   const SystemStateDTO = IDL.Record({
     pickTeamSeasonId: SeasonId,
     pickTeamSeasonName: IDL.Text,
+    calculationSeasonName: IDL.Text,
     calculationGameweek: GameweekNumber,
     pickTeamGameweek: GameweekNumber,
     calculationMonth: CalendarMonth,

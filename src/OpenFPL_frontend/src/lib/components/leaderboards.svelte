@@ -11,7 +11,7 @@
 
   let isLoading = true;
   let gameweeks = Array.from(
-    { length: $systemStore?.focusGameweek ?? 1 },
+    { length: $systemStore?.calculationGameweek ?? 1 },
     (_, i) => i + 1
   );
   let selectedGameweek: number;
@@ -42,8 +42,8 @@
       await leaderboardStore.syncMonthlyLeaderboards();
       await leaderboardStore.syncSeasonLeaderboard();
 
-      selectedGameweek = $systemStore?.focusGameweek ?? 1;
-      selectedMonth = $systemStore?.activeMonth ?? 8;
+      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
+      selectedMonth = $systemStore?.calculationMonth ?? 8;
       selectedTeamId = $authSignedInStore
         ? $userGetFavouriteTeam ??
           $teamStore.sort((a, b) =>
@@ -84,8 +84,8 @@
           leaderboard = await leaderboardStore.getWeeklyLeaderboardPage(
             selectedGameweek,
             currentPage,
-            $systemStore?.focusGameweek ?? 1,
-            $systemStore?.activeSeason.id ?? 1
+            $systemStore?.calculationGameweek ?? 1,
+            $systemStore?.calculationSeasonId ?? 1
           );
           break;
         case 2:
@@ -198,12 +198,12 @@
             </select>
             <button
               class={`${
-                selectedGameweek === $systemStore?.focusGameweek
+                selectedGameweek === $systemStore?.calculationGameweek
                   ? "bg-gray-500"
                   : "fpl-button"
               } default-button ml-1`}
               on:click={() => changeGameweek(1)}
-              disabled={selectedGameweek === $systemStore?.focusGameweek}
+              disabled={selectedGameweek === $systemStore?.calculationGameweek}
               >&gt;</button
             >
           </div>
@@ -323,7 +323,7 @@
               on:click={() => changePage(1)}
               disabled={currentPage >= totalPages}
               class={`${
-                selectedGameweek === $systemStore?.focusGameweek
+                selectedGameweek === $systemStore?.calculationGameweek
                   ? "bg-gray-500"
                   : "fpl-button"
               } 

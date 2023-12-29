@@ -9,7 +9,10 @@
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { authStore } from "$lib/stores/auth.store";
 
-  import { getPositionAbbreviation, convertPlayerPosition } from "$lib/utils/Helpers";
+  import {
+    getPositionAbbreviation,
+    convertPlayerPosition,
+  } from "$lib/utils/Helpers";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Principal } from "@dfinity/principal";
@@ -179,7 +182,9 @@
               on:click={() => showDetailModal(playerGameweek)}
             >
               <div class="w-2/12 xs:w-2/12">
-                {getPositionAbbreviation(convertPlayerPosition(playerGameweek.player.position))}
+                {getPositionAbbreviation(
+                  convertPlayerPosition(playerGameweek.player.position)
+                )}
               </div>
               <div class="w-6/12 xs:w-4/12">
                 <a href={`/player?id=${playerGameweek.player.id}`}>

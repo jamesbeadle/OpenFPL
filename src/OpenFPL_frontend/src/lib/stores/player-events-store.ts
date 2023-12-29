@@ -3,10 +3,10 @@ import { fixtureStore } from "$lib/stores/fixture-store";
 import { playerStore } from "$lib/stores/player-store";
 import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   FixtureDTO,
-  ManagerDTO,
   PlayerDTO,
   PlayerEventData,
   PlayerPointsDTO,
@@ -14,8 +14,12 @@ import type {
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { calculateAgeFromNanoseconds, replacer, convertEvent, convertPlayerPosition } from "../utils/Helpers";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import {
+  calculateAgeFromNanoseconds,
+  convertEvent,
+  convertPlayerPosition,
+  replacer,
+} from "../utils/Helpers";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
@@ -199,7 +203,10 @@ function createPlayerEventsStore() {
           break;
         case 3:
           goalsConceded += 1;
-          if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded % 2 === 0) {
+          if (
+            convertPlayerPosition(playerPointsDTO.position) < 2 &&
+            goalsConceded % 2 === 0
+          ) {
             goalsConcededPoints += -15;
           }
           break;
@@ -208,7 +215,10 @@ function createPlayerEventsStore() {
           break;
         case 5:
           cleanSheets += 1;
-          if (convertPlayerPosition(playerPointsDTO.position) < 2 && goalsConceded === 0) {
+          if (
+            convertPlayerPosition(playerPointsDTO.position) < 2 &&
+            goalsConceded === 0
+          ) {
             cleanSheetPoints += 10;
           }
           break;
@@ -420,7 +430,7 @@ function createPlayerEventsStore() {
       fantasyTeam.noEntryGameweek === gameweekData.gameweek &&
       fantasyTeam.noEntryPlayerId === gameweekData.player.id &&
       (convertPlayerPosition(gameweekData.player.position) === 0 ||
-      convertPlayerPosition(gameweekData.player.position) === 1) &&
+        convertPlayerPosition(gameweekData.player.position) === 1) &&
       gameweekData.cleanSheets
     ) {
       bonusPoints = points * 2;

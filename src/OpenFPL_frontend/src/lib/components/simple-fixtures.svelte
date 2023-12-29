@@ -4,7 +4,7 @@
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { formatUnixTimeToTime } from "../utils/Helpers";
 
@@ -40,7 +40,7 @@
     await teamStore.sync();
     await fixtureStore.sync();
     await systemStore.sync();
-    selectedGameweek = $systemStore?.activeGameweek ?? 1;
+    selectedGameweek = $systemStore?.calculationGameweek ?? 1;
     fixturesWithTeams = $fixtureStore.map((fixture) => ({
       fixture,
       homeTeam: getTeamFromId(fixture.homeTeamId),
@@ -52,7 +52,7 @@
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
   };
 
-  function getTeamFromId(teamId: number): Team | undefined {
+  function getTeamFromId(teamId: number): ClubDTO | undefined {
     return $teamStore.find((team) => team.id === teamId);
   }
 </script>

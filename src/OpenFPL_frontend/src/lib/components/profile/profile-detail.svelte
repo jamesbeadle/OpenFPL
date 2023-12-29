@@ -26,10 +26,10 @@
       ? URL.createObjectURL(new Blob([new Uint8Array($profile.profilePicture)]))
       : "profile_placeholder.png";
 
-  $: gameweek = $systemStore?.activeGameweek ?? 1;
+  $: gameweek = $systemStore?.calculationGameweek ?? 1;
 
   $: teamName =
-    $teamStore.find((x) => x.id == $profile?.favouriteTeamId)?.friendlyName ??
+    $teamStore.find((x) => x.id == $profile?.favouriteClubId)?.friendlyName ??
     "Not Set";
 
   let isLoading = true;
@@ -162,13 +162,13 @@
   <Spinner />
 {:else}
   <UpdateUsernameModal
-    newUsername={$profile ? $profile.displayName : ""}
+    newUsername={$profile ? $profile.username : ""}
     visible={showUsernameModal}
     closeModal={closeUsernameModal}
     cancelModal={cancelUsernameModal}
   />
   <UpdateFavouriteTeamModal
-    newFavouriteTeam={$profile ? $profile.favouriteTeamId : 0}
+    newFavouriteTeam={$profile ? $profile.favouriteClubId : 0}
     visible={showFavouriteTeamModal}
     closeModal={closeFavouriteTeamModal}
     cancelModal={cancelFavouriteTeamModal}
@@ -205,7 +205,7 @@
           <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
             <p class="mb-1">Display Name:</p>
             <h2 class="default-header mb-1 md:mb-2">
-              {$profile?.displayName}
+              {$profile?.username}
             </h2>
             <button
               class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
@@ -219,12 +219,12 @@
             </h2>
             <button
               class={`p-1 md:p-2 px-2 md:px-4 ${
-                gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0
+                gameweek > 1 && ($profile?.favouriteClubId ?? 0) > 0
                   ? "bg-gray-500"
                   : "fpl-button"
               } rounded`}
               on:click={displayFavouriteTeamModal}
-              disabled={gameweek > 1 && ($profile?.favouriteTeamId ?? 0) > 0}
+              disabled={gameweek > 1 && ($profile?.favouriteClubId ?? 0) > 0}
             >
               Update
             </button>

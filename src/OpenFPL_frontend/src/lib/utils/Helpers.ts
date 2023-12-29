@@ -1,6 +1,6 @@
 import { FixtureStatus } from "$lib/enums/FixtureStatus";
-import { Position } from "$lib/enums/Position";
 import { PlayerEvent } from "$lib/enums/PlayerEvent";
+import { Position } from "$lib/enums/Position";
 import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
@@ -405,12 +405,10 @@ export function convertPlayerPosition(
   if ("Defender" in playerPosition) return Position.DEFENDER;
   if ("Midfielder" in playerPosition) return Position.MIDFIELDER;
   if ("Forward" in playerPosition) return Position.FORWARD;
-  return Position.GOALKEEPER
+  return Position.GOALKEEPER;
 }
 
-export function convertEvent(
-  playerEvent: PlayerEventType
-): PlayerEvent {
+export function convertEvent(playerEvent: PlayerEventType): PlayerEvent {
   if ("Appearance" in playerEvent) return PlayerEvent.Appearance;
   if ("Goal" in playerEvent) return PlayerEvent.Goal;
   if ("GoalAssisted" in playerEvent) return PlayerEvent.GoalAssisted;
@@ -422,8 +420,26 @@ export function convertEvent(
   if ("YellowCard" in playerEvent) return PlayerEvent.YellowCard;
   if ("RedCard" in playerEvent) return PlayerEvent.RedCard;
   if ("OwnGoal" in playerEvent) return PlayerEvent.OwnGoal;
-  if ("HighestScoringPlayer" in playerEvent) return PlayerEvent.HighestScoringPlayer;
+  if ("HighestScoringPlayer" in playerEvent)
+    return PlayerEvent.HighestScoringPlayer;
   return PlayerEvent.Appearance;
+}
+
+export function convertIntToEvent(playerEvent: PlayerEvent): PlayerEventType {
+  if (playerEvent == PlayerEvent.Appearance) return { Appearance: null };
+  if (playerEvent == PlayerEvent.Goal) return { Goal: null };
+  if (playerEvent == PlayerEvent.GoalAssisted) return { GoalAssisted: null };
+  if (playerEvent == PlayerEvent.GoalConceded) return { GoalConceded: null };
+  if (playerEvent == PlayerEvent.KeeperSave) return { KeeperSave: null };
+  if (playerEvent == PlayerEvent.CleanSheet) return { CleanSheet: null };
+  if (playerEvent == PlayerEvent.PenaltySaved) return { PenaltySaved: null };
+  if (playerEvent == PlayerEvent.PenaltyMissed) return { PenaltyMissed: null };
+  if (playerEvent == PlayerEvent.YellowCard) return { YellowCard: null };
+  if (playerEvent == PlayerEvent.RedCard) return { RedCard: null };
+  if (playerEvent == PlayerEvent.OwnGoal) return { OwnGoal: null };
+  if (playerEvent == PlayerEvent.HighestScoringPlayer)
+    return { HighestScoringPlayer: null };
+  return { Appearance: null };
 }
 
 export function getDateFromBigInt(dateMS: number): string {

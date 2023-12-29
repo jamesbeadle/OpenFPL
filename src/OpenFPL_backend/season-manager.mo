@@ -98,11 +98,19 @@ module {
 
     public func getSystemState() : DTOs.SystemStateDTO {
       let pickTeamSeason = seasonComposite.getSeason(systemState.pickTeamSeasonId);
-      var seasonName = "";
+      let calculationSeason = seasonComposite.getSeason(systemState.calculationSeasonId);
+      var pickTeamSeasonName = "";
+      var calculationSeasonName = "";
       switch (pickTeamSeason) {
         case (null) {};
         case (?foundSeason) {
-          seasonName := foundSeason.name;
+          pickTeamSeasonName := foundSeason.name;
+        };
+      };
+      switch (calculationSeason) {
+        case (null) {};
+        case (?foundSeason) {
+          calculationSeasonName := foundSeason.name;
         };
       };
       return {
@@ -111,7 +119,8 @@ module {
         calculationSeasonId = systemState.calculationSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
         pickTeamSeasonId = systemState.pickTeamSeasonId;
-        pickTeamSeasonName = seasonName;
+        pickTeamSeasonName = pickTeamSeasonName;
+        calculationSeasonName = calculationSeasonName;
       };
     };
 

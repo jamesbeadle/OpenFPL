@@ -1,6 +1,15 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
   import { Modal } from "@dfinity/gix-components";
+  import type {
+    PlayerDTO,
+    PlayerEventData,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import {
+    convertEvent,
+    convertPlayerPosition,
+    convertIntToEvent,
+  } from "$lib/utils/Helpers";
 
   export let visible = false;
   export let player: PlayerDTO;
@@ -35,11 +44,11 @@
     if (eventType >= 0 && eventStartTime !== null && eventEndTime !== null) {
       const newEvent = {
         playerId: player.id,
-        eventType: Number(eventType),
+        eventType: convertIntToEvent(eventType),
         eventStartMinute: Number(eventStartTime),
         eventEndMinute: Number(eventEndTime),
         fixtureId: fixtureId,
-        teamId: player.clubId,
+        clubId: player.clubId,
       };
       let updatedEvents: PlayerEventData[] = [...$playerEventData, newEvent];
       playerEventData.set(updatedEvents);
@@ -56,7 +65,7 @@
           event.playerId != removedEvent.playerId &&
           event.eventStartMinute != removedEvent.eventStartMinute &&
           event.eventEndMinute != removedEvent.eventEndMinute &&
-          event.eventType != eventType &&
+          convertEvent(event.eventType) != eventType &&
           event.fixtureId != event.fixtureId &&
           event.clubId != event.clubId
       );
@@ -95,7 +104,7 @@
             <option value={8}>Yellow Card</option>
             <option value={9}> Card</option>
             <option value={10}>Own Goal</option>
-            {#if player.position === 0}
+            {#if convertPlayerPosition(player.position) === 0}
               <option value={4}>Keeper Save</option>
               <option value={6}>Penalty Save</option>
             {/if}
@@ -145,8 +154,8 @@
         {#each $playerEventData.filter((x) => x.playerId == player.id) as event, index}
           <li class="flex justify-between items-center mb-2">
             <span
-              >{getEventTypeLabel(event.eventType)} ({event.eventStartMinute} - {event.eventEndMinute})
-              mins</span
+              >{getEventTypeLabel(convertEvent(event.eventType))} ({event.eventStartMinute}
+              - {event.eventEndMinute}) mins</span
             >
             <button
               class="default-button bg-red-500"

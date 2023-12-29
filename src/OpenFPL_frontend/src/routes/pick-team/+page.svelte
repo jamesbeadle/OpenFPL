@@ -28,10 +28,13 @@
     getCountdownTime,
     getPositionAbbreviation,
     getAvailableFormations,
-    convertPlayerPosition
+    convertPlayerPosition,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import type { PlayerDTO, ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type {
+    PlayerDTO,
+    ProfileDTO,
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Spinner, busyStore } from "@dfinity/gix-components";
 
   interface FormationDetails {
@@ -273,7 +276,9 @@
         transfersAvailable.update((n) => (n > 0 ? n - 1 : 0));
       }
       bankBalance.update((n) =>
-        n - player.valueQuarterMillions > 0 ? n - player.valueQuarterMillions : n
+        n - player.valueQuarterMillions > 0
+          ? n - player.valueQuarterMillions
+          : n
       );
 
       if (!$fantasyTeam.playerIds.includes(player.id)) {
@@ -406,7 +411,8 @@
 
       if (
         additionalPlayersNeeded < minimumAdditionalPlayersNeeded &&
-        formationDetails[convertPlayerPosition(player.position)] > positionCounts[convertPlayerPosition(player.position)] - 1
+        formationDetails[convertPlayerPosition(player.position)] >
+          positionCounts[convertPlayerPosition(player.position)] - 1
       ) {
         bestFitFormation = formation;
         minimumAdditionalPlayersNeeded = additionalPlayersNeeded;
@@ -478,7 +484,9 @@
       }
       bankBalance.update(
         (n) =>
-          n + $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions ?? 0
+          n +
+            $playerStore.find((x) => x.id === playerId)!.valueQuarterMillions ??
+          0
       );
 
       return { ...currentTeam, playerIds: newPlayerIds };
@@ -677,7 +685,8 @@
         .sort((a, b) => a.valueQuarterMillions - b.valueQuarterMillions);
 
       for (let player of availablePlayers) {
-        const potentialNewBudget = remainingBudget - player.valueQuarterMillions;
+        const potentialNewBudget =
+          remainingBudget - player.valueQuarterMillions;
         if (potentialNewBudget >= 0) {
           updatedFantasyTeam.playerIds[index] = player.id;
           remainingBudget = potentialNewBudget;
@@ -685,7 +694,7 @@
             player.clubId,
             (teamCounts.get(player.clubId) || 0) + 1
           );
-          break; 
+          break;
         }
       }
     });
@@ -1119,7 +1128,9 @@
                                 max-w-[60px] xs:max-w-[90px] sm:max-w-[120px]"
                               >
                                 <p class="hidden sm:flex sm:min-w-[15px]">
-                                  {getPositionAbbreviation(convertPlayerPosition(player.position))}
+                                  {getPositionAbbreviation(
+                                    convertPlayerPosition(player.position)
+                                  )}
                                 </p>
                                 {#if playerCountry}
                                   <svelte:component
@@ -1156,7 +1167,9 @@
                                   thirdColour={team?.thirdColourHex}
                                 />
                                 <p class="truncate min-w-[50px] max-w-[50px]">
-                                  £{(player.valueQuarterMillions / 4).toFixed(2)}m
+                                  £{(player.valueQuarterMillions / 4).toFixed(
+                                    2
+                                  )}m
                                 </p>
                               </div>
                             </div>

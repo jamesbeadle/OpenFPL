@@ -325,6 +325,7 @@ export interface SubmitFixtureDataDTO {
 export interface SystemStateDTO {
   pickTeamSeasonId: SeasonId;
   pickTeamSeasonName: string;
+  calculationSeasonName: string;
   calculationGameweek: GameweekNumber;
   pickTeamGameweek: GameweekNumber;
   calculationMonth: CalendarMonth;

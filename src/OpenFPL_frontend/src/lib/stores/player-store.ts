@@ -1,6 +1,7 @@
 import { fixtureStore } from "$lib/stores/fixture-store";
 import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   FixtureDTO,
@@ -9,7 +10,6 @@ import type {
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 
 function createPlayerStore() {
   const { subscribe, set } = writable<PlayerDTO[]>([]);

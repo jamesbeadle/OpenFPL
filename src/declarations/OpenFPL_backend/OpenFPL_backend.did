@@ -71,6 +71,7 @@ type SystemStateDTO = record {
   calculationGameweek : GameweekNumber;
   calculationMonth : CalendarMonth;
   calculationSeasonId : SeasonId;
+  calculationSeasonName : text;
   pickTeamGameweek : GameweekNumber;
   pickTeamSeasonId : SeasonId;
   pickTeamSeasonName : text;

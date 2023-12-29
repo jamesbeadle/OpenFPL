@@ -2,14 +2,14 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import { Modal } from "@dfinity/gix-components";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { getFlagComponent } from "../utils/Helpers";
+  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import { convertPlayerPosition, getFlagComponent } from "../utils/Helpers";
 
   export let visible: boolean;
   export let closeDetailModal: () => void;
   export let gameweekData: GameweekData;
-  export let playerTeam: Team;
-  export let opponentTeam: Team;
+  export let playerTeam: ClubDTO;
+  export let opponentTeam: ClubDTO;
   export let seasonName: string;
 </script>
 
@@ -113,7 +113,7 @@
       </div>
     </div>
 
-    {#if gameweekData.player.position < 2}
+    {#if convertPlayerPosition(gameweekData.player.position) < 2}
       <div class="flex justify-between items-center p-2">
         <div class="w-3/6">Clean Sheet</div>
         <div class="w-2/6">
@@ -135,7 +135,7 @@
       </div>
     {/if}
 
-    {#if gameweekData.player.position === 0}
+    {#if convertPlayerPosition(gameweekData.player.position) === 0}
       <div class="flex justify-between items-center p-2">
         <div class="w-3/6">Saves</div>
         <div class="w-2/6">{gameweekData.saves}</div>

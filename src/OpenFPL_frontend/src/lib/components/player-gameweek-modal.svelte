@@ -5,7 +5,7 @@
     ClubDTO,
     PlayerEventData,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { getFlagComponent } from "../utils/Helpers";
+  import { convertEvent, getFlagComponent } from "../utils/Helpers";
 
   export let visible: boolean;
   export let closeDetailModal: () => void;
@@ -67,7 +67,9 @@
     concededEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
     keeperSaveEvents.sort((a, b) => a.eventEndMinute - b.eventEndMinute);
     otherEvents.sort(
-      (a, b) => a.eventType - b.eventType || a.eventEndMinute - b.eventEndMinute
+      (a, b) =>
+        convertEvent(a.eventType) - convertEvent(b.eventType) ||
+        a.eventEndMinute - b.eventEndMinute
     );
   }
 </script>
@@ -175,65 +177,89 @@
       <div class="mt-2">
         <div class="flex justify-between items-center p-2">
           <div class="w-3/6">
-            {#if event.eventType === 1}<div class="w-3/6">Goal Scored</div>{/if}
-            {#if event.eventType === 2}<div class="w-3/6">Assist</div>{/if}
-            {#if event.eventType === 5}<div class="w-3/6">Clean Sheet</div>{/if}
-            {#if event.eventType === 6}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 1}<div class="w-3/6">
+                Goal Scored
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 2}<div class="w-3/6">
+                Assist
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 5}<div class="w-3/6">
+                Clean Sheet
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 6}<div class="w-3/6">
                 Penalty Save
               </div>{/if}
-            {#if event.eventType === 7}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 7}<div class="w-3/6">
                 Penalty Missed
               </div>{/if}
-            {#if event.eventType === 8}<div class="w-3/6">Yellow Card</div>{/if}
-            {#if event.eventType === 9}<div class="w-3/6">Red Card</div>{/if}
-            {#if event.eventType === 10}<div class="w-3/6">Own Goal</div>{/if}
-            {#if event.eventType === 11}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 8}<div class="w-3/6">
+                Yellow Card
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 9}<div class="w-3/6">
+                Red Card
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 10}<div class="w-3/6">
+                Own Goal
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 11}<div class="w-3/6">
                 Highest Scoring Player
               </div>{/if}
           </div>
           <div class="w-2/6">
-            {#if event.eventType === 1}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 1}<div class="w-3/6">
                 {event.eventEndMinute}
               </div>{/if}
-            {#if event.eventType === 2}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 2}<div class="w-3/6">
                 {event.eventEndMinute}
               </div>{/if}
-            {#if event.eventType === 5}<div class="w-3/6">-</div>{/if}
-            {#if event.eventType === 6}<div class="w-3/6">-</div>{/if}
-            {#if event.eventType === 7}<div class="w-3/6">-</div>{/if}
-            {#if event.eventType === 8}<div class="w-3/6">-</div>{/if}
-            {#if event.eventType === 9}<div class="w-3/6">-</div>{/if}
-            {#if event.eventType === 10}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 5}<div class="w-3/6">
+                -
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 6}<div class="w-3/6">
+                -
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 7}<div class="w-3/6">
+                -
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 8}<div class="w-3/6">
+                -
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 9}<div class="w-3/6">
+                -
+              </div>{/if}
+            {#if convertEvent(event.eventType) === 10}<div class="w-3/6">
                 {event.eventEndMinute}
               </div>{/if}
-            {#if event.eventType === 11}<div class="w-3/6">-</div>{/if}
+            {#if convertEvent(event.eventType) === 11}<div class="w-3/6">
+                -
+              </div>{/if}
           </div>
           <div class="w-1/6">
-            {#if event.eventType === 1}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 1}<div class="w-3/6">
                 {pointsForGoal}
               </div>{/if}
-            {#if event.eventType === 2}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 2}<div class="w-3/6">
                 {pointsForAssist}
               </div>{/if}
-            {#if event.eventType === 5}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 5}<div class="w-3/6">
                 {pointsForCleanSheet}
               </div>{/if}
-            {#if event.eventType === 6}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 6}<div class="w-3/6">
                 {pointsForPenaltySave}
               </div>{/if}
-            {#if event.eventType === 7}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 7}<div class="w-3/6">
                 {pointsForPenaltyMiss}
               </div>{/if}
-            {#if event.eventType === 8}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 8}<div class="w-3/6">
                 {pointsForYellowCard}
               </div>{/if}
-            {#if event.eventType === 9}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 9}<div class="w-3/6">
                 {pointsForRedCard}
               </div>{/if}
-            {#if event.eventType === 10}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 10}<div class="w-3/6">
                 {pointsForOwnGoal}
               </div>{/if}
-            {#if event.eventType === 11}<div class="w-3/6">
+            {#if convertEvent(event.eventType) === 11}<div class="w-3/6">
                 {pointsForHighestScore}
               </div>{/if}
           </div>

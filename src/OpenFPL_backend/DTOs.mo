@@ -10,6 +10,7 @@ module DTOs {
     pickTeamGameweek : T.GameweekNumber;
     pickTeamSeasonId : T.SeasonId;
     pickTeamSeasonName : Text;
+    calculationSeasonName : Text;
   };
 
   public type RevaluePlayerUpDTO = {

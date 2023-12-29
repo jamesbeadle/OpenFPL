@@ -14,8 +14,9 @@
   } from "$lib/utils/Helpers";
   import type {
     ClubDTO,
-    ManagerDTO, PlayerDTO, ProfileDTO
-
+    ManagerDTO,
+    PlayerDTO,
+    ProfileDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
@@ -85,7 +86,9 @@
       gameweekPlayers.set(
         fetchedPlayers.sort((a, b) => {
           if (b.totalPoints === a.totalPoints) {
-            return b.player.valueQuarterMillions - a.player.valueQuarterMillions;
+            return (
+              b.player.valueQuarterMillions - a.player.valueQuarterMillions
+            );
           }
           return b.totalPoints - a.totalPoints;
         })
@@ -248,7 +251,9 @@
                   {#if $fantasyTeam.captainId == playerDTO?.id}
                     <ActiveCaptainIcon className="w-5 sm:w-6 md:w-7" />
                   {:else}
-                    {getPositionAbbreviation(convertPlayerPosition(data.player.position))}
+                    {getPositionAbbreviation(
+                      convertPlayerPosition(data.player.position)
+                    )}
                   {/if}
                 </div>
                 <div class="w-2/12 flex items-center">
@@ -434,7 +439,9 @@
                   {#if $fantasyTeam.captainId == playerDTO?.id}
                     <ActiveCaptainIcon className="w-5" />
                   {:else}
-                    {getPositionAbbreviation(convertPlayerPosition(data.player.position))}
+                    {getPositionAbbreviation(
+                      convertPlayerPosition(data.player.position)
+                    )}
                   {/if}
                 </div>
                 <div class="w-2/12 flex items-center">
