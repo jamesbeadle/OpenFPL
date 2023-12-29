@@ -27,11 +27,11 @@
 
   $: filteredPlayers = $playerStore.filter((player) => {
     return (
-      (filterTeam === -1 || player.teamId === filterTeam) &&
+      (filterTeam === -1 || player.clubId === filterTeam) &&
       (filterPosition === -1 || player.position === filterPosition) &&
       filterColumn > -2 &&
-      (minValue === 0 || player.value >= minValue) &&
-      (maxValue === 0 || player.value <= maxValue) &&
+      (minValue === 0 || player.valueQuarterMillions >= minValue) &&
+      (maxValue === 0 || player.valueQuarterMillions <= maxValue) &&
       (filterSurname === "" ||
         player.lastName.toLowerCase().includes(filterSurname.toLowerCase()))
     );
@@ -85,22 +85,22 @@
     playerIds.forEach((playerId) => {
       const player = $playerStore.find((p) => p.id === playerId);
       if (player) {
-        if (!counts[player.teamId]) {
-          counts[player.teamId] = 0;
+        if (!counts[player.clubId]) {
+          counts[player.clubId] = 0;
         }
-        counts[player.teamId]++;
+        counts[player.clubId]++;
       }
     });
     return counts;
   }
 
   function reasonToDisablePlayer(player: PlayerDTO): string | null {
-    const teamCount = teamPlayerCounts[player.teamId] || 0;
+    const teamCount = teamPlayerCounts[player.clubId] || 0;
     if (teamCount >= 2) return "Max 2 Per Team";
 
     let team = $fantasyTeam;
 
-    const canAfford = $bankBalance >= player.value;
+    const canAfford = $bankBalance >= player.valueQuarterMillions;
     if (!canAfford) return "Over Budget";
 
     if (team && team.playerIds.includes(player.id)) return "Selected";
@@ -154,7 +154,7 @@
 
   function addTeamDataToPlayers(players: PlayerDTO[]): any[] {
     return players.map((player) => {
-      const team = $teamStore.find((t) => t.id === player.teamId);
+      const team = $teamStore.find((t) => t.id === player.clubId);
       return { ...player, team };
     });
   }
@@ -289,7 +289,7 @@
             </p>
           </div>
           <div class="w-2/12">
-            £{(player.value / 4).toFixed(2)}m
+            £{(player.valueQuarterMillions / 4).toFixed(2)}m
           </div>
           <div class="w-1/12">{player.totalPoints}</div>
           <div class="w-3/12 flex justify-center items-center">

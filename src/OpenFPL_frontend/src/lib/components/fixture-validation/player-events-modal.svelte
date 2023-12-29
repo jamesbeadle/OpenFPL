@@ -39,7 +39,7 @@
         eventStartMinute: Number(eventStartTime),
         eventEndMinute: Number(eventEndTime),
         fixtureId: fixtureId,
-        teamId: player.teamId,
+        teamId: player.clubId,
       };
       let updatedEvents: PlayerEventData[] = [...$playerEventData, newEvent];
       playerEventData.set(updatedEvents);
@@ -58,7 +58,7 @@
           event.eventEndMinute != removedEvent.eventEndMinute &&
           event.eventType != eventType &&
           event.fixtureId != event.fixtureId &&
-          event.teamId != event.teamId
+          event.clubId != event.clubId
       );
     });
   }

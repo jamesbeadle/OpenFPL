@@ -272,7 +272,7 @@
         transfersAvailable.update((n) => (n > 0 ? n - 1 : 0));
       }
       bankBalance.update((n) =>
-        n - player.value > 0 ? n - player.value : n
+        n - player.valueQuarterMillions > 0 ? n - player.valueQuarterMillions : n
       );
 
       if (!$fantasyTeam.playerIds.includes(player.id)) {
@@ -510,8 +510,8 @@
 
     team.playerIds.forEach((playerId) => {
       const player = $playerStore.find((p) => p.id === playerId);
-      if (player && player.value > highestValue) {
-        highestValue = player.value;
+      if (player && player.valueQuarterMillions > highestValue) {
+        highestValue = player.valueQuarterMillions;
         highestValuedPlayerId = playerId;
       }
     });
@@ -535,7 +535,7 @@
       team.playerIds.forEach((id) => {
         const player = $playerStore.find((p) => p.id === id);
         if (player) {
-          totalValue += player.value;
+          totalValue += player.valueQuarterMillions;
         }
       });
       teamValue = totalValue / 4;
@@ -548,8 +548,8 @@
       if (playerId > 0) {
         const player = $playerStore.find((p) => p.id === playerId);
         if (player) {
-          teamCount.set(player.teamId, (teamCount.get(player.teamId) || 0) + 1);
-          if (teamCount.get(player.teamId) > 2) {
+          teamCount.set(player.clubId, (teamCount.get(player.clubId) || 0) + 1);
+          if (teamCount.get(player.clubId) > 2) {
             return false;
           }
         }
@@ -653,8 +653,8 @@
         const player = $playerStore.find((p) => p.id === playerId);
         if (player) {
           teamCounts.set(
-            player.teamId,
-            (teamCounts.get(player.teamId) || 0) + 1
+            player.clubId,
+            (teamCounts.get(player.clubId) || 0) + 1
           );
         }
       }
@@ -664,27 +664,27 @@
 
     formationPositions.forEach((position, index) => {
       if (remainingBudget <= 0) return;
-      if (updatedFantasyTeam.playerIds[index] > 0) return; // Skip positions already filled
+      if (updatedFantasyTeam.playerIds[index] > 0) return;
 
       const availablePlayers = $playerStore
         .filter(
           (player) =>
             player.position === position &&
             !updatedFantasyTeam.playerIds.includes(player.id) &&
-            (teamCounts.get(player.teamId) || 0) < 2 // Check for team player limit
+            (teamCounts.get(player.clubId) || 0) < 2
         )
-        .sort((a, b) => a.value - b.value);
+        .sort((a, b) => a.valueQuarterMillions - b.valueQuarterMillions);
 
       for (let player of availablePlayers) {
-        const potentialNewBudget = remainingBudget - player.value;
+        const potentialNewBudget = remainingBudget - player.valueQuarterMillions;
         if (potentialNewBudget >= 0) {
           updatedFantasyTeam.playerIds[index] = player.id;
           remainingBudget = potentialNewBudget;
           teamCounts.set(
-            player.teamId,
-            (teamCounts.get(player.teamId) || 0) + 1
+            player.clubId,
+            (teamCounts.get(player.clubId) || 0) + 1
           );
-          break; // Found a suitable player, break the loop
+          break; 
         }
       }
     });
@@ -1066,7 +1066,7 @@
                       >
                         {#if playerId > 0 && player}
                           {@const team = $teamStore.find(
-                            (x) => x.id === player.teamId
+                            (x) => x.id === player.clubId
                           )}
                           <div class="flex flex-col items-center text-center">
                             <div class="flex justify-center items-center">
@@ -1155,7 +1155,7 @@
                                   thirdColour={team?.thirdColourHex}
                                 />
                                 <p class="truncate min-w-[50px] max-w-[50px]">
-                                  £{(player.value / 4).toFixed(2)}m
+                                  £{(player.valueQuarterMillions / 4).toFixed(2)}m
                                 </p>
                               </div>
                             </div>
@@ -1229,7 +1229,7 @@
                 {@const playerIds = $fantasyTeam?.playerIds ?? []}
                 {@const playerId = playerIds[actualIndex]}
                 {@const player = $playerStore.find((p) => p.id === playerId)}
-                {@const team = $teamStore.find((x) => x.id === player?.teamId)}
+                {@const team = $teamStore.find((x) => x.id === player?.clubId)}
 
                 <div class="flex items-center justify-between py-2 px-4">
                   {#if playerId > 0 && player}
@@ -1260,7 +1260,7 @@
                       </p>
                     </div>
                     <div class="w-1/6">
-                      £{(player.value / 4).toFixed(2)}m
+                      £{(player.valueQuarterMillions / 4).toFixed(2)}m
                     </div>
                     <div class="w-1/6 flex items-center">
                       <button

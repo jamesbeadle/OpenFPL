@@ -354,8 +354,8 @@ function createPlayerEventsStore() {
       : [];
     const playerFixtures = gameweekFixtures.filter(
       (fixture) =>
-        (fixture.homeTeamId === gameweekData.player.teamId ||
-          fixture.awayTeamId === gameweekData.player.teamId) &&
+        (fixture.homeTeamId === gameweekData.player.clubId ||
+          fixture.awayTeamId === gameweekData.player.clubId) &&
         fixture.highestScoringPlayerId === gameweekData.player.id
     );
 
@@ -471,7 +471,7 @@ function createPlayerEventsStore() {
 
     if (
       fantasyTeam.teamBoostGameweek === gameweekData.gameweek &&
-      gameweekData.player.teamId === fantasyTeam.teamBoostTeamId
+      gameweekData.player.clubId === fantasyTeam.teamBoostClubId
     ) {
       bonusPoints = points;
     }

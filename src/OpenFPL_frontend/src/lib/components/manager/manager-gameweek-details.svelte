@@ -82,7 +82,7 @@
       gameweekPlayers.set(
         fetchedPlayers.sort((a, b) => {
           if (b.totalPoints === a.totalPoints) {
-            return b.player.value - a.player.value;
+            return b.player.valueQuarterMillions - a.player.valueQuarterMillions;
           }
           return b.totalPoints - a.totalPoints;
         })
@@ -115,7 +115,7 @@
     try {
       selectedGameweekData = gameweekData;
 
-      let playerTeamId = gameweekData.player.teamId;
+      let playerTeamId = gameweekData.player.clubId;
       selectedTeam = $teamStore.find((x) => x.id === playerTeamId)!;
 
       let playerFixture = $fixtureStore.find(
@@ -223,7 +223,7 @@
 
           {#each $gameweekPlayers as data}
             {@const playerDTO = getPlayerDTO(data.player.id)}
-            {@const playerTeam = getPlayerTeam(data.player.teamId)}
+            {@const playerTeam = getPlayerTeam(data.player.clubId)}
             {@const playerCountry = $countriesStore
               ? $countriesStore.find((x) => x.id === playerDTO?.nationality)
               : null}
@@ -412,7 +412,7 @@
 
           {#each $gameweekPlayers as data}
             {@const playerDTO = getPlayerDTO(data.player.id)}
-            {@const playerTeam = getPlayerTeam(data.player.teamId)}
+            {@const playerTeam = getPlayerTeam(data.player.clubId)}
             <button
               class="w-full"
               on:click={() => {

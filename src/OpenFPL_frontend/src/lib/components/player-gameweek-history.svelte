@@ -66,7 +66,7 @@
 
     let fixture = fixturesWithTeams.find((f) => f.fixture.id === fixtureId);
     let opponentId =
-      fixture?.homeTeam?.id === playerDetails.teamId
+      fixture?.homeTeam?.id === playerDetails.clubId
         ? fixture?.awayTeam?.id
         : fixture?.homeTeam?.id;
 
@@ -113,7 +113,7 @@
         (x) => x.number === selectedGameweek
       ) ?? null}
       opponentTeam={selectedOpponent}
-      playerTeam={getTeamFromId(playerDetails.teamId) ?? null}
+      playerTeam={getTeamFromId(playerDetails.clubId) ?? null}
       {closeDetailModal}
       visible={showModal}
       playerDetail={playerDetails}

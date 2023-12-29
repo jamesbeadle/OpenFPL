@@ -83,7 +83,7 @@
   async function showDetailModal(gameweekData: GameweekData) {
     try {
       selectedGameweekData = gameweekData;
-      let playerTeamId = gameweekData.player.teamId;
+      let playerTeamId = gameweekData.player.clubId;
       selectedTeam = $teamStore.find((x) => x.id === playerTeamId)!;
 
       let playerFixture = $fixtureStore.find(

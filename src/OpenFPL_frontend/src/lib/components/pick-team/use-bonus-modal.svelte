@@ -56,7 +56,7 @@
     const teamIds = new Set(
       $playerStore
         .filter((p) => isPlayerInFantasyTeam(p.id))
-        .map((p) => p.teamId)
+        .map((p) => p.clubId)
     );
     return $teamStore
       .filter((t) => teamIds.has(t.id))
