@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
-  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
-  import type { ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { PlayerDTO, ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { toastsError } from "$lib/stores/toasts-store";

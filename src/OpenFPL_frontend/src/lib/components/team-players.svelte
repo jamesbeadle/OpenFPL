@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Position } from "$lib/enums/Position";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
-  import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
   import {
     calculateAgeFromNanoseconds,
     getFlagComponent,

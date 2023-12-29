@@ -1,9 +1,5 @@
 <script lang="ts">
   import type { Writable } from "svelte/store";
-  import type {
-    PlayerDTO,
-    PlayerEventData,
-  } from "../../../../../declarations/player_canister/player_canister.did";
   import { Modal } from "@dfinity/gix-components";
 
   export let visible = false;

@@ -5,17 +5,16 @@
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-  import type { ClubDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO, FixtureDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import {
     formatUnixTimeToTime,
     getFixtureStatusText,
   } from "../../utils/Helpers";
-  import type { Fixture } from "../../../../../declarations/player_canister/player_canister.did";
   import UpdateFixtureModal from "./update-fixture-modal.svelte";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
-  let selectedFixture: Fixture | null;
+  let selectedFixture: FixtureDTO | null;
 
   let selectedGameweek: number;
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
@@ -78,7 +77,7 @@
     return $teamStore.find((team) => team.id === teamId);
   }
 
-  function openUpdateModal(fixture: Fixture) {
+  function openUpdateModal(fixture: FixtureDTO) {
     selectedFixture = fixture;
     showUpdateModal = true;
   }

@@ -366,7 +366,7 @@ export function getAvailableFormations(
   team.playerIds.forEach((id: number) => {
     const teamPlayer = players.find((p) => p.id === id);
     if (teamPlayer) {
-      positionCounts[convertPlayerPosition(teamPlayer.position)!]++;
+      positionCounts[convertPlayerPosition(teamPlayer.position)]++;
     }
   });
 
@@ -396,13 +396,14 @@ export function getAvailableFormations(
   });
 }
 
-function convertPlayerPosition(
+export function convertPlayerPosition(
   playerPosition: PlayerPosition
-): Position | undefined {
+): Position {
   if ("Goalkeeper" in playerPosition) return Position.GOALKEEPER;
   if ("Defender" in playerPosition) return Position.DEFENDER;
   if ("Midfielder" in playerPosition) return Position.MIDFIELDER;
   if ("Forward" in playerPosition) return Position.FORWARD;
+  return Position.GOALKEEPER
 }
 
 export function getDateFromBigInt(dateMS: number): string {

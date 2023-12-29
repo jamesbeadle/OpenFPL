@@ -1,4 +1,3 @@
-import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
 
 export interface GameweekData {
   player: PlayerDTO;

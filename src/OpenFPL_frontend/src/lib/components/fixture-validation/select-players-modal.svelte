@@ -1,11 +1,11 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type { Team } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
+  import type { ClubDTO, PlayerDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
+  import { convertPlayerPosition } from "$lib/utils/Helpers";
 
   export let teamPlayers = writable<PlayerDTO[]>([]);
-  export let selectedTeam: Team;
+  export let selectedTeam: ClubDTO;
   export let selectedPlayers = writable<PlayerDTO[]>([]);
   export let visible = false;
 
@@ -36,7 +36,7 @@
     Select {selectedTeam.friendlyName} Players
   </h3>
   <div class="my-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
-    {#each $teamPlayers.sort((a, b) => a.position - b.position) as player}
+    {#each $teamPlayers.sort((a, b) => convertPlayerPosition(a.position) - convertPlayerPosition(b.position)) as player}
       {@const selected = $selectedPlayers.some((p) => p.id === player.id)}
       <div class="flex flex-row justify-between items-center mx-4 border-b">
         <div class="flex w-1/2">
@@ -50,10 +50,10 @@
         </div>
         <div class="flex w-1/4">
           <span>
-            {#if player.position == 0}GK{/if}
-            {#if player.position == 1}DF{/if}
-            {#if player.position == 2}MF{/if}
-            {#if player.position == 3}FW{/if}
+            {#if convertPlayerPosition(player.position) == 0}GK{/if}
+            {#if convertPlayerPosition(player.position) == 1}DF{/if}
+            {#if convertPlayerPosition(player.position) == 2}MF{/if}
+            {#if convertPlayerPosition(player.position) == 3}FW{/if}
           </span>
         </div>
         <div class="form-checkbox w-1/4">

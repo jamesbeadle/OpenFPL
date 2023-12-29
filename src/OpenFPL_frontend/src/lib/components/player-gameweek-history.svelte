@@ -11,12 +11,10 @@
   import type {
     Season,
     Team,
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-  import type {
     PlayerDetailDTO,
     PlayerGameweekDTO,
-  } from "../../../../declarations/player_canister/player_canister.did";
+  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { Spinner } from "@dfinity/gix-components";
 

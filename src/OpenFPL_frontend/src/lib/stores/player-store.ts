@@ -2,29 +2,28 @@ import { fixtureStore } from "$lib/stores/fixture-store";
 import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import type {
-  DataCache,
-  Fixture,
-  SystemState,
+  DataCacheDTO,
+  FixtureDTO,
+  PlayerDTO,
+  SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { idlFactory } from "../../../../declarations/player_canister";
-import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
 function createPlayerStore() {
   const { subscribe, set } = writable<PlayerDTO[]>([]);
 
-  let systemState: SystemState;
+  let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
-    systemState = value as SystemState;
+    systemState = value as SystemStateDTO;
   });
 
-  let allFixtures: Fixture[];
+  let allFixtures: FixtureDTO[];
   fixtureStore.subscribe((value) => (allFixtures = value));
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.PLAYER_CANISTER_CANISTER_ID
+    process.env.MAIN_CANISTER_ID
   );
 
   async function sync() {

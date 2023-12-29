@@ -8,10 +8,6 @@
   import { governanceStore } from "$lib/stores/governance-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import type {
-    PlayerDTO,
-    PlayerEventData,
-  } from "../../../../declarations/player_canister/player_canister.did";
-  import type {
     Fixture,
     Team,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";

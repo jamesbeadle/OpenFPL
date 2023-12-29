@@ -11,10 +11,8 @@
     getFlagComponent,
     getPositionAbbreviation,
   } from "$lib/utils/Helpers";
-  import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
   import type {
-    FantasyTeam,
-    Team,
+    ManagerDTO, PlayerDTO
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { GameweekData } from "$lib/interfaces/GameweekData";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";

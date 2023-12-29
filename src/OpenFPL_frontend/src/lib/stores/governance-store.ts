@@ -1,13 +1,10 @@
 import { authStore } from "$lib/stores/auth.store";
 import { writable } from "svelte/store";
-import type {
-  Fixture,
-  PlayerEventData,
-} from "../../../../declarations/player_canister/player_canister.did";
 import { ActorFactory } from "../../utils/ActorFactory";
+import type { FixtureDTO, PlayerEventData } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 function createGovernanceStore() {
-  const { subscribe, set } = writable<Fixture[]>([]);
+  const { subscribe, set } = writable<FixtureDTO[]>([]);
 
   async function submitFixtureData(
     fixtureId: number,

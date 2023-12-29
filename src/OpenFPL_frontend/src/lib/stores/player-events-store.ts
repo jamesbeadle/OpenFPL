@@ -8,22 +8,20 @@ import type {
   FantasyTeam,
   Fixture,
   SystemState,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { idlFactory } from "../../../../declarations/player_canister";
-import type {
   PlayerDTO,
   PlayerDetailDTO,
   PlayerPointsDTO,
-} from "../../../../declarations/player_canister/player_canister.did";
+  SystemStateDTO,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { calculateAgeFromNanoseconds, replacer } from "../utils/Helpers";
 
 function createPlayerEventsStore() {
   const { subscribe, set } = writable<PlayerPointsDTO[]>([]);
 
-  let systemState: SystemState;
+  let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
-    systemState = value as SystemState;
+    systemState = value as SystemStateDTO;
   });
 
   let allFixtures: Fixture[];
@@ -31,7 +29,7 @@ function createPlayerEventsStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.PLAYER_CANISTER_CANISTER_ID
+    process.env.MAIN_CANISTER_ID
   );
 
   async function sync() {
@@ -43,8 +41,8 @@ function createPlayerEventsStore() {
 
     if (livePlayersHash?.hash != localHash) {
       let updatedPlayerEventsData = await actor.getPlayerDetailsForGameweek(
-        systemState.activeSeason.id,
-        systemState.focusGameweek
+        systemState.calculationSeasonId,
+        systemState.calculationGameweek
       );
       localStorage.setItem(
         "player_events_data",
@@ -98,12 +96,12 @@ function createPlayerEventsStore() {
 
     let allPlayerEvents: PlayerPointsDTO[] = [];
 
-    if (systemState?.focusGameweek === gameweek) {
+    if (systemState?.calculationGameweek === gameweek) {
       allPlayerEvents = await getPlayerEvents();
     } else {
       allPlayerEvents = await actor.getPlayersDetailsForGameweek(
         fantasyTeam.playerIds,
-        systemState?.activeSeason.id,
+        systemState?.calculationSeasonId,
         gameweek
       );
     }
