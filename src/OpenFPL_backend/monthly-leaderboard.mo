@@ -25,7 +25,10 @@ actor class MonthlyLeaderboardCanister() {
     clubId := ?_clubId;
   };
 
-  public shared query func getEntries(limit : Nat, offset : Nat) : async ?DTOs.MonthlyLeaderboardDTO {
+  public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat) : async ?DTOs.MonthlyLeaderboardDTO {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == CanisterIds.MAIN_CANISTER_ID;
 
     switch (leaderboard) {
       case (null) {
@@ -48,7 +51,11 @@ actor class MonthlyLeaderboardCanister() {
     };
   };
 
-  public shared query func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
+  public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    
     switch (leaderboard) {
       case (null) {
         return null;

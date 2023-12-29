@@ -22,7 +22,10 @@ actor class WeeklyLeaderboardCanister() {
     gameweek := ?_gameweek;
   };
 
-  public shared query func getEntries(limit : Nat, offset : Nat) : async ?DTOs.WeeklyLeaderboardDTO {
+  public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat) : async ?DTOs.WeeklyLeaderboardDTO {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == CanisterIds.MAIN_CANISTER_ID;
 
     switch (leaderboard) {
       case (null) {
@@ -44,7 +47,11 @@ actor class WeeklyLeaderboardCanister() {
     };
   };
 
-  public shared query func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
+  public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    
     switch (leaderboard) {
       case (null) {
         return null;
