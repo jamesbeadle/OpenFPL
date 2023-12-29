@@ -334,6 +334,7 @@ actor Self {
     transferWindowActive = false;
     onHold = false;
   };
+  private stable var stable_canister_ids: [Text] = [];
 
   system func preupgrade() {
     stable_timers := timerComposite.getStableTimers();
@@ -341,7 +342,7 @@ actor Self {
     stable_managers := seasonManager.getStableManagers();
     stable_profile_picture_canister_ids := seasonManager.getStableProfilePictureCanisterIds();
     stable_active_profile_picture_canister_id := seasonManager.getStableActiveProfilePictureCanisterId();
-    stable_team_value_leaderboard := seasonManager.getStableTeamValueLeaderboards();
+    stable_team_value_leaderboards := seasonManager.getStableTeamValueLeaderboards();
     stable_season_rewards := seasonManager.getStableSeasonRewards();
     stable_monthly_rewards := seasonManager.getStableMonthlyRewards();
     stable_weekly_rewards := seasonManager.getStableWeeklyRewards();
@@ -368,13 +369,26 @@ actor Self {
     stable_next_fixture_id := seasonManager.getStableNextFixtureId();
     stable_data_cache_hashes := seasonManager.getStableDataHashes();
     stable_system_state := seasonManager.getStableSystemState();
-
-
+    stable_canister_ids := cyclesDispenser.getStableCanisterIds();
   };
 
   system func postupgrade() {
+    cyclesDispenser.setStableCanisterIds(stable_canister_ids);
     seasonManager.setStableManagers(stable_managers);
-    seasonManager.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);
+    seasonManager.setStableProfilePictureCanisterIds(stable_profile_picture_canister_ids);    
+    seasonManager.setStableActiveProfilePictureCanisterId(stable_active_profile_picture_canister_id);
+    seasonManager.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
+    seasonManager.setStableSeasonRewards(stable_season_rewards);
+    seasonManager.setStableMonthlyRewards(stable_monthly_rewards);
+    seasonManager.setStableWeeklyRewards(stable_weekly_rewards);
+    seasonManager.setStableMostValuableTeamRewards(stable_most_valuable_team_rewards);
+    seasonManager.setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards);
+    seasonManager.setStableWeeklyATHScores(stable_weekly_ath_scores);
+    seasonManager.setStableMonthlyATHScores(stable_monthly_ath_scores);
+    seasonManager.setStableSeasonATHScores(stable_season_ath_scores);
+    seasonManager.setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool);
+    seasonManager.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
+    seasonManager.setSeasonATHPrizePool(stable_season_ath_prize_pool);
     seasonManager.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
     seasonManager.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
     seasonManager.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
@@ -382,6 +396,8 @@ actor Self {
     seasonManager.setStableRelegatedClubs(stable_relegated_clubs);
     seasonManager.setStableNextClubId(stable_next_club_id);
     seasonManager.setStablePlayers(stable_players);
+    seasonManager.setStableFormerPlayers(stable_former_players);
+    seasonManager.setStableRetiredPlayers(stable_retired_players);
     seasonManager.setStableNextPlayerId(stable_next_player_id);
     seasonManager.setStableSeasons(stable_seasons);
     seasonManager.setStableNextSeasonId(stable_next_season_id);
@@ -393,7 +409,8 @@ actor Self {
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
     seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
     seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
-    //TODO: Set the callback functions
+    setCheckCyclesTimer();
+    setCheckCyclesWalletTimer();
   };
 
   public shared ({ caller }) func requestCanisterTopup() : async () {
@@ -432,7 +449,6 @@ actor Self {
       };
     };
     cyclesCheckWalletTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
-    //TODO: BACKUP AND RECREATE
   };
 
   public shared func burnICPToCycles(requestedCycles : Nat64) : async () {

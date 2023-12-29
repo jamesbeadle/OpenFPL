@@ -13,6 +13,8 @@ import Utilities "utilities";
 actor class SeasonLeaderboardCanister() {
   private stable var leaderboard : ?T.SeasonLeaderboard = null;
   private stable var seasonId : ?T.SeasonId = null;
+  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
+  private var cyclesCheckTimerId : ?Timer.TimerId = null;
 
   public shared ({ caller }) func addSeasonLeaderboard(_seasonId : T.SeasonId, seasonLeaderboard : T.SeasonLeaderboard) : async () {
     assert not Principal.isAnonymous(caller);
@@ -141,5 +143,33 @@ actor class SeasonLeaderboardCanister() {
 
   system func preupgrade() {};
 
-  system func postupgrade() {};
+  system func postupgrade() {
+    setCheckCyclesTimer();
+  };
+
+  private func checkCanisterCycles() : async () {
+
+    let balance = Cycles.balance();
+
+    if (balance < 500000000000) {
+      let openfpl_backend_canister = actor (CanisterIds.MAIN_CANISTER_ID) : actor {
+        requestCanisterTopup : () -> async ();
+      };
+      await openfpl_backend_canister.requestCanisterTopup();
+    };
+    setCheckCyclesTimer();
+  };
+
+  private func setCheckCyclesTimer() {
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckTimerId := null;
+      };
+    };
+    cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+  };
+
+  setCheckCyclesTimer();
 };

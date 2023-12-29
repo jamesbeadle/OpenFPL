@@ -11,6 +11,8 @@ actor class WeeklyLeaderboardCanister() {
   private stable var leaderboard : ?T.WeeklyLeaderboard = null;
   private stable var seasonId : ?T.SeasonId = null;
   private stable var gameweek : ?T.GameweekNumber = null;
+  private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
+  private var cyclesCheckTimerId : ?Timer.TimerId = null;
 
   public shared ({ caller }) func addWeeklyLeaderboard(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, weeklyLeaderboard : T.WeeklyLeaderboard) : async () {
     assert not Principal.isAnonymous(caller);
@@ -69,5 +71,33 @@ actor class WeeklyLeaderboardCanister() {
 
   system func preupgrade() {};
 
-  system func postupgrade() {};
+  system func postupgrade() {
+    setCheckCyclesTimer();
+  };
+
+  private func checkCanisterCycles() : async () {
+
+    let balance = Cycles.balance();
+
+    if (balance < 500000000000) {
+      let openfpl_backend_canister = actor (CanisterIds.MAIN_CANISTER_ID) : actor {
+        requestCanisterTopup : () -> async ();
+      };
+      await openfpl_backend_canister.requestCanisterTopup();
+    };
+    setCheckCyclesTimer();
+  };
+
+  private func setCheckCyclesTimer() {
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        Timer.cancelTimer(id);
+        cyclesCheckTimerId := null;
+      };
+    };
+    cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
+  };
+
+  setCheckCyclesTimer();
 };

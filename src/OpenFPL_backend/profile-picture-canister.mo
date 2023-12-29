@@ -216,9 +216,20 @@ actor class ProfilePictureCanister() {
     cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
-  system func preupgrade() {};
+  system func preupgrade() {
+    stable_bucket_map := Iter.toArray(bucketMap.entries());
+  };
 
-  system func postupgrade() {};
+  system func postupgrade() {
+    bucketMap := HashMap.fromIter<T.PrincipalId, Nat8>(
+        stable_bucket_map.vals(),
+        stable_bucket_map.size(),
+        Text.equal,
+        Text.hash,
+      );
+
+    setCheckCyclesTimer();
+  };
 
   public func getCyclesBalance() : async Nat {
     return Cycles.available();
@@ -228,7 +239,7 @@ actor class ProfilePictureCanister() {
     let amount = Cycles.available();
     let accepted = Cycles.accept(amount);
   };
-
+  
   setCheckCyclesTimer();
 
 };
