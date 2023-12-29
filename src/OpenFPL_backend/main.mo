@@ -29,11 +29,6 @@ actor Self {
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckWalletTimerId : ?Timer.TimerId = null;
 
-  public shared ({ caller }) func getTreasuryAccount() : async Account.AccountIdentifier {
-    let actorPrincipal : Principal = Principal.fromActor(Self);
-    Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount());
-  };
-
   //Functions containing inter-canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
     return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
@@ -52,6 +47,14 @@ actor Self {
     return await seasonManager.getProfile(Principal.toText(caller));
   };
 
+  public shared func getManager(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
+    return await seasonManager.getProfile(principalId);
+  };
+
+  public shared func getManagerGameweek(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
+    return await seasonManager.getManagerGameweek(principalId, seasonId, gameweek);
+  };
+
   //Query functions:
   public shared query func getDataHashes() : async Result.Result<[DTOs.DataCacheDTO], T.Error> {
     return #ok(seasonManager.getDataHashes());
@@ -59,14 +62,6 @@ actor Self {
 
   public shared query func getFixtures(seasonId : T.SeasonId) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
     return #ok(seasonManager.getFixtures(seasonId));
-  };
-
-  public shared func getManager(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-    return await seasonManager.getProfile(principalId);
-  };
-
-  public shared func getManagerGameweek(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
-    return await seasonManager.getManagerGameweek(principalId, seasonId, gameweek);
   };
 
   public shared query func getTotalManagers() : async Result.Result<Nat, T.Error> {
@@ -452,8 +447,13 @@ actor Self {
   };
 
   public shared func burnICPToCycles(requestedCycles : Nat64) : async () {
-    let treasuryAccount = await getTreasuryAccount();
+    let treasuryAccount = getTreasuryAccount();
     await treasuryManager.sendICPForCycles(treasuryAccount, requestedCycles);
+  };
+
+  private func getTreasuryAccount() : Account.AccountIdentifier {
+    let actorPrincipal : Principal = Principal.fromActor(Self);
+    Account.accountIdentifier(actorPrincipal, Account.defaultSubaccount());
   };
 
   private func checkCanisterWalletBalance() : async () {
