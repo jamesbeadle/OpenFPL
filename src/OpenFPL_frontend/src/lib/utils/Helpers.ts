@@ -1,6 +1,14 @@
 import { FixtureStatus } from "$lib/enums/FixtureStatus";
 import { Position } from "$lib/enums/Position";
 import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
+import type { TeamStats } from "$lib/types/team-stats";
+import * as FlagIcons from "svelte-flag-icons";
+import type {
+  ClubDTO,
+  PlayerDTO,
+  PlayerPosition,
+  ProfileDTO,
+} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
 export function formatUnixDateToReadable(unixNano: number) {
   const date = new Date(unixNano / 1000000);
@@ -131,14 +139,6 @@ export function calculateAgeFromNanoseconds(nanoseconds: number) {
 
   return age;
 }
-
-import type { TeamStats } from "$lib/types/team-stats";
-import * as FlagIcons from "svelte-flag-icons";
-import type {
-  FantasyTeam,
-  Team,
-} from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import type { PlayerDTO } from "../../../../declarations/player_canister/player_canister.did";
 
 export function getFlagComponent(countryCode: string) {
   switch (countryCode) {
@@ -279,7 +279,7 @@ export function getFlagComponent(countryCode: string) {
 
 export function updateTableData(
   fixtures: FixtureWithTeams[],
-  teams: Team[],
+  teams: ClubDTO[],
   selectedGameweek: number
 ): TeamStats[] {
   let tempTable: Record<number, TeamStats> = {};
@@ -339,7 +339,7 @@ export function updateTableData(
 function initTeamData(
   teamId: number,
   table: Record<number, TeamStats>,
-  teams: Team[]
+  teams: ClubDTO[]
 ) {
   if (!table[teamId]) {
     const team = teams.find((t) => t.id === teamId);
@@ -360,13 +360,13 @@ function initTeamData(
 
 export function getAvailableFormations(
   players: PlayerDTO[],
-  team: FantasyTeam
+  team: ProfileDTO
 ): string[] {
   const positionCounts: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 };
-  team.playerIds.forEach((id) => {
+  team.playerIds.forEach((id: number) => {
     const teamPlayer = players.find((p) => p.id === id);
     if (teamPlayer) {
-      positionCounts[teamPlayer.position]++;
+      positionCounts[convertPlayerPosition(teamPlayer.position)!]++;
     }
   });
 
@@ -396,6 +396,15 @@ export function getAvailableFormations(
   });
 }
 
+function convertPlayerPosition(
+  playerPosition: PlayerPosition
+): Position | undefined {
+  if ("Goalkeeper" in playerPosition) return Position.GOALKEEPER;
+  if ("Defender" in playerPosition) return Position.DEFENDER;
+  if ("Midfielder" in playerPosition) return Position.MIDFIELDER;
+  if ("Forward" in playerPosition) return Position.FORWARD;
+}
+
 export function getDateFromBigInt(dateMS: number): string {
   const dateInMilliseconds = Number(dateMS / 1000000);
   const date = new Date(dateInMilliseconds);
@@ -414,4 +423,21 @@ export function getDateFromBigInt(dateMS: number): string {
     "Dec",
   ];
   return `${monthNames[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+}
+
+interface ErrorResponse {
+  err: {
+    NotFound?: null;
+  };
+}
+
+interface SuccessResponse {
+  ok: any;
+}
+export function isError(response: any): response is ErrorResponse {
+  return response && response.err !== undefined;
+}
+
+export function isSuccess(response: any): response is SuccessResponse {
+  return response && response.ok !== undefined;
 }

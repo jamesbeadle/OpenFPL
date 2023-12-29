@@ -47,8 +47,13 @@ actor Self {
     return await seasonManager.getProfile(Principal.toText(caller));
   };
 
-  public shared func getManager(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
-    return await seasonManager.getProfile(principalId);
+  public shared func getPublicProfile(principalId : Text) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
+    return await seasonManager.getPublicProfile(principalId);
+  };
+
+  public shared ({ caller }) func getManager() : async Result.Result<DTOs.ManagerDTO, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    return await seasonManager.getManager(Principal.toText(caller));
   };
 
   public shared func getManagerGameweek(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
@@ -56,6 +61,10 @@ actor Self {
   };
 
   //Query functions:
+  public shared query func getClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+    return #ok(seasonManager.getClubs());
+  };
+
   public shared query func getDataHashes() : async Result.Result<[DTOs.DataCacheDTO], T.Error> {
     return #ok(seasonManager.getDataHashes());
   };

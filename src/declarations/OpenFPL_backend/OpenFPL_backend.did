@@ -86,19 +86,19 @@ type RetirePlayerDTO = record {
 };
 type Result_9 = variant {
   err : Error;
-  ok : MonthlyLeaderboardDTO;
+  ok : vec PlayerPointsDTO;
 };
 type Result_8 = variant {
   err : Error;
-  ok : vec PlayerPointsDTO;
+  ok : vec PlayerDTO;
 };
 type Result_7 = variant {
   err : Error;
-  ok : vec PlayerDTO;
+  ok : ProfileDTO;
 };
 type Result_6 = variant {
   err : Error;
-  ok : ProfileDTO;
+  ok : PublicProfileDTO;
 };
 type Result_5 = variant {
   err : Error;
@@ -116,21 +116,33 @@ type Result_2 = variant {
   err : Error;
   ok : WeeklyLeaderboardDTO;
 };
-type Result_13 = variant {
+type Result_16 = variant {
+  err : Error;
+  ok : vec ClubDTO;
+};
+type Result_15 = variant {
   err : Error;
   ok : vec CountryDTO;
 };
-type Result_12 = variant {
+type Result_14 = variant {
   err : Error;
   ok : vec DataCacheDTO;
 };
-type Result_11 = variant {
+type Result_13 = variant {
   err : Error;
   ok : vec FixtureDTO;
 };
-type Result_10 = variant {
+type Result_12 = variant {
+  err : Error;
+  ok : ManagerDTO;
+};
+type Result_11 = variant {
   err : Error;
   ok : ManagerGameweekDTO;
+};
+type Result_10 = variant {
+  err : Error;
+  ok : MonthlyLeaderboardDTO;
 };
 type Result_1 = variant {
   err : Error;
@@ -147,6 +159,13 @@ type RescheduleFixtureDTO = record {
   updatedFixtureGameweek : GameweekNumber;
 };
 type RecallPlayerDTO = record { playerId : PlayerId };
+type PublicProfileDTO = record {
+  createDate : int;
+  favouriteClubId : nat16;
+  principalId : text;
+  profilePicture : blob;
+  username : text;
+};
 type PromoteNewClubDTO = record {
   abbreviatedName : text;
   friendlyName : text;
@@ -158,10 +177,35 @@ type PromoteNewClubDTO = record {
 };
 type PromoteFormerClubDTO = record { clubId : ClubId };
 type ProfileDTO = record {
+  bankQuarterMillions : nat16;
+  braceBonusGameweek : GameweekNumber;
+  captainFantasticGameweek : GameweekNumber;
+  captainFantasticPlayerId : PlayerId;
+  captainId : PlayerId;
+  countrymenCountryId : CountryId;
+  countrymenGameweek : GameweekNumber;
   createDate : int;
-  favouriteClubId : nat16;
+  favouriteClubId : ClubId;
+  goalGetterGameweek : GameweekNumber;
+  goalGetterPlayerId : PlayerId;
+  hatTrickHeroGameweek : GameweekNumber;
+  history : List;
+  monthlyBonusesAvailable : nat8;
+  noEntryGameweek : GameweekNumber;
+  noEntryPlayerId : PlayerId;
+  passMasterGameweek : GameweekNumber;
+  passMasterPlayerId : PlayerId;
+  playerIds : vec PlayerId;
   principalId : text;
   profilePicture : blob;
+  prospectsGameweek : GameweekNumber;
+  safeHandsGameweek : GameweekNumber;
+  safeHandsPlayerId : PlayerId;
+  teamBoostClubId : ClubId;
+  teamBoostGameweek : GameweekNumber;
+  termsAccepted : bool;
+  transferWindowGameweek : GameweekNumber;
+  transfersAvailable : nat8;
   username : text;
 };
 type PlayerPosition = variant {
@@ -251,10 +295,35 @@ type ManagerGameweekDTO = record {
   transfersAvailable : nat8;
   username : text;
 };
+type ManagerDTO = record {
+  createDate : int;
+  favouriteClubId : ClubId;
+  gameweeks : vec FantasyTeamSnapshot;
+  monthlyPoints : int16;
+  monthlyPosition : int;
+  monthlyPositionText : text;
+  principalId : text;
+  profilePicture : blob;
+  seasonPoints : int16;
+  seasonPosition : int;
+  seasonPositionText : text;
+  username : text;
+  weeklyPoints : int16;
+  weeklyPosition : int;
+  weeklyPositionText : text;
+};
 type LoanPlayerDTO = record {
   loanClubId : ClubId;
   loanEndDate : int;
   playerId : PlayerId;
+};
+type List_1 = opt record {
+  FantasyTeamSnapshot;
+  List_1;
+};
+type List = opt record {
+  FantasyTeamSeason;
+  List;
 };
 type LeaderboardEntry = record {
   points : int16;
@@ -283,6 +352,42 @@ type FixtureDTO = record {
   kickOff : int;
   seasonId : SeasonId;
   status : FixtureStatus;
+};
+type FantasyTeamSnapshot = record {
+  bankQuarterMillions : nat16;
+  braceBonusGameweek : GameweekNumber;
+  captainFantasticGameweek : GameweekNumber;
+  captainFantasticPlayerId : PlayerId;
+  captainId : PlayerId;
+  countrymenCountryId : CountryId;
+  countrymenGameweek : GameweekNumber;
+  favouriteClubId : ClubId;
+  gameweek : GameweekNumber;
+  goalGetterGameweek : GameweekNumber;
+  goalGetterPlayerId : PlayerId;
+  hatTrickHeroGameweek : GameweekNumber;
+  monthlyBonusesAvailable : nat8;
+  noEntryGameweek : GameweekNumber;
+  noEntryPlayerId : PlayerId;
+  passMasterGameweek : GameweekNumber;
+  passMasterPlayerId : PlayerId;
+  playerIds : vec PlayerId;
+  points : int16;
+  principalId : text;
+  prospectsGameweek : GameweekNumber;
+  safeHandsGameweek : GameweekNumber;
+  safeHandsPlayerId : PlayerId;
+  teamBoostClubId : ClubId;
+  teamBoostGameweek : GameweekNumber;
+  teamValueQuarterMillions : nat16;
+  transferWindowGameweek : GameweekNumber;
+  transfersAvailable : nat8;
+  username : text;
+};
+type FantasyTeamSeason = record {
+  gameweeks : List_1;
+  seasonId : SeasonId;
+  totalPoints : int16;
 };
 type Error = variant {
   AlreadyExists;
@@ -315,6 +420,16 @@ type CountryDTO = record {
   name : text;
 };
 type ClubId = nat16;
+type ClubDTO = record {
+  abbreviatedName : text;
+  friendlyName : text;
+  id : ClubId;
+  name : text;
+  primaryColourHex : text;
+  secondaryColourHex : text;
+  shirtType : ShirtType;
+  thirdColourHex : text;
+};
 type CalendarMonth = nat8;
 type AddInitialFixturesDTO = record {
   seasonFixtures : vec FixtureDTO;
@@ -338,15 +453,17 @@ service : {
   executeUnretirePlayer : (UnretirePlayerDTO) -> ();
   executeUpdateClub : (UpdateClubDTO) -> ();
   executeUpdatePlayer : (UpdatePlayerDTO) -> ();
-  getCountries : () -> (Result_13) query;
-  getDataHashes : () -> (Result_12) query;
-  getFixtures : (SeasonId) -> (Result_11) query;
-  getManager : (text) -> (Result_6);
-  getManagerGameweek : (text, SeasonId, GameweekNumber) -> (Result_10);
-  getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat) -> (Result_9);
-  getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_8) query;
-  getPlayers : () -> (Result_7) query;
-  getProfile : () -> (Result_6);
+  getClubs : () -> (Result_16) query;
+  getCountries : () -> (Result_15) query;
+  getDataHashes : () -> (Result_14) query;
+  getFixtures : (SeasonId) -> (Result_13) query;
+  getManager : () -> (Result_12);
+  getManagerGameweek : (text, SeasonId, GameweekNumber) -> (Result_11);
+  getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat) -> (Result_10);
+  getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_9) query;
+  getPlayers : () -> (Result_8) query;
+  getProfile : () -> (Result_7);
+  getPublicProfile : (text) -> (Result_6);
   getSeasonLeaderboard : (SeasonId, nat, nat) -> (Result_5);
   getSystemState : () -> (Result_4) query;
   getTotalManagers : () -> (Result_3) query;

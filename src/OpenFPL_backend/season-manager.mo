@@ -112,6 +112,10 @@ module {
       return playerComposite.getPlayers(systemState.calculationSeason);
     };
 
+    public func getClubs() : [DTOs.ClubDTO] {
+      return clubComposite.getClubs();
+    };
+
     public func getPlayerDetailsForGameweek(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [DTOs.PlayerPointsDTO] {
       return playerComposite.getPlayerDetailsForGameweek(seasonId, gameweek);
     };
@@ -132,7 +136,11 @@ module {
       return await managerComposite.getProfile(principalId);
     };
 
-    public func getManager(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
+    public func getPublicProfile(principalId : Text) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
+      return await managerComposite.getPublicProfile(principalId);
+    };
+
+    public func getManager(principalId : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
 
       let weeklyLeaderboardEntry = await leaderboardComposite.getWeeklyLeaderboardEntry(principalId, systemState.calculationSeason, systemState.calculationGameweek);
 

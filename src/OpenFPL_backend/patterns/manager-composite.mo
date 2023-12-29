@@ -101,6 +101,63 @@ module {
           let profileDTO : DTOs.ProfileDTO = {
             principalId = foundManager.principalId;
             username = foundManager.username;
+            termsAccepted = foundManager.termsAccepted;
+            profilePicture = profilePicture;
+            favouriteClubId = foundManager.favouriteClubId;
+            createDate = foundManager.createDate;
+            transfersAvailable = foundManager.transfersAvailable;
+            monthlyBonusesAvailable = foundManager.monthlyBonusesAvailable;
+            bankQuarterMillions = foundManager.bankQuarterMillions;
+            playerIds = foundManager.playerIds;
+            captainId = foundManager.captainId;
+            goalGetterGameweek = foundManager.goalGetterGameweek;
+            goalGetterPlayerId = foundManager.goalGetterPlayerId;
+            passMasterGameweek = foundManager.passMasterGameweek;
+            passMasterPlayerId = foundManager.passMasterPlayerId;
+            noEntryGameweek = foundManager.noEntryGameweek;
+            noEntryPlayerId = foundManager.noEntryPlayerId;
+            teamBoostGameweek = foundManager.teamBoostGameweek;
+            teamBoostClubId = foundManager.teamBoostClubId;
+            safeHandsGameweek = foundManager.safeHandsGameweek;
+            safeHandsPlayerId = foundManager.safeHandsPlayerId;
+            captainFantasticGameweek = foundManager.captainFantasticGameweek;
+            captainFantasticPlayerId = foundManager.captainFantasticPlayerId;
+            countrymenGameweek = foundManager.countrymenGameweek;
+            countrymenCountryId = foundManager.countrymenCountryId;
+            prospectsGameweek = foundManager.prospectsGameweek;
+            braceBonusGameweek = foundManager.braceBonusGameweek;
+            hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
+            transferWindowGameweek = foundManager.transferWindowGameweek;
+            history = foundManager.history;
+          };
+
+          return #ok(profileDTO);
+        };
+      };
+    };
+
+    public func getPublicProfile(principalId : Text) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
+
+      let manager = managers.get(principalId);
+
+      switch (manager) {
+        case (null) {
+          return #err(#NotFound);
+        };
+        case (?foundManager) {
+
+          var profilePicture = Blob.fromArray([]);
+
+          if (Text.size(foundManager.profilePictureCanisterId) > 0) {
+            let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
+              getProfilePicture : (principalId : Text) -> async Blob;
+            };
+            profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+          };
+
+          let profileDTO : DTOs.PublicProfileDTO = {
+            principalId = foundManager.principalId;
+            username = foundManager.username;
             profilePicture = profilePicture;
             favouriteClubId = foundManager.favouriteClubId;
             createDate = foundManager.createDate;
@@ -275,7 +332,7 @@ module {
 
       switch (manager) {
         case (null) {
-          let createProfileDTO : DTOs.ProfileDTO = {
+          let createProfileDTO : DTOs.CreateProfileDTO = {
             principalId = principalId;
             username = updatedFantasyTeam.username;
             profilePicture = Blob.fromArray([]);
@@ -367,7 +424,7 @@ module {
 
       switch (manager) {
         case (null) {
-          let createProfileDTO : DTOs.ProfileDTO = {
+          let createProfileDTO : DTOs.CreateProfileDTO = {
             principalId = principalId;
             username = updatedUsername;
             profilePicture = Blob.fromArray([]);
@@ -429,7 +486,7 @@ module {
       switch (manager) {
         case (null) {
 
-          let createProfileDTO : DTOs.ProfileDTO = {
+          let createProfileDTO : DTOs.CreateProfileDTO = {
             principalId = principalId;
             username = "";
             profilePicture = Blob.fromArray([]);
@@ -495,7 +552,7 @@ module {
 
           let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
 
-          let createProfileDTO : DTOs.ProfileDTO = {
+          let createProfileDTO : DTOs.CreateProfileDTO = {
             principalId = principalId;
             username = "";
             profilePicture = profilePicture;
@@ -953,7 +1010,7 @@ module {
       return (sizeInKB <= 0 or sizeInKB > 500);
     };
 
-    private func buildNewManager(principalId : Text, createProfileDTO : DTOs.ProfileDTO, profilePictureCanisterId : Text) : T.Manager {
+    private func buildNewManager(principalId : Text, createProfileDTO : DTOs.CreateProfileDTO, profilePictureCanisterId : Text) : T.Manager {
       let newManager : T.Manager = {
         principalId = principalId;
         username = createProfileDTO.username;

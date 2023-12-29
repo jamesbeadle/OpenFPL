@@ -192,7 +192,7 @@ module Types {
   };
 
   public type Club = {
-    id : Nat16;
+    id : ClubId;
     name : Text;
     friendlyName : Text;
     primaryColourHex : Text;

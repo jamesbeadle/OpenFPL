@@ -113,12 +113,53 @@ module DTOs {
     shirtType : T.ShirtType;
   };
 
-  public type ProfileDTO = {
+  public type CreateProfileDTO = {
     principalId : Text;
     username : Text;
     profilePicture : Blob;
     favouriteClubId : Nat16;
     createDate : Int;
+  };
+
+  public type PublicProfileDTO = {
+    principalId : Text;
+    username : Text;
+    profilePicture : Blob;
+    favouriteClubId : Nat16;
+    createDate : Int;
+  };
+
+  public type ProfileDTO = {
+    principalId : Text;
+    username : Text;
+    termsAccepted : Bool;
+    profilePicture : Blob;
+    favouriteClubId : T.ClubId;
+    createDate : Int;
+    transfersAvailable : Nat8;
+    monthlyBonusesAvailable : Nat8;
+    bankQuarterMillions : Nat16;
+    playerIds : [T.PlayerId];
+    captainId : T.PlayerId;
+    goalGetterGameweek : T.GameweekNumber;
+    goalGetterPlayerId : T.PlayerId;
+    passMasterGameweek : T.GameweekNumber;
+    passMasterPlayerId : T.PlayerId;
+    noEntryGameweek : T.GameweekNumber;
+    noEntryPlayerId : T.PlayerId;
+    teamBoostGameweek : T.GameweekNumber;
+    teamBoostClubId : T.ClubId;
+    safeHandsGameweek : T.GameweekNumber;
+    safeHandsPlayerId : T.PlayerId;
+    captainFantasticGameweek : T.GameweekNumber;
+    captainFantasticPlayerId : T.PlayerId;
+    countrymenGameweek : T.GameweekNumber;
+    countrymenCountryId : T.CountryId;
+    prospectsGameweek : T.GameweekNumber;
+    braceBonusGameweek : T.GameweekNumber;
+    hatTrickHeroGameweek : T.GameweekNumber;
+    transferWindowGameweek : T.GameweekNumber;
+    history : List.List<T.FantasyTeamSeason>;
   };
 
   public type PlayerRatingsDTO = {
@@ -253,6 +294,17 @@ module DTOs {
     gameweek : T.GameweekNumber;
     kickOff : Int;
     status : Nat8;
+  };
+
+  public type ClubDTO = {
+    id : T.ClubId;
+    name : Text;
+    friendlyName : Text;
+    primaryColourHex : Text;
+    secondaryColourHex : Text;
+    thirdColourHex : Text;
+    abbreviatedName : Text;
+    shirtType : T.ShirtType;
   };
 
   public type CountryDTO = {
