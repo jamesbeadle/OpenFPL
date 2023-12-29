@@ -363,6 +363,8 @@ actor Self {
     timerComposite.setStableTimers(stable_timers);
     
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
+    seasonManager.setTimerBackupFunction(timerComposite.setAndBackupTimer, timerComposite.removeExpiredTimers);
+    seasonManager.setStoreCanisterIdFunction(cyclesDispenser.storeCanisterId);
     //TODO: Set the callback functions
   };
 
