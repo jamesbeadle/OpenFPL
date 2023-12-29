@@ -6,8 +6,10 @@ module DTOs {
   public type SystemStateDTO = {
     calculationGameweek : T.GameweekNumber;
     calculationMonth : T.CalendarMonth;
-    calculationSeason : T.SeasonId;
+    calculationSeasonId : T.SeasonId;
     pickTeamGameweek : T.GameweekNumber;
+    pickTeamSeasonId : T.SeasonId;
+    pickTeamSeasonName : Text;
   };
 
   public type RevaluePlayerUpDTO = {
@@ -284,8 +286,13 @@ module DTOs {
   };
 
   public type UpdateSystemStateDTO = {
-    activeGameweek : T.GameweekNumber;
-    focusGameweek : T.GameweekNumber;
+    pickTeamSeasonId : T.SeasonId;
+    pickTeamGameweek : T.GameweekNumber;
+    calculationGameweek : T.GameweekNumber;
+    calculationMonth : T.CalendarMonth;
+    calculationSeasonId : T.SeasonId;
+    transferWindowActive : Bool;
+    onHold : Bool;
   };
 
   public type UpdateFixtureDTO = {

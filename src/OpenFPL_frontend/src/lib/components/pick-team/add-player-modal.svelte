@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import type { PlayerDTO } from "../../../../../declarations/player_canister/player_canister.did";
-  import type { FantasyTeam } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import AddIcon from "$lib/icons/AddIcon.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { toastsError } from "$lib/stores/toasts-store";
@@ -13,7 +13,7 @@
   export let visible: boolean;
   export let closeAddPlayerModal: () => void;
   export let handlePlayerSelection: (player: PlayerDTO) => void;
-  export let fantasyTeam = writable<FantasyTeam | null>(null);
+  export let fantasyTeam = writable<ProfileDTO | null>(null);
 
   export let filterPosition = -1;
   export let filterColumn = -1;
@@ -72,10 +72,10 @@
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);
     } catch (error) {
       toastsError({
-        msg: { text: "Error fetching homepage data." },
+        msg: { text: "Error fetching add player data." },
         err: error,
       });
-      console.error("Error fetching homepage data:", error);
+      console.error("Error fetching add player data:", error);
     } finally {
       isLoading = false;
     }

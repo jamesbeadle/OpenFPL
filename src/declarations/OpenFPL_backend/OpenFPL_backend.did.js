@@ -383,6 +383,16 @@ export const idlFactory = ({ IDL }) => {
     captainId: PlayerId,
   });
   const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
+  const UpdateSystemStateDTO = IDL.Record({
+    pickTeamSeasonName: IDL.Text,
+    calculationGameweek: GameweekNumber,
+    transferWindowActive: IDL.Bool,
+    pickTeamSeason: SeasonId,
+    pickTeamGameweek: GameweekNumber,
+    calculationMonth: CalendarMonth,
+    calculationSeason: SeasonId,
+    onHold: IDL.Bool,
+  });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
@@ -443,6 +453,7 @@ export const idlFactory = ({ IDL }) => {
     saveFantasyTeam: IDL.Func([UpdateFantasyTeamDTO], [Result_1], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result_1], []),
+    updateSystemState: IDL.Func([UpdateSystemStateDTO], [Result_1], []),
     updateUsername: IDL.Func([IDL.Text], [Result_1], []),
     validateAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),

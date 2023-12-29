@@ -35,6 +35,25 @@ module {
       seasons := List.fromArray(stable_seasons);
     };
 
+    public func getSeason(seasonId : T.SeasonId) : ?DTOs.SeasonDTO {
+      let season = List.find(
+        seasons,
+        func(season : T.Season) : Bool {
+          return season.id == seasonId;
+        },
+      );
+      switch (season) {
+        case (null) { return null };
+        case (?foundSeason) {
+          return ?{
+            id = foundSeason.id;
+            name = foundSeason.name;
+            year = foundSeason.year;
+          };
+        };
+      };
+    };
+
     public func getFixtures(seasonId : T.SeasonId) : [DTOs.FixtureDTO] {
       let season = List.find(
         seasons,
@@ -760,7 +779,7 @@ module {
       let season = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.id == systemState.calculationSeason;
+          return season.id == systemState.calculationSeasonId;
         },
       );
       switch (season) {
@@ -792,7 +811,7 @@ module {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.id == systemState.calculationSeason;
+          return season.id == systemState.calculationSeasonId;
         },
       );
 
@@ -874,7 +893,7 @@ module {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.id == systemState.calculationSeason;
+          return season.id == systemState.calculationSeasonId;
         },
       );
 
@@ -1164,7 +1183,7 @@ module {
       let existingSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.year == systemState.calculationSeason + 1;
+          return season.year == systemState.calculationSeasonId + 1;
         },
       );
       switch (existingSeason) {
@@ -1175,7 +1194,7 @@ module {
       let currentSeason = List.find(
         seasons,
         func(season : T.Season) : Bool {
-          return season.year == systemState.calculationSeason;
+          return season.year == systemState.calculationSeasonId;
         },
       );
       switch (existingSeason) {

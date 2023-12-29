@@ -493,7 +493,17 @@ actor Self {
     };
 
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
+  };
 
+  /* Admin Section to be removed when DAO */
+
+  let TEMP_ADMIN_PRINCIPAL = "";
+
+  public shared ({ caller }) func updateSystemState(updateSystemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+    return await seasonManager.updateSystemState(updateSystemState);
   };
 
 };

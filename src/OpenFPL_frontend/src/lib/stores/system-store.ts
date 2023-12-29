@@ -2,15 +2,15 @@ import { authStore } from "$lib/stores/auth.store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCache,
-  SystemState,
+  DataCacheDTO,
+  SystemStateDTO,
   UpdateSystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
 function createSystemStore() {
-  const { subscribe, set } = writable<SystemState | null>(null);
+  const { subscribe, set } = writable<SystemStateDTO | null>(null);
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
@@ -19,7 +19,7 @@ function createSystemStore() {
 
   async function sync() {
     let category = "system_state";
-    const newHashValues: DataCache[] = await actor.getDataHashes();
+    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
@@ -33,7 +33,7 @@ function createSystemStore() {
       set(updatedSystemStateData);
     } else {
       const cachedSystemStateData = localStorage.getItem("system_state_data");
-      let cachedSystemState: SystemState | null = null;
+      let cachedSystemState: SystemStateDTO | null = null;
       try {
         cachedSystemState = JSON.parse(cachedSystemStateData || "{}");
       } catch (e) {
@@ -43,7 +43,7 @@ function createSystemStore() {
     }
   }
 
-  async function getSystemState(): Promise<SystemState | undefined> {
+  async function getSystemState(): Promise<SystemStateDTO | undefined> {
     let systemState;
     subscribe((value) => {
       systemState = value!;

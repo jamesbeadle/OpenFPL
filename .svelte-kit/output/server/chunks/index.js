@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "qu54hk"
+  version_hash: "c0k4dv"
 };
 function get_hooks() {
   return {};
@@ -3851,6 +3851,16 @@ const idlFactory$1 = ({ IDL }) => {
     captainId: PlayerId
   });
   const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
+  const UpdateSystemStateDTO = IDL.Record({
+    pickTeamSeasonName: IDL.Text,
+    calculationGameweek: GameweekNumber,
+    transferWindowActive: IDL.Bool,
+    pickTeamSeason: SeasonId,
+    pickTeamGameweek: GameweekNumber,
+    calculationMonth: CalendarMonth,
+    calculationSeason: SeasonId,
+    onHold: IDL.Bool
+  });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });
   return IDL.Service({
     burnICPToCycles: IDL.Func([IDL.Nat64], [], []),
@@ -3911,6 +3921,7 @@ const idlFactory$1 = ({ IDL }) => {
     saveFantasyTeam: IDL.Func([UpdateFantasyTeamDTO], [Result_1], []),
     updateFavouriteClub: IDL.Func([ClubId], [Result_1], []),
     updateProfilePicture: IDL.Func([IDL.Vec(IDL.Nat8)], [Result_1], []),
+    updateSystemState: IDL.Func([UpdateSystemStateDTO], [Result_1], []),
     updateUsername: IDL.Func([IDL.Text], [Result_1], []),
     validateAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     validateCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),

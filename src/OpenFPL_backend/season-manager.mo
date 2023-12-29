@@ -52,9 +52,9 @@ module {
     private var systemState : T.SystemState = {
       calculationGameweek = 1;
       calculationMonth = 8;
-      calculationSeason = 1;
+      calculationSeasonId = 1;
       pickTeamGameweek = 1;
-      pickTeamSeason = 1;
+      pickTeamSeasonId = 1;
       transferWindowActive = false;
       onHold = false;
     };
@@ -97,7 +97,22 @@ module {
     };
 
     public func getSystemState() : DTOs.SystemStateDTO {
-      return systemState;
+      let pickTeamSeason = seasonComposite.getSeason(systemState.pickTeamSeasonId);
+      var seasonName = "";
+      switch(pickTeamSeason){
+        case (null){ };
+        case (?foundSeason){
+          seasonName := foundSeason.name;
+        }
+      };
+      return {
+        calculationGameweek = systemState.calculationGameweek;
+        calculationMonth = systemState.calculationMonth;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamGameweek = systemState.pickTeamGameweek;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
+        pickTeamSeasonName = seasonName;
+      };
     };
 
     public func getDataHashes() : [DTOs.DataCacheDTO] {
@@ -109,7 +124,7 @@ module {
     };
 
     public func getPlayers() : [DTOs.PlayerDTO] {
-      return playerComposite.getPlayers(systemState.calculationSeason);
+      return playerComposite.getPlayers(systemState.calculationSeasonId);
     };
 
     public func getClubs() : [DTOs.ClubDTO] {
@@ -142,18 +157,18 @@ module {
 
     public func getManager(principalId : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {
 
-      let weeklyLeaderboardEntry = await leaderboardComposite.getWeeklyLeaderboardEntry(principalId, systemState.calculationSeason, systemState.calculationGameweek);
+      let weeklyLeaderboardEntry = await leaderboardComposite.getWeeklyLeaderboardEntry(principalId, systemState.calculationSeasonId, systemState.calculationGameweek);
 
       let managerFavouriteClub = managerComposite.getFavouriteClub(principalId);
 
       var monthlyLeaderboardEntry : ?DTOs.LeaderboardEntryDTO = null;
       if (managerFavouriteClub > 0) {
-        monthlyLeaderboardEntry := await leaderboardComposite.getMonthlyLeaderboardEntry(principalId, systemState.calculationSeason, systemState.calculationMonth, managerFavouriteClub);
+        monthlyLeaderboardEntry := await leaderboardComposite.getMonthlyLeaderboardEntry(principalId, systemState.calculationSeasonId, systemState.calculationMonth, managerFavouriteClub);
       };
 
-      let seasonLeaderboardEntry = await leaderboardComposite.getSeasonLeaderboardEntry(principalId, systemState.calculationSeason);
+      let seasonLeaderboardEntry = await leaderboardComposite.getSeasonLeaderboardEntry(principalId, systemState.calculationSeasonId);
 
-      return await managerComposite.getManager(principalId, systemState.calculationSeason, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
+      return await managerComposite.getManager(principalId, systemState.calculationSeasonId, weeklyLeaderboardEntry, monthlyLeaderboardEntry, seasonLeaderboardEntry);
     };
 
     public func getManagerGameweek(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.ManagerGameweekDTO, T.Error> {
@@ -165,7 +180,7 @@ module {
     };
 
     public func saveFantasyTeam(principalId : Text, updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
-      let players = playerComposite.getPlayers(systemState.calculationSeason);
+      let players = playerComposite.getPlayers(systemState.calculationSeasonId);
       return await managerComposite.saveFantasyTeam(principalId, updatedFantasyTeam, systemState, players);
     };
 
@@ -196,27 +211,27 @@ module {
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;
         calculationMonth = systemState.calculationMonth;
-        calculationSeason = systemState.calculationSeason;
+        calculationSeasonId = systemState.calculationSeasonId;
         pickTeamGameweek = pickTeamGameweek;
-        pickTeamSeason = systemState.pickTeamSeason;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
         transferWindowActive = systemState.transferWindowActive;
         onHold = systemState.onHold;
       };
 
       systemState := updatedSystemState;
 
-      let players = playerComposite.getPlayers(systemState.calculationSeason);
-      managerComposite.snapshotFantasyTeams(systemState.calculationSeason, systemState.calculationGameweek, players);
+      let players = playerComposite.getPlayers(systemState.calculationSeasonId);
+      managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, players);
       await updateCacheHash("system_state");
     };
 
     public func gameKickOffExpiredCallback() : async () {
-      seasonComposite.setFixturesToActive(systemState.calculationSeason, systemState.calculationGameweek);
+      seasonComposite.setFixturesToActive(systemState.calculationSeasonId, systemState.calculationGameweek);
       await updateCacheHash("fixtures");
     };
 
     public func gameCompletedExpiredCallback() : async () {
-      seasonComposite.setFixturesToCompleted(systemState.calculationSeason, systemState.calculationGameweek);
+      seasonComposite.setFixturesToCompleted(systemState.calculationSeasonId, systemState.calculationGameweek);
       await updateCacheHash("fixtures");
     };
 
@@ -229,9 +244,9 @@ module {
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;
         calculationMonth = systemState.calculationMonth;
-        calculationSeason = systemState.calculationSeason;
+        calculationSeasonId = systemState.calculationSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
-        pickTeamSeason = systemState.pickTeamSeason;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
         transferWindowActive = true;
         onHold = systemState.onHold;
       };
@@ -244,9 +259,9 @@ module {
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;
         calculationMonth = systemState.calculationMonth;
-        calculationSeason = systemState.calculationSeason;
+        calculationSeasonId = systemState.calculationSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
-        pickTeamSeason = systemState.pickTeamSeason;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
         transferWindowActive = false;
         onHold = systemState.onHold;
       };
@@ -261,7 +276,7 @@ module {
     };
 
     public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
-      let players = playerComposite.getPlayers(systemState.calculationSeason);
+      let players = playerComposite.getPlayers(systemState.calculationSeasonId);
       let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
       switch (populatedPlayerEvents) {
         case (null) {};
@@ -271,12 +286,12 @@ module {
         };
       };
 
-      let playerPointsMap = await playerComposite.getPlayersMap(systemState.calculationSeason, systemState.calculationGameweek);
+      let playerPointsMap = await playerComposite.getPlayersMap(systemState.calculationSeasonId, systemState.calculationGameweek);
 
-      await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeason, systemState.calculationGameweek);
+      await managerComposite.calculateFantasyTeamScores(playerPointsMap, systemState.calculationSeasonId, systemState.calculationGameweek);
 
       let managers = managerComposite.getManagers();
-      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeason, systemState.calculationGameweek, systemState.calculationMonth, managers);
+      await leaderboardComposite.calculateLeaderboards(systemState.calculationSeasonId, systemState.calculationGameweek, systemState.calculationMonth, managers);
 
       await payRewards();
       await incrementSystemState();
@@ -294,7 +309,7 @@ module {
 
       var currentGameweek = systemState.calculationGameweek;
       var currentMonth = systemState.calculationMonth;
-      var currentSeasonId = systemState.calculationSeason;
+      var currentSeasonId = systemState.calculationSeasonId;
 
       let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
       if (gameweekComplete) {
@@ -326,8 +341,8 @@ module {
       let updatedSystemState : T.SystemState = {
         calculationGameweek = currentGameweek;
         calculationMonth = currentMonth;
-        calculationSeason = currentSeasonId;
-        pickTeamSeason = systemState.pickTeamSeason;
+        calculationSeasonId = currentSeasonId;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = 1;
         transferWindowActive = true;
         onHold = systemState.onHold;
@@ -354,13 +369,13 @@ module {
     };
 
     private func payRewards() : async () {
-      let rewardPool = rewardPools.get(systemState.calculationSeason);
+      let rewardPool = rewardPools.get(systemState.calculationSeasonId);
       switch (rewardPool) {
         case (null) {};
         case (?foundRewardPool) {
           var calculationGameweek = systemState.calculationGameweek;
           var calculationMonth = systemState.calculationMonth;
-          var calculationSeason = systemState.calculationSeason;
+          var calculationSeasonId = systemState.calculationSeasonId;
 
           let gameweekComplete = seasonComposite.checkGameweekComplete(systemState);
           if (gameweekComplete) {
@@ -392,8 +407,8 @@ module {
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;
         calculationMonth = systemState.calculationMonth;
-        calculationSeason = systemState.calculationSeason;
-        pickTeamSeason = systemState.pickTeamSeason;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
         transferWindowActive = systemState.transferWindowActive;
         onHold = true;
@@ -407,8 +422,8 @@ module {
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;
         calculationMonth = systemState.calculationMonth;
-        calculationSeason = systemState.calculationSeason;
-        pickTeamSeason = systemState.pickTeamSeason;
+        calculationSeasonId = systemState.calculationSeasonId;
+        pickTeamSeasonId = systemState.pickTeamSeasonId;
         pickTeamGameweek = systemState.pickTeamGameweek;
         transferWindowActive = systemState.transferWindowActive;
         onHold = false;
@@ -418,7 +433,7 @@ module {
     };
 
     private func payWeeklyRewards(rewardPool : T.RewardPool) : async () {
-      let weeklyLeaderboardCanisterId = leaderboardComposite.getWeeklyCanisterId(systemState.calculationSeason, systemState.calculationGameweek);
+      let weeklyLeaderboardCanisterId = leaderboardComposite.getWeeklyCanisterId(systemState.calculationSeasonId, systemState.calculationGameweek);
       switch (weeklyLeaderboardCanisterId) {
         case (null) {};
         case (?canisterId) {
@@ -427,7 +442,7 @@ module {
           };
 
           let weeklyLeaderboard = await weekly_leaderboard_canister.getRewardLeaderboard();
-          let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
+          let fixtures = seasonComposite.getFixtures(systemState.calculationSeasonId);
           let gameweekFixtures = Array.filter<DTOs.FixtureDTO>(
             fixtures,
             func(fixture : DTOs.FixtureDTO) : Bool {
@@ -440,7 +455,7 @@ module {
     };
 
     private func payMonthlyRewards(rewardPool : T.RewardPool, clubId : T.ClubId) : async () {
-      let monthlyLeaderboardCanisterId = leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeason, systemState.calculationMonth, clubId);
+      let monthlyLeaderboardCanisterId = leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth, clubId);
       switch (monthlyLeaderboardCanisterId) {
         case (null) {};
         case (?canisterId) {
@@ -458,7 +473,7 @@ module {
       let allMonthlyLeaderboards = Buffer.fromArray<DTOs.MonthlyLeaderboardDTO>([]);
 
       for (club in Iter.fromArray(clubs)) {
-        let monthlyLeaderboardCanisterId = leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeason, systemState.calculationMonth, club.id);
+        let monthlyLeaderboardCanisterId = leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth, club.id);
         switch (monthlyLeaderboardCanisterId) {
           case (null) {};
           case (?canisterId) {
@@ -476,16 +491,16 @@ module {
     };
 
     private func paySeasonRewards(rewardPool : T.RewardPool) : async () {
-      let seasonLeaderboardCanisterId = leaderboardComposite.getSeasonCanisterId(systemState.calculationSeason);
+      let seasonLeaderboardCanisterId = leaderboardComposite.getSeasonCanisterId(systemState.calculationSeasonId);
       switch (seasonLeaderboardCanisterId) {
         case (null) {};
         case (?canisterId) {
           let season_leaderboard_canister = actor (canisterId) : actor {
             getRewardLeaderboard : () -> async DTOs.SeasonLeaderboardDTO;
           };
-          let players = playerComposite.getPlayers(systemState.calculationSeason);
+          let players = playerComposite.getPlayers(systemState.calculationSeasonId);
           let seasonLeaderboard = await season_leaderboard_canister.getRewardLeaderboard();
-          await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard, players, systemState.calculationSeason);
+          await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard, players, systemState.calculationSeasonId);
         };
       };
     };
@@ -512,8 +527,8 @@ module {
       let updatedSystemState : T.SystemState = {
         calculationGameweek = 1;
         calculationMonth = Utilities.unixTimeToMonth(firstFixture.kickOff);
-        calculationSeason = addInitialFixturesDTO.seasonId;
-        pickTeamSeason = addInitialFixturesDTO.seasonId;
+        calculationSeasonId = addInitialFixturesDTO.seasonId;
+        pickTeamSeasonId = addInitialFixturesDTO.seasonId;
         pickTeamGameweek = 1;
         transferWindowActive = true;
         onHold = systemState.onHold;
@@ -526,7 +541,7 @@ module {
     };
 
     private func setGameweekTimers() : async () {
-      let fixtures = seasonComposite.getFixtures(systemState.calculationSeason);
+      let fixtures = seasonComposite.getFixtures(systemState.calculationSeasonId);
       let filteredFilters = Array.filter<DTOs.FixtureDTO>(
         fixtures,
         func(fixture : DTOs.FixtureDTO) : Bool {
@@ -972,5 +987,22 @@ module {
     public func setStableSystemState(stable_system_state : T.SystemState) {
       systemState := stable_system_state;
     };
+
+    public func updateSystemState(updatedSystemStateDTO : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
+
+      let pickTeamSeason = seasonComposite.getSeason(updatedSystemStateDTO.pickTeamSeasonId);
+
+      systemState := {
+        pickTeamSeasonId = updatedSystemStateDTO.pickTeamSeasonId;
+        pickTeamGameweek = updatedSystemStateDTO.pickTeamGameweek;
+        calculationGameweek = updatedSystemStateDTO.calculationGameweek;
+        calculationMonth = updatedSystemStateDTO.calculationMonth;
+        calculationSeasonId = updatedSystemStateDTO.calculationSeasonId;
+        transferWindowActive = updatedSystemStateDTO.transferWindowActive;
+        onHold = updatedSystemStateDTO.onHold;
+      };
+      return #ok;
+    };
+
   };
 };

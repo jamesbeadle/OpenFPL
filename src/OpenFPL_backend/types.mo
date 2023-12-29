@@ -341,11 +341,11 @@ module Types {
   };
 
   public type SystemState = {
-    pickTeamSeason : SeasonId;
+    pickTeamSeasonId : SeasonId;
     pickTeamGameweek : GameweekNumber;
     calculationGameweek : GameweekNumber;
     calculationMonth : CalendarMonth;
-    calculationSeason : SeasonId;
+    calculationSeasonId : SeasonId;
     transferWindowActive : Bool;
     onHold : Bool;
   };

@@ -15,7 +15,7 @@
   } from "../lib/utils/Helpers";
   import type {
     LeaderboardEntry,
-    Team,
+    ClubDTO,
   } from "../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "./Layout.svelte";
   import FixturesComponent from "$lib/components/fixtures.svelte";
@@ -34,17 +34,22 @@
   let nextFixtureDateSmall = "-";
   let nextFixtureTime = "-";
   let weeklyLeader: LeaderboardEntry;
-  let nextFixtureHomeTeam: Team | undefined = undefined;
-  let nextFixtureAwayTeam: Team | undefined = undefined;
+  let nextFixtureHomeTeam: ClubDTO | undefined = undefined;
+  let nextFixtureAwayTeam: ClubDTO | undefined = undefined;
   let isLoggedIn = false;
   let isLoading = true;
 
   onMount(async () => {
     try {
+      console.log("auth store");
       await authStore.sync();
+      console.log("system store");
       await systemStore.sync();
+      console.log("fixture store");
       await fixtureStore.sync();
+      console.log("team store");
       await teamStore.sync();
+      console.log("leaderboard store");
       await leaderboardStore.syncWeeklyLeaderboard();
 
       authStore.subscribe((store) => {
@@ -104,10 +109,10 @@
         <div class="flex-grow">
           <p class="content-panel-header">Gameweek</p>
           <p class="content-panel-stat">
-            {$systemStore?.activeGameweek}
+            {$systemStore?.pickTeamGameweek}
           </p>
           <p class="content-panel-header">
-            {$systemStore?.activeSeason.name}
+            {$systemStore?.pickTeamSeasonName}
           </p>
         </div>
         <div class="vertical-divider" />

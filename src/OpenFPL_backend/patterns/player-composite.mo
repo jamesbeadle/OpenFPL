@@ -216,7 +216,7 @@ module {
             newValue += 1;
 
             let historyEntry : T.ValueHistory = {
-              seasonId = systemState.calculationSeason;
+              seasonId = systemState.calculationSeasonId;
               gameweek = systemState.pickTeamGameweek;
               oldValue = p.valueQuarterMillions;
               newValue = newValue;
@@ -280,7 +280,7 @@ module {
             };
 
             let historyEntry : T.ValueHistory = {
-              seasonId = systemState.calculationSeason;
+              seasonId = systemState.calculationSeasonId;
               gameweek = systemState.pickTeamGameweek;
               oldValue = p.valueQuarterMillions;
               newValue = newValue;
@@ -368,7 +368,7 @@ module {
           let newTransferHistoryEntry : T.TransferHistory = {
             transferDate = Time.now();
             transferGameweek = systemState.pickTeamGameweek;
-            transferSeason = systemState.calculationSeason;
+            transferSeason = systemState.calculationSeasonId;
             fromClub = p.clubId;
             toClub = loanPlayerDTO.loanClubId;
             loanEndDate = loanPlayerDTO.loanEndDate;
@@ -461,7 +461,7 @@ module {
           let newTransferHistoryEntry : T.TransferHistory = {
             transferDate = Time.now();
             transferGameweek = systemState.pickTeamGameweek;
-            transferSeason = systemState.calculationSeason;
+            transferSeason = systemState.calculationSeasonId;
             fromClub = p.clubId;
             toClub = transferPlayerDTO.newClubId;
             loanEndDate = 0;

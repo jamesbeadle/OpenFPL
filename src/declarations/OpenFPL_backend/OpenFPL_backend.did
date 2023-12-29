@@ -4,6 +4,16 @@ type WeeklyLeaderboardDTO = record {
   seasonId : SeasonId;
   totalEntries : nat;
 };
+type UpdateSystemStateDTO = record {
+  calculationGameweek : GameweekNumber;
+  calculationMonth : CalendarMonth;
+  calculationSeason : SeasonId;
+  onHold : bool;
+  pickTeamGameweek : GameweekNumber;
+  pickTeamSeason : SeasonId;
+  pickTeamSeasonName : text;
+  transferWindowActive : bool;
+};
 type UpdatePlayerDTO = record {
   dateOfBirth : int;
   firstName : text;
@@ -474,6 +484,7 @@ service : {
   saveFantasyTeam : (UpdateFantasyTeamDTO) -> (Result_1);
   updateFavouriteClub : (ClubId) -> (Result_1);
   updateProfilePicture : (blob) -> (Result_1);
+  updateSystemState : (UpdateSystemStateDTO) -> (Result_1);
   updateUsername : (text) -> (Result_1);
   validateAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
   validateCreatePlayer : (CreatePlayerDTO) -> (Result);

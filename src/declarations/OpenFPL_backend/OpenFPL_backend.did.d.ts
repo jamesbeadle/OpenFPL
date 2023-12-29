@@ -377,6 +377,16 @@ export interface UpdatePlayerDTO {
   lastName: string;
   firstName: string;
 }
+export interface UpdateSystemStateDTO {
+  pickTeamSeasonName: string;
+  calculationGameweek: GameweekNumber;
+  transferWindowActive: boolean;
+  pickTeamSeason: SeasonId;
+  pickTeamGameweek: GameweekNumber;
+  calculationMonth: CalendarMonth;
+  calculationSeason: SeasonId;
+  onHold: boolean;
+}
 export interface WeeklyLeaderboardDTO {
   totalEntries: bigint;
   seasonId: SeasonId;
@@ -434,6 +444,7 @@ export interface _SERVICE {
   saveFantasyTeam: ActorMethod<[UpdateFantasyTeamDTO], Result_1>;
   updateFavouriteClub: ActorMethod<[ClubId], Result_1>;
   updateProfilePicture: ActorMethod<[Uint8Array | number[]], Result_1>;
+  updateSystemState: ActorMethod<[UpdateSystemStateDTO], Result_1>;
   updateUsername: ActorMethod<[string], Result_1>;
   validateAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
   validateCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
