@@ -323,10 +323,12 @@ export interface SubmitFixtureDataDTO {
   playerEventData: Array<PlayerEventData>;
 }
 export interface SystemStateDTO {
+  pickTeamSeasonId: SeasonId;
+  pickTeamSeasonName: string;
   calculationGameweek: GameweekNumber;
   pickTeamGameweek: GameweekNumber;
   calculationMonth: CalendarMonth;
-  calculationSeason: SeasonId;
+  calculationSeasonId: SeasonId;
 }
 export interface TransferPlayerDTO {
   playerId: PlayerId;
@@ -378,13 +380,12 @@ export interface UpdatePlayerDTO {
   firstName: string;
 }
 export interface UpdateSystemStateDTO {
-  pickTeamSeasonName: string;
+  pickTeamSeasonId: SeasonId;
   calculationGameweek: GameweekNumber;
   transferWindowActive: boolean;
-  pickTeamSeason: SeasonId;
   pickTeamGameweek: GameweekNumber;
   calculationMonth: CalendarMonth;
-  calculationSeason: SeasonId;
+  calculationSeasonId: SeasonId;
   onHold: boolean;
 }
 export interface WeeklyLeaderboardDTO {

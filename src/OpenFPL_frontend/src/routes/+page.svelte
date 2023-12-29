@@ -294,12 +294,12 @@
           <div class="vertical-divider" />
           <div class="flex-grow">
             <p class="content-panel-header">
-              GW {$systemStore?.focusGameweek} High Score
+              GW {$systemStore?.calculationGameweek} High Score
             </p>
             <p class="content-panel-stat max-w-[200px] truncate">
               {#if weeklyLeader}
                 <a
-                  href={`/manager?id=${weeklyLeader.principalId}&gw=${$systemStore?.focusGameweek}`}
+                  href={`/manager?id=${weeklyLeader.principalId}&gw=${$systemStore?.calculationGameweek}`}
                   >{weeklyLeader.principalId === weeklyLeader.username
                     ? "Unknown"
                     : weeklyLeader.username}</a

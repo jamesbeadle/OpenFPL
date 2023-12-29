@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "c0k4dv"
+  version_hash: "1t8hj5i"
 };
 function get_hooks() {
   return {};
@@ -3813,10 +3813,12 @@ const idlFactory$1 = ({ IDL }) => {
   });
   const Result_5 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error2 });
   const SystemStateDTO = IDL.Record({
+    pickTeamSeasonId: SeasonId,
+    pickTeamSeasonName: IDL.Text,
     calculationGameweek: GameweekNumber,
     pickTeamGameweek: GameweekNumber,
     calculationMonth: CalendarMonth,
-    calculationSeason: SeasonId
+    calculationSeasonId: SeasonId
   });
   const Result_4 = IDL.Variant({ ok: SystemStateDTO, err: Error2 });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error2 });
@@ -3852,13 +3854,12 @@ const idlFactory$1 = ({ IDL }) => {
   });
   const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error2 });
   const UpdateSystemStateDTO = IDL.Record({
-    pickTeamSeasonName: IDL.Text,
+    pickTeamSeasonId: SeasonId,
     calculationGameweek: GameweekNumber,
     transferWindowActive: IDL.Bool,
-    pickTeamSeason: SeasonId,
     pickTeamGameweek: GameweekNumber,
     calculationMonth: CalendarMonth,
-    calculationSeason: SeasonId,
+    calculationSeasonId: SeasonId,
     onHold: IDL.Bool
   });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });

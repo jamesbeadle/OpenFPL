@@ -330,9 +330,9 @@ actor Self {
   private stable var stable_system_state : T.SystemState = {
     calculationGameweek = 1;
     calculationMonth = 8;
-    calculationSeason = 1;
+    calculationSeasonId = 1;
     pickTeamGameweek = 1;
-    pickTeamSeason = 1;
+    pickTeamSeasonId = 1;
     homepageFixturesGameweek = 1;
     homepageManagerGameweek = 1;
     transferWindowActive = false;

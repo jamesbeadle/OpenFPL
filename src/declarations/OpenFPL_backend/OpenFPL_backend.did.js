@@ -345,10 +345,12 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_5 = IDL.Variant({ ok: SeasonLeaderboardDTO, err: Error });
   const SystemStateDTO = IDL.Record({
+    pickTeamSeasonId: SeasonId,
+    pickTeamSeasonName: IDL.Text,
     calculationGameweek: GameweekNumber,
     pickTeamGameweek: GameweekNumber,
     calculationMonth: CalendarMonth,
-    calculationSeason: SeasonId,
+    calculationSeasonId: SeasonId,
   });
   const Result_4 = IDL.Variant({ ok: SystemStateDTO, err: Error });
   const Result_3 = IDL.Variant({ ok: IDL.Nat, err: Error });
@@ -384,13 +386,12 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const UpdateSystemStateDTO = IDL.Record({
-    pickTeamSeasonName: IDL.Text,
+    pickTeamSeasonId: SeasonId,
     calculationGameweek: GameweekNumber,
     transferWindowActive: IDL.Bool,
-    pickTeamSeason: SeasonId,
     pickTeamGameweek: GameweekNumber,
     calculationMonth: CalendarMonth,
-    calculationSeason: SeasonId,
+    calculationSeasonId: SeasonId,
     onHold: IDL.Bool,
   });
   const Result = IDL.Variant({ ok: IDL.Text, err: IDL.Text });

@@ -99,11 +99,11 @@ module {
     public func getSystemState() : DTOs.SystemStateDTO {
       let pickTeamSeason = seasonComposite.getSeason(systemState.pickTeamSeasonId);
       var seasonName = "";
-      switch(pickTeamSeason){
-        case (null){ };
-        case (?foundSeason){
+      switch (pickTeamSeason) {
+        case (null) {};
+        case (?foundSeason) {
           seasonName := foundSeason.name;
-        }
+        };
       };
       return {
         calculationGameweek = systemState.calculationGameweek;

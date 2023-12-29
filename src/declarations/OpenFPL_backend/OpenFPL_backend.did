@@ -7,11 +7,10 @@ type WeeklyLeaderboardDTO = record {
 type UpdateSystemStateDTO = record {
   calculationGameweek : GameweekNumber;
   calculationMonth : CalendarMonth;
-  calculationSeason : SeasonId;
+  calculationSeasonId : SeasonId;
   onHold : bool;
   pickTeamGameweek : GameweekNumber;
-  pickTeamSeason : SeasonId;
-  pickTeamSeasonName : text;
+  pickTeamSeasonId : SeasonId;
   transferWindowActive : bool;
 };
 type UpdatePlayerDTO = record {
@@ -64,8 +63,10 @@ type TransferPlayerDTO = record {
 type SystemStateDTO = record {
   calculationGameweek : GameweekNumber;
   calculationMonth : CalendarMonth;
-  calculationSeason : SeasonId;
+  calculationSeasonId : SeasonId;
   pickTeamGameweek : GameweekNumber;
+  pickTeamSeasonId : SeasonId;
+  pickTeamSeasonName : text;
 };
 type SubmitFixtureDataDTO = record {
   fixtureId : FixtureId;
