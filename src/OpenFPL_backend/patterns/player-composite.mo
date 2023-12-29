@@ -40,18 +40,6 @@ module {
       removeExpiredTimers := ?_removeExpiredTimers;
     };
 
-    let former_players_canister = actor (CanisterIds.FORMER_PLAYERS_CANISTER_ID) : actor {
-      getFormerPlayer : (playerId : T.PlayerId) -> async ();
-      addFormerPlayer : (playerDTO : DTOs.PlayerDTO) -> async ();
-      reinstateFormerPlayer : (playerId : T.PlayerId) -> async ();
-    };
-
-    let retired_players_canister = actor (CanisterIds.RETIRED_PLAYERS_CANISTER_ID) : actor {
-      getRetiredPlayer : (playerId : T.PlayerId) -> async ();
-      retirePlayer : (playerDTO : DTOs.PlayerDTO) -> async ();
-      unretirePlayer : (playerId : T.PlayerId) -> async ();
-    };
-
     public func loanExpired() : async () {
 
       let playersToRecall = List.filter<T.Player>(
