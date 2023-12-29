@@ -13,8 +13,9 @@
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import type {
-    Fixture,
-    Team,
+    FixtureDTO,
+    ClubDTO,
+    PlayerDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { updateTableData, getPositionText } from "../../lib/utils/Helpers";
   import { Spinner } from "@dfinity/gix-components";
@@ -22,10 +23,10 @@
   let isLoading = true;
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
-  let team: Team | null = null;
-  let nextFixture: Fixture | null = null;
-  let nextFixtureHomeTeam: Team | null = null;
-  let nextFixtureAwayTeam: Team | null = null;
+  let team: ClubDTO | null = null;
+  let nextFixture: FixtureDTO | null = null;
+  let nextFixtureHomeTeam: ClubDTO | null = null;
+  let nextFixtureAwayTeam: ClubDTO | null = null;
   let highestScoringPlayer: PlayerDTO | null = null;
 
   let activeTab: string = "players";
@@ -38,7 +39,7 @@
       await fixtureStore.sync();
       await systemStore.sync();
       await playerStore.sync();
-      selectedGameweek = $systemStore?.activeGameweek ?? 1;
+      selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter(
         (x) => x.homeTeamId === id || x.awayTeamId === id
@@ -56,12 +57,12 @@
 
       highestScoringPlayer = $playerStore
         .sort((a, b) => a.totalPoints - b.totalPoints)
-        .sort((a, b) => Number(b.value) - Number(a.value))[0];
+        .sort((a, b) => Number(b.valueQuarterMillions) - Number(a.valueQuarterMillions))[0];
 
       nextFixture =
         teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
-      nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
-      nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
+      nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeClubId ?? 0) ?? null;
+      nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayClubId ?? 0) ?? null;
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching club details." },
@@ -82,7 +83,7 @@
     );
   }
 
-  function getTeamFromId(teamId: number): Team | undefined {
+  function getTeamFromId(teamId: number): ClubDTO | undefined {
     return $teamStore.find((team) => team.id === teamId);
   }
 
@@ -133,7 +134,7 @@
         <div class="flex-grow">
           <p class="content-panel-header">Players</p>
           <p class="content-panel-stat">
-            {$playerStore.filter((x) => x.teamId == id).length}
+            {$playerStore.filter((x) => x.clubId == id).length}
           </p>
           <p class="content-panel-header">Total</p>
         </div>
@@ -144,7 +145,7 @@
             {getTeamPosition(id)}
           </p>
           <p class="content-panel-header">
-            {$systemStore?.activeSeason.name}
+            {$systemStore?.pickTeamSeasonName}
           </p>
         </div>
       </div>
@@ -252,7 +253,7 @@
       </ul>
 
       {#if activeTab === "players"}
-        <TeamPlayers players={$playerStore.filter((x) => x.teamId == id)} />
+        <TeamPlayers players={$playerStore.filter((x) => x.clubId == id)} />
       {:else if activeTab === "fixtures"}
         <TeamFixtures clubId={id} />
       {/if}

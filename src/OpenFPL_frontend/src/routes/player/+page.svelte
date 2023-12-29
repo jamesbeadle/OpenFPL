@@ -18,8 +18,9 @@
     updateTableData,
   } from "../../lib/utils/Helpers";
   import type {
-    Fixture,
-    Team,
+    FixtureDTO,
+    ClubDTO,
+    PlayerDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import Layout from "../Layout.svelte";
@@ -30,14 +31,14 @@
 
   $: id = Number($page.url.searchParams.get("id"));
 
-  let selectedGameweek: number = $systemStore?.activeGameweek ?? 1;
+  let selectedGameweek: number = $systemStore?.pickTeamGameweek ?? 1;
   let selectedPlayer: PlayerDTO | null = null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
-  let team: Team | null = null;
+  let team: ClubDTO | null = null;
 
-  let nextFixture: Fixture | null = null;
-  let nextFixtureHomeTeam: Team | null = null;
-  let nextFixtureAwayTeam: Team | null = null;
+  let nextFixture: FixtureDTO | null = null;
+  let nextFixtureHomeTeam: ClubDTO | null = null;
+  let nextFixtureAwayTeam: ClubDTO | null = null;
   let countdownDays = "00";
   let countdownHours = "00";
   let countdownMinutes = "00";
@@ -62,7 +63,7 @@
       }));
 
       selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;
-      team = $teamStore.find((x) => x.id === selectedPlayer?.teamId) ?? null;
+      team = $teamStore.find((x) => x.id === selectedPlayer?.clubId) ?? null;
 
       let teamFixtures = $fixtureStore.filter(
         (x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id
@@ -70,8 +71,8 @@
 
       nextFixture =
         teamFixtures.find((x) => x.gameweek === selectedGameweek) ?? null;
-      nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeTeamId ?? 0) ?? null;
-      nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayTeamId ?? 0) ?? null;
+      nextFixtureHomeTeam = getTeamFromId(nextFixture?.homeClubId ?? 0) ?? null;
+      nextFixtureAwayTeam = getTeamFromId(nextFixture?.awayClubId ?? 0) ?? null;
 
       nextFixtureDate = formatUnixDateToReadable(Number(nextFixture?.kickOff));
       nextFixtureDateSmall = formatUnixDateToSmallReadable(
@@ -103,7 +104,7 @@
     );
   }
 
-  function getTeamFromId(teamId: number): Team | undefined {
+  function getTeamFromId(teamId: number): ClubDTO | undefined {
     return $teamStore.find((team) => team.id === teamId);
   }
 
@@ -138,7 +139,7 @@
         <div class="flex-grow">
           <p class="content-panel-header">{team?.name}</p>
           <p class="content-panel-stat">
-            {$playerStore.filter((x) => x.teamId == id).length}
+            {$playerStore.filter((x) => x.clubId == id).length}
           </p>
           <p class="content-panel-header">Total</p>
         </div>

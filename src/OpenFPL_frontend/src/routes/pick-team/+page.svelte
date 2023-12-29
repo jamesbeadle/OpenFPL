@@ -30,7 +30,7 @@
     getAvailableFormations,
   } from "../../lib/utils/Helpers";
   import { getFlagComponent } from "../../lib/utils/Helpers";
-  import type { FantasyTeam } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ManagerDTO, ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Spinner, busyStore } from "@dfinity/gix-components";
 
   interface FormationDetails {
@@ -75,7 +75,7 @@
 
   let sessionAddedPlayers: number[] = [];
 
-  const fantasyTeam = writable<FantasyTeam | null>(null);
+  const fantasyTeam = writable<ProfileDTO | null>(null);
   const transfersAvailable = writable(newTeam ? Infinity : 3);
   const bankBalance = writable(1200);
   const bonusUsedInSession = writable<boolean>(false);
@@ -121,8 +121,8 @@
         await teamStore.sync();
         await playerStore.sync();
 
-        activeSeason = $systemStore?.activeSeason.name ?? "-";
-        activeGameweek = $systemStore?.activeGameweek ?? 1;
+        activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
+        activeGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
         const storedViewMode = localStorage.getItem("viewMode");
         if (storedViewMode) {

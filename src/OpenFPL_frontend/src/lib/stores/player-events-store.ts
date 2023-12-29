@@ -4,13 +4,13 @@ import { playerStore } from "$lib/stores/player-store";
 import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import type {
-  DataCache,
-  FantasyTeam,
-  Fixture,
-  SystemState,
+  DataCacheDTO,
+  FixtureDTO,
+  ManagerDTO,
   PlayerDTO,
-  PlayerDetailDTO,
+  PlayerEventData,
   PlayerPointsDTO,
+  ProfileDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
@@ -24,7 +24,7 @@ function createPlayerEventsStore() {
     systemState = value as SystemStateDTO;
   });
 
-  let allFixtures: Fixture[];
+  let allFixtures: FixtureDTO[];
   fixtureStore.subscribe((value) => (allFixtures = value));
 
   let actor: any = ActorFactory.createActor(
@@ -34,7 +34,7 @@ function createPlayerEventsStore() {
 
   async function sync() {
     let category = "playerEventData";
-    const newHashValues: DataCache[] = await actor.getDataHashes();
+    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let livePlayersHash =
       newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
@@ -78,7 +78,7 @@ function createPlayerEventsStore() {
   async function getPlayerDetails(
     playerId: number,
     seasonId: number
-  ): Promise<PlayerDetailDTO> {
+  ): Promise<PlayerEventData> {
     try {
       const playerDetailData = await actor.getPlayerDetails(playerId, seasonId);
       return playerDetailData;
@@ -89,7 +89,7 @@ function createPlayerEventsStore() {
   }
 
   async function getGameweekPlayers(
-    fantasyTeam: FantasyTeam,
+    fantasyTeam: ProfileDTO,
     gameweek: number
   ): Promise<GameweekData[]> {
     await sync();

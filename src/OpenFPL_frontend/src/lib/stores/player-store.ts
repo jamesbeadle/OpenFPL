@@ -28,7 +28,7 @@ function createPlayerStore() {
 
   async function sync() {
     let category = "players";
-    const newHashValues: DataCache[] = await actor.getDataHashes();
+    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let livePlayersHash =
       newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);

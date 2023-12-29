@@ -8,8 +8,10 @@
   import { governanceStore } from "$lib/stores/governance-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import type {
-    Fixture,
-    Team,
+    FixtureDTO,
+    ClubDTO,
+    PlayerDTO,
+    PlayerEventData,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { replacer } from "$lib/utils/Helpers";
   import Layout from "../Layout.svelte";
@@ -22,11 +24,11 @@
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
-  let teams: Team[] = [];
+  let teams: ClubDTO[] = [];
   let players: PlayerDTO[] = [];
-  let fixture: Fixture | null;
-  let homeTeam: Team | null;
-  let awayTeam: Team | null;
+  let fixture: FixtureDTO | null;
+  let homeTeam: ClubDTO | null;
+  let awayTeam: ClubDTO | null;
 
   let showPlayerSelectionModal = false;
   let showPlayerEventModal = false;
@@ -36,7 +38,7 @@
   let teamPlayers = writable<PlayerDTO[] | []>([]);
   let selectedPlayers = writable<PlayerDTO[] | []>([]);
 
-  let selectedTeam: Team | null = null;
+  let selectedTeam: ClubDTO | null = null;
   let selectedPlayer: PlayerDTO | null = null;
   let playerEventData = writable<PlayerEventData[] | []>([]);
   let activeTab: string = "home";
@@ -65,10 +67,10 @@
 
       fixtureStore.subscribe((value) => {
         fixture = value.find((x) => x.id == fixtureId)!;
-        homeTeam = teams.find((x) => x.id == fixture?.homeTeamId)!;
-        awayTeam = teams.find((x) => x.id == fixture?.awayTeamId)!;
+        homeTeam = teams.find((x) => x.id == fixture?.homeClubId)!;
+        awayTeam = teams.find((x) => x.id == fixture?.awayClubId)!;
         selectedTeam = homeTeam;
-        teamPlayers.set(players.filter((x) => x.teamId == selectedTeam?.id));
+        teamPlayers.set(players.filter((x) => x.clubId == selectedTeam?.id));
       });
 
       const draftKey = `fixtureDraft_${fixtureId}`;
@@ -157,7 +159,7 @@
   async function setActiveTab(tab: string) {
     await playerStore.sync();
     selectedTeam = tab === "home" ? homeTeam : awayTeam;
-    teamPlayers.set(players.filter((x) => x.teamId == selectedTeam?.id));
+    teamPlayers.set(players.filter((x) => x.clubId == selectedTeam?.id));
     activeTab = tab;
   }
 
@@ -250,7 +252,7 @@
             <div class="w-1/6 px-4">&nbsp;</div>
           </div>
           {#if activeTab === "home"}
-            {#each $selectedPlayers.filter((x) => x.teamId === fixture?.homeTeamId) as player (player.id)}
+            {#each $selectedPlayers.filter((x) => x.clubId === fixture?.homeClubId) as player (player.id)}
               <div
                 class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
               >
@@ -308,7 +310,7 @@
             {/each}
           {/if}
           {#if activeTab === "away"}
-            {#each $selectedPlayers.filter((x) => x.teamId === fixture?.awayTeamId) as player (player.id)}
+            {#each $selectedPlayers.filter((x) => x.clubId === fixture?.awayClubId) as player (player.id)}
               <div
                 class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
               >
