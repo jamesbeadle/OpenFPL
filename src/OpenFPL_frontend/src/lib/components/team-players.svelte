@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Position } from "$lib/enums/Position";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
+    import type { PlayerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import {
     calculateAgeFromNanoseconds,
     getFlagComponent,
@@ -73,7 +74,7 @@
             {calculateAgeFromNanoseconds(Number(player.dateOfBirth))}
           </div>
           <div class="hidden sm:flex items-center w-2/12">
-            £{(Number(player.value) / 4).toFixed(2)}m
+            £{(player.valueQuarterMillions / 4).toFixed(2)}m
           </div>
           <div class="hidden lg:flex items-center w-1/12">
             {player.totalPoints}

@@ -272,7 +272,7 @@
         transfersAvailable.update((n) => (n > 0 ? n - 1 : 0));
       }
       bankBalance.update((n) =>
-        n - Number(player.value) > 0 ? n - Number(player.value) : n
+        n - player.value > 0 ? n - player.value : n
       );
 
       if (!$fantasyTeam.playerIds.includes(player.id)) {
@@ -477,7 +477,7 @@
       }
       bankBalance.update(
         (n) =>
-          n + Number($playerStore.find((x) => x.id === playerId)?.value) ?? 0
+          n + $playerStore.find((x) => x.id === playerId)?.value ?? 0
       );
 
       return { ...currentTeam, playerIds: newPlayerIds };
@@ -510,8 +510,8 @@
 
     team.playerIds.forEach((playerId) => {
       const player = $playerStore.find((p) => p.id === playerId);
-      if (player && Number(player.value) > highestValue) {
-        highestValue = Number(player.value);
+      if (player && player.value > highestValue) {
+        highestValue = player.value;
         highestValuedPlayerId = playerId;
       }
     });
@@ -535,7 +535,7 @@
       team.playerIds.forEach((id) => {
         const player = $playerStore.find((p) => p.id === id);
         if (player) {
-          totalValue += Number(player.value);
+          totalValue += player.value;
         }
       });
       teamValue = totalValue / 4;
@@ -673,10 +673,10 @@
             !updatedFantasyTeam.playerIds.includes(player.id) &&
             (teamCounts.get(player.teamId) || 0) < 2 // Check for team player limit
         )
-        .sort((a, b) => Number(a.value) - Number(b.value));
+        .sort((a, b) => a.value - b.value);
 
       for (let player of availablePlayers) {
-        const potentialNewBudget = remainingBudget - Number(player.value);
+        const potentialNewBudget = remainingBudget - player.value;
         if (potentialNewBudget >= 0) {
           updatedFantasyTeam.playerIds[index] = player.id;
           remainingBudget = potentialNewBudget;
@@ -1155,7 +1155,7 @@
                                   thirdColour={team?.thirdColourHex}
                                 />
                                 <p class="truncate min-w-[50px] max-w-[50px]">
-                                  £{(Number(player.value) / 4).toFixed(2)}m
+                                  £{(player.value / 4).toFixed(2)}m
                                 </p>
                               </div>
                             </div>
@@ -1260,7 +1260,7 @@
                       </p>
                     </div>
                     <div class="w-1/6">
-                      £{(Number(player.value) / 4).toFixed(2)}m
+                      £{(player.value / 4).toFixed(2)}m
                     </div>
                     <div class="w-1/6 flex items-center">
                       <button

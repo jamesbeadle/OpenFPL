@@ -100,7 +100,7 @@
 
     let team = $fantasyTeam;
 
-    const canAfford = $bankBalance >= Number(player.value);
+    const canAfford = $bankBalance >= player.value;
     if (!canAfford) return "Over Budget";
 
     if (team && team.playerIds.includes(player.id)) return "Selected";
@@ -289,7 +289,7 @@
             </p>
           </div>
           <div class="w-2/12">
-            £{(Number(player.value) / 4).toFixed(2)}m
+            £{(player.value / 4).toFixed(2)}m
           </div>
           <div class="w-1/12">{player.totalPoints}</div>
           <div class="w-3/12 flex justify-center items-center">

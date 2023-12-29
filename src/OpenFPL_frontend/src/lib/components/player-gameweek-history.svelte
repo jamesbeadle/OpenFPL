@@ -8,8 +8,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import PlayerGameweekModal from "./player-gameweek-modal.svelte";
-  import type {
-  } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubId } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { Spinner } from "@dfinity/gix-components";
@@ -18,7 +17,7 @@
   let selectedGameweek: number;
   let selectedSeason: Season | null = null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
-  let playerDetails: PlayerDetailDTO;
+  let playerDetails: PlayerDeta;
   let selectedOpponent: Team | null = null;
   let opponentCache = new Map<number, Team>();
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
@@ -92,7 +91,7 @@
 
   function showDetailModal(
     playerDetailsDTO: PlayerGameweekDTO,
-    opponent: Team
+    opponent: ClubId
   ): void {
     selectedPlayerGameweek = playerDetailsDTO;
     selectedOpponent = opponent;

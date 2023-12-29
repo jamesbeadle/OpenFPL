@@ -82,7 +82,7 @@
       gameweekPlayers.set(
         fetchedPlayers.sort((a, b) => {
           if (b.totalPoints === a.totalPoints) {
-            return Number(b.player.value) - Number(a.player.value);
+            return b.player.value - a.player.value;
           }
           return b.totalPoints - a.totalPoints;
         })
