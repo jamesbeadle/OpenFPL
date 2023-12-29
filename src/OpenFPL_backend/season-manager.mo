@@ -745,52 +745,104 @@ module {
       return managerComposite.getStableActiveProfilePictureCanisterId();
     };
 
+    public func setStableActiveProfilePictureCanisterId(stable_active_profile_picture_canister_id : Text) {
+      managerComposite.setStableActiveProfilePictureCanisterId(stable_active_profile_picture_canister_id);
+    };
+
     public func getStableTeamValueLeaderboards(): [(T.SeasonId, T.TeamValueLeaderboard)]{
       return managerComposite.getStableTeamValueLeaderboards();
+    };
+
+    public func setStableTeamValueLeaderboards(stable_team_value_leaderboards: [(T.SeasonId, T.TeamValueLeaderboard)]){
+      return managerComposite.setStableTeamValueLeaderboards(stable_team_value_leaderboards);
     };
 
     public func getStableSeasonRewards() : [T.SeasonRewards]{
       return managerComposite.getStableSeasonRewards();
     };
 
+    public func setStableSeasonRewards(stable_season_rewards: [T.SeasonRewards]) {
+      return managerComposite.setStableSeasonRewards(stable_season_rewards);
+    };
+
     public func getStableMonthlyRewards() : [T.MonthlyRewards]{
       return managerComposite.getStableMonthlyRewards();
+    };
+
+    public func setStableMonthlyRewards(stable_monthly_rewards : [T.MonthlyRewards]){
+      return managerComposite.setStableMonthlyRewards(stable_monthly_rewards);
     };
 
     public func getStableWeeklyRewards() : [T.WeeklyRewards]{
       return managerComposite.getStableWeeklyRewards();
     };
 
+    public func setStableWeeklyRewards(stable_weekly_rewards: [T.WeeklyRewards]) {
+      return managerComposite.setStableWeeklyRewards(stable_weekly_rewards);
+    };
+
     public func getStableMostValuableTeamRewards() : [T.RewardsList]{
       return managerComposite.getStableMostValuableTeamRewards();
+    };
+
+    public func setStableMostValuableTeamRewards(stable_most_valuable_team_rewards: [T.RewardsList]) {
+      return managerComposite.setStableMostValuableTeamRewards(stable_most_valuable_team_rewards);
     };
 
     public func getStableHighestScoringPlayerRewards(): [T.RewardsList]{
       return managerComposite.getStableHighestScoringPlayerRewards();
     };
 
+    public func setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards: [T.RewardsList]){
+      return managerComposite.setStableHighestScoringPlayerRewards(stable_highest_scoring_player_rewards);
+    };
+
     public func getStableWeeklyATHScores(): [T.HighScoreRecord]{
       return managerComposite.getStableWeeklyATHScores();
+    };
+
+    public func setStableWeeklyATHScores(stable_weekly_ath_scores: [T.HighScoreRecord]){
+      return managerComposite.setStableWeeklyATHScores(stable_weekly_ath_scores);
     };
 
     public func getStableMonthlyATHScores(): [T.HighScoreRecord]{
       return managerComposite.getStableMonthlyATHScores();
     };
 
+    public func setStableMonthlyATHScores(stable_monthly_ath_scores: [T.HighScoreRecord]){
+      return managerComposite.setStableMonthlyATHScores(stable_monthly_ath_scores);
+    };
+
     public func getStableSeasonATHScores(): [T.HighScoreRecord]{
       return managerComposite.getStableSeasonATHScores();
+    };
+
+    public func setStableSeasonATHScores(stable_season_ath_scores: [T.HighScoreRecord]){
+      return managerComposite.setStableSeasonATHScores(stable_season_ath_scores);
     };
 
     public func getStableWeeklyATHPrizePool(): Nat64{
       return managerComposite.getStableWeeklyATHPrizePool();
     };
 
+    public func setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool: Nat64){
+      return managerComposite.setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool);
+    };
+
     public func getStableMonthlyATHPrizePool(): Nat64{
       return managerComposite.getStableMonthlyATHPrizePool();
     };
 
-    public func getSeasonATHPrizePool: Nat64{
+    public func setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool: Nat64){
+      return managerComposite.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
+    };
+
+    public func getSeasonATHPrizePool(): Nat64{
       return managerComposite.getSeasonATHPrizePool();
+    };
+
+    public func setSeasonATHPrizePool(stable_season_ath_prize_pool: Nat64){
+      return managerComposite.getSeasonATHPrizePool(stable_season_ath_prize_pool);
     };
 
     public func getStableSeasonLeaderboardCanisterIds() : [(T.SeasonId, Text)] {
