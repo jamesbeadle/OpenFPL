@@ -842,7 +842,7 @@ module {
     };
 
     public func setSeasonATHPrizePool(stable_season_ath_prize_pool: Nat64){
-      return managerComposite.getSeasonATHPrizePool(stable_season_ath_prize_pool);
+      return managerComposite.setSeasonATHPrizePool(stable_season_ath_prize_pool);
     };
 
     public func getStableSeasonLeaderboardCanisterIds() : [(T.SeasonId, Text)] {
