@@ -157,17 +157,20 @@ module Types {
   };
 
   public type WeeklyRewards = {
+    seasonId : SeasonId;
     gameweek : GameweekNumber;
     rewards : List.List<RewardEntry>;
   };
 
   public type MonthlyRewards = {
+    seasonId : SeasonId;
     month : CalendarMonth;
+    clubId: ClubId;
     rewards : List.List<RewardEntry>;
   };
 
   public type SeasonRewards = {
-    season : SeasonId;
+    seasonId : SeasonId;
     rewards : List.List<RewardEntry>;
   };
 
