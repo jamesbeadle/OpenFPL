@@ -14,7 +14,9 @@
   $: filteredPlayers =
     selectedPosition === -1
       ? players
-      : players.filter((p) => convertPlayerPosition(p.position) === selectedPosition);
+      : players.filter(
+          (p) => convertPlayerPosition(p.position) === selectedPosition
+        );
   let positionValues: number[] = Object.values(Position).filter(
     (value) => typeof value === "number"
   ) as number[];

@@ -4,7 +4,6 @@
   import { systemStore } from "$lib/stores/system-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
-  import { leaderboardStore } from "$lib/stores/leaderboard-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { managerStore } from "$lib/stores/manager-store";
   import {
@@ -24,6 +23,7 @@
   import LeagueTableComponent from "$lib/components/league-table.svelte";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
+    import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
 
   let activeTab: string = "fixtures";
   let managerCount = -1;
@@ -50,7 +50,7 @@
       console.log("team store");
       await teamStore.sync();
       console.log("leaderboard store");
-      await leaderboardStore.syncWeeklyLeaderboard();
+      await weeklyLeaderboardStore.syncWeeklyLeaderboard();
 
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
@@ -61,10 +61,10 @@
       let nextFixture = await fixtureStore.getNextFixture();
 
       nextFixtureHomeTeam = await teamStore.getTeamById(
-        nextFixture ? nextFixture.homeTeamId : 0
+        nextFixture ? nextFixture.homeClubId : 0
       );
       nextFixtureAwayTeam = await teamStore.getTeamById(
-        nextFixture ? nextFixture.awayTeamId : 0
+        nextFixture ? nextFixture.awayClubId : 0
       );
       nextFixtureDate = formatUnixDateToReadable(
         nextFixture ? Number(nextFixture.kickOff) : 0
@@ -83,7 +83,7 @@
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
-      weeklyLeader = await leaderboardStore.getLeadingWeeklyTeam();
+      weeklyLeader = await weeklyLeaderboardStore.getLeadingWeeklyTeam();
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching homepage data." },

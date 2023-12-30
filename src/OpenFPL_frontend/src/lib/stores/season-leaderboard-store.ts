@@ -3,7 +3,6 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
-  LeaderboardEntry,
   SeasonLeaderboardDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -66,7 +65,7 @@ function createSeasonLeaderboardStore() {
   return {
     subscribe,
     syncSeasonLeaderboard,
-    getSeasonLeaderboard
+    getSeasonLeaderboard,
   };
 }
 

@@ -29,7 +29,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
-    import { Position } from "$lib/enums/Position";
+  import { Position } from "$lib/enums/Position";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -123,7 +123,11 @@
       <div class="content-panel">
         <div class="flex-grow flex flex-col items-center">
           <p class="content-panel-header">
-            {getPositionText( convertPlayerPosition(selectedPlayer?.position ?? { Goalkeeper: null }) ?? -1)}
+            {getPositionText(
+              convertPlayerPosition(
+                selectedPlayer?.position ?? { Goalkeeper: null }
+              ) ?? -1
+            )}
           </p>
           <div class="py-2 flex">
             <ShirtIcon

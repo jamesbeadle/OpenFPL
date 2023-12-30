@@ -33,7 +33,7 @@ function createMonthlyLeaderboardStore() {
         systemState?.calculationSeasonId,
         systemState?.calculationMonth
       );
-      set(updatedLeaderboardData)
+      set(updatedLeaderboardData);
       localStorage.setItem(
         "monthly_leaderboard_data",
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -46,43 +46,43 @@ function createMonthlyLeaderboardStore() {
     clubId: number,
     month: number,
     currentPage: number
-    ): Promise<MonthlyLeaderboardDTO> {
+  ): Promise<MonthlyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    
 
-    if(currentPage <= 4 && month == systemState?.calculationMonth){
-        const cachedData = localStorage.getItem(
-            "monthly_leaderboard_data"
+    if (currentPage <= 4 && month == systemState?.calculationMonth) {
+      const cachedData = localStorage.getItem("monthly_leaderboard_data");
+
+      if (cachedData) {
+        let cachedLeaderboards: MonthlyLeaderboardDTO[] =
+          JSON.parse(cachedData);
+        let clubLeaderboard = cachedLeaderboards.find(
+          (x) => x.clubId === clubId
         );
 
-        if (cachedData) {
-            let cachedLeaderboards: MonthlyLeaderboardDTO[] = JSON.parse(cachedData);
-            let clubLeaderboard = cachedLeaderboards.find((x) => x.clubId === clubId);
-            
-            if (clubLeaderboard) {
-                return {
-                    ...clubLeaderboard,
-                    entries: clubLeaderboard.entries.slice(offset, offset + limit),
-                };
-            }
+        if (clubLeaderboard) {
+          return {
+            ...clubLeaderboard,
+            entries: clubLeaderboard.entries.slice(offset, offset + limit),
+          };
         }
+      }
     }
 
     let leaderboardData = await actor.getClubLeaderboard(
-        systemState?.calculationSeasonId,
-        month,
-        clubId,
-        limit,
-        offset
-      );
-      return leaderboardData;
+      systemState?.calculationSeasonId,
+      month,
+      clubId,
+      limit,
+      offset
+    );
+    return leaderboardData;
   }
 
   return {
     subscribe,
     syncMonthlyLeaderboard,
-    getMonthlyLeaderboard
+    getMonthlyLeaderboard,
   };
 }
 

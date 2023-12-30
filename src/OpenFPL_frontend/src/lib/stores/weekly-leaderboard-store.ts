@@ -4,8 +4,8 @@ import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   LeaderboardEntry,
-  WeeklyLeaderboardDTO,
   SystemStateDTO,
+  WeeklyLeaderboardDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
@@ -45,45 +45,45 @@ function createWeeklyLeaderboardStore() {
   async function getWeeklyLeaderboard(
     gameweek: number,
     currentPage: number
-    ): Promise<WeeklyLeaderboardDTO> {
+  ): Promise<WeeklyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
 
-    if(currentPage <= 4 && gameweek == systemState?.calculationGameweek){
-        const cachedData = localStorage.getItem(
-            "weekly_leaderboard_data"
-        );
-        
-        if (cachedData) {
-            let cachedWeeklyLeaderboard: WeeklyLeaderboardDTO;
-            cachedWeeklyLeaderboard = JSON.parse(
-                cachedData ||
-                  "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
-            );
+    if (currentPage <= 4 && gameweek == systemState?.calculationGameweek) {
+      const cachedData = localStorage.getItem("weekly_leaderboard_data");
 
-            if(cachedWeeklyLeaderboard){
-                return {
-                    ...cachedWeeklyLeaderboard,
-                    entries: cachedWeeklyLeaderboard.entries.slice(offset, offset + limit),
-                }
-            }
+      if (cachedData) {
+        let cachedWeeklyLeaderboard: WeeklyLeaderboardDTO;
+        cachedWeeklyLeaderboard = JSON.parse(
+          cachedData ||
+            "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
+        );
+
+        if (cachedWeeklyLeaderboard) {
+          return {
+            ...cachedWeeklyLeaderboard,
+            entries: cachedWeeklyLeaderboard.entries.slice(
+              offset,
+              offset + limit
+            ),
+          };
         }
+      }
     }
 
     let leaderboardData = await actor.getweeklyLeaderboard(
-        systemState?.calculationSeasonId,
-        gameweek,
-        limit,
-        offset
-      );
-      return leaderboardData;
-
+      systemState?.calculationSeasonId,
+      gameweek,
+      limit,
+      offset
+    );
+    return leaderboardData;
   }
 
   async function getLeadingWeeklyTeam(): Promise<LeaderboardEntry> {
     let weeklyLeaderboard = await getWeeklyLeaderboard(
-        systemState.calculationGameweek,
-        1
+      systemState.calculationGameweek,
+      1
     );
     return weeklyLeaderboard.entries[0];
   }
