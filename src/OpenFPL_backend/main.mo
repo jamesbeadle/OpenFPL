@@ -34,6 +34,10 @@ actor Self {
     return await seasonManager.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
   };
 
+  public shared func getMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
+    return await seasonManager.getMonthlyLeaderboards(seasonId, month);
+  };
+
   public shared func getMonthlyLeaderboard(seasonId : T.SeasonId, clubId : T.ClubId, month : T.CalendarMonth, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
     return await seasonManager.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset);
   };

@@ -12,6 +12,7 @@ import { replacer } from "../utils/Helpers";
 function createSeasonLeaderboardStore() {
   const { subscribe, set } = writable<SeasonLeaderboardDTO | null>(null);
   const itemsPerPage = 25;
+  const category = "season_leaderboard";
 
   let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
@@ -23,8 +24,7 @@ function createSeasonLeaderboardStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function syncSeasonLeaderboard() {
-    let category = "season_leaderboard";
+  async function sync() {
     const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
@@ -32,18 +32,19 @@ function createSeasonLeaderboardStore() {
       let updatedLeaderboardData = await actor.getSeasonLeaderboard(
         systemState?.calculationSeasonId
       );
+      set(updatedLeaderboardData);
       localStorage.setItem(
-        "season_leaderboard_data",
+        category,
         JSON.stringify(updatedLeaderboardData, replacer)
       );
       localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }
 
-  async function getSeasonLeaderboard(): Promise<SeasonLeaderboardDTO> {
-    const cachedSeasonLeaderboardData = localStorage.getItem(
-      "season_leaderboard_data"
-    );
+  async function getSeasonLeaderboard(
+    seasonId: number
+  ): Promise<SeasonLeaderboardDTO> {
+    const cachedSeasonLeaderboardData = localStorage.getItem(category);
 
     let cachedSeasonLeaderboard: SeasonLeaderboardDTO;
     try {
@@ -64,7 +65,7 @@ function createSeasonLeaderboardStore() {
 
   return {
     subscribe,
-    syncSeasonLeaderboard,
+    sync,
     getSeasonLeaderboard,
   };
 }

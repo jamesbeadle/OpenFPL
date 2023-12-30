@@ -152,6 +152,11 @@ module {
       return await leaderboardComposite.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset);
     };
 
+    public func getMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
+      let clubs = clubComposite.getClubs();
+      return await leaderboardComposite.getMonthlyLeaderboards(seasonId, month, clubs);
+    };
+
     public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
       return await leaderboardComposite.getSeasonLeaderboard(seasonId, limit, offset);
     };

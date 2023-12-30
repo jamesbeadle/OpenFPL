@@ -124,6 +124,36 @@ module {
       };
     };
 
+    public func getMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth, clubs: [DTOs.ClubDTO]) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
+
+      let monthlyLeaderboardBuffer = Buffer.fromArray<DTOs.MonthlyLeaderboardDTO>([]);
+
+      for(club in Iter.fromArray(clubs)){
+
+        let leaderboardKey : T.MonthlyLeaderboardKey = (seasonId, month, club.id);
+        let canisterId = monthlyLeaderboardCanisterIds.get(leaderboardKey);
+        switch (canisterId) {
+          case (null) { };
+          case (?foundCanisterId) {
+            let monthly_leaderboard_canister = actor (foundCanisterId) : actor {
+              getEntries : (limit : Nat, offset : Nat) -> async ?DTOs.MonthlyLeaderboardDTO;
+            };
+
+            let leaderboardEntries = await monthly_leaderboard_canister.getEntries(100, 0);
+            switch (leaderboardEntries) {
+              case (null) { };
+              case (?foundLeaderboard) {
+                monthlyLeaderboardBuffer.add(foundLeaderboard);
+              };
+            };
+          };
+        };
+        
+      };
+
+      return #ok(Buffer.toArray(monthlyLeaderboardBuffer));
+    };
+
     public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
 
       if (limit > 100) {

@@ -12,6 +12,7 @@ import { replacer } from "../utils/Helpers";
 function createMonthlyLeaderboardStore() {
   const { subscribe, set } = writable<MonthlyLeaderboardDTO[] | null>(null);
   const itemsPerPage = 25;
+  const category = "monthly_leaderboard_data";
 
   let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
@@ -23,26 +24,20 @@ function createMonthlyLeaderboardStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function syncMonthlyLeaderboard() {
-    let category = "monthly_leaderboards";
+  async function sync() {
     const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getMonthlyLeaderboard(
-        systemState?.calculationSeasonId,
-        systemState?.calculationMonth
-      );
+      let updatedLeaderboardData = await actor.getMonthlyLeaderboards();
       set(updatedLeaderboardData);
-      localStorage.setItem(
-        "monthly_leaderboard_data",
-        JSON.stringify(updatedLeaderboardData, replacer)
-      );
+      localStorage.setItem(category, JSON.stringify(updatedLeaderboardData, replacer));
       localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }
 
   async function getMonthlyLeaderboard(
+    seasonId: number,
     clubId: number,
     month: number,
     currentPage: number
@@ -51,7 +46,7 @@ function createMonthlyLeaderboardStore() {
     const offset = (currentPage - 1) * limit;
 
     if (currentPage <= 4 && month == systemState?.calculationMonth) {
-      const cachedData = localStorage.getItem("monthly_leaderboard_data");
+      const cachedData = localStorage.getItem(category);
 
       if (cachedData) {
         let cachedLeaderboards: MonthlyLeaderboardDTO[] =
@@ -69,8 +64,8 @@ function createMonthlyLeaderboardStore() {
       }
     }
 
-    let leaderboardData = await actor.getClubLeaderboard(
-      systemState?.calculationSeasonId,
+    let leaderboardData = await actor.getClubLeaderboards(
+      seasonId,
       month,
       clubId,
       limit,
@@ -81,7 +76,7 @@ function createMonthlyLeaderboardStore() {
 
   return {
     subscribe,
-    syncMonthlyLeaderboard,
+    sync,
     getMonthlyLeaderboard,
   };
 }

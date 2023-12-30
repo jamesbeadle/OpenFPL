@@ -13,6 +13,7 @@ import { replacer } from "../utils/Helpers";
 function createWeeklyLeaderboardStore() {
   const { subscribe, set } = writable<WeeklyLeaderboardDTO | null>(null);
   const itemsPerPage = 25;
+  const category = "weekly_leaderboard";
 
   let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
@@ -24,8 +25,7 @@ function createWeeklyLeaderboardStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function syncWeeklyLeaderboard() {
-    let category = "weekly_leaderboard";
+  async function sync() {
     const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
@@ -34,8 +34,9 @@ function createWeeklyLeaderboardStore() {
         systemState?.calculationSeasonId,
         systemState?.calculationGameweek
       );
+      set(updatedLeaderboardData);
       localStorage.setItem(
-        "weekly_leaderboard_data",
+        category,
         JSON.stringify(updatedLeaderboardData, replacer)
       );
       localStorage.setItem(category, liveHash?.hash ?? "");
@@ -43,6 +44,7 @@ function createWeeklyLeaderboardStore() {
   }
 
   async function getWeeklyLeaderboard(
+    seasonId: number,
     gameweek: number,
     currentPage: number
   ): Promise<WeeklyLeaderboardDTO> {
@@ -50,7 +52,7 @@ function createWeeklyLeaderboardStore() {
     const offset = (currentPage - 1) * limit;
 
     if (currentPage <= 4 && gameweek == systemState?.calculationGameweek) {
-      const cachedData = localStorage.getItem("weekly_leaderboard_data");
+      const cachedData = localStorage.getItem(category);
 
       if (cachedData) {
         let cachedWeeklyLeaderboard: WeeklyLeaderboardDTO;
@@ -72,16 +74,24 @@ function createWeeklyLeaderboardStore() {
     }
 
     let leaderboardData = await actor.getweeklyLeaderboard(
-      systemState?.calculationSeasonId,
+      seasonId,
       gameweek,
       limit,
       offset
     );
+    
+    set(leaderboardData);
+    localStorage.setItem(
+      category,
+      JSON.stringify(leaderboardData, replacer)
+    );
+
     return leaderboardData;
   }
 
   async function getLeadingWeeklyTeam(): Promise<LeaderboardEntry> {
     let weeklyLeaderboard = await getWeeklyLeaderboard(
+      systemState.calculationSeasonId,
       systemState.calculationGameweek,
       1
     );
@@ -90,7 +100,7 @@ function createWeeklyLeaderboardStore() {
 
   return {
     subscribe,
-    syncWeeklyLeaderboard,
+    sync,
     getWeeklyLeaderboard,
     getLeadingWeeklyTeam,
   };

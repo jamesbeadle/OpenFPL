@@ -5,7 +5,9 @@
   import { systemStore } from "$lib/stores/system-store";
   import { authSignedInStore } from "$lib/derived/auth.derived";
   import { userGetFavouriteTeam } from "$lib/derived/user.derived";
-  import { leaderboardStore } from "$lib/stores/leaderboard-store";
+  import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
+  import { monthlyLeaderboardStore } from "$lib/stores/monthly-leaderboard-store";
+  import { seasonLeaderboardStore } from "$lib/stores/season-leaderboard-store";
   import ViewDetailsIcon from "$lib/icons/ViewDetailsIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
 
@@ -38,9 +40,9 @@
     try {
       await teamStore.sync();
       await systemStore.sync();
-      await leaderboardStore.syncWeeklyLeaderboard();
-      await leaderboardStore.syncMonthlyLeaderboards();
-      await leaderboardStore.syncSeasonLeaderboard();
+      await weeklyLeaderboardStore.sync();
+      await monthlyLeaderboardStore.sync();
+      await seasonLeaderboardStore.sync();
 
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
       selectedMonth = $systemStore?.calculationMonth ?? 8;
