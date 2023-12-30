@@ -17,39 +17,37 @@ function createCountriesStore() {
 
   async function sync() {
     let category = "countries";
-    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
-    if(isSuccess(newHashValues)){
-      let liveHash = newHashValues.find((x) => x.category === category) ?? null;
-      const localHash = localStorage.getItem(category);
-  
-      if (liveHash?.hash != localHash) {
+    const newHashValues = await actor.getDataHashes();
+    
+    let error = isSuccess(newHashValues);
+    if(error){
+      console.error("Error syncing fixture store");
+      return;
+    }
+
+    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+
+    let categoryHash = dataCacheValues.find((x: DataCacheDTO) => x.category === category) ?? null;
+    const localHash = localStorage.getItem(category);  
+
+    if (categoryHash?.hash != localHash) {
         let updatedCountriesData = await actor.getCountries();
-        console.log(updatedCountriesData);
         localStorage.setItem(
-          "countries_data",
+          category,
           JSON.stringify(updatedCountriesData, replacer)
         );
-        localStorage.setItem(category, liveHash?.hash ?? "");
+        localStorage.setItem(category, categoryHash?.hash ?? "");
         set(updatedCountriesData);
-      } else {
-        const cachedCountriesData = localStorage.getItem("countries_data");
-        let cachedCountries: CountryDTO[] | null = null;
-        try {
-          cachedCountries = JSON.parse(cachedCountriesData || "[]");
-        } catch (e) {
-          cachedCountries = null;
-        }
-        set(cachedCountries);
+    } else {
+      const cachedCountriesData = localStorage.getItem(category);
+      let cachedCountries: CountryDTO[] | null = null;
+      try {
+        cachedCountries = JSON.parse(cachedCountriesData || "[]");
+      } catch (e) {
+        cachedCountries = null;
       }
-    }
-  }
-
-  async function getCountryById(id: number): Promise<CountryDTO | undefined> {
-    let countries: CountryDTO[] = [];
-    subscribe((value) => {
-      countries = value ?? [];
-    })();
-    return countries.find((country) => country.id === id);
+      set(cachedCountries);
+    } 
   }
 
   return {

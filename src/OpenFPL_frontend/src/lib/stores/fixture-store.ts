@@ -35,13 +35,13 @@ function createFixtureStore() {
     if (categoryHash?.hash != localHash) {
       let updatedFixturesData = (await actor.getFixtures()) as FixtureDTO[];
       localStorage.setItem(
-        "fixtures_data",
+        category,
         JSON.stringify(updatedFixturesData, replacer)
       );
       localStorage.setItem(category, categoryHash?.hash ?? "");
       set(updatedFixturesData);
     } else {
-      const cachedFixturesData = localStorage.getItem("fixtures_data");
+      const cachedFixturesData = localStorage.getItem(category);
       let cachedFixtures: FixtureDTO[] = [];
       try {
         cachedFixtures = JSON.parse(cachedFixturesData || "[]");
