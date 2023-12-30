@@ -2,22 +2,21 @@ import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCache,
+  DataCacheDTO,
   LeaderboardEntry,
-  PaginatedClubLeaderboard,
-  PaginatedLeaderboard,
-  SystemState,
+  MonthlyLeaderboardDTO,
+  SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
 function createLeaderboardStore() {
-  const { subscribe, set } = writable<PaginatedLeaderboard | null>(null);
+  const { subscribe, set } = writable<MonthlyLeaderboardDTO | null>(null);
   const itemsPerPage = 25;
 
-  let systemState: SystemState;
+  let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
-    systemState = value as SystemState;
+    systemState = value as SystemStateDTO;
   });
 
   let actor: any = ActorFactory.createActor(
@@ -27,13 +26,13 @@ function createLeaderboardStore() {
 
   async function syncWeeklyLeaderboard() {
     let category = "weekly_leaderboard";
-    const newHashValues: DataCache[] = await actor.getDataHashes();
+    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
       let updatedLeaderboardData = await actor.getWeeklyLeaderboardCache(
-        systemState?.activeSeason.id,
-        systemState?.focusGameweek
+        systemState?.calculationSeasonId,
+        systemState?.calculationGameweek
       );
       localStorage.setItem(
         "weekly_leaderboard_data",
@@ -45,7 +44,7 @@ function createLeaderboardStore() {
 
   async function syncMonthlyLeaderboards() {
     let category = "monthly_leaderboards";
-    const newHashValues: DataCache[] = await actor.getDataHashes();
+    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
@@ -63,7 +62,7 @@ function createLeaderboardStore() {
 
   async function syncSeasonLeaderboard() {
     let category = "season_leaderboard";
-    const newHashValues: DataCache[] = await actor.getDataHashes();
+    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {

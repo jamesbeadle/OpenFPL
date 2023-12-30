@@ -233,13 +233,6 @@ module DTOs {
     fixtureId : T.FixtureId;
   };
 
-  public type PaginatedLeaderboard = {
-    seasonId : T.SeasonId;
-    gameweek : T.GameweekNumber;
-    entries : [LeaderboardEntryDTO];
-    totalEntries : Nat;
-  };
-
   public type LeaderboardEntryDTO = {
     position : Int;
     positionText : Text;

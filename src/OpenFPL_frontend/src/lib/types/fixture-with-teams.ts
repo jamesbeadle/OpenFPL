@@ -1,9 +1,9 @@
 import type {
-  Fixture,
-  Team,
+  FixtureDTO,
+  ClubDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 export type FixtureWithTeams = {
-  fixture: Fixture;
-  homeTeam: Team | undefined;
-  awayTeam: Team | undefined;
+  fixture: FixtureDTO;
+  homeTeam: ClubDTO | undefined;
+  awayTeam: ClubDTO | undefined;
 };

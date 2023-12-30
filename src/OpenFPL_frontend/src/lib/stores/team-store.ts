@@ -1,14 +1,14 @@
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCache,
-  Team,
+  DataCacheDTO,
+  ClubDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
 function createTeamStore() {
-  const { subscribe, set } = writable<Team[]>([]);
+  const { subscribe, set } = writable<ClubDTO[]>([]);
 
   const actor = ActorFactory.createActor(
     idlFactory,
@@ -17,14 +17,14 @@ function createTeamStore() {
 
   async function sync() {
     const category = "teams";
-    const newHashValues: DataCache[] =
-      (await actor.getDataHashes()) as DataCache[];
+    const newHashValues: DataCacheDTO[] =
+      (await actor.getDataHashes()) as DataCacheDTO[];
     const liveTeamsHash =
       newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
     if (liveTeamsHash?.hash != localHash) {
-      const updatedTeamsData = (await actor.getTeams()) as Team[];
+      const updatedTeamsData = (await actor.getTeams()) as ClubDTO[];
       localStorage.setItem(
         "teams_data",
         JSON.stringify(updatedTeamsData, replacer)
@@ -33,7 +33,7 @@ function createTeamStore() {
       set(updatedTeamsData);
     } else {
       const cachedTeamsData = localStorage.getItem("teams_data");
-      let cachedTeams: Team[] = [];
+      let cachedTeams: ClubDTO[] = [];
       try {
         cachedTeams = JSON.parse(cachedTeamsData || "[]");
       } catch (e) {
@@ -43,8 +43,8 @@ function createTeamStore() {
     }
   }
 
-  async function getTeamById(id: number): Promise<Team | undefined> {
-    let teams: Team[] = [];
+  async function getTeamById(id: number): Promise<ClubDTO | undefined> {
+    let teams: ClubDTO[] = [];
     subscribe((value) => {
       teams = value;
     })();

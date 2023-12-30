@@ -1,6 +1,6 @@
-import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
-export interface TeamStats extends Team {
+export interface TeamStats extends ClubDTO {
   played: number;
   wins: number;
   draws: number;

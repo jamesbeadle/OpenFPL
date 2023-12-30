@@ -9,6 +9,7 @@
   import {
     calculateAgeFromNanoseconds,
     convertDateToReadable,
+    convertPlayerPosition,
     formatUnixDateToReadable,
     formatUnixDateToSmallReadable,
     formatUnixTimeToTime,
@@ -28,6 +29,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import ShirtIcon from "$lib/icons/ShirtIcon.svelte";
   import { Spinner } from "@dfinity/gix-components";
+    import { Position } from "$lib/enums/Position";
 
   $: id = Number($page.url.searchParams.get("id"));
 
@@ -121,7 +123,7 @@
       <div class="content-panel">
         <div class="flex-grow flex flex-col items-center">
           <p class="content-panel-header">
-            {getPositionText(selectedPlayer?.position ?? -1)}
+            {getPositionText( convertPlayerPosition(selectedPlayer?.position ?? { Goalkeeper: null }) ?? -1)}
           </p>
           <div class="py-2 flex">
             <ShirtIcon
@@ -151,7 +153,7 @@
           </p>
           <p class="content-panel-header">
             <svelte:component
-              this={getFlagComponent(selectedPlayer?.nationality ?? "")}
+              this={getFlagComponent(selectedPlayer?.nationality ?? 0)}
               class="w-4 h-4 mr-1"
               size="100"
             />{selectedPlayer?.firstName}
