@@ -5,7 +5,7 @@ import type {
   DataCacheDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../utils/Helpers";
+import { isSuccess, replacer } from "../utils/Helpers";
 
 function createCountriesStore() {
   const { subscribe, set } = writable<CountryDTO[] | null>(null);
@@ -18,27 +18,29 @@ function createCountriesStore() {
   async function sync() {
     let category = "countries";
     const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
-
-    if (liveHash?.hash != localHash) {
-      let updatedCountriesData = await actor.getCountries();
-      console.log(updatedCountriesData);
-      localStorage.setItem(
-        "countries_data",
-        JSON.stringify(updatedCountriesData, replacer)
-      );
-      localStorage.setItem(category, liveHash?.hash ?? "");
-      set(updatedCountriesData);
-    } else {
-      const cachedCountriesData = localStorage.getItem("countries_data");
-      let cachedCountries: CountryDTO[] | null = null;
-      try {
-        cachedCountries = JSON.parse(cachedCountriesData || "[]");
-      } catch (e) {
-        cachedCountries = null;
+    if(isSuccess(newHashValues)){
+      let liveHash = newHashValues.find((x) => x.category === category) ?? null;
+      const localHash = localStorage.getItem(category);
+  
+      if (liveHash?.hash != localHash) {
+        let updatedCountriesData = await actor.getCountries();
+        console.log(updatedCountriesData);
+        localStorage.setItem(
+          "countries_data",
+          JSON.stringify(updatedCountriesData, replacer)
+        );
+        localStorage.setItem(category, liveHash?.hash ?? "");
+        set(updatedCountriesData);
+      } else {
+        const cachedCountriesData = localStorage.getItem("countries_data");
+        let cachedCountries: CountryDTO[] | null = null;
+        try {
+          cachedCountries = JSON.parse(cachedCountriesData || "[]");
+        } catch (e) {
+          cachedCountries = null;
+        }
+        set(cachedCountries);
       }
-      set(cachedCountries);
     }
   }
 

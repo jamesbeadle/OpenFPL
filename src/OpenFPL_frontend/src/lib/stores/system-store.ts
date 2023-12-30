@@ -7,7 +7,7 @@ import type {
   UpdateSystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../utils/Helpers";
+import { isSuccess, replacer } from "../utils/Helpers";
 
 function createSystemStore() {
   const { subscribe, set } = writable<SystemStateDTO | null>(null);
@@ -19,17 +19,26 @@ function createSystemStore() {
 
   async function sync() {
     let category = "system_state";
-    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
+    const newHashValues = await actor.getDataHashes();
+    
+    let error = isSuccess(newHashValues);
+    if(error){
+      console.error("Error syncing system store");
+      return;
+    }
 
-    if (liveHash?.hash != localHash) {
+    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+
+    let categoryHash = dataCacheValues.find((x: DataCacheDTO) => x.category === category) ?? null;
+    const localHash = localStorage.getItem(category);  
+
+    if (categoryHash?.hash != localHash) {
       let updatedSystemStateData = await actor.getSystemState();
       localStorage.setItem(
         "system_state_data",
         JSON.stringify(updatedSystemStateData, replacer)
       );
-      localStorage.setItem(category, liveHash?.hash ?? "");
+      localStorage.setItem(category, categoryHash?.hash ?? "");
       set(updatedSystemStateData);
     } else {
       const cachedSystemStateData = localStorage.getItem("system_state_data");

@@ -10,7 +10,7 @@ import { replacer } from "../utils/Helpers";
 function createTeamStore() {
   const { subscribe, set } = writable<ClubDTO[]>([]);
 
-  const actor = ActorFactory.createActor(
+  let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );

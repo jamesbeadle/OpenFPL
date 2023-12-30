@@ -7,30 +7,38 @@ import type {
   UpdateFixtureDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../utils/Helpers";
+import { isSuccess, replacer } from "../utils/Helpers";
 
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);
 
-  const actor = ActorFactory.createActor(
+  let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
   async function sync() {
     let category = "fixtures";
-    const newHashValues: DataCacheDTO[] =
-      (await actor.getDataHashes()) as DataCacheDTO[];
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
+    const newHashValues = await actor.getDataHashes();
+    
+    let error = isSuccess(newHashValues);
+    if(error){
+      console.error("Error syncing fixture store");
+      return;
+    }
 
-    if (liveHash?.hash != localHash) {
+    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+
+    let categoryHash = dataCacheValues.find((x: DataCacheDTO) => x.category === category) ?? null;
+    const localHash = localStorage.getItem(category);  
+
+    if (categoryHash?.hash != localHash) {
       let updatedFixturesData = (await actor.getFixtures()) as FixtureDTO[];
       localStorage.setItem(
         "fixtures_data",
         JSON.stringify(updatedFixturesData, replacer)
       );
-      localStorage.setItem(category, liveHash?.hash ?? "");
+      localStorage.setItem(category, categoryHash?.hash ?? "");
       set(updatedFixturesData);
     } else {
       const cachedFixturesData = localStorage.getItem("fixtures_data");

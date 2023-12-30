@@ -18,7 +18,7 @@ function createManagerStore() {
     systemState = value as SystemStateDTO;
   });
 
-  const actor = ActorFactory.createActor(
+  let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
