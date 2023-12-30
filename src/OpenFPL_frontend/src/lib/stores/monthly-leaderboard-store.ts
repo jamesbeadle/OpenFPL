@@ -97,7 +97,27 @@ function createMonthlyLeaderboardStore() {
       clubId,
       limit,
       offset
-    );
+    ) as MonthlyLeaderboardDTO[];
+
+    if(leaderboardData){
+      let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
+
+      if(clubLeaderboard == null){
+        return {
+          month: 0,
+          clubId: 0,
+          totalEntries: 0n,
+          seasonId: 0,
+          entries: []
+        }
+      }
+
+      return {
+        ...clubLeaderboard,
+        entries: clubLeaderboard.entries.slice(offset, offset + limit)
+      };
+    }
+
     return leaderboardData;
   }
 
