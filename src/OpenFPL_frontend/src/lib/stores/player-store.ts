@@ -24,7 +24,7 @@ function createPlayerStore() {
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
-    process.env.MAIN_CANISTER_ID
+    process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
   async function sync() {

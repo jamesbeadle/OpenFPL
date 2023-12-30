@@ -243,8 +243,6 @@ export function getFlagComponent(countryId: number) {
       return FlagIcons.Dm;
     case 50:
       return FlagIcons.Do;
-    case 50:
-      return FlagIcons.Do;
     case 51:
       return FlagIcons.Ec;
     case 52:

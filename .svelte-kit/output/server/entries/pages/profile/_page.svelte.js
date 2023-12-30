@@ -1,6 +1,8 @@
-import "@dfinity/agent";
+import { n } from "../../../chunks/index.js";
 import "@dfinity/auth-client";
 import "@dfinity/utils";
+import "@dfinity/agent";
 import "dompurify";
-import { n } from "../../../chunks/index.js";
-export { n as default };
+export {
+  n as default
+};

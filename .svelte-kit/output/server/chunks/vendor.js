@@ -1,2 +1,4 @@
 const DEV = false;
-export { DEV as D };
+export {
+  DEV as D
+};
