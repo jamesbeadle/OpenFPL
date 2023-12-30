@@ -67,7 +67,7 @@ module {
       { category = "season_leaderboard"; hash = "DEFAULT_VALUE" },
       { category = "players"; hash = "DEFAULT_VALUE" },
       { category = "player_events"; hash = "DEFAULT_VALUE" },
-      { category = "countries"; hash = "DEFAULT_VALUE" }
+      { category = "countries"; hash = "DEFAULT_VALUE" },
     ]);
 
     public func setTimerBackupFunction(

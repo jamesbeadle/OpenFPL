@@ -20,17 +20,19 @@ function createSystemStore() {
   async function sync() {
     let category = "system_state";
     const newHashValues = await actor.getDataHashes();
-    
+
     let error = isSuccess(newHashValues);
-    if(error){
+    if (error) {
       console.error("Error syncing system store");
       return;
     }
 
     let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
 
-    let categoryHash = dataCacheValues.find((x: DataCacheDTO) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);  
+    let categoryHash =
+      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
+      null;
+    const localHash = localStorage.getItem(category);
 
     if (categoryHash?.hash != localHash) {
       let updatedSystemStateData = await actor.getSystemState();

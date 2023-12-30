@@ -7,7 +7,7 @@ import type {
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../utils/Helpers";
+import { isSuccess, replacer } from "../utils/Helpers";
 
 function createMonthlyLeaderboardStore() {
   const { subscribe, set } = writable<MonthlyLeaderboardDTO[] | null>(null);
@@ -25,17 +25,41 @@ function createMonthlyLeaderboardStore() {
   );
 
   async function sync() {
-    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
+    let category = "monthly_leaderboards";
+    const newHashValues = await actor.getDataHashes();
+
+    let error = isSuccess(newHashValues);
+    if (error) {
+      console.error("Error syncing monthly leaderboard store");
+      return;
+    }
+
+    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+
+    let categoryHash =
+      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
+      null;
     const localHash = localStorage.getItem(category);
-    if (liveHash?.hash != localHash) {
+
+    if (categoryHash?.hash != localHash) {
       let updatedLeaderboardData = await actor.getMonthlyLeaderboards();
-      set(updatedLeaderboardData);
       localStorage.setItem(
         category,
         JSON.stringify(updatedLeaderboardData, replacer)
       );
-      localStorage.setItem(category, liveHash?.hash ?? "");
+      localStorage.setItem(category, categoryHash?.hash ?? "");
+      set(updatedLeaderboardData);
+    } else {
+      const cachedMonthlyLeaderboardsData = localStorage.getItem(category);
+      let cachedMonthlyLeaderboards: MonthlyLeaderboardDTO[] = [];
+      try {
+        cachedMonthlyLeaderboards = JSON.parse(
+          cachedMonthlyLeaderboardsData || "[]"
+        );
+      } catch (e) {
+        cachedMonthlyLeaderboards = [];
+      }
+      set(cachedMonthlyLeaderboards);
     }
   }
 

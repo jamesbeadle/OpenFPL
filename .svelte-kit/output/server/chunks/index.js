@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "sck4l9"
+  version_hash: "locf3z"
 };
 function get_hooks() {
   return {};
@@ -4194,6 +4194,9 @@ function convertFixtureStatus(fixtureStatus) {
     return FixtureStatus.VERIFIED;
   return FixtureStatus.UNPLAYED;
 }
+function isSuccess(response) {
+  return response && response.ok !== void 0;
+}
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
   let actor = ActorFactory.createActor(
@@ -4203,15 +4206,21 @@ function createSystemStore() {
   async function sync() {
     let category = "system_state";
     const newHashValues = await actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
+    let error2 = isSuccess(newHashValues);
+    if (error2) {
+      console.error("Error syncing system store");
+      return;
+    }
+    let dataCacheValues = newHashValues.ok;
+    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveHash?.hash != localHash) {
+    if (categoryHash?.hash != localHash) {
       let updatedSystemStateData = await actor.getSystemState();
       localStorage.setItem(
         "system_state_data",
         JSON.stringify(updatedSystemStateData, replacer)
       );
-      localStorage.setItem(category, liveHash?.hash ?? "");
+      localStorage.setItem(category, categoryHash?.hash ?? "");
       set(updatedSystemStateData);
     } else {
       const cachedSystemStateData = localStorage.getItem("system_state_data");
@@ -4255,25 +4264,31 @@ function createSystemStore() {
 const systemStore = createSystemStore();
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
-  const actor = ActorFactory.createActor(
+  let actor = ActorFactory.createActor(
     idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
     let category = "fixtures";
     const newHashValues = await actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
+    let error2 = isSuccess(newHashValues);
+    if (error2) {
+      console.error("Error syncing fixture store");
+      return;
+    }
+    let dataCacheValues = newHashValues.ok;
+    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveHash?.hash != localHash) {
+    if (categoryHash?.hash != localHash) {
       let updatedFixturesData = await actor.getFixtures();
       localStorage.setItem(
-        "fixtures_data",
+        category,
         JSON.stringify(updatedFixturesData, replacer)
       );
-      localStorage.setItem(category, liveHash?.hash ?? "");
+      localStorage.setItem(category, categoryHash?.hash ?? "");
       set(updatedFixturesData);
     } else {
-      const cachedFixturesData = localStorage.getItem("fixtures_data");
+      const cachedFixturesData = localStorage.getItem(category);
       let cachedFixtures = [];
       try {
         cachedFixtures = JSON.parse(cachedFixturesData || "[]");
@@ -4316,7 +4331,7 @@ function createFixtureStore() {
 const fixtureStore = createFixtureStore();
 function createTeamStore() {
   const { subscribe: subscribe2, set } = writable([]);
-  const actor = ActorFactory.createActor(
+  let actor = ActorFactory.createActor(
     idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
@@ -4788,7 +4803,7 @@ function createManagerStore() {
   systemStore.subscribe((value) => {
     systemState = value;
   });
-  const actor = ActorFactory.createActor(
+  let actor = ActorFactory.createActor(
     idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
@@ -4954,19 +4969,24 @@ function createCountriesStore() {
   async function sync() {
     let category = "countries";
     const newHashValues = await actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
+    let error2 = isSuccess(newHashValues);
+    if (error2) {
+      console.error("Error syncing fixture store");
+      return;
+    }
+    let dataCacheValues = newHashValues.ok;
+    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
-    if (liveHash?.hash != localHash) {
+    if (categoryHash?.hash != localHash) {
       let updatedCountriesData = await actor.getCountries();
-      console.log(updatedCountriesData);
       localStorage.setItem(
-        "countries_data",
+        category,
         JSON.stringify(updatedCountriesData, replacer)
       );
-      localStorage.setItem(category, liveHash?.hash ?? "");
+      localStorage.setItem(category, categoryHash?.hash ?? "");
       set(updatedCountriesData);
     } else {
-      const cachedCountriesData = localStorage.getItem("countries_data");
+      const cachedCountriesData = localStorage.getItem(category);
       let cachedCountries = null;
       try {
         cachedCountries = JSON.parse(cachedCountriesData || "[]");
@@ -5723,17 +5743,35 @@ function createMonthlyLeaderboardStore() {
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
+    let category2 = "monthly_leaderboards";
     const newHashValues = await actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
-    if (liveHash?.hash != localHash) {
+    let error2 = isSuccess(newHashValues);
+    if (error2) {
+      console.error("Error syncing monthly leaderboard store");
+      return;
+    }
+    let dataCacheValues = newHashValues.ok;
+    let categoryHash = dataCacheValues.find((x) => x.category === category2) ?? null;
+    const localHash = localStorage.getItem(category2);
+    if (categoryHash?.hash != localHash) {
       let updatedLeaderboardData = await actor.getMonthlyLeaderboards();
-      set(updatedLeaderboardData);
       localStorage.setItem(
-        category,
+        category2,
         JSON.stringify(updatedLeaderboardData, replacer)
       );
-      localStorage.setItem(category, liveHash?.hash ?? "");
+      localStorage.setItem(category2, categoryHash?.hash ?? "");
+      set(updatedLeaderboardData);
+    } else {
+      const cachedMonthlyLeaderboardsData = localStorage.getItem(category2);
+      let cachedMonthlyLeaderboards = [];
+      try {
+        cachedMonthlyLeaderboards = JSON.parse(
+          cachedMonthlyLeaderboardsData || "[]"
+        );
+      } catch (e) {
+        cachedMonthlyLeaderboards = [];
+      }
+      set(cachedMonthlyLeaderboards);
     }
   }
   async function getMonthlyLeaderboard(seasonId, clubId, month, currentPage) {
@@ -5851,7 +5889,6 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 function createGovernanceStore() {
-  const { subscribe: subscribe2, set } = writable([]);
   async function submitFixtureData(fixtureId, allPlayerEvents) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
@@ -5868,7 +5905,6 @@ function createGovernanceStore() {
     }
   }
   return {
-    subscribe: subscribe2,
     submitFixtureData
   };
 }
