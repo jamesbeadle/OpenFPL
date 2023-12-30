@@ -42,25 +42,42 @@ function createSeasonLeaderboardStore() {
   }
 
   async function getSeasonLeaderboard(
-    seasonId: number
+    seasonId: number,
+    currentPage: number
   ): Promise<SeasonLeaderboardDTO> {
-    const cachedSeasonLeaderboardData = localStorage.getItem(category);
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
 
-    let cachedSeasonLeaderboard: SeasonLeaderboardDTO;
-    try {
-      cachedSeasonLeaderboard = JSON.parse(
-        cachedSeasonLeaderboardData ||
-          "{entries: [], seasonId: 0, totalEntries: 0n }"
-      );
-    } catch (e) {
-      cachedSeasonLeaderboard = {
-        entries: [],
-        seasonId: 0,
-        totalEntries: 0n,
-      };
+    if (currentPage <= 4 && seasonId == systemState?.calculationSeasonId) {
+      const cachedData = localStorage.getItem(category);
+
+      if (cachedData) {
+        let cachedSeasonLeaderboard: SeasonLeaderboardDTO;
+        cachedSeasonLeaderboard = JSON.parse(
+          cachedData || "{entries: [], seasonId: 0, totalEntries: 0n }"
+        );
+
+        if (cachedSeasonLeaderboard) {
+          return {
+            ...cachedSeasonLeaderboard,
+            entries: cachedSeasonLeaderboard.entries.slice(
+              offset,
+              offset + limit
+            ),
+          };
+        }
+      }
     }
 
-    return cachedSeasonLeaderboard;
+    let leaderboardData = await actor.getSeasonLeaderboard(
+      seasonId,
+      limit,
+      offset
+    );
+
+    localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
+
+    return leaderboardData;
   }
 
   return {

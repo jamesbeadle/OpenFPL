@@ -79,12 +79,8 @@ function createWeeklyLeaderboardStore() {
       limit,
       offset
     );
-    
-    set(leaderboardData);
-    localStorage.setItem(
-      category,
-      JSON.stringify(leaderboardData, replacer)
-    );
+
+    localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
 
     return leaderboardData;
   }

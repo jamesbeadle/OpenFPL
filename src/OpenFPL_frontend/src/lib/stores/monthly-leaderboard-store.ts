@@ -31,7 +31,10 @@ function createMonthlyLeaderboardStore() {
     if (liveHash?.hash != localHash) {
       let updatedLeaderboardData = await actor.getMonthlyLeaderboards();
       set(updatedLeaderboardData);
-      localStorage.setItem(category, JSON.stringify(updatedLeaderboardData, replacer));
+      localStorage.setItem(
+        category,
+        JSON.stringify(updatedLeaderboardData, replacer)
+      );
       localStorage.setItem(category, liveHash?.hash ?? "");
     }
   }

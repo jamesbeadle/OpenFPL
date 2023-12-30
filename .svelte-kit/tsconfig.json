@@ -1,48 +1,37 @@
 {
-	"compilerOptions": {
-		"paths": {
-			"$lib": [
-				"../src/OpenFPL_frontend/src/lib"
-			],
-			"$lib/*": [
-				"../src/OpenFPL_frontend/src/lib/*"
-			]
-		},
-		"rootDirs": [
-			"..",
-			"./types"
-		],
-		"importsNotUsedAsValues": "error",
-		"isolatedModules": true,
-		"preserveValueImports": true,
-		"lib": [
-			"esnext",
-			"DOM",
-			"DOM.Iterable"
-		],
-		"moduleResolution": "node",
-		"module": "esnext",
-		"noEmit": true,
-		"target": "esnext",
-		"ignoreDeprecations": "5.0"
-	},
-	"include": [
-		"ambient.d.ts",
-		"./types/**/$types.d.ts",
-		"../vite.config.js",
-		"../vite.config.ts",
-		"../src/**/*.js",
-		"../src/**/*.ts",
-		"../src/**/*.svelte",
-		"../tests/**/*.js",
-		"../tests/**/*.ts",
-		"../tests/**/*.svelte"
-	],
-	"exclude": [
-		"../node_modules/**",
-		"./[!ambient.d.ts]**",
-		"../src/OpenFPL_frontend/src/service-worker.js",
-		"../src/OpenFPL_frontend/src/service-worker.ts",
-		"../src/OpenFPL_frontend/src/service-worker.d.ts"
-	]
+  "compilerOptions": {
+    "paths": {
+      "$lib": ["../src/OpenFPL_frontend/src/lib"],
+      "$lib/*": ["../src/OpenFPL_frontend/src/lib/*"]
+    },
+    "rootDirs": ["..", "./types"],
+    "importsNotUsedAsValues": "error",
+    "isolatedModules": true,
+    "preserveValueImports": true,
+    "lib": ["esnext", "DOM", "DOM.Iterable"],
+    "moduleResolution": "node",
+    "module": "esnext",
+    "noEmit": true,
+    "target": "esnext",
+    "ignoreDeprecations": "5.0"
+  },
+  "include": [
+    "ambient.d.ts",
+    "./types/**/$types.d.ts",
+    "../vite.config.js",
+    "../vite.config.ts",
+    "../src/**/*.js",
+    "../src/**/*.ts",
+    "../src/**/*.svelte",
+    "../tests/**/*.js",
+    "../tests/**/*.ts",
+    "../tests/**/*.svelte"
+  ],
+  "exclude": [
+    "../node_modules/**",
+    "./[!ambient.d.ts]**",
+    "../src/OpenFPL_frontend/src/service-worker.js",
+    "../src/OpenFPL_frontend/src/service-worker.ts",
+    "../src/OpenFPL_frontend/src/service-worker.d.ts"
+  ]
 }

@@ -83,7 +83,7 @@ export interface FantasyTeamSnapshot {
 }
 export interface FixtureDTO {
   id: number;
-  status: FixtureStatus;
+  status: FixtureStatusType;
   highestScoringPlayerId: number;
   seasonId: SeasonId;
   awayClubId: ClubId;
@@ -95,7 +95,7 @@ export interface FixtureDTO {
   awayGoals: number;
 }
 export type FixtureId = number;
-export type FixtureStatus =
+export type FixtureStatusType =
   | { Unplayed: null }
   | { Finalised: null }
   | { Active: null }
@@ -279,13 +279,14 @@ export interface RescheduleFixtureDTO {
 }
 export type Result = { ok: string } | { err: string };
 export type Result_1 = { ok: null } | { err: Error };
-export type Result_10 = { ok: MonthlyLeaderboardDTO } | { err: Error };
-export type Result_11 = { ok: ManagerGameweekDTO } | { err: Error };
-export type Result_12 = { ok: ManagerDTO } | { err: Error };
-export type Result_13 = { ok: Array<FixtureDTO> } | { err: Error };
-export type Result_14 = { ok: Array<DataCacheDTO> } | { err: Error };
-export type Result_15 = { ok: Array<CountryDTO> } | { err: Error };
-export type Result_16 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_10 = { ok: Array<MonthlyLeaderboardDTO> } | { err: Error };
+export type Result_11 = { ok: MonthlyLeaderboardDTO } | { err: Error };
+export type Result_12 = { ok: ManagerGameweekDTO } | { err: Error };
+export type Result_13 = { ok: ManagerDTO } | { err: Error };
+export type Result_14 = { ok: Array<FixtureDTO> } | { err: Error };
+export type Result_15 = { ok: Array<DataCacheDTO> } | { err: Error };
+export type Result_16 = { ok: Array<CountryDTO> } | { err: Error };
+export type Result_17 = { ok: Array<ClubDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
@@ -372,7 +373,7 @@ export interface UpdateFantasyTeamDTO {
   captainId: PlayerId;
 }
 export interface UpdateFixtureDTO {
-  status: FixtureStatus;
+  status: FixtureStatusType;
   fixtureId: FixtureId;
   seasonId: SeasonId;
   kickOff: bigint;
@@ -420,19 +421,20 @@ export interface _SERVICE {
   executeUnretirePlayer: ActorMethod<[UnretirePlayerDTO], undefined>;
   executeUpdateClub: ActorMethod<[UpdateClubDTO], undefined>;
   executeUpdatePlayer: ActorMethod<[UpdatePlayerDTO], undefined>;
-  getClubs: ActorMethod<[], Result_16>;
-  getCountries: ActorMethod<[], Result_15>;
-  getDataHashes: ActorMethod<[], Result_14>;
-  getFixtures: ActorMethod<[SeasonId], Result_13>;
-  getManager: ActorMethod<[], Result_12>;
+  getClubs: ActorMethod<[], Result_17>;
+  getCountries: ActorMethod<[], Result_16>;
+  getDataHashes: ActorMethod<[], Result_15>;
+  getFixtures: ActorMethod<[SeasonId], Result_14>;
+  getManager: ActorMethod<[], Result_13>;
   getManagerGameweek: ActorMethod<
     [string, SeasonId, GameweekNumber],
-    Result_11
+    Result_12
   >;
   getMonthlyLeaderboard: ActorMethod<
     [SeasonId, ClubId, CalendarMonth, bigint, bigint],
-    Result_10
+    Result_11
   >;
+  getMonthlyLeaderboards: ActorMethod<[SeasonId, CalendarMonth], Result_10>;
   getPlayerDetailsForGameweek: ActorMethod<
     [SeasonId, GameweekNumber],
     Result_9

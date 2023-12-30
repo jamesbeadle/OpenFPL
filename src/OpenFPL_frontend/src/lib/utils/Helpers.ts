@@ -6,6 +6,7 @@ import type { TeamStats } from "$lib/types/team-stats";
 import * as FlagIcons from "svelte-flag-icons";
 import type {
   ClubDTO,
+  FixtureStatusType,
   PlayerDTO,
   PlayerEventType,
   PlayerPosition,
@@ -242,12 +243,14 @@ export function getFlagComponent(countryId: number) {
       return FlagIcons.Dm;
     case 50:
       return FlagIcons.Do;
-    case 53:
-      return FlagIcons.Sv;
+    case 50:
+      return FlagIcons.Do;
     case 51:
       return FlagIcons.Ec;
     case 52:
       return FlagIcons.Eg;
+    case 53:
+      return FlagIcons.Sv;
     case 54:
       return FlagIcons.Gq;
     case 55:
@@ -462,8 +465,6 @@ export function getFlagComponent(countryId: number) {
       return FlagIcons.Si;
     case 160:
       return FlagIcons.Sb;
-    case 162:
-      return FlagIcons.Za;
     case 161:
       return FlagIcons.So;
     case 162:
@@ -552,7 +553,7 @@ export function updateTableData(
 
   const relevantFixtures = fixtures.filter(
     (fixture) =>
-      fixture.fixture.status === 3 &&
+      convertFixtureStatus(fixture.fixture.status) === 3 &&
       fixture.fixture.gameweek <= selectedGameweek
   );
 
@@ -702,6 +703,16 @@ export function convertIntToEvent(playerEvent: PlayerEvent): PlayerEventType {
   if (playerEvent == PlayerEvent.HighestScoringPlayer)
     return { HighestScoringPlayer: null };
   return { Appearance: null };
+}
+
+export function convertFixtureStatus(
+  fixtureStatus: FixtureStatusType
+): FixtureStatus {
+  if ("Goalkeeper" in fixtureStatus) return FixtureStatus.UNPLAYED;
+  if ("Defender" in fixtureStatus) return FixtureStatus.ACTIVE;
+  if ("Midfielder" in fixtureStatus) return FixtureStatus.COMPLETED;
+  if ("Forward" in fixtureStatus) return FixtureStatus.VERIFIED;
+  return FixtureStatus.UNPLAYED;
 }
 
 export function getDateFromBigInt(dateMS: number): string {

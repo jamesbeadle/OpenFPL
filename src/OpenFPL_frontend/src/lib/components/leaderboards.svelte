@@ -16,11 +16,12 @@
     { length: $systemStore?.calculationGameweek ?? 1 },
     (_, i) => i + 1
   );
-  let selectedGameweek: number;
   let currentPage = 1;
   let itemsPerPage = 25;
 
   let selectedLeaderboardType: number = 1;
+  let selectedSeasonId: number;
+  let selectedGameweek: number;
   let selectedMonth: number;
   let selectedTeamId: number;
 
@@ -44,6 +45,7 @@
       await monthlyLeaderboardStore.sync();
       await seasonLeaderboardStore.sync();
 
+      selectedSeasonId = $systemStore?.calculationSeasonId ?? 1;
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
       selectedMonth = $systemStore?.calculationMonth ?? 8;
       selectedTeamId = $authSignedInStore
@@ -55,7 +57,11 @@
             a.friendlyName.localeCompare(b.friendlyName)
           )[0].id;
 
-      let leaderboardData = await leaderboardStore.getWeeklyLeaderboard();
+      let leaderboardData = await weeklyLeaderboardStore.getWeeklyLeaderboard(
+        selectedSeasonId,
+        selectedGameweek,
+        currentPage
+      );
       leaderboard = leaderboardData;
     } catch (error) {
       toastsError({
@@ -83,22 +89,23 @@
     try {
       switch (selectedLeaderboardType) {
         case 1:
-          leaderboard = await leaderboardStore.getWeeklyLeaderboardPage(
+          leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard(
+            selectedSeasonId,
             selectedGameweek,
-            currentPage,
-            $systemStore?.calculationGameweek ?? 1,
-            $systemStore?.calculationSeasonId ?? 1
+            currentPage
           );
           break;
         case 2:
-          leaderboard = await leaderboardStore.getMonthlyLeaderboard(
+          leaderboard = await monthlyLeaderboardStore.getMonthlyLeaderboard(
+            selectedSeasonId,
             selectedTeamId,
             selectedMonth,
             currentPage
           );
           break;
         case 3:
-          leaderboard = await leaderboardStore.getSeasonLeaderboardPage(
+          leaderboard = await seasonLeaderboardStore.getSeasonLeaderboard(
+            selectedSeasonId,
             currentPage
           );
           break;

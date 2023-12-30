@@ -1,15 +1,15 @@
 {
-	"/": [],
-	"/add-fixture-data": [],
-	"/admin": [],
-	"/club": [],
-	"/fixture-validation": [],
-	"/gameplay-rules": [],
-	"/governance": [],
-	"/manager": [],
-	"/pick-team": [],
-	"/player": [],
-	"/profile": [],
-	"/terms": [],
-	"/whitepaper": []
+  "/": [],
+  "/add-fixture-data": [],
+  "/admin": [],
+  "/club": [],
+  "/fixture-validation": [],
+  "/gameplay-rules": [],
+  "/governance": [],
+  "/manager": [],
+  "/pick-team": [],
+  "/player": [],
+  "/profile": [],
+  "/terms": [],
+  "/whitepaper": []
 }

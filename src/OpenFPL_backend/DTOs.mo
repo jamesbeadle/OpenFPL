@@ -256,7 +256,7 @@ module DTOs {
     awayClubId : T.ClubId;
     homeGoals : Nat8;
     awayGoals : Nat8;
-    status : T.FixtureStatus;
+    status : T.FixtureStatusType;
     highestScoringPlayerId : Nat16;
     events : [T.PlayerEventData];
   };
@@ -294,7 +294,7 @@ module DTOs {
     fixtureId : T.FixtureId;
     gameweek : T.GameweekNumber;
     kickOff : Int;
-    status : T.FixtureStatus;
+    status : T.FixtureStatusType;
   };
 
   public type ClubDTO = {

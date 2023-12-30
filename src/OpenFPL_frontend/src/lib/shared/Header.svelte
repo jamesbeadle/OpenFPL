@@ -5,7 +5,7 @@
   import { countriesStore } from "$lib/stores/country-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { teamStore } from "$lib/stores/team-store";
-  import { leaderboardStore } from "$lib/stores/leaderboard-store";
+  import { weeklyLeaderboardStore } from "$lib/stores/weekly-leaderboard-store";
   import { playerStore } from "$lib/stores/player-store";
   import { playerEventsStore } from "$lib/stores/player-events-store";
   import { userStore } from "$lib/stores/user-store";
@@ -32,7 +32,7 @@
       await countriesStore.sync();
       await fixtureStore.sync();
       await teamStore.sync();
-      await leaderboardStore.syncWeeklyLeaderboard();
+      await weeklyLeaderboardStore.sync();
       await playerStore.sync();
       await playerEventsStore.sync();
     } catch (error) {

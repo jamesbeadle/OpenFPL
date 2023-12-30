@@ -38,7 +38,7 @@ module Types {
     #Striped;
   };
 
-  public type FixtureStatus = {
+  public type FixtureStatusType = {
     #Unplayed;
     #Active;
     #Complete;
@@ -211,7 +211,7 @@ module Types {
     awayClubId : ClubId;
     homeGoals : Nat8;
     awayGoals : Nat8;
-    status : FixtureStatus;
+    status : FixtureStatusType;
     highestScoringPlayerId : PlayerId;
     events : List.List<PlayerEventData>;
   };

@@ -2,7 +2,7 @@ export const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
   const List_1 = IDL.Rec();
   const SeasonId = IDL.Nat16;
-  const FixtureStatus = IDL.Variant({
+  const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
     Finalised: IDL.Null,
     Active: IDL.Null,
@@ -35,7 +35,7 @@ export const idlFactory = ({ IDL }) => {
   const GameweekNumber = IDL.Nat8;
   const FixtureDTO = IDL.Record({
     id: IDL.Nat32,
-    status: FixtureStatus,
+    status: FixtureStatusType,
     highestScoringPlayerId: IDL.Nat16,
     seasonId: SeasonId,
     awayClubId: ClubId,
@@ -152,19 +152,19 @@ export const idlFactory = ({ IDL }) => {
     AlreadyExists: IDL.Null,
     InvalidTeamError: IDL.Null,
   });
-  const Result_16 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
+  const Result_17 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error });
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
     name: IDL.Text,
   });
-  const Result_15 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error });
+  const Result_16 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error });
   const DataCacheDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_14 = IDL.Variant({
+  const Result_15 = IDL.Variant({
     ok: IDL.Vec(DataCacheDTO),
     err: Error,
   });
-  const Result_13 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error });
+  const Result_14 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error });
   const FantasyTeamSnapshot = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     teamValueQuarterMillions: IDL.Nat16,
@@ -213,7 +213,7 @@ export const idlFactory = ({ IDL }) => {
     principalId: IDL.Text,
     seasonPositionText: IDL.Text,
   });
-  const Result_12 = IDL.Variant({ ok: ManagerDTO, err: Error });
+  const Result_13 = IDL.Variant({ ok: ManagerDTO, err: Error });
   const ManagerGameweekDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     teamValueQuarterMillions: IDL.Nat16,
@@ -245,7 +245,7 @@ export const idlFactory = ({ IDL }) => {
     points: IDL.Int16,
     monthlyBonusesAvailable: IDL.Nat8,
   });
-  const Result_11 = IDL.Variant({ ok: ManagerGameweekDTO, err: Error });
+  const Result_12 = IDL.Variant({ ok: ManagerGameweekDTO, err: Error });
   const CalendarMonth = IDL.Nat8;
   const LeaderboardEntry = IDL.Record({
     username: IDL.Text,
@@ -261,8 +261,12 @@ export const idlFactory = ({ IDL }) => {
     seasonId: SeasonId,
     entries: IDL.Vec(LeaderboardEntry),
   });
-  const Result_10 = IDL.Variant({
+  const Result_11 = IDL.Variant({
     ok: MonthlyLeaderboardDTO,
+    err: Error,
+  });
+  const Result_10 = IDL.Variant({
+    ok: IDL.Vec(MonthlyLeaderboardDTO),
     err: Error,
   });
   const PlayerPointsDTO = IDL.Record({
@@ -387,7 +391,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_1 = IDL.Variant({ ok: IDL.Null, err: Error });
   const UpdateFixtureDTO = IDL.Record({
-    status: FixtureStatus,
+    status: FixtureStatusType,
     fixtureId: FixtureId,
     seasonId: SeasonId,
     kickOff: IDL.Int,
@@ -421,18 +425,23 @@ export const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getClubs: IDL.Func([], [Result_16], ["query"]),
-    getCountries: IDL.Func([], [Result_15], ["query"]),
-    getDataHashes: IDL.Func([], [Result_14], ["query"]),
-    getFixtures: IDL.Func([SeasonId], [Result_13], ["query"]),
-    getManager: IDL.Func([], [Result_12], []),
+    getClubs: IDL.Func([], [Result_17], ["query"]),
+    getCountries: IDL.Func([], [Result_16], ["query"]),
+    getDataHashes: IDL.Func([], [Result_15], ["query"]),
+    getFixtures: IDL.Func([SeasonId], [Result_14], ["query"]),
+    getManager: IDL.Func([], [Result_13], []),
     getManagerGameweek: IDL.Func(
       [IDL.Text, SeasonId, GameweekNumber],
-      [Result_11],
+      [Result_12],
       []
     ),
     getMonthlyLeaderboard: IDL.Func(
       [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat],
+      [Result_11],
+      []
+    ),
+    getMonthlyLeaderboards: IDL.Func(
+      [SeasonId, CalendarMonth],
       [Result_10],
       []
     ),
