@@ -30,7 +30,7 @@ function createWeeklyLeaderboardStore() {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getWeeklyLeaderboardCache(
+      let updatedLeaderboardData = await actor.getWeeklyLeaderboard(
         systemState?.calculationSeasonId,
         systemState?.calculationGameweek
       );
@@ -42,31 +42,49 @@ function createWeeklyLeaderboardStore() {
     }
   }
 
-  async function getWeeklyLeaderboard(): Promise<WeeklyLeaderboardDTO> {
-    const cachedWeeklyLeaderboardData = localStorage.getItem(
-      "weekly_leaderboard_data"
-    );
+  async function getWeeklyLeaderboard(
+    gameweek: number,
+    currentPage: number
+    ): Promise<WeeklyLeaderboardDTO> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
 
-    let cachedWeeklyLeaderboard: WeeklyLeaderboardDTO;
-    try {
-      cachedWeeklyLeaderboard = JSON.parse(
-        cachedWeeklyLeaderboardData ||
-          "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
-      );
-    } catch (e) {
-      cachedWeeklyLeaderboard = {
-        entries: [],
-        gameweek: 0,
-        seasonId: 0,
-        totalEntries: 0n,
-      };
+    if(currentPage <= 4 && gameweek == systemState?.calculationGameweek){
+        const cachedData = localStorage.getItem(
+            "weekly_leaderboard_data"
+        );
+        
+        if (cachedData) {
+            let cachedWeeklyLeaderboard: WeeklyLeaderboardDTO;
+            cachedWeeklyLeaderboard = JSON.parse(
+                cachedData ||
+                  "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
+            );
+
+            if(cachedWeeklyLeaderboard){
+                return {
+                    ...cachedWeeklyLeaderboard,
+                    entries: cachedWeeklyLeaderboard.entries.slice(offset, offset + limit),
+                }
+            }
+        }
     }
 
-    return cachedWeeklyLeaderboard;
+    let leaderboardData = await actor.getweeklyLeaderboard(
+        systemState?.calculationSeasonId,
+        gameweek,
+        limit,
+        offset
+      );
+      return leaderboardData;
+
   }
 
   async function getLeadingWeeklyTeam(): Promise<LeaderboardEntry> {
-    let weeklyLeaderboard = await getWeeklyLeaderboard();
+    let weeklyLeaderboard = await getWeeklyLeaderboard(
+        systemState.calculationGameweek,
+        1
+    );
     return weeklyLeaderboard.entries[0];
   }
 

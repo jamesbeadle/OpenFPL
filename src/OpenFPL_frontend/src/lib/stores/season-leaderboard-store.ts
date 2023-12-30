@@ -30,7 +30,7 @@ function createSeasonLeaderboardStore() {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getSeasonLeaderboardCache(
+      let updatedLeaderboardData = await actor.getSeasonLeaderboard(
         systemState?.calculationSeasonId
       );
       localStorage.setItem(

@@ -2,15 +2,15 @@ import { authStore } from "$lib/stores/auth.store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
-  DataCache,
-  Fixture,
+  DataCacheDTO,
+  FixtureDTO,
   UpdateFixtureDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { replacer } from "../utils/Helpers";
 
 function createFixtureStore() {
-  const { subscribe, set } = writable<Fixture[]>([]);
+  const { subscribe, set } = writable<FixtureDTO[]>([]);
 
   const actor = ActorFactory.createActor(
     idlFactory,
@@ -19,13 +19,13 @@ function createFixtureStore() {
 
   async function sync() {
     let category = "fixtures";
-    const newHashValues: DataCache[] =
-      (await actor.getDataHashes()) as DataCache[];
+    const newHashValues: DataCacheDTO[] =
+      (await actor.getDataHashes()) as DataCacheDTO[];
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
 
     if (liveHash?.hash != localHash) {
-      let updatedFixturesData = (await actor.getFixtures()) as Fixture[];
+      let updatedFixturesData = (await actor.getFixtures()) as FixtureDTO[];
       localStorage.setItem(
         "fixtures_data",
         JSON.stringify(updatedFixturesData, replacer)
@@ -34,7 +34,7 @@ function createFixtureStore() {
       set(updatedFixturesData);
     } else {
       const cachedFixturesData = localStorage.getItem("fixtures_data");
-      let cachedFixtures: Fixture[] = [];
+      let cachedFixtures: FixtureDTO[] = [];
       try {
         cachedFixtures = JSON.parse(cachedFixturesData || "[]");
       } catch (e) {
@@ -44,8 +44,8 @@ function createFixtureStore() {
     }
   }
 
-  async function getNextFixture(): Promise<Fixture | undefined> {
-    let fixtures: Fixture[] = [];
+  async function getNextFixture(): Promise<FixtureDTO | undefined> {
+    let fixtures: FixtureDTO[] = [];
     await sync();
     await subscribe((value) => {
       fixtures = value;

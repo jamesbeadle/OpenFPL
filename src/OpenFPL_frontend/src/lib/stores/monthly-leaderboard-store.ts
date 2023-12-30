@@ -3,7 +3,6 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
-  LeaderboardEntry,
   MonthlyLeaderboardDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -30,10 +29,11 @@ function createMonthlyLeaderboardStore() {
     let liveHash = newHashValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (liveHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getMonthlyLeaderboardCache(
+      let updatedLeaderboardData = await actor.getMonthlyLeaderboard(
         systemState?.calculationSeasonId,
-        systemState?.calculationGameweek
+        systemState?.calculationMonth
       );
+      set(updatedLeaderboardData)
       localStorage.setItem(
         "monthly_leaderboard_data",
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -51,7 +51,7 @@ function createMonthlyLeaderboardStore() {
     const offset = (currentPage - 1) * limit;
     
 
-    if(currentPage < 4 && month == systemState?.calculationMonth){
+    if(currentPage <= 4 && month == systemState?.calculationMonth){
         const cachedData = localStorage.getItem(
             "monthly_leaderboard_data"
         );
