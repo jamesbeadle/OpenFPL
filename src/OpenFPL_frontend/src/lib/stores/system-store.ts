@@ -20,8 +20,8 @@ function createSystemStore() {
   async function sync() {
     let category = "system_state";
     const newHashValues = await actor.getDataHashes();
-    console.log(newHashValues)
-    
+    console.log(newHashValues);
+
     let error = isError(newHashValues);
     if (error) {
       console.error("Error syncing system store");
@@ -37,8 +37,8 @@ function createSystemStore() {
 
     if (categoryHash?.hash != localHash) {
       let updatedSystemStateData = await actor.getSystemState();
-      console.log(updatedSystemStateData)
-      if(isError(updatedSystemStateData)){
+      console.log(updatedSystemStateData);
+      if (isError(updatedSystemStateData)) {
         console.error("Error syncing system store");
         return;
       }

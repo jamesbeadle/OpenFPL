@@ -29,7 +29,7 @@ function createPlayerStore() {
 
   async function sync() {
     let category = "players";
-    
+
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);

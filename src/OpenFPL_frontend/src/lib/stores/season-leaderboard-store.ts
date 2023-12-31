@@ -3,7 +3,6 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
-  MonthlyLeaderboardDTO,
   SeasonLeaderboardDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -26,7 +25,6 @@ function createSeasonLeaderboardStore() {
   );
 
   async function sync() {
-
     let category = "season_leaderboard";
     const newHashValues = await actor.getDataHashes();
 
@@ -55,11 +53,22 @@ function createSeasonLeaderboardStore() {
       set(updatedLeaderboardData);
     } else {
       const cachedLeaderboardData = localStorage.getItem(category);
-      let cachedSeasonLeaderboard: SeasonLeaderboardDTO = {entries: [], seasonId: 0, totalEntries: 0n };
+      let cachedSeasonLeaderboard: SeasonLeaderboardDTO = {
+        entries: [],
+        seasonId: 0,
+        totalEntries: 0n,
+      };
       try {
-        cachedSeasonLeaderboard = JSON.parse(cachedLeaderboardData || "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }");
+        cachedSeasonLeaderboard = JSON.parse(
+          cachedLeaderboardData ||
+            "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
+        );
       } catch (e) {
-        cachedSeasonLeaderboard = {entries: [], seasonId: 0, totalEntries: 0n };
+        cachedSeasonLeaderboard = {
+          entries: [],
+          seasonId: 0,
+          totalEntries: 0n,
+        };
       }
       set(cachedSeasonLeaderboard);
     }

@@ -366,21 +366,21 @@ module Types {
   };
 
   public type WeeklyLeaderboardCanister = {
-    seasonId: SeasonId;
-    gameweek: GameweekNumber;
-    canisterId: Text;
+    seasonId : SeasonId;
+    gameweek : GameweekNumber;
+    canisterId : Text;
   };
 
   public type MonthlyLeaderboardCanister = {
-    seasonId: SeasonId;
-    month: CalendarMonth;
-    clubId: ClubId;
-    canisterId: Text;
+    seasonId : SeasonId;
+    month : CalendarMonth;
+    clubId : ClubId;
+    canisterId : Text;
   };
 
   public type SeasonLeaderboardCanister = {
-    seasonId: SeasonId;
-    canisterId: Text;
+    seasonId : SeasonId;
+    canisterId : Text;
   };
 
 };

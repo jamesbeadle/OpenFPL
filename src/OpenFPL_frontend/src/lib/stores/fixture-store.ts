@@ -8,24 +8,23 @@ import type {
   UpdateFixtureDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isError, isSuccess, replacer } from "../utils/Helpers";
+import { isError, replacer } from "../utils/Helpers";
 import { systemStore } from "./system-store";
 
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);
-  
+
   let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
     systemState = value as SystemStateDTO;
   });
-  
+
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
   async function sync() {
-    
     let category = "fixtures";
     const newHashValues = await actor.getDataHashes();
 
@@ -43,7 +42,9 @@ function createFixtureStore() {
     const localHash = localStorage.getItem(category);
 
     if (categoryHash?.hash != localHash) {
-      let updatedFixturesData = (await actor.getFixtures(systemState.calculationSeasonId)) as FixtureDTO[];
+      let updatedFixturesData = (await actor.getFixtures(
+        systemState.calculationSeasonId
+      )) as FixtureDTO[];
       localStorage.setItem(
         category,
         JSON.stringify(updatedFixturesData, replacer)

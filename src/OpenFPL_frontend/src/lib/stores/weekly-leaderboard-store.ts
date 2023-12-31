@@ -1,10 +1,8 @@
-import { systemStore } from "$lib/stores/system-store";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   LeaderboardEntry,
-  SystemStateDTO,
   WeeklyLeaderboardDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
@@ -14,7 +12,6 @@ function createWeeklyLeaderboardStore() {
   const { subscribe, set } = writable<WeeklyLeaderboardDTO | null>(null);
   const itemsPerPage = 25;
   const category = "weekly_leaderboard";
-  
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
@@ -45,10 +42,10 @@ function createWeeklyLeaderboardStore() {
         100,
         0
       );
-      console.log(updatedLeaderboardData)
+      console.log(updatedLeaderboardData);
 
-      if(isError(updatedLeaderboardData)){
-        console.error("error fetching leaderboard store")
+      if (isError(updatedLeaderboardData)) {
+        console.error("error fetching leaderboard store");
       }
 
       localStorage.setItem(
@@ -103,8 +100,16 @@ function createWeeklyLeaderboardStore() {
     return leaderboardData;
   }
 
-  async function getLeadingWeeklyTeam(seasonId: number, gameweek: number): Promise<LeaderboardEntry> {
-    let weeklyLeaderboard = await getWeeklyLeaderboard(seasonId, gameweek,1,0);
+  async function getLeadingWeeklyTeam(
+    seasonId: number,
+    gameweek: number
+  ): Promise<LeaderboardEntry> {
+    let weeklyLeaderboard = await getWeeklyLeaderboard(
+      seasonId,
+      gameweek,
+      1,
+      0
+    );
     return weeklyLeaderboard.entries[0];
   }
 

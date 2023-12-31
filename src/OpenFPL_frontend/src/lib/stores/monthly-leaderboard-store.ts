@@ -91,30 +91,30 @@ function createMonthlyLeaderboardStore() {
       }
     }
 
-    let leaderboardData = await actor.getClubLeaderboards(
+    let leaderboardData = (await actor.getClubLeaderboards(
       seasonId,
       month,
       clubId,
       limit,
       offset
-    ) as MonthlyLeaderboardDTO[];
+    )) as MonthlyLeaderboardDTO[];
 
-    if(leaderboardData){
+    if (leaderboardData) {
       let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
 
-      if(clubLeaderboard == null){
+      if (clubLeaderboard == null) {
         return {
           month: 0,
           clubId: 0,
           totalEntries: 0n,
           seasonId: 0,
-          entries: []
-        }
+          entries: [],
+        };
       }
 
       return {
         ...clubLeaderboard,
-        entries: clubLeaderboard.entries.slice(offset, offset + limit)
+        entries: clubLeaderboard.entries.slice(offset, offset + limit),
       };
     }
 

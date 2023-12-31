@@ -40,10 +40,13 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      console.log("syncing system store")
+      console.log("syncing system store");
       await systemStore.sync();
-      console.log("syncing leaderboard store")
-      await weeklyLeaderboardStore.sync($systemStore?.calculationSeasonId ?? 1, $systemStore?.calculationGameweek ?? 1);
+      console.log("syncing leaderboard store");
+      await weeklyLeaderboardStore.sync(
+        $systemStore?.calculationSeasonId ?? 1,
+        $systemStore?.calculationGameweek ?? 1
+      );
       await monthlyLeaderboardStore.sync();
       await seasonLeaderboardStore.sync();
 

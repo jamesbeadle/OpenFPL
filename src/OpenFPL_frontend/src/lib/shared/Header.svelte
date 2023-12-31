@@ -28,13 +28,16 @@
     try {
       await userStore.sync();
       await authStore.sync();
-      console.log("syncing system store")
+      console.log("syncing system store");
       await systemStore.sync();
       await countriesStore.sync();
       await fixtureStore.sync();
       await teamStore.sync();
-      console.log("syncing leaderboard store")
-      await weeklyLeaderboardStore.sync($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0);
+      console.log("syncing leaderboard store");
+      await weeklyLeaderboardStore.sync(
+        $systemStore?.calculationSeasonId ?? 0,
+        $systemStore?.calculationGameweek ?? 0
+      );
       await playerStore.sync();
       await playerEventsStore.sync();
     } catch (error) {
