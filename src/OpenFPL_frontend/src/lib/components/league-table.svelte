@@ -6,13 +6,13 @@
   import { systemStore } from "$lib/stores/system-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import { updateTableData } from "../utils/Helpers";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
   let gameweeks = Array.from(
-    { length: $systemStore?.activeGameweek ?? 1 },
+    { length: $systemStore?.calculationGameweek ?? 1 },
     (_, i) => i + 1
   );
   let tableData: any[] = [];
@@ -23,12 +23,12 @@
       if($teamStore.length == 0) return;
       await fixtureStore.sync();
       await systemStore.sync();
-      selectedGameweek = $systemStore?.activeGameweek ?? 1;
+      selectedGameweek = $systemStore?.calculationGameweek ?? 1;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
+        homeTeam: getTeamFromId(fixture.homeClubId),
+        awayTeam: getTeamFromId(fixture.awayClubId),
       }));
     } catch (error) {
       toastsError({
@@ -52,7 +52,7 @@
     selectedGameweek = Math.max(1, Math.min(38, selectedGameweek + delta));
   };
 
-  function getTeamFromId(teamId: number): Team | undefined {
+  function getTeamFromId(teamId: number): ClubDTO | undefined {
     return $teamStore.find((team) => team.id === teamId);
   }
 </script>
@@ -80,12 +80,12 @@
 
     <button
       class={`${
-        selectedGameweek === $systemStore?.activeGameweek
+        selectedGameweek === $systemStore?.calculationGameweek
           ? "bg-gray-500"
           : "fpl-button"
       } default-button ml-1`}
       on:click={() => changeGameweek(1)}
-      disabled={selectedGameweek === $systemStore?.activeGameweek}
+      disabled={selectedGameweek === $systemStore?.calculationGameweek}
     >
       &gt;
     </button>

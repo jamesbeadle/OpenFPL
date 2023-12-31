@@ -9,7 +9,7 @@
   import type {
     FantasyTeamSnapshot,
     ManagerDTO,
-    Team,
+    ClubDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
   import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
@@ -28,7 +28,7 @@
 
   let manager: ManagerDTO;
   let displayName = "";
-  let favouriteTeam: Team | null = null;
+  let favouriteTeam: ClubDTO | null = null;
   let selectedSeason = "";
   let joinedDate = "";
   let profilePicture: string;
@@ -40,9 +40,9 @@
       await teamStore.sync();
       if($teamStore.length == 0) return;
       await systemStore.sync();
-      manager = await managerStore.getManager(
+      manager = await managerStore.getPublicProfile(
         id ?? "",
-        $systemStore?.activeSeason.id ?? 1,
+        $systemStore?.calculationSeasonId ?? 1,
         $selectedGameweek ?? 1
       );
       displayName =

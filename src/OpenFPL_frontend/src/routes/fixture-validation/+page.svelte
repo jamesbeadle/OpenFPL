@@ -5,9 +5,10 @@
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { toastsError } from "$lib/stores/toasts-store";
-  import type { Team } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
   import { Spinner } from "@dfinity/gix-components";
+    import { convertFixtureStatus } from "$lib/utils/Helpers";
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let currentGameweek: number;
@@ -21,8 +22,8 @@
       if($teamStore.length == 0) return;
       await systemStore.sync();
       await playerStore.sync();
-      currentGameweek = $systemStore?.activeGameweek ?? 1;
-      currentSeasonName = $systemStore?.activeSeason.name ?? "";
+      currentGameweek = $systemStore?.calculationGameweek ?? 1;
+      currentSeasonName = $systemStore?.calculationSeasonName ?? "";
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching fixture validation list." },
@@ -38,7 +39,7 @@
     currentGameweek = Math.max(1, Math.min(38, currentGameweek + delta));
   };
 
-  function getTeamById(teamId: number): Team {
+  function getTeamById(teamId: number): ClubDTO {
     return $teamStore.find((x) => x.id === teamId)!;
   }
 </script>
@@ -97,23 +98,23 @@
 
             {#if $fixtureStore.filter((x) => x.gameweek === currentGameweek) && $fixtureStore.filter((x) => x.gameweek === currentGameweek).length > 0}
               {#each $fixtureStore.filter((x) => x.gameweek === currentGameweek) as fixture}
-                {@const homeTeam = getTeamById(fixture.homeTeamId)}
-                {@const awayTeam = getTeamById(fixture.awayTeamId)}
+                {@const homeTeam = getTeamById(fixture.homeClubId)}
+                {@const awayTeam = getTeamById(fixture.awayClubId)}
                 <div
                   class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer"
                 >
                   <div class="w-1/4 px-4">{homeTeam.friendlyName}</div>
                   <div class="w-1/4 px-4">{awayTeam.friendlyName}</div>
-                  {#if fixture.status == 0}<div class="w-1/4 px-4">
+                  {#if convertFixtureStatus(fixture.status) == 0}<div class="w-1/4 px-4">
                       Scheduled
                     </div>{/if}
-                  {#if fixture.status == 1}<div class="w-1/4 px-4">
+                  {#if convertFixtureStatus(fixture.status) == 1}<div class="w-1/4 px-4">
                       Active
                     </div>{/if}
-                  {#if fixture.status == 2}<div class="w-1/4 px-4">
+                  {#if convertFixtureStatus(fixture.status) == 2}<div class="w-1/4 px-4">
                       Completed
                     </div>{/if}
-                  {#if fixture.status == 3}<div class="w-1/4 px-4">
+                  {#if convertFixtureStatus(fixture.status) == 3}<div class="w-1/4 px-4">
                       Verified
                     </div>{/if}
                   <div class="w-1/4 px-4">

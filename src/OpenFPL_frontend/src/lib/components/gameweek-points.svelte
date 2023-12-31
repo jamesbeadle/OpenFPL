@@ -36,7 +36,7 @@
     try {
       await teamStore.sync();
       if($teamStore.length == 0) return;
-      
+
       await systemStore.sync();
       await fixtureStore.sync();
       await authStore.sync();
@@ -94,12 +94,12 @@
       let playerFixture = $fixtureStore.find(
         (x) =>
           x.gameweek === gameweekData.gameweek &&
-          (x.homeTeamId === playerTeamId || x.awayTeamId === playerTeamId)
+          (x.homeClubId === playerTeamId || x.awayClubId === playerTeamId)
       );
       let opponentId =
-        playerFixture?.homeTeamId === playerTeamId
-          ? playerFixture?.awayTeamId
-          : playerFixture?.homeTeamId;
+        playerFixture?.homeClubId === playerTeamId
+          ? playerFixture?.awayClubId
+          : playerFixture?.homeClubId;
       selectedOpponentTeam = $teamStore.find((x) => x.id === opponentId)!;
       showModal = true;
     } catch (error) {

@@ -47,15 +47,15 @@
       selectedGameweek = $systemStore?.pickTeamGameweek ?? 1;
 
       let teamFixtures = $fixtureStore.filter(
-        (x) => x.homeTeamId === id || x.awayTeamId === id
+        (x) => x.homeClubId === id || x.awayClubId === id
       );
 
       fixturesWithTeams = teamFixtures
         .sort((a, b) => Number(a.kickOff) - Number(b.kickOff))
         .map((fixture) => ({
           fixture,
-          homeTeam: getTeamFromId(fixture.homeTeamId),
-          awayTeam: getTeamFromId(fixture.awayTeamId),
+          homeTeam: getTeamFromId(fixture.homeClubId),
+          awayTeam: getTeamFromId(fixture.awayClubId),
         }));
 
       team = $teamStore.find((x) => x.id == id) ?? null;
@@ -230,7 +230,7 @@
           </p>
           <p class="content-panel-header">
             {getPositionText(
-              convertPlayerPosition(highestScoringPlayer?.position)
+              convertPlayerPosition(highestScoringPlayer?.position ?? { Goalkeeper: null })
             )}
             ({highestScoringPlayer?.totalPoints})
           </p>

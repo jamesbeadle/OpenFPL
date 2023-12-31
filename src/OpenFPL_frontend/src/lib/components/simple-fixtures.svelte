@@ -6,7 +6,7 @@
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
-  import { formatUnixTimeToTime } from "../utils/Helpers";
+  import { convertFixtureStatus, formatUnixTimeToTime } from "../utils/Helpers";
 
   let fixturesWithTeams: FixtureWithTeams[] = [];
   let selectedGameweek: number;
@@ -44,8 +44,8 @@
     selectedGameweek = $systemStore?.calculationGameweek ?? 1;
     fixturesWithTeams = $fixtureStore.map((fixture) => ({
       fixture,
-      homeTeam: getTeamFromId(fixture.homeTeamId),
-      awayTeam: getTeamFromId(fixture.awayTeamId),
+      homeTeam: getTeamFromId(fixture.homeClubId),
+      awayTeam: getTeamFromId(fixture.awayClubId),
     }));
   });
 
@@ -104,13 +104,13 @@
           {#each fixtures as { fixture, homeTeam, awayTeam }}
             <div
               class={`flex items-center justify-between py-2 border-b border-gray-700
-              ${fixture.status < 3 ? "text-gray-400" : "text-white"}`}
+              ${convertFixtureStatus(fixture.status) < 3 ? "text-gray-400" : "text-white"}`}
             >
               <div class="flex w-full items-center space-x-10 mx-4 xs:mx-8">
                 <div class="flex flex-col w-3/6 min-w-[100px] md:min-w-[200px]">
                   <a
                     class="my-1 flex items-center"
-                    href={`/club?id=${fixture.homeTeamId}`}
+                    href={`/club?id=${fixture.homeClubId}`}
                   >
                     <BadgeIcon
                       className="w-4 mr-1"
@@ -124,7 +124,7 @@
                   </a>
                   <a
                     class="my-1 flex items-center"
-                    href={`/club?id=${fixture.awayTeamId}`}
+                    href={`/club?id=${fixture.awayClubId}`}
                   >
                     <BadgeIcon
                       className="w-4 mr-1"
@@ -138,8 +138,8 @@
                   </a>
                 </div>
                 <div class="flex flex-col w-1/6 items-center justify-center">
-                  <span>{fixture.status < 3 ? "-" : fixture.homeGoals}</span>
-                  <span>{fixture.status < 3 ? "-" : fixture.awayGoals}</span>
+                  <span>{convertFixtureStatus(fixture.status) < 3 ? "-" : fixture.homeGoals}</span>
+                  <span>{convertFixtureStatus(fixture.status) < 3 ? "-" : fixture.awayGoals}</span>
                 </div>
                 <div class="flex flex-col w-2/6">
                   <span class="md:ml-0"

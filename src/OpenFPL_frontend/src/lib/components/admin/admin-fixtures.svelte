@@ -11,6 +11,7 @@
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import {
+    convertFixtureStatus,
     formatUnixTimeToTime,
     getFixtureStatusText,
   } from "../../utils/Helpers";
@@ -59,8 +60,8 @@
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
+        homeTeam: getTeamFromId(fixture.homeClubId),
+        awayTeam: getTeamFromId(fixture.awayClubId),
       }));
     } catch (error) {
       toastsError({
@@ -145,13 +146,13 @@
         {#each fixtures as { fixture, homeTeam, awayTeam }}
           <div
             class={`flex items-center justify-between py-2 border-b border-gray-700  ${
-              fixture.status === 0 ? "text-gray-400" : "text-white"
+              convertFixtureStatus(fixture.status) === 0 ? "text-gray-400" : "text-white"
             }`}
           >
             <div class="flex items-center w-1/2 ml-4">
               <div class="flex w-1/2 space-x-4 justify-center">
                 <div class="w-10 items-center justify-center">
-                  <a href={`/club?id=${fixture.homeTeamId}`}>
+                  <a href={`/club?id=${fixture.homeClubId}`}>
                     <BadgeIcon
                       primaryColour={homeTeam ? homeTeam.primaryColourHex : ""}
                       secondaryColour={homeTeam
@@ -163,7 +164,7 @@
                 </div>
                 <span>v</span>
                 <div class="w-10 items-center justify-center">
-                  <a href={`/club?id=${fixture.awayTeamId}`}>
+                  <a href={`/club?id=${fixture.awayClubId}`}>
                     <BadgeIcon
                       primaryColour={awayTeam ? awayTeam.primaryColourHex : ""}
                       secondaryColour={awayTeam
@@ -181,7 +182,7 @@
               </div>
               <div class="flex w-1/2 lg:justify-center">
                 <span class="text-sm ml-4 md:ml-0 text-left"
-                  >{getFixtureStatusText(fixture.status)}</span
+                  >{getFixtureStatusText(convertFixtureStatus(fixture.status))}</span
                 >
               </div>
             </div>
@@ -189,18 +190,18 @@
               <div
                 class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px]"
               >
-                <a href={`/club?id=${fixture.homeTeamId}`}
+                <a href={`/club?id=${fixture.homeClubId}`}
                   >{homeTeam ? homeTeam.friendlyName : ""}</a
                 >
-                <a href={`/club?id=${fixture.awayTeamId}`}
+                <a href={`/club?id=${fixture.awayClubId}`}
                   >{awayTeam ? awayTeam.friendlyName : ""}</a
                 >
               </div>
               <div
                 class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px]"
               >
-                <span>{fixture.status === 0 ? "-" : fixture.homeGoals}</span>
-                <span>{fixture.status === 0 ? "-" : fixture.awayGoals}</span>
+                <span>{convertFixtureStatus(fixture.status) === 0 ? "-" : fixture.homeGoals}</span>
+                <span>{convertFixtureStatus(fixture.status) === 0 ? "-" : fixture.awayGoals}</span>
               </div>
               <div class="flex flex-col">
                 <button

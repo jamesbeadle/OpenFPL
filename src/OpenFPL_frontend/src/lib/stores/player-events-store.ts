@@ -6,6 +6,7 @@ import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
+  FantasyTeamSnapshot,
   FixtureDTO,
   PlayerDTO,
   PlayerEventData,
@@ -105,7 +106,7 @@ function createPlayerEventsStore() {
   }
 
   async function getGameweekPlayers(
-    fantasyTeam: ProfileDTO,
+    fantasyTeam: FantasyTeamSnapshot,
     gameweek: number
   ): Promise<GameweekData[]> {
     await sync();
@@ -393,7 +394,7 @@ function createPlayerEventsStore() {
 
   function calculateBonusPoints(
     gameweekData: GameweekData,
-    fantasyTeam: ProfileDTO,
+    fantasyTeam: FantasyTeamSnapshot,
     points: number
   ): number {
     if (!gameweekData) {

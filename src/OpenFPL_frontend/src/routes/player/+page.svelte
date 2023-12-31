@@ -61,15 +61,15 @@
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
+        homeTeam: getTeamFromId(fixture.homeClubId),
+        awayTeam: getTeamFromId(fixture.awayClubId),
       }));
 
       selectedPlayer = $playerStore.find((x) => x.id === id) ?? null;
       team = $teamStore.find((x) => x.id === selectedPlayer?.clubId) ?? null;
 
       let teamFixtures = $fixtureStore.filter(
-        (x) => x.homeTeamId === team?.id || x.awayTeamId === team?.id
+        (x) => x.homeClubId === team?.id || x.awayClubId === team?.id
       );
 
       nextFixture =
