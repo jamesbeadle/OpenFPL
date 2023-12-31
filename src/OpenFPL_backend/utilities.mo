@@ -44,26 +44,6 @@ module {
     Nat32.fromNat(Nat32.toNat(key) % (2 ** 32 -1));
   };
 
-  public let eqWeeklyKey = func(a : T.WeeklyLeaderboardKey, b : T.WeeklyLeaderboardKey) : Bool {
-    a.0 == b.0 and a.1 == b.1;
-  };
-
-  public let hashWeeklyKey = func(key : T.WeeklyLeaderboardKey) : Hash.Hash {
-    combineHashes(hashNat32(Nat32.fromNat(Nat16.toNat(key.0))), hashNat32(Nat32.fromNat(Nat8.toNat(key.1))));
-  };
-
-  public let combineHashes = func(hash1 : Hash.Hash, hash2 : Hash.Hash) : Hash.Hash {
-    (hash1 + hash2) % (2 ** 32);
-  };
-
-  public let eqMonthlyKey = func(a : T.MonthlyLeaderboardKey, b : T.MonthlyLeaderboardKey) : Bool {
-    a.0 == b.0 and a.1 == b.1 and a.2 == b.2;
-  };
-
-  public let hashMonthlyKey = func(key : T.MonthlyLeaderboardKey) : Hash.Hash {
-    combineHashes(hashNat32(Nat32.fromNat(Nat16.toNat(key.0))), combineHashes(hashNat32(Nat32.fromNat(Nat8.toNat(key.1))), hashNat32(Nat32.fromNat(Nat16.toNat(key.2)))));
-  };
-
   public func eqPlayerEventData(event1 : T.PlayerEventData, event2 : T.PlayerEventData) : Bool {
     event1.fixtureId == event2.fixtureId and event1.playerId == event2.playerId and event1.eventType == event2.eventType and event1.eventStartMinute == event2.eventStartMinute and event1.eventEndMinute == event2.eventEndMinute
   };

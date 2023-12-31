@@ -45,6 +45,7 @@ function createWeeklyLeaderboardStore() {
         100,
         0
       );
+      console.log(updatedLeaderboardData)
 
       if(isError(updatedLeaderboardData)){
         console.error("error fetching leaderboard store")

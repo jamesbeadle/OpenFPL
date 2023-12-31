@@ -12,9 +12,6 @@ module Types {
   public type CountryId = Nat16;
   public type PrincipalId = Text;
 
-  public type WeeklyLeaderboardKey = (SeasonId, GameweekNumber);
-  public type MonthlyLeaderboardKey = (SeasonId, CalendarMonth, ClubId);
-
   public type Error = {
     #NotFound;
     #AlreadyExists;
@@ -366,6 +363,24 @@ module Types {
     allTimeWeeklyHighScorePool : Nat64;
     allTimeMonthlyHighScorePool : Nat64;
     allTimeSeasonHighScorePool : Nat64;
-  }
+  };
+
+  public type WeeklyLeaderboardCanister = {
+    seasonId: SeasonId;
+    gameweek: GameweekNumber;
+    canisterId: Text;
+  };
+
+  public type MonthlyLeaderboardCanister = {
+    seasonId: SeasonId;
+    month: CalendarMonth;
+    clubId: ClubId;
+    canisterId: Text;
+  };
+
+  public type SeasonLeaderboardCanister = {
+    seasonId: SeasonId;
+    canisterId: Text;
+  };
 
 };

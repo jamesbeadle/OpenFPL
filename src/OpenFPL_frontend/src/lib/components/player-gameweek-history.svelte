@@ -39,13 +39,13 @@
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
-        homeTeam: getTeamFromId(fixture.homeTeamId),
-        awayTeam: getTeamFromId(fixture.awayTeamId),
+        homeTeam: getTeamFromId(fixture.homeClubId),
+        awayTeam: getTeamFromId(fixture.awayClubId),
       }));
 
       playerDetails = await playerEventsStore.getPlayerDetails(
         id,
-        $systemStore?.calculationSeasonId ?? 0
+        $systemStore?.calculationSeasonId ?? 1
       );
     } catch (error) {
       toastsError({
