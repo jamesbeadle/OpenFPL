@@ -448,7 +448,7 @@ module {
     };
 
     private func payWeeklyRewards(rewardPool : T.RewardPool) : async () {
-      let weeklyLeaderboardCanisterId = leaderboardComposite.getWeeklyCanisterId(systemState.calculationSeasonId, systemState.calculationGameweek);
+      let weeklyLeaderboardCanisterId = await leaderboardComposite.getWeeklyCanisterId(systemState.calculationSeasonId, systemState.calculationGameweek);
       switch (weeklyLeaderboardCanisterId) {
         case (null) {};
         case (?canisterId) {
@@ -470,7 +470,7 @@ module {
     };
 
     private func payMonthlyRewards(rewardPool : T.RewardPool, clubId : T.ClubId) : async () {
-      let monthlyLeaderboardCanisterId = leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth, clubId);
+      let monthlyLeaderboardCanisterId = await leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth, clubId);
       switch (monthlyLeaderboardCanisterId) {
         case (null) {};
         case (?canisterId) {
@@ -488,7 +488,7 @@ module {
       let allMonthlyLeaderboards = Buffer.fromArray<DTOs.MonthlyLeaderboardDTO>([]);
 
       for (club in Iter.fromArray(clubs)) {
-        let monthlyLeaderboardCanisterId = leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth, club.id);
+        let monthlyLeaderboardCanisterId = await leaderboardComposite.getMonthlyCanisterId(systemState.calculationSeasonId, systemState.calculationMonth, club.id);
         switch (monthlyLeaderboardCanisterId) {
           case (null) {};
           case (?canisterId) {
@@ -506,7 +506,7 @@ module {
     };
 
     private func paySeasonRewards(rewardPool : T.RewardPool) : async () {
-      let seasonLeaderboardCanisterId = leaderboardComposite.getSeasonCanisterId(systemState.calculationSeasonId);
+      let seasonLeaderboardCanisterId = await leaderboardComposite.getSeasonCanisterId(systemState.calculationSeasonId);
       switch (seasonLeaderboardCanisterId) {
         case (null) {};
         case (?canisterId) {

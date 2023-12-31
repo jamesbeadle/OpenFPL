@@ -50,6 +50,54 @@ module {
       backendCanisterController := ?controller;
     };
 
+    public func getWeeklyCanisterId(seasonId: T.SeasonId, gameweek: T.GameweekNumber) :  async ?Text {
+      let leaderboardCanisterId = List.find<T.WeeklyLeaderboardCanister>(
+        weeklyLeaderboardCanisters,
+        func(canister: T.WeeklyLeaderboardCanister) : Bool {
+          return canister.seasonId == seasonId and canister.gameweek == gameweek;
+        },
+      );
+
+      switch (leaderboardCanisterId) {
+        case (null) { return null };
+        case (?foundCanister) {
+          return ?foundCanister.canisterId;
+        };
+      };
+    };
+
+    public func getMonthlyCanisterId(seasonId: T.SeasonId, month: T.CalendarMonth, clubId: T.ClubId) :  async ?Text {
+      let leaderboardCanisterId = List.find<T.MonthlyLeaderboardCanister>(
+        monthlyLeaderboardCanisters,
+        func(canister: T.MonthlyLeaderboardCanister) : Bool {
+          return canister.seasonId == seasonId and canister.month == month and canister.clubId == clubId;
+        },
+      );
+
+      switch (leaderboardCanisterId) {
+        case (null) { return null };
+        case (?foundCanister) {
+          return ?foundCanister.canisterId;
+        };
+      };
+    };
+
+    public func getSeasonCanisterId(seasonId: T.SeasonId) :  async ?Text {
+      let leaderboardCanisterId = List.find<T.SeasonLeaderboardCanister>(
+        seasonLeaderboardCanisters,
+        func(canister: T.SeasonLeaderboardCanister) : Bool {
+          return canister.seasonId == seasonId;
+        },
+      );
+
+      switch (leaderboardCanisterId) {
+        case (null) { return null };
+        case (?foundCanister) {
+          return ?foundCanister.canisterId;
+        };
+      };
+    };
+
     public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
       if (limit > 100) {
         return #err(#NotAllowed);
