@@ -50,7 +50,7 @@ function createUserStore() {
 
       if (!updatedProfileDataObj) {
         await identityActor.createProfile();
-        updatedProfileDataObj = (await identityActor.getProfileDTO()) as any;
+        updatedProfileDataObj = (await identityActor.getProfile()) as any;
       }
       let updatedProfileData = updatedProfileDataObj[0];
       if (
@@ -133,7 +133,7 @@ function createUserStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.getProfileDTO();
+      const result = await identityActor.getProfile();
       set(result);
       return result;
     } catch (error) {

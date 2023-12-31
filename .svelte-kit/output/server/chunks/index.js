@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1dp8ghg"
+  version_hash: "q3ag5t"
 };
 function get_hooks() {
   return {};
@@ -5614,7 +5614,7 @@ function createUserStore() {
       console.log(updatedProfileDataObj);
       if (!updatedProfileDataObj) {
         await identityActor.createProfile();
-        updatedProfileDataObj = await identityActor.getProfileDTO();
+        updatedProfileDataObj = await identityActor.getProfile();
       }
       let updatedProfileData = updatedProfileDataObj[0];
       if (updatedProfileData && updatedProfileData.profilePicture instanceof Uint8Array) {
@@ -5690,7 +5690,7 @@ function createUserStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.getProfileDTO();
+      const result = await identityActor.getProfile();
       set(result);
       return result;
     } catch (error2) {

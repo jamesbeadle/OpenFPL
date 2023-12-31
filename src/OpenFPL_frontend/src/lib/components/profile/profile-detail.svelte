@@ -12,7 +12,38 @@
   import { getDateFromBigInt } from "$lib/utils/Helpers";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
 
-  let profile: Writable<ProfileDTO | null> = writable(null);
+  let profile: Writable<ProfileDTO> = writable({
+    playerIds: [],
+    countrymenCountryId: 0,
+    username: "",
+    goalGetterPlayerId: 0,
+    hatTrickHeroGameweek: 0,
+    transfersAvailable: 3,
+    termsAccepted: false,
+    teamBoostGameweek: 0,
+    captainFantasticGameweek: 0,
+    createDate: 0n,
+    countrymenGameweek: 0,
+    bankQuarterMillions: 1200,
+    noEntryPlayerId: 0,
+    safeHandsPlayerId: 0,
+    history: [],
+    braceBonusGameweek: 0,
+    favouriteClubId: 0,
+    passMasterGameweek: 0,
+    teamBoostClubId: 0,
+    goalGetterGameweek: 0,
+    captainFantasticPlayerId: 0,
+    profilePicture: [],
+    transferWindowGameweek: 0,
+    noEntryGameweek: 0,
+    prospectsGameweek: 0,
+    safeHandsGameweek: 0,
+    principalId: "",
+    passMasterPlayerId: 0,
+    captainId: 0,
+    monthlyBonusesAvailable: 0,
+  });
   let showUsernameModal: boolean = false;
   let showFavouriteTeamModal: boolean = false;
   let fileInput: HTMLInputElement;
@@ -102,7 +133,7 @@
         alert("File size exceeds 500KB");
         return;
       }
-
+      
       uploadProfileImage(file);
     }
   }
@@ -174,78 +205,71 @@
     cancelModal={cancelFavouriteTeamModal}
   />
   <div class="container mx-auto p-4">
-    {#if $profile}
-      <div class="flex flex-wrap">
-        <div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2">
-          <div class="group flex flex-col md:block">
-            <img
-              src={profileSrc}
-              alt="Profile"
-              class="w-full mb-1 rounded-lg"
+    <div class="flex flex-wrap">
+      <div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 px-2">
+        <div class="group flex flex-col md:block">
+          <img src={profileSrc} alt="Profile" class="w-full mb-1 rounded-lg" />
+
+          <div class="file-upload-wrapper mt-4">
+            <button class="btn-file-upload fpl-button" on:click={clickFileInput}
+              >Upload Photo</button
+            >
+            <input
+              type="file"
+              id="profile-image"
+              accept="image/*"
+              bind:this={fileInput}
+              on:change={handleFileChange}
+              style="opacity: 0; position: absolute; left: 0; top: 0;"
             />
-
-            <div class="file-upload-wrapper mt-4">
-              <button
-                class="btn-file-upload fpl-button"
-                on:click={clickFileInput}>Upload Photo</button
-              >
-              <input
-                type="file"
-                id="profile-image"
-                accept="image/*"
-                bind:this={fileInput}
-                on:change={handleFileChange}
-                style="opacity: 0; position: absolute; left: 0; top: 0;"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="w-full md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 mb-4 md:mb-0">
-          <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
-            <p class="mb-1">Display Name:</p>
-            <h2 class="default-header mb-1 md:mb-2">
-              {$profile?.username}
-            </h2>
-            <button
-              class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
-              on:click={displayUsernameModal}
-            >
-              Update
-            </button>
-            <p class="mb-1 mt-4">Favourite Team:</p>
-            <h2 class="default-header mb-1 md:mb-2">
-              {teamName}
-            </h2>
-            <button
-              class={`p-1 md:p-2 px-2 md:px-4 ${
-                gameweek > 1 && ($profile?.favouriteClubId ?? 0) > 0
-                  ? "bg-gray-500"
-                  : "fpl-button"
-              } rounded`}
-              on:click={displayFavouriteTeamModal}
-              disabled={gameweek > 1 && ($profile?.favouriteClubId ?? 0) > 0}
-            >
-              Update
-            </button>
-
-            <p class="mb-1 mt-4">Joined:</p>
-            <h2 class="default-header mb-1 md:mb-2">{joinedDate}</h2>
-
-            <p class="mb-1">Principal:</p>
-            <div class="flex items-center">
-              <button
-                class="flex items-center text-left"
-                on:click={copyTextAndShowToast}
-              >
-                <span>{$profile.principalId}</span>
-                <CopyIcon className="w-7 xs:w-6 text-left" fill="#FFFFFF" />
-              </button>
-            </div>
           </div>
         </div>
       </div>
-    {/if}
+
+      <div class="w-full md:w-1/2 lg:w-2/3 xl:w-3/4 md:px-2 mb-4 md:mb-0">
+        <div class="md:ml-4 md:px-4 px-4 mt-2 md:mt-1 rounded-lg">
+          <p class="mb-1">Display Name:</p>
+          <h2 class="default-header mb-1 md:mb-2">
+            {$profile?.username}
+          </h2>
+          <button
+            class="text-sm md:text-sm p-1 md:p-2 px-2 md:px-4 rounded fpl-button"
+            on:click={displayUsernameModal}
+          >
+            Update
+          </button>
+          <p class="mb-1 mt-4">Favourite Team:</p>
+          <h2 class="default-header mb-1 md:mb-2">
+            {teamName}
+          </h2>
+          <button
+            class={`p-1 md:p-2 px-2 md:px-4 ${
+              gameweek > 1 && ($profile?.favouriteClubId ?? 0) > 0
+                ? "bg-gray-500"
+                : "fpl-button"
+            } rounded`}
+            on:click={displayFavouriteTeamModal}
+            disabled={gameweek > 1 && ($profile?.favouriteClubId ?? 0) > 0}
+          >
+            Update
+          </button>
+
+          <p class="mb-1 mt-4">Joined:</p>
+          <h2 class="default-header mb-1 md:mb-2">{joinedDate}</h2>
+
+          <p class="mb-1">Principal:</p>
+          <div class="flex items-center">
+            <button
+              class="flex items-center text-left"
+              on:click={copyTextAndShowToast}
+            >
+              <span>{$profile.principalId}</span>
+              <CopyIcon className="w-7 xs:w-6 text-left" fill="#FFFFFF" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="flex flex-wrap">
       <div class="w-full px-2 mb-4">
         <div class="mt-4 px-2">

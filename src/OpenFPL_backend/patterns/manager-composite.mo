@@ -20,6 +20,7 @@ import Option "mo:base/Option";
 import Time "mo:base/Time";
 import Order "mo:base/Order";
 import Int16 "mo:base/Int16";
+import Debug "mo:base/Debug";
 import Management "../modules/Management";
 import ENV "../utils/Env";
 import ProfilePictureCanister "../profile-picture-canister";
@@ -568,6 +569,7 @@ module {
         case (null) {
 
           let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
+          Debug.print(profilePictureCanisterId);
 
           let createProfileDTO : DTOs.CreateProfileDTO = {
             principalId = principalId;
