@@ -560,6 +560,7 @@ module {
 
     public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async Result.Result<(), T.Error> {
 
+      Debug.print("Updating profile picture");
       if (invalidProfilePicture(profilePicture)) {
         return #err(#InvalidData);
       };
@@ -567,7 +568,7 @@ module {
       let existingManager = managers.get(principalId);
       switch (existingManager) {
         case (null) {
-
+          Debug.print("No manager");
           let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
           Debug.print(profilePictureCanisterId);
 
@@ -586,9 +587,12 @@ module {
           return #ok();
         };
         case (?foundManager) {
+          Debug.print("Found manager");
           var profilePictureCanisterId = "";
           if (foundManager.profilePictureCanisterId == "") {
+            Debug.print("No profile picture");
             profilePictureCanisterId := await setManagerProfileImage(principalId, profilePicture);
+            Debug.print(profilePictureCanisterId);
 
             let updatedManager : T.Manager = {
               principalId = foundManager.principalId;
@@ -624,6 +628,7 @@ module {
             };
             managers.put(principalId, updatedManager);
           } else {
+            Debug.print("Got a profile picture");
             let profilePictureCanister = actor (activeProfilePictureCanisterId) : actor {
               hasSpaceAvailable : () -> async Bool;
               addProfilePicture : (principalId : T.PrincipalId, profilePicture : Blob) -> async ();
@@ -681,7 +686,7 @@ module {
         return "";
       };
 
-      Cycles.add(2000000000000);
+      Cycles.add(2_000_000_000_000);
       let canister = await ProfilePictureCanister.ProfilePictureCanister();
       let IC : Management.Management = actor (ENV.Default);
       let _ = await Utilities.updateCanister_(canister, backendCanisterController, IC);

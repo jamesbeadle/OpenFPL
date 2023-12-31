@@ -30,7 +30,7 @@ module {
           let canister_actor = actor (foundId) : actor {
             topupCanister : () -> async ();
           };
-          Cycles.add(2000000000000);
+          Cycles.add(2_000_000_000_000);
           await canister_actor.topupCanister();
         };
       };

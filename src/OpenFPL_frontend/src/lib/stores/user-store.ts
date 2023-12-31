@@ -160,6 +160,7 @@ function createUserStore() {
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
+          console.log(result);
           sync();
           return result;
         } catch (error) {

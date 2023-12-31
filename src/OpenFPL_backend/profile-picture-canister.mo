@@ -7,6 +7,7 @@ import Buffer "mo:base/Buffer";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Principal "mo:base/Principal";
+import Debug "mo:base/Debug";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
 
@@ -30,6 +31,8 @@ actor class ProfilePictureCanister() {
   public shared ({ caller }) func addProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
+    Debug.print(principalId);
+    Debug.print(CanisterIds.MAIN_CANISTER_ID);
     assert principalId == CanisterIds.MAIN_CANISTER_ID;
 
     switch (currentBucketIndex) {

@@ -72,8 +72,10 @@
       await userStore.sync();
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
+        if (!value) {
+          return;
+        }
         setProfile(value);
-        console.log(value);
         joinedDate = getDateFromBigInt(Number(value.createDate));
       });
     } catch (error) {
@@ -133,7 +135,7 @@
         alert("File size exceeds 500KB");
         return;
       }
-      
+
       uploadProfileImage(file);
     }
   }
