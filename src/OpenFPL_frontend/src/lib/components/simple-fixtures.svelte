@@ -38,7 +38,7 @@
 
   onMount(async () => {
     await teamStore.sync();
-    if($teamStore.length == 0) return;
+    if ($teamStore.length == 0) return;
     await fixtureStore.sync();
     await systemStore.sync();
     selectedGameweek = $systemStore?.calculationGameweek ?? 1;
@@ -104,7 +104,11 @@
           {#each fixtures as { fixture, homeTeam, awayTeam }}
             <div
               class={`flex items-center justify-between py-2 border-b border-gray-700
-              ${convertFixtureStatus(fixture.status) < 3 ? "text-gray-400" : "text-white"}`}
+              ${
+                convertFixtureStatus(fixture.status) < 3
+                  ? "text-gray-400"
+                  : "text-white"
+              }`}
             >
               <div class="flex w-full items-center space-x-10 mx-4 xs:mx-8">
                 <div class="flex flex-col w-3/6 min-w-[100px] md:min-w-[200px]">
@@ -138,8 +142,16 @@
                   </a>
                 </div>
                 <div class="flex flex-col w-1/6 items-center justify-center">
-                  <span>{convertFixtureStatus(fixture.status) < 3 ? "-" : fixture.homeGoals}</span>
-                  <span>{convertFixtureStatus(fixture.status) < 3 ? "-" : fixture.awayGoals}</span>
+                  <span
+                    >{convertFixtureStatus(fixture.status) < 3
+                      ? "-"
+                      : fixture.homeGoals}</span
+                  >
+                  <span
+                    >{convertFixtureStatus(fixture.status) < 3
+                      ? "-"
+                      : fixture.awayGoals}</span
+                  >
                 </div>
                 <div class="flex flex-col w-2/6">
                   <span class="md:ml-0"

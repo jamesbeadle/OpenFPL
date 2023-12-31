@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "11xw5g0"
+  version_hash: "1t6wkhh"
 };
 function get_hooks() {
   return {};
@@ -3805,6 +3805,7 @@ const idlFactory = ({ IDL }) => {
   const PublicProfileDTO = IDL.Record({
     username: IDL.Text,
     createDate: IDL.Int,
+    gameweeks: IDL.Vec(FantasyTeamSnapshot),
     favouriteClubId: IDL.Nat16,
     profilePicture: IDL.Vec(IDL.Nat8),
     principalId: IDL.Text
@@ -3920,7 +3921,11 @@ const idlFactory = ({ IDL }) => {
     ),
     getPlayers: IDL.Func([], [Result_8], ["query"]),
     getProfile: IDL.Func([], [Result_7], []),
-    getPublicProfile: IDL.Func([IDL.Text], [Result_6], []),
+    getPublicProfile: IDL.Func(
+      [IDL.Text, SeasonId, GameweekNumber],
+      [Result_6],
+      []
+    ),
     getSeasonLeaderboard: IDL.Func(
       [SeasonId, IDL.Nat, IDL.Nat],
       [Result_5],
@@ -4363,12 +4368,15 @@ function createTeamStore() {
     const localHash = localStorage.getItem(category);
     if (categoryHash?.hash != localHash) {
       const updatedTeamsData = await actor.getClubs();
+      if (isError(updatedTeamsData)) {
+        return [];
+      }
       localStorage.setItem(
         category,
-        JSON.stringify(updatedTeamsData, replacer)
+        JSON.stringify(updatedTeamsData.ok, replacer)
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedTeamsData);
+      set(updatedTeamsData.ok);
     } else {
       const cachedTeamsData = localStorage.getItem(category);
       let cachedTeams = [];
@@ -4836,6 +4844,14 @@ function createManagerStore() {
       throw error2;
     }
   }
+  async function getPublicProfile(principalId) {
+    try {
+      return await actor.getPublicProfile(principalId);
+    } catch (error2) {
+      console.error("Error fetching manager profile for gameweek:", error2);
+      throw error2;
+    }
+  }
   async function getTotalManagers() {
     try {
       const managerCountData = await actor.getTotalManagers();
@@ -4977,7 +4993,8 @@ function createManagerStore() {
     getFantasyTeamForGameweek,
     getFantasyTeam,
     saveFantasyTeam,
-    snapshotFantasyTeams
+    snapshotFantasyTeams,
+    getPublicProfile
   };
 }
 createManagerStore();
@@ -5967,9 +5984,12 @@ const css$1 = {
 };
 const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
+  let $$unsubscribe_teamStore;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
+  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$result.css.add(css$1);
   $$unsubscribe_systemStore();
+  $$unsubscribe_teamStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
@@ -6035,8 +6055,10 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
 const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
+  let $$unsubscribe_teamStore;
   let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $page, $$unsubscribe_page;
+  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let showClearDraftModal = false;
   let showConfirmDataModal = false;
@@ -6088,6 +6110,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   fixtureId = Number($page.url.searchParams.get("id"));
   $playerEventData.length == 0 || $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length != $selectedPlayers.length;
   $$unsubscribe_playerEventData();
+  $$unsubscribe_teamStore();
   $$unsubscribe_selectedPlayers();
   $$unsubscribe_page();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
@@ -6223,11 +6246,9 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_selectedGameweek;
   let $$unsubscribe_loadingGameweekDetail;
   let $$unsubscribe_teamStore;
-  let $$unsubscribe_systemStore;
   let $page, $$unsubscribe_page;
   let $$unsubscribe_fantasyTeam;
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let fantasyTeam = writable(null);
   $$unsubscribe_fantasyTeam = subscribe(fantasyTeam, (value) => value);
@@ -6239,7 +6260,6 @@ const Page$5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_selectedGameweek();
   $$unsubscribe_loadingGameweekDetail();
   $$unsubscribe_teamStore();
-  $$unsubscribe_systemStore();
   $$unsubscribe_page();
   $$unsubscribe_fantasyTeam();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {

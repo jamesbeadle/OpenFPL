@@ -43,7 +43,7 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      if($teamStore.length == 0) return;
+      if ($teamStore.length == 0) return;
       await fixtureStore.sync();
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
@@ -96,7 +96,11 @@
     {#each filteredFixtures as { fixture, homeTeam, awayTeam }}
       <div
         class={`flex items-center justify-between border-b border-gray-700 p-2 px-4  
-        ${convertFixtureStatus(fixture.status) === 0 ? "text-gray-400" : "text-white"}`}
+        ${
+          convertFixtureStatus(fixture.status) === 0
+            ? "text-gray-400"
+            : "text-white"
+        }`}
       >
         <div class="w-1/6 md:ml-4">{fixture.gameweek}</div>
         <div class="w-1/3 flex">
@@ -141,8 +145,16 @@
         </div>
         <div class="w-1/6 md:w-1/4 md:mr-4">
           <div class="flex flex-col">
-            <span>{convertFixtureStatus(fixture.status) === 0 ? "-" : fixture.homeGoals}</span>
-            <span>{convertFixtureStatus(fixture.status) === 0 ? "-" : fixture.awayGoals}</span>
+            <span
+              >{convertFixtureStatus(fixture.status) === 0
+                ? "-"
+                : fixture.homeGoals}</span
+            >
+            <span
+              >{convertFixtureStatus(fixture.status) === 0
+                ? "-"
+                : fixture.awayGoals}</span
+            >
           </div>
         </div>
       </div>

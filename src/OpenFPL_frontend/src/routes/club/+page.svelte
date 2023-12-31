@@ -38,9 +38,9 @@
   $: id = Number($page.url.searchParams.get("id"));
 
   onMount(async () => {
-    try {  
+    try {
       await teamStore.sync();
-      if($teamStore.length == 0) return;
+      if ($teamStore.length == 0) return;
       await fixtureStore.sync();
       await systemStore.sync();
       await playerStore.sync();
@@ -230,7 +230,9 @@
           </p>
           <p class="content-panel-header">
             {getPositionText(
-              convertPlayerPosition(highestScoringPlayer?.position ?? { Goalkeeper: null })
+              convertPlayerPosition(
+                highestScoringPlayer?.position ?? { Goalkeeper: null }
+              )
             )}
             ({highestScoringPlayer?.totalPoints})
           </p>

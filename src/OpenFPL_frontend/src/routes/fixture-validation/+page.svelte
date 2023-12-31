@@ -8,7 +8,7 @@
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
   import { Spinner } from "@dfinity/gix-components";
-    import { convertFixtureStatus } from "$lib/utils/Helpers";
+  import { convertFixtureStatus } from "$lib/utils/Helpers";
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
   let currentGameweek: number;
@@ -19,7 +19,7 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      if($teamStore.length == 0) return;
+      if ($teamStore.length == 0) return;
       await systemStore.sync();
       await playerStore.sync();
       currentGameweek = $systemStore?.calculationGameweek ?? 1;
@@ -105,16 +105,24 @@
                 >
                   <div class="w-1/4 px-4">{homeTeam.friendlyName}</div>
                   <div class="w-1/4 px-4">{awayTeam.friendlyName}</div>
-                  {#if convertFixtureStatus(fixture.status) == 0}<div class="w-1/4 px-4">
+                  {#if convertFixtureStatus(fixture.status) == 0}<div
+                      class="w-1/4 px-4"
+                    >
                       Scheduled
                     </div>{/if}
-                  {#if convertFixtureStatus(fixture.status) == 1}<div class="w-1/4 px-4">
+                  {#if convertFixtureStatus(fixture.status) == 1}<div
+                      class="w-1/4 px-4"
+                    >
                       Active
                     </div>{/if}
-                  {#if convertFixtureStatus(fixture.status) == 2}<div class="w-1/4 px-4">
+                  {#if convertFixtureStatus(fixture.status) == 2}<div
+                      class="w-1/4 px-4"
+                    >
                       Completed
                     </div>{/if}
-                  {#if convertFixtureStatus(fixture.status) == 3}<div class="w-1/4 px-4">
+                  {#if convertFixtureStatus(fixture.status) == 3}<div
+                      class="w-1/4 px-4"
+                    >
                       Verified
                     </div>{/if}
                   <div class="w-1/4 px-4">

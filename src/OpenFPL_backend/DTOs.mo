@@ -130,6 +130,7 @@ module DTOs {
     profilePicture : Blob;
     favouriteClubId : Nat16;
     createDate : Int;
+    gameweeks : [T.FantasyTeamSnapshot];
   };
 
   public type ProfileDTO = {

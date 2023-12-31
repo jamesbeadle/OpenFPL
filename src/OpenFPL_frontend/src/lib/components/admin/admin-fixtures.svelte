@@ -52,7 +52,7 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      if($teamStore.length == 0) return;
+      if ($teamStore.length == 0) return;
       await fixtureStore.sync();
       await systemStore.sync();
 
@@ -146,7 +146,9 @@
         {#each fixtures as { fixture, homeTeam, awayTeam }}
           <div
             class={`flex items-center justify-between py-2 border-b border-gray-700  ${
-              convertFixtureStatus(fixture.status) === 0 ? "text-gray-400" : "text-white"
+              convertFixtureStatus(fixture.status) === 0
+                ? "text-gray-400"
+                : "text-white"
             }`}
           >
             <div class="flex items-center w-1/2 ml-4">
@@ -182,7 +184,9 @@
               </div>
               <div class="flex w-1/2 lg:justify-center">
                 <span class="text-sm ml-4 md:ml-0 text-left"
-                  >{getFixtureStatusText(convertFixtureStatus(fixture.status))}</span
+                  >{getFixtureStatusText(
+                    convertFixtureStatus(fixture.status)
+                  )}</span
                 >
               </div>
             </div>
@@ -200,8 +204,16 @@
               <div
                 class="flex flex-col min-w-[200px] lg:min-w-[120px] lg:min-w-[200px]"
               >
-                <span>{convertFixtureStatus(fixture.status) === 0 ? "-" : fixture.homeGoals}</span>
-                <span>{convertFixtureStatus(fixture.status) === 0 ? "-" : fixture.awayGoals}</span>
+                <span
+                  >{convertFixtureStatus(fixture.status) === 0
+                    ? "-"
+                    : fixture.homeGoals}</span
+                >
+                <span
+                  >{convertFixtureStatus(fixture.status) === 0
+                    ? "-"
+                    : fixture.awayGoals}</span
+                >
               </div>
               <div class="flex flex-col">
                 <button

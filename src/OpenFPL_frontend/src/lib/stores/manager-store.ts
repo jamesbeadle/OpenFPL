@@ -6,6 +6,7 @@ import type {
   FantasyTeamSnapshot,
   ManagerDTO,
   ProfileDTO,
+  PublicProfileDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
@@ -28,6 +29,17 @@ function createManagerStore() {
       return (await actor.getManager()) as ManagerDTO;
     } catch (error) {
       console.error("Error fetching manager for gameweek:", error);
+      throw error;
+    }
+  }
+
+  async function getPublicProfile(
+    principalId: string
+  ): Promise<PublicProfileDTO> {
+    try {
+      return (await actor.getPublicProfile(principalId)) as PublicProfileDTO;
+    } catch (error) {
+      console.error("Error fetching manager profile for gameweek:", error);
       throw error;
     }
   }
@@ -219,6 +231,7 @@ function createManagerStore() {
     getFantasyTeam,
     saveFantasyTeam,
     snapshotFantasyTeams,
+    getPublicProfile,
   };
 }
 

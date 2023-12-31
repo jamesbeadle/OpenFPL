@@ -264,6 +264,7 @@ export interface PromoteNewClubDTO {
 export interface PublicProfileDTO {
   username: string;
   createDate: bigint;
+  gameweeks: Array<FantasyTeamSnapshot>;
   favouriteClubId: number;
   profilePicture: Uint8Array | number[];
   principalId: string;
@@ -441,7 +442,7 @@ export interface _SERVICE {
   >;
   getPlayers: ActorMethod<[], Result_8>;
   getProfile: ActorMethod<[], Result_7>;
-  getPublicProfile: ActorMethod<[string], Result_6>;
+  getPublicProfile: ActorMethod<[string, SeasonId, GameweekNumber], Result_6>;
   getSeasonLeaderboard: ActorMethod<[SeasonId, bigint, bigint], Result_5>;
   getSystemState: ActorMethod<[], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;

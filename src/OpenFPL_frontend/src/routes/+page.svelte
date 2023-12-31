@@ -42,7 +42,7 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      if($teamStore.length == 0) return;
+      if ($teamStore.length == 0) return;
       await authStore.sync();
       await systemStore.sync();
       await fixtureStore.sync();
@@ -57,9 +57,9 @@
 
       managerCount = await managerStore.getTotalManagers();
 
-      if($teamStore.length == 0){
+      if ($teamStore.length == 0) {
         return [];
-      };
+      }
 
       let nextFixture = await fixtureStore.getNextFixture();
 

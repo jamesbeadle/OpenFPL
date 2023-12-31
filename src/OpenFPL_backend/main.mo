@@ -51,8 +51,8 @@ actor Self {
     return await seasonManager.getProfile(Principal.toText(caller));
   };
 
-  public shared func getPublicProfile(principalId : Text) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
-    return await seasonManager.getPublicProfile(principalId);
+  public shared func getPublicProfile(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
+    return await seasonManager.getPublicProfile(principalId, seasonId, gameweek);
   };
 
   public shared ({ caller }) func getManager() : async Result.Result<DTOs.ManagerDTO, T.Error> {

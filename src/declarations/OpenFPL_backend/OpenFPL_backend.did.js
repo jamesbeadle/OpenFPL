@@ -337,6 +337,7 @@ export const idlFactory = ({ IDL }) => {
   const PublicProfileDTO = IDL.Record({
     username: IDL.Text,
     createDate: IDL.Int,
+    gameweeks: IDL.Vec(FantasyTeamSnapshot),
     favouriteClubId: IDL.Nat16,
     profilePicture: IDL.Vec(IDL.Nat8),
     principalId: IDL.Text,
@@ -452,7 +453,11 @@ export const idlFactory = ({ IDL }) => {
     ),
     getPlayers: IDL.Func([], [Result_8], ["query"]),
     getProfile: IDL.Func([], [Result_7], []),
-    getPublicProfile: IDL.Func([IDL.Text], [Result_6], []),
+    getPublicProfile: IDL.Func(
+      [IDL.Text, SeasonId, GameweekNumber],
+      [Result_6],
+      []
+    ),
     getSeasonLeaderboard: IDL.Func(
       [SeasonId, IDL.Nat, IDL.Nat],
       [Result_5],

@@ -15,7 +15,7 @@
 
   onMount(async () => {
     await teamStore.sync();
-    if($teamStore.length == 0) return;
+    if ($teamStore.length == 0) return;
     await userStore.sync();
   });
 

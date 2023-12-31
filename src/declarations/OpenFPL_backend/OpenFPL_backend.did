@@ -185,6 +185,7 @@ type RecallPlayerDTO = record { playerId : PlayerId };
 type PublicProfileDTO = record {
   createDate : int;
   favouriteClubId : nat16;
+  gameweeks : vec FantasyTeamSnapshot;
   principalId : text;
   profilePicture : blob;
   username : text;
@@ -487,7 +488,7 @@ service : {
   getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_9) query;
   getPlayers : () -> (Result_8) query;
   getProfile : () -> (Result_7);
-  getPublicProfile : (text) -> (Result_6);
+  getPublicProfile : (text, SeasonId, GameweekNumber) -> (Result_6);
   getSeasonLeaderboard : (SeasonId, nat, nat) -> (Result_5);
   getSystemState : () -> (Result_4) query;
   getTotalManagers : () -> (Result_3) query;

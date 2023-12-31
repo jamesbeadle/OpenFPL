@@ -136,7 +136,7 @@ module {
       };
     };
 
-    public func getPublicProfile(principalId : Text) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
+    public func getPublicProfile(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
 
       let manager = managers.get(principalId);
 
@@ -155,12 +155,29 @@ module {
             profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
           };
 
+          var gameweeks : [T.FantasyTeamSnapshot] = [];
+
+          let season = List.find(
+            foundManager.history,
+            func(season : T.FantasyTeamSeason) : Bool {
+              return season.seasonId == seasonId;
+            },
+          );
+
+          switch (season) {
+            case (null) {};
+            case (?foundSeason) {
+              gameweeks := List.toArray(foundSeason.gameweeks);
+            };
+          };
+
           let profileDTO : DTOs.PublicProfileDTO = {
             principalId = foundManager.principalId;
             username = foundManager.username;
             profilePicture = profilePicture;
             favouriteClubId = foundManager.favouriteClubId;
             createDate = foundManager.createDate;
+            gameweeks = gameweeks;
           };
 
           return #ok(profileDTO);

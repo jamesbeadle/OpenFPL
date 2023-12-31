@@ -166,8 +166,8 @@ module {
       return await managerComposite.getProfile(principalId);
     };
 
-    public func getPublicProfile(principalId : Text) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
-      return await managerComposite.getPublicProfile(principalId);
+    public func getPublicProfile(principalId : Text, seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<DTOs.PublicProfileDTO, T.Error> {
+      return await managerComposite.getPublicProfile(principalId, seasonId, gameweek);
     };
 
     public func getManager(principalId : Text) : async Result.Result<DTOs.ManagerDTO, T.Error> {

@@ -35,9 +35,9 @@ function createTeamStore() {
     if (categoryHash?.hash != localHash) {
       const updatedTeamsData = await actor.getClubs();
 
-      if(isError(updatedTeamsData)){
+      if (isError(updatedTeamsData)) {
         return [];
-      };
+      }
 
       localStorage.setItem(
         category,

@@ -6,7 +6,11 @@
   import { toastsError } from "$lib/stores/toasts-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
-  import { convertFixtureStatus, formatUnixTimeToTime, getFixtureStatusText } from "../utils/Helpers";
+  import {
+    convertFixtureStatus,
+    formatUnixTimeToTime,
+    getFixtureStatusText,
+  } from "../utils/Helpers";
   import type { ClubDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
 
@@ -42,7 +46,7 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      if($teamStore.length == 0) return;
+      if ($teamStore.length == 0) return;
 
       await fixtureStore.sync();
       await systemStore.sync();
@@ -114,7 +118,9 @@
         {#each fixtures as { fixture, homeTeam, awayTeam }}
           <div
             class={`flex flex-row items-center py-2 border-b border-gray-700  ${
-              convertFixtureStatus(fixture.status) < 3 ? "text-gray-400" : "text-white"
+              convertFixtureStatus(fixture.status) < 3
+                ? "text-gray-400"
+                : "text-white"
             }`}
           >
             <div
@@ -155,8 +161,16 @@
             </div>
 
             <div class="flex w-2/12 xs:w-2/12 md:w-2/12 lg:w-1/12 flex-col">
-              <span>{convertFixtureStatus(fixture.status) < 3 ? "-" : fixture.homeGoals}</span>
-              <span>{convertFixtureStatus(fixture.status) < 3 ? "-" : fixture.awayGoals}</span>
+              <span
+                >{convertFixtureStatus(fixture.status) < 3
+                  ? "-"
+                  : fixture.homeGoals}</span
+              >
+              <span
+                >{convertFixtureStatus(fixture.status) < 3
+                  ? "-"
+                  : fixture.awayGoals}</span
+              >
             </div>
 
             <div

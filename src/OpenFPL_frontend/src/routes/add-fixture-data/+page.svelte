@@ -59,14 +59,14 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      if($teamStore.length == 0) return;
+      if ($teamStore.length == 0) return;
       await fixtureStore.sync();
       await playerStore.sync();
 
       let teams = $teamStore;
-      if(teams.length == 0){
+      if (teams.length == 0) {
         return;
-      };
+      }
 
       playerStore.subscribe((value) => {
         players = value;

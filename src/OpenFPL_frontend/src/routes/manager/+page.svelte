@@ -8,8 +8,8 @@
   import { toastsError } from "$lib/stores/toasts-store";
   import type {
     FantasyTeamSnapshot,
-    ManagerDTO,
     ClubDTO,
+    PublicProfileDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import Layout from "../Layout.svelte";
   import ManagerGameweekDetails from "$lib/components/manager/manager-gameweek-details.svelte";
@@ -26,7 +26,7 @@
     Number($page.url.searchParams.get("gw")) ?? 1
   );
 
-  let manager: ManagerDTO;
+  let manager: PublicProfileDTO;
   let displayName = "";
   let favouriteTeam: ClubDTO | null = null;
   let selectedSeason = "";
@@ -38,29 +38,22 @@
   onMount(async () => {
     try {
       await teamStore.sync();
-      if($teamStore.length == 0) return;
+      if ($teamStore.length == 0) return;
       await systemStore.sync();
-      manager = await managerStore.getPublicProfile(
-        id ?? "",
-        $systemStore?.calculationSeasonId ?? 1,
-        $selectedGameweek ?? 1
-      );
+      manager = await managerStore.getPublicProfile(id ?? "");
       displayName =
-        manager.displayName === manager.principalId
-          ? "Unknown"
-          : manager.displayName;
+        manager.username === manager.principalId ? "Unknown" : manager.username;
       const blob = new Blob([new Uint8Array(manager.profilePicture)]);
       const blobUrl =
         manager.profilePicture.length > 0
           ? URL.createObjectURL(blob)
           : "profile_placeholder.png";
       profilePicture = blobUrl;
-      selectedSeason = $systemStore?.activeSeason.name ?? "-";
 
       joinedDate = getDateFromBigInt(Number(manager.createDate));
       favouriteTeam =
-        manager.favouriteTeamId > 0
-          ? $teamStore.find((x) => x.id == manager.favouriteTeamId) ?? null
+        manager.favouriteClubId > 0
+          ? $teamStore.find((x) => x.id == manager.favouriteClubId) ?? null
           : null;
       viewGameweekDetail(manager.principalId, $selectedGameweek!);
     } catch (error) {
@@ -81,7 +74,7 @@
     activeTab = tab;
   }
 
-  function viewGameweekDetail(principalId: string, gw: number) {
+  function viewGameweekDetail(gw: number) {
     $selectedGameweek = gw;
     let team = manager.gameweeks.find((x) => x.gameweek === $selectedGameweek)!;
     if (team) {

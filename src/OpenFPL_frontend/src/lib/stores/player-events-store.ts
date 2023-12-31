@@ -11,7 +11,6 @@ import type {
   PlayerDTO,
   PlayerEventData,
   PlayerPointsDTO,
-  ProfileDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
