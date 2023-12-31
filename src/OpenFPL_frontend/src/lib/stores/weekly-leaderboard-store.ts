@@ -14,18 +14,14 @@ function createWeeklyLeaderboardStore() {
   const { subscribe, set } = writable<WeeklyLeaderboardDTO | null>(null);
   const itemsPerPage = 25;
   const category = "weekly_leaderboard";
-
-  let systemState: SystemStateDTO;
-  systemStore.subscribe((value) => {
-    systemState = value as SystemStateDTO;
-  });
+  
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function sync() {
+  async function sync(seasonId: number, gameweek: number) {
     let category = "weekly_leaderboard";
     const newHashValues = await actor.getDataHashes();
 
@@ -44,8 +40,8 @@ function createWeeklyLeaderboardStore() {
 
     if (categoryHash?.hash != localHash) {
       let updatedLeaderboardData = await actor.getWeeklyLeaderboard(
-        systemState?.calculationSeasonId,
-        systemState?.calculationGameweek,
+        seasonId,
+        gameweek,
         100,
         0
       );
@@ -66,12 +62,13 @@ function createWeeklyLeaderboardStore() {
   async function getWeeklyLeaderboard(
     seasonId: number,
     gameweek: number,
-    currentPage: number
+    currentPage: number,
+    calculationGameweek: number
   ): Promise<WeeklyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
 
-    if (currentPage <= 4 && gameweek == systemState?.calculationGameweek) {
+    if (currentPage <= 4 && gameweek == calculationGameweek) {
       const cachedData = localStorage.getItem(category);
 
       if (cachedData) {
@@ -105,12 +102,8 @@ function createWeeklyLeaderboardStore() {
     return leaderboardData;
   }
 
-  async function getLeadingWeeklyTeam(): Promise<LeaderboardEntry> {
-    let weeklyLeaderboard = await getWeeklyLeaderboard(
-      systemState.calculationSeasonId,
-      systemState.calculationGameweek,
-      1
-    );
+  async function getLeadingWeeklyTeam(seasonId: number, gameweek: number): Promise<LeaderboardEntry> {
+    let weeklyLeaderboard = await getWeeklyLeaderboard(seasonId, gameweek,1,0);
     return weeklyLeaderboard.entries[0];
   }
 

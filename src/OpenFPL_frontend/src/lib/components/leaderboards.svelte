@@ -40,8 +40,10 @@
   onMount(async () => {
     try {
       await teamStore.sync();
+      console.log("syncing system store")
       await systemStore.sync();
-      await weeklyLeaderboardStore.sync();
+      console.log("syncing leaderboard store")
+      await weeklyLeaderboardStore.sync($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0);
       await monthlyLeaderboardStore.sync();
       await seasonLeaderboardStore.sync();
 
@@ -60,7 +62,8 @@
       let leaderboardData = await weeklyLeaderboardStore.getWeeklyLeaderboard(
         selectedSeasonId,
         selectedGameweek,
-        currentPage
+        currentPage,
+        $systemStore?.calculationGameweek ?? 1
       );
       leaderboard = leaderboardData;
     } catch (error) {
@@ -92,7 +95,8 @@
           leaderboard = await weeklyLeaderboardStore.getWeeklyLeaderboard(
             selectedSeasonId,
             selectedGameweek,
-            currentPage
+            currentPage,
+            $systemStore?.calculationGameweek ?? 1
           );
           break;
         case 2:

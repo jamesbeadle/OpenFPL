@@ -42,10 +42,12 @@
   onMount(async () => {
     try {
       await authStore.sync();
+      console.log("Syncing system store")
       await systemStore.sync();
       await fixtureStore.sync();
       await teamStore.sync();
-      await weeklyLeaderboardStore.sync();
+      console.log("Syncing leaderboard store")
+      await weeklyLeaderboardStore.sync($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0);
 
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;
@@ -78,7 +80,7 @@
       countdownHours = countdownTime.hours.toString();
       countdownMinutes = countdownTime.minutes.toString();
 
-      weeklyLeader = await weeklyLeaderboardStore.getLeadingWeeklyTeam();
+      weeklyLeader = await weeklyLeaderboardStore.getLeadingWeeklyTeam($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 1);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching homepage data." },

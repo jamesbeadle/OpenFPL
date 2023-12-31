@@ -33,7 +33,7 @@ function createTeamStore() {
     const localHash = localStorage.getItem(category);
 
     if (categoryHash?.hash != localHash) {
-      const updatedTeamsData = (await actor.getTeams()) as ClubDTO[];
+      const updatedTeamsData = (await actor.getClubs()) as ClubDTO[];
       localStorage.setItem(
         category,
         JSON.stringify(updatedTeamsData, replacer)
