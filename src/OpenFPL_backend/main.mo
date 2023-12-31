@@ -362,9 +362,9 @@ actor Self {
     stable_weekly_ath_prize_pool := seasonManager.getStableWeeklyATHPrizePool();
     stable_monthly_ath_prize_pool := seasonManager.getStableMonthlyATHPrizePool();
     stable_season_ath_prize_pool := seasonManager.getSeasonATHPrizePool();
-    stable_season_leaderboard_canisters := seasonManager.getStableSeasonLeaderboardCanisterIds();
-    stable_monthly_leaderboard_canisters := seasonManager.getStableMonthlyLeaderboardCanisterIds();
-    stable_weekly_leaderboard_canisters := seasonManager.getStableWeeklyLeaderboardCanisterIds();
+    stable_season_leaderboard_canisters := seasonManager.getStableSeasonLeaderboardCanisters();
+    stable_monthly_leaderboard_canisters := seasonManager.getStableMonthlyLeaderboardCanisters();
+    stable_weekly_leaderboard_canisters := seasonManager.getStableWeeklyLeaderboardCanisters();
     stable_clubs := seasonManager.getStableClubs();
     stable_relegated_clubs := seasonManager.getStableRelegatedClubs();
     stable_next_club_id := seasonManager.getStableNextClubId();

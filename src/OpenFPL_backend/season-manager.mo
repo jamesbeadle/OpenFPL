@@ -887,7 +887,7 @@ module {
       return leaderboardComposite.getStableSeasonLeaderboardCanisters();
     };
 
-    public func setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters : [T.WeeklyLeaderboardCanister]) {
+    public func setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters : [T.SeasonLeaderboardCanister]) {
       leaderboardComposite.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
     };
 
@@ -903,7 +903,7 @@ module {
       return leaderboardComposite.getStableWeeklyLeaderboardCanisters();
     };
 
-    public func setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister]) {
+    public func setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister]) {
       leaderboardComposite.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
     };
 
