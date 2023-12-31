@@ -7,7 +7,7 @@ import type {
   UpdateFixtureDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isSuccess, replacer } from "../utils/Helpers";
+import { isError, isSuccess, replacer } from "../utils/Helpers";
 
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);
@@ -21,7 +21,7 @@ function createFixtureStore() {
     let category = "fixtures";
     const newHashValues = await actor.getDataHashes();
 
-    let error = isSuccess(newHashValues);
+    let error = isError(newHashValues);
     if (error) {
       console.error("Error syncing fixture store");
       return;

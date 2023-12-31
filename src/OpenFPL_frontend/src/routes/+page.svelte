@@ -41,16 +41,11 @@
 
   onMount(async () => {
     try {
-      console.log("auth store");
       await authStore.sync();
-      console.log("system store");
       await systemStore.sync();
-      console.log("fixture store");
       await fixtureStore.sync();
-      console.log("team store");
       await teamStore.sync();
-      console.log("leaderboard store");
-      await weeklyLeaderboardStore.syncWeeklyLeaderboard();
+      await weeklyLeaderboardStore.sync();
 
       authStore.subscribe((store) => {
         isLoggedIn = store.identity !== null && store.identity !== undefined;

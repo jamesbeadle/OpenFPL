@@ -5,7 +5,7 @@ import type {
   DataCacheDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../utils/Helpers";
+import { isError, replacer } from "../utils/Helpers";
 
 function createTeamStore() {
   const { subscribe, set } = writable<ClubDTO[]>([]);
@@ -17,22 +17,31 @@ function createTeamStore() {
 
   async function sync() {
     const category = "teams";
-    const newHashValues: DataCacheDTO[] =
-      (await actor.getDataHashes()) as DataCacheDTO[];
-    const liveTeamsHash =
-      newHashValues.find((x) => x.category === category) ?? null;
+    const newHashValues = await actor.getDataHashes();
+
+    let error = isError(newHashValues);
+    if (error) {
+      console.error("Error syncing team store");
+      return;
+    }
+
+    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+
+    let categoryHash =
+      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
+      null;
     const localHash = localStorage.getItem(category);
 
-    if (liveTeamsHash?.hash != localHash) {
+    if (categoryHash?.hash != localHash) {
       const updatedTeamsData = (await actor.getTeams()) as ClubDTO[];
       localStorage.setItem(
-        "teams_data",
+        category,
         JSON.stringify(updatedTeamsData, replacer)
       );
-      localStorage.setItem(category, liveTeamsHash?.hash ?? "");
+      localStorage.setItem(category, categoryHash?.hash ?? "");
       set(updatedTeamsData);
     } else {
-      const cachedTeamsData = localStorage.getItem("teams_data");
+      const cachedTeamsData = localStorage.getItem(category);
       let cachedTeams: ClubDTO[] = [];
       try {
         cachedTeams = JSON.parse(cachedTeamsData || "[]");

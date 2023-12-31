@@ -8,7 +8,7 @@ import type {
   WeeklyLeaderboardDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { replacer } from "../utils/Helpers";
+import { isError, replacer } from "../utils/Helpers";
 
 function createWeeklyLeaderboardStore() {
   const { subscribe, set } = writable<WeeklyLeaderboardDTO | null>(null);
@@ -26,20 +26,40 @@ function createWeeklyLeaderboardStore() {
   );
 
   async function sync() {
-    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
-    let liveHash = newHashValues.find((x) => x.category === category) ?? null;
+    let category = "weekly_leaderboard";
+    const newHashValues = await actor.getDataHashes();
+
+    let error = isError(newHashValues);
+    if (error) {
+      console.error("Error syncing leaderboard store");
+      return;
+    }
+
+    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+
+    let categoryHash =
+      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
+      null;
     const localHash = localStorage.getItem(category);
-    if (liveHash?.hash != localHash) {
+
+    if (categoryHash?.hash != localHash) {
       let updatedLeaderboardData = await actor.getWeeklyLeaderboard(
         systemState?.calculationSeasonId,
-        systemState?.calculationGameweek
+        systemState?.calculationGameweek,
+        100,
+        0
       );
-      set(updatedLeaderboardData);
+
+      if(isError(updatedLeaderboardData)){
+        console.error("error fetching leaderboard store")
+      }
+
       localStorage.setItem(
         category,
-        JSON.stringify(updatedLeaderboardData, replacer)
+        JSON.stringify(updatedLeaderboardData.ok, replacer)
       );
-      localStorage.setItem(category, liveHash?.hash ?? "");
+      localStorage.setItem(category, categoryHash?.hash ?? "");
+      set(updatedLeaderboardData.ok);
     }
   }
 
