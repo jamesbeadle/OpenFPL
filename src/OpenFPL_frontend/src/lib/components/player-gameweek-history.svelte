@@ -31,6 +31,7 @@
   onMount(async () => {
     try {
       await teamStore.sync();
+      if($teamStore.length == 0) return;
       await fixtureStore.sync();
       await systemStore.sync();
       await playerEventsStore.sync;

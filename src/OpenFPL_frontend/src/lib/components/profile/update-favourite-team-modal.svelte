@@ -14,8 +14,9 @@
   $: isSubmitDisabled = newFavouriteTeam <= 0;
 
   onMount(async () => {
-    await userStore.sync();
     await teamStore.sync();
+    if($teamStore.length == 0) return;
+    await userStore.sync();
   });
 
   async function updateFavouriteTeam() {

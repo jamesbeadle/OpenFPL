@@ -41,10 +41,11 @@
 
   onMount(async () => {
     try {
+      await teamStore.sync();
+      if($teamStore.length == 0) return;
       await authStore.sync();
       await systemStore.sync();
       await fixtureStore.sync();
-      await teamStore.sync();
       await weeklyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
@@ -55,6 +56,10 @@
       });
 
       managerCount = await managerStore.getTotalManagers();
+
+      if($teamStore.length == 0){
+        return [];
+      };
 
       let nextFixture = await fixtureStore.getNextFixture();
 

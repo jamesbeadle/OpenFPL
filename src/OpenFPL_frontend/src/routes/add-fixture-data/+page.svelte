@@ -17,6 +17,7 @@
     replacer,
     convertEvent,
     convertPlayerPosition,
+    isError,
   } from "$lib/utils/Helpers";
   import Layout from "../Layout.svelte";
   import PlayerEventsModal from "$lib/components/fixture-validation/player-events-modal.svelte";
@@ -58,12 +59,14 @@
   onMount(async () => {
     try {
       await teamStore.sync();
+      if($teamStore.length == 0) return;
       await fixtureStore.sync();
       await playerStore.sync();
 
-      teamStore.subscribe((value) => {
-        teams = value;
-      });
+      let teams = $teamStore;
+      if(teams.length == 0){
+        return;
+      };
 
       playerStore.subscribe((value) => {
         players = value;

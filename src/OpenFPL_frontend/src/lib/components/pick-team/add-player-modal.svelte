@@ -69,8 +69,9 @@
 
   onMount(async () => {
     try {
-      await playerStore.sync();
       await teamStore.sync();
+      if($teamStore.length == 0) return;
+      await playerStore.sync();
 
       let team = $fantasyTeam;
       teamPlayerCounts = countPlayersByTeam(team?.playerIds ?? []);

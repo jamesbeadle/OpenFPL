@@ -37,8 +37,9 @@
 
   onMount(async () => {
     try {
-      await systemStore.sync();
       await teamStore.sync();
+      if($teamStore.length == 0) return;
+      await systemStore.sync();
       manager = await managerStore.getManager(
         id ?? "",
         $systemStore?.activeSeason.id ?? 1,

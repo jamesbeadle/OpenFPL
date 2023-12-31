@@ -33,13 +33,18 @@ function createTeamStore() {
     const localHash = localStorage.getItem(category);
 
     if (categoryHash?.hash != localHash) {
-      const updatedTeamsData = (await actor.getClubs()) as ClubDTO[];
+      const updatedTeamsData = await actor.getClubs();
+
+      if(isError(updatedTeamsData)){
+        return [];
+      };
+
       localStorage.setItem(
         category,
-        JSON.stringify(updatedTeamsData, replacer)
+        JSON.stringify(updatedTeamsData.ok, replacer)
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedTeamsData);
+      set(updatedTeamsData.ok);
     } else {
       const cachedTeamsData = localStorage.getItem(category);
       let cachedTeams: ClubDTO[] = [];

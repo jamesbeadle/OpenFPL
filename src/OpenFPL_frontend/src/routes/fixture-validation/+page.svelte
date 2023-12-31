@@ -17,8 +17,9 @@
 
   onMount(async () => {
     try {
-      await systemStore.sync();
       await teamStore.sync();
+      if($teamStore.length == 0) return;
+      await systemStore.sync();
       await playerStore.sync();
       currentGameweek = $systemStore?.activeGameweek ?? 1;
       currentSeasonName = $systemStore?.activeSeason.name ?? "";
