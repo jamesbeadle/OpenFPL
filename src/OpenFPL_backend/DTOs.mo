@@ -210,18 +210,18 @@ module DTOs {
   public type PlayerDetailDTO = {
     id : T.PlayerId;
     clubId : T.ClubId;
-    position : Nat8;
+    position : T.PlayerPosition;
     firstName : Text;
     lastName : Text;
     shirtNumber : Nat8;
-    value : Nat;
+    valueQuarterMillions : Nat16;
     dateOfBirth : Int;
     nationality : T.CountryId;
     seasonId : T.SeasonId;
     gameweeks : [PlayerGameweekDTO];
     valueHistory : [T.ValueHistory];
     onLoan : Bool;
-    parentClubId : Nat16;
+    parentClubId : T.ClubId;
     isInjured : Bool;
     injuryHistory : [T.InjuryHistory];
     retirementDate : Int;

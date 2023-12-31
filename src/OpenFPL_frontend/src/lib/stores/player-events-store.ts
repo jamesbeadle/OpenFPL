@@ -9,7 +9,7 @@ import type {
   FantasyTeamSnapshot,
   FixtureDTO,
   PlayerDTO,
-  PlayerEventData,
+  PlayerDetailDTO,
   PlayerPointsDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -94,7 +94,7 @@ function createPlayerEventsStore() {
   async function getPlayerDetails(
     playerId: number,
     seasonId: number
-  ): Promise<PlayerEventData> {
+  ): Promise<PlayerDetailDTO> {
     try {
       const playerDetailData = await actor.getPlayerDetails(playerId, seasonId);
       return playerDetailData;

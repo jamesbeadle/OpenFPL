@@ -101,6 +101,11 @@ export type FixtureStatusType =
   | { Active: null }
   | { Complete: null };
 export type GameweekNumber = number;
+export interface InjuryHistory {
+  description: string;
+  injuryStartDate: bigint;
+  expectedEndDate: bigint;
+}
 export interface LeaderboardEntry {
   username: string;
   positionText: string;
@@ -110,6 +115,7 @@ export interface LeaderboardEntry {
 }
 export type List = [] | [[FantasyTeamSeason, List]];
 export type List_1 = [] | [[FantasyTeamSnapshot, List_1]];
+export type List_2 = [] | [[PlayerEventData, List_2]];
 export interface LoanPlayerDTO {
   loanEndDate: bigint;
   playerId: PlayerId;
@@ -182,6 +188,25 @@ export interface PlayerDTO {
   lastName: string;
   firstName: string;
 }
+export interface PlayerDetailDTO {
+  id: PlayerId;
+  clubId: ClubId;
+  parentClubId: ClubId;
+  valueQuarterMillions: number;
+  dateOfBirth: bigint;
+  injuryHistory: Array<InjuryHistory>;
+  seasonId: SeasonId;
+  isInjured: boolean;
+  gameweeks: Array<PlayerGameweekDTO>;
+  nationality: CountryId;
+  retirementDate: bigint;
+  valueHistory: Array<ValueHistory>;
+  shirtNumber: number;
+  position: PlayerPosition;
+  lastName: string;
+  onLoan: boolean;
+  firstName: string;
+}
 export interface PlayerEventData {
   fixtureId: FixtureId;
   clubId: ClubId;
@@ -203,6 +228,12 @@ export type PlayerEventType =
   | { GoalAssisted: null }
   | { OwnGoal: null }
   | { HighestScoringPlayer: null };
+export interface PlayerGameweekDTO {
+  fixtureId: FixtureId;
+  events: Array<PlayerEventData>;
+  number: number;
+  points: number;
+}
 export type PlayerId = number;
 export interface PlayerPointsDTO {
   id: number;
@@ -217,6 +248,19 @@ export type PlayerPosition =
   | { Midfielder: null }
   | { Forward: null }
   | { Defender: null };
+export interface PlayerScoreDTO {
+  id: number;
+  clubId: ClubId;
+  assists: number;
+  dateOfBirth: bigint;
+  nationality: CountryId;
+  goalsScored: number;
+  saves: number;
+  goalsConceded: number;
+  events: List_2;
+  position: PlayerPosition;
+  points: number;
+}
 export interface ProfileDTO {
   playerIds: Uint16Array | number[];
   countrymenCountryId: CountryId;
@@ -280,22 +324,24 @@ export interface RescheduleFixtureDTO {
 }
 export type Result = { ok: string } | { err: string };
 export type Result_1 = { ok: null } | { err: Error };
-export type Result_10 = { ok: Array<MonthlyLeaderboardDTO> } | { err: Error };
-export type Result_11 = { ok: MonthlyLeaderboardDTO } | { err: Error };
-export type Result_12 = { ok: ManagerGameweekDTO } | { err: Error };
-export type Result_13 = { ok: ManagerDTO } | { err: Error };
-export type Result_14 = { ok: Array<FixtureDTO> } | { err: Error };
-export type Result_15 = { ok: Array<DataCacheDTO> } | { err: Error };
-export type Result_16 = { ok: Array<CountryDTO> } | { err: Error };
-export type Result_17 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_10 = { ok: Array<PlayerPointsDTO> } | { err: Error };
+export type Result_11 = { ok: PlayerDetailDTO } | { err: Error };
+export type Result_12 = { ok: Array<MonthlyLeaderboardDTO> } | { err: Error };
+export type Result_13 = { ok: MonthlyLeaderboardDTO } | { err: Error };
+export type Result_14 = { ok: ManagerGameweekDTO } | { err: Error };
+export type Result_15 = { ok: ManagerDTO } | { err: Error };
+export type Result_16 = { ok: Array<FixtureDTO> } | { err: Error };
+export type Result_17 = { ok: Array<DataCacheDTO> } | { err: Error };
+export type Result_18 = { ok: Array<CountryDTO> } | { err: Error };
+export type Result_19 = { ok: Array<ClubDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
 export type Result_5 = { ok: SeasonLeaderboardDTO } | { err: Error };
 export type Result_6 = { ok: PublicProfileDTO } | { err: Error };
 export type Result_7 = { ok: ProfileDTO } | { err: Error };
-export type Result_8 = { ok: Array<PlayerDTO> } | { err: Error };
-export type Result_9 = { ok: Array<PlayerPointsDTO> } | { err: Error };
+export type Result_8 = { ok: Array<[number, PlayerScoreDTO]> } | { err: Error };
+export type Result_9 = { ok: Array<PlayerDTO> } | { err: Error };
 export interface RetirePlayerDTO {
   playerId: PlayerId;
   retirementDate: bigint;
@@ -398,6 +444,12 @@ export interface UpdateSystemStateDTO {
   calculationSeasonId: SeasonId;
   onHold: boolean;
 }
+export interface ValueHistory {
+  oldValue: number;
+  newValue: number;
+  seasonId: number;
+  gameweek: number;
+}
 export interface WeeklyLeaderboardDTO {
   totalEntries: bigint;
   seasonId: SeasonId;
@@ -422,25 +474,27 @@ export interface _SERVICE {
   executeUnretirePlayer: ActorMethod<[UnretirePlayerDTO], undefined>;
   executeUpdateClub: ActorMethod<[UpdateClubDTO], undefined>;
   executeUpdatePlayer: ActorMethod<[UpdatePlayerDTO], undefined>;
-  getClubs: ActorMethod<[], Result_17>;
-  getCountries: ActorMethod<[], Result_16>;
-  getDataHashes: ActorMethod<[], Result_15>;
-  getFixtures: ActorMethod<[SeasonId], Result_14>;
-  getManager: ActorMethod<[], Result_13>;
+  getClubs: ActorMethod<[], Result_19>;
+  getCountries: ActorMethod<[], Result_18>;
+  getDataHashes: ActorMethod<[], Result_17>;
+  getFixtures: ActorMethod<[SeasonId], Result_16>;
+  getManager: ActorMethod<[], Result_15>;
   getManagerGameweek: ActorMethod<
     [string, SeasonId, GameweekNumber],
-    Result_12
+    Result_14
   >;
   getMonthlyLeaderboard: ActorMethod<
     [SeasonId, ClubId, CalendarMonth, bigint, bigint],
-    Result_11
+    Result_13
   >;
-  getMonthlyLeaderboards: ActorMethod<[SeasonId, CalendarMonth], Result_10>;
+  getMonthlyLeaderboards: ActorMethod<[SeasonId, CalendarMonth], Result_12>;
+  getPlayerDetails: ActorMethod<[PlayerId, SeasonId], Result_11>;
   getPlayerDetailsForGameweek: ActorMethod<
     [SeasonId, GameweekNumber],
-    Result_9
+    Result_10
   >;
-  getPlayers: ActorMethod<[], Result_8>;
+  getPlayers: ActorMethod<[], Result_9>;
+  getPlayersMap: ActorMethod<[SeasonId, GameweekNumber], Result_8>;
   getProfile: ActorMethod<[], Result_7>;
   getPublicProfile: ActorMethod<[string, SeasonId, GameweekNumber], Result_6>;
   getSeasonLeaderboard: ActorMethod<[SeasonId, bigint, bigint], Result_5>;

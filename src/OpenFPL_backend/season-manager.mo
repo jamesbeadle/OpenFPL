@@ -145,6 +145,15 @@ module {
       return playerComposite.getPlayerDetailsForGameweek(seasonId, gameweek);
     };
 
+    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+      return await playerComposite.getPlayerDetails(playerId, seasonId);
+    };
+
+    public func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+      let result = await playerComposite.getPlayersMap(seasonId, gameweek);
+      return #ok(result);
+    };
+
     public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
       return await leaderboardComposite.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
     };

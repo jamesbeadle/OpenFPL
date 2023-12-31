@@ -11,6 +11,10 @@
   import type {
     ClubDTO,
     ClubId,
+    PlayerDetailDTO,
+    PlayerGameweekDTO,
+    PlayerPointsDTO,
+    PlayerScoreDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { FixtureWithTeams } from "$lib/types/fixture-with-teams";
   import { playerEventsStore } from "$lib/stores/player-events-store";
@@ -18,9 +22,8 @@
 
   let isLoading = true;
   let selectedGameweek: number;
-  let selectedSeason: Season | null = null;
   let fixturesWithTeams: FixtureWithTeams[] = [];
-  let playerDetails: PlayerDeta;
+  let playerDetails: PlayerDetailDTO;
   let selectedOpponent: ClubDTO | null = null;
   let opponentCache = new Map<number, ClubDTO>();
   let selectedPlayerGameweek: PlayerGameweekDTO | null = null;
@@ -36,7 +39,6 @@
       await systemStore.sync();
       await playerEventsStore.sync;
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
-      selectedSeason = $systemStore?.calculationSeasonId ?? null;
 
       fixturesWithTeams = $fixtureStore.map((fixture) => ({
         fixture,
@@ -84,7 +86,7 @@
         friendlyName: "",
         thirdColourHex: "",
         abbreviatedName: "",
-        shirtType: 0,
+        shirtType: { Filled: null },
         primaryColourHex: "",
       };
     }
@@ -95,7 +97,7 @@
 
   function showDetailModal(
     playerDetailsDTO: PlayerGameweekDTO,
-    opponent: ClubId
+    opponent: ClubDTO
   ): void {
     selectedPlayerGameweek = playerDetailsDTO;
     selectedOpponent = opponent;
@@ -122,7 +124,7 @@
       visible={showModal}
       playerDetail={playerDetails}
       gameweek={selectedGameweek}
-      seasonName={selectedSeason?.name}
+      seasonName={$systemStore?.calculationSeasonName}
     />
   {/if}
   <div class="flex flex-col space-y-4 mt-4">

@@ -93,6 +93,16 @@ actor Self {
     return #ok(seasonManager.getPlayerDetailsForGameweek(seasonId, gameweek));
   };
 
+  //TODO: Identify why this can't be a query function
+  public shared func getPlayersMap(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<[(Nat16, DTOs.PlayerScoreDTO)], T.Error> {
+    return await seasonManager.getPlayersMap(seasonId, gameweek);
+  };
+
+  //TODO: Identify why this can't be a query function
+  public shared ({ caller }) func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+    return await seasonManager.getPlayerDetails(playerId, seasonId);
+  };
+
   public shared query func getCountries() : async Result.Result<[DTOs.CountryDTO], T.Error> {
     return #ok(Countries.countries);
   };

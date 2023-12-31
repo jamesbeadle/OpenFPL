@@ -190,6 +190,98 @@ module {
       return Iter.toArray(playersMap.entries());
     };
 
+    public func getPlayerDetails(playerId : T.PlayerId, seasonId : T.SeasonId) : async Result.Result<DTOs.PlayerDetailDTO, T.Error> {
+
+      var clubId : T.ClubId = 0;
+      var position : T.PlayerPosition = #Goalkeeper;
+      var firstName = "";
+      var lastName = "";
+      var shirtNumber : Nat8 = 0;
+      var valueQuarterMillions : Nat16 = 0;
+      var dateOfBirth : Int = 0;
+      var nationality : T.CountryId = 0;
+      var valueHistory : [T.ValueHistory] = [];
+      var onLoan = false;
+      var parentClubId : T.ClubId = 0;
+      var isInjured = false;
+      var injuryHistory : [T.InjuryHistory] = [];
+      var retirementDate : Int = 0;
+
+      let gameweeksBuffer = Buffer.fromArray<DTOs.PlayerGameweekDTO>([]);
+
+      let foundPlayer = List.find<T.Player>(
+        players,
+        func(player : T.Player) : Bool {
+          return player.id == playerId and not player.onLoan;
+        },
+      );
+
+      switch (foundPlayer) {
+        case (null) {};
+        case (?player) {
+          clubId := player.clubId;
+          position := player.position;
+          firstName := player.firstName;
+          lastName := player.lastName;
+          shirtNumber := player.shirtNumber;
+          valueQuarterMillions := player.valueQuarterMillions;
+          dateOfBirth := player.dateOfBirth;
+          nationality := player.nationality;
+          valueHistory := List.toArray<T.ValueHistory>(player.valueHistory);
+          onLoan := player.onLoan;
+          parentClubId := player.parentClubId;
+          isInjured := player.isInjured;
+          injuryHistory := List.toArray<T.InjuryHistory>(player.injuryHistory);
+          retirementDate := player.retirementDate;
+
+          let currentSeason = List.find<T.PlayerSeason>(player.seasons, func(ps : T.PlayerSeason) { ps.id == seasonId });
+          switch (currentSeason) {
+            case (null) {};
+            case (?season) {
+              for (gw in Iter.fromList(season.gameweeks)) {
+
+                var fixtureId : T.FixtureId = 0;
+                let events = List.toArray<T.PlayerEventData>(gw.events);
+                if (Array.size(events) > 0) {
+                  fixtureId := events[0].fixtureId;
+                };
+
+                let gameweekDTO : DTOs.PlayerGameweekDTO = {
+                  number = gw.number;
+                  events = List.toArray<T.PlayerEventData>(gw.events);
+                  points = gw.points;
+                  fixtureId = fixtureId;
+                };
+
+                gameweeksBuffer.add(gameweekDTO);
+              };
+            };
+          };
+
+        };
+      };
+
+      return #ok({
+        id = playerId;
+        clubId = clubId;
+        position = position;
+        firstName = firstName;
+        lastName = lastName;
+        shirtNumber = shirtNumber;
+        valueQuarterMillions = valueQuarterMillions;
+        dateOfBirth = dateOfBirth;
+        nationality = nationality;
+        seasonId = seasonId;
+        valueHistory = valueHistory;
+        onLoan = onLoan;
+        parentClubId = parentClubId;
+        isInjured = isInjured;
+        injuryHistory = injuryHistory;
+        retirementDate = retirementDate;
+        gameweeks = Buffer.toArray<DTOs.PlayerGameweekDTO>(gameweeksBuffer);
+      });
+    };
+
     public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
       let player = List.find<T.Player>(
         players,
