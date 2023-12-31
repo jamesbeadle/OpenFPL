@@ -58,7 +58,7 @@ function createWeeklyLeaderboardStore() {
         category,
         JSON.stringify(updatedLeaderboardData.ok, replacer)
       );
-      localStorage.setItem(category, categoryHash?.hash ?? "");
+      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedLeaderboardData.ok);
     }
   }

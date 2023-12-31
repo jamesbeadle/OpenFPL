@@ -38,7 +38,7 @@ function createTeamStore() {
         category,
         JSON.stringify(updatedTeamsData, replacer)
       );
-      localStorage.setItem(category, categoryHash?.hash ?? "");
+      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedTeamsData);
     } else {
       const cachedTeamsData = localStorage.getItem(category);

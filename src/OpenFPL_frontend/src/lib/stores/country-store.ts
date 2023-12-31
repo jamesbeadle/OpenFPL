@@ -38,7 +38,7 @@ function createCountriesStore() {
         category,
         JSON.stringify(updatedCountriesData, replacer)
       );
-      localStorage.setItem(category, categoryHash?.hash ?? "");
+      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedCountriesData);
     } else {
       const cachedCountriesData = localStorage.getItem(category);

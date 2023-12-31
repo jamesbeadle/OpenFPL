@@ -47,7 +47,7 @@ function createMonthlyLeaderboardStore() {
         category,
         JSON.stringify(updatedLeaderboardData, replacer)
       );
-      localStorage.setItem(category, categoryHash?.hash ?? "");
+      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedLeaderboardData);
     } else {
       const cachedMonthlyLeaderboardsData = localStorage.getItem(category);

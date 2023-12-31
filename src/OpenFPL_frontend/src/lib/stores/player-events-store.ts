@@ -18,6 +18,7 @@ import {
   calculateAgeFromNanoseconds,
   convertEvent,
   convertPlayerPosition,
+  isError,
   replacer,
 } from "../utils/Helpers";
 
@@ -38,25 +39,35 @@ function createPlayerEventsStore() {
   );
 
   async function sync() {
-    let category = "playerEventData";
-    const newHashValues: DataCacheDTO[] = await actor.getDataHashes();
-    let livePlayersHash =
-      newHashValues.find((x) => x.category === category) ?? null;
+    let category = "player_events";
+    const newHashValues = await actor.getDataHashes();
+
+    let error = isError(newHashValues);
+    if (error) {
+      console.error("Error syncing player events store");
+      return;
+    }
+
+    let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
+
+    let categoryHash =
+      dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
+      null;
     const localHash = localStorage.getItem(category);
 
-    if (livePlayersHash?.hash != localHash) {
+    if (categoryHash?.hash != localHash) {
       let updatedPlayerEventsData = await actor.getPlayerDetailsForGameweek(
         systemState.calculationSeasonId,
         systemState.calculationGameweek
       );
       localStorage.setItem(
-        "player_events_data",
+        category,
         JSON.stringify(updatedPlayerEventsData, replacer)
       );
-      localStorage.setItem(category, livePlayersHash?.hash ?? "");
+      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedPlayerEventsData);
     } else {
-      const cachedPlayersData = localStorage.getItem("player_events_data");
+      const cachedPlayersData = localStorage.getItem(category);
       let cachedPlayerEvents: PlayerPointsDTO[] = [];
       try {
         cachedPlayerEvents = JSON.parse(cachedPlayersData || "[]");
