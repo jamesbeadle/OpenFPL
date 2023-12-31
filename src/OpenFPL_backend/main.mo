@@ -317,9 +317,9 @@ actor Self {
   private stable var stable_weekly_ath_prize_pool : Nat64 = 0;
   private stable var stable_monthly_ath_prize_pool : Nat64 = 0;
   private stable var stable_season_ath_prize_pool : Nat64 = 0;
-  private stable var stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)] = [];
-  private stable var stable_monthly_leaderboard_canister_ids : [(T.MonthlyLeaderboardKey, Text)] = [];
-  private stable var stable_weekly_leaderboard_canister_ids : [(T.WeeklyLeaderboardKey, Text)] = [];
+  private stable var stable_season_leaderboard_canisters : [T.SeasonLeaderboardCanister] = [];
+  private stable var stable_monthly_leaderboard_canisters : [T.MonthlyLeaderboardCanister] = [];
+  private stable var stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister] = [];
   private stable var stable_clubs : [T.Club] = [];
   private stable var stable_relegated_clubs : [T.Club] = [];
   private stable var stable_next_club_id : T.ClubId = 1;
@@ -362,9 +362,9 @@ actor Self {
     stable_weekly_ath_prize_pool := seasonManager.getStableWeeklyATHPrizePool();
     stable_monthly_ath_prize_pool := seasonManager.getStableMonthlyATHPrizePool();
     stable_season_ath_prize_pool := seasonManager.getSeasonATHPrizePool();
-    stable_season_leaderboard_canister_ids := seasonManager.getStableSeasonLeaderboardCanisterIds();
-    stable_monthly_leaderboard_canister_ids := seasonManager.getStableMonthlyLeaderboardCanisterIds();
-    stable_weekly_leaderboard_canister_ids := seasonManager.getStableWeeklyLeaderboardCanisterIds();
+    stable_season_leaderboard_canisters := seasonManager.getStableSeasonLeaderboardCanisterIds();
+    stable_monthly_leaderboard_canisters := seasonManager.getStableMonthlyLeaderboardCanisterIds();
+    stable_weekly_leaderboard_canisters := seasonManager.getStableWeeklyLeaderboardCanisterIds();
     stable_clubs := seasonManager.getStableClubs();
     stable_relegated_clubs := seasonManager.getStableRelegatedClubs();
     stable_next_club_id := seasonManager.getStableNextClubId();
@@ -397,9 +397,9 @@ actor Self {
     seasonManager.setStableWeeklyATHPrizePool(stable_weekly_ath_prize_pool);
     seasonManager.setStableMonthlyATHPrizePool(stable_monthly_ath_prize_pool);
     seasonManager.setSeasonATHPrizePool(stable_season_ath_prize_pool);
-    seasonManager.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
-    seasonManager.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
-    seasonManager.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
+    seasonManager.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
+    seasonManager.setStableMonthlyLeaderboardCanisters(stable_monthly_leaderboard_canisters);
+    seasonManager.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
     seasonManager.setStableClubs(stable_clubs);
     seasonManager.setStableRelegatedClubs(stable_relegated_clubs);
     seasonManager.setStableNextClubId(stable_next_club_id);

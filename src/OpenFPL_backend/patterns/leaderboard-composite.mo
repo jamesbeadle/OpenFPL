@@ -619,7 +619,7 @@ module {
       return List.toArray(seasonLeaderboardCanisters);
     };
 
-    public func setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canisters : [T.SeasonLeaderboardCanister]) {
+    public func setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters : [T.SeasonLeaderboardCanister]) {
       seasonLeaderboardCanisters := List.fromArray(stable_season_leaderboard_canisters);
     };
 

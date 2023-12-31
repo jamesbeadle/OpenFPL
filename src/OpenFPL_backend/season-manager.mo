@@ -883,28 +883,28 @@ module {
       return managerComposite.setSeasonATHPrizePool(stable_season_ath_prize_pool);
     };
 
-    public func getStableSeasonLeaderboardCanisterIds() : [(T.SeasonId, Text)] {
-      return leaderboardComposite.getStableSeasonLeaderboardCanisterIds();
+    public func getStableSeasonLeaderboardCanisters() : [T.SeasonLeaderboardCanister] {
+      return leaderboardComposite.getStableSeasonLeaderboardCanisters();
     };
 
-    public func setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids : [(T.SeasonId, Text)]) {
-      leaderboardComposite.setStableSeasonLeaderboardCanisterIds(stable_season_leaderboard_canister_ids);
+    public func setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters : [T.WeeklyLeaderboardCanister]) {
+      leaderboardComposite.setStableSeasonLeaderboardCanisters(stable_season_leaderboard_canisters);
     };
 
-    public func getStableMonthlyLeaderboardCanisterIds() : [(T.MonthlyLeaderboardKey, Text)] {
-      return leaderboardComposite.getStableMonthlyLeaderboardCanisterIds();
+    public func getStableMonthlyLeaderboardCanisters() : [T.MonthlyLeaderboardCanister] {
+      return leaderboardComposite.getStableMonthlyLeaderboardCanisters();
     };
 
-    public func setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids : [(T.MonthlyLeaderboardKey, Text)]) {
-      leaderboardComposite.setStableMonthlyLeaderboardCanisterIds(stable_monthly_leaderboard_canister_ids);
+    public func setStableMonthlyLeaderboardCanisters(stable_monthly_leaderboard_canisters : [T.MonthlyLeaderboardCanister]) {
+      leaderboardComposite.setStableMonthlyLeaderboardCanisters(stable_monthly_leaderboard_canisters);
     };
 
-    public func getStableWeeklyLeaderboardCanisterIds() : [(T.WeeklyLeaderboardKey, Text)] {
-      return leaderboardComposite.getStableWeeklyLeaderboardCanisterIds();
+    public func getStableWeeklyLeaderboardCanisters() : [T.WeeklyLeaderboardCanister] {
+      return leaderboardComposite.getStableWeeklyLeaderboardCanisters();
     };
 
-    public func setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids : [(T.WeeklyLeaderboardKey, Text)]) {
-      leaderboardComposite.setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canister_ids);
+    public func setStableWeeklyLeaderboardCanisterIds(stable_weekly_leaderboard_canisters : [T.WeeklyLeaderboardCanister]) {
+      leaderboardComposite.setStableWeeklyLeaderboardCanisters(stable_weekly_leaderboard_canisters);
     };
 
     public func getStableClubs() : [T.Club] {
