@@ -1,10 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Layout from "../Layout.svelte";
+  import AdminCanisters from "$lib/components/admin/admin-canisters.svelte";
+  import AdminClubs from "$lib/components/admin/admin-clubs.svelte";
   import AdminFixtures from "$lib/components/admin/admin-fixtures.svelte";
+  import AdminPlayers from "$lib/components/admin/admin-players.svelte";
+  import AdminTimers from "$lib/components/admin/admin-timers.svelte";
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
   import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
   import { Spinner } from "@dfinity/gix-components";
+    import AdminManagers from "$lib/components/admin/admin-managers.svelte";
 
   export let showSystemStateModal: boolean = false;
   export let showSnapshotModal: boolean = false;
@@ -82,8 +87,18 @@
           </li>
         </ul>
 
-        {#if activeTab === "fixtures"}
-          <AdminFixtures />
+        {#if activeTab === "canisters"}
+          <AdminCanisters />
+        {:else if activeTab === "timers"}
+          <AdminTimers />  
+        {:else if activeTab === "fixtures"}
+          <AdminFixtures />  
+        {:else if activeTab === "clubs"}
+          <AdminClubs />  
+        {:else if activeTab === "players"}
+          <AdminPlayers />
+        {:else if activeTab === "managers"}
+          <AdminManagers />
         {/if}
       </div>
     </div>
