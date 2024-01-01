@@ -1,15 +1,16 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import type { CanisterDTO, ClubDTO, FixtureDTO, ManagerDTO, PlayerDTO, TimerDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isError, replacer } from "../utils/Helpers";
 
 function createAdminStore() {
-
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function getCanisters(page: number): Promise<CanisterDTO[] | undefined> {
+  async function getCanisters(
+    page: number
+  ): Promise<CanisterDTO[] | undefined> {
     let canisterDTOs: CanisterDTO[] = [];
     subscribe((value) => {
       canisterDTOs = value;
@@ -63,7 +64,7 @@ function createAdminStore() {
     getFixtures,
     getClubs,
     getPlayers,
-    getManagers
+    getManagers,
   };
 }
 

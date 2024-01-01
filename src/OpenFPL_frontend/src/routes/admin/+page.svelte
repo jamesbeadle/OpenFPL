@@ -9,7 +9,7 @@
   import SystemStateModal from "$lib/components/admin/system-state-modal.svelte";
   import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
   import { Spinner } from "@dfinity/gix-components";
-    import AdminManagers from "$lib/components/admin/admin-managers.svelte";
+  import AdminManagers from "$lib/components/admin/admin-managers.svelte";
 
   export let showSystemStateModal: boolean = false;
   export let showSnapshotModal: boolean = false;
@@ -90,11 +90,11 @@
         {#if activeTab === "canisters"}
           <AdminCanisters />
         {:else if activeTab === "timers"}
-          <AdminTimers />  
+          <AdminTimers />
         {:else if activeTab === "fixtures"}
-          <AdminFixtures />  
+          <AdminFixtures />
         {:else if activeTab === "clubs"}
-          <AdminClubs />  
+          <AdminClubs />
         {:else if activeTab === "players"}
           <AdminPlayers />
         {:else if activeTab === "managers"}

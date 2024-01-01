@@ -5,6 +5,10 @@ export interface AddInitialFixturesDTO {
   seasonFixtures: Array<FixtureDTO>;
 }
 export type CalendarMonth = number;
+export interface CanisterDTO {
+  cycles: bigint;
+  canisterId: string;
+}
 export interface ClubDTO {
   id: ClubId;
   secondaryColourHex: string;
@@ -340,6 +344,9 @@ export type Result_17 = { ok: Array<DataCacheDTO> } | { err: Error };
 export type Result_18 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_19 = { ok: Array<ClubDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
+export type Result_20 = { ok: Array<TimerDTO> } | { err: Error };
+export type Result_21 = { ok: Array<ProfileDTO> } | { err: Error };
+export type Result_22 = { ok: Array<CanisterDTO> } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
 export type Result_5 = { ok: SeasonLeaderboardDTO } | { err: Error };
@@ -383,6 +390,11 @@ export interface SystemStateDTO {
   pickTeamGameweek: GameweekNumber;
   calculationMonth: CalendarMonth;
   calculationSeasonId: SeasonId;
+}
+export interface TimerDTO {
+  id: bigint;
+  callbackFunction: string;
+  triggerTime: bigint;
 }
 export interface TransferPlayerDTO {
   playerId: PlayerId;
@@ -462,6 +474,28 @@ export interface WeeklyLeaderboardDTO {
   gameweek: GameweekNumber;
 }
 export interface _SERVICE {
+  adminAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
+  adminCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
+  adminGetCanisters: ActorMethod<[], Result_22>;
+  adminGetClubs: ActorMethod<[], Result_19>;
+  adminGetFixtures: ActorMethod<[], Result_16>;
+  adminGetManagers: ActorMethod<[], Result_21>;
+  adminGetPlayers: ActorMethod<[], Result_9>;
+  adminGetTimers: ActorMethod<[], Result_20>;
+  adminLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
+  adminPromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], Result>;
+  adminPromoteNewClub: ActorMethod<[PromoteNewClubDTO], Result>;
+  adminRecallPlayer: ActorMethod<[RecallPlayerDTO], Result>;
+  adminRescheduleFixture: ActorMethod<[RescheduleFixtureDTO], Result>;
+  adminRetirePlayer: ActorMethod<[RetirePlayerDTO], Result>;
+  adminRevaluePlayerDown: ActorMethod<[RevaluePlayerDownDTO], Result>;
+  adminRevaluePlayerUp: ActorMethod<[RevaluePlayerUpDTO], Result>;
+  adminSetPlayerInjury: ActorMethod<[SetPlayerInjuryDTO], Result>;
+  adminSubmitFixtureData: ActorMethod<[SubmitFixtureDataDTO], Result>;
+  adminTransferPlayer: ActorMethod<[TransferPlayerDTO], Result>;
+  adminUnretirePlayer: ActorMethod<[UnretirePlayerDTO], Result>;
+  adminUpdateClub: ActorMethod<[UpdateClubDTO], Result>;
+  adminUpdatePlayer: ActorMethod<[UpdatePlayerDTO], Result>;
   burnICPToCycles: ActorMethod<[bigint], undefined>;
   executeAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], undefined>;
   executeCreatePlayer: ActorMethod<[CreatePlayerDTO], undefined>;

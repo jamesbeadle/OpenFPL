@@ -1018,5 +1018,29 @@ module {
       return await seasonComposite.updateFixture(updateFixtureDTO);
     };
 
+    public func adminGetCanisters() : [DTOs.CanisterDTO] {
+      return [];
+    };
+
+    public func adminGetTimers() : [DTOs.TimerDTO] {
+      return [];
+    };
+
+    public func adminGetFixtures() : [DTOs.FixtureDTO] {
+      return [];
+    };
+
+    public func adminGetClubs() : [DTOs.ClubDTO] {
+      return [];
+    };
+
+    public func adminGetPlayers() : [DTOs.PlayerDTO] {
+      return [];
+    };
+
+    public func adminGetManagers() : [DTOs.ProfileDTO] {
+      return [];
+    };
+
   };
 };

@@ -403,4 +403,15 @@ module DTOs {
     transferWindowGameweek : T.GameweekNumber;
   };
 
+  public type CanisterDTO = {
+    canisterId : Text;
+    cycles : Nat;
+  };
+
+  public type TimerDTO = {
+    id : Int;
+    triggerTime : Int;
+    callbackFunction : Text;
+  };
+
 };

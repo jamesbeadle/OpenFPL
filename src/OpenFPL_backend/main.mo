@@ -510,27 +510,45 @@ actor Self {
   let TEMP_ADMIN_PRINCIPAL = "";
 
   //Getters for admin functions
-  public shared query func adminGetCanisters() : async Result.Result<[DTOs.CanisterDTO], T.Error> {
+  public shared query ({ caller }) func adminGetCanisters() : async Result.Result<[DTOs.CanisterDTO], T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     return #ok(seasonManager.adminGetCanisters());
   };
 
-  public shared query func adminGetTimers() : async Result.Result<[DTOs.TimerDTO], T.Error> {
+  public shared query ({ caller }) func adminGetTimers() : async Result.Result<[DTOs.TimerDTO], T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     return #ok(seasonManager.adminGetTimers());
   };
 
-  public shared query func adminGetFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+  public shared query ({ caller }) func adminGetFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     return #ok(seasonManager.adminGetFixtures());
   };
 
-  public shared query func adminGetClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+  public shared query ({ caller }) func adminGetClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     return #ok(seasonManager.adminGetClubs());
   };
 
-  public shared query func adminGetPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+  public shared query ({ caller }) func adminGetPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     return #ok(seasonManager.adminGetPlayers());
   };
 
-  public shared query func adminGetManagers() : async Result.Result<[DTOs.ProfileDTO], T.Error> {
+  public shared query ({ caller }) func adminGetManagers() : async Result.Result<[DTOs.ProfileDTO], T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     return #ok(seasonManager.adminGetManagers());
   };
 
@@ -551,15 +569,15 @@ actor Self {
   };
 
   //Add in functions that simultaneously validate and execute each proposal type for testing
-  
+
   public shared ({ caller }) func adminRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
     let result = await seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
-    if(result == #ok("Valid")){
+    if (result == #ok("Valid")) {
       await seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
-      return #ok;
+      return #ok("Valid");
     };
     return #err("Error revaluing players");
   };
@@ -568,10 +586,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeRevaluePlayerDown(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
+      return #ok("Valid");
     };
     return #err("Error revaluing players");
   };
@@ -580,10 +598,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateSubmitFixtureData(submitFixtureData);
-    if(result == #ok("Valid")){
-      await seasonManager.executeSubmitFixtureData(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateSubmitFixtureData(submitFixtureData);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeSubmitFixtureData(submitFixtureData);
+      return #ok("Valid");
     };
     return #err("Error submitting fixture data");
   };
@@ -592,10 +610,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeAddInitialFixtures(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeAddInitialFixtures(addInitialFixturesDTO);
+      return #ok("Valid");
     };
     return #err("Error adding initial fixtures");
   };
@@ -604,10 +622,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeRescheduleFixture(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeRescheduleFixture(rescheduleFixtureDTO);
+      return #ok("Valid");
     };
     return #err("Error rescheduling fixtures");
   };
@@ -616,10 +634,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateLoanPlayer(loanPlayerDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeLoanPlayer(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateLoanPlayer(loanPlayerDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeLoanPlayer(loanPlayerDTO);
+      return #ok("Valid");
     };
     return #err("Error loaning player");
   };
@@ -628,10 +646,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateTransferPlayer(transferPlayerDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeTransferPlayer(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateTransferPlayer(transferPlayerDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeTransferPlayer(transferPlayerDTO);
+      return #ok("Valid");
     };
     return #err("Error transferring player");
   };
@@ -640,10 +658,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateRecallPlayer(recallPlayerDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeRecallPlayer(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateRecallPlayer(recallPlayerDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeRecallPlayer(recallPlayerDTO);
+      return #ok("Valid");
     };
     return #err("Error recalling player");
   };
@@ -652,10 +670,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateCreatePlayer(createPlayerDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeCreatePlayer(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateCreatePlayer(createPlayerDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeCreatePlayer(createPlayerDTO);
+      return #ok("Valid");
     };
     return #err("Error creating player");
   };
@@ -664,10 +682,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateUpdatePlayer(updatePlayerDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeUpdatePlayer(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateUpdatePlayer(updatePlayerDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeUpdatePlayer(updatePlayerDTO);
+      return #ok("Valid");
     };
     return #err("Error updating player");
   };
@@ -676,10 +694,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeSetPlayerInjury(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeSetPlayerInjury(setPlayerInjuryDTO);
+      return #ok("Valid");
     };
     return #err("Error setting player injury");
   };
@@ -688,10 +706,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateRetirePlayer(retirePlayerDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeRetirePlayer(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateRetirePlayer(retirePlayerDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeRetirePlayer(retirePlayerDTO);
+      return #ok("Valid");
     };
     return #err("Error retiring player");
   };
@@ -700,10 +718,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateUnretirePlayer(unretirePlayerDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeUnretirePlayer(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateUnretirePlayer(unretirePlayerDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeUnretirePlayer(unretirePlayerDTO);
+      return #ok("Valid");
     };
     return #err("Error unretiring player");
   };
@@ -712,10 +730,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executePromoteFormerClub(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executePromoteFormerClub(promoteFormerClubDTO);
+      return #ok("Valid");
     };
     return #err("Error promoting former club");
   };
@@ -724,10 +742,10 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validatePromoteNewClub(promoteNewClubDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executePromoteNewClub(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validatePromoteNewClub(promoteNewClubDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executePromoteNewClub(promoteNewClubDTO);
+      return #ok("Valid");
     };
     return #err("Error promoting new clubs");
   };
@@ -736,34 +754,12 @@ actor Self {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    await seasonManager.validateUpdateClub(updateClubDTO);
-    if(result == #ok("Valid")){
-      await seasonManager.executeUpdateClub(revaluePlayerUpDTO);
-      return #ok;
+    let result = await seasonManager.validateUpdateClub(updateClubDTO);
+    if (result == #ok("Valid")) {
+      await seasonManager.executeUpdateClub(updateClubDTO);
+      return #ok("Valid");
     };
     return #err("Error updating club");
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 };

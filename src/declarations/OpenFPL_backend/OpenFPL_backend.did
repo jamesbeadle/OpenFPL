@@ -73,6 +73,11 @@ type TransferPlayerDTO = record {
   newClubId : ClubId;
   playerId : PlayerId;
 };
+type TimerDTO = record {
+  callbackFunction : text;
+  id : int;
+  triggerTime : int;
+};
 type SystemStateDTO = record {
   calculationGameweek : GameweekNumber;
   calculationMonth : CalendarMonth;
@@ -139,6 +144,18 @@ type Result_4 = variant {
 type Result_3 = variant {
   err : Error;
   ok : nat;
+};
+type Result_22 = variant {
+  err : Error;
+  ok : vec CanisterDTO;
+};
+type Result_21 = variant {
+  err : Error;
+  ok : vec ProfileDTO;
+};
+type Result_20 = variant {
+  err : Error;
+  ok : vec TimerDTO;
 };
 type Result_2 = variant {
   err : Error;
@@ -524,12 +541,38 @@ type ClubDTO = record {
   shirtType : ShirtType;
   thirdColourHex : text;
 };
+type CanisterDTO = record {
+  canisterId : text;
+  cycles : nat;
+};
 type CalendarMonth = nat8;
 type AddInitialFixturesDTO = record {
   seasonFixtures : vec FixtureDTO;
   seasonId : SeasonId;
 };
 service : {
+  adminAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
+  adminCreatePlayer : (CreatePlayerDTO) -> (Result);
+  adminGetCanisters : () -> (Result_22) query;
+  adminGetClubs : () -> (Result_19) query;
+  adminGetFixtures : () -> (Result_16) query;
+  adminGetManagers : () -> (Result_21) query;
+  adminGetPlayers : () -> (Result_9) query;
+  adminGetTimers : () -> (Result_20) query;
+  adminLoanPlayer : (LoanPlayerDTO) -> (Result);
+  adminPromoteFormerClub : (PromoteFormerClubDTO) -> (Result);
+  adminPromoteNewClub : (PromoteNewClubDTO) -> (Result);
+  adminRecallPlayer : (RecallPlayerDTO) -> (Result);
+  adminRescheduleFixture : (RescheduleFixtureDTO) -> (Result);
+  adminRetirePlayer : (RetirePlayerDTO) -> (Result);
+  adminRevaluePlayerDown : (RevaluePlayerDownDTO) -> (Result);
+  adminRevaluePlayerUp : (RevaluePlayerUpDTO) -> (Result);
+  adminSetPlayerInjury : (SetPlayerInjuryDTO) -> (Result);
+  adminSubmitFixtureData : (SubmitFixtureDataDTO) -> (Result);
+  adminTransferPlayer : (TransferPlayerDTO) -> (Result);
+  adminUnretirePlayer : (UnretirePlayerDTO) -> (Result);
+  adminUpdateClub : (UpdateClubDTO) -> (Result);
+  adminUpdatePlayer : (UpdatePlayerDTO) -> (Result);
   burnICPToCycles : (nat64) -> ();
   executeAddInitialFixtures : (AddInitialFixturesDTO) -> ();
   executeCreatePlayer : (CreatePlayerDTO) -> ();
