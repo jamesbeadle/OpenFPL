@@ -609,6 +609,50 @@ actor Self {
     return #ok(dto);
   };
 
+  public shared ({ caller }) func adminGetProfileCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminProfilePictureCanisterList, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+
+    let profileCanisters = seasonManager.getStableProfilePictureCanisterIds();
+
+    let uniqueCanisterIds = Buffer.fromArray<Text>([]);
+
+    for (canister in Iter.fromArray(profileCanisters)) {
+      if (not Buffer.contains<Text>(uniqueCanisterIds, canister.1, func(a : Text, b : Text) : Bool { a == b })) {
+        uniqueCanisterIds.add(canister.1);
+      };
+    };
+
+    let uniqueCanisterArray = Buffer.toArray(uniqueCanisterIds);
+
+    let droppedEntries = List.drop<Text>(List.fromArray(uniqueCanisterArray), offset);
+    let paginatedEntries = List.take<Text>(droppedEntries, limit);
+    
+    let canisterInfoBuffer = Buffer.fromArray<DTOs.ProfileCanisterDTO>([]);
+
+    for(canisterId in Iter.fromList(paginatedEntries)){
+      let profile_picture_caniter = actor (canisterId) : actor {
+        getCyclesBalance : () -> async Nat;
+      };
+
+      let cycles = await profile_picture_caniter.getCyclesBalance();
+      canisterInfoBuffer.add({
+        canisterId = canisterId;
+        cycles = cycles;
+      });
+    };
+
+    let dto: DTOs.AdminProfilePictureCanisterList = {
+      limit = limit;
+      offset = offset;
+      canisters = Buffer.toArray(canisterInfoBuffer);
+      totalEntries = Array.size(profileCanisters);
+    };
+
+    return #ok(dto);
+  };
+
   public shared query ({ caller }) func adminGetTimers(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminTimerList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);

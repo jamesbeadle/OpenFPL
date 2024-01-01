@@ -452,6 +452,11 @@ module DTOs {
     totalEntries: Nat;
   };
 
+  public type AdminProfilePictureCanisterList = {
+    canisters: [ProfileCanisterDTO];
+    totalEntries: Nat;
+  };
+
   public type AdminTimerList = {
     limit : Nat;
     offset : Nat;
