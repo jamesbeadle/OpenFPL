@@ -2406,16 +2406,62 @@ module {
     };
 
     /* Admin functions to be removed */
+    
+
+    private func getProfiles() : [DTOs.ProfileDTO] {
+
+      let profilesBuffer = Buffer.fromArray<DTOs.ProfileDTO>([]);
+
+      for (profile in managers.vals()) {
+        profilesBuffer.add({                
+          principalId = profile.principalId;
+          username = profile.username;
+          termsAccepted = profile.termsAccepted;
+          profilePicture = Blob.fromArray([]);
+          favouriteClubId = profile.favouriteClubId;
+          createDate = profile.createDate;
+          transfersAvailable = profile.transfersAvailable;
+          monthlyBonusesAvailable = profile.monthlyBonusesAvailable;
+          bankQuarterMillions = profile.bankQuarterMillions;
+          playerIds = profile.playerIds;
+          captainId = profile.captainId;
+          goalGetterGameweek = profile.goalGetterGameweek;
+          goalGetterPlayerId = profile.goalGetterPlayerId;
+          passMasterGameweek = profile.passMasterGameweek;
+          passMasterPlayerId = profile.passMasterPlayerId;
+          noEntryGameweek = profile.noEntryGameweek;
+          noEntryPlayerId = profile.noEntryPlayerId;
+          teamBoostGameweek = profile.teamBoostGameweek;
+          teamBoostClubId = profile.teamBoostClubId;
+          safeHandsGameweek = profile.safeHandsGameweek;
+          safeHandsPlayerId = profile.safeHandsPlayerId;
+          captainFantasticGameweek = profile.captainFantasticGameweek;
+          captainFantasticPlayerId = profile.captainFantasticPlayerId;
+          countrymenGameweek = profile.countrymenGameweek;
+          countrymenCountryId = profile.countrymenCountryId;
+          prospectsGameweek = profile.prospectsGameweek;
+          braceBonusGameweek = profile.braceBonusGameweek;
+          hatTrickHeroGameweek = profile.hatTrickHeroGameweek;
+          transferWindowGameweek = profile.transferWindowGameweek;
+          history = profile.history;
+        });
+      };
+
+      return Buffer.toArray(profilesBuffer);
+      
+    };
+
     public func adminGetManagers(limit : Nat, offset : Nat) : DTOs.AdminProfileList {
       
-
-      
+      let allManagers = getProfiles();
+      let droppedEntries = List.drop<DTOs.ProfileDTO>(List.fromArray(allManagers), offset);
+      let paginatedEntries = List.take<DTOs.ProfileDTO>(droppedEntries, limit);
       
       return {
         limit = limit;
         offset  = offset;
         profiles = [];
-        totalEntries = 0;
+        totalEntries = Array.size(allManagers);
       };
     };
   };
