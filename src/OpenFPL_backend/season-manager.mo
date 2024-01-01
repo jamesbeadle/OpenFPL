@@ -134,7 +134,7 @@ module {
     };
 
     public func getPlayers() : [DTOs.PlayerDTO] {
-      return playerComposite.getPlayers(systemState.calculationSeasonId);
+      return playerComposite.getActivePlayers(systemState.calculationSeasonId);
     };
 
     public func getClubs() : [DTOs.ClubDTO] {
@@ -204,7 +204,7 @@ module {
     };
 
     public func saveFantasyTeam(principalId : Text, updatedFantasyTeam : DTOs.UpdateFantasyTeamDTO) : async Result.Result<(), T.Error> {
-      let players = playerComposite.getPlayers(systemState.calculationSeasonId);
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
       return await managerComposite.saveFantasyTeam(principalId, updatedFantasyTeam, systemState, players);
     };
 
@@ -244,7 +244,7 @@ module {
 
       systemState := updatedSystemState;
 
-      let players = playerComposite.getPlayers(systemState.calculationSeasonId);
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
       managerComposite.snapshotFantasyTeams(systemState.calculationSeasonId, systemState.calculationGameweek, players);
       await updateCacheHash("system_state");
     };
@@ -300,7 +300,7 @@ module {
     };
 
     public func executeSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async () {
-      let players = playerComposite.getPlayers(systemState.calculationSeasonId);
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
       let populatedPlayerEvents = await seasonComposite.populatePlayerEventData(submitFixtureData, players);
       switch (populatedPlayerEvents) {
         case (null) {};
@@ -522,7 +522,7 @@ module {
           let season_leaderboard_canister = actor (canisterId) : actor {
             getRewardLeaderboard : () -> async DTOs.SeasonLeaderboardDTO;
           };
-          let players = playerComposite.getPlayers(systemState.calculationSeasonId);
+          let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
           let seasonLeaderboard = await season_leaderboard_canister.getRewardLeaderboard();
           await managerComposite.paySeasonRewards(rewardPool, seasonLeaderboard, players, systemState.calculationSeasonId);
         };
@@ -946,22 +946,6 @@ module {
 
     public func setStablePlayers(stable_players : [T.Player]) {
       playerComposite.setStablePlayers(stable_players);
-    };
-
-    public func getStableRetiredPlayers() : [T.Player] {
-      return playerComposite.getStableRetiredPlayers();
-    };
-
-    public func setStableRetiredPlayers(stable_retired_players : [T.Player]) {
-      playerComposite.setStableRetiredPlayers(stable_retired_players);
-    };
-
-    public func getStableFormerPlayers() : [T.Player] {
-      return playerComposite.getStableFormerPlayers();
-    };
-
-    public func setStableFormerPlayers(stable_former_players : [T.Player]) {
-      playerComposite.setStableFormerPlayers(stable_former_players);
     };
 
     public func getStableNextPlayerId() : T.PlayerId {

@@ -379,8 +379,6 @@ actor Self {
     stable_relegated_clubs := seasonManager.getStableRelegatedClubs();
     stable_next_club_id := seasonManager.getStableNextClubId();
     stable_players := seasonManager.getStablePlayers();
-    stable_retired_players := seasonManager.getStableRetiredPlayers();
-    stable_former_players := seasonManager.getStableFormerPlayers();
     stable_next_player_id := seasonManager.getStableNextPlayerId();
     stable_seasons := seasonManager.getStableSeasons();
     stable_next_season_id := seasonManager.getStableNextSeasonId();
@@ -414,8 +412,6 @@ actor Self {
     seasonManager.setStableRelegatedClubs(stable_relegated_clubs);
     seasonManager.setStableNextClubId(stable_next_club_id);
     seasonManager.setStablePlayers(stable_players);
-    seasonManager.setStableFormerPlayers(stable_former_players);
-    seasonManager.setStableRetiredPlayers(stable_retired_players);
     seasonManager.setStableNextPlayerId(stable_next_player_id);
     seasonManager.setStableSeasons(stable_seasons);
     seasonManager.setStableNextSeasonId(stable_next_season_id);
