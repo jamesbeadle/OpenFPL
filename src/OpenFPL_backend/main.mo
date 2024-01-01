@@ -509,6 +509,51 @@ actor Self {
 
   let TEMP_ADMIN_PRINCIPAL = "";
 
+  //Getters for admin functions
+  public shared query func adminGetCanisters() : async Result.Result<[DTOs.CanisterDTO], T.Error> {
+    return #ok(seasonManager.adminGetCanisters());
+  };
+
+  public shared query func adminGetTimers() : async Result.Result<[DTOs.TimerDTO], T.Error> {
+    return #ok(seasonManager.adminGetTimers());
+  };
+
+  public shared query func adminGetFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    return #ok(seasonManager.adminGetFixtures());
+  };
+
+  public shared query func adminGetClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+    return #ok(seasonManager.adminGetClubs());
+  };
+
+  public shared query func adminGetPlayers() : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    return #ok(seasonManager.adminGetPlayers());
+  };
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public shared ({ caller }) func updateSystemState(updateSystemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
