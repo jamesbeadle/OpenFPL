@@ -530,9 +530,32 @@ actor Self {
     return #ok(seasonManager.adminGetPlayers());
   };
 
+  public shared query func adminGetManagers() : async Result.Result<[DTOs.ProfileDTO], T.Error> {
+    return #ok(seasonManager.adminGetManagers());
+  };
+
+  //Update system state
+  //Remove a canister timer
+  public shared ({ caller }) func updateSystemState(updateSystemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+    return await seasonManager.updateSystemState(updateSystemState);
+  };
+
+  public shared ({ caller }) func updateFixture(updatedFixture : DTOs.UpdateFixtureDTO) : async Result.Result<(), T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+    return await seasonManager.updateFixture(updatedFixture);
+  };
+
   //Add in functions that simultaneously validate and execute each proposal type for testing
   
-  public shared func adminRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     let result = await seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
@@ -541,7 +564,10 @@ actor Self {
     return #err("Error revaluing players");
   };
 
-  public shared func adminRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeRevaluePlayerDown(revaluePlayerUpDTO);
@@ -550,7 +576,10 @@ actor Self {
     return #err("Error revaluing players");
   };
 
-  public shared func adminSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateSubmitFixtureData(submitFixtureData);
     if(result == #ok("Valid")){
       await seasonManager.executeSubmitFixtureData(revaluePlayerUpDTO);
@@ -559,7 +588,10 @@ actor Self {
     return #err("Error submitting fixture data");
   };
 
-  public shared func adminAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeAddInitialFixtures(revaluePlayerUpDTO);
@@ -568,7 +600,10 @@ actor Self {
     return #err("Error adding initial fixtures");
   };
 
-  public shared func adminRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeRescheduleFixture(revaluePlayerUpDTO);
@@ -577,7 +612,10 @@ actor Self {
     return #err("Error rescheduling fixtures");
   };
 
-  public shared func adminLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateLoanPlayer(loanPlayerDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeLoanPlayer(revaluePlayerUpDTO);
@@ -586,7 +624,10 @@ actor Self {
     return #err("Error loaning player");
   };
 
-  public shared func adminTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateTransferPlayer(transferPlayerDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeTransferPlayer(revaluePlayerUpDTO);
@@ -595,7 +636,10 @@ actor Self {
     return #err("Error transferring player");
   };
 
-  public shared func adminRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateRecallPlayer(recallPlayerDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeRecallPlayer(revaluePlayerUpDTO);
@@ -604,7 +648,10 @@ actor Self {
     return #err("Error recalling player");
   };
 
-  public shared func adminCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateCreatePlayer(createPlayerDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeCreatePlayer(revaluePlayerUpDTO);
@@ -613,7 +660,10 @@ actor Self {
     return #err("Error creating player");
   };
 
-  public shared func adminUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateUpdatePlayer(updatePlayerDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeUpdatePlayer(revaluePlayerUpDTO);
@@ -622,7 +672,10 @@ actor Self {
     return #err("Error updating player");
   };
 
-  public shared func adminSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeSetPlayerInjury(revaluePlayerUpDTO);
@@ -631,7 +684,10 @@ actor Self {
     return #err("Error setting player injury");
   };
 
-  public shared func adminRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateRetirePlayer(retirePlayerDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeRetirePlayer(revaluePlayerUpDTO);
@@ -640,7 +696,10 @@ actor Self {
     return #err("Error retiring player");
   };
 
-  public shared func adminUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateUnretirePlayer(unretirePlayerDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeUnretirePlayer(revaluePlayerUpDTO);
@@ -649,7 +708,10 @@ actor Self {
     return #err("Error unretiring player");
   };
 
-  public shared func adminPromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminPromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
     if(result == #ok("Valid")){
       await seasonManager.executePromoteFormerClub(revaluePlayerUpDTO);
@@ -658,7 +720,10 @@ actor Self {
     return #err("Error promoting former club");
   };
 
-  public shared func adminPromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminPromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validatePromoteNewClub(promoteNewClubDTO);
     if(result == #ok("Valid")){
       await seasonManager.executePromoteNewClub(revaluePlayerUpDTO);
@@ -667,7 +732,10 @@ actor Self {
     return #err("Error promoting new clubs");
   };
 
-  public shared func adminUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
+  public shared ({ caller }) func adminUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
     await seasonManager.validateUpdateClub(updateClubDTO);
     if(result == #ok("Valid")){
       await seasonManager.executeUpdateClub(revaluePlayerUpDTO);
@@ -697,19 +765,5 @@ actor Self {
 
 
 
-
-  public shared ({ caller }) func updateSystemState(updateSystemState : DTOs.UpdateSystemStateDTO) : async Result.Result<(), T.Error> {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return await seasonManager.updateSystemState(updateSystemState);
-  };
-
-  public shared ({ caller }) func updateFixture(updatedFixture : DTOs.UpdateFixtureDTO) : async Result.Result<(), T.Error> {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return await seasonManager.updateFixture(updatedFixture);
-  };
 
 };
