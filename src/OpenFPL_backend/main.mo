@@ -510,42 +510,64 @@ actor Self {
   let TEMP_ADMIN_PRINCIPAL = "";
 
   //Getters for admin functions
-  public shared query ({ caller }) func adminGetCanisters(currentPage: Nat) : async Result.Result<DTOs.AdminCanisterList, T.Error> {
+  public shared query ({ caller }) func adminGetCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminCanisterList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return #ok(seasonManager.adminGetCanisters(currentPage));
+
+    let canisterIds = getStableCanisterIds();
+    let droppedEntries = List.drop<T.CanisterDTO>(canisterIds.entries, offset);
+    let paginatedEntries = List.take<T.CanisterDTO>(droppedEntries, limit);
+
+    let dto: DTOs.AdminCanisterList = {
+      currentPage = currentPage;
+      canisters = paginatedEntries;
+      totalEntries = Array.size(paginatedEntries);
+    };
+
+    return #ok(dto);
   };
 
-  public shared query ({ caller }) func adminGetTimers(currentPage: Nat) : async Result.Result<[DTOs.TimerDTO], T.Error> {
+  public shared query ({ caller }) func adminGetTimers(limit : Nat, offset : Nat) : async Result.Result<[DTOs.TimerDTO], T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return #ok(seasonManager.adminGetTimers());
+
+    let timers = getStableTimers();
+    let droppedEntries = List.drop<T.CanisterDTO>(timers.entries, offset);
+    let paginatedEntries = List.take<T.CanisterDTO>(droppedEntries, limit);
+
+    let dto: DTOs.AdminCanisterList = {
+      currentPage = currentPage;
+      canisters = paginatedEntries;
+      totalEntries = Array.size(paginatedEntries);
+    };
+
+    return #ok(dto);
   };
 
-  public shared query ({ caller }) func adminGetFixtures(currentPage: Nat) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+  public shared query ({ caller }) func adminGetFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<[DTOs.FixtureDTO], T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return #ok(seasonManager.adminGetFixtures(currentPage));
+    return #ok(seasonManager.adminGetFixtures(seasonId, gameweek));
   };
 
-  public shared query ({ caller }) func adminGetClubs(currentPage: Nat) : async Result.Result<[DTOs.ClubDTO], T.Error> {
+  public shared query ({ caller }) func adminGetClubs(limit : Nat, offset : Nat) : async Result.Result<[DTOs.ClubDTO], T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
     return #ok(seasonManager.adminGetClubs(currentPage));
   };
 
-  public shared query ({ caller }) func adminGetPlayers(currentPage: Nat) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+  public shared query ({ caller }) func adminGetPlayers(clubId: T.ClubId, status: T.PlayerStatus, limit : Nat, offset : Nat) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return #ok(seasonManager.adminGetPlayers(currentPage));
+    return #ok(seasonManager.adminGetPlayers(clubId, status, limit, offset));
   };
 
-  public shared query ({ caller }) func adminGetManagers(currentPage: Nat) : async Result.Result<[DTOs.ProfileDTO], T.Error> {
+  public shared query ({ caller }) func adminGetManagers(limit : Nat, offset : Nat) : async Result.Result<[DTOs.ProfileDTO], T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;

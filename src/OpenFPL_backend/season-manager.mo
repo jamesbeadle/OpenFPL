@@ -1018,14 +1018,6 @@ module {
       return await seasonComposite.updateFixture(updateFixtureDTO);
     };
 
-    public func adminGetCanisters() : DTOs.AdminCanisterList {
-      return [];
-    };
-
-    public func adminGetTimers() : DTOs.AdminTimerList {
-      return [];
-    };
-
     public func adminGetFixtures() : DTOs.AdminFixtureList {
       return [];
     };
