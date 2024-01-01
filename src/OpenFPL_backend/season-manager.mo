@@ -1018,27 +1018,27 @@ module {
       return await seasonComposite.updateFixture(updateFixtureDTO);
     };
 
-    public func adminGetCanisters() : [DTOs.CanisterDTO] {
+    public func adminGetCanisters() : DTOs.AdminCanisterList {
       return [];
     };
 
-    public func adminGetTimers() : [DTOs.TimerDTO] {
+    public func adminGetTimers() : DTOs.AdminTimerList {
       return [];
     };
 
-    public func adminGetFixtures() : [DTOs.FixtureDTO] {
+    public func adminGetFixtures() : DTOs.AdminFixtureList {
       return [];
     };
 
-    public func adminGetClubs() : [DTOs.ClubDTO] {
+    public func adminGetClubs() : DTOs.AdminClubList {
       return [];
     };
 
-    public func adminGetPlayers() : [DTOs.PlayerDTO] {
+    public func adminGetPlayers() : DTOs.AdminPlayerList {
       return [];
     };
 
-    public func adminGetManagers() : [DTOs.ProfileDTO] {
+    public func adminGetManagers() : DTOs.AdminProfileList {
       return [];
     };
 

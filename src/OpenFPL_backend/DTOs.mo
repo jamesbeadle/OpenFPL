@@ -1,5 +1,6 @@
 import T "types";
 import List "mo:base/List";
+import Nat "mo:base/Nat";
 
 module DTOs {
 
@@ -412,6 +413,42 @@ module DTOs {
     id : Int;
     triggerTime : Int;
     callbackFunction : Text;
+  };
+
+  public type AdminCanisterList = {
+    currentPage: Nat;
+    canisters: [CanisterDTO];
+    totalEntries: Nat;
+  };
+
+  public type AdminTimerList = {
+    currentPage: Nat;
+    timers: [TimerDTO];
+    totalEntries: Nat;
+  };
+
+  public type AdminFixtureList = {
+    currentPage: Nat;
+    fixtures: [FixtureDTO];
+    totalEntries: Nat;
+  };
+
+  public type AdminClubList = {
+    currentPage: Nat;
+    clubs: [ClubDTO];
+    totalEntries: Nat;
+  };
+
+  public type AdminPlayerList = {
+    currentPage: Nat;
+    players: [PlayerDTO];
+    totalEntries: Nat;
+  };
+
+  public type AdminProfileList = {
+    currentPage: Nat;
+    profiles: [ProfileDTO];
+    totalEntries: Nat;
   };
 
 };
