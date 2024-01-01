@@ -1,8 +1,6 @@
 <div class="m-4">
   <h1 class="default-header">Roadmap</h1>
-  <p class="my-4">
-    We have an ambitious roadmap of features:
-  </p>
+  <p class="my-4">We have an ambitious roadmap of features:</p>
   <h2 class="default-sub-header mt-4">
     Jan - Feb 2024: SNS Testflight Testing
   </h2>

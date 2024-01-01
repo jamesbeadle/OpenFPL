@@ -270,6 +270,12 @@ export const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(MonthlyLeaderboardDTO),
     err: Error,
   });
+  const PlayerStatus = IDL.Variant({
+    OnLoan: IDL.Null,
+    Former: IDL.Null,
+    Active: IDL.Null,
+    Retired: IDL.Null,
+  });
   const InjuryHistory = IDL.Record({
     description: IDL.Text,
     injuryStartDate: IDL.Int,
@@ -289,6 +295,7 @@ export const idlFactory = ({ IDL }) => {
   });
   const PlayerDetailDTO = IDL.Record({
     id: PlayerId,
+    status: PlayerStatus,
     clubId: ClubId,
     parentClubId: ClubId,
     valueQuarterMillions: IDL.Nat16,
@@ -303,7 +310,6 @@ export const idlFactory = ({ IDL }) => {
     shirtNumber: IDL.Nat8,
     position: PlayerPosition,
     lastName: IDL.Text,
-    onLoan: IDL.Bool,
     firstName: IDL.Text,
   });
   const Result_11 = IDL.Variant({ ok: PlayerDetailDTO, err: Error });

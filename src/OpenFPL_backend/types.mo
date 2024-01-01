@@ -225,7 +225,7 @@ module Types {
     nationality : CountryId;
     seasons : List.List<PlayerSeason>;
     valueHistory : List.List<ValueHistory>;
-    status: PlayerStatus;
+    status : PlayerStatus;
     currentLoanEndDate : Int;
     parentClubId : Nat16;
     isInjured : Bool;

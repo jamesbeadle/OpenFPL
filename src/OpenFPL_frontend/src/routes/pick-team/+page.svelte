@@ -1127,10 +1127,10 @@
                                     convertPlayerPosition(player.position)
                                   )}
                                 </p>
-                                  <svelte:component
-                                    this={getFlagComponent(player.nationality)}
-                                    class="hidden xs:flex h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
-                                  />
+                                <svelte:component
+                                  this={getFlagComponent(player.nationality)}
+                                  class="hidden xs:flex h-2 w-2 mr-1 sm:h-4 sm:w-4 sm:mx-2 min-w-[15px]"
+                                />
                                 <p
                                   class="hidden xs:block truncate min-w-[50px] max-w-[50px] xs:min-w-[60px] xs:max-w-[60px]"
                                 >

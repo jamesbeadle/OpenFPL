@@ -19,10 +19,9 @@ actor class SeasonLeaderboardCanister() {
 
   let network = Environment.DFX_NETWORK;
   var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
-  if(network == "local"){
+  if (network == "local") {
     main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
   };
-
 
   public shared ({ caller }) func addSeasonLeaderboard(_seasonId : T.SeasonId, seasonLeaderboard : T.SeasonLeaderboard) : async () {
     assert not Principal.isAnonymous(caller);

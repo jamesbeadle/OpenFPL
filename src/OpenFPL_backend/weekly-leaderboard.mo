@@ -17,7 +17,7 @@ actor class WeeklyLeaderboardCanister() {
 
   let network = Environment.DFX_NETWORK;
   var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
-  if(network == "local"){
+  if (network == "local") {
     main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
   };
 

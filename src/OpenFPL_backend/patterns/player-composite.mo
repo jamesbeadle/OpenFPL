@@ -61,7 +61,7 @@ module {
         players,
         func(event : T.Player) : Bool {
           return event.status == #Active;
-        }
+        },
       );
 
       let playerDTOs = List.map<T.Player, DTOs.PlayerDTO>(
@@ -204,7 +204,7 @@ module {
       var dateOfBirth : Int = 0;
       var nationality : T.CountryId = 0;
       var valueHistory : [T.ValueHistory] = [];
-      var status: T.PlayerStatus = #Active;
+      var status : T.PlayerStatus = #Active;
       var parentClubId : T.ClubId = 0;
       var isInjured = false;
       var injuryHistory : [T.InjuryHistory] = [];
@@ -562,11 +562,10 @@ module {
             loanEndDate = 0;
           };
 
-          var status: T.PlayerStatus = #Active;
-          if(transferPlayerDTO.newClubId == 0){
+          var status : T.PlayerStatus = #Active;
+          if (transferPlayerDTO.newClubId == 0) {
             status := #Former;
           };
-
 
           let updatedPlayer : T.Player = {
             id = p.id;

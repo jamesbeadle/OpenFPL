@@ -21,7 +21,7 @@ module {
   public class TreasuryManager() {
 
     public type ConversionRateResponse = {
-      data: Nat;
+      data : Nat;
     };
 
     let icp_fee : Nat64 = 10_000;
@@ -43,7 +43,7 @@ module {
       let network = Environment.DFX_NETWORK;
       var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
       var cycles_minting_canister_id = CanisterIds.CYCLES_MINTING_CANISTER_IC_ID;
-      if(network == "local"){
+      if (network == "local") {
         cycles_minting_canister_id := CanisterIds.CYCLES_MINTING_CANISTER_LOCAL_ID;
         main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
       };
@@ -53,7 +53,7 @@ module {
       };
       let converstionRate : ConversionRateResponse = await cycles_minting_canister.get_icp_xdr_conversion_rate();
 
-      let icp_required: Nat64 = cyclesRequested / Nat64.fromNat(converstionRate.data) / 1_000_000;
+      let icp_required : Nat64 = cyclesRequested / Nat64.fromNat(converstionRate.data) / 1_000_000;
 
       let balance = await ledger.account_balance({ account = treasuryAccount });
 

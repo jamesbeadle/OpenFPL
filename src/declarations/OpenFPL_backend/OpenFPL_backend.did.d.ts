@@ -190,6 +190,7 @@ export interface PlayerDTO {
 }
 export interface PlayerDetailDTO {
   id: PlayerId;
+  status: PlayerStatus;
   clubId: ClubId;
   parentClubId: ClubId;
   valueQuarterMillions: number;
@@ -204,7 +205,6 @@ export interface PlayerDetailDTO {
   shirtNumber: number;
   position: PlayerPosition;
   lastName: string;
-  onLoan: boolean;
   firstName: string;
 }
 export interface PlayerEventData {
@@ -261,6 +261,11 @@ export interface PlayerScoreDTO {
   position: PlayerPosition;
   points: number;
 }
+export type PlayerStatus =
+  | { OnLoan: null }
+  | { Former: null }
+  | { Active: null }
+  | { Retired: null };
 export interface ProfileDTO {
   playerIds: Uint16Array | number[];
   countrymenCountryId: CountryId;

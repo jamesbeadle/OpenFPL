@@ -20,9 +20,9 @@
   </p>
   <p class="my-4">
     OpenFPL aims to be recognised as more than just a digital platform; we
-    aspire to build a brand that creates diverse revenue opportunities. 
-	  We aim to distribute this revenue to token holders through the purchase and burning of $FPL from exchanges, 
-    aiming to increase the utility token's value.
+    aspire to build a brand that creates diverse revenue opportunities. We aim
+    to distribute this revenue to token holders through the purchase and burning
+    of $FPL from exchanges, aiming to increase the utility token's value.
   </p>
   <p class="my-4">
     Central to OpenFPL is our community focus. We strive to create a space where

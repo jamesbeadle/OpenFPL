@@ -249,6 +249,12 @@ type ProfileDTO = record {
   transfersAvailable : nat8;
   username : text;
 };
+type PlayerStatus = variant {
+  Active;
+  Former;
+  OnLoan;
+  Retired;
+};
 type PlayerScoreDTO = record {
   assists : int16;
   clubId : ClubId;
@@ -315,12 +321,12 @@ type PlayerDetailDTO = record {
   isInjured : bool;
   lastName : text;
   nationality : CountryId;
-  onLoan : bool;
   parentClubId : ClubId;
   position : PlayerPosition;
   retirementDate : int;
   seasonId : SeasonId;
   shirtNumber : nat8;
+  status : PlayerStatus;
   valueHistory : vec ValueHistory;
   valueQuarterMillions : nat16;
 };

@@ -14,11 +14,11 @@ module {
 
   public class Token() {
 
-  let network = Environment.DFX_NETWORK;
-  var token_canister_id = CanisterIds.TOKEN_CANISTER_IC_ID;
-  if(network == "local"){
-    token_canister_id := CanisterIds.TOKEN_CANISTER_LOCAL_ID;
-  };
+    let network = Environment.DFX_NETWORK;
+    var token_canister_id = CanisterIds.TOKEN_CANISTER_IC_ID;
+    if (network == "local") {
+      token_canister_id := CanisterIds.TOKEN_CANISTER_LOCAL_ID;
+    };
 
     type Tokens = Nat;
     type BlockIndex = Nat;
