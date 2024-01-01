@@ -19,6 +19,10 @@ module {
 
   public class TreasuryManager() {
 
+    public type ConversionRateResponse = {
+      data: Nat;
+    };
+
     let icp_fee : Nat64 = 10_000;
     let memo_txt_tpup : Nat64 = 0x50555054;
     private let ledger : ICPLedger.Interface = actor (ICPLedger.CANISTER_ID);
@@ -36,15 +40,11 @@ module {
       };
 
       let cycles_minting_canister = actor (CanisterIds.CYCLES_MINTING_CANISTER) : actor {
-        get_icp_xdr_conversion_rate : () -> async Nat64;
+        get_icp_xdr_conversion_rate : () -> async ConversionRateResponse;
       };
-      let converstionRate : Nat64 = await cycles_minting_canister.get_icp_xdr_conversion_rate();
+      let converstionRate : ConversionRateResponse = await cycles_minting_canister.get_icp_xdr_conversion_rate();
 
-      //TODO:
-      //call the cycles minting canister and get the icp xdr conversion rate
-      //work out the icp to send the get the required cycles
-
-      let amount : Nat64 = 10_000_000_000;
+      let icp_required: Nat64 = cyclesRequested / Nat64.fromNat(converstionRate.data) / 1_000_000;
 
       let balance = await ledger.account_balance({ account = treasuryAccount });
 
@@ -54,7 +54,7 @@ module {
 
       let withdrawable = balance.e8s - icp_fee;
 
-      if (amount >= withdrawable) {
+      if (icp_required >= withdrawable) {
         return;
       };
 
@@ -68,7 +68,7 @@ module {
         memo = memo_txt_tpup;
         from_subaccount = null;
         to = target_account;
-        amount = { e8s = amount };
+        amount = { e8s = icp_required };
         fee = { e8s = icp_fee };
         created_at_time = ?{
           timestamp_nanos = Nat64.fromNat(Int.abs(Time.now()));
