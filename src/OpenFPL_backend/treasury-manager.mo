@@ -14,6 +14,7 @@ import Text "mo:base/Text";
 import Blob "mo:base/Blob";
 import DTOs "DTOs";
 import CanisterIds "CanisterIds";
+import Environment "Environment";
 
 module {
 
@@ -39,7 +40,15 @@ module {
         return;
       };
 
-      let cycles_minting_canister = actor (CanisterIds.CYCLES_MINTING_CANISTER) : actor {
+      let network = Environment.DFX_NETWORK;
+      var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
+      var cycles_minting_canister_id = CanisterIds.CYCLES_MINTING_CANISTER_IC_ID;
+      if(network == "local"){
+        cycles_minting_canister_id := CanisterIds.CYCLES_MINTING_CANISTER_LOCAL_ID;
+        main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
+      };
+
+      let cycles_minting_canister = actor (cycles_minting_canister_id) : actor {
         get_icp_xdr_conversion_rate : () -> async ConversionRateResponse;
       };
       let converstionRate : ConversionRateResponse = await cycles_minting_canister.get_icp_xdr_conversion_rate();
@@ -58,7 +67,7 @@ module {
         return;
       };
 
-      let target_account = Account.accountIdentifier(Principal.fromText(CanisterIds.CYCLES_MINTING_CANISTER), Account.principalToSubaccount(Principal.fromText(CanisterIds.MAIN_CANISTER_ID)));
+      let target_account = Account.accountIdentifier(Principal.fromText(cycles_minting_canister_id), Account.principalToSubaccount(Principal.fromText(main_canister_id)));
 
       if (not Account.validateAccountIdentifier(target_account)) {
         return;

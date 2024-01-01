@@ -1,12 +1,19 @@
 import Cycles "mo:base/ExperimentalCycles";
 import List "mo:base/List";
 import CanisterIds "CanisterIds";
+import Environment "Environment";
 
 module {
 
   public class CyclesDispenser() {
 
-    private var canisterIds : List.List<Text> = List.fromArray<Text>([CanisterIds.MAIN_CANISTER_ID]);
+    let network = Environment.DFX_NETWORK;
+    var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
+    if(network == "local"){
+      main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
+    };
+
+    private var canisterIds : List.List<Text> = List.fromArray<Text>([main_canister_id]);
 
     public func getStableCanisterIds() : [Text] {
       return List.toArray(canisterIds);

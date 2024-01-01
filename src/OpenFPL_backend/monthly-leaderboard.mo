@@ -6,6 +6,7 @@ import Timer "mo:base/Timer";
 import Principal "mo:base/Principal";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
+import Environment "Environment";
 
 actor class MonthlyLeaderboardCanister() {
   private stable var leaderboard : ?T.ClubLeaderboard = null;
@@ -16,10 +17,16 @@ actor class MonthlyLeaderboardCanister() {
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
 
+  let network = Environment.DFX_NETWORK;
+  var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
+  if(network == "local"){
+    main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
+  };
+
   public shared ({ caller }) func addMonthlyLeaderboard(_seasonId : T.SeasonId, _gameweek : T.GameweekNumber, _clubId : T.ClubId, clubLeaderboard : T.ClubLeaderboard) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     leaderboard := ?clubLeaderboard;
     seasonId := ?_seasonId;
@@ -30,7 +37,7 @@ actor class MonthlyLeaderboardCanister() {
   public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat) : async ?DTOs.MonthlyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     switch (leaderboard) {
       case (null) {
@@ -56,7 +63,7 @@ actor class MonthlyLeaderboardCanister() {
   public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     switch (leaderboard) {
       case (null) {
@@ -84,7 +91,7 @@ actor class MonthlyLeaderboardCanister() {
     let balance = Cycles.balance();
 
     if (balance < 500000000000) {
-      let openfpl_backend_canister = actor (CanisterIds.MAIN_CANISTER_ID) : actor {
+      let openfpl_backend_canister = actor (main_canister_id) : actor {
         requestCanisterTopup : () -> async ();
       };
       await openfpl_backend_canister.requestCanisterTopup();
