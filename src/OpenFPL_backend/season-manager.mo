@@ -1018,17 +1018,17 @@ module {
       return await seasonComposite.updateFixture(updateFixtureDTO);
     };
 
-    public func adminGetFixtures(seasonId: T.SeasonId) : DTOs.AdminFixtureList {
-      
+    public func adminGetFixtures(seasonId : T.SeasonId) : DTOs.AdminFixtureList {
+
       let fixtures = getFixtures(seasonId);
-      
+
       return {
         seasonId = seasonId;
         fixtures = fixtures;
       };
     };
 
-    public func adminGetClubs(limit : Nat, offset : Nat) : DTOs.AdminClubList {      
+    public func adminGetClubs(limit : Nat, offset : Nat) : DTOs.AdminClubList {
       let clubs = getClubs();
       let droppedEntries = List.drop<DTOs.ClubDTO>(List.fromArray(clubs), offset);
       let paginatedEntries = List.take<DTOs.ClubDTO>(droppedEntries, limit);
@@ -1041,7 +1041,7 @@ module {
       };
     };
 
-    public func adminGetPlayers(status: T.PlayerStatus) : DTOs.AdminPlayerList {      
+    public func adminGetPlayers(status : T.PlayerStatus) : DTOs.AdminPlayerList {
       let players = getPlayers();
 
       let filteredPlayers = Array.filter<DTOs.PlayerDTO>(

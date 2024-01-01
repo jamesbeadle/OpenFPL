@@ -518,10 +518,10 @@ actor Self {
     let weeklyCanisters = seasonManager.getStableWeeklyLeaderboardCanisters();
     let droppedEntries = List.drop<T.WeeklyLeaderboardCanister>(List.fromArray(weeklyCanisters), offset);
     let paginatedEntries = List.take<T.WeeklyLeaderboardCanister>(droppedEntries, limit);
-    
+
     let canisterInfoBuffer = Buffer.fromArray<DTOs.WeeklyCanisterDTO>([]);
 
-    for(canisterInfo in Iter.fromList(paginatedEntries)){
+    for (canisterInfo in Iter.fromList(paginatedEntries)) {
       let weekly_leaderboard_canister = actor (canisterInfo.canisterId) : actor {
         getCyclesBalance : () -> async Nat;
       };
@@ -533,7 +533,7 @@ actor Self {
       });
     };
 
-    let dto: DTOs.AdminWeeklyCanisterList = {
+    let dto : DTOs.AdminWeeklyCanisterList = {
       limit = limit;
       offset = offset;
       canisters = Buffer.toArray(canisterInfoBuffer);
@@ -551,10 +551,10 @@ actor Self {
     let monthlyCanisters = seasonManager.getStableMonthlyLeaderboardCanisters();
     let droppedEntries = List.drop<T.MonthlyLeaderboardCanister>(List.fromArray(monthlyCanisters), offset);
     let paginatedEntries = List.take<T.MonthlyLeaderboardCanister>(droppedEntries, limit);
-    
+
     let canisterInfoBuffer = Buffer.fromArray<DTOs.MonthlyCanisterDTO>([]);
 
-    for(canisterInfo in Iter.fromList(paginatedEntries)){
+    for (canisterInfo in Iter.fromList(paginatedEntries)) {
       let monthly_leaderboard_canister = actor (canisterInfo.canisterId) : actor {
         getCyclesBalance : () -> async Nat;
       };
@@ -566,7 +566,7 @@ actor Self {
       });
     };
 
-    let dto: DTOs.AdminMonthlyCanisterList = {
+    let dto : DTOs.AdminMonthlyCanisterList = {
       limit = limit;
       offset = offset;
       canisters = Buffer.toArray(canisterInfoBuffer);
@@ -584,10 +584,10 @@ actor Self {
     let seasonCanisters = seasonManager.getStableSeasonLeaderboardCanisters();
     let droppedEntries = List.drop<T.SeasonLeaderboardCanister>(List.fromArray(seasonCanisters), offset);
     let paginatedEntries = List.take<T.SeasonLeaderboardCanister>(droppedEntries, limit);
-    
+
     let canisterInfoBuffer = Buffer.fromArray<DTOs.SeasonCanisterDTO>([]);
 
-    for(canisterInfo in Iter.fromList(paginatedEntries)){
+    for (canisterInfo in Iter.fromList(paginatedEntries)) {
       let season_leaderboard_canister = actor (canisterInfo.canisterId) : actor {
         getCyclesBalance : () -> async Nat;
       };
@@ -599,7 +599,7 @@ actor Self {
       });
     };
 
-    let dto: DTOs.AdminSeasonCanisterList = {
+    let dto : DTOs.AdminSeasonCanisterList = {
       limit = limit;
       offset = offset;
       canisters = Buffer.toArray(canisterInfoBuffer);
@@ -628,10 +628,10 @@ actor Self {
 
     let droppedEntries = List.drop<Text>(List.fromArray(uniqueCanisterArray), offset);
     let paginatedEntries = List.take<Text>(droppedEntries, limit);
-    
+
     let canisterInfoBuffer = Buffer.fromArray<DTOs.ProfileCanisterDTO>([]);
 
-    for(canisterId in Iter.fromList(paginatedEntries)){
+    for (canisterId in Iter.fromList(paginatedEntries)) {
       let profile_picture_caniter = actor (canisterId) : actor {
         getCyclesBalance : () -> async Nat;
       };
@@ -643,7 +643,7 @@ actor Self {
       });
     };
 
-    let dto: DTOs.AdminProfilePictureCanisterList = {
+    let dto : DTOs.AdminProfilePictureCanisterList = {
       limit = limit;
       offset = offset;
       canisters = Buffer.toArray(canisterInfoBuffer);
@@ -662,7 +662,7 @@ actor Self {
     let droppedEntries = List.drop<DTOs.TimerDTO>(List.fromArray(timers), offset);
     let paginatedEntries = List.take<DTOs.TimerDTO>(droppedEntries, limit);
 
-    let dto: DTOs.AdminTimerList = {
+    let dto : DTOs.AdminTimerList = {
       limit = limit;
       offset = offset;
       timers = List.toArray(paginatedEntries);
@@ -672,7 +672,7 @@ actor Self {
     return #ok(dto);
   };
 
-  public shared query ({ caller }) func adminGetFixtures(seasonId: T.SeasonId) : async Result.Result<DTOs.AdminFixtureList, T.Error> {
+  public shared query ({ caller }) func adminGetFixtures(seasonId : T.SeasonId) : async Result.Result<DTOs.AdminFixtureList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
@@ -686,7 +686,7 @@ actor Self {
     return #ok(seasonManager.adminGetClubs(limit, offset));
   };
 
-  public shared query ({ caller }) func adminGetPlayers(status: T.PlayerStatus) : async Result.Result<DTOs.AdminPlayerList, T.Error> {
+  public shared query ({ caller }) func adminGetPlayers(status : T.PlayerStatus) : async Result.Result<DTOs.AdminPlayerList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;

@@ -2406,14 +2406,13 @@ module {
     };
 
     /* Admin functions to be removed */
-    
 
     private func getProfiles() : [DTOs.ProfileDTO] {
 
       let profilesBuffer = Buffer.fromArray<DTOs.ProfileDTO>([]);
 
       for (profile in managers.vals()) {
-        profilesBuffer.add({                
+        profilesBuffer.add({
           principalId = profile.principalId;
           username = profile.username;
           termsAccepted = profile.termsAccepted;
@@ -2448,18 +2447,18 @@ module {
       };
 
       return Buffer.toArray(profilesBuffer);
-      
+
     };
 
     public func adminGetManagers(limit : Nat, offset : Nat) : DTOs.AdminProfileList {
-      
+
       let allManagers = getProfiles();
       let droppedEntries = List.drop<DTOs.ProfileDTO>(List.fromArray(allManagers), offset);
       let paginatedEntries = List.take<DTOs.ProfileDTO>(droppedEntries, limit);
-      
+
       return {
         limit = limit;
-        offset  = offset;
+        offset = offset;
         profiles = [];
         totalEntries = Array.size(allManagers);
       };

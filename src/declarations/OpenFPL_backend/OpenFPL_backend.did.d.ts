@@ -4,11 +4,55 @@ export interface AddInitialFixturesDTO {
   seasonId: SeasonId;
   seasonFixtures: Array<FixtureDTO>;
 }
-export type CalendarMonth = number;
-export interface CanisterDTO {
-  cycles: bigint;
-  canisterId: string;
+export interface AdminClubList {
+  totalEntries: bigint;
+  clubs: Array<ClubDTO>;
+  offset: bigint;
+  limit: bigint;
 }
+export interface AdminFixtureList {
+  seasonId: SeasonId;
+  fixtures: Array<FixtureDTO>;
+}
+export interface AdminMonthlyCanisterList {
+  totalEntries: bigint;
+  offset: bigint;
+  limit: bigint;
+  canisters: Array<MonthlyCanisterDTO>;
+}
+export interface AdminPlayerList {
+  playerStatus: PlayerStatus;
+  players: Array<PlayerDTO>;
+}
+export interface AdminProfileList {
+  totalEntries: bigint;
+  offset: bigint;
+  limit: bigint;
+  profiles: Array<ProfileDTO>;
+}
+export interface AdminProfilePictureCanisterList {
+  totalEntries: bigint;
+  canisters: Array<ProfileCanisterDTO>;
+}
+export interface AdminSeasonCanisterList {
+  totalEntries: bigint;
+  offset: bigint;
+  limit: bigint;
+  canisters: Array<SeasonCanisterDTO>;
+}
+export interface AdminTimerList {
+  timers: Array<TimerDTO>;
+  totalEntries: bigint;
+  offset: bigint;
+  limit: bigint;
+}
+export interface AdminWeeklyCanisterList {
+  totalEntries: bigint;
+  offset: bigint;
+  limit: bigint;
+  canisters: Array<WeeklyCanisterDTO>;
+}
+export type CalendarMonth = number;
 export interface ClubDTO {
   id: ClubId;
   secondaryColourHex: string;
@@ -173,6 +217,16 @@ export interface ManagerGameweekDTO {
   points: number;
   monthlyBonusesAvailable: number;
 }
+export interface MonthlyCanisterDTO {
+  cycles: bigint;
+  canister: MonthlyLeaderboardCanister;
+}
+export interface MonthlyLeaderboardCanister {
+  month: CalendarMonth;
+  clubId: ClubId;
+  seasonId: SeasonId;
+  canisterId: string;
+}
 export interface MonthlyLeaderboardDTO {
   month: number;
   clubId: ClubId;
@@ -182,6 +236,7 @@ export interface MonthlyLeaderboardDTO {
 }
 export interface PlayerDTO {
   id: number;
+  status: PlayerStatus;
   clubId: ClubId;
   valueQuarterMillions: number;
   dateOfBirth: bigint;
@@ -270,6 +325,10 @@ export type PlayerStatus =
   | { Former: null }
   | { Active: null }
   | { Retired: null };
+export interface ProfileCanisterDTO {
+  cycles: bigint;
+  canisterId: string;
+}
 export interface ProfileDTO {
   playerIds: Uint16Array | number[];
   countrymenCountryId: CountryId;
@@ -344,9 +403,17 @@ export type Result_17 = { ok: Array<DataCacheDTO> } | { err: Error };
 export type Result_18 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_19 = { ok: Array<ClubDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
-export type Result_20 = { ok: Array<TimerDTO> } | { err: Error };
-export type Result_21 = { ok: Array<ProfileDTO> } | { err: Error };
-export type Result_22 = { ok: Array<CanisterDTO> } | { err: Error };
+export type Result_20 = { ok: AdminWeeklyCanisterList } | { err: Error };
+export type Result_21 = { ok: AdminTimerList } | { err: Error };
+export type Result_22 = { ok: AdminSeasonCanisterList } | { err: Error };
+export type Result_23 =
+  | { ok: AdminProfilePictureCanisterList }
+  | { err: Error };
+export type Result_24 = { ok: AdminPlayerList } | { err: Error };
+export type Result_25 = { ok: AdminMonthlyCanisterList } | { err: Error };
+export type Result_26 = { ok: AdminProfileList } | { err: Error };
+export type Result_27 = { ok: AdminFixtureList } | { err: Error };
+export type Result_28 = { ok: AdminClubList } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
 export type Result_5 = { ok: SeasonLeaderboardDTO } | { err: Error };
@@ -364,7 +431,15 @@ export interface RevaluePlayerDownDTO {
 export interface RevaluePlayerUpDTO {
   playerId: PlayerId;
 }
+export interface SeasonCanisterDTO {
+  cycles: bigint;
+  canister: SeasonLeaderboardCanister;
+}
 export type SeasonId = number;
+export interface SeasonLeaderboardCanister {
+  seasonId: SeasonId;
+  canisterId: string;
+}
 export interface SeasonLeaderboardDTO {
   totalEntries: bigint;
   seasonId: SeasonId;
@@ -393,7 +468,7 @@ export interface SystemStateDTO {
 }
 export interface TimerDTO {
   id: bigint;
-  callbackFunction: string;
+  callbackName: string;
   triggerTime: bigint;
 }
 export interface TransferPlayerDTO {
@@ -467,6 +542,15 @@ export interface ValueHistory {
   seasonId: number;
   gameweek: number;
 }
+export interface WeeklyCanisterDTO {
+  cycles: bigint;
+  canister: WeeklyLeaderboardCanister;
+}
+export interface WeeklyLeaderboardCanister {
+  seasonId: SeasonId;
+  gameweek: GameweekNumber;
+  canisterId: string;
+}
 export interface WeeklyLeaderboardDTO {
   totalEntries: bigint;
   seasonId: SeasonId;
@@ -476,12 +560,15 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   adminAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
   adminCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
-  adminGetCanisters: ActorMethod<[], Result_22>;
-  adminGetClubs: ActorMethod<[], Result_19>;
-  adminGetFixtures: ActorMethod<[], Result_16>;
-  adminGetManagers: ActorMethod<[], Result_21>;
-  adminGetPlayers: ActorMethod<[], Result_9>;
-  adminGetTimers: ActorMethod<[], Result_20>;
+  adminGetClubs: ActorMethod<[bigint, bigint], Result_28>;
+  adminGetFixtures: ActorMethod<[SeasonId], Result_27>;
+  adminGetManagers: ActorMethod<[bigint, bigint], Result_26>;
+  adminGetMonthlyCanisters: ActorMethod<[bigint, bigint], Result_25>;
+  adminGetPlayers: ActorMethod<[PlayerStatus], Result_24>;
+  adminGetProfileCanisters: ActorMethod<[bigint, bigint], Result_23>;
+  adminGetSeasonCanisters: ActorMethod<[bigint, bigint], Result_22>;
+  adminGetTimers: ActorMethod<[bigint, bigint], Result_21>;
+  adminGetWeeklyCanisters: ActorMethod<[bigint, bigint], Result_20>;
   adminLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
   adminPromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], Result>;
   adminPromoteNewClub: ActorMethod<[PromoteNewClubDTO], Result>;

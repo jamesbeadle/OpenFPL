@@ -4,6 +4,15 @@ type WeeklyLeaderboardDTO = record {
   seasonId : SeasonId;
   totalEntries : nat;
 };
+type WeeklyLeaderboardCanister = record {
+  canisterId : text;
+  gameweek : GameweekNumber;
+  seasonId : SeasonId;
+};
+type WeeklyCanisterDTO = record {
+  canister : WeeklyLeaderboardCanister;
+  cycles : nat;
+};
 type ValueHistory = record {
   gameweek : nat8;
   newValue : nat16;
@@ -74,7 +83,7 @@ type TransferPlayerDTO = record {
   playerId : PlayerId;
 };
 type TimerDTO = record {
-  callbackFunction : text;
+  callbackName : text;
   id : int;
   triggerTime : int;
 };
@@ -107,7 +116,15 @@ type SeasonLeaderboardDTO = record {
   seasonId : SeasonId;
   totalEntries : nat;
 };
+type SeasonLeaderboardCanister = record {
+  canisterId : text;
+  seasonId : SeasonId;
+};
 type SeasonId = nat16;
+type SeasonCanisterDTO = record {
+  canister : SeasonLeaderboardCanister;
+  cycles : nat;
+};
 type RevaluePlayerUpDTO = record { playerId : PlayerId };
 type RevaluePlayerDownDTO = record { playerId : PlayerId };
 type RetirePlayerDTO = record {
@@ -145,17 +162,41 @@ type Result_3 = variant {
   err : Error;
   ok : nat;
 };
+type Result_28 = variant {
+  err : Error;
+  ok : AdminClubList;
+};
+type Result_27 = variant {
+  err : Error;
+  ok : AdminFixtureList;
+};
+type Result_26 = variant {
+  err : Error;
+  ok : AdminProfileList;
+};
+type Result_25 = variant {
+  err : Error;
+  ok : AdminMonthlyCanisterList;
+};
+type Result_24 = variant {
+  err : Error;
+  ok : AdminPlayerList;
+};
+type Result_23 = variant {
+  err : Error;
+  ok : AdminProfilePictureCanisterList;
+};
 type Result_22 = variant {
   err : Error;
-  ok : vec CanisterDTO;
+  ok : AdminSeasonCanisterList;
 };
 type Result_21 = variant {
   err : Error;
-  ok : vec ProfileDTO;
+  ok : AdminTimerList;
 };
 type Result_20 = variant {
   err : Error;
-  ok : vec TimerDTO;
+  ok : AdminWeeklyCanisterList;
 };
 type Result_2 = variant {
   err : Error;
@@ -266,6 +307,10 @@ type ProfileDTO = record {
   transfersAvailable : nat8;
   username : text;
 };
+type ProfileCanisterDTO = record {
+  canisterId : text;
+  cycles : nat;
+};
 type PlayerStatus = variant {
   Active;
   Former;
@@ -356,6 +401,7 @@ type PlayerDTO = record {
   nationality : CountryId;
   position : PlayerPosition;
   shirtNumber : nat8;
+  status : PlayerStatus;
   totalPoints : int16;
   valueQuarterMillions : nat16;
 };
@@ -365,6 +411,16 @@ type MonthlyLeaderboardDTO = record {
   month : nat8;
   seasonId : SeasonId;
   totalEntries : nat;
+};
+type MonthlyLeaderboardCanister = record {
+  canisterId : text;
+  clubId : ClubId;
+  month : CalendarMonth;
+  seasonId : SeasonId;
+};
+type MonthlyCanisterDTO = record {
+  canister : MonthlyLeaderboardCanister;
+  cycles : nat;
 };
 type ManagerGameweekDTO = record {
   bankQuarterMillions : nat16;
@@ -541,11 +597,55 @@ type ClubDTO = record {
   shirtType : ShirtType;
   thirdColourHex : text;
 };
-type CanisterDTO = record {
-  canisterId : text;
-  cycles : nat;
-};
 type CalendarMonth = nat8;
+type AdminWeeklyCanisterList = record {
+  canisters : vec WeeklyCanisterDTO;
+  limit : nat;
+  offset : nat;
+  totalEntries : nat;
+};
+type AdminTimerList = record {
+  limit : nat;
+  offset : nat;
+  timers : vec TimerDTO;
+  totalEntries : nat;
+};
+type AdminSeasonCanisterList = record {
+  canisters : vec SeasonCanisterDTO;
+  limit : nat;
+  offset : nat;
+  totalEntries : nat;
+};
+type AdminProfilePictureCanisterList = record {
+  canisters : vec ProfileCanisterDTO;
+  totalEntries : nat;
+};
+type AdminProfileList = record {
+  limit : nat;
+  offset : nat;
+  profiles : vec ProfileDTO;
+  totalEntries : nat;
+};
+type AdminPlayerList = record {
+  playerStatus : PlayerStatus;
+  players : vec PlayerDTO;
+};
+type AdminMonthlyCanisterList = record {
+  canisters : vec MonthlyCanisterDTO;
+  limit : nat;
+  offset : nat;
+  totalEntries : nat;
+};
+type AdminFixtureList = record {
+  fixtures : vec FixtureDTO;
+  seasonId : SeasonId;
+};
+type AdminClubList = record {
+  clubs : vec ClubDTO;
+  limit : nat;
+  offset : nat;
+  totalEntries : nat;
+};
 type AddInitialFixturesDTO = record {
   seasonFixtures : vec FixtureDTO;
   seasonId : SeasonId;
@@ -553,12 +653,15 @@ type AddInitialFixturesDTO = record {
 service : {
   adminAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
   adminCreatePlayer : (CreatePlayerDTO) -> (Result);
-  adminGetCanisters : () -> (Result_22) query;
-  adminGetClubs : () -> (Result_19) query;
-  adminGetFixtures : () -> (Result_16) query;
-  adminGetManagers : () -> (Result_21) query;
-  adminGetPlayers : () -> (Result_9) query;
-  adminGetTimers : () -> (Result_20) query;
+  adminGetClubs : (nat, nat) -> (Result_28) query;
+  adminGetFixtures : (SeasonId) -> (Result_27) query;
+  adminGetManagers : (nat, nat) -> (Result_26) query;
+  adminGetMonthlyCanisters : (nat, nat) -> (Result_25);
+  adminGetPlayers : (PlayerStatus) -> (Result_24) query;
+  adminGetProfileCanisters : (nat, nat) -> (Result_23);
+  adminGetSeasonCanisters : (nat, nat) -> (Result_22);
+  adminGetTimers : (nat, nat) -> (Result_21) query;
+  adminGetWeeklyCanisters : (nat, nat) -> (Result_20);
   adminLoanPlayer : (LoanPlayerDTO) -> (Result);
   adminPromoteFormerClub : (PromoteFormerClubDTO) -> (Result);
   adminPromoteNewClub : (PromoteNewClubDTO) -> (Result);

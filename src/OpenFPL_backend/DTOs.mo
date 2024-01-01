@@ -432,60 +432,60 @@ module DTOs {
   };
 
   public type AdminWeeklyCanisterList = {
-    limit: Nat;
-    offset: Nat;
-    canisters: [WeeklyCanisterDTO];
-    totalEntries: Nat;
+    limit : Nat;
+    offset : Nat;
+    canisters : [WeeklyCanisterDTO];
+    totalEntries : Nat;
   };
 
   public type AdminMonthlyCanisterList = {
-    limit: Nat;
-    offset: Nat;
-    canisters: [MonthlyCanisterDTO];
-    totalEntries: Nat;
+    limit : Nat;
+    offset : Nat;
+    canisters : [MonthlyCanisterDTO];
+    totalEntries : Nat;
   };
 
   public type AdminSeasonCanisterList = {
-    limit: Nat;
-    offset: Nat;
-    canisters: [SeasonCanisterDTO];
-    totalEntries: Nat;
+    limit : Nat;
+    offset : Nat;
+    canisters : [SeasonCanisterDTO];
+    totalEntries : Nat;
   };
 
   public type AdminProfilePictureCanisterList = {
-    canisters: [ProfileCanisterDTO];
-    totalEntries: Nat;
+    canisters : [ProfileCanisterDTO];
+    totalEntries : Nat;
   };
 
   public type AdminTimerList = {
     limit : Nat;
     offset : Nat;
-    timers: [TimerDTO];
-    totalEntries: Nat;
+    timers : [TimerDTO];
+    totalEntries : Nat;
   };
 
   public type AdminFixtureList = {
-    seasonId: T.SeasonId;
-    fixtures: [FixtureDTO];
+    seasonId : T.SeasonId;
+    fixtures : [FixtureDTO];
   };
 
   public type AdminClubList = {
     limit : Nat;
     offset : Nat;
-    clubs: [ClubDTO];
-    totalEntries: Nat;
+    clubs : [ClubDTO];
+    totalEntries : Nat;
   };
 
   public type AdminPlayerList = {
-    playerStatus: T.PlayerStatus;
-    players: [PlayerDTO];
+    playerStatus : T.PlayerStatus;
+    players : [PlayerDTO];
   };
 
   public type AdminProfileList = {
     limit : Nat;
     offset : Nat;
-    profiles: [ProfileDTO];
-    totalEntries: Nat;
+    profiles : [ProfileDTO];
+    totalEntries : Nat;
   };
 
 };
