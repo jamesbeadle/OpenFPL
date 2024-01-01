@@ -220,7 +220,7 @@ module DTOs {
     seasonId : T.SeasonId;
     gameweeks : [PlayerGameweekDTO];
     valueHistory : [T.ValueHistory];
-    onLoan : Bool;
+    status : T.PlayerStatus;
     parentClubId : T.ClubId;
     isInjured : Bool;
     injuryHistory : [T.InjuryHistory];

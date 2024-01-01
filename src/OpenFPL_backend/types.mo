@@ -225,13 +225,20 @@ module Types {
     nationality : CountryId;
     seasons : List.List<PlayerSeason>;
     valueHistory : List.List<ValueHistory>;
-    onLoan : Bool;
+    status: PlayerStatus;
+    currentLoanEndDate : Int;
     parentClubId : Nat16;
-    loanEndDate : Int;
     isInjured : Bool;
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;
     retirementDate : Int;
+  };
+
+  public type PlayerStatus = {
+    #Active;
+    #Retired;
+    #Former;
+    #OnLoan;
   };
 
   public type PlayerSeason = {
