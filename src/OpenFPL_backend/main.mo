@@ -530,7 +530,151 @@ actor Self {
     return #ok(seasonManager.adminGetPlayers());
   };
 
+  //Add in functions that simultaneously validate and execute each proposal type for testing
   
+  public shared func adminRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
+    let result = await seasonManager.validateRevaluePlayerUp(revaluePlayerUpDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error revaluing players");
+  };
+
+  public shared func adminRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateRevaluePlayerDown(revaluePlayerDownDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeRevaluePlayerDown(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error revaluing players");
+  };
+
+  public shared func adminSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateSubmitFixtureData(submitFixtureData);
+    if(result == #ok("Valid")){
+      await seasonManager.executeSubmitFixtureData(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error submitting fixture data");
+  };
+
+  public shared func adminAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateAddInitialFixtures(addInitialFixturesDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeAddInitialFixtures(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error adding initial fixtures");
+  };
+
+  public shared func adminRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateRescheduleFixture(rescheduleFixtureDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeRescheduleFixture(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error rescheduling fixtures");
+  };
+
+  public shared func adminLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateLoanPlayer(loanPlayerDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeLoanPlayer(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error loaning player");
+  };
+
+  public shared func adminTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateTransferPlayer(transferPlayerDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeTransferPlayer(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error transferring player");
+  };
+
+  public shared func adminRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateRecallPlayer(recallPlayerDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeRecallPlayer(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error recalling player");
+  };
+
+  public shared func adminCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateCreatePlayer(createPlayerDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeCreatePlayer(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error creating player");
+  };
+
+  public shared func adminUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateUpdatePlayer(updatePlayerDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeUpdatePlayer(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error updating player");
+  };
+
+  public shared func adminSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateSetPlayerInjury(setPlayerInjuryDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeSetPlayerInjury(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error setting player injury");
+  };
+
+  public shared func adminRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateRetirePlayer(retirePlayerDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeRetirePlayer(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error retiring player");
+  };
+
+  public shared func adminUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateUnretirePlayer(unretirePlayerDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeUnretirePlayer(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error unretiring player");
+  };
+
+  public shared func adminPromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validatePromoteFormerClub(promoteFormerClubDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executePromoteFormerClub(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error promoting former club");
+  };
+
+  public shared func adminPromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validatePromoteNewClub(promoteNewClubDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executePromoteNewClub(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error promoting new clubs");
+  };
+
+  public shared func adminUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
+    await seasonManager.validateUpdateClub(updateClubDTO);
+    if(result == #ok("Valid")){
+      await seasonManager.executeUpdateClub(revaluePlayerUpDTO);
+      return #ok;
+    };
+    return #err("Error updating club");
+  };
 
 
 
