@@ -95,6 +95,7 @@ module {
             dateOfBirth = player.dateOfBirth;
             nationality = player.nationality;
             totalPoints = totalSeasonPoints;
+            status = player.status;
           };
         },
       );

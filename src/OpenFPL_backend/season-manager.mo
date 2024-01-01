@@ -1041,7 +1041,7 @@ module {
       };
     };
 
-    public func adminGetPlayers(clubId: T.ClubId, status: T.PlayerStatus) : DTOs.AdminPlayerList {      
+    public func adminGetPlayers(status: T.PlayerStatus) : DTOs.AdminPlayerList {      
       let players = getPlayers();
 
       let filteredPlayers = Array.filter<DTOs.PlayerDTO>(
@@ -1051,12 +1051,9 @@ module {
         },
       );
 
-      let droppedEntries = List.drop<DTOs.ClubDTO>(List.fromArray(filteredPlayers), offset);
-      let paginatedEntries = List.take<DTOs.ClubDTO>(droppedEntries, limit);
-
       return {
-        players = List.toArray(paginatedEntries);
-        status = status;
+        players = filteredPlayers;
+        playerStatus = status;
       };
     };
 

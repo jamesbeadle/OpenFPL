@@ -515,13 +515,14 @@ actor Self {
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
 
-    let canisterIds = getStableCanisterIds();
-    let droppedEntries = List.drop<T.CanisterDTO>(canisterIds.entries, offset);
-    let paginatedEntries = List.take<T.CanisterDTO>(droppedEntries, limit);
+    let canisterIds = cyclesDispenser.getStableCanisterIds();
+    let droppedEntries = List.drop<DTOs.CanisterDTO>(List.fromArray(canisterIds), offset);
+    let paginatedEntries = List.take<DTOs.CanisterDTO>(droppedEntries, limit);
 
     let dto: DTOs.AdminCanisterList = {
-      currentPage = currentPage;
-      canisters = paginatedEntries;
+      limit = limit;
+      offset = offset;
+      canisters = List.toArrary(paginatedEntries);
       totalEntries = Array.size(paginatedEntries);
     };
 
@@ -533,7 +534,7 @@ actor Self {
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
 
-    let timers = getStableTimers();
+    let timers = seasonManager.getStableTimers();
     let droppedEntries = List.drop<T.CanisterDTO>(timers.entries, offset);
     let paginatedEntries = List.take<T.CanisterDTO>(droppedEntries, limit);
 
@@ -546,11 +547,11 @@ actor Self {
     return #ok(dto);
   };
 
-  public shared query ({ caller }) func adminGetFixtures(seasonId: T.SeasonId, gameweek: T.GameweekNumber) : async Result.Result<DTOs.AdminFixtureList, T.Error> {
+  public shared query ({ caller }) func adminGetFixtures(seasonId: T.SeasonId) : async Result.Result<DTOs.AdminFixtureList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return #ok(seasonManager.adminGetFixtures(seasonId, gameweek));
+    return #ok(seasonManager.adminGetFixtures(seasonId));
   };
 
   public shared query ({ caller }) func adminGetClubs(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminClubList, T.Error> {
@@ -560,14 +561,14 @@ actor Self {
     return #ok(seasonManager.adminGetClubs(limit, offset));
   };
 
-  public shared query ({ caller }) func adminGetPlayers(clubId: T.ClubId, status: T.PlayerStatus, limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminPlayerList, T.Error> {
+  public shared query ({ caller }) func adminGetPlayers(status: T.PlayerStatus) : async Result.Result<DTOs.AdminPlayerList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
-    return #ok(seasonManager.adminGetPlayers(clubId, status, limit, offset));
+    return #ok(seasonManager.adminGetPlayers(status));
   };
 
-  public shared query ({ caller }) func adminGetManagers(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminManagerList, T.Error> {
+  public shared query ({ caller }) func adminGetManagers(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminProfileList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
