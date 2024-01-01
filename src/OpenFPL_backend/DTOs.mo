@@ -183,6 +183,7 @@ module DTOs {
     dateOfBirth : Int;
     nationality : T.CountryId;
     totalPoints : Int16;
+    status : T.PlayerStatus;
   };
 
   public type PlayerScoreDTO = {
@@ -416,37 +417,39 @@ module DTOs {
   };
 
   public type AdminCanisterList = {
-    currentPage: Nat;
+    limit: Nat;
+    offset: Nat;
     canisters: [CanisterDTO];
     totalEntries: Nat;
   };
 
   public type AdminTimerList = {
-    currentPage: Nat;
+    limit : Nat;
+    offset : Nat;
     timers: [TimerDTO];
     totalEntries: Nat;
   };
 
   public type AdminFixtureList = {
-    currentPage: Nat;
+    seasonId: T.SeasonId;
     fixtures: [FixtureDTO];
-    totalEntries: Nat;
   };
 
   public type AdminClubList = {
-    currentPage: Nat;
+    limit : Nat;
+    offset : Nat;
     clubs: [ClubDTO];
     totalEntries: Nat;
   };
 
   public type AdminPlayerList = {
-    currentPage: Nat;
+    playerStatus: T.PlayerStatus;
     players: [PlayerDTO];
-    totalEntries: Nat;
   };
 
   public type AdminProfileList = {
-    currentPage: Nat;
+    limit : Nat;
+    offset : Nat;
     profiles: [ProfileDTO];
     totalEntries: Nat;
   };

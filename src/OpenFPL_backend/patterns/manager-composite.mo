@@ -2404,5 +2404,19 @@ module {
     public func setSeasonATHPrizePool(stable_season_ath_prize_pool : Nat64) {
       seasonATHPrizePool := stable_season_ath_prize_pool;
     };
+
+    /* Admin functions to be removed */
+    public func adminGetManagers(limit : Nat, offset : Nat) : DTOs.AdminProfileList {
+      
+
+      
+      
+      return {
+        limit = limit;
+        offset  = offset;
+        profiles = [];
+        totalEntries = 0;
+      };
+    };
   };
 };

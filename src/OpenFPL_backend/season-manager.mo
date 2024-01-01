@@ -1018,20 +1018,50 @@ module {
       return await seasonComposite.updateFixture(updateFixtureDTO);
     };
 
-    public func adminGetFixtures() : DTOs.AdminFixtureList {
-      return [];
+    public func adminGetFixtures(seasonId: T.SeasonId) : DTOs.AdminFixtureList {
+      
+      let fixtures = getFixtures(seasonId);
+      
+      return {
+        seasonId = seasonId;
+        fixtures = fixtures;
+      };
     };
 
-    public func adminGetClubs() : DTOs.AdminClubList {
-      return [];
+    public func adminGetClubs(limit : Nat, offset : Nat) : DTOs.AdminClubList {      
+      let clubs = getClubs();
+      let droppedEntries = List.drop<DTOs.ClubDTO>(List.fromArray(clubs), offset);
+      let paginatedEntries = List.take<DTOs.ClubDTO>(droppedEntries, limit);
+
+      return {
+        clubs = List.toArray(paginatedEntries);
+        limit = limit;
+        offset = offset;
+        totalEntries = Array.size(clubs);
+      };
     };
 
-    public func adminGetPlayers() : DTOs.AdminPlayerList {
-      return [];
+    public func adminGetPlayers(clubId: T.ClubId, status: T.PlayerStatus) : DTOs.AdminPlayerList {      
+      let players = getPlayers();
+
+      let filteredPlayers = Array.filter<DTOs.PlayerDTO>(
+        players,
+        func(player : DTOs.PlayerDTO) : Bool {
+          return player.status == status;
+        },
+      );
+
+      let droppedEntries = List.drop<DTOs.ClubDTO>(List.fromArray(filteredPlayers), offset);
+      let paginatedEntries = List.take<DTOs.ClubDTO>(droppedEntries, limit);
+
+      return {
+        players = List.toArray(paginatedEntries);
+        status = status;
+      };
     };
 
-    public func adminGetManagers() : DTOs.AdminProfileList {
-      return [];
+    public func adminGetManagers(limit : Nat, offset : Nat) : DTOs.AdminProfileList {
+      return managerComposite.adminGetManagers(limit, offset);
     };
 
   };
