@@ -405,7 +405,22 @@ module DTOs {
     transferWindowGameweek : T.GameweekNumber;
   };
 
-  public type CanisterDTO = {
+  public type WeeklyCanisterDTO = {
+    canister : T.WeeklyLeaderboardCanister;
+    cycles : Nat;
+  };
+
+  public type MonthlyCanisterDTO = {
+    canister : T.MonthlyLeaderboardCanister;
+    cycles : Nat;
+  };
+
+  public type SeasonCanisterDTO = {
+    canister : T.SeasonLeaderboardCanister;
+    cycles : Nat;
+  };
+
+  public type ProfileCanisterDTO = {
     canisterId : Text;
     cycles : Nat;
   };
@@ -416,10 +431,24 @@ module DTOs {
     callbackFunction : Text;
   };
 
-  public type AdminCanisterList = {
+  public type AdminWeeklyCanisterList = {
     limit: Nat;
     offset: Nat;
-    canisters: [CanisterDTO];
+    canisters: [WeeklyCanisterDTO];
+    totalEntries: Nat;
+  };
+
+  public type AdminMonthlyCanisterList = {
+    limit: Nat;
+    offset: Nat;
+    canisters: [MonthlyCanisterDTO];
+    totalEntries: Nat;
+  };
+
+  public type AdminSeasonCanisterList = {
+    limit: Nat;
+    offset: Nat;
+    canisters: [SeasonCanisterDTO];
     totalEntries: Nat;
   };
 

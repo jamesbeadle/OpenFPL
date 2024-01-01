@@ -509,21 +509,101 @@ actor Self {
 
   let TEMP_ADMIN_PRINCIPAL = "";
 
-  //Getters for admin functions
-  public shared query ({ caller }) func adminGetCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminCanisterList, T.Error> {
+  //Getters for admin functions - //TODO: Can't be query as gets cycles?
+  public shared ({ caller }) func adminGetWeeklyCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminWeeklyCanisterList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
 
-    let canisterIds = cyclesDispenser.getStableCanisterIds();
-    let droppedEntries = List.drop<DTOs.CanisterDTO>(List.fromArray(canisterIds), offset);
-    let paginatedEntries = List.take<DTOs.CanisterDTO>(droppedEntries, limit);
+    let weeklyCanisters = seasonManager.getStableWeeklyLeaderboardCanisters();
+    let droppedEntries = List.drop<T.WeeklyLeaderboardCanister>(List.fromArray(weeklyCanisters), offset);
+    let paginatedEntries = List.take<T.WeeklyLeaderboardCanister>(droppedEntries, limit);
+    
+    let canisterInfoBuffer = Buffer.fromArray<DTOs.WeeklyCanisterDTO>([]);
 
-    let dto: DTOs.AdminCanisterList = {
+    for(canisterInfo in Iter.fromList(paginatedEntries)){
+      let weekly_leaderboard_canister = actor (canisterInfo.canisterId) : actor {
+        getCyclesBalance : () -> async Nat;
+      };
+
+      let cycles = await weekly_leaderboard_canister.getCyclesBalance();
+      canisterInfoBuffer.add({
+        canister = canisterInfo;
+        cycles = cycles;
+      });
+    };
+
+    let dto: DTOs.AdminWeeklyCanisterList = {
       limit = limit;
       offset = offset;
-      canisters = List.toArrary(paginatedEntries);
-      totalEntries = Array.size(paginatedEntries);
+      canisters = Buffer.toArray(canisterInfoBuffer);
+      totalEntries = Array.size(weeklyCanisters);
+    };
+
+    return #ok(dto);
+  };
+
+  public shared ({ caller }) func adminGetMonthlyCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminMonthlyCanisterList, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+
+    let monthlyCanisters = seasonManager.getStableMonthlyLeaderboardCanisters();
+    let droppedEntries = List.drop<T.MonthlyLeaderboardCanister>(List.fromArray(monthlyCanisters), offset);
+    let paginatedEntries = List.take<T.MonthlyLeaderboardCanister>(droppedEntries, limit);
+    
+    let canisterInfoBuffer = Buffer.fromArray<DTOs.MonthlyCanisterDTO>([]);
+
+    for(canisterInfo in Iter.fromList(paginatedEntries)){
+      let monthly_leaderboard_canister = actor (canisterInfo.canisterId) : actor {
+        getCyclesBalance : () -> async Nat;
+      };
+
+      let cycles = await monthly_leaderboard_canister.getCyclesBalance();
+      canisterInfoBuffer.add({
+        canister = canisterInfo;
+        cycles = cycles;
+      });
+    };
+
+    let dto: DTOs.AdminMonthlyCanisterList = {
+      limit = limit;
+      offset = offset;
+      canisters = Buffer.toArray(canisterInfoBuffer);
+      totalEntries = Array.size(monthlyCanisters);
+    };
+
+    return #ok(dto);
+  };
+
+  public shared ({ caller }) func adminGetSeasonCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminSeasonCanisterList, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+
+    let seasonCanisters = seasonManager.getStableSeasonLeaderboardCanisters();
+    let droppedEntries = List.drop<T.SeasonLeaderboardCanister>(List.fromArray(seasonCanisters), offset);
+    let paginatedEntries = List.take<T.SeasonLeaderboardCanister>(droppedEntries, limit);
+    
+    let canisterInfoBuffer = Buffer.fromArray<DTOs.SeasonCanisterDTO>([]);
+
+    for(canisterInfo in Iter.fromList(paginatedEntries)){
+      let season_leaderboard_canister = actor (canisterInfo.canisterId) : actor {
+        getCyclesBalance : () -> async Nat;
+      };
+
+      let cycles = await season_leaderboard_canister.getCyclesBalance();
+      canisterInfoBuffer.add({
+        canister = canisterInfo;
+        cycles = cycles;
+      });
+    };
+
+    let dto: DTOs.AdminSeasonCanisterList = {
+      limit = limit;
+      offset = offset;
+      canisters = Buffer.toArray(canisterInfoBuffer);
+      totalEntries = Array.size(seasonCanisters);
     };
 
     return #ok(dto);

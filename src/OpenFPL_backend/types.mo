@@ -389,5 +389,4 @@ module Types {
     seasonId : SeasonId;
     canisterId : Text;
   };
-
 };
