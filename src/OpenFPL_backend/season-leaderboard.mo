@@ -9,6 +9,7 @@ import Array "mo:base/Array";
 import Order "mo:base/Order";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
+import Environment "Environment";
 
 actor class SeasonLeaderboardCanister() {
   private stable var leaderboard : ?T.SeasonLeaderboard = null;
@@ -16,10 +17,17 @@ actor class SeasonLeaderboardCanister() {
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
 
+  let network = Environment.DFX_NETWORK;
+  var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
+  if(network == "local"){
+    main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
+  };
+
+
   public shared ({ caller }) func addSeasonLeaderboard(_seasonId : T.SeasonId, seasonLeaderboard : T.SeasonLeaderboard) : async () {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     leaderboard := ?seasonLeaderboard;
     seasonId := ?_seasonId;
@@ -28,7 +36,7 @@ actor class SeasonLeaderboardCanister() {
   public shared query ({ caller }) func getRewardLeaderboard() : async ?T.SeasonLeaderboard {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     switch (leaderboard) {
       case (null) { return null };
@@ -100,7 +108,7 @@ actor class SeasonLeaderboardCanister() {
   public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat) : async ?DTOs.SeasonLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     switch (leaderboard) {
       case (null) {
@@ -124,7 +132,7 @@ actor class SeasonLeaderboardCanister() {
   public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     switch (leaderboard) {
       case (null) {
@@ -152,7 +160,7 @@ actor class SeasonLeaderboardCanister() {
     let balance = Cycles.balance();
 
     if (balance < 500000000000) {
-      let openfpl_backend_canister = actor (CanisterIds.MAIN_CANISTER_ID) : actor {
+      let openfpl_backend_canister = actor (main_canister_id) : actor {
         requestCanisterTopup : () -> async ();
       };
       await openfpl_backend_canister.requestCanisterTopup();

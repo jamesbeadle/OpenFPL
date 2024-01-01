@@ -8,10 +8,17 @@ import Result "mo:base/Result";
 import Account "lib/Account";
 import CanisterIds "CanisterIds";
 import T "types";
+import Environment "Environment";
 
 module {
 
   public class Token() {
+
+  let network = Environment.DFX_NETWORK;
+  var token_canister_id = CanisterIds.TOKEN_CANISTER_IC_ID;
+  if(network == "local"){
+    token_canister_id := CanisterIds.TOKEN_CANISTER_LOCAL_ID;
+  };
 
     type Tokens = Nat;
     type BlockIndex = Nat;
@@ -71,7 +78,7 @@ module {
 
     public func transferToken(principalId : Text, amount : Nat) : async () {
 
-      let tokenMintingAccount = Account.accountIdentifier(Principal.fromText(CanisterIds.TOKEN_CANISTER_ID), Blob.fromArrayMut(Array.init(32, 0 : Nat8)));
+      let tokenMintingAccount = Account.accountIdentifier(Principal.fromText(token_canister_id), Blob.fromArrayMut(Array.init(32, 0 : Nat8)));
 
       let transferArgs : TransferArg = {
         from_subaccount = tokenMintingAccount;
@@ -89,12 +96,12 @@ module {
 
     public func mintToTreasury(amount : Nat) : async () {
 
-      let tokenMintingAccount = Account.accountIdentifier(Principal.fromText(CanisterIds.TOKEN_CANISTER_ID), Blob.fromArrayMut(Array.init(32, 0 : Nat8)));
+      let tokenMintingAccount = Account.accountIdentifier(Principal.fromText(token_canister_id), Blob.fromArrayMut(Array.init(32, 0 : Nat8)));
 
       let transferArgs : TransferArg = {
         from_subaccount = tokenMintingAccount;
         to = {
-          owner = Principal.fromText(CanisterIds.MAIN_CANISTER_ID);
+          owner = Principal.fromText(token_canister_id);
           subaccount = null;
         };
         amount = amount;

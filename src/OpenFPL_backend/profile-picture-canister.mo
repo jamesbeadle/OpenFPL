@@ -10,6 +10,7 @@ import Principal "mo:base/Principal";
 import Debug "mo:base/Debug";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
+import Environment "Environment";
 
 actor class ProfilePictureCanister() {
   private stable var bucket1 : [(T.PrincipalId, Blob)] = [];
@@ -19,6 +20,12 @@ actor class ProfilePictureCanister() {
   private stable var bucket5 : [(T.PrincipalId, Blob)] = [];
   private stable var bucket6 : [(T.PrincipalId, Blob)] = [];
   private stable var stable_bucket_map : [(T.PrincipalId, Nat8)] = [];
+
+  let network = Environment.DFX_NETWORK;
+  var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
+  if(network == "local"){
+    main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
+  };
 
   private var currentBucketIndex = 0;
   private var maxPicturesPerBucket = 5000;
@@ -32,8 +39,8 @@ actor class ProfilePictureCanister() {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     Debug.print(principalId);
-    Debug.print(CanisterIds.MAIN_CANISTER_ID);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    Debug.print(main_canister_id);
+    assert principalId == main_canister_id;
 
     switch (currentBucketIndex) {
       case 0 {
@@ -95,7 +102,7 @@ actor class ProfilePictureCanister() {
   public shared query ({ caller }) func hasSpaceAvailable() : async Bool {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     let spaceInBucket1 = bucket1.size() < maxPicturesPerBucket;
     let spaceInBucket2 = bucket2.size() < maxPicturesPerBucket;
@@ -110,7 +117,7 @@ actor class ProfilePictureCanister() {
   public shared query ({ caller }) func getProfilePicture(userPrincipal : T.PrincipalId) : async ?Blob {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
-    assert principalId == CanisterIds.MAIN_CANISTER_ID;
+    assert principalId == main_canister_id;
 
     let bucketIndex = bucketMap.get(userPrincipal);
 
@@ -200,7 +207,7 @@ actor class ProfilePictureCanister() {
     let balance = Cycles.balance();
 
     if (balance < 500000000000) {
-      let openfpl_backend_canister = actor (CanisterIds.MAIN_CANISTER_ID) : actor {
+      let openfpl_backend_canister = actor (main_canister_id) : actor {
         requestCanisterTopup : () -> async ();
       };
       await openfpl_backend_canister.requestCanisterTopup();
