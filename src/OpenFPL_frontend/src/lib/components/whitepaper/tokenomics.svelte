@@ -98,7 +98,8 @@
     <li>Estimated 5% users spend 10ICP per year.</li>
   </ul>
 
-  <p class="mt-8">The financials below are in ICP:</p>
+  <p class="mt-8">The financials below are in ICP</p>
+  <p class="text-xs">(ICP/USD = ~$5):</p>
   <div class="hidden md:flex">
     <table
       class="w-full text-right border-collapse striped mb-8 mt-4 text-xs lg:text-base"
@@ -331,13 +332,13 @@
     </tr>
     <tr>
       <td>The maximum ICP to be raised.</td>
-      <td>2,000,000</td>
+      <td>1,000,000</td>
     </tr>
     <tr>
       <td
         >The minimum ICP to be raised (otherwise sale fails and ICP returned).</td
       >
-      <td>1,000,000</td>
+      <td>250,000</td>
     </tr>
     <tr>
       <td>The ICP from the Community Fund.</td>
@@ -345,7 +346,7 @@
     </tr>
     <tr>
       <td>Sale start date.</td>
-      <td>1st March 2024</td>
+      <td>1st February 2024</td>
     </tr>
     <tr>
       <td>Minimum number of sale participants.</td>
@@ -353,7 +354,7 @@
     </tr>
     <tr>
       <td>Minimum ICP per buyer.</td>
-      <td>10</td>
+      <td>1</td>
     </tr>
     <tr>
       <td>Maximum ICP per buyer.</td>
@@ -403,13 +404,9 @@
 
   <h2 class="default-sub-header mt-4">Tokenomics</h2>
   <p class="my-2">
-    Each season, 2.5% of the total $FPL supply will be minted for DAO rewards.
-    There is no mechanism to automatically burn $FPL as we anticipate the user
-    growth to be faster than the supply increase, thus increasing the price of
-    $FPL. However a proposal can always be made to burn $FPL if required. If the
-    DAO’s treasury is ever 60% or more of the total supply of $FPL, it will be
-    ICP FA policy to raise a proposal to burn 5% of the total supply from the
-    DAO’s treasury.
+    Each season, 2.5% of the total $FPL supply will be minted for DAO rewards. 
+    It will be ICP FA policy to raise proposals to use 50% of the revenue deposited into the DAO's treasury to purchase $FPL from exchanges. 
+    Using this available ICP, the DAO will purchase $FPL up to an amount that would burn the total supply back to 100m $FPL.
   </p>
 
   <h2 class="default-sub-header mt-4">ICP FA Overview</h2>

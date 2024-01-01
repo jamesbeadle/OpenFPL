@@ -34,6 +34,11 @@
     Each January, users can overhaul their team completely once, adding another
     strategic layer to the game reflecting the January transfer window.
   </p>
+  <p class="my-2">
+    If a player is transferred from a club they are removed from any fantasy team that contains them. 
+    This will leave a space in your team you must fill when saving your team next. 
+    Scores will still be calculated on teams with less than 11 players that have not saved their team in the gameweek.
+  </p>
 
   <h2 class="default-header mt-4">Scoring System</h2>
   <p class="my-2">

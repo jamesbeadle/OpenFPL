@@ -1,27 +1,8 @@
 <div class="m-4">
   <h1 class="default-header">Roadmap</h1>
   <p class="my-4">
-    We have an ambitious roadmap of features we aim to release:
+    We have an ambitious roadmap of features:
   </p>
-  <h2 class="default-sub-header">November 2023: Investment NFTs Launch</h2>
-  <p class="my-2">
-    We will be launching 2 NFT collections in November 2024 to give the
-    opportunity for users to share in OpenFPL merchandise and podcast revenue.
-    These NFTs will be used to fund the production of OpenFPL merchandise along
-    with promotion of the OpenFPL platform in the run up to the genesis season.
-    Further information can be found in the marketing section of this
-    whitepaper.
-  </p>
-
-  <h2 class="default-sub-header mt-4">
-    December 2023: Svelte Frontend Upgrade
-  </h2>
-  <p class="my-2">
-    We're aligning OpenFPL with flagship IC apps like the NNS, OpenChat & Juno
-    by adopting Svelte. This upgrade ensures a consistent user experience and
-    leverages Svelte’s server-side rendering for faster load times.
-  </p>
-
   <h2 class="default-sub-header mt-4">
     Jan - Feb 2024: SNS Testflight Testing
   </h2>

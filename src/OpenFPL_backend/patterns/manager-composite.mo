@@ -238,7 +238,7 @@ module {
           return #err(#NotFound);
         };
         case (?foundManager) {
-
+          Debug.print("Manager found");
           var gameweeks : [T.FantasyTeamSnapshot] = [];
 
           let season = List.find(
@@ -256,11 +256,15 @@ module {
           };
 
           var profilePicture = Blob.fromArray([]);
+          Debug.print("Checking canister id");
+          Debug.print(foundManager.profilePictureCanisterId);
           if (Text.size(foundManager.profilePictureCanisterId) > 0) {
             let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
               getProfilePicture : (principalId : Text) -> async Blob;
             };
+            Debug.print("getting profile picture");
             profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+            Debug.print("Got profile picture");
           };
 
           let managerDTO : DTOs.ManagerDTO = {

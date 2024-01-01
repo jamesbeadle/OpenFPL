@@ -45,6 +45,7 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
+      console.log("updatedProfileDataObj");
       let updatedProfileDataObj = (await identityActor.getProfile()) as any;
       console.log(updatedProfileDataObj);
 
