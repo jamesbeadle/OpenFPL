@@ -658,14 +658,15 @@ actor Self {
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
 
-    let timers = seasonManager.getStableTimers();
-    let droppedEntries = List.drop<T.CanisterDTO>(timers.entries, offset);
-    let paginatedEntries = List.take<T.CanisterDTO>(droppedEntries, limit);
+    let timers = timerComposite.getStableTimers();
+    let droppedEntries = List.drop<DTOs.TimerDTO>(List.fromArray(timers), offset);
+    let paginatedEntries = List.take<DTOs.TimerDTO>(droppedEntries, limit);
 
     let dto: DTOs.AdminTimerList = {
-      currentPage = currentPage;
-      canisters = paginatedEntries;
-      totalEntries = Array.size(paginatedEntries);
+      limit = limit;
+      offset = offset;
+      timers = List.toArray(paginatedEntries);
+      totalEntries = Array.size(timers);
     };
 
     return #ok(dto);

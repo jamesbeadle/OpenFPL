@@ -428,7 +428,7 @@ module DTOs {
   public type TimerDTO = {
     id : Int;
     triggerTime : Int;
-    callbackFunction : Text;
+    callbackName : Text;
   };
 
   public type AdminWeeklyCanisterList = {
