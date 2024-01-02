@@ -36,6 +36,7 @@ actor class ProfilePictureCanister() {
   private var bucketMap : HashMap.HashMap<T.PrincipalId, Nat8> = HashMap.HashMap<T.PrincipalId, Nat8>(100, Text.equal, Text.hash);
 
   public shared ({ caller }) func addProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async () {
+    Debug.print(debug_show caller);
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     Debug.print(principalId);
@@ -115,12 +116,14 @@ actor class ProfilePictureCanister() {
   };
 
   public shared query ({ caller }) func getProfilePicture(userPrincipal : T.PrincipalId) : async ?Blob {
+    Debug.print("Getting profile picture");
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
 
+    Debug.print("user: " # userPrincipal);
     let bucketIndex = bucketMap.get(userPrincipal);
-
+    Debug.print("bucket" # userPrincipal);
     switch (bucketIndex) {
       case (null) {
         return null;

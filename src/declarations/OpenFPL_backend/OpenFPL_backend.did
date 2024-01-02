@@ -720,7 +720,7 @@ service : {
   getSystemState : () -> (Result_4) query;
   getTotalManagers : () -> (Result_3) query;
   getWeeklyLeaderboard : (SeasonId, GameweekNumber, nat, nat) -> (Result_2);
-  init : () -> ();
+  initControllers : () -> ();
   isUsernameValid : (text) -> (bool) query;
   requestCanisterTopup : () -> ();
   saveFantasyTeam : (UpdateFantasyTeamDTO) -> (Result_1);

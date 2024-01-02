@@ -46,7 +46,7 @@
   }
 
   async function loadCanisterInfo() {
-    console.log(selectedCanisterType)
+    console.log(selectedCanisterType);
     mainCanisterInfo = await adminStore.getMainCanisterInfo();
 
     switch (selectedCanisterType) {
@@ -74,8 +74,8 @@
           itemsPerPage,
           currentPage
         );
-    console.log("profilePictureCanisters")
-    console.log(profilePictureCanisters)
+        console.log("profilePictureCanisters");
+        console.log(profilePictureCanisters);
         break;
     }
   }
@@ -134,7 +134,7 @@
         </div>
       {/each}
       {#if weeklyLeaderboardCanisters.canisters.length == 0}
-          <p>No Canisters Found</p>
+        <p>No Canisters Found</p>
       {/if}
     {/if}
 
@@ -153,7 +153,7 @@
         </div>
       {/each}
       {#if monthlyLeaderboardCanisters.canisters.length == 0}
-          <p>No Canisters Found</p>
+        <p>No Canisters Found</p>
       {/if}
     {/if}
 
@@ -172,7 +172,7 @@
         </div>
       {/each}
       {#if seasonLeaderboardCanisters.canisters.length == 0}
-          <p>No Canisters Found</p>
+        <p>No Canisters Found</p>
       {/if}
     {/if}
 
@@ -191,7 +191,7 @@
         </div>
       {/each}
       {#if profilePictureCanisters.canisters.length == 0}
-          <p>No Canisters Found</p>
+        <p>No Canisters Found</p>
       {/if}
     {/if}
 

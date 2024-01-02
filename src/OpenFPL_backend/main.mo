@@ -269,6 +269,25 @@ actor Self {
     return await seasonManager.executeUpdateClub(updateClubDTO);
   };
 
+  public shared func init() : async () {
+
+    switch (cyclesCheckTimerId) {
+      case (null) {
+        setCheckCyclesTimer();
+      };
+      case (?id) {};
+    };
+
+    switch (cyclesCheckWalletTimerId) {
+      case (null) {
+        setCheckCyclesWalletTimer();
+      };
+      case (?id) {};
+    };
+
+    seasonManager.setBackendCanisterController(Principal.fromActor(Self));
+  };
+
   private func gameweekBeginExpiredCallback() : async () {
     await seasonManager.gameweekBeginExpired();
     timerComposite.removeExpiredTimers();
@@ -468,7 +487,7 @@ actor Self {
     cyclesCheckWalletTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
   };
 
-  public shared func burnICPToCycles(requestedCycles : Nat64) : async () {
+  public func burnICPToCycles(requestedCycles : Nat64) : async () {
     let treasuryAccount = getTreasuryAccount();
     await treasuryManager.sendICPForCycles(treasuryAccount, requestedCycles);
   };
@@ -487,25 +506,6 @@ actor Self {
       await burnICPToCycles(Nat64.fromNat(targetBalance - available));
     };
     setCheckCyclesTimer();
-  };
-
-  public func init() : async () {
-
-    switch (cyclesCheckTimerId) {
-      case (null) {
-        setCheckCyclesTimer();
-      };
-      case (?id) {};
-    };
-
-    switch (cyclesCheckWalletTimerId) {
-      case (null) {
-        setCheckCyclesWalletTimer();
-      };
-      case (?id) {};
-    };
-
-    seasonManager.setBackendCanisterController(Principal.fromActor(Self));
   };
 
   /* Admin Section to be removed when DAO */

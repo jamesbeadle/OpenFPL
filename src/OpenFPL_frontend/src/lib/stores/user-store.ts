@@ -104,7 +104,7 @@ function createUserStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const result = await identityActor.updateDisplayName(username);
+      const result = await identityActor.updateUsername(username);
       sync();
       return result;
     } catch (error) {

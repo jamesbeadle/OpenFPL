@@ -250,7 +250,6 @@ module {
           return #err(#NotFound);
         };
         case (?foundManager) {
-          Debug.print("Manager found");
           var gameweeks : [T.FantasyTeamSnapshot] = [];
 
           let season = List.find(
@@ -268,8 +267,6 @@ module {
           };
 
           var profilePicture = Blob.fromArray([]);
-          Debug.print("Checking canister id");
-          Debug.print(foundManager.profilePictureCanisterId);
           if (Text.size(foundManager.profilePictureCanisterId) > 0) {
             let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
               getProfilePicture : (principalId : Text) -> async ?Blob;
@@ -281,7 +278,6 @@ module {
                 profilePicture := foundProfilePicture;
               };
             };
-            Debug.print("Got profile picture");
           };
 
           let managerDTO : DTOs.ManagerDTO = {
@@ -591,7 +587,7 @@ module {
         case (null) {
           Debug.print("No manager");
           let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
-          Debug.print(profilePictureCanisterId);
+          Debug.print("Manager Profile Image Canister: " # profilePictureCanisterId);
 
           let createProfileDTO : DTOs.CreateProfileDTO = {
             principalId = principalId;
@@ -608,12 +604,11 @@ module {
           return #ok();
         };
         case (?foundManager) {
-          Debug.print("Found manager");
+          Debug.print("Found Manager with Profile Image Canister: " # foundManager.profilePictureCanisterId);
           var profilePictureCanisterId = "";
           if (foundManager.profilePictureCanisterId == "") {
-            Debug.print("No profile picture");
             profilePictureCanisterId := await setManagerProfileImage(principalId, profilePicture);
-            Debug.print(profilePictureCanisterId);
+            Debug.print("Manager Profile Image Canister: " # profilePictureCanisterId);
 
             let updatedManager : T.Manager = {
               principalId = foundManager.principalId;
@@ -649,8 +644,8 @@ module {
             };
             managers.put(principalId, updatedManager);
           } else {
-            Debug.print("Got a profile picture");
-            let profilePictureCanister = actor (activeProfilePictureCanisterId) : actor {
+            Debug.print("Manager Profile Image Canister: " # profilePictureCanisterId);
+            let profilePictureCanister = actor (foundManager.profilePictureCanisterId) : actor {
               hasSpaceAvailable : () -> async Bool;
               addProfilePicture : (principalId : T.PrincipalId, profilePicture : Blob) -> async ();
             };
@@ -662,7 +657,7 @@ module {
     };
 
     private func setManagerProfileImage(principalId : Text, profilePicture : Blob) : async Text {
-
+      Debug.print("Setting manager profile image");
       if (activeProfilePictureCanisterId == "") {
         return await createProfileCanister(principalId, profilePicture);
       } else {
