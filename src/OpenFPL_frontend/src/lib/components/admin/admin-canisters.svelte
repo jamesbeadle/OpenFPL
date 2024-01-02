@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
   import { adminStore } from "$lib/stores/admin-store";
-  import type { 
+  import type {
     AdminMainCanisterInfo,
     AdminWeeklyCanisterList,
     AdminMonthlyCanisterList,
     AdminSeasonCanisterList,
-    AdminProfilePictureCanisterList
-   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    AdminProfilePictureCanisterList,
+  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   //have a different array for each canister type as the table produces will have slightly different columns
-    //leaderboards will have season and gameweek etc
-    //profiles sho;ld have the number of pictures stored 
+  //leaderboards will have season and gameweek etc
+  //profiles sho;ld have the number of pictures stored
 
   let selectedCansiterType = "Main";
   let mainCanisterInfo: AdminMainCanisterInfo;
@@ -18,17 +18,21 @@
   let seasonLeaderboardCanisters: AdminSeasonCanisterList;
   let profilePictureCanisters: AdminProfilePictureCanisterList;
 
-
-  
-  $: canisterIds = selectedCansiterType === "Main" ? [] : 
-    selectedCansiterType === "WeeklyLeaderboard" ? [] : 
-    selectedCansiterType === "MonthlyLeaderboard" ? [] :
-    selectedCansiterType === "SeasonLeaderboard" ? [] :
-    selectedCansiterType === "Profile" ? [] :  [];
-
+  $: canisterIds =
+    selectedCansiterType === "Main"
+      ? []
+      : selectedCansiterType === "WeeklyLeaderboard"
+      ? []
+      : selectedCansiterType === "MonthlyLeaderboard"
+      ? []
+      : selectedCansiterType === "SeasonLeaderboard"
+      ? []
+      : selectedCansiterType === "Profile"
+      ? []
+      : [];
 </script>
 
-
+<!-- //TODO: Main Canister Info -->
 
 <div class="flex p-4">
   <div class="flex items-center">
@@ -46,15 +50,9 @@
   </div>
 </div>
 
-
-{#each canisterIds as canisterId}
-
-{/each}
-
-
-
-<!-- Main Canister Info -->
-<!-- Leaderboard Canister Ids Info -->
+<!-- Weekly Leaderboard Canister Ids Info -->
+<!-- Monthly Leaderboard Canister Ids Info -->
+<!-- Season Leaderboard Canister Ids Info -->
 <!-- Profile Picture Canister Ids -->
 
 <div class="flex">

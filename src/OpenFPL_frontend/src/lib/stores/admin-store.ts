@@ -1,5 +1,4 @@
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
-import { ActorFactory } from "../../utils/ActorFactory";
 import type {
   AdminClubList,
   AdminFixtureList,
@@ -10,8 +9,9 @@ import type {
   AdminSeasonCanisterList,
   AdminTimerList,
   AdminWeeklyCanisterList,
-  PlayerStatus
+  PlayerStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { ActorFactory } from "../../utils/ActorFactory";
 
 function createAdminStore() {
   let actor: any = ActorFactory.createActor(
@@ -19,48 +19,80 @@ function createAdminStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function getWeeklyCanisters(limit: number, offset: number): Promise<AdminWeeklyCanisterList> {
-    let canisterDTOs: AdminWeeklyCanisterList = await actor.adminGetWeeklyCanisters(limit, offset);
+  async function getWeeklyCanisters(
+    limit: number,
+    offset: number
+  ): Promise<AdminWeeklyCanisterList> {
+    let canisterDTOs: AdminWeeklyCanisterList =
+      await actor.adminGetWeeklyCanisters(limit, offset);
     return canisterDTOs;
   }
 
-  async function getMonthlyCanisters(limit: number, offset: number): Promise<AdminMonthlyCanisterList> {
-    let canisterDTOs: AdminMonthlyCanisterList = await actor.adminGetMonthlyCanisters(limit, offset);
+  async function getMonthlyCanisters(
+    limit: number,
+    offset: number
+  ): Promise<AdminMonthlyCanisterList> {
+    let canisterDTOs: AdminMonthlyCanisterList =
+      await actor.adminGetMonthlyCanisters(limit, offset);
     return canisterDTOs;
   }
 
-  async function getSeasonCanisters(limit: number,offset: number): Promise<AdminSeasonCanisterList> {
-    let canisterDTOs: AdminSeasonCanisterList = await actor.adminGetSeasonCanisters(limit, offset);
+  async function getSeasonCanisters(
+    limit: number,
+    offset: number
+  ): Promise<AdminSeasonCanisterList> {
+    let canisterDTOs: AdminSeasonCanisterList =
+      await actor.adminGetSeasonCanisters(limit, offset);
     return canisterDTOs;
   }
 
-  async function getProfilePictureCanisters(limit: number,offset: number): Promise<AdminProfilePictureCanisterList> {
-    let canisterDTOs: AdminProfilePictureCanisterList = await actor.adminGetProfileCanisters(limit, offset);
+  async function getProfilePictureCanisters(
+    limit: number,
+    offset: number
+  ): Promise<AdminProfilePictureCanisterList> {
+    let canisterDTOs: AdminProfilePictureCanisterList =
+      await actor.adminGetProfileCanisters(limit, offset);
     return canisterDTOs;
   }
 
-  async function getTimers(limit: number,offset: number): Promise<AdminTimerList | undefined> {
+  async function getTimers(
+    limit: number,
+    offset: number
+  ): Promise<AdminTimerList | undefined> {
     let timerDTOs: AdminTimerList = await actor.adminGetTimers(limit, offset);
     return timerDTOs;
   }
 
-  async function getFixtures(seasonId: number): Promise<AdminFixtureList | undefined> {
+  async function getFixtures(
+    seasonId: number
+  ): Promise<AdminFixtureList | undefined> {
     let fixtureDTOs: AdminFixtureList = await actor.adminGetFixtures(seasonId);
     return fixtureDTOs;
   }
 
-  async function getClubs(limit: number,offset: number): Promise<AdminClubList> {
+  async function getClubs(
+    limit: number,
+    offset: number
+  ): Promise<AdminClubList> {
     let clubDTOs: AdminClubList = await actor.adminGetClubs(limit, offset);
     return clubDTOs;
   }
 
-  async function getPlayers(playerStatus: PlayerStatus): Promise<AdminPlayerList> {
+  async function getPlayers(
+    playerStatus: PlayerStatus
+  ): Promise<AdminPlayerList> {
     let playerDTOs: AdminPlayerList = await actor.adminGetPlayers(playerStatus);
     return playerDTOs;
   }
 
-  async function getManagers(limit: number,offset: number): Promise<AdminProfileList> {
-    let managerDTOs: AdminProfileList = await actor.adminGetManagers(limit, offset);
+  async function getManagers(
+    limit: number,
+    offset: number
+  ): Promise<AdminProfileList> {
+    let managerDTOs: AdminProfileList = await actor.adminGetManagers(
+      limit,
+      offset
+    );
     return managerDTOs;
   }
 

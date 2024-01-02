@@ -162,13 +162,17 @@ type Result_3 = variant {
   err : Error;
   ok : nat;
 };
-type Result_28 = variant {
+type Result_29 = variant {
   err : Error;
   ok : AdminClubList;
 };
-type Result_27 = variant {
+type Result_28 = variant {
   err : Error;
   ok : AdminFixtureList;
+};
+type Result_27 = variant {
+  err : Error;
+  ok : AdminMainCanisterInfo;
 };
 type Result_26 = variant {
   err : Error;
@@ -636,6 +640,10 @@ type AdminMonthlyCanisterList = record {
   offset : nat;
   totalEntries : nat;
 };
+type AdminMainCanisterInfo = record {
+  canisterId : text;
+  cycles : nat;
+};
 type AdminFixtureList = record {
   fixtures : vec FixtureDTO;
   seasonId : SeasonId;
@@ -653,8 +661,9 @@ type AddInitialFixturesDTO = record {
 service : {
   adminAddInitialFixtures : (AddInitialFixturesDTO) -> (Result);
   adminCreatePlayer : (CreatePlayerDTO) -> (Result);
-  adminGetClubs : (nat, nat) -> (Result_28) query;
-  adminGetFixtures : (SeasonId) -> (Result_27) query;
+  adminGetClubs : (nat, nat) -> (Result_29) query;
+  adminGetFixtures : (SeasonId) -> (Result_28) query;
+  adminGetMainCanisterInfo : () -> (Result_27);
   adminGetManagers : (nat, nat) -> (Result_26) query;
   adminGetMonthlyCanisters : (nat, nat) -> (Result_25);
   adminGetPlayers : (PlayerStatus) -> (Result_24) query;

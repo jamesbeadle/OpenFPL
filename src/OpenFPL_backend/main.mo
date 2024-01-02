@@ -517,7 +517,6 @@ actor Self {
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
 
-
     let balance = Cycles.balance();
     let network = Environment.DFX_NETWORK;
     var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;

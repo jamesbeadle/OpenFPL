@@ -14,6 +14,10 @@ export interface AdminFixtureList {
   seasonId: SeasonId;
   fixtures: Array<FixtureDTO>;
 }
+export interface AdminMainCanisterInfo {
+  cycles: bigint;
+  canisterId: string;
+}
 export interface AdminMonthlyCanisterList {
   totalEntries: bigint;
   offset: bigint;
@@ -412,8 +416,9 @@ export type Result_23 =
 export type Result_24 = { ok: AdminPlayerList } | { err: Error };
 export type Result_25 = { ok: AdminMonthlyCanisterList } | { err: Error };
 export type Result_26 = { ok: AdminProfileList } | { err: Error };
-export type Result_27 = { ok: AdminFixtureList } | { err: Error };
-export type Result_28 = { ok: AdminClubList } | { err: Error };
+export type Result_27 = { ok: AdminMainCanisterInfo } | { err: Error };
+export type Result_28 = { ok: AdminFixtureList } | { err: Error };
+export type Result_29 = { ok: AdminClubList } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
 export type Result_5 = { ok: SeasonLeaderboardDTO } | { err: Error };
@@ -560,8 +565,9 @@ export interface WeeklyLeaderboardDTO {
 export interface _SERVICE {
   adminAddInitialFixtures: ActorMethod<[AddInitialFixturesDTO], Result>;
   adminCreatePlayer: ActorMethod<[CreatePlayerDTO], Result>;
-  adminGetClubs: ActorMethod<[bigint, bigint], Result_28>;
-  adminGetFixtures: ActorMethod<[SeasonId], Result_27>;
+  adminGetClubs: ActorMethod<[bigint, bigint], Result_29>;
+  adminGetFixtures: ActorMethod<[SeasonId], Result_28>;
+  adminGetMainCanisterInfo: ActorMethod<[], Result_27>;
   adminGetManagers: ActorMethod<[bigint, bigint], Result_26>;
   adminGetMonthlyCanisters: ActorMethod<[bigint, bigint], Result_25>;
   adminGetPlayers: ActorMethod<[PlayerStatus], Result_24>;

@@ -96,12 +96,20 @@ export const idlFactory = ({ IDL }) => {
     AlreadyExists: IDL.Null,
     InvalidTeamError: IDL.Null,
   });
-  const Result_28 = IDL.Variant({ ok: AdminClubList, err: Error });
+  const Result_29 = IDL.Variant({ ok: AdminClubList, err: Error });
   const AdminFixtureList = IDL.Record({
     seasonId: SeasonId,
     fixtures: IDL.Vec(FixtureDTO),
   });
-  const Result_27 = IDL.Variant({ ok: AdminFixtureList, err: Error });
+  const Result_28 = IDL.Variant({ ok: AdminFixtureList, err: Error });
+  const AdminMainCanisterInfo = IDL.Record({
+    cycles: IDL.Nat,
+    canisterId: IDL.Text,
+  });
+  const Result_27 = IDL.Variant({
+    ok: AdminMainCanisterInfo,
+    err: Error,
+  });
   const PlayerId = IDL.Nat16;
   const FantasyTeamSnapshot = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
@@ -579,8 +587,9 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     adminAddInitialFixtures: IDL.Func([AddInitialFixturesDTO], [Result], []),
     adminCreatePlayer: IDL.Func([CreatePlayerDTO], [Result], []),
-    adminGetClubs: IDL.Func([IDL.Nat, IDL.Nat], [Result_28], ["query"]),
-    adminGetFixtures: IDL.Func([SeasonId], [Result_27], ["query"]),
+    adminGetClubs: IDL.Func([IDL.Nat, IDL.Nat], [Result_29], ["query"]),
+    adminGetFixtures: IDL.Func([SeasonId], [Result_28], ["query"]),
+    adminGetMainCanisterInfo: IDL.Func([], [Result_27], []),
     adminGetManagers: IDL.Func([IDL.Nat, IDL.Nat], [Result_26], ["query"]),
     adminGetMonthlyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_25], []),
     adminGetPlayers: IDL.Func([PlayerStatus], [Result_24], ["query"]),
