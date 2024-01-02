@@ -11,28 +11,43 @@
   //leaderboards will have season and gameweek etc
   //profiles sho;ld have the number of pictures stored
 
-  let selectedCansiterType = "Main";
+  let selectedCansiterType = "WeeklyLeaderboard";
   let mainCanisterInfo: AdminMainCanisterInfo;
   let weeklyLeaderboardCanisters: AdminWeeklyCanisterList;
   let monthlyLeaderboardCanisters: AdminMonthlyCanisterList;
   let seasonLeaderboardCanisters: AdminSeasonCanisterList;
   let profilePictureCanisters: AdminProfilePictureCanisterList;
+  let currentPage = 1;
+  let itemsPerPage = 25;
+  let totalPages: number = 0;
 
-  $: canisterIds =
-    selectedCansiterType === "Main"
-      ? []
-      : selectedCansiterType === "WeeklyLeaderboard"
-      ? []
-      : selectedCansiterType === "MonthlyLeaderboard"
-      ? []
-      : selectedCansiterType === "SeasonLeaderboard"
-      ? []
-      : selectedCansiterType === "Profile"
-      ? []
-      : [];
+  async function changePage(delta: number) {
+    currentPage = Math.max(1, Math.min(totalPages, currentPage + delta));
+    await loadCanisterInfo();
+  }
+
+  async function loadCanisterInfo(){
+    switch(selectedCansiterType){
+      case "WeeklyLeaderboard":
+        weeklyLeaderboardCanisters = await adminStore.getWeeklyCanisters(itemsPerPage, currentPage);
+        break;
+      case "MonthlyLeaderboard":
+        monthlyLeaderboardCanisters = await adminStore.getMonthlyCanisters(itemsPerPage, currentPage);
+        break;
+      case "SeasonLeaderboard":
+        seasonLeaderboardCanisters = await adminStore.getSeasonCanisters(itemsPerPage, currentPage);
+        break;
+      case "Profile":
+        profilePictureCanisters = await adminStore.getProfilePictureCanisters(itemsPerPage, currentPage);
+        break;
+    }
+  }
+
 </script>
 
-<!-- //TODO: Main Canister Info -->
+<p>OpenFPL Main Canister</p>
+<p>Id: {mainCanisterInfo.canisterId}</p>
+<p>Cycles: {mainCanisterInfo.cycles}</p>
 
 <div class="flex p-4">
   <div class="flex items-center">
@@ -41,7 +56,6 @@
       class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
       bind:value={selectedCansiterType}
     >
-      <option value={"Main"}>Main</option>
       <option value={"WeeklyLeaderboard"}>WeeklyLeaderboard</option>
       <option value={"MonthlyLeaderboard"}>MonthlyLeaderboard</option>
       <option value={"SeasonLeaderboard"}>SeasonLeaderboard</option>
@@ -50,10 +64,6 @@
   </div>
 </div>
 
-<!-- Weekly Leaderboard Canister Ids Info -->
-<!-- Monthly Leaderboard Canister Ids Info -->
-<!-- Season Leaderboard Canister Ids Info -->
-<!-- Profile Picture Canister Ids -->
 
 <div class="flex">
   <div class="w-1/4">
@@ -66,4 +76,94 @@
     <p>Options</p>
   </div>
 </div>
-<!-- Pagination -->
+
+{#if selectedCansiterType === "WeeklyLeaderboard"}
+  {#each weeklyLeaderboardCanisters.canisters as canister}
+    <div class="flex">
+      <div class="w-1/4">
+        <p>{canister.canister}</p>
+      </div>
+      <div class="w-1/4">
+        <p>{canister.cycles}</p>
+      </div>
+      <div class="w-1/4">
+        <p>...</p>
+      </div>
+    </div>
+  {/each}
+{/if}
+
+{#if selectedCansiterType === "monthlyLeaderboard"}
+  {#each monthlyLeaderboardCanisters.canisters as canister}
+    <div class="flex">
+      <div class="w-1/4">
+        <p>{canister.canister}</p>
+      </div>
+      <div class="w-1/4">
+        <p>{canister.cycles}</p>
+      </div>
+      <div class="w-1/4">
+        <p>...</p>
+      </div>
+    </div>
+  {/each}
+{/if}
+
+{#if selectedCansiterType === "SeasonLeaderboard"}
+  {#each seasonLeaderboardCanisters.canisters as canister}
+    <div class="flex">
+      <div class="w-1/4">
+        <p>{canister.canister}</p>
+      </div>
+      <div class="w-1/4">
+        <p>{canister.cycles}</p>
+      </div>
+      <div class="w-1/4">
+        <p>...</p>
+      </div>
+    </div>
+  {/each}
+{/if}
+
+{#if selectedCansiterType === "Profile"}
+  {#each profilePictureCanisters.canisters as canister}
+    <div class="flex">
+      <div class="w-1/4">
+        <p>{canister.canisterId}</p>
+      </div>
+      <div class="w-1/4">
+        <p>{canister.cycles}</p>
+      </div>
+      <div class="w-1/4">
+        <p>...</p>
+      </div>
+    </div>
+  {/each}
+{/if}
+
+
+<div class="flex justify-center items-center mt-4 mb-4">
+  <button
+    on:click={() => changePage(-1)}
+    disabled={currentPage === 1}
+    class={`${currentPage === 1 ? "bg-gray-500" : "fpl-button"}
+    disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`}
+  >
+    Previous
+  </button>
+
+  <span class="px-4">Page {currentPage}</span>
+
+  <button
+    on:click={() => changePage(1)}
+    disabled={currentPage >= totalPages}
+    class={`${
+      currentPage >= totalPages
+        ? "bg-gray-500"
+        : "fpl-button"
+    } 
+      disabled:bg-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed min-w-[100px] default-button`}
+  >
+    Next
+  </button>
+</div>

@@ -20,45 +20,55 @@ function createAdminStore() {
   );
 
   async function getWeeklyCanisters(
-    limit: number,
-    offset: number
+    itemsPerPage: number,
+    currentPage: number
   ): Promise<AdminWeeklyCanisterList> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let canisterDTOs: AdminWeeklyCanisterList =
-      await actor.adminGetWeeklyCanisters(limit, offset);
+    await actor.adminGetWeeklyCanisters(limit, offset);
     return canisterDTOs;
   }
 
   async function getMonthlyCanisters(
-    limit: number,
-    offset: number
+    itemsPerPage: number,
+    currentPage: number
   ): Promise<AdminMonthlyCanisterList> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let canisterDTOs: AdminMonthlyCanisterList =
-      await actor.adminGetMonthlyCanisters(limit, offset);
+    await actor.adminGetMonthlyCanisters(limit, offset);
     return canisterDTOs;
   }
 
   async function getSeasonCanisters(
-    limit: number,
-    offset: number
+    itemsPerPage: number,
+    currentPage: number
   ): Promise<AdminSeasonCanisterList> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let canisterDTOs: AdminSeasonCanisterList =
-      await actor.adminGetSeasonCanisters(limit, offset);
+    await actor.adminGetSeasonCanisters(limit, offset);
     return canisterDTOs;
   }
 
   async function getProfilePictureCanisters(
-    limit: number,
-    offset: number
+    itemsPerPage: number,
+    currentPage: number
   ): Promise<AdminProfilePictureCanisterList> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let canisterDTOs: AdminProfilePictureCanisterList =
-      await actor.adminGetProfileCanisters(limit, offset);
+    await actor.adminGetProfileCanisters(limit, offset);
     return canisterDTOs;
   }
 
   async function getTimers(
-    limit: number,
-    offset: number
+    itemsPerPage: number,
+    currentPage: number
   ): Promise<AdminTimerList | undefined> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let timerDTOs: AdminTimerList = await actor.adminGetTimers(limit, offset);
     return timerDTOs;
   }
@@ -71,9 +81,11 @@ function createAdminStore() {
   }
 
   async function getClubs(
-    limit: number,
-    offset: number
+    itemsPerPage: number,
+    currentPage: number
   ): Promise<AdminClubList> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let clubDTOs: AdminClubList = await actor.adminGetClubs(limit, offset);
     return clubDTOs;
   }
@@ -86,9 +98,11 @@ function createAdminStore() {
   }
 
   async function getManagers(
-    limit: number,
-    offset: number
+    itemsPerPage: number,
+    currentPage: number
   ): Promise<AdminProfileList> {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let managerDTOs: AdminProfileList = await actor.adminGetManagers(
       limit,
       offset
