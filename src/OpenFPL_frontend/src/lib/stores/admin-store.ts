@@ -16,7 +16,6 @@ import { ActorFactory } from "../../utils/ActorFactory";
 import { authStore } from "./auth.store";
 
 function createAdminStore() {
-
   async function getMainCanisterInfo(): Promise<AdminMainCanisterInfo | null> {
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
@@ -24,7 +23,7 @@ function createAdminStore() {
     );
     const result = await identityActor.adminGetMainCanisterInfo();
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching main canister info");
       return null;
     }
@@ -38,13 +37,13 @@ function createAdminStore() {
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-    ) ;
+    );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
 
     const result = await identityActor.adminGetWeeklyCanisters(limit, offset);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching weekly canister info");
       return null;
     }
@@ -65,7 +64,7 @@ function createAdminStore() {
     const offset = (currentPage - 1) * limit;
     const result = await identityActor.adminGetMonthlyCanisters(limit, offset);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching monthly canister info");
       return null;
     }
@@ -86,7 +85,7 @@ function createAdminStore() {
     const offset = (currentPage - 1) * limit;
     const result = await identityActor.adminGetSeasonCanisters(limit, offset);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching season canister info");
       return null;
     }
@@ -107,7 +106,7 @@ function createAdminStore() {
     const offset = (currentPage - 1) * limit;
     const result = await identityActor.adminGetProfileCanisters(limit, offset);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching profile picture canister info");
       return null;
     }
@@ -127,7 +126,7 @@ function createAdminStore() {
     const offset = (currentPage - 1) * limit;
     const result = await identityActor.adminGetTimers(limit, offset);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching timer info");
       return null;
     }
@@ -144,7 +143,7 @@ function createAdminStore() {
     );
     const result = await identityActor.adminGetFixtures(seasonId);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching fixture info");
       return null;
     }
@@ -164,7 +163,7 @@ function createAdminStore() {
     const offset = (currentPage - 1) * limit;
     const result = await identityActor.adminGetClubs(limit, offset);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching club info");
       return null;
     }
@@ -181,7 +180,7 @@ function createAdminStore() {
     );
     const result = await identityActor.adminGetPlayers(playerStatus);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching player info");
       return null;
     }
@@ -201,7 +200,7 @@ function createAdminStore() {
     const offset = (currentPage - 1) * limit;
     const result = await identityActor.adminGetManagers(limit, offset);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching manager info");
       return null;
     }

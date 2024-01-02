@@ -94,9 +94,15 @@ module {
 
           if (Text.size(foundManager.profilePictureCanisterId) > 0) {
             let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-              getProfilePicture : (principalId : Text) -> async Blob;
+              getProfilePicture : (principalId : Text) -> async ?Blob;
             };
-            profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+            let fetchedProfilePicture = await profile_picture_canister.getProfilePicture(foundManager.principalId);
+            switch (fetchedProfilePicture) {
+              case (null) {};
+              case (?foundProfilePicture) {
+                profilePicture := foundProfilePicture;
+              };
+            };
           };
 
           let profileDTO : DTOs.ProfileDTO = {
@@ -151,9 +157,15 @@ module {
 
           if (Text.size(foundManager.profilePictureCanisterId) > 0) {
             let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-              getProfilePicture : (principalId : Text) -> async Blob;
+              getProfilePicture : (principalId : Text) -> async ?Blob;
             };
-            profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+            let fetchedProfilePicture = await profile_picture_canister.getProfilePicture(foundManager.principalId);
+            switch (fetchedProfilePicture) {
+              case (null) {};
+              case (?foundProfilePicture) {
+                profilePicture := foundProfilePicture;
+              };
+            };
           };
 
           var gameweeks : [T.FantasyTeamSnapshot] = [];
@@ -260,10 +272,15 @@ module {
           Debug.print(foundManager.profilePictureCanisterId);
           if (Text.size(foundManager.profilePictureCanisterId) > 0) {
             let profile_picture_canister = actor (foundManager.profilePictureCanisterId) : actor {
-              getProfilePicture : (principalId : Text) -> async Blob;
+              getProfilePicture : (principalId : Text) -> async ?Blob;
             };
-            Debug.print("getting profile picture");
-            profilePicture := await profile_picture_canister.getProfilePicture(foundManager.principalId);
+            let fetchedProfilePicture = await profile_picture_canister.getProfilePicture(foundManager.principalId);
+            switch (fetchedProfilePicture) {
+              case (null) {};
+              case (?foundProfilePicture) {
+                profilePicture := foundProfilePicture;
+              };
+            };
             Debug.print("Got profile picture");
           };
 
