@@ -14,7 +14,7 @@
   //leaderboards will have season and gameweek etc
   //profiles sho;ld have the number of pictures stored
 
-  let selectedCansiterType = "WeeklyLeaderboard";
+  let selectedCanisterType = "WeeklyLeaderboard";
   let mainCanisterInfo: AdminMainCanisterInfo | null;
   let weeklyLeaderboardCanisters: AdminWeeklyCanisterList | null;
   let monthlyLeaderboardCanisters: AdminMonthlyCanisterList | null;
@@ -46,10 +46,10 @@
   }
 
   async function loadCanisterInfo() {
-    console.log(selectedCansiterType)
+    console.log(selectedCanisterType)
     mainCanisterInfo = await adminStore.getMainCanisterInfo();
 
-    switch (selectedCansiterType) {
+    switch (selectedCanisterType) {
       case "WeeklyLeaderboard":
         weeklyLeaderboardCanisters = await adminStore.getWeeklyCanisters(
           itemsPerPage,
@@ -74,29 +74,30 @@
           itemsPerPage,
           currentPage
         );
+    console.log("profilePictureCanisters")
+    console.log(profilePictureCanisters)
         break;
     }
   }
 
-  async function changeCanisterType() {
+  $: if (selectedCanisterType) {
     currentPage = 1;
-    await loadCanisterInfo();
+    loadCanisterInfo();
   }
 </script>
 
 {#if !isLoading}
   <div class="m-4">
-    <p>OpenFPL Main Canister</p>
+    <p class="text-xl">OpenFPL Main Canister</p>
     <p>Id: {mainCanisterInfo?.canisterId}</p>
     <p>Cycles: {mainCanisterInfo?.cycles}</p>
 
-    <div class="flex p-4">
+    <div class="flex mt-4">
       <div class="flex items-center">
         <p>Type:</p>
         <select
           class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-          on:change={() => changeCanisterType()}
-          bind:value={selectedCansiterType}
+          bind:value={selectedCanisterType}
         >
           <option value={"WeeklyLeaderboard"}>WeeklyLeaderboard</option>
           <option value={"MonthlyLeaderboard"}>MonthlyLeaderboard</option>
@@ -118,7 +119,7 @@
       </div>
     </div>
 
-    {#if selectedCansiterType === "WeeklyLeaderboard" && weeklyLeaderboardCanisters}
+    {#if selectedCanisterType === "WeeklyLeaderboard" && weeklyLeaderboardCanisters}
       {#each weeklyLeaderboardCanisters.canisters as canister}
         <div class="flex">
           <div class="w-1/4">
@@ -132,9 +133,12 @@
           </div>
         </div>
       {/each}
+      {#if weeklyLeaderboardCanisters.canisters.length == 0}
+          <p>No Canisters Found</p>
+      {/if}
     {/if}
 
-    {#if selectedCansiterType === "monthlyLeaderboard" && monthlyLeaderboardCanisters}
+    {#if selectedCanisterType === "monthlyLeaderboard" && monthlyLeaderboardCanisters}
       {#each monthlyLeaderboardCanisters.canisters as canister}
         <div class="flex">
           <div class="w-1/4">
@@ -148,9 +152,12 @@
           </div>
         </div>
       {/each}
+      {#if monthlyLeaderboardCanisters.canisters.length == 0}
+          <p>No Canisters Found</p>
+      {/if}
     {/if}
 
-    {#if selectedCansiterType === "SeasonLeaderboard" && seasonLeaderboardCanisters}
+    {#if selectedCanisterType === "SeasonLeaderboard" && seasonLeaderboardCanisters}
       {#each seasonLeaderboardCanisters.canisters as canister}
         <div class="flex">
           <div class="w-1/4">
@@ -164,9 +171,12 @@
           </div>
         </div>
       {/each}
+      {#if seasonLeaderboardCanisters.canisters.length == 0}
+          <p>No Canisters Found</p>
+      {/if}
     {/if}
 
-    {#if selectedCansiterType === "Profile" && profilePictureCanisters}
+    {#if selectedCanisterType === "Profile" && profilePictureCanisters}
       {#each profilePictureCanisters.canisters as canister}
         <div class="flex">
           <div class="w-1/4">
@@ -180,6 +190,9 @@
           </div>
         </div>
       {/each}
+      {#if profilePictureCanisters.canisters.length == 0}
+          <p>No Canisters Found</p>
+      {/if}
     {/if}
 
     <div class="flex justify-center items-center mt-4 mb-4">
