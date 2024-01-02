@@ -9,6 +9,7 @@ import Result "mo:base/Result";
 import Time "mo:base/Time";
 import Timer "mo:base/Timer";
 import Nat64 "mo:base/Nat64";
+import Debug "mo:base/Debug";
 
 import Countries "Countries";
 import DTOs "DTOs";
@@ -509,10 +510,11 @@ actor Self {
 
   /* Admin Section to be removed when DAO */
 
-  let TEMP_ADMIN_PRINCIPAL = "";
+  let TEMP_ADMIN_PRINCIPAL = "nn75s-ayupf-j6mj3-kluyb-wjj7y-eang2-dwzzr-cfdxk-etbw7-cgwnb-lqe";
 
   //Getters for admin functions - //TODO: Can't be query as gets cycles?
   public shared ({ caller }) func adminGetMainCanisterInfo() : async Result.Result<DTOs.AdminMainCanisterInfo, T.Error> {
+    Debug.print(Principal.toText(caller));
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;

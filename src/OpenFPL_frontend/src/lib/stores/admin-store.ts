@@ -1,7 +1,7 @@
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   AdminClubList,
   AdminFixtureList,
+  AdminMainCanisterInfo,
   AdminMonthlyCanisterList,
   AdminPlayerList,
   AdminProfileList,
@@ -12,21 +12,32 @@ import type {
   PlayerStatus,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
+import { authStore } from "./auth.store";
 
 function createAdminStore() {
-  let actor: any = ActorFactory.createActor(
-    idlFactory,
-    process.env.OPENFPL_BACKEND_CANISTER_ID
-  );
 
+  async function getMainCanisterInfo(): Promise<AdminMainCanisterInfo> {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
+    let canisterDTOs: AdminMainCanisterInfo =
+      await identityActor.adminGetMainCanisterInfo() as AdminMainCanisterInfo;
+    console.log(canisterDTOs);
+    return canisterDTOs;
+  }
   async function getWeeklyCanisters(
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminWeeklyCanisterList> {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     let canisterDTOs: AdminWeeklyCanisterList =
-    await actor.adminGetWeeklyCanisters(limit, offset);
+      await identityActor.adminGetWeeklyCanisters(limit, offset) as AdminWeeklyCanisterList;
     return canisterDTOs;
   }
 
@@ -34,10 +45,14 @@ function createAdminStore() {
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminMonthlyCanisterList> {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     let canisterDTOs: AdminMonthlyCanisterList =
-    await actor.adminGetMonthlyCanisters(limit, offset);
+      await identityActor.adminGetMonthlyCanisters(limit, offset) as AdminMonthlyCanisterList;
     return canisterDTOs;
   }
 
@@ -45,10 +60,14 @@ function createAdminStore() {
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminSeasonCanisterList> {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     let canisterDTOs: AdminSeasonCanisterList =
-    await actor.adminGetSeasonCanisters(limit, offset);
+      await identityActor.adminGetSeasonCanisters(limit, offset) as AdminSeasonCanisterList;
     return canisterDTOs;
   }
 
@@ -56,10 +75,14 @@ function createAdminStore() {
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminProfilePictureCanisterList> {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     let canisterDTOs: AdminProfilePictureCanisterList =
-    await actor.adminGetProfileCanisters(limit, offset);
+      await identityActor.adminGetProfileCanisters(limit, offset) as AdminProfilePictureCanisterList;
     return canisterDTOs;
   }
 
@@ -67,16 +90,24 @@ function createAdminStore() {
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminTimerList | undefined> {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let timerDTOs: AdminTimerList = await actor.adminGetTimers(limit, offset);
+    let timerDTOs: AdminTimerList = await identityActor.adminGetTimers(limit, offset) as AdminTimerList;
     return timerDTOs;
   }
 
   async function getFixtures(
     seasonId: number
   ): Promise<AdminFixtureList | undefined> {
-    let fixtureDTOs: AdminFixtureList = await actor.adminGetFixtures(seasonId);
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
+    let fixtureDTOs: AdminFixtureList = await identityActor.adminGetFixtures(seasonId) as AdminFixtureList;
     return fixtureDTOs;
   }
 
@@ -84,16 +115,24 @@ function createAdminStore() {
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminClubList> {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let clubDTOs: AdminClubList = await actor.adminGetClubs(limit, offset);
+    let clubDTOs: AdminClubList = await identityActor.adminGetClubs(limit, offset) as AdminClubList;
     return clubDTOs;
   }
 
   async function getPlayers(
     playerStatus: PlayerStatus
   ): Promise<AdminPlayerList> {
-    let playerDTOs: AdminPlayerList = await actor.adminGetPlayers(playerStatus);
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
+    let playerDTOs: AdminPlayerList = await identityActor.adminGetPlayers(playerStatus) as AdminPlayerList;
     return playerDTOs;
   }
 
@@ -101,16 +140,18 @@ function createAdminStore() {
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminProfileList> {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let managerDTOs: AdminProfileList = await actor.adminGetManagers(
-      limit,
-      offset
-    );
+    let managerDTOs: AdminProfileList = await identityActor.adminGetManagers(limit, offset) as AdminProfileList;
     return managerDTOs;
   }
 
   return {
+    getMainCanisterInfo,
     getWeeklyCanisters,
     getMonthlyCanisters,
     getSeasonCanisters,

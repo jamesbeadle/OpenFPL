@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1789rxt"
+  version_hash: "1aokt2t"
 };
 function get_hooks() {
   return {};
@@ -3440,6 +3440,7 @@ const initAuthStore = () => {
               ...state,
               identity: authClient?.getIdentity()
             }));
+            console.log(authClient?.getIdentity().getPrincipal().toString());
             resolve();
           },
           onError: reject,
@@ -6344,27 +6345,42 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   )}`;
 });
 function createAdminStore() {
-  let actor = ActorFactory.createActor(
-    idlFactory,
+  let actor = ActorFactory.createIdentityActor(
+    authStore,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
-  async function getWeeklyCanisters(limit, offset) {
+  async function getMainCanisterInfo() {
+    let canisterDTOs = await actor.adminGetMainCanisterInfo();
+    console.log(canisterDTOs);
+    return canisterDTOs;
+  }
+  async function getWeeklyCanisters(itemsPerPage, currentPage) {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let canisterDTOs = await actor.adminGetWeeklyCanisters(limit, offset);
     return canisterDTOs;
   }
-  async function getMonthlyCanisters(limit, offset) {
+  async function getMonthlyCanisters(itemsPerPage, currentPage) {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let canisterDTOs = await actor.adminGetMonthlyCanisters(limit, offset);
     return canisterDTOs;
   }
-  async function getSeasonCanisters(limit, offset) {
+  async function getSeasonCanisters(itemsPerPage, currentPage) {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let canisterDTOs = await actor.adminGetSeasonCanisters(limit, offset);
     return canisterDTOs;
   }
-  async function getProfilePictureCanisters(limit, offset) {
+  async function getProfilePictureCanisters(itemsPerPage, currentPage) {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let canisterDTOs = await actor.adminGetProfileCanisters(limit, offset);
     return canisterDTOs;
   }
-  async function getTimers(limit, offset) {
+  async function getTimers(itemsPerPage, currentPage) {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let timerDTOs = await actor.adminGetTimers(limit, offset);
     return timerDTOs;
   }
@@ -6372,7 +6388,9 @@ function createAdminStore() {
     let fixtureDTOs = await actor.adminGetFixtures(seasonId);
     return fixtureDTOs;
   }
-  async function getClubs(limit, offset) {
+  async function getClubs(itemsPerPage, currentPage) {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let clubDTOs = await actor.adminGetClubs(limit, offset);
     return clubDTOs;
   }
@@ -6380,7 +6398,9 @@ function createAdminStore() {
     let playerDTOs = await actor.adminGetPlayers(playerStatus);
     return playerDTOs;
   }
-  async function getManagers(limit, offset) {
+  async function getManagers(itemsPerPage, currentPage) {
+    const limit = itemsPerPage;
+    const offset = (currentPage - 1) * limit;
     let managerDTOs = await actor.adminGetManagers(
       limit,
       offset
@@ -6388,6 +6408,7 @@ function createAdminStore() {
     return managerDTOs;
   }
   return {
+    getMainCanisterInfo,
     getWeeklyCanisters,
     getMonthlyCanisters,
     getSeasonCanisters,

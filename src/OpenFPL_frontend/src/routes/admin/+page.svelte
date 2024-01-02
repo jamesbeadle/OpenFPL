@@ -14,7 +14,7 @@
   export let showSystemStateModal: boolean = false;
   export let showSnapshotModal: boolean = false;
 
-  let activeTab: string = "fixtures";
+  let activeTab: string = "canisters";
   let isLoading = true;
 
   onMount(async () => {
