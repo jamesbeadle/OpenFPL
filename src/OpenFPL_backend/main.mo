@@ -19,6 +19,8 @@ import CyclesDispenser "cycles-dispenser";
 import TreasuryManager "treasury-manager";
 import Utilities "utilities";
 import Account "lib/Account";
+import Environment "Environment";
+import CanisterIds "CanisterIds";
 
 actor Self {
   let seasonManager = SeasonManager.SeasonManager();
@@ -510,6 +512,27 @@ actor Self {
   let TEMP_ADMIN_PRINCIPAL = "";
 
   //Getters for admin functions - //TODO: Can't be query as gets cycles?
+  public shared ({ caller }) func adminGetMainCanisterInfo() : async Result.Result<DTOs.AdminMainCanisterInfo, T.Error> {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == TEMP_ADMIN_PRINCIPAL;
+
+
+    let balance = Cycles.balance();
+    let network = Environment.DFX_NETWORK;
+    var main_canister_id = CanisterIds.MAIN_CANISTER_IC_ID;
+    if (network == "local") {
+      main_canister_id := CanisterIds.MAIN_CANISTER_LOCAL_ID;
+    };
+
+    let dto : DTOs.AdminMainCanisterInfo = {
+      cycles = balance;
+      canisterId = main_canister_id;
+    };
+
+    return #ok(dto);
+  };
+
   public shared ({ caller }) func adminGetWeeklyCanisters(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminWeeklyCanisterList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);

@@ -488,4 +488,9 @@ module DTOs {
     totalEntries : Nat;
   };
 
+  public type AdminMainCanisterInfo = {
+    canisterId : Text;
+    cycles : Nat;
+  };
+
 };
