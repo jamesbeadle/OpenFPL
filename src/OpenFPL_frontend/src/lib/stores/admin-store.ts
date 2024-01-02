@@ -1,3 +1,4 @@
+import { isError } from "$lib/utils/Helpers";
 import type {
   AdminClubList,
   AdminFixtureList,
@@ -16,137 +17,195 @@ import { authStore } from "./auth.store";
 
 function createAdminStore() {
 
-  async function getMainCanisterInfo(): Promise<AdminMainCanisterInfo> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  async function getMainCanisterInfo(): Promise<AdminMainCanisterInfo | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
-    let canisterDTOs: AdminMainCanisterInfo =
-      await identityActor.adminGetMainCanisterInfo() as AdminMainCanisterInfo;
-    console.log(canisterDTOs);
-    return canisterDTOs;
+    const result = await identityActor.adminGetMainCanisterInfo();
+
+    if(isError(result)){
+      console.error("Error fetching main canister info");
+      return null;
+    }
+    let mainCanisterInfo: AdminMainCanisterInfo = result.ok;
+    return mainCanisterInfo;
   }
   async function getWeeklyCanisters(
     itemsPerPage: number,
     currentPage: number
-  ): Promise<AdminWeeklyCanisterList> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminWeeklyCanisterList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
-    );
+    ) ;
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let canisterDTOs: AdminWeeklyCanisterList =
-      await identityActor.adminGetWeeklyCanisters(limit, offset) as AdminWeeklyCanisterList;
+
+    const result = await identityActor.adminGetWeeklyCanisters(limit, offset);
+
+    if(isError(result)){
+      console.error("Error fetching weekly canister info");
+      return null;
+    }
+
+    let canisterDTOs: AdminWeeklyCanisterList = result.ok;
     return canisterDTOs;
   }
 
   async function getMonthlyCanisters(
     itemsPerPage: number,
     currentPage: number
-  ): Promise<AdminMonthlyCanisterList> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminMonthlyCanisterList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let canisterDTOs: AdminMonthlyCanisterList =
-      await identityActor.adminGetMonthlyCanisters(limit, offset) as AdminMonthlyCanisterList;
+    const result = await identityActor.adminGetMonthlyCanisters(limit, offset);
+
+    if(isError(result)){
+      console.error("Error fetching monthly canister info");
+      return null;
+    }
+
+    let canisterDTOs: AdminMonthlyCanisterList = result.ok;
     return canisterDTOs;
   }
 
   async function getSeasonCanisters(
     itemsPerPage: number,
     currentPage: number
-  ): Promise<AdminSeasonCanisterList> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminSeasonCanisterList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let canisterDTOs: AdminSeasonCanisterList =
-      await identityActor.adminGetSeasonCanisters(limit, offset) as AdminSeasonCanisterList;
+    const result = await identityActor.adminGetSeasonCanisters(limit, offset);
+
+    if(isError(result)){
+      console.error("Error fetching season canister info");
+      return null;
+    }
+
+    let canisterDTOs: AdminSeasonCanisterList = result.ok;
     return canisterDTOs;
   }
 
   async function getProfilePictureCanisters(
     itemsPerPage: number,
     currentPage: number
-  ): Promise<AdminProfilePictureCanisterList> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminProfilePictureCanisterList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let canisterDTOs: AdminProfilePictureCanisterList =
-      await identityActor.adminGetProfileCanisters(limit, offset) as AdminProfilePictureCanisterList;
+    const result = await identityActor.adminGetProfileCanisters(limit, offset);
+
+    if(isError(result)){
+      console.error("Error fetching profile picture canister info");
+      return null;
+    }
+    let canisterDTOs: AdminProfilePictureCanisterList = result.ok;
     return canisterDTOs;
   }
 
   async function getTimers(
     itemsPerPage: number,
     currentPage: number
-  ): Promise<AdminTimerList | undefined> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminTimerList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let timerDTOs: AdminTimerList = await identityActor.adminGetTimers(limit, offset) as AdminTimerList;
+    const result = await identityActor.adminGetTimers(limit, offset);
+
+    if(isError(result)){
+      console.error("Error fetching timer info");
+      return null;
+    }
+    let timerDTOs: AdminTimerList = result.ok;
     return timerDTOs;
   }
 
   async function getFixtures(
     seasonId: number
-  ): Promise<AdminFixtureList | undefined> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminFixtureList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
-    let fixtureDTOs: AdminFixtureList = await identityActor.adminGetFixtures(seasonId) as AdminFixtureList;
+    const result = await identityActor.adminGetFixtures(seasonId);
+
+    if(isError(result)){
+      console.error("Error fetching fixture info");
+      return null;
+    }
+    let fixtureDTOs: AdminFixtureList = result.ok;
     return fixtureDTOs;
   }
 
   async function getClubs(
     itemsPerPage: number,
     currentPage: number
-  ): Promise<AdminClubList> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminClubList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let clubDTOs: AdminClubList = await identityActor.adminGetClubs(limit, offset) as AdminClubList;
+    const result = await identityActor.adminGetClubs(limit, offset);
+
+    if(isError(result)){
+      console.error("Error fetching club info");
+      return null;
+    }
+    let clubDTOs: AdminClubList = result.ok;
     return clubDTOs;
   }
 
   async function getPlayers(
     playerStatus: PlayerStatus
-  ): Promise<AdminPlayerList> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminPlayerList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
-    let playerDTOs: AdminPlayerList = await identityActor.adminGetPlayers(playerStatus) as AdminPlayerList;
+    const result = await identityActor.adminGetPlayers(playerStatus);
+
+    if(isError(result)){
+      console.error("Error fetching player info");
+      return null;
+    }
+    let playerDTOs: AdminPlayerList = result.ok;
     return playerDTOs;
   }
 
   async function getManagers(
     itemsPerPage: number,
     currentPage: number
-  ): Promise<AdminProfileList> {
-    const identityActor = await ActorFactory.createIdentityActor(
+  ): Promise<AdminProfileList | null> {
+    const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
     );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    let managerDTOs: AdminProfileList = await identityActor.adminGetManagers(limit, offset) as AdminProfileList;
+    const result = await identityActor.adminGetManagers(limit, offset);
+
+    if(isError(result)){
+      console.error("Error fetching manager info");
+      return null;
+    }
+    let managerDTOs: AdminProfileList = result.ok;
     return managerDTOs;
   }
 

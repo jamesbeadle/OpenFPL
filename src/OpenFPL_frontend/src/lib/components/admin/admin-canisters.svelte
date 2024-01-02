@@ -15,11 +15,11 @@
   //profiles sho;ld have the number of pictures stored
 
   let selectedCansiterType = "WeeklyLeaderboard";
-  let mainCanisterInfo: AdminMainCanisterInfo;
-  let weeklyLeaderboardCanisters: AdminWeeklyCanisterList;
-  let monthlyLeaderboardCanisters: AdminMonthlyCanisterList;
-  let seasonLeaderboardCanisters: AdminSeasonCanisterList;
-  let profilePictureCanisters: AdminProfilePictureCanisterList;
+  let mainCanisterInfo: AdminMainCanisterInfo | null;
+  let weeklyLeaderboardCanisters: AdminWeeklyCanisterList | null;
+  let monthlyLeaderboardCanisters: AdminMonthlyCanisterList | null;
+  let seasonLeaderboardCanisters: AdminSeasonCanisterList | null;
+  let profilePictureCanisters: AdminProfilePictureCanisterList | null;
   let currentPage = 1;
   let itemsPerPage = 25;
   let totalPages: number = 0;
@@ -80,8 +80,8 @@
 
 {#if !isLoading}
   <p>OpenFPL Main Canister</p>
-  <p>Id: {mainCanisterInfo.canisterId}</p>
-  <p>Cycles: {mainCanisterInfo.cycles}</p>
+  <p>Id: {mainCanisterInfo?.canisterId}</p>
+  <p>Cycles: {mainCanisterInfo?.cycles}</p>
 
   <div class="flex p-4">
     <div class="flex items-center">
@@ -110,7 +110,7 @@
     </div>
   </div>
 
-  {#if selectedCansiterType === "WeeklyLeaderboard"}
+  {#if selectedCansiterType === "WeeklyLeaderboard" && weeklyLeaderboardCanisters}
     {#each weeklyLeaderboardCanisters.canisters as canister}
       <div class="flex">
         <div class="w-1/4">
@@ -126,7 +126,7 @@
     {/each}
   {/if}
 
-  {#if selectedCansiterType === "monthlyLeaderboard"}
+  {#if selectedCansiterType === "monthlyLeaderboard" && monthlyLeaderboardCanisters}
     {#each monthlyLeaderboardCanisters.canisters as canister}
       <div class="flex">
         <div class="w-1/4">
@@ -142,7 +142,7 @@
     {/each}
   {/if}
 
-  {#if selectedCansiterType === "SeasonLeaderboard"}
+  {#if selectedCansiterType === "SeasonLeaderboard" && seasonLeaderboardCanisters}
     {#each seasonLeaderboardCanisters.canisters as canister}
       <div class="flex">
         <div class="w-1/4">
@@ -158,7 +158,7 @@
     {/each}
   {/if}
 
-  {#if selectedCansiterType === "Profile"}
+  {#if selectedCansiterType === "Profile" && profilePictureCanisters}
     {#each profilePictureCanisters.canisters as canister}
       <div class="flex">
         <div class="w-1/4">
