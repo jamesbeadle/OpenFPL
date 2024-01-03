@@ -6,11 +6,12 @@
     import type { ClubDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     export let visible: boolean;
-    export let closeDetailModal: () => void;
+    export let cancelModal: () => void;
 
     let formerClubs: ClubDTO[] = [];
     let selectedClubId: number = -1;
     let isLoading = true;
+    let showConfirm = false;
 
     $: isSubmitDisabled = selectedClubId <= 0;
    
@@ -29,13 +30,22 @@
     }
   });
 
+  function raiseProposal(){
+    showConfirm = true;
+  }
+
+  function confirmProposal(){
+    //TODO: Call governance canister raising proposal
+  }
+        
+
 </script>
 
-<Modal {visible} on:nnsClose={closeDetailModal}>
+<Modal {visible} on:nnsClose={cancelModal}>
     <div class="p-4">
         <div class="flex justify-between items-center my-2">
         <h3 class="default-header">Promote Former Club</h3>
-        <button class="times-button" on:click={closeDetailModal}>&times;</button>
+        <button class="times-button" on:click={cancelModal}>&times;</button>
         </div>
 
         <div class="flex justify-start items-center w-full">
@@ -49,16 +59,41 @@
                         <option value={club.id}>{club.friendlyName}</option>
                     {/each}
                 </select>
-                <button
-                  class={`px-4 py-2 ${
-                    isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"
-                  } default-button fpl-purple-btn`}
-                  type="submit"
-                  disabled={isSubmitDisabled}
-                >
-                  Submit Proposal
-                </button>
+
+                <div class="items-center py-3 flex space-x-4">
+                    <button
+                      class="px-4 py-2 default-button fpl-cancel-btn"
+                      type="button"
+                      on:click={cancelModal}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                        class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
+                        px-4 py-2 default-button`}
+                        on:click={raiseProposal}
+                        disabled={isSubmitDisabled}>
+                        Raise Proposal
+                    </button>
+                </div>
+
+                {#if showConfirm}
+                    <div class="items-center py-3 flex">
+                        <p class="text-orange-700">Failed proposals will cost the proposer 10 $FPL tokens.</p>
+                    </div>
+                    <div class="items-center py-3 flex">
+                        
+                        <button
+                            class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
+                            px-4 py-2 default-button w-full`}
+                            on:click={confirmProposal}
+                            disabled={isSubmitDisabled}>
+                            Confirm Submit Proposal
+                        </button>
+                    </div>
+                {/if}
             </div>
         </div>
+
     </div>
 </Modal>
