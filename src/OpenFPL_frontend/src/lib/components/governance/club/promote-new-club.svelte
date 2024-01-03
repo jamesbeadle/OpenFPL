@@ -19,7 +19,11 @@
     let isLoading = true;
     let showConfirm = false;
 
-    $: isSubmitDisabled = name.length > 0 && name.length < 50;
+    
+    $: isSubmitDisabled = 
+        name.length <= 0 || name.length > 100 ||
+        friendlyName.length <= 0 || friendlyName.length > 50 ||
+        abbreviatedName.length != 3;
 
     let shirtTypes: ShirtType[] = [{ Filled: null }, { Striped: null }];
    
