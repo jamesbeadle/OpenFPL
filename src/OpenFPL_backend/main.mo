@@ -72,6 +72,10 @@ actor Self {
     return #ok(seasonManager.getClubs());
   };
 
+  public shared query func getFormerClubs() : async Result.Result<[DTOs.ClubDTO], T.Error> {
+    return #ok(seasonManager.getFormerClubs());
+  };
+
   public shared query func getDataHashes() : async Result.Result<[DTOs.DataCacheDTO], T.Error> {
     return #ok(seasonManager.getDataHashes());
   };

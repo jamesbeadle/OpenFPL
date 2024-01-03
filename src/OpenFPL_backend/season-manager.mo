@@ -141,6 +141,10 @@ module {
       return clubComposite.getClubs();
     };
 
+    public func getFormerClubs() : [DTOs.ClubDTO] {
+      return clubComposite.getFormerClubs();
+    };
+
     public func getPlayerDetailsForGameweek(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : [DTOs.PlayerPointsDTO] {
       return playerComposite.getPlayerDetailsForGameweek(seasonId, gameweek);
     };

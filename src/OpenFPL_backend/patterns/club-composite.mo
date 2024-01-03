@@ -37,6 +37,20 @@ module {
       return sortedArray;
     };
 
+    public func getFormerClubs() : [T.Club] {
+      let clubsArray = List.toArray(relegatedClubs);
+      let sortedArray = Array.sort(
+        clubsArray,
+        func(a : T.Club, b : T.Club) : Order.Order {
+          if (a.name < b.name) { return #less };
+          if (a.name == b.name) { return #equal };
+          return #greater;
+        },
+      );
+      let sortedClubs = List.fromArray(sortedArray);
+      return sortedArray;
+    };
+
     public func validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
       if (List.size(clubs) >= 20) {
         return #err("Invalid: League cannot contain more than 20 teams.");
