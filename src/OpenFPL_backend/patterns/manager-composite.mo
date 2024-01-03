@@ -65,21 +65,6 @@ module {
       storeCanisterId := ?_storeCanisterId;
     };
 
-    public func setStableData(stable_managers : [(T.PrincipalId, T.Manager)], stable_profile_picture_canister_ids : [(T.PrincipalId, Text)]) {
-      managers := HashMap.fromIter<T.PrincipalId, T.Manager>(
-        stable_managers.vals(),
-        stable_managers.size(),
-        Text.equal,
-        Text.hash,
-      );
-      profilePictureCanisterIds := HashMap.fromIter<T.PrincipalId, Text>(
-        stable_profile_picture_canister_ids.vals(),
-        stable_profile_picture_canister_ids.size(),
-        Text.equal,
-        Text.hash,
-      );
-    };
-
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {
 
       let manager = managers.get(principalId);
@@ -638,12 +623,14 @@ module {
               history = foundManager.history;
             };
             managers.put(principalId, updatedManager);
+            profilePictureCanisterIds.put(principalId, profilePictureCanisterId);
           } else {
             let profilePictureCanister = actor (foundManager.profilePictureCanisterId) : actor {
               hasSpaceAvailable : () -> async Bool;
               addProfilePicture : (principalId : T.PrincipalId, profilePicture : Blob) -> async ();
             };
             await profilePictureCanister.addProfilePicture(principalId, profilePicture);
+            profilePictureCanisterIds.put(principalId, foundManager.profilePictureCanisterId);
           };
           return #ok();
         };

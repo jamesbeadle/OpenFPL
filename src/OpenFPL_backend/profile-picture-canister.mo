@@ -239,7 +239,7 @@ actor class ProfilePictureCanister() {
   };
 
   public func getCyclesBalance() : async Nat {
-    return Cycles.available();
+    return Cycles.balance();
   };
 
   public func topupCanister() : async () {
