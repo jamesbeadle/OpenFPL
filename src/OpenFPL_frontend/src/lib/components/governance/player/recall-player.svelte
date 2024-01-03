@@ -49,7 +49,7 @@
     }
 
     async function confirmProposal(){
-        await governanceStore.loanPlayer(selectedPlayerId, selectedClubId, loanEndDate);
+        await governanceStore.recallPlayer(selectedPlayerId);
     }
 
 </script>
