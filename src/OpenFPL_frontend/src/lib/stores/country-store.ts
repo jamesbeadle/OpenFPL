@@ -8,7 +8,7 @@ import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/Helpers";
 
 function createCountriesStore() {
-  const { subscribe, set } = writable<CountryDTO[] | null>(null);
+  const { subscribe, set } = writable<CountryDTO[]>([]);
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
@@ -41,11 +41,11 @@ function createCountriesStore() {
       set(updatedCountriesData);
     } else {
       const cachedCountriesData = localStorage.getItem(category);
-      let cachedCountries: CountryDTO[] | null = null;
+      let cachedCountries: CountryDTO[] = [];
       try {
         cachedCountries = JSON.parse(cachedCountriesData || "[]");
       } catch (e) {
-        cachedCountries = null;
+        cachedCountries = [];
       }
       set(cachedCountries);
     }
