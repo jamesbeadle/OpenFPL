@@ -2,7 +2,6 @@
     import { onMount } from "svelte";
     import { Modal } from "@dfinity/gix-components";
     import { teamStore } from "$lib/stores/team-store";
-    import { systemStore } from "$lib/stores/system-store";
     import { toastsError } from "$lib/stores/toasts-store";
     import { governanceStore } from "$lib/stores/governance-store";
     import type { PlayerPosition } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
@@ -21,7 +20,11 @@
     let nationalityId = 0;
 
     $: isSubmitDisabled = selectedClubId <= 0 || nationalityId <= 0 || 
-        firstName.length <= 0 || firstName.length > 50; //TODO: 
+        firstName.length <= 0 || firstName.length > 50 ||
+        dateOfBirth <= 0 ||
+        shirtNumber < 1 || shirtNumber > 99 ||
+        value <= 0 || value > 200 ||
+        nationalityId == 0;
     
     let isLoading = true;
     let showConfirm = false;
@@ -45,13 +48,17 @@
     }
 
     async function confirmProposal(){
-        //TODO: CONVERT THE VALUE INTO QMS
-        //TODO: Ensure the value is in QMs
-        await governanceStore.rescheduleFixture(
-            $systemStore?.calculationSeasonId ?? 0, 
-            selectedFixtureId, 
-            updatedFixtureGameweek ?? 1, 
-            updatedFixtureDate ?? 0);
+        const valueInQuarterMillions = value * 4;
+        await governanceStore.createPlayer(
+            selectedClubId,
+            selectedPosition,
+            firstName,
+            lastName,
+            shirtNumber,
+            valueInQuarterMillions,
+            dateOfBirth,
+            nationalityId
+        );
     }
 </script>
 
@@ -109,20 +116,25 @@
                 <p>Shirt Number:</p>
             
                 <input
-                    type="text"
+                    type="number"
                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                     placeholder="Shirt Number"
+                    min="1"
+                    max="99"
+                    step="1"
                     bind:value={shirtNumber}
                 />
 
                 <p>Value:</p>
             
                 <input
-                    type="text"
+                    type="number"
+                    step="0.25"
                     class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                    placeholder="Shirt Number"
+                    placeholder="Value"
                     bind:value={value}
                 />
+
 
                 <p>Date of Birth:</p>
 
