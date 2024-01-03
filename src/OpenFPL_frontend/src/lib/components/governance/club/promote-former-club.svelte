@@ -29,8 +29,6 @@
     }
   });
 
-
-
 </script>
 
 <Modal {visible} on:nnsClose={closeDetailModal}>
