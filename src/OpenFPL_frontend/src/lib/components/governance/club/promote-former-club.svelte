@@ -3,6 +3,10 @@
 
     export let visible: boolean;
     export let closeDetailModal: () => void;
+
+    
+
+
 </script>
 
 <Modal {visible} on:nnsClose={closeDetailModal}>
@@ -13,9 +17,9 @@
         </div>
 
         <div class="flex justify-start items-center w-full">
-        <div class="ml-4">
-            <p>Test</p>
-        </div>
+            <div class="ml-4">
+                <!-- //TODO: Dropdown of club id -->
+            </div>
         </div>
     </div>
 </Modal>

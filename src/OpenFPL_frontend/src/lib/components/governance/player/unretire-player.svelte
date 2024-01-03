@@ -13,9 +13,12 @@
         </div>
 
         <div class="flex justify-start items-center w-full">
-        <div class="ml-4">
-            <p>Test</p>
-        </div>
+            <div class="ml-4">
+                
+                    <!-- //TODO:
+    playerId : T.PlayerId;
+                -->
+            </div>
         </div>
     </div>
 </Modal>

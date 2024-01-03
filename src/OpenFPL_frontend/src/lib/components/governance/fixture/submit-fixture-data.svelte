@@ -13,9 +13,15 @@
         </div>
 
         <div class="flex justify-start items-center w-full">
-        <div class="ml-4">
-            <p>Test</p>
-        </div>
+            <div class="ml-4">
+                 <!-- //TODO: 
+              
+    seasonId : T.SeasonId;
+    gameweek : T.GameweekNumber;
+    fixtureId : T.FixtureId;
+    playerEventData : [T.PlayerEventData];
+                -->
+            </div>
         </div>
     </div>
 </Modal>

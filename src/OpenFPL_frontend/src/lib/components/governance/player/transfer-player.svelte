@@ -13,8 +13,14 @@
         </div>
 
         <div class="flex justify-start items-center w-full">
-        <div class="ml-4">
-            <p>Test</p>
+            <div class="ml-4">
+                
+                    
+                    
+                    <!-- //TODO:
+    playerId : T.PlayerId;
+    newClubId : T.ClubId;
+                -->
         </div>
         </div>
     </div>

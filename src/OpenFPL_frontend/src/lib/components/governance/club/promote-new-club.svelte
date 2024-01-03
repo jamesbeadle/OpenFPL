@@ -13,9 +13,17 @@
         </div>
 
         <div class="flex justify-start items-center w-full">
-        <div class="ml-4">
-            <p>Test</p>
-        </div>
+            <div class="ml-4">
+                <!-- //TODO: 
+                    name : Text;
+                    friendlyName : Text;
+                    primaryColourHex : Text;
+                    secondaryColourHex : Text;
+                    thirdColourHex : Text;
+                    abbreviatedName : Text;
+                    shirtType : T.ShirtType;
+                -->
+            </div>
         </div>
     </div>
 </Modal>

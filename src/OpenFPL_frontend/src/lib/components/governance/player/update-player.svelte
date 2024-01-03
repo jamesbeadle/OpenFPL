@@ -13,9 +13,20 @@
         </div>
 
         <div class="flex justify-start items-center w-full">
-        <div class="ml-4">
-            <p>Test</p>
-        </div>
+            <div class="ml-4">
+                
+                
+                    <!-- //TODO:
+    
+    playerId : T.PlayerId;
+    position : T.PlayerPosition;
+    firstName : Text;
+    lastName : Text;
+    shirtNumber : Nat8;
+    dateOfBirth : Int;
+    nationality : T.CountryId;
+                -->
+            </div>
         </div>
     </div>
 </Modal>
