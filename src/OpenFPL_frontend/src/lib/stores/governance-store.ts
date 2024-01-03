@@ -63,6 +63,11 @@ function createGovernanceStore() {
   }
 
   async function addInitialFixtures(seasonId: number, seasonFixtures: FixtureDTO[]){
+    
+    if(seasonId == 0){
+      return;
+    }
+
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
