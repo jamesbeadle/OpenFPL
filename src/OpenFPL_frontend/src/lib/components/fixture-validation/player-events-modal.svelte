@@ -59,18 +59,18 @@
   }
 
   function handleRemoveEvent(removedEvent: PlayerEventData) {
-    playerEventData.update((currentEvents) => {
-      return currentEvents.filter(
-        (event) =>
-          event.playerId != removedEvent.playerId &&
-          event.eventStartMinute != removedEvent.eventStartMinute &&
-          event.eventEndMinute != removedEvent.eventEndMinute &&
-          convertEvent(event.eventType) != eventType &&
-          event.fixtureId != event.fixtureId &&
-          event.clubId != event.clubId
+    playerEventData.update(currentEvents => {
+      return currentEvents.filter(event => 
+        !(event.playerId === removedEvent.playerId &&
+          event.eventStartMinute === removedEvent.eventStartMinute &&
+          event.eventEndMinute === removedEvent.eventEndMinute &&
+          event.eventType === removedEvent.eventType &&
+          event.fixtureId === removedEvent.fixtureId &&
+          event.clubId === removedEvent.clubId)
       );
     });
   }
+
 
   const getEventTypeLabel = (id: number) => {
     const option = eventOptions.find((option) => option.id === id);

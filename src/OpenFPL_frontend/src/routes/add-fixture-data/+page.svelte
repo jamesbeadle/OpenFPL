@@ -152,8 +152,6 @@
     playerEventData.set(playerEvents);
   }
 
-
-
   function saveDraft() {
     let uniquePlayerIds = new Set();
     $playerEventData.forEach(event => {
