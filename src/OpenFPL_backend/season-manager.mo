@@ -666,7 +666,8 @@ module {
     };
 
     public func executeLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async () {
-      await managerComposite.removePlayerFromTeams(loanPlayerDTO.playerId);
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      await managerComposite.removePlayerFromTeams(loanPlayerDTO.playerId, players);
       await playerComposite.executeLoanPlayer(loanPlayerDTO, systemState);
       await updateCacheHash("players");
     };
@@ -677,7 +678,8 @@ module {
     };
 
     public func executeTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async () {
-      await managerComposite.removePlayerFromTeams(transferPlayerDTO.playerId);
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      await managerComposite.removePlayerFromTeams(transferPlayerDTO.playerId, players);
       await playerComposite.executeTransferPlayer(transferPlayerDTO, systemState);
       await updateCacheHash("players");
     };
@@ -687,7 +689,8 @@ module {
     };
 
     public func executeRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async () {
-      await managerComposite.removePlayerFromTeams(recallPlayerDTO.playerId);
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      await managerComposite.removePlayerFromTeams(recallPlayerDTO.playerId, players);
       await playerComposite.executeRecallPlayer(recallPlayerDTO);
       await updateCacheHash("players");
     };
@@ -709,13 +712,15 @@ module {
     public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
       let currentPlayerPosition = playerComposite.getPlayerPosition(updatePlayerDTO.playerId);
       await playerComposite.executeUpdatePlayer(updatePlayerDTO);
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+    
       
       switch(currentPlayerPosition){
         case (null) { return };
         case (?foundPosition){
           var removePlayer = false;
           if(foundPosition != updatePlayerDTO.position){
-            await managerComposite.removePlayerFromTeams(updatePlayerDTO.playerId);
+            await managerComposite.removePlayerFromTeams(updatePlayerDTO.playerId, players);
           };
 
           await updateCacheHash("players");
@@ -737,7 +742,8 @@ module {
     };
 
     public func executeRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async () {
-      await managerComposite.removePlayerFromTeams(retirePlayerDTO.playerId);
+      let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
+      await managerComposite.removePlayerFromTeams(retirePlayerDTO.playerId, players);
       await playerComposite.executeRetirePlayer(retirePlayerDTO);
       await updateCacheHash("players");
     };

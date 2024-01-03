@@ -1301,7 +1301,7 @@ module {
       };
     };
 
-    public func removePlayerFromTeams(playerId : T.PlayerId) : async () {
+    public func removePlayerFromTeams(playerId : T.PlayerId, allPlayers: [DTOs.PlayerDTO]) : async () {
 
       let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
         managers,
@@ -1318,6 +1318,36 @@ module {
           func(id) : T.PlayerId { if (id == playerId) { 0 } else { id } },
         );
 
+        var captainId = manager.captainId;
+        if(captainId == playerId){
+          let highestValuedPlayer = Array.foldLeft<T.PlayerId, ?DTOs.PlayerDTO>(
+            manager.playerIds, 
+            null, 
+            func (highest, id) : ?DTOs.PlayerDTO {
+              if (id == playerId or id == 0) { return highest; };
+              let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id; });
+              switch (highest, player) {
+                case (null, ?p){
+                  ?p;
+                };
+                case (?h, ?p){
+                  if (p.valueQuarterMillions > h.valueQuarterMillions) { ?p; } else { ?h; }
+                }; 
+                case (_, null){
+                  highest;
+                } 
+              };
+            }
+          );
+
+          switch (highestValuedPlayer) {
+            case (?player){
+              captainId := player.id;
+            };
+            case null { } 
+          };
+        };
+
         let updatedManager : T.Manager = {
           principalId = manager.principalId;
           username = manager.username;
@@ -1329,7 +1359,7 @@ module {
           monthlyBonusesAvailable = manager.monthlyBonusesAvailable;
           bankQuarterMillions = manager.bankQuarterMillions;
           playerIds = newPlayerIds;
-          captainId = manager.captainId;
+          captainId = captainId;
           goalGetterGameweek = manager.goalGetterGameweek;
           goalGetterPlayerId = manager.goalGetterPlayerId;
           passMasterGameweek = manager.passMasterGameweek;
