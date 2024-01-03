@@ -11,6 +11,7 @@
   import { busyStore, Spinner } from "@dfinity/gix-components";
   import { getDateFromBigInt } from "$lib/utils/Helpers";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
+    import { authStore } from "$lib/stores/auth.store";
 
   let profile: Writable<ProfileDTO> = writable({
     playerIds: [],
@@ -39,7 +40,7 @@
     noEntryGameweek: 0,
     prospectsGameweek: 0,
     safeHandsGameweek: 0,
-    principalId: "",
+    principalId: $authStore?.identity?.getPrincipal().toString() ?? "",
     passMasterPlayerId: 0,
     captainId: 0,
     monthlyBonusesAvailable: 0,
