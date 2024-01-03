@@ -3,8 +3,8 @@
     import { Modal } from "@dfinity/gix-components";
     import { toastsError } from "$lib/stores/toasts-store";
     import { teamStore } from "$lib/stores/team-store";
-    import type { ClubDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { governanceStore } from "$lib/stores/governance-store";
+    import type { ClubDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 
     export let visible: boolean;
     export let cancelModal: () => void;
