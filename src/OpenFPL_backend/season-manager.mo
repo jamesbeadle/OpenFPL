@@ -137,6 +137,14 @@ module {
       return playerComposite.getActivePlayers(systemState.calculationSeasonId);
     };
 
+    public func getLoanedPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+      return playerComposite.getLoanedPlayers(clubId);
+    };
+
+    public func getRetiredPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+      return playerComposite.getRetiredPlayers(clubId);
+    };
+
     public func getClubs() : [DTOs.ClubDTO] {
       return clubComposite.getClubs();
     };

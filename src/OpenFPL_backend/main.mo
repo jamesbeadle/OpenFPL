@@ -96,6 +96,14 @@ actor Self {
     return #ok(seasonManager.getPlayers());
   };
 
+  public shared query func getLoanedPlayers(clubId: T.ClubId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    return #ok(seasonManager.getLoanedPlayers(clubId));
+  };
+
+  public shared query func getRetiredPlayers(clubId: T.ClubId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+    return #ok(seasonManager.getRetiredPlayers(clubId));
+  };
+
   public shared query func getPlayerDetailsForGameweek(seasonId : T.SeasonId, gameweek : T.GameweekNumber) : async Result.Result<[DTOs.PlayerPointsDTO], T.Error> {
     return #ok(seasonManager.getPlayerDetailsForGameweek(seasonId, gameweek));
   };

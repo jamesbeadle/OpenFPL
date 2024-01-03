@@ -59,8 +59,8 @@ module {
 
       let activePlayers = List.filter<T.Player>(
         players,
-        func(event : T.Player) : Bool {
-          return event.status == #Active;
+        func(player : T.Player) : Bool {
+          return player.status == #Active;
         },
       );
 
@@ -95,6 +95,68 @@ module {
             dateOfBirth = player.dateOfBirth;
             nationality = player.nationality;
             totalPoints = totalSeasonPoints;
+            status = player.status;
+          };
+        },
+      );
+      return List.toArray(playerDTOs);
+    };
+
+    public func getLoanedPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+
+      let loanedPlayers = List.filter<T.Player>(
+        players,
+        func(player : T.Player) : Bool {
+          return player.status == #OnLoan;
+        },
+      );
+
+      let playerDTOs = List.map<T.Player, DTOs.PlayerDTO>(
+        loanedPlayers,
+        func(player : T.Player) : DTOs.PlayerDTO {
+
+          return {
+            id = player.id;
+            clubId = player.clubId;
+            position = player.position;
+            firstName = player.firstName;
+            lastName = player.lastName;
+            shirtNumber = player.shirtNumber;
+            valueQuarterMillions = player.valueQuarterMillions;
+            dateOfBirth = player.dateOfBirth;
+            nationality = player.nationality;
+            totalPoints = 0;
+            status = player.status;
+          };
+        },
+      );
+      return List.toArray(playerDTOs);
+    };
+
+    public func getRetiredPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+
+      let retiredPlayers = List.filter<T.Player>(
+        players,
+        func(player : T.Player) : Bool {
+          return player.status == #Retired;
+        },
+      );
+
+      let playerDTOs = List.map<T.Player, DTOs.PlayerDTO>(
+        retiredPlayers,
+        func(player : T.Player) : DTOs.PlayerDTO {
+
+          return {
+            id = player.id;
+            clubId = player.clubId;
+            position = player.position;
+            firstName = player.firstName;
+            lastName = player.lastName;
+            shirtNumber = player.shirtNumber;
+            valueQuarterMillions = player.valueQuarterMillions;
+            dateOfBirth = player.dateOfBirth;
+            nationality = player.nationality;
+            totalPoints = 0;
             status = player.status;
           };
         },
