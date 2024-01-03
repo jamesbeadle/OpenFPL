@@ -46,7 +46,6 @@
   }
 
   async function loadCanisterInfo() {
-    console.log(selectedCanisterType);
     mainCanisterInfo = await adminStore.getMainCanisterInfo();
 
     switch (selectedCanisterType) {
@@ -55,7 +54,6 @@
           itemsPerPage,
           currentPage
         );
-        console.log(weeklyLeaderboardCanisters);
         break;
       case "MonthlyLeaderboard":
         monthlyLeaderboardCanisters = await adminStore.getMonthlyCanisters(
@@ -74,8 +72,6 @@
           itemsPerPage,
           currentPage
         );
-        console.log("profilePictureCanisters");
-        console.log(profilePictureCanisters);
         break;
     }
   }

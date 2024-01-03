@@ -45,9 +45,7 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      console.log("updatedProfileDataObj");
       let updatedProfileDataObj = (await identityActor.getProfile()) as any;
-      console.log(updatedProfileDataObj);
 
       if (!updatedProfileDataObj) {
         await identityActor.createProfile();
@@ -161,7 +159,6 @@ function createUserStore() {
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
-          console.log(result);
           sync();
           return result;
         } catch (error) {

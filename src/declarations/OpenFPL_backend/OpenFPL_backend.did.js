@@ -674,7 +674,7 @@ export const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    initControllers: IDL.Func([], [], []),
+    init: IDL.Func([], [], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateFantasyTeamDTO], [Result_1], []),

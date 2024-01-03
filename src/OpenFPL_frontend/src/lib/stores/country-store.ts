@@ -5,7 +5,7 @@ import type {
   DataCacheDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isSuccess, replacer } from "../utils/Helpers";
+import { isError, replacer } from "../utils/Helpers";
 
 function createCountriesStore() {
   const { subscribe, set } = writable<CountryDTO[] | null>(null);
@@ -18,10 +18,9 @@ function createCountriesStore() {
   async function sync() {
     let category = "countries";
     const newHashValues = await actor.getDataHashes();
-
-    let error = isSuccess(newHashValues);
+    let error = isError(newHashValues);
     if (error) {
-      console.error("Error syncing fixture store");
+      console.error("Error syncing countries store");
       return;
     }
 

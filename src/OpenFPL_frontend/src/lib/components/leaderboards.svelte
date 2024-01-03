@@ -42,9 +42,7 @@
       await teamStore.sync();
       if ($teamStore.length == 0) return;
 
-      console.log("syncing system store");
       await systemStore.sync();
-      console.log("syncing leaderboard store");
       await weeklyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1

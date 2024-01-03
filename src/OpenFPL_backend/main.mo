@@ -514,7 +514,6 @@ actor Self {
 
   //Getters for admin functions - //TODO: Can't be query as gets cycles?
   public shared ({ caller }) func adminGetMainCanisterInfo() : async Result.Result<DTOs.AdminMainCanisterInfo, T.Error> {
-    Debug.print(Principal.toText(caller));
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;

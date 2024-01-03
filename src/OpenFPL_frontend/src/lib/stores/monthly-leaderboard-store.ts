@@ -7,7 +7,7 @@ import type {
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isSuccess, replacer } from "../utils/Helpers";
+import { isError, replacer } from "../utils/Helpers";
 
 function createMonthlyLeaderboardStore() {
   const { subscribe, set } = writable<MonthlyLeaderboardDTO[] | null>(null);
@@ -28,7 +28,7 @@ function createMonthlyLeaderboardStore() {
     let category = "monthly_leaderboards";
     const newHashValues = await actor.getDataHashes();
 
-    let error = isSuccess(newHashValues);
+    let error = isError(newHashValues);
     if (error) {
       console.error("Error syncing monthly leaderboard store");
       return;

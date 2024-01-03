@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "8p0x90"
+  version_hash: "sbysvp"
 };
 function get_hooks() {
   return {};
@@ -4143,7 +4143,7 @@ const idlFactory = ({ IDL }) => {
       [Result_2],
       []
     ),
-    initControllers: IDL.Func([], [], []),
+    init: IDL.Func([], [], []),
     isUsernameValid: IDL.Func([IDL.Text], [IDL.Bool], ["query"]),
     requestCanisterTopup: IDL.Func([], [], []),
     saveFantasyTeam: IDL.Func([UpdateFantasyTeamDTO], [Result_1], []),
@@ -4406,9 +4406,6 @@ function convertFixtureStatus(fixtureStatus) {
 }
 function isError(response) {
   return response && response.err !== void 0;
-}
-function isSuccess(response) {
-  return response && response.ok !== void 0;
 }
 function createSystemStore() {
   const { subscribe: subscribe2, set } = writable(null);
@@ -5212,9 +5209,11 @@ function createCountriesStore() {
   async function sync() {
     let category = "countries";
     const newHashValues = await actor.getDataHashes();
-    let error2 = isSuccess(newHashValues);
+    console.log("newHashValues");
+    console.log(newHashValues);
+    let error2 = isError(newHashValues);
     if (error2) {
-      console.error("Error syncing fixture store");
+      console.error("Error syncing countries store");
       return;
     }
     let dataCacheValues = newHashValues.ok;
@@ -5811,6 +5810,7 @@ function createUserStore() {
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
+      console.log(result);
       sync();
       return result;
     } catch (error2) {
@@ -6015,7 +6015,7 @@ function createMonthlyLeaderboardStore() {
   async function sync() {
     let category2 = "monthly_leaderboards";
     const newHashValues = await actor.getDataHashes();
-    let error2 = isSuccess(newHashValues);
+    let error2 = isError(newHashValues);
     if (error2) {
       console.error("Error syncing monthly leaderboard store");
       return;
@@ -6111,7 +6111,7 @@ function createSeasonLeaderboardStore() {
     const newHashValues = await actor.getDataHashes();
     let error2 = isError(newHashValues);
     if (error2) {
-      console.error("Error syncing fixture store");
+      console.error("Error syncing season leaderboard store");
       return;
     }
     let dataCacheValues = newHashValues.ok;

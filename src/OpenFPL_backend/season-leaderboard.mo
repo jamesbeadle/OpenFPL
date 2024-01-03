@@ -130,8 +130,8 @@ actor class SeasonLeaderboardCanister() {
 
   public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
+    let callerPrincipalId = Principal.toText(caller);
+    assert callerPrincipalId == main_canister_id;
 
     switch (leaderboard) {
       case (null) {

@@ -69,8 +69,6 @@ const initAuthStore = (): AuthStore => {
               identity: authClient?.getIdentity(),
             }));
 
-            console.log(authClient?.getIdentity().getPrincipal().toString());
-
             resolve();
           },
           onError: reject,

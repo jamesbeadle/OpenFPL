@@ -77,12 +77,52 @@
         <ul
           class="flex rounded-t-lg bg-light-gray px-4 pt-2 border-b border-gray-700"
         >
+          <li class={`mr-4 ${activeTab === "canisters" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "canisters" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("canisters")}>Canisters</button
+            >
+          </li>
+          <li class={`mr-4 ${activeTab === "timers" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "timers" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("timers")}>Timers</button
+            >
+          </li>
           <li class={`mr-4 ${activeTab === "fixtures" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${
                 activeTab === "fixtures" ? "text-white" : "text-gray-400"
               }`}
               on:click={() => setActiveTab("fixtures")}>Fixtures</button
+            >
+          </li>
+          <li class={`mr-4 ${activeTab === "clubs" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "clubs" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("clubs")}>Clubs</button
+            >
+          </li>
+          <li class={`mr-4 ${activeTab === "players" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "players" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("players")}>Players</button
+            >
+          </li>
+          <li class={`mr-4 ${activeTab === "managers" ? "active-tab" : ""}`}>
+            <button
+              class={`p-2 ${
+                activeTab === "managers" ? "text-white" : "text-gray-400"
+              }`}
+              on:click={() => setActiveTab("managers")}>Managers</button
             >
           </li>
         </ul>

@@ -111,7 +111,6 @@ module {
 
       switch (leaderboardCanisterId) {
         case (null) {
-          Debug.print("Canister id not found");
           return #err(#NotFound);
         };
         case (?foundCanister) {

@@ -72,6 +72,8 @@
       await userStore.sync();
 
       unsubscribeUserProfile = userStore.subscribe((value) => {
+        console.log("PROFILE")
+        console.log(value)
         if (!value) {
           return;
         }

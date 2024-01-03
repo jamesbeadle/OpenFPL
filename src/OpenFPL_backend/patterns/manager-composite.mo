@@ -577,7 +577,6 @@ module {
 
     public func updateProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async Result.Result<(), T.Error> {
 
-      Debug.print("Updating profile picture");
       if (invalidProfilePicture(profilePicture)) {
         return #err(#InvalidData);
       };
@@ -585,9 +584,7 @@ module {
       let existingManager = managers.get(principalId);
       switch (existingManager) {
         case (null) {
-          Debug.print("No manager");
           let profilePictureCanisterId = await setManagerProfileImage(principalId, profilePicture);
-          Debug.print("Manager Profile Image Canister: " # profilePictureCanisterId);
 
           let createProfileDTO : DTOs.CreateProfileDTO = {
             principalId = principalId;
@@ -604,11 +601,9 @@ module {
           return #ok();
         };
         case (?foundManager) {
-          Debug.print("Found Manager with Profile Image Canister: " # foundManager.profilePictureCanisterId);
           var profilePictureCanisterId = "";
           if (foundManager.profilePictureCanisterId == "") {
             profilePictureCanisterId := await setManagerProfileImage(principalId, profilePicture);
-            Debug.print("Manager Profile Image Canister: " # profilePictureCanisterId);
 
             let updatedManager : T.Manager = {
               principalId = foundManager.principalId;
@@ -644,7 +639,6 @@ module {
             };
             managers.put(principalId, updatedManager);
           } else {
-            Debug.print("Manager Profile Image Canister: " # profilePictureCanisterId);
             let profilePictureCanister = actor (foundManager.profilePictureCanisterId) : actor {
               hasSpaceAvailable : () -> async Bool;
               addProfilePicture : (principalId : T.PrincipalId, profilePicture : Blob) -> async ();
@@ -657,7 +651,6 @@ module {
     };
 
     private func setManagerProfileImage(principalId : Text, profilePicture : Blob) : async Text {
-      Debug.print("Setting manager profile image");
       if (activeProfilePictureCanisterId == "") {
         return await createProfileCanister(principalId, profilePicture);
       } else {
@@ -2471,7 +2464,7 @@ module {
       return {
         limit = limit;
         offset = offset;
-        profiles = [];
+        profiles = List.toArray(paginatedEntries);
         totalEntries = Array.size(allManagers);
       };
     };

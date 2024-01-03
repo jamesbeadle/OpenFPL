@@ -30,7 +30,7 @@ function createSeasonLeaderboardStore() {
 
     let error = isError(newHashValues);
     if (error) {
-      console.error("Error syncing fixture store");
+      console.error("Error syncing season leaderboard store");
       return;
     }
 

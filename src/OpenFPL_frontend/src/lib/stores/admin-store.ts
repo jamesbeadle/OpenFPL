@@ -199,7 +199,6 @@ function createAdminStore() {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     const result = await identityActor.adminGetManagers(limit, offset);
-
     if (isError(result)) {
       console.error("Error fetching manager info");
       return null;
