@@ -26,10 +26,10 @@
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
   import { playerStore } from "$lib/stores/player-store";
   import { Spinner, busyStore } from "@dfinity/gix-components";
+    import { systemStore } from "$lib/stores/system-store";
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
-  let teams: ClubDTO[] = [];
   let players: PlayerDTO[] = [];
   let fixture: FixtureDTO | null;
   let homeTeam: ClubDTO | null;
@@ -58,6 +58,7 @@
 
   onMount(async () => {
     try {
+      await systemStore.sync();
       await teamStore.sync();
       if ($teamStore.length == 0) return;
       await fixtureStore.sync();
@@ -79,17 +80,7 @@
         selectedTeam = homeTeam;
         teamPlayers.set(players.filter((x) => x.clubId == selectedTeam?.id));
       });
-
-      const draftKey = `fixtureDraft_${fixtureId}`;
-      const savedDraft = localStorage.getItem(draftKey);
-      if (savedDraft) {
-        const draftData = JSON.parse(savedDraft);
-        let draftEventData = draftData.playerEventData;
-        if (draftEventData) {
-          playerEventData.set(draftEventData);
-          updateSelectedPlayers();
-        }
-      }
+      loadDraft(fixtureId);
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching fixture information." },
@@ -101,6 +92,26 @@
     }
   });
 
+  function loadDraft(fixtureId: number) {
+    const draftKey = `fixtureDraft_${fixtureId}`;
+    const savedDraft = localStorage.getItem(draftKey);
+    if (savedDraft) {
+      const draftData = JSON.parse(savedDraft);
+
+      let draftEventData = draftData.playerEventData;
+      if (draftEventData) {
+        playerEventData.set(draftEventData);
+      }
+
+      let allPlayers = draftData.allPlayers;
+      if (allPlayers) {
+        updateSelectedPlayers(allPlayers, draftEventData);
+      }
+    }
+  }
+
+
+
   async function confirmFixtureData() {
     busyStore.startBusy({
       initiator: "confirm-data",
@@ -108,7 +119,7 @@
     });
 
     try {
-      await governanceStore.submitFixtureData(fixtureId, $playerEventData);
+      await governanceStore.submitFixtureData($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0, fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       toastsShow({
         text: "Fixture data saved.",
@@ -128,19 +139,32 @@
     }
   }
 
-  function updateSelectedPlayers() {
-    const uniquePlayerIds = new Set(
-      $playerEventData.map((event) => event.playerId)
-    );
-    const selectedPlayerObjects = players.filter((player) =>
-      uniquePlayerIds.has(player.id)
-    );
-    selectedPlayers.set(selectedPlayerObjects);
+  function updateSelectedPlayers(allPlayers: PlayerDTO[], playerEvents: PlayerEventData[]): void {
+    const playerEventMap = new Map<number, PlayerEventData[]>();
+    playerEvents.forEach(event => {
+      if (!playerEventMap.has(event.playerId)) {
+        playerEventMap.set(event.playerId, []);
+      }
+      playerEventMap.get(event.playerId)?.push(event);
+    });
+
+    selectedPlayers.set(allPlayers);
+    playerEventData.set(playerEvents);
   }
 
+
+
   function saveDraft() {
+    let uniquePlayerIds = new Set();
+    $playerEventData.forEach(event => {
+      uniquePlayerIds.add(event.playerId);
+    });
+
+    let playersFromEvents = Array.from(uniquePlayerIds);
+
     const draftData = {
-      playerEventData: $playerEventData,
+      playersFromEvents: playersFromEvents,
+      playerEventData: $playerEventData
     };
     const draftKey = `fixtureDraft_${fixtureId}`;
     localStorage.setItem(draftKey, JSON.stringify(draftData, replacer));
