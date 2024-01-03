@@ -320,11 +320,11 @@ function createGovernanceStore() {
   async function updateClub(
     clubId: number,
     name: string,
-    friendlyName: Text,
-    primaryColourHex: Text,
-    secondaryColourHex: Text,
-    thirdColourHex: Text,
-    abbreviatedName: Text,
+    friendlyName: string,
+    primaryColourHex: string,
+    secondaryColourHex: string,
+    thirdColourHex: string,
+    abbreviatedName: string,
     shirtType: ShirtType) : Promise<void>{
       try {
         const identityActor = await ActorFactory.createIdentityActor(

@@ -9,7 +9,7 @@
     export let visible: boolean;
     export let cancelModal: () => void;
 
-    let selectedClub: ClubDTO;
+    let selectedClubId: number = -1;
     
     let name = "";
     let friendlyName = "";
@@ -28,13 +28,13 @@
 
     onMount(async () => {
         try {
-            
+            teamStore.sync();
         } catch (error) {
         toastsError({
-            msg: { text: "Error syncing club details." },
+            msg: { text: "Error syncing club store." },
             err: error,
         });
-        console.error("Error syncing club details.", error);
+        console.error("Error syncing club store.", error);
         } finally {
         isLoading = false;
         }
@@ -45,7 +45,7 @@
     }
 
     async function confirmProposal(){
-        await governanceStore.promoteNewClub(name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType);
+        await governanceStore.updateClub(selectedClubId, name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType);
     }
 
     function handlePrimaryColorChange(event: Event) {
@@ -63,6 +63,32 @@
         thirdColourHex = input.value;
     }
 
+    $: if (selectedClubId) {
+        loadClub();
+    }
+
+    async function loadClub() {
+        isLoading = true;
+
+        let clubs = $teamStore;
+        let selectedClub = clubs.find(x => x.id == selectedClubId);
+        
+        if(!selectedClub){
+            isLoading = false;
+            return;
+        }
+
+        name = selectedClub.name;
+        friendlyName = selectedClub.friendlyName;
+        abbreviatedName = selectedClub.abbreviatedName;
+        primaryColourHex = selectedClub.primaryColourHex;
+        secondaryColourHex = selectedClub.secondaryColourHex;
+        thirdColourHex = selectedClub.thirdColourHex;
+        
+        isLoading = false;
+    }
+
+
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
@@ -77,13 +103,14 @@
             <div class="ml-4">
                 <select
                   class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-                  bind:value={selectedClub}
+                  bind:value={selectedClubId}
                 >
-                  {#each $teamStore as club}
-                    <option value={club.id}>{club.friendlyName}</option>
-                  {/each}
+                    <option value={-1}>Select Club</option>
+                    {#each $teamStore as club}
+                        <option value={club.id}>{club.friendlyName}</option>
+                    {/each}
                 </select>
-                {#if selectedClub}
+                {#if selectedClubId > 0}
                     <input
                         type="text"
                         class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
