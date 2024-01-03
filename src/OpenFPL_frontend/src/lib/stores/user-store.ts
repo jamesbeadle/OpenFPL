@@ -1,5 +1,5 @@
 import { authStore } from "$lib/stores/auth.store";
-import { replacer } from "$lib/utils/Helpers";
+import { isError, replacer } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import type { ProfileDTO } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
@@ -40,30 +40,35 @@ function createUserStore() {
 
   async function sync() {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(
+      const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let updatedProfileDataObj = (await identityActor.getProfile()) as any;
-
-      if (!updatedProfileDataObj) {
-        await identityActor.createProfile();
-        updatedProfileDataObj = (await identityActor.getProfile()) as any;
+      let getProfileResponse = await identityActor.getProfile();
+      let error = isError(getProfileResponse);
+      if (error) {
+        console.error("Error syncing user store");
+        return;
       }
-      let updatedProfileData = updatedProfileDataObj[0];
-      if (
-        updatedProfileData &&
-        updatedProfileData.profilePicture instanceof Uint8Array
-      ) {
+
+      if (!getProfileResponse) {
+        await identityActor.createProfile();
+        getProfileResponse = await identityActor.getProfile();
+      }
+      
+      let profileData = getProfileResponse.ok;
+
+      
+      if (profileData && profileData.profilePicture instanceof Uint8Array) {
         const base64Picture = uint8ArrayToBase64(
-          updatedProfileData.profilePicture
+          profileData.profilePicture
         );
         localStorage.setItem(
           "user_profile_data",
           JSON.stringify(
             {
-              ...updatedProfileData,
+              ...profileData,
               profilePicture: base64Picture,
             },
             replacer
@@ -72,10 +77,10 @@ function createUserStore() {
       } else {
         localStorage.setItem(
           "user_profile_data",
-          JSON.stringify(updatedProfileData, replacer)
+          JSON.stringify(profileData, replacer)
         );
       }
-      set(updatedProfileData);
+      set(profileData);
     } catch (error) {
       console.error("Error fetching user profile:", error);
       throw error;

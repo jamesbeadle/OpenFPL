@@ -36,7 +36,7 @@ actor class ProfilePictureCanister() {
   private var bucketMap : HashMap.HashMap<T.PrincipalId, Nat8> = HashMap.HashMap<T.PrincipalId, Nat8>(100, Text.equal, Text.hash);
 
   public shared ({ caller }) func addProfilePicture(principalId : T.PrincipalId, profilePicture : Blob) : async () {
-   assert not Principal.isAnonymous(caller);
+    assert not Principal.isAnonymous(caller);
     let callerPrincipalId = Principal.toText(caller);
     assert callerPrincipalId == main_canister_id;
 

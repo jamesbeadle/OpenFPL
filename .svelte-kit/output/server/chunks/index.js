@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "sbysvp"
+  version_hash: "rflbxb"
 };
 function get_hooks() {
   return {};
@@ -3440,7 +3440,6 @@ const initAuthStore = () => {
               ...state,
               identity: authClient?.getIdentity()
             }));
-            console.log(authClient?.getIdentity().getPrincipal().toString());
             resolve();
           },
           onError: reject,
@@ -4416,7 +4415,6 @@ function createSystemStore() {
   async function sync() {
     let category = "system_state";
     const newHashValues = await actor.getDataHashes();
-    console.log(newHashValues);
     let error2 = isError(newHashValues);
     if (error2) {
       console.error("Error syncing system store");
@@ -4427,7 +4425,6 @@ function createSystemStore() {
     const localHash = localStorage.getItem(category);
     if (categoryHash?.hash != localHash) {
       let updatedSystemStateData = await actor.getSystemState();
-      console.log(updatedSystemStateData);
       if (isError(updatedSystemStateData)) {
         console.error("Error syncing system store");
         return;
@@ -5209,8 +5206,6 @@ function createCountriesStore() {
   async function sync() {
     let category = "countries";
     const newHashValues = await actor.getDataHashes();
-    console.log("newHashValues");
-    console.log(newHashValues);
     let error2 = isError(newHashValues);
     if (error2) {
       console.error("Error syncing countries store");
@@ -5270,7 +5265,6 @@ function createWeeklyLeaderboardStore() {
         100,
         0
       );
-      console.log(updatedLeaderboardData);
       if (isError(updatedLeaderboardData)) {
         console.error("error fetching leaderboard store");
       }
@@ -5756,9 +5750,7 @@ function createUserStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      console.log("updatedProfileDataObj");
       let updatedProfileDataObj = await identityActor.getProfile();
-      console.log(updatedProfileDataObj);
       if (!updatedProfileDataObj) {
         await identityActor.createProfile();
         updatedProfileDataObj = await identityActor.getProfile();
@@ -5810,7 +5802,6 @@ function createUserStore() {
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
-      console.log(result);
       sync();
       return result;
     } catch (error2) {
@@ -5863,7 +5854,6 @@ function createUserStore() {
             { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
-          console.log(result);
           sync();
           return result;
         } catch (error2) {
