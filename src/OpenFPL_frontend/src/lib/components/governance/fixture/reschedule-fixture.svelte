@@ -25,8 +25,7 @@
 
     $: dateTime = date + 'T' + time;
 
-    $: isSubmitDisabled = false; //TODO
-
+    $: isSubmitDisabled = !selectedFixtureId || selectedFixtureId <= 0 || (!isPostponed && updatedFixtureDate == 0) 
     
     $: if (selectedFixtureId) {
         loadGameweekFixtures();
@@ -43,7 +42,6 @@
         try {
             await fixtureStore.sync();
             loadGameweekFixtures();
-            //TODO: Set gameweek fixtures to gameweek 1 fixtures
         } catch (error) {
         toastsError({
             msg: { text: "Error syncing club details." },
