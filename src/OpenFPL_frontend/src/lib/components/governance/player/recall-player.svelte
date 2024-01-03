@@ -5,6 +5,7 @@
     import { toastsError } from "$lib/stores/toasts-store";
     import { governanceStore } from "$lib/stores/governance-store";
     import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { teamStore } from "$lib/stores/team-store";
 
     export let visible: boolean;
     export let cancelModal: () => void;
@@ -70,22 +71,24 @@
                     class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
                     bind:value={selectedClubId}
                 >
-                    {#each $playerStore as player}
-                        <option value={player.id}>{player.firstName} {player.lastName}</option>
+                    {#each $teamStore as club}
+                        <option value={club.id}>{club.friendlyName}</option>
                     {/each}
                 </select>
 
-                <p>Select a player to recall:</p>
+                {#if selectedClubId > 0}
+                    <p>Select a player to recall:</p>
 
-                <select
-                    class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-                    bind:value={selectedPlayerId}
-                >
-                    <option value={0}>Select Player</option>
-                    {#each $playerStore as player}
-                        <option value={player.id}>{player.firstName} {player.lastName}</option>
-                    {/each}
-                </select>
+                    <select
+                        class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+                        bind:value={selectedPlayerId}
+                    >
+                        <option value={0}>Select Player</option>
+                        {#each $playerStore as player}
+                            <option value={player.id}>{player.firstName} {player.lastName}</option>
+                        {/each}
+                    </select>
+                {/if}
                
                 <div class="items-center py-3 flex space-x-4">
                     <button

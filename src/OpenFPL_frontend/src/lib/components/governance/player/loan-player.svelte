@@ -1,7 +1,9 @@
 <script lang="ts">
-    import { governanceStore } from "$lib/stores/governance-store";
-    import { playerStore } from "$lib/stores/player-store";
     import { Modal } from "@dfinity/gix-components";
+    import { playerStore } from "$lib/stores/player-store";
+    import { governanceStore } from "$lib/stores/governance-store";
+    import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { teamStore } from "$lib/stores/team-store";
 
     export let visible: boolean;
     export let cancelModal: () => void;
@@ -10,10 +12,19 @@
     let leavingLeague = false;
     let selectedClubId: number = 0;
     let loanEndDate: number = 0;
+    let clubPlayers: PlayerDTO[] = [];
 
     $: isSubmitDisabled = selectedPlayerId <= 0 || (!leavingLeague && selectedClubId <= 0) || loanEndDate == 0;
     
     let showConfirm = false;
+
+    $: if (selectedClubId) {
+        getClubPlayers();
+    }
+
+    async function getClubPlayers(){
+        clubPlayers = $playerStore.filter(x => x.clubId == selectedClubId);
+    }
 
     function raiseProposal(){
         showConfirm = true;
@@ -35,40 +46,54 @@
         <div class="flex justify-start items-center w-full">
             <div class="ml-4">
 
-                <p>Select a player to loan:</p>
-
+                <p>Select the players club:</p>
+                
                 <select
                     class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-                    bind:value={selectedPlayerId}
+                    bind:value={selectedClubId}
                 >
-                    <option value={0}>Select Player</option>
-                    {#each $playerStore as player}
-                        <option value={player.id}>{player.firstName} {player.lastName}</option>
+                    {#each $teamStore as club}
+                        <option value={club.id}>{club.friendlyName}</option>
                     {/each}
                 </select>
 
+                {#if selectedClubId > 0}
 
-                <p>Please check the following box if the player is being loaned to a club outside of the Premier League:</p>
-                
-                <input type="checkbox" bind:checked={leavingLeague} />
-
-                {#if !leavingLeague}
-                    <p>Please select new Premier League Club:</p>
+                    <p>Select a player to loan:</p>
 
                     <select
                         class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-                        bind:value={selectedClubId}
+                        bind:value={selectedPlayerId}
                     >
-                        {#each $playerStore as player}
+                        <option value={0}>Select Player</option>
+                        {#each clubPlayers as player}
                             <option value={player.id}>{player.firstName} {player.lastName}</option>
                         {/each}
                     </select>
+
+
+                    <p>Please check the following box if the player is being loaned to a club outside of the Premier League:</p>
+                    
+                    <input type="checkbox" bind:checked={leavingLeague} />
+
+                    {#if !leavingLeague}
+                        <p>Please select new Premier League Club:</p>
+
+                        <select
+                            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+                            bind:value={selectedClubId}
+                        >
+                            {#each $playerStore as player}
+                                <option value={player.id}>{player.firstName} {player.lastName}</option>
+                            {/each}
+                        </select>
+                    {/if}
+
+                    <p>Loan End Date:</p>
+
+                    <input type="date" bind:value={loanEndDate} class="input input-bordered" />
                 {/if}
-
-                <p>Loan End Date:</p>
-
-                <input type="date" bind:value={loanEndDate} class="input input-bordered" />
-               
+                
                 <div class="items-center py-3 flex space-x-4">
                     <button
                     class="px-4 py-2 default-button fpl-cancel-btn"
@@ -101,7 +126,6 @@
                         </button>
                     </div>
                 {/if}
-
             </div>
         </div>
     </div>
