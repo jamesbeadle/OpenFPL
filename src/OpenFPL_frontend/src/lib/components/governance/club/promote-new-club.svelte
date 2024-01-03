@@ -10,16 +10,18 @@
 
     let name = "";
     let friendlyName = "";
+    let abbreviatedName = "";
     let primaryColourHex = "";
     let secondaryColourHex = "";
     let thirdColourHex = "";
-    let abbreviatedName = "";
-    let shirtType: ShirtType;
+    let shirtType: ShirtType = { Filled: null };
 
     let isLoading = true;
     let showConfirm = false;
 
     $: isSubmitDisabled = name.length > 0 && name.length < 50;
+
+    let shirtTypes: ShirtType[] = [{ Filled: null }, { Striped: null }];
    
     onMount(async () => {
         try {
@@ -42,7 +44,21 @@
     async function confirmProposal(){
         await governanceStore.promoteNewClub(name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType);
     }
-        
+
+    function handlePrimaryColorChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        primaryColourHex = input.value;
+    }
+
+    function handleSecondaryColorChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        secondaryColourHex = input.value;
+    }
+
+    function handleThirdColorChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        thirdColourHex = input.value;
+    }
 
 </script>
 
@@ -55,17 +71,56 @@
 
         <div class="flex justify-start items-center w-full">
             <div class="ml-4">
-              
-<!-- //TODO: 
-                    name : Text;
-                    friendlyName : Text;
-                    primaryColourHex : Text;
-                    secondaryColourHex : Text;
-                    thirdColourHex : Text;
-                    abbreviatedName : Text;
-                    shirtType : T.ShirtType;
-                -->
+                <input
+                    type="text"
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                    placeholder="Club Full Name"
+                    bind:value={name}
+                />
 
+                <input
+                    type="text"
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                    placeholder="Club Friendly Name"
+                    bind:value={name}
+                />
+
+                <input
+                    type="text"
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                    placeholder="Abbreviated Name"
+                    bind:value={abbreviatedName}
+                />
+
+                <input 
+                    type="color" 
+                    bind:value={primaryColourHex}
+                    on:input={handlePrimaryColorChange}
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                />
+
+                <input 
+                    type="color" 
+                    bind:value={secondaryColourHex}
+                    on:input={handleSecondaryColorChange}
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                />
+
+                <input 
+                    type="color" 
+                    bind:value={thirdColourHex}
+                    on:input={handleThirdColorChange}
+                    class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                />
+
+                <select
+                  class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+                  bind:value={shirtType}
+                >
+                  {#each shirtTypes as shirt}
+                    <option value={shirt}>{shirt}</option>
+                  {/each}
+                </select>
 
                 <div class="items-center py-3 flex space-x-4">
                     <button
