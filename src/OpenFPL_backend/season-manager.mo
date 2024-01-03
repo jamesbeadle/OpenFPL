@@ -707,8 +707,20 @@ module {
     };
 
     public func executeUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async () {
+      let currentPlayerPosition = playerComposite.getPlayerPosition(updatePlayerDTO.playerId);
       await playerComposite.executeUpdatePlayer(updatePlayerDTO);
-      await updateCacheHash("players");
+      
+      switch(currentPlayerPosition){
+        case (null) { return };
+        case (?foundPosition){
+          var removePlayer = false;
+          if(foundPosition != updatePlayerDTO.position){
+            await managerComposite.removePlayerFromTeams(updatePlayerDTO.playerId);
+          };
+
+          await updateCacheHash("players");
+        }
+      }
     };
 
     public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {

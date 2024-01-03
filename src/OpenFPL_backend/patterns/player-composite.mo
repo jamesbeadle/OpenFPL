@@ -286,6 +286,24 @@ module {
       });
     };
 
+    public func getPlayerPosition(playerId : T.PlayerId) : ?T.PlayerPosition {
+
+      let foundPlayer = List.find<T.Player>(
+        players,
+        func(player : T.Player) : Bool {
+          return player.id == playerId and player.status != #OnLoan;
+        },
+      );
+
+      switch (foundPlayer) {
+        case (null) { return null; };
+        case (?player) {
+          return ?player.position;
+
+        };
+      };
+    };
+
     public func validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO) : async Result.Result<Text, Text> {
       let player = List.find<T.Player>(
         players,
