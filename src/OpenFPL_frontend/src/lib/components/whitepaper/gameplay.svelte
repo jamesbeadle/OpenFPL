@@ -35,18 +35,17 @@
     strategic layer to the game reflecting the January transfer window.
   </p>
   <p class="my-2">
-    If a player is transferred from a club they are removed from any fantasy
+    If a player is loaned or transferred from a club they are removed from any fantasy
     team that contains them. This will leave a space in your team you must fill
     when saving your team next.
   </p>
   <p class="my-2">
-    If the DAO votes to change a player's position, for example from a forward to a midfielder, then the player is removed from any fantasy
-    team that contains them. This will again leave a space in your team you must fill
-    when saving your team next. 
+    If the DAO votes to change a player's position, for example from a forward to a midfielder, then the player is again removed from any fantasy
+    team that contains them. 
   </p>
   <p class="my-2">
     Scores will still be calculated on teams with
-    less than 11 players that have not saved their team in the gameweek.
+    less than 11 players that have not updated their team since an automatic system change.
   </p>
   
   <h2 class="default-header mt-4">Scoring System</h2>
