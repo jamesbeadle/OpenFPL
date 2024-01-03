@@ -79,6 +79,31 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
+
+
+
+  <!--
+
+	- Flag and name row
+	- vs badge name season gameweek
+	- APPEARANCE SLIDER
+	- GoalsScored Slider
+	- Goals scored minute badges
+	- Goals assisted slider
+	- Goals assisted minute badges
+	- Penalty Save slider
+	- Penalty saved minute badges
+	- Penaly Missed Slider
+	- Penalty Missed Minute badges
+	- Own Goal Slider
+	
+	- Cards
+	- No cards
+	- Yellow card
+	- Red card modal
+
+
+  -->
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
       <h4>

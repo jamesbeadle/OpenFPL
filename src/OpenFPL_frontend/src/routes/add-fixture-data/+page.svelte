@@ -205,11 +205,40 @@
   }
 </script>
 
+
 <Layout>
   {#if isLoading}
     <Spinner />
   {:else}
     <div class="bg-panel rounded-md">
+
+      <!--
+
+
+- Header
+	- Score Panel
+	- Details Panel
+		- Goals
+		- Assists
+		- Result
+	- Tabs for teams
+		- Select player button row
+		- Player table
+			- Name
+			- Events Count
+			- Update
+		- Clear, Save and submit buttons
+	- Match totals
+	
+- Select player modal Modal:
+	- 2 colums 
+		- Checkbox, number flag name
+
+	- cancel and select buttons
+
+
+      -->
+      
       <div class="flex flex-col mt-4">
         <div class="flex flex-row space-x-2 p-4">
           <button class="fpl-button px-4 py-2" on:click={showSelectPlayersModal}

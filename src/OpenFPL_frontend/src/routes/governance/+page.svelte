@@ -6,7 +6,7 @@
     activeTab = tab;
   }
 </script>
-
+<!-- //TODO: List the proposals and add filters etc -->
 <Layout>
   <div class="m-4">
     <div class="bg-panel rounded-md">
