@@ -178,5 +178,14 @@ actor class SeasonLeaderboardCanister() {
     cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
+  public func topupCanister() : async () {
+    let amount = Cycles.available();
+    let accepted = Cycles.accept(amount);
+  };
+
+  public func getCyclesBalance() : async Nat {
+    return Cycles.balance();
+  };
+
   setCheckCyclesTimer();
 };
