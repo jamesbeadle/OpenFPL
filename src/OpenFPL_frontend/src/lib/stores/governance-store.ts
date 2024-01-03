@@ -191,19 +191,19 @@ function createGovernanceStore() {
 
   async function updatePlayer(
     playerId: number,
-    position: number,
+    position: PlayerPosition,
     firstName: string,
     lastName: string,
     shirtNumber: number,
-    dateOfBirth: number,
-    nationality: number) : Promise<void>{
+    dateOfBirth: bigint,
+    nationalityId: number) : Promise<void>{
       try {
         const identityActor = await ActorFactory.createIdentityActor(
           authStore,
           process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
         );
     
-        let result = identityActor.adminUpdatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationality); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+        let result = identityActor.adminUpdatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationalityId); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
     
         if(isError(result)){
           console.error("Error submitting proposal");

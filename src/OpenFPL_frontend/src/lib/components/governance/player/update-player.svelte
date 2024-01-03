@@ -3,42 +3,45 @@
     import { Modal } from "@dfinity/gix-components";
     import { toastsError } from "$lib/stores/toasts-store";
     import { governanceStore } from "$lib/stores/governance-store";
-    import type { ClubDTO, ShirtType } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import type { ClubDTO, PlayerDTO, PlayerPosition, ShirtType } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
     import { teamStore } from "$lib/stores/team-store";
+    import { playerStore } from "$lib/stores/player-store";
+    import { countriesStore } from "$lib/stores/country-store";
 
     export let visible: boolean;
     export let cancelModal: () => void;
 
     let selectedClubId: number = -1;
+    let selectedPlayerId: number = -1;
+    let clubPlayers: PlayerDTO[] = [];
     
-    let name = "";
-    let friendlyName = "";
-    let abbreviatedName = "";
-    let primaryColourHex = "";
-    let secondaryColourHex = "";
-    let thirdColourHex = "";
-    let shirtType: ShirtType = { Filled: null };
+    let playerId: number;
+    let position: PlayerPosition;
+    let firstName: string;
+    let lastName: string;
+    let shirtNumber: number;
+    let dateOfBirth: bigint;
+    let nationalityId: number;
 
     let isLoading = true;
     let showConfirm = false;
 
-    $: isSubmitDisabled = 
-        selectedClubId <= 0 ||
-        name.length <= 0 || name.length > 100 ||
-        friendlyName.length <= 0 || friendlyName.length > 50 ||
-        abbreviatedName.length != 3;
-
-    let shirtTypes: ShirtType[] = [{ Filled: null }, { Striped: null }];
+    $: isSubmitDisabled = playerId <= 0 || 
+        firstName.length > 50 ||
+        lastName.length > 50 ||
+        shirtNumber <= 0 && shirtNumber > 99 ||
+        dateOfBirth <= 0 ||
+        nationalityId <= 0;
 
     onMount(async () => {
         try {
-            teamStore.sync();
+            playerStore.sync();
         } catch (error) {
         toastsError({
-            msg: { text: "Error syncing club store." },
+            msg: { text: "Error syncing player store." },
             err: error,
         });
-        console.error("Error syncing club store.", error);
+        console.error("Error syncing player store.", error);
         } finally {
         isLoading = false;
         }
@@ -49,61 +52,35 @@
     }
 
     async function confirmProposal(){
-        await governanceStore.updateClub(selectedClubId, name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType);
-    }
-
-    function handlePrimaryColorChange(event: Event) {
-        const input = event.target as HTMLInputElement;
-        primaryColourHex = input.value;
-    }
-
-    function handleSecondaryColorChange(event: Event) {
-        const input = event.target as HTMLInputElement;
-        secondaryColourHex = input.value;
-    }
-
-    function handleThirdColorChange(event: Event) {
-        const input = event.target as HTMLInputElement;
-        thirdColourHex = input.value;
+        await governanceStore.updatePlayer(selectedClubId, position, firstName, lastName, shirtNumber, dateOfBirth, nationalityId);
     }
 
     $: if (selectedClubId) {
-        loadClub();
+        loadClubPlayers();
     }
 
-    async function loadClub() {
+    $: if (selectedPlayerId) {
+        loadPlayer();
+    }
+
+    async function loadClubPlayers() {
         isLoading = true;
-
-        let clubs = $teamStore;
-        let selectedClub = clubs.find(x => x.id == selectedClubId);
-        
-        if(!selectedClub){
-            isLoading = false;
-            return;
-        }
-
-        name = selectedClub.name;
-        friendlyName = selectedClub.friendlyName;
-        abbreviatedName = selectedClub.abbreviatedName;
-        primaryColourHex = selectedClub.primaryColourHex;
-        secondaryColourHex = selectedClub.secondaryColourHex;
-        thirdColourHex = selectedClub.thirdColourHex;
-        
+        clubPlayers = $playerStore.filter(x => x.clubId == selectedClubId);
         isLoading = false;
+    }
+
+    async function loadPlayer() {
+        let selectedPlayer = clubPlayers.find(x => x.id == selectedPlayerId);
+        position = selectedPlayer?.position ?? { Goalkeeper: null };
+        firstName = selectedPlayer?.firstName ?? "";
+        lastName = selectedPlayer?.lastName ?? "";
+        shirtNumber = selectedPlayer?.shirtNumber ?? 0;
+        dateOfBirth = selectedPlayer?.dateOfBirth ?? 0n;
+        nationalityId = selectedPlayer?.nationality ?? 0;
     }
 
 
 </script>
- <!-- //TODO:
-    
-    playerId : T.PlayerId;
-    position : T.PlayerPosition;
-    firstName : Text;
-    lastName : Text;
-    shirtNumber : Nat8;
-    dateOfBirth : Int;
-    nationality : T.CountryId;
-                -->
 <Modal {visible} on:nnsClose={cancelModal}>
     <div class="p-4">
         <div class="flex justify-between items-center my-2">
@@ -124,56 +101,73 @@
                     {/each}
                 </select>
                 {#if selectedClubId > 0}
-                    <input
-                        type="text"
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                        placeholder="Club Full Name"
-                        bind:value={name}
-                    />
-
-                    <input
-                        type="text"
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                        placeholder="Club Friendly Name"
-                        bind:value={name}
-                    />
-
-                    <input
-                        type="text"
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                        placeholder="Abbreviated Name"
-                        bind:value={abbreviatedName}
-                    />
-
-                    <input 
-                        type="color" 
-                        bind:value={primaryColourHex}
-                        on:input={handlePrimaryColorChange}
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                    />
-
-                    <input 
-                        type="color" 
-                        bind:value={secondaryColourHex}
-                        on:input={handleSecondaryColorChange}
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                    />
-
-                    <input 
-                        type="color" 
-                        bind:value={thirdColourHex}
-                        on:input={handleThirdColorChange}
-                        class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                    />
 
                     <select
-                    class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-                    bind:value={shirtType}
+                        class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+                        bind:value={selectedPlayerId}
                     >
-                        {#each shirtTypes as shirt}
-                            <option value={shirt}>{shirt}</option>
+                        <option value={-1}>Select Player</option>
+                        {#each clubPlayers as player}
+                            <option value={player.id}>{player.firstName} {player.lastName}</option>
                         {/each}
                     </select>
+
+                    {#if selectedPlayerId > 0}
+
+                        <select
+                            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+                            bind:value={position}
+                        >
+                            <option value={{ Goalkeeper: null }}>Goalkeeper</option>
+                            <option value={{ Defender: null }}>Defender</option>
+                            <option value={{ Midfielder: null }}>Midfielder</option>
+                            <option value={{ Forward: null }}>Forward</option>
+                        </select>
+
+                        let firstName: string;
+                        let lastName: string;
+                        let shirtNumber: number;
+                        let dateOfBirth: bigint;
+                        let nationalityId: number;
+
+                        <input
+                            type="text"
+                            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                            placeholder="First Name"
+                            bind:value={firstName}
+                        />
+
+                        <input
+                            type="text"
+                            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                            placeholder="Last Name"
+                            bind:value={lastName}
+                        />
+
+                        <input
+                            type="text"
+                            class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                            placeholder="Shirt Number"
+                            bind:value={shirtNumber}
+                        />
+
+
+                        <p>Date of Birth:</p>
+
+                        <input type="date" bind:value={dateOfBirth} class="input input-bordered" />
+
+
+                        <p>Nationality:</p>
+            
+                        <select
+                            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+                            bind:value={nationalityId}
+                        >
+                            {#each $countriesStore as country}
+                                <option value={country.id}>{country.name}</option>
+                            {/each}
+                        </select>
+                    {/if}                   
                 {/if}
 
                 <div class="items-center py-3 flex space-x-4">
