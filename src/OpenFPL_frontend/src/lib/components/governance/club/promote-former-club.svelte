@@ -4,6 +4,7 @@
     import { toastsError } from "$lib/stores/toasts-store";
     import { teamStore } from "$lib/stores/team-store";
     import type { ClubDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import { governanceStore } from "$lib/stores/governance-store";
 
     export let visible: boolean;
     export let cancelModal: () => void;
@@ -15,28 +16,28 @@
 
     $: isSubmitDisabled = selectedClubId <= 0;
    
-  onMount(async () => {
-    try {
-        await teamStore.sync();
-        formerClubs = await teamStore.getFormerClubs();
-    } catch (error) {
-      toastsError({
-        msg: { text: "Error syncing club details." },
-        err: error,
-      });
-      console.error("Error syncing club details.", error);
-    } finally {
-      isLoading = false;
+    onMount(async () => {
+        try {
+            await teamStore.sync();
+            formerClubs = await teamStore.getFormerClubs();
+        } catch (error) {
+        toastsError({
+            msg: { text: "Error syncing club details." },
+            err: error,
+        });
+        console.error("Error syncing club details.", error);
+        } finally {
+        isLoading = false;
+        }
+    });
+
+    function raiseProposal(){
+        showConfirm = true;
     }
-  });
 
-  function raiseProposal(){
-    showConfirm = true;
-  }
-
-  function confirmProposal(){
-    //TODO: Call governance canister raising proposal
-  }
+    async function confirmProposal(){
+        await governanceStore.promoteFormerClub(selectedClubId);
+    }
         
 
 </script>
