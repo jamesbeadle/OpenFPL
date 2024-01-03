@@ -17,6 +17,26 @@
   let activeTab: string = "canisters";
   let isLoading = true;
 
+  //proposal types 
+  /*
+  validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO)
+validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO)
+validateSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO)
+validateAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO)
+validateRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO)
+validateLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO)
+validateTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO)
+validateRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO)
+validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO)
+validateUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO)
+validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO)
+validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO)
+validateUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO)
+validatePromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO)
+validatePromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO)
+validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO)
+*/
+
   onMount(async () => {
     isLoading = false;
   });

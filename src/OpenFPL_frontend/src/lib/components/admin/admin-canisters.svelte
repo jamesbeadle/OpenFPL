@@ -10,6 +10,7 @@
     AdminProfilePictureCanisterList,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { authStore } from "$lib/stores/auth.store";
+    import { Spinner } from "@dfinity/gix-components";
   //have a different array for each canister type as the table produces will have slightly different columns
   //leaderboards will have season and gameweek etc
   //profiles sho;ld have the number of pictures stored
@@ -46,6 +47,7 @@
   }
 
   async function loadCanisterInfo() {
+    isLoading = true;
     mainCanisterInfo = await adminStore.getMainCanisterInfo();
 
     switch (selectedCanisterType) {
@@ -74,6 +76,7 @@
         );
         break;
     }
+    isLoading = false;
   }
 
   $: if (selectedCanisterType) {
@@ -82,7 +85,9 @@
   }
 </script>
 
-{#if !isLoading}
+{#if isLoading}
+  <Spinner />
+{:else}
   <div class="m-4">
     <p class="text-xl">OpenFPL Main Canister</p>
     <p>Id: {mainCanisterInfo?.canisterId}</p>
