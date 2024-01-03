@@ -70,7 +70,7 @@
                     </select>
 
 
-                    <p>Please check the following box if the player is being loaned to a club outside of the Premier League:</p>
+                    <p>Please check the following box if the player is being transferred to a club outside of the Premier League:</p>
                     
                     <input type="checkbox" bind:checked={leavingLeague} />
 
