@@ -6,7 +6,7 @@
     import { Spinner } from "@dfinity/gix-components";
   
     let selectedTimerType = "System";
-    let timerInfo: AdminTimerInfo | null;
+    let timers: TimerInfo[] = [];
     let currentPage = 1;
     let itemsPerPage = 25;
     let totalPages: number = 0;
@@ -29,18 +29,18 @@
   
     async function changePage(delta: number) {
       currentPage = Math.max(1, Math.min(totalPages, currentPage + delta));
-      await loadCanisterInfo();
+      await loadTimerInfo();
     }
   
-    async function loadCanisterInfo() {
+    async function loadTimerInfo() {
       isLoading = true;
-      timerInfo = await adminStore.getTimerInfo(itemsPerPage, currentPage);
+      timers = await adminStore.getTimers(selectedTimerType, itemsPerPage, currentPage);
       isLoading = false;
     }
   
-    $: if (selectedCanisterType) {
+    $: if (selectedTimerType) {
       currentPage = 1;
-      loadCanisterInfo();
+      loadTimerInfo();
     }
   </script>
   
@@ -55,11 +55,17 @@
           <p>Type:</p>
           <select
             class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-            bind:value={selectedCanisterType}
+            bind:value={selectedTimerType}
           >
-            <option value={"SeasonLeaderboard"}>System Timers</option>
-            <option value={"WeeklyLeaderboard"}>Loan Timers</option>
-            <option value={"MonthlyLeaderboard"}>Injury Timers</option>
+            <option value={"CheckCycles"}>Check Cycles</option>
+            <option value={"CheckCyclesWallet"}>Check Cycles Wallet</option>
+            <option value={"GameweekBegin"}>Gameweek Begin</option>
+            <option value={"GameKickOff"}>Game Kick Off</option>
+            <option value={"GameEnd"}>Game End</option>
+            <option value={"LoanExpired"}>Loan Expired</option>
+            <option value={"InjuryExpired"}>Injury Expired</option>
+            <option value={"TransferWindowStart"}>Tansfer Window Start</option>
+            <option value={"TransferWindowEnd"}>Transfer Window End</option>
           </select>
         </div>
       </div>
@@ -79,8 +85,8 @@
         </div>
       </div>
   
-      {#if selectedTimerType === "WeeklyLeaderboard" && timerInfo}
-        {#each timerInfo.timers as timer}
+      {#if selectedTimerType === "CheckCycles" && timers}
+        {#each timers as timer}
           <div class="flex">
             <div class="w-1/4">
               <p>{timer.id}</p>
@@ -96,7 +102,7 @@
             </div>
           </div>
         {/each}
-        {#if timerInfo.timers.length == 0}
+        {#if timers.length == 0}
           <p>No Timers Found</p>
         {/if}
       {/if}
