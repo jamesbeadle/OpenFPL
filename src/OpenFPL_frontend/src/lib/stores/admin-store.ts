@@ -115,6 +115,7 @@ function createAdminStore() {
   }
 
   async function getTimers(
+    category: string,
     itemsPerPage: number,
     currentPage: number
   ): Promise<AdminTimerList | null> {
@@ -124,7 +125,7 @@ function createAdminStore() {
     );
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
-    const result = await identityActor.adminGetTimers(limit, offset);
+    const result = await identityActor.adminGetTimers(category, limit, offset);
 
     if (isError(result)) {
       console.error("Error fetching timer info");

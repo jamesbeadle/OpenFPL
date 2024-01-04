@@ -17,6 +17,7 @@ module {
     private var gameweekBeginExpiredCallback : ?(() -> async ()) = null;
     private var gameKickOffExpiredCallback : ?(() -> async ()) = null;
     private var gameCompletedExpiredCallback : ?(() -> async ()) = null;
+    private var injuryExpiredCallback : ?(() -> async ()) = null;
     private var loanExpiredCallback : ?(() -> async ()) = null;
     private var transferWindowStartCallback : ?(() -> async ()) = null;
     private var transferWindowEndCallback : ?(() -> async ()) = null;
@@ -26,6 +27,7 @@ module {
       _gameKickOffExpiredCallback : () -> async (),
       _gameCompletedExpiredCallback : () -> async (),
       _loanExpiredCallback : () -> async (),
+      _injuryExpiredCallback : () -> async (),
       _transferWindowStartCallback : () -> async (),
       _transferWindowEndCallback : () -> async (),
     ) {
@@ -33,6 +35,7 @@ module {
       gameKickOffExpiredCallback := ?_gameKickOffExpiredCallback;
       gameCompletedExpiredCallback := ?_gameCompletedExpiredCallback;
       loanExpiredCallback := ?_loanExpiredCallback;
+      injuryExpiredCallback := ?_injuryExpiredCallback;
       transferWindowStartCallback := ?_transferWindowStartCallback;
       transferWindowEndCallback := ?_transferWindowEndCallback;
     };
@@ -78,6 +81,12 @@ module {
         };
         case "loanExpired" {
           switch (loanExpiredCallback) {
+            case null { Timer.setTimer(duration, defaultCallback) };
+            case (?callback) { Timer.setTimer(duration, callback) };
+          };
+        };
+        case "injuryExpired" {
+          switch (injuryExpiredCallback) {
             case null { Timer.setTimer(duration, defaultCallback) };
             case (?callback) { Timer.setTimer(duration, callback) };
           };
@@ -148,6 +157,12 @@ module {
             };
             case "loanExpired" {
               switch (loanExpiredCallback) {
+                case null {};
+                case (?callback) { ignore Timer.setTimer(duration, callback) };
+              };
+            };
+            case "injuryExpired" {
+              switch (injuryExpiredCallback) {
                 case null {};
                 case (?callback) { ignore Timer.setTimer(duration, callback) };
               };

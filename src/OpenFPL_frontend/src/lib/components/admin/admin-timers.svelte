@@ -4,9 +4,10 @@
     import { toastsError } from "$lib/stores/toasts-store";
     import { authStore } from "$lib/stores/auth.store";
     import { Spinner } from "@dfinity/gix-components";
+    import type { AdminTimerList } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   
-    let selectedTimerType = "System";
-    let timers: TimerInfo[] = [];
+    let selectedTimerType = "gameweekBeginExpired";
+    let timerList: AdminTimerList | null = null;
     let currentPage = 1;
     let itemsPerPage = 25;
     let totalPages: number = 0;
@@ -34,7 +35,7 @@
   
     async function loadTimerInfo() {
       isLoading = true;
-      timers = await adminStore.getTimers(selectedTimerType, itemsPerPage, currentPage);
+      timerList = await adminStore.getTimers(selectedTimerType, itemsPerPage, currentPage);
       isLoading = false;
     }
   
@@ -50,6 +51,14 @@
     <div class="m-4">
       <p class="text-xl">OpenFPL Timers</p>
   
+      <p>Next Cycles Check:</p>
+
+      {timerList.cyclesCheck}
+
+      <p>Next Cycles Wallet Check:</p>
+
+      {timerList.cyclesWalletCheck}
+
       <div class="flex mt-4">
         <div class="flex items-center">
           <p>Type:</p>
@@ -57,15 +66,13 @@
             class="px-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
             bind:value={selectedTimerType}
           >
-            <option value={"CheckCycles"}>Check Cycles</option>
-            <option value={"CheckCyclesWallet"}>Check Cycles Wallet</option>
-            <option value={"GameweekBegin"}>Gameweek Begin</option>
-            <option value={"GameKickOff"}>Game Kick Off</option>
-            <option value={"GameEnd"}>Game End</option>
-            <option value={"LoanExpired"}>Loan Expired</option>
-            <option value={"InjuryExpired"}>Injury Expired</option>
-            <option value={"TransferWindowStart"}>Tansfer Window Start</option>
-            <option value={"TransferWindowEnd"}>Transfer Window End</option>
+            <option value={"gameweekBeginExpired"}>Gameweek Begin</option>
+            <option value={"gameKickOffExpired"}>Game Kick Off</option>
+            <option value={"gameCompletedExpired"}>Game End</option>
+            <option value={"loanExpired"}>Loan Expired</option>
+            <option value={"injuryExpired"}>Injury Expired</option>
+            <option value={"transferWindowStart"}>Tansfer Window Start</option>
+            <option value={"transferWindowEnd"}>Transfer Window End</option>
           </select>
         </div>
       </div>
@@ -85,24 +92,24 @@
         </div>
       </div>
   
-      {#if selectedTimerType === "CheckCycles" && timers}
-        {#each timers as timer}
+      {#if timerList}
+        {#each timerList.timers as timer}
           <div class="flex">
             <div class="w-1/4">
               <p>{timer.id}</p>
             </div>
             <div class="w-1/4">
-              <p>{timer.time}</p>
+              <p>{timer.triggerTime}</p>
             </div>
             <div class="w-1/4">
-              <p>{timer.callback}</p>
+              <p>{timer.callbackName}</p>
             </div>
             <div class="w-1/4">
               <p>...</p>
             </div>
           </div>
         {/each}
-        {#if timers.length == 0}
+        {#if timerList.timers.length == 0}
           <p>No Timers Found</p>
         {/if}
       {/if}

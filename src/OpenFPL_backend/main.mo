@@ -688,13 +688,21 @@ actor Self {
     return #ok(dto);
   };
 
-  public shared query ({ caller }) func adminGetTimers(limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminTimerList, T.Error> {
+  public shared query ({ caller }) func adminGetTimers(category: Text, limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminTimerList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
 
     let timers = timerComposite.getStableTimers();
-    let droppedEntries = List.drop<DTOs.TimerDTO>(List.fromArray(timers), offset);
+
+    let filteredTimers = Array.filter<T.TimerInfo>(
+      timers,
+      func(timer : T.TimerInfo) : Bool {
+        return timer.callbackName == category;
+      },
+    );
+
+    let droppedEntries = List.drop<DTOs.TimerDTO>(List.fromArray(filteredTimers), offset);
     let paginatedEntries = List.take<DTOs.TimerDTO>(droppedEntries, limit);
 
     let dto : DTOs.AdminTimerList = {
@@ -702,6 +710,7 @@ actor Self {
       offset = offset;
       timers = List.toArray(paginatedEntries);
       totalEntries = Array.size(timers);
+      category = category;
     };
 
     return #ok(dto);
