@@ -203,5 +203,8 @@
         {/each}
       </div>
     {/each}
+    {#if Object.entries(groupedFixtures).length == 0}
+      <p class="px-4 mb-4">No fixture data.</p>
+    {/if}
   </div>
 </div>

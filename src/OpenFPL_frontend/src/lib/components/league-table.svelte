@@ -138,5 +138,8 @@
         <div class="w-1/12">{team.points}</div>
       </div>
     {/each}
+    {#if Object.entries(tableData).length == 0}
+      <p class="px-4 py-4">No table data.</p>
+    {/if}
   </div>
 </div>

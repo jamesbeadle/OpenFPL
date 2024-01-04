@@ -173,6 +173,7 @@
 
 {#if isLoading}
   <Spinner />
+  <p class="w-full px-4 mb-4">Loading leaderboard.</p>
 {:else}
   <div class="flex flex-col space-y-4">
     <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
