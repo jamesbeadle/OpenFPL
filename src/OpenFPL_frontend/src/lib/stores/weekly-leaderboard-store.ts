@@ -35,6 +35,10 @@ function createWeeklyLeaderboardStore() {
       null;
     const localHash = localStorage.getItem(category);
 
+    console.log("getting leaderboard data")
+    console.log(seasonId)
+    console.log(gameweek)
+
     if (categoryHash?.hash != localHash) {
       let updatedLeaderboardData = await actor.getWeeklyLeaderboard(
         seasonId,
@@ -45,6 +49,7 @@ function createWeeklyLeaderboardStore() {
 
       if (isError(updatedLeaderboardData)) {
         console.error("error fetching leaderboard store");
+        return;
       }
 
       localStorage.setItem(
@@ -70,10 +75,7 @@ function createWeeklyLeaderboardStore() {
 
       if (cachedData) {
         let cachedWeeklyLeaderboard: WeeklyLeaderboardDTO;
-        cachedWeeklyLeaderboard = JSON.parse(
-          cachedData ||
-            "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
-        );
+        cachedWeeklyLeaderboard = JSON.parse(cachedData, replacer);
 
         if (cachedWeeklyLeaderboard) {
           return {
@@ -86,13 +88,18 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
-
-    let leaderboardData = await actor.getweeklyLeaderboard(
+    
+    let leaderboardData = await actor.getWeeklyLeaderboard(
       seasonId,
       gameweek,
       limit,
       offset
     );
+
+    if(isError(leaderboardData)){
+      console.log("Error fetching weekly leaderboard data");
+      return {entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
+    }
 
     localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
 

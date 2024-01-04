@@ -47,8 +47,8 @@
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
-      await monthlyLeaderboardStore.sync();
-      await seasonLeaderboardStore.sync();
+      //await monthlyLeaderboardStore.sync();
+      //await seasonLeaderboardStore.sync();
 
       selectedSeasonId = $systemStore?.calculationSeasonId ?? 1;
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
@@ -69,6 +69,7 @@
         $systemStore?.calculationGameweek ?? 1
       );
       leaderboard = leaderboardData;
+      console.log("Leaderboard Data")
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching leaderboard data." },
