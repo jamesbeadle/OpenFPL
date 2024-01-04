@@ -69,7 +69,6 @@
         $systemStore?.calculationGameweek ?? 1
       );
       leaderboard = leaderboardData;
-      console.log("Leaderboard Data")
     } catch (error) {
       toastsError({
         msg: { text: "Error fetching leaderboard data." },

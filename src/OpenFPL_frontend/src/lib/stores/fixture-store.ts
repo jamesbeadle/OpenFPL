@@ -74,8 +74,7 @@ function createFixtureStore() {
     await subscribe((value) => {
       fixtures = value;
     })();
-    console.log("fixtures")
-    console.log(fixtures)
+    
     if(fixtures.length == 0){
       return;
     }

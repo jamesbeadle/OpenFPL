@@ -35,10 +35,6 @@ function createWeeklyLeaderboardStore() {
       null;
     const localHash = localStorage.getItem(category);
 
-    console.log("getting leaderboard data")
-    console.log(seasonId)
-    console.log(gameweek)
-
     if (categoryHash?.hash != localHash) {
       let updatedLeaderboardData = await actor.getWeeklyLeaderboard(
         seasonId,
@@ -97,7 +93,7 @@ function createWeeklyLeaderboardStore() {
     );
 
     if(isError(leaderboardData)){
-      console.log("Error fetching weekly leaderboard data");
+      console.error("Error fetching weekly leaderboard data");
       return {entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
     }
 
