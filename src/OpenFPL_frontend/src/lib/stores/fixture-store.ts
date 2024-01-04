@@ -25,7 +25,7 @@ function createFixtureStore() {
   );
 
   async function sync() {
-    let category = "fixtures";
+    const category = "fixtures";
     const newHashValues = await actor.getDataHashes();
 
     let error = isError(newHashValues);
@@ -42,15 +42,20 @@ function createFixtureStore() {
     const localHash = localStorage.getItem(category);
 
     if (categoryHash?.hash != localHash) {
-      let updatedFixturesData = (await actor.getFixtures(
+      const updatedFixturesData = await actor.getFixtures(
         systemState.calculationSeasonId
-      )) as FixtureDTO[];
+      );
+
+      if(isError(updatedFixturesData)){
+        return [];
+      }
+
       localStorage.setItem(
         category,
-        JSON.stringify(updatedFixturesData, replacer)
+        JSON.stringify(updatedFixturesData.ok, replacer)
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedFixturesData);
+      set(updatedFixturesData.ok);
     } else {
       const cachedFixturesData = localStorage.getItem(category);
       let cachedFixtures: FixtureDTO[] = [];
@@ -69,6 +74,11 @@ function createFixtureStore() {
     await subscribe((value) => {
       fixtures = value;
     })();
+    console.log("fixtures")
+    console.log(fixtures)
+    if(fixtures.length == 0){
+      return;
+    }
     const now = new Date();
     return fixtures.find(
       (fixture) => new Date(Number(fixture.kickOff) / 1000000) > now
