@@ -28,9 +28,13 @@ actor Self {
   let cyclesDispenser = CyclesDispenser.CyclesDispenser();
   let treasuryManager = TreasuryManager.TreasuryManager();
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
-  private var cyclesCheckTimerId : ?Timer.TimerId = null;
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
+  
+  private var cyclesCheckTimerId : ?Timer.TimerId = null;
   private var cyclesCheckWalletTimerId : ?Timer.TimerId = null;
+  
+  private var nextCyclesCheckTime : Int = 0;
+  private var nextWalletCheckTime : Int = 0;
 
   //Functions containing inter-canister calls that cannot be query functions:
   public shared func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
@@ -481,6 +485,7 @@ actor Self {
         cyclesCheckTimerId := null;
       };
     };
+    nextCyclesCheckTime := Time.now() + cyclesCheckInterval;
     cyclesCheckTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckInterval), checkCanisterCycles);
   };
 
@@ -502,6 +507,7 @@ actor Self {
         cyclesCheckWalletTimerId := null;
       };
     };
+    nextWalletCheckTime := Time.now() + cyclesCheckWalletInterval;
     cyclesCheckWalletTimerId := ?Timer.setTimer(#nanoseconds(cyclesCheckWalletInterval), checkCanisterWalletBalance);
   };
 
@@ -711,21 +717,41 @@ actor Self {
     let droppedEntries = List.drop<DTOs.TimerDTO>(List.fromArray(filteredTimers), offset);
     let paginatedEntries = List.take<DTOs.TimerDTO>(droppedEntries, limit);
 
+
+      var currentCyclesCheckTimerId = 0;
+      var currentWalletCheckTimerId = 0;
+      
+      switch (cyclesCheckTimerId){
+        case (null){};
+        case(?id){
+          currentCyclesCheckTimerId := id;
+        }
+      };
+      
+      switch (cyclesCheckWalletTimerId){
+        case (null){};
+        case(?id){
+          currentWalletCheckTimerId := id;
+        }
+      };
+
     let dto : DTOs.AdminTimerList = {
       limit = limit;
       offset = offset;
       timers = List.toArray(paginatedEntries);
       totalEntries = Array.size(timers);
       category = category;
+
+
       cyclesCheck = {
-        id = 0;
-        triggerTime = 0;
-        callbackName = "";
+        id = currentCyclesCheckTimerId;
+        triggerTime = nextCyclesCheckTime;
+        callbackName = "checkCanisterCycles";
       };
       cyclesWalletCheck = {    
-        id = 0;
-        triggerTime = 0;
-        callbackName = "";
+        id = currentWalletCheckTimerId;
+        triggerTime = nextWalletCheckTime;
+        callbackName = "checkCanisterWalletBalance";
       };
     };
 
