@@ -119,22 +119,6 @@ validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO)
               on:click={() => setActiveTab("fixtures")}>Fixtures</button
             >
           </li>
-          <li class={`mr-4 ${activeTab === "clubs" ? "active-tab" : ""}`}>
-            <button
-              class={`p-2 ${
-                activeTab === "clubs" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("clubs")}>Clubs</button
-            >
-          </li>
-          <li class={`mr-4 ${activeTab === "players" ? "active-tab" : ""}`}>
-            <button
-              class={`p-2 ${
-                activeTab === "players" ? "text-white" : "text-gray-400"
-              }`}
-              on:click={() => setActiveTab("players")}>Players</button
-            >
-          </li>
           <li class={`mr-4 ${activeTab === "managers" ? "active-tab" : ""}`}>
             <button
               class={`p-2 ${

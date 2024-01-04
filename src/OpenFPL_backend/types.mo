@@ -329,10 +329,6 @@ module Types {
     callbackName : Text;
   };
 
-  public type ProposalTimer = {
-    timerInfo : TimerInfo;
-  };
-
   public type LoanTimer = {
     timerInfo : TimerInfo;
     playerId : Nat16;
