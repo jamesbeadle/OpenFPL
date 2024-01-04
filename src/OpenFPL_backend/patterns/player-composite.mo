@@ -55,6 +55,21 @@ module {
 
     };
 
+    public func injuryExpired() : async () {
+
+      let playersNoLongerInjured = List.filter<T.Player>(
+        players,
+        func(currentPlayer : T.Player) : Bool {
+          return currentPlayer.latestInjuryEndDate > 0 and currentPlayer.latestInjuryEndDate <= Time.now();
+        },
+      );
+
+      for (player in Iter.fromList(playersNoLongerInjured)) {
+        await executeResetPlayerInjury(player.id);
+      };
+
+    };
+
     public func getActivePlayers(currentSeasonId : T.SeasonId) : [DTOs.PlayerDTO] {
 
       let activePlayers = List.filter<T.Player>(
@@ -269,7 +284,7 @@ module {
       var valueHistory : [T.ValueHistory] = [];
       var status : T.PlayerStatus = #Active;
       var parentClubId : T.ClubId = 0;
-      var isInjured = false;
+      var latestInjuryEndDate: Int = 0;
       var injuryHistory : [T.InjuryHistory] = [];
       var retirementDate : Int = 0;
 
@@ -296,7 +311,7 @@ module {
           valueHistory := List.toArray<T.ValueHistory>(player.valueHistory);
           status := player.status;
           parentClubId := player.parentClubId;
-          isInjured := player.isInjured;
+          latestInjuryEndDate := player.latestInjuryEndDate;
           injuryHistory := List.toArray<T.InjuryHistory>(player.injuryHistory);
           retirementDate := player.retirementDate;
 
@@ -341,7 +356,7 @@ module {
         valueHistory = valueHistory;
         status = status;
         parentClubId = parentClubId;
-        isInjured = isInjured;
+        latestInjuryEndDate = latestInjuryEndDate;
         injuryHistory = injuryHistory;
         retirementDate = retirementDate;
         gameweeks = Buffer.toArray<DTOs.PlayerGameweekDTO>(gameweeksBuffer);
@@ -413,7 +428,7 @@ module {
               status = p.status;
               parentClubId = p.parentClubId;
               currentLoanEndDate = p.currentLoanEndDate;
-              isInjured = p.isInjured;
+              latestInjuryEndDate = p.latestInjuryEndDate;
               injuryHistory = p.injuryHistory;
               retirementDate = p.retirementDate;
               transferHistory = p.transferHistory;
@@ -477,7 +492,7 @@ module {
               status = p.status;
               parentClubId = p.parentClubId;
               currentLoanEndDate = p.currentLoanEndDate;
-              isInjured = p.isInjured;
+              latestInjuryEndDate = p.latestInjuryEndDate;
               injuryHistory = p.injuryHistory;
               retirementDate = p.retirementDate;
               transferHistory = p.transferHistory;
@@ -565,7 +580,7 @@ module {
             status = #OnLoan;
             parentClubId = p.clubId;
             currentLoanEndDate = loanPlayerDTO.loanEndDate;
-            isInjured = p.isInjured;
+            latestInjuryEndDate = p.latestInjuryEndDate;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
             transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
@@ -663,7 +678,7 @@ module {
             status = status;
             currentLoanEndDate = 0;
             parentClubId = 0;
-            isInjured = p.isInjured;
+            latestInjuryEndDate = p.latestInjuryEndDate;
             injuryHistory = p.injuryHistory;
             retirementDate = p.retirementDate;
             transferHistory = List.append<T.TransferHistory>(p.transferHistory, List.fromArray([newTransferHistoryEntry]));
@@ -725,7 +740,7 @@ module {
               status = #Active;
               parentClubId = 0;
               currentLoanEndDate = 0;
-              isInjured = p.isInjured;
+              latestInjuryEndDate = p.latestInjuryEndDate;
               injuryHistory = p.injuryHistory;
               retirementDate = p.retirementDate;
               transferHistory = p.transferHistory;
@@ -752,6 +767,55 @@ module {
         };
       };
     };
+
+    public func executeResetPlayerInjury(playerId: T.PlayerId) : async () {
+      let playersToReset = List.find<T.Player>(players, func(p : T.Player) { p.id == playerId });
+      switch (playersToReset) {
+        case (null) {};
+        case (?p) {
+          if (p.latestInjuryEndDate > 0) {
+            let returnedPlayer : T.Player = {
+              id = p.id;
+              clubId = p.parentClubId;
+              position = p.position;
+              firstName = p.firstName;
+              lastName = p.lastName;
+              shirtNumber = p.shirtNumber;
+              valueQuarterMillions = p.valueQuarterMillions;
+              dateOfBirth = p.dateOfBirth;
+              nationality = p.nationality;
+              seasons = p.seasons;
+              valueHistory = p.valueHistory;
+              status = #Active;
+              parentClubId = p.parentClubId;
+              currentLoanEndDate = p.currentLoanEndDate;
+              latestInjuryEndDate = 0;
+              injuryHistory = p.injuryHistory;
+              retirementDate = p.retirementDate;
+              transferHistory = p.transferHistory;
+            };
+
+            players := List.map<T.Player, T.Player>(
+              players,
+              func(currentPlayer : T.Player) : T.Player {
+                if (currentPlayer.id == returnedPlayer.id) {
+                  return returnedPlayer;
+                } else {
+                  return currentPlayer;
+                };
+              },
+            );
+
+            switch (removeExpiredTimers) {
+              case (null) {};
+              case (?actualFunction) {
+                actualFunction();
+              };
+            };
+          };
+        };
+      };
+    };   
 
     public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO, clubs : List.List<T.Club>) : async Result.Result<Text, Text> {
 
@@ -808,7 +872,7 @@ module {
         status = #Active;
         parentClubId = 0;
         currentLoanEndDate = 0;
-        isInjured = false;
+        latestInjuryEndDate = 0;
         injuryHistory = List.nil<T.InjuryHistory>();
         retirementDate = 0;
         transferHistory = List.nil<T.TransferHistory>();
@@ -876,7 +940,7 @@ module {
               status = currentPlayer.status;
               parentClubId = currentPlayer.parentClubId;
               currentLoanEndDate = currentPlayer.currentLoanEndDate;
-              isInjured = currentPlayer.isInjured;
+              latestInjuryEndDate = currentPlayer.latestInjuryEndDate;
               injuryHistory = currentPlayer.injuryHistory;
               retirementDate = currentPlayer.retirementDate;
               transferHistory = currentPlayer.transferHistory;
@@ -943,7 +1007,7 @@ module {
                 status = currentPlayer.status;
                 parentClubId = currentPlayer.parentClubId;
                 currentLoanEndDate = currentPlayer.currentLoanEndDate;
-                isInjured = false;
+                latestInjuryEndDate = 0;
                 injuryHistory = updatedInjuryHistory;
                 retirementDate = currentPlayer.retirementDate;
                 transferHistory = currentPlayer.transferHistory;
@@ -970,7 +1034,7 @@ module {
                 status = currentPlayer.status;
                 parentClubId = currentPlayer.parentClubId;
                 currentLoanEndDate = currentPlayer.currentLoanEndDate;
-                isInjured = true;
+                latestInjuryEndDate = setPlayerInjuryDTO.expectedEndDate;
                 injuryHistory = List.push(newInjury, currentPlayer.injuryHistory);
                 retirementDate = currentPlayer.retirementDate;
                 transferHistory = currentPlayer.transferHistory;
@@ -1025,7 +1089,7 @@ module {
                   status = #Retired;
                   parentClubId = p.parentClubId;
                   currentLoanEndDate = p.currentLoanEndDate;
-                  isInjured = p.isInjured;
+                  latestInjuryEndDate = p.latestInjuryEndDate;
                   injuryHistory = p.injuryHistory;
                   retirementDate = retirePlayerDTO.retirementDate;
                   transferHistory = p.transferHistory;
@@ -1076,7 +1140,7 @@ module {
                   status = #Active;
                   parentClubId = p.parentClubId;
                   currentLoanEndDate = p.currentLoanEndDate;
-                  isInjured = p.isInjured;
+                  latestInjuryEndDate = p.latestInjuryEndDate;
                   injuryHistory = p.injuryHistory;
                   retirementDate = 0;
                   transferHistory = p.transferHistory;
@@ -1220,7 +1284,7 @@ module {
               status = foundPlayer.status;
               parentClubId = foundPlayer.parentClubId;
               currentLoanEndDate = foundPlayer.currentLoanEndDate;
-              isInjured = foundPlayer.isInjured;
+              latestInjuryEndDate = foundPlayer.latestInjuryEndDate;
               injuryHistory = foundPlayer.injuryHistory;
               retirementDate = foundPlayer.retirementDate;
               transferHistory = foundPlayer.transferHistory;

@@ -224,7 +224,7 @@ module DTOs {
     valueHistory : [T.ValueHistory];
     status : T.PlayerStatus;
     parentClubId : T.ClubId;
-    isInjured : Bool;
+    latestInjuryEndDate : Int;
     injuryHistory : [T.InjuryHistory];
     retirementDate : Int;
   };

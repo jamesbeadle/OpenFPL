@@ -320,6 +320,11 @@ actor Self {
     timerComposite.removeExpiredTimers();
   };
 
+  private func injuryExpiredCallback() : async () {
+    await seasonManager.injuryExpiredCallback();
+    timerComposite.removeExpiredTimers();
+  };
+
   private func transferWindowStartCallback() : async () {
     await seasonManager.transferWindowStartCallback();
     timerComposite.removeExpiredTimers();
@@ -336,6 +341,7 @@ actor Self {
     gameKickOffExpiredCallback,
     gameCompletedExpiredCallback,
     loanExpiredCallback,
+    injuryExpiredCallback,
     transferWindowStartCallback,
     transferWindowEndCallback,
   );
@@ -711,6 +717,16 @@ actor Self {
       timers = List.toArray(paginatedEntries);
       totalEntries = Array.size(timers);
       category = category;
+      cyclesCheck = {
+        id = 0;
+        triggerTime = 0;
+        callbackName = "";
+      };
+      cyclesWalletCheck = {    
+        id = 0;
+        triggerTime = 0;
+        callbackName = "";
+      };
     };
 
     return #ok(dto);

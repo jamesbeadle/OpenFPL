@@ -276,6 +276,11 @@ module {
       await updateCacheHash("players");
     };
 
+    public func injuryExpiredCallback() : async () {
+      await playerComposite.injuryExpired();
+      await updateCacheHash("players");
+    };
+
     public func transferWindowStartCallback() : async () {
       let updatedSystemState : T.SystemState = {
         calculationGameweek = systemState.calculationGameweek;

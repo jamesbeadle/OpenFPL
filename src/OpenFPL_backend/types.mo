@@ -228,7 +228,7 @@ module Types {
     status : PlayerStatus;
     currentLoanEndDate : Int;
     parentClubId : Nat16;
-    isInjured : Bool;
+    latestInjuryEndDate : Int;
     injuryHistory : List.List<InjuryHistory>;
     transferHistory : List.List<TransferHistory>;
     retirementDate : Int;
