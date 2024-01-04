@@ -15,7 +15,7 @@
   let activeTab: string = "canisters";
   let isLoading = true;
 
-  //proposal types 
+  //proposal types
   /*
   validateRevaluePlayerUp(revaluePlayerUpDTO : DTOs.RevaluePlayerUpDTO)
 validateRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO)

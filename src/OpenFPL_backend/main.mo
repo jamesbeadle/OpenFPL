@@ -29,10 +29,10 @@ actor Self {
   let treasuryManager = TreasuryManager.TreasuryManager();
   private let cyclesCheckInterval : Nat = Utilities.getHour() * 24;
   private let cyclesCheckWalletInterval : Nat = Utilities.getHour() * 24;
-  
+
   private var cyclesCheckTimerId : ?Timer.TimerId = null;
   private var cyclesCheckWalletTimerId : ?Timer.TimerId = null;
-  
+
   private var nextCyclesCheckTime : Int = 0;
   private var nextWalletCheckTime : Int = 0;
 
@@ -100,11 +100,11 @@ actor Self {
     return #ok(seasonManager.getPlayers());
   };
 
-  public shared query func getLoanedPlayers(clubId: T.ClubId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+  public shared query func getLoanedPlayers(clubId : T.ClubId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
     return #ok(seasonManager.getLoanedPlayers(clubId));
   };
 
-  public shared query func getRetiredPlayers(clubId: T.ClubId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
+  public shared query func getRetiredPlayers(clubId : T.ClubId) : async Result.Result<[DTOs.PlayerDTO], T.Error> {
     return #ok(seasonManager.getRetiredPlayers(clubId));
   };
 
@@ -700,7 +700,7 @@ actor Self {
     return #ok(dto);
   };
 
-  public shared query ({ caller }) func adminGetTimers(category: Text, limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminTimerList, T.Error> {
+  public shared query ({ caller }) func adminGetTimers(category : Text, limit : Nat, offset : Nat) : async Result.Result<DTOs.AdminTimerList, T.Error> {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == TEMP_ADMIN_PRINCIPAL;
@@ -717,23 +717,22 @@ actor Self {
     let droppedEntries = List.drop<DTOs.TimerDTO>(List.fromArray(filteredTimers), offset);
     let paginatedEntries = List.take<DTOs.TimerDTO>(droppedEntries, limit);
 
+    var currentCyclesCheckTimerId = 0;
+    var currentWalletCheckTimerId = 0;
 
-      var currentCyclesCheckTimerId = 0;
-      var currentWalletCheckTimerId = 0;
-      
-      switch (cyclesCheckTimerId){
-        case (null){};
-        case(?id){
-          currentCyclesCheckTimerId := id;
-        }
+    switch (cyclesCheckTimerId) {
+      case (null) {};
+      case (?id) {
+        currentCyclesCheckTimerId := id;
       };
-      
-      switch (cyclesCheckWalletTimerId){
-        case (null){};
-        case(?id){
-          currentWalletCheckTimerId := id;
-        }
+    };
+
+    switch (cyclesCheckWalletTimerId) {
+      case (null) {};
+      case (?id) {
+        currentWalletCheckTimerId := id;
       };
+    };
 
     let dto : DTOs.AdminTimerList = {
       limit = limit;
@@ -742,13 +741,12 @@ actor Self {
       totalEntries = Array.size(timers);
       category = category;
 
-
       cyclesCheck = {
         id = currentCyclesCheckTimerId;
         triggerTime = nextCyclesCheckTime;
         callbackName = "checkCanisterCycles";
       };
-      cyclesWalletCheck = {    
+      cyclesWalletCheck = {
         id = currentWalletCheckTimerId;
         triggerTime = nextWalletCheckTime;
         callbackName = "checkCanisterWalletBalance";

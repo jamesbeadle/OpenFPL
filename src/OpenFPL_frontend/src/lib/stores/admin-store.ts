@@ -105,7 +105,7 @@ function createAdminStore() {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     const result = await identityActor.adminGetProfileCanisters(limit, offset);
-    console.log(result)
+    console.log(result);
     if (isError(result)) {
       console.error("Error fetching profile picture canister info");
       return null;

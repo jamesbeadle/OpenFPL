@@ -137,11 +137,11 @@ module {
       return playerComposite.getActivePlayers(systemState.calculationSeasonId);
     };
 
-    public func getLoanedPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+    public func getLoanedPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
       return playerComposite.getLoanedPlayers(clubId);
     };
 
-    public func getRetiredPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+    public func getRetiredPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
       return playerComposite.getRetiredPlayers(clubId);
     };
 
@@ -726,19 +726,18 @@ module {
       let currentPlayerPosition = playerComposite.getPlayerPosition(updatePlayerDTO.playerId);
       await playerComposite.executeUpdatePlayer(updatePlayerDTO);
       let players = playerComposite.getActivePlayers(systemState.calculationSeasonId);
-    
-      
-      switch(currentPlayerPosition){
+
+      switch (currentPlayerPosition) {
         case (null) { return };
-        case (?foundPosition){
+        case (?foundPosition) {
           var removePlayer = false;
-          if(foundPosition != updatePlayerDTO.position){
+          if (foundPosition != updatePlayerDTO.position) {
             await managerComposite.removePlayerFromTeams(updatePlayerDTO.playerId, players);
           };
 
           await updateCacheHash("players");
-        }
-      }
+        };
+      };
     };
 
     public func validateSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {

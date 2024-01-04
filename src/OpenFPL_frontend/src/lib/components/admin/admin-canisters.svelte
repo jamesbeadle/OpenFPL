@@ -10,7 +10,7 @@
     AdminProfilePictureCanisterList,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { authStore } from "$lib/stores/auth.store";
-    import { Spinner } from "@dfinity/gix-components";
+  import { Spinner } from "@dfinity/gix-components";
   //have a different array for each canister type as the table produces will have slightly different columns
   //leaderboards will have season and gameweek etc
   //profiles sho;ld have the number of pictures stored

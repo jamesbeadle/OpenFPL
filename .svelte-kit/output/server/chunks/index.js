@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "rflbxb"
+  version_hash: "1pliv5o"
 };
 function get_hooks() {
   return {};
@@ -3740,7 +3740,10 @@ const idlFactory = ({ IDL }) => {
     timers: IDL.Vec(TimerDTO),
     totalEntries: IDL.Nat,
     offset: IDL.Nat,
-    limit: IDL.Nat
+    limit: IDL.Nat,
+    cyclesCheck: TimerDTO,
+    category: IDL.Text,
+    cyclesWalletCheck: TimerDTO
   });
   const Result_21 = IDL.Variant({ ok: AdminTimerList, err: Error2 });
   const WeeklyLeaderboardCanister = IDL.Record({
@@ -3825,19 +3828,20 @@ const idlFactory = ({ IDL }) => {
     lastName: IDL.Text,
     firstName: IDL.Text
   });
-  const Result_19 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
+  const Result_16 = IDL.Variant({ ok: IDL.Vec(ClubDTO), err: Error2 });
   const CountryDTO = IDL.Record({
     id: CountryId,
     code: IDL.Text,
     name: IDL.Text
   });
-  const Result_18 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
+  const Result_19 = IDL.Variant({ ok: IDL.Vec(CountryDTO), err: Error2 });
   const DataCacheDTO = IDL.Record({ hash: IDL.Text, category: IDL.Text });
-  const Result_17 = IDL.Variant({
+  const Result_18 = IDL.Variant({
     ok: IDL.Vec(DataCacheDTO),
     err: Error2
   });
-  const Result_16 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
+  const Result_17 = IDL.Variant({ ok: IDL.Vec(FixtureDTO), err: Error2 });
+  const Result_6 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
   const ManagerDTO = IDL.Record({
     username: IDL.Text,
     weeklyPosition: IDL.Int,
@@ -3936,11 +3940,11 @@ const idlFactory = ({ IDL }) => {
     dateOfBirth: IDL.Int,
     injuryHistory: IDL.Vec(InjuryHistory),
     seasonId: SeasonId,
-    isInjured: IDL.Bool,
     gameweeks: IDL.Vec(PlayerGameweekDTO),
     nationality: CountryId,
     retirementDate: IDL.Int,
     valueHistory: IDL.Vec(ValueHistory),
+    latestInjuryEndDate: IDL.Int,
     shirtNumber: IDL.Nat8,
     position: PlayerPosition,
     lastName: IDL.Text,
@@ -3959,7 +3963,6 @@ const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(PlayerPointsDTO),
     err: Error2
   });
-  const Result_9 = IDL.Variant({ ok: IDL.Vec(PlayerDTO), err: Error2 });
   List_2.fill(IDL.Opt(IDL.Tuple(PlayerEventData, List_2)));
   const PlayerScoreDTO = IDL.Record({
     id: IDL.Nat16,
@@ -3974,11 +3977,11 @@ const idlFactory = ({ IDL }) => {
     position: PlayerPosition,
     points: IDL.Int16
   });
-  const Result_8 = IDL.Variant({
+  const Result_9 = IDL.Variant({
     ok: IDL.Vec(IDL.Tuple(IDL.Nat16, PlayerScoreDTO)),
     err: Error2
   });
-  const Result_7 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
+  const Result_8 = IDL.Variant({ ok: ProfileDTO, err: Error2 });
   const PublicProfileDTO = IDL.Record({
     username: IDL.Text,
     createDate: IDL.Int,
@@ -3987,7 +3990,7 @@ const idlFactory = ({ IDL }) => {
     profilePicture: IDL.Vec(IDL.Nat8),
     principalId: IDL.Text
   });
-  const Result_6 = IDL.Variant({ ok: PublicProfileDTO, err: Error2 });
+  const Result_7 = IDL.Variant({ ok: PublicProfileDTO, err: Error2 });
   const SeasonLeaderboardDTO = IDL.Record({
     totalEntries: IDL.Nat,
     seasonId: SeasonId,
@@ -4063,7 +4066,11 @@ const idlFactory = ({ IDL }) => {
     adminGetPlayers: IDL.Func([PlayerStatus], [Result_24], ["query"]),
     adminGetProfileCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_23], []),
     adminGetSeasonCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_22], []),
-    adminGetTimers: IDL.Func([IDL.Nat, IDL.Nat], [Result_21], ["query"]),
+    adminGetTimers: IDL.Func(
+      [IDL.Text, IDL.Nat, IDL.Nat],
+      [Result_21],
+      ["query"]
+    ),
     adminGetWeeklyCanisters: IDL.Func([IDL.Nat, IDL.Nat], [Result_20], []),
     adminLoanPlayer: IDL.Func([LoanPlayerDTO], [Result], []),
     adminPromoteFormerClub: IDL.Func([PromoteFormerClubDTO], [Result], []),
@@ -4096,10 +4103,12 @@ const idlFactory = ({ IDL }) => {
     executeUnretirePlayer: IDL.Func([UnretirePlayerDTO], [], []),
     executeUpdateClub: IDL.Func([UpdateClubDTO], [], []),
     executeUpdatePlayer: IDL.Func([UpdatePlayerDTO], [], []),
-    getClubs: IDL.Func([], [Result_19], ["query"]),
-    getCountries: IDL.Func([], [Result_18], ["query"]),
-    getDataHashes: IDL.Func([], [Result_17], ["query"]),
-    getFixtures: IDL.Func([SeasonId], [Result_16], ["query"]),
+    getClubs: IDL.Func([], [Result_16], ["query"]),
+    getCountries: IDL.Func([], [Result_19], ["query"]),
+    getDataHashes: IDL.Func([], [Result_18], ["query"]),
+    getFixtures: IDL.Func([SeasonId], [Result_17], ["query"]),
+    getFormerClubs: IDL.Func([], [Result_16], ["query"]),
+    getLoanedPlayers: IDL.Func([ClubId], [Result_6], ["query"]),
     getManager: IDL.Func([], [Result_15], []),
     getManagerGameweek: IDL.Func(
       [IDL.Text, SeasonId, GameweekNumber],
@@ -4122,14 +4131,15 @@ const idlFactory = ({ IDL }) => {
       [Result_10],
       ["query"]
     ),
-    getPlayers: IDL.Func([], [Result_9], ["query"]),
-    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_8], []),
-    getProfile: IDL.Func([], [Result_7], []),
+    getPlayers: IDL.Func([], [Result_6], ["query"]),
+    getPlayersMap: IDL.Func([SeasonId, GameweekNumber], [Result_9], []),
+    getProfile: IDL.Func([], [Result_8], []),
     getPublicProfile: IDL.Func(
       [IDL.Text, SeasonId, GameweekNumber],
-      [Result_6],
+      [Result_7],
       []
     ),
+    getRetiredPlayers: IDL.Func([ClubId], [Result_6], ["query"]),
     getSeasonLeaderboard: IDL.Func(
       [SeasonId, IDL.Nat, IDL.Nat],
       [Result_5],
@@ -4594,10 +4604,18 @@ function createTeamStore() {
     })();
     return teams.find((team) => team.id === id);
   }
+  async function getFormerClubs() {
+    const formerClubsData = await actor.getFormerClubs();
+    if (isError(formerClubsData)) {
+      return [];
+    }
+    return formerClubsData.ok;
+  }
   return {
     subscribe: subscribe2,
     sync,
-    getTeamById
+    getTeamById,
+    getFormerClubs
   };
 }
 const teamStore = createTeamStore();
@@ -5198,7 +5216,7 @@ function createManagerStore() {
 }
 createManagerStore();
 function createCountriesStore() {
-  const { subscribe: subscribe2, set } = writable(null);
+  const { subscribe: subscribe2, set } = writable([]);
   let actor = ActorFactory.createActor(
     idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
@@ -5224,11 +5242,11 @@ function createCountriesStore() {
       set(updatedCountriesData);
     } else {
       const cachedCountriesData = localStorage.getItem(category);
-      let cachedCountries = null;
+      let cachedCountries = [];
       try {
         cachedCountries = JSON.parse(cachedCountriesData || "[]");
       } catch (e) {
-        cachedCountries = null;
+        cachedCountries = [];
       }
       set(cachedCountries);
     }
@@ -5362,9 +5380,27 @@ function createPlayerStore() {
       set(cachedPlayers);
     }
   }
+  async function getLoanedPlayers(clubId) {
+    let loanedPlayers = await actor.getLoanPlayers(clubId);
+    if (isError(loanedPlayers)) {
+      console.error("Error fetching loaned players");
+      return [];
+    }
+    return loanedPlayers.ok;
+  }
+  async function getRetiredPlayers(clubId) {
+    let loanedPlayers = await actor.getRetiredPlayers(clubId);
+    if (isError(loanedPlayers)) {
+      console.error("Error fetching retired players");
+      return [];
+    }
+    return loanedPlayers.ok;
+  }
   return {
     subscribe: subscribe2,
-    sync
+    sync,
+    getLoanedPlayers,
+    getRetiredPlayers
   };
 }
 const playerStore = createPlayerStore();
@@ -5750,21 +5786,24 @@ function createUserStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let updatedProfileDataObj = await identityActor.getProfile();
-      if (!updatedProfileDataObj) {
-        await identityActor.createProfile();
-        updatedProfileDataObj = await identityActor.getProfile();
+      let getProfileResponse = await identityActor.getProfile();
+      let error2 = isError(getProfileResponse);
+      if (error2) {
+        console.error("Error syncing user store");
+        return;
       }
-      let updatedProfileData = updatedProfileDataObj[0];
-      if (updatedProfileData && updatedProfileData.profilePicture instanceof Uint8Array) {
-        const base64Picture = uint8ArrayToBase64(
-          updatedProfileData.profilePicture
-        );
+      if (!getProfileResponse) {
+        await identityActor.createProfile();
+        getProfileResponse = await identityActor.getProfile();
+      }
+      let profileData = getProfileResponse.ok;
+      if (profileData && profileData.profilePicture instanceof Uint8Array) {
+        const base64Picture = uint8ArrayToBase64(profileData.profilePicture);
         localStorage.setItem(
           "user_profile_data",
           JSON.stringify(
             {
-              ...updatedProfileData,
+              ...profileData,
               profilePicture: base64Picture
             },
             replacer
@@ -5773,10 +5812,10 @@ function createUserStore() {
       } else {
         localStorage.setItem(
           "user_profile_data",
-          JSON.stringify(updatedProfileData, replacer)
+          JSON.stringify(profileData, replacer)
         );
       }
-      set(updatedProfileData);
+      set(profileData);
     } catch (error2) {
       console.error("Error fetching user profile:", error2);
       throw error2;
@@ -6179,7 +6218,7 @@ const css$1 = {
   code: ".w-v.svelte-18fkfyi{width:20px}",
   map: null
 };
-const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
@@ -6194,23 +6233,337 @@ const Page$c = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 function createGovernanceStore() {
-  async function submitFixtureData(fixtureId, allPlayerEvents) {
+  async function revaluePlayerUp(playerId) {
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = await identityActor.savePlayerEvents(
-        fixtureId,
-        allPlayerEvents
+      let result = identityActor.adminRevaluePlayerUp(playerId);
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function revaluePlayerDown(playerId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
+      let result = identityActor.adminRevaluePlayerDown(playerId);
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function submitFixtureData(seasonId, gameweek, fixtureId, playerEventData) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminSubmitFixtureData(
+        seasonId,
+        gameweek,
+        fixtureId,
+        playerEventData
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function addInitialFixtures(seasonId, seasonFixtures) {
+    if (seasonId == 0) {
+      return;
+    }
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminAddInitialFixtures(
+        seasonId,
+        seasonFixtures
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function rescheduleFixture(seasonId, fixtureId, updatedFixtureGameweek, updatedFixtureDate) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminRescheduleFixture(
+        seasonId,
+        fixtureId,
+        updatedFixtureGameweek,
+        updatedFixtureDate
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function loanPlayer(playerId, loanClubId, loanEndDate) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminLoanPlayer(
+        playerId,
+        loanClubId,
+        loanEndDate
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function transferPlayer(playerId, newClubId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminTransferPlayer(playerId, newClubId);
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function recallPlayer(playerId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminRecallPlayer(playerId);
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function createPlayer(clubId, position, firstName, lastName, shirtNumber, valueQuarterMillions, dateOfBirth, nationality) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminCreatePlayer(
+        clubId,
+        position,
+        firstName,
+        lastName,
+        shirtNumber,
+        valueQuarterMillions,
+        dateOfBirth,
+        nationality
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function updatePlayer(playerId, position, firstName, lastName, shirtNumber, dateOfBirth, nationalityId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminUpdatePlayer(
+        playerId,
+        position,
+        firstName,
+        lastName,
+        shirtNumber,
+        dateOfBirth,
+        nationalityId
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function setPlayerInjury(playerId, description, expectedEndDate) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminSetPlayerInjury(
+        playerId,
+        description,
+        expectedEndDate
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function retirePlayer(playerId, retirementDate) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminRetirePlayer(playerId, retirementDate);
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function unretirePlayer(playerId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminUnretirePlayer(playerId);
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function promoteFormerClub(clubId) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminPromoteFormerClub(clubId);
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function promoteNewClub(name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminPromoteNewClub(
+        name,
+        friendlyName,
+        primaryColourHex,
+        secondaryColourHex,
+        thirdColourHex,
+        abbreviatedName,
+        shirtType
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
+    } catch (error2) {
+      console.error("Error submitting fixture data:", error2);
+      throw error2;
+    }
+  }
+  async function updateClub(clubId, name, friendlyName, primaryColourHex, secondaryColourHex, thirdColourHex, abbreviatedName, shirtType) {
+    try {
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = identityActor.adminUpdateClub(
+        clubId,
+        name,
+        friendlyName,
+        primaryColourHex,
+        secondaryColourHex,
+        thirdColourHex,
+        abbreviatedName,
+        shirtType
+      );
+      if (isError(result)) {
+        console.error("Error submitting proposal");
+        return;
+      }
     } catch (error2) {
       console.error("Error submitting fixture data:", error2);
       throw error2;
     }
   }
   return {
-    submitFixtureData
+    revaluePlayerUp,
+    revaluePlayerDown,
+    submitFixtureData,
+    addInitialFixtures,
+    rescheduleFixture,
+    loanPlayer,
+    transferPlayer,
+    recallPlayer,
+    createPlayer,
+    updatePlayer,
+    setPlayerInjury,
+    retirePlayer,
+    unretirePlayer,
+    promoteFormerClub,
+    promoteNewClub,
+    updateClub
   };
 }
 const governanceStore = createGovernanceStore();
@@ -6249,12 +6602,14 @@ const Clear_draft_modal = create_ssr_component(($$result, $$props, $$bindings, s
     }
   })}`;
 });
-const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let fixtureId;
   let $playerEventData, $$unsubscribe_playerEventData = noop, $$subscribe_playerEventData = () => ($$unsubscribe_playerEventData(), $$unsubscribe_playerEventData = subscribe(playerEventData, ($$value) => $playerEventData = $$value), playerEventData);
+  let $systemStore, $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
   let $selectedPlayers, $$unsubscribe_selectedPlayers;
   let $page, $$unsubscribe_page;
+  $$unsubscribe_systemStore = subscribe(systemStore, (value) => $systemStore = value);
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   let showClearDraftModal = false;
@@ -6269,7 +6624,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       text: "Saving fixture data..."
     });
     try {
-      await governanceStore.submitFixtureData(fixtureId, $playerEventData);
+      await governanceStore.submitFixtureData($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0, fixtureId, $playerEventData);
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       toastsShow({
         text: "Fixture data saved.",
@@ -6307,6 +6662,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   fixtureId = Number($page.url.searchParams.get("id"));
   $playerEventData.length == 0 || $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length != $selectedPlayers.length;
   $$unsubscribe_playerEventData();
+  $$unsubscribe_systemStore();
   $$unsubscribe_teamStore();
   $$unsubscribe_selectedPlayers();
   $$unsubscribe_page();
@@ -6334,7 +6690,7 @@ const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     {}
   )}`;
 });
-const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { showSystemStateModal = false } = $$props;
   let { showSnapshotModal = false } = $$props;
   if ($$props.showSystemStateModal === void 0 && $$bindings.showSystemStateModal && showSystemStateModal !== void 0)
@@ -6347,7 +6703,7 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   })}`;
 });
-const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $teamStore, $$unsubscribe_teamStore;
   let $$unsubscribe_playerStore;
   let $$unsubscribe_fixtureStore;
@@ -6371,23 +6727,6 @@ const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_fixtureStore();
   $$unsubscribe_systemStore();
   $$unsubscribe_page();
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
-    default: () => {
-      return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
-    }
-  })}`;
-});
-const Page$8 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let $$unsubscribe_teamStore;
-  let $$unsubscribe_systemStore;
-  let $$unsubscribe_fixtureStore;
-  $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
-  $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
-  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
-  Array.from({ length: 38 }, (_, i) => i + 1);
-  $$unsubscribe_teamStore();
-  $$unsubscribe_systemStore();
-  $$unsubscribe_fixtureStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
@@ -6429,7 +6768,7 @@ const Page$7 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   })}`;
 });
 const Page$6 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
+  return ` ${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `<div class="m-4"><div class="bg-panel rounded-md"><ul class="flex rounded-t-lg bg-light-gray border-b border-gray-700 px-4 pt-2"><li${add_attribute("class", `mr-4 ${"active-tab"}`, 0)}><button${add_attribute(
         "class",
@@ -6791,24 +7130,23 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 export {
   Error$1 as E,
   Layout$1 as L,
-  Page$c as P,
+  Page$b as P,
   Server as S,
   set_building as a,
   set_private_env as b,
   set_public_env as c,
-  Page$b as d,
-  Page$a as e,
-  Page$9 as f,
+  Page$a as d,
+  Page$9 as e,
+  Page$8 as f,
   get_hooks as g,
-  Page$8 as h,
-  Page$7 as i,
-  Page$6 as j,
-  Page$5 as k,
-  Page$4 as l,
-  Page$3 as m,
-  Page$2 as n,
+  Page$7 as h,
+  Page$6 as i,
+  Page$5 as j,
+  Page$4 as k,
+  Page$3 as l,
+  Page$2 as m,
+  Page$1 as n,
   options as o,
-  Page$1 as p,
-  Page as q,
+  Page as p,
   set_assets as s
 };

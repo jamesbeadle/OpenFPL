@@ -9,7 +9,7 @@
   },
   "_index.js": {
     "css": [
-      "_app/immutable/assets/index.74fe463c.css"
+      "_app/immutable/assets/index.87be7e40.css"
     ],
     "file": "chunks/index.js",
     "imports": [
@@ -20,7 +20,7 @@
     "file": "chunks/vendor.js"
   },
   "index.css": {
-    "file": "_app/immutable/assets/index.74fe463c.css",
+    "file": "_app/immutable/assets/index.87be7e40.css",
     "src": "index.css"
   },
   "node_modules/@dfinity/gix-components/dist/assets/logo-nns.svg": {
@@ -98,14 +98,6 @@
     ],
     "isEntry": true,
     "src": "src/OpenFPL_frontend/src/routes/club/+page.svelte"
-  },
-  "src/OpenFPL_frontend/src/routes/fixture-validation/+page.svelte": {
-    "file": "entries/pages/fixture-validation/_page.svelte.js",
-    "imports": [
-      "_index.js"
-    ],
-    "isEntry": true,
-    "src": "src/OpenFPL_frontend/src/routes/fixture-validation/+page.svelte"
   },
   "src/OpenFPL_frontend/src/routes/gameplay-rules/+page.svelte": {
     "file": "entries/pages/gameplay-rules/_page.svelte.js",

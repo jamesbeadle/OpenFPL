@@ -26,7 +26,7 @@
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
   import { playerStore } from "$lib/stores/player-store";
   import { Spinner, busyStore } from "@dfinity/gix-components";
-    import { systemStore } from "$lib/stores/system-store";
+  import { systemStore } from "$lib/stores/system-store";
 
   $: fixtureId = Number($page.url.searchParams.get("id"));
 
@@ -110,8 +110,6 @@
     }
   }
 
-
-
   async function confirmFixtureData() {
     busyStore.startBusy({
       initiator: "confirm-data",
@@ -119,7 +117,12 @@
     });
 
     try {
-      await governanceStore.submitFixtureData($systemStore?.calculationSeasonId ?? 0, $systemStore?.calculationGameweek ?? 0, fixtureId, $playerEventData);
+      await governanceStore.submitFixtureData(
+        $systemStore?.calculationSeasonId ?? 0,
+        $systemStore?.calculationGameweek ?? 0,
+        fixtureId,
+        $playerEventData
+      );
       localStorage.removeItem(`fixtureDraft_${fixtureId}`);
       toastsShow({
         text: "Fixture data saved.",
@@ -139,9 +142,12 @@
     }
   }
 
-  function updateSelectedPlayers(allPlayers: PlayerDTO[], playerEvents: PlayerEventData[]): void {
+  function updateSelectedPlayers(
+    allPlayers: PlayerDTO[],
+    playerEvents: PlayerEventData[]
+  ): void {
     const playerEventMap = new Map<number, PlayerEventData[]>();
-    playerEvents.forEach(event => {
+    playerEvents.forEach((event) => {
       if (!playerEventMap.has(event.playerId)) {
         playerEventMap.set(event.playerId, []);
       }
@@ -154,7 +160,7 @@
 
   function saveDraft() {
     let uniquePlayerIds = new Set();
-    $playerEventData.forEach(event => {
+    $playerEventData.forEach((event) => {
       uniquePlayerIds.add(event.playerId);
     });
 
@@ -162,7 +168,7 @@
 
     const draftData = {
       playersFromEvents: playersFromEvents,
-      playerEventData: $playerEventData
+      playerEventData: $playerEventData,
     };
     const draftKey = `fixtureDraft_${fixtureId}`;
     localStorage.setItem(draftKey, JSON.stringify(draftData, replacer));
@@ -227,13 +233,11 @@
   }
 </script>
 
-
 <Layout>
   {#if isLoading}
     <Spinner />
   {:else}
     <div class="bg-panel rounded-md">
-
       <!--
 
 
@@ -260,7 +264,7 @@
 
 
       -->
-      
+
       <div class="flex flex-col mt-4">
         <div class="flex flex-row space-x-2 p-4">
           <button class="fpl-button px-4 py-2" on:click={showSelectPlayersModal}

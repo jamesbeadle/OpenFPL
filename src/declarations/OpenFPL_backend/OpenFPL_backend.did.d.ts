@@ -49,6 +49,9 @@ export interface AdminTimerList {
   totalEntries: bigint;
   offset: bigint;
   limit: bigint;
+  cyclesCheck: TimerDTO;
+  category: string;
+  cyclesWalletCheck: TimerDTO;
 }
 export interface AdminWeeklyCanisterList {
   totalEntries: bigint;
@@ -260,11 +263,11 @@ export interface PlayerDetailDTO {
   dateOfBirth: bigint;
   injuryHistory: Array<InjuryHistory>;
   seasonId: SeasonId;
-  isInjured: boolean;
   gameweeks: Array<PlayerGameweekDTO>;
   nationality: CountryId;
   retirementDate: bigint;
   valueHistory: Array<ValueHistory>;
+  latestInjuryEndDate: bigint;
   shirtNumber: number;
   position: PlayerPosition;
   lastName: string;
@@ -402,10 +405,10 @@ export type Result_12 = { ok: Array<MonthlyLeaderboardDTO> } | { err: Error };
 export type Result_13 = { ok: MonthlyLeaderboardDTO } | { err: Error };
 export type Result_14 = { ok: ManagerGameweekDTO } | { err: Error };
 export type Result_15 = { ok: ManagerDTO } | { err: Error };
-export type Result_16 = { ok: Array<FixtureDTO> } | { err: Error };
-export type Result_17 = { ok: Array<DataCacheDTO> } | { err: Error };
-export type Result_18 = { ok: Array<CountryDTO> } | { err: Error };
-export type Result_19 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_16 = { ok: Array<ClubDTO> } | { err: Error };
+export type Result_17 = { ok: Array<FixtureDTO> } | { err: Error };
+export type Result_18 = { ok: Array<DataCacheDTO> } | { err: Error };
+export type Result_19 = { ok: Array<CountryDTO> } | { err: Error };
 export type Result_2 = { ok: WeeklyLeaderboardDTO } | { err: Error };
 export type Result_20 = { ok: AdminWeeklyCanisterList } | { err: Error };
 export type Result_21 = { ok: AdminTimerList } | { err: Error };
@@ -422,10 +425,10 @@ export type Result_29 = { ok: AdminClubList } | { err: Error };
 export type Result_3 = { ok: bigint } | { err: Error };
 export type Result_4 = { ok: SystemStateDTO } | { err: Error };
 export type Result_5 = { ok: SeasonLeaderboardDTO } | { err: Error };
-export type Result_6 = { ok: PublicProfileDTO } | { err: Error };
-export type Result_7 = { ok: ProfileDTO } | { err: Error };
-export type Result_8 = { ok: Array<[number, PlayerScoreDTO]> } | { err: Error };
-export type Result_9 = { ok: Array<PlayerDTO> } | { err: Error };
+export type Result_6 = { ok: Array<PlayerDTO> } | { err: Error };
+export type Result_7 = { ok: PublicProfileDTO } | { err: Error };
+export type Result_8 = { ok: ProfileDTO } | { err: Error };
+export type Result_9 = { ok: Array<[number, PlayerScoreDTO]> } | { err: Error };
 export interface RetirePlayerDTO {
   playerId: PlayerId;
   retirementDate: bigint;
@@ -573,7 +576,7 @@ export interface _SERVICE {
   adminGetPlayers: ActorMethod<[PlayerStatus], Result_24>;
   adminGetProfileCanisters: ActorMethod<[bigint, bigint], Result_23>;
   adminGetSeasonCanisters: ActorMethod<[bigint, bigint], Result_22>;
-  adminGetTimers: ActorMethod<[bigint, bigint], Result_21>;
+  adminGetTimers: ActorMethod<[string, bigint, bigint], Result_21>;
   adminGetWeeklyCanisters: ActorMethod<[bigint, bigint], Result_20>;
   adminLoanPlayer: ActorMethod<[LoanPlayerDTO], Result>;
   adminPromoteFormerClub: ActorMethod<[PromoteFormerClubDTO], Result>;
@@ -606,10 +609,12 @@ export interface _SERVICE {
   executeUnretirePlayer: ActorMethod<[UnretirePlayerDTO], undefined>;
   executeUpdateClub: ActorMethod<[UpdateClubDTO], undefined>;
   executeUpdatePlayer: ActorMethod<[UpdatePlayerDTO], undefined>;
-  getClubs: ActorMethod<[], Result_19>;
-  getCountries: ActorMethod<[], Result_18>;
-  getDataHashes: ActorMethod<[], Result_17>;
-  getFixtures: ActorMethod<[SeasonId], Result_16>;
+  getClubs: ActorMethod<[], Result_16>;
+  getCountries: ActorMethod<[], Result_19>;
+  getDataHashes: ActorMethod<[], Result_18>;
+  getFixtures: ActorMethod<[SeasonId], Result_17>;
+  getFormerClubs: ActorMethod<[], Result_16>;
+  getLoanedPlayers: ActorMethod<[ClubId], Result_6>;
   getManager: ActorMethod<[], Result_15>;
   getManagerGameweek: ActorMethod<
     [string, SeasonId, GameweekNumber],
@@ -625,10 +630,11 @@ export interface _SERVICE {
     [SeasonId, GameweekNumber],
     Result_10
   >;
-  getPlayers: ActorMethod<[], Result_9>;
-  getPlayersMap: ActorMethod<[SeasonId, GameweekNumber], Result_8>;
-  getProfile: ActorMethod<[], Result_7>;
-  getPublicProfile: ActorMethod<[string, SeasonId, GameweekNumber], Result_6>;
+  getPlayers: ActorMethod<[], Result_6>;
+  getPlayersMap: ActorMethod<[SeasonId, GameweekNumber], Result_9>;
+  getProfile: ActorMethod<[], Result_8>;
+  getPublicProfile: ActorMethod<[string, SeasonId, GameweekNumber], Result_7>;
+  getRetiredPlayers: ActorMethod<[ClubId], Result_6>;
   getSeasonLeaderboard: ActorMethod<[SeasonId, bigint, bigint], Result_5>;
   getSystemState: ActorMethod<[], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;

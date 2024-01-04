@@ -56,14 +56,11 @@ function createUserStore() {
         await identityActor.createProfile();
         getProfileResponse = await identityActor.getProfile();
       }
-      
+
       let profileData = getProfileResponse.ok;
 
-      
       if (profileData && profileData.profilePicture instanceof Uint8Array) {
-        const base64Picture = uint8ArrayToBase64(
-          profileData.profilePicture
-        );
+        const base64Picture = uint8ArrayToBase64(profileData.profilePicture);
         localStorage.setItem(
           "user_profile_data",
           JSON.stringify(

@@ -65,10 +65,10 @@ function createPlayerStore() {
     }
   }
 
-  async function getLoanedPlayers(clubId: number) : Promise<PlayerDTO[]> {
+  async function getLoanedPlayers(clubId: number): Promise<PlayerDTO[]> {
     let loanedPlayers = await actor.getLoanPlayers(clubId);
-    
-    if(isError(loanedPlayers)){
+
+    if (isError(loanedPlayers)) {
       console.error("Error fetching loaned players");
       return [];
     }
@@ -76,10 +76,10 @@ function createPlayerStore() {
     return loanedPlayers.ok;
   }
 
-  async function getRetiredPlayers(clubId: number) : Promise<PlayerDTO[]> {
+  async function getRetiredPlayers(clubId: number): Promise<PlayerDTO[]> {
     let loanedPlayers = await actor.getRetiredPlayers(clubId);
-    
-    if(isError(loanedPlayers)){
+
+    if (isError(loanedPlayers)) {
       console.error("Error fetching retired players");
       return [];
     }
@@ -91,7 +91,7 @@ function createPlayerStore() {
     subscribe,
     sync,
     getLoanedPlayers,
-    getRetiredPlayers
+    getRetiredPlayers,
   };
 }
 

@@ -117,7 +117,7 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getLoanedPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+    public func getLoanedPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
 
       let loanedPlayers = List.filter<T.Player>(
         players,
@@ -148,7 +148,7 @@ module {
       return List.toArray(playerDTOs);
     };
 
-    public func getRetiredPlayers(clubId: T.ClubId) : [DTOs.PlayerDTO] {
+    public func getRetiredPlayers(clubId : T.ClubId) : [DTOs.PlayerDTO] {
 
       let retiredPlayers = List.filter<T.Player>(
         players,
@@ -284,7 +284,7 @@ module {
       var valueHistory : [T.ValueHistory] = [];
       var status : T.PlayerStatus = #Active;
       var parentClubId : T.ClubId = 0;
-      var latestInjuryEndDate: Int = 0;
+      var latestInjuryEndDate : Int = 0;
       var injuryHistory : [T.InjuryHistory] = [];
       var retirementDate : Int = 0;
 
@@ -373,7 +373,7 @@ module {
       );
 
       switch (foundPlayer) {
-        case (null) { return null; };
+        case (null) { return null };
         case (?player) {
           return ?player.position;
 
@@ -768,7 +768,7 @@ module {
       };
     };
 
-    public func executeResetPlayerInjury(playerId: T.PlayerId) : async () {
+    public func executeResetPlayerInjury(playerId : T.PlayerId) : async () {
       let playersToReset = List.find<T.Player>(players, func(p : T.Player) { p.id == playerId });
       switch (playersToReset) {
         case (null) {};
@@ -815,7 +815,7 @@ module {
           };
         };
       };
-    };   
+    };
 
     public func validateCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO, clubs : List.List<T.Club>) : async Result.Result<Text, Text> {
 
@@ -1045,8 +1045,6 @@ module {
           };
         },
       );
-
-      
 
       let playerInjuryDuration = #nanoseconds(Int.abs((setPlayerInjuryDTO.expectedEndDate - Time.now())));
       switch (setAndBackupTimer) {

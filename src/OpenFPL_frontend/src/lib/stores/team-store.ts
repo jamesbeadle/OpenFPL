@@ -65,21 +65,21 @@ function createTeamStore() {
     return teams.find((team) => team.id === id);
   }
 
-  async function getFormerClubs() : Promise<ClubDTO[]> {
+  async function getFormerClubs(): Promise<ClubDTO[]> {
     const formerClubsData = await actor.getFormerClubs();
 
     if (isError(formerClubsData)) {
       return [];
     }
-    
-   return formerClubsData.ok;
+
+    return formerClubsData.ok;
   }
 
   return {
     subscribe,
     sync,
     getTeamById,
-    getFormerClubs
+    getFormerClubs,
   };
 }
 

@@ -11,7 +11,7 @@
   import { busyStore, Spinner } from "@dfinity/gix-components";
   import { getDateFromBigInt } from "$lib/utils/Helpers";
   import CopyIcon from "$lib/icons/CopyIcon.svelte";
-    import { authStore } from "$lib/stores/auth.store";
+  import { authStore } from "$lib/stores/auth.store";
 
   let profile: Writable<ProfileDTO> = writable({
     playerIds: [],

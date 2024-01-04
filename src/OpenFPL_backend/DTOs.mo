@@ -464,7 +464,7 @@ module DTOs {
     cyclesCheck : TimerDTO;
     cyclesWalletCheck : TimerDTO;
     totalEntries : Nat;
-    category: Text;
+    category : Text;
   };
 
   public type AdminFixtureList = {

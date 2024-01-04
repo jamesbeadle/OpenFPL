@@ -1301,7 +1301,7 @@ module {
       };
     };
 
-    public func removePlayerFromTeams(playerId : T.PlayerId, allPlayers: [DTOs.PlayerDTO]) : async () {
+    public func removePlayerFromTeams(playerId : T.PlayerId, allPlayers : [DTOs.PlayerDTO]) : async () {
 
       let managersWithPlayer = HashMap.mapFilter<T.PrincipalId, T.Manager, T.Manager>(
         managers,
@@ -1319,32 +1319,34 @@ module {
         );
 
         var captainId = manager.captainId;
-        if(captainId == playerId){
+        if (captainId == playerId) {
           let highestValuedPlayer = Array.foldLeft<T.PlayerId, ?DTOs.PlayerDTO>(
-            manager.playerIds, 
-            null, 
-            func (highest, id) : ?DTOs.PlayerDTO {
-              if (id == playerId or id == 0) { return highest; };
-              let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id; });
+            manager.playerIds,
+            null,
+            func(highest, id) : ?DTOs.PlayerDTO {
+              if (id == playerId or id == 0) { return highest };
+              let player = Array.find<DTOs.PlayerDTO>(allPlayers, func(p) { p.id == id });
               switch (highest, player) {
-                case (null, ?p){
+                case (null, ?p) {
                   ?p;
                 };
-                case (?h, ?p){
-                  if (p.valueQuarterMillions > h.valueQuarterMillions) { ?p; } else { ?h; }
-                }; 
-                case (_, null){
+                case (?h, ?p) {
+                  if (p.valueQuarterMillions > h.valueQuarterMillions) { ?p } else {
+                    ?h;
+                  };
+                };
+                case (_, null) {
                   highest;
-                } 
+                };
               };
-            }
+            },
           );
 
           switch (highestValuedPlayer) {
-            case (?player){
+            case (?player) {
               captainId := player.id;
             };
-            case null { } 
+            case null {};
           };
         };
 
