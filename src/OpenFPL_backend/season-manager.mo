@@ -1095,5 +1095,9 @@ module {
       return managerComposite.adminGetManagers(limit, offset);
     };
 
+    public func init(){
+      clubComposite.init();
+    };
+
   };
 };

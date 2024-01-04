@@ -302,6 +302,8 @@ actor Self {
     };
 
     seasonManager.setBackendCanisterController(Principal.fromActor(Self));
+
+    seasonManager.init();
   };
 
   private func gameweekBeginExpiredCallback() : async () {
