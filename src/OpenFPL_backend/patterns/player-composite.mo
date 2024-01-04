@@ -1045,6 +1045,16 @@ module {
           };
         },
       );
+
+      
+
+      let playerInjuryDuration = #nanoseconds(Int.abs((setPlayerInjuryDTO.expectedEndDate - Time.now())));
+      switch (setAndBackupTimer) {
+        case (null) {};
+        case (?actualFunction) {
+          actualFunction(playerInjuryDuration, "injuryExpired");
+        };
+      };
     };
 
     public func validateRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
