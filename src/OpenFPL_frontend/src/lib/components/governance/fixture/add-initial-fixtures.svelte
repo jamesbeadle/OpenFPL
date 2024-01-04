@@ -33,11 +33,7 @@
   async function processFile(file: File) {
     const text = await file.text();
     let uploadedData = parseCSV(text) as UploadData[];
-    let fixtureData = uploadedData.map(mapUploadDataToFixtureDTO);
-    await governanceStore.addInitialFixtures(
-      $systemStore?.calculationSeasonId ?? 0,
-      fixtureData
-    );
+    fixtureData = uploadedData.map(mapUploadDataToFixtureDTO);
   }
 
   function mapUploadDataToFixtureDTO(uploadData: UploadData): FixtureDTO {

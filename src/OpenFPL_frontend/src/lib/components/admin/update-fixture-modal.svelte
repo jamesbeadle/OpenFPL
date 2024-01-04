@@ -6,7 +6,7 @@
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
   import type {
     FixtureDTO,
-    FixtureStatus,
+    FixtureStatusType,
     UpdateFixtureDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
@@ -23,7 +23,7 @@
 
   let gameweek: number = fixture.gameweek;
   let kickOff: bigint = fixture.kickOff;
-  let status: FixtureStatus = fixture.status;
+  let status: FixtureStatusType = fixture.status;
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
 

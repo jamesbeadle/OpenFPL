@@ -1,6 +1,7 @@
 import { authStore } from "$lib/stores/auth.store";
 import { isError } from "$lib/utils/Helpers";
 import type {
+  AddInitialFixturesDTO,
   FixtureDTO,
   PlayerEventData,
   PlayerPosition,
@@ -83,17 +84,20 @@ function createGovernanceStore() {
     if (seasonId == 0) {
       return;
     }
-
+    
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
 
-      let result = identityActor.adminAddInitialFixtures(
+      let dto: AddInitialFixturesDTO = {
         seasonId,
         seasonFixtures
-      ); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      };
+
+      let result = identityActor.adminAddInitialFixtures(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      console.log(seasonFixtures)
 
       if (isError(result)) {
         console.error("Error submitting proposal");

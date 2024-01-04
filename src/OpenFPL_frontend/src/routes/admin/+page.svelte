@@ -8,9 +8,11 @@
   import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import AdminManagers from "$lib/components/admin/admin-managers.svelte";
+    import AddInitialFixtures from "$lib/components/governance/fixture/add-initial-fixtures.svelte";
 
-  export let showSystemStateModal: boolean = false;
-  export let showSnapshotModal: boolean = false;
+  let showSystemStateModal: boolean = false;
+  let showSnapshotModal: boolean = false;
+  let showAddInitialFixturesModal: boolean = false; 
 
   let activeTab: string = "canisters";
   let isLoading = true;
@@ -58,6 +60,15 @@ validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO)
   function hideSnapshotModal(): void {
     showSnapshotModal = false;
   }
+
+  function displayAddInitialFixturesModal(): void {
+    showAddInitialFixturesModal = true;
+  }
+
+  function hideAddInitialFixturesModal(): void {
+    showAddInitialFixturesModal = false;
+  }
+
 </script>
 
 <Layout>
@@ -74,6 +85,10 @@ validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO)
       closeModal={hideSnapshotModal}
       cancelModal={hideSnapshotModal}
     />
+    <AddInitialFixtures
+      visible={showAddInitialFixturesModal}
+      cancelModal={hideAddInitialFixturesModal}
+    />
     <div class="m-4">
       <div class="bg-panel rounded-md">
         <div class="flex flex-col p-4">
@@ -89,6 +104,10 @@ validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO)
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1"
             on:click={displaySnapshotModal}>Snapshot Fantasy Teams</button
+          >
+          <button
+            class="rounded fpl-button px-3 sm:px-2 px-3 py-1"
+            on:click={displayAddInitialFixturesModal}>Add Initial Fixtures</button
           >
         </div>
 
