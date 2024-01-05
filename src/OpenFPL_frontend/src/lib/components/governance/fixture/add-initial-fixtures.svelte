@@ -45,7 +45,7 @@
       awayClubId: uploadData.awayClubId,
       status: { Unplayed: null },
       highestScoringPlayerId: 0,
-      seasonId: 0,
+      seasonId: $systemStore?.calculationSeasonId ?? 0,
       events: [],
       homeGoals: 0,
       awayGoals: 0,

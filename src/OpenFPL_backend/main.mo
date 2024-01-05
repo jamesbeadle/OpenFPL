@@ -813,7 +813,7 @@ actor Self {
       await seasonManager.executeRevaluePlayerUp(revaluePlayerUpDTO);
       return #ok("Valid");
     };
-    return #err("Error revaluing players");
+    return result;
   };
 
   public shared ({ caller }) func adminRevaluePlayerDown(revaluePlayerDownDTO : DTOs.RevaluePlayerDownDTO) : async Result.Result<Text, Text> {
@@ -825,7 +825,7 @@ actor Self {
       await seasonManager.executeRevaluePlayerDown(revaluePlayerDownDTO);
       return #ok("Valid");
     };
-    return #err("Error revaluing players");
+    return result;
   };
 
   public shared ({ caller }) func adminSubmitFixtureData(submitFixtureData : DTOs.SubmitFixtureDataDTO) : async Result.Result<Text, Text> {
@@ -837,7 +837,7 @@ actor Self {
       await seasonManager.executeSubmitFixtureData(submitFixtureData);
       return #ok("Valid");
     };
-    return #err("Error submitting fixture data");
+    return result;
   };
 
   public shared ({ caller }) func adminAddInitialFixtures(addInitialFixturesDTO : DTOs.AddInitialFixturesDTO) : async Result.Result<Text, Text> {
@@ -849,7 +849,7 @@ actor Self {
       await seasonManager.executeAddInitialFixtures(addInitialFixturesDTO);
       return #ok("Valid");
     };
-    return #err("Error adding initial fixtures");
+    return result;
   };
 
   public shared ({ caller }) func adminRescheduleFixture(rescheduleFixtureDTO : DTOs.RescheduleFixtureDTO) : async Result.Result<Text, Text> {
@@ -861,7 +861,7 @@ actor Self {
       await seasonManager.executeRescheduleFixture(rescheduleFixtureDTO);
       return #ok("Valid");
     };
-    return #err("Error rescheduling fixtures");
+    return result;
   };
 
   public shared ({ caller }) func adminLoanPlayer(loanPlayerDTO : DTOs.LoanPlayerDTO) : async Result.Result<Text, Text> {
@@ -873,7 +873,7 @@ actor Self {
       await seasonManager.executeLoanPlayer(loanPlayerDTO);
       return #ok("Valid");
     };
-    return #err("Error loaning player");
+    return result;
   };
 
   public shared ({ caller }) func adminTransferPlayer(transferPlayerDTO : DTOs.TransferPlayerDTO) : async Result.Result<Text, Text> {
@@ -885,7 +885,7 @@ actor Self {
       await seasonManager.executeTransferPlayer(transferPlayerDTO);
       return #ok("Valid");
     };
-    return #err("Error transferring player");
+    return result;
   };
 
   public shared ({ caller }) func adminRecallPlayer(recallPlayerDTO : DTOs.RecallPlayerDTO) : async Result.Result<Text, Text> {
@@ -897,7 +897,7 @@ actor Self {
       await seasonManager.executeRecallPlayer(recallPlayerDTO);
       return #ok("Valid");
     };
-    return #err("Error recalling player");
+    return result;
   };
 
   public shared ({ caller }) func adminCreatePlayer(createPlayerDTO : DTOs.CreatePlayerDTO) : async Result.Result<Text, Text> {
@@ -909,7 +909,7 @@ actor Self {
       await seasonManager.executeCreatePlayer(createPlayerDTO);
       return #ok("Valid");
     };
-    return #err("Error creating player");
+    return result;
   };
 
   public shared ({ caller }) func adminUpdatePlayer(updatePlayerDTO : DTOs.UpdatePlayerDTO) : async Result.Result<Text, Text> {
@@ -921,7 +921,7 @@ actor Self {
       await seasonManager.executeUpdatePlayer(updatePlayerDTO);
       return #ok("Valid");
     };
-    return #err("Error updating player");
+    return result;
   };
 
   public shared ({ caller }) func adminSetPlayerInjury(setPlayerInjuryDTO : DTOs.SetPlayerInjuryDTO) : async Result.Result<Text, Text> {
@@ -933,7 +933,7 @@ actor Self {
       await seasonManager.executeSetPlayerInjury(setPlayerInjuryDTO);
       return #ok("Valid");
     };
-    return #err("Error setting player injury");
+    return result;
   };
 
   public shared ({ caller }) func adminRetirePlayer(retirePlayerDTO : DTOs.RetirePlayerDTO) : async Result.Result<Text, Text> {
@@ -945,7 +945,7 @@ actor Self {
       await seasonManager.executeRetirePlayer(retirePlayerDTO);
       return #ok("Valid");
     };
-    return #err("Error retiring player");
+    return result;
   };
 
   public shared ({ caller }) func adminUnretirePlayer(unretirePlayerDTO : DTOs.UnretirePlayerDTO) : async Result.Result<Text, Text> {
@@ -957,7 +957,7 @@ actor Self {
       await seasonManager.executeUnretirePlayer(unretirePlayerDTO);
       return #ok("Valid");
     };
-    return #err("Error unretiring player");
+    return result;
   };
 
   public shared ({ caller }) func adminPromoteFormerClub(promoteFormerClubDTO : DTOs.PromoteFormerClubDTO) : async Result.Result<Text, Text> {
@@ -969,7 +969,7 @@ actor Self {
       await seasonManager.executePromoteFormerClub(promoteFormerClubDTO);
       return #ok("Valid");
     };
-    return #err("Error promoting former club");
+    return result;
   };
 
   public shared ({ caller }) func adminPromoteNewClub(promoteNewClubDTO : DTOs.PromoteNewClubDTO) : async Result.Result<Text, Text> {
@@ -981,7 +981,7 @@ actor Self {
       await seasonManager.executePromoteNewClub(promoteNewClubDTO);
       return #ok("Valid");
     };
-    return #err("Error promoting new clubs");
+    return result;
   };
 
   public shared ({ caller }) func adminUpdateClub(updateClubDTO : DTOs.UpdateClubDTO) : async Result.Result<Text, Text> {
@@ -993,7 +993,7 @@ actor Self {
       await seasonManager.executeUpdateClub(updateClubDTO);
       return #ok("Valid");
     };
-    return #err("Error updating club");
+    return result;
   };
 
 };

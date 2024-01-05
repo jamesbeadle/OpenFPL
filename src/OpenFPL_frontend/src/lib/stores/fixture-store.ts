@@ -46,7 +46,7 @@ function createFixtureStore() {
         systemState.calculationSeasonId
       );
 
-      if(isError(updatedFixturesData)){
+      if (isError(updatedFixturesData)) {
         return [];
       }
 
@@ -74,8 +74,8 @@ function createFixtureStore() {
     await subscribe((value) => {
       fixtures = value;
     })();
-    
-    if(fixtures.length == 0){
+
+    if (fixtures.length == 0) {
       return;
     }
     const now = new Date();

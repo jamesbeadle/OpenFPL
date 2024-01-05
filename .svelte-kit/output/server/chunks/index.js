@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "14b1vtf"
+  version_hash: "1g9caeo"
 };
 function get_hooks() {
   return {};
@@ -4496,7 +4496,7 @@ function createFixtureStore() {
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync() {
-    let category = "fixtures";
+    const category = "fixtures";
     const newHashValues = await actor.getDataHashes();
     let error2 = isError(newHashValues);
     if (error2) {
@@ -4507,15 +4507,18 @@ function createFixtureStore() {
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
     const localHash = localStorage.getItem(category);
     if (categoryHash?.hash != localHash) {
-      let updatedFixturesData = await actor.getFixtures(
+      const updatedFixturesData = await actor.getFixtures(
         systemState.calculationSeasonId
       );
+      if (isError(updatedFixturesData)) {
+        return [];
+      }
       localStorage.setItem(
         category,
-        JSON.stringify(updatedFixturesData, replacer)
+        JSON.stringify(updatedFixturesData.ok, replacer)
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedFixturesData);
+      set(updatedFixturesData.ok);
     } else {
       const cachedFixturesData = localStorage.getItem(category);
       let cachedFixtures = [];
@@ -4533,6 +4536,9 @@ function createFixtureStore() {
     await subscribe2((value) => {
       fixtures = value;
     })();
+    if (fixtures.length == 0) {
+      return;
+    }
     const now = /* @__PURE__ */ new Date();
     return fixtures.find(
       (fixture) => new Date(Number(fixture.kickOff) / 1e6) > now
@@ -5285,6 +5291,7 @@ function createWeeklyLeaderboardStore() {
       );
       if (isError(updatedLeaderboardData)) {
         console.error("error fetching leaderboard store");
+        return;
       }
       localStorage.setItem(
         category2,
@@ -5301,9 +5308,7 @@ function createWeeklyLeaderboardStore() {
       const cachedData = localStorage.getItem(category);
       if (cachedData) {
         let cachedWeeklyLeaderboard;
-        cachedWeeklyLeaderboard = JSON.parse(
-          cachedData || "{entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n }"
-        );
+        cachedWeeklyLeaderboard = JSON.parse(cachedData, replacer);
         if (cachedWeeklyLeaderboard) {
           return {
             ...cachedWeeklyLeaderboard,
@@ -5315,12 +5320,16 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
-    let leaderboardData = await actor.getweeklyLeaderboard(
+    let leaderboardData = await actor.getWeeklyLeaderboard(
       seasonId,
       gameweek,
       limit,
       offset
     );
+    if (isError(leaderboardData)) {
+      console.error("Error fetching weekly leaderboard data");
+      return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
+    }
     localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
     return leaderboardData;
   }
@@ -6221,11 +6230,14 @@ const css$1 = {
 const Page$b = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_systemStore;
   let $$unsubscribe_teamStore;
+  let $$unsubscribe_fixtureStore;
   $$unsubscribe_systemStore = subscribe(systemStore, (value) => value);
   $$unsubscribe_teamStore = subscribe(teamStore, (value) => value);
+  $$unsubscribe_fixtureStore = subscribe(fixtureStore, (value) => value);
   $$result.css.add(css$1);
   $$unsubscribe_systemStore();
   $$unsubscribe_teamStore();
+  $$unsubscribe_fixtureStore();
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;
@@ -6287,6 +6299,7 @@ function createGovernanceStore() {
     }
   }
   async function addInitialFixtures(seasonId, seasonFixtures) {
+    console.log(seasonId);
     if (seasonId == 0) {
       return;
     }
@@ -6295,10 +6308,13 @@ function createGovernanceStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      let result = identityActor.adminAddInitialFixtures(
+      let dto = {
         seasonId,
         seasonFixtures
-      );
+      };
+      let result = await identityActor.adminAddInitialFixtures(dto);
+      console.log(result);
+      console.log(seasonFixtures);
       if (isError(result)) {
         console.error("Error submitting proposal");
         return;
@@ -6691,12 +6707,6 @@ const Page$a = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   )}`;
 });
 const Page$9 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { showSystemStateModal = false } = $$props;
-  let { showSnapshotModal = false } = $$props;
-  if ($$props.showSystemStateModal === void 0 && $$bindings.showSystemStateModal && showSystemStateModal !== void 0)
-    $$bindings.showSystemStateModal(showSystemStateModal);
-  if ($$props.showSnapshotModal === void 0 && $$bindings.showSnapshotModal && showSnapshotModal !== void 0)
-    $$bindings.showSnapshotModal(showSnapshotModal);
   return `${validate_component(Layout, "Layout").$$render($$result, {}, {}, {
     default: () => {
       return `${`${validate_component(Spinner, "Spinner").$$render($$result, {}, {}, {})}`}`;

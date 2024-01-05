@@ -84,7 +84,7 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
-    
+
     let leaderboardData = await actor.getWeeklyLeaderboard(
       seasonId,
       gameweek,
@@ -92,9 +92,9 @@ function createWeeklyLeaderboardStore() {
       offset
     );
 
-    if(isError(leaderboardData)){
+    if (isError(leaderboardData)) {
       console.error("Error fetching weekly leaderboard data");
-      return {entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
+      return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
     }
 
     localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));

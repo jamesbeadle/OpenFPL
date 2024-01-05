@@ -47,7 +47,7 @@
       await fixtureStore.sync();
       if ($teamStore.length == 0) return;
       if ($fixtureStore.length == 0) return;
-      
+
       await weeklyLeaderboardStore.sync(
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1

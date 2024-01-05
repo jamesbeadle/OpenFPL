@@ -55,7 +55,7 @@
     try {
       await teamStore.sync();
       await fixtureStore.sync();
-      
+
       if ($teamStore.length == 0) return;
       if ($fixtureStore.length == 0) return;
 

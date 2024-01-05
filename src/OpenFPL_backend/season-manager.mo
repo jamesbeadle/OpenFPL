@@ -1096,6 +1096,7 @@ module {
     };
 
     public func init() {
+      seasonComposite.init();
       clubComposite.init();
     };
 

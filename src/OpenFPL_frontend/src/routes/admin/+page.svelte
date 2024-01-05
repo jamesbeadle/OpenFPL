@@ -8,11 +8,11 @@
   import SnapshotFantasyTeams from "$lib/components/admin/snapshot-fantasy-teams.svelte";
   import { Spinner } from "@dfinity/gix-components";
   import AdminManagers from "$lib/components/admin/admin-managers.svelte";
-    import AddInitialFixtures from "$lib/components/governance/fixture/add-initial-fixtures.svelte";
+  import AddInitialFixtures from "$lib/components/governance/fixture/add-initial-fixtures.svelte";
 
   let showSystemStateModal: boolean = false;
   let showSnapshotModal: boolean = false;
-  let showAddInitialFixturesModal: boolean = false; 
+  let showAddInitialFixturesModal: boolean = false;
 
   let activeTab: string = "canisters";
   let isLoading = true;
@@ -68,7 +68,6 @@ validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO)
   function hideAddInitialFixturesModal(): void {
     showAddInitialFixturesModal = false;
   }
-
 </script>
 
 <Layout>
@@ -107,7 +106,8 @@ validateUpdateClub(updateClubDTO : DTOs.UpdateClubDTO)
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1"
-            on:click={displayAddInitialFixturesModal}>Add Initial Fixtures</button
+            on:click={displayAddInitialFixturesModal}
+            >Add Initial Fixtures</button
           >
         </div>
 

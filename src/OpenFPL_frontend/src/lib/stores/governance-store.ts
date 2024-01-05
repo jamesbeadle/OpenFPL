@@ -81,10 +81,11 @@ function createGovernanceStore() {
     seasonId: number,
     seasonFixtures: FixtureDTO[]
   ) {
+    console.log(seasonId);
     if (seasonId == 0) {
       return;
     }
-    
+
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -93,14 +94,15 @@ function createGovernanceStore() {
 
       let dto: AddInitialFixturesDTO = {
         seasonId,
-        seasonFixtures
+        seasonFixtures,
       };
 
-      let result = identityActor.adminAddInitialFixtures(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
-      console.log(seasonFixtures)
+      let result = await identityActor.adminAddInitialFixtures(dto); //TODO: POST SNS REPLACE WITH GOVERNANCE CANISTER CALL
+      console.log(result);
+      console.log(seasonFixtures);
 
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error) {
