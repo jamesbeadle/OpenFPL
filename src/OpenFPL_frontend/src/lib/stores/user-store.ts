@@ -113,7 +113,7 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
-      sync();
+      await cacheProfile();
       return result;
     } catch (error) {
       console.error("Error updating username:", error);
@@ -127,8 +127,8 @@ function createUserStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      sync();
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
+      await cacheProfile();
       return result;
     } catch (error) {
       console.error("Error updating favourite team:", error);
@@ -169,7 +169,13 @@ function createUserStore() {
             process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
-          sync();
+
+          if(isError(result)){
+            console.error("Error updating profile picture");
+            return;
+          }
+          
+          await cacheProfile();
           return result;
         } catch (error) {
           console.error(error);
@@ -179,6 +185,43 @@ function createUserStore() {
       console.error("Error updating username:", error);
       throw error;
     }
+  }
+
+  async function cacheProfile(){
+
+    const identityActor: any = await ActorFactory.createIdentityActor(
+      authStore,
+      process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+    );
+
+    let getProfileResponse = await identityActor.getProfile();
+    let error = isError(getProfileResponse);
+    if (error) {
+      console.error("Error fetching user profile");
+      return;
+    }
+
+    let profileData = getProfileResponse.ok;
+
+    if (profileData && profileData.profilePicture instanceof Uint8Array) {
+      const base64Picture = uint8ArrayToBase64(profileData.profilePicture);
+      localStorage.setItem(
+        "user_profile_data",
+        JSON.stringify(
+          {
+            ...profileData,
+            profilePicture: base64Picture,
+          },
+          replacer
+        )
+      );
+    } else {
+      localStorage.setItem(
+        "user_profile_data",
+        JSON.stringify(profileData, replacer)
+      );
+    }
+    set(profileData);
   }
 
   return {
