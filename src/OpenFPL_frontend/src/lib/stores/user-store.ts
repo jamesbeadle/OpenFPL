@@ -39,6 +39,14 @@ function createUserStore() {
   }
 
   async function sync() {
+    
+    const localProfile = localStorage.getItem("user_profile_data");
+
+    if(localProfile){
+      set(getProfileFromLocalStorage());
+      return;
+    }
+
     try {
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,

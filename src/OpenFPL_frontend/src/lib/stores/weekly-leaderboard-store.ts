@@ -94,6 +94,8 @@ function createWeeklyLeaderboardStore() {
 
     if (isError(leaderboardData)) {
       console.error("Error fetching weekly leaderboard data");
+      let emptyLeaderboard = { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
+      localStorage.setItem(category, JSON.stringify(emptyLeaderboard, replacer));
       return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
     }
 

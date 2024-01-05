@@ -47,7 +47,8 @@ function createFixtureStore() {
       );
 
       if (isError(updatedFixturesData)) {
-        return [];
+        console.error("error syncing fixture store");
+        return;
       }
 
       localStorage.setItem(
