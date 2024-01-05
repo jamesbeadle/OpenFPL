@@ -30,7 +30,8 @@ function createTeamStore() {
     let categoryHash =
       dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
       null;
-    const localHash = localStorage.getItem(category);
+    
+    const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
       const updatedTeamsData = await actor.getClubs();
