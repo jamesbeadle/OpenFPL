@@ -47,7 +47,15 @@ function createPlayerStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let updatedPlayersData = await actor.getPlayers();
+      let result = await actor.getPlayers();
+
+      if(isError(result)){
+        console.error("Error fetching players data")
+        return;
+      }
+
+      let updatedPlayersData = result.ok;
+
       localStorage.setItem(
         category,
         JSON.stringify(updatedPlayersData, replacer)

@@ -10,6 +10,7 @@ import type {
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
+import { isError } from "$lib/utils/Helpers";
 
 function createManagerStore() {
   const { subscribe, set } = writable<ManagerDTO | null>(null);
@@ -26,7 +27,20 @@ function createManagerStore() {
 
   async function getManager(): Promise<ManagerDTO> {
     try {
-      return (await actor.getManager()) as ManagerDTO;
+      
+      const identityActor: any = await ActorFactory.createIdentityActor(
+        authStore,
+        process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      
+      let result = await identityActor.getManager();
+
+      if(isError(result)){
+        console.error("Error getting manager.");
+      }
+
+      let manager = result.ok;
+      return manager;
     } catch (error) {
       console.error("Error fetching manager for gameweek:", error);
       throw error;
@@ -46,7 +60,13 @@ function createManagerStore() {
 
   async function getTotalManagers(): Promise<number> {
     try {
-      const managerCountData = await actor.getTotalManagers();
+      let result = await actor.getTotalManagers();
+
+      if(isError(result)){
+        console.error("Error getting public profile");
+      }
+
+      const managerCountData = result.ok;
       return Number(managerCountData);
     } catch (error) {
       console.error("Error fetching total managers:", error);
@@ -59,7 +79,7 @@ function createManagerStore() {
     gameweek: number
   ): Promise<FantasyTeamSnapshot> {
     try {
-      const fantasyTeamData = (await actor.getFantasyTeamForGameweek(
+      const fantasyTeamData = (await actor.getManagerGameweek(
         managerId,
         systemState?.calculationGameweek,
         gameweek
@@ -77,7 +97,7 @@ function createManagerStore() {
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const fantasyTeam = await identityActor.getFantasyTeam();
+      const fantasyTeam = await identityActor.getManager();
       return fantasyTeam;
     } catch (error) {
       console.error("Error fetching fantasy team:", error);

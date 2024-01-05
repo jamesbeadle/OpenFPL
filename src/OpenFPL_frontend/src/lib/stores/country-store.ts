@@ -32,7 +32,14 @@ function createCountriesStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let updatedCountriesData = await actor.getCountries();
+      let result = await actor.getCountries();
+
+      if(isError(result)){
+        console.error("Error fetching countries")
+      }
+
+      let updatedCountriesData = result.ok;
+
       localStorage.setItem(
         category,
         JSON.stringify(updatedCountriesData, replacer)

@@ -94,7 +94,7 @@
 
   $: gridSetup = getGridSetup(selectedFormation);
 
-  $: if ($fantasyTeam) {
+  $: if ($fantasyTeam && $playerStore.length > 0) {
     disableInvalidFormations();
     updateTeamValue();
     isSaveButtonActive = checkSaveButtonConditions();
@@ -124,6 +124,10 @@
         await systemStore.sync();
         await teamStore.sync();
         await playerStore.sync();
+
+        if($playerStore.length == 0){
+          return;
+        }
 
         activeSeason = $systemStore?.pickTeamSeasonName ?? "-";
         activeGameweek = $systemStore?.pickTeamGameweek ?? 1;

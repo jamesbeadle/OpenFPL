@@ -43,14 +43,16 @@ function createFixtureStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      const updatedFixturesData = await actor.getFixtures(
+      const result = await actor.getFixtures(
         systemState.calculationSeasonId
       );
 
-      if (isError(updatedFixturesData)) {
+      if (isError(result)) {
         console.error("error syncing fixture store");
         return;
       }
+
+      let updatedFixturesData = result.ok;
 
       localStorage.setItem(
         category,

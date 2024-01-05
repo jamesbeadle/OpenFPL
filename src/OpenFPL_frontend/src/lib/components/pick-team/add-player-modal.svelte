@@ -28,7 +28,7 @@
   let maxValue = 0;
   let currentPage = 1;
   const pageSize = 10;
-
+    console.log($playerStore)
   $: filteredPlayers = $playerStore.filter((player) => {
     return (
       (filterTeam === -1 || player.clubId === filterTeam) &&
