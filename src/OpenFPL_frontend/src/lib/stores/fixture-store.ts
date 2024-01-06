@@ -56,10 +56,10 @@ function createFixtureStore() {
 
       localStorage.setItem(
         category,
-        JSON.stringify(updatedFixturesData.ok, replacer)
+        JSON.stringify(updatedFixturesData, replacer)
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedFixturesData.ok);
+      set(updatedFixturesData);
     } else {
       const cachedFixturesData = localStorage.getItem(category);
       let cachedFixtures: FixtureDTO[] = [];
@@ -73,6 +73,7 @@ function createFixtureStore() {
   }
 
   async function getNextFixture(): Promise<FixtureDTO | undefined> {
+    console.log("Getting fixtures")
     let fixtures: FixtureDTO[] = [];
     await sync();
     await subscribe((value) => {

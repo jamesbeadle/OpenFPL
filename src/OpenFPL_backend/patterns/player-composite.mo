@@ -14,6 +14,7 @@ import HashMap "mo:base/HashMap";
 import CanisterIds "../CanisterIds";
 import Countries "../Countries";
 import Utilities "../utilities";
+import Players "../../../testing/players";
 
 module {
   public class PlayerComposite() {
@@ -1338,5 +1339,10 @@ module {
     public func setStableNextPlayerId(stable_next_player_id : T.PlayerId) {
       nextPlayerId := stable_next_player_id;
     };
+
+    public func init(){
+      let testPlayers = Players.Players();
+      players := List.fromArray(testPlayers.players);
+    }
   };
 };

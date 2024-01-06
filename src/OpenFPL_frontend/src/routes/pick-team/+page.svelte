@@ -165,6 +165,7 @@
           }
           return currentTeam;
         });
+        
         nextFixtureDate = formatUnixDateToReadable(
           Number(nextFixture?.kickOff)
         );
