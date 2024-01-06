@@ -43,6 +43,7 @@
       await playerEventsStore.sync();
 
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
+      console.log(selectedGameweek)
       activeSeasonName = $systemStore?.calculationSeasonName ?? "-";
       gameweeks = Array.from(
         { length: $systemStore?.calculationGameweek ?? 1 },
@@ -60,7 +61,7 @@
     }
   });
 
-  $: if ($authStore?.identity?.getPrincipal()) {
+  $: if (selectedGameweek && $authStore?.identity?.getPrincipal()) {
     loadGameweekPoints($authStore?.identity?.getPrincipal());
   }
 
@@ -68,6 +69,10 @@
     if (!principal) {
       return;
     }
+
+    console.log(principal)
+    console.log(selectedGameweek)
+
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal?.toText(),
       selectedGameweek

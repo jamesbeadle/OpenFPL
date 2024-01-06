@@ -1,28 +1,28 @@
-import { authStore } from "$lib/stores/auth.store";
 import { writable } from "svelte/store";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
+import { systemStore } from "./system-store";
+import { authStore } from "$lib/stores/auth.store";
 import type {
   DataCacheDTO,
   FixtureDTO,
   SystemStateDTO,
   UpdateFixtureDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/Helpers";
-import { systemStore } from "./system-store";
 
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);
-
-  let systemState: SystemStateDTO;
-  systemStore.subscribe((value) => {
-    systemState = value as SystemStateDTO;
-  });
 
   let actor: any = ActorFactory.createActor(
     idlFactory,
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
+
+  let systemState: SystemStateDTO;
+  systemStore.subscribe((value) => {
+    systemState = value as SystemStateDTO;
+  });
 
   async function sync() {
     const category = "fixtures";

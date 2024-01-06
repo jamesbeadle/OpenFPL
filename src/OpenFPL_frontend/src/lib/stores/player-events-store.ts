@@ -127,7 +127,7 @@ function createPlayerEventsStore() {
     let allPlayerEvents: PlayerPointsDTO[] = [];
 
     if (systemState?.calculationGameweek === gameweek) {
-      allPlayerEvents = await getPlayerEvents(); //TODO: THIS SHOULDN'T BE CALLED AS INFOR SHOULD BE RETRIEVED BY BACKEND
+      allPlayerEvents = await getPlayerEvents();
     } else {
       allPlayerEvents = await actor.getPlayersDetailsForGameweek(
         fantasyTeam.playerIds,
