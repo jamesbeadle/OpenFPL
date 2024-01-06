@@ -37,14 +37,14 @@ function createWeeklyLeaderboardStore() {
 
     if (categoryHash?.hash != localHash) {
       
-      let updatedLeaderboardData = await actor.getWeeklyLeaderboard(
+      let result = await actor.getWeeklyLeaderboard(
         seasonId,
         gameweek,
         100,
         0
       );
 
-      if (isError(updatedLeaderboardData)) {
+      if(isError(result)){
         let emptyLeaderboard = { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
         localStorage.setItem(category, JSON.stringify(emptyLeaderboard, replacer));
         localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
@@ -52,6 +52,8 @@ function createWeeklyLeaderboardStore() {
         console.error("error fetching leaderboard store");
         return;
       }
+
+      let updatedLeaderboardData = result.ok;
 
       localStorage.setItem(
         category,

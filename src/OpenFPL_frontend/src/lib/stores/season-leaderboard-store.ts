@@ -43,9 +43,17 @@ function createSeasonLeaderboardStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getSeasonLeaderboard(
+      let result = await actor.getSeasonLeaderboard(
         systemState?.calculationSeasonId
       );
+
+      if(isError(result)){
+        console.error("Error syncing season leaderboard.")
+        return;
+      }
+
+      let updatedLeaderboardData = result.ok;
+
       localStorage.setItem(
         category,
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -103,11 +111,17 @@ function createSeasonLeaderboardStore() {
       }
     }
 
-    let leaderboardData = await actor.getSeasonLeaderboard(
+    let result = await actor.getSeasonLeaderboard(
       seasonId,
       limit,
       offset
     );
+
+    if(isError(result)){
+      console.error("Error fetching season leaderboard");
+    }
+
+    let leaderboardData = result.ok;
 
     localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
 

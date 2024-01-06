@@ -63,6 +63,10 @@ function createUserStore() {
       if (!getProfileResponse) {
         await identityActor.createProfile();
         getProfileResponse = await identityActor.getProfile();
+        if (isError(getProfileResponse)) {
+          console.error("Error syncing user store");
+          return;
+        }
       }
 
       let profileData = getProfileResponse.ok;
@@ -99,6 +103,10 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.createProfile();
+      if(isError(result)){
+        console.error("Error creating profile")
+        return;
+      }
       return result;
     } catch (error) {
       console.error("Error updating username:", error);
@@ -113,6 +121,10 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
+      if(isError(result)){
+        console.error("Error updating username")
+        return;
+      }
       await cacheProfile();
       return result;
     } catch (error) {
@@ -128,6 +140,10 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
+      if(isError(result)){
+        console.error("Error updating favourite team")
+        return;
+      }
       await cacheProfile();
       return result;
     } catch (error) {
@@ -143,6 +159,10 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfile();
+      if(isError(result)){
+        console.error("Error fetching profile")
+        return;
+      }
       set(result);
       return result;
     } catch (error) {

@@ -36,18 +36,21 @@ function createSystemStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let updatedSystemStateData = await actor.getSystemState();
-      if (isError(updatedSystemStateData)) {
+      let result = await actor.getSystemState();
+      
+      if (isError(result)) {
         console.error("Error syncing system store");
         return;
       }
 
+      let updatedSystemStateData = result.ok;
+
       localStorage.setItem(
         category,
-        JSON.stringify(updatedSystemStateData.ok, replacer)
+        JSON.stringify(updatedSystemStateData, replacer)
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedSystemStateData.ok);
+      set(updatedSystemStateData);
     } else {
       const cachedSystemStateData = localStorage.getItem(category);
       let cachedSystemState: SystemStateDTO | null = null;
@@ -77,6 +80,11 @@ function createSystemStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateSystemState(systemState);
+
+      if(isError(result)){
+        console.error("Error fetching system state.")
+      }
+
       sync();
       return result;
     } catch (error) {
