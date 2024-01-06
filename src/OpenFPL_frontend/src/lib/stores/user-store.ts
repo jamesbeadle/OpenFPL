@@ -39,10 +39,9 @@ function createUserStore() {
   }
 
   async function sync() {
-    
     const localProfile = localStorage.getItem("user_profile_data");
 
-    if(localProfile){
+    if (localProfile) {
       set(getProfileFromLocalStorage());
       return;
     }
@@ -103,8 +102,8 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.createProfile();
-      if(isError(result)){
-        console.error("Error creating profile")
+      if (isError(result)) {
+        console.error("Error creating profile");
         return;
       }
       return result;
@@ -121,8 +120,8 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
-      if(isError(result)){
-        console.error("Error updating username")
+      if (isError(result)) {
+        console.error("Error updating username");
         return;
       }
       await cacheProfile();
@@ -140,8 +139,8 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
-      if(isError(result)){
-        console.error("Error updating favourite team")
+      if (isError(result)) {
+        console.error("Error updating favourite team");
         return;
       }
       await cacheProfile();
@@ -159,8 +158,8 @@ function createUserStore() {
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfile();
-      if(isError(result)){
-        console.error("Error fetching profile")
+      if (isError(result)) {
+        console.error("Error fetching profile");
         return;
       }
       set(result);
@@ -190,11 +189,11 @@ function createUserStore() {
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
 
-          if(isError(result)){
+          if (isError(result)) {
             console.error("Error updating profile picture");
             return;
           }
-          
+
           await cacheProfile();
           return result;
         } catch (error) {
@@ -207,8 +206,7 @@ function createUserStore() {
     }
   }
 
-  async function cacheProfile(){
-
+  async function cacheProfile() {
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""

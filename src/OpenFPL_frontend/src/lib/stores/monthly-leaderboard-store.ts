@@ -39,19 +39,19 @@ function createMonthlyLeaderboardStore() {
     let categoryHash =
       dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
       null;
-    
+
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
       let result = await actor.getMonthlyLeaderboards();
-      
-      if(isError(result)){
+
+      if (isError(result)) {
         console.log("Error syncing monthly leaderboards");
         return;
       }
 
       let updatedLeaderboardData = result.ok;
-      
+
       localStorage.setItem(
         category,
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -114,19 +114,19 @@ function createMonthlyLeaderboardStore() {
       totalEntries: 0n,
       seasonId: 0,
       entries: [],
-    }
+    };
 
-    if(isError(result)){
+    if (isError(result)) {
       console.log("Error fetching monthly leaderboard");
       return emptyReturn;
     }
 
     let leaderboardData = result.ok as MonthlyLeaderboardDTO[];
     let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
-    if(!clubLeaderboard){
+    if (!clubLeaderboard) {
       return emptyReturn;
     }
-    
+
     return {
       ...clubLeaderboard,
       entries: clubLeaderboard.entries.slice(offset, offset + limit),

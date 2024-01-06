@@ -292,7 +292,7 @@ type ProfileDTO = record {
   goalGetterGameweek : GameweekNumber;
   goalGetterPlayerId : PlayerId;
   hatTrickHeroGameweek : GameweekNumber;
-  history : List;
+  history : vec FantasyTeamSeason;
   monthlyBonusesAvailable : nat8;
   noEntryGameweek : GameweekNumber;
   noEntryPlayerId : PlayerId;
@@ -325,7 +325,7 @@ type PlayerScoreDTO = record {
   assists : int16;
   clubId : ClubId;
   dateOfBirth : int;
-  events : List_2;
+  events : vec PlayerEventData;
   goalsConceded : int16;
   goalsScored : int16;
   id : nat16;
@@ -479,16 +479,8 @@ type LoanPlayerDTO = record {
   loanEndDate : int;
   playerId : PlayerId;
 };
-type List_2 = opt record {
-  PlayerEventData;
-  List_2;
-};
-type List_1 = opt record {
-  FantasyTeamSnapshot;
-  List_1;
-};
 type List = opt record {
-  FantasyTeamSeason;
+  FantasyTeamSnapshot;
   List;
 };
 type LeaderboardEntry = record {
@@ -556,7 +548,7 @@ type FantasyTeamSnapshot = record {
   username : text;
 };
 type FantasyTeamSeason = record {
-  gameweeks : List_1;
+  gameweeks : List;
   seasonId : SeasonId;
   totalPoints : int16;
 };

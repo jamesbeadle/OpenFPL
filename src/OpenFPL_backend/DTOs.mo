@@ -1,5 +1,4 @@
 import T "types";
-import List "mo:base/List";
 import Nat "mo:base/Nat";
 
 module DTOs {
@@ -164,7 +163,7 @@ module DTOs {
     braceBonusGameweek : T.GameweekNumber;
     hatTrickHeroGameweek : T.GameweekNumber;
     transferWindowGameweek : T.GameweekNumber;
-    history : List.List<T.FantasyTeamSeason>;
+    history : [T.FantasyTeamSeason];
   };
 
   public type PlayerRatingsDTO = {
@@ -197,7 +196,7 @@ module DTOs {
     dateOfBirth : Int;
     saves : Int16;
     assists : Int16;
-    events : List.List<T.PlayerEventData>;
+    events : [T.PlayerEventData];
   };
 
   public type PlayerPointsDTO = {

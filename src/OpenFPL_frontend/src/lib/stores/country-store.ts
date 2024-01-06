@@ -34,8 +34,8 @@ function createCountriesStore() {
     if (categoryHash?.hash != localHash) {
       let result = await actor.getCountries();
 
-      if(isError(result)){
-        console.error("Error fetching countries")
+      if (isError(result)) {
+        console.error("Error fetching countries");
       }
 
       let updatedCountriesData = result.ok;

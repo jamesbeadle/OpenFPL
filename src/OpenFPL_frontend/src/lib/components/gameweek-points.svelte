@@ -43,7 +43,7 @@
       await playerEventsStore.sync();
 
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
-      console.log(selectedGameweek)
+      console.log(selectedGameweek);
       activeSeasonName = $systemStore?.calculationSeasonName ?? "-";
       gameweeks = Array.from(
         { length: $systemStore?.calculationGameweek ?? 1 },
@@ -70,8 +70,8 @@
       return;
     }
 
-    console.log(principal)
-    console.log(selectedGameweek)
+    console.log(principal);
+    console.log(selectedGameweek);
 
     let fantasyTeam = await managerStore.getFantasyTeamForGameweek(
       principal?.toText(),

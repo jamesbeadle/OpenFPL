@@ -1,12 +1,10 @@
 <script lang="ts">
   import { writable } from "svelte/store";
-  import type {
-    ProfileDTO,
-  } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  import type { ProfileDTO } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import type { Bonus } from "$lib/types/bonus";
   import { BonusType } from "$lib/enums/BonusType";
   import UseBonusModal from "$lib/components/pick-team/use-bonus-modal.svelte";
-    import Tooltip from "../tooltip.svelte";
+  import Tooltip from "../tooltip.svelte";
 
   export let fantasyTeam = writable<ProfileDTO | null>(null);
   export let activeGameweek: number;
@@ -203,7 +201,7 @@
           class="flex items-center w-1/5 bonus-panel-inner m-1 md:m-2 xl:m-1 my-2 md:my-3 lg:my-4 rounded-lg border border-gray-700"
         >
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <Tooltip text="{bonus.description}">
+            <Tooltip text={bonus.description}>
               <img
                 alt={bonus.name}
                 src={bonus.image}
@@ -247,14 +245,14 @@
           class="flex items-center w-1/5 bonus-panel-inner m-1 my-2 md:m-2 xl:m-1 rounded-lg border border-gray-700"
         >
           <div class={`flex flex-col justify-center items-center flex-1`}>
-            <Tooltip text="{bonus.description}">
+            <Tooltip text={bonus.description}>
               <img
                 alt={bonus.name}
                 src={bonus.image}
                 class="h-12 m-2 xl:m-1 mt-4 xl:mt-4 md:h-16"
               />
             </Tooltip>
-            
+
             <div
               class="mt-1 mb-1 lg:p-2 p-1 lg:px-4 rounded-md flex items-center min-h-[50px] xl:min-h-[60px]"
             >
@@ -280,7 +278,7 @@
               <div class="w-full px-1 sm:px-4 mb-2 sm:mb-4 xl:min-h-[40px]">
                 <p class="text-center xl:mt-1 smaller-text">1 Per Week</p>
               </div>
-            {/if}            
+            {/if}
           </div>
         </div>
       {/each}
@@ -294,7 +292,7 @@
           class="flex flex-row items-center bonus-panel-inner m-1 rounded-lg border border-gray-700 w-full min-h-[50px]"
         >
           <div class="w-2/12 flex items-center justify-center">
-            <Tooltip text="{bonus.description}">
+            <Tooltip text={bonus.description}>
               <img
                 alt={bonus.name}
                 src={bonus.image}

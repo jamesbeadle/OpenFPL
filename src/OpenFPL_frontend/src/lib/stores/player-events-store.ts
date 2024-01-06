@@ -53,7 +53,7 @@ function createPlayerEventsStore() {
     let categoryHash =
       dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
       null;
-    
+
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
@@ -62,7 +62,7 @@ function createPlayerEventsStore() {
         systemState.calculationGameweek
       );
 
-      if(isError(result)){
+      if (isError(result)) {
         console.error("Error fetching player details for gameweek");
         return;
       }
@@ -107,8 +107,8 @@ function createPlayerEventsStore() {
     try {
       let result = await actor.getPlayerDetails(playerId, seasonId);
 
-      if(isError(result)){
-        console.error("Error fetching player details")
+      if (isError(result)) {
+        console.error("Error fetching player details");
       }
 
       return result.ok;

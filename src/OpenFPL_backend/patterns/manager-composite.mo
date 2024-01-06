@@ -120,7 +120,7 @@ module {
             braceBonusGameweek = foundManager.braceBonusGameweek;
             hatTrickHeroGameweek = foundManager.hatTrickHeroGameweek;
             transferWindowGameweek = foundManager.transferWindowGameweek;
-            history = foundManager.history;
+            history = List.toArray(foundManager.history);
           };
 
           return #ok(profileDTO);
@@ -2466,7 +2466,7 @@ module {
           braceBonusGameweek = profile.braceBonusGameweek;
           hatTrickHeroGameweek = profile.hatTrickHeroGameweek;
           transferWindowGameweek = profile.transferWindowGameweek;
-          history = profile.history;
+          history = List.toArray(profile.history);
         });
       };
 

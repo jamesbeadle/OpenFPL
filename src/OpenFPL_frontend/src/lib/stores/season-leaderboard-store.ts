@@ -39,7 +39,7 @@ function createSeasonLeaderboardStore() {
     let categoryHash =
       dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
       null;
-    
+
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
@@ -47,8 +47,8 @@ function createSeasonLeaderboardStore() {
         systemState?.calculationSeasonId
       );
 
-      if(isError(result)){
-        console.error("Error syncing season leaderboard.")
+      if (isError(result)) {
+        console.error("Error syncing season leaderboard.");
         return;
       }
 
@@ -111,13 +111,9 @@ function createSeasonLeaderboardStore() {
       }
     }
 
-    let result = await actor.getSeasonLeaderboard(
-      seasonId,
-      limit,
-      offset
-    );
+    let result = await actor.getSeasonLeaderboard(seasonId, limit, offset);
 
-    if(isError(result)){
+    if (isError(result)) {
       console.error("Error fetching season leaderboard");
     }
 

@@ -124,7 +124,7 @@
         await teamStore.sync();
         await playerStore.sync();
 
-        if($playerStore.length == 0){
+        if ($playerStore.length == 0) {
           return;
         }
 
@@ -139,6 +139,7 @@
         let nextFixture = await fixtureStore.getNextFixture();
 
         let userFantasyTeam = await managerStore.getFantasyTeam();
+
         fantasyTeam.set(userFantasyTeam);
 
         let principalId = $fantasyTeam?.principalId ?? "";
@@ -164,7 +165,7 @@
           }
           return currentTeam;
         });
-        
+
         nextFixtureDate = formatUnixDateToReadable(
           Number(nextFixture?.kickOff)
         );
@@ -265,6 +266,7 @@
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
+    console.log($fantasyTeam);
     if ($fantasyTeam) {
       if (
         canAddPlayerToCurrentFormation(player, $fantasyTeam, selectedFormation)

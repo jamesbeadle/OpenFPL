@@ -1,15 +1,15 @@
-import { writable } from "svelte/store";
-import { systemStore } from "./system-store";
 import { authStore } from "$lib/stores/auth.store";
+import { writable } from "svelte/store";
+import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   DataCacheDTO,
   FixtureDTO,
   SystemStateDTO,
   UpdateFixtureDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import { ActorFactory } from "../../utils/ActorFactory";
 import { isError, replacer } from "../utils/Helpers";
+import { systemStore } from "./system-store";
 
 function createFixtureStore() {
   const { subscribe, set } = writable<FixtureDTO[]>([]);
@@ -39,13 +39,11 @@ function createFixtureStore() {
     let categoryHash =
       dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
       null;
-    
+
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      const result = await actor.getFixtures(
-        systemState.calculationSeasonId
-      );
+      const result = await actor.getFixtures(systemState.calculationSeasonId);
 
       if (isError(result)) {
         console.error("error syncing fixture store");
@@ -73,7 +71,7 @@ function createFixtureStore() {
   }
 
   async function getNextFixture(): Promise<FixtureDTO | undefined> {
-    console.log("Getting fixtures")
+    console.log("Getting fixtures");
     let fixtures: FixtureDTO[] = [];
     await sync();
     await subscribe((value) => {

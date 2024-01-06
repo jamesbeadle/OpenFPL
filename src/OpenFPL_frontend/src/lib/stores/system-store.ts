@@ -32,12 +32,12 @@ function createSystemStore() {
     let categoryHash =
       dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
       null;
-    
+
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
       let result = await actor.getSystemState();
-      
+
       if (isError(result)) {
         console.error("Error syncing system store");
         return;
@@ -81,8 +81,8 @@ function createSystemStore() {
       );
       const result = await identityActor.updateSystemState(systemState);
 
-      if(isError(result)){
-        console.error("Error fetching system state.")
+      if (isError(result)) {
+        console.error("Error fetching system state.");
       }
 
       sync();

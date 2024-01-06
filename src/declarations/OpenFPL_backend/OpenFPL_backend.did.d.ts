@@ -102,7 +102,7 @@ export type Error =
   | { InvalidTeamError: null };
 export interface FantasyTeamSeason {
   seasonId: SeasonId;
-  gameweeks: List_1;
+  gameweeks: List;
   totalPoints: number;
 }
 export interface FantasyTeamSnapshot {
@@ -168,9 +168,7 @@ export interface LeaderboardEntry {
   principalId: string;
   points: number;
 }
-export type List = [] | [[FantasyTeamSeason, List]];
-export type List_1 = [] | [[FantasyTeamSnapshot, List_1]];
-export type List_2 = [] | [[PlayerEventData, List_2]];
+export type List = [] | [[FantasyTeamSnapshot, List]];
 export interface LoanPlayerDTO {
   loanEndDate: bigint;
   playerId: PlayerId;
@@ -323,7 +321,7 @@ export interface PlayerScoreDTO {
   goalsScored: number;
   saves: number;
   goalsConceded: number;
-  events: List_2;
+  events: Array<PlayerEventData>;
   position: PlayerPosition;
   points: number;
 }
@@ -351,7 +349,7 @@ export interface ProfileDTO {
   bankQuarterMillions: number;
   noEntryPlayerId: PlayerId;
   safeHandsPlayerId: PlayerId;
-  history: List;
+  history: Array<FantasyTeamSeason>;
   braceBonusGameweek: GameweekNumber;
   favouriteClubId: ClubId;
   passMasterGameweek: GameweekNumber;

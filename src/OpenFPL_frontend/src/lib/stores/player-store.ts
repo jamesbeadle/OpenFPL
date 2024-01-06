@@ -43,14 +43,14 @@ function createPlayerStore() {
     let categoryHash =
       dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
       null;
-    
+
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
       let result = await actor.getPlayers();
 
-      if(isError(result)){
-        console.error("Error fetching players data")
+      if (isError(result)) {
+        console.error("Error fetching players data");
         return;
       }
 

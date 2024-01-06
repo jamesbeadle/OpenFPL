@@ -32,21 +32,23 @@ function createWeeklyLeaderboardStore() {
     let categoryHash =
       dataCacheValues.find((x: DataCacheDTO) => x.category === category) ??
       null;
-    
+
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      
-      let result = await actor.getWeeklyLeaderboard(
-        seasonId,
-        gameweek,
-        100,
-        0
-      );
+      let result = await actor.getWeeklyLeaderboard(seasonId, gameweek, 100, 0);
 
-      if(isError(result)){
-        let emptyLeaderboard = { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
-        localStorage.setItem(category, JSON.stringify(emptyLeaderboard, replacer));
+      if (isError(result)) {
+        let emptyLeaderboard = {
+          entries: [],
+          gameweek: 0,
+          seasonId: 0,
+          totalEntries: 0n,
+        };
+        localStorage.setItem(
+          category,
+          JSON.stringify(emptyLeaderboard, replacer)
+        );
         localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
 
         console.error("error fetching leaderboard store");
@@ -91,7 +93,9 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
-    console.log("//TODO: THIS SHOULD BE CALLED REPEATEDLY IF THERE IS NO DATA THEN NO ERRORS")
+    console.log(
+      "//TODO: THIS SHOULD BE CALLED REPEATEDLY IF THERE IS NO DATA THEN NO ERRORS"
+    );
     let leaderboardData = await actor.getWeeklyLeaderboard(
       seasonId,
       gameweek,
@@ -101,8 +105,16 @@ function createWeeklyLeaderboardStore() {
 
     if (isError(leaderboardData)) {
       console.error("Error fetching weekly leaderboard data");
-      let emptyLeaderboard = { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
-      localStorage.setItem(category, JSON.stringify(emptyLeaderboard, replacer));
+      let emptyLeaderboard = {
+        entries: [],
+        gameweek: 0,
+        seasonId: 0,
+        totalEntries: 0n,
+      };
+      localStorage.setItem(
+        category,
+        JSON.stringify(emptyLeaderboard, replacer)
+      );
       return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
     }
 

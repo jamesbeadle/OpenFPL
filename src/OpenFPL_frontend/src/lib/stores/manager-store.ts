@@ -1,19 +1,18 @@
 import { authStore } from "$lib/stores/auth.store";
 import { systemStore } from "$lib/stores/system-store";
+import { isError } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
   FantasyTeamSnapshot,
-  ManagerDTO,
   ProfileDTO,
   PublicProfileDTO,
   SystemStateDTO,
 } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
 import { ActorFactory } from "../../utils/ActorFactory";
-import { isError } from "$lib/utils/Helpers";
 
 function createManagerStore() {
-  const { subscribe, set } = writable<ManagerDTO | null>(null);
+  const { subscribe, set } = writable<ProfileDTO | null>(null);
 
   let systemState: SystemStateDTO;
   systemStore.subscribe((value) => {
@@ -25,18 +24,51 @@ function createManagerStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
-  async function getManager(): Promise<ManagerDTO> {
+  async function getManager(): Promise<ProfileDTO> {
     try {
-      
+      let newManager = {
+        playerIds: [],
+        countrymenCountryId: 0,
+        username: "",
+        goalGetterPlayerId: 0,
+        hatTrickHeroGameweek: 0,
+        transfersAvailable: 0,
+        termsAccepted: false,
+        teamBoostGameweek: 0,
+        captainFantasticGameweek: 0,
+        createDate: 0n,
+        countrymenGameweek: 0,
+        bankQuarterMillions: 0,
+        noEntryPlayerId: 0,
+        safeHandsPlayerId: 0,
+        history: [],
+        braceBonusGameweek: 0,
+        favouriteClubId: 0,
+        passMasterGameweek: 0,
+        teamBoostClubId: 0,
+        goalGetterGameweek: 0,
+        captainFantasticPlayerId: 0,
+        profilePicture: [],
+        transferWindowGameweek: 0,
+        noEntryGameweek: 0,
+        prospectsGameweek: 0,
+        safeHandsGameweek: 0,
+        principalId: "",
+        passMasterPlayerId: 0,
+        captainId: 0,
+        monthlyBonusesAvailable: 0,
+      };
+
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      
+
       let result = await identityActor.getManager();
 
-      if(isError(result)){
+      if (isError(result)) {
         console.error("Error getting manager.");
+        set(newManager);
       }
 
       let manager = result.ok;
@@ -53,7 +85,7 @@ function createManagerStore() {
     try {
       let result = await actor.getPublicProfile(principalId);
 
-      if(isError(result)){
+      if (isError(result)) {
         console.error("Error getting public profile");
       }
 
@@ -69,7 +101,7 @@ function createManagerStore() {
     try {
       let result = await actor.getTotalManagers();
 
-      if(isError(result)){
+      if (isError(result)) {
         console.error("Error getting public profile");
       }
 
@@ -86,15 +118,14 @@ function createManagerStore() {
     gameweek: number
   ): Promise<FantasyTeamSnapshot> {
     try {
-
       let result = await actor.getManagerGameweek(
         managerId,
         systemState?.calculationGameweek,
         gameweek
       );
-      
-      if(isError(result)){
-        console.error("Error fetching fantasy team for gameweek:");  
+
+      if (isError(result)) {
+        console.error("Error fetching fantasy team for gameweek:");
       }
 
       const fantasyTeamData = result.ok;
@@ -113,8 +144,10 @@ function createManagerStore() {
       );
       const result = await identityActor.getManager();
 
-      if(isError(result)){
-        console.error("Error fetching fantasy team.")
+      if (isError(result)) {
+        console.error("Error fetching fantasy team.");
+
+        return;
       }
 
       let fantasyTeam = result.ok;
@@ -154,7 +187,7 @@ function createManagerStore() {
         bonusTeamId
       );
 
-      if(isError(result)){
+      if (isError(result)) {
         console.error("Error saving fantasy team");
         return;
       }

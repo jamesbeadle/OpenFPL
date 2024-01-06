@@ -1,7 +1,5 @@
 export const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
-  const List_1 = IDL.Rec();
-  const List_2 = IDL.Rec();
   const SeasonId = IDL.Nat16;
   const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
@@ -142,13 +140,12 @@ export const idlFactory = ({ IDL }) => {
     points: IDL.Int16,
     monthlyBonusesAvailable: IDL.Nat8,
   });
-  List_1.fill(IDL.Opt(IDL.Tuple(FantasyTeamSnapshot, List_1)));
+  List.fill(IDL.Opt(IDL.Tuple(FantasyTeamSnapshot, List)));
   const FantasyTeamSeason = IDL.Record({
     seasonId: SeasonId,
-    gameweeks: List_1,
+    gameweeks: List,
     totalPoints: IDL.Int16,
   });
-  List.fill(IDL.Opt(IDL.Tuple(FantasyTeamSeason, List)));
   const ProfileDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -164,7 +161,7 @@ export const idlFactory = ({ IDL }) => {
     bankQuarterMillions: IDL.Nat16,
     noEntryPlayerId: PlayerId,
     safeHandsPlayerId: PlayerId,
-    history: List,
+    history: IDL.Vec(FantasyTeamSeason),
     braceBonusGameweek: GameweekNumber,
     favouriteClubId: ClubId,
     passMasterGameweek: GameweekNumber,
@@ -495,7 +492,6 @@ export const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(PlayerPointsDTO),
     err: Error,
   });
-  List_2.fill(IDL.Opt(IDL.Tuple(PlayerEventData, List_2)));
   const PlayerScoreDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
@@ -505,7 +501,7 @@ export const idlFactory = ({ IDL }) => {
     goalsScored: IDL.Int16,
     saves: IDL.Int16,
     goalsConceded: IDL.Int16,
-    events: List_2,
+    events: IDL.Vec(PlayerEventData),
     position: PlayerPosition,
     points: IDL.Int16,
   });

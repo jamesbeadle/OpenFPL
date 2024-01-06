@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1g9caeo"
+  version_hash: "hb4t1y"
 };
 function get_hooks() {
   return {};
@@ -3468,8 +3468,6 @@ const initAuthStore = () => {
 const authStore = initAuthStore();
 const idlFactory = ({ IDL }) => {
   const List = IDL.Rec();
-  const List_1 = IDL.Rec();
-  const List_2 = IDL.Rec();
   const SeasonId = IDL.Nat16;
   const FixtureStatusType = IDL.Variant({
     Unplayed: IDL.Null,
@@ -3610,13 +3608,12 @@ const idlFactory = ({ IDL }) => {
     points: IDL.Int16,
     monthlyBonusesAvailable: IDL.Nat8
   });
-  List_1.fill(IDL.Opt(IDL.Tuple(FantasyTeamSnapshot, List_1)));
+  List.fill(IDL.Opt(IDL.Tuple(FantasyTeamSnapshot, List)));
   const FantasyTeamSeason = IDL.Record({
     seasonId: SeasonId,
-    gameweeks: List_1,
+    gameweeks: List,
     totalPoints: IDL.Int16
   });
-  List.fill(IDL.Opt(IDL.Tuple(FantasyTeamSeason, List)));
   const ProfileDTO = IDL.Record({
     playerIds: IDL.Vec(PlayerId),
     countrymenCountryId: CountryId,
@@ -3632,7 +3629,7 @@ const idlFactory = ({ IDL }) => {
     bankQuarterMillions: IDL.Nat16,
     noEntryPlayerId: PlayerId,
     safeHandsPlayerId: PlayerId,
-    history: List,
+    history: IDL.Vec(FantasyTeamSeason),
     braceBonusGameweek: GameweekNumber,
     favouriteClubId: ClubId,
     passMasterGameweek: GameweekNumber,
@@ -3963,7 +3960,6 @@ const idlFactory = ({ IDL }) => {
     ok: IDL.Vec(PlayerPointsDTO),
     err: Error2
   });
-  List_2.fill(IDL.Opt(IDL.Tuple(PlayerEventData, List_2)));
   const PlayerScoreDTO = IDL.Record({
     id: IDL.Nat16,
     clubId: ClubId,
@@ -3973,7 +3969,7 @@ const idlFactory = ({ IDL }) => {
     goalsScored: IDL.Int16,
     saves: IDL.Int16,
     goalsConceded: IDL.Int16,
-    events: List_2,
+    events: IDL.Vec(PlayerEventData),
     position: PlayerPosition,
     points: IDL.Int16
   });
@@ -4432,19 +4428,20 @@ function createSystemStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
+    const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let updatedSystemStateData = await actor.getSystemState();
-      if (isError(updatedSystemStateData)) {
+      let result = await actor.getSystemState();
+      if (isError(result)) {
         console.error("Error syncing system store");
         return;
       }
+      let updatedSystemStateData = result.ok;
       localStorage.setItem(
         category,
-        JSON.stringify(updatedSystemStateData.ok, replacer)
+        JSON.stringify(updatedSystemStateData, replacer)
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedSystemStateData.ok);
+      set(updatedSystemStateData);
     } else {
       const cachedSystemStateData = localStorage.getItem(category);
       let cachedSystemState = null;
@@ -4470,6 +4467,9 @@ function createSystemStore() {
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateSystemState(systemState);
+      if (isError(result)) {
+        console.error("Error fetching system state.");
+      }
       sync();
       return result;
     } catch (error2) {
@@ -4487,14 +4487,14 @@ function createSystemStore() {
 const systemStore = createSystemStore();
 function createFixtureStore() {
   const { subscribe: subscribe2, set } = writable([]);
-  let systemState;
-  systemStore.subscribe((value) => {
-    systemState = value;
-  });
   let actor = ActorFactory.createActor(
     idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
+  let systemState;
+  systemStore.subscribe((value) => {
+    systemState = value;
+  });
   async function sync() {
     const category = "fixtures";
     const newHashValues = await actor.getDataHashes();
@@ -4505,20 +4505,20 @@ function createFixtureStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
+    const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      const updatedFixturesData = await actor.getFixtures(
-        systemState.calculationSeasonId
-      );
-      if (isError(updatedFixturesData)) {
-        return [];
+      const result = await actor.getFixtures(systemState.calculationSeasonId);
+      if (isError(result)) {
+        console.error("error syncing fixture store");
+        return;
       }
+      let updatedFixturesData = result.ok;
       localStorage.setItem(
         category,
-        JSON.stringify(updatedFixturesData.ok, replacer)
+        JSON.stringify(updatedFixturesData, replacer)
       );
       localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
-      set(updatedFixturesData.ok);
+      set(updatedFixturesData);
     } else {
       const cachedFixturesData = localStorage.getItem(category);
       let cachedFixtures = [];
@@ -4531,6 +4531,7 @@ function createFixtureStore() {
     }
   }
   async function getNextFixture() {
+    console.log("Getting fixtures");
     let fixtures = [];
     await sync();
     await subscribe2((value) => {
@@ -4580,7 +4581,7 @@ function createTeamStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
+    const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
       const updatedTeamsData = await actor.getClubs();
       if (isError(updatedTeamsData)) {
@@ -5061,7 +5062,49 @@ function createManagerStore() {
   );
   async function getManager() {
     try {
-      return await actor.getManager();
+      let newManager = {
+        playerIds: [],
+        countrymenCountryId: 0,
+        username: "",
+        goalGetterPlayerId: 0,
+        hatTrickHeroGameweek: 0,
+        transfersAvailable: 0,
+        termsAccepted: false,
+        teamBoostGameweek: 0,
+        captainFantasticGameweek: 0,
+        createDate: 0n,
+        countrymenGameweek: 0,
+        bankQuarterMillions: 0,
+        noEntryPlayerId: 0,
+        safeHandsPlayerId: 0,
+        history: [],
+        braceBonusGameweek: 0,
+        favouriteClubId: 0,
+        passMasterGameweek: 0,
+        teamBoostClubId: 0,
+        goalGetterGameweek: 0,
+        captainFantasticPlayerId: 0,
+        profilePicture: [],
+        transferWindowGameweek: 0,
+        noEntryGameweek: 0,
+        prospectsGameweek: 0,
+        safeHandsGameweek: 0,
+        principalId: "",
+        passMasterPlayerId: 0,
+        captainId: 0,
+        monthlyBonusesAvailable: 0
+      };
+      const identityActor = await ActorFactory.createIdentityActor(
+        authStore,
+        { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
+      );
+      let result = await identityActor.getManager();
+      if (isError(result)) {
+        console.error("Error getting manager.");
+        set(newManager);
+      }
+      let manager = result.ok;
+      return manager;
     } catch (error2) {
       console.error("Error fetching manager for gameweek:", error2);
       throw error2;
@@ -5069,7 +5112,12 @@ function createManagerStore() {
   }
   async function getPublicProfile(principalId) {
     try {
-      return await actor.getPublicProfile(principalId);
+      let result = await actor.getPublicProfile(principalId);
+      if (isError(result)) {
+        console.error("Error getting public profile");
+      }
+      let profile = result.ok;
+      return profile;
     } catch (error2) {
       console.error("Error fetching manager profile for gameweek:", error2);
       throw error2;
@@ -5077,7 +5125,11 @@ function createManagerStore() {
   }
   async function getTotalManagers() {
     try {
-      const managerCountData = await actor.getTotalManagers();
+      let result = await actor.getTotalManagers();
+      if (isError(result)) {
+        console.error("Error getting public profile");
+      }
+      const managerCountData = result.ok;
       return Number(managerCountData);
     } catch (error2) {
       console.error("Error fetching total managers:", error2);
@@ -5086,11 +5138,15 @@ function createManagerStore() {
   }
   async function getFantasyTeamForGameweek(managerId, gameweek) {
     try {
-      const fantasyTeamData = await actor.getFantasyTeamForGameweek(
+      let result = await actor.getManagerGameweek(
         managerId,
         systemState?.calculationGameweek,
         gameweek
       );
+      if (isError(result)) {
+        console.error("Error fetching fantasy team for gameweek:");
+      }
+      const fantasyTeamData = result.ok;
       return fantasyTeamData;
     } catch (error2) {
       console.error("Error fetching fantasy team for gameweek:", error2);
@@ -5103,7 +5159,12 @@ function createManagerStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const fantasyTeam = await identityActor.getFantasyTeam();
+      const result = await identityActor.getManager();
+      if (isError(result)) {
+        console.error("Error fetching fantasy team.");
+        return;
+      }
+      let fantasyTeam = result.ok;
       return fantasyTeam;
     } catch (error2) {
       console.error("Error fetching fantasy team:", error2);
@@ -5124,13 +5185,18 @@ function createManagerStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const fantasyTeam = await identityActor.saveFantasyTeam(
+      let result = await identityActor.saveFantasyTeam(
         userFantasyTeam.playerIds,
         userFantasyTeam.captainId,
         bonusPlayed,
         bonusPlayerId,
         bonusTeamId
       );
+      if (isError(result)) {
+        console.error("Error saving fantasy team");
+        return;
+      }
+      const fantasyTeam = result.ok;
       return fantasyTeam;
     } catch (error2) {
       console.error("Error saving fantasy team:", error2);
@@ -5237,9 +5303,13 @@ function createCountriesStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
+    const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let updatedCountriesData = await actor.getCountries();
+      let result = await actor.getCountries();
+      if (isError(result)) {
+        console.error("Error fetching countries");
+      }
+      let updatedCountriesData = result.ok;
       localStorage.setItem(
         category,
         JSON.stringify(updatedCountriesData, replacer)
@@ -5272,7 +5342,6 @@ function createWeeklyLeaderboardStore() {
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
   async function sync(seasonId, gameweek) {
-    let category2 = "weekly_leaderboard";
     const newHashValues = await actor.getDataHashes();
     let error2 = isError(newHashValues);
     if (error2) {
@@ -5280,24 +5349,31 @@ function createWeeklyLeaderboardStore() {
       return;
     }
     let dataCacheValues = newHashValues.ok;
-    let categoryHash = dataCacheValues.find((x) => x.category === category2) ?? null;
-    const localHash = localStorage.getItem(category2);
+    let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
+    const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getWeeklyLeaderboard(
-        seasonId,
-        gameweek,
-        100,
-        0
-      );
-      if (isError(updatedLeaderboardData)) {
+      let result = await actor.getWeeklyLeaderboard(seasonId, gameweek, 100, 0);
+      if (isError(result)) {
+        let emptyLeaderboard = {
+          entries: [],
+          gameweek: 0,
+          seasonId: 0,
+          totalEntries: 0n
+        };
+        localStorage.setItem(
+          category,
+          JSON.stringify(emptyLeaderboard, replacer)
+        );
+        localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
         console.error("error fetching leaderboard store");
         return;
       }
+      let updatedLeaderboardData = result.ok;
       localStorage.setItem(
-        category2,
+        category,
         JSON.stringify(updatedLeaderboardData.ok, replacer)
       );
-      localStorage.setItem(`${category2}_hash`, categoryHash?.hash ?? "");
+      localStorage.setItem(`${category}_hash`, categoryHash?.hash ?? "");
       set(updatedLeaderboardData.ok);
     }
   }
@@ -5320,6 +5396,9 @@ function createWeeklyLeaderboardStore() {
         }
       }
     }
+    console.log(
+      "//TODO: THIS SHOULD BE CALLED REPEATEDLY IF THERE IS NO DATA THEN NO ERRORS"
+    );
     let leaderboardData = await actor.getWeeklyLeaderboard(
       seasonId,
       gameweek,
@@ -5328,6 +5407,16 @@ function createWeeklyLeaderboardStore() {
     );
     if (isError(leaderboardData)) {
       console.error("Error fetching weekly leaderboard data");
+      let emptyLeaderboard = {
+        entries: [],
+        gameweek: 0,
+        seasonId: 0,
+        totalEntries: 0n
+      };
+      localStorage.setItem(
+        category,
+        JSON.stringify(emptyLeaderboard, replacer)
+      );
       return { entries: [], gameweek: 0, seasonId: 0, totalEntries: 0n };
     }
     localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
@@ -5369,9 +5458,14 @@ function createPlayerStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
+    const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let updatedPlayersData = await actor.getPlayers();
+      let result = await actor.getPlayers();
+      if (isError(result)) {
+        console.error("Error fetching players data");
+        return;
+      }
+      let updatedPlayersData = result.ok;
       localStorage.setItem(
         category,
         JSON.stringify(updatedPlayersData, replacer)
@@ -5398,12 +5492,12 @@ function createPlayerStore() {
     return loanedPlayers.ok;
   }
   async function getRetiredPlayers(clubId) {
-    let loanedPlayers = await actor.getRetiredPlayers(clubId);
-    if (isError(loanedPlayers)) {
+    let retiredPlayers = await actor.getRetiredPlayers(clubId);
+    if (isError(retiredPlayers)) {
       console.error("Error fetching retired players");
       return [];
     }
-    return loanedPlayers.ok;
+    return retiredPlayers.ok;
   }
   return {
     subscribe: subscribe2,
@@ -5435,12 +5529,17 @@ function createPlayerEventsStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category) ?? null;
-    const localHash = localStorage.getItem(category);
+    const localHash = localStorage.getItem(`${category}_hash`);
     if (categoryHash?.hash != localHash) {
-      let updatedPlayerEventsData = await actor.getPlayerDetailsForGameweek(
+      let result = await actor.getPlayerDetailsForGameweek(
         systemState.calculationSeasonId,
         systemState.calculationGameweek
       );
+      if (isError(result)) {
+        console.error("Error fetching player details for gameweek");
+        return;
+      }
+      let updatedPlayerEventsData = result.ok;
       localStorage.setItem(
         category,
         JSON.stringify(updatedPlayerEventsData, replacer)
@@ -5470,8 +5569,11 @@ function createPlayerEventsStore() {
   }
   async function getPlayerDetails(playerId, seasonId) {
     try {
-      const playerDetailData = await actor.getPlayerDetails(playerId, seasonId);
-      return playerDetailData;
+      let result = await actor.getPlayerDetails(playerId, seasonId);
+      if (isError(result)) {
+        console.error("Error fetching player details");
+      }
+      return result.ok;
     } catch (error2) {
       console.error("Error fetching player data:", error2);
       throw error2;
@@ -5790,6 +5892,11 @@ function createUserStore() {
     return null;
   }
   async function sync() {
+    const localProfile = localStorage.getItem("user_profile_data");
+    if (localProfile) {
+      set(getProfileFromLocalStorage());
+      return;
+    }
     try {
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
@@ -5804,6 +5911,10 @@ function createUserStore() {
       if (!getProfileResponse) {
         await identityActor.createProfile();
         getProfileResponse = await identityActor.getProfile();
+        if (isError(getProfileResponse)) {
+          console.error("Error syncing user store");
+          return;
+        }
       }
       let profileData = getProfileResponse.ok;
       if (profileData && profileData.profilePicture instanceof Uint8Array) {
@@ -5837,6 +5948,10 @@ function createUserStore() {
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.createProfile();
+      if (isError(result)) {
+        console.error("Error creating profile");
+        return;
+      }
       return result;
     } catch (error2) {
       console.error("Error updating username:", error2);
@@ -5850,7 +5965,11 @@ function createUserStore() {
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.updateUsername(username);
-      sync();
+      if (isError(result)) {
+        console.error("Error updating username");
+        return;
+      }
+      await cacheProfile();
       return result;
     } catch (error2) {
       console.error("Error updating username:", error2);
@@ -5863,8 +5982,12 @@ function createUserStore() {
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      sync();
       const result = await identityActor.updateFavouriteTeam(favouriteTeamId);
+      if (isError(result)) {
+        console.error("Error updating favourite team");
+        return;
+      }
+      await cacheProfile();
       return result;
     } catch (error2) {
       console.error("Error updating favourite team:", error2);
@@ -5878,6 +6001,10 @@ function createUserStore() {
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
       const result = await identityActor.getProfile();
+      if (isError(result)) {
+        console.error("Error fetching profile");
+        return;
+      }
       set(result);
       return result;
     } catch (error2) {
@@ -5902,7 +6029,11 @@ function createUserStore() {
             { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
           );
           const result = await identityActor.updateProfilePicture(uint8Array);
-          sync();
+          if (isError(result)) {
+            console.error("Error updating profile picture");
+            return;
+          }
+          await cacheProfile();
           return result;
         } catch (error2) {
           console.error(error2);
@@ -5912,6 +6043,38 @@ function createUserStore() {
       console.error("Error updating username:", error2);
       throw error2;
     }
+  }
+  async function cacheProfile() {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    );
+    let getProfileResponse = await identityActor.getProfile();
+    let error2 = isError(getProfileResponse);
+    if (error2) {
+      console.error("Error fetching user profile");
+      return;
+    }
+    let profileData = getProfileResponse.ok;
+    if (profileData && profileData.profilePicture instanceof Uint8Array) {
+      const base64Picture = uint8ArrayToBase64(profileData.profilePicture);
+      localStorage.setItem(
+        "user_profile_data",
+        JSON.stringify(
+          {
+            ...profileData,
+            profilePicture: base64Picture
+          },
+          replacer
+        )
+      );
+    } else {
+      localStorage.setItem(
+        "user_profile_data",
+        JSON.stringify(profileData, replacer)
+      );
+    }
+    set(profileData);
   }
   return {
     subscribe: subscribe2,
@@ -6060,9 +6223,14 @@ function createMonthlyLeaderboardStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category2) ?? null;
-    const localHash = localStorage.getItem(category2);
+    const localHash = localStorage.getItem(`${category2}_hash`);
     if (categoryHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getMonthlyLeaderboards();
+      let result = await actor.getMonthlyLeaderboards();
+      if (isError(result)) {
+        console.log("Error syncing monthly leaderboards");
+        return;
+      }
+      let updatedLeaderboardData = result.ok;
       localStorage.setItem(
         category2,
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -6089,41 +6257,44 @@ function createMonthlyLeaderboardStore() {
       const cachedData = localStorage.getItem(category);
       if (cachedData) {
         let cachedLeaderboards = JSON.parse(cachedData);
-        let clubLeaderboard = cachedLeaderboards.find(
+        let clubLeaderboard2 = cachedLeaderboards.find(
           (x) => x.clubId === clubId
         );
-        if (clubLeaderboard) {
+        if (clubLeaderboard2) {
           return {
-            ...clubLeaderboard,
-            entries: clubLeaderboard.entries.slice(offset, offset + limit)
+            ...clubLeaderboard2,
+            entries: clubLeaderboard2.entries.slice(offset, offset + limit)
           };
         }
       }
     }
-    let leaderboardData = await actor.getClubLeaderboards(
+    let result = await actor.getClubLeaderboards(
       seasonId,
       month,
       clubId,
       limit,
       offset
     );
-    if (leaderboardData) {
-      let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
-      if (clubLeaderboard == null) {
-        return {
-          month: 0,
-          clubId: 0,
-          totalEntries: 0n,
-          seasonId: 0,
-          entries: []
-        };
-      }
-      return {
-        ...clubLeaderboard,
-        entries: clubLeaderboard.entries.slice(offset, offset + limit)
-      };
+    let emptyReturn = {
+      month: 0,
+      clubId: 0,
+      totalEntries: 0n,
+      seasonId: 0,
+      entries: []
+    };
+    if (isError(result)) {
+      console.log("Error fetching monthly leaderboard");
+      return emptyReturn;
     }
-    return leaderboardData;
+    let leaderboardData = result.ok;
+    let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
+    if (!clubLeaderboard) {
+      return emptyReturn;
+    }
+    return {
+      ...clubLeaderboard,
+      entries: clubLeaderboard.entries.slice(offset, offset + limit)
+    };
   }
   return {
     subscribe: subscribe2,
@@ -6154,11 +6325,16 @@ function createSeasonLeaderboardStore() {
     }
     let dataCacheValues = newHashValues.ok;
     let categoryHash = dataCacheValues.find((x) => x.category === category2) ?? null;
-    const localHash = localStorage.getItem(category2);
+    const localHash = localStorage.getItem(`${category2}_hash`);
     if (categoryHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getSeasonLeaderboard(
+      let result = await actor.getSeasonLeaderboard(
         systemState?.calculationSeasonId
       );
+      if (isError(result)) {
+        console.error("Error syncing season leaderboard.");
+        return;
+      }
+      let updatedLeaderboardData = result.ok;
       localStorage.setItem(
         category2,
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -6207,11 +6383,11 @@ function createSeasonLeaderboardStore() {
         }
       }
     }
-    let leaderboardData = await actor.getSeasonLeaderboard(
-      seasonId,
-      limit,
-      offset
-    );
+    let result = await actor.getSeasonLeaderboard(seasonId, limit, offset);
+    if (isError(result)) {
+      console.error("Error fetching season leaderboard");
+    }
+    let leaderboardData = result.ok;
     localStorage.setItem(category, JSON.stringify(leaderboardData, replacer));
     return leaderboardData;
   }
@@ -6316,7 +6492,7 @@ function createGovernanceStore() {
       console.log(result);
       console.log(seasonFixtures);
       if (isError(result)) {
-        console.error("Error submitting proposal");
+        console.error("Error submitting proposal: ", result);
         return;
       }
     } catch (error2) {
@@ -7007,7 +7183,7 @@ const Page$4 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   }
   getGridSetup(selectedFormation);
   {
-    if ($fantasyTeam) {
+    if ($fantasyTeam && $playerStore.length > 0) {
       disableInvalidFormations();
       updateTeamValue();
       checkSaveButtonConditions();

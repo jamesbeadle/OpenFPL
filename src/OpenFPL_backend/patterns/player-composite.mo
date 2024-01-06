@@ -257,7 +257,7 @@ module {
         let scoreDTO : DTOs.PlayerScoreDTO = {
           id = player.id;
           points = points;
-          events = events;
+          events = List.toArray(events);
           clubId = player.clubId;
           position = player.position;
           goalsScored = goalsScored;
@@ -1340,9 +1340,9 @@ module {
       nextPlayerId := stable_next_player_id;
     };
 
-    public func init(){
+    public func init() {
       let testPlayers = Players.Players();
       players := List.fromArray(testPlayers.players);
-    }
+    };
   };
 };
