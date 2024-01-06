@@ -8,7 +8,6 @@
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { managerStore } from "$lib/stores/manager-store";
-  import { countriesStore } from "$lib/stores/country-store";
 
   import BonusPanel from "$lib/components/pick-team/bonus-panel.svelte";
   import AddPlayerModal from "$lib/components/pick-team/add-player-modal.svelte";
