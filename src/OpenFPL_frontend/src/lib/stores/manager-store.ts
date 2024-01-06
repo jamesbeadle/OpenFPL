@@ -51,7 +51,14 @@ function createManagerStore() {
     principalId: string
   ): Promise<PublicProfileDTO> {
     try {
-      return (await actor.getPublicProfile(principalId)) as PublicProfileDTO;
+      let result = await actor.getPublicProfile(principalId);
+
+      if(isError(result)){
+        console.error("Error getting public profile");
+      }
+
+      let profile = result.ok;
+      return profile;
     } catch (error) {
       console.error("Error fetching manager profile for gameweek:", error);
       throw error;
@@ -79,11 +86,18 @@ function createManagerStore() {
     gameweek: number
   ): Promise<FantasyTeamSnapshot> {
     try {
-      const fantasyTeamData = (await actor.getManagerGameweek(
+
+      let result = await actor.getManagerGameweek(
         managerId,
         systemState?.calculationGameweek,
         gameweek
-      )) as FantasyTeamSnapshot;
+      );
+      
+      if(isError(result)){
+        console.error("Error fetching fantasy team for gameweek:");  
+      }
+
+      const fantasyTeamData = result.ok;
       return fantasyTeamData;
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
@@ -93,11 +107,17 @@ function createManagerStore() {
 
   async function getFantasyTeam(): Promise<any> {
     try {
-      const identityActor = await ActorFactory.createIdentityActor(
+      const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const fantasyTeam = await identityActor.getManager();
+      const result = await identityActor.getManager();
+
+      if(isError(result)){
+        console.error("Error fetching fantasy team.")
+      }
+
+      let fantasyTeam = result.ok;
       return fantasyTeam;
     } catch (error) {
       console.error("Error fetching fantasy team:", error);
@@ -121,17 +141,25 @@ function createManagerStore() {
         bonusTeamId = getBonusTeamId(userFantasyTeam, activeGameweek);
       }
 
-      const identityActor = await ActorFactory.createIdentityActor(
+      const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
       );
-      const fantasyTeam = await identityActor.saveFantasyTeam(
+
+      let result = await identityActor.saveFantasyTeam(
         userFantasyTeam.playerIds,
         userFantasyTeam.captainId,
         bonusPlayed,
         bonusPlayerId,
         bonusTeamId
       );
+
+      if(isError(result)){
+        console.error("Error saving fantasy team");
+        return;
+      }
+
+      const fantasyTeam = result.ok;
       return fantasyTeam;
     } catch (error) {
       console.error("Error saving fantasy team:", error);

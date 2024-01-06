@@ -43,7 +43,15 @@ function createMonthlyLeaderboardStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let updatedLeaderboardData = await actor.getMonthlyLeaderboards();
+      let result = await actor.getMonthlyLeaderboards();
+      
+      if(isError(result)){
+        console.log("Error syncing monthly leaderboards");
+        return;
+      }
+
+      let updatedLeaderboardData = result.ok;
+      
       localStorage.setItem(
         category,
         JSON.stringify(updatedLeaderboardData, replacer)
@@ -92,34 +100,37 @@ function createMonthlyLeaderboardStore() {
       }
     }
 
-    let leaderboardData = (await actor.getClubLeaderboards(
+    let result = await actor.getClubLeaderboards(
       seasonId,
       month,
       clubId,
       limit,
       offset
-    )) as MonthlyLeaderboardDTO[];
+    );
 
-    if (leaderboardData) {
-      let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
-
-      if (clubLeaderboard == null) {
-        return {
-          month: 0,
-          clubId: 0,
-          totalEntries: 0n,
-          seasonId: 0,
-          entries: [],
-        };
-      }
-
-      return {
-        ...clubLeaderboard,
-        entries: clubLeaderboard.entries.slice(offset, offset + limit),
-      };
+    let emptyReturn = {
+      month: 0,
+      clubId: 0,
+      totalEntries: 0n,
+      seasonId: 0,
+      entries: [],
     }
 
-    return leaderboardData;
+    if(isError(result)){
+      console.log("Error fetching monthly leaderboard");
+      return emptyReturn;
+    }
+
+    let leaderboardData = result.ok as MonthlyLeaderboardDTO[];
+    let clubLeaderboard = leaderboardData.find((x) => x.clubId === clubId);
+    if(!clubLeaderboard){
+      return emptyReturn;
+    }
+    
+    return {
+      ...clubLeaderboard,
+      entries: clubLeaderboard.entries.slice(offset, offset + limit),
+    };
   }
 
   return {

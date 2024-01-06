@@ -57,10 +57,18 @@ function createPlayerEventsStore() {
     const localHash = localStorage.getItem(`${category}_hash`);
 
     if (categoryHash?.hash != localHash) {
-      let updatedPlayerEventsData = await actor.getPlayerDetailsForGameweek(
+      let result = await actor.getPlayerDetailsForGameweek(
         systemState.calculationSeasonId,
         systemState.calculationGameweek
       );
+
+      if(isError(result)){
+        console.error("Error fetching player details for gameweek");
+        return;
+      }
+
+      let updatedPlayerEventsData = result.ok;
+
       localStorage.setItem(
         category,
         JSON.stringify(updatedPlayerEventsData, replacer)
@@ -97,8 +105,13 @@ function createPlayerEventsStore() {
     seasonId: number
   ): Promise<PlayerDetailDTO> {
     try {
-      const playerDetailData = await actor.getPlayerDetails(playerId, seasonId);
-      return playerDetailData;
+      let result = await actor.getPlayerDetails(playerId, seasonId);
+
+      if(isError(result)){
+        console.error("Error fetching player details")
+      }
+
+      return result.ok;
     } catch (error) {
       console.error("Error fetching player data:", error);
       throw error;
@@ -114,7 +127,7 @@ function createPlayerEventsStore() {
     let allPlayerEvents: PlayerPointsDTO[] = [];
 
     if (systemState?.calculationGameweek === gameweek) {
-      allPlayerEvents = await getPlayerEvents();
+      allPlayerEvents = await getPlayerEvents(); //TODO: THIS SHOULDN'T BE CALLED AS INFOR SHOULD BE RETRIEVED BY BACKEND
     } else {
       allPlayerEvents = await actor.getPlayersDetailsForGameweek(
         fantasyTeam.playerIds,
