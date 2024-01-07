@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { userStore } from "$lib/stores/user-store";
+  import { userStore } from "$lib/stores/user-store";
   import { Modal } from "@dfinity/gix-components";
 
   export let visible: boolean;
@@ -29,7 +29,7 @@
     }
   }
 
-  async function isDisplayNameAvailable(displayName: string): Promise<boolean>{
+  async function isDisplayNameAvailable(displayName: string): Promise<boolean> {
     return await userStore.isUsernameAvailable(displayName);
   }
 
@@ -37,8 +37,8 @@
     checkDisplayNameAvailability(newUsername);
   }
 
-  $: isSubmitDisabled = !isDisplayNameValid(newUsername) || !isUsernameAvailable;
-
+  $: isSubmitDisabled =
+    !isDisplayNameValid(newUsername) || !isUsernameAvailable;
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>

@@ -60,8 +60,6 @@ function createManagerStore() {
 
   async function getManager(): Promise<ProfileDTO> {
     try {
-      
-
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
         process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -121,7 +119,6 @@ function createManagerStore() {
     gameweek: number
   ): Promise<FantasyTeamSnapshot | null> {
     try {
-
       const category = "gameweek_points";
       const newHashValues = await actor.getDataHashes();
 
@@ -130,33 +127,33 @@ function createManagerStore() {
         console.error("Error fetching hash values");
         return null;
       }
-      
+
       let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
 
       let weelklyLeaderboardHash =
-        dataCacheValues.find((x: DataCacheDTO) => x.category === "weekly_leaderboard_hash") ??
-        null;
+        dataCacheValues.find(
+          (x: DataCacheDTO) => x.category === "weekly_leaderboard_hash"
+        ) ?? null;
 
       const localHash = localStorage.getItem(`${category}_hash`);
 
       if (weelklyLeaderboardHash != localHash) {
-      
         let result = await actor.getManagerGameweek(
           managerId,
           systemState?.calculationGameweek,
           gameweek
         );
-  
+
         if (isError(result)) {
           console.error("Error fetching fantasy team for gameweek:");
         }
 
         let snapshot = result.ok;
+        localStorage.setItem(category, JSON.stringify(snapshot, replacer));
         localStorage.setItem(
-          category,
-          JSON.stringify(snapshot, replacer)
+          `${category}_hash`,
+          weelklyLeaderboardHash?.hash ?? ""
         );
-        localStorage.setItem(`${category}_hash`, weelklyLeaderboardHash?.hash ?? "");
         const fantasyTeamData = result.ok;
         return fantasyTeamData;
       } else {

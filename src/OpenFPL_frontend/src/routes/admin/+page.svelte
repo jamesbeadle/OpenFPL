@@ -189,7 +189,6 @@
   function hideUpdateClubModal(): void {
     showUpdateClubModal = false;
   }
-
 </script>
 
 <Layout>
@@ -206,20 +205,20 @@
       closeModal={hideSnapshotModal}
       cancelModal={hideSnapshotModal}
     />
-    
+
     <RevaluePlayerUp
       visible={showRevaluePlayerUpModal}
-      cancelModal={hideRevaluePlayerUpModal} 
+      cancelModal={hideRevaluePlayerUpModal}
     />
     <RevaluePlayerDown
       visible={showRevaluePlayerDownModal}
       cancelModal={hideRevaluePlayerDownModal}
-     />
+    />
     <AddInitialFixtures
       visible={showAddInitialFixturesModal}
       cancelModal={hideAddInitialFixturesModal}
     />
-  
+
     <RescheduleFixture
       visible={showRescheduleFixtureModal}
       cancelModal={hideRescehduleFixturesModal}
@@ -292,13 +291,11 @@
         <div class="flex flex-wrap p-4">
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayRevaluePlayerUpModal}
-            >Revalue Player Up</button
+            on:click={displayRevaluePlayerUpModal}>Revalue Player Up</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayRevaluePlayerDownModal}
-            >Revalue Player Down</button
+            on:click={displayRevaluePlayerDownModal}>Revalue Player Down</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
@@ -307,63 +304,51 @@
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayRescheduleFixtureModal}
-            >Reschedule Fixtures</button
+            on:click={displayRescheduleFixtureModal}>Reschedule Fixtures</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayLoanPlayerModal}
-            >Loan Player</button
+            on:click={displayLoanPlayerModal}>Loan Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayTransferPlayerModal}
-            >Transfer Player</button
+            on:click={displayTransferPlayerModal}>Transfer Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayRecallPlayerModal}
-            >Recall Player</button
+            on:click={displayRecallPlayerModal}>Recall Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayCreatePlayerModal}
-            >Create Player</button
+            on:click={displayCreatePlayerModal}>Create Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayUpdatePlayerModal}
-            >Update Player</button
+            on:click={displayUpdatePlayerModal}>Update Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displaySetPlayerInjuryModal}
-            >Set Player Injury</button
+            on:click={displaySetPlayerInjuryModal}>Set Player Injury</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayRetirePlayerModal}
-            >Retire Player</button
+            on:click={displayRetirePlayerModal}>Retire Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayUnretirePlayerModal}
-            >Unretire Player</button
+            on:click={displayUnretirePlayerModal}>Unretire Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayPromoteFormerClubModal}
-            >Promote Former Club</button
+            on:click={displayPromoteFormerClubModal}>Promote Former Club</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayPromoteNewClubModal}
-            >Promote New Club</button
+            on:click={displayPromoteNewClubModal}>Promote New Club</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 my-1"
-            on:click={displayUpdateClubModal}
-            >Update Club</button
+            on:click={displayUpdateClubModal}>Update Club</button
           >
         </div>
 

@@ -44,7 +44,7 @@
   }
 
   async function getRetiredPlayers() {
-    if(selectedClubId <= 0){
+    if (selectedClubId <= 0) {
       return;
     }
     clubRetiredPlayers = await playerStore.getRetiredPlayers(selectedClubId);

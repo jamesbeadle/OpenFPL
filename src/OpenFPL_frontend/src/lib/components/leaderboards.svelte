@@ -89,14 +89,13 @@
     selectedTeamId,
     loadLeaderboardData();
 
-    
   function performSearch() {
     searchTerm = searchInput;
     loadLeaderboardData();
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       performSearch();
     }
   }

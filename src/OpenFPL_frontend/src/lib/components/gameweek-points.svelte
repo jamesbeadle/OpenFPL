@@ -78,7 +78,7 @@
       selectedGameweek
     );
 
-    if(!fantasyTeam){
+    if (!fantasyTeam) {
       return;
     }
 

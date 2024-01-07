@@ -30,18 +30,24 @@
   const pageSize = 10;
   console.log($playerStore);
   $: filteredPlayers = $playerStore.filter((player) => {
-    const normalizedFilterSurname = normalizeString(filterSurname.toLowerCase());
-    const normalizedPlayerLastName = normalizeString(player.lastName.toLowerCase());
-  
-    return (
-        (filterTeam === -1 || player.clubId === filterTeam) &&
-        (filterPosition === -1 || convertPlayerPosition(player.position) === filterPosition) &&
-        filterColumn > -2 &&
-        (minValue === 0 || player.valueQuarterMillions >= minValue) &&
-        (maxValue === 0 || player.valueQuarterMillions <= maxValue) &&
-        (filterSurname === "" || normalizedPlayerLastName.includes(normalizedFilterSurname))
+    const normalizedFilterSurname = normalizeString(
+      filterSurname.toLowerCase()
     );
-});
+    const normalizedPlayerLastName = normalizeString(
+      player.lastName.toLowerCase()
+    );
+
+    return (
+      (filterTeam === -1 || player.clubId === filterTeam) &&
+      (filterPosition === -1 ||
+        convertPlayerPosition(player.position) === filterPosition) &&
+      filterColumn > -2 &&
+      (minValue === 0 || player.valueQuarterMillions >= minValue) &&
+      (maxValue === 0 || player.valueQuarterMillions <= maxValue) &&
+      (filterSurname === "" ||
+        normalizedPlayerLastName.includes(normalizedFilterSurname))
+    );
+  });
 
   $: paginatedPlayers = addTeamDataToPlayers(
     filteredPlayers.slice((currentPage - 1) * pageSize, currentPage * pageSize)
@@ -177,9 +183,8 @@
   }
 
   function normalizeString(str: string) {
-      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
-
 </script>
 
 <Modal {visible} on:nnsClose={closeAddPlayerModal}>

@@ -118,8 +118,8 @@ actor class SeasonLeaderboardCanister() {
         let filteredEntries = List.filter<T.LeaderboardEntry>(
           foundLeaderboard.entries,
           func(entry : T.LeaderboardEntry) : Bool {
-            Text.startsWith(entry.username, #text searchTerm)
-          }
+            Text.startsWith(entry.username, #text searchTerm);
+          },
         );
 
         let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
@@ -135,7 +135,6 @@ actor class SeasonLeaderboardCanister() {
       };
     };
   };
-
 
   public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);

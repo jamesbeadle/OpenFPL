@@ -112,7 +112,12 @@ function createSeasonLeaderboardStore() {
       }
     }
 
-    let result = await actor.getSeasonLeaderboard(seasonId, limit, offset, searchTerm);
+    let result = await actor.getSeasonLeaderboard(
+      seasonId,
+      limit,
+      offset,
+      searchTerm
+    );
 
     if (isError(result)) {
       console.error("Error fetching season leaderboard");

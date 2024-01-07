@@ -31,8 +31,8 @@
   let isLoading = true;
   let showConfirm = false;
 
-  $: isSubmitDisabled = !isLoading && 
-    playerId <= 0 ||
+  $: isSubmitDisabled =
+    (!isLoading && playerId <= 0) ||
     firstName.length > 50 ||
     lastName.length > 50 ||
     (shirtNumber <= 0 && shirtNumber > 99) ||

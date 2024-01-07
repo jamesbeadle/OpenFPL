@@ -206,7 +206,7 @@ function createUserStore() {
     }
   }
 
-  async function isUsernameAvailable(username: string) : Promise<boolean> {
+  async function isUsernameAvailable(username: string): Promise<boolean> {
     const identityActor: any = await ActorFactory.createIdentityActor(
       authStore,
       process.env.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -259,7 +259,7 @@ function createUserStore() {
     updateProfilePicture,
     createProfile,
     getProfileFromLocalStorage,
-    isUsernameAvailable
+    isUsernameAvailable,
   };
 }
 

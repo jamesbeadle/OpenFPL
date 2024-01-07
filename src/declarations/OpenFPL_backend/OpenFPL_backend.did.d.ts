@@ -619,7 +619,7 @@ export interface _SERVICE {
     Result_14
   >;
   getMonthlyLeaderboard: ActorMethod<
-    [SeasonId, ClubId, CalendarMonth, bigint, bigint],
+    [SeasonId, ClubId, CalendarMonth, bigint, bigint, string],
     Result_13
   >;
   getMonthlyLeaderboards: ActorMethod<[SeasonId, CalendarMonth], Result_12>;
@@ -633,11 +633,14 @@ export interface _SERVICE {
   getProfile: ActorMethod<[], Result_8>;
   getPublicProfile: ActorMethod<[string, SeasonId, GameweekNumber], Result_7>;
   getRetiredPlayers: ActorMethod<[ClubId], Result_6>;
-  getSeasonLeaderboard: ActorMethod<[SeasonId, bigint, bigint], Result_5>;
+  getSeasonLeaderboard: ActorMethod<
+    [SeasonId, bigint, bigint, string],
+    Result_5
+  >;
   getSystemState: ActorMethod<[], Result_4>;
   getTotalManagers: ActorMethod<[], Result_3>;
   getWeeklyLeaderboard: ActorMethod<
-    [SeasonId, GameweekNumber, bigint, bigint],
+    [SeasonId, GameweekNumber, bigint, bigint, string],
     Result_2
   >;
   init: ActorMethod<[], undefined>;

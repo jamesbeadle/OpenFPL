@@ -35,7 +35,7 @@
     PlayerDTO,
     ProfileDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import SetTeamName from "$lib/components/pick-team/set-team-name.svelte";
+  import SetTeamName from "$lib/components/pick-team/set-team-name.svelte";
 
   interface FormationDetails {
     positions: number[];
@@ -155,7 +155,7 @@
 
         if (!newTeam && activeGameweek > 1) {
           transfersAvailable.set(userFantasyTeam.transfersAvailable);
-          if($transfersAvailable <= 0){
+          if ($transfersAvailable <= 0) {
             canSellPlayer = false;
           }
         }
@@ -273,7 +273,6 @@
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
-    
     if ($fantasyTeam) {
       if (
         canAddPlayerToCurrentFormation(player, $fantasyTeam, selectedFormation)
@@ -287,13 +286,10 @@
       }
       if (!newTeam && activeGameweek > 1) {
         transfersAvailable.update((n) => (n > 0 ? n - 1 : 0));
-        if($transfersAvailable <= 0){
+        if ($transfersAvailable <= 0) {
           canSellPlayer = false;
         }
         //TODO: Allow sell of insesson players
-        
-
-
       }
       bankBalance.update((n) =>
         n - player.valueQuarterMillions > 0
@@ -304,8 +300,6 @@
       if (!sessionAddedPlayers.includes(player.id)) {
         sessionAddedPlayers.push(player.id);
       }
-
-
     }
   }
 
@@ -359,8 +353,8 @@
       return;
     }
 
-    console.log("Team before update")
-    console.log($fantasyTeam)
+    console.log("Team before update");
+    console.log($fantasyTeam);
 
     fantasyTeam.update((currentTeam) => {
       if (!currentTeam) return null;
@@ -376,15 +370,19 @@
       }
     });
 
-    if(!$fantasyTeam){
+    if (!$fantasyTeam) {
       return;
     }
 
     let updatedTeam = $fantasyTeam;
-    console.log("Team before update")
-    console.log(updatedTeam)
+    console.log("Team before update");
+    console.log(updatedTeam);
 
-    if(updatedTeam.captainId > 0 && $fantasyTeam.playerIds.filter(x => x == updatedTeam.captainId).length == 0){
+    if (
+      updatedTeam.captainId > 0 &&
+      $fantasyTeam.playerIds.filter((x) => x == updatedTeam.captainId).length ==
+        0
+    ) {
       newCaptainId = getHighestValuedPlayerId($fantasyTeam);
       changeCaptain();
     }
@@ -530,10 +528,10 @@
   }
 
   function setCaptain(playerId: number) {
-    console.log("Setting captain")
-    if(newCaptainId == 0){
-      console.log("Current captain 0")
-      newCaptainId = playerId; 
+    console.log("Setting captain");
+    if (newCaptainId == 0) {
+      console.log("Current captain 0");
+      newCaptainId = playerId;
       changeCaptain();
       return;
     }
@@ -545,14 +543,16 @@
   }
 
   function updateCaptainIfNeeded(currentTeam: ProfileDTO) {
-
-    if(currentTeam.playerIds.filter(x => x == 0).length > 0){
-      console.log("Team has spaces")
+    if (currentTeam.playerIds.filter((x) => x == 0).length > 0) {
+      console.log("Team has spaces");
       return;
     }
 
-    if(currentTeam.captainId > 0 && currentTeam.playerIds.filter(x => x == currentTeam.captainId).length > 0){
-      console.log("Team captain already set")
+    if (
+      currentTeam.captainId > 0 &&
+      currentTeam.playerIds.filter((x) => x == currentTeam.captainId).length > 0
+    ) {
+      console.log("Team captain already set");
       return;
     }
 
@@ -733,10 +733,12 @@
 
       const topN = 3;
       const candidates = availablePlayers.slice(0, topN);
-      const randomPlayer = candidates[Math.floor(Math.random() * candidates.length)];
+      const randomPlayer =
+        candidates[Math.floor(Math.random() * candidates.length)];
 
       if (randomPlayer) {
-        const potentialNewBudget = remainingBudget - randomPlayer.valueQuarterMillions;
+        const potentialNewBudget =
+          remainingBudget - randomPlayer.valueQuarterMillions;
         if (potentialNewBudget >= 0) {
           updatedFantasyTeam.playerIds[index] = randomPlayer.id;
           remainingBudget = potentialNewBudget;
@@ -755,14 +757,12 @@
     updateCaptainIfNeeded($fantasyTeam!);
   }
 
-
   async function saveFantasyTeam() {
-
-    if(!$fantasyTeam){
+    if (!$fantasyTeam) {
       return;
     }
 
-    if($fantasyTeam.username == ""){
+    if ($fantasyTeam.username == "") {
       showUsernameModal = true;
       return;
     }
@@ -816,7 +816,7 @@
   }
 
   function changeCaptain() {
-    console.log(`updating captain to ${newCaptainId}`)
+    console.log(`updating captain to ${newCaptainId}`);
     selectedPosition = -1;
     selectedColumn = -1;
     fantasyTeam.update((currentTeam) => {
@@ -854,11 +854,11 @@
       onClose={closeCaptainModal}
       onConfirm={changeCaptain}
     />
-    <SetTeamName 
+    <SetTeamName
       visible={showUsernameModal}
       setUsername={saveFantasyTeam}
       cancelModal={closeUsernameModal}
-      newUsername={newUsername}
+      {newUsername}
     />
     <div>
       <div class="hidden xl:flex page-header-wrapper">
@@ -1160,7 +1160,9 @@
                                     />
                                   </button>
                                 {:else}
-                                  <div class="w-4 h-4 sm:w-6 sm:h-6 p-1">&nbsp;</div>
+                                  <div class="w-4 h-4 sm:w-6 sm:h-6 p-1">
+                                    &nbsp;
+                                  </div>
                                 {/if}
                                 <div
                                   class="flex justify-center items-center flex-grow"

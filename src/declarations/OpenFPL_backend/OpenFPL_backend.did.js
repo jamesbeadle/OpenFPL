@@ -644,7 +644,7 @@ export const idlFactory = ({ IDL }) => {
       []
     ),
     getMonthlyLeaderboard: IDL.Func(
-      [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat],
+      [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
       [Result_13],
       []
     ),
@@ -669,14 +669,14 @@ export const idlFactory = ({ IDL }) => {
     ),
     getRetiredPlayers: IDL.Func([ClubId], [Result_6], ["query"]),
     getSeasonLeaderboard: IDL.Func(
-      [SeasonId, IDL.Nat, IDL.Nat],
+      [SeasonId, IDL.Nat, IDL.Nat, IDL.Text],
       [Result_5],
       []
     ),
     getSystemState: IDL.Func([], [Result_4], ["query"]),
     getTotalManagers: IDL.Func([], [Result_3], ["query"]),
     getWeeklyLeaderboard: IDL.Func(
-      [SeasonId, GameweekNumber, IDL.Nat, IDL.Nat],
+      [SeasonId, GameweekNumber, IDL.Nat, IDL.Nat, IDL.Text],
       [Result_2],
       []
     ),

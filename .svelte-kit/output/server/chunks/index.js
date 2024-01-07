@@ -3262,7 +3262,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "hb4t1y"
+  version_hash: "9zd4pg"
 };
 function get_hooks() {
   return {};
@@ -4112,7 +4112,7 @@ const idlFactory = ({ IDL }) => {
       []
     ),
     getMonthlyLeaderboard: IDL.Func(
-      [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat],
+      [SeasonId, ClubId, CalendarMonth, IDL.Nat, IDL.Nat, IDL.Text],
       [Result_13],
       []
     ),
@@ -4137,14 +4137,14 @@ const idlFactory = ({ IDL }) => {
     ),
     getRetiredPlayers: IDL.Func([ClubId], [Result_6], ["query"]),
     getSeasonLeaderboard: IDL.Func(
-      [SeasonId, IDL.Nat, IDL.Nat],
+      [SeasonId, IDL.Nat, IDL.Nat, IDL.Text],
       [Result_5],
       []
     ),
     getSystemState: IDL.Func([], [Result_4], ["query"]),
     getTotalManagers: IDL.Func([], [Result_3], ["query"]),
     getWeeklyLeaderboard: IDL.Func(
-      [SeasonId, GameweekNumber, IDL.Nat, IDL.Nat],
+      [SeasonId, GameweekNumber, IDL.Nat, IDL.Nat, IDL.Text],
       [Result_2],
       []
     ),
@@ -5060,40 +5060,40 @@ function createManagerStore() {
     idlFactory,
     { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
   );
+  let newManager = {
+    playerIds: [],
+    countrymenCountryId: 0,
+    username: "",
+    goalGetterPlayerId: 0,
+    hatTrickHeroGameweek: 0,
+    transfersAvailable: 0,
+    termsAccepted: false,
+    teamBoostGameweek: 0,
+    captainFantasticGameweek: 0,
+    createDate: 0n,
+    countrymenGameweek: 0,
+    bankQuarterMillions: 0,
+    noEntryPlayerId: 0,
+    safeHandsPlayerId: 0,
+    history: [],
+    braceBonusGameweek: 0,
+    favouriteClubId: 0,
+    passMasterGameweek: 0,
+    teamBoostClubId: 0,
+    goalGetterGameweek: 0,
+    captainFantasticPlayerId: 0,
+    profilePicture: [],
+    transferWindowGameweek: 0,
+    noEntryGameweek: 0,
+    prospectsGameweek: 0,
+    safeHandsGameweek: 0,
+    principalId: "",
+    passMasterPlayerId: 0,
+    captainId: 0,
+    monthlyBonusesAvailable: 0
+  };
   async function getManager() {
     try {
-      let newManager = {
-        playerIds: [],
-        countrymenCountryId: 0,
-        username: "",
-        goalGetterPlayerId: 0,
-        hatTrickHeroGameweek: 0,
-        transfersAvailable: 0,
-        termsAccepted: false,
-        teamBoostGameweek: 0,
-        captainFantasticGameweek: 0,
-        createDate: 0n,
-        countrymenGameweek: 0,
-        bankQuarterMillions: 0,
-        noEntryPlayerId: 0,
-        safeHandsPlayerId: 0,
-        history: [],
-        braceBonusGameweek: 0,
-        favouriteClubId: 0,
-        passMasterGameweek: 0,
-        teamBoostClubId: 0,
-        goalGetterGameweek: 0,
-        captainFantasticPlayerId: 0,
-        profilePicture: [],
-        transferWindowGameweek: 0,
-        noEntryGameweek: 0,
-        prospectsGameweek: 0,
-        safeHandsGameweek: 0,
-        principalId: "",
-        passMasterPlayerId: 0,
-        captainId: 0,
-        monthlyBonusesAvailable: 0
-      };
       const identityActor = await ActorFactory.createIdentityActor(
         authStore,
         { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID ?? ""
@@ -5138,16 +5138,40 @@ function createManagerStore() {
   }
   async function getFantasyTeamForGameweek(managerId, gameweek) {
     try {
-      let result = await actor.getManagerGameweek(
-        managerId,
-        systemState?.calculationGameweek,
-        gameweek
-      );
-      if (isError(result)) {
-        console.error("Error fetching fantasy team for gameweek:");
+      const category = "gameweek_points";
+      const newHashValues = await actor.getDataHashes();
+      let error2 = isError(newHashValues);
+      if (error2) {
+        console.error("Error fetching hash values");
+        return null;
       }
-      const fantasyTeamData = result.ok;
-      return fantasyTeamData;
+      let dataCacheValues = newHashValues.ok;
+      let weelklyLeaderboardHash = dataCacheValues.find(
+        (x) => x.category === "weekly_leaderboard_hash"
+      ) ?? null;
+      const localHash = localStorage.getItem(`${category}_hash`);
+      if (weelklyLeaderboardHash != localHash) {
+        let result = await actor.getManagerGameweek(
+          managerId,
+          systemState?.calculationGameweek,
+          gameweek
+        );
+        if (isError(result)) {
+          console.error("Error fetching fantasy team for gameweek:");
+        }
+        let snapshot = result.ok;
+        localStorage.setItem(category, JSON.stringify(snapshot, replacer));
+        localStorage.setItem(
+          `${category}_hash`,
+          weelklyLeaderboardHash?.hash ?? ""
+        );
+        const fantasyTeamData = result.ok;
+        return fantasyTeamData;
+      } else {
+        const cachedSnapshot = localStorage.getItem(category);
+        let snapshot = JSON.parse(cachedSnapshot || "undefined");
+        return snapshot;
+      }
     } catch (error2) {
       console.error("Error fetching fantasy team for gameweek:", error2);
       throw error2;
@@ -5162,7 +5186,7 @@ function createManagerStore() {
       const result = await identityActor.getManager();
       if (isError(result)) {
         console.error("Error fetching fantasy team.");
-        return;
+        return newManager;
       }
       let fantasyTeam = result.ok;
       return fantasyTeam;
@@ -5377,7 +5401,7 @@ function createWeeklyLeaderboardStore() {
       set(updatedLeaderboardData.ok);
     }
   }
-  async function getWeeklyLeaderboard(seasonId, gameweek, currentPage, calculationGameweek) {
+  async function getWeeklyLeaderboard(seasonId, gameweek, currentPage, calculationGameweek, searchTerm) {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && gameweek == calculationGameweek) {
@@ -5403,7 +5427,8 @@ function createWeeklyLeaderboardStore() {
       seasonId,
       gameweek,
       limit,
-      offset
+      offset,
+      searchTerm
     );
     if (isError(leaderboardData)) {
       console.error("Error fetching weekly leaderboard data");
@@ -5427,7 +5452,8 @@ function createWeeklyLeaderboardStore() {
       seasonId,
       gameweek,
       1,
-      0
+      0,
+      ""
     );
     return weeklyLeaderboard.entries[0];
   }
@@ -6044,6 +6070,13 @@ function createUserStore() {
       throw error2;
     }
   }
+  async function isUsernameAvailable(username) {
+    const identityActor = await ActorFactory.createIdentityActor(
+      authStore,
+      { "OPENFPL_BACKEND_CANISTER_ID": "gl6nx-5maaa-aaaaa-qaaqq-cai", "OPENFPL_FRONTEND_CANISTER_ID": "gc5gl-leaaa-aaaaa-qaara-cai", "__CANDID_UI_CANISTER_ID": "gx2xg-kmaaa-aaaaa-qaasq-cai", "PLAYER_CANISTER_CANISTER_ID": "gf4a7-g4aaa-aaaaa-qaarq-cai", "TOKEN_CANISTER_CANISTER_ID": "gq3rs-huaaa-aaaaa-qaasa-cai", "DFX_NETWORK": "local" }.OPENFPL_BACKEND_CANISTER_ID
+    );
+    return await identityActor.isUsernameValid(username);
+  }
   async function cacheProfile() {
     const identityActor = await ActorFactory.createIdentityActor(
       authStore,
@@ -6084,7 +6117,8 @@ function createUserStore() {
     getProfile,
     updateProfilePicture,
     createProfile,
-    getProfileFromLocalStorage
+    getProfileFromLocalStorage,
+    isUsernameAvailable
   };
 }
 const userStore = createUserStore();
@@ -6250,7 +6284,7 @@ function createMonthlyLeaderboardStore() {
       set(cachedMonthlyLeaderboards);
     }
   }
-  async function getMonthlyLeaderboard(seasonId, clubId, month, currentPage) {
+  async function getMonthlyLeaderboard(seasonId, clubId, month, currentPage, searchTerm) {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && month == systemState?.calculationMonth) {
@@ -6273,7 +6307,8 @@ function createMonthlyLeaderboardStore() {
       month,
       clubId,
       limit,
-      offset
+      offset,
+      searchTerm
     );
     let emptyReturn = {
       month: 0,
@@ -6362,7 +6397,7 @@ function createSeasonLeaderboardStore() {
       set(cachedSeasonLeaderboard);
     }
   }
-  async function getSeasonLeaderboard(seasonId, currentPage) {
+  async function getSeasonLeaderboard(seasonId, currentPage, searchTerm) {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
     if (currentPage <= 4 && seasonId == systemState?.calculationSeasonId) {
@@ -6383,7 +6418,12 @@ function createSeasonLeaderboardStore() {
         }
       }
     }
-    let result = await actor.getSeasonLeaderboard(seasonId, limit, offset);
+    let result = await actor.getSeasonLeaderboard(
+      seasonId,
+      limit,
+      offset,
+      searchTerm
+    );
     if (isError(result)) {
       console.error("Error fetching season leaderboard");
     }

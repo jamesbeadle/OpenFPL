@@ -705,7 +705,7 @@ service : {
   getLoanedPlayers : (ClubId) -> (Result_6) query;
   getManager : () -> (Result_15);
   getManagerGameweek : (text, SeasonId, GameweekNumber) -> (Result_14);
-  getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat) -> (Result_13);
+  getMonthlyLeaderboard : (SeasonId, ClubId, CalendarMonth, nat, nat, text) -> (Result_13);
   getMonthlyLeaderboards : (SeasonId, CalendarMonth) -> (Result_12);
   getPlayerDetails : (PlayerId, SeasonId) -> (Result_11);
   getPlayerDetailsForGameweek : (SeasonId, GameweekNumber) -> (Result_10) query;
@@ -714,10 +714,10 @@ service : {
   getProfile : () -> (Result_8);
   getPublicProfile : (text, SeasonId, GameweekNumber) -> (Result_7);
   getRetiredPlayers : (ClubId) -> (Result_6) query;
-  getSeasonLeaderboard : (SeasonId, nat, nat) -> (Result_5);
+  getSeasonLeaderboard : (SeasonId, nat, nat, text) -> (Result_5);
   getSystemState : () -> (Result_4) query;
   getTotalManagers : () -> (Result_3) query;
-  getWeeklyLeaderboard : (SeasonId, GameweekNumber, nat, nat) -> (Result_2);
+  getWeeklyLeaderboard : (SeasonId, GameweekNumber, nat, nat, text) -> (Result_2);
   init : () -> ();
   isUsernameValid : (text) -> (bool) query;
   requestCanisterTopup : () -> ();
