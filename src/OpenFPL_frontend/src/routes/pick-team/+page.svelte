@@ -79,7 +79,7 @@
   let sessionAddedPlayers: number[] = [];
 
   const fantasyTeam = writable<ProfileDTO | null>(null);
-  const transfersAvailable = writable(newTeam ? Infinity : 3);
+  const transfersAvailable = writable(newTeam ? Infinity : 0);
   const bankBalance = writable(1200);
   const bonusUsedInSession = writable<boolean>(false);
 
@@ -88,7 +88,7 @@
 
   let newCaptainId = 0;
   const newCaptain = writable("");
-  let canSellPlayer = false;
+  let canSellPlayer = true;
 
   let isLoading = true;
 
@@ -150,8 +150,11 @@
           bankBalance.set(Number(userFantasyTeam.bankBalance));
         }
 
-        if (activeGameweek > 1 && principalId.length > 0) {
+        if (!newTeam && activeGameweek > 1) {
           transfersAvailable.set(userFantasyTeam.transfersAvailable);
+          if($transfersAvailable <= 0){
+            canSellPlayer = false;
+          }
         }
 
         fantasyTeam.update((currentTeam) => {
@@ -281,6 +284,13 @@
       }
       if (!newTeam && activeGameweek > 1) {
         transfersAvailable.update((n) => (n > 0 ? n - 1 : 0));
+        if($transfersAvailable <= 0){
+          canSellPlayer = false;
+        }
+        //TODO: Allow sell of insesson players
+        
+
+
       }
       bankBalance.update((n) =>
         n - player.valueQuarterMillions > 0
@@ -288,9 +298,11 @@
           : n
       );
 
-      if (!$fantasyTeam.playerIds.includes(player.id)) {
+      if (!sessionAddedPlayers.includes(player.id)) {
         sessionAddedPlayers.push(player.id);
       }
+
+
     }
   }
 
@@ -1112,18 +1124,18 @@
                               <div
                                 class="flex justify-between items-end w-full"
                               >
-                              {#if canSellPlayer}
-                                <button
-                                  on:click={() => removePlayer(player.id)}
-                                  class="bg-red-600 mb-1 rounded-sm"
-                                >
-                                  <RemovePlayerIcon
-                                    className="w-4 h-4 sm:w-6 sm:h-6 p-1"
-                                  />
-                                </button>
-                              {:else}
-                                <div class="w-4 h-4 sm:w-6 sm:h-6 p-1">&nbsp;</div>
-                              {/if}
+                                {#if canSellPlayer && !sessionAddedPlayers.includes(player.id)}
+                                  <button
+                                    on:click={() => removePlayer(player.id)}
+                                    class="bg-red-600 mb-1 rounded-sm"
+                                  >
+                                    <RemovePlayerIcon
+                                      className="w-4 h-4 sm:w-6 sm:h-6 p-1"
+                                    />
+                                  </button>
+                                {:else}
+                                  <div class="w-4 h-4 sm:w-6 sm:h-6 p-1">&nbsp;</div>
+                                {/if}
                                 <div
                                   class="flex justify-center items-center flex-grow"
                                 >
