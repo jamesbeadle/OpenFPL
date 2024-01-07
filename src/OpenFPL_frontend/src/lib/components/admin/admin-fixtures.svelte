@@ -103,7 +103,7 @@
 {/if}
 
 <div class="flex flex-col space-y-4">
-  <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
+  <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 mt-4">
     <div class="flex items-center space-x-2 ml-4">
       <button
         class={`${
