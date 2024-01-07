@@ -35,6 +35,7 @@
     PlayerDTO,
     ProfileDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    import SetTeamName from "$lib/components/pick-team/set-team-name.svelte";
 
   interface FormationDetails {
     positions: number[];
@@ -89,6 +90,8 @@
   let newCaptainId = 0;
   const newCaptain = writable("");
   let canSellPlayer = true;
+  let showUsernameModal = false;
+  let newUsername = "";
 
   let isLoading = true;
 
@@ -751,6 +754,16 @@
   }
 
   async function saveFantasyTeam() {
+
+    if(!$fantasyTeam){
+      return;
+    }
+
+    if($fantasyTeam.username == ""){
+      showUsernameModal = true;
+      return;
+    }
+
     busyStore.startBusy({
       initiator: "save-team",
       text: "Saving fantasy team...",
@@ -813,6 +826,10 @@
   function closeCaptainModal() {
     showCaptainModal = false;
   }
+
+  function closeUsernameModal() {
+    showUsernameModal = false;
+  }
 </script>
 
 <Layout>
@@ -833,6 +850,12 @@
       visible={showCaptainModal}
       onClose={closeCaptainModal}
       onConfirm={changeCaptain}
+    />
+    <SetTeamName 
+      visible={showUsernameModal}
+      setUsername={saveFantasyTeam}
+      cancelModal={closeUsernameModal}
+      newUsername={newUsername}
     />
     <div>
       <div class="hidden xl:flex page-header-wrapper">
