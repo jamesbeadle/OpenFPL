@@ -292,18 +292,13 @@
         <div class="flex flex-wrap p-4">
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayRevaluePlayerUpModal}
             >Revalue Player Up</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayRevaluePlayerDownModal}
             >Revalue Player Down</button
-          >
-          <button
-            class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
-            >Submit Fixture Data</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
@@ -312,62 +307,62 @@
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayRescheduleFixtureModal}
             >Reschedule Fixtures</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayLoanPlayerModal}
             >Loan Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayTransferPlayerModal}
             >Transfer Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayRecallPlayerModal}
             >Recall Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayCreatePlayerModal}
             >Create Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayUpdatePlayerModal}
             >Update Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displaySetPlayerInjuryModal}
             >Set Player Injury</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayRetirePlayerModal}
             >Retire Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayUnretirePlayerModal}
             >Unretire Player</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayPromoteFormerClubModal}
             >Promote Former Club</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayPromoteNewClubModal}
             >Promote New Club</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 my-1"
-            on:click={displayAddInitialFixturesModal}
+            on:click={displayUpdateClubModal}
             >Update Club</button
           >
         </div>
