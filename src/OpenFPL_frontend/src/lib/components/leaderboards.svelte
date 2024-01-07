@@ -29,6 +29,7 @@
   let totalPages: number = 0;
   let selectedTeamIndex: number = 0;
   let searchTerm = "";
+  let searchInput = "";
 
   $: selectedTeamIndex = $teamStore.findIndex(
     (team) => team.id === selectedTeamId
@@ -37,8 +38,6 @@
   $: if (leaderboard && leaderboard.totalEntries) {
     totalPages = Math.ceil(Number(leaderboard.totalEntries) / itemsPerPage);
   }
-
-  $: searchTerm, loadLeaderboardData();
 
   onMount(async () => {
     try {
@@ -89,6 +88,18 @@
     selectedMonth,
     selectedTeamId,
     loadLeaderboardData();
+
+    
+  function performSearch() {
+    searchTerm = searchInput;
+    loadLeaderboardData();
+  }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      performSearch();
+    }
+  }
 
   async function loadLeaderboardData() {
     if (!selectedGameweek) {
@@ -295,6 +306,23 @@
         {/if}
       </div>
     </div>
+
+    <div class="flex items-center mb-4">
+      <input
+        type="text"
+        class="input-field"
+        placeholder="Search by manager..."
+        bind:value={searchInput}
+        on:keydown={handleKeydown}
+      />
+      <button
+        class="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        on:click={performSearch}
+      >
+        Search
+      </button>
+    </div>
+
     <div class="flex flex-col space-y-4 mt-4">
       <div class="overflow-x-auto flex-1">
         <div
