@@ -85,7 +85,8 @@ function createSeasonLeaderboardStore() {
 
   async function getSeasonLeaderboard(
     seasonId: number,
-    currentPage: number
+    currentPage: number,
+    searchTerm: string
   ): Promise<SeasonLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
@@ -111,7 +112,7 @@ function createSeasonLeaderboardStore() {
       }
     }
 
-    let result = await actor.getSeasonLeaderboard(seasonId, limit, offset);
+    let result = await actor.getSeasonLeaderboard(seasonId, limit, offset, searchTerm);
 
     if (isError(result)) {
       console.error("Error fetching season leaderboard");

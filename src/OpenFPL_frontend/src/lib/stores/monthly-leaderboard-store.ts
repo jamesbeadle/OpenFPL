@@ -76,7 +76,8 @@ function createMonthlyLeaderboardStore() {
     seasonId: number,
     clubId: number,
     month: number,
-    currentPage: number
+    currentPage: number,
+    searchTerm: string
   ): Promise<MonthlyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
@@ -105,7 +106,8 @@ function createMonthlyLeaderboardStore() {
       month,
       clubId,
       limit,
-      offset
+      offset,
+      searchTerm
     );
 
     let emptyReturn = {

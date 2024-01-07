@@ -70,7 +70,8 @@ function createWeeklyLeaderboardStore() {
     seasonId: number,
     gameweek: number,
     currentPage: number,
-    calculationGameweek: number
+    calculationGameweek: number,
+    searchTerm: string
   ): Promise<WeeklyLeaderboardDTO> {
     const limit = itemsPerPage;
     const offset = (currentPage - 1) * limit;
@@ -100,7 +101,8 @@ function createWeeklyLeaderboardStore() {
       seasonId,
       gameweek,
       limit,
-      offset
+      offset,
+      searchTerm
     );
 
     if (isError(leaderboardData)) {
@@ -131,7 +133,8 @@ function createWeeklyLeaderboardStore() {
       seasonId,
       gameweek,
       1,
-      0
+      0,
+      ""
     );
     return weeklyLeaderboard.entries[0];
   }

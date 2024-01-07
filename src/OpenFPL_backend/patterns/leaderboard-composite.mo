@@ -97,7 +97,7 @@ module {
       };
     };
 
-    public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+    public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
       if (limit > 100) {
         return #err(#NotAllowed);
       };
@@ -115,10 +115,10 @@ module {
         };
         case (?foundCanister) {
           let weekly_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async ?DTOs.WeeklyLeaderboardDTO;
+            getEntries : (limit : Nat, offset : Nat, searchTerm: Text) -> async ?DTOs.WeeklyLeaderboardDTO;
           };
 
-          let leaderboardEntries = await weekly_leaderboard_canister.getEntries(limit, offset);
+          let leaderboardEntries = await weekly_leaderboard_canister.getEntries(limit, offset, searchTerm);
           switch (leaderboardEntries) {
             case (null) {
               return #err(#NotFound);
@@ -131,7 +131,7 @@ module {
       };
     };
 
-    public func getMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+    public func getMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
 
       if (limit > 100) {
         return #err(#NotAllowed);
@@ -150,10 +150,10 @@ module {
         };
         case (?foundCanister) {
           let monthly_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async ?DTOs.MonthlyLeaderboardDTO;
+            getEntries : (limit : Nat, offset : Nat, searchTerm: Text) -> async ?DTOs.MonthlyLeaderboardDTO;
           };
 
-          let leaderboardEntries = await monthly_leaderboard_canister.getEntries(limit, offset);
+          let leaderboardEntries = await monthly_leaderboard_canister.getEntries(limit, offset, searchTerm);
           switch (leaderboardEntries) {
             case (null) {
               return #err(#NotFound);
@@ -202,7 +202,7 @@ module {
       return #ok(Buffer.toArray(monthlyLeaderboardBuffer));
     };
 
-    public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+    public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
 
       if (limit > 100) {
         return #err(#NotAllowed);
@@ -221,10 +221,10 @@ module {
         };
         case (?foundCanister) {
           let season_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            getEntries : (limit : Nat, offset : Nat) -> async ?DTOs.SeasonLeaderboardDTO;
+            getEntries : (limit : Nat, offset : Nat, searchTerm: Text) -> async ?DTOs.SeasonLeaderboardDTO;
           };
 
-          let leaderboardEntries = await season_leaderboard_canister.getEntries(limit, offset);
+          let leaderboardEntries = await season_leaderboard_canister.getEntries(limit, offset, searchTerm);
           switch (leaderboardEntries) {
             case (null) {
               return #err(#NotFound);
@@ -305,110 +305,6 @@ module {
 
           let leaderboardEntry = await season_leaderboard_canister.getEntry(principalId);
           return leaderboardEntry;
-        };
-      };
-    };
-    
-    public func searchWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      if (limit > 100) {
-        return #err(#NotAllowed);
-      };
-
-      let leaderboardCanisterId = List.find<T.WeeklyLeaderboardCanister>(
-        weeklyLeaderboardCanisters,
-        func(canister : T.WeeklyLeaderboardCanister) : Bool {
-          return canister.seasonId == seasonId and canister.gameweek == gameweek;
-        },
-      );
-
-      switch (leaderboardCanisterId) {
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundCanister) {
-          let weekly_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            searchEntries : (limit : Nat, offset : Nat, searchTerm: Text) -> async ?DTOs.WeeklyLeaderboardDTO;
-          };
-
-          let leaderboardEntries = await weekly_leaderboard_canister.searchEntries(limit, offset, searchTerm); //TODO IMPLEMENT IN CANISTER
-          switch (leaderboardEntries) {
-            case (null) {
-              return #err(#NotFound);
-            };
-            case (?foundLeaderboard) {
-              return #ok(foundLeaderboard);
-            };
-          };
-        };
-      };
-    };
-
-    public func searchMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-
-      if (limit > 100) {
-        return #err(#NotAllowed);
-      };
-
-      let leaderboardCanisterId = List.find<T.MonthlyLeaderboardCanister>(
-        monthlyLeaderboardCanisters,
-        func(canister : T.MonthlyLeaderboardCanister) : Bool {
-          return canister.seasonId == seasonId and canister.month == month and canister.clubId == clubId;
-        },
-      );
-
-      switch (leaderboardCanisterId) {
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundCanister) {
-          let monthly_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            searchEntries : (limit : Nat, offset : Nat, searchTerm: Text) -> async ?DTOs.MonthlyLeaderboardDTO;
-          };
-
-          let leaderboardEntries = await monthly_leaderboard_canister.searchEntries(limit, offset, searchTerm);
-          switch (leaderboardEntries) {
-            case (null) {
-              return #err(#NotFound);
-            };
-            case (?foundLeaderboard) {
-              return #ok(foundLeaderboard);
-            };
-          };
-        };
-      };
-    };
-
-    public func searchSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-
-      if (limit > 100) {
-        return #err(#NotAllowed);
-      };
-
-      let leaderboardCanisterId = List.find<T.SeasonLeaderboardCanister>(
-        monthlyLeaderboardCanisters,
-        func(canister : T.SeasonLeaderboardCanister) : Bool {
-          return canister.seasonId == seasonId;
-        },
-      );
-
-      switch (leaderboardCanisterId) {
-        case (null) {
-          return #err(#NotFound);
-        };
-        case (?foundCanister) {
-          let season_leaderboard_canister = actor (foundCanister.canisterId) : actor {
-            searchEntries : (limit : Nat, offset : Nat, searchTerm: Text) -> async ?DTOs.SeasonLeaderboardDTO;
-          };
-
-          let leaderboardEntries = await season_leaderboard_canister.searchEntries(limit, offset, searchTerm);
-          switch (leaderboardEntries) {
-            case (null) {
-              return #err(#NotFound);
-            };
-            case (?foundLeaderboard) {
-              return #ok(foundLeaderboard);
-            };
-          };
         };
       };
     };

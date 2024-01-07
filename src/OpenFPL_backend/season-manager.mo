@@ -166,12 +166,12 @@ module {
       return #ok(result);
     };
 
-    public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.getWeeklyLeaderboard(seasonId, gameweek, limit, offset);
+    public func getWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+      return await leaderboardComposite.getWeeklyLeaderboard(seasonId, gameweek, limit, offset, searchTerm);
     };
 
-    public func getMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, limit : Nat, offset : Nat) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset);
+    public func getMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+      return await leaderboardComposite.getMonthlyLeaderboard(seasonId, month, clubId, limit, offset, searchTerm);
     };
 
     public func getMonthlyLeaderboards(seasonId : T.SeasonId, month : T.CalendarMonth) : async Result.Result<[DTOs.MonthlyLeaderboardDTO], T.Error> {
@@ -179,20 +179,8 @@ module {
       return await leaderboardComposite.getMonthlyLeaderboards(seasonId, month, clubs);
     };
 
-    public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.getSeasonLeaderboard(seasonId, limit, offset);
-    };
-
-    public func searchWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.searchWeeklyLeaderboard(seasonId, gameweek, limit, offset, searchTerm);
-    };
-
-    public func searchMonthlyLeaderboard(seasonId : T.SeasonId, month : T.CalendarMonth, clubId : T.ClubId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.searchMonthlyLeaderboard(seasonId, month, clubId, limit, offset, searchTerm);
-    };
-
-    public func searchSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
-      return await leaderboardComposite.searchSeasonLeaderboard(seasonId, limit, offset, searchTerm);
+    public func getSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+      return await leaderboardComposite.getSeasonLeaderboard(seasonId, limit, offset, searchTerm);
     };
 
     public func getProfile(principalId : Text) : async Result.Result<DTOs.ProfileDTO, T.Error> {

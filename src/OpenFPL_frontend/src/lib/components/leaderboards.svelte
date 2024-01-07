@@ -28,6 +28,7 @@
   let leaderboard: any;
   let totalPages: number = 0;
   let selectedTeamIndex: number = 0;
+  let searchTerm = "";
 
   $: selectedTeamIndex = $teamStore.findIndex(
     (team) => team.id === selectedTeamId
@@ -36,6 +37,8 @@
   $: if (leaderboard && leaderboard.totalEntries) {
     totalPages = Math.ceil(Number(leaderboard.totalEntries) / itemsPerPage);
   }
+
+  $: searchTerm, loadLeaderboardData();
 
   onMount(async () => {
     try {
@@ -47,8 +50,8 @@
         $systemStore?.calculationSeasonId ?? 1,
         $systemStore?.calculationGameweek ?? 1
       );
-      //await monthlyLeaderboardStore.sync();
-      //await seasonLeaderboardStore.sync();
+      //await monthlyLeaderboardStore.sync(); //TODO:Add back
+      //await seasonLeaderboardStore.sync(); //TODO:Add back
 
       selectedSeasonId = $systemStore?.calculationSeasonId ?? 1;
       selectedGameweek = $systemStore?.calculationGameweek ?? 1;
@@ -66,7 +69,8 @@
         selectedSeasonId,
         selectedGameweek,
         currentPage,
-        $systemStore?.calculationGameweek ?? 1
+        $systemStore?.calculationGameweek ?? 1,
+        searchTerm
       );
       leaderboard = leaderboardData;
     } catch (error) {
@@ -99,7 +103,8 @@
             selectedSeasonId,
             selectedGameweek,
             currentPage,
-            $systemStore?.calculationGameweek ?? 1
+            $systemStore?.calculationGameweek ?? 1,
+            searchTerm
           );
           break;
         case 2:
@@ -107,13 +112,15 @@
             selectedSeasonId,
             selectedTeamId,
             selectedMonth,
-            currentPage
+            currentPage,
+            searchTerm
           );
           break;
         case 3:
           leaderboard = await seasonLeaderboardStore.getSeasonLeaderboard(
             selectedSeasonId,
-            currentPage
+            currentPage,
+            searchTerm
           );
           break;
       }

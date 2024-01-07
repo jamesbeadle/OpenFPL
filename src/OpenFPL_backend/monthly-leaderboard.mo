@@ -35,33 +35,7 @@ actor class MonthlyLeaderboardCanister() {
     clubId := ?_clubId;
   };
 
-  public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat) : async ?DTOs.MonthlyLeaderboardDTO {
-    assert not Principal.isAnonymous(caller);
-    let principalId = Principal.toText(caller);
-    assert principalId == main_canister_id;
-
-    switch (leaderboard) {
-      case (null) {
-        return null;
-      };
-      case (?foundLeaderboard) {
-        let droppedEntries = List.drop<T.LeaderboardEntry>(foundLeaderboard.entries, offset);
-        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
-
-        let leaderboardDTO : DTOs.MonthlyLeaderboardDTO = {
-          seasonId = foundLeaderboard.seasonId;
-          month = foundLeaderboard.month;
-          clubId = foundLeaderboard.clubId;
-          entries = List.toArray(paginatedEntries);
-          totalEntries = List.size(foundLeaderboard.entries);
-        };
-
-        return ?leaderboardDTO;
-      };
-    };
-  };
-
-  public shared query ({ caller }) func searchEntries(searchTerm : Text, limit : Nat, offset : Nat) : async ?DTOs.MonthlyLeaderboardDTO {
+  public shared query ({ caller }) func getEntries(limit : Nat, offset : Nat, searchTerm : Text) : async ?DTOs.MonthlyLeaderboardDTO {
     assert not Principal.isAnonymous(caller);
     let principalId = Principal.toText(caller);
     assert principalId == main_canister_id;
@@ -86,14 +60,13 @@ actor class MonthlyLeaderboardCanister() {
           month = foundLeaderboard.month;
           clubId = foundLeaderboard.clubId;
           entries = List.toArray(paginatedEntries);
-          totalEntries = List.size(filteredEntries);
+          totalEntries = List.size(foundLeaderboard.entries);
         };
 
         return ?leaderboardDTO;
       };
     };
   };
-
 
   public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);
