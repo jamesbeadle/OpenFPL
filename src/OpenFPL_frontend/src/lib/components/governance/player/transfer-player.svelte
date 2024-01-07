@@ -62,7 +62,7 @@
             bind:value={selectedPlayerId}
           >
             <option value={0}>Select Player</option>
-            {#each $playerStore as player}
+            {#each clubPlayers as player}
               <option value={player.id}
                 >{player.firstName} {player.lastName}</option
               >
@@ -83,7 +83,7 @@
               class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
               bind:value={selectedClubId}
             >
-              {#each $playerStore as player}
+              {#each clubPlayers as player}
                 <option value={player.id}
                   >{player.firstName} {player.lastName}</option
                 >

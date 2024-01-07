@@ -67,7 +67,7 @@
           bind:value={selectedPlayerId}
         >
           <option value={0}>Select Player</option>
-          {#each $playerStore as player}
+          {#each clubRetiredPlayers as player}
             <option value={player.id}
               >{player.firstName} {player.lastName}</option
             >
