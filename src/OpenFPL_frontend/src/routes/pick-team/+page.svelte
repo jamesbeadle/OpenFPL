@@ -88,6 +88,7 @@
 
   let newCaptainId = 0;
   const newCaptain = writable("");
+  let canSellPlayer = false;
 
   let isLoading = true;
 
@@ -343,6 +344,9 @@
       return;
     }
 
+    console.log("Team before update")
+    console.log($fantasyTeam)
+
     fantasyTeam.update((currentTeam) => {
       if (!currentTeam) return null;
       const newPlayerIds = Uint16Array.from(currentTeam.playerIds);
@@ -357,7 +361,18 @@
       }
     });
 
-    updateCaptainIfNeeded($fantasyTeam!);
+    if(!$fantasyTeam){
+      return;
+    }
+
+    let updatedTeam = $fantasyTeam;
+    console.log("Team before update")
+    console.log(updatedTeam)
+
+    if(updatedTeam.captainId > 0 && $fantasyTeam.playerIds.filter(x => x == updatedTeam.captainId).length == 0){
+      newCaptainId = getHighestValuedPlayerId($fantasyTeam);
+      changeCaptain();
+    }
   }
 
   function getAvailablePositionIndex(
@@ -497,8 +512,6 @@
 
       return { ...currentTeam, playerIds: newPlayerIds };
     });
-
-    updateCaptainIfNeeded($fantasyTeam!);
   }
 
   function setCaptain(playerId: number) {
@@ -523,7 +536,7 @@
       return;
     }
 
-    if(currentTeam.captainId > 0){
+    if(currentTeam.captainId > 0 && currentTeam.playerIds.filter(x => x == currentTeam.captainId).length > 0){
       console.log("Team captain already set")
       return;
     }
@@ -1099,6 +1112,7 @@
                               <div
                                 class="flex justify-between items-end w-full"
                               >
+                              {#if canSellPlayer}
                                 <button
                                   on:click={() => removePlayer(player.id)}
                                   class="bg-red-600 mb-1 rounded-sm"
@@ -1107,6 +1121,9 @@
                                     className="w-4 h-4 sm:w-6 sm:h-6 p-1"
                                   />
                                 </button>
+                              {:else}
+                                <div class="w-4 h-4 sm:w-6 sm:h-6 p-1">&nbsp;</div>
+                              {/if}
                                 <div
                                   class="flex justify-center items-center flex-grow"
                                 >
