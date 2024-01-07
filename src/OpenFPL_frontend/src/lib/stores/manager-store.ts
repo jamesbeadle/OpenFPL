@@ -1,9 +1,10 @@
 import { authStore } from "$lib/stores/auth.store";
 import { systemStore } from "$lib/stores/system-store";
-import { isError } from "$lib/utils/Helpers";
+import { isError, replacer } from "$lib/utils/Helpers";
 import { writable } from "svelte/store";
 import { idlFactory } from "../../../../declarations/OpenFPL_backend";
 import type {
+  DataCacheDTO,
   FantasyTeamSnapshot,
   ProfileDTO,
   PublicProfileDTO,
@@ -118,20 +119,51 @@ function createManagerStore() {
   async function getFantasyTeamForGameweek(
     managerId: string,
     gameweek: number
-  ): Promise<FantasyTeamSnapshot> {
+  ): Promise<FantasyTeamSnapshot | null> {
     try {
-      let result = await actor.getManagerGameweek(
-        managerId,
-        systemState?.calculationGameweek,
-        gameweek
-      );
 
-      if (isError(result)) {
-        console.error("Error fetching fantasy team for gameweek:");
+      const category = "gameweek_points";
+      const newHashValues = await actor.getDataHashes();
+
+      let error = isError(newHashValues);
+      if (error) {
+        console.error("Error fetching hash values");
+        return null;
       }
+      
+      let dataCacheValues: DataCacheDTO[] = newHashValues.ok;
 
-      const fantasyTeamData = result.ok;
-      return fantasyTeamData;
+      let weelklyLeaderboardHash =
+        dataCacheValues.find((x: DataCacheDTO) => x.category === "weekly_leaderboard_hash") ??
+        null;
+
+      const localHash = localStorage.getItem(`${category}_hash`);
+
+      if (weelklyLeaderboardHash != localHash) {
+      
+        let result = await actor.getManagerGameweek(
+          managerId,
+          systemState?.calculationGameweek,
+          gameweek
+        );
+  
+        if (isError(result)) {
+          console.error("Error fetching fantasy team for gameweek:");
+        }
+
+        let snapshot = result.ok;
+        localStorage.setItem(
+          category,
+          JSON.stringify(snapshot, replacer)
+        );
+        localStorage.setItem(`${category}_hash`, weelklyLeaderboardHash?.hash ?? "");
+        const fantasyTeamData = result.ok;
+        return fantasyTeamData;
+      } else {
+        const cachedSnapshot = localStorage.getItem(category);
+        let snapshot = JSON.parse(cachedSnapshot || "undefined");
+        return snapshot;
+      }
     } catch (error) {
       console.error("Error fetching fantasy team for gameweek:", error);
       throw error;

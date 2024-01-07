@@ -78,6 +78,10 @@
       selectedGameweek
     );
 
+    if(!fantasyTeam){
+      return;
+    }
+
     let unsortedData = await playerEventsStore.getGameweekPlayers(
       fantasyTeam,
       selectedGameweek
