@@ -4,6 +4,7 @@ import List "mo:base/List";
 import Cycles "mo:base/ExperimentalCycles";
 import Timer "mo:base/Timer";
 import Principal "mo:base/Principal";
+import Text "mo:base/Text";
 import CanisterIds "CanisterIds";
 import Utilities "utilities";
 import Environment "Environment";
@@ -59,6 +60,40 @@ actor class MonthlyLeaderboardCanister() {
       };
     };
   };
+
+  public shared query ({ caller }) func searchEntries(searchTerm : Text, limit : Nat, offset : Nat) : async ?DTOs.MonthlyLeaderboardDTO {
+    assert not Principal.isAnonymous(caller);
+    let principalId = Principal.toText(caller);
+    assert principalId == main_canister_id;
+
+    switch (leaderboard) {
+      case (null) {
+        return null;
+      };
+      case (?foundLeaderboard) {
+        let filteredEntries = List.filter<T.LeaderboardEntry>(
+          foundLeaderboard.entries,
+          func(entry : T.LeaderboardEntry) : Bool {
+            Text.startsWith(entry.username, #text searchTerm)
+          }
+        );
+
+        let droppedEntries = List.drop<T.LeaderboardEntry>(filteredEntries, offset);
+        let paginatedEntries = List.take<T.LeaderboardEntry>(droppedEntries, limit);
+
+        let leaderboardDTO : DTOs.MonthlyLeaderboardDTO = {
+          seasonId = foundLeaderboard.seasonId;
+          month = foundLeaderboard.month;
+          clubId = foundLeaderboard.clubId;
+          entries = List.toArray(paginatedEntries);
+          totalEntries = List.size(filteredEntries);
+        };
+
+        return ?leaderboardDTO;
+      };
+    };
+  };
+
 
   public shared query ({ caller }) func getEntry(principalId : Text) : async ?DTOs.LeaderboardEntryDTO {
     assert not Principal.isAnonymous(caller);

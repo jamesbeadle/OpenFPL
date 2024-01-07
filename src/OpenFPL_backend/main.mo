@@ -53,6 +53,18 @@ actor Self {
     return await seasonManager.getSeasonLeaderboard(seasonId, limit, offset);
   };
 
+  public shared func searchWeeklyLeaderboard(seasonId : T.SeasonId, gameweek : T.GameweekNumber, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.WeeklyLeaderboardDTO, T.Error> {
+    return await seasonManager.searchWeeklyLeaderboard(seasonId, gameweek, limit, offset, searchTerm);
+  };
+
+  public shared func searchMonthlyLeaderboard(seasonId : T.SeasonId, clubId : T.ClubId, month : T.CalendarMonth, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.MonthlyLeaderboardDTO, T.Error> {
+    return await seasonManager.searchMonthlyLeaderboard(seasonId, month, clubId, limit, offset, searchTerm);
+  };
+
+  public shared func searchSeasonLeaderboard(seasonId : T.SeasonId, limit : Nat, offset : Nat, searchTerm: Text) : async Result.Result<DTOs.SeasonLeaderboardDTO, T.Error> {
+    return await seasonManager.searchSeasonLeaderboard(seasonId, limit, offset, searchTerm);
+  };
+
   public shared ({ caller }) func getProfile() : async Result.Result<DTOs.ProfileDTO, T.Error> {
     assert not Principal.isAnonymous(caller);
     return await seasonManager.getProfile(Principal.toText(caller));
