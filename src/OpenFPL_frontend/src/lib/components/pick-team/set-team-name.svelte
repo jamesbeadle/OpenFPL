@@ -1,10 +1,13 @@
 <script lang="ts">
+    import { userStore } from "$lib/stores/user-store";
   import { Modal } from "@dfinity/gix-components";
 
   export let visible: boolean;
   export let setUsername: () => void;
   export let cancelModal: () => void;
   export let newUsername: string = "";
+
+  let isUsernameAvailable = false;
 
   function isDisplayNameValid(displayName: string): boolean {
     if (!displayName) {
@@ -18,11 +21,23 @@
     return /^[a-zA-Z0-9 ]+$/.test(displayName);
   }
 
-  function isDisplayNameAvailable(displayName: string): boolean{
-    return false;
+  async function checkDisplayNameAvailability(displayName: string) {
+    if (isDisplayNameValid(displayName)) {
+      isUsernameAvailable = await isDisplayNameAvailable(displayName);
+    } else {
+      isUsernameAvailable = false;
+    }
   }
 
-  $: isSubmitDisabled = !isDisplayNameValid(newUsername) && isDisplayNameAvailable(newUsername);
+  async function isDisplayNameAvailable(displayName: string): Promise<boolean>{
+    return await userStore.isUsernameAvailable(displayName);
+  }
+
+  $: if (newUsername) {
+    checkDisplayNameAvailability(newUsername);
+  }
+
+  $: isSubmitDisabled = !isDisplayNameValid(newUsername) || !isUsernameAvailable;
 
 </script>
 
