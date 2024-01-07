@@ -9,20 +9,20 @@
   import { Spinner } from "@dfinity/gix-components";
   import AdminManagers from "$lib/components/admin/admin-managers.svelte";
   import AddInitialFixtures from "$lib/components/governance/fixture/add-initial-fixtures.svelte";
-    import RevaluePlayerUp from "$lib/components/governance/player/revalue-player-up.svelte";
-    import RevaluePlayerDown from "$lib/components/governance/player/revalue-player-down.svelte";
-    import RescheduleFixture from "$lib/components/governance/fixture/reschedule-fixture.svelte";
-    import LoanPlayer from "$lib/components/governance/player/loan-player.svelte";
-    import TransferPlayer from "$lib/components/governance/player/transfer-player.svelte";
-    import RecallPlayer from "$lib/components/governance/player/recall-player.svelte";
-    import CreatePlayer from "$lib/components/governance/player/create-player.svelte";
-    import UpdatePlayer from "$lib/components/governance/player/update-player.svelte";
-    import SetPlayerInjury from "$lib/components/governance/player/set-player-injury.svelte";
-    import RetirePlayer from "$lib/components/governance/player/retire-player.svelte";
-    import UnretirePlayer from "$lib/components/governance/player/unretire-player.svelte";
-    import PromoteFormerClub from "$lib/components/governance/club/promote-former-club.svelte";
-    import PromoteNewClub from "$lib/components/governance/club/promote-new-club.svelte";
-    import UpdateClub from "$lib/components/governance/club/update-club.svelte";
+  import RevaluePlayerUp from "$lib/components/governance/player/revalue-player-up.svelte";
+  import RevaluePlayerDown from "$lib/components/governance/player/revalue-player-down.svelte";
+  import RescheduleFixture from "$lib/components/governance/fixture/reschedule-fixture.svelte";
+  import LoanPlayer from "$lib/components/governance/player/loan-player.svelte";
+  import TransferPlayer from "$lib/components/governance/player/transfer-player.svelte";
+  import RecallPlayer from "$lib/components/governance/player/recall-player.svelte";
+  import CreatePlayer from "$lib/components/governance/player/create-player.svelte";
+  import UpdatePlayer from "$lib/components/governance/player/update-player.svelte";
+  import SetPlayerInjury from "$lib/components/governance/player/set-player-injury.svelte";
+  import RetirePlayer from "$lib/components/governance/player/retire-player.svelte";
+  import UnretirePlayer from "$lib/components/governance/player/unretire-player.svelte";
+  import PromoteFormerClub from "$lib/components/governance/club/promote-former-club.svelte";
+  import PromoteNewClub from "$lib/components/governance/club/promote-new-club.svelte";
+  import UpdateClub from "$lib/components/governance/club/update-club.svelte";
 
   let showSystemStateModal: boolean = false;
   let showSnapshotModal: boolean = false;
@@ -280,7 +280,7 @@
         <div class="flex flex-wrap p-4">
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
-            on:click={displaySnapshotModal}>System Status</button
+            on:click={displaySystemStateModal}>System Status</button
           >
           <button
             class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"

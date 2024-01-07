@@ -20,10 +20,10 @@
   let selectedPlayerId: number = -1;
   let clubPlayers: PlayerDTO[] = [];
 
-  let playerId: number;
+  let playerId: number = 0;
   let position: PlayerPosition;
-  let firstName: string;
-  let lastName: string;
+  let firstName: string = "";
+  let lastName: string = "";
   let shirtNumber: number;
   let dateOfBirth: bigint;
   let nationalityId: number;
@@ -31,7 +31,7 @@
   let isLoading = true;
   let showConfirm = false;
 
-  $: isSubmitDisabled =
+  $: isSubmitDisabled = !isLoading && 
     playerId <= 0 ||
     firstName.length > 50 ||
     lastName.length > 50 ||
