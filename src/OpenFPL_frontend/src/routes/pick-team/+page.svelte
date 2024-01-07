@@ -731,17 +731,19 @@
         )
         .sort((a, b) => a.valueQuarterMillions - b.valueQuarterMillions);
 
-      for (let player of availablePlayers) {
-        const potentialNewBudget =
-          remainingBudget - player.valueQuarterMillions;
+      const topN = 3;
+      const candidates = availablePlayers.slice(0, topN);
+      const randomPlayer = candidates[Math.floor(Math.random() * candidates.length)];
+
+      if (randomPlayer) {
+        const potentialNewBudget = remainingBudget - randomPlayer.valueQuarterMillions;
         if (potentialNewBudget >= 0) {
-          updatedFantasyTeam.playerIds[index] = player.id;
+          updatedFantasyTeam.playerIds[index] = randomPlayer.id;
           remainingBudget = potentialNewBudget;
           teamCounts.set(
-            player.clubId,
-            (teamCounts.get(player.clubId) || 0) + 1
+            randomPlayer.clubId,
+            (teamCounts.get(randomPlayer.clubId) || 0) + 1
           );
-          break;
         }
       }
     });
@@ -752,6 +754,7 @@
     }
     updateCaptainIfNeeded($fantasyTeam!);
   }
+
 
   async function saveFantasyTeam() {
 
