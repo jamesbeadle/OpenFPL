@@ -502,7 +502,9 @@
   }
 
   function setCaptain(playerId: number) {
+    console.log("Setting captain")
     if(newCaptainId == 0){
+      console.log("Current captain 0")
       newCaptainId = playerId; 
       changeCaptain();
       return;
@@ -515,15 +517,19 @@
   }
 
   function updateCaptainIfNeeded(currentTeam: ProfileDTO) {
-    
-    if (
-      !currentTeam.captainId ||
-      currentTeam.captainId === 0 ||
-      !currentTeam.playerIds.includes(currentTeam.captainId)
-    ) {
-      const newCaptainId = getHighestValuedPlayerId(currentTeam);
-      setCaptain(newCaptainId);
+
+    if(currentTeam.playerIds.filter(x => x == 0).length > 0){
+      console.log("Team has spaces")
+      return;
     }
+
+    if(currentTeam.captainId > 0){
+      console.log("Team captain already set")
+      return;
+    }
+
+    const newCaptainId = getHighestValuedPlayerId(currentTeam);
+    setCaptain(newCaptainId);
   }
 
   function getHighestValuedPlayerId(team: ProfileDTO): number {
@@ -769,6 +775,7 @@
   }
 
   function changeCaptain() {
+    console.log(`updating captain to ${newCaptainId}`)
     selectedPosition = -1;
     selectedColumn = -1;
     fantasyTeam.update((currentTeam) => {
