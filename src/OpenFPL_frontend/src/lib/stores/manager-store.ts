@@ -24,40 +24,42 @@ function createManagerStore() {
     process.env.OPENFPL_BACKEND_CANISTER_ID
   );
 
+  let newManager = {
+    playerIds: [],
+    countrymenCountryId: 0,
+    username: "",
+    goalGetterPlayerId: 0,
+    hatTrickHeroGameweek: 0,
+    transfersAvailable: 0,
+    termsAccepted: false,
+    teamBoostGameweek: 0,
+    captainFantasticGameweek: 0,
+    createDate: 0n,
+    countrymenGameweek: 0,
+    bankQuarterMillions: 0,
+    noEntryPlayerId: 0,
+    safeHandsPlayerId: 0,
+    history: [],
+    braceBonusGameweek: 0,
+    favouriteClubId: 0,
+    passMasterGameweek: 0,
+    teamBoostClubId: 0,
+    goalGetterGameweek: 0,
+    captainFantasticPlayerId: 0,
+    profilePicture: [],
+    transferWindowGameweek: 0,
+    noEntryGameweek: 0,
+    prospectsGameweek: 0,
+    safeHandsGameweek: 0,
+    principalId: "",
+    passMasterPlayerId: 0,
+    captainId: 0,
+    monthlyBonusesAvailable: 0,
+  };
+
   async function getManager(): Promise<ProfileDTO> {
     try {
-      let newManager = {
-        playerIds: [],
-        countrymenCountryId: 0,
-        username: "",
-        goalGetterPlayerId: 0,
-        hatTrickHeroGameweek: 0,
-        transfersAvailable: 0,
-        termsAccepted: false,
-        teamBoostGameweek: 0,
-        captainFantasticGameweek: 0,
-        createDate: 0n,
-        countrymenGameweek: 0,
-        bankQuarterMillions: 0,
-        noEntryPlayerId: 0,
-        safeHandsPlayerId: 0,
-        history: [],
-        braceBonusGameweek: 0,
-        favouriteClubId: 0,
-        passMasterGameweek: 0,
-        teamBoostClubId: 0,
-        goalGetterGameweek: 0,
-        captainFantasticPlayerId: 0,
-        profilePicture: [],
-        transferWindowGameweek: 0,
-        noEntryGameweek: 0,
-        prospectsGameweek: 0,
-        safeHandsGameweek: 0,
-        principalId: "",
-        passMasterPlayerId: 0,
-        captainId: 0,
-        monthlyBonusesAvailable: 0,
-      };
+      
 
       const identityActor: any = await ActorFactory.createIdentityActor(
         authStore,
@@ -146,8 +148,7 @@ function createManagerStore() {
 
       if (isError(result)) {
         console.error("Error fetching fantasy team.");
-
-        return;
+        return newManager;
       }
 
       let fantasyTeam = result.ok;

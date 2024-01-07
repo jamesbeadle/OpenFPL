@@ -21,6 +21,8 @@
   import RemovePlayerIcon from "$lib/icons/RemovePlayerIcon.svelte";
   import PlayerCaptainIcon from "$lib/icons/PlayerCaptainIcon.svelte";
   import ActiveCaptainIcon from "$lib/icons/ActiveCaptainIcon.svelte";
+  import { getFlagComponent } from "../../lib/utils/Helpers";
+  import { Spinner, busyStore } from "@dfinity/gix-components";
   import {
     formatUnixDateToReadable,
     formatUnixTimeToTime,
@@ -29,12 +31,10 @@
     getAvailableFormations,
     convertPlayerPosition,
   } from "../../lib/utils/Helpers";
-  import { getFlagComponent } from "../../lib/utils/Helpers";
   import type {
     PlayerDTO,
     ProfileDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { Spinner, busyStore } from "@dfinity/gix-components";
 
   interface FormationDetails {
     positions: number[];
@@ -266,7 +266,7 @@
   }
 
   function handlePlayerSelection(player: PlayerDTO) {
-    console.log($fantasyTeam);
+    
     if ($fantasyTeam) {
       if (
         canAddPlayerToCurrentFormation(player, $fantasyTeam, selectedFormation)
@@ -502,6 +502,12 @@
   }
 
   function setCaptain(playerId: number) {
+    if(newCaptainId == 0){
+      newCaptainId = playerId; 
+      changeCaptain();
+      return;
+    }
+
     newCaptainId = playerId;
     let player = $playerStore.find((x) => x.id === playerId);
     newCaptain.update((x) => `${player?.firstName} ${player?.lastName}`);
@@ -509,6 +515,7 @@
   }
 
   function updateCaptainIfNeeded(currentTeam: ProfileDTO) {
+    
     if (
       !currentTeam.captainId ||
       currentTeam.captainId === 0 ||
@@ -709,6 +716,7 @@
       fantasyTeam.set(updatedFantasyTeam);
       bankBalance.set(remainingBudget);
     }
+    updateCaptainIfNeeded($fantasyTeam!);
   }
 
   async function saveFantasyTeam() {
