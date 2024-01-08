@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { Modal } from "@dfinity/gix-components";
+  import { Modal, Spinner } from "@dfinity/gix-components";
+  import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { governanceStore } from "$lib/stores/governance-store";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { teamStore } from "$lib/stores/team-store";
-
+    import LocalSpinner from "$lib/components/local-spinner.svelte";
+  
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -20,6 +21,7 @@
     loanEndDate == 0;
 
   let showConfirm = false;
+  let isLoading = false;
 
   $: if (selectedClubId) {
     getClubPlayers();
@@ -34,19 +36,32 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    /*
     await governanceStore.loanPlayer(
       selectedPlayerId,
       selectedClubId,
       loanEndDate
     );
+    */
+    closeModal();
+  }
+
+  function closeModal(){
+    selectedClubId = 0;
+    selectedPlayerId = 0;
+    clubPlayers = [];
+    cancelModal();
+    isLoading = false;
   }
 </script>
 
-<Modal {visible} on:nnsClose={cancelModal}>
+<Modal {visible} on:nnsClose={closeModal}>
   <div class="p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Loan Player</h3>
-      <button class="times-button" on:click={cancelModal}>&times;</button>
+      <button class="times-button" on:click={closeModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
@@ -112,7 +127,7 @@
           <button
             class="px-4 py-2 default-button fpl-cancel-btn"
             type="button"
-            on:click={cancelModal}
+            on:click={closeModal}
           >
             Cancel
           </button>
@@ -145,5 +160,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>
