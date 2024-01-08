@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { governanceStore } from "$lib/stores/governance-store";
+  import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
+  import { governanceStore } from "$lib/stores/governance-store";
   import { Modal } from "@dfinity/gix-components";
-    import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import { teamStore } from "$lib/stores/team-store";
-
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+    
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -12,13 +13,14 @@
   let selectedPlayerId: number = 0;
   let description = "";
   let injuryEndDate = 0;
+  let clubPlayers: PlayerDTO[] = [];
+
+  let isLoading = true;
+  let showConfirm = false;
 
   $: isSubmitDisabled =
     selectedPlayerId <= 0 || injuryEndDate == 0 || description.length == 0;
-
-  let showConfirm = false;
-  let clubPlayers: PlayerDTO[] = [];
-
+  
   $: if (selectedClubId) {
     getClubPlayers();
   }
@@ -32,11 +34,24 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.setPlayerInjury(
       selectedPlayerId,
       description,
       injuryEndDate
     );
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    selectedClubId = 0;
+    selectedPlayerId = 0;
+    description = "";
+    injuryEndDate = 0;
+    showConfirm = false;
+    clubPlayers = []
   }
 </script>
 
@@ -130,5 +145,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

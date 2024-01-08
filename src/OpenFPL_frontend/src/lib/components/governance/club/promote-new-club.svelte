@@ -1,10 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Modal } from "@dfinity/gix-components";
   import { toastsError } from "$lib/stores/toasts-store";
   import { governanceStore } from "$lib/stores/governance-store";
+  import { Modal } from "@dfinity/gix-components";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { ShirtType } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+  
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -46,6 +47,7 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.promoteNewClub(
       name,
       friendlyName,
@@ -55,6 +57,20 @@
       abbreviatedName,
       shirtType
     );
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    name = "";
+    friendlyName = "";
+    abbreviatedName = "";
+    primaryColourHex = "";
+    secondaryColourHex = "";
+    thirdColourHex = "";
+    shirtType = { Filled: null };
+    showConfirm = false;
   }
 
   function handlePrimaryColorChange(event: Event) {
@@ -170,5 +186,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

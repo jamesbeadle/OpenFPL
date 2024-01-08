@@ -1,20 +1,23 @@
 <script lang="ts">
-  import { governanceStore } from "$lib/stores/governance-store";
+  import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
-    import { teamStore } from "$lib/stores/team-store";
+  import { governanceStore } from "$lib/stores/governance-store";
   import { Modal } from "@dfinity/gix-components";
-    import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
   export let visible: boolean;
   export let cancelModal: () => void;
 
   let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
+  let clubPlayers: PlayerDTO[] = [];
+
+  let isLoading = true;
+  let showConfirm = false;
 
   $: isSubmitDisabled = selectedPlayerId <= 0;
 
-  let showConfirm = false;
-  let clubPlayers: PlayerDTO[] = [];
 
   $: if (selectedClubId) {
     getClubPlayers();
@@ -29,7 +32,18 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.revaluePlayerDown(selectedPlayerId);
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    selectedClubId = 0;
+    selectedPlayerId = 0;
+    showConfirm = false;
+    clubPlayers = []
   }
 </script>
 
@@ -105,5 +119,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

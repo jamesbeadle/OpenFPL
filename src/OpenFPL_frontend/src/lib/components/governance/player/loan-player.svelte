@@ -1,27 +1,27 @@
 <script lang="ts">
-  import { Modal, Spinner } from "@dfinity/gix-components";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { governanceStore } from "$lib/stores/governance-store";
+  import { Modal } from "@dfinity/gix-components";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-    import LocalSpinner from "$lib/components/local-spinner.svelte";
   
   export let visible: boolean;
   export let cancelModal: () => void;
 
+  let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
   let leavingLeague = false;
-  let selectedClubId: number = 0;
   let loanEndDate: number = 0;
   let clubPlayers: PlayerDTO[] = [];
+  
+  let isLoading = false;
+  let showConfirm = false;
 
   $: isSubmitDisabled =
     selectedPlayerId <= 0 ||
     (!leavingLeague && selectedClubId <= 0) ||
     loanEndDate == 0;
-
-  let showConfirm = false;
-  let isLoading = false;
 
   $: if (selectedClubId) {
     getClubPlayers();
@@ -37,14 +37,11 @@
 
   async function confirmProposal() {
     isLoading = true;
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    /*
     await governanceStore.loanPlayer(
       selectedPlayerId,
       selectedClubId,
       loanEndDate
     );
-    */
     closeModal();
   }
 

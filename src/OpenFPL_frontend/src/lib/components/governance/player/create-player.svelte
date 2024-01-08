@@ -1,11 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Modal } from "@dfinity/gix-components";
   import { teamStore } from "$lib/stores/team-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import { governanceStore } from "$lib/stores/governance-store";
-  import type { PlayerPosition } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { countriesStore } from "$lib/stores/country-store";
+  import { Modal } from "@dfinity/gix-components";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import type { PlayerPosition } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -19,6 +21,9 @@
   let value = 0;
   let nationalityId = 0;
 
+  let isLoading = true;
+  let showConfirm = false;
+
   $: isSubmitDisabled =
     selectedClubId <= 0 ||
     nationalityId <= 0 ||
@@ -30,9 +35,6 @@
     value <= 0 ||
     value > 200 ||
     nationalityId == 0;
-
-  let isLoading = true;
-  let showConfirm = false;
 
   onMount(async () => {
     try {
@@ -53,6 +55,7 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     const valueInQuarterMillions = value * 4;
     await governanceStore.createPlayer(
       selectedClubId,
@@ -64,6 +67,21 @@
       dateOfBirth,
       nationalityId
     );
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    selectedClubId = 0;
+    selectedNationalityId = 0;
+    selectedPosition = { Goalkeeper: null };
+    firstName = "";
+    lastName = "";
+    dateOfBirth = 0;
+    shirtNumber = 0;
+    value = 0;
+    nationalityId = 0;
   }
 </script>
 
@@ -195,5 +213,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

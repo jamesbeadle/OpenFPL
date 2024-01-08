@@ -1,20 +1,23 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Modal } from "@dfinity/gix-components";
-  import { toastsError } from "$lib/stores/toasts-store";
+  import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { governanceStore } from "$lib/stores/governance-store";
+  import { toastsError } from "$lib/stores/toasts-store";
+  import { Modal } from "@dfinity/gix-components";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+ 
   export let visible: boolean;
   export let cancelModal: () => void;
 
   let selectedClubId: number = -1;
   let selectedPlayerId: number = 0;
+  let clubRetiredPlayers: PlayerDTO[] = [];
+  
   let isLoading = true;
   let showConfirm = false;
-  let clubRetiredPlayers: PlayerDTO[] = [];
-
+  
   $: isSubmitDisabled = selectedPlayerId <= 0;
 
   $: if (selectedClubId) {
@@ -40,15 +43,28 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.unretirePlayer(selectedPlayerId);
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    selectedClubId = 0;
+    selectedPlayerId = 0;
+    showConfirm = false;
+    clubRetiredPlayers = []
   }
 
   async function getRetiredPlayers() {
+    isLoading = true;
     if (selectedClubId <= 0) {
       return;
     }
     clubRetiredPlayers = await playerStore.getRetiredPlayers(selectedClubId);
   }
+    isLoading = false;
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
@@ -59,57 +75,74 @@
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="ml-4">
-        <p>Select a player to retire:</p>
+      <p>Select the players club:</p>
 
-        <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-          bind:value={selectedPlayerId}
-        >
-          <option value={0}>Select Player</option>
-          {#each clubRetiredPlayers as player}
-            <option value={player.id}
-              >{player.firstName} {player.lastName}</option
+      <select
+        class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+        bind:value={selectedClubId}
+      >
+        {#each $teamStore as club}
+          <option value={club.id}>{club.friendlyName}</option>
+        {/each}
+      </select>
+      
+      {#if selectedClubId > 0}
+        <div class="ml-4">
+          <p>Select a player to unretire:</p>
+
+          <select
+            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            bind:value={selectedPlayerId}
+          >
+            <option value={0}>Select Player</option>
+            {#each clubRetiredPlayers as player}
+              <option value={player.id}
+                >{player.firstName} {player.lastName}</option
+              >
+            {/each}
+          </select>
+
+          <div class="items-center py-3 flex space-x-4">
+            <button
+              class="px-4 py-2 default-button fpl-cancel-btn"
+              type="button"
+              on:click={cancelModal}
             >
-          {/each}
-        </select>
-
-        <div class="items-center py-3 flex space-x-4">
-          <button
-            class="px-4 py-2 default-button fpl-cancel-btn"
-            type="button"
-            on:click={cancelModal}
-          >
-            Cancel
-          </button>
-          <button
-            class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button`}
-            on:click={raiseProposal}
-            disabled={isSubmitDisabled}
-          >
-            Raise Proposal
-          </button>
-        </div>
-
-        {#if showConfirm}
-          <div class="items-center py-3 flex">
-            <p class="text-orange-700">
-              Failed proposals will cost the proposer 10 $FPL tokens.
-            </p>
-          </div>
-          <div class="items-center py-3 flex">
+              Cancel
+            </button>
             <button
               class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                            px-4 py-2 default-button w-full`}
-              on:click={confirmProposal}
+                          px-4 py-2 default-button`}
+              on:click={raiseProposal}
               disabled={isSubmitDisabled}
             >
-              Confirm Submit Proposal
+              Raise Proposal
             </button>
           </div>
-        {/if}
-      </div>
+
+          {#if showConfirm}
+            <div class="items-center py-3 flex">
+              <p class="text-orange-700">
+                Failed proposals will cost the proposer 10 $FPL tokens.
+              </p>
+            </div>
+            <div class="items-center py-3 flex">
+              <button
+                class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
+                              px-4 py-2 default-button w-full`}
+                on:click={confirmProposal}
+                disabled={isSubmitDisabled}
+              >
+                Confirm Submit Proposal
+              </button>
+            </div>
+          {/if}
+        </div>
+      {/if}
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

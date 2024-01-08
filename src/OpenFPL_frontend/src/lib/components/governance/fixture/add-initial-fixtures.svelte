@@ -2,8 +2,9 @@
   import { governanceStore } from "$lib/stores/governance-store";
   import { systemStore } from "$lib/stores/system-store";
   import { Modal } from "@dfinity/gix-components";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { FixtureDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+  
   interface UploadData {
     id: number;
     gameweek: number;
@@ -18,9 +19,11 @@
   let file: File | null = null;
   let fixtureData: FixtureDTO[] = [];
 
+  let isLoading = true;
+  let showConfirm = false;
+
   $: isSubmitDisabled = fixtureData.length == 0;
 
-  let showConfirm = false;
   async function handleFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) {
@@ -71,10 +74,19 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.addInitialFixtures(
       $systemStore?.calculationSeasonId ?? 0,
       fixtureData
     );
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    file = null;
+    fixtureData = [];
   }
 </script>
 
@@ -126,5 +138,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

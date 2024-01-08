@@ -4,13 +4,14 @@
   import { teamStore } from "$lib/stores/team-store";
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
+  import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type {
     ClubDTO,
     FixtureDTO,
   } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import { fixtureStore } from "$lib/stores/fixture-store";
-
+  
   export let visible: boolean;
   export let cancelModal: () => void;
 
@@ -70,12 +71,26 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.rescheduleFixture(
       $systemStore?.calculationSeasonId ?? 0,
       selectedFixtureId,
       updatedFixtureGameweek ?? 1,
       updatedFixtureDate ?? 0
     );
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    date = "";
+    time = "";
+    dateTime = "";
+    isPostponed = false;
+    updatedFixtureGameweek = 0;
+    updatedFixtureDate = 0;
+    showConfirm = false;
   }
 </script>
 
@@ -173,5 +188,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

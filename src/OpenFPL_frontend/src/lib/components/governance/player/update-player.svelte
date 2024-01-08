@@ -1,25 +1,23 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Modal } from "@dfinity/gix-components";
-  import { toastsError } from "$lib/stores/toasts-store";
-  import { governanceStore } from "$lib/stores/governance-store";
-  import type {
-    ClubDTO,
-    PlayerDTO,
-    PlayerPosition,
-    ShirtType,
-  } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { teamStore } from "$lib/stores/team-store";
   import { playerStore } from "$lib/stores/player-store";
   import { countriesStore } from "$lib/stores/country-store";
-
+  import { governanceStore } from "$lib/stores/governance-store";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import { toastsError } from "$lib/stores/toasts-store";
+  import type {
+    PlayerDTO,
+    PlayerPosition,
+  } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
   export let visible: boolean;
   export let cancelModal: () => void;
 
   let selectedClubId: number = -1;
   let selectedPlayerId: number = -1;
   let clubPlayers: PlayerDTO[] = [];
-
   let playerId: number = 0;
   let position: PlayerPosition;
   let firstName: string = "";
@@ -58,6 +56,7 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.updatePlayer(
       selectedClubId,
       position,
@@ -67,6 +66,23 @@
       dateOfBirth,
       nationalityId
     );
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    selectedClubId = 0;
+    selectedPlayerId = 0;
+    playerId = 0;
+    position = {Goalkeeper: null};
+    firstName = "";
+    lastName = "";
+    shirtNumber = 0;
+    dateOfBirth = 0n;
+    nationalityId = 0;
+    showConfirm = false;
+    clubPlayers = [];
   }
 
   $: if (selectedClubId) {
@@ -218,5 +234,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

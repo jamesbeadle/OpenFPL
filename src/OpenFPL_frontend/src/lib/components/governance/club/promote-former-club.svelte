@@ -1,16 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Modal } from "@dfinity/gix-components";
-  import { toastsError } from "$lib/stores/toasts-store";
   import { teamStore } from "$lib/stores/team-store";
   import { governanceStore } from "$lib/stores/governance-store";
+  import { toastsError } from "$lib/stores/toasts-store";
+  import { Modal } from "@dfinity/gix-components";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
   import type { ClubDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-
+  
   export let visible: boolean;
   export let cancelModal: () => void;
 
   let formerClubs: ClubDTO[] = [];
   let selectedClubId: number = -1;
+
   let isLoading = true;
   let showConfirm = false;
 
@@ -36,7 +38,17 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.promoteFormerClub(selectedClubId);
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    selectedClubId = 0;
+    showConfirm = false;
+    formerClubs = []
   }
 </script>
 
@@ -96,5 +108,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>

@@ -1,28 +1,30 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Modal } from "@dfinity/gix-components";
-  import { playerStore } from "$lib/stores/player-store";
-  import { toastsError } from "$lib/stores/toasts-store";
-  import { governanceStore } from "$lib/stores/governance-store";
-  import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { teamStore } from "$lib/stores/team-store";
-
+  import { playerStore } from "$lib/stores/player-store";
+  import { governanceStore } from "$lib/stores/governance-store";
+  import { toastsError } from "$lib/stores/toasts-store";
+  import { Modal } from "@dfinity/gix-components";
+  import LocalSpinner from "$lib/components/local-spinner.svelte";
+  import type { PlayerDTO } from "../../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
+  
   export let visible: boolean;
   export let cancelModal: () => void;
 
+  let selectedClubId: number = 0;
   let selectedPlayerId: number = 0;
   let leavingLeague = false;
-  let selectedClubId: number = 0;
   let loanEndDate: number = 0;
   let loanedPlayers: PlayerDTO[] = [];
+
+  let isLoading = true;
+  let showConfirm = false;
 
   $: isSubmitDisabled =
     selectedPlayerId <= 0 ||
     (!leavingLeague && selectedClubId <= 0) ||
     loanEndDate == 0;
 
-  let showConfirm = false;
-  let isLoading = true;
 
   onMount(async () => {
     try {
@@ -53,7 +55,20 @@
   }
 
   async function confirmProposal() {
+    isLoading = true;
     await governanceStore.recallPlayer(selectedPlayerId);
+    isLoading = false;
+    resetForm();
+    cancelModal();
+  }
+
+  function resetForm(){
+    selectedClubId = 0;
+    selectedPlayerId = 0;
+    leavingLeague = false;
+    loanEndDate = 0;
+    showConfirm = false;
+    loanedPlayers = [];
   }
 </script>
 
@@ -130,5 +145,9 @@
         {/if}
       </div>
     </div>
+
+    {#if isLoading}
+      <LocalSpinner />
+    {/if}
   </div>
 </Modal>
