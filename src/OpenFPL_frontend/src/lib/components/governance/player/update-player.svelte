@@ -111,26 +111,28 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Update Player</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="ml-4">
-        <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-          bind:value={selectedClubId}
-        >
-          <option value={-1}>Select Club</option>
-          {#each $teamStore as club}
-            <option value={club.id}>{club.friendlyName}</option>
-          {/each}
-        </select>
+      <div class="w-full">
+        <div class="w-full">
+          <select
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
+            bind:value={selectedClubId}
+          >
+            <option value={-1}>Select Club</option>
+            {#each $teamStore as club}
+              <option value={club.id}>{club.friendlyName}</option>
+            {/each}
+          </select>  
+        </div>
         {#if selectedClubId > 0}
           <select
-            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            class="p-2 fpl-dropdown text-center my-4 min-w-[100px]"
             bind:value={selectedPlayerId}
           >
             <option value={-1}>Select Player</option>
@@ -142,19 +144,18 @@
           </select>
 
           {#if selectedPlayerId > 0}
-            <select
-              class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-              bind:value={position}
-            >
-              <option value={{ Goalkeeper: null }}>Goalkeeper</option>
-              <option value={{ Defender: null }}>Defender</option>
-              <option value={{ Midfielder: null }}>Midfielder</option>
-              <option value={{ Forward: null }}>Forward</option>
-            </select>
-
-            let firstName: string; let lastName: string; let shirtNumber:
-            number; let dateOfBirth: bigint; let nationalityId: number;
-
+          
+            <div class="w-full">
+              <select
+                class="p-2 fpl-dropdown text-center my-4 min-w-[100px]"
+                bind:value={position}
+              >
+                <option value={{ Goalkeeper: null }}>Goalkeeper</option>
+                <option value={{ Defender: null }}>Defender</option>
+                <option value={{ Midfielder: null }}>Midfielder</option>
+                <option value={{ Forward: null }}>Forward</option>
+              </select>
+            </div>
             <input
               type="text"
               class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
@@ -164,19 +165,19 @@
 
             <input
               type="text"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              class="w-full px-4 py-2 my-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               placeholder="Last Name"
               bind:value={lastName}
             />
 
             <input
               type="text"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              class="w-full px-4 py-2 my-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               placeholder="Shirt Number"
               bind:value={shirtNumber}
             />
 
-            <p>Date of Birth:</p>
+            <p class="my-4">Date of Birth:</p>
 
             <input
               type="date"
@@ -184,10 +185,10 @@
               class="input input-bordered"
             />
 
-            <p>Nationality:</p>
+            <p class="my-4">Nationality:</p>
 
             <select
-              class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+              class="p-2 fpl-dropdown text-center my-4 min-w-[100px]"
               bind:value={nationalityId}
             >
               {#each $countriesStore as country}
@@ -196,6 +197,8 @@
             </select>
           {/if}
         {/if}
+        
+        <div class="border-b border-gray-200"></div>
 
         <div class="items-center py-3 flex space-x-4">
           <button

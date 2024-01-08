@@ -18,6 +18,7 @@ function createCountriesStore() {
   async function sync() {
     let category = "countries";
     const newHashValues = await actor.getDataHashes();
+
     let error = isError(newHashValues);
     if (error) {
       console.error("Error syncing countries store");

@@ -55,18 +55,18 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Loan Player</h3>
       <button class="times-button" on:click={closeModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="ml-4">
+      <div class="w-full">
         <p>Select the players club:</p>
 
         <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+          class="p-2 fpl-dropdown my-4 min-w-[100px]"
           bind:value={selectedClubId}
         >
           {#each $teamStore as club}
@@ -78,7 +78,7 @@
           <p>Select a player to loan:</p>
 
           <select
-            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={selectedPlayerId}
           >
             <option value={0}>Select Player</option>
@@ -89,18 +89,20 @@
             {/each}
           </select>
 
-          <p>
-            Please check the following box if the player is being loaned to a
-            club outside of the Premier League:
-          </p>
+          <div class="flex flex-row">
+            <p class="mr-2">
+              Player leaving Premier League
+            </p>
+            <input type="checkbox" bind:checked={leavingLeague} />
+          </div>
 
-          <input type="checkbox" bind:checked={leavingLeague} />
+          <p class="my-2">Or</p>
 
           {#if !leavingLeague}
-            <p>Please select new Premier League Club:</p>
+            <p>Select new Premier League Club:</p>
 
             <select
-              class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+              class="p-2 fpl-dropdown my-4 min-w-[100px]"
               bind:value={selectedClubId}
             >
               {#each clubPlayers as player}
@@ -116,9 +118,10 @@
           <input
             type="date"
             bind:value={loanEndDate}
-            class="input input-bordered"
+            class="input input-bordered mb-4"
           />
         {/if}
+        <div class="border-b border-gray-200"></div>
 
         <div class="items-center py-3 flex space-x-4">
           <button

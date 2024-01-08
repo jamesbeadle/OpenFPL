@@ -86,18 +86,18 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Create Player</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="ml-4">
+      <div class="w-full">
         <p>Select Club:</p>
 
         <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+          class="p-2 fpl-dropdown my-4 min-w-[100px]"
           bind:value={selectedClubId}
         >
           {#each $teamStore as club}
@@ -108,7 +108,7 @@
         <p>Select Position:</p>
 
         <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+          class="p-2 fpl-dropdown my-4 min-w-[100px]"
           bind:value={selectedPosition}
         >
           <option value={{ Goalkeeper: null }}>Goalkeeper</option>
@@ -117,7 +117,7 @@
           <option value={{ Forward: null }}>Forward</option>
         </select>
 
-        <p>First Name:</p>
+        <p class="py-2">First Name:</p>
 
         <input
           type="text"
@@ -126,7 +126,7 @@
           bind:value={firstName}
         />
 
-        <p>Last Name:</p>
+        <p class="py-2">Last Name:</p>
 
         <input
           type="text"
@@ -135,7 +135,7 @@
           bind:value={lastName}
         />
 
-        <p>Shirt Number:</p>
+        <p class="py-2">Shirt Number:</p>
 
         <input
           type="number"
@@ -147,7 +147,7 @@
           bind:value={shirtNumber}
         />
 
-        <p>Value:</p>
+        <p class="py-2">Value:</p>
 
         <input
           type="number"
@@ -157,7 +157,7 @@
           bind:value
         />
 
-        <p>Date of Birth:</p>
+        <p class="py-2">Date of Birth:</p>
 
         <input
           type="date"
@@ -165,10 +165,10 @@
           class="input input-bordered"
         />
 
-        <p>Nationality:</p>
+        <p class="py-2">Nationality:</p>
 
         <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+          class="p-2 fpl-dropdown min-w-[100px] mb-2"
           bind:value={selectedNationalityId}
         >
           {#each $countriesStore as country}

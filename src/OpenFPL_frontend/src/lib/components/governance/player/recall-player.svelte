@@ -73,18 +73,18 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Recall Player</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="ml-4">
+      <div class="w-full">
         <p>Select the players club:</p>
 
         <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+          class="p-2 fpl-dropdown my-4 min-w-[100px]"
           bind:value={selectedClubId}
         >
           {#each $teamStore as club}
@@ -96,7 +96,7 @@
           <p>Select a player to recall:</p>
 
           <select
-            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={selectedPlayerId}
           >
             <option value={0}>Select Player</option>
@@ -107,6 +107,8 @@
             {/each}
           </select>
         {/if}
+
+        <div class="border-b border-gray-200"></div>
 
         <div class="items-center py-3 flex space-x-4">
           <button

@@ -95,61 +95,74 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Reschedule Fixture</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="ml-4">
-        <p>Reschedule Fixture:</p>
-
+      <div class="w-full">
         <p>Select Gameweek:</p>
-
-        <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-          bind:value={selectedGameweek}
-        >
-          {#each gameweeks as gameweek}
-            <option value={gameweek}>Gameweek {gameweek}</option>
-          {/each}
-        </select>
-
-        <select
-          class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
-          bind:value={selectedFixtureId}
-        >
-          {#each gameweekFixtures as fixture}
-            {@const homeTeam = getTeamById(fixture.homeClubId)}
-            {@const awayTeam = getTeamById(fixture.awayClubId)}
-            <option value={fixture.id}
-              >{homeTeam.friendlyName} v {awayTeam.friendlyName}</option
-            >
-          {/each}
-        </select>
-
-        <p>Postpone Fixture:</p>
-        <input type="checkbox" bind:checked={isPostponed} />
-
-        {#if !isPostponed}
-          <p>Select Date:</p>
-          <input type="date" bind:value={date} class="input input-bordered" />
-
-          <p>Select Time:</p>
-          <input type="time" bind:value={time} class="input input-bordered" />
-
-          <p>Updated Gameweek:</p>
-
+        <div class="flex w-full">
           <select
-            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            class="p-2 fpl-dropdown text-center my-4 min-w-[100px]"
             bind:value={selectedGameweek}
           >
             {#each gameweeks as gameweek}
               <option value={gameweek}>Gameweek {gameweek}</option>
             {/each}
           </select>
+        </div>
+
+        <p>Select Fixture:</p>
+        <div class="flex w-full">
+          <select
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
+            bind:value={selectedFixtureId}
+          >
+            {#each gameweekFixtures as fixture}
+              {@const homeTeam = getTeamById(fixture.homeClubId)}
+              {@const awayTeam = getTeamById(fixture.awayClubId)}
+              <option value={fixture.id}
+                >{homeTeam.friendlyName} v {awayTeam.friendlyName}</option
+              >
+            {/each}
+          </select>
+        </div>        
+
+        <div class="flex flex-row my-2">
+          <p class="mr-2">Postpone Fixture:</p>
+          <input type="checkbox" bind:checked={isPostponed} />  
+        </div>
+        
+        {#if !isPostponed}
+          <div class="border-b border-gray-200 my-4"></div>
+          <p class="mr-2 my-2">Or set new date:</p>
+          <div class="flex flex-row my-2">
+            <p class="mr-2">Select Date:</p>
+            <input type="date" bind:value={date} class="input input-bordered" />  
+          </div>
+          <div class="flex flex-row my-2">
+            <p class="mr-2">Select Time:</p>
+            <input type="time" bind:value={time} class="input input-bordered" />
+          </div>
+          <div class="flex flex-row my-2 items-center">
+            <p class="mr-2">Select Gameweek:</p>
+            
+            <select
+              class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+              bind:value={selectedGameweek}
+            >
+              {#each gameweeks as gameweek}
+                <option value={gameweek}>Gameweek {gameweek}</option>
+              {/each}
+            </select>
+          </div>
+
         {/if}
+
+        <div class="border-b border-gray-200 my-4"></div>
 
         <div class="items-center py-3 flex space-x-4">
           <button
