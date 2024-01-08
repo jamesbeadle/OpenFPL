@@ -13,7 +13,8 @@
 
 .fpl-dropdown {
   background-color: transparent;
-  border: none;
+  border: 1px solid white;
+  @apply rounded-sm
 }
 
 .fpl-dropdown option {

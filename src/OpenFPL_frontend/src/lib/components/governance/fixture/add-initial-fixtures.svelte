@@ -19,7 +19,7 @@
   let file: File | null = null;
   let fixtureData: FixtureDTO[] = [];
 
-  let isLoading = true;
+  let isLoading = false;
   let showConfirm = false;
 
   $: isSubmitDisabled = fixtureData.length == 0;
@@ -91,16 +91,19 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Add Initial Fixtures</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="ml-4">
+      <div class="w-full">
         <p>Please select a file to upload:</p>
-        <input type="file" accept=".csv" on:change={handleFileChange} />
+        <input class="my-4" type="file" accept=".csv" on:change={handleFileChange} />
+        
+        <div class="border-b border-gray-200"></div>
+        
         <div class="items-center py-3 flex space-x-4">
           <button
             class="px-4 py-2 default-button fpl-cancel-btn"
@@ -125,7 +128,7 @@
               Failed proposals will cost the proposer 10 $FPL tokens.
             </p>
           </div>
-          <div class="items-center py-3 flex">
+          <div class="items-center flex">
             <button
               class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
                                 px-4 py-2 default-button w-full`}

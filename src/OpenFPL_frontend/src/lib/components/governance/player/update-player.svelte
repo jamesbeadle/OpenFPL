@@ -221,7 +221,7 @@
               Failed proposals will cost the proposer 10 $FPL tokens.
             </p>
           </div>
-          <div class="items-center py-3 flex">
+          <div class="items-center flex">
             <button
               class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
                             px-4 py-2 default-button w-full`}
