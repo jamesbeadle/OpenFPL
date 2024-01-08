@@ -12,9 +12,9 @@
 }
 
 .fpl-dropdown {
-  background-color: transparent;
-  border: 1px solid white;
-  @apply rounded-sm
+  background-color: #2e323a !important;
+  border: none;
+  @apply rounded-sm text-sm
 }
 
 .fpl-dropdown option {

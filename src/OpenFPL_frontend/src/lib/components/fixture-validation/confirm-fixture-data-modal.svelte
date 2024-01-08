@@ -7,7 +7,7 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h4>Confirm Fixture Data</h4>
       <button class="text-black" on:click={closeModal}>✕</button>

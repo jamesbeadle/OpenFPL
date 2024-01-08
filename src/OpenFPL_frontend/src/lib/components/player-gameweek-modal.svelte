@@ -75,7 +75,7 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeDetailModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Player Detail</h3>
       <button class="times-button" on:click={closeDetailModal}>&times;</button>
@@ -86,7 +86,7 @@
         this={getFlagComponent(playerDetail.nationality)}
         class="h-20 w-20"
       />
-      <div class="ml-4">
+      <div class="w-full flex-col space-y-4 mb-2">
         <h3 class="default-header mb-2">
           {playerDetail.firstName}
           {playerDetail.lastName}

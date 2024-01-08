@@ -11,7 +11,7 @@
   export let cancelModal: () => void;
 
   let formerClubs: ClubDTO[] = [];
-  let selectedClubId: number = -1;
+  let selectedClubId: number = 0;
 
   let isLoading = true;
   let showConfirm = false;
@@ -53,27 +53,32 @@
 </script>
 
 <Modal {visible} on:nnsClose={cancelModal}>
-  <div class="p-4">
+  <div class="mx-4 p-4">
     <div class="flex justify-between items-center my-2">
       <h3 class="default-header">Promote Former Club</h3>
       <button class="times-button" on:click={cancelModal}>&times;</button>
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="ml-4">
-        <select
-          class="p-2 fpl-dropdown mx-0 md:mx-2 min-w-[100px]"
-          bind:value={selectedClubId}
-        >
-          <option value={-1}>Select</option>
-          {#each formerClubs as club}
-            <option value={club.id}>{club.friendlyName}</option>
-          {/each}
-        </select>
+      <div class="w-full flex-col space-y-4 mb-2">
+        
+        <div class="flex-col space-y-2">
+          <select
+            class="p-2 fpl-dropdown min-w-[100px]"
+            bind:value={selectedClubId}
+          >
+            <option value={0}>Select Club</option>
+            {#each formerClubs as club}
+              <option value={club.id}>{club.friendlyName}</option>
+            {/each}
+          </select>
+        </div>
+        
+        <div class="border-b border-gray-200"></div>
 
-        <div class="items-center py-3 flex space-x-4">
+        <div class="items-center flex space-x-4">
           <button
-            class="px-4 py-2 default-button fpl-cancel-btn"
+            class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]"
             type="button"
             on:click={cancelModal}
           >
@@ -81,7 +86,7 @@
           </button>
           <button
             class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button`}
+                        px-4 py-2 default-button min-w-[150px]`}
             on:click={raiseProposal}
             disabled={isSubmitDisabled}
           >
@@ -90,8 +95,8 @@
         </div>
 
         {#if showConfirm}
-          <div class="items-center py-3 flex">
-            <p class="text-orange-700">
+          <div class="items-center flex">
+            <p class="text-orange-400">
               Failed proposals will cost the proposer 10 $FPL tokens.
             </p>
           </div>

@@ -55,38 +55,41 @@
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="w-full">
-        <p>Select a player to revalue down by £0.25m:</p>
-
-        <select
-          class="p-2 fpl-dropdown my-4 min-w-[100px]"
-          bind:value={selectedClubId}
-        >
-          {#each $teamStore as club}
-            <option value={club.id}>{club.friendlyName}</option>
-          {/each}
-        </select>
-        {#if selectedClubId > 0}
-          <p>Select a player to revalue up by £0.25m:</p>
-
+      <div class="w-full flex-col space-y-4 mb-2">
+        <div class="flex-col space-y-2">
+          <p>Select the player's club:</p> 
           <select
-            class="p-2 fpl-dropdown my-4 min-w-[100px]"
-            bind:value={selectedPlayerId}
+            class="p-2 fpl-dropdown min-w-[100px]"
+            bind:value={selectedClubId}
           >
-            <option value={0}>Select Player</option>
-            {#each clubPlayers as player}
-              <option value={player.id}
-                >{player.firstName} {player.lastName}</option
-              >
+            <option value={0}>Select Club</option>
+            {#each $teamStore as club}
+              <option value={club.id}>{club.friendlyName}</option>
             {/each}
           </select>
+        </div> 
+        {#if selectedClubId > 0}
+          <div class="flex-col space-y-2">
+            <p>Select a player to revalue down by £0.25m:</p>
+            <select
+              class="p-2 fpl-dropdown my-4 min-w-[100px]"
+              bind:value={selectedPlayerId}
+            >
+              <option value={0}>Select Player</option>
+              {#each clubPlayers as player}
+                <option value={player.id}
+                  >{player.firstName} {player.lastName}</option
+                >
+              {/each}
+            </select>
+          </div>
         {/if}
-
+        
         <div class="border-b border-gray-200"></div>
 
-        <div class="items-center py-3 flex space-x-4">
+        <div class="items-center flex space-x-4">
           <button
-            class="px-4 py-2 default-button fpl-cancel-btn"
+            class="px-4 py-2 default-button fpl-cancel-btn min-w-[150px]"
             type="button"
             on:click={cancelModal}
           >
@@ -94,7 +97,7 @@
           </button>
           <button
             class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
-                        px-4 py-2 default-button`}
+              px-4 py-2 default-button min-w-[150px]`}
             on:click={raiseProposal}
             disabled={isSubmitDisabled}
           >
@@ -103,8 +106,8 @@
         </div>
 
         {#if showConfirm}
-          <div class="items-center py-3 flex">
-            <p class="text-orange-700">
+          <div class="items-center flex">
+            <p class="text-orange-400">
               Failed proposals will cost the proposer 10 $FPL tokens.
             </p>
           </div>
