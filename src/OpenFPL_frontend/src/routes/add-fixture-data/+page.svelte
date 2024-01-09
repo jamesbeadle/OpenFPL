@@ -321,16 +321,16 @@
           >
         </div>
         <div class="flex w-full flex-col">
+
           <div
-            class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
-          >
-            <div class="w-1/6 px-4">Player</div>
-            <div class="w-1/6 px-4">Position</div>
-            <div class="w-1/6 px-4">Events</div>
-            <div class="w-1/6 px-4">Start</div>
-            <div class="w-1/6 px-4">End</div>
-            <div class="w-1/6 px-4">&nbsp;</div>
-          </div>
+          class="flex flex-row items-center justify-between border border-gray-700 py-4 bg-light-gray"
+        >
+          <div class="w-1/6 px-4">#</div>
+          <div class="w-3/6 px-4">Player</div>
+          <div class="w-1/6 px-4">Events</div>
+          <div class="w-1/6 px-4">Action</div>
+        </div>
+
           {#if activeTab === "home"}
             {#each $selectedPlayers.filter((x) => x.clubId === fixture?.homeClubId) as player (player.id)}
               <div
@@ -410,6 +410,9 @@
                 </div>
               </div>
             {/each}
+            {#if $selectedPlayers.filter((x) => x.clubId === fixture?.homeClubId).length == 0}
+              <p class="p-4">No players selected.</p>
+            {/if}
           {/if}
           {#if activeTab === "away"}
             {#each $selectedPlayers.filter((x) => x.clubId === fixture?.awayClubId) as player (player.id)}
@@ -484,57 +487,14 @@
                 </div>
               </div>
             {/each}
+            {#if $selectedPlayers.filter((x) => x.clubId === fixture?.awayClubId).length == 0}
+              <p class="p-4">No players selected.</p>
+            {/if}
           {/if}
-        </div>
-        <div class="flex w-full m-4">
-          <h1>Summary</h1>
-        </div>
-        <div class="flex flex-row w-full m-4">
-          <div class="flex-grow">
-            Appearances: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 0
-            ).length}
-          </div>
-          <div class="flex-grow">
-            Goals: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 1
-            ).length}
-          </div>
-          <div class="flex-grow">
-            Own Goals: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 10
-            ).length}
-          </div>
-          <div class="flex-grow">
-            Assists: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 2
-            ).length}
-          </div>
-          <div class="flex-grow">
-            Keeper Saves: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 4
-            ).length}
-          </div>
-          <div class="flex-grow">
-            Yellow Cards: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 8
-            ).length}
-          </div>
-          <div class="flex-grow">
-            Red Cards: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 9
-            ).length}
-          </div>
-          <div class="flex-grow">
-            Penalties Saved: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 6
-            ).length}
-          </div>
-          <div class="flex-grow">
-            Penalties Missed: {$playerEventData.filter(
-              (x) => convertEvent(x.eventType) == 7
-            ).length}
-          </div>
+
+
+
+
         </div>
         <div class="flex flex-row space-x-2 p-4 items-center justify-end">
           
@@ -552,6 +512,62 @@
             on:click={displayConfirmDataModal}
             disabled={isSubmitDisabled}>Submit Proposal</button
           >
+        </div>
+        
+        <div class="border-b border-gray-600 mx-4"></div>
+
+        <div class="flex flex-row w-full m-4 text-sm">
+          <div class="w-1/3 border-r border-gray-600 px-4">
+            <div class="flex-grow">
+              Appearances: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 0
+              ).length}
+            </div>
+            <div class="flex-grow">
+              Goals: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 1
+              ).length}
+            </div>
+            <div class="flex-grow">
+              Own Goals: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 10
+              ).length}
+            </div>
+          </div>
+          <div class="w-1/3 border-r border-gray-600 px-4">
+            <div class="flex-grow">
+              Assists: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 2
+              ).length}
+            </div>
+            <div class="flex-grow">
+              Keeper Saves: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 4
+              ).length}
+            </div>
+            <div class="flex-grow">
+              Yellow Cards: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 8
+              ).length}
+            </div>
+          </div>
+          <div class="w-1/3 px-4">
+            <div class="flex-grow">
+              Red Cards: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 9
+              ).length}
+            </div>
+            <div class="flex-grow">
+              Penalties Saved: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 6
+              ).length}
+            </div>
+            <div class="flex-grow">
+              Penalties Missed: {$playerEventData.filter(
+                (x) => convertEvent(x.eventType) == 7
+              ).length}
+            </div>
+          </div>
         </div>
       </div>
     </div>

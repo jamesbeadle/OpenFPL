@@ -5,7 +5,6 @@
   import { systemStore } from "$lib/stores/system-store";
   import { toastsError } from "$lib/stores/toasts-store";
   import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
-
   import {
     convertFixtureStatus,
     formatUnixTimeToTime,
