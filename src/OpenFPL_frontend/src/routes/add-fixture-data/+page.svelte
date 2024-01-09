@@ -3,32 +3,31 @@
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { writable } from "svelte/store";
+  import { systemStore } from "$lib/stores/system-store";
   import { teamStore } from "$lib/stores/team-store";
+  import { playerStore } from "$lib/stores/player-store";
   import { fixtureStore } from "$lib/stores/fixture-store";
   import { governanceStore } from "$lib/stores/governance-store";
   import { toastsError, toastsShow } from "$lib/stores/toasts-store";
+  import {
+    replacer,
+    convertEvent,
+    convertPlayerPosition,
+  } from "$lib/utils/Helpers";
   import type {
     FixtureDTO,
     ClubDTO,
     PlayerDTO,
     PlayerEventData,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
-  import {
-    replacer,
-    convertEvent,
-    convertPlayerPosition,
-    isError,
-  } from "$lib/utils/Helpers";
+  
   import Layout from "../Layout.svelte";
   import PlayerEventsModal from "$lib/components/fixture-validation/player-events-modal.svelte";
   import SelectPlayersModal from "$lib/components/fixture-validation/select-players-modal.svelte";
   import ConfirmFixtureDataModal from "$lib/components/fixture-validation/confirm-fixture-data-modal.svelte";
   import ClearDraftModal from "$lib/components/fixture-validation/clear-draft-modal.svelte";
-  import { playerStore } from "$lib/stores/player-store";
   import { Spinner, busyStore } from "@dfinity/gix-components";
-  import { systemStore } from "$lib/stores/system-store";
-
-  $: fixtureId = Number($page.url.searchParams.get("id"));
+  import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
   let players: PlayerDTO[] = [];
   let fixture: FixtureDTO | null;
@@ -47,14 +46,20 @@
   let selectedPlayer: PlayerDTO | null = null;
   let playerEventData = writable<PlayerEventData[] | []>([]);
   let activeTab: string = "home";
+  let homeGoalsText = "";
+  let awayGoalsText = "";
+  let homeAssistsText = "";
+  let awayAssistsText = "";
 
-  let isSubmitDisabled: boolean = true;
+  let isLoading = true;
+  
+  $: fixtureId = Number($page.url.searchParams.get("id"));
+
   $: isSubmitDisabled =
     $playerEventData.length == 0 ||
     $playerEventData.filter((x) => convertEvent(x.eventType) == 0).length !=
       $selectedPlayers.length;
 
-  let isLoading = true;
 
   onMount(async () => {
     try {
@@ -237,50 +242,56 @@
   {#if isLoading}
     <Spinner />
   {:else}
-    <div class="bg-panel rounded-md">
-      <!--
-
-
-- Header
-	- Score Panel
-	- Details Panel
-		- Goals
-		- Assists
-		- Result
-	- Tabs for teams
-		- Select player button row
-		- Player table
-			- Name
-			- Events Count
-			- Update
-		- Clear, Save and submit buttons
-	- Match totals
-	
-- Select player modal Modal:
-	- 2 colums 
-		- Checkbox, number flag name
-
-	- cancel and select buttons
-
-
-      -->
-
-      <div class="flex flex-col mt-4">
-        <div class="flex flex-row space-x-2 p-4">
-          <button class="fpl-button px-4 py-2" on:click={showSelectPlayersModal}
-            >Select Players</button
-          >
-          <button class="fpl-button px-4 py-2" on:click={saveDraft}
-            >Save Draft</button
-          >
-          <button
-            class="fpl-button px-4 py-2"
-            on:click={showConfirmClearDraftModal}>Clear Draft</button
-          >
+    
+    <div class="flex flex-row space-x-4 mb-4">
+      <div class="bg-panel-color rounded-md w-1/3 flex flex-row items-center justify-center space-x-4 py-4">
+        <div class="flex-col flex justify-center space-y-2">
+          <BadgeIcon
+            className="h-12"
+            primaryColour={homeTeam?.primaryColourHex}
+            secondaryColour={homeTeam?.secondaryColourHex}
+            thirdColour={homeTeam?.thirdColourHex}
+          />
+          <p class="text-center text-sm">{homeTeam?.abbreviatedName}</p>  
         </div>
+        <p class="text-4xl">0-0</p>
+        <div class="flex-col flex justify-center space-y-2">
+          <BadgeIcon
+            className="h-12"
+            primaryColour={awayTeam?.primaryColourHex}
+            secondaryColour={awayTeam?.secondaryColourHex}
+            thirdColour={awayTeam?.thirdColourHex}
+          />
+          <p class="text-center text-sm">{awayTeam?.abbreviatedName}</p>  
+        </div>
+        
+      </div>
+      <div class="bg-panel-color rounded-md w-2/3 flex flex-row space-x-4 p-4 text-gray-400 text-sm">
+        <div class="w-1/2 flex-col space-y-4">
+          <p>{homeTeam?.name}</p>
+          <div class="flex flex-col space-y-2">
+            <p>Goals: {homeGoalsText}</p>
+            <p>Assists: {homeAssistsText}</p>
+          </div>
+        </div>
+        <div class="w-1/2 flex-col space-y-4">
+          <p>{awayTeam?.name}</p>
+          <div class="flex flex-col space-y-2">
+            <p>Goals: {awayGoalsText}</p>
+            <p>Assists: {awayAssistsText}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="bg-panel rounded-md">
+     
+      <div class="flex flex-col">
+        
         <div class="flex w-full">
           <ul
-            class="flex bg-light-gray px-4 pt-2 w-full mt-4 border-b border-gray-700"
+            class="flex bg-light-gray px-4 pt-2 w-full border-b border-gray-700"
           >
             <li class={`mr-4 ${activeTab === "home" ? "active-tab" : ""}`}>
               <button
@@ -301,6 +312,13 @@
               >
             </li>
           </ul>
+        </div>
+        <div class="flex flex-row space-x-2 p-4 items-center">
+          <p>Selected Players</p>
+          <div class="flex-grow"></div>
+          <button class="fpl-button default-button px-4 py-2 justify-end" on:click={showSelectPlayersModal}
+            >Select Players</button
+          >
         </div>
         <div class="flex w-full flex-col">
           <div
@@ -518,13 +536,21 @@
             ).length}
           </div>
         </div>
-
-        <div class="items-center mt-3 flex space-x-4">
+        <div class="flex flex-row space-x-2 p-4 items-center justify-end">
+          
+          <div class="flex-grow"></div>
+          <button class="fpl-purple-btn default-button px-4 py-2" on:click={saveDraft}
+            >Save Draft</button
+          >
+          <button
+            class="fpl-purple-btn default-button px-4 py-2"
+            on:click={showConfirmClearDraftModal}>Clear Draft</button
+          >
           <button
             class={`${isSubmitDisabled ? "bg-gray-500" : "fpl-purple-btn"} 
             px-4 py-2 default-button`}
             on:click={displayConfirmDataModal}
-            disabled={isSubmitDisabled}>Submit Event Data</button
+            disabled={isSubmitDisabled}>Submit Proposal</button
           >
         </div>
       </div>
