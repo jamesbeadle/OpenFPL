@@ -23,6 +23,7 @@
   import PromoteFormerClub from "$lib/components/governance/club/promote-former-club.svelte";
   import PromoteNewClub from "$lib/components/governance/club/promote-new-club.svelte";
   import UpdateClub from "$lib/components/governance/club/update-club.svelte";
+    import AddFixtureData from "$lib/components/governance/fixture/add-fixture-data.svelte";
 
   let showSystemStateModal: boolean = false;
   let showSnapshotModal: boolean = false;
@@ -45,6 +46,7 @@
   let showPromoteFormerClubModal: boolean = false;
   let showPromoteNewClubModal: boolean = false;
   let showUpdateClubModal: boolean = false;
+  let showAddFixtureDataModal: boolean = false;
 
   onMount(async () => {
     isLoading = false;
@@ -189,6 +191,14 @@
   function hideUpdateClubModal(): void {
     showUpdateClubModal = false;
   }
+
+  function displayAddFixtureDataModal(): void {
+    showAddFixtureDataModal = true;
+  }
+
+  function hideAddFixtureDataModal(): void {
+    showAddFixtureDataModal = false;
+  }
 </script>
 
 <Layout>
@@ -266,6 +276,10 @@
     <UpdateClub
       visible={showUpdateClubModal}
       cancelModal={hideUpdateClubModal}
+    />
+    <AddFixtureData
+      visible={showAddFixtureDataModal}
+      cancelModal={hideAddFixtureDataModal}
     />
 
     <div class="m-4">
@@ -347,8 +361,12 @@
             on:click={displayPromoteNewClubModal}>Promote New Club</button
           >
           <button
-            class="rounded fpl-button px-3 sm:px-2 px-3 py-1 my-1"
+            class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
             on:click={displayUpdateClubModal}>Update Club</button
+          >
+          <button
+            class="rounded fpl-button px-3 sm:px-2 px-3 py-1 mr-1 my-1"
+            on:click={displayAddFixtureDataModal}>Add Fixture Data</button
           >
         </div>
 
