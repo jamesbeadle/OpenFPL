@@ -48,45 +48,45 @@
     </div>
     <div class="my-2 grid grid-cols-1 sm:grid-cols-2 gap-x-2">
       {#each $teamPlayers.sort((a, b) => convertPlayerPosition(a.position) - convertPlayerPosition(b.position)) as player}
-  {@const selected = $selectedPlayers.some((p) => p.id === player.id)}
-  <div class="flex flex-row justify-between items-center p-2 border border-gray-600">
-    <div class="form-checkbox w-1/12">
-      <label class="inline-flex items-center">
-        <input
-          type="checkbox"
-          class="form-checkbox h-5 w-5"
-          checked={selected}
-          on:change={(e) => {
-            handlePlayerSelection(e, player);
-          }}
-        />
-      </label>
-    </div>
-    <div class="flex w-2/12 justify-center">
-      <span>
-        {#if convertPlayerPosition(player.position) == 0}GK{/if}
-        {#if convertPlayerPosition(player.position) == 1}DF{/if}
-        {#if convertPlayerPosition(player.position) == 2}MF{/if}
-        {#if convertPlayerPosition(player.position) == 3}FW{/if}
-      </span>
-    </div>
-    <div class="flex w-2/12 justify-center">
-      <svelte:component
-        this={getFlagComponent(player.nationality)}
-        class="w-6 mr-1"
-      />
-    </div>
-    <div class="flex flex-grow">
-      <span>
-        {`${
-          player.firstName.length > 0
-            ? player.firstName.charAt(0) + "."
-            : ""
-        } ${player.lastName}`}
-      </span>
-    </div>
-  </div>
-{/each}
+        {@const selected = $selectedPlayers.some((p) => p.id === player.id)}
+        <div class="flex flex-row justify-between items-center p-2 border border-gray-600">
+          <div class="form-checkbox w-1/12">
+            <label class="inline-flex items-center">
+              <input
+                type="checkbox"
+                class="form-checkbox h-5 w-5"
+                checked={selected}
+                on:change={(e) => {
+                  handlePlayerSelection(e, player);
+                }}
+              />
+            </label>
+          </div>
+          <div class="flex w-2/12 justify-center">
+            <span>
+              {#if convertPlayerPosition(player.position) == 0}GK{/if}
+              {#if convertPlayerPosition(player.position) == 1}DF{/if}
+              {#if convertPlayerPosition(player.position) == 2}MF{/if}
+              {#if convertPlayerPosition(player.position) == 3}FW{/if}
+            </span>
+          </div>
+          <div class="flex w-2/12 justify-center">
+            <svelte:component
+              this={getFlagComponent(player.nationality)}
+              class="w-6 mr-1"
+            />
+          </div>
+          <div class="flex flex-grow">
+            <span>
+              {`${
+                player.firstName.length > 0
+                  ? player.firstName.charAt(0) + "."
+                  : ""
+              } ${player.lastName}`}
+            </span>
+          </div>
+        </div>
+      {/each}
 
     </div>
   
