@@ -35,6 +35,11 @@ export default {
       "4xl": "2.441rem",
       "5xl": "3.052rem",
     },
+    extend:{
+      colors:{
+        'BRAND': '#2ce3a6'
+      }
+    }
   },
   plugins: [],
 };

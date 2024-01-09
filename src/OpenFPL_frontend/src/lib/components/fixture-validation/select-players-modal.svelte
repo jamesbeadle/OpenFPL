@@ -5,7 +5,8 @@
     PlayerDTO,
   } from "../../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { Modal } from "@dfinity/gix-components";
-  import { convertPlayerPosition } from "$lib/utils/Helpers";
+  import { convertPlayerPosition, getFlagComponent } from "$lib/utils/Helpers";
+    import BadgeIcon from "$lib/icons/BadgeIcon.svelte";
 
   export let teamPlayers = writable<PlayerDTO[]>([]);
   export let selectedTeam: ClubDTO;
@@ -31,60 +32,75 @@
 </script>
 
 <Modal {visible} on:nnsClose={closeModal}>
-  <div class="flex justify-between items-center my-2">
-    <h3 class="default-header">Select Players</h3>
-    <button class="times-button" on:click={closeModal}>&times;</button>
+  <div class="mx-4 p-4">
+    <div class="flex justify-between items-center my-2">
+      <h3 class="default-header">Select Players</h3>
+      <button class="times-button" on:click={closeModal}>&times;</button>
+    </div>
+    <div class="flex-row flex items-center mb-4">
+      <BadgeIcon
+        className="h-6 mr-2"
+        primaryColour={selectedTeam?.primaryColourHex}
+        secondaryColour={selectedTeam?.secondaryColourHex}
+        thirdColour={selectedTeam?.thirdColourHex}
+      />
+      <p class="text-center">{selectedTeam?.friendlyName}</p>  
+    </div>
+    <div class="my-2 grid grid-cols-1 sm:grid-cols-2 gap-x-2">
+      {#each $teamPlayers.sort((a, b) => convertPlayerPosition(a.position) - convertPlayerPosition(b.position)) as player}
+  {@const selected = $selectedPlayers.some((p) => p.id === player.id)}
+  <div class="flex flex-row justify-between items-center p-2 border border-gray-600">
+    <div class="form-checkbox w-1/12">
+      <label class="inline-flex items-center">
+        <input
+          type="checkbox"
+          class="form-checkbox h-5 w-5"
+          checked={selected}
+          on:change={(e) => {
+            handlePlayerSelection(e, player);
+          }}
+        />
+      </label>
+    </div>
+    <div class="flex w-2/12 justify-center">
+      <span>
+        {#if convertPlayerPosition(player.position) == 0}GK{/if}
+        {#if convertPlayerPosition(player.position) == 1}DF{/if}
+        {#if convertPlayerPosition(player.position) == 2}MF{/if}
+        {#if convertPlayerPosition(player.position) == 3}FW{/if}
+      </span>
+    </div>
+    <div class="flex w-2/12 justify-center">
+      <svelte:component
+        this={getFlagComponent(player.nationality)}
+        class="w-6 mr-1"
+      />
+    </div>
+    <div class="flex flex-grow">
+      <span>
+        {`${
+          player.firstName.length > 0
+            ? player.firstName.charAt(0) + "."
+            : ""
+        } ${player.lastName}`}
+      </span>
+    </div>
   </div>
-  <h3 class="default-header">
-    Select {selectedTeam.friendlyName} Players
-  </h3>
-  <div class="my-5 grid grid-cols-1 sm:grid-cols-2 gap-2">
-    {#each $teamPlayers.sort((a, b) => convertPlayerPosition(a.position) - convertPlayerPosition(b.position)) as player}
-      {@const selected = $selectedPlayers.some((p) => p.id === player.id)}
-      <div class="flex flex-row justify-between items-center mx-4 border-b">
-        <div class="flex w-1/2">
-          <span>
-            {`${
-              player.firstName.length > 0
-                ? player.firstName.charAt(0) + "."
-                : ""
-            } ${player.lastName}`}
-          </span>
-        </div>
-        <div class="flex w-1/4">
-          <span>
-            {#if convertPlayerPosition(player.position) == 0}GK{/if}
-            {#if convertPlayerPosition(player.position) == 1}DF{/if}
-            {#if convertPlayerPosition(player.position) == 2}MF{/if}
-            {#if convertPlayerPosition(player.position) == 3}FW{/if}
-          </span>
-        </div>
-        <div class="form-checkbox w-1/4">
-          <label class="inline-flex items-center">
-            <input
-              type="checkbox"
-              class="form-checkbox h-5 w-5 text-blue-600"
-              checked={selected}
-              on:change={(e) => {
-                handlePlayerSelection(e, player);
-              }}
-            />
-          </label>
-        </div>
-      </div>
-    {/each}
-  </div>
+{/each}
 
-  <div class="items-center py-3 flex space-x-4">
-    <button
-      class="default-button fpl-cancel-btn"
-      type="button"
-      on:click={closeModal}
-    >
-      Cancel
-    </button>
-    <button class={`default-button fpl-purple-btn`} on:click={closeModal}
-      >Select</button
-    >
+    </div>
+  
+    <div class="items-center py-3 flex space-x-4 flex justify-end">
+      <button
+        class="default-button fpl-cancel-btn"
+        type="button"
+        on:click={closeModal}
+      >
+        Cancel
+      </button>
+      <button class={`default-button fpl-purple-btn`} on:click={closeModal}
+        >Select</button
+      >
+    </div>
   </div>
 </Modal>
