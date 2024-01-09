@@ -337,32 +337,15 @@
                 class="flex items-center p-2 justify-between py-4 border-b border-gray-700 cursor-pointer w-full"
               >
                 <div class="w-1/6 px-4">
+                  {player.shirtNumber}
+                </div>
+                <div class="w-3/6 px-4">
                   {`${
                     player.firstName.length > 0
                       ? player.firstName.charAt(0) + "."
                       : ""
                   } ${player.lastName}`}
                 </div>
-                {#if convertPlayerPosition(player.position) == 0}<div
-                    class="w-1/6 px-4"
-                  >
-                    GK
-                  </div>{/if}
-                {#if convertPlayerPosition(player.position) == 1}<div
-                    class="w-1/6 px-4"
-                  >
-                    DF
-                  </div>{/if}
-                {#if convertPlayerPosition(player.position) == 2}<div
-                    class="w-1/6 px-4"
-                  >
-                    MF
-                  </div>{/if}
-                {#if convertPlayerPosition(player.position) == 3}<div
-                    class="w-1/6 px-4"
-                  >
-                    FW
-                  </div>{/if}
                 <div class="w-1/6 px-4">
                   Events:
                   {$playerEventData?.length > 0 &&
@@ -371,34 +354,6 @@
                     ? $playerEventData?.filter((e) => e.playerId === player.id)
                         .length
                     : 0}
-                </div>
-                <div class="w-1/6 px-4">
-                  {$playerEventData &&
-                  $playerEventData?.length > 0 &&
-                  $playerEventData?.find(
-                    (e) =>
-                      e.playerId === player.id && convertEvent(e.eventType) == 0
-                  )
-                    ? $playerEventData?.find(
-                        (e) =>
-                          e.playerId === player.id &&
-                          convertEvent(e.eventType) == 0
-                      )?.eventStartMinute
-                    : "-"}
-                </div>
-                <div class="w-1/6 px-4">
-                  {$playerEventData &&
-                  $playerEventData?.length > 0 &&
-                  $playerEventData?.find(
-                    (e) =>
-                      e.playerId === player.id && convertEvent(e.eventType) == 0
-                  )
-                    ? $playerEventData?.find(
-                        (e) =>
-                          e.playerId === player.id &&
-                          convertEvent(e.eventType) == 0
-                      )?.eventEndMinute
-                    : "-"}
                 </div>
                 <div class="w-1/6 px-4">
                   <button
