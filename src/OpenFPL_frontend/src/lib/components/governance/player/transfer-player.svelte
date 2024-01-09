@@ -14,7 +14,7 @@
   let leavingLeague = false;
   let clubPlayers: PlayerDTO[] = [];
   
-  let isLoading = true;
+  let isLoading = false;
   let showConfirm = false;
   
   $: isSubmitDisabled =
@@ -74,7 +74,7 @@
           <p>Select a player to transfer:</p>
 
           <select
-            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={selectedPlayerId}
           >
             <option value={0}>Select Player</option>

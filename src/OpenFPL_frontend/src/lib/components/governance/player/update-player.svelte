@@ -118,8 +118,10 @@
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="w-full">
-        <div class="w-full">
+      <div class="w-full flex-col space-y-4 mb-2">
+
+        <div class="flex-col space-y-2">
+          <p>Select the players club:</p>
           <select
             class="p-2 fpl-dropdown min-w-[100px]"
             bind:value={selectedClubId}
@@ -130,24 +132,29 @@
             {/each}
           </select>  
         </div>
+
         {#if selectedClubId > 0}
-          <select
-            class="p-2 fpl-dropdown text-center my-4 min-w-[100px]"
-            bind:value={selectedPlayerId}
-          >
-            <option value={0}>Select Player</option>
-            {#each clubPlayers as player}
-              <option value={player.id}
-                >{player.firstName} {player.lastName}</option
-              >
-            {/each}
-          </select>
+
+          <div class="flex-col space-y-2">
+            <p>Select a player to update:</p>
+            <select
+              class="p-2 fpl-dropdown my-4 min-w-[100px]"
+              bind:value={selectedPlayerId}
+            >
+              <option value={0}>Select Player</option>
+              {#each clubPlayers as player}
+                <option value={player.id}
+                  >{player.firstName} {player.lastName}</option
+                >
+              {/each}
+            </select>
+          </div>
 
           {#if selectedPlayerId > 0}
-          
-            <div class="w-full">
+            <div class="flex-col space-y-2">
+              <p>Select a player's position:</p>
               <select
-                class="p-2 fpl-dropdown text-center my-4 min-w-[100px]"
+                class="p-2 fpl-dropdown my-4 min-w-[100px]"
                 bind:value={position}
               >
                 <option value={{ Goalkeeper: null }}>Goalkeeper</option>
@@ -156,45 +163,57 @@
                 <option value={{ Forward: null }}>Forward</option>
               </select>
             </div>
-            <input
-              type="text"
-              class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              placeholder="First Name"
-              bind:value={firstName}
-            />
-
-            <input
-              type="text"
-              class="w-full px-4 py-2 my-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              placeholder="Last Name"
-              bind:value={lastName}
-            />
-
-            <input
-              type="text"
-              class="w-full px-4 py-2 my-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              placeholder="Shirt Number"
-              bind:value={shirtNumber}
-            />
-
-            <p class="my-4">Date of Birth:</p>
-
-            <input
-              type="date"
-              bind:value={dateOfBirth}
-              class="input input-bordered"
-            />
-
-            <p class="my-4">Nationality:</p>
-
-            <select
-              class="p-2 fpl-dropdown text-center my-4 min-w-[100px]"
-              bind:value={nationalityId}
-            >
-              {#each $countriesStore as country}
-                <option value={country.id}>{country.name}</option>
-              {/each}
-            </select>
+    
+            <div class="flex-col space-y-2">
+              <p>First name:</p>
+              <input
+                type="text"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                placeholder="First Name"
+                bind:value={firstName}
+              />
+            </div>
+    
+            <div class="flex-col space-y-2">
+              <p>Last name:</p>
+              <input
+                type="text"
+                class="w-full px-4 py-2 my-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                placeholder="Last Name"
+                bind:value={lastName}
+              />
+            </div>
+          
+            <div class="flex-col space-y-2">
+              <p>Shirt number:</p>
+              <input
+                type="text"
+                class="w-full px-4 py-2 my-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                placeholder="Shirt Number"
+                bind:value={shirtNumber}
+              />
+            </div>
+          
+            <div class="flex-col space-y-2">
+              <p>Date of birth:</p>
+              <input
+                type="date"
+                bind:value={dateOfBirth}
+                class="input input-bordered"
+              />
+            </div>
+          
+            <div class="flex-col space-y-2">
+              <p>Nationality:</p>  
+              <select
+                class="p-2 fpl-dropdown my-4 min-w-[100px]"
+                bind:value={nationalityId}
+              >
+                {#each $countriesStore as country}
+                  <option value={country.id}>{country.name}</option>
+                {/each}
+              </select>
+            </div>
           {/if}
         {/if}
         

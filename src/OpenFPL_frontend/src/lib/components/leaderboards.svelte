@@ -253,7 +253,7 @@
             </button>
 
             <select
-              class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+              class="p-2 fpl-dropdown my-4 min-w-[100px]"
               bind:value={selectedTeamId}
             >
               {#each $teamStore.sort( (a, b) => a.friendlyName.localeCompare(b.friendlyName) ) as team}

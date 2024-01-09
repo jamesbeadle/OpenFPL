@@ -154,7 +154,7 @@
           </button>
 
           <select
-            class="p-2 fpl-dropdown text-center mx-0 md:mx-2 min-w-[100px]"
+            class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={selectedGameweek}
           >
             {#each gameweeks as gameweek}

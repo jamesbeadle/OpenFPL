@@ -80,33 +80,37 @@
     </div>
 
     <div class="flex justify-start items-center w-full">
-      <div class="w-full">
-        <p>Select the players club:</p>
-
-        <select
-          class="p-2 fpl-dropdown min-w-[100px]"
-          bind:value={selectedClubId}
-        >
-          <option value={0}>Select Club</option>
-          {#each $teamStore as club}
-            <option value={club.id}>{club.friendlyName}</option>
-          {/each}
-        </select>
-
-        {#if selectedClubId > 0}
-          <p>Select a player to recall:</p>
-
+      <div class="w-full flex-col space-y-4 mb-2">
+        <div class="flex-col space-y-2">
+          <p>Select the players club:</p>
           <select
-            class="p-2 fpl-dropdown my-4 min-w-[100px]"
-            bind:value={selectedPlayerId}
+            class="p-2 fpl-dropdown min-w-[100px]"
+            bind:value={selectedClubId}
           >
-            <option value={0}>Select Player</option>
-            {#each loanedPlayers as player}
-              <option value={player.id}
-                >{player.firstName} {player.lastName}</option
-              >
+            <option value={0}>Select Club</option>
+            {#each $teamStore as club}
+              <option value={club.id}>{club.friendlyName}</option>
             {/each}
           </select>
+        </div>
+        
+
+        {#if selectedClubId > 0}
+          <div class="flex-col space-y-2">
+            <p>Select a player to recall:</p>
+  
+            <select
+              class="p-2 fpl-dropdown my-4 min-w-[100px]"
+              bind:value={selectedPlayerId}
+            >
+              <option value={0}>Select Player</option>
+              {#each loanedPlayers as player}
+                <option value={player.id}
+                  >{player.firstName} {player.lastName}</option
+                >
+              {/each}
+            </select>
+          </div>
         {/if}
 
         <div class="border-b border-gray-200"></div>
