@@ -3,7 +3,9 @@
   import { Modal } from "@dfinity/gix-components";
   import type {
     ClubDTO,
+    PlayerDetailDTO,
     PlayerEventData,
+    PlayerGameweekDTO,
   } from "../../../../declarations/OpenFPL_backend/OpenFPL_backend.did";
   import { convertEvent, getFlagComponent } from "../utils/Helpers";
 
@@ -47,14 +49,14 @@
 
     gameweekDetail.events.forEach((evt) => {
       switch (evt.eventType) {
-        case 0:
+        case {Appearance: null}:
           appearanceEvents.push(evt);
           break;
-        case 3:
+        case {GoalConceded: null}:
           concededEvents.push(evt);
           goalConcededCount++;
           break;
-        case 4:
+        case {KeeperSave: null}:
           keeperSaveEvents.push(evt);
           keeperSaveCount++;
           break;
