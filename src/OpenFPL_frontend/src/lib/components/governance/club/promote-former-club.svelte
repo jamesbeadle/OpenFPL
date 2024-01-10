@@ -18,6 +18,10 @@
 
   $: isSubmitDisabled = selectedClubId <= 0;
 
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
+
   onMount(async () => {
     try {
       await teamStore.sync();

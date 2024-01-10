@@ -24,6 +24,10 @@
     getRetiredPlayers();
   }
 
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
+
   onMount(async () => {
     try {
       await playerStore.sync();

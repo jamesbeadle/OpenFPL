@@ -26,6 +26,10 @@
 
   $: if (selectedClubId) {
     getClubPlayers();
+  }  
+
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
   }
 
   async function getClubPlayers() {

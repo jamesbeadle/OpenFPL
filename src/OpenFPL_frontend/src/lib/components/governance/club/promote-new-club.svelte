@@ -27,6 +27,10 @@
     friendlyName.length > 50 ||
     abbreviatedName.length != 3;
 
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
+
   let shirtTypes: ShirtType[] = [{ Filled: null }, { Striped: null }];
 
   onMount(async () => {

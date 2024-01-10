@@ -18,9 +18,12 @@
 
   $: isSubmitDisabled = selectedPlayerId <= 0;
 
-
   $: if (selectedClubId) {
     getClubPlayers();
+  }
+
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
   }
 
   async function getClubPlayers() {

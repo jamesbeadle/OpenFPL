@@ -48,6 +48,10 @@
   let isLoading = true;
   let showConfirm = false;
 
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
+
   onMount(async () => {
     try {
       await fixtureStore.sync();

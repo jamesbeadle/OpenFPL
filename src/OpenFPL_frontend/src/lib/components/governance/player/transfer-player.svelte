@@ -25,6 +25,10 @@
     getClubPlayers();
   }
 
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
+
   async function getClubPlayers() {
     clubPlayers = $playerStore.filter((x) => x.clubId == selectedClubId);
   }

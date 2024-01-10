@@ -24,6 +24,10 @@
 
   $: isSubmitDisabled = fixtureData.length == 0;
 
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
+
   async function handleFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) {

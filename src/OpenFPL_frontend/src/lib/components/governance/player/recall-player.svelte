@@ -25,6 +25,9 @@
     (!leavingLeague && selectedClubId <= 0) ||
     loanEndDate == 0;
 
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
 
   onMount(async () => {
     try {

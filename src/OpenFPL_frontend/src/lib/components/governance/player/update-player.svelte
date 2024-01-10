@@ -37,6 +37,10 @@
     dateOfBirth <= 0 ||
     nationalityId <= 0;
 
+  $: if (isSubmitDisabled && showConfirm) {
+    showConfirm = false;
+  }
+
   onMount(async () => {
     try {
       playerStore.sync();
