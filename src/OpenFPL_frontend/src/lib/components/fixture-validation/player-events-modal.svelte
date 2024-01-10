@@ -43,8 +43,7 @@
 
   function addPlayerEvents(){
     
-    //create the player events and write to the writable in the parent container
-    
+    //TODO: Create events and add to writable in parent view
     closeModal();
   }
   
@@ -114,33 +113,35 @@
         </div>
 
         <div class="border-b border-gray-200"></div>
-        
-        <div class="flex-col space-y-2">
-          <p>Start Minute</p>
-          <input
-            type="number"
-            id="startMinute"
-            bind:value={appearanceStart}
-            class="bg-gray-900 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter start minute"
-            min="0"
-            max="90"
-          />
-        </div>
-        
-        <div class="flex-col space-y-2">
-          <p>End Minute</p>
-          <input
-            type="number"
-            id="endMinute"
-            bind:value={appearanceEnd}
-            class="bg-gray-900 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter end minute"
-            min="0"
-            max="90"
-          />
-        </div>
 
+        <div class="flex flex-row space-x-1">
+          <div class="flex-col space-y-2 w-1/2">
+            <p>Start Minute</p>
+            <input
+              type="number"
+              id="startMinute"
+              bind:value={appearanceStart}
+              class="bg-gray-900 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter start minute"
+              min="0"
+              max="90"
+            />
+          </div>
+          
+          <div class="flex-col space-y-2 w-1/2">
+            <p>End Minute</p>
+            <input
+              type="number"
+              id="endMinute"
+              bind:value={appearanceEnd}
+              class="bg-gray-900 w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter end minute"
+              min="0"
+              max="90"
+            />
+          </div>
+        </div>
+        
         <div class="flex-col space-y-2">
           <p>Select Cards:</p>
           <div class="flex flex-row">
