@@ -225,6 +225,12 @@ input {
   @apply bg-panel-color w-full;
 }
 
+.event-tag{
+  background-color: #2ce3a6;
+  color: #161819;
+  @apply px-2
+}
+
 /* Extra small devices (portrait phones, less than 480px) */
 @media (min-width: 480px) {
 }
