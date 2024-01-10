@@ -88,6 +88,10 @@ actor Self {
     return #ok(seasonManager.getFixtures(seasonId));
   };
 
+  public shared query func getPostponedFixtures() : async Result.Result<[DTOs.FixtureDTO], T.Error> {
+    return #ok(seasonManager.getPostponedFixtures());
+  };
+
   public shared query func getTotalManagers() : async Result.Result<Nat, T.Error> {
     return #ok(seasonManager.getTotalManagers());
   };

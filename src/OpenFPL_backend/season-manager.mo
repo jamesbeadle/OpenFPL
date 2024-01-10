@@ -133,6 +133,10 @@ module {
       return seasonComposite.getFixtures(seasonId);
     };
 
+    public func getPostponedFixtures() : [DTOs.FixtureDTO] {
+      return seasonComposite.getPostponedFixtures(systemState.calculationSeasonId);
+    };
+
     public func getPlayers() : [DTOs.PlayerDTO] {
       return playerComposite.getActivePlayers(systemState.calculationSeasonId);
     };

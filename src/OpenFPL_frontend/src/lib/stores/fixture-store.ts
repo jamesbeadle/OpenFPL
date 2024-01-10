@@ -102,11 +102,28 @@ function createFixtureStore() {
     }
   }
 
+  async function getPostponedFixtures(): Promise<FixtureDTO[]> {
+    try {
+      let result = await actor.getPostponedFixtures();
+
+      if (isError(result)) {
+        console.error("Error getting postponed fixtures");
+      }
+
+      let fixtures = result.ok;
+      return fixtures;
+    } catch (error) {
+      console.error("Error getting postponed fixtures:", error);
+      throw error;
+    }
+  }
+
   return {
     subscribe,
     sync,
     getNextFixture,
     updateFixture,
+    getPostponedFixtures
   };
 }
 
