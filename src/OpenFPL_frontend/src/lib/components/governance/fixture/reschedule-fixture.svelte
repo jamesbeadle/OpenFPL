@@ -16,8 +16,9 @@
   export let cancelModal: () => void;
 
   let gameweeks = Array.from({ length: 38 }, (_, i) => i + 1);
-  let selectedGameweek: number = 1;
-  let selectedFixtureId: number;
+  let selectedGameweek: number = 0;
+  let newGameweek: number = 0;
+  let selectedFixtureId: number = 0;
   let gameweekFixtures: FixtureDTO[] = [];
 
   let date = "";
@@ -34,7 +35,7 @@
     selectedFixtureId <= 0 ||
     (!isPostponed && updatedFixtureDate == 0);
 
-  $: if (selectedFixtureId) {
+  $: if (selectedGameweek) {
     loadGameweekFixtures();
   }
 
@@ -109,6 +110,7 @@
             class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={selectedGameweek}
           >
+            <option value={0}>Select Gameweek</option>
             {#each gameweeks as gameweek}
               <option value={gameweek}>Gameweek {gameweek}</option>
             {/each}
@@ -121,6 +123,7 @@
             class="p-2 fpl-dropdown my-4 min-w-[100px]"
             bind:value={selectedFixtureId}
           >
+            <option value={0}>Select Fixture</option>
             {#each gameweekFixtures as fixture}
               {@const homeTeam = getTeamById(fixture.homeClubId)}
               {@const awayTeam = getTeamById(fixture.awayClubId)}
@@ -154,8 +157,9 @@
             
             <select
               class="p-2 fpl-dropdown my-4 min-w-[100px]"
-              bind:value={selectedGameweek}
+              bind:value={newGameweek}
             >
+              <option value={0}>Select New Gameweek</option>
               {#each gameweeks as gameweek}
                 <option value={gameweek}>Gameweek {gameweek}</option>
               {/each}

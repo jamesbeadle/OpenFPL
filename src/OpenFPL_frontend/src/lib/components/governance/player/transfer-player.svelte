@@ -11,6 +11,7 @@
 
   let selectedPlayerId: number = 0;
   let selectedClubId: number = 0;
+  let transferClubId: number = 0;
   let leavingLeague = false;
   let clubPlayers: PlayerDTO[] = [];
   
@@ -97,13 +98,11 @@
 
             <select
               class="p-2 fpl-dropdown min-w-[100px]"
-              bind:value={selectedClubId}
+              bind:value={transferClubId}
             >
               <option value={0}>Select Club</option>
-              {#each clubPlayers as player}
-                <option value={player.id}
-                  >{player.firstName} {player.lastName}</option
-                >
+              {#each $teamStore as club}
+                <option value={club.id}>{club.friendlyName}</option>
               {/each}
             </select>
           {/if}

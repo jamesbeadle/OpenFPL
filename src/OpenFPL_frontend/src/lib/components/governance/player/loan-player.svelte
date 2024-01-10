@@ -10,6 +10,7 @@
   export let cancelModal: () => void;
 
   let selectedClubId: number = 0;
+  let loadnClubId: number = 0;
   let selectedPlayerId: number = 0;
   let leavingLeague = false;
   let loanEndDate: number = 0;
@@ -107,7 +108,7 @@
 
               <select
                 class="p-2 fpl-dropdown my-4 min-w-[100px]"
-                bind:value={selectedClubId}
+                bind:value={loadnClubId}
               >
                 <option value={0}>Select Club</option>
                 {#each $teamStore as club}
