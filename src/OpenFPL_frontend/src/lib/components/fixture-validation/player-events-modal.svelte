@@ -19,7 +19,7 @@
   export let closeModal: () => void;
 
   let appearanceStart = 0;
-  let appearanceEnd = 0;
+  let appearanceEnd = 90;
   let keeperSaves = 0;
   let selectedCard = 0;
   let goalMinutes: number[] = [];
@@ -41,11 +41,101 @@
     appearanceEnd < 0 ||
     appearanceEnd > 90;
 
-  function addPlayerEvents(){
-    
-    //TODO: Create events and add to writable in parent view
+    function addPlayerEvents() {
+    let newEvents: PlayerEventData[] = [];
+
+    newEvents.push({
+      playerId: player.id,
+      eventType: {Appearance: null},
+      eventStartMinute: Number(appearanceStart),
+      eventEndMinute: Number(appearanceEnd),
+      fixtureId: fixtureId,
+      clubId: player.clubId
+    });
+
+    goalMinutes.forEach(minute => {
+      newEvents.push({
+        playerId: player.id,
+        eventType: {Goal: null},
+        eventStartMinute: minute,
+        eventEndMinute: minute,
+        fixtureId: fixtureId,
+        clubId: player.clubId
+      });
+    });
+
+    assistMinutes.forEach(minute => {
+      newEvents.push({
+        playerId: player.id,
+        eventType: {GoalAssisted: null},
+        eventStartMinute: minute,
+        eventEndMinute: minute,
+        fixtureId: fixtureId,
+        clubId: player.clubId
+      });
+    });
+
+    ownGoalMinutes.forEach(minute => {
+      newEvents.push({
+        playerId: player.id,
+        eventType: {OwnGoal: null},
+        eventStartMinute: minute,
+        eventEndMinute: minute,
+        fixtureId: fixtureId,
+        clubId: player.clubId
+      });
+    });
+
+    penaltySaveMinutes.forEach(minute => {
+      newEvents.push({
+        playerId: player.id,
+        eventType: {PenaltySaved: null},
+        eventStartMinute: minute,
+        eventEndMinute: minute,
+        fixtureId: fixtureId,
+        clubId: player.clubId
+      });
+    });
+
+    penaltyMissedMinutes.forEach(minute => {
+      newEvents.push({
+        playerId: player.id,
+        eventType: {PenaltyMissed: null},
+        eventStartMinute: minute,
+        eventEndMinute: minute,
+        fixtureId: fixtureId,
+        clubId: player.clubId
+      });
+    });
+
+    if (selectedCard > 0) {
+      let cardType = selectedCard === 1 ? {YellowCard: null} : {RedCard: null};
+      newEvents.push({
+        playerId: player.id,
+        eventType: cardType,
+        eventStartMinute: 0,
+        eventEndMinute: 0,
+        fixtureId: fixtureId,
+        clubId: player.clubId
+      });
+    }
+
+    for (let i = 0; i < keeperSaves; i++) {
+      newEvents.push({
+        playerId: player.id,
+        eventType: {KeeperSave: null},
+        eventStartMinute: 0, 
+        eventEndMinute: 0,
+        fixtureId: fixtureId,
+        clubId: player.clubId
+      });
+    }
+
+    playerEventData.set(newEvents);
+
     closeModal();
   }
+
   
   function addGoalEvent() {
     goalMinutes = [...goalMinutes, goalSliderValue];
